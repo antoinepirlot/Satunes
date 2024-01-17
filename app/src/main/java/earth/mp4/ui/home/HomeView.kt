@@ -6,6 +6,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.media3.common.MediaItem
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerControlView
@@ -22,5 +23,9 @@ fun HomeView(
     val playerControlView = PlayerControlView(LocalContext.current)
     playerControlView.player = player
 
+    val mediaItem = MediaItem.fromUri(musicList[0].uri)
+    player.setMediaItem(mediaItem)
+    player.prepare()
+    player.play()
     Text(text = musicList[0].name)
 }

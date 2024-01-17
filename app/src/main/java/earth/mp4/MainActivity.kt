@@ -2,6 +2,7 @@ package earth.mp4
 
 import android.Manifest.permission.READ_MEDIA_AUDIO
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import androidx.activity.ComponentActivity
@@ -73,7 +74,8 @@ class MainActivity : ComponentActivity() {
 
                 // Stores column values and the contentUri in a local object
                 // that represents the media file.
-                musicList.add(Music(id, name, duration, size, uri))
+                val fileUri = Uri.Builder().appendPath("${uri.path}/${name}").build()
+                musicList.add(Music(id, name, duration, size, fileUri))
             }
         }
     }

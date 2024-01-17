@@ -25,17 +25,17 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestPermission()
-        if (isAudioDenied()) {
+        if (!isAudioDenied()) {
             setContent {
+                val musicList = remember {
+                    mutableListOf<Music>()
+                }
+                LoadMusic(musicList = musicList)
                 MP3Theme {
                     Surface(
                         modifier = Modifier.fillMaxSize(),
                         color = MaterialTheme.colorScheme.background
                     ) {
-                        val musicList = remember {
-                            mutableListOf<Music>()
-                        }
-                        LoadMusic(musicList = musicList)
                         HomeView(modifier = Modifier, musicList = musicList)
                     }
                 }
@@ -47,6 +47,7 @@ class MainActivity : ComponentActivity() {
     fun LoadMusic(musicList: MutableList<Music>) {
         val uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
         val projection = arrayOf(
+            MediaStore.Audio.Media._ID,
             MediaStore.Audio.Media.DISPLAY_NAME,
             MediaStore.Audio.Media.DURATION,
             MediaStore.Audio.Media.SIZE
@@ -56,21 +57,23 @@ class MainActivity : ComponentActivity() {
             uri, projection, null, null
         )?.use { cursor ->
             // Cache column indices.
+            val idColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID)
             val nameColumn =
-                cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DISPLAY_NAME)
+                cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DISPLAY_NAME)
             val durationColumn =
-                cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION)
-            val sizeColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.SIZE)
+                cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION)
+            val sizeColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE)
 
             while (cursor.moveToNext()) {
                 // Get values of columns for a given video.
+                val id = cursor.getLong(idColumn)
                 val name = cursor.getString(nameColumn)
                 val duration = cursor.getInt(durationColumn)
                 val size = cursor.getInt(sizeColumn)
 
                 // Stores column values and the contentUri in a local object
                 // that represents the media file.
-                musicList.add(Music(name, duration, size))
+                musicList.add(Music(id, name, duration, size, uri))
             }
         }
     }

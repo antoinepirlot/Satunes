@@ -2,6 +2,7 @@ package earth.mp4.ui.home
 
 import android.annotation.SuppressLint
 import androidx.annotation.OptIn
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -17,8 +18,9 @@ fun HomeView(
     modifier: Modifier,
     musicList: List<Music>
 ) {
-        val player = ExoPlayer.Builder(LocalContext.current).build()
-        val playerControlView = PlayerControlView(LocalContext.current)
-        playerControlView.player = player
+    val player = ExoPlayer.Builder(LocalContext.current).build()
+    val playerControlView = PlayerControlView(LocalContext.current)
+    playerControlView.player = player
 
+    Text(text = musicList[0].name)
 }

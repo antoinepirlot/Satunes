@@ -1,10 +1,6 @@
-package earth.mp4.ui.home
+package earth.mp4.ui.AppBars
 
-import android.annotation.SuppressLint
-import android.view.Menu
-import android.view.MenuItem
-import androidx.annotation.OptIn
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Menu
@@ -15,34 +11,21 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.media3.common.MediaItem
-import androidx.media3.common.util.UnstableApi
-import androidx.media3.exoplayer.ExoPlayer
-import androidx.media3.ui.PlayerControlView
-import earth.mp4.data.Music
+import androidx.compose.ui.tooling.preview.Preview
 
-@SuppressLint("Range")
-@OptIn(UnstableApi::class)
-@Composable
-fun HomeView(
-    modifier: Modifier,
-    musicList: List<Music>
-) {
-    CenterAlignedTopAppBarExample()
-}
 
 //https://developer.android.com/jetpack/compose/components/app-bars#center
 @kotlin.OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CenterAlignedTopAppBarExample() {
+fun MP3TopAppBar(
+    modifier: Modifier
+) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
 
     Scaffold(
@@ -85,16 +68,8 @@ fun CenterAlignedTopAppBarExample() {
     }
 }
 
-//if (musicList.isEmpty()) {
-//    Text(text = "The music list is empty, please add music to your phone and restart")
-//} else {
-//    val player = ExoPlayer.Builder(LocalContext.current).build()
-//    val playerControlView = PlayerControlView(LocalContext.current)
-//    playerControlView.player = player
-//
-//    val mediaItem = MediaItem.fromUri(musicList[0].uri)
-//    player.setMediaItem(mediaItem)
-//    player.prepare()
-//    player.play()
-//    Text(text = musicList[0].name)
-//}
+@Composable
+@Preview
+fun MP3TopAppBarPreview() {
+    MP3TopAppBar(modifier = Modifier.fillMaxSize())
+}

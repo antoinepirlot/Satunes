@@ -19,7 +19,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import earth.mp4.data.Music
-import earth.mp4.ui.home.HomeView
+import earth.mp4.ui.HomeView
 import earth.mp4.ui.theme.MP3Theme
 
 class MainActivity : ComponentActivity() {

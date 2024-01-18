@@ -1,4 +1,4 @@
-package earth.mp4.ui.AppBars
+package earth.mp4.ui.appBars
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
@@ -21,7 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 
 
 //https://developer.android.com/jetpack/compose/components/app-bars#center
-@kotlin.OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MP3TopAppBar(
     modifier: Modifier

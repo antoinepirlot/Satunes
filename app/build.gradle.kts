@@ -7,6 +7,11 @@ android {
     namespace = "earth.mp3"
     compileSdk = 34
 
+    androidResources {
+        generateLocaleConfig = true
+    }
+
+
     defaultConfig {
         applicationId = "earth.mp3"
         minSdk = 34
@@ -64,7 +69,7 @@ dependencies {
     //Media
     val media3Version = "1.2.1"
     implementation("androidx.media3:media3-exoplayer:${media3Version}")
-    implementation ("androidx.media3:media3-exoplayer-dash:${media3Version}")
+    implementation("androidx.media3:media3-exoplayer-dash:${media3Version}")
     implementation("androidx.media3:media3-session:${media3Version}")
     implementation("androidx.media3:media3-ui:${media3Version}")
 

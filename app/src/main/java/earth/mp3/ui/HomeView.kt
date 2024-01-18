@@ -18,11 +18,13 @@ import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.media3.common.util.UnstableApi
+import earth.mp3.R
 import earth.mp3.data.Music
-import earth.mp3.ui.components.cards.CardList
+import earth.mp3.ui.components.cards.menu.CardListMenu
 
 /**
  * Show The Home App Bar and content inside
@@ -47,7 +49,7 @@ fun HomeView(
                 ),
                 title = {
                     Text(
-                        "Lecteur MP3",
+                        stringResource(id = R.string.app_name),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
@@ -67,7 +69,7 @@ fun HomeView(
         Row(
             modifier = modifier.padding(innerPadding)
         ) {
-            CardList(modifier = modifier, musicList = musicList)
+            CardListMenu(modifier = modifier)
         }
     }
 }

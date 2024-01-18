@@ -2,4 +2,6 @@
 <resources>
     <string name="app_name">Lecteur MP3</string>
     <string name="folder">Dossier</string>
+    <string name="artists">Artistes</string>
+    <string name="tracks">Morceaux</string>
 </resources>

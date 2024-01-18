@@ -22,7 +22,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.media3.common.util.UnstableApi
 import earth.mp3.data.Music
-import earth.mp3.ui.cards.CardList
+import earth.mp3.ui.components.cards.CardList
 
 /**
  * Show The Home App Bar and content inside

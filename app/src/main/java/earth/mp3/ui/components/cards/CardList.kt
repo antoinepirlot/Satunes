@@ -1,4 +1,4 @@
-package earth.mp3.ui.cards
+package earth.mp3.ui.components.cards
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyRow

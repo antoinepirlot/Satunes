@@ -1,5 +1,6 @@
-package earth.mp3.ui.cards
+package earth.mp3.ui.components.cards
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
@@ -17,7 +18,9 @@ fun MusicCard(
     Column(
         modifier = modifier
     ) {
-        Text(text = music.name)
+        Box(modifier = modifier) {
+            Text(text = music.name)
+        }
     }
 }
 

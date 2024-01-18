@@ -1,6 +1,5 @@
 package earth.mp3.ui
 
-import android.annotation.SuppressLint
 import androidx.annotation.OptIn
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,7 +25,6 @@ import earth.mp3.data.Music
 import earth.mp3.ui.cards.CardList
 
 @kotlin.OptIn(ExperimentalMaterial3Api::class)
-@SuppressLint("Range")
 @OptIn(UnstableApi::class)
 @Composable
 fun HomeView(
@@ -91,7 +89,7 @@ fun HorizontalList(
 @Preview
 fun HorizontalListPreview() {
     val music = Music(1, "Il avait les mots", 2, 2, null)
-    val musicList = listOf<Music>(music)
+    val musicList = listOf(music)
     HorizontalList(modifier = Modifier.fillMaxSize(), musicList = musicList)
 }
 

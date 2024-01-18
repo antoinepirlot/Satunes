@@ -24,6 +24,9 @@ import androidx.media3.common.util.UnstableApi
 import earth.mp3.data.Music
 import earth.mp3.ui.cards.CardList
 
+/**
+ * Show The Home App Bar and content inside
+ */
 @kotlin.OptIn(ExperimentalMaterial3Api::class)
 @OptIn(UnstableApi::class)
 @Composable

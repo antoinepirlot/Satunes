@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "earth.mp4"
+    namespace = "earth.mp3"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "earth.mp4"
+        applicationId = "earth.mp3"
         minSdk = 34
         targetSdk = 34
         versionCode = 1

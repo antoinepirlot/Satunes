@@ -1,4 +1,4 @@
-package earth.mp4.ui.theme
+package earth.mp3.ui.theme
 
 import android.app.Activity
 import android.os.Build

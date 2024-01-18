@@ -1,4 +1,4 @@
-package earth.mp4.data
+package earth.mp3.data
 
 data class Album(
     val id:Long,

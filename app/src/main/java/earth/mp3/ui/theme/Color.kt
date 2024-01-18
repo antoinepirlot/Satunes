@@ -1,4 +1,4 @@
-package earth.mp4.ui.theme
+package earth.mp3.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

@@ -1,6 +1,10 @@
-package earth.mp4.ui.appBars
+package earth.mp3.ui
 
+import android.annotation.SuppressLint
+import androidx.annotation.OptIn
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -17,13 +21,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.media3.common.util.UnstableApi
+import earth.mp3.data.Music
+import earth.mp3.ui.cards.CardList
 
-
-//https://developer.android.com/jetpack/compose/components/app-bars#center
-@OptIn(ExperimentalMaterial3Api::class)
+@kotlin.OptIn(ExperimentalMaterial3Api::class)
+@SuppressLint("Range")
+@OptIn(UnstableApi::class)
 @Composable
-fun MP3TopAppBar(
-    modifier: Modifier
+fun HomeView(
+    modifier: Modifier,
+    musicList: List<Music>
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
 
@@ -55,12 +63,48 @@ fun MP3TopAppBar(
             )
         },
     ) { innerPadding ->
-        Text(text = innerPadding.toString())
+        Row(
+            modifier = modifier.padding(innerPadding)
+        ) {
+            CardList(modifier = modifier, musicList = musicList)
+        }
     }
+}
+
+/**
+ * List that shows "Folders, Artists & Tracks" sections on the top
+ */
+@Composable
+fun HorizontalList(
+    modifier: Modifier,
+    musicList: List<Music>,
+) {
+//    LazyRow {
+//        itemsIndexed(musicList) {
+//            index, item ->
+//
+//        }
+//    }
 }
 
 @Composable
 @Preview
-fun MP3TopAppBarPreview() {
-    MP3TopAppBar(modifier = Modifier.fillMaxSize())
+fun HorizontalListPreview() {
+    val music = Music(1, "Il avait les mots", 2, 2, null)
+    val musicList = listOf<Music>(music)
+    HorizontalList(modifier = Modifier.fillMaxSize(), musicList = musicList)
 }
+
+//if (musicList.isEmpty()) {
+//    Text(text = "The music list is empty, please add music to your phone and restart")
+//} else {
+//    val player = ExoPlayer.Builder(LocalContext.current).build()
+//    val playerControlView = PlayerControlView(LocalContext.current)
+//    playerControlView.player = player
+//
+//    val mediaItem = MediaItem.fromUri(musicList[0].uri)
+//    player.setMediaItem(mediaItem)
+//    player.prepare()
+//    player.play()
+//    Text(text = musicList[0].name)
+//}

@@ -1,4 +1,4 @@
-package earth.mp4
+package earth.mp3
 
 import android.Manifest.permission.READ_MEDIA_AUDIO
 import android.content.pm.PackageManager
@@ -18,9 +18,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import earth.mp4.data.Music
-import earth.mp4.ui.HomeView
-import earth.mp4.ui.theme.MP3Theme
+import earth.mp3.data.Music
+import earth.mp3.ui.HomeView
+import earth.mp3.ui.theme.MP3Theme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

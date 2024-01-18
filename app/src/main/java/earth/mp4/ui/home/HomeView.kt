@@ -19,13 +19,19 @@ fun HomeView(
     modifier: Modifier,
     musicList: List<Music>
 ) {
-    val player = ExoPlayer.Builder(LocalContext.current).build()
-    val playerControlView = PlayerControlView(LocalContext.current)
-    playerControlView.player = player
 
-    val mediaItem = MediaItem.fromUri(musicList[0].uri)
-    player.setMediaItem(mediaItem)
-    player.prepare()
-    player.play()
-    Text(text = musicList[0].name)
 }
+
+//if (musicList.isEmpty()) {
+//    Text(text = "The music list is empty, please add music to your phone and restart")
+//} else {
+//    val player = ExoPlayer.Builder(LocalContext.current).build()
+//    val playerControlView = PlayerControlView(LocalContext.current)
+//    playerControlView.player = player
+//
+//    val mediaItem = MediaItem.fromUri(musicList[0].uri)
+//    player.setMediaItem(mediaItem)
+//    player.prepare()
+//    player.play()
+//    Text(text = musicList[0].name)
+//}

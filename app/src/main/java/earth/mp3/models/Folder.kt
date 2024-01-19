@@ -1,8 +1,8 @@
 package earth.mp3.models
 
 data class Folder(
-    val relativePath: String,
-    val subFolders: MutableMap<String, Folder> = mutableMapOf(),
+    var name: String = "Music",
+    var subFolder: Folder? = null,
     val musicList: MutableList<Music> = mutableListOf()
 )
 
@@ -14,7 +14,7 @@ fun getFolderList(musicList: List<Music>): MutableMap<String, Folder> {
             folderMap[music.relativePath]!!.musicList.add(music)
         } else {
             val newFolder = Folder(
-                relativePath = music.relativePath,
+                name = music.relativePath,
                 musicList = mutableListOf(music)
             )
             folderMap[music.relativePath] = newFolder
@@ -22,4 +22,23 @@ fun getFolderList(musicList: List<Music>): MutableMap<String, Folder> {
 
     }
     return folderMap
+}
+
+/**
+ * Create subfolders into subfolders if exists and remove /Music/ because all have it
+ *
+ */
+private fun createSubfolders(relativePath: String, folder: Folder) {
+    //TODO check if it works
+    if (relativePath.isBlank()) {
+        return
+    }
+    val splitedPath = relativePath.split("/")
+    val folderName = splitedPath[0]
+    val reducedPath = relativePath.removePrefix("/$folderName")
+    folder!!.name = folderName
+    if (!reducedPath.isBlank()) {
+        folder.subFolder = Folder()
+        createSubfolders(reducedPath, folder.subFolder!!)
+    }
 }

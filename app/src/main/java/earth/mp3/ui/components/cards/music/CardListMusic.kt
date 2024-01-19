@@ -9,7 +9,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import earth.mp3.data.Music
 
 @Composable
-fun CardList(
+fun CardMusicList(
     modifier: Modifier,
     musicList: List<Music>
 ) {
@@ -25,8 +25,8 @@ fun CardList(
 
 @Composable
 @Preview
-fun CardListPreview() {
+fun CardMusicListPreview() {
     val music = Music(1, "Il avait les mots", 2, 2, null)
     val musicList = listOf<Music>(music)
-    CardList(modifier = Modifier.fillMaxSize(), musicList = musicList)
+    CardMusicList(modifier = Modifier.fillMaxSize(), musicList = musicList)
 }

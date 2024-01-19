@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import earth.mp3.R
 
 @Composable
-fun CardListMenu(
+fun CardMenuList(
     modifier: Modifier
 ) {
     val menuTitleList = listOf(
@@ -74,6 +74,6 @@ fun CardListMenu(
 
 @Composable
 @Preview
-fun CardListMenuPreview() {
-    CardListMenu(modifier = Modifier.fillMaxSize())
+fun CardMenuListPreview() {
+    CardMenuList(modifier = Modifier.fillMaxSize())
 }

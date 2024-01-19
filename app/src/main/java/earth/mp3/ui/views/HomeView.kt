@@ -24,7 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.media3.common.util.UnstableApi
 import earth.mp3.R
 import earth.mp3.data.Music
-import earth.mp3.ui.components.cards.menu.CardListMenu
+import earth.mp3.ui.components.cards.menu.CardMenuList
 
 /**
  * Show The Home App Bar and content inside
@@ -69,7 +69,7 @@ fun HomeView(
         Row(
             modifier = modifier.padding(innerPadding)
         ) {
-            CardListMenu(modifier = modifier)
+            CardMenuList(modifier = modifier)
         }
     }
 }

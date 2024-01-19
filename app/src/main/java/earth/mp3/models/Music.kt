@@ -1,4 +1,4 @@
-package earth.mp3.data
+package earth.mp3.models
 
 import android.net.Uri
 

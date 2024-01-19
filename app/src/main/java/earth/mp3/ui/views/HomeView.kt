@@ -25,7 +25,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.media3.common.util.UnstableApi
 import earth.mp3.R
-import earth.mp3.data.Music
+import earth.mp3.models.Music
 import earth.mp3.ui.components.cards.artists.CardArtistList
 import earth.mp3.ui.components.cards.folder.CardFolderList
 import earth.mp3.ui.components.cards.menu.CardMenuList

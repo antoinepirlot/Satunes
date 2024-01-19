@@ -6,7 +6,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import earth.mp3.data.Music
+import earth.mp3.models.Music
 
 @Composable
 fun CardMusicList(

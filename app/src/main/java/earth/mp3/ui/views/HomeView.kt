@@ -1,4 +1,4 @@
-package earth.mp3.ui
+package earth.mp3.ui.views
 
 import androidx.annotation.OptIn
 import androidx.compose.foundation.layout.Row

@@ -19,8 +19,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import earth.mp3.data.Music
-import earth.mp3.ui.HomeView
 import earth.mp3.ui.theme.MP3Theme
+import earth.mp3.ui.views.HomeView
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

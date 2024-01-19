@@ -18,7 +18,7 @@ fun CardFolder(
     ) {
         Text(text = folderName)
     }
-    Divider()
+    Divider(modifier = modifier)
 }
 
 @Composable

@@ -1,27 +1,38 @@
 package earth.mp3.ui.components.cards.menu
 
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
 fun CardMenu(
     modifier: Modifier,
-    menuTitle: String
+    menuTitle: String,
+    openedMenu: MutableState<MenuTitle>
 ) {
-    TextButton(
-        modifier = modifier,
-        onClick = { /*TODO*/ }
-    ) {
-        Text(text = menuTitle)
-    }
+
+//    Button(
+//        modifier = modifier,
+//        onClick = { /*TODO*/ },
+//        colors = ButtonDefaults.buttonColors(
+//            containerColor = MaterialTheme.colorScheme.primary,
+//            disabledContentColor = MaterialTheme.colorScheme.onSecondary
+//        )
+//    ) {
+//        Text(
+//            color = Color.Blue,
+//            text = menuTitle
+//        )
+//    }
 }
 
 @Composable
 @Preview
 fun CardMenuPreview() {
-    CardMenu(modifier = Modifier.fillMaxSize(), "Folder")
+    var openedMenu = rememberSaveable { mutableStateOf(MenuTitle.FOLDER) }
+    CardMenu(modifier = Modifier.fillMaxSize(), menuTitle = "Folder", openedMenu = openedMenu)
 }

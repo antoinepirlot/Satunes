@@ -1,6 +1,7 @@
 package earth.mp3
 
 import android.Manifest.permission.READ_MEDIA_AUDIO
+import android.content.Context
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
@@ -12,7 +13,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -31,7 +31,7 @@ class MainActivity : ComponentActivity() {
                 val musicList = remember {
                     mutableListOf<Music>()
                 }
-                LoadMusic(musicList = musicList)
+                loadMusics(context = LocalContext.current, musicList = musicList)
                 MP3Theme {
                     Surface(
                         modifier = Modifier.fillMaxSize(),
@@ -44,8 +44,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    @Composable
-    fun LoadMusic(musicList: MutableList<Music>) {
+    fun loadMusics(context: Context, musicList: MutableList<Music>) {
         val uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
         val projection = arrayOf(
             MediaStore.Audio.Media._ID,
@@ -54,7 +53,7 @@ class MainActivity : ComponentActivity() {
             MediaStore.Audio.Media.SIZE
         )
 
-        LocalContext.current.contentResolver.query(
+        context.contentResolver.query(
             uri, projection, null, null
         )?.use { cursor ->
             // Cache column indices.

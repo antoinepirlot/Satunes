@@ -86,7 +86,7 @@ fun HomeView(
             } else if (artistsSelected.value) {
                 ArtistsView(modifier = modifier)
             } else if (tracksSelected.value) {
-                //TODO show tracks view
+                TracksView(modifier = modifier)
             } else {
                 throw IllegalStateException(
                     "No tab selected (folder, artists, tracks), that could not happen"

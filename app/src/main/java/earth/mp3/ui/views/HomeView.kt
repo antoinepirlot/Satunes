@@ -84,7 +84,7 @@ fun HomeView(
             if (folderSelected.value) {
                 FolderView(modifier = modifier)
             } else if (artistsSelected.value) {
-                //TODO show artists view
+                ArtistsView(modifier = modifier)
             } else if (tracksSelected.value) {
                 //TODO show tracks view
             } else {

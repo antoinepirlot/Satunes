@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -15,17 +16,16 @@ import earth.mp3.R
 
 @Composable
 fun CardMenuList(
-    modifier: Modifier
+    modifier: Modifier,
+    folderSelected: MutableState<Boolean>,
+    artistsSelected: MutableState<Boolean>,
+    tracksSelected: MutableState<Boolean>
 ) {
     val menuTitleList = listOf(
         MenuTitle.FOLDER,
         MenuTitle.ARTISTS,
         MenuTitle.TRACKS
     )
-
-    val folderSelected = remember { mutableStateOf(true) } // default section
-    val artistsSelected = remember { mutableStateOf(false) }
-    val tracksSelected = remember { mutableStateOf(false) }
 
     LazyRow(
         modifier = modifier.height(60.dp)
@@ -74,6 +74,14 @@ fun CardMenuList(
 
 @Composable
 @Preview
-fun CardMenuListPreview() {
-    CardMenuList(modifier = Modifier.fillMaxSize())
+fun CardListMenuPreview() {
+    val folderSelected = remember { mutableStateOf(true) } // default section
+    val artistsSelected = remember { mutableStateOf(false) }
+    val tracksSelected = remember { mutableStateOf(false) }
+    CardMenuList(
+        modifier = Modifier.fillMaxSize(),
+        folderSelected = folderSelected,
+        artistsSelected = artistsSelected,
+        tracksSelected = tracksSelected
+    )
 }

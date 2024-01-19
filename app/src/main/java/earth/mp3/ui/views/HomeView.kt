@@ -1,7 +1,7 @@
 package earth.mp3.ui.views
 
 import androidx.annotation.OptIn
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -16,6 +16,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
@@ -66,10 +68,19 @@ fun HomeView(
             )
         },
     ) { innerPadding ->
-        Row(
+        Column(
             modifier = modifier.padding(innerPadding)
         ) {
-            CardMenuList(modifier = modifier)
+            val folderSelected = remember { mutableStateOf(true) } // default section
+            val artistsSelected = remember { mutableStateOf(false) }
+            val tracksSelected = remember { mutableStateOf(false) }
+            CardMenuList(
+                modifier = modifier,
+                folderSelected = folderSelected,
+                artistsSelected = artistsSelected,
+                tracksSelected = tracksSelected
+            )
+            //TODO Show folder artists and tracks views from whats selected
         }
     }
 }

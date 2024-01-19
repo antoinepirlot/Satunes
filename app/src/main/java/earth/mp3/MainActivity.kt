@@ -44,13 +44,14 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    fun loadMusics(context: Context, musicList: MutableList<Music>) {
+    private fun loadMusics(context: Context, musicList: MutableList<Music>) {
         val uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
         val projection = arrayOf(
             MediaStore.Audio.Media._ID,
             MediaStore.Audio.Media.DISPLAY_NAME,
             MediaStore.Audio.Media.DURATION,
-            MediaStore.Audio.Media.SIZE
+            MediaStore.Audio.Media.SIZE,
+            MediaStore.Audio.Media.RELATIVE_PATH
         )
 
         context.contentResolver.query(
@@ -63,6 +64,8 @@ class MainActivity : ComponentActivity() {
             val durationColumn =
                 cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION)
             val sizeColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE)
+            val relativePathColumn =
+                cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.RELATIVE_PATH)
 
             while (cursor.moveToNext()) {
                 // Get values of columns for a given video.
@@ -70,11 +73,12 @@ class MainActivity : ComponentActivity() {
                 val name = cursor.getString(nameColumn)
                 val duration = cursor.getInt(durationColumn)
                 val size = cursor.getInt(sizeColumn)
+                val relativePath = cursor.getString(relativePathColumn)
 
                 // Stores column values and the contentUri in a local object
                 // that represents the media file.
                 val fileUri = Uri.Builder().appendPath("${uri.path}/${name}").build()
-                musicList.add(Music(id, name, duration, size, fileUri))
+                musicList.add(Music(id, name, duration, size, fileUri, relativePath))
             }
         }
     }

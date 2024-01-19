@@ -29,6 +29,6 @@ fun MusicCard(
 @Composable
 @Preview
 fun MusicCardPreview() {
-    val music = Music(1, "Il avait les mots", 2, 2, null)
+    val music = Music(1, "Il avait les mots", 2, 2, null, "relative path")
     MusicCard(modifier = Modifier.fillMaxSize(), music)
 }

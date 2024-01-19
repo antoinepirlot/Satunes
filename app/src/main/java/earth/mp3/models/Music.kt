@@ -8,6 +8,7 @@ data class Music(
     val name: String,
     val duration: Int,
     val size: Int,
-    val uri: Uri?
+    val uri: Uri?,
+    val relativePath: String
 )
 

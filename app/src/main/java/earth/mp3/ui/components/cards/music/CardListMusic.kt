@@ -26,7 +26,7 @@ fun CardMusicList(
 @Composable
 @Preview
 fun CardMusicListPreview() {
-    val music = Music(1, "Il avait les mots", 2, 2, null)
+    val music = Music(1, "Il avait les mots", 2, 2, null, "relative path")
     val musicList = listOf<Music>(music)
     CardMusicList(modifier = Modifier.fillMaxSize(), musicList = musicList)
 }

@@ -5,10 +5,12 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import earth.mp3.models.Folder
 
 @Composable
 fun CardFolderList(
     modifier: Modifier = Modifier,
+    folderMap: Map<String, Folder>
 ) {
     val folderList = listOf(
         "folder",
@@ -26,5 +28,5 @@ fun CardFolderList(
 @Composable
 @Preview
 fun CardFolderListPreview() {
-    CardFolderList()
+    CardFolderList(folderMap = mutableMapOf())
 }

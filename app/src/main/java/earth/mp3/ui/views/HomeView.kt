@@ -24,6 +24,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.media3.common.util.UnstableApi
 import earth.mp3.R
 import earth.mp3.models.Music
+import earth.mp3.models.getFolderList
 import earth.mp3.ui.components.cards.artists.CardArtistList
 import earth.mp3.ui.components.cards.folder.CardFolderList
 import earth.mp3.ui.components.cards.menu.CardMenuList
@@ -82,7 +83,8 @@ fun HomeView(
                 tracksSelected = tracksSelected
             )
             if (folderSelected.value) {
-                CardFolderList(modifier = modifier)
+                val folderMap = rememberSaveable { getFolderList(musicList = musicList) }
+                CardFolderList(modifier = modifier, folderMap = folderMap)
             } else if (artistsSelected.value) {
                 CardArtistList(modifier = modifier)
             } else if (tracksSelected.value) {

@@ -83,7 +83,6 @@ fun HomeView(
                 artistsSelected = artistsSelected,
                 tracksSelected = tracksSelected
             )
-            //TODO Show folder artists and tracks views from whats selected
             if (folderSelected.value) {
                 CardFolderList(modifier = modifier)
             } else if (artistsSelected.value) {

@@ -26,7 +26,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.media3.common.util.UnstableApi
 import earth.mp3.R
 import earth.mp3.data.Music
+import earth.mp3.ui.components.cards.artists.CardArtistList
+import earth.mp3.ui.components.cards.folder.CardFolderList
 import earth.mp3.ui.components.cards.menu.CardMenuList
+import earth.mp3.ui.components.cards.tracks.CardTrackList
 
 /**
  * Show The Home App Bar and content inside
@@ -82,11 +85,11 @@ fun HomeView(
             )
             //TODO Show folder artists and tracks views from whats selected
             if (folderSelected.value) {
-                FolderView(modifier = modifier)
+                CardFolderList(modifier = modifier)
             } else if (artistsSelected.value) {
-                ArtistsView(modifier = modifier)
+                CardArtistList(modifier = modifier)
             } else if (tracksSelected.value) {
-                TracksView(modifier = modifier)
+                CardTrackList(modifier = modifier)
             } else {
                 throw IllegalStateException(
                     "No tab selected (folder, artists, tracks), that could not happen"

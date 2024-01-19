@@ -81,6 +81,17 @@ fun HomeView(
                 tracksSelected = tracksSelected
             )
             //TODO Show folder artists and tracks views from whats selected
+            if (folderSelected.value) {
+                FolderView(modifier = modifier)
+            } else if (artistsSelected.value) {
+                //TODO show artists view
+            } else if (tracksSelected.value) {
+                //TODO show tracks view
+            } else {
+                throw IllegalStateException(
+                    "No tab selected (folder, artists, tracks), that could not happen"
+                )
+            }
         }
     }
 }

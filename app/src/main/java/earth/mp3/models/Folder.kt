@@ -72,13 +72,9 @@ class Folder {
             subFolderNameList.removeAt(0)
         }
         subFolderNameList.forEach { folderName ->
-            try {
-                val subFolder = Folder(folderName)
-                parentFolder.addSubFolder(subFolder)
-                parentFolder = subFolder
-            } catch (_: IllegalArgumentException) {
-
-            }
+            val subFolder = Folder(folderName)
+            parentFolder.addSubFolder(subFolder)
+            parentFolder = subFolder
         }
     }
 

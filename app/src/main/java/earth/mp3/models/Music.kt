@@ -48,7 +48,9 @@ fun loadMusics(context: Context, musicList: MutableList<Music>) {
             // Stores column values and the contentUri in a local object
             // that represents the media file.
             val fileUri = Uri.Builder().appendPath("${uri.path}/${name}").build()
-            musicList.add(Music(id, name, duration, size, fileUri, relativePath))
+            val music = Music(id, name, duration, size, fileUri, relativePath)
+            musicList.add(music)
+            createSubFolders(relativePath, Folder())
         }
     }
 }

@@ -31,17 +31,35 @@ fun getFolderList(musicList: List<Music>): MutableMap<String, Folder> {
  * @param folder : the folder to add sub-folders
  *
  */
-private fun createSubFolders(relativePath: String, folder: Folder) {
+fun createSubFolders(relativePath: String, folder: Folder) {
     //TODO check if it works
     if (relativePath.isBlank()) {
         return
     }
-    val splitedPath = relativePath.split("/")
-    val folderName = splitedPath[0]
-    val reducedPath = relativePath.removePrefix("/$folderName")
-    folder.name = folderName
-    if (reducedPath.isNotBlank()) {
-        folder.subFolder = Folder()
-        createSubFolders(reducedPath, folder.subFolder!!)
+    val folderNameList = relativePath.split("/")
+    folderNameList.forEach { folderName ->
+        val subFolder = Folder()
+        setFolderName(folderName = folderName, folder = subFolder)
+        folder.subFolder = subFolder
     }
+
+
+//    if (relativePath.isBlank()) {
+//        return
+//    }
+//    val splitedPath = relativePath.split("/")
+//    val folderName = splitedPath[0]
+//    val reducedPath = relativePath.removePrefix("/$folderName")
+//    folder.name = folderName
+//    if (reducedPath.isNotBlank()) {
+//        folder.subFolder = Folder()
+//        createSubFolders(reducedPath, folder.subFolder!!)
+//    }
+}
+
+private fun setFolderName(folderName: String, folder: Folder) {
+    if (folderName.isBlank()) {
+        throw IllegalArgumentException("The folder name is blank")
+    }
+    folder.name = folderName
 }

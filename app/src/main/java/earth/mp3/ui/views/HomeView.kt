@@ -2,6 +2,7 @@ package earth.mp3.ui.views
 
 import androidx.annotation.OptIn
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
@@ -21,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.media3.common.util.UnstableApi
 import earth.mp3.R
 import earth.mp3.models.Music
@@ -96,6 +98,12 @@ fun HomeView(
             }
         }
     }
+}
+
+@Composable
+@Preview
+fun HomeViewPreview() {
+    HomeView(modifier = Modifier.fillMaxSize(), musicList = listOf())
 }
 
 //if (musicList.isEmpty()) {

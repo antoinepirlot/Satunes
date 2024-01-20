@@ -58,7 +58,20 @@ fun loadMusics(
             rootFolder.createSubFolders(splitedPath.toMutableList())
             rootFolder.getSubFolder(splitedPath.toMutableList())!!.addMusic(music)
 
-            rootFolderList.add(rootFolder)
+            if (rootFolderList.isEmpty()) {
+                rootFolderList.add(rootFolder)
+            } else {
+                var isNotPresent = true
+                rootFolderList.forEach { rootFolderOfList ->
+                    if (rootFolderOfList.getName() == rootFolder.getName()) {
+                        isNotPresent = false
+                        return@forEach
+                    }
+                }
+                if (isNotPresent) {
+                    rootFolderList.add(rootFolder)
+                }
+            }
             musicList.add(music)
         }
     }

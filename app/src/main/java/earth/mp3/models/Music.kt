@@ -14,7 +14,11 @@ data class Music(
     val relativePath: String
 )
 
-fun loadMusics(context: Context, musicList: MutableList<Music>) {
+fun loadMusics(
+    context: Context,
+    musicList: MutableList<Music>,
+    folderList: MutableMap<String, Folder>
+) {
     val uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
     val projection = arrayOf(
         MediaStore.Audio.Media._ID,
@@ -49,8 +53,14 @@ fun loadMusics(context: Context, musicList: MutableList<Music>) {
             // that represents the media file.
             val fileUri = Uri.Builder().appendPath("${uri.path}/${name}").build()
             val music = Music(id, name, duration, size, fileUri, relativePath)
+
+            if (!folderList.containsKey(relativePath)) {
+                val folder = Folder()
+                createSubFolders(relativePath = relativePath, folder = folder)
+                folderList[relativePath] = folder
+                folder.musicList.add(music)
+            }
             musicList.add(music)
-            createSubFolders(relativePath, Folder())
         }
     }
 }

@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import earth.mp3.models.Folder
 import earth.mp3.models.Music
 import earth.mp3.models.loadMusics
 import earth.mp3.ui.theme.MP3Theme
@@ -29,7 +30,14 @@ class MainActivity : ComponentActivity() {
                 val musicList = remember {
                     mutableListOf<Music>()
                 }
-                loadMusics(context = LocalContext.current, musicList = musicList)
+
+                val folderList = remember { mutableMapOf<String, Folder>() }
+                loadMusics(
+                    context = LocalContext.current,
+                    musicList = musicList,
+                    folderList = folderList
+                )
+
                 MP3Theme {
                     Surface(
                         modifier = Modifier.fillMaxSize(),

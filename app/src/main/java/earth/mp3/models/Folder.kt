@@ -100,7 +100,12 @@ class Folder {
             return this
         }
         splitedPath.remove(splitedPath[0])
-        return getSubFolder(splitedPath)
+        this.subFolderList.forEach { subFolder: Folder ->
+            if (subFolder.name == splitedPath[0]) {
+                return subFolder.getSubFolder(splitedPath)
+            }
+        }
+        return null
     }
 }
 //if (relativePath.isBlank()) {

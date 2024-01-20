@@ -25,10 +25,13 @@ fun getFolderList(musicList: List<Music>): MutableMap<String, Folder> {
 }
 
 /**
- * Create subfolders into subfolders if exists and remove /Music/ because all have it
+ * Add sub-folders to folder if the relative path is not empty
+ * @param relativePath : the relative path that contains the relative path to the directory
+ *                       where is the music stored
+ * @param folder : the folder to add sub-folders
  *
  */
-private fun createSubfolders(relativePath: String, folder: Folder) {
+private fun createSubFolders(relativePath: String, folder: Folder) {
     //TODO check if it works
     if (relativePath.isBlank()) {
         return
@@ -39,6 +42,6 @@ private fun createSubfolders(relativePath: String, folder: Folder) {
     folder.name = folderName
     if (reducedPath.isNotBlank()) {
         folder.subFolder = Folder()
-        createSubfolders(reducedPath, folder.subFolder!!)
+        createSubFolders(reducedPath, folder.subFolder!!)
     }
 }

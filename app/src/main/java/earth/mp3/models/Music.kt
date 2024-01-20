@@ -53,11 +53,11 @@ fun loadMusics(
             // that represents the media file.
             val fileUri = Uri.Builder().appendPath("${uri.path}/${name}").build()
             val music = Music(id, name, duration, size, fileUri, relativePath)
+            val folder = Folder(relativePath.split("/")[0])
 
-            if (!folderList.containsKey(relativePath)) {
-                val folder = Folder()
+            if (!folderList.containsKey(folder.name)) {
                 createSubFolders(relativePath = relativePath, folder = folder)
-                folderList[relativePath] = folder
+                folderList[folder.name] = folder //Root folder's name is used to identify in the map
                 folder.musicList.add(music)
             }
             musicList.add(music)

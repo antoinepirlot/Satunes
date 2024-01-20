@@ -18,6 +18,7 @@ fun CardFolderList(
         modifier = modifier
     ) {
         itemsIndexed(folderList) { _: Int, folder: Folder ->
+            //TODO fix the multiple Music Folder showed, there's should only be one Music
             CardFolder(folderName = folder.name)
         }
     }

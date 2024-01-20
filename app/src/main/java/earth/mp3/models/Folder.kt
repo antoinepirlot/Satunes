@@ -24,6 +24,14 @@ fun getFolderList(musicList: List<Music>): MutableMap<String, Folder> {
     return folderMap
 }
 
+fun <T, U> mapToList(map: Map<U, T>): List<T> {
+    val listToReturn = mutableListOf<T>()
+    map.map { entry ->
+        listToReturn.add(entry.value)
+    }
+    return listToReturn
+}
+
 /**
  * Add sub-folders to folder if the relative path is not empty
  * @param relativePath : the relative path that contains the relative path to the directory

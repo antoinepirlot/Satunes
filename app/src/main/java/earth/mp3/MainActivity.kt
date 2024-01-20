@@ -43,7 +43,11 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier.fillMaxSize(),
                         color = MaterialTheme.colorScheme.background
                     ) {
-                        HomeView(modifier = Modifier, musicList = musicList)
+                        HomeView(
+                            modifier = Modifier,
+                            musicList = musicList,
+                            folderMap = folderList
+                        )
                     }
                 }
             }

@@ -6,21 +6,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import earth.mp3.models.Folder
+import earth.mp3.models.mapToList
 
 @Composable
 fun CardFolderList(
     modifier: Modifier = Modifier,
     folderMap: Map<String, Folder>
 ) {
-    val folderList = listOf(
-        "folder",
-        "test"
-    )
+    val folderList = mapToList(folderMap)
     LazyColumn(
         modifier = modifier
     ) {
-        itemsIndexed(folderList) { _: Int, folderName: String ->
-            CardFolder(folderName = folderName)
+        itemsIndexed(folderList) { _: Int, folder: Folder ->
+            CardFolder(folderName = folder.name)
         }
     }
 }

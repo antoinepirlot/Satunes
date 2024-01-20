@@ -68,7 +68,7 @@ class Folder {
         //TODO A folder have multiple sub-folders, check to use one instance per folder
         //TODO check if it works
         var parentFolder = this
-        if (subFolderNameList.get(0) == this.name) {
+        if (subFolderNameList[0] == this.name) {
             subFolderNameList.removeAt(0)
         }
         subFolderNameList.forEach { folderName ->

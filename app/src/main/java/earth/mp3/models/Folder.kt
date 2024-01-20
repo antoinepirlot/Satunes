@@ -93,14 +93,15 @@ class Folder {
      */
     fun getSubFolder(splitedPath: MutableList<String>): Folder? {
         if (splitedPath.isEmpty()) {
-            return null
+            //The forEach call this function is the folder match with the splited path
+            return this
         }
         if (splitedPath.size == 1 && this.name == splitedPath.get(0)) {
             return this
         }
-        splitedPath.remove(splitedPath[0])
         this.subFolderList.forEach { subFolder: Folder ->
             if (subFolder.name == splitedPath[0]) {
+                splitedPath.remove(splitedPath[0])
                 return subFolder.getSubFolder(splitedPath)
             }
         }

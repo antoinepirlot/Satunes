@@ -52,7 +52,9 @@ fun loadMusics(
             // that represents the media file.
             val fileUri = Uri.Builder().appendPath("${uri.path}/${name}").build()
             val music = Music(id, name, duration, size, fileUri, relativePath)
+            musicList.add(music)
 
+            //Load folders
             val splitedPath = relativePath.split("/").toMutableList()
             if (splitedPath.last().isBlank()) {
                 //remove the blank folder
@@ -66,12 +68,11 @@ fun loadMusics(
             }
             if (rootFolder == null) {
                 rootFolder = Folder(splitedPath[0])
+                rootFolderList.add(rootFolder!!)
             }
             splitedPath.removeAt(0)
             rootFolder!!.createSubFolders(splitedPath.toMutableList())
             rootFolder!!.getSubFolder(splitedPath.toMutableList())!!.addMusic(music)
-            rootFolderList.add(rootFolder!!)
-            musicList.add(music)
         }
     }
 }

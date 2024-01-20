@@ -28,12 +28,12 @@ class MainActivity : ComponentActivity() {
         if (!isAudioDenied()) {
             setContent {
                 val musicList = remember { mutableListOf<Music>() }
-                val folderList = remember { mutableListOf<Folder>() }
+                val rootFolderList = remember { mutableListOf<Folder>() }
 
                 loadMusics(
                     context = LocalContext.current,
                     musicList = musicList,
-                    folderList = folderList
+                    rootFolderList = rootFolderList
                 )
 
                 MP3Theme {
@@ -44,7 +44,7 @@ class MainActivity : ComponentActivity() {
                         HomeView(
                             modifier = Modifier,
                             musicList = musicList,
-                            folderList = folderList
+                            folderList = rootFolderList
                         )
                     }
                 }

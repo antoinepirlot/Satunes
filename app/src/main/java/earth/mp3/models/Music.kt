@@ -17,7 +17,7 @@ data class Music(
 fun loadMusics(
     context: Context,
     musicList: MutableList<Music>,
-    folderList: MutableList<Folder>
+    rootFolderList: MutableList<Folder>
 ) {
     val uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
     val projection = arrayOf(
@@ -58,7 +58,7 @@ fun loadMusics(
             rootFolder.createSubFolders(splitedPath)
             rootFolder.addMusic(music)
 
-            folderList.add(rootFolder)
+            rootFolderList.add(rootFolder)
             musicList.add(music)
         }
     }

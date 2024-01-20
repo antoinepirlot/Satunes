@@ -5,21 +5,21 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import earth.mp3.models.Folder
+import earth.mp3.models.FolderData
 import earth.mp3.models.mapToList
 
 @Composable
 fun CardFolderList(
     modifier: Modifier = Modifier,
-    folderMap: Map<String, Folder>
+    folderDataMap: Map<String, FolderData>
 ) {
-    val folderList = mapToList(folderMap)
+    val folderList = mapToList(folderDataMap)
     LazyColumn(
         modifier = modifier
     ) {
-        itemsIndexed(folderList) { _: Int, folder: Folder ->
+        itemsIndexed(folderList) { _: Int, folderData: FolderData ->
             //TODO fix the multiple Music Folder showed, there's should only be one Music
-            CardFolder(folderName = folder.name)
+            CardFolder(folderName = folderData.name)
         }
     }
 }
@@ -27,5 +27,5 @@ fun CardFolderList(
 @Composable
 @Preview
 fun CardFolderListPreview() {
-    CardFolderList(folderMap = mutableMapOf())
+    CardFolderList(folderDataMap = mutableMapOf())
 }

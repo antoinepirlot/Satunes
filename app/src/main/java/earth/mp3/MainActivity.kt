@@ -15,7 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import earth.mp3.models.Folder
+import earth.mp3.models.FolderData
 import earth.mp3.models.Music
 import earth.mp3.models.loadMusics
 import earth.mp3.ui.theme.MP3Theme
@@ -31,11 +31,11 @@ class MainActivity : ComponentActivity() {
                     mutableListOf<Music>()
                 }
 
-                val folderList = remember { mutableMapOf<String, Folder>() }
+                val folderDataList = remember { mutableMapOf<String, FolderData>() }
                 loadMusics(
                     context = LocalContext.current,
                     musicList = musicList,
-                    folderList = folderList
+                    folderDataList = folderDataList
                 )
 
                 MP3Theme {
@@ -46,7 +46,7 @@ class MainActivity : ComponentActivity() {
                         HomeView(
                             modifier = Modifier,
                             musicList = musicList,
-                            folderMap = folderList
+                            folderDataMap = folderDataList
                         )
                     }
                 }

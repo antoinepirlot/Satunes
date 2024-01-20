@@ -60,14 +60,17 @@ class Folder {
     /**
      * Add sub-folders to folder if the relative path is not empty
      * @param relativePath : the relative path that contains the relative path to the directory
-     *                       where is the music stored
+     *                       where is the music stored.
      * @param folder : the folder to add sub-folders
      *
      */
-    fun createSubFolders(subFolderNameList: List<String>) {
+    fun createSubFolders(subFolderNameList: MutableList<String>) {
         //TODO A folder have multiple sub-folders, check to use one instance per folder
         //TODO check if it works
         var parentFolder = this
+        if (subFolderNameList.get(0) == this.name) {
+            subFolderNameList.removeAt(0)
+        }
         subFolderNameList.forEach { folderName ->
             try {
                 val subFolder = Folder(folderName)
@@ -87,6 +90,9 @@ class Folder {
      * @return the right Folder matching the last subFolderName of the list
      */
     fun getSubFolder(splitedPath: MutableList<String>): Folder? {
+        if (splitedPath.last() == "") {
+            splitedPath.removeAt(splitedPath.lastIndex)
+        }
         if (splitedPath.isEmpty()) {
             return null
         }

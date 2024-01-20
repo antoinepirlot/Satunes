@@ -54,6 +54,10 @@ fun loadMusics(
             val music = Music(id, name, duration, size, fileUri, relativePath)
 
             val splitedPath = relativePath.split("/").toMutableList()
+            if (splitedPath.last().isBlank()) {
+                //remove the blank folder
+                splitedPath.removeAt(splitedPath.lastIndex)
+            }
             var rootFolder: Folder? = null
             rootFolderList.forEach { folder: Folder ->
                 if (folder.getName() == splitedPath[0]) {

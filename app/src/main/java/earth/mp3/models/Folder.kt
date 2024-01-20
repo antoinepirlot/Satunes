@@ -92,9 +92,6 @@ class Folder {
      * @return the right Folder matching the last subFolderName of the list
      */
     fun getSubFolder(splitedPath: MutableList<String>): Folder? {
-        if (splitedPath.last() == "") {
-            splitedPath.removeAt(splitedPath.lastIndex)
-        }
         if (splitedPath.isEmpty()) {
             return null
         }

@@ -55,8 +55,8 @@ fun loadMusics(
 
             val splitedPath = relativePath.split("/")
             val rootFolder = Folder(splitedPath[0])
-            rootFolder.createSubFolders(splitedPath)
-            rootFolder.addMusic(music)
+            rootFolder.createSubFolders(splitedPath.toMutableList())
+            rootFolder.getSubFolder(splitedPath.toMutableList())!!.addMusic(music)
 
             rootFolderList.add(rootFolder)
             musicList.add(music)

@@ -64,27 +64,37 @@ class Folder {
      * @param folder : the folder to add sub-folders
      *
      */
-    fun createSubFolders(relativePath: String) {
+    fun createSubFolders(subFolderNameList: List<String>) {
         //TODO A folder have multiple sub-folders, check to use one instance per folder
         //TODO check if it works
-        if (relativePath.isBlank()) {
-            return
-        }
-        val folderNameList = relativePath.split("/")
         var parentFolder = this
-        folderNameList.forEach { folderName ->
-            if (folderName != folderNameList[0]) {
-                try {
-                    val subFolder = Folder()
-                    subFolder.setName(folderName)
-                    parentFolder.addSubFolder(subFolder)
-                    parentFolder = subFolder
-                } catch (_: IllegalArgumentException) {
+        subFolderNameList.forEach { folderName ->
+            try {
+                val subFolder = Folder(folderName)
+                parentFolder.addSubFolder(subFolder)
+                parentFolder = subFolder
+            } catch (_: IllegalArgumentException) {
 
-                }
             }
         }
+    }
 
+    /**
+     * Find the right sub-folder and return when it's found, otherwise null
+     * @param splitedPath the list of all sub-folders name
+     * /!\ The list reference won't change
+     *
+     * @return the right Folder matching the last subFolderName of the list
+     */
+    fun getSubFolder(splitedPath: MutableList<String>): Folder? {
+        if (splitedPath.isEmpty()) {
+            return null
+        }
+        if (splitedPath.size == 1 && this.name == splitedPath.get(0)) {
+            return this
+        }
+        splitedPath.remove(splitedPath[0])
+        return getSubFolder(splitedPath)
     }
 }
 //if (relativePath.isBlank()) {

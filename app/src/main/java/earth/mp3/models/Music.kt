@@ -53,25 +53,20 @@ fun loadMusics(
             val fileUri = Uri.Builder().appendPath("${uri.path}/${name}").build()
             val music = Music(id, name, duration, size, fileUri, relativePath)
 
-            val splitedPath = relativePath.split("/")
-            val rootFolder = Folder(splitedPath[0])
-            rootFolder.createSubFolders(splitedPath.toMutableList())
-            rootFolder.getSubFolder(splitedPath.toMutableList())!!.addMusic(music)
-
-            if (rootFolderList.isEmpty()) {
-                rootFolderList.add(rootFolder)
-            } else {
-                var isNotPresent = true
-                rootFolderList.forEach { rootFolderOfList ->
-                    if (rootFolderOfList.getName() == rootFolder.getName()) {
-                        isNotPresent = false
-                        return@forEach
-                    }
-                }
-                if (isNotPresent) {
-                    rootFolderList.add(rootFolder)
+            val splitedPath = relativePath.split("/").toMutableList()
+            var rootFolder: Folder? = null
+            rootFolderList.forEach { folder: Folder ->
+                if (folder.getName() == splitedPath[0]) {
+                    rootFolder = folder
                 }
             }
+            if (rootFolder == null) {
+                rootFolder = Folder(splitedPath[0])
+            }
+            splitedPath.removeAt(0)
+            rootFolder!!.createSubFolders(splitedPath.toMutableList())
+            rootFolder!!.getSubFolder(splitedPath.toMutableList())!!.addMusic(music)
+            rootFolderList.add(rootFolder!!)
             musicList.add(music)
         }
     }

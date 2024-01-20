@@ -58,22 +58,28 @@ class Folder {
     }
 
     /**
-     * Add sub-folders to folder if the relative path is not empty
-     * @param relativePath : the relative path that contains the relative path to the directory
-     *                       where is the music stored.
-     * @param folder : the folder to add sub-folders
+     * Add sub folders in chain to this folder. For example the list is; "Android", "music", "favorites"
+     * The rresult will be Android folder contains music folder and music folder contains favorite folder.
+     * /!\ It's NOT this folder that contains Android, music and favorite folder side by side.
+     * @param subFolderNameChainList : the relative path that contains the sub folders names
+     *                                 It's a path not all the subfolder of this folder
      *
      */
-    fun createSubFolders(subFolderNameList: MutableList<String>) {
+    fun createSubFolders(subFolderNameChainList: MutableList<String>) {
         //TODO A folder have multiple sub-folders, check to use one instance per folder
         //TODO check if it works
         var parentFolder = this
-        if (subFolderNameList[0] == this.name) {
-            subFolderNameList.removeAt(0)
-        }
-        subFolderNameList.forEach { folderName ->
-            val subFolder = Folder(folderName)
-            parentFolder.addSubFolder(subFolder)
+        subFolderNameChainList.forEach { folderName ->
+            var subFolder: Folder? = null
+            for (folder in parentFolder.subFolderList) {
+                if (folder.name == folderName) {
+                    subFolder = folder
+                }
+            }
+            if (subFolder == null) {
+                subFolder = Folder(folderName)
+                parentFolder.addSubFolder(subFolder)
+            }
             parentFolder = subFolder
         }
     }

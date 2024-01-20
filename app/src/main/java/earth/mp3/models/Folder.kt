@@ -107,6 +107,26 @@ class Folder {
         }
         return null
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Folder
+
+        if (name != other.name) return false
+        if (parentFolder != other.parentFolder) return false
+        if (subFolderList != other.subFolderList) return false
+        return musicList == other.musicList
+    }
+
+    override fun hashCode(): Int {
+        var result = name.hashCode()
+        result = 31 * result + (parentFolder?.hashCode() ?: 0)
+        result = 31 * result + subFolderList.hashCode()
+        result = 31 * result + musicList.hashCode()
+        return result
+    }
 }
 //if (relativePath.isBlank()) {
 //    return

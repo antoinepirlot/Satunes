@@ -6,6 +6,14 @@ class Folder {
     private val subFolderList: MutableList<Folder> = mutableListOf()
     private val musicList: MutableList<Music> = mutableListOf()
 
+    constructor() {
+
+    }
+
+    constructor(name: String) {
+        this.setName(name)
+    }
+
     fun setName(name: String) {
         if (name.isBlank()) {
             return
@@ -56,14 +64,14 @@ class Folder {
      * @param folder : the folder to add sub-folders
      *
      */
-    fun createSubFolders(relativePath: String, folder: Folder) {
+    fun createSubFolders(relativePath: String) {
         //TODO A folder have multiple sub-folders, check to use one instance per folder
         //TODO check if it works
         if (relativePath.isBlank()) {
             return
         }
         val folderNameList = relativePath.split("/")
-        var parentFolder = folder
+        var parentFolder = this
         folderNameList.forEach { folderName ->
             if (folderName != folderNameList[0]) {
                 try {

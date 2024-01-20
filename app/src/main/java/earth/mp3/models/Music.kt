@@ -17,7 +17,7 @@ data class Music(
 fun loadMusics(
     context: Context,
     musicList: MutableList<Music>,
-    folderDataList: MutableMap<String, FolderData>
+    folderList: MutableList<Folder>
 ) {
     val uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
     val projection = arrayOf(
@@ -40,7 +40,6 @@ fun loadMusics(
         val sizeColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE)
         val relativePathColumn =
             cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.RELATIVE_PATH)
-
         while (cursor.moveToNext()) {
             // Get values of columns for a given video.
             val id = cursor.getLong(idColumn)
@@ -53,14 +52,13 @@ fun loadMusics(
             // that represents the media file.
             val fileUri = Uri.Builder().appendPath("${uri.path}/${name}").build()
             val music = Music(id, name, duration, size, fileUri, relativePath)
-            val folderData = FolderData(relativePath.split("/")[0])
 
-            if (!folderDataList.containsKey(folderData.name)) {
-                createSubFolders(relativePath = relativePath, folderData = folderData)
-                folderDataList[folderData.name] =
-                    folderData //Root folder's name is used to identify in the map
-                folderData.musicList.add(music)
-            }
+            val splitedPath = relativePath.split("/")
+            val rootFolder = Folder(splitedPath[0])
+            rootFolder.createSubFolders(relativePath)
+            rootFolder.addMusic(music)
+
+            folderList.add(rootFolder)
             musicList.add(music)
         }
     }

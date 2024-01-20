@@ -25,7 +25,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.media3.common.util.UnstableApi
 import earth.mp3.R
-import earth.mp3.models.FolderData
+import earth.mp3.models.Folder
 import earth.mp3.models.Music
 import earth.mp3.ui.components.cards.artists.CardArtistList
 import earth.mp3.ui.components.cards.folder.CardFolderList
@@ -41,7 +41,7 @@ import earth.mp3.ui.components.cards.tracks.CardTrackList
 fun HomeView(
     modifier: Modifier,
     musicList: List<Music>,
-    folderDataMap: Map<String, FolderData>
+    folderList: List<Folder>
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
 
@@ -86,7 +86,7 @@ fun HomeView(
                 tracksSelected = tracksSelected
             )
             if (folderSelected.value) {
-                CardFolderList(modifier = modifier, folderDataMap = folderDataMap)
+                CardFolderList(modifier = modifier, folderList = folderList)
             } else if (artistsSelected.value) {
                 CardArtistList(modifier = modifier)
             } else if (tracksSelected.value) {
@@ -106,7 +106,7 @@ fun HomeViewPreview() {
     HomeView(
         modifier = Modifier.fillMaxSize(),
         musicList = listOf(),
-        folderDataMap = mapOf<String, FolderData>()
+        folderList = listOf()
     )
 }
 

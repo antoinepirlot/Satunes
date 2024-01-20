@@ -37,13 +37,17 @@ fun createSubFolders(relativePath: String, folder: Folder) {
         return
     }
     val folderNameList = relativePath.split("/")
+    var parentFolder = folder
     folderNameList.forEach { folderName ->
-        try {
-            val subFolder = Folder()
-            setFolderName(folderName = folderName, folder = subFolder)
-            folder.subFolder = subFolder
-        } catch (_: IllegalArgumentException) {
+        if (folderName != folderNameList[0]) {
+            try {
+                val subFolder = Folder()
+                setFolderName(folderName = folderName, folder = subFolder)
+                parentFolder.subFolder = subFolder
+                parentFolder = subFolder
+            } catch (_: IllegalArgumentException) {
 
+            }
         }
     }
 

@@ -36,8 +36,8 @@ private fun createSubfolders(relativePath: String, folder: Folder) {
     val splitedPath = relativePath.split("/")
     val folderName = splitedPath[0]
     val reducedPath = relativePath.removePrefix("/$folderName")
-    folder!!.name = folderName
-    if (!reducedPath.isBlank()) {
+    folder.name = folderName
+    if (reducedPath.isNotBlank()) {
         folder.subFolder = Folder()
         createSubfolders(reducedPath, folder.subFolder!!)
     }

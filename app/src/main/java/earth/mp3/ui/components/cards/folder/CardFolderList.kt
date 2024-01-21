@@ -13,7 +13,7 @@ import earth.mp3.models.Folder
 fun CardFolderList(
     modifier: Modifier = Modifier,
     folderList: MutableList<Folder>,
-    onClick: (folder: Folder) -> Unit
+    updateFolderList: (folder: Folder) -> Unit
 ) {
     val lazyState = rememberLazyListState()
     LazyColumn(
@@ -21,7 +21,7 @@ fun CardFolderList(
         state = lazyState
     ) {
         items(folderList) { folder ->
-            CardFolder(folderName = folder.getName(), onClick = { onClick(folder) })
+            CardFolder(folderName = folder.getName(), onClick = { updateFolderList(folder) })
         }
     }
 }
@@ -29,5 +29,5 @@ fun CardFolderList(
 @Composable
 @Preview
 fun CardFolderListPreview() {
-    CardFolderList(folderList = mutableListOf(), onClick = {})
+    CardFolderList(folderList = mutableListOf(), updateFolderList = {})
 }

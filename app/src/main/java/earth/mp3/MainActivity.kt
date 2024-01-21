@@ -27,7 +27,7 @@ class MainActivity : ComponentActivity() {
         requestPermission()
         if (!isAudioDenied()) {
             setContent {
-                val musicList = remember { mutableListOf<Music>() }
+                val musicList = remember { mutableStateListOf<Music>() }
                 val rootFolderList = remember { mutableStateListOf<Folder>() }
 
                 Music.loadMusics(

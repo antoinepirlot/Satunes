@@ -5,48 +5,11 @@ import android.net.Uri
 import android.provider.MediaStore
 
 class Music(id: Long, name: String, duration: Int, size: Int, uri: Uri?, relativePath: String) {
-    private val id: Long
-        get() {
-            return this.id
-        }
-    var name: String
-        get() {
-            return this.name
-        }
-        set(name: String) {
-            this.name = name
-        }
-    var duration: Int
-        get() {
-            return this.duration
-        }
-        set(duration: Int) {
-            this.duration = duration
-        }
-    var size: Int
-        get() {
-            return this.size
-        }
-        set(size: Int) {
-            this.size = size
-        }
-    var uri: Uri?
-        get() {
-            return this.uri
-        }
-        set(uri: Uri?) {
-            if (uri == null) {
-                return
-            }
-            this.uri = uri
-        }
-    var relativePath: String
-        get() {
-            return this.relativePath
-        }
-        set(name: String) {
-            this.name = name
-        }
+    private val id: Long = id
+    var name: String = name
+    var duration: Int = duration
+    var size: Int = size
+    var uri: Uri? = uri
 
     companion object {
         fun loadMusics(

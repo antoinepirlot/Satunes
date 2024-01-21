@@ -1,26 +1,24 @@
 package earth.mp3.ui.components.cards.tracks
 
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import earth.mp3.models.Music
 
 @Composable
-fun CardTrackList(
-    modifier: Modifier = Modifier
+fun CardMusicList(
+    modifier: Modifier = Modifier,
+    musicList: List<Music>
 ) {
-    val tracksList = listOf(
-        "Name of track 1",
-        "Ilana Un monde imparfait"
-    )
     LazyColumn(
         modifier = modifier
     ) {
-        itemsIndexed(tracksList) { _: Int, trackName: String ->
-            CardTrack(
+        items(musicList) { music: Music ->
+            CardMusic(
                 modifier = modifier,
-                trackName = trackName,
+                music = music,
             )
         }
     }
@@ -29,5 +27,5 @@ fun CardTrackList(
 @Composable
 @Preview
 fun CardTrackListPreview() {
-    CardTrackList()
+    CardMusicList(musicList = listOf())
 }

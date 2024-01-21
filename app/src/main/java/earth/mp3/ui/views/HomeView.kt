@@ -32,7 +32,7 @@ import earth.mp3.models.Music
 import earth.mp3.ui.components.cards.artists.CardArtistList
 import earth.mp3.ui.components.cards.folder.CardFolderList
 import earth.mp3.ui.components.cards.menu.CardMenuList
-import earth.mp3.ui.components.cards.tracks.CardTrackList
+import earth.mp3.ui.components.cards.tracks.CardMusicList
 
 /**
  * Show The Home App Bar and content inside
@@ -81,7 +81,6 @@ fun HomeView(
             val folderSelected = rememberSaveable { mutableStateOf(true) } // default section
             val artistsSelected = rememberSaveable { mutableStateOf(false) }
             val tracksSelected = rememberSaveable { mutableStateOf(false) }
-            //TODO find another solution without using mutable state of list (issue with lazy column)
             val folderListToShow = remember { mutableStateListOf<Folder>() }
 
 
@@ -108,7 +107,7 @@ fun HomeView(
             } else if (artistsSelected.value) {
                 CardArtistList(modifier = modifier)
             } else if (tracksSelected.value) {
-                CardTrackList(modifier = modifier)
+                CardMusicList(modifier = modifier, musicList = musicList)
             } else {
                 throw IllegalStateException(
                     "No tab selected (folder, artists, tracks), that could not happen"

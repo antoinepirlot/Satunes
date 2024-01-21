@@ -6,17 +6,18 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import earth.mp3.models.Music
 
 @Composable
-fun CardTrack(
+fun CardMusic(
     modifier: Modifier = Modifier,
-    trackName: String,
+    music: Music,
 ) {
     TextButton(
         modifier = modifier,
         onClick = { /*TODO*/ } //redirect to the folder's view
     ) {
-        Text(text = trackName)
+        Text(text = music.name)
     }
     Divider(modifier = modifier)
 }
@@ -24,5 +25,5 @@ fun CardTrack(
 @Composable
 @Preview
 fun CardTrackPreview() {
-    CardTrack(trackName = "trackName")
+    CardMusic(music = Music(0, "Music Name", 2, 5, null, "/Music"))
 }

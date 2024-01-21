@@ -1,8 +1,9 @@
 package earth.mp3.ui.components.cards.music
 
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -13,11 +14,13 @@ fun CardMusicList(
     modifier: Modifier,
     musicDataList: List<Music>
 ) {
-    LazyRow(
-        modifier = modifier
+    val lazyState = rememberLazyListState()
+    LazyColumn(
+        modifier = modifier,
+        state = lazyState
     ) {
         itemsIndexed(musicDataList) { index: Int, music: Music ->
-            MusicCard(modifier = modifier, music = music)
+            MusicCard(modifier = modifier, music = music, onClick = { /*TODO play music*/ })
         }
     }
 

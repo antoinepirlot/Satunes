@@ -16,7 +16,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -80,7 +82,8 @@ fun HomeView(
             val artistsSelected = rememberSaveable { mutableStateOf(false) }
             val tracksSelected = rememberSaveable { mutableStateOf(false) }
             //TODO find another solution without using mutable state of list (issue with lazy column)
-            val folderListToShow = rememberSaveable { mutableStateOf(folderList.toMutableList()) }
+            val folderListToShow = remember { mutableStateListOf<Folder>() }
+
 
             CardMenuList(
                 modifier = modifier,
@@ -88,18 +91,18 @@ fun HomeView(
                 artistsSelected = artistsSelected,
                 tracksSelected = tracksSelected,
                 resetFoldersToShow = {
-                    folderListToShow.value = folderList.toMutableList()
+                    folderListToShow.clear()
+                    for (folder in folderList) {
+                        folderListToShow.add(folder)
+                    }
                 }
             )
             if (folderSelected.value) {
                 CardFolderList(
                     modifier = modifier,
-                    folderList = folderListToShow.value,
-                    onClick = {
-                        val subFolders = it.getSubFolderList()
-                        if (subFolders != null) {
-                            folderListToShow.value = subFolders.toMutableList()
-                        }
+                    folderList = folderListToShow,
+                    updateFolderList = {
+                        loadSubFoldersTo(folderListToShow, it)
                     }
                 )
             } else if (artistsSelected.value) {
@@ -123,6 +126,17 @@ fun HomeViewPreview() {
         musicList = listOf(),
         folderList = listOf()
     )
+}
+
+fun loadSubFoldersTo(folderList: MutableList<Folder>, folder: Folder) {
+    folderList.clear()
+    val subFolderList = folder.getSubFolderList()
+    if (subFolderList != null) {
+        for (subFolder: Folder in subFolderList) {
+            folderList.add(subFolder)
+        }
+    }
+
 }
 
 //if (musicList.isEmpty()) {

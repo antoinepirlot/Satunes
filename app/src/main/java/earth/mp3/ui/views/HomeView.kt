@@ -86,7 +86,10 @@ fun HomeView(
                 modifier = modifier,
                 folderSelected = folderSelected,
                 artistsSelected = artistsSelected,
-                tracksSelected = tracksSelected
+                tracksSelected = tracksSelected,
+                resetFoldersToShow = {
+                    folderListToShow.value = folderList.toMutableList()
+                }
             )
             if (folderSelected.value) {
                 CardFolderList(

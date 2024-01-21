@@ -19,7 +19,8 @@ fun CardMenuList(
     modifier: Modifier,
     folderSelected: MutableState<Boolean>,
     artistsSelected: MutableState<Boolean>,
-    tracksSelected: MutableState<Boolean>
+    tracksSelected: MutableState<Boolean>,
+    resetFoldersToShow: () -> Unit
 ) {
     val menuTitleList = listOf(
         MenuTitle.FOLDER,
@@ -38,6 +39,7 @@ fun CardMenuList(
                         menuTitle = stringResource(id = R.string.folder),
                         selected = folderSelected.value
                     ) {
+                        resetFoldersToShow()
                         folderSelected.value = true
                         artistsSelected.value = false
                         tracksSelected.value = false
@@ -82,6 +84,7 @@ fun CardListMenuPreview() {
         modifier = Modifier.fillMaxSize(),
         folderSelected = folderSelected,
         artistsSelected = artistsSelected,
-        tracksSelected = tracksSelected
+        tracksSelected = tracksSelected,
+        resetFoldersToShow = {}
     )
 }

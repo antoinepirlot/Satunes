@@ -1,5 +1,6 @@
 package earth.mp3.ui.components.cards.folder
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.Divider
@@ -17,23 +18,21 @@ fun CardFolder(
     folderName: String,
     onClick: () -> Unit
 ) {
-    ListItem(
-        headlineContent = {
-            TextButton(
-                modifier = modifier,
-                onClick = onClick //redirect to the folder's view
-            ) {
-                Text(text = folderName)
-            }
-        },
-        leadingContent = {
-            Icon(
-                Icons.Filled.KeyboardArrowRight,
-                contentDescription = "Arrow Right"
+    Box(modifier = modifier) {
+        TextButton(onClick = onClick) {
+            ListItem(
+                headlineContent = {
+                    Text(text = folderName)
+                },
+                leadingContent = {
+                    Icon(
+                        Icons.Filled.KeyboardArrowRight,
+                        contentDescription = "Arrow Right"
+                    )
+                }
             )
         }
-    )
-
+    }
     Divider(modifier = modifier)
 }
 

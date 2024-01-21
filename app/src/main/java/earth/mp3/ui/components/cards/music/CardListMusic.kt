@@ -6,18 +6,18 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import earth.mp3.models.Music
+import earth.mp3.models.MusicData
 
 @Composable
 fun CardMusicList(
     modifier: Modifier,
-    musicList: List<Music>
+    musicDataList: List<MusicData>
 ) {
     LazyRow(
         modifier = modifier
     ) {
-        itemsIndexed(musicList) { index: Int, music: Music ->
-            MusicCard(modifier = modifier, music = music)
+        itemsIndexed(musicDataList) { index: Int, musicData: MusicData ->
+            MusicCard(modifier = modifier, musicData = musicData)
         }
     }
 
@@ -26,7 +26,7 @@ fun CardMusicList(
 @Composable
 @Preview
 fun CardMusicListPreview() {
-    val music = Music(1, "Il avait les mots", 2, 2, null, "relative path")
-    val musicList = listOf<Music>(music)
-    CardMusicList(modifier = Modifier.fillMaxSize(), musicList = musicList)
+    val musicData = MusicData(1, "Il avait les mots", 2, 2, null, "relative path")
+    val musicDataList = listOf<MusicData>(musicData)
+    CardMusicList(modifier = Modifier.fillMaxSize(), musicDataList = musicDataList)
 }

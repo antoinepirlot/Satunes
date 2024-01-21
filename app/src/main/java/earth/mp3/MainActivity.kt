@@ -17,8 +17,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import earth.mp3.models.Folder
-import earth.mp3.models.MusicData
-import earth.mp3.models.loadMusics
+import earth.mp3.models.Music
 import earth.mp3.ui.theme.MP3Theme
 import earth.mp3.ui.views.HomeView
 
@@ -28,12 +27,12 @@ class MainActivity : ComponentActivity() {
         requestPermission()
         if (!isAudioDenied()) {
             setContent {
-                val musicDataList = remember { mutableListOf<MusicData>() }
+                val musicList = remember { mutableListOf<Music>() }
                 val rootFolderList = remember { mutableStateListOf<Folder>() }
 
-                loadMusics(
+                Music.loadMusics(
                     context = LocalContext.current,
-                    musicDataList = musicDataList,
+                    musicList = musicList,
                     rootFolderList = rootFolderList
                 )
 
@@ -44,7 +43,7 @@ class MainActivity : ComponentActivity() {
                     ) {
                         HomeView(
                             modifier = Modifier,
-                            musicDataList = musicDataList,
+                            musicList = musicList,
                             folderList = rootFolderList
                         )
                     }

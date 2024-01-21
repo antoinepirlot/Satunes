@@ -9,19 +9,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import earth.mp3.models.MusicData
+import earth.mp3.models.Music
 
 
 @Composable
 fun MusicCard(
     modifier: Modifier,
-    musicData: MusicData
+    music: Music
 ) {
     Column(
         modifier = modifier
     ) {
         Box(modifier = modifier.padding(8.dp)) {
-            Text(text = musicData.name)
+            Text(text = music.name)
         }
     }
 }
@@ -29,6 +29,6 @@ fun MusicCard(
 @Composable
 @Preview
 fun MusicCardPreview() {
-    val musicData = MusicData(1, "Il avait les mots", 2, 2, null, "relative path")
+    val musicData = Music(1, "Il avait les mots", 2, 2, null, "relative path")
     MusicCard(modifier = Modifier.fillMaxSize(), musicData)
 }

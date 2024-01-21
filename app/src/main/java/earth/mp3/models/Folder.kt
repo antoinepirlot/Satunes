@@ -4,7 +4,7 @@ class Folder {
     private var name: String = "Music"
     private var parentFolder: Folder? = null
     private val subFolderList: MutableList<Folder> = mutableListOf()
-    private val musicDataList: MutableList<MusicData> = mutableListOf()
+    private val musicList: MutableList<Music> = mutableListOf()
 
     constructor() {
 
@@ -49,12 +49,12 @@ class Folder {
         this.subFolderList.remove(subFolder)
     }
 
-    fun addMusic(musicData: MusicData) {
-        this.musicDataList.add(musicData)
+    fun addMusic(musicData: Music) {
+        this.musicList.add(musicData)
     }
 
-    fun removeMusic(musicData: MusicData) {
-        this.musicDataList.remove(musicData)
+    fun removeMusic(musicData: Music) {
+        this.musicList.remove(musicData)
     }
 
     /**
@@ -117,14 +117,14 @@ class Folder {
         if (name != other.name) return false
         if (parentFolder != other.parentFolder) return false
         if (subFolderList != other.subFolderList) return false
-        return musicDataList == other.musicDataList
+        return musicList == other.musicList
     }
 
     override fun hashCode(): Int {
         var result = name.hashCode()
         result = 31 * result + (parentFolder?.hashCode() ?: 0)
         result = 31 * result + subFolderList.hashCode()
-        result = 31 * result + musicDataList.hashCode()
+        result = 31 * result + musicList.hashCode()
         return result
     }
 }

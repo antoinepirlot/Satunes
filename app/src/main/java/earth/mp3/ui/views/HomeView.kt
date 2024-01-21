@@ -28,7 +28,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.media3.common.util.UnstableApi
 import earth.mp3.R
 import earth.mp3.models.Folder
-import earth.mp3.models.MusicData
+import earth.mp3.models.Music
 import earth.mp3.ui.components.cards.artists.CardArtistList
 import earth.mp3.ui.components.cards.folder.CardFolderList
 import earth.mp3.ui.components.cards.menu.CardMenuList
@@ -42,7 +42,7 @@ import earth.mp3.ui.components.cards.tracks.CardTrackList
 @Composable
 fun HomeView(
     modifier: Modifier,
-    musicDataList: List<MusicData>,
+    musicList: List<Music>,
     folderList: List<Folder>
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
@@ -123,7 +123,7 @@ fun HomeView(
 fun HomeViewPreview() {
     HomeView(
         modifier = Modifier.fillMaxSize(),
-        musicDataList = listOf(),
+        musicList = listOf(),
         folderList = listOf()
     )
 }

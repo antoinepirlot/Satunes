@@ -79,6 +79,9 @@ fun HomeView(
             val folderSelected = rememberSaveable { mutableStateOf(true) } // default section
             val artistsSelected = rememberSaveable { mutableStateOf(false) }
             val tracksSelected = rememberSaveable { mutableStateOf(false) }
+            //TODO find another solution without using mutable state of list (issue with lazy column)
+            val folderListToShow = rememberSaveable { mutableStateOf(folderList.toMutableList()) }
+
             CardMenuList(
                 modifier = modifier,
                 folderSelected = folderSelected,
@@ -86,7 +89,16 @@ fun HomeView(
                 tracksSelected = tracksSelected
             )
             if (folderSelected.value) {
-                CardFolderList(modifier = modifier, folderList = folderList)
+                CardFolderList(
+                    modifier = modifier,
+                    folderList = folderListToShow.value,
+                    onClick = {
+                        val subFolders = it.getSubFolderList()
+                        if (subFolders != null) {
+                            folderListToShow.value = subFolders.toMutableList()
+                        }
+                    }
+                )
             } else if (artistsSelected.value) {
                 CardArtistList(modifier = modifier)
             } else if (tracksSelected.value) {

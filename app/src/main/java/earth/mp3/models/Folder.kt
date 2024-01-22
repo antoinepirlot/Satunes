@@ -34,10 +34,7 @@ class Folder {
         this.parentFolder = parentFolder
     }
 
-    fun getSubFolderList(): List<Folder>? {
-        if (this.subFolderList == null) {
-            return null
-        }
+    fun getSubFolderList(): List<Folder> {
         return this.subFolderList.toList()
     }
 

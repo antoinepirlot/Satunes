@@ -33,7 +33,6 @@ import earth.mp3.models.Folder
 import earth.mp3.models.Music
 import earth.mp3.models.utils.loadObjectsTo
 import earth.mp3.ui.components.cards.CardList
-import earth.mp3.ui.components.cards.artists.CardArtistList
 import earth.mp3.ui.components.cards.menu.CardMenuList
 
 /**
@@ -111,7 +110,7 @@ fun HomeView(
                     onClick = { loadObjectsTo(folderListToShow, it.getSubFolderList()) }
                 )
             } else if (artistsSelected.value) {
-                CardArtistList(modifier = modifier)
+                //TODO show artists list
             } else if (tracksSelected.value) {
                 CardList(
                     objectList = musicListToShow,

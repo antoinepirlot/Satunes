@@ -110,13 +110,6 @@ fun HomeView(
                     contentDescription = "Arrow Forward",
                     onClick = { loadObjectsTo(folderListToShow, it.getSubFolderList()) }
                 )
-//                CardFolderList(
-//                    modifier = modifier,
-//                    folderList = folderListToShow,
-//                    updateFolderList = {
-//                        loadSubFoldersTo(folderListToShow, it)
-//                    }
-//                )
             } else if (artistsSelected.value) {
                 CardArtistList(modifier = modifier)
             } else if (tracksSelected.value) {

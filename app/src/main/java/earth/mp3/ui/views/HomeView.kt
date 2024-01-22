@@ -34,7 +34,6 @@ import earth.mp3.models.Music
 import earth.mp3.ui.components.cards.CardList
 import earth.mp3.ui.components.cards.artists.CardArtistList
 import earth.mp3.ui.components.cards.menu.CardMenuList
-import earth.mp3.ui.components.cards.tracks.CardMusicList
 
 /**
  * Show The Home App Bar and content inside
@@ -83,8 +82,12 @@ fun HomeView(
             val folderSelected = rememberSaveable { mutableStateOf(true) } // default section
             val artistsSelected = rememberSaveable { mutableStateOf(false) }
             val tracksSelected = rememberSaveable { mutableStateOf(false) }
+
             val folderListToShow = remember { mutableStateListOf<Folder>() }
+            loadObjectsTo(folderListToShow, folderList)
             val musicListToShow = remember { mutableStateListOf<Music>() }
+            loadObjectsTo(musicListToShow, musicList)
+
 
 
             CardMenuList(
@@ -104,7 +107,7 @@ fun HomeView(
                     objectList = folderListToShow,
                     imageVector = Icons.Filled.ArrowForward,
                     contentDescription = "Arrow Forward",
-                    onClick = { loadSubFoldersTo(folderListToShow, it) }
+                    onClick = { loadObjectsTo(folderListToShow, it.getSubFolderList()) }
                 )
 //                CardFolderList(
 //                    modifier = modifier,
@@ -122,7 +125,6 @@ fun HomeView(
                     contentDescription = "Play Arrow",
                     onClick = { /*TODO play music*/ }
                 )
-                CardMusicList(modifier = modifier, musicList = musicList)
             } else {
                 throw IllegalStateException(
                     "No tab selected (folder, artists, tracks), that could not happen"
@@ -142,15 +144,11 @@ fun HomeViewPreview() {
     )
 }
 
-fun loadSubFoldersTo(folderList: MutableList<Folder>, folder: Folder) {
-    folderList.clear()
-    val subFolderList = folder.getSubFolderList()
-    if (subFolderList != null) {
-        for (subFolder: Folder in subFolderList) {
-            folderList.add(subFolder)
-        }
+fun <T> loadObjectsTo(toList: MutableList<T>, fromList: List<T>) {
+    toList.clear()
+    for (obj: T in fromList) {
+        toList.add(obj)
     }
-
 }
 
 //if (musicList.isEmpty()) {

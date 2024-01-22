@@ -31,6 +31,7 @@ import androidx.media3.common.util.UnstableApi
 import earth.mp3.R
 import earth.mp3.models.Folder
 import earth.mp3.models.Music
+import earth.mp3.models.utils.loadObjectsTo
 import earth.mp3.ui.components.cards.CardList
 import earth.mp3.ui.components.cards.artists.CardArtistList
 import earth.mp3.ui.components.cards.menu.CardMenuList
@@ -142,13 +143,6 @@ fun HomeViewPreview() {
         musicList = listOf(),
         folderList = listOf()
     )
-}
-
-fun <T> loadObjectsTo(toList: MutableList<T>, fromList: List<T>) {
-    toList.clear()
-    for (obj: T in fromList) {
-        toList.add(obj)
-    }
 }
 
 //if (musicList.isEmpty()) {

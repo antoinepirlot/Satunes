@@ -7,3 +7,10 @@ fun <T, U> mapToList(map: Map<U, T>): List<T> {
     }
     return listToReturn
 }
+
+fun <T> loadObjectsTo(toList: MutableList<T>, fromList: List<T>) {
+    toList.clear()
+    for (obj: T in fromList) {
+        toList.add(obj)
+    }
+}

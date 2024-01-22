@@ -44,7 +44,7 @@ class Music(id: Long, name: String, duration: Int, size: Int, uri: Uri?, relativ
             rootFolderList: MutableList<Folder>,
             uri: Uri
         ) {
-// Cache column indices.
+            // Cache music columns indices.
             val idColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID)
             val nameColumn =
                 cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DISPLAY_NAME)

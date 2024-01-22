@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Settings
@@ -29,6 +30,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.media3.common.util.UnstableApi
 import earth.mp3.R
+import earth.mp3.models.Artist
 import earth.mp3.models.Folder
 import earth.mp3.models.Music
 import earth.mp3.models.utils.loadObjectsTo
@@ -44,7 +46,8 @@ import earth.mp3.ui.components.cards.menu.CardMenuList
 fun HomeView(
     modifier: Modifier,
     musicList: List<Music>,
-    folderList: List<Folder>
+    folderList: List<Folder>,
+    artistList: List<Artist>
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
 
@@ -87,6 +90,8 @@ fun HomeView(
             loadObjectsTo(folderListToShow, folderList)
             val musicListToShow = remember { mutableStateListOf<Music>() }
             loadObjectsTo(musicListToShow, musicList)
+            val artistListToShow = remember { mutableStateListOf<Artist>() }
+            loadObjectsTo(artistListToShow, artistList)
 
 
 
@@ -110,7 +115,13 @@ fun HomeView(
                     onClick = { loadObjectsTo(folderListToShow, it.getSubFolderList()) }
                 )
             } else if (artistsSelected.value) {
-                //TODO show artists list
+                // TODO remove hard data
+                artistListToShow.add(Artist(1, "Adèle", 5, 4))
+                CardList(
+                    objectList = artistListToShow,
+                    imageVector = Icons.Filled.AccountCircle,
+                    onClick = { /*TODO show artist albums list*/ }
+                )
             } else if (tracksSelected.value) {
                 CardList(
                     objectList = musicListToShow,
@@ -133,7 +144,8 @@ fun HomeViewPreview() {
     HomeView(
         modifier = Modifier.fillMaxSize(),
         musicList = listOf(),
-        folderList = listOf()
+        folderList = listOf(),
+        artistList = listOf(Artist(1, "Adèle", 5, 4))
     )
 }
 

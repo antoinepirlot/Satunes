@@ -17,7 +17,8 @@ class Music(id: Long, name: String, duration: Int, size: Int, uri: Uri?, relativ
         fun loadData(
             context: Context,
             musicList: MutableList<Music>,
-            rootFolderList: MutableList<Folder>
+            rootFolderList: MutableList<Folder>,
+            artistList: MutableList<Artist>
         ) {
             val uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
             val projection = arrayOf(
@@ -31,7 +32,7 @@ class Music(id: Long, name: String, duration: Int, size: Int, uri: Uri?, relativ
             context.contentResolver.query(
                 uri, projection, null, null
             )?.use { cursor ->
-                loadData(cursor, musicList, rootFolderList, uri)
+                loadData(cursor, musicList, rootFolderList, artistList, uri)
             }
         }
 
@@ -42,6 +43,7 @@ class Music(id: Long, name: String, duration: Int, size: Int, uri: Uri?, relativ
             cursor: Cursor,
             musicList: MutableList<Music>,
             rootFolderList: MutableList<Folder>,
+            artistList: MutableList<Artist>,
             uri: Uri
         ) {
             // Cache music columns indices.
@@ -53,6 +55,22 @@ class Music(id: Long, name: String, duration: Int, size: Int, uri: Uri?, relativ
             val musicSizeColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE)
             val relativePathColumn =
                 cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.RELATIVE_PATH)
+
+            // Cache artist columns indices.
+            var artistIdColumn: Int? = null
+            var artistNameColumn: Int? = null
+            var artistNbOfTracksColumn: Int? = null
+            var artistNbOfAlbumsColumn: Int? = null
+            try {
+                artistIdColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Artists._ID)
+                artistNameColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Artists.ARTIST)
+                artistNbOfTracksColumn =
+                    cursor.getColumnIndexOrThrow(MediaStore.Audio.Artists.NUMBER_OF_TRACKS)
+                artistNbOfAlbumsColumn =
+                    cursor.getColumnIndexOrThrow(MediaStore.Audio.Artists.NUMBER_OF_ALBUMS)
+            } catch (_: IllegalArgumentException) {
+
+            }
 
             while (cursor.moveToNext()) {
                 val music: Music = loadMusic(
@@ -66,7 +84,21 @@ class Music(id: Long, name: String, duration: Int, size: Int, uri: Uri?, relativ
                     uri
                 )
                 loadFolders(music, rootFolderList)
-                loadArtists(cursor)
+                if (
+                    artistIdColumn != null
+                    && artistNameColumn != null
+                    && artistNbOfTracksColumn != null
+                    && artistNbOfAlbumsColumn != null
+                ) {
+                    loadArtists(
+                        cursor,
+                        artistList,
+                        artistIdColumn,
+                        artistNameColumn!!,
+                        artistNbOfTracksColumn!!,
+                        artistNbOfAlbumsColumn!!
+                    )
+                }
             }
         }
 
@@ -75,7 +107,7 @@ class Music(id: Long, name: String, duration: Int, size: Int, uri: Uri?, relativ
          *
          * @param cursor the cursor where music's data is stored
          * @param idColumn the id column in cursor
-         * @param name the name column in cursor
+         * @param nameColumn the name column in cursor
          * @param durationColumn the duration column in cursor
          * @param sizeColumn the size column in cursor
          * @param relativePathColumn the relative path column in cursor
@@ -93,7 +125,7 @@ class Music(id: Long, name: String, duration: Int, size: Int, uri: Uri?, relativ
             relativePathColumn: Int,
             uri: Uri
         ): Music {
-            // Get values of columns for a given video.
+            // Get values of columns for a given music.
             val id = cursor.getLong(idColumn)
             val name = cursor.getString(nameColumn)
             val duration = cursor.getInt(durationColumn)
@@ -138,8 +170,22 @@ class Music(id: Long, name: String, duration: Int, size: Int, uri: Uri?, relativ
             rootFolder!!.getSubFolder(splitedPath.toMutableList())!!.addMusic(music)
         }
 
-        private fun loadArtists(cursor: Cursor) {
-
+        private fun loadArtists(
+            cursor: Cursor,
+            artistList: MutableList<Artist>,
+            idColumn: Int,
+            nameColumn: Int,
+            numberOfTracksColumn: Int,
+            numberOfAlbumsColumn: Int
+        ): Artist {
+            // Get values of columns for a given artist.
+            val id = cursor.getLong(idColumn)
+            val name = cursor.getString(nameColumn)
+            val nbOfTracksColumn = cursor.getInt(numberOfTracksColumn)
+            val nbOfAlbumsColumn = cursor.getInt(numberOfAlbumsColumn)
+            val artist = Artist(id, name, nbOfTracksColumn, nbOfAlbumsColumn)
+            artistList.add(artist)
+            return artist
         }
     }
 

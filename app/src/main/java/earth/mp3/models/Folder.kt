@@ -127,6 +127,10 @@ class Folder {
         result = 31 * result + musicList.hashCode()
         return result
     }
+
+    override fun toString(): String {
+        return this.name
+    }
 }
 //if (relativePath.isBlank()) {
 //    return

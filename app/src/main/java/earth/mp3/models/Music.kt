@@ -75,4 +75,8 @@ class Music(id: Long, name: String, duration: Int, size: Int, uri: Uri?, relativ
             }
         }
     }
+
+    override fun toString(): String {
+        return this.name
+    }
 }

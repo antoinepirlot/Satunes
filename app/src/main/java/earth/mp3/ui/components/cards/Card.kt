@@ -1,4 +1,4 @@
-package earth.mp3.ui.components.cards.music
+package earth.mp3.ui.components.cards
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,27 +11,28 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import earth.mp3.models.Music
 
-
 @Composable
-fun MusicCard(
-    modifier: Modifier,
-    music: Music,
+fun <T> Card(
+    modifier: Modifier = Modifier,
+    obj: T,
+    imageVector: ImageVector,
+    contentDescription: String? = null,
     onClick: () -> Unit
 ) {
-    //TODO make generic card
     Box(modifier = modifier) {
         TextButton(onClick = onClick) {
             ListItem(
                 headlineContent = {
-                    Text(text = music.name)
+                    Text(text = obj.toString())
                 },
                 leadingContent = {
                     Icon(
-                        imageVector = Icons.Filled.PlayArrow,
-                        contentDescription = "Play Arrow"
+                        imageVector = imageVector,
+                        contentDescription = contentDescription
                     )
                 }
             )
@@ -42,7 +43,11 @@ fun MusicCard(
 
 @Composable
 @Preview
-fun MusicCardPreview() {
+fun CardPreview() {
     val musicData = Music(1, "Il avait les mots", 2, 2, null, "relative path")
-    MusicCard(modifier = Modifier.fillMaxSize(), musicData, onClick = {})
+    Card(
+        modifier = Modifier.fillMaxSize(),
+        musicData,
+        imageVector = Icons.Filled.PlayArrow,
+        onClick = {})
 }

@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -29,8 +31,8 @@ import androidx.media3.common.util.UnstableApi
 import earth.mp3.R
 import earth.mp3.models.Folder
 import earth.mp3.models.Music
+import earth.mp3.ui.components.cards.CardList
 import earth.mp3.ui.components.cards.artists.CardArtistList
-import earth.mp3.ui.components.cards.folder.CardFolderList
 import earth.mp3.ui.components.cards.menu.CardMenuList
 import earth.mp3.ui.components.cards.tracks.CardMusicList
 
@@ -82,6 +84,7 @@ fun HomeView(
             val artistsSelected = rememberSaveable { mutableStateOf(false) }
             val tracksSelected = rememberSaveable { mutableStateOf(false) }
             val folderListToShow = remember { mutableStateListOf<Folder>() }
+            val musicListToShow = remember { mutableStateListOf<Music>() }
 
 
             CardMenuList(
@@ -97,16 +100,28 @@ fun HomeView(
                 }
             )
             if (folderSelected.value) {
-                CardFolderList(
-                    modifier = modifier,
-                    folderList = folderListToShow,
-                    updateFolderList = {
-                        loadSubFoldersTo(folderListToShow, it)
-                    }
+                CardList(
+                    objectList = folderListToShow,
+                    imageVector = Icons.Filled.ArrowForward,
+                    contentDescription = "Arrow Forward",
+                    onClick = { loadSubFoldersTo(folderListToShow, it) }
                 )
+//                CardFolderList(
+//                    modifier = modifier,
+//                    folderList = folderListToShow,
+//                    updateFolderList = {
+//                        loadSubFoldersTo(folderListToShow, it)
+//                    }
+//                )
             } else if (artistsSelected.value) {
                 CardArtistList(modifier = modifier)
             } else if (tracksSelected.value) {
+                CardList(
+                    objectList = musicListToShow,
+                    imageVector = Icons.Filled.PlayArrow,
+                    contentDescription = "Play Arrow",
+                    onClick = { /*TODO play music*/ }
+                )
                 CardMusicList(modifier = modifier, musicList = musicList)
             } else {
                 throw IllegalStateException(

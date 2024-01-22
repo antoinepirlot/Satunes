@@ -45,26 +45,28 @@ class Music(id: Long, name: String, duration: Int, size: Int, uri: Uri?, relativ
             uri: Uri
         ) {
             // Cache music columns indices.
-            val idColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID)
-            val nameColumn =
+            val musicIdColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID)
+            val musicNameColumn =
                 cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DISPLAY_NAME)
-            val durationColumn =
+            val musicDurationColumn =
                 cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION)
-            val sizeColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE)
+            val musicSizeColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE)
             val relativePathColumn =
                 cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.RELATIVE_PATH)
+
             while (cursor.moveToNext()) {
                 val music: Music = loadMusic(
                     cursor,
                     musicList,
-                    idColumn,
-                    nameColumn,
-                    durationColumn,
-                    sizeColumn,
+                    musicIdColumn,
+                    musicNameColumn,
+                    musicDurationColumn,
+                    musicSizeColumn,
                     relativePathColumn,
                     uri
                 )
                 loadFolders(music, rootFolderList)
+                loadArtists(cursor)
             }
         }
 

@@ -30,7 +30,7 @@ class MainActivity : ComponentActivity() {
                 val musicList = remember { mutableStateListOf<Music>() }
                 val rootFolderList = remember { mutableStateListOf<Folder>() }
 
-                Music.loadMusics(
+                Music.loadData(
                     context = LocalContext.current,
                     musicList = musicList,
                     rootFolderList = rootFolderList

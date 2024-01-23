@@ -19,8 +19,8 @@ import androidx.core.content.ContextCompat
 import earth.mp3.models.Artist
 import earth.mp3.models.Folder
 import earth.mp3.models.Music
+import earth.mp3.router.Router
 import earth.mp3.ui.theme.MP3Theme
-import earth.mp3.ui.views.HomeView
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,7 +44,7 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier.fillMaxSize(),
                         color = MaterialTheme.colorScheme.background
                     ) {
-                        HomeView(
+                        Router(
                             modifier = Modifier,
                             musicList = musicList,
                             folderList = rootFolderList,

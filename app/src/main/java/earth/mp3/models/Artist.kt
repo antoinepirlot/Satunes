@@ -7,4 +7,8 @@ class Artist(id: Long, name: String, numberOfTracks: Int, numberOfAlbums: Int) {
     var numberOfAlbums: Int = numberOfAlbums
     val musicList: MutableList<Music> = mutableListOf()
     //val albumList: MutableList<Album> = mutableListOf()
+
+    override fun toString(): String {
+        return this.name
+    }
 }

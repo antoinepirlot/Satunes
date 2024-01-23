@@ -16,9 +16,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import earth.mp3.models.Music
 
 @Composable
-fun <T> Card(
+fun Card(
     modifier: Modifier = Modifier,
-    obj: T,
+    text: String,
     imageVector: ImageVector,
     contentDescription: String? = null,
     onClick: () -> Unit
@@ -27,7 +27,7 @@ fun <T> Card(
         TextButton(onClick = onClick) {
             ListItem(
                 headlineContent = {
-                    Text(text = obj.toString())
+                    Text(text = text)
                 },
                 leadingContent = {
                     Icon(
@@ -44,10 +44,10 @@ fun <T> Card(
 @Composable
 @Preview
 fun CardPreview() {
-    val musicData = Music(1, "Il avait les mots", 2, 2, null, "relative path")
+    val music = Music(1, "Il avait les mots", 2, 2, null, "relative path")
     Card(
         modifier = Modifier.fillMaxSize(),
-        musicData,
+        text = music.name,
         imageVector = Icons.Filled.PlayArrow,
         onClick = {})
 }

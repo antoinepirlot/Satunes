@@ -26,7 +26,7 @@ fun <T> CardList(
         items(objectList) { obj ->
             Card(
                 modifier = modifier,
-                obj = obj,
+                text = obj.toString(),
                 imageVector = imageVector,
                 contentDescription = contentDescription,
                 onClick = { onClick(obj) }

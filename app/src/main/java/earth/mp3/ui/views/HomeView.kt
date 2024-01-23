@@ -1,6 +1,7 @@
 package earth.mp3.ui.views
 
 import androidx.annotation.OptIn
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
@@ -46,44 +47,46 @@ fun HomeView(
     val artistListToShow = remember { mutableStateListOf<Artist>() }
     loadObjectsTo(artistListToShow, artistList)
 
-    CardMenuList(
-        modifier = modifier,
-        folderSelected = folderSelected,
-        artistsSelected = artistsSelected,
-        tracksSelected = tracksSelected,
-        resetFoldersToShow = {
-            folderListToShow.clear()
-            for (folder in folderList) {
-                folderListToShow.add(folder)
+    Column {
+        CardMenuList(
+            modifier = modifier,
+            folderSelected = folderSelected,
+            artistsSelected = artistsSelected,
+            tracksSelected = tracksSelected,
+            resetFoldersToShow = {
+                folderListToShow.clear()
+                for (folder in folderList) {
+                    folderListToShow.add(folder)
+                }
             }
+        )
+        if (folderSelected.value) {
+            CardList(
+                objectList = folderListToShow,
+                imageVector = Icons.Filled.ArrowForward,
+                contentDescription = "Arrow Forward",
+                onClick = { loadObjectsTo(folderListToShow, it.getSubFolderList()) }
+            )
+        } else if (artistsSelected.value) {
+            // TODO remove hard data
+            artistListToShow.add(Artist(1, "Adèle", 5, 4))
+            CardList(
+                objectList = artistListToShow,
+                imageVector = Icons.Filled.AccountCircle,
+                onClick = { /*TODO show artist albums list*/ }
+            )
+        } else if (tracksSelected.value) {
+            CardList(
+                objectList = musicListToShow,
+                imageVector = Icons.Filled.PlayArrow,
+                contentDescription = "Play Arrow",
+                onClick = { /*TODO play music*/ }
+            )
+        } else {
+            throw IllegalStateException(
+                "No tab selected (folder, artists, tracks), that could not happen"
+            )
         }
-    )
-    if (folderSelected.value) {
-        CardList(
-            objectList = folderListToShow,
-            imageVector = Icons.Filled.ArrowForward,
-            contentDescription = "Arrow Forward",
-            onClick = { loadObjectsTo(folderListToShow, it.getSubFolderList()) }
-        )
-    } else if (artistsSelected.value) {
-        // TODO remove hard data
-        artistListToShow.add(Artist(1, "Adèle", 5, 4))
-        CardList(
-            objectList = artistListToShow,
-            imageVector = Icons.Filled.AccountCircle,
-            onClick = { /*TODO show artist albums list*/ }
-        )
-    } else if (tracksSelected.value) {
-        CardList(
-            objectList = musicListToShow,
-            imageVector = Icons.Filled.PlayArrow,
-            contentDescription = "Play Arrow",
-            onClick = { /*TODO play music*/ }
-        )
-    } else {
-        throw IllegalStateException(
-            "No tab selected (folder, artists, tracks), that could not happen"
-        )
     }
 }
 

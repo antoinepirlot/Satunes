@@ -23,7 +23,6 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import earth.mp3.models.Artist
 import earth.mp3.models.Folder
@@ -40,7 +39,6 @@ class MainActivity : ComponentActivity() {
         if (!isAudioDenied()) {
             setContent {
                 val navController = rememberNavController()
-                val navHostController = NavHostController(LocalContext.current)
 
                 val musicList = remember { mutableStateListOf<Music>() }
                 val rootFolderList = remember { mutableStateListOf<Folder>() }
@@ -62,7 +60,6 @@ class MainActivity : ComponentActivity() {
                             TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
                         Scaffold(
                             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-
                             topBar = { HomeTopAppBar(scrollBehavior = scrollBehavior) },
                         ) { innerPadding ->
                             Column(
@@ -70,6 +67,7 @@ class MainActivity : ComponentActivity() {
                             ) {
                                 Router(
                                     modifier = Modifier,
+                                    navController = navController,
                                     musicList = musicList,
                                     folderList = rootFolderList,
                                     artistList = artistList,

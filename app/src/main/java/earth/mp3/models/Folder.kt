@@ -6,9 +6,14 @@ class Folder(
     override val id: Long,
     override var name: String,
     var parentFolder: Folder? = null,
-    val subFolderList: MutableList<Folder> = mutableListOf(),
+    private val subFolderList: MutableList<Folder> = mutableListOf(),
     val musicList: MutableList<Music> = mutableListOf()
 ) : Media {
+
+    fun getSubFolderList(): MutableList<Media> {
+        return this.subFolderList.toMutableList()
+    }
+
     fun addSubFolder(subFolder: Folder) {
         this.subFolderList.add(subFolder)
     }

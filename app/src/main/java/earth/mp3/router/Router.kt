@@ -1,10 +1,7 @@
 package earth.mp3.router
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.ArrowForward
-import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -34,9 +31,7 @@ fun Router(
             // /!\ This line prevent back gesture to exit the app
             MediaCardList(
                 mediaList = rootFolderList,
-                imageVector = Icons.Filled.ArrowForward,
-                contentDescription = "Arrow Forward",
-                onClick = { clickedFolder: Media ->
+                openFolder = { clickedFolder: Media ->
                     navController.navigate("${Destination.FOLDERS.link}/${clickedFolder.id}")
                 }
             )
@@ -45,17 +40,21 @@ fun Router(
         composable("${Destination.FOLDERS.link}/{id}") {
             val folderId = it.arguments!!.getString("id")!!.toLong()
             var folder: Folder = folderMap[Music.FIRST_FOLDER_INDEX]!!
-            var folderListToShow: List<Folder> = rootFolderList
+
+            val listToShow: MutableList<Media> = remember { mutableListOf() }
             if (folderId >= Music.FIRST_FOLDER_INDEX && folderId <= folderMap.size) {
                 folder = folderMap[folderId]!!
-                folderListToShow = folder.subFolderList
+                listToShow.addAll(folder.getSubFolderList())
+            } else {
+                listToShow.addAll(rootFolderList)
             }
+            if (folder.musicList.isNotEmpty()) {
+                listToShow.addAll(folder.musicList.toMutableList())
+            }
+
             MediaCardList(
-                mediaList = folderListToShow,
-                parentMedia = folder,
-                imageVector = Icons.Filled.ArrowForward,
-                contentDescription = "Arrow Forward",
-                onClick = { clickedFolder: Media ->
+                mediaList = listToShow,
+                openFolder = { clickedFolder: Media ->
                     navController.navigate("${Destination.FOLDERS.link}/${clickedFolder.id}")
                 }
             )
@@ -64,18 +63,14 @@ fun Router(
         composable(Destination.ARTISTS.link) {
             MediaCardList(
                 mediaList = artistListToShow,
-                imageVector = Icons.Filled.AccountCircle,
-                contentDescription = "Account Circle",
-                onClick = { /*TODO show artist albums list*/ }
+                openFolder = { /*TODO show artist albums list*/ }
             )
         }
 
         composable(Destination.MUSICS.link) {
             MediaCardList(
                 mediaList = musicListToShow,
-                imageVector = Icons.Filled.PlayArrow,
-                contentDescription = "Play Arrow",
-                onClick = { /*TODO play music*/ }
+                openFolder = { /*TODO play music*/ }
             )
         }
     }

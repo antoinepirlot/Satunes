@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
+import earth.mp3.models.Artist
 import earth.mp3.models.Folder
 import earth.mp3.models.Media
 
@@ -36,16 +37,27 @@ fun MediaCardList(
             )
         }
     }
-    when (parentMedia) {
-        is Folder -> {
-            //Show music list
-            MediaCardList(
-                mediaList = parentMedia.musicList,
-                imageVector = Icons.Filled.PlayArrow,
-                contentDescription = "Play Arrow",
-                onClick = { /* TODO */ }
-            )
-        }
+    if (parentMedia is Folder) {
+        // TODO find a parade to avoid abstract class as Android Studio tell me when the condition
+        //  is parentMedia is Folder || parentMedia is Artist
+        // Show music list
+        MediaCardList(
+            mediaList = parentMedia.musicList,
+            imageVector = Icons.Filled.PlayArrow,
+            contentDescription = "Play Arrow",
+            onClick = { /* TODO */ }
+        )
+    }
+    if (parentMedia is Artist) {
+        // TODO find a parade to avoid abstract class as Android Studio tell me when the condition
+        //  is parentMedia is Folder || parentMedia is Artist
+        // Show music list
+        MediaCardList(
+            mediaList = parentMedia.musicList,
+            imageVector = Icons.Filled.PlayArrow,
+            contentDescription = "Play Arrow",
+            onClick = { /* TODO */ }
+        )
     }
 }
 

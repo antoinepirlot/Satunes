@@ -7,7 +7,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -26,7 +25,6 @@ import earth.mp3.ui.components.cards.menu.CardMenuList
 /**
  * Show The Home App Bar and content inside
  */
-@kotlin.OptIn(ExperimentalMaterial3Api::class)
 @OptIn(UnstableApi::class)
 @Composable
 fun HomeView(
@@ -46,7 +44,6 @@ fun HomeView(
     loadObjectsTo(musicListToShow, musicList)
     val artistListToShow = remember { mutableStateListOf<Artist>() }
     loadObjectsTo(artistListToShow, artistList)
-
     Column {
         CardMenuList(
             modifier = modifier,

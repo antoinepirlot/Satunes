@@ -23,13 +23,12 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.navigation.compose.rememberNavController
 import earth.mp3.models.Artist
 import earth.mp3.models.Folder
 import earth.mp3.models.Music
-import earth.mp3.router.Router
 import earth.mp3.ui.components.MP3TopAppBar
 import earth.mp3.ui.theme.MP3Theme
+import earth.mp3.ui.views.HomeView
 
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
@@ -38,7 +37,6 @@ class MainActivity : ComponentActivity() {
         requestPermission()
         if (!isAudioDenied()) {
             setContent {
-                val navController = rememberNavController()
 
                 val musicList = remember { mutableStateListOf<Music>() }
                 val rootFolderList = remember { mutableStateListOf<Folder>() }
@@ -65,9 +63,8 @@ class MainActivity : ComponentActivity() {
                             Column(
                                 modifier = Modifier.padding(innerPadding)
                             ) {
-                                Router(
+                                HomeView(
                                     modifier = Modifier,
-                                    navController = navController,
                                     musicList = musicList,
                                     folderList = rootFolderList,
                                     artistList = artistList,

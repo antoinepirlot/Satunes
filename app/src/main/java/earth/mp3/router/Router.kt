@@ -31,7 +31,14 @@ fun Router(
     ) {
         composable(Destination.FOLDERS.link) {
             // /!\ This line prevent back gesture to exit the app
-            navController.navigate("${Destination.FOLDERS.link}/0")
+            CardList(
+                objectList = rootFolderList,
+                imageVector = Icons.Filled.ArrowForward,
+                contentDescription = "Arrow Forward",
+                onClick = { clickedFolder: Folder ->
+                    navController.navigate("${Destination.FOLDERS.link}/${clickedFolder.id}")
+                }
+            )
         }
 
         composable("${Destination.FOLDERS.link}/{id}") {

@@ -22,11 +22,13 @@ fun HomeView(
     musicList: List<Music>,
     folderList: List<Folder>,
     artistList: List<Artist>,
+    folderMap: Map<Long, Folder>
 ) {
     val startDestination = rememberSaveable { mutableStateOf(Destination.FOLDERS.link) }
 
     val folderListToShow = remember { mutableStateListOf<Folder>() }
     loadObjectsTo(folderListToShow, folderList)
+
     val musicListToShow = remember { mutableStateListOf<Music>() }
     loadObjectsTo(musicListToShow, musicList)
     val artistListToShow = remember { mutableStateListOf<Artist>() }
@@ -41,8 +43,9 @@ fun HomeView(
         Router(
             startDestination = startDestination.value,
             folderListToShow = folderListToShow,
+            folderMap = folderMap,
             artistListToShow = artistListToShow,
-            musicListToShow = musicListToShow
+            musicListToShow = musicListToShow,
         )
     }
 }
@@ -50,5 +53,10 @@ fun HomeView(
 @Composable
 @Preview
 fun HomeViewPreview() {
-    HomeView(musicList = listOf(), folderList = listOf(), artistList = listOf())
+    HomeView(
+        musicList = listOf(),
+        folderList = listOf(),
+        artistList = listOf(),
+        folderMap = mapOf()
+    )
 }

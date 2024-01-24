@@ -13,7 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 @Composable
 fun <T> CardList(
     modifier: Modifier = Modifier,
-    objectList: MutableList<T>,
+    objectList: List<T>,
     imageVector: ImageVector,
     contentDescription: String? = null,
     onClick: (obj: T) -> Unit
@@ -39,7 +39,7 @@ fun <T> CardList(
 @Preview
 fun <T> CardListPreview() {
     CardList(
-        objectList = mutableListOf<T>(),
+        objectList = listOf<T>(),
         imageVector = Icons.Filled.PlayArrow,
         onClick = {}
     )

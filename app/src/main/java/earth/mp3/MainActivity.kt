@@ -71,6 +71,7 @@ class MainActivity : ComponentActivity() {
                                     musicList = musicList,
                                     folderList = rootFolderList,
                                     artistList = artistList,
+                                    folderMap = folderMap
                                 )
                             }
                         }

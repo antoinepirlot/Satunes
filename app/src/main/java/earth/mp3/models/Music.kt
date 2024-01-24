@@ -6,7 +6,6 @@ import android.net.Uri
 import android.provider.MediaStore
 import androidx.compose.runtime.MutableLongState
 import androidx.compose.runtime.mutableLongStateOf
-import androidx.compose.runtime.snapshots.SnapshotStateMap
 
 class Music(id: Long, name: String, duration: Int, size: Int, uri: Uri?, relativePath: String) {
     private val id: Long = id
@@ -21,7 +20,7 @@ class Music(id: Long, name: String, duration: Int, size: Int, uri: Uri?, relativ
             context: Context,
             musicList: MutableList<Music>,
             rootFolderList: MutableList<Folder>,
-            folderMap: SnapshotStateMap<Long, Folder>,
+            folderMap: MutableMap<Long, Folder>,
             artistList: MutableList<Artist>,
         ) {
             val uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
@@ -36,7 +35,7 @@ class Music(id: Long, name: String, duration: Int, size: Int, uri: Uri?, relativ
             context.contentResolver.query(
                 uri, projection, null, null
             )?.use { cursor ->
-                loadData(cursor, musicList, rootFolderList, artistList, uri)
+                loadData(cursor, musicList, rootFolderList, folderMap, artistList, uri)
             }
         }
 
@@ -47,6 +46,7 @@ class Music(id: Long, name: String, duration: Int, size: Int, uri: Uri?, relativ
             cursor: Cursor,
             musicList: MutableList<Music>,
             rootFolderList: MutableList<Folder>,
+            folderMap: MutableMap<Long, Folder>,
             artistList: MutableList<Artist>,
             uri: Uri
         ) {
@@ -91,7 +91,7 @@ class Music(id: Long, name: String, duration: Int, size: Int, uri: Uri?, relativ
                     uri
                 )
 
-                loadFolders(music, rootFolderList, folderId)
+                loadFolders(music, rootFolderList, folderMap, folderId)
 
                 if (
                     artistIdColumn != null
@@ -158,6 +158,7 @@ class Music(id: Long, name: String, duration: Int, size: Int, uri: Uri?, relativ
         private fun loadFolders(
             music: Music,
             rootFolderList: MutableList<Folder>,
+            folderMap: MutableMap<Long, Folder>,
             folderId: MutableLongState,
         ) {
             val splitedPath = music.relativePath.split("/").toMutableList()
@@ -177,6 +178,7 @@ class Music(id: Long, name: String, duration: Int, size: Int, uri: Uri?, relativ
             if (rootFolder == null) {
                 // No root folders in the list
                 rootFolder = Folder(folderId.longValue, splitedPath[0])
+                folderMap[folderId.longValue] = rootFolder!!
                 folderId.longValue++
                 rootFolderList.add(rootFolder!!)
             }

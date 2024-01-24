@@ -3,7 +3,7 @@ package earth.mp3.models
 import androidx.compose.runtime.MutableLongState
 
 class Folder(id: Long, name: String) {
-    private val id: Long = id
+    val id: Long = id
     private var name: String = name
     private var parentFolder: Folder? = null
     private val subFolderList: MutableList<Folder> = mutableListOf()

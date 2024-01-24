@@ -4,34 +4,16 @@ import androidx.compose.runtime.MutableLongState
 
 class Folder(id: Long, name: String) {
     val id: Long = id
-    private var name: String = name
-    private var parentFolder: Folder? = null
-    private val subFolderList: MutableList<Folder> = mutableListOf()
-    private val musicList: MutableList<Music> = mutableListOf()
-
-    fun setName(name: String) {
-        if (name.isBlank()) {
-            return
+    var name: String = name
+        set(name) {
+            if (name.isBlank()) {
+                return
+            }
+            field = name
         }
-        this.name = name
-    }
-
-    fun getName(): String {
-        return this.name
-    }
-
-
-    fun getParentFolder(): Folder? {
-        return this.parentFolder
-    }
-
-    fun setParentFolder(parentFolder: Folder) {
-        this.parentFolder = parentFolder
-    }
-
-    fun getSubFolderList(): List<Folder> {
-        return this.subFolderList.toList()
-    }
+    var parentFolder: Folder? = null
+    val subFolderList: MutableList<Folder> = mutableListOf()
+    val musicList: MutableList<Music> = mutableListOf()
 
     fun addSubFolder(subFolder: Folder) {
         this.subFolderList.add(subFolder)

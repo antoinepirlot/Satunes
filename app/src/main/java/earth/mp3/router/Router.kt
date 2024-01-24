@@ -47,7 +47,7 @@ fun Router(
             var folderListToShow: List<Folder> = rootFolderList
             if (folderId >= Music.FIRST_FOLDER_INDEX && folderId <= folderMap.size) {
                 folder = folderMap[folderId]!!
-                folderListToShow = folder.getSubFolderList()
+                folderListToShow = folder.subFolderList
             }
             CardList(
                 objectList = folderListToShow,

@@ -11,7 +11,7 @@ fun FolderView(
     modifier: Modifier = Modifier,
     folder: Folder
 ) {
-    Text(text = folder.getName())
+    Text(text = folder.name)
 }
 
 @Composable

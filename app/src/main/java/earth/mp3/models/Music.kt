@@ -170,7 +170,7 @@ class Music(id: Long, name: String, duration: Int, size: Int, uri: Uri?, relativ
 
             var rootFolder: Folder? = null
             rootFolderList.forEach { folder: Folder ->
-                if (folder.getName() == splitedPath[0]) {
+                if (folder.name == splitedPath[0]) {
                     rootFolder = folder
                     return@forEach
                 }

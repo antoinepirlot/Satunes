@@ -32,9 +32,8 @@ fun HomeView(
     val artistListToShow = remember { mutableStateListOf<Artist>() }
     loadObjectsTo(artistListToShow, artistList)
 
-    Column {
+    Column(modifier = modifier) {
         SectionSelection(
-            modifier = modifier,
             startDestination = startDestination,
             folderList = folderListToShow
         )

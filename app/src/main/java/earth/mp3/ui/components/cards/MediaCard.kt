@@ -16,7 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import earth.mp3.models.Music
 
 @Composable
-fun Card(
+fun MediaCard(
     modifier: Modifier = Modifier,
     text: String,
     imageVector: ImageVector,
@@ -45,7 +45,7 @@ fun Card(
 @Preview
 fun CardPreview() {
     val music = Music(1, "Il avait les mots", 2, 2, null, "relative path")
-    Card(
+    MediaCard(
         modifier = Modifier.fillMaxSize(),
         text = music.name,
         imageVector = Icons.Filled.PlayArrow,

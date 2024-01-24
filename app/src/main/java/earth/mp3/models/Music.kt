@@ -8,7 +8,7 @@ import androidx.compose.runtime.MutableLongState
 import androidx.compose.runtime.mutableLongStateOf
 
 class Music(
-    val id: Long,
+    override val id: Long,
     override var name: String,
     val duration: Int,
     val size: Int,

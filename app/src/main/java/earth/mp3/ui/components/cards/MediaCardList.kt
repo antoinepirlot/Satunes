@@ -9,27 +9,28 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
+import earth.mp3.models.Media
 
 @Composable
-fun <T> CardList(
+fun MediaCardList(
     modifier: Modifier = Modifier,
-    objectList: List<T>,
+    mediaList: List<Media>,
     imageVector: ImageVector,
     contentDescription: String? = null,
-    onClick: (obj: T) -> Unit
+    onClick: (media: Media) -> Unit
 ) {
     val lazyState = rememberLazyListState()
     LazyColumn(
         modifier = modifier,
         state = lazyState
     ) {
-        items(objectList) { obj ->
-            Card(
+        items(mediaList) { media: Media ->
+            MediaCard(
                 modifier = modifier,
-                text = obj.toString(),
+                text = media.name,
                 imageVector = imageVector,
                 contentDescription = contentDescription,
-                onClick = { onClick(obj) }
+                onClick = { onClick(media) }
             )
         }
     }
@@ -38,8 +39,8 @@ fun <T> CardList(
 @Composable
 @Preview
 fun <T> CardListPreview() {
-    CardList(
-        objectList = listOf<T>(),
+    MediaCardList(
+        mediaList = listOf<Media>(),
         imageVector = Icons.Filled.PlayArrow,
         onClick = {}
     )

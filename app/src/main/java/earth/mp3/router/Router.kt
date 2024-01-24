@@ -11,8 +11,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import earth.mp3.models.Artist
 import earth.mp3.models.Folder
+import earth.mp3.models.Media
 import earth.mp3.models.Music
-import earth.mp3.ui.components.cards.CardList
+import earth.mp3.ui.components.cards.MediaCardList
 
 @Composable
 fun Router(
@@ -31,11 +32,11 @@ fun Router(
     ) {
         composable(Destination.FOLDERS.link) {
             // /!\ This line prevent back gesture to exit the app
-            CardList(
-                objectList = rootFolderList,
+            MediaCardList(
+                mediaList = rootFolderList,
                 imageVector = Icons.Filled.ArrowForward,
                 contentDescription = "Arrow Forward",
-                onClick = { clickedFolder: Folder ->
+                onClick = { clickedFolder: Media ->
                     navController.navigate("${Destination.FOLDERS.link}/${clickedFolder.id}")
                 }
             )
@@ -49,19 +50,19 @@ fun Router(
                 folder = folderMap[folderId]!!
                 folderListToShow = folder.subFolderList
             }
-            CardList(
-                objectList = folderListToShow,
+            MediaCardList(
+                mediaList = folderListToShow,
                 imageVector = Icons.Filled.ArrowForward,
                 contentDescription = "Arrow Forward",
-                onClick = { clickedFolder: Folder ->
+                onClick = { clickedFolder: Media ->
                     navController.navigate("${Destination.FOLDERS.link}/${clickedFolder.id}")
                 }
             )
         }
 
         composable(Destination.ARTISTS.link) {
-            CardList(
-                objectList = artistListToShow,
+            MediaCardList(
+                mediaList = artistListToShow,
                 imageVector = Icons.Filled.AccountCircle,
                 contentDescription = "Account Circle",
                 onClick = { /*TODO show artist albums list*/ }
@@ -69,8 +70,8 @@ fun Router(
         }
 
         composable(Destination.MUSICS.link) {
-            CardList(
-                objectList = musicListToShow,
+            MediaCardList(
+                mediaList = musicListToShow,
                 imageVector = Icons.Filled.PlayArrow,
                 contentDescription = "Play Arrow",
                 onClick = { /*TODO play music*/ }

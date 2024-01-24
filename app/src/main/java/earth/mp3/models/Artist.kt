@@ -1,7 +1,7 @@
 package earth.mp3.models
 
 class Artist(
-    val id: Long,
+    override val id: Long,
     override var name: String,
     val numberOfTracks: Int,
     val numberOfAlbums: Int,

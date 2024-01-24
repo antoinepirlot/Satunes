@@ -17,6 +17,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -40,12 +41,14 @@ class MainActivity : ComponentActivity() {
 
                 val musicList = remember { mutableStateListOf<Music>() }
                 val rootFolderList = remember { mutableStateListOf<Folder>() }
+                val folderMap = remember { mutableStateMapOf<Long, Folder>() }
                 val artistList = remember { mutableStateListOf<Artist>() }
 
                 Music.loadData(
                     context = LocalContext.current,
                     musicList = musicList,
                     rootFolderList = rootFolderList,
+                    folderMap = folderMap,
                     artistList = artistList
                 )
 

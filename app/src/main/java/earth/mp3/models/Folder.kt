@@ -1,18 +1,13 @@
 package earth.mp3.models
 
-class Folder {
-    private var name: String = "Music"
+import androidx.compose.runtime.MutableLongState
+
+class Folder(id: Long, name: String) {
+    private val id: Long = id
+    private var name: String = name
     private var parentFolder: Folder? = null
     private val subFolderList: MutableList<Folder> = mutableListOf()
     private val musicList: MutableList<Music> = mutableListOf()
-
-    constructor() {
-
-    }
-
-    constructor(name: String) {
-        this.setName(name)
-    }
 
     fun setName(name: String) {
         if (name.isBlank()) {
@@ -60,13 +55,14 @@ class Folder {
      * /!\ It's NOT this folder that contains Android, music and favorite folder side by side.
      * @param subFolderNameChainList : the relative path that contains the sub folders names
      *                                 It's a path not all the subfolder of this folder
+     * @param folderId : the next folder id
      *
      */
-    fun createSubFolders(subFolderNameChainList: MutableList<String>) {
+    fun createSubFolders(subFolderNameChainList: MutableList<String>, folderId: MutableLongState) {
         //TODO A folder have multiple sub-folders, check to use one instance per folder
         //TODO check if it works
         var parentFolder = this
-        subFolderNameChainList.forEach { folderName ->
+        subFolderNameChainList.forEach { folderName: String ->
             var subFolder: Folder? = null
             for (folder in parentFolder.subFolderList) {
                 if (folder.name == folderName) {
@@ -74,7 +70,8 @@ class Folder {
                 }
             }
             if (subFolder == null) {
-                subFolder = Folder(folderName)
+                subFolder = Folder(folderId.longValue, folderName)
+                folderId.longValue++
                 parentFolder.addSubFolder(subFolder)
             }
             parentFolder = subFolder

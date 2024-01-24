@@ -4,6 +4,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
@@ -37,6 +38,12 @@ fun Router(
                 onClick = { loadObjectsTo(folderListToShow, it.getSubFolderList()) }
             )
         }
+
+        composable("${Destination.FOLDERS.link}/{id}") {
+            val folderId = it.arguments!!.getString("id")!!.toLong()
+            Text(text = folderId.toString())
+        }
+
         composable(Destination.ARTISTS.link) {
             CardList(
                 objectList = artistListToShow,

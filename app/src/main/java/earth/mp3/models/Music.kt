@@ -4,6 +4,9 @@ import android.content.Context
 import android.database.Cursor
 import android.net.Uri
 import android.provider.MediaStore
+import androidx.compose.runtime.MutableLongState
+import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.snapshots.SnapshotStateMap
 
 class Music(id: Long, name: String, duration: Int, size: Int, uri: Uri?, relativePath: String) {
     private val id: Long = id
@@ -18,7 +21,8 @@ class Music(id: Long, name: String, duration: Int, size: Int, uri: Uri?, relativ
             context: Context,
             musicList: MutableList<Music>,
             rootFolderList: MutableList<Folder>,
-            artistList: MutableList<Artist>
+            folderMap: SnapshotStateMap<Long, Folder>,
+            artistList: MutableList<Artist>,
         ) {
             val uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
             val projection = arrayOf(
@@ -83,7 +87,9 @@ class Music(id: Long, name: String, duration: Int, size: Int, uri: Uri?, relativ
                     relativePathColumn,
                     uri
                 )
+
                 loadFolders(music, rootFolderList)
+
                 if (
                     artistIdColumn != null
                     && artistNameColumn != null
@@ -94,9 +100,9 @@ class Music(id: Long, name: String, duration: Int, size: Int, uri: Uri?, relativ
                         cursor,
                         artistList,
                         artistIdColumn,
-                        artistNameColumn!!,
-                        artistNbOfTracksColumn!!,
-                        artistNbOfAlbumsColumn!!
+                        artistNameColumn,
+                        artistNbOfTracksColumn,
+                        artistNbOfAlbumsColumn
                     )
                 }
             }
@@ -155,18 +161,25 @@ class Music(id: Long, name: String, duration: Int, size: Int, uri: Uri?, relativ
                 //remove the blank folder
                 splitedPath.removeAt(splitedPath.lastIndex)
             }
+
             var rootFolder: Folder? = null
+            var rootFolderId: MutableLongState = mutableLongStateOf(1)
             rootFolderList.forEach { folder: Folder ->
                 if (folder.getName() == splitedPath[0]) {
                     rootFolder = folder
+                    return@forEach
                 }
+                rootFolderId.longValue++
             }
             if (rootFolder == null) {
-                rootFolder = Folder(splitedPath[0])
+                // No root folders in the list
+                rootFolder = Folder(rootFolderId.longValue, splitedPath[0])
+                rootFolderId.longValue++
                 rootFolderList.add(rootFolder!!)
             }
+
             splitedPath.removeAt(0)
-            rootFolder!!.createSubFolders(splitedPath.toMutableList())
+            rootFolder!!.createSubFolders(splitedPath.toMutableList(), rootFolderId)
             rootFolder!!.getSubFolder(splitedPath.toMutableList())!!.addMusic(music)
         }
 

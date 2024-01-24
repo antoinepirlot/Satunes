@@ -17,5 +17,5 @@ fun FolderView(
 @Composable
 @Preview
 fun FolderViewPreview() {
-    FolderView(folder = Folder("Test"))
+    FolderView(folder = Folder(0, "Test"))
 }

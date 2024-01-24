@@ -2,19 +2,13 @@ package earth.mp3.models
 
 import androidx.compose.runtime.MutableLongState
 
-class Folder(id: Long, name: String) {
-    val id: Long = id
-    var name: String = name
-        set(name) {
-            if (name.isBlank()) {
-                return
-            }
-            field = name
-        }
-    var parentFolder: Folder? = null
-    val subFolderList: MutableList<Folder> = mutableListOf()
+class Folder(
+    val id: Long,
+    override var name: String,
+    var parentFolder: Folder? = null,
+    val subFolderList: MutableList<Folder> = mutableListOf(),
     val musicList: MutableList<Music> = mutableListOf()
-
+) : Media {
     fun addSubFolder(subFolder: Folder) {
         this.subFolderList.add(subFolder)
     }

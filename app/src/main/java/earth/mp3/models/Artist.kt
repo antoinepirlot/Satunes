@@ -1,12 +1,13 @@
 package earth.mp3.models
 
-class Artist(id: Long, name: String, numberOfTracks: Int, numberOfAlbums: Int) {
-    val id: Long = id
-    var name: String = name
-    var numberOfTracks: Int = numberOfTracks
-    var numberOfAlbums: Int = numberOfAlbums
-    val musicList: MutableList<Music> = mutableListOf()
+class Artist(
+    val id: Long,
+    override var name: String,
+    val numberOfTracks: Int,
+    val numberOfAlbums: Int,
+    val musicList: MutableList<Music> = mutableListOf(),
     //val albumList: MutableList<Album> = mutableListOf()
+) : Media {
 
     override fun toString(): String {
         return this.name

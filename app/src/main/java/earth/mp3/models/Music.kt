@@ -7,13 +7,15 @@ import android.provider.MediaStore
 import androidx.compose.runtime.MutableLongState
 import androidx.compose.runtime.mutableLongStateOf
 
-class Music(id: Long, name: String, duration: Int, size: Int, uri: Uri?, relativePath: String) {
-    private val id: Long = id
-    var name: String = name
-    var duration: Int = duration
-    var size: Int = size
-    var uri: Uri? = uri
-    var relativePath = relativePath
+class Music(
+    val id: Long,
+    override var name: String,
+    val duration: Int,
+    val size: Int,
+    val uri: Uri?,
+    val relativePath: String
+) : Media {
+
 
     companion object {
         const val FIRST_FOLDER_INDEX: Long = 1

@@ -28,7 +28,7 @@ import earth.mp3.models.Artist
 import earth.mp3.models.Folder
 import earth.mp3.models.Music
 import earth.mp3.router.Router
-import earth.mp3.ui.components.HomeTopAppBar
+import earth.mp3.ui.components.MP3TopAppBar
 import earth.mp3.ui.theme.MP3Theme
 
 class MainActivity : ComponentActivity() {
@@ -60,7 +60,7 @@ class MainActivity : ComponentActivity() {
                             TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
                         Scaffold(
                             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-                            topBar = { HomeTopAppBar(scrollBehavior = scrollBehavior) },
+                            topBar = { MP3TopAppBar(scrollBehavior = scrollBehavior) },
                         ) { innerPadding ->
                             Column(
                                 modifier = Modifier.padding(innerPadding)

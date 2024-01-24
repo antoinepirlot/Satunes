@@ -20,7 +20,7 @@ import earth.mp3.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeTopAppBar(
+fun MP3TopAppBar(
     modifier: Modifier = Modifier,
     scrollBehavior: TopAppBarScrollBehavior,
 ) {
@@ -56,7 +56,7 @@ fun HomeTopAppBarPreview() {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(
         rememberTopAppBarState()
     )
-    HomeTopAppBar(
+    MP3TopAppBar(
         modifier = Modifier,
         scrollBehavior = scrollBehavior,
     )

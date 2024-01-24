@@ -176,7 +176,6 @@ class Music(
                     rootFolder = folder
                     return@forEach
                 }
-                folderId.longValue++
             }
             if (rootFolder == null) {
                 // No root folders in the list

@@ -76,6 +76,9 @@ class Music(id: Long, name: String, duration: Int, size: Int, uri: Uri?, relativ
 
             }
 
+            //Id for folders
+            val folderId: MutableLongState = mutableLongStateOf(1)
+
             while (cursor.moveToNext()) {
                 val music: Music = loadMusic(
                     cursor,
@@ -88,7 +91,7 @@ class Music(id: Long, name: String, duration: Int, size: Int, uri: Uri?, relativ
                     uri
                 )
 
-                loadFolders(music, rootFolderList)
+                loadFolders(music, rootFolderList, folderId)
 
                 if (
                     artistIdColumn != null
@@ -154,7 +157,8 @@ class Music(id: Long, name: String, duration: Int, size: Int, uri: Uri?, relativ
          */
         private fun loadFolders(
             music: Music,
-            rootFolderList: MutableList<Folder>
+            rootFolderList: MutableList<Folder>,
+            folderId: MutableLongState,
         ) {
             val splitedPath = music.relativePath.split("/").toMutableList()
             if (splitedPath.last().isBlank()) {
@@ -163,23 +167,22 @@ class Music(id: Long, name: String, duration: Int, size: Int, uri: Uri?, relativ
             }
 
             var rootFolder: Folder? = null
-            var rootFolderId: MutableLongState = mutableLongStateOf(1)
             rootFolderList.forEach { folder: Folder ->
                 if (folder.getName() == splitedPath[0]) {
                     rootFolder = folder
                     return@forEach
                 }
-                rootFolderId.longValue++
+                folderId.longValue++
             }
             if (rootFolder == null) {
                 // No root folders in the list
-                rootFolder = Folder(rootFolderId.longValue, splitedPath[0])
-                rootFolderId.longValue++
+                rootFolder = Folder(folderId.longValue, splitedPath[0])
+                folderId.longValue++
                 rootFolderList.add(rootFolder!!)
             }
 
             splitedPath.removeAt(0)
-            rootFolder!!.createSubFolders(splitedPath.toMutableList(), rootFolderId)
+            rootFolder!!.createSubFolders(splitedPath.toMutableList(), folderId)
             rootFolder!!.getSubFolder(splitedPath.toMutableList())!!.addMusic(music)
         }
 

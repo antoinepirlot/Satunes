@@ -30,6 +30,7 @@ fun Router(
         startDestination = startDestination
     ) {
         composable(Destination.FOLDERS.link) {
+            // /!\ This line prevent back gesture to exit the app
             navController.navigate("${Destination.FOLDERS.link}/0")
         }
 

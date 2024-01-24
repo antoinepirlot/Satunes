@@ -46,7 +46,9 @@ fun Router(
                 objectList = folder!!.getSubFolderList(),
                 imageVector = Icons.Filled.ArrowForward,
                 contentDescription = "Arrow Forward",
-                onClick = { /*TODO*/ }
+                onClick = { clickedFolder: Folder ->
+                    navController.navigate("${Destination.FOLDERS.link}/${clickedFolder.id}")
+                }
             )
         }
 

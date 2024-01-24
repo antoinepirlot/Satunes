@@ -21,6 +21,8 @@ fun Router(
     musicListToShow: MutableList<Music>,
     folderMap: Map<Long, Folder>
 ) {
+    val listToShow: MutableList<Media> = remember { mutableListOf() }
+
     val navController = rememberNavController()
     NavHost(
         modifier = modifier,
@@ -40,11 +42,12 @@ fun Router(
         composable("${Destination.FOLDERS.link}/{id}") {
             val folderId = it.arguments!!.getString("id")!!.toLong()
             var folder: Folder = folderMap[Music.FIRST_FOLDER_INDEX]!!
+            listToShow.clear()
 
-            val listToShow: MutableList<Media> = remember { mutableListOf() }
             if (folderId >= Music.FIRST_FOLDER_INDEX && folderId <= folderMap.size) {
                 folder = folderMap[folderId]!!
-                listToShow.addAll(folder.getSubFolderList())
+                val listToAdd = folder.getSubFolderList()
+                listToShow.addAll(listToAdd)
             } else {
                 listToShow.addAll(rootFolderList)
             }

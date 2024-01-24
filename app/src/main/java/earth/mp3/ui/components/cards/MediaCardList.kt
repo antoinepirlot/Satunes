@@ -23,25 +23,27 @@ fun MediaCardList(
     openFolder: (folder: Folder) -> Unit
 ) {
     val lazyState = rememberLazyListState()
-    Column {
-        LazyColumn(
-            modifier = modifier,
-            state = lazyState
-        ) {
-            items(mediaList) { media: Media ->
-                // First pair is image vector and second one is content description (String)
-                val pair = getRightIconAnDescription(media)
-                MediaCard(
-                    modifier = modifier,
-                    text = media.name,
-                    imageVector = pair.first,
-                    contentDescription = pair.second,
-                    onClick = {
-                        if (media is Folder) {
-                            openFolder(media)
+    if (mediaList.isNotEmpty()) { // It fixes issue while accessing last folder in chain
+        Column {
+            LazyColumn(
+                modifier = modifier,
+                state = lazyState
+            ) {
+                items(mediaList) { media: Media ->
+                    // First pair is image vector and second one is content description (String)
+                    val pair = getRightIconAnDescription(media)
+                    MediaCard(
+                        modifier = modifier,
+                        text = media.name,
+                        imageVector = pair.first,
+                        contentDescription = pair.second,
+                        onClick = {
+                            if (media is Folder) {
+                                openFolder(media)
+                            }
                         }
-                    }
-                )
+                    )
+                }
             }
         }
     }

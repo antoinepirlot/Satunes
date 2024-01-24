@@ -42,7 +42,7 @@ fun HomeView(
 
         Router(
             startDestination = startDestination.value,
-            folderListToShow = folderListToShow,
+            rootFolderList = folderListToShow,
             folderMap = folderMap,
             artistListToShow = artistListToShow,
             musicListToShow = musicListToShow,

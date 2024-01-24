@@ -16,6 +16,7 @@ class Music(id: Long, name: String, duration: Int, size: Int, uri: Uri?, relativ
     var relativePath = relativePath
 
     companion object {
+        const val FIRST_FOLDER_INDEX: Long = 1
         fun loadData(
             context: Context,
             musicList: MutableList<Music>,
@@ -77,7 +78,7 @@ class Music(id: Long, name: String, duration: Int, size: Int, uri: Uri?, relativ
             }
 
             //Id for folders
-            val folderId: MutableLongState = mutableLongStateOf(1)
+            val folderId: MutableLongState = mutableLongStateOf(FIRST_FOLDER_INDEX)
 
             while (cursor.moveToNext()) {
                 val music: Music = loadMusic(

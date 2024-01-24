@@ -18,7 +18,7 @@ import earth.mp3.ui.components.cards.CardList
 fun Router(
     modifier: Modifier = Modifier,
     startDestination: String,
-    folderListToShow: MutableList<Folder>,
+    rootFolderList: List<Folder>,
     artistListToShow: MutableList<Artist>,
     musicListToShow: MutableList<Music>,
     folderMap: Map<Long, Folder>
@@ -30,20 +30,19 @@ fun Router(
         startDestination = startDestination
     ) {
         composable(Destination.FOLDERS.link) {
-            CardList(
-                objectList = folderListToShow,
-                imageVector = Icons.Filled.ArrowForward,
-                contentDescription = "Arrow Forward",
-                onClick = { folder: Folder ->
-                    navController.navigate("${Destination.FOLDERS.link}/${folder.id}")
-                }
-            )
+            navController.navigate("${Destination.FOLDERS.link}/0")
         }
 
         composable("${Destination.FOLDERS.link}/{id}") {
-            val folder = folderMap[it.arguments!!.getString("id")!!.toLong()]
+            val folderId = it.arguments!!.getString("id")!!.toLong()
+            var folder: Folder = folderMap[Music.FIRST_FOLDER_INDEX]!!
+            var folderListToShow: List<Folder> = rootFolderList
+            if (folderId >= Music.FIRST_FOLDER_INDEX && folderId <= folderMap.size) {
+                folder = folderMap[folderId]!!
+                folderListToShow = folder.getSubFolderList()
+            }
             CardList(
-                objectList = folder!!.getSubFolderList(),
+                objectList = folderListToShow,
                 imageVector = Icons.Filled.ArrowForward,
                 contentDescription = "Arrow Forward",
                 onClick = { clickedFolder: Folder ->

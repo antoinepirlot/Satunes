@@ -184,7 +184,7 @@ class Music(id: Long, name: String, duration: Int, size: Int, uri: Uri?, relativ
             }
 
             splitedPath.removeAt(0)
-            rootFolder!!.createSubFolders(splitedPath.toMutableList(), folderId)
+            rootFolder!!.createSubFolders(splitedPath.toMutableList(), folderId, folderMap)
             rootFolder!!.getSubFolder(splitedPath.toMutableList())!!.addMusic(music)
         }
 

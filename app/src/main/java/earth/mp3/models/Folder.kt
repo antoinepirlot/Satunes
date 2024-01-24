@@ -58,7 +58,11 @@ class Folder(id: Long, name: String) {
      * @param folderId : the next folder id
      *
      */
-    fun createSubFolders(subFolderNameChainList: MutableList<String>, folderId: MutableLongState) {
+    fun createSubFolders(
+        subFolderNameChainList: MutableList<String>,
+        folderId: MutableLongState,
+        folderMap: MutableMap<Long, Folder>
+    ) {
         //TODO A folder have multiple sub-folders, check to use one instance per folder
         //TODO check if it works
         var parentFolder = this
@@ -71,6 +75,7 @@ class Folder(id: Long, name: String) {
             }
             if (subFolder == null) {
                 subFolder = Folder(folderId.longValue, folderName)
+                folderMap[folderId.longValue] = subFolder
                 folderId.longValue++
                 parentFolder.addSubFolder(subFolder)
             }
@@ -90,7 +95,7 @@ class Folder(id: Long, name: String) {
             //The forEach call this function is the folder match with the splited path
             return this
         }
-        if (splitedPath.size == 1 && this.name == splitedPath.get(0)) {
+        if (splitedPath.size == 1 && this.name == splitedPath[0]) {
             return this
         }
         this.subFolderList.forEach { subFolder: Folder ->

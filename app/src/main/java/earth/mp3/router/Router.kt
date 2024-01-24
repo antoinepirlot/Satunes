@@ -52,6 +52,7 @@ fun Router(
             }
             MediaCardList(
                 mediaList = folderListToShow,
+                parentMedia = folder,
                 imageVector = Icons.Filled.ArrowForward,
                 contentDescription = "Arrow Forward",
                 onClick = { clickedFolder: Media ->

@@ -9,12 +9,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
+import earth.mp3.models.Folder
 import earth.mp3.models.Media
 
 @Composable
 fun MediaCardList(
     modifier: Modifier = Modifier,
     mediaList: List<Media>,
+    parentMedia: Media? = null, // For example folder, it contains a list of music
     imageVector: ImageVector,
     contentDescription: String? = null,
     onClick: (media: Media) -> Unit
@@ -34,11 +36,22 @@ fun MediaCardList(
             )
         }
     }
+    when (parentMedia) {
+        is Folder -> {
+            //Show music list
+            MediaCardList(
+                mediaList = parentMedia.musicList,
+                imageVector = Icons.Filled.PlayArrow,
+                contentDescription = "Play Arrow",
+                onClick = { /* TODO */ }
+            )
+        }
+    }
 }
 
 @Composable
 @Preview
-fun <T> CardListPreview() {
+fun CardListPreview() {
     MediaCardList(
         mediaList = listOf<Media>(),
         imageVector = Icons.Filled.PlayArrow,

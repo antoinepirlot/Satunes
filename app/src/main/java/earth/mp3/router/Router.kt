@@ -35,7 +35,7 @@ fun Router(
             MediaCardList(
                 mediaList = rootFolderList,
                 openMedia = { clickedMedia: Media ->
-                    navController.navigate("${getDestinationOf(clickedMedia)}/${clickedMedia.id}")
+                    navController.navigate(getDestinationOf(clickedMedia))
                 }
             )
         }
@@ -59,7 +59,7 @@ fun Router(
             MediaCardList(
                 mediaList = listToShow,
                 openMedia = { clickedMedia: Media ->
-                    navController.navigate("${getDestinationOf(clickedMedia)}/${clickedMedia.id}")
+                    navController.navigate(getDestinationOf(clickedMedia))
                 }
             )
         }
@@ -85,24 +85,25 @@ fun Router(
 }
 
 /**
- * Return the destination link of media (folder, artists or music)
+ * Return the destination link of media (folder, artists or music) with its id.
+ * For example if media is folder, it returns: /folders/5
  *
  * @param media the media to get the destination link
  *
- * @return the media destination link
+ * @return the media destination link with the media's id
  */
 private fun getDestinationOf(media: Media): String {
     return when (media) {
         is Folder -> {
-            Destination.FOLDERS.link
+            "${Destination.FOLDERS.link}/${media.id}"
         }
 
         is Artist -> {
-            Destination.ARTISTS.link
+            "${Destination.ARTISTS.link}/${media.id}"
         }
 
         else -> {
-            Destination.MUSICS.link
+            "${Destination.MUSICS.link}/${media.id}"
         }
     }
 }

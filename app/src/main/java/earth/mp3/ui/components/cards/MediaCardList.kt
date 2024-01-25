@@ -58,7 +58,7 @@ fun CardListPreview() {
     )
 }
 
-fun getRightIconAnDescription(media: Media): Pair<ImageVector, String> {
+private fun getRightIconAnDescription(media: Media): Pair<ImageVector, String> {
     when (media) {
         is Folder -> {
             return Icons.Filled.ArrowForward to "Arrow Forward"

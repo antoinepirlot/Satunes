@@ -10,6 +10,7 @@ import earth.mp3.models.Artist
 import earth.mp3.models.Folder
 import earth.mp3.models.Media
 import earth.mp3.models.Music
+import earth.mp3.ui.PlayBackView
 import earth.mp3.ui.components.cards.MediaCardList
 
 @Composable
@@ -75,6 +76,10 @@ fun Router(
                 mediaList = musicListToShow,
                 openFolder = { /*TODO play music*/ }
             )
+        }
+
+        composable(Destination.PLAYBACK.link) {
+            PlayBackView()
         }
     }
 }

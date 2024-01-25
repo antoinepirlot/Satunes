@@ -1,11 +1,8 @@
 package earth.mp3.router
 
-import android.media.MediaPlayer
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -25,9 +22,6 @@ fun Router(
     musicMapToShow: MutableMap<Long, Music>,
     folderMap: Map<Long, Folder>
 ) {
-    val context = LocalContext.current
-    val mediaPlayer = remember { mutableStateOf(MediaPlayer(context)) }
-
     val listToShow: MutableList<Media> = remember { mutableListOf() }
 
     val navController = rememberNavController()
@@ -87,7 +81,6 @@ fun Router(
             MediaCardList(
                 mediaList = musicMapToShow.values.toList(),
                 openMedia = { clickedMedia: Media ->
-                    val link = getDestinationOf(clickedMedia)
                     navController.navigate(getDestinationOf(clickedMedia))
                 }
             )
@@ -96,7 +89,7 @@ fun Router(
         composable("${Destination.PLAYBACK.link}/{mediaId}") {
             //TODO play music
             val music = musicMapToShow[it.arguments!!.getString("mediaId")!!.toLong()]!!
-            PlayBackView(mediaPlayer = mediaPlayer.value, music = music)
+            PlayBackView(musicList = listOf(music))
         }
     }
 }

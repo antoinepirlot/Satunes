@@ -6,22 +6,35 @@ import android.media.MediaPlayer
 import android.net.Uri
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import earth.mp3.models.Music
 import earth.mp3.ui.components.music.MusicControlBar
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @Composable
 fun PlayBackView(
     modifier: Modifier = Modifier,
-    mediaPlayer: MediaPlayer,
-    music: Music
+    musicList: List<Music>
 ) {
-    startMusic(music, mediaPlayer)
+    val context = LocalContext.current
+    val mediaPlayer = remember { mutableStateOf(MediaPlayer(context)) }
+
+    LaunchedEffect(key1 = musicList) {
+        CoroutineScope(Dispatchers.Main).launch {
+            startMusic(musicList, mediaPlayer.value)
+        }
+    }
     Column(
         modifier = modifier
     ) {
-        MusicControlBar(mediaPlayer = mediaPlayer)
+        MusicControlBar(mediaPlayer = mediaPlayer.value)
     }
 }
 
@@ -29,11 +42,11 @@ fun PlayBackView(
 @Composable
 @Preview
 fun PlayBackViewPreview() {
-    PlayBackView(mediaPlayer = MediaPlayer(), music = Music(0, "", 0, 0, Uri.EMPTY, ""))
+    PlayBackView(musicList = listOf(Music(0, "", 0, 0, Uri.EMPTY, "")))
 }
 
-private fun startMusic(music: Music, mediaPlayer: MediaPlayer) {
-    val path = "/sdcard/${music.relativePath}/${music.name}"
+private fun startMusic(musicList: List<Music>, mediaPlayer: MediaPlayer) {
+    val path = "/sdcard/${musicList[0].relativePath}/${musicList[0].name}"
     // if if media player is playing is not checked, recomposition will crash the app
     if (!mediaPlayer.isPlaying) {
         mediaPlayer.apply {

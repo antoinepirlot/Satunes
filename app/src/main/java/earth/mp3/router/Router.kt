@@ -1,6 +1,5 @@
 package earth.mp3.router
 
-import android.media.AudioAttributes
 import android.media.MediaPlayer
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -97,22 +96,7 @@ fun Router(
         composable("${Destination.PLAYBACK.link}/{mediaId}") {
             //TODO play music
             val music = musicMapToShow[it.arguments!!.getString("mediaId")!!.toLong()]!!
-            val path = "/sdcard/${music.relativePath}/${music.name}"
-            // if if media player is playing is not checked, recomposition will crash the app
-            if (!mediaPlayer.value.isPlaying) {
-                mediaPlayer.value.apply {
-                    setAudioAttributes(
-                        AudioAttributes.Builder()
-                            .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                            .setUsage(AudioAttributes.USAGE_MEDIA)
-                            .build()
-                    )
-                    setDataSource(path)
-                    prepare()
-                    start()
-                }
-            }
-            PlayBackView(mediaPlayer = mediaPlayer.value)
+            PlayBackView(mediaPlayer = mediaPlayer.value, music = music)
         }
     }
 }

@@ -22,7 +22,7 @@ fun Router(
     startDestination: String,
     rootFolderList: List<Folder>,
     artistListToShow: MutableList<Artist>,
-    musicListToShow: MutableList<Music>,
+    musicMapToShow: MutableMap<Long, Music>,
     folderMap: Map<Long, Folder>
 ) {
     val context = LocalContext.current
@@ -85,7 +85,7 @@ fun Router(
 
         composable(Destination.MUSICS.link) {
             MediaCardList(
-                mediaList = musicListToShow,
+                mediaList = musicMapToShow.values.toList(),
                 openMedia = { clickedMedia: Media ->
                     navController.navigate(getDestinationOf(clickedMedia))
                 }

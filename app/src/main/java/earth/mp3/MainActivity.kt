@@ -39,14 +39,14 @@ class MainActivity : ComponentActivity() {
         if (!isAudioDenied()) {
             setContent {
 
-                val musicList = remember { mutableStateListOf<Music>() }
+                val musicMap = remember { mutableStateMapOf<Long, Music>() }
                 val rootFolderList = remember { mutableStateListOf<Folder>() }
                 val folderMap = remember { mutableStateMapOf<Long, Folder>() }
                 val artistList = remember { mutableStateListOf<Artist>() }
 
                 Music.loadData(
                     context = LocalContext.current,
-                    musicList = musicList,
+                    musicMap = musicMap,
                     rootFolderList = rootFolderList,
                     folderMap = folderMap,
                     artistList = artistList
@@ -68,7 +68,7 @@ class MainActivity : ComponentActivity() {
                             ) {
                                 HomeView(
                                     modifier = Modifier,
-                                    musicList = musicList,
+                                    musicMap = musicMap,
                                     folderList = rootFolderList,
                                     artistList = artistList,
                                     folderMap = folderMap

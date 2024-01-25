@@ -3,6 +3,7 @@ package earth.mp3.ui.views
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -12,6 +13,7 @@ import earth.mp3.models.Artist
 import earth.mp3.models.Folder
 import earth.mp3.models.Music
 import earth.mp3.models.utils.loadObjectsTo
+import earth.mp3.models.utils.loadObjectsToMap
 import earth.mp3.router.Destination
 import earth.mp3.router.Router
 import earth.mp3.ui.appBars.SectionSelection
@@ -19,7 +21,7 @@ import earth.mp3.ui.appBars.SectionSelection
 @Composable
 fun HomeView(
     modifier: Modifier = Modifier,
-    musicList: List<Music>,
+    musicMap: Map<Long, Music>,
     folderList: List<Folder>,
     artistList: List<Artist>,
     folderMap: Map<Long, Folder>
@@ -29,8 +31,8 @@ fun HomeView(
     val folderListToShow = remember { mutableStateListOf<Folder>() }
     loadObjectsTo(folderListToShow, folderList)
 
-    val musicListToShow = remember { mutableStateListOf<Music>() }
-    loadObjectsTo(musicListToShow, musicList)
+    val musicMapToShow = remember { mutableStateMapOf<Long, Music>() }
+    loadObjectsToMap(musicMapToShow, musicMap)
     val artistListToShow = remember { mutableStateListOf<Artist>() }
     loadObjectsTo(artistListToShow, artistList)
 
@@ -45,7 +47,7 @@ fun HomeView(
             rootFolderList = folderListToShow,
             folderMap = folderMap,
             artistListToShow = artistListToShow,
-            musicListToShow = musicListToShow,
+            musicMapToShow = musicMapToShow,
         )
     }
 }
@@ -54,7 +56,7 @@ fun HomeView(
 @Preview
 fun HomeViewPreview() {
     HomeView(
-        musicList = listOf(),
+        musicMap = mapOf(),
         folderList = listOf(),
         artistList = listOf(),
         folderMap = mapOf()

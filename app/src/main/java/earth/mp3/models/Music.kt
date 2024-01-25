@@ -21,7 +21,7 @@ class Music(
         const val FIRST_FOLDER_INDEX: Long = 1
         fun loadData(
             context: Context,
-            musicList: MutableList<Music>,
+            musicMap: MutableMap<Long, Music>,
             rootFolderList: MutableList<Folder>,
             folderMap: MutableMap<Long, Folder>,
             artistList: MutableList<Artist>,
@@ -38,7 +38,7 @@ class Music(
             context.contentResolver.query(
                 uri, projection, null, null
             )?.use { cursor ->
-                loadData(cursor, musicList, rootFolderList, folderMap, artistList, uri)
+                loadData(cursor, musicMap, rootFolderList, folderMap, artistList, uri)
             }
         }
 
@@ -47,7 +47,7 @@ class Music(
          */
         private fun loadData(
             cursor: Cursor,
-            musicList: MutableList<Music>,
+            musicMap: MutableMap<Long, Music>,
             rootFolderList: MutableList<Folder>,
             folderMap: MutableMap<Long, Folder>,
             artistList: MutableList<Artist>,
@@ -85,7 +85,7 @@ class Music(
             while (cursor.moveToNext()) {
                 val music: Music = loadMusic(
                     cursor,
-                    musicList,
+                    musicMap,
                     musicIdColumn,
                     musicNameColumn,
                     musicDurationColumn,
@@ -129,7 +129,7 @@ class Music(
          */
         private fun loadMusic(
             cursor: Cursor,
-            musicList: MutableList<Music>,
+            musicMap: MutableMap<Long, Music>,
             idColumn: Int,
             nameColumn: Int,
             durationColumn: Int,
@@ -148,7 +148,7 @@ class Music(
             // that represents the media file.
             val fileUri = Uri.Builder().appendPath("${uri.path}/${name}").build()
             val music = Music(id, name, duration, size, fileUri, relativePath)
-            musicList.add(music)
+            musicMap[music.id] = music
             return music
         }
 

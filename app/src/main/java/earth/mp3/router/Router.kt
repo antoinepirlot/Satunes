@@ -7,7 +7,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.core.net.toUri
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -17,7 +16,6 @@ import earth.mp3.models.Media
 import earth.mp3.models.Music
 import earth.mp3.ui.PlayBackView
 import earth.mp3.ui.components.cards.MediaCardList
-import java.io.File
 
 @Composable
 fun Router(
@@ -99,8 +97,7 @@ fun Router(
         composable("${Destination.PLAYBACK.link}/{mediaId}") {
             //TODO play music
             val music = musicMapToShow[it.arguments!!.getString("mediaId")!!.toLong()]!!
-            val file = File("/sdcard/${music.relativePath}/${music.name}")
-            val uri = file.toUri()
+            val path = "/sdcard/${music.relativePath}/${music.name}"
             // if if media player is playing is not checked, recomposition will crash the app
             if (!mediaPlayer.value.isPlaying) {
                 mediaPlayer.value.apply {
@@ -110,7 +107,7 @@ fun Router(
                             .setUsage(AudioAttributes.USAGE_MEDIA)
                             .build()
                     )
-                    setDataSource(context, uri)
+                    setDataSource(path)
                     prepare()
                     start()
                 }

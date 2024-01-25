@@ -31,7 +31,7 @@ fun Router(
         startDestination = startDestination
     ) {
         composable(Destination.FOLDERS.link) {
-            // /!\ This line prevent back gesture to exit the app
+            // /!\ This route prevent back gesture to exit the app
             MediaCardList(
                 mediaList = rootFolderList,
                 openMedia = { clickedMedia: Media ->

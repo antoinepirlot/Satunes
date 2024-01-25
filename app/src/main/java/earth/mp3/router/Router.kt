@@ -94,9 +94,8 @@ fun Router(
 
         composable("${Destination.PLAYBACK.link}/{mediaId}") {
             //TODO play music
-            val music =
-                //mediaPlayer.value.setDataSource()
-                PlayBackView(mediaPlayer = mediaPlayer.value)
+//            val music = mediaPlayer.value.setDataSource()
+            PlayBackView(mediaPlayer = mediaPlayer.value)
         }
     }
 }
@@ -120,7 +119,7 @@ private fun getDestinationOf(media: Media): String {
         }
 
         else -> {
-            "${Destination.MUSICS.link}/${media.id}"
+            "${Destination.PLAYBACK.link}/${media.id}"
         }
     }
 }

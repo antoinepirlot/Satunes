@@ -1,11 +1,13 @@
 package earth.mp3.router
 
+import android.media.AudioAttributes
 import android.media.MediaPlayer
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.core.net.toUri
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -15,6 +17,7 @@ import earth.mp3.models.Media
 import earth.mp3.models.Music
 import earth.mp3.ui.PlayBackView
 import earth.mp3.ui.components.cards.MediaCardList
+import java.io.File
 
 @Composable
 fun Router(
@@ -87,6 +90,7 @@ fun Router(
             MediaCardList(
                 mediaList = musicMapToShow.values.toList(),
                 openMedia = { clickedMedia: Media ->
+                    val link = getDestinationOf(clickedMedia)
                     navController.navigate(getDestinationOf(clickedMedia))
                 }
             )
@@ -94,7 +98,23 @@ fun Router(
 
         composable("${Destination.PLAYBACK.link}/{mediaId}") {
             //TODO play music
-//            val music = mediaPlayer.value.setDataSource()
+            val music = musicMapToShow[it.arguments!!.getString("mediaId")!!.toLong()]!!
+            val file = File("/sdcard/${music.relativePath}/${music.name}")
+            val uri = file.toUri()
+            // if if media player is playing is not checked, recomposition will crash the app
+            if (!mediaPlayer.value.isPlaying) {
+                mediaPlayer.value.apply {
+                    setAudioAttributes(
+                        AudioAttributes.Builder()
+                            .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                            .setUsage(AudioAttributes.USAGE_MEDIA)
+                            .build()
+                    )
+                    setDataSource(context, uri)
+                    prepare()
+                    start()
+                }
+            }
             PlayBackView(mediaPlayer = mediaPlayer.value)
         }
     }

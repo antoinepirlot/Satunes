@@ -32,7 +32,7 @@ fun PlayBackViewPreview() {
     PlayBackView(mediaPlayer = MediaPlayer(), music = Music(0, "", 0, 0, Uri.EMPTY, ""))
 }
 
-fun startMusic(music: Music, mediaPlayer: MediaPlayer) {
+private fun startMusic(music: Music, mediaPlayer: MediaPlayer) {
     val path = "/sdcard/${music.relativePath}/${music.name}"
     // if if media player is playing is not checked, recomposition will crash the app
     if (!mediaPlayer.isPlaying) {

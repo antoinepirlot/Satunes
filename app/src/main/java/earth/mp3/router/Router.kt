@@ -34,8 +34,8 @@ fun Router(
             // /!\ This line prevent back gesture to exit the app
             MediaCardList(
                 mediaList = rootFolderList,
-                openFolder = { clickedFolder: Media ->
-                    navController.navigate("${Destination.FOLDERS.link}/${clickedFolder.id}")
+                openMedia = { clickedMedia: Media ->
+                    navController.navigate("${getDestinationOf(clickedMedia)}/${clickedMedia.id}")
                 }
             )
         }
@@ -58,8 +58,8 @@ fun Router(
 
             MediaCardList(
                 mediaList = listToShow,
-                openFolder = { clickedFolder: Media ->
-                    navController.navigate("${Destination.FOLDERS.link}/${clickedFolder.id}")
+                openMedia = { clickedMedia: Media ->
+                    navController.navigate("${getDestinationOf(clickedMedia)}/${clickedMedia.id}")
                 }
             )
         }
@@ -67,19 +67,42 @@ fun Router(
         composable(Destination.ARTISTS.link) {
             MediaCardList(
                 mediaList = artistListToShow,
-                openFolder = { /*TODO show artist albums list*/ }
+                openMedia = { /*TODO show artist albums list*/ }
             )
         }
 
         composable(Destination.MUSICS.link) {
             MediaCardList(
                 mediaList = musicListToShow,
-                openFolder = { /*TODO play music*/ }
+                openMedia = { /*TODO play music*/ }
             )
         }
 
         composable(Destination.PLAYBACK.link) {
             PlayBackView()
+        }
+    }
+}
+
+/**
+ * Return the destination link of media (folder, artists or music)
+ *
+ * @param media the media to get the destination link
+ *
+ * @return the media destination link
+ */
+private fun getDestinationOf(media: Media): String {
+    return when (media) {
+        is Folder -> {
+            Destination.FOLDERS.link
+        }
+
+        is Artist -> {
+            Destination.ARTISTS.link
+        }
+
+        else -> {
+            Destination.MUSICS.link
         }
     }
 }

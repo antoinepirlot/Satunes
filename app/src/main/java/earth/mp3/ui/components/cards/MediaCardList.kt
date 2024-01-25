@@ -20,7 +20,7 @@ import earth.mp3.models.Media
 fun MediaCardList(
     modifier: Modifier = Modifier,
     mediaList: List<Media>,
-    openFolder: (folder: Folder) -> Unit
+    openMedia: (media: Media) -> Unit
 ) {
     val lazyState = rememberLazyListState()
     if (mediaList.isNotEmpty()) { // It fixes issue while accessing last folder in chain
@@ -37,11 +37,7 @@ fun MediaCardList(
                         text = media.name,
                         imageVector = pair.first,
                         contentDescription = pair.second,
-                        onClick = {
-                            if (media is Folder) {
-                                openFolder(media)
-                            }
-                        }
+                        onClick = { openMedia(media) }
                     )
                 }
             }
@@ -54,20 +50,24 @@ fun MediaCardList(
 fun CardListPreview() {
     MediaCardList(
         mediaList = listOf(),
-        openFolder = {}
+        openMedia = {}
     )
 }
 
 private fun getRightIconAnDescription(media: Media): Pair<ImageVector, String> {
-    when (media) {
+    return when (media) {
         is Folder -> {
-            return Icons.Filled.ArrowForward to "Arrow Forward"
+            Icons.Filled.ArrowForward to "Arrow Forward"
         }
 
         is Artist -> {
-            return Icons.Filled.AccountCircle to "Account Circle"
+            Icons.Filled.AccountCircle to "Account Circle"
+        }
+
+        else -> {
+            // In that case, media is Music
+            Icons.Filled.PlayArrow to "Play Arrow"
         }
     }
-    // In that case, media is Music
-    return Icons.Filled.PlayArrow to "Play Arrow"
+
 }

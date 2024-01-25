@@ -67,14 +67,18 @@ fun Router(
         composable(Destination.ARTISTS.link) {
             MediaCardList(
                 mediaList = artistListToShow,
-                openMedia = { /*TODO show artist albums list*/ }
+                openMedia = { clickedMedia: Media ->
+                    navController.navigate(getDestinationOf(clickedMedia))
+                }
             )
         }
 
         composable(Destination.MUSICS.link) {
             MediaCardList(
                 mediaList = musicListToShow,
-                openMedia = { /*TODO play music*/ }
+                openMedia = { clickedMedia: Media ->
+                    navController.navigate(getDestinationOf(clickedMedia))
+                }
             )
         }
 

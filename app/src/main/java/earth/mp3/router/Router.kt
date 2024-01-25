@@ -79,6 +79,10 @@ fun Router(
             )
         }
 
+        composable("${Destination.ARTISTS.link}/{id}") {
+            // TODO show artist
+        }
+
         composable(Destination.MUSICS.link) {
             MediaCardList(
                 mediaList = musicListToShow,

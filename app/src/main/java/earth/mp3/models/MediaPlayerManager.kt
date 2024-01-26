@@ -20,7 +20,14 @@ object MediaPlayerManager {
             return
         }
         musicPlaying = getNextMusic()
-        val path = "$ROOT_PATH/${musicPlaying!!.relativePath}${musicPlaying!!.name}"
+        prepareMediaPlayer("$ROOT_PATH/${musicPlaying!!.relativePath}${musicPlaying!!.name}")
+        mediaPlayer!!.start()
+    }
+
+    /**
+     * This function prepare the media player
+     */
+    private fun prepareMediaPlayer(path: String) {
         mediaPlayer!!.apply {
             setAudioAttributes(
                 AudioAttributes.Builder()
@@ -30,7 +37,6 @@ object MediaPlayerManager {
             )
             setDataSource(path)
             prepare()
-            start()
         }
     }
 
@@ -73,9 +79,7 @@ object MediaPlayerManager {
      */
     fun next() {
         if (musicQueueToPlay.isNotEmpty()) {
-            if (mediaPlayer!!.isPlaying) {
-                stop(reset = false)
-            }
+            stop(reset = false)
             startMusic()
         }
     }
@@ -104,7 +108,9 @@ object MediaPlayerManager {
      */
     fun previous() {
         if (musicQueueToPlay.isNotEmpty() && musicPlayingIndex > -1) {
-
+            stop(reset = false)
+            musicPlayingIndex -= 2
+            startMusic()
         }
     }
 

@@ -59,10 +59,12 @@ object MediaPlayerManager {
     /**
      * Stop the music
      */
-    fun stop() {
+    fun stop(reset: Boolean = true) {
+        if (reset) {
+            musicPlayingIndex = -1
+        }
         mediaPlayer!!.stop()
         mediaPlayer!!.release()
-        musicPlayingIndex = -1
         mediaPlayer = MediaPlayer()
     }
 
@@ -72,7 +74,7 @@ object MediaPlayerManager {
     fun next() {
         if (musicQueueToPlay.isNotEmpty()) {
             if (mediaPlayer!!.isPlaying) {
-                stop()
+                stop(reset = false)
             }
             startMusic()
         }
@@ -102,7 +104,7 @@ object MediaPlayerManager {
      */
     fun previous() {
         if (musicQueueToPlay.isNotEmpty() && musicPlayingIndex > -1) {
-            // TODO
+
         }
     }
 

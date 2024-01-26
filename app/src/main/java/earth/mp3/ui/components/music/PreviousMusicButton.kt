@@ -2,7 +2,7 @@ package earth.mp3.ui.components.music
 
 import android.annotation.SuppressLint
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
@@ -19,7 +19,7 @@ fun PreviousMusicButton(
     hasNext: MutableState<Boolean>,
 ) {
     IconButton(onClick = { previousMusic(hasPrevious, hasNext) }) {
-        Icon(imageVector = Icons.Filled.ArrowForward, contentDescription = "ArrowForward")
+        Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Arrow Back")
     }
 }
 

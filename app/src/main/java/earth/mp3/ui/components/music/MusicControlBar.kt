@@ -27,9 +27,10 @@ fun MusicControlBar(
         modifier = modifier.fillMaxWidth(),
     ) {
         if (hasPrevious.value) {
-            IconButton(onClick = { /*TODO*/ }) {
-                // TODO previous music
-            }
+            PreviousMusicButton(
+                hasPrevious = hasPrevious,
+                hasNext = hasNext
+            )
         }
         IconButton(
             modifier = modifier,

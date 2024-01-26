@@ -1,5 +1,7 @@
 package earth.mp3.ui.components.music
 
+import android.annotation.SuppressLint
+import android.net.Uri
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -13,10 +15,12 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import earth.mp3.models.MediaPlayerManager
+import earth.mp3.models.Music
 
 @Composable
 fun MusicControlBar(
     modifier: Modifier = Modifier,
+    musicPlaying: MutableState<Music>,
 ) {
     val isPlaying = rememberSaveable { mutableStateOf(MediaPlayerManager.isPlaying()) }
     val hasPrevious = rememberSaveable { mutableStateOf(MediaPlayerManager.hasPrevious()) }
@@ -27,6 +31,7 @@ fun MusicControlBar(
     ) {
         if (hasPrevious.value) {
             PreviousMusicButton(
+                musicPlaying = musicPlaying,
                 hasPrevious = hasPrevious,
                 hasNext = hasNext
             )
@@ -42,6 +47,7 @@ fun MusicControlBar(
         }
         if (hasNext.value) {
             NextMusicButton(
+                musicPlaying = musicPlaying,
                 hasNext = hasNext,
                 hasPrevious = hasPrevious
             )
@@ -49,10 +55,11 @@ fun MusicControlBar(
     }
 }
 
+@SuppressLint("UnrememberedMutableState")
 @Composable
 @Preview
 fun MediaControlBarPreview() {
-    MusicControlBar()
+    MusicControlBar(musicPlaying = mutableStateOf(Music(0, "", 0, 0, Uri.EMPTY, "")))
 }
 
 /**

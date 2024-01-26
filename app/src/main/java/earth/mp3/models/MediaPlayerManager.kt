@@ -88,6 +88,10 @@ object MediaPlayerManager {
         return mediaPlayer!!.isPlaying
     }
 
+    fun getMusicPlaying(): Music? {
+        return musicPlaying
+    }
+
     /**
      * Add all music from musicMap to the queue in the same order
      */

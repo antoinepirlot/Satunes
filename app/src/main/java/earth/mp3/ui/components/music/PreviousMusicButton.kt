@@ -13,12 +13,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import earth.mp3.models.MediaPlayerManager
 
 @Composable
-fun NextMusicButton(
+fun PreviousMusicButton(
     modifier: Modifier = Modifier,
-    hasNext: MutableState<Boolean>,
     hasPrevious: MutableState<Boolean>,
+    hasNext: MutableState<Boolean>,
 ) {
-    IconButton(onClick = { nextMusic(hasNext, hasPrevious) }) {
+    IconButton(onClick = { previousMusic(hasPrevious, hasNext) }) {
         Icon(imageVector = Icons.Filled.ArrowForward, contentDescription = "ArrowForward")
     }
 }
@@ -26,15 +26,15 @@ fun NextMusicButton(
 @SuppressLint("UnrememberedMutableState")
 @Composable
 @Preview
-fun NextMusicButtonPreview() {
-    NextMusicButton(hasNext = mutableStateOf(true), hasPrevious = mutableStateOf(true))
+fun PreviousMusicButtonPreview() {
+    PreviousMusicButton(
+        hasNext = mutableStateOf(true),
+        hasPrevious = mutableStateOf(true)
+    )
 }
 
-/**
- * Play the next music
- */
-private fun nextMusic(hasNext: MutableState<Boolean>, hasPrevious: MutableState<Boolean>) {
-    MediaPlayerManager.next()
-    hasNext.value = MediaPlayerManager.hasNext()
+private fun previousMusic(hasPrevious: MutableState<Boolean>, hasNext: MutableState<Boolean>) {
+    MediaPlayerManager.previous()
     hasPrevious.value = MediaPlayerManager.hasPrevious()
+    hasNext.value = MediaPlayerManager.hasNext()
 }

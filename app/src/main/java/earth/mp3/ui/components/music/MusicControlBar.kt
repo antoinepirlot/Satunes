@@ -21,11 +21,16 @@ fun MusicControlBar(
     mediaPlayerManager: MediaPlayerManager
 ) {
     val isPlaying = rememberSaveable { mutableStateOf(mediaPlayerManager.isPlaying()) }
+    val hasPrevious = rememberSaveable { mutableStateOf(MediaPlayerManager.hasPrevious()) }
+    val hasNext = rememberSaveable { mutableStateOf(MediaPlayerManager.hasNext()) }
+
     Row(
         modifier = modifier.fillMaxWidth(),
     ) {
-        IconButton(onClick = { /*TODO*/ }) {
-            // TODO previous music
+        if (hasPrevious.value) {
+            IconButton(onClick = { /*TODO*/ }) {
+                // TODO previous music
+            }
         }
         IconButton(
             modifier = modifier,
@@ -37,7 +42,12 @@ fun MusicControlBar(
                 Icon(imageVector = Icons.Filled.PlayArrow, contentDescription = "Play Icon")
             }
         }
-        NextMusicButton(mediaPlayerManager = mediaPlayerManager)
+        if (hasNext.value) {
+            NextMusicButton(
+                hasNext = hasNext,
+                hasPrevious = hasPrevious
+            )
+        }
     }
 }
 

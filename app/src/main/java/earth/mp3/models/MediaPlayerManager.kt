@@ -8,6 +8,7 @@ object MediaPlayerManager {
     private var mediaPlayer: MediaPlayer? = MediaPlayer()
     private val musicQueueToPlay: ArrayDeque<Music> = ArrayDeque()
     private var musicPlaying: Music? = null
+    private var musicPlayingIndex: Int = -1
 
     init {
         mediaPlayer!!.apply {
@@ -99,5 +100,18 @@ object MediaPlayerManager {
 
     fun hasNext(): Boolean {
         return musicQueueToPlay.isNotEmpty()
+    }
+
+    /**
+     * Play the previous music in deque
+     */
+    fun previous() {
+        if (musicQueueToPlay.isNotEmpty() && musicPlayingIndex > -1) {
+            // TODO
+        }
+    }
+
+    fun hasPrevious(): Boolean {
+        return musicQueueToPlay.isNotEmpty() && musicPlaying != musicQueueToPlay[0]
     }
 }

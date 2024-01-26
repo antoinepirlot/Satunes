@@ -10,17 +10,6 @@ object MediaPlayerManager {
     private var musicPlaying: Music? = null
     private var musicPlayingIndex: Int = -1
 
-    init {
-        mediaPlayer!!.apply {
-            setAudioAttributes(
-                AudioAttributes.Builder()
-                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                    .setUsage(AudioAttributes.USAGE_MEDIA)
-                    .build()
-            )
-        }
-    }
-
     /**
      * Start the first music of the music queue if it's not already playing
      *
@@ -35,6 +24,12 @@ object MediaPlayerManager {
         musicPlaying = getFirstMusic()
         val path = "$ROOT_PATH/${musicPlaying!!.relativePath}${musicPlaying!!.name}"
         mediaPlayer!!.apply {
+            setAudioAttributes(
+                AudioAttributes.Builder()
+                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                    .setUsage(AudioAttributes.USAGE_MEDIA)
+                    .build()
+            )
             setDataSource(path)
             prepare()
             start()

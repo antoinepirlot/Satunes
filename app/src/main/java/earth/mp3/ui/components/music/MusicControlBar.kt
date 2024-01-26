@@ -31,9 +31,7 @@ fun MusicControlBar(
             modifier = modifier,
             onClick = { playPause(mediaPlayerManager, isPlaying) }
         ) {
-            // TODO I used the inverse otherwise when is playing it is false
-            //  I think it's a issue with coroutine or something like this
-            if (!isPlaying.value) {
+            if (isPlaying.value) {
                 Icon(imageVector = Icons.Filled.Close, contentDescription = "Close")
             } else {
                 Icon(imageVector = Icons.Filled.PlayArrow, contentDescription = "Play Icon")

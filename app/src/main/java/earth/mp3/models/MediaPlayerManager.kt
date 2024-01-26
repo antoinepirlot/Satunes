@@ -74,10 +74,12 @@ object MediaPlayerManager {
      * Play the next music in queue
      */
     fun next() {
-        if (mediaPlayer!!.isPlaying) {
-            stop()
+        if (musicQueueToPlay.isNotEmpty()) {
+            if (mediaPlayer!!.isPlaying) {
+                stop()
+            }
+            startMusic()
         }
-        startMusic()
     }
 
     fun isPlaying(): Boolean {

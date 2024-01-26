@@ -17,8 +17,8 @@ fun NextMusicButton(
     mediaPlayerManager: MediaPlayerManager,
 ) {
     val hasNextMusic = rememberSaveable { mutableStateOf(true) }
-    IconButton(onClick = { mediaPlayerManager.next() }) {
-        if (hasNextMusic.value) {
+    if (hasNextMusic.value) {
+        IconButton(onClick = { nextMusic(mediaPlayerManager, hasNextMusic) }) {
             Icon(imageVector = Icons.Filled.ArrowForward, contentDescription = "ArrowForward")
         }
     }

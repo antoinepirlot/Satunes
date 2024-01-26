@@ -37,7 +37,6 @@ fun MusicControlBar(
                 Icon(imageVector = Icons.Filled.PlayArrow, contentDescription = "Play Icon")
             }
         }
-
         NextMusicButton(mediaPlayerManager = mediaPlayerManager)
     }
 }

@@ -1,7 +1,6 @@
 package earth.mp3.ui.components.music
 
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.PlayArrow
@@ -24,7 +23,7 @@ fun MusicControlBar(
     val hasNext = rememberSaveable { mutableStateOf(MediaPlayerManager.hasNext()) }
 
     Row(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier,
     ) {
         if (hasPrevious.value) {
             PreviousMusicButton(
@@ -33,7 +32,6 @@ fun MusicControlBar(
             )
         }
         IconButton(
-            modifier = modifier,
             onClick = { playPause(isPlaying) }
         ) {
             if (isPlaying.value) {

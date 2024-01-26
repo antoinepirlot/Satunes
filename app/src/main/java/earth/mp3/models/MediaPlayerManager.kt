@@ -62,6 +62,7 @@ object MediaPlayerManager {
     fun stop() {
         mediaPlayer!!.stop()
         mediaPlayer!!.release()
+        musicPlayingIndex = -1
         mediaPlayer = MediaPlayer()
     }
 

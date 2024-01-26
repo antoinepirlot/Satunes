@@ -16,7 +16,6 @@ class Music(
     val relativePath: String
 ) : Media {
 
-
     companion object {
         const val FIRST_FOLDER_INDEX: Long = 1
         fun loadData(
@@ -207,6 +206,15 @@ class Music(
             artistList.add(artist)
             return artist
         }
+    }
+
+    /**
+     * Return the path from the root to music
+     *
+     * @return the absolute path
+     */
+    fun getAbsolutePath(): String {
+        return "${MediaPlayerManager.ROOT_PATH}/$relativePath/$name"
     }
 
     override fun toString(): String {

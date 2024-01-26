@@ -4,7 +4,7 @@ import android.media.AudioAttributes
 import android.media.MediaPlayer
 
 object MediaPlayerManager {
-    private const val ROOT_PATH: String = "/sdcard"//Environment.getExternalStorageDirectory().path
+    const val ROOT_PATH: String = "/sdcard"//Environment.getExternalStorageDirectory().path
     private var mediaPlayer: MediaPlayer? = MediaPlayer()
     private val musicQueueToPlay: ArrayDeque<Music> = ArrayDeque()
     private var musicPlaying: Music? = null
@@ -20,7 +20,7 @@ object MediaPlayerManager {
             return
         }
         musicPlaying = getNextMusic()
-        prepareMediaPlayer("$ROOT_PATH/${musicPlaying!!.relativePath}${musicPlaying!!.name}")
+        prepareMediaPlayer(musicPlaying!!.getAbsolutePath())
         mediaPlayer!!.start()
     }
 
@@ -109,8 +109,10 @@ object MediaPlayerManager {
     fun previous() {
         if (musicQueueToPlay.isNotEmpty() && musicPlayingIndex > -1) {
             stop(reset = false)
-            musicPlayingIndex -= 2
-            startMusic()
+            musicPlayingIndex--
+            musicPlaying = musicQueueToPlay[musicPlayingIndex]
+            prepareMediaPlayer(musicPlaying!!.getAbsolutePath())
+            mediaPlayer!!.start()
         }
     }
 

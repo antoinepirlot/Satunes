@@ -19,7 +19,7 @@ object MediaPlayerManager {
         if (mediaPlayer!!.isPlaying) {
             return
         }
-        musicPlaying = getFirstMusic()
+        musicPlaying = getNextMusic()
         val path = "$ROOT_PATH/${musicPlaying!!.relativePath}${musicPlaying!!.name}"
         mediaPlayer!!.apply {
             setAudioAttributes(
@@ -35,13 +35,14 @@ object MediaPlayerManager {
     }
 
     /**
-     * get and remove the first music of the array deque
+     * Get the music from queue, increment the music play index and return the music from the queue
      *
      * @return the first music of the array deque
      * @throws NoSuchElementException if the queue is empty
      */
-    private fun getFirstMusic(): Music {
-        return musicQueueToPlay.removeFirst()
+    private fun getNextMusic(): Music {
+        musicPlayingIndex++
+        return musicQueueToPlay[musicPlayingIndex]
     }
 
     /**

@@ -13,8 +13,6 @@ object MediaPlayerManager {
     /**
      * Start the first music of the music queue if it's not already playing
      *
-     * @param musicList the list of music to be played
-     *
      * @throws NoSuchElementException if the queue is empty
      */
     fun startMusic() {

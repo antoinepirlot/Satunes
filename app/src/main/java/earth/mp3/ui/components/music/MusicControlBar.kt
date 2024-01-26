@@ -6,7 +6,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import earth.mp3.models.MediaPlayerManager
 
@@ -35,5 +34,5 @@ fun MusicControlBar(
 @Composable
 @Preview
 fun MediaControlBarPreview() {
-    MusicControlBar(mediaPlayerManager = MediaPlayerManager(LocalContext.current))
+    MusicControlBar(mediaPlayerManager = MediaPlayerManager)
 }

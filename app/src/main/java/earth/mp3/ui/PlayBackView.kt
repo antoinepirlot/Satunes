@@ -5,7 +5,6 @@ import android.net.Uri
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import earth.mp3.models.MediaPlayerManager
 import earth.mp3.models.Music
@@ -30,7 +29,7 @@ fun PlayBackView(
 @Preview
 fun PlayBackViewPreview() {
     PlayBackView(
-        mediaPlayerManager = MediaPlayerManager(LocalContext.current),
+        mediaPlayerManager = MediaPlayerManager,
         musicList = listOf(Music(0, "", 0, 0, Uri.EMPTY, ""))
     )
 }

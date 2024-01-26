@@ -1,27 +1,28 @@
 package earth.mp3.models
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.media.AudioAttributes
 import android.media.MediaPlayer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class MediaPlayerManager(context: Context) {
+object MediaPlayerManager {
     private val rootPath: String = "/sdcard"//Environment.getExternalStorageDirectory().path
-    private val mediaPlayer: MediaPlayer = MediaPlayer(context)
+    private val mediaPlayer: MediaPlayer = MediaPlayer()
     private val musicQueueToPlay: ArrayDeque<Music> = ArrayDeque()
     private var musicPlaying: Music? = null
 
     init {
-        mediaPlayer.apply {
-            setAudioAttributes(
-                AudioAttributes.Builder()
-                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                    .setUsage(AudioAttributes.USAGE_MEDIA)
-                    .build()
-            )
+        CoroutineScope(Dispatchers.Main).launch {
+            mediaPlayer.apply {
+                setAudioAttributes(
+                    AudioAttributes.Builder()
+                        .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                        .setUsage(AudioAttributes.USAGE_MEDIA)
+                        .build()
+                )
+            }
         }
     }
 
@@ -62,10 +63,12 @@ class MediaPlayerManager(context: Context) {
      * Play music if it is paused otherwise start music
      */
     fun playPause() {
-        if (isPlaying()) {
-            mediaPlayer.pause()
-        } else {
-            mediaPlayer.start()
+        CoroutineScope(Dispatchers.Main).launch {
+            if (isPlaying()) {
+                mediaPlayer.pause()
+            } else {
+                mediaPlayer.start()
+            }
         }
     }
 
@@ -73,8 +76,10 @@ class MediaPlayerManager(context: Context) {
      * Stop the music
      */
     fun stop() {
-        mediaPlayer.pause()
-        mediaPlayer.stop()
+        CoroutineScope(Dispatchers.Main).launch {
+            mediaPlayer.pause()
+            mediaPlayer.stop()
+        }
     }
 
     fun isPlaying(): Boolean {

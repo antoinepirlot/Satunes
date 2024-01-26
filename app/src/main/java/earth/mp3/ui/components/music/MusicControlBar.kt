@@ -18,9 +18,8 @@ import earth.mp3.models.MediaPlayerManager
 @Composable
 fun MusicControlBar(
     modifier: Modifier = Modifier,
-    mediaPlayerManager: MediaPlayerManager
 ) {
-    val isPlaying = rememberSaveable { mutableStateOf(mediaPlayerManager.isPlaying()) }
+    val isPlaying = rememberSaveable { mutableStateOf(MediaPlayerManager.isPlaying()) }
     val hasPrevious = rememberSaveable { mutableStateOf(MediaPlayerManager.hasPrevious()) }
     val hasNext = rememberSaveable { mutableStateOf(MediaPlayerManager.hasNext()) }
 
@@ -34,7 +33,7 @@ fun MusicControlBar(
         }
         IconButton(
             modifier = modifier,
-            onClick = { playPause(mediaPlayerManager, isPlaying) }
+            onClick = { playPause(isPlaying) }
         ) {
             if (isPlaying.value) {
                 Icon(imageVector = Icons.Filled.Close, contentDescription = "Close")
@@ -54,16 +53,15 @@ fun MusicControlBar(
 @Composable
 @Preview
 fun MediaControlBarPreview() {
-    MusicControlBar(mediaPlayerManager = MediaPlayerManager)
+    MusicControlBar()
 }
 
 /**
  * Play or pause the music using media player manager and update the state of isPlaying
  *
- * @param mediaPlayerManager the media player manager
  * @param isPlaying the boolean that indicates if the music is playing
  */
-private fun playPause(mediaPlayerManager: MediaPlayerManager, isPlaying: MutableState<Boolean>) {
-    mediaPlayerManager.playPause()
-    isPlaying.value = mediaPlayerManager.isPlaying()
+private fun playPause(isPlaying: MutableState<Boolean>) {
+    MediaPlayerManager.playPause()
+    isPlaying.value = MediaPlayerManager.isPlaying()
 }

@@ -23,7 +23,6 @@ fun Router(
     musicMapToShow: MutableMap<Long, Music>,
     folderMap: Map<Long, Folder>
 ) {
-    val mediaPlayerManager = MediaPlayerManager
     val listToShow: MutableList<Media> = remember { mutableListOf() }
 
     val navController = rememberNavController()
@@ -91,8 +90,8 @@ fun Router(
         composable("${Destination.PLAYBACK.link}/{mediaId}") {
             //TODO play music
             val music = musicMapToShow[it.arguments!!.getString("mediaId")!!.toLong()]!!
-            mediaPlayerManager.loadMusic(musicMapToShow)
-            PlayBackView(mediaPlayerManager = mediaPlayerManager, musicList = listOf(music))
+            MediaPlayerManager.loadMusic(musicMapToShow)
+            PlayBackView(musicList = listOf(music))
         }
     }
 }

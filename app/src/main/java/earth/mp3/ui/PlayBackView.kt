@@ -13,14 +13,13 @@ import earth.mp3.ui.components.music.MusicControlBar
 @Composable
 fun PlayBackView(
     modifier: Modifier = Modifier,
-    mediaPlayerManager: MediaPlayerManager,
     musicList: List<Music>,
 ) {
-    mediaPlayerManager.startMusic()
+    MediaPlayerManager.startMusic()
     Column(
         modifier = modifier
     ) {
-        MusicControlBar(mediaPlayerManager = mediaPlayerManager)
+        MusicControlBar()
     }
 }
 
@@ -29,7 +28,6 @@ fun PlayBackView(
 @Preview
 fun PlayBackViewPreview() {
     PlayBackView(
-        mediaPlayerManager = MediaPlayerManager,
         musicList = listOf(Music(0, "", 0, 0, Uri.EMPTY, ""))
     )
 }

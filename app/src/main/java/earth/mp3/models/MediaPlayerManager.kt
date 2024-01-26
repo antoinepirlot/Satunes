@@ -1,28 +1,22 @@
 package earth.mp3.models
 
-import android.annotation.SuppressLint
 import android.media.AudioAttributes
 import android.media.MediaPlayer
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 object MediaPlayerManager {
     private val rootPath: String = "/sdcard"//Environment.getExternalStorageDirectory().path
-    private val mediaPlayer: MediaPlayer = MediaPlayer()
+    private var mediaPlayer: MediaPlayer? = MediaPlayer()
     private val musicQueueToPlay: ArrayDeque<Music> = ArrayDeque()
     private var musicPlaying: Music? = null
 
     init {
-        CoroutineScope(Dispatchers.Main).launch {
-            mediaPlayer.apply {
-                setAudioAttributes(
-                    AudioAttributes.Builder()
-                        .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                        .setUsage(AudioAttributes.USAGE_MEDIA)
-                        .build()
-                )
-            }
+        mediaPlayer!!.apply {
+            setAudioAttributes(
+                AudioAttributes.Builder()
+                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                    .setUsage(AudioAttributes.USAGE_MEDIA)
+                    .build()
+            )
         }
     }
 
@@ -33,19 +27,16 @@ object MediaPlayerManager {
      *
      * @throws NoSuchElementException if the queue is empty
      */
-    @SuppressLint("SdCardPath")
     fun startMusic() {
-        CoroutineScope(Dispatchers.Main).launch {
-            if (mediaPlayer.isPlaying) {
-                return@launch
-            }
-            musicPlaying = getFirstMusic()
-            val path = "$rootPath/${musicPlaying!!.relativePath}/${musicPlaying!!.name}"
-            mediaPlayer.apply {
-                setDataSource(path)
-                prepare()
-                start()
-            }
+        if (mediaPlayer!!.isPlaying) {
+            return
+        }
+        musicPlaying = getFirstMusic()
+        val path = "$rootPath/${musicPlaying!!.relativePath}${musicPlaying!!.name}"
+        mediaPlayer!!.apply {
+            setDataSource(path)
+            prepare()
+            start()
         }
     }
 
@@ -63,12 +54,10 @@ object MediaPlayerManager {
      * Play music if it is paused otherwise start music
      */
     fun playPause() {
-        CoroutineScope(Dispatchers.Main).launch {
-            if (isPlaying()) {
-                mediaPlayer.pause()
-            } else {
-                mediaPlayer.start()
-            }
+        if (isPlaying()) {
+            mediaPlayer!!.pause()
+        } else {
+            mediaPlayer!!.start()
         }
     }
 
@@ -76,25 +65,22 @@ object MediaPlayerManager {
      * Stop the music
      */
     fun stop() {
-        CoroutineScope(Dispatchers.Main).launch {
-            mediaPlayer.pause()
-            mediaPlayer.stop()
-        }
+        mediaPlayer!!.stop()
+        mediaPlayer!!.release()
+        mediaPlayer = MediaPlayer()
     }
 
     fun isPlaying(): Boolean {
-        return mediaPlayer.isPlaying
+        return mediaPlayer!!.isPlaying
     }
 
     /**
      * Add all music from musicMap to the queue in the same order
      */
     fun loadMusic(musicMap: Map<Long, Music>) {
-        CoroutineScope(Dispatchers.Main).launch {
-            for (music in musicMap.values) {
-                if (!musicQueueToPlay.contains(music)) {
-                    musicQueueToPlay.add(music)
-                }
+        for (music in musicMap.values) {
+            if (!musicQueueToPlay.contains(music)) {
+                musicQueueToPlay.add(music)
             }
         }
     }

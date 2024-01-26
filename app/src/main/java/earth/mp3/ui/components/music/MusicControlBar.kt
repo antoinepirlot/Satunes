@@ -1,8 +1,13 @@
 package earth.mp3.ui.components.music
 
 import androidx.compose.foundation.layout.Row
-import androidx.compose.material3.Switch
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
@@ -15,19 +20,14 @@ fun MusicControlBar(
     mediaPlayerManager: MediaPlayerManager
 ) {
     Row(modifier = modifier) {
-        val checked = rememberSaveable { mutableStateOf(true) }
-        Switch(checked = checked.value, onCheckedChange = {
-            mediaPlayerManager.playPause()
-            checked.value = mediaPlayerManager.isPlaying()
-        })
-//        IconButton(onClick = { playPause(mediaPlayer) }) {
-//
-////            if (mediaPlayer.isPlaying) {
-////                Icon(imageVector = Icons.Filled.Close, contentDescription = "Close")
-////            } else {
-////                Icon(imageVector = Icons.Filled.PlayArrow, contentDescription = "Play Icon")
-////            }
-//        }
+        val isPlaying = rememberSaveable { mutableStateOf(mediaPlayerManager.isPlaying()) }
+        IconButton(onClick = { playPause(mediaPlayerManager, isPlaying) }) {
+            if (isPlaying.value) {
+                Icon(imageVector = Icons.Filled.Close, contentDescription = "Close")
+            } else {
+                Icon(imageVector = Icons.Filled.PlayArrow, contentDescription = "Play Icon")
+            }
+        }
     }
 }
 
@@ -35,4 +35,15 @@ fun MusicControlBar(
 @Preview
 fun MediaControlBarPreview() {
     MusicControlBar(mediaPlayerManager = MediaPlayerManager)
+}
+
+/**
+ * Play or pause the music using media player manager and update the state of isPlaying
+ *
+ * @param mediaPlayerManager the media player manager
+ * @param isPlaying the boolean that indicates if the music is playing
+ */
+private fun playPause(mediaPlayerManager: MediaPlayerManager, isPlaying: MutableState<Boolean>) {
+    mediaPlayerManager.playPause()
+    isPlaying.value = mediaPlayerManager.isPlaying()
 }

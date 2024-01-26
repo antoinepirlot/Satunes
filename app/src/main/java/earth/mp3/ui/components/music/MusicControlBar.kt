@@ -1,24 +1,25 @@
 package earth.mp3.ui.components.music
 
-import android.media.MediaPlayer
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.Switch
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import earth.mp3.models.MediaPlayerManager
 
 @Composable
 fun MusicControlBar(
     modifier: Modifier = Modifier,
-    mediaPlayer: MediaPlayer
+    mediaPlayerManager: MediaPlayerManager
 ) {
     Row(modifier = modifier) {
         val checked = rememberSaveable { mutableStateOf(true) }
         Switch(checked = checked.value, onCheckedChange = {
-            checked.value = it
-            playPause(mediaPlayer)
+            mediaPlayerManager.playPause()
+            checked.value = mediaPlayerManager.isPlaying()
         })
 //        IconButton(onClick = { playPause(mediaPlayer) }) {
 //
@@ -34,13 +35,5 @@ fun MusicControlBar(
 @Composable
 @Preview
 fun MediaControlBarPreview() {
-    MusicControlBar(mediaPlayer = MediaPlayer())
-}
-
-fun playPause(mediaPlayer: MediaPlayer) {
-    if (mediaPlayer.isPlaying) {
-        mediaPlayer.pause()
-    } else {
-        mediaPlayer.start()
-    }
+    MusicControlBar(mediaPlayerManager = MediaPlayerManager(LocalContext.current))
 }

@@ -70,6 +70,16 @@ object MediaPlayerManager {
         mediaPlayer = MediaPlayer()
     }
 
+    /**
+     * Play the next music in queue
+     */
+    fun next() {
+        if (mediaPlayer!!.isPlaying) {
+            stop()
+        }
+        startMusic()
+    }
+
     fun isPlaying(): Boolean {
         return mediaPlayer!!.isPlaying
     }
@@ -83,5 +93,9 @@ object MediaPlayerManager {
                 musicQueueToPlay.add(music)
             }
         }
+    }
+
+    fun hasNext(): Boolean {
+        return musicQueueToPlay.isNotEmpty()
     }
 }

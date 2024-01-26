@@ -1,6 +1,7 @@
 package earth.mp3.ui.components.music
 
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.PlayArrow
@@ -19,9 +20,17 @@ fun MusicControlBar(
     modifier: Modifier = Modifier,
     mediaPlayerManager: MediaPlayerManager
 ) {
-    Row(modifier = modifier) {
-        val isPlaying = rememberSaveable { mutableStateOf(mediaPlayerManager.isPlaying()) }
-        IconButton(onClick = { playPause(mediaPlayerManager, isPlaying) }) {
+    val isPlaying = rememberSaveable { mutableStateOf(mediaPlayerManager.isPlaying()) }
+    Row(
+        modifier = modifier.fillMaxWidth(),
+    ) {
+        IconButton(onClick = { /*TODO*/ }) {
+            // TODO previous music
+        }
+        IconButton(
+            modifier = modifier,
+            onClick = { playPause(mediaPlayerManager, isPlaying) }
+        ) {
             // TODO I used the inverse otherwise when is playing it is false
             //  I think it's a issue with coroutine or something like this
             if (!isPlaying.value) {
@@ -30,6 +39,8 @@ fun MusicControlBar(
                 Icon(imageVector = Icons.Filled.PlayArrow, contentDescription = "Play Icon")
             }
         }
+
+        NextMusicButton(mediaPlayerManager = mediaPlayerManager)
     }
 }
 

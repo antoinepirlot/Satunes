@@ -85,19 +85,12 @@ class MediaPlayerManager(context: Context) {
      * Add all music from musicMap to the queue in the same order
      */
     fun loadMusic(musicMap: Map<Long, Music>) {
-        for (music in musicMap.values) {
-            addMusicInQueue(music)
-        }
-    }
-
-    /**
-     * Add music in queue if it is not already present
-     *
-     * @param music the music to add to the queue
-     */
-    private fun addMusicInQueue(music: Music) {
-        if (!musicQueueToPlay.contains(music)) {
-            musicQueueToPlay.add(music)
+        CoroutineScope(Dispatchers.Main).launch {
+            for (music in musicMap.values) {
+                if (!musicQueueToPlay.contains(music)) {
+                    musicQueueToPlay.add(music)
+                }
+            }
         }
     }
 }

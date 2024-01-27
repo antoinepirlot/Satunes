@@ -108,8 +108,7 @@ class ExoPlayerManager private constructor(context: Context) {
     }
 
     /**
-     * Add all music from musicMap to the exoPlayer in the same order and configure the manager
-     * to the first music to play
+     * Add all music from musicMap to the exoPlayer in the same order
      */
     fun loadMusic(musicList: List<Music>) {
         for (music in musicList) {

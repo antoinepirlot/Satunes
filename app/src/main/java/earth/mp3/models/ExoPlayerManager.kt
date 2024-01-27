@@ -1,14 +1,29 @@
 package earth.mp3.models
 
 import android.content.Context
+import androidx.annotation.OptIn
 import androidx.media3.common.MediaItem
+import androidx.media3.common.TrackSelectionParameters.AudioOffloadPreferences
+import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 
-class ExoPlayerManager private constructor(context: Context) {
+class ExoPlayerManager @OptIn(UnstableApi::class) private constructor(context: Context) {
     private val exoPlayer: ExoPlayer = ExoPlayer.Builder(context).build()
     private val musicQueueToPlay: ArrayDeque<Music> = ArrayDeque()
     private var musicPlaying: Music? = null
     private var musicPlayingIndex: Int = -1
+
+    init {
+        val audioOffloadPreferences = AudioOffloadPreferences.Builder()
+            .setAudioOffloadMode(AudioOffloadPreferences.AUDIO_OFFLOAD_MODE_ENABLED)
+            .setIsGaplessSupportRequired(true)
+            .build()
+
+        exoPlayer.trackSelectionParameters = exoPlayer.trackSelectionParameters
+            .buildUpon()
+            .setAudioOffloadPreferences(audioOffloadPreferences)
+            .build()
+    }
 
     companion object {
         const val ROOT_PATH: String = "/sdcard"//Environment.getExternalStorageDirectory().path

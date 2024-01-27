@@ -7,7 +7,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import earth.mp3.models.ExoPlayerManager
 import earth.mp3.ui.components.music.MusicControlBar
@@ -15,15 +14,14 @@ import earth.mp3.ui.components.music.MusicControlBar
 @Composable
 fun PlayBackView(
     modifier: Modifier = Modifier,
-    exoPlayerManager: ExoPlayerManager
 ) {
-    exoPlayerManager.startMusic()
+    val exoPlayerManager = ExoPlayerManager.getInstance(null)
     val musicPlaying = remember { mutableStateOf(exoPlayerManager.getMusicPlaying()!!) }
     Column(
         modifier = modifier
     ) {
         Text(text = musicPlaying.value.name)
-        MusicControlBar(exoPlayerManager = exoPlayerManager, musicPlaying = musicPlaying)
+        MusicControlBar(musicPlaying = musicPlaying)
     }
 }
 
@@ -31,5 +29,5 @@ fun PlayBackView(
 @Composable
 @Preview
 fun PlayBackViewPreview() {
-    PlayBackView(exoPlayerManager = ExoPlayerManager.getInstance(LocalContext.current))
+    PlayBackView()
 }

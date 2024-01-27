@@ -94,8 +94,9 @@ fun Router(
             //TODO play music
             val music = musicMapToShow[it.arguments!!.getString("mediaId")!!.toLong()]!!
             exoPlayerManager.loadMusic(musicMapToShow)
+            exoPlayerManager.startMusic()
 //            MediaPlayerManager.loadMusic(musicMapToShow)
-            PlayBackView(exoPlayerManager = exoPlayerManager)
+            PlayBackView()
         }
     }
 }

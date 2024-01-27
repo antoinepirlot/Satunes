@@ -11,6 +11,8 @@ class ExoPlayerManager private constructor(context: Context) {
     private var musicPlayingIndex: Int = -1
 
     companion object {
+        const val ROOT_PATH: String = "/sdcard"//Environment.getExternalStorageDirectory().path
+
         private lateinit var instance: ExoPlayerManager
 
         fun getInstance(context: Context?): ExoPlayerManager {
@@ -22,8 +24,6 @@ class ExoPlayerManager private constructor(context: Context) {
             }
             return instance
         }
-
-        const val ROOT_PATH: String = "/sdcard"//Environment.getExternalStorageDirectory().path
     }
 
     /**
@@ -32,7 +32,7 @@ class ExoPlayerManager private constructor(context: Context) {
      * @throws NoSuchElementException if the queue is empty
      */
     fun startMusic() {
-        if (exoPlayer.isPlaying) {
+        if (isPlaying()) {
             return
         }
         musicPlaying = getNextMusic()
@@ -83,8 +83,7 @@ class ExoPlayerManager private constructor(context: Context) {
         if (hasNext()) {
             stop(reset = false)
             exoPlayer.seekToNext()
-            musicPlayingIndex++
-            musicPlaying = musicQueueToPlay[musicPlayingIndex]
+            startMusic()
         }
     }
 
@@ -122,6 +121,7 @@ class ExoPlayerManager private constructor(context: Context) {
             val previousMediaItem = exoPlayer.currentMediaItem
             exoPlayer.seekToPrevious()
             if (previousMediaItem != exoPlayer.currentMediaItem) {
+                exoPlayer.prepare()
                 musicPlayingIndex--
                 musicPlaying = musicQueueToPlay[musicPlayingIndex]
             }

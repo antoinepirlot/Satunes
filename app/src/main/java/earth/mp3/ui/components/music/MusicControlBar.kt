@@ -13,7 +13,6 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import earth.mp3.models.ExoPlayerManager
 import earth.mp3.models.Music
@@ -21,9 +20,10 @@ import earth.mp3.models.Music
 @Composable
 fun MusicControlBar(
     modifier: Modifier = Modifier,
-    exoPlayerManager: ExoPlayerManager,
     musicPlaying: MutableState<Music>,
 ) {
+    val exoPlayerManager = ExoPlayerManager.getInstance(null)
+
     val isPlaying = rememberSaveable { mutableStateOf(exoPlayerManager.isPlaying()) }
     val hasPrevious = rememberSaveable { mutableStateOf(exoPlayerManager.hasPrevious()) }
     val hasNext = rememberSaveable { mutableStateOf(exoPlayerManager.hasNext()) }
@@ -62,7 +62,6 @@ fun MusicControlBar(
 @Preview
 fun MediaControlBarPreview() {
     MusicControlBar(
-        exoPlayerManager = ExoPlayerManager.getInstance(LocalContext.current),
         musicPlaying = mutableStateOf(Music(0, "", 0, 0, Uri.EMPTY, ""))
     )
 }

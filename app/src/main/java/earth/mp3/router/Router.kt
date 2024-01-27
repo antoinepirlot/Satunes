@@ -15,7 +15,7 @@ import earth.mp3.models.Media
 import earth.mp3.models.Music
 import earth.mp3.ui.PlayBackView
 import earth.mp3.ui.components.cards.MediaCardList
-import earth.mp3.ui.utils.startMusic
+import earth.mp3.ui.utils.startPlaylist
 
 @Composable
 fun Router(
@@ -135,7 +135,7 @@ private fun openMedia(
 ) {
     navController.navigate(getDestinationOf(media))
     if (media is Music && musicList != null) {
-        startMusic(musicList)
+        startPlaylist(musicList)
     }
 }
 

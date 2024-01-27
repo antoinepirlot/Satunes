@@ -115,16 +115,10 @@ class ExoPlayerManager private constructor(context: Context) {
         for (music in musicList) {
             if (!musicQueueToPlay.contains(music)) {
                 musicQueueToPlay.add(music)
-                if (musicPlaying == null) {
-                    musicPlaying = music
-                    musicPlayingIndex = 0
-                }
-
                 val mediaItem = MediaItem.fromUri(music.getAbsolutePath())
                 exoPlayer.addMediaItem(mediaItem)
             }
         }
-        exoPlayer.prepare()
     }
 
     /**

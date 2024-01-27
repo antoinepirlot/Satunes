@@ -58,20 +58,6 @@ class ExoPlayerManager @OptIn(UnstableApi::class) private constructor(context: C
     }
 
     /**
-     * Start the first music of the music queue if it's not already playing
-     *
-     * @throws NoSuchElementException if the queue is empty
-     */
-//    fun start() {
-//        if (isPlaying()) {
-//            return
-//        }
-//        musicPlaying = getNextMusic()
-//        exoPlayer.prepare()
-//        playPause()
-//    }
-
-    /**
      * Start the music in params.
      * If the music to play is already the music playing nothing is done.
      *

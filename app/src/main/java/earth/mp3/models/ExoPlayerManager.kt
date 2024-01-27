@@ -6,14 +6,22 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.TrackSelectionParameters.AudioOffloadPreferences
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.exoplayer.trackselection.DefaultTrackSelector
+import androidx.media3.exoplayer.trackselection.TrackSelector
 
 class ExoPlayerManager @OptIn(UnstableApi::class) private constructor(context: Context) {
-    private val exoPlayer: ExoPlayer = ExoPlayer.Builder(context).build()
+    private lateinit var exoPlayer: ExoPlayer
+    private lateinit var trackSelector: TrackSelector
     private val musicQueueToPlay: ArrayDeque<Music> = ArrayDeque()
     private var musicPlaying: Music? = null
     private var musicPlayingIndex: Int = -1
 
     init {
+        trackSelector = DefaultTrackSelector(context)
+        exoPlayer = ExoPlayer.Builder(context)
+            .setTrackSelector(trackSelector)
+            .build()
+
         val audioOffloadPreferences = AudioOffloadPreferences.Builder()
             .setAudioOffloadMode(AudioOffloadPreferences.AUDIO_OFFLOAD_MODE_ENABLED)
             .setIsGaplessSupportRequired(true)
@@ -54,24 +62,36 @@ class ExoPlayerManager @OptIn(UnstableApi::class) private constructor(context: C
      *
      * @throws NoSuchElementException if the queue is empty
      */
-    fun startMusic() {
-        if (isPlaying()) {
-            return
-        }
-        musicPlaying = getNextMusic()
-        exoPlayer.prepare()
-        playPause()
-    }
+//    fun start() {
+//        if (isPlaying()) {
+//            return
+//        }
+//        musicPlaying = getNextMusic()
+//        exoPlayer.prepare()
+//        playPause()
+//    }
 
     /**
-     * Get the music from queue, increment the music play index and return the music from the queue
+     * Start the music in params.
+     * If the music to play is already the music playing nothing is done.
      *
-     * @return the first music of the array deque
-     * @throws NoSuchElementException if the queue is empty
+     * @param musicToPlay the music to play
      */
-    private fun getNextMusic(): Music {
-        musicPlayingIndex++
-        return musicQueueToPlay[musicPlayingIndex]
+    fun start(musicToPlay: Music) {
+        if (musicToPlay == musicPlaying) {
+            return
+        }
+        for (i: Int in 0..<musicQueueToPlay.size) {
+            val music = musicQueueToPlay[i]
+            if (musicToPlay == music) {
+                musicPlaying = musicToPlay
+                musicPlayingIndex = i
+                break
+            }
+        }
+        exoPlayer.seekTo(musicPlayingIndex, 0)
+        exoPlayer.prepare()
+        exoPlayer.play()
     }
 
     /**
@@ -104,10 +124,22 @@ class ExoPlayerManager @OptIn(UnstableApi::class) private constructor(context: C
      */
     fun next() {
         if (hasNext()) {
-            stop(reset = false)
             exoPlayer.seekToNext()
-            startMusic()
+            musicPlaying = getNextMusic()
+            exoPlayer.prepare()
+            playPause()
         }
+    }
+
+    /**
+     * Get the music from queue, increment the music play index and return the music from the queue
+     *
+     * @return the first music of the array deque
+     * @throws NoSuchElementException if the queue is empty
+     */
+    private fun getNextMusic(): Music {
+        musicPlayingIndex++
+        return musicQueueToPlay[musicPlayingIndex]
     }
 
     fun hasNext(): Boolean {
@@ -140,7 +172,6 @@ class ExoPlayerManager @OptIn(UnstableApi::class) private constructor(context: C
      */
     fun previous() {
         if (hasPrevious()) {
-            stop(reset = false)
             val previousMediaItem = exoPlayer.currentMediaItem
             exoPlayer.seekToPrevious()
             if (previousMediaItem != exoPlayer.currentMediaItem) {

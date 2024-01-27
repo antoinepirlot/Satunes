@@ -4,12 +4,14 @@ import earth.mp3.models.ExoPlayerManager
 import earth.mp3.models.Music
 
 /**
- * Start playback and load music if no music in queue
+ * Start the music from music list.
+ *
+ * @param musicList the music list of musics to play
+ * @param musicToPlay the music to play from the music list
  */
-fun startPlaylist(musicList: List<Music>?) {
+
+fun startMusicFromPlaylist(musicList: List<Music>, musicToPlay: Music) {
     val exoPlayerManager = ExoPlayerManager.getInstance(null)
-    if (musicList != null) {
-        exoPlayerManager.loadMusic(musicList)
-    }
-    exoPlayerManager.startMusic()
+    exoPlayerManager.loadMusic(musicList)
+    exoPlayerManager.start(musicToPlay)
 }

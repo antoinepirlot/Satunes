@@ -6,22 +6,16 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.TrackSelectionParameters.AudioOffloadPreferences
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
-import androidx.media3.exoplayer.trackselection.DefaultTrackSelector
 import androidx.media3.exoplayer.trackselection.TrackSelector
 
 class ExoPlayerManager @OptIn(UnstableApi::class) private constructor(context: Context) {
-    private lateinit var exoPlayer: ExoPlayer
+    private val exoPlayer: ExoPlayer = ExoPlayer.Builder(context).build()
     private lateinit var trackSelector: TrackSelector
     private val musicQueueToPlay: ArrayDeque<Music> = ArrayDeque()
     private var musicPlaying: Music? = null
     private var musicPlayingIndex: Int = -1
 
     init {
-        trackSelector = DefaultTrackSelector(context)
-        exoPlayer = ExoPlayer.Builder(context)
-            .setTrackSelector(trackSelector)
-            .build()
-
         val audioOffloadPreferences = AudioOffloadPreferences.Builder()
             .setAudioOffloadMode(AudioOffloadPreferences.AUDIO_OFFLOAD_MODE_ENABLED)
             .setIsGaplessSupportRequired(true)

@@ -24,7 +24,7 @@ fun Router(
     musicMapToShow: MutableMap<Long, Music>,
     folderMap: Map<Long, Folder>
 ) {
-    val exoPlayerManager = ExoPlayerManager(LocalContext.current)
+    val exoPlayerManager = ExoPlayerManager.getInstance(LocalContext.current)
 
     val listToShow: MutableList<Media> = remember { mutableListOf() }
 

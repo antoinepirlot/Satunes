@@ -33,14 +33,13 @@ fun MusicControlBar(
     ) {
         if (hasPrevious.value) {
             PreviousMusicButton(
-                exoPlayerManager = exoPlayerManager,
                 musicPlaying = musicPlaying,
                 hasPrevious = hasPrevious,
                 hasNext = hasNext
             )
         }
         IconButton(
-            onClick = { playPause(exoPlayerManager, isPlaying) }
+            onClick = { playPause(isPlaying) }
         ) {
             if (isPlaying.value) {
                 Icon(imageVector = Icons.Filled.Close, contentDescription = "Close")
@@ -50,7 +49,6 @@ fun MusicControlBar(
         }
         if (hasNext.value) {
             NextMusicButton(
-                exoPlayerManager = exoPlayerManager,
                 musicPlaying = musicPlaying,
                 hasNext = hasNext,
                 hasPrevious = hasPrevious
@@ -64,7 +62,7 @@ fun MusicControlBar(
 @Preview
 fun MediaControlBarPreview() {
     MusicControlBar(
-        exoPlayerManager = ExoPlayerManager(LocalContext.current),
+        exoPlayerManager = ExoPlayerManager.getInstance(LocalContext.current),
         musicPlaying = mutableStateOf(Music(0, "", 0, 0, Uri.EMPTY, ""))
     )
 }
@@ -74,7 +72,8 @@ fun MediaControlBarPreview() {
  *
  * @param isPlaying the boolean that indicates if the music is playing
  */
-private fun playPause(exoPlayerManager: ExoPlayerManager, isPlaying: MutableState<Boolean>) {
+private fun playPause(isPlaying: MutableState<Boolean>) {
+    val exoPlayerManager = ExoPlayerManager.getInstance(null)
     exoPlayerManager.playPause()
     isPlaying.value = exoPlayerManager.isPlaying()
 }

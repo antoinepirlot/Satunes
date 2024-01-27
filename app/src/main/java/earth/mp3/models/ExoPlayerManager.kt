@@ -4,13 +4,25 @@ import android.content.Context
 import androidx.media3.common.MediaItem
 import androidx.media3.exoplayer.ExoPlayer
 
-class ExoPlayerManager(context: Context) {
+class ExoPlayerManager private constructor(context: Context) {
     private val exoPlayer: ExoPlayer = ExoPlayer.Builder(context).build()
     private val musicQueueToPlay: ArrayDeque<Music> = ArrayDeque()
     private var musicPlaying: Music? = null
     private var musicPlayingIndex: Int = -1
 
     companion object {
+        private lateinit var instance: ExoPlayerManager
+
+        fun getInstance(context: Context?): ExoPlayerManager {
+            if (context == null && !::instance.isInitialized) {
+                throw IllegalStateException("The ExoPlayerManager is not instanced, it needs a context")
+            }
+            if (!::instance.isInitialized) {
+                instance = ExoPlayerManager(context!!)
+            }
+            return instance
+        }
+
         const val ROOT_PATH: String = "/sdcard"//Environment.getExternalStorageDirectory().path
     }
 

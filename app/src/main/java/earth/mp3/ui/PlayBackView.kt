@@ -31,5 +31,5 @@ fun PlayBackView(
 @Composable
 @Preview
 fun PlayBackViewPreview() {
-    PlayBackView(exoPlayerManager = ExoPlayerManager(LocalContext.current))
+    PlayBackView(exoPlayerManager = ExoPlayerManager.getInstance(LocalContext.current))
 }

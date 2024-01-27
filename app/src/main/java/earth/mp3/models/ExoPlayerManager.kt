@@ -1,6 +1,7 @@
 package earth.mp3.models
 
 import android.content.Context
+import android.os.Environment
 import androidx.annotation.OptIn
 import androidx.media3.common.MediaItem
 import androidx.media3.common.TrackSelectionParameters.AudioOffloadPreferences
@@ -28,7 +29,7 @@ class ExoPlayerManager @OptIn(UnstableApi::class) private constructor(context: C
     }
 
     companion object {
-        const val ROOT_PATH: String = "/sdcard"//Environment.getExternalStorageDirectory().path
+        val ROOT_PATH: String = Environment.getExternalStorageDirectory().path
 
         private lateinit var instance: ExoPlayerManager
 

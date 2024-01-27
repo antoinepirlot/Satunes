@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -39,7 +40,11 @@ fun Router(
             MediaCardList(
                 mediaList = rootFolderList,
                 openMedia = { clickedMedia: Media ->
-                    navController.navigate(getDestinationOf(clickedMedia))
+                    openMedia(
+                        navController,
+                        clickedMedia,
+                        musicMapToShow.values.toList()
+                    )
                 }
             )
         }
@@ -63,7 +68,11 @@ fun Router(
             MediaCardList(
                 mediaList = listToShow,
                 openMedia = { clickedMedia: Media ->
-                    navController.navigate(getDestinationOf(clickedMedia))
+                    openMedia(
+                        navController,
+                        clickedMedia,
+                        musicMapToShow.values.toList()
+                    )
                 }
             )
         }
@@ -72,7 +81,11 @@ fun Router(
             MediaCardList(
                 mediaList = artistListToShow,
                 openMedia = { clickedMedia: Media ->
-                    navController.navigate(getDestinationOf(clickedMedia))
+                    openMedia(
+                        navController,
+                        clickedMedia,
+                        musicMapToShow.values.toList()
+                    )
                 }
             )
         }
@@ -85,7 +98,11 @@ fun Router(
             MediaCardList(
                 mediaList = musicMapToShow.values.toList(),
                 openMedia = { clickedMedia: Media ->
-                    navController.navigate(getDestinationOf(clickedMedia))
+                    openMedia(
+                        navController,
+                        clickedMedia,
+                        musicMapToShow.values.toList()
+                    )
                 }
             )
         }
@@ -93,11 +110,31 @@ fun Router(
         composable("${Destination.PLAYBACK.link}/{mediaId}") {
             //TODO play music
             val music = musicMapToShow[it.arguments!!.getString("mediaId")!!.toLong()]!!
-            exoPlayerManager.loadMusic(musicMapToShow)
-            exoPlayerManager.startMusic()
-//            MediaPlayerManager.loadMusic(musicMapToShow)
             PlayBackView()
         }
+    }
+}
+
+/**
+ * Open the media, when it is:
+ *      Music: navigate to the media's destination and start music with exoplayer
+ *
+ *      Folder: navigate to the media's destination
+ *
+ *      Artist: navigate to the media's destination
+ *
+ * @param navController the nav controller to redirect to the good path
+ * @param media the media to open
+ * @param musicList the music list to load in exoplayer (if clickedMedia is a music)
+ */
+private fun openMedia(
+    navController: NavHostController,
+    media: Media,
+    musicList: List<Music>?
+) {
+    navController.navigate(getDestinationOf(media))
+    if (media is Music && musicList != null) {
+        startMusic(musicList)
     }
 }
 
@@ -123,4 +160,15 @@ private fun getDestinationOf(media: Media): String {
             "${Destination.PLAYBACK.link}/${media.id}"
         }
     }
+}
+
+/**
+ * Start playback and load music if no music in queue
+ */
+private fun startMusic(musicList: List<Music>?) {
+    val exoPlayerManager = ExoPlayerManager.getInstance(null)
+    if (musicList != null) {
+        exoPlayerManager.loadMusic(musicList)
+    }
+    exoPlayerManager.playPause()
 }

@@ -108,16 +108,23 @@ class ExoPlayerManager private constructor(context: Context) {
     }
 
     /**
-     * Add all music from musicMap to the exoPlayer in the same order
+     * Add all music from musicMap to the exoPlayer in the same order and configure the manager
+     * to the first music to play
      */
-    fun loadMusic(musicMap: Map<Long, Music>) {
-        for (music in musicMap.values) {
+    fun loadMusic(musicList: List<Music>) {
+        for (music in musicList) {
             if (!musicQueueToPlay.contains(music)) {
                 musicQueueToPlay.add(music)
+                if (musicPlaying == null) {
+                    musicPlaying = music
+                    musicPlayingIndex = 0
+                }
+
                 val mediaItem = MediaItem.fromUri(music.getAbsolutePath())
                 exoPlayer.addMediaItem(mediaItem)
             }
         }
+        exoPlayer.prepare()
     }
 
     /**

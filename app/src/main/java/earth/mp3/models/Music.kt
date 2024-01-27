@@ -214,7 +214,7 @@ class Music(
      * @return the absolute path
      */
     fun getAbsolutePath(): String {
-        return "${MediaPlayerManager.ROOT_PATH}/$relativePath/$name"
+        return "${ExoPlayerManager.ROOT_PATH}/$relativePath/$name"
     }
 
     override fun toString(): String {

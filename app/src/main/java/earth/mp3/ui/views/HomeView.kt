@@ -26,6 +26,7 @@ fun HomeView(
     artistList: List<Artist>,
     folderMap: Map<Long, Folder>
 ) {
+
     val startDestination = rememberSaveable { mutableStateOf(Destination.FOLDERS.link) }
 
     val folderListToShow = remember { mutableStateListOf<Folder>() }

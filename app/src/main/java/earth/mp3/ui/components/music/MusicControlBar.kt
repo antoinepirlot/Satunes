@@ -13,31 +13,34 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import earth.mp3.models.MediaPlayerManager
+import earth.mp3.models.ExoPlayerManager
 import earth.mp3.models.Music
 
 @Composable
 fun MusicControlBar(
     modifier: Modifier = Modifier,
+    exoPlayerManager: ExoPlayerManager,
     musicPlaying: MutableState<Music>,
 ) {
-    val isPlaying = rememberSaveable { mutableStateOf(MediaPlayerManager.isPlaying()) }
-    val hasPrevious = rememberSaveable { mutableStateOf(MediaPlayerManager.hasPrevious()) }
-    val hasNext = rememberSaveable { mutableStateOf(MediaPlayerManager.hasNext()) }
+    val isPlaying = rememberSaveable { mutableStateOf(exoPlayerManager.isPlaying()) }
+    val hasPrevious = rememberSaveable { mutableStateOf(exoPlayerManager.hasPrevious()) }
+    val hasNext = rememberSaveable { mutableStateOf(exoPlayerManager.hasNext()) }
 
     Row(
         modifier = modifier,
     ) {
         if (hasPrevious.value) {
             PreviousMusicButton(
+                exoPlayerManager = exoPlayerManager,
                 musicPlaying = musicPlaying,
                 hasPrevious = hasPrevious,
                 hasNext = hasNext
             )
         }
         IconButton(
-            onClick = { playPause(isPlaying) }
+            onClick = { playPause(exoPlayerManager, isPlaying) }
         ) {
             if (isPlaying.value) {
                 Icon(imageVector = Icons.Filled.Close, contentDescription = "Close")
@@ -47,6 +50,7 @@ fun MusicControlBar(
         }
         if (hasNext.value) {
             NextMusicButton(
+                exoPlayerManager = exoPlayerManager,
                 musicPlaying = musicPlaying,
                 hasNext = hasNext,
                 hasPrevious = hasPrevious
@@ -59,7 +63,10 @@ fun MusicControlBar(
 @Composable
 @Preview
 fun MediaControlBarPreview() {
-    MusicControlBar(musicPlaying = mutableStateOf(Music(0, "", 0, 0, Uri.EMPTY, "")))
+    MusicControlBar(
+        exoPlayerManager = ExoPlayerManager(LocalContext.current),
+        musicPlaying = mutableStateOf(Music(0, "", 0, 0, Uri.EMPTY, ""))
+    )
 }
 
 /**
@@ -67,7 +74,7 @@ fun MediaControlBarPreview() {
  *
  * @param isPlaying the boolean that indicates if the music is playing
  */
-private fun playPause(isPlaying: MutableState<Boolean>) {
-    MediaPlayerManager.playPause()
-    isPlaying.value = MediaPlayerManager.isPlaying()
+private fun playPause(exoPlayerManager: ExoPlayerManager, isPlaying: MutableState<Boolean>) {
+    exoPlayerManager.playPause()
+    isPlaying.value = exoPlayerManager.isPlaying()
 }

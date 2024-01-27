@@ -10,18 +10,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import earth.mp3.models.MediaPlayerManager
+import earth.mp3.models.ExoPlayerManager
 import earth.mp3.models.Music
 
 @Composable
 fun NextMusicButton(
     modifier: Modifier = Modifier,
+    exoPlayerManager: ExoPlayerManager,
     hasNext: MutableState<Boolean>,
     hasPrevious: MutableState<Boolean>,
     musicPlaying: MutableState<Music>,
 ) {
-    IconButton(onClick = { nextMusic(hasNext, hasPrevious, musicPlaying) }) {
+    IconButton(onClick = { nextMusic(exoPlayerManager, hasNext, hasPrevious, musicPlaying) }) {
         Icon(imageVector = Icons.Filled.ArrowForward, contentDescription = "ArrowForward")
     }
 }
@@ -31,6 +33,7 @@ fun NextMusicButton(
 @Preview
 fun NextMusicButtonPreview() {
     NextMusicButton(
+        exoPlayerManager = ExoPlayerManager(LocalContext.current),
         hasNext = mutableStateOf(true),
         hasPrevious = mutableStateOf(true),
         musicPlaying = mutableStateOf(Music(0, "", 0, 0, Uri.EMPTY, ""))
@@ -41,12 +44,13 @@ fun NextMusicButtonPreview() {
  * Play the next music
  */
 private fun nextMusic(
+    exoPlayerManager: ExoPlayerManager,
     hasNext: MutableState<Boolean>,
     hasPrevious: MutableState<Boolean>,
     musicPlaying: MutableState<Music>
 ) {
-    MediaPlayerManager.next()
-    hasNext.value = MediaPlayerManager.hasNext()
-    hasPrevious.value = MediaPlayerManager.hasPrevious()
-    musicPlaying.value = MediaPlayerManager.getMusicPlaying()!!
+    exoPlayerManager.next()
+    hasNext.value = exoPlayerManager.hasNext()
+    hasPrevious.value = exoPlayerManager.hasPrevious()
+    musicPlaying.value = exoPlayerManager.getMusicPlaying()!!
 }

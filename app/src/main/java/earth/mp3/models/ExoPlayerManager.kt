@@ -119,9 +119,13 @@ class ExoPlayerManager private constructor(context: Context) {
     fun previous() {
         if (hasPrevious()) {
             stop(reset = false)
+            val previousMediaItem = exoPlayer.currentMediaItem
             exoPlayer.seekToPrevious()
-            musicPlayingIndex--
-            musicPlaying = musicQueueToPlay[musicPlayingIndex]
+            if (previousMediaItem != exoPlayer.currentMediaItem) {
+                musicPlayingIndex--
+                musicPlaying = musicQueueToPlay[musicPlayingIndex]
+            }
+            playPause()
         }
     }
 

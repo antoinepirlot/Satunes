@@ -15,6 +15,7 @@ import earth.mp3.models.Media
 import earth.mp3.models.Music
 import earth.mp3.ui.PlayBackView
 import earth.mp3.ui.components.cards.MediaCardList
+import earth.mp3.ui.utils.startMusic
 
 @Composable
 fun Router(
@@ -160,15 +161,4 @@ private fun getDestinationOf(media: Media): String {
             "${Destination.PLAYBACK.link}/${media.id}"
         }
     }
-}
-
-/**
- * Start playback and load music if no music in queue
- */
-private fun startMusic(musicList: List<Music>?) {
-    val exoPlayerManager = ExoPlayerManager.getInstance(null)
-    if (musicList != null) {
-        exoPlayerManager.loadMusic(musicList)
-    }
-    exoPlayerManager.playPause()
 }

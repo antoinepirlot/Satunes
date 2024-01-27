@@ -15,6 +15,14 @@ class ExoPlayerManager private constructor(context: Context) {
 
         private lateinit var instance: ExoPlayerManager
 
+        /**
+         * Return only one instance of ExoPlayerManager. If there's no instance already created
+         * you have to send a context to the constructor otherwise send null.
+         *
+         * @param context a context if no instance exists, null otherwise
+         *
+         * @return the instance of ExoPlayerManager
+         */
         fun getInstance(context: Context?): ExoPlayerManager {
             if (context == null && !::instance.isInitialized) {
                 throw IllegalStateException("The ExoPlayerManager is not instanced, it needs a context")

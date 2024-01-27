@@ -88,24 +88,31 @@ dependencies {
     implementation("androidx.media3:media3-ui:$media3Version")
 
     /**
+     * Icons
+     */
+    val materialIconsVersion = "1.6.0"
+    implementation("androidx.compose.material:material-icons-core:$materialIconsVersion")
+    implementation("androidx.compose.material:material-icons-extended:$materialIconsVersion")
+
+    /**
      * Navigation
      */
-    val nav_version = "2.5.3"
+    val navVersion = "2.5.3"
 
     // Java language implementation
-    implementation("androidx.navigation:navigation-fragment:$nav_version")
-    implementation("androidx.navigation:navigation-ui:$nav_version")
+    implementation("androidx.navigation:navigation-fragment:$navVersion")
+    implementation("androidx.navigation:navigation-ui:$navVersion")
 
     // Kotlin
-    implementation("androidx.navigation:navigation-fragment-ktx:$nav_version")
-    implementation("androidx.navigation:navigation-ui-ktx:$nav_version")
+    implementation("androidx.navigation:navigation-fragment-ktx:$navVersion")
+    implementation("androidx.navigation:navigation-ui-ktx:$navVersion")
 
     // Feature module Support
-    implementation("androidx.navigation:navigation-dynamic-features-fragment:$nav_version")
+    implementation("androidx.navigation:navigation-dynamic-features-fragment:$navVersion")
 
     // Testing Navigation
-    androidTestImplementation("androidx.navigation:navigation-testing:$nav_version")
+    androidTestImplementation("androidx.navigation:navigation-testing:$navVersion")
 
     // Jetpack Compose Integration
-    implementation("androidx.navigation:navigation-compose:$nav_version")
+    implementation("androidx.navigation:navigation-compose:$navVersion")
 }

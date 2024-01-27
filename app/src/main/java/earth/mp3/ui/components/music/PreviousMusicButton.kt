@@ -2,8 +2,9 @@ package earth.mp3.ui.components.music
 
 import android.annotation.SuppressLint
 import android.net.Uri
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.SkipPrevious
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
@@ -11,6 +12,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import earth.mp3.models.ExoPlayerManager
 import earth.mp3.models.Music
 
@@ -21,8 +23,15 @@ fun PreviousMusicButton(
     hasNext: MutableState<Boolean>,
     musicPlaying: MutableState<Music>,
 ) {
-    IconButton(onClick = { previousMusic(hasPrevious, hasNext, musicPlaying) }) {
-        Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Arrow Back")
+    IconButton(
+        modifier = modifier.size(45.dp),
+        onClick = { previousMusic(hasPrevious, hasNext, musicPlaying) }
+    ) {
+        Icon(
+            modifier = modifier.size(45.dp),
+            imageVector = Icons.Filled.SkipPrevious,
+            contentDescription = "Skip Previous"
+        )
     }
 }
 

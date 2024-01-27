@@ -2,18 +2,26 @@ package earth.mp3.ui.components.music
 
 import android.annotation.SuppressLint
 import android.net.Uri
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.PauseCircle
+import androidx.compose.material.icons.filled.PlayCircle
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import earth.mp3.models.ExoPlayerManager
 import earth.mp3.models.Music
 
@@ -29,7 +37,11 @@ fun MusicControlBar(
     val hasNext = rememberSaveable { mutableStateOf(exoPlayerManager.hasNext()) }
 
     Row(
-        modifier = modifier,
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(top = 16.dp),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         if (hasPrevious.value) {
             PreviousMusicButton(
@@ -37,17 +49,20 @@ fun MusicControlBar(
                 hasPrevious = hasPrevious,
                 hasNext = hasNext
             )
+            Spacer(modifier = modifier.width(20.dp))
         }
         IconButton(
+            modifier = modifier.size(80.dp),
             onClick = { playPause(isPlaying) }
         ) {
-            if (isPlaying.value) {
-                Icon(imageVector = Icons.Filled.Close, contentDescription = "Close")
-            } else {
-                Icon(imageVector = Icons.Filled.PlayArrow, contentDescription = "Play Icon")
-            }
+            Icon(
+                modifier = modifier.size(80.dp),
+                imageVector = if (isPlaying.value) Icons.Filled.PauseCircle else Icons.Filled.PlayCircle,
+                contentDescription = if (isPlaying.value) "Pause" else "Play",
+            )
         }
         if (hasNext.value) {
+            Spacer(modifier = modifier.width(20.dp))
             NextMusicButton(
                 musicPlaying = musicPlaying,
                 hasNext = hasNext,

@@ -106,20 +106,6 @@ class ExoPlayerManager @OptIn(UnstableApi::class) private constructor(context: C
     }
 
     /**
-     * Stop the music
-     */
-    fun stop(reset: Boolean = true) {
-        exoPlayer.stop()
-        if (reset) {
-            musicPlayingIndex = -1
-            exoPlayer.release()
-            // TODO make sure new one is created
-        }
-//        exoPlayer.release()
-//        exoPlayer = ExoPlayer.Builder(context).build()
-    }
-
-    /**
      * Play the next music in queue
      */
     fun next() {

@@ -37,6 +37,7 @@ fun MusicControlBar(
     val hasNext = rememberSaveable { mutableStateOf(exoPlayerManager.hasNext()) }
 
     val spaceBetweenButtons = 20.dp
+    val playPauseButtonSize = 80.dp
 
     Row(
         modifier = modifier
@@ -54,11 +55,11 @@ fun MusicControlBar(
             Spacer(modifier = modifier.width(spaceBetweenButtons))
         }
         IconButton(
-            modifier = modifier.size(80.dp),
+            modifier = modifier.size(playPauseButtonSize),
             onClick = { playPause(isPlaying) }
         ) {
             Icon(
-                modifier = modifier.size(80.dp),
+                modifier = modifier.size(playPauseButtonSize),
                 imageVector = if (isPlaying.value) Icons.Filled.PauseCircle else Icons.Filled.PlayCircle,
                 contentDescription = if (isPlaying.value) "Pause" else "Play",
             )

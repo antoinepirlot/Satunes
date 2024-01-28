@@ -54,22 +54,28 @@ class ExoPlayerManager @OptIn(UnstableApi::class) private constructor(context: C
     }
 
     /**
-     * Start the music in params.
+     * Start the music in params
+     * If music to play is null, play the first music of the playlist otherwise play the musicToPlay
      * If the music to play is already the music playing nothing is done.
      *
      * @param musicToPlay the music to play
      */
-    fun start(musicToPlay: Music) {
-        if (musicToPlay == musicPlaying) {
-            return
-        }
-        for (i: Int in 0..<musicQueueToPlay.size) {
-            val music = musicQueueToPlay[i]
-            if (musicToPlay == music) {
-                musicPlaying = musicToPlay
-                musicPlayingIndex = i
-                break
+    fun start(musicToPlay: Music? = null) {
+        if (musicToPlay != null) {
+            if (musicToPlay == musicPlaying) {
+                return
             }
+            for (i: Int in 0..<musicQueueToPlay.size) {
+                val music = musicQueueToPlay[i]
+                if (musicToPlay == music) {
+                    musicPlaying = musicToPlay
+                    musicPlayingIndex = i
+                    break
+                }
+            }
+        } else {
+            musicPlayingIndex = 0
+            musicPlaying = musicQueueToPlay[musicPlayingIndex]
         }
         exoPlayer.seekTo(musicPlayingIndex, 0)
         exoPlayer.prepare()

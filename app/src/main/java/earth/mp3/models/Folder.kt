@@ -10,8 +10,23 @@ class Folder(
     val musicList: MutableList<Music> = mutableListOf()
 ) : Media {
 
-    fun getSubFolderList(): MutableList<Media> {
-        return this.subFolderList.toMutableList()
+
+    /**
+     * Get the list of subfolder
+     *
+     * @return a list of subfolder and each subfolder is a Folder object
+     */
+    fun getSubFolderList(): List<Folder> {
+        return this.subFolderList.toList()
+    }
+
+    /**
+     * Get the list of subfolders as media
+     *
+     * @return a list of subfolder and each subfolder is cast to Media object
+     */
+    fun getSubFolderListAsMedia(): List<Media> {
+        return this.subFolderList.toList()
     }
 
     fun addSubFolder(subFolder: Folder) {
@@ -23,6 +38,7 @@ class Folder(
     }
 
     fun addMusic(musicData: Music) {
+        musicData.folder = this
         this.musicList.add(musicData)
     }
 

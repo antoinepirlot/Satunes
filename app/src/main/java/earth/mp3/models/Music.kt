@@ -13,7 +13,8 @@ class Music(
     val duration: Int,
     val size: Int,
     val uri: Uri,
-    val relativePath: String
+    val relativePath: String,
+    var folder: Folder? = null
 ) : Media {
 
     companion object {

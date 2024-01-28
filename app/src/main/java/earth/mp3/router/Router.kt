@@ -15,7 +15,8 @@ import earth.mp3.models.Media
 import earth.mp3.models.Music
 import earth.mp3.ui.PlayBackView
 import earth.mp3.ui.components.cards.MediaCardList
-import earth.mp3.ui.utils.startMusicFromPlaylist
+import earth.mp3.ui.utils.getMusicListFromFolder
+import earth.mp3.ui.utils.startMusic
 
 @Composable
 fun Router(
@@ -41,11 +42,7 @@ fun Router(
             MediaCardList(
                 mediaList = rootFolderList,
                 openMedia = { clickedMedia: Media ->
-                    openMedia(
-                        navController,
-                        clickedMedia,
-                        musicMapToShow.values.toList()
-                    )
+                    openMediaFromFolder(navController, clickedMedia)
                 }
             )
         }
@@ -57,7 +54,7 @@ fun Router(
 
             if (folderId >= Music.FIRST_FOLDER_INDEX && folderId <= folderMap.size) {
                 folder = folderMap[folderId]!!
-                val listToAdd = folder.getSubFolderList()
+                val listToAdd = folder.getSubFolderListAsMedia()
                 listToShow.addAll(listToAdd)
             } else {
                 listToShow.addAll(rootFolderList)
@@ -69,11 +66,7 @@ fun Router(
             MediaCardList(
                 mediaList = listToShow,
                 openMedia = { clickedMedia: Media ->
-                    openMedia(
-                        navController,
-                        clickedMedia,
-                        musicMapToShow.values.toList()
-                    )
+                    openMediaFromFolder(navController, clickedMedia)
                 }
             )
         }
@@ -109,7 +102,6 @@ fun Router(
         }
 
         composable(Destination.PLAYBACK.link) {
-            //TODO play music
             PlayBackView()
         }
     }
@@ -134,8 +126,24 @@ private fun openMedia(
 ) {
     navController.navigate(getDestinationOf(media))
     if (media is Music) {
-        startMusicFromPlaylist(musicList, media)
+        startMusic(musicList, media)
     }
+}
+
+private fun openMediaFromFolder(
+    navController: NavHostController,
+    media: Media
+) {
+    when (media) {
+        is Music -> {
+            openMedia(navController, media, getMusicListFromFolder(media.folder!!))
+        }
+
+        is Folder -> {
+            navController.navigate(getDestinationOf(media))
+        }
+    }
+
 }
 
 /**

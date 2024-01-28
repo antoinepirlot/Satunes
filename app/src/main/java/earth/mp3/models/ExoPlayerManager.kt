@@ -101,7 +101,8 @@ class ExoPlayerManager @OptIn(UnstableApi::class) private constructor(context: C
             exoPlayer.seekToNext()
             musicPlaying = getNextMusic()
             exoPlayer.prepare()
-            playPause()
+            exoPlayer.play()
+            isPlaying = true
         }
     }
 
@@ -149,7 +150,8 @@ class ExoPlayerManager @OptIn(UnstableApi::class) private constructor(context: C
                 musicPlayingIndex--
                 musicPlaying = musicQueueToPlay[musicPlayingIndex]
             }
-            playPause()
+            exoPlayer.play()
+            isPlaying = true
         }
     }
 

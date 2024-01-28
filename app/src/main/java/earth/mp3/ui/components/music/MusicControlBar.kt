@@ -5,8 +5,6 @@ import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
@@ -29,6 +27,8 @@ import earth.mp3.models.Music
 fun MusicControlBar(
     modifier: Modifier = Modifier,
     musicPlaying: MutableState<Music>,
+    horizontalArrangement: Arrangement.HorizontalOrVertical = Arrangement.Center,
+    verticalAlignment: Alignment.Vertical = Alignment.CenterVertically
 ) {
     val exoPlayerManager = ExoPlayerManager.getInstance(null)
 
@@ -40,11 +40,9 @@ fun MusicControlBar(
     val playPauseButtonSize = 80.dp
 
     Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(top = 16.dp),
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
+        modifier = modifier,
+        horizontalArrangement = horizontalArrangement,
+        verticalAlignment = verticalAlignment
     ) {
         if (hasPrevious.value) {
             PreviousMusicButton(
@@ -52,20 +50,20 @@ fun MusicControlBar(
                 hasPrevious = hasPrevious,
                 hasNext = hasNext
             )
-            Spacer(modifier = modifier.width(spaceBetweenButtons))
+            Spacer(modifier = Modifier.width(spaceBetweenButtons))
         }
         IconButton(
-            modifier = modifier.size(playPauseButtonSize),
+            modifier = Modifier.size(playPauseButtonSize),
             onClick = { playPause(isPlaying) }
         ) {
             Icon(
-                modifier = modifier.size(playPauseButtonSize),
+                modifier = Modifier.size(playPauseButtonSize),
                 imageVector = if (isPlaying.value) Icons.Filled.PauseCircle else Icons.Filled.PlayCircle,
                 contentDescription = if (isPlaying.value) "Pause" else "Play",
             )
         }
         if (hasNext.value) {
-            Spacer(modifier = modifier.width(spaceBetweenButtons))
+            Spacer(modifier = Modifier.width(spaceBetweenButtons))
             NextMusicButton(
                 musicPlaying = musicPlaying,
                 hasNext = hasNext,

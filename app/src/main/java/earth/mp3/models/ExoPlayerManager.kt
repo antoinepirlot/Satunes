@@ -15,6 +15,7 @@ class ExoPlayerManager @OptIn(UnstableApi::class) private constructor(context: C
     private val musicQueueToPlay: ArrayDeque<Music> = ArrayDeque()
     private var musicPlaying: Music? = null
     private var musicPlayingIndex: Int = -1
+    var isPlaying: Boolean = false
 
     init {
         val audioOffloadPreferences = AudioOffloadPreferences.Builder()
@@ -73,17 +74,23 @@ class ExoPlayerManager @OptIn(UnstableApi::class) private constructor(context: C
         exoPlayer.seekTo(musicPlayingIndex, 0)
         exoPlayer.prepare()
         exoPlayer.play()
+        switchIsPlaying()
     }
 
     /**
      * Play music if it is paused otherwise start music
      */
     fun playPause() {
-        if (isPlaying()) {
+        if (isPlaying) {
             exoPlayer.pause()
         } else {
             exoPlayer.play()
         }
+        switchIsPlaying()
+    }
+
+    private fun switchIsPlaying() {
+        isPlaying = !isPlaying
     }
 
     /**
@@ -111,10 +118,6 @@ class ExoPlayerManager @OptIn(UnstableApi::class) private constructor(context: C
 
     fun hasNext(): Boolean {
         return musicQueueToPlay.isNotEmpty()
-    }
-
-    fun isPlaying(): Boolean {
-        return exoPlayer.isPlaying
     }
 
     fun getMusicPlaying(): Music? {

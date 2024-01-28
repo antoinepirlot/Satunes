@@ -32,7 +32,7 @@ fun MusicControlBar(
 ) {
     val exoPlayerManager = ExoPlayerManager.getInstance(null)
 
-    val isPlaying = rememberSaveable { mutableStateOf(exoPlayerManager.isPlaying()) }
+    val isPlaying = rememberSaveable { mutableStateOf(exoPlayerManager.isPlaying) }
     val hasPrevious = rememberSaveable { mutableStateOf(exoPlayerManager.hasPrevious()) }
     val hasNext = rememberSaveable { mutableStateOf(exoPlayerManager.hasNext()) }
 
@@ -92,5 +92,5 @@ fun MediaControlBarPreview() {
 private fun playPause(isPlaying: MutableState<Boolean>) {
     val exoPlayerManager = ExoPlayerManager.getInstance(null)
     exoPlayerManager.playPause()
-    isPlaying.value = exoPlayerManager.isPlaying()
+    isPlaying.value = exoPlayerManager.isPlaying
 }

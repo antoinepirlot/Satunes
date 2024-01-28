@@ -36,6 +36,8 @@ fun MusicControlBar(
     val hasPrevious = rememberSaveable { mutableStateOf(exoPlayerManager.hasPrevious()) }
     val hasNext = rememberSaveable { mutableStateOf(exoPlayerManager.hasNext()) }
 
+    val spaceBetweenButtons = 20.dp
+
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -49,7 +51,7 @@ fun MusicControlBar(
                 hasPrevious = hasPrevious,
                 hasNext = hasNext
             )
-            Spacer(modifier = modifier.width(20.dp))
+            Spacer(modifier = modifier.width(spaceBetweenButtons))
         }
         IconButton(
             modifier = modifier.size(80.dp),
@@ -62,7 +64,7 @@ fun MusicControlBar(
             )
         }
         if (hasNext.value) {
-            Spacer(modifier = modifier.width(20.dp))
+            Spacer(modifier = modifier.width(spaceBetweenButtons))
             NextMusicButton(
                 musicPlaying = musicPlaying,
                 hasNext = hasNext,

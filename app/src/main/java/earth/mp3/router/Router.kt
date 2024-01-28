@@ -108,11 +108,9 @@ fun Router(
             )
         }
 
-        composable("${Destination.PLAYBACK.link}/{mediaId}") {
+        composable(Destination.PLAYBACK.link) {
             //TODO play music
-            val music = musicMapToShow[it.arguments!!.getString("mediaId")!!.toLong()]!!
             PlayBackView()
-
         }
     }
 }
@@ -159,7 +157,7 @@ private fun getDestinationOf(media: Media): String {
         }
 
         else -> {
-            "${Destination.PLAYBACK.link}/${media.id}"
+            Destination.PLAYBACK.link
         }
     }
 }

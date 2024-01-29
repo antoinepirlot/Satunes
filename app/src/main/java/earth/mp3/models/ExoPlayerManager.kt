@@ -135,6 +135,8 @@ class ExoPlayerManager @OptIn(UnstableApi::class) private constructor(context: C
      * Add all music from musicMap to the exoPlayer in the same order
      */
     fun loadMusic(musicList: List<Music>) {
+        musicQueueToPlay.clear()
+        exoPlayer.clearMediaItems()
         for (music in musicList) {
             if (!musicQueueToPlay.contains(music)) {
                 musicQueueToPlay.add(music)

@@ -20,6 +20,7 @@ class ExoPlayerManager @OptIn(UnstableApi::class) private constructor(context: C
     private val exoPlayer: ExoPlayer = ExoPlayer.Builder(context).build()
     private val musicQueueToPlay: ArrayDeque<Music> = ArrayDeque()
     private var musicPlayingIndex: Int = DEFAULT_MUSIC_PLAYING_INDEX
+    private var isEnded: Boolean = false
 
     // Mutable var are used in ui, it needs to be recomposed
     // I use mutable to avoid using function with multiples params like to add listener
@@ -46,6 +47,7 @@ class ExoPlayerManager @OptIn(UnstableApi::class) private constructor(context: C
             super.onPlaybackStateChanged(playbackState)
             if (playbackState == STATE_ENDED) {
                 isPlaying.value = false
+                isEnded = true
             }
         }
 
@@ -139,10 +141,16 @@ class ExoPlayerManager @OptIn(UnstableApi::class) private constructor(context: C
     fun playPause() {
         if (isPlaying.value) {
             exoPlayer.pause()
+            switchIsPlaying()
         } else {
-            exoPlayer.play()
+            if (isEnded) {
+                start()
+                isEnded = false
+            } else {
+                exoPlayer.play()
+                switchIsPlaying()
+            }
         }
-        switchIsPlaying()
     }
 
     private fun switchIsPlaying() {

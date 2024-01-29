@@ -193,7 +193,7 @@ class ExoPlayerManager @OptIn(UnstableApi::class) private constructor(context: C
      * Add all music from musicMap to the exoPlayer in the same order
      */
     fun loadMusic(musicList: List<Music>) {
-        clearPlaylist()
+        resetToDefault()
         for (music in musicList) {
             if (!originalMusicQueueToPlay.contains(music)) {
                 originalMusicQueueToPlay.add(music)
@@ -208,7 +208,7 @@ class ExoPlayerManager @OptIn(UnstableApi::class) private constructor(context: C
     /**
      * Set the exo player to the default state without media items. clear all
      */
-    private fun clearPlaylist() {
+    private fun resetToDefault() {
         exoPlayer.removeListener(listener)
         musicQueueToPlay.clear()
         exoPlayer.clearMediaItems()

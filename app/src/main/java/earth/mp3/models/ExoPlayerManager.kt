@@ -44,11 +44,23 @@ class ExoPlayerManager @OptIn(UnstableApi::class) private constructor(context: C
         override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
             super.onMediaItemTransition(mediaItem, reason)
             if (reason == Player.MEDIA_ITEM_TRANSITION_REASON_AUTO) {
-                if (musicPlayingIndex + 1 == musicQueueToPlay.size) {
-                    //It is listened because the last music has been finished
-                    return
+                when (repeatMode.value) {
+                    REPEAT_MODE_OFF -> {
+                        musicPlayingIndex++
+                        musicPlaying.value = musicQueueToPlay[musicPlayingIndex]
+                        hasNext.value = hasNext()
+                        hasPrevious.value = hasPrevious()
+                    }
+
+                    REPEAT_MODE_ALL -> {
+                        if (musicPlayingIndex + 1 == musicQueueToPlay.size) {
+                            musicPlayingIndex = 0
+                        } else {
+                            musicPlayingIndex++
+                        }
+
+                    }
                 }
-                musicPlayingIndex++
                 musicPlaying.value = musicQueueToPlay[musicPlayingIndex]
                 hasNext.value = hasNext()
                 hasPrevious.value = hasPrevious()

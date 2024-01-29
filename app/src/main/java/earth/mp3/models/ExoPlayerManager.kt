@@ -18,7 +18,8 @@ import androidx.media3.exoplayer.ExoPlayer
 
 class ExoPlayerManager @OptIn(UnstableApi::class) private constructor(context: Context) {
     private val exoPlayer: ExoPlayer = ExoPlayer.Builder(context).build()
-    private val musicQueueToPlay: ArrayDeque<Music> = ArrayDeque()
+    private val originalMusicQueueToPlay: ArrayDeque<Music> = ArrayDeque()
+    private var musicQueueToPlay: ArrayDeque<Music> = ArrayDeque()
     private var musicPlayingIndex: Int = DEFAULT_MUSIC_PLAYING_INDEX
     private var isEnded: Boolean = false
 
@@ -27,6 +28,7 @@ class ExoPlayerManager @OptIn(UnstableApi::class) private constructor(context: C
     var musicPlaying: MutableState<Music?> = mutableStateOf(null)
     var isPlaying: MutableState<Boolean> = mutableStateOf(false)
     var repeatMode: MutableState<Int> = mutableIntStateOf(REPEAT_MODE_OFF)
+    var shuffleMode: MutableState<Boolean> = mutableStateOf(false)
     var hasNext: MutableState<Boolean> = mutableStateOf(false)
     var hasPrevious: MutableState<Boolean> = mutableStateOf(false)
 
@@ -258,5 +260,20 @@ class ExoPlayerManager @OptIn(UnstableApi::class) private constructor(context: C
             }
         }
         exoPlayer.repeatMode = repeatMode.value
+    }
+
+    /**
+     * Mix the playlist from the playing music
+     */
+    fun switchShuffleMode() {
+        musicQueueToPlay = ArrayDeque(originalMusicQueueToPlay)
+        if (!shuffleMode.value) {
+            // Activate shuffle mode
+            musicQueueToPlay.remove(musicPlaying.value)
+            musicQueueToPlay.shuffle()
+            musicQueueToPlay.addFirst(musicPlaying.value!!)
+        }
+        start(musicPlaying.value)
+        shuffleMode.value = !shuffleMode.value
     }
 }

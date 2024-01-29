@@ -40,6 +40,8 @@ fun MusicControlBar(
         horizontalArrangement = horizontalArrangement,
         verticalAlignment = verticalAlignment
     ) {
+        ShuffleMusicButton(modifier = Modifier.size(optionButtonSize))
+        Spacer(modifier = Modifier.width(spaceBetweenButtons))
         if (hasPrevious.value) {
             PreviousMusicButton()
             Spacer(modifier = Modifier.width(spaceBetweenButtons))
@@ -59,7 +61,7 @@ fun MusicControlBar(
             NextMusicButton()
         }
         Spacer(modifier = Modifier.width(spaceBetweenButtons))
-        RepeatMusicButton(Modifier.size(optionButtonSize))
+        RepeatMusicButton(modifier = Modifier.size(optionButtonSize))
     }
 }
 

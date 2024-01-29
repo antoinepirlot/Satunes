@@ -12,7 +12,6 @@ import androidx.compose.material.icons.filled.PlayCircle
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -46,7 +45,7 @@ fun MusicControlBar(
         }
         IconButton(
             modifier = Modifier.size(playPauseButtonSize),
-            onClick = { playPause(isPlaying) }
+            onClick = { exoPlayerManager.playPause() }
         ) {
             Icon(
                 modifier = Modifier.size(playPauseButtonSize),
@@ -66,15 +65,4 @@ fun MusicControlBar(
 @Preview
 fun MediaControlBarPreview() {
     MusicControlBar()
-}
-
-/**
- * Play or pause the music using media player manager and update the state of isPlaying
- *
- * @param isPlaying the boolean that indicates if the music is playing
- */
-private fun playPause(isPlaying: MutableState<Boolean>) {
-    val exoPlayerManager = ExoPlayerManager.getInstance(null)
-    exoPlayerManager.playPause()
-    isPlaying.value = exoPlayerManager.isPlaying.value
 }

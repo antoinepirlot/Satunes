@@ -18,7 +18,7 @@ fun PreviousMusicButton(
 ) {
     IconButton(
         modifier = modifier.size(45.dp),
-        onClick = { previousMusic() }
+        onClick = { ExoPlayerManager.getInstance(null).previous() }
     ) {
         Icon(
             modifier = modifier.size(45.dp),
@@ -33,9 +33,4 @@ fun PreviousMusicButton(
 @Preview
 fun PreviousMusicButtonPreview() {
     PreviousMusicButton()
-}
-
-private fun previousMusic() {
-    val exoPlayerManager = ExoPlayerManager.getInstance(null)
-    exoPlayerManager.previous()
 }

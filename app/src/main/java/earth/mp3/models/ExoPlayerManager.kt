@@ -195,7 +195,8 @@ class ExoPlayerManager @OptIn(UnstableApi::class) private constructor(context: C
     fun loadMusic(musicList: List<Music>) {
         clearPlaylist()
         for (music in musicList) {
-            if (!musicQueueToPlay.contains(music)) {
+            if (!originalMusicQueueToPlay.contains(music)) {
+                originalMusicQueueToPlay.add(music)
                 musicQueueToPlay.add(music)
                 val mediaItem = MediaItem.fromUri(music.getAbsolutePath())
                 exoPlayer.addMediaItem(mediaItem)

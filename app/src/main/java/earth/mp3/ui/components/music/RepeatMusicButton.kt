@@ -3,7 +3,7 @@ package earth.mp3.ui.components.music
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Repeat
 import androidx.compose.material.icons.filled.RepeatOn
-import androidx.compose.material.icons.filled.RepeatOne
+import androidx.compose.material.icons.filled.RepeatOneOn
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
@@ -41,7 +41,7 @@ fun RepeatMusicButtonPreview() {
 private fun getImageVector(): ImageVector {
     return when (ExoPlayerManager.getInstance(null).repeatMode.value) {
         REPEAT_MODE_ONE -> {
-            Icons.Filled.RepeatOne
+            Icons.Filled.RepeatOneOn
         }
 
         REPEAT_MODE_ALL -> {

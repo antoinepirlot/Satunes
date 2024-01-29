@@ -41,11 +41,11 @@ fun RepeatMusicButtonPreview() {
 private fun getImageVector(): ImageVector {
     return when (ExoPlayerManager.getInstance(null).repeatMode.value) {
         REPEAT_MODE_ONE -> {
-            Icons.Filled.RepeatOn
+            Icons.Filled.RepeatOne
         }
 
         REPEAT_MODE_ALL -> {
-            Icons.Filled.RepeatOne
+            Icons.Filled.RepeatOn
         }
 
         else -> {

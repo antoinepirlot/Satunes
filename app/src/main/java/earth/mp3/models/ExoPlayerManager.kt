@@ -124,7 +124,7 @@ class ExoPlayerManager @OptIn(UnstableApi::class) private constructor(context: C
     }
 
     fun hasNext(): Boolean {
-        return musicQueueToPlay.isNotEmpty()
+        return musicPlaying != musicQueueToPlay.last()
     }
 
     fun getMusicPlaying(): Music? {
@@ -162,6 +162,6 @@ class ExoPlayerManager @OptIn(UnstableApi::class) private constructor(context: C
     }
 
     fun hasPrevious(): Boolean {
-        return musicQueueToPlay.isNotEmpty() && musicPlaying != musicQueueToPlay[0]
+        return musicPlaying != musicQueueToPlay[0]
     }
 }

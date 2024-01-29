@@ -4,15 +4,18 @@ import android.content.Context
 import android.os.Environment
 import androidx.annotation.OptIn
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
+import androidx.media3.common.Player.REPEAT_MODE_ALL
+import androidx.media3.common.Player.REPEAT_MODE_OFF
+import androidx.media3.common.Player.REPEAT_MODE_ONE
 import androidx.media3.common.TrackSelectionParameters.AudioOffloadPreferences
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 
 class ExoPlayerManager @OptIn(UnstableApi::class) private constructor(context: Context) {
-
     private val exoPlayer: ExoPlayer = ExoPlayer.Builder(context).build()
     private val musicQueueToPlay: ArrayDeque<Music> = ArrayDeque()
     private var musicPlayingIndex: Int = DEFAULT_MUSIC_PLAYING_INDEX
@@ -21,6 +24,7 @@ class ExoPlayerManager @OptIn(UnstableApi::class) private constructor(context: C
     // I use mutable to avoid using function with multiples params like to add listener
     var musicPlaying: MutableState<Music?> = mutableStateOf(null)
     var isPlaying: MutableState<Boolean> = mutableStateOf(false)
+    var repeatMode: MutableState<Int> = mutableIntStateOf(REPEAT_MODE_OFF)
     var hasNext: MutableState<Boolean> = mutableStateOf(false)
     var hasPrevious: MutableState<Boolean> = mutableStateOf(false)
 
@@ -203,5 +207,28 @@ class ExoPlayerManager @OptIn(UnstableApi::class) private constructor(context: C
 
     fun hasPrevious(): Boolean {
         return musicPlaying.value != musicQueueToPlay[0]
+    }
+
+    /**
+     * Switch the repeat mode when repeat mode is:
+     *      Disabled: switch to repeat all
+     *      Repeat All: switch to repeat one
+     *      else: repeat disabled (when it's repeat one for example)
+     */
+    fun switchRepeatMode() {
+        when (repeatMode.value) {
+            REPEAT_MODE_OFF -> {
+                repeatMode.value = REPEAT_MODE_ALL
+            }
+
+            REPEAT_MODE_ALL -> {
+                repeatMode.value = REPEAT_MODE_ONE
+            }
+
+            REPEAT_MODE_ONE -> {
+                repeatMode.value = REPEAT_MODE_OFF
+            }
+        }
+        exoPlayer.repeatMode = repeatMode.value
     }
 }

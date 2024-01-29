@@ -33,6 +33,7 @@ fun MusicControlBar(
 
     val spaceBetweenButtons = 20.dp
     val playPauseButtonSize = 80.dp
+    val optionButtonSize = 30.dp
 
     Row(
         modifier = modifier,
@@ -57,6 +58,8 @@ fun MusicControlBar(
             Spacer(modifier = Modifier.width(spaceBetweenButtons))
             NextMusicButton()
         }
+        Spacer(modifier = Modifier.width(spaceBetweenButtons))
+        RepeatMusicButton(Modifier.size(optionButtonSize))
     }
 }
 

@@ -36,6 +36,8 @@ fun MusicControlBar(
     val hasPrevious = rememberSaveable { mutableStateOf(exoPlayerManager.hasPrevious()) }
     val hasNext = rememberSaveable { mutableStateOf(exoPlayerManager.hasNext()) }
 
+    exoPlayerManager.addListener(musicPlaying, hasNext, hasPrevious, isPlaying)
+
     val spaceBetweenButtons = 20.dp
     val playPauseButtonSize = 80.dp
 

@@ -3,18 +3,19 @@ package earth.mp3.models
 import android.content.Context
 import android.os.Environment
 import androidx.annotation.OptIn
+import androidx.compose.runtime.MutableState
 import androidx.media3.common.MediaItem
+import androidx.media3.common.Player
 import androidx.media3.common.TrackSelectionParameters.AudioOffloadPreferences
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
-import androidx.media3.exoplayer.trackselection.TrackSelector
 
 class ExoPlayerManager @OptIn(UnstableApi::class) private constructor(context: Context) {
+
     private val exoPlayer: ExoPlayer = ExoPlayer.Builder(context).build()
-    private lateinit var trackSelector: TrackSelector
     private val musicQueueToPlay: ArrayDeque<Music> = ArrayDeque()
     private var musicPlaying: Music? = null
-    private var musicPlayingIndex: Int = -1
+    private var musicPlayingIndex: Int = DEFAULT_MUSIC_PLAYING_INDEX
     var isPlaying: Boolean = false
 
     init {
@@ -31,6 +32,7 @@ class ExoPlayerManager @OptIn(UnstableApi::class) private constructor(context: C
 
     companion object {
         val ROOT_PATH: String = Environment.getExternalStorageDirectory().path
+        const val DEFAULT_MUSIC_PLAYING_INDEX = -1
 
         private lateinit var instance: ExoPlayerManager
 
@@ -135,8 +137,7 @@ class ExoPlayerManager @OptIn(UnstableApi::class) private constructor(context: C
      * Add all music from musicMap to the exoPlayer in the same order
      */
     fun loadMusic(musicList: List<Music>) {
-        musicQueueToPlay.clear()
-        exoPlayer.clearMediaItems()
+        clearPlaylist()
         for (music in musicList) {
             if (!musicQueueToPlay.contains(music)) {
                 musicQueueToPlay.add(music)
@@ -144,6 +145,42 @@ class ExoPlayerManager @OptIn(UnstableApi::class) private constructor(context: C
                 exoPlayer.addMediaItem(mediaItem)
             }
         }
+    }
+
+    /**
+     * Set the exo player to the default state without media items. clear all
+     */
+    private fun clearPlaylist() {
+        musicQueueToPlay.clear()
+        exoPlayer.clearMediaItems()
+        musicPlaying = null
+        musicPlayingIndex = DEFAULT_MUSIC_PLAYING_INDEX
+        isPlaying = false
+    }
+
+    fun addListener(
+        mutableMusicPlaying: MutableState<Music>,
+        mutableHasNext: MutableState<Boolean>,
+        mutableHasPrevious: MutableState<Boolean>,
+        mutableIsPlaying: MutableState<Boolean>
+    ) {
+        exoPlayer.addListener(object : Player.Listener {
+            override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
+                super.onMediaItemTransition(mediaItem, reason)
+                if (reason == Player.MEDIA_ITEM_TRANSITION_REASON_AUTO) {
+                    if (musicPlayingIndex + 1 == musicQueueToPlay.size) {
+                        //It is listened because the last music has been finished
+                        return
+                    }
+                    musicPlayingIndex++
+                    musicPlaying = musicQueueToPlay[musicPlayingIndex]
+                    mutableMusicPlaying.value = musicPlaying!!
+                    mutableHasNext.value = hasNext()
+                    mutableHasPrevious.value = hasPrevious()
+                    mutableIsPlaying.value = isPlaying
+                }
+            }
+        })
     }
 
     /**

@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Environment
 import androidx.annotation.OptIn
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.common.TrackSelectionParameters.AudioOffloadPreferences
@@ -16,7 +17,9 @@ class ExoPlayerManager @OptIn(UnstableApi::class) private constructor(context: C
     private val musicQueueToPlay: ArrayDeque<Music> = ArrayDeque()
     private var musicPlaying: Music? = null
     private var musicPlayingIndex: Int = DEFAULT_MUSIC_PLAYING_INDEX
-    var isPlaying: Boolean = false
+    var isPlaying: MutableState<Boolean> = mutableStateOf(false)
+    var hasNext: MutableState<Boolean> = mutableStateOf(false)
+    var hasPrevious: MutableState<Boolean> = mutableStateOf(false)
 
     init {
         val audioOffloadPreferences = AudioOffloadPreferences.Builder()
@@ -89,7 +92,7 @@ class ExoPlayerManager @OptIn(UnstableApi::class) private constructor(context: C
      * Play music if it is paused otherwise start music
      */
     fun playPause() {
-        if (isPlaying) {
+        if (isPlaying.value) {
             exoPlayer.pause()
         } else {
             exoPlayer.play()
@@ -98,7 +101,7 @@ class ExoPlayerManager @OptIn(UnstableApi::class) private constructor(context: C
     }
 
     private fun switchIsPlaying() {
-        isPlaying = !isPlaying
+        isPlaying.value = !isPlaying.value
     }
 
     /**
@@ -110,7 +113,7 @@ class ExoPlayerManager @OptIn(UnstableApi::class) private constructor(context: C
             musicPlaying = getNextMusic()
             exoPlayer.prepare()
             exoPlayer.play()
-            isPlaying = true
+            isPlaying.value = true
         }
     }
 
@@ -155,7 +158,7 @@ class ExoPlayerManager @OptIn(UnstableApi::class) private constructor(context: C
         exoPlayer.clearMediaItems()
         musicPlaying = null
         musicPlayingIndex = DEFAULT_MUSIC_PLAYING_INDEX
-        isPlaying = false
+        isPlaying.value = false
     }
 
     fun addListener(
@@ -177,7 +180,7 @@ class ExoPlayerManager @OptIn(UnstableApi::class) private constructor(context: C
                     mutableMusicPlaying.value = musicPlaying!!
                     mutableHasNext.value = hasNext()
                     mutableHasPrevious.value = hasPrevious()
-                    mutableIsPlaying.value = isPlaying
+                    mutableIsPlaying.value = isPlaying.value
                 }
             }
         })
@@ -196,7 +199,7 @@ class ExoPlayerManager @OptIn(UnstableApi::class) private constructor(context: C
                 musicPlaying = musicQueueToPlay[musicPlayingIndex]
             }
             exoPlayer.play()
-            isPlaying = true
+            isPlaying.value = true
         }
     }
 

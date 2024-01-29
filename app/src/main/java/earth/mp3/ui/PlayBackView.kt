@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -19,16 +18,15 @@ fun PlayBackView(
     modifier: Modifier = Modifier,
 ) {
     val exoPlayerManager = ExoPlayerManager.getInstance(null)
-    val musicPlaying = remember { mutableStateOf(exoPlayerManager.getMusicPlaying()!!) }
+    val musicPlaying = remember { exoPlayerManager.musicPlaying }
     Column(
         modifier = modifier
     ) {
-        Text(text = musicPlaying.value.name)
+        Text(text = musicPlaying.value!!.name)
         MusicControlBar(
             modifier = modifier
                 .fillMaxWidth()
                 .padding(16.dp),
-            musicPlaying = musicPlaying
         )
     }
 }

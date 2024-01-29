@@ -1,31 +1,24 @@
 package earth.mp3.ui.components.music
 
 import android.annotation.SuppressLint
-import android.net.Uri
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.SkipPrevious
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import earth.mp3.models.ExoPlayerManager
-import earth.mp3.models.Music
 
 @Composable
 fun PreviousMusicButton(
-    modifier: Modifier = Modifier,
-    hasPrevious: MutableState<Boolean>,
-    hasNext: MutableState<Boolean>,
-    musicPlaying: MutableState<Music>,
+    modifier: Modifier = Modifier
 ) {
     IconButton(
         modifier = modifier.size(45.dp),
-        onClick = { previousMusic(hasPrevious, hasNext, musicPlaying) }
+        onClick = { previousMusic() }
     ) {
         Icon(
             modifier = modifier.size(45.dp),
@@ -39,21 +32,10 @@ fun PreviousMusicButton(
 @Composable
 @Preview
 fun PreviousMusicButtonPreview() {
-    PreviousMusicButton(
-        hasPrevious = mutableStateOf(true),
-        hasNext = mutableStateOf(true),
-        musicPlaying = mutableStateOf(Music(0, "", 0, 0, Uri.EMPTY, "")),
-    )
+    PreviousMusicButton()
 }
 
-private fun previousMusic(
-    hasPrevious: MutableState<Boolean>,
-    hasNext: MutableState<Boolean>,
-    musicPlaying: MutableState<Music>
-) {
+private fun previousMusic() {
     val exoPlayerManager = ExoPlayerManager.getInstance(null)
     exoPlayerManager.previous()
-    hasPrevious.value = exoPlayerManager.hasPrevious()
-    hasNext.value = exoPlayerManager.hasNext()
-    musicPlaying.value = exoPlayerManager.getMusicPlaying()!!
 }

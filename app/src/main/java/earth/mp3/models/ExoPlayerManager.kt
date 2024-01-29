@@ -15,8 +15,11 @@ class ExoPlayerManager @OptIn(UnstableApi::class) private constructor(context: C
 
     private val exoPlayer: ExoPlayer = ExoPlayer.Builder(context).build()
     private val musicQueueToPlay: ArrayDeque<Music> = ArrayDeque()
-    private var musicPlaying: Music? = null
     private var musicPlayingIndex: Int = DEFAULT_MUSIC_PLAYING_INDEX
+
+    // Mutable var are used in ui, it needs to be recomposed
+    // I use mutable to avoid using function with multiples params like to add listener
+    var musicPlaying: MutableState<Music?> = mutableStateOf(null)
     var isPlaying: MutableState<Boolean> = mutableStateOf(false)
     var hasNext: MutableState<Boolean> = mutableStateOf(false)
     var hasPrevious: MutableState<Boolean> = mutableStateOf(false)
@@ -31,6 +34,22 @@ class ExoPlayerManager @OptIn(UnstableApi::class) private constructor(context: C
             .buildUpon()
             .setAudioOffloadPreferences(audioOffloadPreferences)
             .build()
+    }
+
+    private val listener = object : Player.Listener {
+        override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
+            super.onMediaItemTransition(mediaItem, reason)
+            if (reason == Player.MEDIA_ITEM_TRANSITION_REASON_AUTO) {
+                if (musicPlayingIndex + 1 == musicQueueToPlay.size) {
+                    //It is listened because the last music has been finished
+                    return
+                }
+                musicPlayingIndex++
+                musicPlaying.value = musicQueueToPlay[musicPlayingIndex]
+                hasNext.value = hasNext()
+                hasPrevious.value = hasPrevious()
+            }
+        }
     }
 
     companion object {
@@ -67,21 +86,23 @@ class ExoPlayerManager @OptIn(UnstableApi::class) private constructor(context: C
      */
     fun start(musicToPlay: Music? = null) {
         if (musicToPlay != null) {
-            if (musicToPlay == musicPlaying) {
+            if (musicToPlay == musicPlaying.value) {
                 return
             }
             for (i: Int in 0..<musicQueueToPlay.size) {
                 val music = musicQueueToPlay[i]
                 if (musicToPlay == music) {
-                    musicPlaying = musicToPlay
+                    musicPlaying.value = musicToPlay
                     musicPlayingIndex = i
                     break
                 }
             }
         } else {
             musicPlayingIndex = 0
-            musicPlaying = musicQueueToPlay[musicPlayingIndex]
+            musicPlaying.value = musicQueueToPlay[musicPlayingIndex]
         }
+        hasNext.value = hasNext()
+        hasPrevious.value = hasPrevious()
         exoPlayer.seekTo(musicPlayingIndex, 0)
         exoPlayer.prepare()
         exoPlayer.play()
@@ -110,7 +131,9 @@ class ExoPlayerManager @OptIn(UnstableApi::class) private constructor(context: C
     fun next() {
         if (hasNext()) {
             exoPlayer.seekToNext()
-            musicPlaying = getNextMusic()
+            musicPlaying.value = getNextMusic()
+            hasNext.value = hasNext()
+            hasPrevious.value = hasPrevious()
             exoPlayer.prepare()
             exoPlayer.play()
             isPlaying.value = true
@@ -129,11 +152,7 @@ class ExoPlayerManager @OptIn(UnstableApi::class) private constructor(context: C
     }
 
     fun hasNext(): Boolean {
-        return musicPlaying != musicQueueToPlay.last()
-    }
-
-    fun getMusicPlaying(): Music? {
-        return musicPlaying
+        return musicPlaying.value != musicQueueToPlay.last()
     }
 
     /**
@@ -148,42 +167,19 @@ class ExoPlayerManager @OptIn(UnstableApi::class) private constructor(context: C
                 exoPlayer.addMediaItem(mediaItem)
             }
         }
+        exoPlayer.addListener(listener)
     }
 
     /**
      * Set the exo player to the default state without media items. clear all
      */
     private fun clearPlaylist() {
+        exoPlayer.removeListener(listener)
         musicQueueToPlay.clear()
         exoPlayer.clearMediaItems()
-        musicPlaying = null
+        musicPlaying.value = null
         musicPlayingIndex = DEFAULT_MUSIC_PLAYING_INDEX
         isPlaying.value = false
-    }
-
-    fun addListener(
-        mutableMusicPlaying: MutableState<Music>,
-        mutableHasNext: MutableState<Boolean>,
-        mutableHasPrevious: MutableState<Boolean>,
-        mutableIsPlaying: MutableState<Boolean>
-    ) {
-        exoPlayer.addListener(object : Player.Listener {
-            override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
-                super.onMediaItemTransition(mediaItem, reason)
-                if (reason == Player.MEDIA_ITEM_TRANSITION_REASON_AUTO) {
-                    if (musicPlayingIndex + 1 == musicQueueToPlay.size) {
-                        //It is listened because the last music has been finished
-                        return
-                    }
-                    musicPlayingIndex++
-                    musicPlaying = musicQueueToPlay[musicPlayingIndex]
-                    mutableMusicPlaying.value = musicPlaying!!
-                    mutableHasNext.value = hasNext()
-                    mutableHasPrevious.value = hasPrevious()
-                    mutableIsPlaying.value = isPlaying.value
-                }
-            }
-        })
     }
 
     /**
@@ -196,7 +192,9 @@ class ExoPlayerManager @OptIn(UnstableApi::class) private constructor(context: C
             if (previousMediaItem != exoPlayer.currentMediaItem) {
                 exoPlayer.prepare()
                 musicPlayingIndex--
-                musicPlaying = musicQueueToPlay[musicPlayingIndex]
+                musicPlaying.value = musicQueueToPlay[musicPlayingIndex]
+                hasNext.value = hasNext()
+                hasPrevious.value = hasPrevious()
             }
             exoPlayer.play()
             isPlaying.value = true
@@ -204,6 +202,6 @@ class ExoPlayerManager @OptIn(UnstableApi::class) private constructor(context: C
     }
 
     fun hasPrevious(): Boolean {
-        return musicPlaying != musicQueueToPlay[0]
+        return musicPlaying.value != musicQueueToPlay[0]
     }
 }

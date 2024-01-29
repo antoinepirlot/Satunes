@@ -129,9 +129,9 @@ class ExoPlayerManager @OptIn(UnstableApi::class) private constructor(context: C
             musicPlayingIndex = 0
             musicPlaying.value = musicQueueToPlay[musicPlayingIndex]
         }
+        exoPlayer.seekTo(musicPlayingIndex, 0)
         hasNext.value = hasNext()
         hasPrevious.value = hasPrevious()
-        exoPlayer.seekTo(musicPlayingIndex, 0)
         exoPlayer.prepare()
         exoPlayer.play()
         switchIsPlaying()
@@ -192,17 +192,25 @@ class ExoPlayerManager @OptIn(UnstableApi::class) private constructor(context: C
     /**
      * Add all music from musicMap to the exoPlayer in the same order
      */
-    fun loadMusic(musicList: List<Music>) {
-        resetToDefault()
-        for (music in musicList) {
-            if (!originalMusicQueueToPlay.contains(music)) {
-                originalMusicQueueToPlay.add(music)
-                musicQueueToPlay.add(music)
+    fun loadMusic(musicList: List<Music>? = null) {
+        if (musicList != null) {
+            resetToDefault()
+            for (music in musicList) {
+                if (!originalMusicQueueToPlay.contains(music)) {
+                    originalMusicQueueToPlay.add(music)
+                    musicQueueToPlay.add(music)
+                    val mediaItem = MediaItem.fromUri(music.getAbsolutePath())
+                    exoPlayer.addMediaItem(mediaItem)
+                }
+            }
+            exoPlayer.addListener(listener)
+        } else {
+            exoPlayer.clearMediaItems()
+            for (music in musicQueueToPlay) {
                 val mediaItem = MediaItem.fromUri(music.getAbsolutePath())
                 exoPlayer.addMediaItem(mediaItem)
             }
         }
-        exoPlayer.addListener(listener)
     }
 
     /**
@@ -237,7 +245,7 @@ class ExoPlayerManager @OptIn(UnstableApi::class) private constructor(context: C
     }
 
     fun hasPrevious(): Boolean {
-        return musicPlaying.value != musicQueueToPlay[0]
+        return musicPlaying.value != musicQueueToPlay.first()
     }
 
     /**
@@ -273,7 +281,9 @@ class ExoPlayerManager @OptIn(UnstableApi::class) private constructor(context: C
             musicQueueToPlay.remove(musicPlaying.value)
             musicQueueToPlay.shuffle()
             musicQueueToPlay.addFirst(musicPlaying.value!!)
+            musicPlayingIndex = 0
         }
+        loadMusic()
         start(musicPlaying.value)
         shuffleMode.value = !shuffleMode.value
     }

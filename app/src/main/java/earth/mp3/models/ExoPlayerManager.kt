@@ -125,7 +125,7 @@ class ExoPlayerManager @OptIn(UnstableApi::class) private constructor(context: C
                     break
                 }
             }
-        } else {
+        } else if (musicPlayingIndex < 0) {
             musicPlayingIndex = 0
             musicPlaying.value = musicQueueToPlay[musicPlayingIndex]
         }
@@ -206,7 +206,11 @@ class ExoPlayerManager @OptIn(UnstableApi::class) private constructor(context: C
             exoPlayer.addListener(listener)
         } else {
             exoPlayer.clearMediaItems()
-            for (music in musicQueueToPlay) {
+            for (i: Int in 0..<musicQueueToPlay.size) {
+                val music = musicQueueToPlay[i]
+                if (music == musicPlaying.value) {
+                    musicPlayingIndex = i
+                }
                 val mediaItem = MediaItem.fromUri(music.getAbsolutePath())
                 exoPlayer.addMediaItem(mediaItem)
             }
@@ -272,13 +276,21 @@ class ExoPlayerManager @OptIn(UnstableApi::class) private constructor(context: C
     }
 
     /**
-     * Mix the playlist from the playing music
+     * Mix the playlist from the playing music if activation
+     * Play the original music queue if deactivation
      */
     fun switchShuffleMode() {
-        musicQueueToPlay.remove(musicPlaying.value)
-        musicQueueToPlay.shuffle()
-        musicQueueToPlay.addFirst(musicPlaying.value!!)
-        musicPlayingIndex = 0
+        if (shuffleMode.value) {
+            // Deactivate shuffle mode
+            musicQueueToPlay = ArrayDeque(originalMusicQueueToPlay)
+            shuffleMode.value = false
+        } else {
+            // Activate Shuffle mode
+            musicQueueToPlay.remove(musicPlaying.value)
+            musicQueueToPlay.shuffle()
+            musicQueueToPlay.addFirst(musicPlaying.value!!)
+            shuffleMode.value = true
+        }
         loadMusic()
         playPause()
     }

@@ -112,7 +112,7 @@ class ExoPlayerManager @OptIn(UnstableApi::class) private constructor(context: C
      *
      * @param musicToPlay the music to play
      */
-    fun start(musicToPlay: Music? = null) {
+    fun start(musicToPlay: Music? = null, positionMs: Long = 0) {
         if (musicToPlay != null) {
             if (musicToPlay == musicPlaying.value) {
                 return
@@ -129,7 +129,7 @@ class ExoPlayerManager @OptIn(UnstableApi::class) private constructor(context: C
             musicPlayingIndex = 0
             musicPlaying.value = musicQueueToPlay[musicPlayingIndex]
         }
-        exoPlayer.seekTo(musicPlayingIndex, 0)
+        exoPlayer.seekTo(musicPlayingIndex, positionMs)
         hasNext.value = hasNext()
         hasPrevious.value = hasPrevious()
         exoPlayer.prepare()
@@ -291,7 +291,8 @@ class ExoPlayerManager @OptIn(UnstableApi::class) private constructor(context: C
             musicQueueToPlay.addFirst(musicPlaying.value!!)
             shuffleMode.value = true
         }
+        val currentMusicPositionMs: Long = exoPlayer.currentPosition
         loadMusic()
-        playPause()
+        start(positionMs = currentMusicPositionMs)
     }
 }

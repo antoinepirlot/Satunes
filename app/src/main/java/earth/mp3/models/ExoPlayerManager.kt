@@ -280,5 +280,10 @@ class ExoPlayerManager @OptIn(UnstableApi::class) private constructor(context: C
         musicQueueToPlay.addFirst(musicPlaying.value!!)
         musicPlayingIndex = 0
         loadMusic()
+        exoPlayer.prepare()
+        exoPlayer.play()
+        isPlaying.value = true
+        hasNext.value = true
+        hasPrevious.value = false
     }
 }

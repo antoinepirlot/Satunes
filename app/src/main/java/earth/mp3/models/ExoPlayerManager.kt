@@ -1,6 +1,7 @@
 package earth.mp3.models
 
 import android.content.Context
+import android.content.Intent
 import android.os.Environment
 import androidx.annotation.OptIn
 import androidx.compose.runtime.MutableState
@@ -15,9 +16,14 @@ import androidx.media3.common.Player.STATE_ENDED
 import androidx.media3.common.TrackSelectionParameters.AudioOffloadPreferences
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.session.MediaSession
+import androidx.media3.session.MediaSessionService
 
-class ExoPlayerManager @OptIn(UnstableApi::class) private constructor(context: Context) {
-    private val exoPlayer: ExoPlayer = ExoPlayer.Builder(context).build()
+class ExoPlayerManager @OptIn(UnstableApi::class) private constructor(context: Context) :
+    MediaSessionService() {
+
+    private lateinit var exoPlayer: ExoPlayer
+    private var mediaSession: MediaSession? = null
     private val originalMusicQueueToPlay: ArrayDeque<Music> = ArrayDeque()
     private var musicQueueToPlay: ArrayDeque<Music> = ArrayDeque()
     private var musicPlayingIndex: Int = DEFAULT_MUSIC_PLAYING_INDEX
@@ -33,6 +39,7 @@ class ExoPlayerManager @OptIn(UnstableApi::class) private constructor(context: C
     var hasPrevious: MutableState<Boolean> = mutableStateOf(false)
 
     init {
+        exoPlayer = ExoPlayer.Builder(context).build()
         val audioOffloadPreferences = AudioOffloadPreferences.Builder()
             .setAudioOffloadMode(AudioOffloadPreferences.AUDIO_OFFLOAD_MODE_ENABLED)
             .setIsGaplessSupportRequired(true)
@@ -42,6 +49,8 @@ class ExoPlayerManager @OptIn(UnstableApi::class) private constructor(context: C
             .buildUpon()
             .setAudioOffloadPreferences(audioOffloadPreferences)
             .build()
+
+        mediaSession = MediaSession.Builder(context, exoPlayer).build()
     }
 
     private val listener = object : Player.Listener {
@@ -295,5 +304,47 @@ class ExoPlayerManager @OptIn(UnstableApi::class) private constructor(context: C
         val currentMusicPositionMs: Long = exoPlayer.currentPosition
         loadMusic()
         start(positionMs = currentMusicPositionMs)
+    }
+
+    @OptIn(UnstableApi::class)
+    override fun onCreate() {
+        //TODO not working
+        super.onCreate()
+        exoPlayer = ExoPlayer.Builder(this).build()
+        val audioOffloadPreferences = AudioOffloadPreferences.Builder()
+            .setAudioOffloadMode(AudioOffloadPreferences.AUDIO_OFFLOAD_MODE_ENABLED)
+            .setIsGaplessSupportRequired(true)
+            .build()
+
+        exoPlayer.trackSelectionParameters = exoPlayer.trackSelectionParameters
+            .buildUpon()
+            .setAudioOffloadPreferences(audioOffloadPreferences)
+            .build()
+
+        mediaSession = MediaSession.Builder(this, exoPlayer).build()
+    }
+
+    /**
+     * Got from https://developer.android.com/media/media3/session/background-playback
+     */
+    override fun onTaskRemoved(rootIntent: Intent?) {
+        if (mediaSession!!.player.playWhenReady || mediaSession!!.player.mediaItemCount == 0) {
+            // Stop the service if not playing, continue playing in the background
+            // otherwise.
+            stopSelf()
+        }
+    }
+
+    override fun onDestroy() {
+        mediaSession?.run {
+            player.release()
+            release()
+            mediaSession = null
+        }
+        super.onDestroy()
+    }
+
+    override fun onGetSession(controllerInfo: androidx.media3.session.MediaSession.ControllerInfo): MediaSession? {
+        return mediaSession
     }
 }

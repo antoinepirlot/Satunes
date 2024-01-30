@@ -275,16 +275,10 @@ class ExoPlayerManager @OptIn(UnstableApi::class) private constructor(context: C
      * Mix the playlist from the playing music
      */
     fun switchShuffleMode() {
-        musicQueueToPlay = ArrayDeque(originalMusicQueueToPlay)
-        if (!shuffleMode.value) {
-            // Activate shuffle mode
-            musicQueueToPlay.remove(musicPlaying.value)
-            musicQueueToPlay.shuffle()
-            musicQueueToPlay.addFirst(musicPlaying.value!!)
-            musicPlayingIndex = 0
-        }
+        musicQueueToPlay.remove(musicPlaying.value)
+        musicQueueToPlay.shuffle()
+        musicQueueToPlay.addFirst(musicPlaying.value!!)
+        musicPlayingIndex = 0
         loadMusic()
-        start(musicPlaying.value)
-        shuffleMode.value = !shuffleMode.value
     }
 }

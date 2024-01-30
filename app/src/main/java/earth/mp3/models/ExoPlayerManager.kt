@@ -222,6 +222,7 @@ class ExoPlayerManager @OptIn(UnstableApi::class) private constructor(context: C
      */
     private fun resetToDefault() {
         exoPlayer.removeListener(listener)
+        originalMusicQueueToPlay.clear()
         musicQueueToPlay.clear()
         exoPlayer.clearMediaItems()
         musicPlaying.value = null

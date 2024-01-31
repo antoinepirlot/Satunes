@@ -17,7 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import earth.mp3.models.ExoPlayerManager
+import earth.mp3.services.ExoPlayerManager
 
 @Composable
 fun MusicControlBar(

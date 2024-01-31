@@ -1,4 +1,4 @@
-package earth.mp3.models
+package earth.mp3.services
 
 import android.content.Context
 import android.content.Intent
@@ -18,6 +18,7 @@ import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.session.MediaSession
 import androidx.media3.session.MediaSessionService
+import earth.mp3.models.Music
 
 class ExoPlayerManager @OptIn(UnstableApi::class) private constructor(context: Context) :
     MediaSessionService() {
@@ -104,10 +105,10 @@ class ExoPlayerManager @OptIn(UnstableApi::class) private constructor(context: C
          * @return the instance of ExoPlayerManager
          */
         fun getInstance(context: Context?): ExoPlayerManager {
-            if (context == null && !::instance.isInitialized) {
+            if (context == null && !Companion::instance.isInitialized) {
                 throw IllegalStateException("The ExoPlayerManager is not instanced, it needs a context")
             }
-            if (!::instance.isInitialized) {
+            if (!Companion::instance.isInitialized) {
                 instance = ExoPlayerManager(context!!)
             }
             return instance

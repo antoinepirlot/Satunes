@@ -9,10 +9,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import earth.mp3.models.Artist
-import earth.mp3.models.ExoPlayerManager
 import earth.mp3.models.Folder
 import earth.mp3.models.Media
 import earth.mp3.models.Music
+import earth.mp3.services.ExoPlayerManager
 import earth.mp3.ui.PlayBackView
 import earth.mp3.ui.components.cards.MediaCardList
 import earth.mp3.ui.utils.getMusicListFromFolder

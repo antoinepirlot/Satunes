@@ -9,7 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
-import earth.mp3.models.ExoPlayerManager
+import earth.mp3.services.ExoPlayerManager
 
 @Composable
 fun ShuffleMusicButton(

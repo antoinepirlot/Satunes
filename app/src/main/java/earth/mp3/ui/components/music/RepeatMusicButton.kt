@@ -12,7 +12,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.media3.common.Player.REPEAT_MODE_ALL
 import androidx.media3.common.Player.REPEAT_MODE_ONE
-import earth.mp3.models.ExoPlayerManager
+import earth.mp3.services.ExoPlayerManager
 
 @Composable
 fun RepeatMusicButton(

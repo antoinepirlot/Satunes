@@ -16,6 +16,8 @@ import earth.mp3.models.Music
 class PlaybackController private constructor(context: Context, sessionToken: SessionToken) {
     private lateinit var mediaController: MediaController
 
+    private val musicMediaItemMap: MutableMap<Music, MediaItem> = mutableMapOf()
+    private val mediaItemMusicMap: MutableMap<MediaItem, Music> = mutableMapOf()
     private val originalMusicQueueToPlay: ArrayDeque<Music> = ArrayDeque()
     private var musicQueueToPlay: ArrayDeque<Music> = ArrayDeque()
     private var musicPlayingIndex: Int = DEFAULT_MUSIC_PLAYING_INDEX
@@ -195,6 +197,8 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
                     originalMusicQueueToPlay.add(music)
                     musicQueueToPlay.add(music)
                     val mediaItem = MediaItem.fromUri(music.getAbsolutePath())
+                    musicMediaItemMap[music] = mediaItem
+                    mediaItemMusicMap[mediaItem] = music
                     mediaController.addMediaItem(mediaItem)
                 }
             }
@@ -207,6 +211,8 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
                     musicPlayingIndex = i
                 }
                 val mediaItem = MediaItem.fromUri(music.getAbsolutePath())
+                musicMediaItemMap[music] = mediaItem
+                mediaItemMusicMap[mediaItem] = music
                 mediaController.addMediaItem(mediaItem)
             }
         }
@@ -220,6 +226,7 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
         originalMusicQueueToPlay.clear()
         musicQueueToPlay.clear()
         mediaController.clearMediaItems()
+        musicMediaItemMap.clear()
         musicPlaying.value = null
         musicPlayingIndex = DEFAULT_MUSIC_PLAYING_INDEX
         isPlaying.value = false
@@ -278,18 +285,78 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
     fun switchShuffleMode() {
         if (shuffleMode.value) {
             // Deactivate shuffle mode
-            musicQueueToPlay = ArrayDeque(originalMusicQueueToPlay)
+            backToOriginalPlaylist()
             shuffleMode.value = false
         } else {
-            // Activate Shuffle mode
-            musicQueueToPlay.remove(musicPlaying.value)
-            musicQueueToPlay.shuffle()
-            musicQueueToPlay.addFirst(musicPlaying.value!!)
+            // Activate shuffle mode
+            shuffle()
             shuffleMode.value = true
         }
-        val currentMusicPositionMs: Long = mediaController.currentPosition
-        loadMusic()
-        start(positionMs = currentMusicPositionMs)
     }
 
+    private fun backToOriginalPlaylist() {
+        if (musicPlayingIndex == 0) {
+            mediaController.removeMediaItems(1, mediaController.mediaItemCount)
+        } else if (musicPlayingIndex == musicQueueToPlay.size - 1) {
+            mediaController.removeMediaItems(0, mediaController.mediaItemCount - 1)
+        } else {
+            mediaController.removeMediaItems(musicPlayingIndex + 1, mediaController.mediaItemCount)
+            mediaController.removeMediaItems(0, musicPlayingIndex)
+        }
+        musicQueueToPlay = ArrayDeque(originalMusicQueueToPlay)
+        //Update index
+        for (i: Int in 0..<musicQueueToPlay.size) {
+            val music = musicQueueToPlay[i]
+            if (music == musicPlaying.value) {
+                musicPlayingIndex = i
+                musicPlaying.value = music
+                break
+            }
+        }
+
+        for (i: Int in 0..<musicQueueToPlay.size) {
+            if (i == musicPlayingIndex) {
+                continue
+            }
+            val mediaItem = musicMediaItemMap[musicQueueToPlay[i]]!!
+            if (i < musicPlayingIndex) {
+                mediaController.addMediaItem(i, mediaItem)
+            } else {
+                mediaController.addMediaItem(mediaItem)
+            }
+        }
+
+//        if (musicPlayingIndex > 0) {
+//            // music playing index is preserved in media controller
+//            mediaController.removeMediaItems(0, musicPlayingIndex + 1)
+//            mediaController.removeMediaItems(musicPlayingIndex + 1, mediaController.mediaItemCount)
+//        }
+//        musicQueueToPlay = ArrayDeque(originalMusicQueueToPlay)
+//        //update music playing index
+//        for (i: Int in 0..< musicQueueToPlay.size - 1) {
+//            if (musicPlaying.value == musicQueueToPlay[i]) {
+//                musicPlayingIndex = i
+//                break
+//            }
+//        }
+    }
+
+
+    /**
+     * Shuffle music
+     */
+    private fun shuffle() {
+        mediaController.moveMediaItem(musicPlayingIndex, 0)
+        mediaController.removeMediaItems(1, mediaController.mediaItemCount)
+        musicQueueToPlay.remove(musicPlaying.value!!)
+        musicQueueToPlay.shuffle()
+        musicQueueToPlay.addFirst(musicPlaying.value!!)
+        musicPlayingIndex = 0
+        for (i: Int in 1..<musicQueueToPlay.size - 1) {
+            val music = musicQueueToPlay[i]
+            val mediaItem = musicMediaItemMap[music]!!
+            mediaController.addMediaItem(mediaItem)
+            mediaController.prepare()
+        }
+    }
 }

@@ -17,7 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import earth.mp3.services.ExoPlayerManager
+import earth.mp3.services.PlaybackController
 
 @Composable
 fun MusicControlBar(
@@ -25,7 +25,7 @@ fun MusicControlBar(
     horizontalArrangement: Arrangement.HorizontalOrVertical = Arrangement.Center,
     verticalAlignment: Alignment.Vertical = Alignment.CenterVertically
 ) {
-    val exoPlayerManager = ExoPlayerManager.getInstance(null)
+    val exoPlayerManager = PlaybackController.getInstance()
 
     val isPlaying = rememberSaveable { exoPlayerManager.isPlaying }
     val hasPrevious = rememberSaveable { exoPlayerManager.hasPrevious }

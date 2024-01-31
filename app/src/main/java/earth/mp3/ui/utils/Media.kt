@@ -3,7 +3,7 @@ package earth.mp3.ui.utils
 import earth.mp3.models.Folder
 import earth.mp3.models.Media
 import earth.mp3.models.Music
-import earth.mp3.services.ExoPlayerManager
+import earth.mp3.services.PlaybackController
 
 
 /**
@@ -14,7 +14,7 @@ import earth.mp3.services.ExoPlayerManager
  */
 
 fun startMusic(musicList: List<Music>, mediaToPlay: Media) {
-    val exoPlayerManager = ExoPlayerManager.getInstance(null)
+    val exoPlayerManager = PlaybackController.getInstance()
     exoPlayerManager.loadMusic(musicList)
 
     when (mediaToPlay) {

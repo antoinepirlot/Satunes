@@ -10,7 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import earth.mp3.services.ExoPlayerManager
+import earth.mp3.services.PlaybackController
 
 @Composable
 fun NextMusicButton(
@@ -18,7 +18,7 @@ fun NextMusicButton(
 ) {
     IconButton(
         modifier = modifier.size(45.dp),
-        onClick = { ExoPlayerManager.getInstance(null).next() }
+        onClick = { PlaybackController.getInstance().next() }
     ) {
         Icon(
             modifier = modifier.size(45.dp),

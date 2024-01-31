@@ -9,13 +9,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
-import earth.mp3.services.ExoPlayerManager
+import earth.mp3.services.PlaybackController
 
 @Composable
 fun ShuffleMusicButton(
     modifier: Modifier = Modifier
 ) {
-    val exoPlayerManager: ExoPlayerManager = ExoPlayerManager.getInstance(null)
+    val exoPlayerManager: PlaybackController = PlaybackController.getInstance()
 
     IconButton(
         modifier = modifier,
@@ -36,7 +36,7 @@ fun ShuffleMusicButtonPreview() {
 }
 
 private fun getImageVector(): ImageVector {
-    return if (ExoPlayerManager.getInstance(null).shuffleMode.value) {
+    return if (PlaybackController.getInstance().shuffleMode.value) {
         Icons.Filled.ShuffleOn
     } else {
         Icons.Filled.Shuffle

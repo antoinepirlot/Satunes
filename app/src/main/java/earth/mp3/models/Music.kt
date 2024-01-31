@@ -6,7 +6,7 @@ import android.net.Uri
 import android.provider.MediaStore
 import androidx.compose.runtime.MutableLongState
 import androidx.compose.runtime.mutableLongStateOf
-import earth.mp3.services.ExoPlayerManager
+import earth.mp3.services.PlaybackController
 
 class Music(
     override val id: Long,
@@ -216,7 +216,7 @@ class Music(
      * @return the absolute path
      */
     fun getAbsolutePath(): String {
-        return "${ExoPlayerManager.ROOT_PATH}/$relativePath/$name"
+        return "${PlaybackController.ROOT_PATH}/$relativePath/$name"
     }
 
     override fun toString(): String {

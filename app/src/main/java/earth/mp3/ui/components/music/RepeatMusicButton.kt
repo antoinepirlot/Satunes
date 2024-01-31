@@ -12,7 +12,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.media3.common.Player.REPEAT_MODE_ALL
 import androidx.media3.common.Player.REPEAT_MODE_ONE
-import earth.mp3.services.ExoPlayerManager
+import earth.mp3.services.PlaybackController
 
 @Composable
 fun RepeatMusicButton(
@@ -20,7 +20,7 @@ fun RepeatMusicButton(
 ) {
     IconButton(
         modifier = modifier,
-        onClick = { ExoPlayerManager.getInstance(null).switchRepeatMode() }
+        onClick = { PlaybackController.getInstance().switchRepeatMode() }
     ) {
         Icon(
             modifier = modifier,
@@ -39,7 +39,7 @@ fun RepeatMusicButtonPreview() {
 }
 
 private fun getImageVector(): ImageVector {
-    return when (ExoPlayerManager.getInstance(null).repeatMode.value) {
+    return when (PlaybackController.getInstance().repeatMode.value) {
         REPEAT_MODE_ONE -> {
             Icons.Filled.RepeatOneOn
         }

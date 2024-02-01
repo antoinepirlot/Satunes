@@ -27,6 +27,7 @@ import androidx.core.content.ContextCompat
 import earth.mp3.models.Artist
 import earth.mp3.models.Folder
 import earth.mp3.models.Music
+import earth.mp3.services.PlaybackController
 import earth.mp3.ui.components.MP3TopAppBar
 import earth.mp3.ui.theme.MP3Theme
 import earth.mp3.ui.views.HomeView
@@ -38,7 +39,8 @@ class MainActivity : ComponentActivity() {
         requestPermission()
         if (!isAudioDenied()) {
             setContent {
-
+                //Init playback controller
+                PlaybackController.getInstance(LocalContext.current)
                 val musicMap = remember { mutableStateMapOf<Long, Music>() }
                 val rootFolderList = remember { mutableStateListOf<Folder>() }
                 val folderMap = remember { mutableStateMapOf<Long, Folder>() }

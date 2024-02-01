@@ -1,4 +1,4 @@
-package earth.mp3.ui.components.cards
+package earth.mp3.ui.components.cards.media
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.lazy.LazyColumn

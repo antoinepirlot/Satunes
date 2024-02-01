@@ -1,4 +1,4 @@
-package earth.mp3.ui.components.cards
+package earth.mp3.ui.components.cards.media
 
 import android.net.Uri
 import androidx.compose.foundation.layout.Box

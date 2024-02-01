@@ -8,6 +8,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.core.content.ContextCompat
 import androidx.media3.common.MediaItem
+import androidx.media3.common.MediaMetadata
 import androidx.media3.common.Player
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
@@ -225,7 +226,11 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
                 if (!originalMusicQueueToPlay.contains(music)) {
                     originalMusicQueueToPlay.add(music)
                     musicQueueToPlay.add(music)
-                    val mediaItem = MediaItem.fromUri(music.getAbsolutePath())
+                    val mediaMetaData = MediaMetadata.Builder().setTitle(music.name).build()
+                    val mediaItem = MediaItem.Builder()
+                        .setUri(music.getAbsolutePath())
+                        .setMediaMetadata(mediaMetaData)
+                        .build()
                     musicMediaItemMap[music] = mediaItem
                     mediaItemMusicMap[mediaItem] = music
                     mediaController.addMediaItem(mediaItem)
@@ -239,7 +244,11 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
                 if (music == musicPlaying.value) {
                     musicPlayingIndex = i
                 }
-                val mediaItem = MediaItem.fromUri(music.getAbsolutePath())
+                val mediaMetaData = MediaMetadata.Builder().setTitle(music.name).build()
+                val mediaItem = MediaItem.Builder()
+                    .setUri(music.getAbsolutePath())
+                    .setMediaMetadata(mediaMetaData)
+                    .build()
                 musicMediaItemMap[music] = mediaItem
                 mediaItemMusicMap[mediaItem] = music
                 mediaController.addMediaItem(mediaItem)

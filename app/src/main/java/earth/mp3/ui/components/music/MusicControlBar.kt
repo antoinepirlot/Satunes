@@ -28,8 +28,6 @@ fun MusicControlBar(
     val exoPlayerManager = PlaybackController.getInstance()
 
     val isPlaying = rememberSaveable { exoPlayerManager.isPlaying }
-    val hasPrevious = rememberSaveable { exoPlayerManager.hasPrevious }
-    val hasNext = rememberSaveable { exoPlayerManager.hasNext }
 
     val spaceBetweenButtons = 20.dp
     val playPauseButtonSize = 80.dp
@@ -42,10 +40,10 @@ fun MusicControlBar(
     ) {
         ShuffleMusicButton(modifier = Modifier.size(optionButtonSize))
         Spacer(modifier = Modifier.width(spaceBetweenButtons))
-        if (hasPrevious.value) {
-            PreviousMusicButton()
-            Spacer(modifier = Modifier.width(spaceBetweenButtons))
-        }
+
+        PreviousMusicButton()
+        Spacer(modifier = Modifier.width(spaceBetweenButtons))
+
         IconButton(
             modifier = Modifier.size(playPauseButtonSize),
             onClick = { exoPlayerManager.playPause() }
@@ -56,10 +54,10 @@ fun MusicControlBar(
                 contentDescription = if (isPlaying.value) "Pause" else "Play",
             )
         }
-        if (hasNext.value) {
-            Spacer(modifier = Modifier.width(spaceBetweenButtons))
-            NextMusicButton()
-        }
+
+        Spacer(modifier = Modifier.width(spaceBetweenButtons))
+        NextMusicButton()
+
         Spacer(modifier = Modifier.width(spaceBetweenButtons))
         RepeatMusicButton(modifier = Modifier.size(optionButtonSize))
     }

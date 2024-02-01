@@ -27,7 +27,7 @@ import androidx.core.content.ContextCompat
 import earth.mp3.models.Artist
 import earth.mp3.models.Folder
 import earth.mp3.models.Music
-import earth.mp3.ui.components.MP3TopAppBar
+import earth.mp3.ui.appBars.MP3TopAppBar
 import earth.mp3.ui.theme.MP3Theme
 import earth.mp3.ui.views.HomeView
 

@@ -220,41 +220,37 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
      * Add all music from musicMap to the exoPlayer in the same order
      */
     fun loadMusic(musicList: List<Music>? = null) {
+        val musicListToIterate: List<Music>
         if (musicList != null) {
+            musicListToIterate = musicList
             resetToDefault()
-            for (music in musicList) {
+        } else {
+            musicListToIterate = musicQueueToPlay
+            mediaController.clearMediaItems()
+        }
+
+        for (i: Int in musicListToIterate.indices) {
+            val music: Music = musicListToIterate[i]
+            if (musicList != null) {
                 if (!originalMusicQueueToPlay.contains(music)) {
                     originalMusicQueueToPlay.add(music)
                     musicQueueToPlay.add(music)
-                    val mediaMetaData = MediaMetadata.Builder().setTitle(music.name).build()
-                    val mediaItem = MediaItem.Builder()
-                        .setUri(music.getAbsolutePath())
-                        .setMediaMetadata(mediaMetaData)
-                        .build()
-                    musicMediaItemMap[music] = mediaItem
-                    mediaItemMusicMap[mediaItem] = music
-                    mediaController.addMediaItem(mediaItem)
                 }
+            } else if (music == musicPlaying.value) {
+                musicPlayingIndex = i
             }
-            mediaController.addListener(listener)
-        } else {
-            mediaController.clearMediaItems()
-            for (i: Int in 0..<musicQueueToPlay.size) {
-                val music = musicQueueToPlay[i]
-                if (music == musicPlaying.value) {
-                    musicPlayingIndex = i
-                }
-                val mediaMetaData = MediaMetadata.Builder().setTitle(music.name).build()
-                val mediaItem = MediaItem.Builder()
-                    .setUri(music.getAbsolutePath())
-                    .setMediaMetadata(mediaMetaData)
-                    .build()
-                musicMediaItemMap[music] = mediaItem
-                mediaItemMusicMap[mediaItem] = music
-                mediaController.addMediaItem(mediaItem)
-            }
+            val mediaMetaData = MediaMetadata.Builder().setTitle(music.name).build()
+            val mediaItem = MediaItem.Builder()
+                .setUri(music.getAbsolutePath())
+                .setMediaMetadata(mediaMetaData)
+                .build()
+            musicMediaItemMap[music] = mediaItem
+            mediaItemMusicMap[mediaItem] = music
+            mediaController.addMediaItem(mediaItem)
         }
+        mediaController.addListener(listener)
         mediaController.prepare()
+
     }
 
     /**

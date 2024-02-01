@@ -25,9 +25,9 @@ fun MusicControlBar(
     horizontalArrangement: Arrangement.HorizontalOrVertical = Arrangement.Center,
     verticalAlignment: Alignment.Vertical = Alignment.CenterVertically
 ) {
-    val exoPlayerManager = PlaybackController.getInstance()
+    val playbackController = PlaybackController.getInstance()
 
-    val isPlaying = rememberSaveable { exoPlayerManager.isPlaying }
+    val isPlaying = rememberSaveable { PlaybackController.isPlaying }
 
     val spaceBetweenButtons = 20.dp
     val playPauseButtonSize = 80.dp
@@ -46,7 +46,7 @@ fun MusicControlBar(
 
         IconButton(
             modifier = Modifier.size(playPauseButtonSize),
-            onClick = { exoPlayerManager.playPause() }
+            onClick = { playbackController.playPause() }
         ) {
             Icon(
                 modifier = Modifier.size(playPauseButtonSize),

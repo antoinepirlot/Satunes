@@ -23,15 +23,6 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
     private var musicPlayingIndex: Int = DEFAULT_MUSIC_PLAYING_INDEX
     private var isEnded: Boolean = false
 
-    // Mutable var are used in ui, it needs to be recomposed
-    // I use mutable to avoid using function with multiples params like to add listener
-    var musicPlaying: MutableState<Music?> = mutableStateOf(null)
-    var isPlaying: MutableState<Boolean> = mutableStateOf(false)
-    var repeatMode: MutableState<Int> = mutableIntStateOf(Player.REPEAT_MODE_OFF)
-    var shuffleMode: MutableState<Boolean> = mutableStateOf(false)
-    var hasNext: MutableState<Boolean> = mutableStateOf(false)
-    var hasPrevious: MutableState<Boolean> = mutableStateOf(false)
-
     init {
         val controllerFuture = MediaController.Builder(context, sessionToken).buildAsync()
         controllerFuture.addListener({
@@ -41,7 +32,22 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
 
     companion object {
         val ROOT_PATH: String = Environment.getExternalStorageDirectory().path
+        val DEFAULT_MUSIC_PLAYING = null
         const val DEFAULT_MUSIC_PLAYING_INDEX = -1
+        const val DEFAULT_IS_PLAYING_VALUE = false
+        const val DEFAULT_REPEAT_MODE = Player.REPEAT_MODE_OFF
+        const val DEFAULT_SHUFFLE_MODE = false
+        const val DEFAULT_HAS_NEXT = false
+        const val DEFAULT_HAS_PREVIOUS = false
+
+        // Mutable var are used in ui, it needs to be recomposed
+        // I use mutable to avoid using function with multiples params like to add listener
+        var musicPlaying: MutableState<Music?> = mutableStateOf(DEFAULT_MUSIC_PLAYING)
+        var isPlaying: MutableState<Boolean> = mutableStateOf(DEFAULT_IS_PLAYING_VALUE)
+        var repeatMode: MutableState<Int> = mutableIntStateOf(DEFAULT_REPEAT_MODE)
+        var shuffleMode: MutableState<Boolean> = mutableStateOf(DEFAULT_SHUFFLE_MODE)
+        var hasNext: MutableState<Boolean> = mutableStateOf(DEFAULT_HAS_NEXT)
+        var hasPrevious: MutableState<Boolean> = mutableStateOf(DEFAULT_HAS_PREVIOUS)
 
         private lateinit var instance: PlaybackController
 
@@ -216,7 +222,7 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
     }
 
     /**
-     * Set the exo player to the default state without media items. clear all
+     * Set this class to default values. In other words it clears all
      */
     private fun resetToDefault() {
         mediaController.removeListener(listener)
@@ -224,9 +230,14 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
         musicQueueToPlay.clear()
         mediaController.clearMediaItems()
         musicMediaItemMap.clear()
-        musicPlaying.value = null
+        musicPlaying.value = DEFAULT_MUSIC_PLAYING
         musicPlayingIndex = DEFAULT_MUSIC_PLAYING_INDEX
-        isPlaying.value = false
+        isPlaying.value = DEFAULT_IS_PLAYING_VALUE
+        repeatMode.value = DEFAULT_REPEAT_MODE
+        shuffleMode.value = DEFAULT_SHUFFLE_MODE
+        hasNext.value = DEFAULT_HAS_NEXT
+        hasPrevious.value = DEFAULT_HAS_PREVIOUS
+
     }
 
     /**

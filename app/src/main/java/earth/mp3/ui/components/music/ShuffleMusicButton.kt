@@ -15,11 +15,11 @@ import earth.mp3.services.PlaybackController
 fun ShuffleMusicButton(
     modifier: Modifier = Modifier
 ) {
-    val exoPlayerManager: PlaybackController = PlaybackController.getInstance()
+    val playbackController: PlaybackController = PlaybackController.getInstance()
 
     IconButton(
         modifier = modifier,
-        onClick = { exoPlayerManager.switchShuffleMode() }
+        onClick = { playbackController.switchShuffleMode() }
     ) {
         Icon(
             modifier = modifier,
@@ -36,7 +36,7 @@ fun ShuffleMusicButtonPreview() {
 }
 
 private fun getImageVector(): ImageVector {
-    return if (PlaybackController.getInstance().shuffleMode.value) {
+    return if (PlaybackController.shuffleMode.value) {
         Icons.Filled.ShuffleOn
     } else {
         Icons.Filled.Shuffle

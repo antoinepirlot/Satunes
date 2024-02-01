@@ -166,6 +166,7 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
     fun next() {
         if (hasNext()) {
             mediaController.seekToNext()
+            mediaController.play()
             musicPlaying.value = getNextMusic()
             hasNext.value = hasNext()
             hasPrevious.value = hasPrevious()
@@ -253,6 +254,7 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
             hasNext.value = hasNext()
             hasPrevious.value = hasPrevious()
         }
+        mediaController.play()
     }
 
     fun hasPrevious(): Boolean {

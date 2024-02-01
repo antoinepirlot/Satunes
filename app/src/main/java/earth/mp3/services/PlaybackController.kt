@@ -83,22 +83,43 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
 
         override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
             super.onMediaItemTransition(mediaItem, reason)
-            if (reason == Player.MEDIA_ITEM_TRANSITION_REASON_AUTO) {
-                when (repeatMode.value) {
-                    Player.REPEAT_MODE_OFF -> {
-                        musicPlayingIndex++
-                        musicPlaying.value = musicQueueToPlay[musicPlayingIndex]
-                        hasNext.value = hasNext()
-                        hasPrevious.value = hasPrevious()
-                    }
+            if (mediaItem == musicMediaItemMap[musicPlaying.value]!!) {
+                return
+            }
+            if (reason == Player.MEDIA_ITEM_TRANSITION_REASON_SEEK) {
+                val previousMusic: Music =
+                    if (musicPlayingIndex > 0) musicQueueToPlay[musicPlayingIndex - 1]
+                    else musicQueueToPlay.last()
 
-                    Player.REPEAT_MODE_ALL -> {
-                        if (musicPlayingIndex + 1 == musicQueueToPlay.size) {
-                            musicPlayingIndex = 0
-                        } else {
+                if (mediaItem == musicMediaItemMap[previousMusic]!!) {
+                    // Previous button has been clicked
+                    when (repeatMode.value) {
+                        Player.REPEAT_MODE_OFF -> {
+                            musicPlayingIndex--
+                        }
+
+                        Player.REPEAT_MODE_ALL -> {
+                            if (previousMusic == musicQueueToPlay.last()) {
+                                musicPlayingIndex = musicQueueToPlay.lastIndex
+                            } else {
+                                musicPlayingIndex--
+                            }
+                        }
+                    }
+                } else {
+                    // The next button has been clicked
+                    when (repeatMode.value) {
+                        Player.REPEAT_MODE_OFF -> {
                             musicPlayingIndex++
                         }
 
+                        Player.REPEAT_MODE_ALL -> {
+                            if (musicPlayingIndex + 1 == musicQueueToPlay.size) {
+                                musicPlayingIndex = 0
+                            } else {
+                                musicPlayingIndex++
+                            }
+                        }
                     }
                 }
                 musicPlaying.value = musicQueueToPlay[musicPlayingIndex]

@@ -29,7 +29,10 @@ fun MediaCardList(
                 modifier = modifier,
                 state = lazyState
             ) {
-                items(mediaList) { media: Media ->
+                items(
+                    items = mediaList,
+                    key = { it.id }
+                ) { media: Media ->
                     // First pair is image vector and second one is content description (String)
                     val pair = getRightIconAnDescription(media)
                     MediaCard(

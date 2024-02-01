@@ -50,6 +50,8 @@ fun HomeView(
             artistListToShow = artistListToShow,
             musicMapToShow = musicMapToShow,
         )
+
+//        TODO CurrentMusicBar()
     }
 }
 

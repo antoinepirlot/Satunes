@@ -129,9 +129,7 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
         mediaController.seekTo(musicPlayingIndex, positionMs)
         hasNext.value = hasNext()
         hasPrevious.value = hasPrevious()
-        mediaController.prepare()
-        mediaController.play()
-        switchIsPlaying()
+        playPause()
     }
 
     /**
@@ -165,8 +163,6 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
             musicPlaying.value = getNextMusic()
             hasNext.value = hasNext()
             hasPrevious.value = hasPrevious()
-            mediaController.prepare()
-            mediaController.play()
             isPlaying.value = true
         }
     }
@@ -216,6 +212,7 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
                 mediaController.addMediaItem(mediaItem)
             }
         }
+        mediaController.prepare()
     }
 
     /**
@@ -238,15 +235,13 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
     fun previous() {
         val previousMediaItem = mediaController.currentMediaItem
         mediaController.seekToPrevious()
+        isPlaying.value = true
         if (previousMediaItem != mediaController.currentMediaItem) {
-            mediaController.prepare()
             musicPlayingIndex--
             musicPlaying.value = musicQueueToPlay[musicPlayingIndex]
             hasNext.value = hasNext()
             hasPrevious.value = hasPrevious()
         }
-        mediaController.play()
-        isPlaying.value = true
     }
 
     fun hasPrevious(): Boolean {
@@ -293,15 +288,25 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
     }
 
     private fun backToOriginalPlaylist() {
-        if (musicPlayingIndex == 0) {
-            mediaController.removeMediaItems(1, mediaController.mediaItemCount)
-        } else if (musicPlayingIndex == musicQueueToPlay.size - 1) {
-            mediaController.removeMediaItems(0, mediaController.mediaItemCount - 1)
-        } else {
-            mediaController.removeMediaItems(musicPlayingIndex + 1, mediaController.mediaItemCount)
-            mediaController.removeMediaItems(0, musicPlayingIndex)
+        when (musicPlayingIndex) {
+            0 -> {
+                mediaController.removeMediaItems(1, mediaController.mediaItemCount)
+            }
+
+            musicQueueToPlay.size - 1 -> {
+                mediaController.removeMediaItems(0, mediaController.mediaItemCount - 1)
+            }
+
+            else -> {
+                mediaController.removeMediaItems(
+                    musicPlayingIndex + 1,
+                    mediaController.mediaItemCount
+                )
+                mediaController.removeMediaItems(0, musicPlayingIndex)
+            }
         }
         musicQueueToPlay = ArrayDeque(originalMusicQueueToPlay)
+
         //Update index
         for (i: Int in 0..<musicQueueToPlay.size) {
             val music = musicQueueToPlay[i]

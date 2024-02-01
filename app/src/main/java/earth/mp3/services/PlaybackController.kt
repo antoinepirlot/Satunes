@@ -102,7 +102,6 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
             if (mediaItem == musicMediaItemMap[musicPlaying.value]!!) {
                 return
             }
-
             if (reason == Player.MEDIA_ITEM_TRANSITION_REASON_SEEK
                 || reason == Player.MEDIA_ITEM_TRANSITION_REASON_AUTO
             ) {
@@ -175,6 +174,7 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
             musicPlaying.value = musicQueueToPlay[musicPlayingIndex]
         }
         mediaController.seekTo(musicPlayingIndex, positionMs)
+        mediaController.play()
     }
 
     /**

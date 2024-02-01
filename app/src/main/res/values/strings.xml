@@ -4,4 +4,5 @@
     <string name="folder">Dossier</string>
     <string name="artists">Artistes</string>
     <string name="tracks">Morceaux</string>
+    <string name="play_all">Lire toute la musique</string>
 </resources>

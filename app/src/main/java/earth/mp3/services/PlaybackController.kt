@@ -82,7 +82,6 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
         }
 
         override fun onShuffleModeEnabledChanged(shuffleModeEnabled: Boolean) {
-            super.onShuffleModeEnabledChanged(shuffleModeEnabled)
             if (shuffleMode.value) {
                 // Deactivate shuffle mode
                 backToOriginalPlaylist()

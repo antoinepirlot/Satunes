@@ -196,9 +196,7 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
      * Play the next music in queue
      */
     fun next() {
-        if (hasNext()) {
-            mediaController.seekToNext()
-        }
+        mediaController.seekToNext()
     }
 
     /**

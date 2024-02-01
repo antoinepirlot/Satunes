@@ -236,19 +236,17 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
      * Play the previous music in deque
      */
     fun previous() {
-        if (hasPrevious()) {
-            val previousMediaItem = mediaController.currentMediaItem
-            mediaController.seekToPrevious()
-            if (previousMediaItem != mediaController.currentMediaItem) {
-                mediaController.prepare()
-                musicPlayingIndex--
-                musicPlaying.value = musicQueueToPlay[musicPlayingIndex]
-                hasNext.value = hasNext()
-                hasPrevious.value = hasPrevious()
-            }
-            mediaController.play()
-            isPlaying.value = true
+        val previousMediaItem = mediaController.currentMediaItem
+        mediaController.seekToPrevious()
+        if (previousMediaItem != mediaController.currentMediaItem) {
+            mediaController.prepare()
+            musicPlayingIndex--
+            musicPlaying.value = musicQueueToPlay[musicPlayingIndex]
+            hasNext.value = hasNext()
+            hasPrevious.value = hasPrevious()
         }
+        mediaController.play()
+        isPlaying.value = true
     }
 
     fun hasPrevious(): Boolean {

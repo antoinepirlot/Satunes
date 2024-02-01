@@ -14,9 +14,9 @@ import earth.mp3.models.Media
 import earth.mp3.models.Music
 import earth.mp3.services.PlaybackController
 import earth.mp3.ui.PlayBackView
-import earth.mp3.ui.components.cards.media.MediaCardList
 import earth.mp3.ui.utils.getMusicListFromFolder
 import earth.mp3.ui.utils.startMusic
+import earth.mp3.ui.views.MediaListView
 
 @Composable
 fun Router(
@@ -25,7 +25,7 @@ fun Router(
     rootFolderList: List<Folder>,
     artistListToShow: MutableList<Artist>,
     musicMapToShow: MutableMap<Long, Music>,
-    folderMap: Map<Long, Folder>
+    folderMap: Map<Long, Folder>,
 ) {
     val playbackController = PlaybackController.getInstance(LocalContext.current)
 
@@ -39,11 +39,12 @@ fun Router(
     ) {
         composable(Destination.FOLDERS.link) {
             // /!\ This route prevent back gesture to exit the app
-            MediaCardList(
+            MediaListView(
                 mediaList = rootFolderList,
                 openMedia = { clickedMedia: Media ->
                     openMediaFromFolder(navController, clickedMedia)
-                }
+                },
+                playMusicAction = { /* TODO */ }
             )
         }
 
@@ -63,16 +64,17 @@ fun Router(
                 listToShow.addAll(folder.musicList.toMutableList())
             }
 
-            MediaCardList(
+            MediaListView(
                 mediaList = listToShow,
                 openMedia = { clickedMedia: Media ->
                     openMediaFromFolder(navController, clickedMedia)
-                }
+                },
+                playMusicAction = { /* TODO */ }
             )
         }
 
         composable(Destination.ARTISTS.link) {
-            MediaCardList(
+            MediaListView(
                 mediaList = artistListToShow,
                 openMedia = { clickedMedia: Media ->
                     openMedia(
@@ -80,7 +82,8 @@ fun Router(
                         clickedMedia,
                         musicMapToShow.values.toList()
                     )
-                }
+                },
+                playMusicAction = { /* TODO */ }
             )
         }
 
@@ -89,13 +92,21 @@ fun Router(
         }
 
         composable(Destination.MUSICS.link) {
-            MediaCardList(
+            MediaListView(
                 mediaList = musicMapToShow.values.toList(),
                 openMedia = { clickedMedia: Media ->
                     openMedia(
                         navController,
                         clickedMedia,
                         musicMapToShow.values.toList()
+                    )
+                },
+                playMusicAction = {
+                    val musicList = musicMapToShow.values.toList()
+                    openMedia(
+                        navController,
+                        musicList[0],
+                        musicList
                     )
                 }
             )

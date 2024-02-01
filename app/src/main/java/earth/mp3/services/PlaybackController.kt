@@ -99,53 +99,51 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
 
         override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
             super.onMediaItemTransition(mediaItem, reason)
-            if (mediaItem == musicMediaItemMap[musicPlaying.value]!!) {
-                return
-            }
-            if (reason == Player.MEDIA_ITEM_TRANSITION_REASON_SEEK
-                || reason == Player.MEDIA_ITEM_TRANSITION_REASON_AUTO
-            ) {
-                val previousMusic: Music =
-                    if (musicPlayingIndex > 0) musicQueueToPlay[musicPlayingIndex - 1]
-                    else musicQueueToPlay.last()
+            if (mediaItem != musicMediaItemMap[musicPlaying.value]!!) {
+                if (reason == Player.MEDIA_ITEM_TRANSITION_REASON_SEEK
+                    || reason == Player.MEDIA_ITEM_TRANSITION_REASON_AUTO
+                ) {
+                    val previousMusic: Music =
+                        if (musicPlayingIndex > 0) musicQueueToPlay[musicPlayingIndex - 1]
+                        else musicQueueToPlay.last()
 
-                if (mediaItem == musicMediaItemMap[previousMusic]!!) {
-                    // Previous button has been clicked
-                    when (repeatMode.value) {
-                        Player.REPEAT_MODE_OFF -> {
-                            musicPlayingIndex--
-                        }
-
-                        Player.REPEAT_MODE_ALL -> {
-                            if (previousMusic == musicQueueToPlay.last()) {
-                                musicPlayingIndex = musicQueueToPlay.lastIndex
-                            } else {
+                    if (mediaItem == musicMediaItemMap[previousMusic]!!) {
+                        // Previous button has been clicked
+                        when (repeatMode.value) {
+                            Player.REPEAT_MODE_OFF -> {
                                 musicPlayingIndex--
                             }
-                        }
-                    }
-                } else {
-                    // The next button has been clicked
-                    when (repeatMode.value) {
-                        Player.REPEAT_MODE_OFF -> {
-                            musicPlayingIndex++
-                        }
 
-                        Player.REPEAT_MODE_ALL -> {
-                            if (musicPlayingIndex + 1 == musicQueueToPlay.size) {
-                                musicPlayingIndex = 0
-                            } else {
+                            Player.REPEAT_MODE_ALL -> {
+                                if (previousMusic == musicQueueToPlay.last()) {
+                                    musicPlayingIndex = musicQueueToPlay.lastIndex
+                                } else {
+                                    musicPlayingIndex--
+                                }
+                            }
+                        }
+                    } else {
+                        // The next button has been clicked
+                        when (repeatMode.value) {
+                            Player.REPEAT_MODE_OFF -> {
                                 musicPlayingIndex++
+                            }
+
+                            Player.REPEAT_MODE_ALL -> {
+                                if (musicPlayingIndex + 1 == musicQueueToPlay.size) {
+                                    musicPlayingIndex = 0
+                                } else {
+                                    musicPlayingIndex++
+                                }
                             }
                         }
                     }
                 }
-                musicPlaying.value = musicQueueToPlay[musicPlayingIndex]
-                hasNext.value = hasNext()
-                hasPrevious.value = hasPrevious()
-                mediaController.play()
-                isPlaying.value = true
             }
+            musicPlaying.value = musicQueueToPlay[musicPlayingIndex]
+            hasNext.value = hasNext()
+            hasPrevious.value = hasPrevious()
+            mediaController.play()
         }
     }
 
@@ -174,7 +172,7 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
             musicPlaying.value = musicQueueToPlay[musicPlayingIndex]
         }
         mediaController.seekTo(musicPlayingIndex, positionMs)
-        mediaController.play()
+        isPlaying.value = true
     }
 
     /**
@@ -266,7 +264,6 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
         shuffleMode.value = DEFAULT_SHUFFLE_MODE
         hasNext.value = DEFAULT_HAS_NEXT
         hasPrevious.value = DEFAULT_HAS_PREVIOUS
-
     }
 
     /**

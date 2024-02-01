@@ -14,16 +14,16 @@ import earth.mp3.services.PlaybackController
  */
 
 fun startMusic(musicList: List<Music>, mediaToPlay: Media) {
-    val exoPlayerManager = PlaybackController.getInstance()
-    exoPlayerManager.loadMusic(musicList)
+    val playbackController = PlaybackController.getInstance()
+    playbackController.loadMusic(musicList)
 
     when (mediaToPlay) {
         is Music -> {
-            exoPlayerManager.start(mediaToPlay)
+            playbackController.start(mediaToPlay)
         }
 
         is Folder -> {
-            exoPlayerManager.start()
+            playbackController.start()
         }
     }
 }

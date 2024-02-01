@@ -3,7 +3,6 @@ package earth.mp3.router
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -12,7 +11,6 @@ import earth.mp3.models.Artist
 import earth.mp3.models.Folder
 import earth.mp3.models.Media
 import earth.mp3.models.Music
-import earth.mp3.services.PlaybackController
 import earth.mp3.ui.PlayBackView
 import earth.mp3.ui.components.cards.media.MediaCardList
 import earth.mp3.ui.utils.getMusicListFromFolder
@@ -27,8 +25,6 @@ fun Router(
     musicMapToShow: MutableMap<Long, Music>,
     folderMap: Map<Long, Folder>
 ) {
-    val playbackController = PlaybackController.getInstance(LocalContext.current)
-
     val listToShow: MutableList<Media> = remember { mutableListOf() }
 
     val navController = rememberNavController()

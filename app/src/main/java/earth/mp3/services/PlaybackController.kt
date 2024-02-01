@@ -111,7 +111,7 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
                     if (mediaItem == musicMediaItemMap[previousMusic]!!) {
                         // Previous button has been clicked
                         when (repeatMode.value) {
-                            Player.REPEAT_MODE_OFF -> {
+                            Player.REPEAT_MODE_OFF, Player.REPEAT_MODE_ONE -> {
                                 musicPlayingIndex--
                             }
 
@@ -126,7 +126,7 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
                     } else {
                         // The next button has been clicked
                         when (repeatMode.value) {
-                            Player.REPEAT_MODE_OFF -> {
+                            Player.REPEAT_MODE_OFF, Player.REPEAT_MODE_ONE -> {
                                 musicPlayingIndex++
                             }
 

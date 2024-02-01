@@ -81,12 +81,20 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
             }
         }
 
+        override fun onPlayWhenReadyChanged(playWhenReady: Boolean, reason: Int) {
+            super.onPlayWhenReadyChanged(playWhenReady, reason)
+            isPlaying.value = playWhenReady
+        }
+
         override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
             super.onMediaItemTransition(mediaItem, reason)
             if (mediaItem == musicMediaItemMap[musicPlaying.value]!!) {
                 return
             }
-            if (reason == Player.MEDIA_ITEM_TRANSITION_REASON_SEEK) {
+
+            if (reason == Player.MEDIA_ITEM_TRANSITION_REASON_SEEK
+                || reason == Player.MEDIA_ITEM_TRANSITION_REASON_AUTO
+            ) {
                 val previousMusic: Music =
                     if (musicPlayingIndex > 0) musicQueueToPlay[musicPlayingIndex - 1]
                     else musicQueueToPlay.last()
@@ -125,6 +133,8 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
                 musicPlaying.value = musicQueueToPlay[musicPlayingIndex]
                 hasNext.value = hasNext()
                 hasPrevious.value = hasPrevious()
+                mediaController.play()
+                isPlaying.value = true
             }
         }
     }
@@ -154,9 +164,6 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
             musicPlaying.value = musicQueueToPlay[musicPlayingIndex]
         }
         mediaController.seekTo(musicPlayingIndex, positionMs)
-        hasNext.value = hasNext()
-        hasPrevious.value = hasPrevious()
-        playPause()
     }
 
     /**
@@ -165,20 +172,14 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
     fun playPause() {
         if (isPlaying.value) {
             mediaController.pause()
-            switchIsPlaying()
         } else {
             if (isEnded) {
                 start()
                 isEnded = false
             } else {
                 mediaController.play()
-                switchIsPlaying()
             }
         }
-    }
-
-    private fun switchIsPlaying() {
-        isPlaying.value = !isPlaying.value
     }
 
     /**
@@ -187,11 +188,6 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
     fun next() {
         if (hasNext()) {
             mediaController.seekToNext()
-            mediaController.play()
-            musicPlaying.value = getNextMusic()
-            hasNext.value = hasNext()
-            hasPrevious.value = hasPrevious()
-            isPlaying.value = true
         }
     }
 
@@ -266,16 +262,7 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
      * Play the previous music in deque
      */
     fun previous() {
-        val previousMediaItem = mediaController.currentMediaItem
         mediaController.seekToPrevious()
-        isPlaying.value = true
-        if (previousMediaItem != mediaController.currentMediaItem) {
-            musicPlayingIndex--
-            musicPlaying.value = musicQueueToPlay[musicPlayingIndex]
-            hasNext.value = hasNext()
-            hasPrevious.value = hasPrevious()
-        }
-        mediaController.play()
     }
 
     fun hasPrevious(): Boolean {

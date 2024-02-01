@@ -307,15 +307,7 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
         }
         musicQueueToPlay = ArrayDeque(originalMusicQueueToPlay)
 
-        //Update index
-        for (i: Int in 0..<musicQueueToPlay.size) {
-            val music = musicQueueToPlay[i]
-            if (music == musicPlaying.value) {
-                musicPlayingIndex = i
-                musicPlaying.value = music
-                break
-            }
-        }
+        reloadMusicPlaying()
 
         for (i: Int in 0..<musicQueueToPlay.size) {
             if (i == musicPlayingIndex) {
@@ -328,20 +320,21 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
                 mediaController.addMediaItem(mediaItem)
             }
         }
+    }
 
-//        if (musicPlayingIndex > 0) {
-//            // music playing index is preserved in media controller
-//            mediaController.removeMediaItems(0, musicPlayingIndex + 1)
-//            mediaController.removeMediaItems(musicPlayingIndex + 1, mediaController.mediaItemCount)
-//        }
-//        musicQueueToPlay = ArrayDeque(originalMusicQueueToPlay)
-//        //update music playing index
-//        for (i: Int in 0..< musicQueueToPlay.size - 1) {
-//            if (musicPlaying.value == musicQueueToPlay[i]) {
-//                musicPlayingIndex = i
-//                break
-//            }
-//        }
+    /**
+     * It search for the music playing in music queue to play and update musicPlayingIndex
+     * and musicPlaying
+     */
+    private fun reloadMusicPlaying() {
+        for (i: Int in 0..<musicQueueToPlay.size) {
+            val music = musicQueueToPlay[i]
+            if (music == musicPlaying.value) {
+                musicPlayingIndex = i
+                musicPlaying.value = music
+                break
+            }
+        }
     }
 
 

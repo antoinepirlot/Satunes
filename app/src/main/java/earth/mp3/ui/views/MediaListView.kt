@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import earth.mp3.models.Media
 import earth.mp3.models.Music
+import earth.mp3.services.PlaybackController
 import earth.mp3.ui.components.ShowCurrentMusicButton
 import earth.mp3.ui.components.cards.media.MediaCardList
 import earth.mp3.ui.components.music.PlayAllButton
@@ -24,7 +25,11 @@ fun MediaListView(
 ) {
     Scaffold(
         modifier = modifier,
-        floatingActionButton = { ShowCurrentMusicButton(onClick = onFABClick) },
+        floatingActionButton = {
+            if (PlaybackController.musicPlaying.value != null) {
+                ShowCurrentMusicButton(onClick = onFABClick)
+            }
+        },
         floatingActionButtonPosition = FabPosition.End
     ) { innerPadding ->
         Column(

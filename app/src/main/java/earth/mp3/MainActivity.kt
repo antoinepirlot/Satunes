@@ -18,7 +18,9 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
@@ -27,10 +29,14 @@ import androidx.core.content.ContextCompat
 import earth.mp3.models.Artist
 import earth.mp3.models.Folder
 import earth.mp3.models.Music
+import earth.mp3.models.utils.loadObjectsTo
+import earth.mp3.models.utils.loadObjectsToMap
+import earth.mp3.router.Destination
+import earth.mp3.router.Router
 import earth.mp3.services.PlaybackController
+import earth.mp3.ui.appBars.MP3BottomAppBar
 import earth.mp3.ui.appBars.MP3TopAppBar
 import earth.mp3.ui.theme.MP3Theme
-import earth.mp3.ui.views.HomeView
 
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
@@ -45,6 +51,14 @@ class MainActivity : ComponentActivity() {
                 val rootFolderList = remember { mutableStateListOf<Folder>() }
                 val folderMap = remember { mutableStateMapOf<Long, Folder>() }
                 val artistList = remember { mutableStateListOf<Artist>() }
+
+                val folderListToShow = remember { mutableStateListOf<Folder>() }
+                loadObjectsTo(folderListToShow, rootFolderList)
+
+                val musicMapToShow = remember { mutableStateMapOf<Long, Music>() }
+                loadObjectsToMap(musicMapToShow, musicMap)
+                val artistListToShow = remember { mutableStateListOf<Artist>() }
+                loadObjectsTo(artistListToShow, artistList)
 
                 Music.loadData(
                     context = LocalContext.current,
@@ -61,20 +75,31 @@ class MainActivity : ComponentActivity() {
                     ) {
                         val scrollBehavior =
                             TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
+                        val startDestination =
+                            rememberSaveable { mutableStateOf(Destination.FOLDERS.link) }
+
                         Scaffold(
                             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
                             topBar = { MP3TopAppBar(scrollBehavior = scrollBehavior) },
+                            bottomBar = { MP3BottomAppBar(startDestination = startDestination) }
                         ) { innerPadding ->
                             Column(
                                 modifier = Modifier.padding(innerPadding)
                             ) {
-                                HomeView(
-                                    modifier = Modifier,
-                                    musicMap = musicMap,
-                                    folderList = rootFolderList,
-                                    artistList = artistList,
-                                    folderMap = folderMap
+                                Router(
+                                    startDestination = startDestination.value,
+                                    rootFolderList = rootFolderList,
+                                    folderMap = folderMap,
+                                    artistListToShow = artistList,
+                                    musicMapToShow = musicMap,
                                 )
+//                                HomeView(
+//                                    modifier = Modifier,
+//                                    musicMap = musicMap,
+//                                    folderList = rootFolderList,
+//                                    artistList = artistList,
+//                                    folderMap = folderMap
+//                                )
                             }
                         }
                     }

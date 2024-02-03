@@ -28,7 +28,7 @@ fun CardMenuList(
     val menuTitleList = listOf(
         MenuTitle.FOLDER,
         MenuTitle.ARTISTS,
-        MenuTitle.TRACKS
+        MenuTitle.MUSIC
     )
 
     LazyRow(
@@ -68,7 +68,7 @@ fun CardMenuList(
                     }
                 }
 
-                MenuTitle.TRACKS -> {
+                MenuTitle.MUSIC -> {
                     CardMenu(
                         modifier = modifier,
                         menuTitle = stringResource(id = R.string.tracks),

@@ -34,21 +34,6 @@ fun PlayAllButton(
             )
         }
     }
-//    Row(
-//        modifier = modifier,
-//        horizontalArrangement = Arrangement.Start
-//        ) {
-//        FloatingActionButton(
-//            modifier = modifier,
-//            onClick = { /*TODO*/ },
-//        ) {
-//            Icon(
-//                modifier = modifier.size(40.dp),
-//                imageVector = Icons.Filled.PlayArrow,
-//                contentDescription = "Play all music"
-//            )
-//        }
-//    }
 }
 
 @Composable

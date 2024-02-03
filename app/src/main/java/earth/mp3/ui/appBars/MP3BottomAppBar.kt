@@ -5,6 +5,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AccountCircle
 import androidx.compose.material.icons.rounded.Audiotrack
 import androidx.compose.material.icons.rounded.Folder
+import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
@@ -57,15 +58,26 @@ fun MP3BottomAppBar(
                 icon = {
                     when (section) {
                         MenuTitle.FOLDER -> {
-                            Icons.Rounded.Folder
+                            Icon(
+                                imageVector = Icons.Rounded.Folder,
+                                contentDescription = "Folder Icon"
+                            )
                         }
 
                         MenuTitle.ARTISTS -> {
-                            Icons.Rounded.AccountCircle
+                            Icon(
+                                imageVector = Icons.Rounded.AccountCircle,
+                                contentDescription = "Artist Icon"
+                            )
+
                         }
 
                         MenuTitle.MUSIC -> {
-                            Icons.Rounded.Audiotrack
+                            Icon(
+                                imageVector = Icons.Rounded.Audiotrack,
+                                contentDescription = "Music Icon"
+                            )
+
                         }
                     }
                 }

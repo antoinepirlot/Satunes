@@ -381,7 +381,7 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
         musicQueueToPlay.shuffle()
         musicQueueToPlay.addFirst(musicPlaying.value!!)
         musicPlayingIndex = 0
-        for (i: Int in 1..<musicQueueToPlay.size - 1) {
+        for (i: Int in 1..<musicQueueToPlay.size) {
             val music = musicQueueToPlay[i]
             val mediaItem = musicMediaItemMap[music]!!
             mediaController.addMediaItem(mediaItem)

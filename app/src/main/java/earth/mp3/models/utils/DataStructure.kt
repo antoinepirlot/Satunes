@@ -5,7 +5,7 @@ fun <T> loadObjectsTo(toList: MutableList<T>, fromList: List<T>) {
     toList.addAll(fromList)
 }
 
-fun <T, U> loadObjectsToMap(toList: MutableMap<T, U>, fromMap: Map<T, U>) {
-    toList.clear()
-    toList.putAll(fromMap)
+fun <T, U> loadObjectsToMap(toMap: MutableMap<T, U>, fromMap: Map<T, U>) {
+    toMap.clear()
+    toMap.putAll(fromMap)
 }

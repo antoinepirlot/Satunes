@@ -90,17 +90,17 @@ fun Router(
         }
 
         composable(Destination.MUSICS.link) {
+            val musicList = musicMapToShow.values.toList()
             MediaListView(
                 mediaList = musicMapToShow.values.toList(),
                 openMedia = { clickedMedia: Media ->
                     openMedia(
                         navController,
                         clickedMedia,
-                        musicMapToShow.values.toList()
+                        musicList
                     )
                 },
                 playMusicAction = {
-                    val musicList = musicMapToShow.values.toList()
                     openMedia(
                         navController,
                         musicList[0],

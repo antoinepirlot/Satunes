@@ -34,7 +34,7 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
     companion object {
         val ROOT_PATH: String = Environment.getExternalStorageDirectory().path
         val DEFAULT_MUSIC_PLAYING = null
-        const val DEFAULT_MUSIC_PLAYING_INDEX = -1
+        const val DEFAULT_MUSIC_PLAYING_INDEX = 0
         const val DEFAULT_IS_PLAYING_VALUE = false
         const val DEFAULT_REPEAT_MODE = Player.REPEAT_MODE_OFF
         const val DEFAULT_SHUFFLE_MODE = false
@@ -173,6 +173,7 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
             musicPlaying.value = musicQueueToPlay[musicPlayingIndex]
         }
         mediaController.seekTo(musicPlayingIndex, positionMs)
+        mediaController.play()
         isPlaying.value = true
     }
 
@@ -380,7 +381,7 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
         musicQueueToPlay.shuffle()
         musicQueueToPlay.addFirst(musicPlaying.value!!)
         musicPlayingIndex = 0
-        for (i: Int in 1..<musicQueueToPlay.size - 1) {
+        for (i: Int in 1..<musicQueueToPlay.size) {
             val music = musicQueueToPlay[i]
             val mediaItem = musicMediaItemMap[music]!!
             mediaController.addMediaItem(mediaItem)

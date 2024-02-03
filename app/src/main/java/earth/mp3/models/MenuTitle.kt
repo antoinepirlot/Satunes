@@ -1,4 +1,4 @@
-package earth.mp3.ui.components.cards.menu
+package earth.mp3.models
 
 enum class MenuTitle {
     FOLDER,

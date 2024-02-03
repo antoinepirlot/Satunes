@@ -16,8 +16,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import earth.mp3.models.MenuTitle
 import earth.mp3.router.Destination
-import earth.mp3.ui.components.cards.menu.MenuTitle
 
 @Composable
 fun MP3BottomAppBar(

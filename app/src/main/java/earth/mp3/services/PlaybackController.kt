@@ -161,20 +161,27 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
      */
     @Suppress("NAME_SHADOWING")
     fun start(musicToPlay: Music? = null) {
-        val musicToPlay: Music? = musicToPlay
+        var musicToPlay: Music? = musicToPlay
+
         if (musicToPlay != null) {
             if (musicToPlay == musicPlaying.value) {
                 return
             }
-            for (i: Int in 0..<musicQueueToPlay.size) {
-                val music = musicQueueToPlay[i]
-                if (musicToPlay == music) {
-                    musicPlaying.value = musicToPlay
-                    musicPlayingIndex = i
-                    break
+            if (isShuffle.value) {
+                musicPlayingIndex = DEFAULT_MUSIC_PLAYING_INDEX
+                musicToPlay = musicQueueToPlay[musicPlayingIndex]
+                musicPlaying.value = musicToPlay
+            } else {
+                for (i: Int in 0..<musicQueueToPlay.size) {
+                    val music = musicQueueToPlay[i]
+                    if (musicToPlay == music) {
+                        musicPlaying.value = musicToPlay
+                        musicPlayingIndex = i
+                        break
+                    }
                 }
             }
-        } else if (musicPlayingIndex < DEFAULT_MUSIC_PLAYING_INDEX || isShuffle.value) {
+        } else if (musicPlayingIndex < DEFAULT_MUSIC_PLAYING_INDEX) {
             musicPlayingIndex = DEFAULT_MUSIC_PLAYING_INDEX
             musicPlaying.value = musicQueueToPlay[musicPlayingIndex]
         }
@@ -265,7 +272,6 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
         }
         mediaController.addListener(listener)
         mediaController.prepare()
-
     }
 
     /**
@@ -391,15 +397,22 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
      * Shuffle music
      */
     private fun shuffle() {
-        mediaController.moveMediaItem(musicPlayingIndex, DEFAULT_MUSIC_PLAYING_INDEX)
-        mediaController.removeMediaItems(1, mediaController.mediaItemCount)
-        musicQueueToPlay.remove(musicPlaying.value)
+        var startIndex = 1
+        if (musicPlaying.value == null) {
+            mediaController.clearMediaItems()
+            startIndex = DEFAULT_MUSIC_PLAYING_INDEX
+        } else {
+            mediaController.moveMediaItem(musicPlayingIndex, DEFAULT_MUSIC_PLAYING_INDEX)
+            mediaController.removeMediaItems(1, mediaController.mediaItemCount)
+            musicQueueToPlay.remove(musicPlaying.value)
+        }
         musicQueueToPlay.shuffle()
         if (musicPlaying.value != null) {
             musicQueueToPlay.addFirst(musicPlaying.value!!)
         }
         musicPlayingIndex = DEFAULT_MUSIC_PLAYING_INDEX
-        for (i: Int in 1..<musicQueueToPlay.size) {
+
+        for (i: Int in startIndex..<musicQueueToPlay.size) {
             val music = musicQueueToPlay[i]
             val mediaItem = musicMediaItemMap[music]!!
             mediaController.addMediaItem(mediaItem)

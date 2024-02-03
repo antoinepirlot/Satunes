@@ -47,9 +47,9 @@ class MainActivity : ComponentActivity() {
             setContent {
                 //Init playback controller
                 PlaybackController.getInstance(LocalContext.current)
-                val musicMap = remember { mutableStateMapOf<Long, Music>() }
+                val musicMap = remember { sortedMapOf<Long, Music>() }
                 val rootFolderList = remember { mutableStateListOf<Folder>() }
-                val folderMap = remember { mutableStateMapOf<Long, Folder>() }
+                val folderMap = remember { sortedMapOf<Long, Folder>() }
                 val artistList = remember { mutableStateListOf<Artist>() }
 
                 val folderListToShow = remember { mutableStateListOf<Folder>() }

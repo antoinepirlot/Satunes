@@ -7,6 +7,7 @@ import android.provider.MediaStore
 import androidx.compose.runtime.MutableLongState
 import androidx.compose.runtime.mutableLongStateOf
 import earth.mp3.services.PlaybackController
+import java.util.SortedMap
 
 class Music(
     override val id: Long,
@@ -22,9 +23,9 @@ class Music(
         const val FIRST_FOLDER_INDEX: Long = 1
         fun loadData(
             context: Context,
-            musicMap: MutableMap<Long, Music>,
+            musicMap: SortedMap<Long, Music>,
             rootFolderList: MutableList<Folder>,
-            folderMap: MutableMap<Long, Folder>,
+            folderMap: SortedMap<Long, Folder>,
             artistList: MutableList<Artist>,
         ) {
             val uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
@@ -35,12 +36,16 @@ class Music(
                 MediaStore.Audio.Media.SIZE,
                 MediaStore.Audio.Media.RELATIVE_PATH
             )
-
+            //TODO sort by alphabetical order for display name
             context.contentResolver.query(
                 uri, projection, null, null
             )?.use { cursor ->
                 loadData(cursor, musicMap, rootFolderList, folderMap, artistList, uri)
             }
+            musicMap.toSortedMap { o1, o2 -> o1.compareTo(o2) }
+            folderMap.toSortedMap { o1, o2 -> o1.compareTo(o2) }
+            rootFolderList.sortBy { folder: Folder -> folder.name }
+            artistList.sortBy { artist: Artist -> artist.name }
         }
 
         /**
@@ -48,9 +53,9 @@ class Music(
          */
         private fun loadData(
             cursor: Cursor,
-            musicMap: MutableMap<Long, Music>,
+            musicMap: SortedMap<Long, Music>,
             rootFolderList: MutableList<Folder>,
-            folderMap: MutableMap<Long, Folder>,
+            folderMap: SortedMap<Long, Folder>,
             artistList: MutableList<Artist>,
             uri: Uri
         ) {
@@ -130,7 +135,7 @@ class Music(
          */
         private fun loadMusic(
             cursor: Cursor,
-            musicMap: MutableMap<Long, Music>,
+            musicMap: SortedMap<Long, Music>,
             idColumn: Int,
             nameColumn: Int,
             durationColumn: Int,
@@ -162,7 +167,7 @@ class Music(
         private fun loadFolders(
             music: Music,
             rootFolderList: MutableList<Folder>,
-            folderMap: MutableMap<Long, Folder>,
+            folderMap: SortedMap<Long, Folder>,
             folderId: MutableLongState,
         ) {
             val splitedPath = music.relativePath.split("/").toMutableList()

@@ -1,6 +1,7 @@
 package earth.mp3.models
 
 import androidx.compose.runtime.MutableLongState
+import java.util.SortedMap
 
 class Folder(
     override val id: Long,
@@ -58,7 +59,7 @@ class Folder(
     fun createSubFolders(
         subFolderNameChainList: MutableList<String>,
         folderId: MutableLongState,
-        folderMap: MutableMap<Long, Folder>
+        folderMap: SortedMap<Long, Folder>
     ) {
         //TODO A folder have multiple sub-folders, check to use one instance per folder
         //TODO check if it works

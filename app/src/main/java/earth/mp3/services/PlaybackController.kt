@@ -153,10 +153,15 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
      * If music to play is null, play the first music of the playlist otherwise play the musicToPlay
      * If the music to play is already the music playing nothing is done.
      *
+     * If isShuffle is true, then musicToPlay is replaced by the first music, let's
+     * assume that the musicQueueToPlay has been already shuffled (in load function).
+     *
      *
      * @param musicToPlay the music to play
      */
+    @Suppress("NAME_SHADOWING")
     fun start(musicToPlay: Music? = null) {
+        var musicToPlay: Music? = musicToPlay
         if (musicToPlay != null) {
             if (musicToPlay == musicPlaying.value) {
                 return
@@ -169,8 +174,8 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
                     break
                 }
             }
-        } else if (musicPlayingIndex < 0) {
-            musicPlayingIndex = 0
+        } else if (musicPlayingIndex < DEFAULT_MUSIC_PLAYING_INDEX || isShuffle.value) {
+            musicPlayingIndex = DEFAULT_MUSIC_PLAYING_INDEX
             musicPlaying.value = musicQueueToPlay[musicPlayingIndex]
         }
         mediaController.seekTo(musicPlayingIndex, 0)
@@ -386,14 +391,14 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
      * Shuffle music
      */
     private fun shuffle() {
-        mediaController.moveMediaItem(musicPlayingIndex, 0)
+        mediaController.moveMediaItem(musicPlayingIndex, DEFAULT_MUSIC_PLAYING_INDEX)
         mediaController.removeMediaItems(1, mediaController.mediaItemCount)
         musicQueueToPlay.remove(musicPlaying.value)
         musicQueueToPlay.shuffle()
         if (musicPlaying.value != null) {
             musicQueueToPlay.addFirst(musicPlaying.value!!)
         }
-        musicPlayingIndex = 0
+        musicPlayingIndex = DEFAULT_MUSIC_PLAYING_INDEX
         for (i: Int in 1..<musicQueueToPlay.size) {
             val music = musicQueueToPlay[i]
             val mediaItem = musicMediaItemMap[music]!!

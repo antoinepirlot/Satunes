@@ -2,7 +2,7 @@ package earth.mp3.ui.components.music
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.PlayCircle
+import androidx.compose.material.icons.rounded.Shuffle
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
@@ -14,11 +14,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import earth.mp3.R
 
 @Composable
-fun PlayAllButton(
+fun ShuffleAllButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
-    //TODO change it to use floating action button
     Box(modifier = modifier) {
         TextButton(onClick = onClick) {
             ListItem(
@@ -27,8 +26,8 @@ fun PlayAllButton(
                 },
                 leadingContent = {
                     Icon(
-                        imageVector = Icons.Filled.PlayCircle,
-                        contentDescription = "Play All Musics Button"
+                        imageVector = Icons.Rounded.Shuffle,
+                        contentDescription = "Shuffle All Musics Button"
                     )
                 }
             )
@@ -39,5 +38,5 @@ fun PlayAllButton(
 @Composable
 @Preview
 fun PlayAllButtonPreview() {
-    PlayAllButton(onClick = {})
+    ShuffleAllButton(onClick = {})
 }

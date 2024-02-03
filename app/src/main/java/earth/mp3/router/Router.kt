@@ -42,7 +42,7 @@ fun Router(
                 openMedia = { clickedMedia: Media ->
                     openMediaFromFolder(navController, clickedMedia)
                 },
-                playMusicAction = { /* TODO */ },
+                shuffleMusicAction = { /* TODO */ },
                 onFABClick = { openCurrentMusic(navController) }
             )
         }
@@ -68,7 +68,7 @@ fun Router(
                 openMedia = { clickedMedia: Media ->
                     openMediaFromFolder(navController, clickedMedia)
                 },
-                playMusicAction = { /* TODO */ },
+                shuffleMusicAction = { /* TODO */ },
                 onFABClick = { openCurrentMusic(navController) }
             )
         }
@@ -83,7 +83,7 @@ fun Router(
                         musicMapToShow.values.toList()
                     )
                 },
-                playMusicAction = { /* TODO */ },
+                shuffleMusicAction = { /* TODO */ },
                 onFABClick = { openCurrentMusic(navController) }
             )
         }
@@ -103,11 +103,12 @@ fun Router(
                         musicList
                     )
                 },
-                playMusicAction = {
+                shuffleMusicAction = {
                     openMedia(
                         navController,
                         musicList[0],
-                        musicList
+                        musicList,
+                        shuffleMode = true
                     )
                 },
                 onFABClick = { openCurrentMusic(navController) }
@@ -128,18 +129,22 @@ fun Router(
  *
  *      Artist: navigate to the media's destination
  *
+ * If the shuffle mode param is true then shuffle the music and start the selected media
+ *
  * @param navController the nav controller to redirect to the good path
  * @param media the media to open
  * @param musicList the music list to load in exoplayer (if clickedMedia is a music)
+ * @param shuffleMode by default false, if true, it starts in shuffle mode
  */
 private fun openMedia(
     navController: NavHostController,
     media: Media,
-    musicList: List<Music>
+    musicList: List<Music>,
+    shuffleMode: Boolean = false,
 ) {
     navController.navigate(getDestinationOf(media))
     if (media is Music) {
-        startMusic(musicList, media)
+        startMusic(musicList, media, shuffleMode)
     }
 }
 

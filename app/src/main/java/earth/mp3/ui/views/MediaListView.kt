@@ -13,14 +13,14 @@ import earth.mp3.models.Music
 import earth.mp3.services.PlaybackController
 import earth.mp3.ui.components.ShowCurrentMusicButton
 import earth.mp3.ui.components.cards.media.MediaCardList
-import earth.mp3.ui.components.music.PlayAllButton
+import earth.mp3.ui.components.music.ShuffleAllButton
 
 @Composable
 fun MediaListView(
     modifier: Modifier = Modifier,
     mediaList: List<Media>,
     openMedia: (media: Media) -> Unit,
-    playMusicAction: () -> Unit,
+    shuffleMusicAction: () -> Unit,
     onFABClick: () -> Unit
 ) {
     Scaffold(
@@ -35,7 +35,7 @@ fun MediaListView(
         Column(
             modifier = Modifier.padding(innerPadding)
         ) {
-            PlayAllButton(onClick = playMusicAction)
+            ShuffleAllButton(onClick = shuffleMusicAction)
             MediaCardList(mediaList = mediaList, openMedia = openMedia)
         }
     }
@@ -47,7 +47,7 @@ fun MediaListViewPreview() {
     MediaListView(
         mediaList = listOf(Music(1, "Musique", 0, 0, Uri.EMPTY, "", null)),
         openMedia = {},
-        playMusicAction = {},
+        shuffleMusicAction = {},
         onFABClick = {}
     )
 }

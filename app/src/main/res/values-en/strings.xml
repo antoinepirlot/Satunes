@@ -4,5 +4,5 @@
     <string name="folder">Folder</string>
     <string name="artists">Artists</string>
     <string name="tracks">Tracks</string>
-    <string name="play_all">Play All Musics</string>
+    <string name="play_all">Shuffle All Musics</string>
 </resources>

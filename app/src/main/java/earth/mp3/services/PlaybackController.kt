@@ -37,7 +37,7 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
         const val DEFAULT_MUSIC_PLAYING_INDEX = 0
         const val DEFAULT_IS_PLAYING_VALUE = false
         const val DEFAULT_REPEAT_MODE = Player.REPEAT_MODE_OFF
-        const val DEFAULT_SHUFFLE_MODE = false
+        const val DEFAULT_IS_SHUFFLE = false
         const val DEFAULT_HAS_NEXT = false
         const val DEFAULT_HAS_PREVIOUS = false
 
@@ -46,7 +46,7 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
         var musicPlaying: MutableState<Music?> = mutableStateOf(DEFAULT_MUSIC_PLAYING)
         var isPlaying: MutableState<Boolean> = mutableStateOf(DEFAULT_IS_PLAYING_VALUE)
         var repeatMode: MutableState<Int> = mutableIntStateOf(DEFAULT_REPEAT_MODE)
-        var shuffleMode: MutableState<Boolean> = mutableStateOf(DEFAULT_SHUFFLE_MODE)
+        var isShuffle: MutableState<Boolean> = mutableStateOf(DEFAULT_IS_SHUFFLE)
         var hasNext: MutableState<Boolean> = mutableStateOf(DEFAULT_HAS_NEXT)
         var hasPrevious: MutableState<Boolean> = mutableStateOf(DEFAULT_HAS_PREVIOUS)
 
@@ -83,14 +83,14 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
         }
 
         override fun onShuffleModeEnabledChanged(shuffleModeEnabled: Boolean) {
-            if (shuffleMode.value) {
+            if (isShuffle.value) {
                 // Deactivate shuffle mode
                 backToOriginalPlaylist()
             } else {
                 // Activate shuffle mode
                 shuffle()
             }
-            shuffleMode.value = shuffleModeEnabled
+            isShuffle.value = shuffleModeEnabled
         }
 
         override fun onPlayWhenReadyChanged(playWhenReady: Boolean, reason: Int) {
@@ -152,6 +152,7 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
      * Start the music in params
      * If music to play is null, play the first music of the playlist otherwise play the musicToPlay
      * If the music to play is already the music playing nothing is done.
+     *
      *
      * @param musicToPlay the music to play
      */
@@ -216,9 +217,15 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
     }
 
     /**
-     * Add all music from musicMap to the exoPlayer in the same order
+     * Add all music from musicMap to the mediaController in the same order.
+     * If the shuffle mode is true then shuffle the playlist but the first music of the playlist
+     * and the first music to start is musicToPlay.
+     *
+     * @param musicList the music list to load if null use the musicQueueToPlay instead
+     * @param shuffleMode indicate if the playlist has to be started in shuffle mode by default false
+     *
      */
-    fun loadMusic(musicList: List<Music>? = null) {
+    fun loadMusic(musicList: List<Music>? = null, shuffleMode: Boolean = false) {
         val musicListToIterate: List<Music>
         if (musicList != null) {
             musicListToIterate = musicList
@@ -247,6 +254,10 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
             mediaItemMusicMap[mediaItem] = music
             mediaController.addMediaItem(mediaItem)
         }
+        if (shuffleMode) {
+            shuffle()
+            isShuffle.value = true
+        }
         mediaController.addListener(listener)
         mediaController.prepare()
 
@@ -265,7 +276,7 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
         musicPlayingIndex = DEFAULT_MUSIC_PLAYING_INDEX
         isPlaying.value = DEFAULT_IS_PLAYING_VALUE
         repeatMode.value = DEFAULT_REPEAT_MODE
-        shuffleMode.value = DEFAULT_SHUFFLE_MODE
+        isShuffle.value = DEFAULT_IS_SHUFFLE
         hasNext.value = DEFAULT_HAS_NEXT
         hasPrevious.value = DEFAULT_HAS_PREVIOUS
     }
@@ -309,14 +320,14 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
      * Play the original music queue if deactivation
      */
     fun switchShuffleMode() {
-        if (shuffleMode.value) {
+        if (isShuffle.value) {
             // Deactivate shuffle mode
             backToOriginalPlaylist()
-            shuffleMode.value = false
+            isShuffle.value = false
         } else {
             // Activate shuffle mode
             shuffle()
-            shuffleMode.value = true
+            isShuffle.value = true
         }
     }
 
@@ -377,9 +388,11 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
     private fun shuffle() {
         mediaController.moveMediaItem(musicPlayingIndex, 0)
         mediaController.removeMediaItems(1, mediaController.mediaItemCount)
-        musicQueueToPlay.remove(musicPlaying.value!!)
+        musicQueueToPlay.remove(musicPlaying.value)
         musicQueueToPlay.shuffle()
-        musicQueueToPlay.addFirst(musicPlaying.value!!)
+        if (musicPlaying.value != null) {
+            musicQueueToPlay.addFirst(musicPlaying.value!!)
+        }
         musicPlayingIndex = 0
         for (i: Int in 1..<musicQueueToPlay.size) {
             val music = musicQueueToPlay[i]

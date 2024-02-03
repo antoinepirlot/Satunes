@@ -9,13 +9,16 @@ import earth.mp3.services.PlaybackController
 /**
  * Start the music from music list.
  *
+ * If the shuffle mode is true, then start music in shuffle mode and start with mediaToPlay.
+ *
  * @param musicList the music list of musics to play
  * @param mediaToPlay the music to play from the music list
+ * @param shuffleMode indicate if the music start in shuffle mode, by default it is false
  */
 
-fun startMusic(musicList: List<Music>, mediaToPlay: Media) {
+fun startMusic(musicList: List<Music>, mediaToPlay: Media, shuffleMode: Boolean = false) {
     val playbackController = PlaybackController.getInstance()
-    playbackController.loadMusic(musicList)
+    playbackController.loadMusic(musicList, shuffleMode = shuffleMode)
 
     when (mediaToPlay) {
         is Music -> {

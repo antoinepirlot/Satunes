@@ -161,7 +161,7 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
      */
     @Suppress("NAME_SHADOWING")
     fun start(musicToPlay: Music? = null) {
-        var musicToPlay: Music? = musicToPlay
+        val musicToPlay: Music? = musicToPlay
         if (musicToPlay != null) {
             if (musicToPlay == musicPlaying.value) {
                 return

@@ -155,7 +155,7 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
      *
      * @param musicToPlay the music to play
      */
-    fun start(musicToPlay: Music? = null, positionMs: Long = 0) {
+    fun start(musicToPlay: Music? = null) {
         if (musicToPlay != null) {
             if (musicToPlay == musicPlaying.value) {
                 return
@@ -172,7 +172,7 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
             musicPlayingIndex = 0
             musicPlaying.value = musicQueueToPlay[musicPlayingIndex]
         }
-        mediaController.seekTo(musicPlayingIndex, positionMs)
+        mediaController.seekTo(musicPlayingIndex, 0)
         mediaController.play()
         isPlaying.value = true
     }

@@ -11,12 +11,11 @@ import earth.mp3.models.Artist
 import earth.mp3.models.Folder
 import earth.mp3.models.Media
 import earth.mp3.models.Music
-import earth.mp3.ui.components.cards.media.MediaCardList
 import earth.mp3.services.PlaybackController
 import earth.mp3.ui.utils.getMusicListFromFolder
 import earth.mp3.ui.utils.startMusic
-import earth.mp3.ui.views.PlayBackView
 import earth.mp3.ui.views.MediaListView
+import earth.mp3.ui.views.PlayBackView
 
 @Composable
 fun Router(
@@ -27,9 +26,10 @@ fun Router(
     musicMapToShow: MutableMap<Long, Music>,
     folderMap: Map<Long, Folder>,
 ) {
+    val navController = rememberNavController()
     val listToShow: MutableList<Media> = remember { mutableListOf() }
 
-    val navController = rememberNavController()
+
     NavHost(
         modifier = modifier,
         navController = navController,
@@ -42,7 +42,8 @@ fun Router(
                 openMedia = { clickedMedia: Media ->
                     openMediaFromFolder(navController, clickedMedia)
                 },
-                playMusicAction = { /* TODO */ }
+                playMusicAction = { /* TODO */ },
+                onFABClick = { openCurrentMusic(navController) }
             )
         }
 
@@ -67,7 +68,8 @@ fun Router(
                 openMedia = { clickedMedia: Media ->
                     openMediaFromFolder(navController, clickedMedia)
                 },
-                playMusicAction = { /* TODO */ }
+                playMusicAction = { /* TODO */ },
+                onFABClick = { openCurrentMusic(navController) }
             )
         }
 
@@ -81,7 +83,8 @@ fun Router(
                         musicMapToShow.values.toList()
                     )
                 },
-                playMusicAction = { /* TODO */ }
+                playMusicAction = { /* TODO */ },
+                onFABClick = { openCurrentMusic(navController) }
             )
         }
 
@@ -106,7 +109,8 @@ fun Router(
                         musicList[0],
                         musicList
                     )
-                }
+                },
+                onFABClick = { openCurrentMusic(navController) }
             )
         }
 
@@ -163,7 +167,7 @@ private fun openMediaFromFolder(
  *
  * @return the media destination link with the media's id
  */
-private fun getDestinationOf(media: Media): String {
+fun getDestinationOf(media: Media): String {
     return when (media) {
         is Folder -> {
             "${Destination.FOLDERS.link}/${media.id}"
@@ -177,4 +181,16 @@ private fun getDestinationOf(media: Media): String {
             Destination.PLAYBACK.link
         }
     }
+}
+
+/**
+ * Open the current playing music
+ *
+ * @throws IllegalStateException if there's no music playing
+ */
+fun openCurrentMusic(navController: NavHostController) {
+    val musicPlaying = PlaybackController.musicPlaying.value
+        ?: throw IllegalStateException("No music is currently playing, this button can be accessible")
+
+    navController.navigate(getDestinationOf(musicPlaying))
 }

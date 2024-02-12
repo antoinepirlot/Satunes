@@ -8,7 +8,6 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.core.content.ContextCompat
 import androidx.media3.common.MediaItem
-import androidx.media3.common.MediaMetadata
 import androidx.media3.common.Player
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
@@ -255,12 +254,7 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
             } else if (music == musicPlaying.value) {
                 musicPlayingIndex = i
             }
-            val mediaMetaData = MediaMetadata.Builder().setTitle(music.name).build()
-            val mediaItem = MediaItem.Builder()
-                .setUri(music.getAbsolutePath())
-                .setMediaMetadata(mediaMetaData)
-                .build()
-            mediaController.addMediaItem(mediaItem)
+            mediaController.addMediaItem(music.mediaItem!!)
         }
         if (shuffleMode) {
             shuffle()

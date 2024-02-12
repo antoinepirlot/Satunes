@@ -2,11 +2,12 @@ package earth.mp3.models
 
 import android.content.Context
 import android.database.Cursor
-import android.media.browse.MediaBrowser.MediaItem
 import android.net.Uri
 import android.provider.MediaStore
 import androidx.compose.runtime.MutableLongState
 import androidx.compose.runtime.mutableLongStateOf
+import androidx.media3.common.MediaItem
+import androidx.media3.common.MediaMetadata
 import earth.mp3.services.PlaybackController
 import java.util.SortedMap
 
@@ -18,7 +19,7 @@ class Music(
     val uri: Uri,
     val relativePath: String,
     var folder: Folder? = null,
-    val mediaItem: MediaItem
+    var mediaItem: MediaItem? = null
 ) : Media {
 
     companion object {
@@ -155,8 +156,15 @@ class Music(
             // Stores column values and the contentUri in a local object
             // that represents the media file.
             val fileUri = Uri.Builder().appendPath("${uri.path}/${name}").build()
+
             val music = Music(id, name, duration, size, fileUri, relativePath)
             musicMap[music.id] = music
+            val mediaMetaData = MediaMetadata.Builder().setTitle(music.name).build()
+            val mediaItem = androidx.media3.common.MediaItem.Builder()
+                .setUri(music.getAbsolutePath())
+                .setMediaMetadata(mediaMetaData)
+                .build()
+            music.mediaItem = mediaItem
             return music
         }
 

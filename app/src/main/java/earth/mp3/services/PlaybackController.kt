@@ -17,8 +17,6 @@ import earth.mp3.models.Music
 class PlaybackController private constructor(context: Context, sessionToken: SessionToken) {
     private lateinit var mediaController: MediaController
 
-    private val musicMediaItemMap: MutableMap<Music, MediaItem> = mutableMapOf()
-    private val mediaItemMusicMap: MutableMap<MediaItem, Music> = mutableMapOf()
     private val originalMusicQueueToPlay: ArrayDeque<Music> = ArrayDeque()
     private var musicQueueToPlay: ArrayDeque<Music> = ArrayDeque()
     private var musicPlayingIndex: Int = DEFAULT_MUSIC_PLAYING_INDEX
@@ -100,7 +98,7 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
 
         override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
             super.onMediaItemTransition(mediaItem, reason)
-            if (mediaItem != musicMediaItemMap[musicPlaying.value]!!) {
+            if (mediaItem != musicPlaying.value!!.mediaItem!!) {
                 if (reason == Player.MEDIA_ITEM_TRANSITION_REASON_SEEK
                     || reason == Player.MEDIA_ITEM_TRANSITION_REASON_AUTO
                 ) {
@@ -108,7 +106,7 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
                         if (musicPlayingIndex > 0) musicQueueToPlay[musicPlayingIndex - 1]
                         else musicQueueToPlay.last()
 
-                    if (mediaItem == musicMediaItemMap[previousMusic]!!) {
+                    if (mediaItem == previousMusic.mediaItem!!) {
                         // Previous button has been clicked
                         when (repeatMode.value) {
                             Player.REPEAT_MODE_OFF, Player.REPEAT_MODE_ONE -> {
@@ -262,8 +260,6 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
                 .setUri(music.getAbsolutePath())
                 .setMediaMetadata(mediaMetaData)
                 .build()
-            musicMediaItemMap[music] = mediaItem
-            mediaItemMusicMap[mediaItem] = music
             mediaController.addMediaItem(mediaItem)
         }
         if (shuffleMode) {
@@ -282,7 +278,6 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
         originalMusicQueueToPlay.clear()
         musicQueueToPlay.clear()
         mediaController.clearMediaItems()
-        musicMediaItemMap.clear()
         musicPlaying.value = DEFAULT_MUSIC_PLAYING
         musicPlayingIndex = DEFAULT_MUSIC_PLAYING_INDEX
         isPlaying.value = DEFAULT_IS_PLAYING_VALUE
@@ -368,7 +363,7 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
             if (i == musicPlayingIndex) {
                 continue
             }
-            val mediaItem = musicMediaItemMap[musicQueueToPlay[i]]!!
+            val mediaItem = musicQueueToPlay[i].mediaItem!!
             if (i < musicPlayingIndex) {
                 mediaController.addMediaItem(i, mediaItem)
             } else {
@@ -414,7 +409,7 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
 
         for (i: Int in startIndex..<musicQueueToPlay.size) {
             val music = musicQueueToPlay[i]
-            val mediaItem = musicMediaItemMap[music]!!
+            val mediaItem = music.mediaItem!!
             mediaController.addMediaItem(mediaItem)
             mediaController.prepare()
         }

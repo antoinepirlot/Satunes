@@ -2,6 +2,7 @@ package earth.mp3.models
 
 import android.content.Context
 import android.database.Cursor
+import android.media.browse.MediaBrowser.MediaItem
 import android.net.Uri
 import android.provider.MediaStore
 import androidx.compose.runtime.MutableLongState
@@ -16,7 +17,8 @@ class Music(
     val size: Int,
     val uri: Uri,
     val relativePath: String,
-    var folder: Folder? = null
+    var folder: Folder? = null,
+    val mediaItem: MediaItem
 ) : Media {
 
     companion object {

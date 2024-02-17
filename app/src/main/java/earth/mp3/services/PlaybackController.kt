@@ -30,7 +30,9 @@ class PlaybackController private constructor(
     init {
         val controllerFuture = MediaController.Builder(context, sessionToken).buildAsync()
         controllerFuture.addListener({
-            mediaController = controllerFuture.get()
+            this.mediaController = controllerFuture.get()
+            this.mediaController.addListener(listener)
+            loadMusic(musicMap = musicMap)
         }, ContextCompat.getMainExecutor(context))
     }
 

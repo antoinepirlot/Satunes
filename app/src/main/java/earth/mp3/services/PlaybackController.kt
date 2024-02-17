@@ -260,6 +260,7 @@ class PlaybackController private constructor(
      *
      */
     fun loadMusic(musicMap: SortedMap<Long, Music>, shuffleMode: Boolean = false) {
+        //TODO stop using sorted map and use arraydeque instead everywhere
         originalMusicQueueToPlay = ArrayDeque(musicMap.values)
         musicQueueToPlay = originalMusicQueueToPlay
         if (shuffleMode) {

@@ -3,7 +3,6 @@ package earth.mp3.router
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.media3.common.MediaItem
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -13,6 +12,7 @@ import earth.mp3.models.Folder
 import earth.mp3.models.Media
 import earth.mp3.models.Music
 import earth.mp3.services.PlaybackController
+import earth.mp3.ui.utils.getMusicListFromFolder
 import earth.mp3.ui.utils.startMusic
 import earth.mp3.ui.views.MediaListView
 import earth.mp3.ui.views.PlayBackView
@@ -26,7 +26,6 @@ fun Router(
     artistMapToShow: SortedMap<Long, Artist>,
     musicMapToShow: SortedMap<Long, Music>,
     folderMap: Map<Long, Folder>,
-    mediaItemMap: SortedMap<Music, MediaItem>,
 ) {
     val navController = rememberNavController()
     val mapToShow: SortedMap<Long, Media> = remember { sortedMapOf() }
@@ -43,7 +42,7 @@ fun Router(
             MediaListView(
                 mediaMap = rootFolderMap as SortedMap<Long, Media>,
                 openMedia = { clickedMedia: Media ->
-                    openMedia(navController, clickedMedia)
+                    openMediaFromFolder(navController, clickedMedia)
                 },
                 shuffleMusicAction = { /* TODO */ },
                 onFABClick = { openCurrentMusic(navController) }
@@ -69,7 +68,7 @@ fun Router(
             MediaListView(
                 mediaMap = mapToShow,
                 openMedia = { clickedMedia: Media ->
-                    openMedia(navController, clickedMedia)
+                    openMediaFromFolder(navController, clickedMedia)
                 },
                 shuffleMusicAction = { /* TODO */ },
                 onFABClick = { openCurrentMusic(navController) }
@@ -144,6 +143,25 @@ private fun openMedia(
         startMusic(media)
     }
     navController.navigate(getDestinationOf(media))
+}
+
+
+private fun openMediaFromFolder(
+    navController: NavHostController,
+    media: Media
+) {
+    when (media) {
+        is Music -> {
+            val playbackController = PlaybackController.getInstance()
+            playbackController.loadMusic(musicMap = getMusicListFromFolder(media.folder!!))
+            openMedia(navController, media)
+        }
+
+        is Folder -> {
+            navController.navigate(getDestinationOf(media))
+        }
+    }
+
 }
 
 /**

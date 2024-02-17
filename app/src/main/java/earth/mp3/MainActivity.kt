@@ -26,7 +26,6 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.media3.common.MediaItem
 import earth.mp3.models.Artist
 import earth.mp3.models.Folder
 import earth.mp3.models.Music
@@ -51,7 +50,6 @@ class MainActivity : ComponentActivity() {
                 val folderListToShow = remember { mutableStateListOf<Folder>() }
                 val musicMapToShow = remember { mutableStateMapOf<Long, Music>() }
                 val artistListToShow = remember { mutableStateListOf<Artist>() }
-                val allMediaItemList = remember { sortedMapOf<Music, MediaItem>() }
 
                 Music.loadAllData(
                     context = LocalContext.current,
@@ -90,7 +88,6 @@ class MainActivity : ComponentActivity() {
                                     folderMap = folderMap,
                                     artistMapToShow = artistMap,
                                     musicMapToShow = musicMap,
-                                    mediaItemMap = allMediaItemList
                                 )
                             }
                         }

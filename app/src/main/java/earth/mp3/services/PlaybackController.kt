@@ -267,6 +267,7 @@ class PlaybackController private constructor(
         } else {
             musicQueueToPlay = ArrayDeque(musicMap.values)
         }
+        this.mediaController.clearMediaItems()
         for (i: Int in musicQueueToPlay.indices) {
             mediaController.addMediaItem(musicQueueToPlay[i].mediaItem)
         }

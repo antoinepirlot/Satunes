@@ -14,7 +14,12 @@ import androidx.media3.session.SessionToken
 import earth.mp3.models.Music
 import java.util.SortedMap
 
-class PlaybackController private constructor(context: Context, sessionToken: SessionToken) {
+class PlaybackController private constructor(
+    context: Context,
+    sessionToken: SessionToken,
+    musicMap: SortedMap<Long, Music>,
+    private val musicMediaItemMap: SortedMap<Music, MediaItem>,
+) {
     private lateinit var mediaController: MediaController
 
     private val originalMusicQueueToPlay: ArrayDeque<Music> = ArrayDeque()
@@ -58,16 +63,29 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
          *
          * @return the instance of MediaController
          */
-        fun getInstance(context: Context? = null): PlaybackController {
+        fun getInstance(): PlaybackController {
             if (!Companion::instance.isInitialized) {
-                if (context == null) {
-                    throw IllegalStateException("The context can't be null when instance is not init")
-                }
-                val sessionToken =
-                    SessionToken(context, ComponentName(context, PlaybackService::class.java))
-                instance = PlaybackController(context, sessionToken)
+                throw IllegalStateException("The PlayBackController has not been initialized")
             }
             return instance
+        }
+
+        fun initInstance(
+            context: Context,
+            musicMediaItemMap: SortedMap<Music, MediaItem>,
+            musicMap: SortedMap<Long, Music>
+        ): PlaybackController {
+            if (!Companion::instance.isInitialized) {
+                val sessionToken =
+                    SessionToken(context, ComponentName(context, PlaybackService::class.java))
+                instance = PlaybackController(
+                    context = context,
+                    sessionToken = sessionToken,
+                    musicMap = musicMap,
+                    musicMediaItemMap = musicMediaItemMap
+                )
+            }
+            return getInstance()
         }
     }
 

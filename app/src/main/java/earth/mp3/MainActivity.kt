@@ -44,8 +44,6 @@ class MainActivity : ComponentActivity() {
         requestPermission()
         if (!isAudioDenied()) {
             setContent {
-                //Init playback controller
-                PlaybackController.getInstance(LocalContext.current)
                 val musicMap = remember { sortedMapOf<Long, Music>() }
                 val rootFolderList = remember { sortedMapOf<Long, Folder>() }
                 val folderMap = remember { sortedMapOf<Long, Folder>() }
@@ -61,6 +59,12 @@ class MainActivity : ComponentActivity() {
                     rootFolderMap = rootFolderList,
                     folderMap = folderMap,
                     artistMap = artistMap,
+                )
+
+                PlaybackController.initInstance(
+                    context = LocalContext.current,
+                    musicMediaItemMap = allMediaItemList,
+                    musicMap = musicMap
                 )
 
                 MP3Theme {

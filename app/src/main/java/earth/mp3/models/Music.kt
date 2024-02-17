@@ -4,7 +4,6 @@ import android.content.Context
 import android.database.Cursor
 import android.net.Uri
 import android.provider.MediaStore
-import androidx.compose.runtime.MutableLongState
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
@@ -13,26 +12,60 @@ import java.util.SortedMap
 
 class Music(
     override val id: Long,
-    override var name: String,
+    override val name: String,
     val duration: Int,
     val size: Int,
     val uri: Uri,
     val relativePath: String,
     var folder: Folder? = null,
-    var mediaItem: MediaItem? = null
 ) : Media {
+
+    val mediaItem: MediaItem
+    val absolutePath: String = "${PlaybackController.ROOT_PATH}/$relativePath/$name"
+    val mediaMetadata: MediaMetadata
+
+    init {
+        this.mediaItem = MediaItem.Builder()
+            .setUri(this.absolutePath)
+            .build()
+
+        this.mediaMetadata = this.mediaItem.mediaMetadata
+    }
 
     companion object {
         const val FIRST_FOLDER_INDEX: Long = 1
-        fun loadData(
+        private val URI = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+
+        private var musicIdColumn: Int? = null
+        private var musicNameColumn: Int? = null
+        private var musicDurationColumn: Int? = null
+        private var musicSizeColumn: Int? = null
+        private var relativePathColumn: Int? = null
+        private var artistIdColumn: Int? = null
+        private var artistNameColumn: Int? = null
+        private var artistNbOfTracksColumn: Int? = null
+        private var artistNbOfAlbumsColumn: Int? = null
+
+        private lateinit var musicMap: SortedMap<Long, Music>
+        private lateinit var rootFolderMap: SortedMap<Long, Folder>
+        private lateinit var folderMap: SortedMap<Long, Folder>
+        private lateinit var artistMap: SortedMap<Long, Artist>
+
+        private var folderId: Long = Music.FIRST_FOLDER_INDEX
+
+
+        fun loadAllData(
             context: Context,
             musicMap: SortedMap<Long, Music>,
-            rootFolderList: MutableList<Folder>,
+            rootFolderMap: SortedMap<Long, Folder>,
             folderMap: SortedMap<Long, Folder>,
-            artistList: MutableList<Artist>,
-            mediaItemList: MutableList<MediaItem>
+            artistMap: SortedMap<Long, Artist>,
         ) {
-            val uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+            this.musicMap = musicMap
+            this.rootFolderMap = rootFolderMap
+            this.folderMap = folderMap
+            this.artistMap = artistMap
+
             val projection = arrayOf(
                 MediaStore.Audio.Media._ID,
                 MediaStore.Audio.Media.DISPLAY_NAME,
@@ -40,88 +73,44 @@ class Music(
                 MediaStore.Audio.Media.SIZE,
                 MediaStore.Audio.Media.RELATIVE_PATH
             )
-            //TODO sort by alphabetical order for display name
-            context.contentResolver.query(
-                uri, projection, null, null
-            )?.use { cursor ->
-                loadData(cursor, musicMap, rootFolderList, folderMap, artistList, uri, mediaItemList)
-            }
-            musicMap.toSortedMap { o1, o2 -> o1.compareTo(o2) }
-            folderMap.toSortedMap { o1, o2 -> o1.compareTo(o2) }
-            rootFolderList.sortBy { folder: Folder -> folder.name }
-            artistList.sortBy { artist: Artist -> artist.name }
-        }
+            context.contentResolver.query(URI, projection, null, null)?.use {
+                // Cache music columns indices.
+                musicIdColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Media._ID)
+                musicNameColumn =
+                    it.getColumnIndexOrThrow(MediaStore.Audio.Media.DISPLAY_NAME)
+                musicDurationColumn =
+                    it.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION)
+                musicSizeColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE)
+                relativePathColumn =
+                    it.getColumnIndexOrThrow(MediaStore.Audio.Media.RELATIVE_PATH)
 
-        /**
-         * Load all data from the cursor
-         */
-        private fun loadData(
-            cursor: Cursor,
-            musicMap: SortedMap<Long, Music>,
-            rootFolderList: MutableList<Folder>,
-            folderMap: SortedMap<Long, Folder>,
-            artistList: MutableList<Artist>,
-            uri: Uri,
-            mediaItemList: MutableList<MediaItem>
-        ) {
-            // Cache music columns indices.
-            val musicIdColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID)
-            val musicNameColumn =
-                cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DISPLAY_NAME)
-            val musicDurationColumn =
-                cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION)
-            val musicSizeColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE)
-            val relativePathColumn =
-                cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.RELATIVE_PATH)
+                // Cache artist columns indices.
+                try {
+                    artistIdColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Artists._ID)
+                    artistNameColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Artists.ARTIST)
+                    artistNbOfTracksColumn =
+                        it.getColumnIndexOrThrow(MediaStore.Audio.Artists.NUMBER_OF_TRACKS)
+                    artistNbOfAlbumsColumn =
+                        it.getColumnIndexOrThrow(MediaStore.Audio.Artists.NUMBER_OF_ALBUMS)
+                } catch (_: IllegalArgumentException) {
 
-            // Cache artist columns indices.
-            var artistIdColumn: Int? = null
-            var artistNameColumn: Int? = null
-            var artistNbOfTracksColumn: Int? = null
-            var artistNbOfAlbumsColumn: Int? = null
-            try {
-                artistIdColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Artists._ID)
-                artistNameColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Artists.ARTIST)
-                artistNbOfTracksColumn =
-                    cursor.getColumnIndexOrThrow(MediaStore.Audio.Artists.NUMBER_OF_TRACKS)
-                artistNbOfAlbumsColumn =
-                    cursor.getColumnIndexOrThrow(MediaStore.Audio.Artists.NUMBER_OF_ALBUMS)
-            } catch (_: IllegalArgumentException) {
+                }
 
-            }
+                while (it.moveToNext()) {
+                    val music: Music = loadMusic(cursor = it)
+                    musicMap[music.id] = music
 
-            //Id for folders
-            val folderId: MutableLongState = mutableLongStateOf(FIRST_FOLDER_INDEX)
+                    loadFolders(music = music)
 
-            while (cursor.moveToNext()) {
-                val music: Music = loadMusic(
-                    cursor,
-                    musicMap,
-                    musicIdColumn,
-                    musicNameColumn,
-                    musicDurationColumn,
-                    musicSizeColumn,
-                    relativePathColumn,
-                    uri,
-                    mediaItemList
-                )
-
-                loadFolders(music, rootFolderList, folderMap, folderId)
-
-                if (
-                    artistIdColumn != null
-                    && artistNameColumn != null
-                    && artistNbOfTracksColumn != null
-                    && artistNbOfAlbumsColumn != null
-                ) {
-                    loadArtists(
-                        cursor,
-                        artistList,
-                        artistIdColumn,
-                        artistNameColumn,
-                        artistNbOfTracksColumn,
-                        artistNbOfAlbumsColumn
-                    )
+                    if (
+                        artistIdColumn != null
+                        && artistNameColumn != null
+                        && artistNbOfTracksColumn != null
+                        && artistNbOfAlbumsColumn != null
+                    ) {
+                        val artist = loadArtists(cursor = it)
+                        artistMap[artist.id] = artist
+                    }
                 }
             }
         }
@@ -130,117 +119,69 @@ class Music(
          * Create a music object from the cursor and add it to the music list
          *
          * @param cursor the cursor where music's data is stored
-         * @param idColumn the id column in cursor
-         * @param nameColumn the name column in cursor
-         * @param durationColumn the duration column in cursor
-         * @param sizeColumn the size column in cursor
-         * @param relativePathColumn the relative path column in cursor
-         * @param uri the music's uri
-         * @param mediaItemList the media item list
          *
          * @return the created music
          */
-        private fun loadMusic(
-            cursor: Cursor,
-            musicMap: SortedMap<Long, Music>,
-            idColumn: Int,
-            nameColumn: Int,
-            durationColumn: Int,
-            sizeColumn: Int,
-            relativePathColumn: Int,
-            uri: Uri,
-            mediaItemList: MutableList<MediaItem>
-        ): Music {
+        private fun loadMusic(cursor: Cursor): Music {
             // Get values of columns for a given music.
-            val id = cursor.getLong(idColumn)
-            val name = cursor.getString(nameColumn)
-            val duration = cursor.getInt(durationColumn)
-            val size = cursor.getInt(sizeColumn)
-            val relativePath = cursor.getString(relativePathColumn)
+            val id = cursor.getLong(musicIdColumn!!)
+            val name = cursor.getString(musicNameColumn!!)
+            val duration = cursor.getInt(musicDurationColumn!!)
+            val size = cursor.getInt(musicSizeColumn!!)
+            val relativePath = cursor.getString(relativePathColumn!!)
 
-            // Stores column values and the contentUri in a local object
-            // that represents the media file.
-            val fileUri = Uri.Builder().appendPath("${uri.path}/${name}").build()
+            val fileUri = Uri.Builder().appendPath("${URI.path}/${name}").build()
 
-            val music = Music(id, name, duration, size, fileUri, relativePath)
-            musicMap[music.id] = music
-            val mediaMetaData = MediaMetadata.Builder().setTitle(music.name).build()
-            val mediaItem = MediaItem.Builder()
-                .setUri(music.getAbsolutePath())
-                .setMediaMetadata(mediaMetaData)
-                .build()
-            music.mediaItem = mediaItem
-            mediaItemList.add(mediaItem)
-            return music
+            return Music(id, name, duration, size, fileUri, relativePath)
         }
 
         /**
          * Load folders and subfolders (creaate them if not exists) where the music is present
          *
-         * @param music the music to add to the folder //todo check if it works i think no
+         * @param music the music to add to the folder
          * @param rootFolderList the list of root folers where to add folders
          */
         private fun loadFolders(
             music: Music,
-            rootFolderList: MutableList<Folder>,
-            folderMap: SortedMap<Long, Folder>,
-            folderId: MutableLongState,
         ) {
-            val splitedPath = music.relativePath.split("/").toMutableList()
-            if (splitedPath.last().isBlank()) {
+            val splitPath = music.relativePath.split("/").toMutableList()
+            if (splitPath.last().isBlank()) {
                 //remove the blank folder
-                splitedPath.removeAt(splitedPath.lastIndex)
+                splitPath.removeAt(splitPath.lastIndex)
             }
 
             var rootFolder: Folder? = null
-            rootFolderList.forEach { folder: Folder ->
-                if (folder.name == splitedPath[0]) {
+            rootFolderMap.values.forEach { folder: Folder ->
+                if (folder.name == splitPath[0]) {
                     rootFolder = folder
                     return@forEach
                 }
             }
+
             if (rootFolder == null) {
                 // No root folders in the list
-                rootFolder = Folder(folderId.longValue, splitedPath[0])
-                folderMap[folderId.longValue] = rootFolder!!
-                folderId.longValue++
-                rootFolderList.add(rootFolder!!)
+                rootFolder = Folder(folderId, splitPath[0])
+                folderMap[folderId] = rootFolder!!
+                folderId++
+                rootFolderMap[rootFolder!!.id] = rootFolder!!
             }
 
-            splitedPath.removeAt(0)
-            rootFolder!!.createSubFolders(splitedPath.toMutableList(), folderId, folderMap)
-            rootFolder!!.getSubFolder(splitedPath.toMutableList())!!.addMusic(music)
+            splitPath.removeAt(0)
+            rootFolder!!.createSubFolders(
+                splitPath.toMutableList(),
+                mutableLongStateOf(folderId),
+                folderMap
+            )
+            rootFolder!!.getSubFolder(splitPath.toMutableList())!!.addMusic(music)
         }
 
-        private fun loadArtists(
-            cursor: Cursor,
-            artistList: MutableList<Artist>,
-            idColumn: Int,
-            nameColumn: Int,
-            numberOfTracksColumn: Int,
-            numberOfAlbumsColumn: Int
-        ): Artist {
+        private fun loadArtists(cursor: Cursor): Artist {
             // Get values of columns for a given artist.
-            val id = cursor.getLong(idColumn)
-            val name = cursor.getString(nameColumn)
-            val nbOfTracksColumn = cursor.getInt(numberOfTracksColumn)
-            val nbOfAlbumsColumn = cursor.getInt(numberOfAlbumsColumn)
-            val artist = Artist(id, name, nbOfTracksColumn, nbOfAlbumsColumn)
-            artistList.add(artist)
-            return artist
+            val id = cursor.getLong(artistIdColumn!!)
+            val name = cursor.getString(artistNameColumn!!)
+            val nbOfTracks = cursor.getInt(artistNbOfTracksColumn!!)
+            val nbOfAlbums = cursor.getInt(artistNbOfAlbumsColumn!!)
+            return Artist(id, name, nbOfTracks, nbOfAlbums)
         }
-    }
-
-    /**
-     * Return the path from the root to music
-     *
-     * @return the absolute path
-     */
-    fun getAbsolutePath(): String {
-        return "${PlaybackController.ROOT_PATH}/$relativePath/$name"
-    }
-
-    override fun toString(): String {
-        return this.name
     }
 }

@@ -2,7 +2,6 @@ package earth.mp3.router
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.media3.common.MediaItem
 import androidx.navigation.NavHostController
@@ -18,19 +17,20 @@ import earth.mp3.ui.utils.getMusicListFromFolder
 import earth.mp3.ui.utils.startMusic
 import earth.mp3.ui.views.MediaListView
 import earth.mp3.ui.views.PlayBackView
+import java.util.SortedMap
 
 @Composable
 fun Router(
     modifier: Modifier = Modifier,
     startDestination: String,
-    rootFolderList: List<Folder>,
-    artistListToShow: MutableList<Artist>,
-    musicMapToShow: MutableMap<Long, Music>,
+    rootFolderMap: SortedMap<Long, Folder>,
+    artistMapToShow: SortedMap<Long, Artist>,
+    musicMapToShow: SortedMap<Long, Music>,
     folderMap: Map<Long, Folder>,
-    mediaItemList: SnapshotStateList<MediaItem>,
+    mediaItemMap: SortedMap<Music, MediaItem>,
 ) {
     val navController = rememberNavController()
-    val listToShow: MutableList<Media> = remember { mutableListOf() }
+    val mapToShow: SortedMap<Long, Media> = remember { sortedMapOf() }
 
 
     NavHost(
@@ -41,7 +41,7 @@ fun Router(
         composable(Destination.FOLDERS.link) {
             // /!\ This route prevent back gesture to exit the app
             MediaListView(
-                mediaList = rootFolderList,
+                mediaMap = rootFolderMap as SortedMap<Long, Media>,
                 openMedia = { clickedMedia: Media ->
                     openMediaFromFolder(navController, clickedMedia)
                 },
@@ -53,21 +53,21 @@ fun Router(
         composable("${Destination.FOLDERS.link}/{id}") {
             val folderId = it.arguments!!.getString("id")!!.toLong()
             var folder: Folder = folderMap[Music.FIRST_FOLDER_INDEX]!!
-            listToShow.clear()
+            mapToShow.clear()
 
             if (folderId >= Music.FIRST_FOLDER_INDEX && folderId <= folderMap.size) {
                 folder = folderMap[folderId]!!
-                val listToAdd = folder.getSubFolderListAsMedia()
-                listToShow.addAll(listToAdd)
+                val mapToAdd = folder.getSubFolderListAsMedia()
+                mapToShow.putAll(mapToAdd)
             } else {
-                listToShow.addAll(rootFolderList)
+                mapToShow.putAll(rootFolderMap)
             }
-            if (folder.musicList.isNotEmpty()) {
-                listToShow.addAll(folder.musicList.toMutableList())
+            if (folder.musicMap.isNotEmpty()) {
+                mapToShow.putAll(folder.musicMap)
             }
 
             MediaListView(
-                mediaList = listToShow,
+                mediaMap = mapToShow,
                 openMedia = { clickedMedia: Media ->
                     openMediaFromFolder(navController, clickedMedia)
                 },
@@ -78,12 +78,12 @@ fun Router(
 
         composable(Destination.ARTISTS.link) {
             MediaListView(
-                mediaList = artistListToShow,
+                mediaMap = artistMapToShow as SortedMap<Long, Media>,
                 openMedia = { clickedMedia: Media ->
                     openMedia(
                         navController,
                         clickedMedia,
-                        musicMapToShow.values.toList()
+                        musicMapToShow
                     )
                 },
                 shuffleMusicAction = { /* TODO */ },
@@ -96,21 +96,20 @@ fun Router(
         }
 
         composable(Destination.MUSICS.link) {
-            val musicList = musicMapToShow.values.toList()
             MediaListView(
-                mediaList = musicMapToShow.values.toList(),
+                mediaMap = musicMapToShow as SortedMap<Long, Media>,
                 openMedia = { clickedMedia: Media ->
                     openMedia(
                         navController,
                         clickedMedia,
-                        musicList
+                        musicMapToShow
                     )
                 },
                 shuffleMusicAction = {
                     openMedia(
                         navController,
-                        musicList[0],
-                        musicList,
+                        musicMapToShow.values.first(),
+                        musicMapToShow,
                         shuffleMode = true
                     )
                 },
@@ -136,18 +135,18 @@ fun Router(
  *
  * @param navController the nav controller to redirect to the good path
  * @param media the media to open
- * @param musicList the music list to load in exoplayer (if clickedMedia is a music)
+ * @param musicMap the music map to load in exoplayer (if clickedMedia is a music)
  * @param shuffleMode by default false, if true, it starts in shuffle mode
  */
 private fun openMedia(
     navController: NavHostController,
     media: Media,
-    musicList: List<Music>,
+    musicMap: SortedMap<Long, Music>,
     shuffleMode: Boolean = false,
 ) {
     navController.navigate(getDestinationOf(media))
     if (media is Music) {
-        startMusic(musicList, media, shuffleMode)
+        startMusic(musicMap, media, shuffleMode)
     }
 }
 

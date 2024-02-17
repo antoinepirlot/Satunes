@@ -14,11 +14,12 @@ import earth.mp3.services.PlaybackController
 import earth.mp3.ui.components.ShowCurrentMusicButton
 import earth.mp3.ui.components.cards.media.MediaCardList
 import earth.mp3.ui.components.music.ShuffleAllButton
+import java.util.SortedMap
 
 @Composable
 fun MediaListView(
     modifier: Modifier = Modifier,
-    mediaList: List<Media>,
+    mediaMap: SortedMap<Long, Media>,
     openMedia: (media: Media) -> Unit,
     shuffleMusicAction: () -> Unit,
     onFABClick: () -> Unit
@@ -36,7 +37,7 @@ fun MediaListView(
             modifier = Modifier.padding(innerPadding)
         ) {
             ShuffleAllButton(onClick = shuffleMusicAction)
-            MediaCardList(mediaList = mediaList, openMedia = openMedia)
+            MediaCardList(mediaMap = mediaMap, openMedia = openMedia)
         }
     }
 }
@@ -44,8 +45,9 @@ fun MediaListView(
 @Composable
 @Preview
 fun MediaListViewPreview() {
+    val map = sortedMapOf(Pair<Long, Media>(1, Music(1, "Musique", 0, 0, Uri.EMPTY, "", null)))
     MediaListView(
-        mediaList = listOf(Music(1, "Musique", 0, 0, Uri.EMPTY, "", null)),
+        mediaMap = map,
         openMedia = {},
         shuffleMusicAction = {},
         onFABClick = {}

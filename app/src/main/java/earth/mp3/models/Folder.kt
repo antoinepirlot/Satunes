@@ -7,8 +7,8 @@ class Folder(
     override val id: Long,
     override var name: String,
     var parentFolder: Folder? = null,
-    private val subFolderList: MutableList<Folder> = mutableListOf(),
-    val musicList: MutableList<Music> = mutableListOf()
+    private val subFolderList: SortedMap<Long, Folder> = sortedMapOf(),
+    val musicMap: SortedMap<Long, Music> = sortedMapOf()
 ) : Media {
 
 
@@ -17,8 +17,8 @@ class Folder(
      *
      * @return a list of subfolder and each subfolder is a Folder object
      */
-    fun getSubFolderList(): List<Folder> {
-        return this.subFolderList.toList()
+    fun getSubFolderList(): SortedMap<Long, Folder> {
+        return this.subFolderList
     }
 
     /**
@@ -26,25 +26,25 @@ class Folder(
      *
      * @return a list of subfolder and each subfolder is cast to Media object
      */
-    fun getSubFolderListAsMedia(): List<Media> {
-        return this.subFolderList.toList()
+    fun getSubFolderListAsMedia(): SortedMap<Long, Media> {
+        return this.subFolderList as SortedMap<Long, Media>
     }
 
     fun addSubFolder(subFolder: Folder) {
-        this.subFolderList.add(subFolder)
+        this.subFolderList[subFolder.id] = subFolder
     }
 
     fun removeSubFolder(subFolder: Folder) {
-        this.subFolderList.remove(subFolder)
+        this.subFolderList.remove(subFolder.id)
     }
 
     fun addMusic(musicData: Music) {
         musicData.folder = this
-        this.musicList.add(musicData)
+        this.musicMap[musicData.id] = musicData
     }
 
     fun removeMusic(musicData: Music) {
-        this.musicList.remove(musicData)
+        this.musicMap.remove(musicData.id)
     }
 
     /**
@@ -66,7 +66,7 @@ class Folder(
         var parentFolder = this
         subFolderNameChainList.forEach { folderName: String ->
             var subFolder: Folder? = null
-            for (folder in parentFolder.subFolderList) {
+            for (folder in parentFolder.subFolderList.values) {
                 if (folder.name == folderName) {
                     subFolder = folder
                 }
@@ -83,23 +83,23 @@ class Folder(
 
     /**
      * Find the right sub-folder and return when it's found, otherwise null
-     * @param splitedPath the list of all sub-folders name
+     * @param splitPath the list of all sub-folders name
      * /!\ The list reference won't change
      *
      * @return the right Folder matching the last subFolderName of the list
      */
-    fun getSubFolder(splitedPath: MutableList<String>): Folder? {
-        if (splitedPath.isEmpty()) {
+    fun getSubFolder(splitPath: MutableList<String>): Folder? {
+        if (splitPath.isEmpty()) {
             //The forEach call this function is the folder match with the splited path
             return this
         }
-        if (splitedPath.size == 1 && this.name == splitedPath[0]) {
+        if (splitPath.size == 1 && this.name == splitPath[0]) {
             return this
         }
-        this.subFolderList.forEach { subFolder: Folder ->
-            if (subFolder.name == splitedPath[0]) {
-                splitedPath.remove(splitedPath[0])
-                return subFolder.getSubFolder(splitedPath)
+        this.subFolderList.values.forEach { subFolder: Folder ->
+            if (subFolder.name == splitPath[0]) {
+                splitPath.remove(splitPath[0])
+                return subFolder.getSubFolder(splitPath)
             }
         }
         return null
@@ -114,14 +114,14 @@ class Folder(
         if (name != other.name) return false
         if (parentFolder != other.parentFolder) return false
         if (subFolderList != other.subFolderList) return false
-        return musicList == other.musicList
+        return musicMap == other.musicMap
     }
 
     override fun hashCode(): Int {
         var result = name.hashCode()
         result = 31 * result + (parentFolder?.hashCode() ?: 0)
         result = 31 * result + subFolderList.hashCode()
-        result = 31 * result + musicList.hashCode()
+        result = 31 * result + musicMap.hashCode()
         return result
     }
 

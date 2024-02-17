@@ -15,22 +15,23 @@ import androidx.compose.ui.tooling.preview.Preview
 import earth.mp3.models.Artist
 import earth.mp3.models.Folder
 import earth.mp3.models.Media
+import java.util.SortedMap
 
 @Composable
 fun MediaCardList(
     modifier: Modifier = Modifier,
-    mediaList: List<Media>,
+    mediaMap: SortedMap<Long, Media>,
     openMedia: (media: Media) -> Unit
 ) {
     val lazyState = rememberLazyListState()
-    if (mediaList.isNotEmpty()) { // It fixes issue while accessing last folder in chain
+    if (mediaMap.isNotEmpty()) { // It fixes issue while accessing last folder in chain
         Column {
             LazyColumn(
                 modifier = modifier,
                 state = lazyState
             ) {
                 items(
-                    items = mediaList,
+                    items = mediaMap.values.toList(),
                     key = { it.id }
                 ) { media: Media ->
                     // First pair is image vector and second one is content description (String)
@@ -52,7 +53,7 @@ fun MediaCardList(
 @Preview
 fun CardListPreview() {
     MediaCardList(
-        mediaList = listOf(),
+        mediaMap = sortedMapOf(),
         openMedia = {}
     )
 }

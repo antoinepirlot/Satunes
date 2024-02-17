@@ -12,6 +12,7 @@ import androidx.media3.common.Player
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
 import earth.mp3.models.Music
+import java.util.SortedMap
 
 class PlaybackController private constructor(context: Context, sessionToken: SessionToken) {
     private lateinit var mediaController: MediaController
@@ -230,14 +231,14 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
      * If the shuffle mode is true then shuffle the playlist but the first music of the playlist
      * and the first music to start is musicToPlay.
      *
-     * @param musicList the music list to load if null use the musicQueueToPlay instead
+     * @param musicMap the music map to load if null use the musicQueueToPlay instead
      * @param shuffleMode indicate if the playlist has to be started in shuffle mode by default false
      *
      */
-    fun loadMusic(musicList: List<Music>? = null, shuffleMode: Boolean = false) {
+    fun loadMusic(musicMap: SortedMap<Long, Music>? = null, shuffleMode: Boolean = false) {
         val musicListToIterate: List<Music>
-        if (musicList != null) {
-            musicListToIterate = musicList
+        if (musicMap != null) {
+            musicListToIterate = musicMap.values.toList()
             resetToDefault()
         } else {
             musicListToIterate = musicQueueToPlay
@@ -246,7 +247,7 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
 
         for (i: Int in musicListToIterate.indices) {
             val music: Music = musicListToIterate[i]
-            if (musicList != null) {
+            if (musicMap != null) {
                 if (!originalMusicQueueToPlay.contains(music)) {
                     originalMusicQueueToPlay.add(music)
                     musicQueueToPlay.add(music)

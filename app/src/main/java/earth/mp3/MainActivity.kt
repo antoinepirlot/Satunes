@@ -47,21 +47,20 @@ class MainActivity : ComponentActivity() {
                 //Init playback controller
                 PlaybackController.getInstance(LocalContext.current)
                 val musicMap = remember { sortedMapOf<Long, Music>() }
-                val rootFolderList = remember { mutableStateListOf<Folder>() }
+                val rootFolderList = remember { sortedMapOf<Long, Folder>() }
                 val folderMap = remember { sortedMapOf<Long, Folder>() }
-                val artistList = remember { mutableStateListOf<Artist>() }
+                val artistMap = remember { sortedMapOf<Long, Artist>() }
                 val folderListToShow = remember { mutableStateListOf<Folder>() }
                 val musicMapToShow = remember { mutableStateMapOf<Long, Music>() }
                 val artistListToShow = remember { mutableStateListOf<Artist>() }
-                val mediaItemList = remember { mutableStateListOf<MediaItem>() }
+                val allMediaItemList = remember { sortedMapOf<Music, MediaItem>() }
 
-                Music.loadData(
+                Music.loadAllData(
                     context = LocalContext.current,
                     musicMap = musicMap,
-                    rootFolderList = rootFolderList,
+                    rootFolderMap = rootFolderList,
                     folderMap = folderMap,
-                    artistList = artistList,
-                    mediaItemList = mediaItemList
+                    artistMap = artistMap,
                 )
 
                 MP3Theme {
@@ -84,11 +83,11 @@ class MainActivity : ComponentActivity() {
                             ) {
                                 Router(
                                     startDestination = startDestination.value,
-                                    rootFolderList = rootFolderList,
+                                    rootFolderMap = rootFolderList,
                                     folderMap = folderMap,
-                                    artistListToShow = artistList,
+                                    artistMapToShow = artistMap,
                                     musicMapToShow = musicMap,
-                                    mediaItemList = mediaItemList
+                                    mediaItemMap = allMediaItemList
                                 )
 //                                HomeView(
 //                                    modifier = Modifier,

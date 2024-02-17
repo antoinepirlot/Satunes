@@ -92,13 +92,6 @@ class MainActivity : ComponentActivity() {
                                     musicMapToShow = musicMap,
                                     mediaItemMap = allMediaItemList
                                 )
-//                                HomeView(
-//                                    modifier = Modifier,
-//                                    musicMap = musicMap,
-//                                    folderList = rootFolderList,
-//                                    artistList = artistList,
-//                                    folderMap = folderMap
-//                                )
                             }
                         }
                     }

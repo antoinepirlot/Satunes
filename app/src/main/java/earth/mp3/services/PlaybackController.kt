@@ -22,7 +22,7 @@ class PlaybackController private constructor(
 ) {
     private lateinit var mediaController: MediaController
 
-    private val originalMusicQueueToPlay: ArrayDeque<Music> = ArrayDeque()
+    private var originalMusicQueueToPlay: ArrayDeque<Music> = ArrayDeque()
     private var musicQueueToPlay: ArrayDeque<Music> = ArrayDeque()
     private var musicPlayingIndex: Int = DEFAULT_MUSIC_PLAYING_INDEX
     private var isEnded: Boolean = false
@@ -31,7 +31,6 @@ class PlaybackController private constructor(
         val controllerFuture = MediaController.Builder(context, sessionToken).buildAsync()
         controllerFuture.addListener({
             this.mediaController = controllerFuture.get()
-            this.mediaController.addListener(listener)
             loadMusic(musicMap = musicMap)
         }, ContextCompat.getMainExecutor(context))
     }
@@ -259,50 +258,20 @@ class PlaybackController private constructor(
      * @param shuffleMode indicate if the playlist has to be started in shuffle mode by default false
      *
      */
-    fun loadMusicToReplace(musicMap: SortedMap<Long, Music>, shuffleMode: Boolean = false) {
-        originalMusicQueueToPlay.clear()
-        originalMusicQueueToPlay.addAll(musicMap.values)
-        musicQueueToPlay = ArrayDeque(musicMap.values)
+    fun loadMusic(musicMap: SortedMap<Long, Music>, shuffleMode: Boolean = false) {
+        originalMusicQueueToPlay = ArrayDeque(musicMap.values)
         if (shuffleMode) {
-            shuffle()
+            musicQueueToPlay = ArrayDeque(musicMap.values.shuffled())
             isShuffle.value = true
-        }
-    }
-
-    /**
-     * Add all music from musicMap to the mediaController in the same order.
-     * If the shuffle mode is true then shuffle the playlist but the first music of the playlist
-     * and the first music to start is musicToPlay.
-     *
-     * @param musicMap the music map to load if null use the musicQueueToPlay instead
-     * @param shuffleMode indicate if the playlist has to be started in shuffle mode by default false
-     *
-     */
-    fun loadMusic(musicMap: SortedMap<Long, Music>? = null, shuffleMode: Boolean = false) {
-        val musicListToIterate: List<Music>
-        if (musicMap != null) {
-            musicListToIterate = musicMap.values.toList()
-            resetToDefault()
         } else {
-            musicListToIterate = musicQueueToPlay
-            mediaController.clearMediaItems()
+            musicQueueToPlay = ArrayDeque(musicMap.values)
         }
-
-        for (i: Int in musicListToIterate.indices) {
-            val music: Music = musicListToIterate[i]
-            if (musicMap != null) {
-                if (!originalMusicQueueToPlay.contains(music)) {
-                    originalMusicQueueToPlay.add(music)
-                    musicQueueToPlay.add(music)
-                }
-            } else if (music == musicPlaying.value) {
+        for (i: Int in musicQueueToPlay.indices) {
+            val music: Music = musicQueueToPlay[i]
+            if (music == musicPlaying.value) {
                 musicPlayingIndex = i
             }
-            mediaController.addMediaItem(music.mediaItem!!)
-        }
-        if (shuffleMode) {
-            shuffle()
-            isShuffle.value = true
+            mediaController.addMediaItem(music.mediaItem)
         }
         mediaController.addListener(listener)
         mediaController.prepare()

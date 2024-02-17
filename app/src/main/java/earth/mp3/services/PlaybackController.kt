@@ -26,12 +26,13 @@ class PlaybackController private constructor(
     private var musicQueueToPlay: ArrayDeque<Music> = ArrayDeque()
     private var musicPlayingIndex: Int = DEFAULT_MUSIC_PLAYING_INDEX
     private var isEnded: Boolean = false
+    private var isLoaded: Boolean = DEFAULT_IS_LOADED
 
     init {
         val controllerFuture = MediaController.Builder(context, sessionToken).buildAsync()
         controllerFuture.addListener({
             this.mediaController = controllerFuture.get()
-            loadMusic(mediaItemList = musicMediaItemMap.values.toList(), musicMap = musicMap)
+            loadMusic(musicMap = musicMap)
         }, ContextCompat.getMainExecutor(context))
     }
 
@@ -44,6 +45,7 @@ class PlaybackController private constructor(
         const val DEFAULT_IS_SHUFFLE = false
         const val DEFAULT_HAS_NEXT = false
         const val DEFAULT_HAS_PREVIOUS = false
+        const val DEFAULT_IS_LOADED = false
 
         // Mutable var are used in ui, it needs to be recomposed
         // I use mutable to avoid using function with multiples params like to add listener
@@ -184,7 +186,6 @@ class PlaybackController private constructor(
         if (this.originalMusicQueueToPlay.isEmpty() || musicQueueToPlay.isEmpty()) {
             throw IllegalStateException("The music list to play has not been loaded")
         }
-        val musicToPlay: Music? = musicToPlay
 
         when (musicToPlay) {
             null -> {
@@ -200,10 +201,10 @@ class PlaybackController private constructor(
 
             else -> {
                 // the user wants to play a specific music
-                for (i: Int in 0..<musicQueueToPlay.size) {
+                for (i: Int in musicQueueToPlay.indices) {
                     val music = musicQueueToPlay[i]
                     if (musicToPlay == music) {
-                        musicPlaying.value = musicToPlay
+                        musicPlaying.value = music
                         musicPlayingIndex = i
                         break
                     }
@@ -253,33 +254,6 @@ class PlaybackController private constructor(
         return musicPlaying.value != musicQueueToPlay.last()
     }
 
-    fun loadMusic(
-        mediaItemList: List<MediaItem>? = null,
-        musicMap: SortedMap<Long, Music>,
-        shuffleMode: Boolean = false
-    ) {
-        if (mediaItemList == null) {
-            loadMusic(musicMap = musicMap, shuffleMode = shuffleMode)
-            return
-        }
-
-        originalMusicQueueToPlay = ArrayDeque(musicMap.values)
-        if (shuffleMode) {
-            musicQueueToPlay = ArrayDeque(musicMap.values.shuffled())
-            isShuffle.value = true
-        } else {
-            musicQueueToPlay = ArrayDeque(musicMap.values)
-        }
-        this.mediaController.addMediaItems(mediaItemList)
-        if (musicPlaying.value != null) {
-            val music = musicMap[musicPlaying.value!!.id]
-            musicPlayingIndex = musicQueueToPlay.indexOf(music)
-        }
-        mediaController.addListener(listener)
-        mediaController.prepare()
-
-    }
-
     /**
      * Add all music from musicMap to the mediaController in the same order.
      * If the shuffle mode is true then shuffle the playlist
@@ -297,14 +271,15 @@ class PlaybackController private constructor(
             musicQueueToPlay = ArrayDeque(musicMap.values)
         }
         for (i: Int in musicQueueToPlay.indices) {
-            val music: Music = musicQueueToPlay[i]
-            if (music == musicPlaying.value) {
-                musicPlayingIndex = i
-            }
-            mediaController.addMediaItem(music.mediaItem)
+            mediaController.addMediaItem(musicQueueToPlay[i].mediaItem)
         }
         mediaController.addListener(listener)
         mediaController.prepare()
+        isLoaded = true
+    }
+
+    fun isLoaded(): Boolean {
+        return this.isLoaded
     }
 
     /**
@@ -322,6 +297,7 @@ class PlaybackController private constructor(
         isShuffle.value = DEFAULT_IS_SHUFFLE
         hasNext.value = DEFAULT_HAS_NEXT
         hasPrevious.value = DEFAULT_HAS_PREVIOUS
+        isLoaded = DEFAULT_IS_LOADED
     }
 
     /**

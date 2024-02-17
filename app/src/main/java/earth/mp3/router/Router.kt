@@ -13,7 +13,6 @@ import earth.mp3.models.Folder
 import earth.mp3.models.Media
 import earth.mp3.models.Music
 import earth.mp3.services.PlaybackController
-import earth.mp3.ui.utils.getMusicListFromFolder
 import earth.mp3.ui.utils.startMusic
 import earth.mp3.ui.views.MediaListView
 import earth.mp3.ui.views.PlayBackView
@@ -31,6 +30,7 @@ fun Router(
 ) {
     val navController = rememberNavController()
     val mapToShow: SortedMap<Long, Media> = remember { sortedMapOf() }
+    val playbackController: PlaybackController = PlaybackController.getInstance()
 
 
     NavHost(
@@ -43,7 +43,7 @@ fun Router(
             MediaListView(
                 mediaMap = rootFolderMap as SortedMap<Long, Media>,
                 openMedia = { clickedMedia: Media ->
-                    openMediaFromFolder(navController, clickedMedia)
+                    openMedia(navController, clickedMedia)
                 },
                 shuffleMusicAction = { /* TODO */ },
                 onFABClick = { openCurrentMusic(navController) }
@@ -69,7 +69,7 @@ fun Router(
             MediaListView(
                 mediaMap = mapToShow,
                 openMedia = { clickedMedia: Media ->
-                    openMediaFromFolder(navController, clickedMedia)
+                    openMedia(navController, clickedMedia)
                 },
                 shuffleMusicAction = { /* TODO */ },
                 onFABClick = { openCurrentMusic(navController) }
@@ -82,8 +82,7 @@ fun Router(
                 openMedia = { clickedMedia: Media ->
                     openMedia(
                         navController,
-                        clickedMedia,
-                        musicMapToShow
+                        clickedMedia
                     )
                 },
                 shuffleMusicAction = { /* TODO */ },
@@ -99,18 +98,21 @@ fun Router(
             MediaListView(
                 mediaMap = musicMapToShow as SortedMap<Long, Media>,
                 openMedia = { clickedMedia: Media ->
+                    if (!playbackController.isLoaded()) {
+                        playbackController.loadMusic(musicMap = musicMapToShow)
+                    }
                     openMedia(
                         navController,
-                        clickedMedia,
-                        musicMapToShow
+                        clickedMedia
                     )
                 },
                 shuffleMusicAction = {
+                    if (!playbackController.isLoaded()) {
+                        playbackController.loadMusic(musicMap = musicMapToShow, shuffleMode = true)
+                    }
                     openMedia(
                         navController,
                         musicMapToShow.values.first(),
-                        musicMapToShow,
-                        shuffleMode = true
                     )
                 },
                 onFABClick = { openCurrentMusic(navController) }
@@ -131,39 +133,17 @@ fun Router(
  *
  *      Artist: navigate to the media's destination
  *
- * If the shuffle mode param is true then shuffle the music and start the selected media
- *
  * @param navController the nav controller to redirect to the good path
  * @param media the media to open
- * @param musicMap the music map to load in exoplayer (if clickedMedia is a music)
- * @param shuffleMode by default false, if true, it starts in shuffle mode
  */
 private fun openMedia(
     navController: NavHostController,
-    media: Media,
-    musicMap: SortedMap<Long, Music>,
-    shuffleMode: Boolean = false,
-) {
-    navController.navigate(getDestinationOf(media))
-    if (media is Music) {
-        startMusic(musicMap, media, shuffleMode)
-    }
-}
-
-private fun openMediaFromFolder(
-    navController: NavHostController,
     media: Media
 ) {
-    when (media) {
-        is Music -> {
-            openMedia(navController, media, getMusicListFromFolder(media.folder!!))
-        }
-
-        is Folder -> {
-            navController.navigate(getDestinationOf(media))
-        }
+    if (media is Music) {
+        startMusic(media)
     }
-
+    navController.navigate(getDestinationOf(media))
 }
 
 /**

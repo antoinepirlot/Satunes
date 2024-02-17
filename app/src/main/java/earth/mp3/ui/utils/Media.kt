@@ -8,18 +8,13 @@ import java.util.SortedMap
 
 
 /**
- * Start the music from music list.
+ * Start the music
  *
- * If the shuffle mode is true, then start music in shuffle mode and start with mediaToPlay.
- *
- * @param musicMap the music map of musics to play
  * @param mediaToPlay the music to play from the music list
- * @param shuffleMode indicate if the music start in shuffle mode, by default it is false
  */
 
-fun startMusic(musicMap: SortedMap<Long, Music>, mediaToPlay: Media, shuffleMode: Boolean = false) {
+fun startMusic(mediaToPlay: Media) {
     val playbackController = PlaybackController.getInstance()
-    playbackController.loadMusic(musicMap, shuffleMode = shuffleMode)
 
     when (mediaToPlay) {
         is Music -> {

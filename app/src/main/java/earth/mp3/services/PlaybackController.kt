@@ -261,11 +261,10 @@ class PlaybackController private constructor(
      */
     fun loadMusic(musicMap: SortedMap<Long, Music>, shuffleMode: Boolean = false) {
         originalMusicQueueToPlay = ArrayDeque(musicMap.values)
+        musicQueueToPlay = originalMusicQueueToPlay
         if (shuffleMode) {
             musicQueueToPlay = ArrayDeque(musicMap.values.shuffled())
             isShuffle.value = true
-        } else {
-            musicQueueToPlay = ArrayDeque(musicMap.values)
         }
         this.mediaController.clearMediaItems()
         for (i: Int in musicQueueToPlay.indices) {

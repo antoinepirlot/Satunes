@@ -31,7 +31,7 @@ class PlaybackController private constructor(
         val controllerFuture = MediaController.Builder(context, sessionToken).buildAsync()
         controllerFuture.addListener({
             this.mediaController = controllerFuture.get()
-            loadMusic(musicMap = musicMap)
+            loadMusic(mediaItemList = musicMediaItemMap.values.toList(), musicMap = musicMap)
         }, ContextCompat.getMainExecutor(context))
     }
 
@@ -117,6 +117,10 @@ class PlaybackController private constructor(
 
         override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
             super.onMediaItemTransition(mediaItem, reason)
+            if (musicPlaying.value == null) {
+                //Fix issue while loading for the first time
+                return
+            }
             if (mediaItem != musicPlaying.value!!.mediaItem!!) {
                 if (reason == Player.MEDIA_ITEM_TRANSITION_REASON_SEEK
                     || reason == Player.MEDIA_ITEM_TRANSITION_REASON_AUTO
@@ -247,6 +251,33 @@ class PlaybackController private constructor(
 
     fun hasNext(): Boolean {
         return musicPlaying.value != musicQueueToPlay.last()
+    }
+
+    fun loadMusic(
+        mediaItemList: List<MediaItem>? = null,
+        musicMap: SortedMap<Long, Music>,
+        shuffleMode: Boolean = false
+    ) {
+        if (mediaItemList == null) {
+            loadMusic(musicMap = musicMap, shuffleMode = shuffleMode)
+            return
+        }
+
+        originalMusicQueueToPlay = ArrayDeque(musicMap.values)
+        if (shuffleMode) {
+            musicQueueToPlay = ArrayDeque(musicMap.values.shuffled())
+            isShuffle.value = true
+        } else {
+            musicQueueToPlay = ArrayDeque(musicMap.values)
+        }
+        this.mediaController.addMediaItems(mediaItemList)
+        if (musicPlaying.value != null) {
+            val music = musicMap[musicPlaying.value!!.id]
+            musicPlayingIndex = musicQueueToPlay.indexOf(music)
+        }
+        mediaController.addListener(listener)
+        mediaController.prepare()
+
     }
 
     /**

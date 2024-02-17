@@ -18,7 +18,6 @@ class PlaybackController private constructor(
     context: Context,
     sessionToken: SessionToken,
     musicMap: SortedMap<Long, Music>,
-    private val musicMediaItemMap: SortedMap<Music, MediaItem>,
 ) {
     private lateinit var mediaController: MediaController
 
@@ -75,7 +74,6 @@ class PlaybackController private constructor(
 
         fun initInstance(
             context: Context,
-            musicMediaItemMap: SortedMap<Music, MediaItem>,
             musicMap: SortedMap<Long, Music>
         ): PlaybackController {
             if (!Companion::instance.isInitialized) {
@@ -85,7 +83,6 @@ class PlaybackController private constructor(
                     context = context,
                     sessionToken = sessionToken,
                     musicMap = musicMap,
-                    musicMediaItemMap = musicMediaItemMap
                 )
             }
             return getInstance()

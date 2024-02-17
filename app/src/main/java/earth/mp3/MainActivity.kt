@@ -63,7 +63,6 @@ class MainActivity : ComponentActivity() {
 
                 PlaybackController.initInstance(
                     context = LocalContext.current,
-                    musicMediaItemMap = allMediaItemList,
                     musicMap = musicMap
                 )
 

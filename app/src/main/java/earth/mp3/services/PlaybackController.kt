@@ -151,25 +151,32 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
      * If music to play is null, play the first music of the playlist otherwise play the musicToPlay
      * If the music to play is already the music playing nothing is done.
      *
-     * If isShuffle is true, then musicToPlay is replaced by the first music, let's
-     * assume that the musicQueueToPlay has been already shuffled (in load function).
-     *
      *
      * @param musicToPlay the music to play
+     *
+     * @throws IllegalStateException if the music list has not been loaded
      */
     @Suppress("NAME_SHADOWING")
     fun start(musicToPlay: Music? = null) {
-        var musicToPlay: Music? = musicToPlay
+        if (this.originalMusicQueueToPlay.isEmpty() || musicQueueToPlay.isEmpty()) {
+            throw IllegalStateException("The music list to play has not been loaded")
+        }
+        val musicToPlay: Music? = musicToPlay
 
-        if (musicToPlay != null) {
-            if (musicToPlay == musicPlaying.value) {
+        when (musicToPlay) {
+            null -> {
+                // Play the first music of the list
+                musicPlayingIndex = DEFAULT_MUSIC_PLAYING_INDEX
+                musicPlaying.value = musicQueueToPlay[musicPlayingIndex]
+            }
+
+            musicPlaying.value -> {
+                //The user wants to play the current music, nothing has to be done
                 return
             }
-            if (isShuffle.value) {
-                musicPlayingIndex = DEFAULT_MUSIC_PLAYING_INDEX
-                musicToPlay = musicQueueToPlay[musicPlayingIndex]
-                musicPlaying.value = musicToPlay
-            } else {
+
+            else -> {
+                // the user wants to play a specific music
                 for (i: Int in 0..<musicQueueToPlay.size) {
                     val music = musicQueueToPlay[i]
                     if (musicToPlay == music) {
@@ -179,9 +186,6 @@ class PlaybackController private constructor(context: Context, sessionToken: Ses
                     }
                 }
             }
-        } else if (musicPlayingIndex < DEFAULT_MUSIC_PLAYING_INDEX) {
-            musicPlayingIndex = DEFAULT_MUSIC_PLAYING_INDEX
-            musicPlaying.value = musicQueueToPlay[musicPlayingIndex]
         }
         mediaController.seekTo(musicPlayingIndex, 0)
         mediaController.play()

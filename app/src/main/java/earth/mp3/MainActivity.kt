@@ -26,11 +26,10 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.media3.common.MediaItem
 import earth.mp3.models.Artist
 import earth.mp3.models.Folder
 import earth.mp3.models.Music
-import earth.mp3.models.utils.loadObjectsTo
-import earth.mp3.models.utils.loadObjectsToMap
 import earth.mp3.router.Destination
 import earth.mp3.router.Router
 import earth.mp3.services.PlaybackController
@@ -51,21 +50,18 @@ class MainActivity : ComponentActivity() {
                 val rootFolderList = remember { mutableStateListOf<Folder>() }
                 val folderMap = remember { sortedMapOf<Long, Folder>() }
                 val artistList = remember { mutableStateListOf<Artist>() }
-
                 val folderListToShow = remember { mutableStateListOf<Folder>() }
-                loadObjectsTo(folderListToShow, rootFolderList)
-
                 val musicMapToShow = remember { mutableStateMapOf<Long, Music>() }
-                loadObjectsToMap(musicMapToShow, musicMap)
                 val artistListToShow = remember { mutableStateListOf<Artist>() }
-                loadObjectsTo(artistListToShow, artistList)
+                val mediaItemList = remember { mutableStateListOf<MediaItem>() }
 
                 Music.loadData(
                     context = LocalContext.current,
                     musicMap = musicMap,
                     rootFolderList = rootFolderList,
                     folderMap = folderMap,
-                    artistList = artistList
+                    artistList = artistList,
+                    mediaItemList = mediaItemList
                 )
 
                 MP3Theme {
@@ -92,6 +88,7 @@ class MainActivity : ComponentActivity() {
                                     folderMap = folderMap,
                                     artistListToShow = artistList,
                                     musicMapToShow = musicMap,
+                                    mediaItemList = mediaItemList
                                 )
 //                                HomeView(
 //                                    modifier = Modifier,

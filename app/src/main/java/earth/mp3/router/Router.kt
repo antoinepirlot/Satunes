@@ -2,7 +2,9 @@ package earth.mp3.router
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
+import androidx.media3.common.MediaItem
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -25,6 +27,7 @@ fun Router(
     artistListToShow: MutableList<Artist>,
     musicMapToShow: MutableMap<Long, Music>,
     folderMap: Map<Long, Folder>,
+    mediaItemList: SnapshotStateList<MediaItem>,
 ) {
     val navController = rememberNavController()
     val listToShow: MutableList<Media> = remember { mutableListOf() }

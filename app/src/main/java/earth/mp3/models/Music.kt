@@ -30,6 +30,7 @@ class Music(
             rootFolderList: MutableList<Folder>,
             folderMap: SortedMap<Long, Folder>,
             artistList: MutableList<Artist>,
+            mediaItemList: MutableList<MediaItem>
         ) {
             val uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
             val projection = arrayOf(
@@ -43,7 +44,7 @@ class Music(
             context.contentResolver.query(
                 uri, projection, null, null
             )?.use { cursor ->
-                loadData(cursor, musicMap, rootFolderList, folderMap, artistList, uri)
+                loadData(cursor, musicMap, rootFolderList, folderMap, artistList, uri, mediaItemList)
             }
             musicMap.toSortedMap { o1, o2 -> o1.compareTo(o2) }
             folderMap.toSortedMap { o1, o2 -> o1.compareTo(o2) }
@@ -60,7 +61,8 @@ class Music(
             rootFolderList: MutableList<Folder>,
             folderMap: SortedMap<Long, Folder>,
             artistList: MutableList<Artist>,
-            uri: Uri
+            uri: Uri,
+            mediaItemList: MutableList<MediaItem>
         ) {
             // Cache music columns indices.
             val musicIdColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID)
@@ -100,7 +102,8 @@ class Music(
                     musicDurationColumn,
                     musicSizeColumn,
                     relativePathColumn,
-                    uri
+                    uri,
+                    mediaItemList
                 )
 
                 loadFolders(music, rootFolderList, folderMap, folderId)
@@ -133,6 +136,7 @@ class Music(
          * @param sizeColumn the size column in cursor
          * @param relativePathColumn the relative path column in cursor
          * @param uri the music's uri
+         * @param mediaItemList the media item list
          *
          * @return the created music
          */
@@ -144,7 +148,8 @@ class Music(
             durationColumn: Int,
             sizeColumn: Int,
             relativePathColumn: Int,
-            uri: Uri
+            uri: Uri,
+            mediaItemList: MutableList<MediaItem>
         ): Music {
             // Get values of columns for a given music.
             val id = cursor.getLong(idColumn)
@@ -160,11 +165,12 @@ class Music(
             val music = Music(id, name, duration, size, fileUri, relativePath)
             musicMap[music.id] = music
             val mediaMetaData = MediaMetadata.Builder().setTitle(music.name).build()
-            val mediaItem = androidx.media3.common.MediaItem.Builder()
+            val mediaItem = MediaItem.Builder()
                 .setUri(music.getAbsolutePath())
                 .setMediaMetadata(mediaMetaData)
                 .build()
             music.mediaItem = mediaItem
+            mediaItemList.add(mediaItem)
             return music
         }
 

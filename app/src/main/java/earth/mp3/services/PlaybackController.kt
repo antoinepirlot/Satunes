@@ -251,8 +251,7 @@ class PlaybackController private constructor(
 
     /**
      * Add all music from musicMap to the mediaController in the same order.
-     * If the shuffle mode is true then shuffle the playlist but the first music of the playlist
-     * and the first music to start is musicToPlay.
+     * If the shuffle mode is true then shuffle the playlist
      *
      * @param musicMap the music map to load if null use the musicQueueToPlay instead
      * @param shuffleMode indicate if the playlist has to be started in shuffle mode by default false

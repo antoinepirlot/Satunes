@@ -119,6 +119,7 @@ fun Router(
                             shuffleMode = true
                         )
                     } else {
+                        playbackController.isShuffle.value = false
                         playbackController.switchShuffleMode()
                     }
                     openMedia(navController = navController)

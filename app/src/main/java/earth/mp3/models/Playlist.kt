@@ -53,4 +53,19 @@ class Playlist(
         //No music is playing
         return null
     }
+
+    @Suppress("NAME_SHADOWING")
+    fun getMediaItems(fromIndex: Int, toIndex: Int): List<MediaItem> {
+        val toIndex = if (toIndex > this.mediaItemList.size) this.mediaItemList.size else toIndex
+        val fromIndex = if (fromIndex < 0) 0 else fromIndex
+        if (fromIndex >= toIndex) {
+            throw IllegalArgumentException("The fromIndex has to be lower than toIndex")
+        }
+
+        val toReturn: MutableList<MediaItem> = mutableListOf()
+        for (i: Int in fromIndex..<toIndex) {
+            toReturn.add(this.mediaItemList[i])
+        }
+        return toReturn
+    }
 }

@@ -1,5 +1,6 @@
 package earth.mp3.ui.utils
 
+import androidx.media3.common.MediaItem
 import earth.mp3.models.Folder
 import earth.mp3.models.Media
 import earth.mp3.models.Music
@@ -30,10 +31,10 @@ fun startMusic(mediaToPlay: Media) {
 /**
  * Create the list of all music in the folder and subfolder
  */
-fun getMusicListFromFolder(folder: Folder): SortedMap<Long, Music> {
-    val mapOfMusic: SortedMap<Long, Music> = folder.musicMap
+fun getMusicListFromFolder(folder: Folder): SortedMap<Music, MediaItem> {
+    val mapOfMusic: SortedMap<Music, MediaItem> = folder.musicMapMediaItemSortedMap
     for (subfolder in folder.getSubFolderList().values) {
-        mapOfMusic.putAll(subfolder.musicMap)
+        mapOfMusic.putAll(subfolder.musicMapMediaItemSortedMap)
     }
     return mapOfMusic
 }

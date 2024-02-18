@@ -26,6 +26,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.media3.common.MediaItem
 import earth.mp3.models.Artist
 import earth.mp3.models.Folder
 import earth.mp3.models.Music
@@ -43,7 +44,7 @@ class MainActivity : ComponentActivity() {
         requestPermission()
         if (!isAudioDenied()) {
             setContent {
-                val musicMap = remember { sortedMapOf<Long, Music>() }
+                val musicMediaItemSortedMap = remember { sortedMapOf<Music, MediaItem>() }
                 val rootFolderList = remember { sortedMapOf<Long, Folder>() }
                 val folderMap = remember { sortedMapOf<Long, Folder>() }
                 val artistMap = remember { sortedMapOf<Long, Artist>() }
@@ -53,7 +54,7 @@ class MainActivity : ComponentActivity() {
 
                 Music.loadAllData(
                     context = LocalContext.current,
-                    musicMap = musicMap,
+                    musicMediaItemSortedMap = musicMediaItemSortedMap,
                     rootFolderMap = rootFolderList,
                     folderMap = folderMap,
                     artistMap = artistMap,
@@ -61,7 +62,7 @@ class MainActivity : ComponentActivity() {
 
                 PlaybackController.initInstance(
                     context = LocalContext.current,
-                    musicMap = musicMap
+                    musicMediaItemSortedMap = musicMediaItemSortedMap
                 )
 
                 MP3Theme {
@@ -87,7 +88,7 @@ class MainActivity : ComponentActivity() {
                                     rootFolderMap = rootFolderList,
                                     folderMap = folderMap,
                                     artistMapToShow = artistMap,
-                                    musicMapToShow = musicMap,
+                                    musicMapToShow = musicMediaItemSortedMap,
                                 )
                             }
                         }

@@ -3,6 +3,7 @@ package earth.mp3.router
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.media3.common.MediaItem
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -24,7 +25,7 @@ fun Router(
     startDestination: String,
     rootFolderMap: SortedMap<Long, Folder>,
     artistMapToShow: SortedMap<Long, Artist>,
-    musicMapToShow: SortedMap<Long, Music>,
+    musicMapToShow: SortedMap<Music, MediaItem>,
     folderMap: Map<Long, Folder>,
 ) {
     val navController = rememberNavController()
@@ -61,8 +62,10 @@ fun Router(
             } else {
                 mapToShow.putAll(rootFolderMap)
             }
-            if (folder.musicMap.isNotEmpty()) {
-                mapToShow.putAll(folder.musicMap)
+            if (folder.musicMapMediaItemSortedMap.isNotEmpty()) {
+                musicMapToShow.keys.forEach { music: Music ->
+                    mapToShow[music.id] = music
+                }
             }
 
             MediaListView(
@@ -97,8 +100,8 @@ fun Router(
             MediaListView(
                 mediaMap = musicMapToShow as SortedMap<Long, Media>,
                 openMedia = { clickedMedia: Media ->
-                    if (!playbackController.isLoaded()) {
-                        playbackController.loadMusic(musicMap = musicMapToShow)
+                    if (!playbackController.isLoaded.value) {
+                        playbackController.loadMusic(musicMediaItemSortedMap = musicMapToShow)
                     }
                     openMedia(
                         navController,
@@ -106,8 +109,11 @@ fun Router(
                     )
                 },
                 shuffleMusicAction = {
-                    if (!playbackController.isLoaded()) {
-                        playbackController.loadMusic(musicMap = musicMapToShow, shuffleMode = true)
+                    if (!playbackController.isLoaded.value) {
+                        playbackController.loadMusic(
+                            musicMediaItemSortedMap = musicMapToShow,
+                            shuffleMode = true
+                        )
                     }
                     openMedia(
                         navController,
@@ -153,7 +159,7 @@ private fun openMediaFromFolder(
     when (media) {
         is Music -> {
             val playbackController = PlaybackController.getInstance()
-            playbackController.loadMusic(musicMap = getMusicListFromFolder(media.folder!!))
+            playbackController.loadMusic(musicMediaItemSortedMap = getMusicListFromFolder(media.folder!!))
             openMedia(navController, media)
         }
 
@@ -194,7 +200,8 @@ fun getDestinationOf(media: Media): String {
  * @throws IllegalStateException if there's no music playing
  */
 fun openCurrentMusic(navController: NavHostController) {
-    val musicPlaying = PlaybackController.musicPlaying.value
+    val playbackController: PlaybackController = PlaybackController.getInstance()
+    val musicPlaying = playbackController.musicPlaying.value
         ?: throw IllegalStateException("No music is currently playing, this button can be accessible")
 
     navController.navigate(getDestinationOf(musicPlaying))

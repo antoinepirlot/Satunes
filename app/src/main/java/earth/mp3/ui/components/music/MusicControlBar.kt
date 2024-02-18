@@ -27,7 +27,7 @@ fun MusicControlBar(
 ) {
     val playbackController = PlaybackController.getInstance()
 
-    val isPlaying = rememberSaveable { PlaybackController.isPlaying }
+    val isPlaying = rememberSaveable { playbackController.isPlaying }
 
     val spaceBetweenButtons = 20.dp
     val playPauseButtonSize = 80.dp

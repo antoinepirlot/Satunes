@@ -46,7 +46,7 @@ class Music(
         private var artistNbOfTracksColumn: Int? = null
         private var artistNbOfAlbumsColumn: Int? = null
 
-        private lateinit var musicMap: SortedMap<Long, Music>
+        private lateinit var musicMediaItemSortedMap: SortedMap<Music, MediaItem>
         private lateinit var rootFolderMap: SortedMap<Long, Folder>
         private lateinit var folderMap: SortedMap<Long, Folder>
         private lateinit var artistMap: SortedMap<Long, Artist>
@@ -56,12 +56,12 @@ class Music(
 
         fun loadAllData(
             context: Context,
-            musicMap: SortedMap<Long, Music>,
+            musicMediaItemSortedMap: SortedMap<Music, MediaItem>,
             rootFolderMap: SortedMap<Long, Folder>,
             folderMap: SortedMap<Long, Folder>,
             artistMap: SortedMap<Long, Artist>,
         ) {
-            this.musicMap = musicMap
+            this.musicMediaItemSortedMap = musicMediaItemSortedMap
             this.rootFolderMap = rootFolderMap
             this.folderMap = folderMap
             this.artistMap = artistMap
@@ -98,7 +98,7 @@ class Music(
 
                 while (it.moveToNext()) {
                     val music: Music = loadMusic(cursor = it)
-                    musicMap[music.id] = music
+                    musicMediaItemSortedMap[music] = music.mediaItem
 
                     loadFolders(music = music)
 

@@ -18,7 +18,7 @@ fun PreviousMusicButton(
 ) {
     IconButton(
         modifier = modifier.size(45.dp),
-        onClick = { PlaybackController.getInstance().previous() }
+        onClick = { PlaybackController.getInstance().playPrevious() }
     ) {
         Icon(
             modifier = modifier.size(45.dp),

@@ -12,27 +12,118 @@ import androidx.media3.common.Player
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
 import earth.mp3.models.Music
+import earth.mp3.models.Playlist
 import java.util.SortedMap
 
 class PlaybackController private constructor(
     context: Context,
     sessionToken: SessionToken,
-    musicMap: SortedMap<Long, Music>,
+    musicMediaItemSortedMap: SortedMap<Music, MediaItem>,
 ) {
     private lateinit var mediaController: MediaController
 
-    private var originalMusicQueueToPlay: ArrayDeque<Music> = ArrayDeque()
-    private var musicQueueToPlay: ArrayDeque<Music> = ArrayDeque()
+    private var playlist: Playlist
     private var musicPlayingIndex: Int = DEFAULT_MUSIC_PLAYING_INDEX
     private var isEnded: Boolean = false
-    private var isLoaded: Boolean = DEFAULT_IS_LOADED
+
+    // Mutable var are used in ui, it needs to be recomposed
+    // I use mutable to avoid using function with multiples params like to add listener
+    var musicPlaying: MutableState<Music?> = mutableStateOf(DEFAULT_MUSIC_PLAYING)
+    var isPlaying: MutableState<Boolean> = mutableStateOf(DEFAULT_IS_PLAYING_VALUE)
+    var repeatMode: MutableState<Int> = mutableIntStateOf(DEFAULT_REPEAT_MODE)
+    val isShuffle: MutableState<Boolean>
+    var hasNext: MutableState<Boolean> = mutableStateOf(DEFAULT_HAS_NEXT)
+    var hasPrevious: MutableState<Boolean> = mutableStateOf(DEFAULT_HAS_PREVIOUS)
+    var isLoaded: MutableState<Boolean> = mutableStateOf(DEFAULT_IS_LOADED)
 
     init {
         val controllerFuture = MediaController.Builder(context, sessionToken).buildAsync()
         controllerFuture.addListener({
             this.mediaController = controllerFuture.get()
-            loadMusic(musicMap = musicMap)
         }, ContextCompat.getMainExecutor(context))
+        this.playlist = Playlist(musicMediaItemSortedMap = musicMediaItemSortedMap)
+        this.isShuffle = this.playlist.isShuffle
+    }
+
+    private val listener = object : Player.Listener {
+        override fun onPlaybackStateChanged(playbackState: Int) {
+            super.onPlaybackStateChanged(playbackState)
+            if (playbackState == Player.STATE_ENDED) {
+                isPlaying.value = false
+                isEnded = true
+            }
+        }
+
+        override fun onShuffleModeEnabledChanged(shuffleModeEnabled: Boolean) {
+            switchShuffleMode()
+        }
+
+        override fun onPlayWhenReadyChanged(playWhenReady: Boolean, reason: Int) {
+            super.onPlayWhenReadyChanged(playWhenReady, reason)
+            isPlaying.value = playWhenReady
+        }
+
+        override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
+            super.onMediaItemTransition(mediaItem, reason)
+            if (musicPlaying.value == null) {
+                //Fix issue while loading for the first time
+                return
+            }
+            if (mediaItem != musicPlaying.value!!.mediaItem) {
+                if (reason == Player.MEDIA_ITEM_TRANSITION_REASON_SEEK
+                    || reason == Player.MEDIA_ITEM_TRANSITION_REASON_AUTO
+                ) {
+                    val previousMusic: Music =
+                        if (musicPlayingIndex > 0) playlist.musicList[musicPlayingIndex - 1]
+                        else playlist.musicList.last()
+
+                    if (mediaItem == previousMusic.mediaItem) {
+                        // Previous button has been clicked
+                        when (repeatMode.value) {
+                            Player.REPEAT_MODE_OFF, Player.REPEAT_MODE_ONE -> {
+                                musicPlayingIndex--
+                            }
+
+                            Player.REPEAT_MODE_ALL -> {
+                                if (previousMusic == playlist.musicList.last()) {
+                                    musicPlayingIndex = playlist.musicList.lastIndex
+                                } else {
+                                    musicPlayingIndex--
+                                }
+                            }
+                        }
+                    } else {
+                        // The next button has been clicked
+                        when (repeatMode.value) {
+                            Player.REPEAT_MODE_OFF, Player.REPEAT_MODE_ONE -> {
+                                musicPlayingIndex++
+                            }
+
+                            Player.REPEAT_MODE_ALL -> {
+                                if (musicPlayingIndex + 1 == playlist.musicList.size) {
+                                    musicPlayingIndex = 0
+                                } else {
+                                    musicPlayingIndex++
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            musicPlaying.value = playlist.musicList[musicPlayingIndex]
+            updateHasNext()
+            updateHasPrevious()
+            mediaController.play()
+        }
+    }
+
+
+    private fun updateHasPrevious() {
+        this.hasPrevious.value = musicPlaying.value != this.playlist.musicList.last()
+    }
+
+    private fun updateHasNext() {
+        this.hasNext.value = musicPlaying.value != playlist.musicList.last()
     }
 
     companion object {
@@ -45,15 +136,6 @@ class PlaybackController private constructor(
         const val DEFAULT_HAS_NEXT = false
         const val DEFAULT_HAS_PREVIOUS = false
         const val DEFAULT_IS_LOADED = false
-
-        // Mutable var are used in ui, it needs to be recomposed
-        // I use mutable to avoid using function with multiples params like to add listener
-        var musicPlaying: MutableState<Music?> = mutableStateOf(DEFAULT_MUSIC_PLAYING)
-        var isPlaying: MutableState<Boolean> = mutableStateOf(DEFAULT_IS_PLAYING_VALUE)
-        var repeatMode: MutableState<Int> = mutableIntStateOf(DEFAULT_REPEAT_MODE)
-        var isShuffle: MutableState<Boolean> = mutableStateOf(DEFAULT_IS_SHUFFLE)
-        var hasNext: MutableState<Boolean> = mutableStateOf(DEFAULT_HAS_NEXT)
-        var hasPrevious: MutableState<Boolean> = mutableStateOf(DEFAULT_HAS_PREVIOUS)
 
         private lateinit var instance: PlaybackController
 
@@ -74,7 +156,7 @@ class PlaybackController private constructor(
 
         fun initInstance(
             context: Context,
-            musicMap: SortedMap<Long, Music>
+            musicMediaItemSortedMap: SortedMap<Music, MediaItem>
         ): PlaybackController {
             if (!Companion::instance.isInitialized) {
                 val sessionToken =
@@ -82,347 +164,138 @@ class PlaybackController private constructor(
                 instance = PlaybackController(
                     context = context,
                     sessionToken = sessionToken,
-                    musicMap = musicMap,
+                    musicMediaItemSortedMap = musicMediaItemSortedMap,
                 )
             }
             return getInstance()
         }
     }
 
-    private val listener = object : Player.Listener {
-        override fun onPlaybackStateChanged(playbackState: Int) {
-            super.onPlaybackStateChanged(playbackState)
-            if (playbackState == Player.STATE_ENDED) {
-                isPlaying.value = false
-                isEnded = true
-            }
-        }
-
-        override fun onShuffleModeEnabledChanged(shuffleModeEnabled: Boolean) {
-            if (isShuffle.value) {
-                // Deactivate shuffle mode
-                backToOriginalPlaylist()
-            } else {
-                // Activate shuffle mode
-                shuffle()
-            }
-            isShuffle.value = shuffleModeEnabled
-        }
-
-        override fun onPlayWhenReadyChanged(playWhenReady: Boolean, reason: Int) {
-            super.onPlayWhenReadyChanged(playWhenReady, reason)
-            isPlaying.value = playWhenReady
-        }
-
-        override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
-            super.onMediaItemTransition(mediaItem, reason)
-            if (musicPlaying.value == null) {
-                //Fix issue while loading for the first time
-                return
-            }
-            if (mediaItem != musicPlaying.value!!.mediaItem!!) {
-                if (reason == Player.MEDIA_ITEM_TRANSITION_REASON_SEEK
-                    || reason == Player.MEDIA_ITEM_TRANSITION_REASON_AUTO
-                ) {
-                    val previousMusic: Music =
-                        if (musicPlayingIndex > 0) musicQueueToPlay[musicPlayingIndex - 1]
-                        else musicQueueToPlay.last()
-
-                    if (mediaItem == previousMusic.mediaItem!!) {
-                        // Previous button has been clicked
-                        when (repeatMode.value) {
-                            Player.REPEAT_MODE_OFF, Player.REPEAT_MODE_ONE -> {
-                                musicPlayingIndex--
-                            }
-
-                            Player.REPEAT_MODE_ALL -> {
-                                if (previousMusic == musicQueueToPlay.last()) {
-                                    musicPlayingIndex = musicQueueToPlay.lastIndex
-                                } else {
-                                    musicPlayingIndex--
-                                }
-                            }
-                        }
-                    } else {
-                        // The next button has been clicked
-                        when (repeatMode.value) {
-                            Player.REPEAT_MODE_OFF, Player.REPEAT_MODE_ONE -> {
-                                musicPlayingIndex++
-                            }
-
-                            Player.REPEAT_MODE_ALL -> {
-                                if (musicPlayingIndex + 1 == musicQueueToPlay.size) {
-                                    musicPlayingIndex = 0
-                                } else {
-                                    musicPlayingIndex++
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            musicPlaying.value = musicQueueToPlay[musicPlayingIndex]
-            hasNext.value = hasNext()
-            hasPrevious.value = hasPrevious()
-            mediaController.play()
-        }
-    }
-
-    /**
-     * Start the music in params
-     * If music to play is null, play the first music of the playlist otherwise play the musicToPlay
-     * If the music to play is already the music playing nothing is done.
-     *
-     *
-     * @param musicToPlay the music to play
-     *
-     * @throws IllegalStateException if the music list has not been loaded
-     */
-    @Suppress("NAME_SHADOWING")
     fun start(musicToPlay: Music? = null) {
-        if (this.originalMusicQueueToPlay.isEmpty() || musicQueueToPlay.isEmpty()) {
-            throw IllegalStateException("The music list to play has not been loaded")
+        if (!this.isLoaded.value) {
+            throw IllegalStateException("The playlist has not been loaded, you can't play music")
         }
 
         when (musicToPlay) {
             null -> {
-                // Play the first music of the list
-                musicPlayingIndex = DEFAULT_MUSIC_PLAYING_INDEX
-                musicPlaying.value = musicQueueToPlay[musicPlayingIndex]
+                //Play from the beginning
+                this.musicPlayingIndex = DEFAULT_MUSIC_PLAYING_INDEX
+                this.musicPlaying.value = this.playlist.musicList[musicPlayingIndex]
             }
 
-            musicPlaying.value -> {
-                //The user wants to play the current music, nothing has to be done
+            this.musicPlaying.value -> {
+                // The music playing is the same as the music to play, nothing is done
                 return
             }
 
             else -> {
-                // the user wants to play a specific music
-                for (i: Int in musicQueueToPlay.indices) {
-                    val music = musicQueueToPlay[i]
+                // The music to play has to be played
+                for (i: Int in this.playlist.musicList.indices) {
+                    val music = this.playlist.musicList[i]
                     if (musicToPlay == music) {
-                        musicPlaying.value = music
-                        musicPlayingIndex = i
+                        this.musicPlaying.value = music
+                        this.musicPlayingIndex = i
                         break
                     }
                 }
             }
         }
-        mediaController.seekTo(musicPlayingIndex, 0)
-        mediaController.play()
-        isPlaying.value = true
+
+        this.mediaController.seekTo(this.musicPlayingIndex, 0)
+        this.mediaController.play()
+        this.isPlaying.value = true
     }
 
-    /**
-     * Play music if it is paused otherwise start music
-     */
     fun playPause() {
-        if (isPlaying.value) {
-            mediaController.pause()
+        if (this.isPlaying.value) {
+            this.mediaController.pause()
+            return
         } else {
-            if (isEnded) {
-                start()
-                isEnded = false
+            if (this.isEnded) {
+                this.start()
+                this.isEnded = false
             } else {
-                mediaController.play()
+                this.mediaController.play()
             }
         }
     }
 
-    /**
-     * Play the next music in queue
-     */
-    fun next() {
-        mediaController.seekToNext()
+    fun playNext() {
+        this.mediaController.seekToNext()
     }
 
-    /**
-     * Get the music from queue, increment the music play index and return the music from the queue
-     *
-     * @return the first music of the array deque
-     * @throws NoSuchElementException if the queue is empty
-     */
-    private fun getNextMusic(): Music {
-        musicPlayingIndex++
-        return musicQueueToPlay[musicPlayingIndex]
-    }
-
-    fun hasNext(): Boolean {
-        return musicPlaying.value != musicQueueToPlay.last()
+    fun playPrevious() {
+        mediaController.seekToPrevious()
     }
 
     /**
      * Add all music from musicMap to the mediaController in the same order.
      * If the shuffle mode is true then shuffle the playlist
      *
-     * @param musicMap the music map to load if null use the musicQueueToPlay instead
+     * @param musicMediaItemSortedMap the music map to load if null use the musicQueueToPlay instead
      * @param shuffleMode indicate if the playlist has to be started in shuffle mode by default false
      *
      */
-    fun loadMusic(musicMap: SortedMap<Long, Music>, shuffleMode: Boolean = false) {
-        //TODO stop using sorted map and use arraydeque instead everywhere
-        originalMusicQueueToPlay = ArrayDeque(musicMap.values)
-        musicQueueToPlay = originalMusicQueueToPlay
-        if (shuffleMode) {
-            musicQueueToPlay = ArrayDeque(musicMap.values.shuffled())
-            isShuffle.value = true
-        }
+    fun loadMusic(
+        musicMediaItemSortedMap: SortedMap<Music, MediaItem>,
+        shuffleMode: Boolean = false
+    ) {
         this.mediaController.clearMediaItems()
-        for (i: Int in musicQueueToPlay.indices) {
-            mediaController.addMediaItem(musicQueueToPlay[i].mediaItem)
+        if (shuffleMode) {
+            this.playlist.isShuffle.value = false
+            this.switchShuffleMode()
+        } else {
+            this.mediaController.addMediaItems(musicMediaItemSortedMap.values.toList())
         }
         mediaController.addListener(listener)
         mediaController.prepare()
-        isLoaded = true
+        isLoaded.value = true
     }
 
-    fun isLoaded(): Boolean {
-        return this.isLoaded
+    fun switchShuffleMode() {
+        this.playlist.shuffle(this.musicPlaying.value)
+        if (this.isShuffle.value) {
+            if (this.musicPlaying.value == null) {
+                // No music is playing
+                this.mediaController.clearMediaItems()
+                this.mediaController.addMediaItems(this.playlist.mediaItemList)
+            } else {
+                // A music is playing
+                // Move music playing to the first index and remove other
+                this.mediaController.moveMediaItem(
+                    this.musicPlayingIndex,
+                    DEFAULT_MUSIC_PLAYING_INDEX
+                )
+                this.mediaController.replaceMediaItems(
+                    DEFAULT_MUSIC_PLAYING_INDEX + 1,
+                    this.mediaController.mediaItemCount,
+                    this.playlist.mediaItemList
+                )
+                //Add music in shuffle mode except the music playing
+                val mediaItems: MutableList<MediaItem> = this.playlist.mediaItemList.toMutableList()
+                if (!mediaItems.remove(this.musicPlaying.value!!.mediaItem)) {
+                    throw IllegalStateException("The Music playing is not into the playlist")
+                }
+                this.mediaController.addMediaItems(this.playlist.mediaItemList)
+            }
+        }
+        this.musicPlayingIndex = DEFAULT_MUSIC_PLAYING_INDEX
     }
 
-    /**
-     * Set this class to default values. In other words it clears all
-     */
-    private fun resetToDefault() {
-        mediaController.removeListener(listener)
-        originalMusicQueueToPlay.clear()
-        musicQueueToPlay.clear()
-        mediaController.clearMediaItems()
-        musicPlaying.value = DEFAULT_MUSIC_PLAYING
-        musicPlayingIndex = DEFAULT_MUSIC_PLAYING_INDEX
-        isPlaying.value = DEFAULT_IS_PLAYING_VALUE
-        repeatMode.value = DEFAULT_REPEAT_MODE
-        isShuffle.value = DEFAULT_IS_SHUFFLE
-        hasNext.value = DEFAULT_HAS_NEXT
-        hasPrevious.value = DEFAULT_HAS_PREVIOUS
-        isLoaded = DEFAULT_IS_LOADED
-    }
-
-    /**
-     * Play the previous music in deque
-     */
-    fun previous() {
-        mediaController.seekToPrevious()
-    }
-
-    fun hasPrevious(): Boolean {
-        return musicPlaying.value != musicQueueToPlay.first()
-    }
-
-    /**
-     * Switch the repeat mode when repeat mode is:
-     *      Disabled: switch to repeat all
-     *      Repeat All: switch to repeat one
-     *      else: repeat disabled (when it's repeat one for example)
-     */
     fun switchRepeatMode() {
-        when (repeatMode.value) {
+        when (this.repeatMode.value) {
             Player.REPEAT_MODE_OFF -> {
-                repeatMode.value = Player.REPEAT_MODE_ALL
+                this.repeatMode.value = Player.REPEAT_MODE_ALL
             }
 
             Player.REPEAT_MODE_ALL -> {
-                repeatMode.value = Player.REPEAT_MODE_ONE
+                this.repeatMode.value = Player.REPEAT_MODE_ONE
             }
 
             Player.REPEAT_MODE_ONE -> {
-                repeatMode.value = Player.REPEAT_MODE_OFF
+                this.repeatMode.value = Player.REPEAT_MODE_OFF
             }
         }
-        mediaController.repeatMode = repeatMode.value
-    }
-
-    /**
-     * Mix the playlist from the playing music if activation
-     * Play the original music queue if deactivation
-     */
-    fun switchShuffleMode() {
-        if (isShuffle.value) {
-            // Deactivate shuffle mode
-            backToOriginalPlaylist()
-            isShuffle.value = false
-        } else {
-            // Activate shuffle mode
-            shuffle()
-            isShuffle.value = true
-        }
-    }
-
-    private fun backToOriginalPlaylist() {
-        when (musicPlayingIndex) {
-            0 -> {
-                mediaController.removeMediaItems(1, mediaController.mediaItemCount)
-            }
-
-            musicQueueToPlay.size - 1 -> {
-                mediaController.removeMediaItems(0, mediaController.mediaItemCount - 1)
-            }
-
-            else -> {
-                mediaController.removeMediaItems(
-                    musicPlayingIndex + 1,
-                    mediaController.mediaItemCount
-                )
-                mediaController.removeMediaItems(0, musicPlayingIndex)
-            }
-        }
-        musicQueueToPlay = ArrayDeque(originalMusicQueueToPlay)
-
-        reloadMusicPlaying()
-
-        for (i: Int in 0..<musicQueueToPlay.size) {
-            if (i == musicPlayingIndex) {
-                continue
-            }
-            val mediaItem = musicQueueToPlay[i].mediaItem!!
-            if (i < musicPlayingIndex) {
-                mediaController.addMediaItem(i, mediaItem)
-            } else {
-                mediaController.addMediaItem(mediaItem)
-            }
-        }
-    }
-
-    /**
-     * It search for the music playing in music queue to play and update musicPlayingIndex
-     * and musicPlaying
-     */
-    private fun reloadMusicPlaying() {
-        for (i: Int in 0..<musicQueueToPlay.size) {
-            val music = musicQueueToPlay[i]
-            if (music == musicPlaying.value) {
-                musicPlayingIndex = i
-                musicPlaying.value = music
-                break
-            }
-        }
-    }
-
-
-    /**
-     * Shuffle music
-     */
-    private fun shuffle() {
-        var startIndex = 1
-        if (musicPlaying.value == null) {
-            mediaController.clearMediaItems()
-            startIndex = DEFAULT_MUSIC_PLAYING_INDEX
-        } else {
-            mediaController.moveMediaItem(musicPlayingIndex, DEFAULT_MUSIC_PLAYING_INDEX)
-            mediaController.removeMediaItems(1, mediaController.mediaItemCount)
-            musicQueueToPlay.remove(musicPlaying.value)
-        }
-        musicQueueToPlay.shuffle()
-        if (musicPlaying.value != null) {
-            musicQueueToPlay.addFirst(musicPlaying.value!!)
-        }
-        musicPlayingIndex = DEFAULT_MUSIC_PLAYING_INDEX
-
-        for (i: Int in startIndex..<musicQueueToPlay.size) {
-            val music = musicQueueToPlay[i]
-            val mediaItem = music.mediaItem
-            mediaController.addMediaItem(mediaItem)
-            mediaController.prepare()
-        }
+        this.mediaController.repeatMode = this.repeatMode.value
     }
 }

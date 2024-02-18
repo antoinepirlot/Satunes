@@ -4,7 +4,6 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.media3.common.MediaItem
 import earth.mp3.services.PlaybackController
-import earth.mp3.services.PlaybackControllerToReplace
 import java.util.SortedMap
 
 class Playlist(
@@ -15,7 +14,7 @@ class Playlist(
     var mediaItemList: List<MediaItem>
     var indexMusicPlaying: Int = PlaybackController.DEFAULT_MUSIC_PLAYING_INDEX
     var isShuffle: MutableState<Boolean> =
-        mutableStateOf(PlaybackControllerToReplace.DEFAULT_IS_SHUFFLE)
+        mutableStateOf(PlaybackController.DEFAULT_IS_SHUFFLE)
 
 
     init {

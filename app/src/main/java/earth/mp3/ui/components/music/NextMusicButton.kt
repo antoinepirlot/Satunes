@@ -18,7 +18,7 @@ fun NextMusicButton(
 ) {
     IconButton(
         modifier = modifier.size(45.dp),
-        onClick = { PlaybackController.getInstance().next() }
+        onClick = { PlaybackController.getInstance().playNext() }
     ) {
         Icon(
             modifier = modifier.size(45.dp),

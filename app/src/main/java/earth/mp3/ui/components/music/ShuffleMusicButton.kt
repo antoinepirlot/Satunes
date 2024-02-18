@@ -36,7 +36,7 @@ fun ShuffleMusicButtonPreview() {
 }
 
 private fun getImageVector(): ImageVector {
-    return if (PlaybackController.isShuffle.value) {
+    return if (PlaybackController.getInstance().isShuffle.value) {
         Icons.Filled.ShuffleOn
     } else {
         Icons.Filled.Shuffle

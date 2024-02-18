@@ -27,7 +27,7 @@ fun MediaListView(
     Scaffold(
         modifier = modifier,
         floatingActionButton = {
-            if (PlaybackController.musicPlaying.value != null) {
+            if (PlaybackController.getInstance().musicPlaying.value != null) {
                 ShowCurrentMusicButton(onClick = onFABClick)
             }
         },

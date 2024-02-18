@@ -17,7 +17,7 @@ import earth.mp3.ui.components.music.MusicControlBar
 fun PlayBackView(
     modifier: Modifier = Modifier,
 ) {
-    val musicPlaying = remember { PlaybackController.musicPlaying }
+    val musicPlaying = remember { PlaybackController.getInstance().musicPlaying }
     Column(
         modifier = modifier
     ) {

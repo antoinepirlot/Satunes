@@ -39,7 +39,7 @@ fun RepeatMusicButtonPreview() {
 }
 
 private fun getImageVector(): ImageVector {
-    return when (PlaybackController.repeatMode.value) {
+    return when (PlaybackController.getInstance().repeatMode.value) {
         REPEAT_MODE_ONE -> {
             Icons.Filled.RepeatOneOn
         }

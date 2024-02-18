@@ -1,6 +1,7 @@
 package earth.mp3.models
 
 import androidx.compose.runtime.MutableLongState
+import androidx.media3.common.MediaItem
 import java.util.SortedMap
 
 class Folder(
@@ -8,7 +9,7 @@ class Folder(
     override var name: String,
     var parentFolder: Folder? = null,
     private val subFolderList: SortedMap<Long, Folder> = sortedMapOf(),
-    val musicMap: SortedMap<Long, Music> = sortedMapOf()
+    val musicMapMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
 ) : Media {
 
 
@@ -40,11 +41,11 @@ class Folder(
 
     fun addMusic(musicData: Music) {
         musicData.folder = this
-        this.musicMap[musicData.id] = musicData
+        this.musicMapMediaItemSortedMap[musicData] = musicData.mediaItem
     }
 
     fun removeMusic(musicData: Music) {
-        this.musicMap.remove(musicData.id)
+        this.musicMapMediaItemSortedMap.remove(musicData)
     }
 
     /**
@@ -114,14 +115,14 @@ class Folder(
         if (name != other.name) return false
         if (parentFolder != other.parentFolder) return false
         if (subFolderList != other.subFolderList) return false
-        return musicMap == other.musicMap
+        return musicMapMediaItemSortedMap == other.musicMapMediaItemSortedMap
     }
 
     override fun hashCode(): Int {
         var result = name.hashCode()
         result = 31 * result + (parentFolder?.hashCode() ?: 0)
         result = 31 * result + subFolderList.hashCode()
-        result = 31 * result + musicMap.hashCode()
+        result = 31 * result + musicMapMediaItemSortedMap.hashCode()
         return result
     }
 

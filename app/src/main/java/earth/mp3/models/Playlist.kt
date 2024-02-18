@@ -11,15 +11,14 @@ class Playlist(
 ) {
     private val originalMusicMediaItemMap: SortedMap<Music, MediaItem>
     var musicList: List<Music>
-    var mediaItemList: List<MediaItem>
-    var indexMusicPlaying: Int = PlaybackController.DEFAULT_MUSIC_PLAYING_INDEX
+    var mediaItemList: MutableList<MediaItem>
     var isShuffle: MutableState<Boolean> =
         mutableStateOf(PlaybackController.DEFAULT_IS_SHUFFLE)
 
 
     init {
         this.musicList = musicMediaItemSortedMap.keys.toList()
-        this.mediaItemList = musicMediaItemSortedMap.values.toList()
+        this.mediaItemList = musicMediaItemSortedMap.values.toMutableList()
         this.originalMusicMediaItemMap = musicMediaItemSortedMap.toSortedMap()
     }
 
@@ -34,11 +33,14 @@ class Playlist(
         if (this.isShuffle.value) {
             // Deactivate Shuffle
             this.musicList = this.originalMusicMediaItemMap.keys.toList()
-            this.mediaItemList = this.originalMusicMediaItemMap.values.toList()
+            this.mediaItemList = this.originalMusicMediaItemMap.values.toMutableList()
         } else {
             // Activate Shuffle
             this.musicList = this.musicList.shuffled()
-            this.mediaItemList = this.mediaItemList.shuffled()
+            this.mediaItemList = mutableListOf()
+            this.musicList.forEach { music: Music ->
+                this.mediaItemList.add(music.mediaItem)
+            }
         }
         this.isShuffle.value = !this.isShuffle.value
         if (musicPlaying != null) {

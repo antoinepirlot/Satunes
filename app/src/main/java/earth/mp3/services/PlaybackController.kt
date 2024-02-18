@@ -203,6 +203,8 @@ class PlaybackController private constructor(
 
         this.mediaController.seekTo(this.musicPlayingIndex, 0)
         this.mediaController.play()
+        this.updateHasNext()
+        this.updateHasPrevious()
         this.isPlaying.value = true
     }
 

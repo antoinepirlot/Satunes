@@ -97,8 +97,12 @@ fun Router(
         }
 
         composable(Destination.MUSICS.link) {
+            val mediaMap: SortedMap<Long, Media> = sortedMapOf()
+            musicMapToShow.keys.forEach { music: Music ->
+                mediaMap[music.id] = music
+            }
             MediaListView(
-                mediaMap = musicMapToShow as SortedMap<Long, Media>,
+                mediaMap = mediaMap,
                 openMedia = { clickedMedia: Media ->
                     if (!playbackController.isLoaded.value) {
                         playbackController.loadMusic(musicMediaItemSortedMap = musicMapToShow)
@@ -117,7 +121,7 @@ fun Router(
                     }
                     openMedia(
                         navController,
-                        musicMapToShow.values.first(),
+                        musicMapToShow.keys.first(),
                     )
                 },
                 onFABClick = { openCurrentMusic(navController) }

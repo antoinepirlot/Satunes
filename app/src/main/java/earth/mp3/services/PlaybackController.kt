@@ -326,6 +326,7 @@ class PlaybackController private constructor(
                         )
                     }
                 }
+                //TODO issue while deactivating and reactivating shuffle mode
             }
         }
     }

@@ -118,11 +118,10 @@ fun Router(
                             musicMediaItemSortedMap = musicMapToShow,
                             shuffleMode = true
                         )
+                    } else {
+                        playbackController.switchShuffleMode()
                     }
-                    openMedia(
-                        navController,
-                        musicMapToShow.keys.first(),
-                    )
+                    openMedia(navController = navController)
                 },
                 onFABClick = { openCurrentMusic(navController) }
             )
@@ -147,9 +146,9 @@ fun Router(
  */
 private fun openMedia(
     navController: NavHostController,
-    media: Media
+    media: Media? = null
 ) {
-    if (media is Music) {
+    if (media == null || media is Music) {
         startMusic(media)
     }
     navController.navigate(getDestinationOf(media))
@@ -182,7 +181,7 @@ private fun openMediaFromFolder(
  *
  * @return the media destination link with the media's id
  */
-fun getDestinationOf(media: Media): String {
+fun getDestinationOf(media: Media?): String {
     return when (media) {
         is Folder -> {
             "${Destination.FOLDERS.link}/${media.id}"

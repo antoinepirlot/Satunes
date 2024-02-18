@@ -14,7 +14,7 @@ import java.util.SortedMap
  * @param mediaToPlay the music to play from the music list
  */
 
-fun startMusic(mediaToPlay: Media) {
+fun startMusic(mediaToPlay: Media? = null) {
     val playbackController = PlaybackController.getInstance()
 
     when (mediaToPlay) {
@@ -23,6 +23,10 @@ fun startMusic(mediaToPlay: Media) {
         }
 
         is Folder -> {
+            playbackController.start()
+        }
+
+        null -> {
             playbackController.start()
         }
     }

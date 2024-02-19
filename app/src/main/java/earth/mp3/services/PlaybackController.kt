@@ -238,10 +238,10 @@ class PlaybackController private constructor(
         musicMediaItemSortedMap: SortedMap<Music, MediaItem>,
         shuffleMode: Boolean = false
     ) {
+        this.playlist.isShuffle.value = shuffleMode
         this.mediaController.clearMediaItems()
         if (shuffleMode) {
-            this.playlist.isShuffle.value = false
-            this.switchShuffleMode()
+            this.shuffle()
         } else {
             this.mediaController.addMediaItems(musicMediaItemSortedMap.values.toList())
         }

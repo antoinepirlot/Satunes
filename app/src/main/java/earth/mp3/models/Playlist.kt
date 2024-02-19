@@ -10,23 +10,35 @@ class Playlist(
     musicMediaItemSortedMap: SortedMap<Music, MediaItem>,
 ) {
     private val originalMusicMediaItemMap: SortedMap<Music, MediaItem>
-    var musicList: List<Music>
+    var musicList: MutableList<Music>
     var mediaItemList: MutableList<MediaItem>
     var isShuffle: MutableState<Boolean> =
         mutableStateOf(PlaybackController.DEFAULT_IS_SHUFFLE)
 
 
     init {
-        this.musicList = musicMediaItemSortedMap.keys.toList()
+        this.musicList = musicMediaItemSortedMap.keys.toMutableList()
         this.mediaItemList = musicMediaItemSortedMap.values.toMutableList()
         this.originalMusicMediaItemMap = musicMediaItemSortedMap.toSortedMap()
     }
 
     /**
      * Shuffle the playlist
+     * @param musicIndex the music index of the music to place at the index 0
      */
-    fun shuffle() {
-        this.musicList = this.musicList.shuffled()
+    fun shuffle(musicIndex: Int = -1) {
+        var musicToMove: Music? = null
+        if (musicIndex >= 0) {
+            musicToMove = this.musicList.removeAt(musicIndex)
+        }
+        if (musicToMove != null) {
+            val oldMusicList: MutableList<Music> = this.musicList
+            this.musicList = mutableListOf()
+            this.musicList.add(musicToMove)
+            this.musicList.addAll(oldMusicList.shuffled())
+        } else {
+            this.musicList = this.musicList.shuffled().toMutableList()
+        }
         this.mediaItemList = mutableListOf()
         this.musicList.forEach { music: Music ->
             this.mediaItemList.add(music.mediaItem)
@@ -38,7 +50,7 @@ class Playlist(
      * Undo shuffle, set to the original playlist
      */
     fun undoShuffle() {
-        this.musicList = this.originalMusicMediaItemMap.keys.toList()
+        this.musicList = this.originalMusicMediaItemMap.keys.toMutableList()
         this.mediaItemList = this.originalMusicMediaItemMap.values.toMutableList()
         this.isShuffle.value = false
     }

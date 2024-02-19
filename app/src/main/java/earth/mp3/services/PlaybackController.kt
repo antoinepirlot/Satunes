@@ -265,12 +265,14 @@ class PlaybackController private constructor(
      * the music playing has to take its original place.
      */
     private fun shuffle() {
-        this.playlist.shuffle()
         if (this.musicPlaying.value == null) {
             // No music playing
+            this.playlist.shuffle()
             this.mediaController.clearMediaItems()
             this.mediaController.addMediaItems(this.playlist.mediaItemList)
             return
+        } else {
+            this.playlist.shuffle(musicIndex = this.musicPlayingIndex)
         }
         //A music is playing
         this.mediaController.moveMediaItem(

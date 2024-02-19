@@ -304,16 +304,16 @@ class PlaybackController private constructor(
 
         val oldMusicPlayingIndex = this.musicPlayingIndex
         this.musicPlayingIndex = this.playlist.getMusicIndex(this.musicPlaying.value!!)
-        this.mediaController.moveMediaItem(
-            oldMusicPlayingIndex,
-            this.musicPlayingIndex
-        )
         val lastIndex: Int = this.playlist.lastIndex()
 
         when (this.musicPlayingIndex) {
             DEFAULT_MUSIC_PLAYING_INDEX -> {
                 // Music playing is at the index 0, replace index 1 to last index
                 // The original place is the first
+                this.mediaController.moveMediaItem(
+                    oldMusicPlayingIndex,
+                    DEFAULT_MUSIC_PLAYING_INDEX
+                )
                 val fromIndex: Int = this.musicPlayingIndex + 1
                 this.mediaController.replaceMediaItems(
                     fromIndex,
@@ -324,6 +324,10 @@ class PlaybackController private constructor(
 
             lastIndex -> {
                 // The music is at the last index, replace from index 0 to last index -1
+                this.mediaController.moveMediaItem(
+                    oldMusicPlayingIndex,
+                    this.musicPlayingIndex + 1
+                )
                 this.mediaController.replaceMediaItems(
                     DEFAULT_MUSIC_PLAYING_INDEX,
                     lastIndex,
@@ -336,6 +340,10 @@ class PlaybackController private constructor(
 
             else -> {
                 // Music playing is not at the easy position, replace before music playing and after
+                this.mediaController.moveMediaItem(
+                    oldMusicPlayingIndex,
+                    this.musicPlayingIndex
+                )
                 this.mediaController.replaceMediaItems(
                     0,
                     this.musicPlayingIndex,
@@ -351,7 +359,6 @@ class PlaybackController private constructor(
                 )
             }
         }
-        //TODO issue while deactivating and reactivating shuffle mode
     }
 
     fun switchRepeatMode() {

@@ -299,15 +299,16 @@ class PlaybackController private constructor(
             this.mediaController.addMediaItems(this.playlist.mediaItemList)
             return
         }
+
         this.mediaController.moveMediaItem(
             this.mediaController.currentMediaItemIndex,
             this.musicPlayingIndex
         )
-        val listLastIndex: Int = this.playlist.musicCount()
+        val listLastIndex: Int = this.playlist.musicCount() - 1
 
         when (this.playlist.getMusicIndex(this.musicPlaying.value!!)) {
             DEFAULT_MUSIC_PLAYING_INDEX -> {
-                //First, if music playing is the first, replace others
+                // Music playing is at the index 0, replace index 1 to last index
                 // The original place is the first
                 val fromIndex: Int = DEFAULT_MUSIC_PLAYING_INDEX + 1
                 val toIndex: Int = listLastIndex + 1

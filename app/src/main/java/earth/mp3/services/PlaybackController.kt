@@ -268,8 +268,14 @@ class PlaybackController private constructor(
         }
     }
 
+    /**
+     * Move music playing to the first index and remove other
+     * the music playing has to take its original place.
+     *
+     * @param musicPlayingIndex is the index of the music playing in the playlist
+     *
+     */
     private fun activateShuffleMOde(musicPlayingIndex: Int) {
-        // Move music playing to the first index and remove other the music playing has to take its original place
         this.mediaController.moveMediaItem(
             musicPlayingIndex,
             DEFAULT_MUSIC_PLAYING_INDEX
@@ -287,6 +293,11 @@ class PlaybackController private constructor(
         this.mediaController.addMediaItems(this.playlist.mediaItemList)
     }
 
+    /**
+     * Restore the original playlist
+     *
+     * @param musicPlayingIndex the index of music playing in the playlist
+     */
     private fun disableShuffleMode(musicPlayingIndex: Int) {
         val listLastIndex = this.playlist.musicList.lastIndex
         this.mediaController.moveMediaItem(musicPlayingIndex, this.musicPlayingIndex)

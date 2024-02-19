@@ -54,10 +54,6 @@ class PlaybackController private constructor(
             }
         }
 
-        override fun onShuffleModeEnabledChanged(shuffleModeEnabled: Boolean) {
-            switchShuffleMode()
-        }
-
         override fun onPlayWhenReadyChanged(playWhenReady: Boolean, reason: Int) {
             super.onPlayWhenReadyChanged(playWhenReady, reason)
             isPlaying.value = playWhenReady

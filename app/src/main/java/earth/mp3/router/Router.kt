@@ -115,8 +115,6 @@ fun Router(
                         musicMediaItemSortedMap = musicMapToShow,
                         shuffleMode = true
                     )
-                    playbackController.isShuffle.value = false
-                    playbackController.switchShuffleMode()
                     openMedia(navController = navController)
                 },
                 onFABClick = { openCurrentMusic(navController) }

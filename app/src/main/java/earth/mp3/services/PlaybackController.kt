@@ -305,49 +305,47 @@ class PlaybackController private constructor(
             this.musicPlayingIndex
         )
         val listLastIndex: Int = this.playlist.musicCount() - 1
-
-        when (this.playlist.getMusicIndex(this.musicPlaying.value!!)) {
+        val newMusicPlayingIndex: Int = this.playlist.getMusicIndex(this.musicPlaying.value!!)
+        this.mediaController.moveMediaItem(
+            this.mediaController.currentMediaItemIndex,
+            newMusicPlayingIndex
+        )
+        when (newMusicPlayingIndex) {
             DEFAULT_MUSIC_PLAYING_INDEX -> {
                 // Music playing is at the index 0, replace index 1 to last index
                 // The original place is the first
                 val fromIndex: Int = DEFAULT_MUSIC_PLAYING_INDEX + 1
-                val toIndex: Int = listLastIndex + 1
                 this.mediaController.replaceMediaItems(
                     fromIndex,
-                    toIndex,
-                    this.playlist.getMediaItems(fromIndex = fromIndex, toIndex = toIndex)
+                    listLastIndex + 1,
+                    this.playlist.getMediaItems(fromIndex = fromIndex, toIndex = listLastIndex)
                 )
             }
 
             listLastIndex -> {
-                //Second if the music playing is the last, replace before
-                val fromIndex: Int = DEFAULT_MUSIC_PLAYING_INDEX
-                val toIndex: Int = listLastIndex
+                // The music is at the last index, replace from index 0 to last index -1
                 this.mediaController.replaceMediaItems(
-                    fromIndex,
-                    toIndex,
-                    this.playlist.getMediaItems(fromIndex = fromIndex, toIndex = toIndex)
+                    DEFAULT_MUSIC_PLAYING_INDEX,
+                    listLastIndex,
+                    this.playlist.getMediaItems(fromIndex = DEFAULT_MUSIC_PLAYING_INDEX, toIndex = listLastIndex + 1)
                 )
             }
 
             else -> {
-                // Third, else replace before music playing and after music playing
-                var fromIndex: Int = DEFAULT_MUSIC_PLAYING_INDEX
-                var toIndex: Int = this.musicPlayingIndex
+                // Music playing is not at the easy position, replace before music playing and after
                 this.mediaController.replaceMediaItems(
-                    fromIndex,
-                    toIndex,
-                    this.playlist.getMediaItems(fromIndex = fromIndex, toIndex = toIndex)
+                    0,
+                    newMusicPlayingIndex,
+                    this.playlist.getMediaItems(fromIndex = 0, toIndex = newMusicPlayingIndex - 1)
                 )
-                fromIndex = this.musicPlayingIndex + 1
-                toIndex = listLastIndex + 1
                 this.mediaController.replaceMediaItems(
-                    fromIndex,
-                    toIndex,
-                    this.playlist.getMediaItems(fromIndex = fromIndex, toIndex = toIndex)
+                    newMusicPlayingIndex + 1,
+                    listLastIndex + 1,
+                    this.playlist.getMediaItems(fromIndex = newMusicPlayingIndex + 1, toIndex = listLastIndex - 1)
                 )
             }
         }
+        this.musicPlayingIndex = newMusicPlayingIndex
         //TODO issue while deactivating and reactivating shuffle mode
     }
 

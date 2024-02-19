@@ -90,11 +90,9 @@ class Folder(
      * @return the right Folder matching the last subFolderName of the list
      */
     fun getSubFolder(splitPath: MutableList<String>): Folder? {
-        if (splitPath.isEmpty()) {
-            //The forEach call this function is the folder match with the splited path
-            return this
-        }
-        if (splitPath.size == 1 && this.name == splitPath[0]) {
+        if (splitPath.isEmpty()
+            || (splitPath.size == 1 && this.name == splitPath[0])
+        ) {
             return this
         }
         this.subFolderList.values.forEach { subFolder: Folder ->

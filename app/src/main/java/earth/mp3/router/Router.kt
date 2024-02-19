@@ -57,8 +57,7 @@ fun Router(
 
             if (folderId >= Music.FIRST_FOLDER_INDEX && folderId <= folderMap.size) {
                 folder = folderMap[folderId]!!
-                val mapToAdd = folder.getSubFolderListAsMedia()
-                mapToShow.putAll(mapToAdd)
+                mapToShow.putAll(folder.getSubFolderListAsMedia())
             } else {
                 mapToShow.putAll(rootFolderMap)
             }

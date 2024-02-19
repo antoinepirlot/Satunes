@@ -4,6 +4,7 @@ import android.content.Context
 import android.database.Cursor
 import android.net.Uri
 import android.provider.MediaStore
+import androidx.compose.runtime.MutableLongState
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
@@ -51,7 +52,7 @@ class Music(
         private lateinit var folderMap: SortedMap<Long, Folder>
         private lateinit var artistMap: SortedMap<Long, Artist>
 
-        private var folderId: Long = Music.FIRST_FOLDER_INDEX
+        private var folderId: MutableLongState = mutableLongStateOf(Music.FIRST_FOLDER_INDEX)
 
 
         fun loadAllData(
@@ -160,16 +161,16 @@ class Music(
 
             if (rootFolder == null) {
                 // No root folders in the list
-                rootFolder = Folder(folderId, splitPath[0])
-                folderMap[folderId] = rootFolder!!
-                folderId++
+                rootFolder = Folder(folderId.longValue, splitPath[0])
+                folderMap[folderId.longValue] = rootFolder!!
+                folderId.longValue++
                 rootFolderMap[rootFolder!!.id] = rootFolder!!
             }
 
             splitPath.removeAt(0)
             rootFolder!!.createSubFolders(
                 splitPath.toMutableList(),
-                mutableLongStateOf(folderId),
+                folderId,
                 folderMap
             )
             rootFolder!!.getSubFolder(splitPath.toMutableList())!!.addMusic(music)

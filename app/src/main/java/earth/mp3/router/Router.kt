@@ -104,24 +104,19 @@ fun Router(
             MediaListView(
                 mediaMap = mediaMap,
                 openMedia = { clickedMedia: Media ->
-                    if (!playbackController.isLoaded.value) {
-                        playbackController.loadMusic(musicMediaItemSortedMap = musicMapToShow)
-                    }
+                    playbackController.loadMusic(musicMediaItemSortedMap = musicMapToShow)
                     openMedia(
                         navController,
                         clickedMedia
                     )
                 },
                 shuffleMusicAction = {
-                    if (!playbackController.isLoaded.value) {
-                        playbackController.loadMusic(
-                            musicMediaItemSortedMap = musicMapToShow,
-                            shuffleMode = true
-                        )
-                    } else {
-                        playbackController.isShuffle.value = false
-                        playbackController.switchShuffleMode()
-                    }
+                    playbackController.loadMusic(
+                        musicMediaItemSortedMap = musicMapToShow,
+                        shuffleMode = true
+                    )
+                    playbackController.isShuffle.value = false
+                    playbackController.switchShuffleMode()
                     openMedia(navController = navController)
                 },
                 onFABClick = { openCurrentMusic(navController) }

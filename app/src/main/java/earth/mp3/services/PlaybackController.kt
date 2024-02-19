@@ -280,7 +280,7 @@ class PlaybackController private constructor(
             DEFAULT_MUSIC_PLAYING_INDEX
         )
         val fromIndex: Int = DEFAULT_MUSIC_PLAYING_INDEX + 1
-        val toIndex: Int = this.playlist.musicCount()
+        val toIndex: Int = this.playlist.musicCount() - 1
         this.mediaController.replaceMediaItems(
             fromIndex,
             toIndex,
@@ -302,34 +302,35 @@ class PlaybackController private constructor(
             return
         }
 
+        val oldMusicPlayingIndex = this.musicPlayingIndex
+        this.musicPlayingIndex = this.playlist.getMusicIndex(this.musicPlaying.value!!)
         this.mediaController.moveMediaItem(
-            this.mediaController.currentMediaItemIndex,
+            oldMusicPlayingIndex,
             this.musicPlayingIndex
         )
-        val listLastIndex: Int = this.playlist.musicCount() - 1
-        val newMusicPlayingIndex: Int = this.playlist.getMusicIndex(this.musicPlaying.value!!)
-        this.mediaController.moveMediaItem(
-            this.mediaController.currentMediaItemIndex,
-            newMusicPlayingIndex
-        )
-        when (newMusicPlayingIndex) {
+        val lastIndex: Int = this.playlist.lastIndex()
+
+        when (this.musicPlayingIndex) {
             DEFAULT_MUSIC_PLAYING_INDEX -> {
                 // Music playing is at the index 0, replace index 1 to last index
                 // The original place is the first
-                val fromIndex: Int = DEFAULT_MUSIC_PLAYING_INDEX + 1
+                val fromIndex: Int = this.musicPlayingIndex + 1
                 this.mediaController.replaceMediaItems(
                     fromIndex,
-                    listLastIndex + 1,
-                    this.playlist.getMediaItems(fromIndex = fromIndex, toIndex = listLastIndex)
+                    lastIndex + 1,
+                    this.playlist.getMediaItems(fromIndex = fromIndex, toIndex = lastIndex)
                 )
             }
 
-            listLastIndex -> {
+            lastIndex -> {
                 // The music is at the last index, replace from index 0 to last index -1
                 this.mediaController.replaceMediaItems(
                     DEFAULT_MUSIC_PLAYING_INDEX,
-                    listLastIndex,
-                    this.playlist.getMediaItems(fromIndex = DEFAULT_MUSIC_PLAYING_INDEX, toIndex = listLastIndex + 1)
+                    lastIndex,
+                    this.playlist.getMediaItems(
+                        fromIndex = DEFAULT_MUSIC_PLAYING_INDEX,
+                        toIndex = lastIndex - 1
+                    )
                 )
             }
 
@@ -337,17 +338,19 @@ class PlaybackController private constructor(
                 // Music playing is not at the easy position, replace before music playing and after
                 this.mediaController.replaceMediaItems(
                     0,
-                    newMusicPlayingIndex,
-                    this.playlist.getMediaItems(fromIndex = 0, toIndex = newMusicPlayingIndex - 1)
+                    this.musicPlayingIndex,
+                    this.playlist.getMediaItems(fromIndex = 0, toIndex = this.musicPlayingIndex - 1)
                 )
                 this.mediaController.replaceMediaItems(
-                    newMusicPlayingIndex + 1,
-                    listLastIndex + 1,
-                    this.playlist.getMediaItems(fromIndex = newMusicPlayingIndex + 1, toIndex = listLastIndex - 1)
+                    this.musicPlayingIndex + 1,
+                    lastIndex + 1,
+                    this.playlist.getMediaItems(
+                        fromIndex = this.musicPlayingIndex + 1,
+                        toIndex = lastIndex
+                    )
                 )
             }
         }
-        this.musicPlayingIndex = newMusicPlayingIndex
         //TODO issue while deactivating and reactivating shuffle mode
     }
 

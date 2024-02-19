@@ -27,14 +27,18 @@ class Playlist(
      * @param musicIndex the music index of the music to place at the index 0
      */
     fun shuffle(musicIndex: Int = -1) {
-        var musicToMove: Music? = null
-        if (musicIndex >= 0) {
-            musicToMove = this.musicList.removeAt(musicIndex)
+        if (musicIndex > this.musicList.lastIndex) {
+            throw IllegalArgumentException("The music index is greater than last index of the list")
         }
-        if (musicToMove != null) {
+        var musicMoving: Music? = null
+        if (musicIndex >= 0) {
+            musicMoving = this.musicList.removeAt(musicIndex)
+        }
+
+        if (musicMoving != null) {
             val oldMusicList: MutableList<Music> = this.musicList
             this.musicList = mutableListOf()
-            this.musicList.add(musicToMove)
+            this.musicList.add(musicMoving)
             this.musicList.addAll(oldMusicList.shuffled())
         } else {
             this.musicList = this.musicList.shuffled().toMutableList()
@@ -66,16 +70,20 @@ class Playlist(
         return this.musicList.size
     }
 
+    fun lastIndex(): Int {
+        return this.musicList.lastIndex
+    }
+
     @Suppress("NAME_SHADOWING")
     fun getMediaItems(fromIndex: Int, toIndex: Int): List<MediaItem> {
-        val toIndex = if (toIndex > this.mediaItemList.size) this.mediaItemList.size else toIndex
+        val toIndex = if (toIndex > this.musicList.lastIndex) this.musicList.lastIndex else toIndex
         val fromIndex = if (fromIndex < 0) 0 else fromIndex
-        if (fromIndex >= toIndex) {
+        if (fromIndex > toIndex) {
             throw IllegalArgumentException("The fromIndex has to be lower than toIndex")
         }
 
         val toReturn: MutableList<MediaItem> = mutableListOf()
-        for (i: Int in fromIndex..<toIndex) {
+        for (i: Int in fromIndex..toIndex) {
             toReturn.add(this.mediaItemList[i])
         }
         return toReturn

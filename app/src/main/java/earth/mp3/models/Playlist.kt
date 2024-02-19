@@ -25,7 +25,7 @@ class Playlist(
     /**
      * Shuffle the playlist
      */
-    fun activateShuffle() {
+    fun shuffle() {
         this.musicList = this.musicList.shuffled()
         this.mediaItemList = mutableListOf()
         this.musicList.forEach { music: Music ->

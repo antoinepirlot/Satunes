@@ -282,53 +282,57 @@ class PlaybackController private constructor(
                 this.mediaController.addMediaItems(this.playlist.mediaItemList)
             } else {
                 // Deactivation of shuffle mode, the music playing has to take its original place
-                val listLastIndex = this.playlist.musicList.lastIndex
-                this.mediaController.moveMediaItem(oldMusicPlayingIndex, this.musicPlayingIndex)
-                when (this.musicPlayingIndex) {
-                    DEFAULT_MUSIC_PLAYING_INDEX -> {
-                        //First, if music playing is the first, replace others
-                        // The original place is the first
-                        val fromIndex: Int = this.musicPlayingIndex + 1
-                        val toIndex: Int = listLastIndex
-                        this.mediaController.replaceMediaItems(
-                            fromIndex,
-                            toIndex,
-                            this.playlist.getMediaItems(fromIndex = fromIndex, toIndex = toIndex)
-                        )
-                    }
-
-                    listLastIndex -> {
-                        //Second if the music playing is the last, replace before
-                        val fromIndex: Int = DEFAULT_MUSIC_PLAYING_INDEX
-                        val toIndex: Int = this.musicPlayingIndex
-                        this.mediaController.replaceMediaItems(
-                            fromIndex,
-                            toIndex,
-                            this.playlist.getMediaItems(fromIndex = fromIndex, toIndex = toIndex)
-                        )
-                    }
-
-                    else -> {
-                        // Third, else replace before music playing and after music playing
-                        var fromIndex: Int = DEFAULT_MUSIC_PLAYING_INDEX
-                        var toIndex: Int = this.musicPlayingIndex
-                        this.mediaController.replaceMediaItems(
-                            fromIndex,
-                            toIndex,
-                            this.playlist.getMediaItems(fromIndex = fromIndex, toIndex = toIndex)
-                        )
-                        fromIndex = this.musicPlayingIndex + 1
-                        toIndex = listLastIndex
-                        this.mediaController.replaceMediaItems(
-                            fromIndex,
-                            toIndex,
-                            this.playlist.getMediaItems(fromIndex = fromIndex, toIndex = toIndex)
-                        )
-                    }
-                }
-                //TODO issue while deactivating and reactivating shuffle mode
+                this.disableShuffleMode(oldMusicPlayingIndex = oldMusicPlayingIndex)
             }
         }
+    }
+
+    private fun disableShuffleMode(oldMusicPlayingIndex: Int) {
+        val listLastIndex = this.playlist.musicList.lastIndex
+        this.mediaController.moveMediaItem(oldMusicPlayingIndex, this.musicPlayingIndex)
+        when (this.musicPlayingIndex) {
+            DEFAULT_MUSIC_PLAYING_INDEX -> {
+                //First, if music playing is the first, replace others
+                // The original place is the first
+                val fromIndex: Int = this.musicPlayingIndex + 1
+                val toIndex: Int = listLastIndex
+                this.mediaController.replaceMediaItems(
+                    fromIndex,
+                    toIndex,
+                    this.playlist.getMediaItems(fromIndex = fromIndex, toIndex = toIndex)
+                )
+            }
+
+            listLastIndex -> {
+                //Second if the music playing is the last, replace before
+                val fromIndex: Int = DEFAULT_MUSIC_PLAYING_INDEX
+                val toIndex: Int = this.musicPlayingIndex
+                this.mediaController.replaceMediaItems(
+                    fromIndex,
+                    toIndex,
+                    this.playlist.getMediaItems(fromIndex = fromIndex, toIndex = toIndex)
+                )
+            }
+
+            else -> {
+                // Third, else replace before music playing and after music playing
+                var fromIndex: Int = DEFAULT_MUSIC_PLAYING_INDEX
+                var toIndex: Int = this.musicPlayingIndex
+                this.mediaController.replaceMediaItems(
+                    fromIndex,
+                    toIndex,
+                    this.playlist.getMediaItems(fromIndex = fromIndex, toIndex = toIndex)
+                )
+                fromIndex = this.musicPlayingIndex + 1
+                toIndex = listLastIndex
+                this.mediaController.replaceMediaItems(
+                    fromIndex,
+                    toIndex,
+                    this.playlist.getMediaItems(fromIndex = fromIndex, toIndex = toIndex)
+                )
+            }
+        }
+        //TODO issue while deactivating and reactivating shuffle mode
     }
 
     fun switchRepeatMode() {

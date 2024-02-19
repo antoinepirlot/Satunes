@@ -140,7 +140,6 @@ class Music(
          * Load folders and subfolders (creaate them if not exists) where the music is present
          *
          * @param music the music to add to the folder
-         * @param rootFolderList the list of root folers where to add folders
          */
         private fun loadFolders(
             music: Music,
@@ -173,7 +172,8 @@ class Music(
                 folderId,
                 folderMap
             )
-            rootFolder!!.getSubFolder(splitPath.toMutableList())!!.addMusic(music)
+            val subfolder = rootFolder!!.getSubFolder(splitPath.toMutableList())!!
+            subfolder.addMusic(music)
         }
 
         private fun loadArtists(cursor: Cursor): Artist {

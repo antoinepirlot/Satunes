@@ -294,20 +294,23 @@ class PlaybackController private constructor(
     private fun undoShuffle() {
         this.playlist.undoShuffle()
         if (this.musicPlaying.value == null) {
+            // No music playing
             this.mediaController.clearMediaItems()
             this.mediaController.addMediaItems(this.playlist.mediaItemList)
             return
         }
-
-        this.mediaController.moveMediaItem(musicPlayingIndex, this.musicPlayingIndex)
+        this.mediaController.moveMediaItem(
+            this.mediaController.currentMediaItemIndex,
+            this.musicPlayingIndex
+        )
         val listLastIndex: Int = this.playlist.musicCount()
 
         when (this.playlist.getMusicIndex(this.musicPlaying.value!!)) {
             DEFAULT_MUSIC_PLAYING_INDEX -> {
                 //First, if music playing is the first, replace others
                 // The original place is the first
-                val fromIndex: Int = this.musicPlayingIndex + 1
-                val toIndex: Int = listLastIndex
+                val fromIndex: Int = DEFAULT_MUSIC_PLAYING_INDEX + 1
+                val toIndex: Int = listLastIndex + 1
                 this.mediaController.replaceMediaItems(
                     fromIndex,
                     toIndex,
@@ -318,7 +321,7 @@ class PlaybackController private constructor(
             listLastIndex -> {
                 //Second if the music playing is the last, replace before
                 val fromIndex: Int = DEFAULT_MUSIC_PLAYING_INDEX
-                val toIndex: Int = this.musicPlayingIndex
+                val toIndex: Int = listLastIndex
                 this.mediaController.replaceMediaItems(
                     fromIndex,
                     toIndex,
@@ -336,7 +339,7 @@ class PlaybackController private constructor(
                     this.playlist.getMediaItems(fromIndex = fromIndex, toIndex = toIndex)
                 )
                 fromIndex = this.musicPlayingIndex + 1
-                toIndex = listLastIndex
+                toIndex = listLastIndex + 1
                 this.mediaController.replaceMediaItems(
                     fromIndex,
                     toIndex,

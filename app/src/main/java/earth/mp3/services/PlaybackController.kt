@@ -260,32 +260,36 @@ class PlaybackController private constructor(
         } else {
             if (this.isShuffle.value) {
                 // A music is playing
-                // Move music playing to the first index and remove other
-                this.mediaController.moveMediaItem(
-                    oldMusicPlayingIndex,
-                    DEFAULT_MUSIC_PLAYING_INDEX
-                )
-                this.mediaController.replaceMediaItems(
-                    DEFAULT_MUSIC_PLAYING_INDEX + 1,
-                    this.mediaController.mediaItemCount,
-                    this.playlist.mediaItemList
-                )
-                //Add music in shuffle mode except the music playing
-                val mediaItems: MutableList<MediaItem> = this.playlist.mediaItemList.toMutableList()
-                if (!mediaItems.remove(this.musicPlaying.value!!.mediaItem)) {
-                    throw IllegalStateException("The Music playing is not into the playlist")
-                }
-                this.mediaController.addMediaItems(this.playlist.mediaItemList)
+                this.activateShuffleMOde(musicPlayingIndex = oldMusicPlayingIndex)
             } else {
-                // Deactivation of shuffle mode, the music playing has to take its original place
-                this.disableShuffleMode(oldMusicPlayingIndex = oldMusicPlayingIndex)
+                // Deactivate shuffle mode
+                this.disableShuffleMode(musicPlayingIndex = oldMusicPlayingIndex)
             }
         }
     }
 
-    private fun disableShuffleMode(oldMusicPlayingIndex: Int) {
+    private fun activateShuffleMOde(musicPlayingIndex: Int) {
+        // Move music playing to the first index and remove other the music playing has to take its original place
+        this.mediaController.moveMediaItem(
+            musicPlayingIndex,
+            DEFAULT_MUSIC_PLAYING_INDEX
+        )
+        this.mediaController.replaceMediaItems(
+            DEFAULT_MUSIC_PLAYING_INDEX + 1,
+            this.mediaController.mediaItemCount,
+            this.playlist.mediaItemList
+        )
+        //Add music in shuffle mode except the music playing
+        val mediaItems: MutableList<MediaItem> = this.playlist.mediaItemList.toMutableList()
+        if (!mediaItems.remove(this.musicPlaying.value!!.mediaItem)) {
+            throw IllegalStateException("The Music playing is not into the playlist")
+        }
+        this.mediaController.addMediaItems(this.playlist.mediaItemList)
+    }
+
+    private fun disableShuffleMode(musicPlayingIndex: Int) {
         val listLastIndex = this.playlist.musicList.lastIndex
-        this.mediaController.moveMediaItem(oldMusicPlayingIndex, this.musicPlayingIndex)
+        this.mediaController.moveMediaItem(musicPlayingIndex, this.musicPlayingIndex)
         when (this.musicPlayingIndex) {
             DEFAULT_MUSIC_PLAYING_INDEX -> {
                 //First, if music playing is the first, replace others

@@ -68,38 +68,16 @@ class PlaybackController private constructor(
                 if (reason == Player.MEDIA_ITEM_TRANSITION_REASON_SEEK
                     || reason == Player.MEDIA_ITEM_TRANSITION_REASON_AUTO
                 ) {
-                    val previousMusic: Music = playlist.musicList[musicPlayingIndex - 1]
+                    val previousMusic: Music? =
+                        if (musicPlayingIndex != DEFAULT_MUSIC_PLAYING_INDEX) playlist.musicList[musicPlayingIndex - 1]
+                        else null
 
-                    if (mediaItem == previousMusic.mediaItem) {
+                    if (previousMusic == null || mediaItem != previousMusic.mediaItem) {
                         // Previous button has been clicked
-                        when (repeatMode.value) {
-                            Player.REPEAT_MODE_OFF, Player.REPEAT_MODE_ONE -> {
-                                musicPlayingIndex--
-                            }
-
-                            Player.REPEAT_MODE_ALL -> {
-                                if (previousMusic == playlist.musicList.last()) {
-                                    musicPlayingIndex = playlist.musicList.lastIndex
-                                } else {
-                                    musicPlayingIndex--
-                                }
-                            }
-                        }
+                        next(repeatMode = repeatMode.value)
                     } else {
-                        // The next button has been clicked
-                        when (repeatMode.value) {
-                            Player.REPEAT_MODE_OFF, Player.REPEAT_MODE_ONE -> {
-                                musicPlayingIndex++
-                            }
-
-                            Player.REPEAT_MODE_ALL -> {
-                                if (musicPlayingIndex + 1 == playlist.musicList.size) {
-                                    musicPlayingIndex = 0
-                                } else {
-                                    musicPlayingIndex++
-                                }
-                            }
-                        }
+                        // Previous button has been clicked
+                        previous(repeatMode = repeatMode.value)
                     }
                 }
             }
@@ -107,6 +85,39 @@ class PlaybackController private constructor(
             updateHasNext()
             updateHasPrevious()
             mediaController.play()
+        }
+
+        private fun next(repeatMode: Int) {
+            // The next button has been clicked
+            when (repeatMode) {
+                Player.REPEAT_MODE_OFF, Player.REPEAT_MODE_ONE -> {
+                    musicPlayingIndex++
+                }
+
+                Player.REPEAT_MODE_ALL -> {
+                    if (musicPlayingIndex + 1 == playlist.musicList.size) {
+                        musicPlayingIndex = 0
+                    } else {
+                        musicPlayingIndex++
+                    }
+                }
+            }
+        }
+
+        private fun previous(repeatMode: Int) {
+            when (repeatMode) {
+                Player.REPEAT_MODE_OFF, Player.REPEAT_MODE_ONE -> {
+                    musicPlayingIndex--
+                }
+
+                Player.REPEAT_MODE_ALL -> {
+                    if (musicPlayingIndex == DEFAULT_MUSIC_PLAYING_INDEX) {
+                        musicPlayingIndex = playlist.musicList.lastIndex
+                    } else {
+                        musicPlayingIndex--
+                    }
+                }
+            }
         }
     }
 
@@ -239,17 +250,16 @@ class PlaybackController private constructor(
         musicMediaItemSortedMap: SortedMap<Music, MediaItem>,
         shuffleMode: Boolean = false
     ) {
-        this.isShuffle.value = shuffleMode
         this.mediaController.clearMediaItems()
+        this.playlist = Playlist(musicMediaItemSortedMap = musicMediaItemSortedMap)
         if (shuffleMode) {
             this.shuffle()
         } else {
-            this.playlist = Playlist(musicMediaItemSortedMap = musicMediaItemSortedMap)
-            this.mediaController.clearMediaItems()
             this.mediaController.addMediaItems(this.playlist.mediaItemList)
         }
         mediaController.addListener(listener)
         mediaController.prepare()
+
         isLoaded.value = true
         this.isShuffle.value = shuffleMode
     }

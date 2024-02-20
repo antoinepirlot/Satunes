@@ -31,7 +31,7 @@ class PlaybackController private constructor(
     var musicPlaying: MutableState<Music?> = mutableStateOf(DEFAULT_MUSIC_PLAYING)
     var isPlaying: MutableState<Boolean> = mutableStateOf(DEFAULT_IS_PLAYING_VALUE)
     var repeatMode: MutableState<Int> = mutableIntStateOf(DEFAULT_REPEAT_MODE)
-    val isShuffle: MutableState<Boolean>
+    val isShuffle: MutableState<Boolean> = mutableStateOf(DEFAULT_IS_SHUFFLE)
     var hasNext: MutableState<Boolean> = mutableStateOf(DEFAULT_HAS_NEXT)
     var hasPrevious: MutableState<Boolean> = mutableStateOf(DEFAULT_HAS_PREVIOUS)
     var isLoaded: MutableState<Boolean> = mutableStateOf(DEFAULT_IS_LOADED)
@@ -42,7 +42,6 @@ class PlaybackController private constructor(
             this.mediaController = controllerFuture.get()
         }, ContextCompat.getMainExecutor(context))
         this.playlist = Playlist(musicMediaItemSortedMap = musicMediaItemSortedMap)
-        this.isShuffle = this.playlist.isShuffle
     }
 
     private val listener = object : Player.Listener {
@@ -61,7 +60,7 @@ class PlaybackController private constructor(
 
         override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
             super.onMediaItemTransition(mediaItem, reason)
-            if (musicPlaying.value == null) {
+            if (musicPlaying.value == null || playlist.musicCount() <= 1) {
                 //Fix issue while loading for the first time
                 return
             }
@@ -69,9 +68,7 @@ class PlaybackController private constructor(
                 if (reason == Player.MEDIA_ITEM_TRANSITION_REASON_SEEK
                     || reason == Player.MEDIA_ITEM_TRANSITION_REASON_AUTO
                 ) {
-                    val previousMusic: Music =
-                        if (musicPlayingIndex > 0) playlist.musicList[musicPlayingIndex - 1]
-                        else playlist.musicList.last()
+                    val previousMusic: Music = playlist.musicList[musicPlayingIndex - 1]
 
                     if (mediaItem == previousMusic.mediaItem) {
                         // Previous button has been clicked
@@ -138,8 +135,6 @@ class PlaybackController private constructor(
         /**
          * Return only one instance of MediaController. If there's no instance already created
          * you have to send a context to the constructor otherwise send null.
-         *
-         * @param context a context if no instance exists, null otherwise
          *
          * @return the instance of MediaController
          */
@@ -219,10 +214,16 @@ class PlaybackController private constructor(
     }
 
     fun playNext() {
+        if (playlist.musicCount() <= 1) {
+            return
+        }
         this.mediaController.seekToNext()
     }
 
     fun playPrevious() {
+        if (playlist.musicCount() <= 1) {
+            return
+        }
         mediaController.seekToPrevious()
     }
 
@@ -238,20 +239,27 @@ class PlaybackController private constructor(
         musicMediaItemSortedMap: SortedMap<Music, MediaItem>,
         shuffleMode: Boolean = false
     ) {
-        this.playlist.isShuffle.value = shuffleMode
+        this.isShuffle.value = shuffleMode
         this.mediaController.clearMediaItems()
         if (shuffleMode) {
             this.shuffle()
         } else {
-            this.mediaController.addMediaItems(musicMediaItemSortedMap.values.toList())
+            this.playlist = Playlist(musicMediaItemSortedMap = musicMediaItemSortedMap)
+            this.mediaController.clearMediaItems()
+            this.mediaController.addMediaItems(this.playlist.mediaItemList)
         }
         mediaController.addListener(listener)
         mediaController.prepare()
         isLoaded.value = true
+        this.isShuffle.value = shuffleMode
     }
 
     fun switchShuffleMode() {
-        if (this.isShuffle.value) {
+        this.isShuffle.value = !this.isShuffle.value
+        if (this.playlist.musicCount() <= 1) {
+            return
+        }
+        if (!this.isShuffle.value) {
             // Deactivate shuffle
             this.undoShuffle()
         } else {

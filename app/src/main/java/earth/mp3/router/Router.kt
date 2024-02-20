@@ -81,6 +81,7 @@ fun Router(
         }
 
         composable(Destination.ARTISTS.link) {
+            // TODO this code is never executed why?
             MediaListView(
                 mediaMap = artistMapToShow as SortedMap<Long, Media>,
                 openMedia = { clickedMedia: Media ->

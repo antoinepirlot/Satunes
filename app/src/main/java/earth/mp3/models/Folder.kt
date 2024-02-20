@@ -104,6 +104,17 @@ class Folder(
         return null
     }
 
+    fun getAllMusic(): SortedMap<Music, MediaItem> {
+        val musicMediaSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
+        musicMediaSortedMap.putAll(this.musicMediaItemSortedMap)
+        if (this.subFolderList.isNotEmpty()) {
+            this.subFolderList.forEach { (_, folder: Folder) ->
+                musicMediaSortedMap.putAll(folder.getAllMusic())
+            }
+        }
+        return musicMediaSortedMap
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

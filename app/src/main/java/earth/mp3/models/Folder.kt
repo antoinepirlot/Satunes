@@ -139,14 +139,3 @@ class Folder(
         return this.name
     }
 }
-//if (relativePath.isBlank()) {
-//    return
-//}
-//val splitedPath = relativePath.split("/")
-//val folderName = splitedPath[0]
-//val reducedPath = relativePath.removePrefix("/$folderName")
-//folder.name = folderName
-//if (reducedPath.isNotBlank()) {
-//    folder.subFolder = Folder()
-//    createSubFolders(reducedPath, folder.subFolder!!)
-//}

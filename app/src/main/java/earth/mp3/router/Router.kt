@@ -25,7 +25,7 @@ fun Router(
     startDestination: String,
     rootFolderMap: SortedMap<Long, Folder>,
     artistMapToShow: SortedMap<Long, Artist>,
-    musicMapToShow: SortedMap<Music, MediaItem>,
+    allMusicMediaItemsMap: SortedMap<Music, MediaItem>,
     folderMap: Map<Long, Folder>,
 ) {
     val navController = rememberNavController()
@@ -55,16 +55,19 @@ fun Router(
             var folder: Folder = folderMap[Music.FIRST_FOLDER_INDEX]!!
             mapToShow.clear()
 
+            //Load sub-folders
             if (folderId >= Music.FIRST_FOLDER_INDEX && folderId <= folderMap.size) {
                 folder = folderMap[folderId]!!
                 mapToShow.putAll(folder.getSubFolderListAsMedia())
             } else {
                 mapToShow.putAll(rootFolderMap)
             }
-            if (folder.musicMapMediaItemSortedMap.isNotEmpty()) {
-                musicMapToShow.keys.forEach { music: Music ->
-                    mapToShow[music.id] = music
-                }
+
+            //Load sub-folder's musics
+            val folderMusicMediaItemSortedMap: SortedMap<Music, MediaItem> =
+                folder.musicMediaItemSortedMap
+            folderMusicMediaItemSortedMap.forEach { (music: Music, _) ->
+                mapToShow[music.id] = music
             }
 
             MediaListView(
@@ -97,13 +100,13 @@ fun Router(
 
         composable(Destination.MUSICS.link) {
             val mediaMap: SortedMap<Long, Media> = sortedMapOf()
-            musicMapToShow.keys.forEach { music: Music ->
+            allMusicMediaItemsMap.keys.forEach { music: Music ->
                 mediaMap[music.id] = music
             }
             MediaListView(
                 mediaMap = mediaMap,
                 openMedia = { clickedMedia: Media ->
-                    playbackController.loadMusic(musicMediaItemSortedMap = musicMapToShow)
+                    playbackController.loadMusic(musicMediaItemSortedMap = allMusicMediaItemsMap)
                     openMedia(
                         navController,
                         clickedMedia
@@ -111,7 +114,7 @@ fun Router(
                 },
                 shuffleMusicAction = {
                     playbackController.loadMusic(
-                        musicMediaItemSortedMap = musicMapToShow,
+                        musicMediaItemSortedMap = allMusicMediaItemsMap,
                         shuffleMode = true
                     )
                     openMedia(navController = navController)

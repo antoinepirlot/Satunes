@@ -88,7 +88,7 @@ class MainActivity : ComponentActivity() {
                                     rootFolderMap = rootFolderList,
                                     folderMap = folderMap,
                                     artistMapToShow = artistMap,
-                                    musicMapToShow = musicMediaItemSortedMap,
+                                    allMusicMediaItemsMap = musicMediaItemSortedMap,
                                 )
                             }
                         }

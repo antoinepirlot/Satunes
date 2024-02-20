@@ -9,7 +9,7 @@ class Folder(
     override var name: String,
     var parentFolder: Folder? = null,
     private val subFolderList: SortedMap<Long, Folder> = sortedMapOf(),
-    val musicMapMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
+    val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
 ) : Media {
 
 
@@ -41,11 +41,11 @@ class Folder(
 
     fun addMusic(musicData: Music) {
         musicData.folder = this
-        this.musicMapMediaItemSortedMap[musicData] = musicData.mediaItem
+        this.musicMediaItemSortedMap[musicData] = musicData.mediaItem
     }
 
     fun removeMusic(musicData: Music) {
-        this.musicMapMediaItemSortedMap.remove(musicData)
+        this.musicMediaItemSortedMap.remove(musicData)
     }
 
     /**
@@ -113,14 +113,14 @@ class Folder(
         if (name != other.name) return false
         if (parentFolder != other.parentFolder) return false
         if (subFolderList != other.subFolderList) return false
-        return musicMapMediaItemSortedMap == other.musicMapMediaItemSortedMap
+        return musicMediaItemSortedMap == other.musicMediaItemSortedMap
     }
 
     override fun hashCode(): Int {
         var result = name.hashCode()
         result = 31 * result + (parentFolder?.hashCode() ?: 0)
         result = 31 * result + subFolderList.hashCode()
-        result = 31 * result + musicMapMediaItemSortedMap.hashCode()
+        result = 31 * result + musicMediaItemSortedMap.hashCode()
         return result
     }
 

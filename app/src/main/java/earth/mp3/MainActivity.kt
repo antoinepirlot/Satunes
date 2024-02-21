@@ -47,7 +47,7 @@ class MainActivity : ComponentActivity() {
                 val musicMediaItemSortedMap = remember { sortedMapOf<Music, MediaItem>() }
                 val rootFolderList = remember { sortedMapOf<Long, Folder>() }
                 val folderMap = remember { sortedMapOf<Long, Folder>() }
-                val artistMap = remember { sortedMapOf<Long, Artist>() }
+                val artistMap = remember { sortedMapOf<String, Artist>() }
                 val folderListToShow = remember { mutableStateListOf<Folder>() }
                 val musicMapToShow = remember { mutableStateMapOf<Long, Music>() }
                 val artistListToShow = remember { mutableStateListOf<Artist>() }

@@ -50,7 +50,7 @@ class Music(
         private lateinit var musicMediaItemSortedMap: SortedMap<Music, MediaItem>
         private lateinit var rootFolderMap: SortedMap<Long, Folder>
         private lateinit var folderMap: SortedMap<Long, Folder>
-        private lateinit var artistMap: SortedMap<Long, Artist>
+        private lateinit var artistMap: SortedMap<String, Artist>
 
         private var folderId: MutableLongState = mutableLongStateOf(Music.FIRST_FOLDER_INDEX)
 
@@ -60,7 +60,7 @@ class Music(
             musicMediaItemSortedMap: SortedMap<Music, MediaItem>,
             rootFolderMap: SortedMap<Long, Folder>,
             folderMap: SortedMap<Long, Folder>,
-            artistMap: SortedMap<Long, Artist>,
+            artistMap: SortedMap<String, Artist>,
         ) {
             this.musicMediaItemSortedMap = musicMediaItemSortedMap
             this.rootFolderMap = rootFolderMap
@@ -72,7 +72,9 @@ class Music(
                 MediaStore.Audio.Media.DISPLAY_NAME,
                 MediaStore.Audio.Media.DURATION,
                 MediaStore.Audio.Media.SIZE,
-                MediaStore.Audio.Media.RELATIVE_PATH
+                MediaStore.Audio.Media.RELATIVE_PATH,
+                MediaStore.Audio.Artists._ID,
+                MediaStore.Audio.Artists.ARTIST,
             )
             context.contentResolver.query(URI, projection, null, null)?.use {
                 // Cache music columns indices.
@@ -106,11 +108,9 @@ class Music(
                     if (
                         artistIdColumn != null
                         && artistNameColumn != null
-                        && artistNbOfTracksColumn != null
-                        && artistNbOfAlbumsColumn != null
                     ) {
-                        val artist = loadArtists(cursor = it)
-                        artistMap[artist.id] = artist
+                        val artist = loadArtist(cursor = it)
+                        artistMap.putIfAbsent(artist.name, artist)
                     }
                 }
             }
@@ -176,13 +176,13 @@ class Music(
             subfolder.addMusic(music)
         }
 
-        private fun loadArtists(cursor: Cursor): Artist {
+        private fun loadArtist(cursor: Cursor): Artist {
             // Get values of columns for a given artist.
             val id = cursor.getLong(artistIdColumn!!)
             val name = cursor.getString(artistNameColumn!!)
-            val nbOfTracks = cursor.getInt(artistNbOfTracksColumn!!)
-            val nbOfAlbums = cursor.getInt(artistNbOfAlbumsColumn!!)
-            return Artist(id, name, nbOfTracks, nbOfAlbums)
+//            val nbOfTracks = cursor.getInt(artistNbOfTracksColumn!!)
+//            val nbOfAlbums = cursor.getInt(artistNbOfAlbumsColumn!!)
+            return Artist(id, name)
         }
     }
 }

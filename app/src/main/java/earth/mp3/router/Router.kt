@@ -24,7 +24,7 @@ fun Router(
     modifier: Modifier = Modifier,
     startDestination: String,
     rootFolderMap: SortedMap<Long, Folder>,
-    artistMapToShow: SortedMap<Long, Artist>,
+    artistMapToShow: SortedMap<String, Artist>,
     allMusicMediaItemsMap: SortedMap<Music, MediaItem>,
     folderMap: Map<Long, Folder>,
 ) {

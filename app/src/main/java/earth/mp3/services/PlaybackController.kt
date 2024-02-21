@@ -250,13 +250,12 @@ class PlaybackController private constructor(
         musicMediaItemSortedMap: SortedMap<Music, MediaItem>,
         shuffleMode: Boolean = false
     ) {
-        this.mediaController.clearMediaItems()
         this.playlist = Playlist(musicMediaItemSortedMap = musicMediaItemSortedMap)
         if (shuffleMode) {
-            this.shuffle()
-        } else {
-            this.mediaController.addMediaItems(this.playlist.mediaItemList)
+            this.playlist.shuffle()
         }
+        this.mediaController.clearMediaItems()
+        this.mediaController.addMediaItems(this.playlist.mediaItemList)
         mediaController.addListener(listener)
         mediaController.prepare()
 
@@ -286,13 +285,9 @@ class PlaybackController private constructor(
         if (this.musicPlaying.value == null) {
             // No music playing
             this.playlist.shuffle()
-            this.mediaController.clearMediaItems()
-            this.mediaController.addMediaItems(this.playlist.mediaItemList)
             return
         } else {
             this.playlist.shuffle(musicIndex = this.musicPlayingIndex)
-            this.mediaController.clearMediaItems()
-            this.mediaController.addMediaItems(this.playlist.mediaItemList)
         }
         //A music is playing
         this.mediaController.moveMediaItem(

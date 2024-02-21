@@ -45,7 +45,17 @@ fun Router(
                 openMedia = { clickedMedia: Media ->
                     openMediaFromFolder(navController, clickedMedia)
                 },
-                shuffleMusicAction = { /* TODO */ },
+                shuffleMusicAction = {
+                    val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
+                    rootFolderMap.forEach { _, folder: Folder ->
+                        musicMediaItemSortedMap.putAll(folder.getAllMusic())
+                    }
+                    playbackController.loadMusic(
+                        musicMediaItemSortedMap = musicMediaItemSortedMap,
+                        shuffleMode = true
+                    )
+                    openMedia(navController = navController)
+                },
                 onFABClick = { openCurrentMusic(navController) }
             )
         }
@@ -75,7 +85,13 @@ fun Router(
                 openMedia = { clickedMedia: Media ->
                     openMediaFromFolder(navController, clickedMedia)
                 },
-                shuffleMusicAction = { /* TODO */ },
+                shuffleMusicAction = {
+                    playbackController.loadMusic(
+                        musicMediaItemSortedMap = folder.getAllMusic(),
+                        shuffleMode = true
+                    )
+                    openMedia(navController = navController)
+                },
                 onFABClick = { openCurrentMusic(navController) }
             )
         }

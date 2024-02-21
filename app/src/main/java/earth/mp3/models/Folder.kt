@@ -104,6 +104,17 @@ class Folder(
         return null
     }
 
+    fun getAllMusic(): SortedMap<Music, MediaItem> {
+        val musicMediaSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
+        musicMediaSortedMap.putAll(this.musicMediaItemSortedMap)
+        if (this.subFolderList.isNotEmpty()) {
+            this.subFolderList.forEach { (_, folder: Folder) ->
+                musicMediaSortedMap.putAll(folder.getAllMusic())
+            }
+        }
+        return musicMediaSortedMap
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
@@ -128,14 +139,3 @@ class Folder(
         return this.name
     }
 }
-//if (relativePath.isBlank()) {
-//    return
-//}
-//val splitedPath = relativePath.split("/")
-//val folderName = splitedPath[0]
-//val reducedPath = relativePath.removePrefix("/$folderName")
-//folder.name = folderName
-//if (reducedPath.isNotBlank()) {
-//    folder.subFolder = Folder()
-//    createSubFolders(reducedPath, folder.subFolder!!)
-//}

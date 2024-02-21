@@ -97,7 +97,6 @@ fun Router(
         }
 
         composable(Destination.ARTISTS.link) {
-            // TODO this code is never executed why?
             MediaListView(
                 mediaMap = artistMapToShow as SortedMap<Long, Media>,
                 openMedia = { clickedMedia: Media ->
@@ -111,8 +110,22 @@ fun Router(
             )
         }
 
-        composable("${Destination.ARTISTS.link}/{id}") {
-            // TODO show artist
+        composable("${Destination.ARTISTS.link}/{name}") {
+            val artistName: String = it.arguments!!.getString("name")!!
+            val artist: Artist = artistMapToShow[artistName]!!
+            val musicMap: SortedMap<Long, Music> = sortedMapOf()
+            artist.musicList.forEach { music: Music ->
+                musicMap[music.id] = music
+            }
+            MediaListView(
+                mediaMap = mapToShow,
+                openMedia = { clickedMedia: Media ->
+                    openMediaFromFolder(navController, clickedMedia)
+                },
+                shuffleMusicAction = { /* TODO */
+                },
+                onFABClick = { openCurrentMusic(navController) }
+            )
         }
 
         composable(Destination.MUSICS.link) {
@@ -201,7 +214,7 @@ fun getDestinationOf(media: Media?): String {
         }
 
         is Artist -> {
-            "${Destination.ARTISTS.link}/${media.id}"
+            "${Destination.ARTISTS.link}/${media.name}"
         }
 
         else -> {

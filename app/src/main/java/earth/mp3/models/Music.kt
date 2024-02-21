@@ -91,10 +91,6 @@ class Music(
                 try {
                     artistIdColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Artists._ID)
                     artistNameColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Artists.ARTIST)
-                    artistNbOfTracksColumn =
-                        it.getColumnIndexOrThrow(MediaStore.Audio.Artists.NUMBER_OF_TRACKS)
-                    artistNbOfAlbumsColumn =
-                        it.getColumnIndexOrThrow(MediaStore.Audio.Artists.NUMBER_OF_ALBUMS)
                 } catch (_: IllegalArgumentException) {
 
                 }

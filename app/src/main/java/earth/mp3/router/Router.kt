@@ -118,12 +118,34 @@ fun Router(
             artist.musicList.forEach { music: Music ->
                 musicMap[music.id] = music
             }
+            var artistOpened: Artist? = null
             MediaListView(
                 mediaMap = musicMap,
                 openMedia = { clickedMedia: Media ->
+                    artistOpened = if (clickedMedia is Artist) {
+                        clickedMedia
+                    } else {
+                        null
+                    }
                     openMediaFromFolder(navController, clickedMedia)
                 },
-                shuffleMusicAction = { /* TODO */
+                shuffleMusicAction = {
+                    //Wrong music map loaded if artist opened
+                    if (artistOpened == null) {
+                        //Load all
+                        playbackController.loadMusic(
+                            musicMediaItemSortedMap = allMusicMediaItemsMap
+                        )
+                    } else {
+                        val musicMediaItemMap: SortedMap<Music, MediaItem> = sortedMapOf()
+                        artistOpened!!.musicList.forEach { music: Music ->
+                            musicMediaItemMap[music] = music.mediaItem
+                        }
+                        playbackController.loadMusic(
+                            musicMediaItemSortedMap = musicMediaItemMap
+                        )
+                    }
+                    openMedia(navController = navController)
                 },
                 onFABClick = { openCurrentMusic(navController) }
             )

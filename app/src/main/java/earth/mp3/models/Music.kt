@@ -19,6 +19,7 @@ class Music(
     val uri: Uri,
     val relativePath: String,
     var folder: Folder? = null,
+    var artist: Artist? = null
 ) : Media {
 
     val mediaItem: MediaItem
@@ -109,6 +110,7 @@ class Music(
                         artistMap.putIfAbsent(artist.name, artist)
                         artist = artistMap[artist.name]!! //The id is not the same for all same artists
                         artist.musicList.add(music)
+                        music.artist = artist
                     }
                 }
             }

@@ -32,6 +32,7 @@ import earth.mp3.models.Folder
 import earth.mp3.models.Music
 import earth.mp3.router.Destination
 import earth.mp3.router.Router
+import earth.mp3.services.DataLoader
 import earth.mp3.services.PlaybackController
 import earth.mp3.ui.appBars.MP3BottomAppBar
 import earth.mp3.ui.appBars.MP3TopAppBar
@@ -52,7 +53,7 @@ class MainActivity : ComponentActivity() {
                 val musicMapToShow = remember { mutableStateMapOf<Long, Music>() }
                 val artistListToShow = remember { mutableStateListOf<Artist>() }
 
-                Music.loadAllData(
+                DataLoader.loadAllData(
                     context = LocalContext.current,
                     musicMediaItemSortedMap = musicMediaItemSortedMap,
                     rootFolderMap = rootFolderList,

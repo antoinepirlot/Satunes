@@ -24,7 +24,7 @@ fun Router(
     modifier: Modifier = Modifier,
     startDestination: String,
     rootFolderMap: SortedMap<Long, Folder>,
-    artistMapToShow: SortedMap<String, Artist>,
+    allArtistSortedMap: SortedMap<String, Artist>,
     allMusicMediaItemsMap: SortedMap<Music, MediaItem>,
     folderMap: Map<Long, Folder>,
 ) {
@@ -98,7 +98,7 @@ fun Router(
 
         composable(Destination.ARTISTS.link) {
             MediaListView(
-                mediaMap = artistMapToShow as SortedMap<Long, Media>,
+                mediaMap = allArtistSortedMap as SortedMap<Long, Media>,
                 openMedia = { clickedMedia: Media ->
                     openMedia(
                         navController,
@@ -112,13 +112,13 @@ fun Router(
 
         composable("${Destination.ARTISTS.link}/{name}") {
             val artistName: String = it.arguments!!.getString("name")!!
-            val artist: Artist = artistMapToShow[artistName]!!
-            val musicMap: SortedMap<Long, Music> = sortedMapOf()
+            val artist: Artist = allArtistSortedMap[artistName]!!
+            val musicMap: SortedMap<Long, Media> = sortedMapOf()
             artist.musicList.forEach { music: Music ->
                 musicMap[music.id] = music
             }
             MediaListView(
-                mediaMap = mapToShow,
+                mediaMap = musicMap,
                 openMedia = { clickedMedia: Media ->
                     openMediaFromFolder(navController, clickedMedia)
                 },

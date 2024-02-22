@@ -107,6 +107,7 @@ class Music(
                     ) {
                         val artist = loadArtist(cursor = it)
                         artistMap.putIfAbsent(artist.name, artist)
+                        artist.musicList.add(music)
                     }
                 }
             }

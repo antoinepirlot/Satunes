@@ -105,8 +105,9 @@ class Music(
                         artistIdColumn != null
                         && artistNameColumn != null
                     ) {
-                        val artist = loadArtist(cursor = it)
+                        var artist = loadArtist(cursor = it)
                         artistMap.putIfAbsent(artist.name, artist)
+                        artist = artistMap[artist.name]!! //The id is not the same for all same artists
                         artist.musicList.add(music)
                     }
                 }

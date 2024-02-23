@@ -299,10 +299,10 @@ class PlaybackController private constructor(
         }
         this.mediaController.clearMediaItems()
         this.mediaController.addMediaItems(this.playlist.mediaItemList)
-        mediaController.addListener(listener)
-        mediaController.prepare()
+        this.mediaController.addListener(listener)
+        this.mediaController.prepare()
 
-        isLoaded.value = true
+        this.isLoaded.value = true
         this.isShuffle.value = shuffleMode
     }
 

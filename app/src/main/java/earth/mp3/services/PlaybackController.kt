@@ -281,9 +281,9 @@ class PlaybackController private constructor(
             return
         }
         this.isUpdatingPosition = !DEFAULT_IS_UPDATING_POSITION
-        val maxPosition: Long = this.musicPlaying.value!!.duration
         CoroutineScope(Dispatchers.Main).launch {
             while (isPlaying.value) {
+                val maxPosition: Long = musicPlaying.value!!.duration
                 val newPosition: Long = mediaController.currentPosition
                 currentPositionProgression.floatValue =
                     newPosition.toFloat() / maxPosition.toFloat()

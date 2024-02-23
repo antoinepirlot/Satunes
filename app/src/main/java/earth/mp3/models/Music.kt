@@ -1,20 +1,14 @@
 package earth.mp3.models
 
-import android.content.Context
-import android.database.Cursor
 import android.net.Uri
-import android.provider.MediaStore
-import androidx.compose.runtime.MutableLongState
-import androidx.compose.runtime.mutableLongStateOf
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import earth.mp3.services.PlaybackController
-import java.util.SortedMap
 
 class Music(
     override val id: Long,
     override val name: String,
-    val duration: Int,
+    val duration: Long,
     val size: Int,
     val uri: Uri,
     val relativePath: String,

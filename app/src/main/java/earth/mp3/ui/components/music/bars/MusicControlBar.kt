@@ -2,6 +2,7 @@ package earth.mp3.ui.components.music.bars
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
@@ -37,33 +38,36 @@ fun MusicControlBar(
     val playPauseButtonSize = 80.dp
     val optionButtonSize = 30.dp
 
-    Row(
-        modifier = modifier,
-        horizontalArrangement = horizontalArrangement,
-        verticalAlignment = verticalAlignment
-    ) {
-        ShuffleMusicButton(modifier = Modifier.size(optionButtonSize))
-        Spacer(modifier = Modifier.width(spaceBetweenButtons))
-
-        PreviousMusicButton()
-        Spacer(modifier = Modifier.width(spaceBetweenButtons))
-
-        IconButton(
-            modifier = Modifier.size(playPauseButtonSize),
-            onClick = { playbackController.playPause() }
+    Column {
+        MusicPositionBar()
+        Row(
+            modifier = modifier,
+            horizontalArrangement = horizontalArrangement,
+            verticalAlignment = verticalAlignment
         ) {
-            Icon(
+            ShuffleMusicButton(modifier = Modifier.size(optionButtonSize))
+            Spacer(modifier = Modifier.width(spaceBetweenButtons))
+
+            PreviousMusicButton()
+            Spacer(modifier = Modifier.width(spaceBetweenButtons))
+
+            IconButton(
                 modifier = Modifier.size(playPauseButtonSize),
-                imageVector = if (isPlaying.value) Icons.Filled.PauseCircle else Icons.Filled.PlayCircle,
-                contentDescription = if (isPlaying.value) "Pause" else "Play",
-            )
+                onClick = { playbackController.playPause() }
+            ) {
+                Icon(
+                    modifier = Modifier.size(playPauseButtonSize),
+                    imageVector = if (isPlaying.value) Icons.Filled.PauseCircle else Icons.Filled.PlayCircle,
+                    contentDescription = if (isPlaying.value) "Pause" else "Play",
+                )
+            }
+
+            Spacer(modifier = Modifier.width(spaceBetweenButtons))
+            NextMusicButton()
+
+            Spacer(modifier = Modifier.width(spaceBetweenButtons))
+            RepeatMusicButton(modifier = Modifier.size(optionButtonSize))
         }
-
-        Spacer(modifier = Modifier.width(spaceBetweenButtons))
-        NextMusicButton()
-
-        Spacer(modifier = Modifier.width(spaceBetweenButtons))
-        RepeatMusicButton(modifier = Modifier.size(optionButtonSize))
     }
 }
 

@@ -3,10 +3,10 @@ package earth.mp3.services
 import android.content.ComponentName
 import android.content.Context
 import android.os.Environment
-import androidx.compose.runtime.MutableLongState
+import androidx.compose.runtime.MutableFloatState
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.core.content.ContextCompat
 import androidx.media3.common.MediaItem
@@ -15,6 +15,10 @@ import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
 import earth.mp3.models.Music
 import earth.mp3.models.Playlist
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.util.SortedMap
 
 class PlaybackController private constructor(
@@ -37,7 +41,8 @@ class PlaybackController private constructor(
     var hasNext: MutableState<Boolean> = mutableStateOf(DEFAULT_HAS_NEXT)
     var hasPrevious: MutableState<Boolean> = mutableStateOf(DEFAULT_HAS_PREVIOUS)
     var isLoaded: MutableState<Boolean> = mutableStateOf(DEFAULT_IS_LOADED)
-    var currentPosition: MutableLongState = mutableLongStateOf(DEFAULT_CURRENT_POSITION)
+    var currentPositionProgression: MutableFloatState =
+        mutableFloatStateOf(DEFAULT_CURRENT_POSITION_PROGRESSION)
 
     init {
         val controllerFuture = MediaController.Builder(context, sessionToken).buildAsync()
@@ -67,7 +72,7 @@ class PlaybackController private constructor(
             reason: Int
         ) {
             super.onPositionDiscontinuity(oldPosition, newPosition, reason)
-            currentPosition.longValue = newPosition.positionMs
+            currentPositionProgression.floatValue = newPosition.positionMs.toFloat()
         }
 
         override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
@@ -152,7 +157,7 @@ class PlaybackController private constructor(
         const val DEFAULT_HAS_NEXT = false
         const val DEFAULT_HAS_PREVIOUS = false
         const val DEFAULT_IS_LOADED = false
-        const val DEFAULT_CURRENT_POSITION: Long = 0
+        const val DEFAULT_CURRENT_POSITION_PROGRESSION: Float = 0f
 
         private lateinit var instance: PlaybackController
 
@@ -221,6 +226,9 @@ class PlaybackController private constructor(
         this.updateHasNext()
         this.updateHasPrevious()
         this.isPlaying.value = true
+        this.isEnded = false
+        //Starting updating progression
+        updateCurrentPosition()
     }
 
     fun playPause() {
@@ -233,6 +241,8 @@ class PlaybackController private constructor(
                 this.isEnded = false
             } else {
                 this.mediaController.play()
+                //Starting updating progression
+                updateCurrentPosition()
             }
         }
     }
@@ -253,6 +263,22 @@ class PlaybackController private constructor(
 
     fun seekTo(positionMs: Long) {
         this.mediaController.seekTo(positionMs)
+    }
+
+    private fun updateCurrentPosition() {
+        if (musicPlaying.value == null) {
+            return
+        }
+        val maxPosition: Long = this.musicPlaying.value!!.duration
+        CoroutineScope(Dispatchers.Main).launch {
+            while (isPlaying.value) {
+                val newPosition: Long = mediaController.currentPosition
+                currentPositionProgression.floatValue =
+                    newPosition.toFloat() / maxPosition.toFloat()
+                delay(1000) // Wait one second to avoid refreshing all the time
+            }
+        }
+
     }
 
     /**

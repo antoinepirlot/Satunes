@@ -105,7 +105,7 @@ object DataLoader {
         // Get values of columns for a given music.
         val id = cursor.getLong(musicIdColumn!!)
         val name = cursor.getString(musicNameColumn!!)
-        val duration = cursor.getInt(musicDurationColumn!!)
+        val duration = cursor.getLong(musicDurationColumn!!)
         val size = cursor.getInt(musicSizeColumn!!)
         val relativePath = cursor.getString(relativePathColumn!!)
 

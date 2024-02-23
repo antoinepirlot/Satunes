@@ -272,6 +272,15 @@ class PlaybackController private constructor(
         this.mediaController.seekTo(positionMs)
     }
 
+    fun seekTo(positionPercentage: Float) {
+        if (this.musicPlaying.value == null || !this.isPlaying.value || this.isEnded) {
+            throw IllegalStateException("Impossible to seek while no music is playing")
+        }
+        val maxPosition: Long = this.musicPlaying.value!!.duration
+        val newPosition: Long = (positionPercentage * maxPosition).toLong()
+        this.seekTo(positionMs = newPosition)
+    }
+
     /**
      * Launch a coroutine where the currentPositionProgression is updated every 1 second.
      * If this function is already running, just return by using isUpdatingPosition.

@@ -93,7 +93,7 @@ class PlaybackController private constructor(
                         else null
 
                     if (previousMusic == null || mediaItem != previousMusic.mediaItem) {
-                        // Previous button has been clicked
+                        // Next button has been clicked
                         next(repeatMode = repeatMode.value)
                     } else {
                         // Previous button has been clicked
@@ -105,6 +105,9 @@ class PlaybackController private constructor(
             updateHasNext()
             updateHasPrevious()
             mediaController.play()
+            updateCurrentPosition()
+            isPlaying.value = !DEFAULT_IS_PLAYING_VALUE
+            isEnded = DEFAULT_IS_ENDED
         }
 
         private fun next(repeatMode: Int) {

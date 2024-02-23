@@ -6,8 +6,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.ArrowForward
-import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Folder
+import androidx.compose.material.icons.filled.MusicNote
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -61,7 +61,7 @@ fun CardListPreview() {
 private fun getRightIconAnDescription(media: Media): Pair<ImageVector, String> {
     return when (media) {
         is Folder -> {
-            Icons.Filled.ArrowForward to "Arrow Forward"
+            Icons.Filled.Folder to "Arrow Forward"
         }
 
         is Artist -> {
@@ -70,7 +70,7 @@ private fun getRightIconAnDescription(media: Media): Pair<ImageVector, String> {
 
         else -> {
             // In that case, media is Music
-            Icons.Filled.PlayArrow to "Play Arrow"
+            Icons.Filled.MusicNote to "Play Arrow"
         }
     }
 

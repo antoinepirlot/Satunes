@@ -1,11 +1,9 @@
-@file:JvmName("MediaKt")
-
 package earth.mp3.ui.utils
 
 import java.util.concurrent.TimeUnit
 
 fun getMillisToTimeText(milliseconds: Long): String {
-    var toReturn: String = ""
+    var toReturn = ""
     val hours = TimeUnit.MILLISECONDS.toHours(milliseconds)
     if (hours > 0) {
         toReturn += "$hours:"

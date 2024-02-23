@@ -1,7 +1,9 @@
 package earth.mp3.ui.components.music.bars
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -40,13 +42,22 @@ fun MusicPositionBar(
                 isUpdating = false
             },
         )
-        Row {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
             val maxDuration: Long = musicPlaying!!.duration
-            if (isUpdating) {
-                Text(text = getMillisToTimeText((newPosition * maxDuration).toLong()))
-            } else {
-                Text(text = getMillisToTimeText((currentPosition * maxDuration).toLong()))
-            }
+            Text(
+                text = (
+                        if (isUpdating) getMillisToTimeText((newPosition * maxDuration).toLong())
+                        else getMillisToTimeText((currentPosition * maxDuration).toLong())
+                        ),
+            )
+            Text(
+                text = (
+                        getMillisToTimeText(maxDuration)
+                        ),
+            )
 //            if (isUpdating) {
 //                Text(text = getMillisToTimeText(milliseconds = currentPosition.toLong() * maxDuration))
 //            } else {

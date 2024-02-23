@@ -3,8 +3,10 @@ package earth.mp3.services
 import android.content.ComponentName
 import android.content.Context
 import android.os.Environment
+import androidx.compose.runtime.MutableLongState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.core.content.ContextCompat
 import androidx.media3.common.MediaItem
@@ -35,6 +37,7 @@ class PlaybackController private constructor(
     var hasNext: MutableState<Boolean> = mutableStateOf(DEFAULT_HAS_NEXT)
     var hasPrevious: MutableState<Boolean> = mutableStateOf(DEFAULT_HAS_PREVIOUS)
     var isLoaded: MutableState<Boolean> = mutableStateOf(DEFAULT_IS_LOADED)
+    var currentPosition: MutableLongState = mutableLongStateOf(DEFAULT_CURRENT_POSITION)
 
     init {
         val controllerFuture = MediaController.Builder(context, sessionToken).buildAsync()
@@ -56,6 +59,15 @@ class PlaybackController private constructor(
         override fun onPlayWhenReadyChanged(playWhenReady: Boolean, reason: Int) {
             super.onPlayWhenReadyChanged(playWhenReady, reason)
             isPlaying.value = playWhenReady
+        }
+
+        override fun onPositionDiscontinuity(
+            oldPosition: Player.PositionInfo,
+            newPosition: Player.PositionInfo,
+            reason: Int
+        ) {
+            super.onPositionDiscontinuity(oldPosition, newPosition, reason)
+            currentPosition.longValue = newPosition.positionMs
         }
 
         override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
@@ -140,6 +152,7 @@ class PlaybackController private constructor(
         const val DEFAULT_HAS_NEXT = false
         const val DEFAULT_HAS_PREVIOUS = false
         const val DEFAULT_IS_LOADED = false
+        const val DEFAULT_CURRENT_POSITION: Long = 0
 
         private lateinit var instance: PlaybackController
 
@@ -236,6 +249,10 @@ class PlaybackController private constructor(
             return
         }
         mediaController.seekToPrevious()
+    }
+
+    fun seekTo(positionMs: Long) {
+        this.mediaController.seekTo(positionMs)
     }
 
     /**

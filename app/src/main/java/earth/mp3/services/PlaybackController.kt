@@ -280,14 +280,18 @@ class PlaybackController private constructor(
         if (this.isUpdatingPosition || musicPlaying.value == null) {
             return
         }
-        this.isUpdatingPosition = !DEFAULT_IS_UPDATING_POSITION
         CoroutineScope(Dispatchers.Main).launch {
+            isUpdatingPosition = !DEFAULT_IS_UPDATING_POSITION
             while (isPlaying.value) {
                 val maxPosition: Long = musicPlaying.value!!.duration
                 val newPosition: Long = mediaController.currentPosition
                 currentPositionProgression.floatValue =
                     newPosition.toFloat() / maxPosition.toFloat()
                 delay(1000) // Wait one second to avoid refreshing all the time
+            }
+            if (isEnded) {
+                // It means the music has reached the end of playlist and the music is finished
+                currentPositionProgression.floatValue = 1f
             }
             isUpdatingPosition = DEFAULT_IS_UPDATING_POSITION
         }

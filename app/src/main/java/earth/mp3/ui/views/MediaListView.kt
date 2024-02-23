@@ -11,9 +11,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import earth.mp3.models.Media
 import earth.mp3.models.Music
 import earth.mp3.services.PlaybackController
-import earth.mp3.ui.components.ShowCurrentMusicButton
 import earth.mp3.ui.components.cards.media.MediaCardList
-import earth.mp3.ui.components.music.ShuffleAllButton
+import earth.mp3.ui.components.music.bars.ShowCurrentMusicButton
+import earth.mp3.ui.components.music.buttons.ShuffleAllButton
 import java.util.SortedMap
 
 @Composable

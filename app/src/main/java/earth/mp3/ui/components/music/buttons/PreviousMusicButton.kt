@@ -1,4 +1,4 @@
-package earth.mp3.ui.components.music
+package earth.mp3.ui.components.music.buttons
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.size

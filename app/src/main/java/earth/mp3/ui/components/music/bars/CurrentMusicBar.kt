@@ -1,4 +1,4 @@
-package earth.mp3.ui.components.music
+package earth.mp3.ui.components.music.bars
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween

@@ -1,4 +1,4 @@
-package earth.mp3.ui.components
+package earth.mp3.ui.components.music.bars
 
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons

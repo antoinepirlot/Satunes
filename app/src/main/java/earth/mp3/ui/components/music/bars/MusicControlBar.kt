@@ -1,4 +1,4 @@
-package earth.mp3.ui.components.music
+package earth.mp3.ui.components.music.bars
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
@@ -18,6 +18,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import earth.mp3.services.PlaybackController
+import earth.mp3.ui.components.music.buttons.NextMusicButton
+import earth.mp3.ui.components.music.buttons.PreviousMusicButton
+import earth.mp3.ui.components.music.buttons.RepeatMusicButton
+import earth.mp3.ui.components.music.buttons.ShuffleMusicButton
 
 @Composable
 fun MusicControlBar(

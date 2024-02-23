@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import earth.mp3.services.PlaybackController
-import earth.mp3.ui.components.music.MusicControlBar
+import earth.mp3.ui.components.music.bars.MusicControlBar
 
 @Composable
 fun PlayBackView(

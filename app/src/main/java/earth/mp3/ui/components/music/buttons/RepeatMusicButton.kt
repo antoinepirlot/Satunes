@@ -1,4 +1,4 @@
-package earth.mp3.ui.components.music
+package earth.mp3.ui.components.music.buttons
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Repeat

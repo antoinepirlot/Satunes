@@ -28,24 +28,13 @@ class Folder(
      * @return a list of subfolder and each subfolder is cast to Media object
      */
     fun getSubFolderListAsMedia(): SortedMap<Long, Media> {
+        @Suppress("UNCHECKED_CAST")
         return this.subFolderList as SortedMap<Long, Media>
-    }
-
-    fun addSubFolder(subFolder: Folder) {
-        this.subFolderList[subFolder.id] = subFolder
-    }
-
-    fun removeSubFolder(subFolder: Folder) {
-        this.subFolderList.remove(subFolder.id)
     }
 
     fun addMusic(musicData: Music) {
         musicData.folder = this
         this.musicMediaItemSortedMap[musicData] = musicData.mediaItem
-    }
-
-    fun removeMusic(musicData: Music) {
-        this.musicMediaItemSortedMap.remove(musicData)
     }
 
     /**
@@ -76,7 +65,7 @@ class Folder(
                 subFolder = Folder(folderId.longValue, folderName)
                 folderMap[folderId.longValue] = subFolder
                 folderId.longValue++
-                parentFolder.addSubFolder(subFolder)
+                parentFolder.subFolderList[subFolder.id] = subFolder
             }
             parentFolder = subFolder
         }

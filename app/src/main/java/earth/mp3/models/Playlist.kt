@@ -1,9 +1,6 @@
 package earth.mp3.models
 
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import androidx.media3.common.MediaItem
-import earth.mp3.services.PlaybackController
 import java.util.SortedMap
 
 class Playlist(

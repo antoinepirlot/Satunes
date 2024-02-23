@@ -16,8 +16,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -49,9 +47,6 @@ class MainActivity : ComponentActivity() {
                 val rootFolderList = remember { sortedMapOf<Long, Folder>() }
                 val folderMap = remember { sortedMapOf<Long, Folder>() }
                 val artistMap = remember { sortedMapOf<String, Artist>() }
-                val folderListToShow = remember { mutableStateListOf<Folder>() }
-                val musicMapToShow = remember { mutableStateMapOf<Long, Music>() }
-                val artistListToShow = remember { mutableStateListOf<Artist>() }
 
                 DataLoader.loadAllData(
                     context = LocalContext.current,

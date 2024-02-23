@@ -41,6 +41,7 @@ fun Router(
     ) {
         composable(Destination.FOLDERS.link) {
             // /!\ This route prevent back gesture to exit the app
+            @Suppress("UNCHECKED_CAST")
             MediaListView(
                 mediaMap = rootFolderMap as SortedMap<Long, Media>,
                 openMedia = { clickedMedia: Media ->
@@ -98,6 +99,7 @@ fun Router(
         }
 
         composable(Destination.ARTISTS.link) {
+            @Suppress("UNCHECKED_CAST")
             MediaListView(
                 mediaMap = allArtistSortedMap as SortedMap<Long, Media>,
                 openMedia = { clickedMedia: Media ->

@@ -30,7 +30,9 @@ class PlaybackController private constructor(
 
     private var playlist: Playlist
     private var musicPlayingIndex: Int = DEFAULT_MUSIC_PLAYING_INDEX
-    private var isEnded: Boolean = false
+    private var isEnded: Boolean = DEFAULT_IS_ENDED
+    private var isUpdatingPosition: Boolean = DEFAULT_IS_UPDATING_POSITION
+
 
     // Mutable var are used in ui, it needs to be recomposed
     // I use mutable to avoid using function with multiples params like to add listener
@@ -148,15 +150,20 @@ class PlaybackController private constructor(
     }
 
     companion object {
+
+        private const val DEFAULT_MUSIC_PLAYING_INDEX: Int = 0
+        private const val DEFAULT_IS_UPDATING_POSITION: Boolean = false
+        private const val DEFAULT_IS_ENDED: Boolean = false
+
         val ROOT_PATH: String = Environment.getExternalStorageDirectory().path
         val DEFAULT_MUSIC_PLAYING = null
-        const val DEFAULT_MUSIC_PLAYING_INDEX = 0
-        const val DEFAULT_IS_PLAYING_VALUE = false
-        const val DEFAULT_REPEAT_MODE = Player.REPEAT_MODE_OFF
-        const val DEFAULT_IS_SHUFFLE = false
-        const val DEFAULT_HAS_NEXT = false
-        const val DEFAULT_HAS_PREVIOUS = false
-        const val DEFAULT_IS_LOADED = false
+
+        const val DEFAULT_IS_PLAYING_VALUE: Boolean = false
+        const val DEFAULT_REPEAT_MODE: Int = Player.REPEAT_MODE_OFF
+        const val DEFAULT_IS_SHUFFLE: Boolean = false
+        const val DEFAULT_HAS_NEXT: Boolean = false
+        const val DEFAULT_HAS_PREVIOUS: Boolean = false
+        const val DEFAULT_IS_LOADED: Boolean = false
         const val DEFAULT_CURRENT_POSITION_PROGRESSION: Float = 0f
 
         private lateinit var instance: PlaybackController
@@ -265,10 +272,15 @@ class PlaybackController private constructor(
         this.mediaController.seekTo(positionMs)
     }
 
+    /**
+     * Launch a coroutine where the currentPositionProgression is updated every 1 second.
+     * If this function is already running, just return by using isUpdatingPosition.
+     */
     private fun updateCurrentPosition() {
-        if (musicPlaying.value == null) {
+        if (this.isUpdatingPosition || musicPlaying.value == null) {
             return
         }
+        this.isUpdatingPosition = !DEFAULT_IS_UPDATING_POSITION
         val maxPosition: Long = this.musicPlaying.value!!.duration
         CoroutineScope(Dispatchers.Main).launch {
             while (isPlaying.value) {
@@ -277,8 +289,8 @@ class PlaybackController private constructor(
                     newPosition.toFloat() / maxPosition.toFloat()
                 delay(1000) // Wait one second to avoid refreshing all the time
             }
+            isUpdatingPosition = DEFAULT_IS_UPDATING_POSITION
         }
-
     }
 
     /**

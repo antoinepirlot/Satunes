@@ -25,20 +25,19 @@ fun MusicPositionBar(
 ) {
     val playbackController = PlaybackController.getInstance()
     val musicPlaying by remember { playbackController.musicPlaying }
-    var newPosition by rememberSaveable { mutableFloatStateOf(playbackController.currentPositionProgression.floatValue) }
-    val currentPosition by rememberSaveable { playbackController.currentPositionProgression }
+    var newPositionPercentage by rememberSaveable { mutableFloatStateOf(playbackController.currentPositionProgression.floatValue) }
+    val currentPositionPercentage by rememberSaveable { playbackController.currentPositionProgression }
     var isUpdating by rememberSaveable { mutableStateOf(false) }
 
     Column(modifier = modifier) {
         Slider(
-            //modifier = modifier.fillMaxWidth(),
-            value = if (isUpdating) newPosition else currentPosition,
+            value = if (isUpdating) newPositionPercentage else currentPositionPercentage,
             onValueChange = {
                 isUpdating = true
-                newPosition = it
+                newPositionPercentage = it
             },
             onValueChangeFinished = {
-                playbackController.seekTo(positionPercentage = newPosition)
+                playbackController.seekTo(positionPercentage = newPositionPercentage)
                 isUpdating = false
             },
         )
@@ -49,8 +48,8 @@ fun MusicPositionBar(
             val maxDuration: Long = musicPlaying!!.duration
             Text(
                 text = (
-                        if (isUpdating) getMillisToTimeText((newPosition * maxDuration).toLong())
-                        else getMillisToTimeText((currentPosition * maxDuration).toLong())
+                        if (isUpdating) getMillisToTimeText((newPositionPercentage * maxDuration).toLong())
+                        else getMillisToTimeText((currentPositionPercentage * maxDuration).toLong())
                         ),
             )
             Text(
@@ -58,15 +57,6 @@ fun MusicPositionBar(
                         getMillisToTimeText(maxDuration)
                         ),
             )
-//            if (isUpdating) {
-//                Text(text = getMillisToTimeText(milliseconds = currentPosition.toLong() * maxDuration))
-//            } else {
-//                Text(text = getMillisToTimeText(milliseconds = currentPosition.toLong() * maxDuration))
-//            }
-//            Text(
-//                text = getMillisToTimeText(milliseconds = musicPlaying!!.duration),
-//                textAlign = TextAlign.Right
-//            )
         }
     }
 

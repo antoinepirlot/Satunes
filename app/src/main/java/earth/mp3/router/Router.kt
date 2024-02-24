@@ -12,7 +12,6 @@ import earth.mp3.models.Artist
 import earth.mp3.models.Folder
 import earth.mp3.models.Media
 import earth.mp3.models.Music
-import earth.mp3.services.DataLoader
 import earth.mp3.services.PlaybackController
 import earth.mp3.ui.utils.getMusicListFromFolder
 import earth.mp3.ui.utils.startMusic
@@ -64,16 +63,10 @@ fun Router(
 
         composable("${Destination.FOLDERS.link}/{id}") {
             val folderId = it.arguments!!.getString("id")!!.toLong()
-            var folder: Folder = folderMap[DataLoader.FIRST_FOLDER_INDEX]!!
+            val folder: Folder = folderMap[folderId]!!
             mapToShow.clear()
-
             //Load sub-folders
-            if (folderId >= DataLoader.FIRST_FOLDER_INDEX && folderId <= folderMap.size) {
-                folder = folderMap[folderId]!!
-                mapToShow.putAll(folder.getSubFolderListAsMedia())
-            } else {
-                mapToShow.putAll(rootFolderMap)
-            }
+            mapToShow.putAll(folder.getSubFolderListAsMedia())
 
             //Load sub-folder's musics
             val folderMusicMediaItemSortedMap: SortedMap<Music, MediaItem> =

@@ -66,6 +66,10 @@ class PlaybackController private constructor(
         override fun onPlayWhenReadyChanged(playWhenReady: Boolean, reason: Int) {
             super.onPlayWhenReadyChanged(playWhenReady, reason)
             isPlaying.value = playWhenReady
+            if (playWhenReady) {
+                isEnded = DEFAULT_IS_ENDED
+                updateCurrentPosition()
+            }
         }
 
         override fun onPositionDiscontinuity(
@@ -105,7 +109,6 @@ class PlaybackController private constructor(
             updateHasNext()
             updateHasPrevious()
             mediaController.play()
-            updateCurrentPosition()
             isPlaying.value = !DEFAULT_IS_PLAYING_VALUE
             isEnded = DEFAULT_IS_ENDED
         }
@@ -236,10 +239,6 @@ class PlaybackController private constructor(
         this.mediaController.play()
         this.updateHasNext()
         this.updateHasPrevious()
-        this.isPlaying.value = true
-        this.isEnded = false
-        //Starting updating progression
-        updateCurrentPosition()
     }
 
     fun playPause() {
@@ -252,8 +251,6 @@ class PlaybackController private constructor(
                 this.isEnded = false
             } else {
                 this.mediaController.play()
-                //Starting updating progression
-                updateCurrentPosition()
             }
         }
     }

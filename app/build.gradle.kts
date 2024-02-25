@@ -3,8 +3,10 @@ plugins {
     id("org.jetbrains.kotlin.android")
 }
 
+val nameSpace: String = "earth.mp3player"
+
 android {
-    namespace = "earth.mp3"
+    namespace = nameSpace
     compileSdk = 34
 
     androidResources {
@@ -13,7 +15,7 @@ android {
 
 
     defaultConfig {
-        applicationId = "earth.mp3"
+        applicationId = nameSpace
         minSdk = 34
         targetSdk = 34
         versionCode = 1

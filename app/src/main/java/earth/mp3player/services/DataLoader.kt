@@ -32,6 +32,7 @@ import android.provider.MediaStore
 import androidx.compose.runtime.MutableLongState
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.media3.common.MediaItem
+import earth.mp3player.models.Album
 import earth.mp3player.models.Artist
 import earth.mp3player.models.Folder
 import earth.mp3player.models.Music
@@ -41,11 +42,18 @@ object DataLoader {
     const val FIRST_FOLDER_INDEX: Long = 1
     private val URI = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
 
+    // Music variables
     private var musicIdColumn: Int? = null
     private var musicNameColumn: Int? = null
     private var musicDurationColumn: Int? = null
     private var musicSizeColumn: Int? = null
     private var relativePathColumn: Int? = null
+
+    // Albums variables
+    private var albumIdColumn: Int? = null
+    private var albumName: Int? = null
+
+    // Artists variables
     private var artistIdColumn: Int? = null
     private var artistNameColumn: Int? = null
     private var artistNbOfTracksColumn: Int? = null
@@ -65,6 +73,7 @@ object DataLoader {
         rootFolderMap: SortedMap<Long, Folder>,
         folderMap: SortedMap<Long, Folder>,
         artistMap: SortedMap<String, Artist>,
+        albumMap: SortedMap<Long, Album>
     ) {
         this.musicMediaItemSortedMap = musicMediaItemSortedMap
         this.rootFolderMap = rootFolderMap
@@ -77,6 +86,8 @@ object DataLoader {
             MediaStore.Audio.Media.DURATION,
             MediaStore.Audio.Media.SIZE,
             MediaStore.Audio.Media.RELATIVE_PATH,
+            MediaStore.Audio.Albums.ALBUM_ID,
+            MediaStore.Audio.Albums.ALBUM,
             MediaStore.Audio.Artists._ID,
             MediaStore.Audio.Artists.ARTIST,
         )
@@ -90,6 +101,14 @@ object DataLoader {
             musicSizeColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE)
             relativePathColumn =
                 it.getColumnIndexOrThrow(MediaStore.Audio.Media.RELATIVE_PATH)
+
+            //Cache album columns indices
+            try {
+                albumIdColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Albums.ALBUM_ID)
+                albumName = it.getColumnIndexOrThrow(MediaStore.Audio.Albums.ALBUM)
+            } catch (_: IllegalArgumentException) {
+
+            }
 
             // Cache artist columns indices.
             try {
@@ -105,15 +124,26 @@ object DataLoader {
 
                 loadFolders(music = music)
 
-                if (
-                    artistIdColumn != null
-                    && artistNameColumn != null
-                ) {
+                var artist: Artist? = null
+                var album: Album? = null
+
+                if (albumIdColumn != null && albumIdColumn != null) {
+                    album = loadAlbum(cursor = it)
+                    albumMap[album.id] = album
+                    music.album = album
+                }
+
+                if (artistIdColumn != null && artistNameColumn != null) {
                     var artist = loadArtist(cursor = it)
                     artistMap.putIfAbsent(artist.name, artist)
                     artist = artistMap[artist.name]!! //The id is not the same for all same artists
                     artist.musicList.add(music)
                     music.artist = artist
+                }
+
+                if (artist != null && album != null) {
+                    artist.addAlbum(album)
+                    album.artist = artist
                 }
             }
         }
@@ -177,6 +207,12 @@ object DataLoader {
         )
         val subfolder = rootFolder!!.getSubFolder(splitPath.toMutableList())!!
         subfolder.addMusic(music)
+    }
+
+    private fun loadAlbum(cursor: Cursor): Album {
+        val id: Long = cursor.getLong(albumIdColumn!!)
+        val name = cursor.getString(albumName!!)
+        return Album(id = id, name = name)
     }
 
     private fun loadArtist(cursor: Cursor): Artist {

@@ -25,15 +25,20 @@
 
 package earth.mp3player.models
 
+import java.util.SortedMap
+
 class Artist(
     override val id: Long,
     override var name: String,
     val numberOfTracks: Int = 0,
     val numberOfAlbums: Int = 0,
     val musicList: MutableList<Music> = mutableListOf(),
-    //val albumList: MutableList<Album> = mutableListOf()
+    val albumSortedMap: SortedMap<String, Album> = sortedMapOf()
 ) : Media {
 
+    fun addAlbum(album: Album) {
+        this.albumSortedMap.putIfAbsent(album.name, album)
+    }
 
     override fun toString(): String {
         return this.name

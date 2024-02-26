@@ -11,7 +11,7 @@
  *
  *  You should have received a copy of the GNU General Public License along with MP3 Player.
  *  If not, see <https://www.gnu.org/licenses/>.
-
+ *
  *  ***** INFORMATIONS ABOUT THE AUTHOR *****
  *  The author of this file is Antoine Pirlot, the owner of this project.
  *  You find this original project on github.
@@ -20,46 +20,24 @@
  *  This current project's link is: https://github.com/antoinepirlot/MP3-Player
  *
  *  You can contact me via my email: pirlot.antoine@outlook.com
- * PS: I don't answer quickly.
+ *  PS: I don't answer quickly.
  */
 
 package earth.mp3player.models
 
-import android.media.MediaMetadataRetriever
 import android.net.Uri
 import androidx.media3.common.MediaItem
-import androidx.media3.common.MediaMetadata
-import earth.mp3player.services.PlaybackController
+import java.util.SortedMap
 
-class Music(
+/**
+ * @author Antoine Pirlot on 26-02-24
+ */
+class Album(
     override val id: Long,
     override val name: String,
-    val duration: Long,
-    val size: Int,
-    val uri: Uri,
-    val relativePath: String,
-    var folder: Folder? = null,
     var artist: Artist? = null,
-    var album: Album? = null,
+    val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf(),
+    var albumArtWorkUri: Uri = Uri.EMPTY,
 ) : Media {
 
-    val mediaItem: MediaItem
-    val absolutePath: String = "${PlaybackController.ROOT_PATH}/$relativePath/$name"
-    val mediaMetadata: MediaMetadata
-    val mediaMetadataRetriever: MediaMetadataRetriever
-
-    init {
-        this.mediaItem = MediaItem.Builder()
-            .setUri(this.absolutePath)
-            .build()
-
-        this.mediaMetadata = this.mediaItem.mediaMetadata
-        this.mediaMetadataRetriever = MediaMetadataRetriever()
-        this.mediaMetadataRetriever.embeddedPicture
-
-        val albumId: String = ""/* Get album ID from your data source */;
-
-        val artworkUri: Uri = Uri.parse("content://media/external/audio/albumart/" + albumId);
-
-    }
 }

@@ -36,6 +36,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import earth.mp3player.services.PlaybackController
+import earth.mp3player.ui.components.music.AlbumArtwork
 import earth.mp3player.ui.components.music.bars.MusicControlBar
 
 @Composable
@@ -46,6 +47,7 @@ fun PlayBackView(
     Column(
         modifier = modifier
     ) {
+        AlbumArtwork()
         Text(text = musicPlaying.value!!.name)
         MusicControlBar(
             modifier = modifier

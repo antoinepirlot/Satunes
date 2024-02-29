@@ -51,7 +51,7 @@ object DataLoader {
 
     // Albums variables
     private var albumIdColumn: Int? = null
-    private var albumName: Int? = null
+    private var albumNameColumn: Int? = null
 
     // Artists variables
     private var artistIdColumn: Int? = null
@@ -105,7 +105,7 @@ object DataLoader {
             //Cache album columns indices
             try {
                 albumIdColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Albums.ALBUM_ID)
-                albumName = it.getColumnIndexOrThrow(MediaStore.Audio.Albums.ALBUM)
+                albumNameColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Albums.ALBUM)
             } catch (_: IllegalArgumentException) {
 
             }
@@ -211,7 +211,7 @@ object DataLoader {
 
     private fun loadAlbum(cursor: Cursor): Album {
         val id: Long = cursor.getLong(albumIdColumn!!)
-        val name = cursor.getString(albumName!!)
+        val name = cursor.getString(albumNameColumn!!)
         return Album(id = id, name = name)
     }
 

@@ -2,6 +2,7 @@ package earth.mp3player.ui.components.music
 
 import android.net.Uri
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -15,14 +16,18 @@ import earth.mp3player.services.PlaybackController
 fun AlbumArtwork(
     modifier: Modifier = Modifier
 ) {
-    val playbackController: PlaybackController = PlaybackController.getInstance()
-    val musicPlaying by remember { playbackController.musicPlaying }
+    val musicPlaying by remember { PlaybackController.getInstance().musicPlaying }
 
     if (musicPlaying!!.album == null || musicPlaying!!.album!!.albumArtWorkUri == Uri.EMPTY) {
-        Image(
-            painter = painterResource(id = R.mipmap.empty_album_artwork_foreground),
-            contentDescription = "Default Album Artwork"
-        )
+        Box(
+            modifier = modifier,
+        ) {
+            Image(
+                modifier = modifier,
+                painter = painterResource(id = R.mipmap.empty_album_artwork_foreground),
+                contentDescription = "Default Album Artwork"
+            )
+        }
     }
 }
 

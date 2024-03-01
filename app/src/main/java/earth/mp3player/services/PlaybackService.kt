@@ -35,7 +35,9 @@ import androidx.media3.session.MediaSessionService
 
 class PlaybackService : MediaSessionService() {
 
-    private var mediaSession: MediaSession? = null
+    companion object {
+        var mediaSession: MediaSession? = null
+    }
 
     @OptIn(UnstableApi::class)
     override fun onCreate() {

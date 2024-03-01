@@ -45,21 +45,11 @@ class Music(
 
     val mediaItem: MediaItem
     val absolutePath: String = "${PlaybackController.ROOT_PATH}/$relativePath/$name"
-    val mediaMetadata: MediaMetadata
-    val mediaMetadataRetriever: MediaMetadataRetriever
+    var artwork: ByteArray? = null
 
     init {
         this.mediaItem = MediaItem.Builder()
             .setUri(this.absolutePath)
             .build()
-
-        this.mediaMetadata = this.mediaItem.mediaMetadata
-        this.mediaMetadataRetriever = MediaMetadataRetriever()
-        this.mediaMetadataRetriever.embeddedPicture
-
-        val albumId: String = ""/* Get album ID from your data source */;
-
-        val artworkUri: Uri = Uri.parse("content://media/external/audio/albumart/" + albumId);
-
     }
 }

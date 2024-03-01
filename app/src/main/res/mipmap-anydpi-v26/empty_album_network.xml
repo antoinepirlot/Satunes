@@ -25,6 +25,6 @@
   -->
 
 <adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
-    <background android:drawable="@drawable/empty_album_network_background" />
+    <background android:drawable="@drawable/empty_album_artwork_background" />
     <foreground android:drawable="@mipmap/empty_album_network_foreground" />
 </adaptive-icon>

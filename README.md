@@ -25,3 +25,11 @@ to the bottom of the screen.
 In this version issue(s) have been fixed.
 
 * When loading artwork fail, the app stop crashing
+
+## 0.3.0-beta
+
+New functionalities has landed. Now you can
+
+* See album list and play music from albums
+* Setting Page
+    * Change bottom bar tabs by removing folders, artists or albums tabs

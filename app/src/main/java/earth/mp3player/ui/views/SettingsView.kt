@@ -36,7 +36,6 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,6 +43,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import earth.mp3player.R
 import earth.mp3player.models.MenuTitle
+import earth.mp3player.services.SettingsManager
 
 /**
  * @author Antoine Pirlot on 02-03-24
@@ -54,15 +54,12 @@ fun SettingsView(
     modifier: Modifier = Modifier
 ) {
     // TODO move these check to main activity and change composition of router
-    val foldersChecked = rememberSaveable { mutableStateOf(true) }
-    val artistsChecked = rememberSaveable { mutableStateOf(true) }
-    val albumsChecked = rememberSaveable { mutableStateOf(true) }
+    val foldersChecked = rememberSaveable { SettingsManager.foldersChecked }
+    val artistsChecked = rememberSaveable { SettingsManager.artistsChecked }
+    val albumsChecked = rememberSaveable { SettingsManager.albumsChecked }
 
-    val menuTitleCheckedMap: Map<MenuTitle, MutableState<Boolean>> = mapOf(
-        Pair(MenuTitle.FOLDERS, foldersChecked),
-        Pair(MenuTitle.ARTISTS, artistsChecked),
-        Pair(MenuTitle.ALBUMS, albumsChecked),
-    )
+    val menuTitleCheckedMap: Map<MenuTitle, MutableState<Boolean>> =
+        SettingsManager.menuTitleCheckedMap
 
     Column(
         modifier = modifier

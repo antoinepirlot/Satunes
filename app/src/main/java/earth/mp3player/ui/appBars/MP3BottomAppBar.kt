@@ -46,18 +46,24 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import earth.mp3player.models.MenuTitle
 import earth.mp3player.router.Destination
+import earth.mp3player.services.SettingsManager
 
 @Composable
 fun MP3BottomAppBar(
     modifier: Modifier = Modifier,
     startDestination: MutableState<String>
 ) {
-    val menuTitleList = listOf(
+    val menuTitleList = mutableListOf(
         MenuTitle.FOLDERS,
         MenuTitle.ARTISTS,
         MenuTitle.ALBUMS,
         MenuTitle.MUSIC,
     )
+    SettingsManager.menuTitleCheckedMap.forEach { (menuTitle: MenuTitle, checked: MutableState<Boolean>) ->
+        if (!checked.value) {
+            menuTitleList.remove(menuTitle)
+        }
+    }
     var selectedSection by remember { mutableStateOf(MenuTitle.FOLDERS) }
 
     NavigationBar(

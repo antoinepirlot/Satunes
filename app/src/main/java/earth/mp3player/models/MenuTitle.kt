@@ -26,7 +26,7 @@
 package earth.mp3player.models
 
 enum class MenuTitle {
-    FOLDER,
+    FOLDERS,
     ARTISTS,
     MUSIC,
     ALBUMS

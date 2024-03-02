@@ -52,12 +52,12 @@ fun MP3BottomAppBar(
     startDestination: MutableState<String>
 ) {
     val menuTitleList = listOf(
-        MenuTitle.FOLDER,
+        MenuTitle.FOLDERS,
         MenuTitle.ARTISTS,
         MenuTitle.ALBUMS,
         MenuTitle.MUSIC,
     )
-    var selectedSection by remember { mutableStateOf(MenuTitle.FOLDER) }
+    var selectedSection by remember { mutableStateOf(MenuTitle.FOLDERS) }
 
     NavigationBar(
         modifier = modifier
@@ -69,7 +69,7 @@ fun MP3BottomAppBar(
                 onClick = {
                     selectedSection = section
                     when (selectedSection) {
-                        MenuTitle.FOLDER -> {
+                        MenuTitle.FOLDERS -> {
                             startDestination.value = Destination.FOLDERS.link
                         }
 
@@ -89,7 +89,7 @@ fun MP3BottomAppBar(
                 },
                 icon = {
                     when (section) {
-                        MenuTitle.FOLDER -> {
+                        MenuTitle.FOLDERS -> {
                             Icon(
                                 imageVector = Icons.Rounded.Folder,
                                 contentDescription = "Folder Icon"

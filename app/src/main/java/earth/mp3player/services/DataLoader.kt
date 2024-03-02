@@ -27,7 +27,6 @@ package earth.mp3player.services
 
 import android.content.Context
 import android.database.Cursor
-import android.net.Uri
 import android.provider.MediaStore
 import androidx.compose.runtime.MutableLongState
 import androidx.compose.runtime.mutableLongStateOf
@@ -164,9 +163,7 @@ object DataLoader {
         val size = cursor.getInt(musicSizeColumn!!)
         val relativePath = cursor.getString(relativePathColumn!!)
 
-        val fileUri = Uri.Builder().appendPath("${URI.path}/${name}").build()
-
-        return Music(id, name, duration, size, fileUri, relativePath)
+        return Music(id, name, duration, size, relativePath)
     }
 
     /**

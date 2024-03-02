@@ -125,19 +125,17 @@ object DataLoader {
             }
 
             while (it.moveToNext()) {
-                val music: Music = loadMusic(context = context, cursor = it)
-                musicMediaItemSortedMap[music] = music.mediaItem
-
-                loadFolders(music = music)
-
                 var artist: Artist? = null
                 var album: Album? = null
 
                 if (albumIdColumn != null && albumIdColumn != null) {
                     album = loadAlbum(cursor = it)
                     albumMap[album.id] = album
-                    music.album = album
                 }
+                val music: Music = loadMusic(context = context, cursor = it, album = album)
+                musicMediaItemSortedMap[music] = music.mediaItem
+
+                loadFolders(music = music)
 
                 if (artistIdColumn != null && artistNameColumn != null) {
                     var artist = loadArtist(cursor = it)
@@ -162,14 +160,21 @@ object DataLoader {
      *
      * @return the created music
      */
-    private fun loadMusic(context: Context, cursor: Cursor): Music {
+    private fun loadMusic(context: Context, cursor: Cursor, album: Album?): Music {
         // Get values of columns for a given music.
         val id = cursor.getLong(musicIdColumn!!)
         val name = cursor.getString(musicNameColumn!!)
         val duration = cursor.getLong(musicDurationColumn!!)
         val size = cursor.getInt(musicSizeColumn!!)
         val relativePath = cursor.getString(relativePathColumn!!)
-        val music: Music = Music(id, name, duration, size, relativePath)
+        val music: Music = Music(
+            id = id,
+            name = name,
+            duration = duration,
+            size = size,
+            relativePath = relativePath,
+            album = album
+        )
         loadAlbumArtwork(context = context, music = music)
         return music
     }

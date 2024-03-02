@@ -50,5 +50,8 @@ class Music(
         this.mediaItem = MediaItem.Builder()
             .setUri(this.uri)
             .build()
+        if (this.album != null) {
+            this.album!!.addMusic(music = this)
+        }
     }
 }

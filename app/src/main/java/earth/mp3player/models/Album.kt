@@ -25,8 +25,6 @@
 
 package earth.mp3player.models
 
-import android.content.ContentResolver
-import android.graphics.Bitmap
 import android.net.Uri
 import androidx.media3.common.MediaItem
 import java.util.SortedMap
@@ -41,4 +39,23 @@ class Album(
     val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf(),
     var albumArtWorkUri: Uri = Uri.EMPTY,
 ) : Media {
+
+    val musicSortedMap: SortedMap<Long, Music> = sortedMapOf()
+
+    init {
+        musicMediaItemSortedMap.forEach { (music: Music, _: MediaItem) ->
+            musicSortedMap[music.id] = music
+        }
+    }
+
+    /**
+     * Add music to this album by adding music in musicMediaItemSortedMap
+     * and in musicSortedMap.
+     *
+     * @param music the music to add
+     */
+    fun addMusic(music: Music) {
+        this.musicMediaItemSortedMap[music] = music.mediaItem
+        this.musicSortedMap[music.id] = music
+    }
 }

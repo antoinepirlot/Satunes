@@ -181,10 +181,14 @@ fun Router(
         composable("${Destination.ALBUMS.link}/{id}") {
             val albumId: Long = it.arguments!!.getString("id")!!.toLong()
             val album: Album = allAlbumSortedMap[albumId]!!
+
             @Suppress("UNCHECKED_CAST")
             MediaListView(
                 mediaMap = album.musicSortedMap as SortedMap<Long, Media>,
                 openMedia = { clickedMedia: Media ->
+                    playbackController.loadMusic(
+                        musicMediaItemSortedMap = album.musicMediaItemSortedMap
+                    )
                     openMedia(navController = navController, media = clickedMedia)
                 },
                 shuffleMusicAction = {

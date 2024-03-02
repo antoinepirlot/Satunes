@@ -26,6 +26,7 @@
 package earth.mp3player.models
 
 import android.net.Uri
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.media3.common.MediaItem
 import earth.mp3player.services.PlaybackController
 
@@ -43,7 +44,7 @@ class Music(
     val mediaItem: MediaItem
     val absolutePath: String = "${PlaybackController.ROOT_PATH}/$relativePath/$name"
     val uri: Uri = Uri.Builder().appendPath(this.absolutePath).build()
-    var artwork: ByteArray? = null
+    var artwork: ImageBitmap? = null
 
     init {
         this.mediaItem = MediaItem.Builder()

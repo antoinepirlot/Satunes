@@ -1,6 +1,5 @@
 package earth.mp3player.ui.components.music
 
-import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
@@ -18,10 +17,16 @@ fun AlbumArtwork(
 ) {
     val musicPlaying by remember { PlaybackController.getInstance().musicPlaying }
 
-    if (musicPlaying!!.album == null || musicPlaying!!.album!!.albumArtWorkUri == Uri.EMPTY) {
-        Box(
-            modifier = modifier,
-        ) {
+    Box(
+        modifier = modifier,
+    ) {
+        if (musicPlaying!!.artwork != null) {
+            Image(
+                modifier = modifier,
+                bitmap = musicPlaying!!.artwork!!,
+                contentDescription = "Default Album Artwork"
+            )
+        } else {
             Image(
                 modifier = modifier,
                 painter = painterResource(id = R.mipmap.empty_album_artwork_foreground),

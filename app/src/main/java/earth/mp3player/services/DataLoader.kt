@@ -27,14 +27,21 @@ package earth.mp3player.services
 
 import android.content.Context
 import android.database.Cursor
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.media.MediaMetadataRetriever
 import android.provider.MediaStore
 import androidx.compose.runtime.MutableLongState
 import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.media3.common.MediaItem
 import earth.mp3player.models.Album
 import earth.mp3player.models.Artist
 import earth.mp3player.models.Folder
 import earth.mp3player.models.Music
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.util.SortedMap
 
 object DataLoader {
@@ -118,7 +125,7 @@ object DataLoader {
             }
 
             while (it.moveToNext()) {
-                val music: Music = loadMusic(cursor = it)
+                val music: Music = loadMusic(context = context, cursor = it)
                 musicMediaItemSortedMap[music] = music.mediaItem
 
                 loadFolders(music = music)
@@ -155,15 +162,37 @@ object DataLoader {
      *
      * @return the created music
      */
-    private fun loadMusic(cursor: Cursor): Music {
+    private fun loadMusic(context: Context, cursor: Cursor): Music {
         // Get values of columns for a given music.
         val id = cursor.getLong(musicIdColumn!!)
         val name = cursor.getString(musicNameColumn!!)
         val duration = cursor.getLong(musicDurationColumn!!)
         val size = cursor.getInt(musicSizeColumn!!)
         val relativePath = cursor.getString(relativePathColumn!!)
+        val music: Music = Music(id, name, duration, size, relativePath)
+        loadAlbumArtwork(context = context, music = music)
+        return music
+    }
 
-        return Music(id, name, duration, size, relativePath)
+    /**
+     * Load the artwork from a media meta data retriever.
+     * Decode the byte array to set music's artwork as ImageBitmap
+     * If there's an artwork add it to music as ImageBitmap.
+     *
+     * @param context the context
+     * @param music the music to add the artwork
+     */
+    private fun loadAlbumArtwork(context: Context, music: Music) {
+        //Put it in Dispatchers.IO make the app not freezing while starting
+        CoroutineScope(Dispatchers.IO).launch {
+            val mediaMetadataRetriever: MediaMetadataRetriever = MediaMetadataRetriever()
+            mediaMetadataRetriever.setDataSource(context, music.uri)
+            val artwork: ByteArray? = mediaMetadataRetriever.embeddedPicture
+            if (artwork != null) {
+                val bitmap: Bitmap = BitmapFactory.decodeByteArray(artwork, 0, artwork.size)
+                music.artwork = bitmap.asImageBitmap()
+            }
+        }
     }
 
     /**

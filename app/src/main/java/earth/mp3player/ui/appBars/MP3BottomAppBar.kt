@@ -37,10 +37,8 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -53,7 +51,7 @@ fun MP3BottomAppBar(
     modifier: Modifier = Modifier,
     startDestination: MutableState<String>
 ) {
-    val menuTitleList = mutableListOf(
+    val menuTitleList: MutableList<MenuTitle> = mutableListOf(
         MenuTitle.FOLDERS,
         MenuTitle.ARTISTS,
         MenuTitle.ALBUMS,
@@ -64,7 +62,17 @@ fun MP3BottomAppBar(
             menuTitleList.remove(menuTitle)
         }
     }
-    var selectedSection by remember { mutableStateOf(MenuTitle.FOLDERS) }
+    var selectedSection: MutableState<MenuTitle> =
+        // Update the tab by default if settings has changed
+        if (SettingsManager.foldersChecked.value) {
+            rememberSaveable { mutableStateOf(MenuTitle.FOLDERS) }
+        } else if (SettingsManager.artistsChecked.value) {
+            rememberSaveable { mutableStateOf(MenuTitle.ARTISTS) }
+        } else if (SettingsManager.albumsChecked.value) {
+            rememberSaveable { mutableStateOf(MenuTitle.ALBUMS) }
+        } else {
+            rememberSaveable { mutableStateOf(MenuTitle.MUSIC) }
+        }
 
     NavigationBar(
         modifier = modifier
@@ -72,10 +80,10 @@ fun MP3BottomAppBar(
         menuTitleList.forEach { section: MenuTitle ->
             NavigationBarItem(
                 label = { Text(text = stringResource(id = section.stringId)) },
-                selected = selectedSection == section,
+                selected = selectedSection.value == section,
                 onClick = {
-                    selectedSection = section
-                    when (selectedSection) {
+                    selectedSection.value = section
+                    when (section) {
                         MenuTitle.FOLDERS -> {
                             startDestination.value = Destination.FOLDERS.link
                         }

@@ -106,7 +106,16 @@ class MainActivity : ComponentActivity() {
                         val scrollBehavior =
                             TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
                         val startDestination =
-                            rememberSaveable { mutableStateOf(Destination.FOLDERS.link) }
+                            // Update the tab by default if settings has changed
+                            if (SettingsManager.foldersChecked.value) {
+                                rememberSaveable { mutableStateOf(Destination.FOLDERS.link) }
+                            } else if (SettingsManager.artistsChecked.value) {
+                                rememberSaveable { mutableStateOf(Destination.ARTISTS.link) }
+                            } else if (SettingsManager.albumsChecked.value) {
+                                rememberSaveable { mutableStateOf(Destination.ALBUMS.link) }
+                            } else {
+                                rememberSaveable { mutableStateOf(Destination.MUSICS.link) }
+                            }
 
                         val navController = rememberNavController()
 

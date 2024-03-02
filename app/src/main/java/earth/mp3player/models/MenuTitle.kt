@@ -25,8 +25,11 @@
 
 package earth.mp3player.models
 
-enum class MenuTitle {
-    FOLDER,
-    ARTISTS,
-    MUSIC
+import earth.mp3player.R
+
+enum class MenuTitle(val stringId: Int) {
+    FOLDERS(stringId = R.string.folders),
+    ARTISTS(stringId = R.string.artists),
+    MUSIC(stringId = R.string.tracks),
+    ALBUMS(stringId = R.string.albums)
 }

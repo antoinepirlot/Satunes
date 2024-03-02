@@ -32,6 +32,7 @@ import androidx.media3.common.MediaItem
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import earth.mp3player.models.Album
 import earth.mp3player.models.Artist
 import earth.mp3player.models.Folder
 import earth.mp3player.models.Media
@@ -51,6 +52,7 @@ fun Router(
     startDestination: String,
     rootFolderMap: SortedMap<Long, Folder>,
     allArtistSortedMap: SortedMap<String, Artist>,
+    allAlbumSortedMap: SortedMap<Long, Album>,
     allMusicMediaItemsMap: SortedMap<Music, MediaItem>,
     folderMap: Map<Long, Folder>,
 ) {
@@ -164,6 +166,53 @@ fun Router(
             )
         }
 
+        composable(Destination.ALBUMS.link) {
+            val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
+            allAlbumSortedMap.forEach { (_: Long, album: Album) ->
+                musicMediaItemSortedMap.putAll(album.musicMediaItemSortedMap)
+            }
+
+            @Suppress("UNCHECKED_CAST")
+            MediaListView(
+                mediaMap = allAlbumSortedMap as SortedMap<Long, Media>,
+                openMedia = { clickedMedia: Media ->
+                    openMedia(navController = navController, media = clickedMedia)
+                },
+                shuffleMusicAction = {
+                    playbackController.loadMusic(
+                        musicMediaItemSortedMap = musicMediaItemSortedMap,
+                        shuffleMode = true
+                    )
+                    openMedia(navController = navController)
+                },
+                onFABClick = { openCurrentMusic(navController = navController) }
+            )
+        }
+
+        composable("${Destination.ALBUMS.link}/{id}") {
+            val albumId: Long = it.arguments!!.getString("id")!!.toLong()
+            val album: Album = allAlbumSortedMap[albumId]!!
+
+            @Suppress("UNCHECKED_CAST")
+            MediaListView(
+                mediaMap = album.musicSortedMap as SortedMap<Long, Media>,
+                openMedia = { clickedMedia: Media ->
+                    playbackController.loadMusic(
+                        musicMediaItemSortedMap = album.musicMediaItemSortedMap
+                    )
+                    openMedia(navController = navController, media = clickedMedia)
+                },
+                shuffleMusicAction = {
+                    playbackController.loadMusic(
+                        musicMediaItemSortedMap = album.musicMediaItemSortedMap,
+                        shuffleMode = true
+                    )
+                    openMedia(navController = navController)
+                },
+                onFABClick = { openCurrentMusic(navController = navController) }
+            )
+        }
+
         composable(Destination.MUSICS.link) {
             val mediaMap: SortedMap<Long, Media> = sortedMapOf()
             allMusicMediaItemsMap.keys.forEach { music: Music ->
@@ -255,6 +304,10 @@ fun getDestinationOf(media: Media?): String {
 
         is Artist -> {
             "${Destination.ARTISTS.link}/${media.name}"
+        }
+
+        is Album -> {
+            "${Destination.ALBUMS.link}/${media.id}"
         }
 
         else -> {

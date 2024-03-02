@@ -25,7 +25,6 @@
 
 package earth.mp3player.ui.views
 
-import android.net.Uri
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.FabPosition
@@ -70,7 +69,7 @@ fun MediaListView(
 @Composable
 @Preview
 fun MediaListViewPreview() {
-    val map = sortedMapOf(Pair<Long, Media>(1, Music(1, "Musique", 0, 0, Uri.EMPTY, "", null)))
+    val map = sortedMapOf(Pair<Long, Media>(1, Music(1, "Musique", 0, 0, "", null)))
     MediaListView(
         mediaMap = map,
         openMedia = {},

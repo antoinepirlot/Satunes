@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Lecteur MP3</string>
-    <string name="folder">Dossier</string>
+    <string name="folders">Dossiers</string>
     <string name="artists">Artistes</string>
     <string name="tracks">Moceaux</string>
     <string name="play_all">Lire en mode aléatoire</string>
     <string name="bottom_bar">Barre de navigation</string>
+    <string name="albums">Albums</string>
 </resources>

@@ -50,6 +50,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.media3.common.MediaItem
+import earth.mp3player.models.Album
 import androidx.navigation.compose.rememberNavController
 import earth.mp3player.models.Artist
 import earth.mp3player.models.Folder
@@ -73,6 +74,7 @@ class MainActivity : ComponentActivity() {
                 val rootFolderList = remember { sortedMapOf<Long, Folder>() }
                 val folderMap = remember { sortedMapOf<Long, Folder>() }
                 val artistMap = remember { sortedMapOf<String, Artist>() }
+                val albumMap = remember { sortedMapOf<Long, Album>() }
 
                 DataLoader.loadAllData(
                     context = LocalContext.current,
@@ -80,6 +82,7 @@ class MainActivity : ComponentActivity() {
                     rootFolderMap = rootFolderList,
                     folderMap = folderMap,
                     artistMap = artistMap,
+                    albumMap = albumMap
                 )
 
                 PlaybackController.initInstance(
@@ -120,6 +123,7 @@ class MainActivity : ComponentActivity() {
                                     rootFolderMap = rootFolderList,
                                     folderMap = folderMap,
                                     allArtistSortedMap = artistMap,
+                                    allAlbumSortedMap = albumMap,
                                     allMusicMediaItemsMap = musicMediaItemSortedMap,
                                 )
                             }

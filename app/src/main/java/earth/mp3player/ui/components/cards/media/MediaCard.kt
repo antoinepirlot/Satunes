@@ -24,7 +24,6 @@
  */
 package earth.mp3player.ui.components.cards.media
 
-import android.net.Uri
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
@@ -69,7 +68,7 @@ fun MediaCard(
 @Composable
 @Preview
 fun CardPreview() {
-    val music = Music(1, "Il avait les mots", 2, 2, Uri.EMPTY, "relative path")
+    val music = Music(1, "Il avait les mots", 2, 2, "relative path")
     MediaCard(
         modifier = Modifier.fillMaxSize(),
         text = music.name,

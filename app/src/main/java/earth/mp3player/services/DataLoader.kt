@@ -27,25 +27,39 @@ package earth.mp3player.services
 
 import android.content.Context
 import android.database.Cursor
-import android.net.Uri
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.media.MediaMetadataRetriever
 import android.provider.MediaStore
 import androidx.compose.runtime.MutableLongState
 import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.media3.common.MediaItem
+import earth.mp3player.models.Album
 import earth.mp3player.models.Artist
 import earth.mp3player.models.Folder
 import earth.mp3player.models.Music
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.util.SortedMap
 
 object DataLoader {
     const val FIRST_FOLDER_INDEX: Long = 1
     private val URI = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
 
+    // Music variables
     private var musicIdColumn: Int? = null
     private var musicNameColumn: Int? = null
     private var musicDurationColumn: Int? = null
     private var musicSizeColumn: Int? = null
     private var relativePathColumn: Int? = null
+
+    // Albums variables
+    private var albumIdColumn: Int? = null
+    private var albumNameColumn: Int? = null
+
+    // Artists variables
     private var artistIdColumn: Int? = null
     private var artistNameColumn: Int? = null
     private var artistNbOfTracksColumn: Int? = null
@@ -65,6 +79,7 @@ object DataLoader {
         rootFolderMap: SortedMap<Long, Folder>,
         folderMap: SortedMap<Long, Folder>,
         artistMap: SortedMap<String, Artist>,
+        albumMap: SortedMap<Long, Album>
     ) {
         this.musicMediaItemSortedMap = musicMediaItemSortedMap
         this.rootFolderMap = rootFolderMap
@@ -77,6 +92,8 @@ object DataLoader {
             MediaStore.Audio.Media.DURATION,
             MediaStore.Audio.Media.SIZE,
             MediaStore.Audio.Media.RELATIVE_PATH,
+            MediaStore.Audio.Albums.ALBUM_ID,
+            MediaStore.Audio.Albums.ALBUM,
             MediaStore.Audio.Artists._ID,
             MediaStore.Audio.Artists.ARTIST,
         )
@@ -91,6 +108,14 @@ object DataLoader {
             relativePathColumn =
                 it.getColumnIndexOrThrow(MediaStore.Audio.Media.RELATIVE_PATH)
 
+            //Cache album columns indices
+            try {
+                albumIdColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Albums.ALBUM_ID)
+                albumNameColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Albums.ALBUM)
+            } catch (_: IllegalArgumentException) {
+
+            }
+
             // Cache artist columns indices.
             try {
                 artistIdColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Artists._ID)
@@ -100,20 +125,29 @@ object DataLoader {
             }
 
             while (it.moveToNext()) {
-                val music: Music = loadMusic(cursor = it)
+                var artist: Artist? = null
+                var album: Album? = null
+
+                if (albumIdColumn != null && albumIdColumn != null) {
+                    album = loadAlbum(cursor = it)
+                    albumMap[album.id] = album
+                }
+                val music: Music = loadMusic(context = context, cursor = it, album = album)
                 musicMediaItemSortedMap[music] = music.mediaItem
 
                 loadFolders(music = music)
 
-                if (
-                    artistIdColumn != null
-                    && artistNameColumn != null
-                ) {
+                if (artistIdColumn != null && artistNameColumn != null) {
                     var artist = loadArtist(cursor = it)
                     artistMap.putIfAbsent(artist.name, artist)
                     artist = artistMap[artist.name]!! //The id is not the same for all same artists
                     artist.musicList.add(music)
                     music.artist = artist
+                }
+
+                if (artist != null && album != null) {
+                    artist.addAlbum(album)
+                    album.artist = artist
                 }
             }
         }
@@ -126,17 +160,48 @@ object DataLoader {
      *
      * @return the created music
      */
-    private fun loadMusic(cursor: Cursor): Music {
+    private fun loadMusic(context: Context, cursor: Cursor, album: Album?): Music {
         // Get values of columns for a given music.
         val id = cursor.getLong(musicIdColumn!!)
         val name = cursor.getString(musicNameColumn!!)
         val duration = cursor.getLong(musicDurationColumn!!)
         val size = cursor.getInt(musicSizeColumn!!)
         val relativePath = cursor.getString(relativePathColumn!!)
+        val music: Music = Music(
+            id = id,
+            name = name,
+            duration = duration,
+            size = size,
+            relativePath = relativePath,
+            album = album
+        )
+        loadAlbumArtwork(context = context, music = music)
+        return music
+    }
 
-        val fileUri = Uri.Builder().appendPath("${URI.path}/${name}").build()
-
-        return Music(id, name, duration, size, fileUri, relativePath)
+    /**
+     * Load the artwork from a media meta data retriever.
+     * Decode the byte array to set music's artwork as ImageBitmap
+     * If there's an artwork add it to music as ImageBitmap.
+     *
+     * @param context the context
+     * @param music the music to add the artwork
+     */
+    private fun loadAlbumArtwork(context: Context, music: Music) {
+        //Put it in Dispatchers.IO make the app not freezing while starting
+        CoroutineScope(Dispatchers.IO).launch {
+            val mediaMetadataRetriever: MediaMetadataRetriever = MediaMetadataRetriever()
+            mediaMetadataRetriever.setDataSource(context, music.uri)
+            val artwork: ByteArray? = mediaMetadataRetriever.embeddedPicture
+            if (artwork != null) {
+                try {
+                    val bitmap: Bitmap = BitmapFactory.decodeByteArray(artwork, 0, artwork.size)
+                    music.artwork = bitmap.asImageBitmap()
+                } catch (_: Exception) {
+                    music.artwork = null
+                }
+            }
+        }
     }
 
     /**
@@ -177,6 +242,12 @@ object DataLoader {
         )
         val subfolder = rootFolder!!.getSubFolder(splitPath.toMutableList())!!
         subfolder.addMusic(music)
+    }
+
+    private fun loadAlbum(cursor: Cursor): Album {
+        val id: Long = cursor.getLong(albumIdColumn!!)
+        val name = cursor.getString(albumNameColumn!!)
+        return Album(id = id, name = name)
     }
 
     private fun loadArtist(cursor: Cursor): Artist {

@@ -11,7 +11,7 @@
  *
  *  You should have received a copy of the GNU General Public License along with MP3 Player.
  *  If not, see <https://www.gnu.org/licenses/>.
-
+ *
  *  ***** INFORMATIONS ABOUT THE AUTHOR *****
  *  The author of this file is Antoine Pirlot, the owner of this project.
  *  You find this original project on github.
@@ -20,16 +20,42 @@
  *  This current project's link is: https://github.com/antoinepirlot/MP3-Player
  *
  *  You can contact me via my email: pirlot.antoine@outlook.com
- * PS: I don't answer quickly.
+ *  PS: I don't answer quickly.
  */
 
-package earth.mp3player.router
+package earth.mp3player.models
 
-enum class Destination(val link: String) {
-    FOLDERS("/folders"),
-    ARTISTS("/artists"),
-    MUSICS("/musics"),
-    PLAYBACK("/playback"),
-    ALBUMS("/albums"),
-    SETTINGS("/settings"),
+import android.net.Uri
+import androidx.media3.common.MediaItem
+import java.util.SortedMap
+
+/**
+ * @author Antoine Pirlot on 26-02-24
+ */
+class Album(
+    override val id: Long,
+    override val name: String,
+    var artist: Artist? = null,
+    val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf(),
+    var albumArtWorkUri: Uri = Uri.EMPTY,
+) : Media {
+
+    val musicSortedMap: SortedMap<Long, Music> = sortedMapOf()
+
+    init {
+        musicMediaItemSortedMap.forEach { (music: Music, _: MediaItem) ->
+            musicSortedMap[music.id] = music
+        }
+    }
+
+    /**
+     * Add music to this album by adding music in musicMediaItemSortedMap
+     * and in musicSortedMap.
+     *
+     * @param music the music to add
+     */
+    fun addMusic(music: Music) {
+        this.musicMediaItemSortedMap[music] = music.mediaItem
+        this.musicSortedMap[music.id] = music
+    }
 }

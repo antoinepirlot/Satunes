@@ -28,6 +28,7 @@ package earth.mp3player.ui.appBars
 import android.annotation.SuppressLint
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AccountCircle
+import androidx.compose.material.icons.rounded.Album
 import androidx.compose.material.icons.rounded.Audiotrack
 import androidx.compose.material.icons.rounded.Folder
 import androidx.compose.material3.Icon
@@ -41,6 +42,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import earth.mp3player.models.MenuTitle
 import earth.mp3player.router.Destination
@@ -51,23 +53,24 @@ fun MP3BottomAppBar(
     startDestination: MutableState<String>
 ) {
     val menuTitleList = listOf(
-        MenuTitle.FOLDER,
+        MenuTitle.FOLDERS,
         MenuTitle.ARTISTS,
-        MenuTitle.MUSIC
+        MenuTitle.ALBUMS,
+        MenuTitle.MUSIC,
     )
-    var selectedSection by remember { mutableStateOf(MenuTitle.FOLDER) }
+    var selectedSection by remember { mutableStateOf(MenuTitle.FOLDERS) }
 
     NavigationBar(
         modifier = modifier
     ) {
         menuTitleList.forEach { section: MenuTitle ->
             NavigationBarItem(
-                label = { Text(text = section.name) },
+                label = { Text(text = stringResource(id = section.stringId)) },
                 selected = selectedSection == section,
                 onClick = {
                     selectedSection = section
                     when (selectedSection) {
-                        MenuTitle.FOLDER -> {
+                        MenuTitle.FOLDERS -> {
                             startDestination.value = Destination.FOLDERS.link
                         }
 
@@ -75,14 +78,19 @@ fun MP3BottomAppBar(
                             startDestination.value = Destination.ARTISTS.link
                         }
 
+                        MenuTitle.ALBUMS -> {
+                            startDestination.value = Destination.ALBUMS.link
+                        }
+
                         MenuTitle.MUSIC -> {
                             startDestination.value = Destination.MUSICS.link
                         }
+
                     }
                 },
                 icon = {
                     when (section) {
-                        MenuTitle.FOLDER -> {
+                        MenuTitle.FOLDERS -> {
                             Icon(
                                 imageVector = Icons.Rounded.Folder,
                                 contentDescription = "Folder Icon"
@@ -95,6 +103,13 @@ fun MP3BottomAppBar(
                                 contentDescription = "Artist Icon"
                             )
 
+                        }
+
+                        MenuTitle.ALBUMS -> {
+                            Icon(
+                                imageVector = Icons.Rounded.Album,
+                                contentDescription = "Album Icon"
+                            )
                         }
 
                         MenuTitle.MUSIC -> {

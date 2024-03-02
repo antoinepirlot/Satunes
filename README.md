@@ -19,3 +19,9 @@ It includes basics functionalities of an mp3 player.
 In this version the album artwork is shown on the playback screen the music control bar has been
 move
 to the bottom of the screen.
+
+### 0.2.1-beta
+
+In this version issue(s) have been fixed.
+
+* When loading artwork fail, the app stop crashing

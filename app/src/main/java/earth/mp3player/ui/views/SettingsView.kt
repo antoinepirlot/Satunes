@@ -63,7 +63,7 @@ fun SettingsView(
             Row(
                 modifier = modifier.fillMaxWidth()
             ) {
-                Text(text = stringResource(id = R.string.folder))
+                Text(text = stringResource(id = R.string.folders))
                 Switch(
                     checked = folderChecked,
                     onCheckedChange = { folderChecked = !folderChecked })

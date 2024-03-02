@@ -26,6 +26,7 @@
 package earth.mp3player
 
 import android.Manifest.permission.READ_MEDIA_AUDIO
+import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -59,9 +60,11 @@ import earth.mp3player.router.Destination
 import earth.mp3player.router.Router
 import earth.mp3player.services.DataLoader
 import earth.mp3player.services.PlaybackController
+import earth.mp3player.services.SettingsManager
 import earth.mp3player.ui.appBars.MP3BottomAppBar
 import earth.mp3player.ui.appBars.MP3TopAppBar
 import earth.mp3player.ui.theme.MP3Theme
+import kotlinx.coroutines.runBlocking
 
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
@@ -70,6 +73,11 @@ class MainActivity : ComponentActivity() {
         requestPermission()
         if (!isAudioDenied()) {
             setContent {
+                val context: Context = LocalContext.current
+                runBlocking {
+                    SettingsManager.loadSettings(context = context)
+                }
+
                 val musicMediaItemSortedMap = remember { sortedMapOf<Music, MediaItem>() }
                 val rootFolderList = remember { sortedMapOf<Long, Folder>() }
                 val folderMap = remember { sortedMapOf<Long, Folder>() }

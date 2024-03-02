@@ -26,7 +26,6 @@
 package earth.mp3player.ui.appBars
 
 import android.annotation.SuppressLint
-import android.content.Context
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AccountCircle
 import androidx.compose.material.icons.rounded.Album
@@ -43,23 +42,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import earth.mp3player.models.MenuTitle
 import earth.mp3player.router.Destination
 import earth.mp3player.services.SettingsManager
-import kotlinx.coroutines.runBlocking
 
 @Composable
 fun MP3BottomAppBar(
     modifier: Modifier = Modifier,
     startDestination: MutableState<String>
 ) {
-    val context: Context = LocalContext.current
-    runBlocking {
-        SettingsManager.loadSettings(context = context)
-    }
     val menuTitleList = mutableListOf(
         MenuTitle.FOLDERS,
         MenuTitle.ARTISTS,

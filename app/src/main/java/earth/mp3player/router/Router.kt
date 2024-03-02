@@ -33,6 +33,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import earth.mp3player.models.Album
 import earth.mp3player.models.Artist
 import earth.mp3player.models.Folder
 import earth.mp3player.models.Media
@@ -50,6 +51,7 @@ fun Router(
     startDestination: String,
     rootFolderMap: SortedMap<Long, Folder>,
     allArtistSortedMap: SortedMap<String, Artist>,
+    allAlbumSortedMap: SortedMap<Long, Album>,
     allMusicMediaItemsMap: SortedMap<Music, MediaItem>,
     folderMap: Map<Long, Folder>,
 ) {
@@ -165,7 +167,15 @@ fun Router(
         }
 
         composable(Destination.ALBUMS.link) {
-
+            @Suppress("UNCHECKED_CAST")
+            MediaListView(
+                mediaMap = allAlbumSortedMap as SortedMap<Long, Media>,
+                openMedia = { clickedMedia: Media ->
+                    openMedia(navController = navController, media = clickedMedia)
+                },
+                shuffleMusicAction = { /*TODO*/ },
+                onFABClick = { openCurrentMusic(navController = navController) }
+            )
         }
 
         composable(Destination.MUSICS.link) {
@@ -255,6 +265,10 @@ fun getDestinationOf(media: Media?): String {
 
         is Artist -> {
             "${Destination.ARTISTS.link}/${media.name}"
+        }
+
+        is Album -> {
+            "${Destination.ALBUMS.link}/${media.id}"
         }
 
         else -> {

@@ -112,6 +112,7 @@ class MainActivity : ComponentActivity() {
                                     rootFolderMap = rootFolderList,
                                     folderMap = folderMap,
                                     allArtistSortedMap = artistMap,
+                                    allAlbumSortedMap = albumMap,
                                     allMusicMediaItemsMap = musicMediaItemSortedMap,
                                 )
                             }

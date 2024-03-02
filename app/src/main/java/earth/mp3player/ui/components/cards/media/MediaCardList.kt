@@ -33,10 +33,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.MusicNote
+import androidx.compose.material.icons.rounded.Album
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
+import earth.mp3player.models.Album
 import earth.mp3player.models.Artist
 import earth.mp3player.models.Folder
 import earth.mp3player.models.Media
@@ -91,6 +93,10 @@ private fun getRightIconAnDescription(media: Media): Pair<ImageVector, String> {
 
         is Artist -> {
             Icons.Filled.AccountCircle to "Account Circle"
+        }
+
+        is Album -> {
+            Icons.Rounded.Album to "Album Icon"
         }
 
         else -> {

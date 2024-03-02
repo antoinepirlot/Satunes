@@ -189,8 +189,12 @@ object DataLoader {
             mediaMetadataRetriever.setDataSource(context, music.uri)
             val artwork: ByteArray? = mediaMetadataRetriever.embeddedPicture
             if (artwork != null) {
-                val bitmap: Bitmap = BitmapFactory.decodeByteArray(artwork, 0, artwork.size)
-                music.artwork = bitmap.asImageBitmap()
+                try {
+                    val bitmap: Bitmap = BitmapFactory.decodeByteArray(artwork, 0, artwork.size)
+                    music.artwork = bitmap.asImageBitmap()
+                } catch (_: Exception) {
+                    music.artwork = null
+                }
             }
         }
     }

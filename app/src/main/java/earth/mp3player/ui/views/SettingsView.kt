@@ -36,7 +36,6 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -66,14 +65,8 @@ fun SettingsView(
         SettingsManager.menuTitleCheckedMap
 
     val context: Context = LocalContext.current
-    LaunchedEffect(key1 = "load_settings") {
-        SettingsManager.loadSettings(context = context)
-    }
-
-    Column(
-        modifier = modifier
-    ) {
-        Box {
+    Box(modifier = modifier) {
+        Column {
             Text(text = stringResource(id = R.string.bottom_bar))
             LazyColumn {
                 items(

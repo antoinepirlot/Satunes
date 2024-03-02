@@ -28,6 +28,7 @@ package earth.mp3player.ui.appBars
 import android.annotation.SuppressLint
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AccountCircle
+import androidx.compose.material.icons.rounded.Album
 import androidx.compose.material.icons.rounded.Audiotrack
 import androidx.compose.material.icons.rounded.Folder
 import androidx.compose.material3.Icon
@@ -53,7 +54,8 @@ fun MP3BottomAppBar(
     val menuTitleList = listOf(
         MenuTitle.FOLDER,
         MenuTitle.ARTISTS,
-        MenuTitle.MUSIC
+        MenuTitle.ALBUMS,
+        MenuTitle.MUSIC,
     )
     var selectedSection by remember { mutableStateOf(MenuTitle.FOLDER) }
 
@@ -75,9 +77,14 @@ fun MP3BottomAppBar(
                             startDestination.value = Destination.ARTISTS.link
                         }
 
+                        MenuTitle.ALBUMS -> {
+                            startDestination.value = Destination.ALBUMS.link
+                        }
+
                         MenuTitle.MUSIC -> {
                             startDestination.value = Destination.MUSICS.link
                         }
+
                     }
                 },
                 icon = {
@@ -95,6 +102,13 @@ fun MP3BottomAppBar(
                                 contentDescription = "Artist Icon"
                             )
 
+                        }
+
+                        MenuTitle.ALBUMS -> {
+                            Icon(
+                                imageVector = Icons.Rounded.Album,
+                                contentDescription = "Album Icon"
+                            )
                         }
 
                         MenuTitle.MUSIC -> {

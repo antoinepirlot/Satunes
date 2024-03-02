@@ -164,6 +164,10 @@ fun Router(
             )
         }
 
+        composable(Destination.ALBUMS.link) {
+
+        }
+
         composable(Destination.MUSICS.link) {
             val mediaMap: SortedMap<Long, Media> = sortedMapOf()
             allMusicMediaItemsMap.keys.forEach { music: Music ->

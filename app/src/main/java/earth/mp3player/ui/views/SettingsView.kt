@@ -25,12 +25,23 @@
 
 package earth.mp3player.ui.views
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import earth.mp3player.R
 
 /**
  * @author Antoine Pirlot on 02-03-24
@@ -40,14 +51,39 @@ import androidx.compose.ui.tooling.preview.Preview
 fun SettingsView(
     modifier: Modifier = Modifier
 ) {
+    // TODO move these check to main activity and change composition of router
+    var folderChecked by rememberSaveable { mutableStateOf(true) }
+    var artistChecked by rememberSaveable { mutableStateOf(true) }
+
     Column(
         modifier = modifier
     ) {
-        ListItem(
-            headlineContent = {
-                Text(text = "Setting 1")
+        Text(text = stringResource(id = R.string.bottom_bar))
+        ListItem(headlineContent = {
+            Row(
+                modifier = modifier.fillMaxWidth()
+            ) {
+                Text(text = stringResource(id = R.string.folder))
+                Switch(
+                    checked = folderChecked,
+                    onCheckedChange = { folderChecked = !folderChecked })
             }
-        )
+        })
+        ListItem(headlineContent = {
+            Row(
+                modifier = modifier.fillMaxWidth()
+            ) {
+                Text(text = stringResource(id = R.string.artists))
+                Box(
+                    contentAlignment = Alignment.CenterEnd
+                ) {
+                    Switch(
+                        checked = artistChecked,
+                        onCheckedChange = { artistChecked = !artistChecked }
+                    )
+                }
+            }
+        })
     }
 }
 

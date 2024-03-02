@@ -32,7 +32,6 @@ import androidx.media3.common.MediaItem
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import earth.mp3player.models.Artist
 import earth.mp3player.models.Folder
 import earth.mp3player.models.Media
@@ -42,18 +41,19 @@ import earth.mp3player.ui.utils.getMusicListFromFolder
 import earth.mp3player.ui.utils.startMusic
 import earth.mp3player.ui.views.MediaListView
 import earth.mp3player.ui.views.PlayBackView
+import earth.mp3player.ui.views.SettingsView
 import java.util.SortedMap
 
 @Composable
 fun Router(
     modifier: Modifier = Modifier,
+    navController: NavHostController,
     startDestination: String,
     rootFolderMap: SortedMap<Long, Folder>,
     allArtistSortedMap: SortedMap<String, Artist>,
     allMusicMediaItemsMap: SortedMap<Music, MediaItem>,
     folderMap: Map<Long, Folder>,
 ) {
-    val navController = rememberNavController()
     val mapToShow: SortedMap<Long, Media> = remember { sortedMapOf() }
     val playbackController: PlaybackController = PlaybackController.getInstance()
 
@@ -191,6 +191,10 @@ fun Router(
 
         composable(Destination.PLAYBACK.link) {
             PlayBackView()
+        }
+
+        composable(Destination.SETTINGS.link) {
+            SettingsView()
         }
     }
 }

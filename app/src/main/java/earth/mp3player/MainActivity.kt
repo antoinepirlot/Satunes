@@ -50,6 +50,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.media3.common.MediaItem
+import androidx.navigation.compose.rememberNavController
 import earth.mp3player.models.Artist
 import earth.mp3player.models.Folder
 import earth.mp3player.models.Music
@@ -96,15 +97,25 @@ class MainActivity : ComponentActivity() {
                         val startDestination =
                             rememberSaveable { mutableStateOf(Destination.FOLDERS.link) }
 
+                        val navController = rememberNavController()
+
                         Scaffold(
                             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-                            topBar = { MP3TopAppBar(scrollBehavior = scrollBehavior) },
-                            bottomBar = { MP3BottomAppBar(startDestination = startDestination) }
+                            topBar = {
+                                MP3TopAppBar(
+                                    scrollBehavior = scrollBehavior,
+                                    navController = navController
+                                )
+                            },
+                            bottomBar = {
+                                MP3BottomAppBar(startDestination = startDestination)
+                            }
                         ) { innerPadding ->
                             Column(
                                 modifier = Modifier.padding(innerPadding)
                             ) {
                                 Router(
+                                    navController = navController,
                                     startDestination = startDestination.value,
                                     rootFolderMap = rootFolderList,
                                     folderMap = folderMap,

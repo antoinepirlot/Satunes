@@ -43,7 +43,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import earth.mp3player.models.MenuTitle
-import earth.mp3player.router.Destination
+import earth.mp3player.router.media.MediaDestination
 import earth.mp3player.services.SettingsManager
 
 @Composable
@@ -62,7 +62,7 @@ fun MP3BottomAppBar(
             menuTitleList.remove(menuTitle)
         }
     }
-    var selectedSection: MutableState<MenuTitle> =
+    val selectedSection: MutableState<MenuTitle> =
         // Update the tab by default if settings has changed
         if (SettingsManager.foldersChecked.value) {
             rememberSaveable { mutableStateOf(MenuTitle.FOLDERS) }
@@ -85,19 +85,19 @@ fun MP3BottomAppBar(
                     selectedSection.value = section
                     when (section) {
                         MenuTitle.FOLDERS -> {
-                            startDestination.value = Destination.FOLDERS.link
+                            startDestination.value = MediaDestination.FOLDERS.link
                         }
 
                         MenuTitle.ARTISTS -> {
-                            startDestination.value = Destination.ARTISTS.link
+                            startDestination.value = MediaDestination.ARTISTS.link
                         }
 
                         MenuTitle.ALBUMS -> {
-                            startDestination.value = Destination.ALBUMS.link
+                            startDestination.value = MediaDestination.ALBUMS.link
                         }
 
                         MenuTitle.MUSIC -> {
-                            startDestination.value = Destination.MUSICS.link
+                            startDestination.value = MediaDestination.MUSICS.link
                         }
 
                     }
@@ -144,5 +144,5 @@ fun MP3BottomAppBar(
 @Preview
 @Composable
 fun MP3BottomAppBarPreview() {
-    MP3BottomAppBar(startDestination = mutableStateOf(Destination.FOLDERS.link))
+    MP3BottomAppBar(startDestination = mutableStateOf(MediaDestination.FOLDERS.link))
 }

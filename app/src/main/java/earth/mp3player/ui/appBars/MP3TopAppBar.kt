@@ -44,7 +44,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import earth.mp3player.R
-import earth.mp3player.router.Destination
+import earth.mp3player.router.media.MediaDestination
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -69,7 +69,7 @@ fun MP3TopAppBar(
         actions = {
             IconButton(
                 onClick = {
-                    navController.navigate(Destination.SETTINGS.link)
+                    navController.navigate(MediaDestination.SETTINGS.link)
                 }
             ) {
                 Icon(

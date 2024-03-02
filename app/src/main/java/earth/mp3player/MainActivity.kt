@@ -51,13 +51,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.media3.common.MediaItem
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import earth.mp3player.models.Album
 import earth.mp3player.models.Artist
 import earth.mp3player.models.Folder
 import earth.mp3player.models.Music
-import earth.mp3player.router.Destination
-import earth.mp3player.router.MediaRouter
+import earth.mp3player.router.main.MainRouter
+import earth.mp3player.router.media.MediaDestination
 import earth.mp3player.services.DataLoader
 import earth.mp3player.services.PlaybackController
 import earth.mp3player.services.SettingsManager
@@ -105,38 +106,40 @@ class MainActivity : ComponentActivity() {
                     ) {
                         val scrollBehavior =
                             TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
-                        val startDestination =
+                        val mediaRouterStartMediaDestination =
                             // Update the tab by default if settings has changed
                             if (SettingsManager.foldersChecked.value) {
-                                rememberSaveable { mutableStateOf(Destination.FOLDERS.link) }
+                                rememberSaveable { mutableStateOf(MediaDestination.FOLDERS.link) }
                             } else if (SettingsManager.artistsChecked.value) {
-                                rememberSaveable { mutableStateOf(Destination.ARTISTS.link) }
+                                rememberSaveable { mutableStateOf(MediaDestination.ARTISTS.link) }
                             } else if (SettingsManager.albumsChecked.value) {
-                                rememberSaveable { mutableStateOf(Destination.ALBUMS.link) }
+                                rememberSaveable { mutableStateOf(MediaDestination.ALBUMS.link) }
                             } else {
-                                rememberSaveable { mutableStateOf(Destination.MUSICS.link) }
+                                rememberSaveable { mutableStateOf(MediaDestination.MUSICS.link) }
                             }
 
-                        val navController = rememberNavController()
+                        val mainRouterNavController = rememberNavController()
+                        val mediaRouterNavController: NavHostController = rememberNavController()
 
                         Scaffold(
                             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
                             topBar = {
                                 MP3TopAppBar(
                                     scrollBehavior = scrollBehavior,
-                                    navController = navController
+                                    navController = mainRouterNavController
                                 )
                             },
                             bottomBar = {
-                                MP3BottomAppBar(startDestination = startDestination)
+                                MP3BottomAppBar(startDestination = mediaRouterStartMediaDestination)
                             }
                         ) { innerPadding ->
                             Column(
                                 modifier = Modifier.padding(innerPadding)
                             ) {
-                                MediaRouter(
-                                    navController = navController,
-                                    startDestination = startDestination.value,
+                                MainRouter(
+                                    navController = mainRouterNavController,
+                                    mediaRouterNavController = mediaRouterNavController,
+                                    mediaRouterStartDestination = mediaRouterStartMediaDestination.value,
                                     rootFolderMap = rootFolderList,
                                     folderMap = folderMap,
                                     allArtistSortedMap = artistMap,

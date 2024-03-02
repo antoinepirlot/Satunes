@@ -11,6 +11,31 @@
  *
  *  You should have received a copy of the GNU General Public License along with MP3 Player.
  *  If not, see <https://www.gnu.org/licenses/>.
+ *
+ *  ***** INFORMATIONS ABOUT THE AUTHOR *****
+ *  The author of this file is Antoine Pirlot, the owner of this project.
+ *  You find this original project on github.
+ *
+ *  My github link is: https://github.com/antoinepirlot
+ *  This current project's link is: https://github.com/antoinepirlot/MP3-Player
+ *
+ *  You can contact me via my email: pirlot.antoine@outlook.com
+ *  PS: I don't answer quickly.
+ */
+
+/*
+ *  This file is part of MP3 Player.
+ *
+ *  MP3 Player is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software Foundation,
+ *  either version 3 of the License, or (at your option) any later version.
+ *
+ *  MP3 Player is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ *   without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *  See the GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License along with MP3 Player.
+ *  If not, see <https://www.gnu.org/licenses/>.
 
  *  ***** INFORMATIONS ABOUT THE AUTHOR *****
  *  The author of this file is Antoine Pirlot, the owner of this project.
@@ -23,7 +48,7 @@
  * PS: I don't answer quickly.
  */
 
-package earth.mp3player.router
+package earth.mp3player.router.media
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -42,7 +67,6 @@ import earth.mp3player.ui.utils.getMusicListFromFolder
 import earth.mp3player.ui.utils.startMusic
 import earth.mp3player.ui.views.MediaListView
 import earth.mp3player.ui.views.PlayBackView
-import earth.mp3player.ui.views.SettingsView
 import java.util.SortedMap
 
 @Composable
@@ -65,7 +89,7 @@ fun MediaRouter(
         navController = navController,
         startDestination = startDestination
     ) {
-        composable(Destination.FOLDERS.link) {
+        composable(MediaDestination.FOLDERS.link) {
             // /!\ This route prevent back gesture to exit the app
             @Suppress("UNCHECKED_CAST")
             MediaListView(
@@ -88,7 +112,7 @@ fun MediaRouter(
             )
         }
 
-        composable("${Destination.FOLDERS.link}/{id}") {
+        composable("${MediaDestination.FOLDERS.link}/{id}") {
             val folderId = it.arguments!!.getString("id")!!.toLong()
             val folder: Folder = folderMap[folderId]!!
             mapToShow.clear()
@@ -118,7 +142,7 @@ fun MediaRouter(
             )
         }
 
-        composable(Destination.ARTISTS.link) {
+        composable(MediaDestination.ARTISTS.link) {
             @Suppress("UNCHECKED_CAST")
             MediaListView(
                 mediaMap = allArtistSortedMap as SortedMap<Long, Media>,
@@ -139,7 +163,7 @@ fun MediaRouter(
             )
         }
 
-        composable("${Destination.ARTISTS.link}/{name}") {
+        composable("${MediaDestination.ARTISTS.link}/{name}") {
             val artistName: String = it.arguments!!.getString("name")!!
             val artist: Artist = allArtistSortedMap[artistName]!!
             val musicMap: SortedMap<Long, Media> = sortedMapOf()
@@ -166,7 +190,7 @@ fun MediaRouter(
             )
         }
 
-        composable(Destination.ALBUMS.link) {
+        composable(MediaDestination.ALBUMS.link) {
             val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
             allAlbumSortedMap.forEach { (_: Long, album: Album) ->
                 musicMediaItemSortedMap.putAll(album.musicMediaItemSortedMap)
@@ -189,7 +213,7 @@ fun MediaRouter(
             )
         }
 
-        composable("${Destination.ALBUMS.link}/{id}") {
+        composable("${MediaDestination.ALBUMS.link}/{id}") {
             val albumId: Long = it.arguments!!.getString("id")!!.toLong()
             val album: Album = allAlbumSortedMap[albumId]!!
 
@@ -213,7 +237,7 @@ fun MediaRouter(
             )
         }
 
-        composable(Destination.MUSICS.link) {
+        composable(MediaDestination.MUSICS.link) {
             val mediaMap: SortedMap<Long, Media> = sortedMapOf()
             allMusicMediaItemsMap.keys.forEach { music: Music ->
                 mediaMap[music.id] = music
@@ -238,12 +262,8 @@ fun MediaRouter(
             )
         }
 
-        composable(Destination.PLAYBACK.link) {
+        composable(MediaDestination.PLAYBACK.link) {
             PlayBackView()
-        }
-
-        composable(Destination.SETTINGS.link) {
-            SettingsView()
         }
     }
 }
@@ -299,19 +319,19 @@ private fun openMediaFromFolder(
 fun getDestinationOf(media: Media?): String {
     return when (media) {
         is Folder -> {
-            "${Destination.FOLDERS.link}/${media.id}"
+            "${MediaDestination.FOLDERS.link}/${media.id}"
         }
 
         is Artist -> {
-            "${Destination.ARTISTS.link}/${media.name}"
+            "${MediaDestination.ARTISTS.link}/${media.name}"
         }
 
         is Album -> {
-            "${Destination.ALBUMS.link}/${media.id}"
+            "${MediaDestination.ALBUMS.link}/${media.id}"
         }
 
         else -> {
-            Destination.PLAYBACK.link
+            MediaDestination.PLAYBACK.link
         }
     }
 }

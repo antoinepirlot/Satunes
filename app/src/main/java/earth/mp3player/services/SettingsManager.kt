@@ -25,21 +25,85 @@
 
 package earth.mp3player.services
 
+import android.content.Context
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.MutablePreferences
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.preferencesDataStore
 import earth.mp3player.models.MenuTitle
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 
 /**
  * @author Antoine Pirlot on 02-03-24
  */
 object SettingsManager {
-    val foldersChecked: MutableState<Boolean> = mutableStateOf(true)
-    val artistsChecked: MutableState<Boolean> = mutableStateOf(true)
-    val albumsChecked: MutableState<Boolean> = mutableStateOf(true)
+    private const val DEFAULT_FOLDERS_CHECKED = true
+    private const val DEFAULT_ARTISTS_CHECKED = true
+    private const val DEFAULT_ALBUMS_CHECKED = true
+
+    private val PREFERENCES_DATA_STORE = preferencesDataStore("settings")
+    private val FOLDERS_CHECKED_PREFERENCES_KEY = booleanPreferencesKey("folders_checked")
+    private val ARTISTS_CHECKED_PREFERENCES_KEY = booleanPreferencesKey("artist_checked")
+    private val ALBUMS_CHECKED_PREFERENCES_KEY = booleanPreferencesKey("albums_checked")
+
+    private val Context.dataStore: DataStore<Preferences> by PREFERENCES_DATA_STORE
+
+    val foldersChecked: MutableState<Boolean> = mutableStateOf(DEFAULT_FOLDERS_CHECKED)
+    val artistsChecked: MutableState<Boolean> = mutableStateOf(DEFAULT_ARTISTS_CHECKED)
+    val albumsChecked: MutableState<Boolean> = mutableStateOf(DEFAULT_ALBUMS_CHECKED)
 
     val menuTitleCheckedMap: Map<MenuTitle, MutableState<Boolean>> = mapOf(
         Pair(MenuTitle.FOLDERS, foldersChecked),
         Pair(MenuTitle.ARTISTS, artistsChecked),
         Pair(MenuTitle.ALBUMS, albumsChecked),
     )
+
+    suspend fun loadSettings(context: Context) {
+        //Find a way to do it in one flow (maybe it's not possible)
+        foldersChecked.value = context.dataStore.data.map { preferences: Preferences ->
+            preferences[FOLDERS_CHECKED_PREFERENCES_KEY]
+                ?: DEFAULT_FOLDERS_CHECKED
+        }.first()
+
+        artistsChecked.value = context.dataStore.data.map { preferences: Preferences ->
+            preferences[ARTISTS_CHECKED_PREFERENCES_KEY]
+                ?: DEFAULT_ARTISTS_CHECKED
+        }.first()
+
+        albumsChecked.value = context.dataStore.data.map { preferences: Preferences ->
+            preferences[ALBUMS_CHECKED_PREFERENCES_KEY]
+                ?: DEFAULT_ALBUMS_CHECKED
+        }.first()
+    }
+
+    suspend fun switchMenuTitle(context: Context, menuTitle: MenuTitle) {
+        when (menuTitle) {
+            MenuTitle.FOLDERS -> {
+                context.dataStore.edit { preferences: MutablePreferences ->
+                    preferences[FOLDERS_CHECKED_PREFERENCES_KEY] = !foldersChecked.value
+                }
+            }
+
+            MenuTitle.ARTISTS -> {
+                context.dataStore.edit { preferences: MutablePreferences ->
+                    preferences[ARTISTS_CHECKED_PREFERENCES_KEY] = !artistsChecked.value
+                }
+            }
+
+            MenuTitle.ALBUMS -> {
+                context.dataStore.edit { preferences: MutablePreferences ->
+                    preferences[ALBUMS_CHECKED_PREFERENCES_KEY] = !albumsChecked.value
+                }
+            }
+
+            MenuTitle.MUSIC -> { /*Do nothing*/
+            }
+        }
+        loadSettings(context = context)
+    }
 }

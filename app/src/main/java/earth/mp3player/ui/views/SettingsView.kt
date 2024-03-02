@@ -25,6 +25,7 @@
 
 package earth.mp3player.ui.views
 
+import android.content.Context
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -35,15 +36,18 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import earth.mp3player.R
 import earth.mp3player.models.MenuTitle
 import earth.mp3player.services.SettingsManager
+import kotlinx.coroutines.runBlocking
 
 /**
  * @author Antoine Pirlot on 02-03-24
@@ -60,6 +64,11 @@ fun SettingsView(
 
     val menuTitleCheckedMap: Map<MenuTitle, MutableState<Boolean>> =
         SettingsManager.menuTitleCheckedMap
+
+    val context: Context = LocalContext.current
+    LaunchedEffect(key1 = "load_settings") {
+        SettingsManager.loadSettings(context = context)
+    }
 
     Column(
         modifier = modifier
@@ -84,7 +93,14 @@ fun SettingsView(
                                         menuTitleCheckedMap[menuTitle]!!
                                     Switch(
                                         checked = checked.value,
-                                        onCheckedChange = { checked.value = !checked.value }
+                                        onCheckedChange = {
+                                            runBlocking {
+                                                SettingsManager.switchMenuTitle(
+                                                    context = context,
+                                                    menuTitle = menuTitle
+                                                )
+                                            }
+                                        }
                                     )
                                 }
                             }

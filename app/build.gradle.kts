@@ -120,4 +120,11 @@ dependencies {
 
     // Jetpack Compose Integration
     implementation("androidx.navigation:navigation-compose:$navVersion")
+
+
+    /**
+     * DataStore
+     */
+    val dataStoreVersion = "1.0.0"
+    implementation("androidx.datastore:datastore-preferences:$dataStoreVersion")
 }

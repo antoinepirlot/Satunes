@@ -57,7 +57,7 @@ import earth.mp3player.models.Artist
 import earth.mp3player.models.Folder
 import earth.mp3player.models.Music
 import earth.mp3player.router.Destination
-import earth.mp3player.router.Router
+import earth.mp3player.router.MediaRouter
 import earth.mp3player.services.DataLoader
 import earth.mp3player.services.PlaybackController
 import earth.mp3player.services.SettingsManager
@@ -134,7 +134,7 @@ class MainActivity : ComponentActivity() {
                             Column(
                                 modifier = Modifier.padding(innerPadding)
                             ) {
-                                Router(
+                                MediaRouter(
                                     navController = navController,
                                     startDestination = startDestination.value,
                                     rootFolderMap = rootFolderList,

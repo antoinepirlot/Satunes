@@ -46,7 +46,7 @@ import earth.mp3player.ui.views.SettingsView
 import java.util.SortedMap
 
 @Composable
-fun Router(
+fun MediaRouter(
     modifier: Modifier = Modifier,
     navController: NavHostController,
     startDestination: String,

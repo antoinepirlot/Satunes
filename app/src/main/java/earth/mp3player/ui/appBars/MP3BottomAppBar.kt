@@ -42,6 +42,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import earth.mp3player.models.MenuTitle
 import earth.mp3player.router.Destination
@@ -64,7 +65,7 @@ fun MP3BottomAppBar(
     ) {
         menuTitleList.forEach { section: MenuTitle ->
             NavigationBarItem(
-                label = { Text(text = section.name) },
+                label = { Text(text = stringResource(id = section.stringId)) },
                 selected = selectedSection == section,
                 onClick = {
                     selectedSection = section

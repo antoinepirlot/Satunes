@@ -42,7 +42,9 @@ class PlaybackService : MediaSessionService() {
     @OptIn(UnstableApi::class)
     override fun onCreate() {
         super.onCreate()
-        val exoPlayer = ExoPlayer.Builder(this).build()
+        val exoPlayer = ExoPlayer.Builder(this)
+            .setHandleAudioBecomingNoisy(true) // Pause when bluetooth or headset disconnect
+            .build()
 
         val audioOffloadPreferences = TrackSelectionParameters.AudioOffloadPreferences.Builder()
             .setAudioOffloadMode(TrackSelectionParameters.AudioOffloadPreferences.AUDIO_OFFLOAD_MODE_ENABLED)
@@ -53,7 +55,6 @@ class PlaybackService : MediaSessionService() {
             .buildUpon()
             .setAudioOffloadPreferences(audioOffloadPreferences)
             .build()
-
         mediaSession = MediaSession.Builder(this, exoPlayer).build()
     }
 

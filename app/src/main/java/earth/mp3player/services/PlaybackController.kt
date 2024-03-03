@@ -28,6 +28,7 @@ package earth.mp3player.services
 import android.content.ComponentName
 import android.content.Context
 import android.os.Environment
+import androidx.annotation.OptIn
 import androidx.compose.runtime.MutableFloatState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableFloatStateOf
@@ -36,6 +37,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.core.content.ContextCompat
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
+import androidx.media3.common.util.UnstableApi
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
 import earth.mp3player.models.Music
@@ -88,11 +90,29 @@ class PlaybackController private constructor(
             }
         }
 
+        override fun onShuffleModeEnabledChanged(shuffleModeEnabled: Boolean) {
+            // Do nothing
+        }
+
         override fun onIsPlayingChanged(isPlaying: Boolean) {
             super.onIsPlayingChanged(isPlaying)
             instance.isPlaying.value = isPlaying
             isEnded = DEFAULT_IS_ENDED
             updateCurrentPosition()
+        }
+
+        /**
+         * Prevents MediaController to shuffle music
+         */
+        @OptIn(UnstableApi::class)
+        override fun onEvents(player: Player, events: Player.Events) {
+            super.onEvents(player, events)
+            if (events.contains(Player.EVENT_SHUFFLE_MODE_ENABLED_CHANGED)) {
+                //Stop making media controller shuffled
+                //Shuffle is managed by PlaybackController not by media controller.
+                //This line avoid mismatch with song on screen and the one playing
+                player.shuffleModeEnabled = false
+            }
         }
 
         override fun onPositionDiscontinuity(
@@ -396,7 +416,7 @@ class PlaybackController private constructor(
     }
 
     /**
-     * Restore the original playlist
+     * Restore the original playlist.
      *
      */
     private fun undoShuffle() {

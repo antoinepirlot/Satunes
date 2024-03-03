@@ -11,6 +11,12 @@ If you decide to use my code to create new app, you can but you have to use the 
 
 ## 0.3
 
+### 0.3.2-beta
+
+Fix: issues:
+
+* Disabling shuffle activation from outside the app (for example asking assistant to shuffle)
+
 ### 0.3.1-beta
 
 Fix issues:

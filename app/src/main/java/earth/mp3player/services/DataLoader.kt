@@ -190,16 +190,17 @@ object DataLoader {
     private fun loadAlbumArtwork(context: Context, music: Music) {
         //Put it in Dispatchers.IO make the app not freezing while starting
         CoroutineScope(Dispatchers.IO).launch {
-            val mediaMetadataRetriever: MediaMetadataRetriever = MediaMetadataRetriever()
-            mediaMetadataRetriever.setDataSource(context, music.uri)
-            val artwork: ByteArray? = mediaMetadataRetriever.embeddedPicture
-            if (artwork != null) {
-                try {
+            try {
+                val mediaMetadataRetriever: MediaMetadataRetriever = MediaMetadataRetriever()
+                mediaMetadataRetriever.setDataSource(context, music.uri)
+                val artwork: ByteArray? = mediaMetadataRetriever.embeddedPicture
+                if (artwork != null) {
                     val bitmap: Bitmap = BitmapFactory.decodeByteArray(artwork, 0, artwork.size)
                     music.artwork = bitmap.asImageBitmap()
-                } catch (_: Exception) {
-                    music.artwork = null
                 }
+            } catch (_: Exception) {
+                /* No artwork found*/
+                music.artwork = null
             }
         }
     }

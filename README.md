@@ -33,3 +33,11 @@ New functionalities has landed. Now you can
 * See album list and play music from albums
 * Setting Page
     * Change bottom bar tabs by removing folders, artists or albums tabs
+
+### 0.3.1-beta
+
+Fix issues:
+
+* Loading data on galaxy devices won't crash the app if not artwork found
+* Disconnecting headset or bluetooth device will pause music
+* The button play paused is now correctly synchronised with the state of the music

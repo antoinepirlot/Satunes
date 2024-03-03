@@ -84,18 +84,15 @@ class PlaybackController private constructor(
         override fun onPlaybackStateChanged(playbackState: Int) {
             super.onPlaybackStateChanged(playbackState)
             if (playbackState == Player.STATE_ENDED) {
-                isPlaying.value = false
-                isEnded = true
+                isEnded = !DEFAULT_IS_ENDED
             }
         }
 
-        override fun onPlayWhenReadyChanged(playWhenReady: Boolean, reason: Int) {
-            super.onPlayWhenReadyChanged(playWhenReady, reason)
-            isPlaying.value = playWhenReady
-            if (playWhenReady) {
-                isEnded = DEFAULT_IS_ENDED
-                updateCurrentPosition()
-            }
+        override fun onIsPlayingChanged(isPlaying: Boolean) {
+            super.onIsPlayingChanged(isPlaying)
+            instance.isPlaying.value = isPlaying
+            isEnded = DEFAULT_IS_ENDED
+            updateCurrentPosition()
         }
 
         override fun onPositionDiscontinuity(
@@ -135,7 +132,6 @@ class PlaybackController private constructor(
             updateHasNext()
             updateHasPrevious()
             mediaController.play()
-            isPlaying.value = !DEFAULT_IS_PLAYING_VALUE
             isEnded = DEFAULT_IS_ENDED
         }
 

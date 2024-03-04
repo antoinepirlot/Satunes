@@ -42,6 +42,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -71,20 +72,21 @@ class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requestPermission()
-        if (!isAudioDenied()) {
-            setContent {
-                val context: Context = LocalContext.current
-                runBlocking {
-                    SettingsManager.loadSettings(context = context)
-                }
-
-                val musicMediaItemSortedMap = remember { sortedMapOf<Music, MediaItem>() }
-                val rootFolderList = remember { sortedMapOf<Long, Folder>() }
-                val folderMap = remember { sortedMapOf<Long, Folder>() }
-                val artistMap = remember { sortedMapOf<String, Artist>() }
-                val albumMap = remember { sortedMapOf<Long, Album>() }
-
+        val isAudioAllowed: MutableState<Boolean> = mutableStateOf(isAudioAllowed())
+        requestPermission(isAudioAllowed = isAudioAllowed)
+        setContent {
+            val context: Context = LocalContext.current
+            runBlocking {
+                SettingsManager.loadSettings(context = context)
+            }
+            @Suppress("NAME_SHADOWING")
+            val isAudioAllowed = rememberSaveable { isAudioAllowed }
+            val musicMediaItemSortedMap = remember { sortedMapOf<Music, MediaItem>() }
+            val rootFolderList = remember { sortedMapOf<Long, Folder>() }
+            val folderMap = remember { sortedMapOf<Long, Folder>() }
+            val artistMap = remember { sortedMapOf<String, Artist>() }
+            val albumMap = remember { sortedMapOf<Long, Album>() }
+            if (isAudioAllowed.value) {
                 DataLoader.loadAllData(
                     context = LocalContext.current,
                     musicMediaItemSortedMap = musicMediaItemSortedMap,
@@ -93,60 +95,60 @@ class MainActivity : ComponentActivity() {
                     artistMap = artistMap,
                     albumMap = albumMap
                 )
+            }
 
-                PlaybackController.initInstance(
-                    context = LocalContext.current,
-                    musicMediaItemSortedMap = musicMediaItemSortedMap
-                )
+            PlaybackController.initInstance(
+                context = LocalContext.current,
+                musicMediaItemSortedMap = musicMediaItemSortedMap
+            )
 
-                MP3Theme {
-                    Surface(
-                        modifier = Modifier.fillMaxSize(),
-                        color = MaterialTheme.colorScheme.background
-                    ) {
-                        val scrollBehavior =
-                            TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
-                        val mediaRouterStartMediaDestination =
-                            // Update the tab by default if settings has changed
-                            if (SettingsManager.foldersChecked.value) {
-                                rememberSaveable { mutableStateOf(MediaDestination.FOLDERS.link) }
-                            } else if (SettingsManager.artistsChecked.value) {
-                                rememberSaveable { mutableStateOf(MediaDestination.ARTISTS.link) }
-                            } else if (SettingsManager.albumsChecked.value) {
-                                rememberSaveable { mutableStateOf(MediaDestination.ALBUMS.link) }
-                            } else {
-                                rememberSaveable { mutableStateOf(MediaDestination.MUSICS.link) }
-                            }
+            MP3Theme {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    val scrollBehavior =
+                        TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
+                    val mediaRouterStartMediaDestination =
+                        // Update the tab by default if settings has changed
+                        if (SettingsManager.foldersChecked.value) {
+                            rememberSaveable { mutableStateOf(MediaDestination.FOLDERS.link) }
+                        } else if (SettingsManager.artistsChecked.value) {
+                            rememberSaveable { mutableStateOf(MediaDestination.ARTISTS.link) }
+                        } else if (SettingsManager.albumsChecked.value) {
+                            rememberSaveable { mutableStateOf(MediaDestination.ALBUMS.link) }
+                        } else {
+                            rememberSaveable { mutableStateOf(MediaDestination.MUSICS.link) }
+                        }
 
-                        val mainRouterNavController = rememberNavController()
-                        val mediaRouterNavController: NavHostController = rememberNavController()
+                    val mainRouterNavController = rememberNavController()
+                    val mediaRouterNavController: NavHostController = rememberNavController()
 
-                        Scaffold(
-                            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-                            topBar = {
-                                MP3TopAppBar(
-                                    scrollBehavior = scrollBehavior,
-                                    navController = mainRouterNavController
-                                )
-                            },
-                            bottomBar = {
-                                MP3BottomAppBar(startDestination = mediaRouterStartMediaDestination)
-                            }
-                        ) { innerPadding ->
-                            Column(
-                                modifier = Modifier.padding(innerPadding)
-                            ) {
-                                MainRouter(
-                                    navController = mainRouterNavController,
-                                    mediaRouterNavController = mediaRouterNavController,
-                                    mediaRouterStartDestination = mediaRouterStartMediaDestination.value,
-                                    rootFolderMap = rootFolderList,
-                                    folderMap = folderMap,
-                                    allArtistSortedMap = artistMap,
-                                    allAlbumSortedMap = albumMap,
-                                    allMusicMediaItemsMap = musicMediaItemSortedMap,
-                                )
-                            }
+                    Scaffold(
+                        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+                        topBar = {
+                            MP3TopAppBar(
+                                scrollBehavior = scrollBehavior,
+                                navController = mainRouterNavController
+                            )
+                        },
+                        bottomBar = {
+                            MP3BottomAppBar(startDestination = mediaRouterStartMediaDestination)
+                        }
+                    ) { innerPadding ->
+                        Column(
+                            modifier = Modifier.padding(innerPadding)
+                        ) {
+                            MainRouter(
+                                navController = mainRouterNavController,
+                                mediaRouterNavController = mediaRouterNavController,
+                                mediaRouterStartDestination = mediaRouterStartMediaDestination.value,
+                                rootFolderMap = rootFolderList,
+                                folderMap = folderMap,
+                                allArtistSortedMap = artistMap,
+                                allAlbumSortedMap = albumMap,
+                                allMusicMediaItemsMap = musicMediaItemSortedMap,
+                            )
                         }
                     }
                 }
@@ -154,18 +156,16 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun requestPermissionLauncher(): ActivityResultLauncher<String> {
+    private fun requestPermissionLauncher(isAudioAllowed: MutableState<Boolean>): ActivityResultLauncher<String> {
         return registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
-            if (!isGranted) {
-                requestPermission()
-            }
+            isAudioAllowed.value = isGranted
         }
     }
 
-    private fun requestPermission() {
+    private fun requestPermission(isAudioAllowed: MutableState<Boolean>) {
         when {
-            isAudioDenied() -> {
-                requestPermissionLauncher().launch(READ_MEDIA_AUDIO)
+            !isAudioAllowed() -> {
+                requestPermissionLauncher(isAudioAllowed = isAudioAllowed).launch(READ_MEDIA_AUDIO)
             }
 
             ActivityCompat.shouldShowRequestPermissionRationale(this, READ_MEDIA_AUDIO) -> {
@@ -174,15 +174,15 @@ class MainActivity : ComponentActivity() {
 
             else -> {
                 // Permission has not been asked yet
-                requestPermissionLauncher().launch(READ_MEDIA_AUDIO)
+                requestPermissionLauncher(isAudioAllowed = isAudioAllowed).launch(READ_MEDIA_AUDIO)
             }
         }
     }
 
-    private fun isAudioDenied(): Boolean {
+    private fun isAudioAllowed(): Boolean {
         return ContextCompat.checkSelfPermission(
             this,
             READ_MEDIA_AUDIO
-        ) == PackageManager.PERMISSION_DENIED
+        ) == PackageManager.PERMISSION_GRANTED
     }
 }

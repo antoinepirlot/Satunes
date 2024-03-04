@@ -11,7 +11,7 @@
  *
  *  You should have received a copy of the GNU General Public License along with MP3 Player.
  *  If not, see <https://www.gnu.org/licenses/>.
-
+ *
  *  ***** INFORMATIONS ABOUT THE AUTHOR *****
  *  The author of this file is Antoine Pirlot, the owner of this project.
  *  You find this original project on github.
@@ -20,40 +20,41 @@
  *  This current project's link is: https://github.com/antoinepirlot/MP3-Player
  *
  *  You can contact me via my email: pirlot.antoine@outlook.com
- * PS: I don't answer quickly.
+ *  PS: I don't answer quickly.
  */
 
 package earth.mp3player.models
 
-import android.net.Uri
-import androidx.compose.ui.graphics.ImageBitmap
-import androidx.media3.common.MediaItem
-import earth.mp3player.services.PlaybackController
+import java.util.SortedMap
 
-class Music(
+/**
+ * @author Antoine Pirlot on 04-03-24
+ */
+class Genre(
     override val id: Long,
-    override val name: String,
-    val duration: Long,
-    val size: Int,
-    val relativePath: String,
-    var folder: Folder? = null,
-    var artist: Artist? = null,
-    var album: Album? = null,
-    var genre: Genre? = null
+    override var name: String,
 ) : Media {
 
+    val musicMap: SortedMap<Long, Music> = sortedMapOf()
 
-    val mediaItem: MediaItem
-    val absolutePath: String = "${PlaybackController.ROOT_PATH}/$relativePath/$name"
-    val uri: Uri = Uri.Builder().appendPath(this.absolutePath).build()
-    var artwork: ImageBitmap? = null
+    fun addMusic(music: Music) {
+        musicMap.putIfAbsent(music.id, music)
+    }
 
-    init {
-        this.mediaItem = MediaItem.Builder()
-            .setUri(this.uri)
-            .build()
-        if (this.album != null) {
-            this.album!!.addMusic(music = this)
-        }
+    fun getMusicList(): List<Music> {
+        return this.musicMap.values.toList()
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Genre
+
+        return name == other.name
+    }
+
+    override fun hashCode(): Int {
+        return name.hashCode()
     }
 }

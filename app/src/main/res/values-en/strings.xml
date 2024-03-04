@@ -7,4 +7,5 @@
     <string name="play_all">Shuffle All Musics</string>
     <string name="albums">Albums</string>
     <string name="bottom_bar">Bottom Navigation Bar</string>
+    <string name="genres">Genres</string>
 </resources>

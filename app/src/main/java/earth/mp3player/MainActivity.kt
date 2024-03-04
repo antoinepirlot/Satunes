@@ -152,6 +152,7 @@ class MainActivity : ComponentActivity() {
                                 allArtistSortedMap = artistMap,
                                 allAlbumSortedMap = albumMap,
                                 allMusicMediaItemsMap = musicMediaItemSortedMap,
+                                genreMap = genreMap
                             )
                         }
                     }

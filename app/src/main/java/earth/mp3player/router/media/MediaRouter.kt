@@ -60,6 +60,7 @@ import androidx.navigation.compose.composable
 import earth.mp3player.models.Album
 import earth.mp3player.models.Artist
 import earth.mp3player.models.Folder
+import earth.mp3player.models.Genre
 import earth.mp3player.models.Media
 import earth.mp3player.models.Music
 import earth.mp3player.services.PlaybackController
@@ -79,6 +80,7 @@ fun MediaRouter(
     allAlbumSortedMap: SortedMap<Long, Album>,
     allMusicMediaItemsMap: SortedMap<Music, MediaItem>,
     folderMap: Map<Long, Folder>,
+    genreMap: Map<String, Genre>
 ) {
     val mapToShow: SortedMap<Long, Media> = remember { sortedMapOf() }
     val playbackController: PlaybackController = PlaybackController.getInstance()
@@ -232,6 +234,30 @@ fun MediaRouter(
                         shuffleMode = true
                     )
                     openMedia(navController = navController)
+                },
+                onFABClick = { openCurrentMusic(navController = navController) }
+            )
+        }
+
+        composable(MediaDestination.GENRES.link) {
+            val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
+            genreMap.forEach { (_: String, genre: Genre) ->
+                musicMediaItemSortedMap.putAll(genre.musicMediaItemMap)
+            }
+            @Suppress("UNCHECKED_CAST")
+            MediaListView(
+                mediaMap = genreMap as SortedMap<Long, Media>, //String is cast to Long
+                openMedia = { clickedMedia: Media ->
+                    val genre: Genre = clickedMedia as Genre
+                    playbackController.loadMusic(
+                        musicMediaItemSortedMap = genre.musicMediaItemMap
+                    )
+                },
+                shuffleMusicAction = {
+                    playbackController.loadMusic(
+                        musicMediaItemSortedMap = musicMediaItemSortedMap,
+                        shuffleMode = true
+                    )
                 },
                 onFABClick = { openCurrentMusic(navController = navController) }
             )

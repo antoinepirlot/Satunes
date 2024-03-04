@@ -30,6 +30,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AccountCircle
 import androidx.compose.material.icons.rounded.Album
 import androidx.compose.material.icons.rounded.Audiotrack
+import androidx.compose.material.icons.rounded.Category
 import androidx.compose.material.icons.rounded.Folder
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -55,6 +56,7 @@ fun MP3BottomAppBar(
         MenuTitle.FOLDERS,
         MenuTitle.ARTISTS,
         MenuTitle.ALBUMS,
+        MenuTitle.GENRES,
         MenuTitle.MUSIC,
     )
     SettingsManager.menuTitleCheckedMap.forEach { (menuTitle: MenuTitle, checked: MutableState<Boolean>) ->
@@ -70,6 +72,8 @@ fun MP3BottomAppBar(
             rememberSaveable { mutableStateOf(MenuTitle.ARTISTS) }
         } else if (SettingsManager.albumsChecked.value) {
             rememberSaveable { mutableStateOf(MenuTitle.ALBUMS) }
+        } else if (SettingsManager.genreChecked.value) {
+            rememberSaveable { mutableStateOf(MenuTitle.GENRES) }
         } else {
             rememberSaveable { mutableStateOf(MenuTitle.MUSIC) }
         }
@@ -94,6 +98,10 @@ fun MP3BottomAppBar(
 
                         MenuTitle.ALBUMS -> {
                             startDestination.value = MediaDestination.ALBUMS.link
+                        }
+
+                        MenuTitle.GENRES -> {
+                            startDestination.value = MediaDestination.GENRES.link
                         }
 
                         MenuTitle.MUSIC -> {
@@ -123,6 +131,13 @@ fun MP3BottomAppBar(
                             Icon(
                                 imageVector = Icons.Rounded.Album,
                                 contentDescription = "Album Icon"
+                            )
+                        }
+
+                        MenuTitle.GENRES -> {
+                            Icon(
+                                imageVector = Icons.Rounded.Category,
+                                contentDescription = "Genres Icon"
                             )
                         }
 

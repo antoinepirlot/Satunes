@@ -9,7 +9,7 @@ If you decide to use my code to create new app, you can but you have to use the 
 
 # UPDATES
 
-## 0.3
+## 0.3 (Android Upside Down Cake and later)
 
 ### 0.3.2-beta
 
@@ -33,7 +33,7 @@ New functionalities has landed. Now you can
 * Setting Page
     * Change bottom bar tabs by removing folders, artists or albums tabs
 
-## 0.2
+## 0.2 (Android Upside Down Cake and later)
 
 ### 0.2.1-beta
 
@@ -47,7 +47,7 @@ In this version the album artwork is shown on the playback screen the music cont
 move
 to the bottom of the screen.
 
-## 0.1
+## 0.1 (Android Upside Down Cake and later)
 
 ### 0.1.0-beta
 

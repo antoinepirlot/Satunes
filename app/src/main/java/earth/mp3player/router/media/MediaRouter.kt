@@ -246,7 +246,6 @@ fun MediaRouter(
                 musicMediaItemSortedMap.putAll(genre.musicMediaItemMap)
                 mediaMap.putIfAbsent(genre.id, genre)
             }
-            @Suppress("UNCHECKED_CAST")
             MediaListView(
                 mediaMap = mediaMap,
                 openMedia = { clickedMedia: Media ->

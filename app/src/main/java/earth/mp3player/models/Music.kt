@@ -44,7 +44,7 @@ class Music(
     var folder: Folder? = null,
     var artist: Artist? = null,
     var album: Album? = null,
-    var genre: Genre? = null
+    var genre: Genre? = null,
     context: Context
 ) : Media {
 

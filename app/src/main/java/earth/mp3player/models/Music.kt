@@ -25,30 +25,51 @@
 
 package earth.mp3player.models
 
+import android.content.Context
 import android.net.Uri
+import android.os.storage.StorageManager
+import android.os.storage.StorageVolume
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.core.content.getSystemService
 import androidx.media3.common.MediaItem
 import earth.mp3player.services.PlaybackController
+import java.io.File
 
 class Music(
     override val id: Long,
     override val name: String,
     val duration: Long,
     val size: Int,
-    val relativePath: String,
+    var relativePath: String,
     var folder: Folder? = null,
     var artist: Artist? = null,
     var album: Album? = null,
     var genre: Genre? = null
+    context: Context
 ) : Media {
 
-
     val mediaItem: MediaItem
-    val absolutePath: String = "${PlaybackController.ROOT_PATH}/$relativePath/$name"
-    val uri: Uri = Uri.Builder().appendPath(this.absolutePath).build()
+    var absolutePath: String? = "${PlaybackController.ROOT_PATH}/$relativePath/$name"
+    var uri: Uri = Uri.Builder().appendPath(this.absolutePath).build()
     var artwork: ImageBitmap? = null
 
     init {
+        val storageManager = context.getSystemService<StorageManager>()
+        val storageVolumes: List<StorageVolume> = storageManager!!.storageVolumes
+        for (volume in storageVolumes) {
+            absolutePath = "${volume.directory!!.path}/$relativePath/$name"
+            if (!File(this.absolutePath!!).exists()) {
+                if (storageVolumes.last() == volume) {
+                    throw IllegalAccessException("This media doesn't exist")
+                }
+                continue
+            }
+            if (storageVolumes.size > 1) {
+                relativePath = "${volume.directory!!.path.split("/").last()}/$relativePath"
+            }
+            this.uri = Uri.parse(absolutePath)
+            break
+        }
         this.mediaItem = MediaItem.Builder()
             .setUri(this.uri)
             .build()

@@ -8,4 +8,6 @@
     <string name="bottom_bar">Barre de navigation</string>
     <string name="albums">Albums</string>
     <string name="genres">Genres</string>
+    <string name="this_device">Cet Appareil</string>
+    <string name="external_storage">Stockage Externe</string>
 </resources>

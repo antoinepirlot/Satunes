@@ -5,7 +5,9 @@
     <string name="artists">Artistes</string>
     <string name="tracks">Morceaux</string>
     <string name="play_all">Lire en mode aléatoire</string>
-    <string name="albums">Albums</string>
+    <string name="albums" translatable="false">Albums</string>
     <string name="bottom_bar">Barre de navigation</string>
     <string name="genres">Genres</string>
+    <string name="this_device">Cet Appareil</string>
+    <string name="external_storage">Stockage Externe</string>
 </resources>

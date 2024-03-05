@@ -24,7 +24,7 @@ fun AlbumArtwork(
             Image(
                 modifier = modifier,
                 bitmap = musicPlaying!!.artwork!!,
-                contentDescription = "Default Album Artwork"
+                contentDescription = "Music Playing Album Artwork"
             )
         } else {
             Image(

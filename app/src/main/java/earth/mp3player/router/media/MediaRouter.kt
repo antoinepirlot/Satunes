@@ -329,9 +329,7 @@ private fun openMediaFromFolder(
             openMedia(navController, media)
         }
 
-        is Folder -> {
-            navController.navigate(getDestinationOf(media))
-        }
+        is Folder -> navController.navigate(getDestinationOf(media))
     }
 
 }
@@ -346,21 +344,13 @@ private fun openMediaFromFolder(
  */
 fun getDestinationOf(media: Media?): String {
     return when (media) {
-        is Folder -> {
-            "${MediaDestination.FOLDERS.link}/${media.id}"
-        }
+        is Folder -> "${MediaDestination.FOLDERS.link}/${media.id}"
 
-        is Artist -> {
-            "${MediaDestination.ARTISTS.link}/${media.name}"
-        }
+        is Artist -> "${MediaDestination.ARTISTS.link}/${media.name}"
 
-        is Album -> {
-            "${MediaDestination.ALBUMS.link}/${media.id}"
-        }
+        is Album -> "${MediaDestination.ALBUMS.link}/${media.id}"
 
-        else -> {
-            MediaDestination.PLAYBACK.link
-        }
+        else -> MediaDestination.PLAYBACK.link
     }
 }
 

@@ -250,20 +250,41 @@ fun MediaRouter(
             MediaListView(
                 mediaMap = mediaMap,
                 openMedia = { clickedMedia: Media ->
-                    val genre: Genre = clickedMedia as Genre
-                    playbackController.loadMusic(
-                        musicMediaItemSortedMap = genre.musicMediaItemMap
-                    )
+                    openMedia(navController = navController, media = clickedMedia)
                 },
                 shuffleMusicAction = {
                     playbackController.loadMusic(
                         musicMediaItemSortedMap = musicMediaItemSortedMap,
                         shuffleMode = true
                     )
+                    openMedia(navController = navController)
                 },
                 onFABClick = { openCurrentMusic(navController = navController) }
             )
         }
+
+        composable("${MediaDestination.GENRES.link}/{name}") {
+            val genreName: String = it.arguments!!.getString("name")!!
+            val genre = genreMap[genreName]!!
+            MediaListView(
+                mediaMap = genre.musicMap,
+                openMedia = { clickedMedia: Media ->
+                    playbackController.loadMusic(
+                        musicMediaItemSortedMap = genre.musicMediaItemMap
+                    )
+                    openMedia(navController = navController, media = clickedMedia)
+                },
+                shuffleMusicAction = {
+                    playbackController.loadMusic(
+                        musicMediaItemSortedMap = genre.musicMediaItemMap,
+                        shuffleMode = true
+                    )
+                    openMedia(navController = navController)
+                },
+                onFABClick = { openCurrentMusic(navController = navController) }
+            )
+        }
+
 
         composable(MediaDestination.MUSICS.link) {
             val mediaMap: SortedMap<Long, Media> = sortedMapOf()
@@ -349,6 +370,8 @@ fun getDestinationOf(media: Media?): String {
         is Artist -> "${MediaDestination.ARTISTS.link}/${media.name}"
 
         is Album -> "${MediaDestination.ALBUMS.link}/${media.id}"
+
+        is Genre -> "${MediaDestination.GENRES.link}/${media.name}"
 
         else -> MediaDestination.PLAYBACK.link
     }

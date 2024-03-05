@@ -241,7 +241,7 @@ fun MediaRouter(
 
         composable(MediaDestination.GENRES.link) {
             val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
-            val mediaMap: MutableMap<Long, Media> = sortedMapOf()
+            val mediaMap: MutableMap<Long, Media> = mutableMapOf()
             genreMap.forEach { (_: String, genre: Genre) ->
                 musicMediaItemSortedMap.putAll(genre.musicMediaItemMap)
                 mediaMap.putIfAbsent(genre.id, genre)

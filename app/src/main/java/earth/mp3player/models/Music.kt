@@ -29,6 +29,7 @@ import android.net.Uri
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.media3.common.MediaItem
 import earth.mp3player.services.PlaybackController
+import java.io.File
 
 class Music(
     override val id: Long,
@@ -47,6 +48,9 @@ class Music(
     var artwork: ImageBitmap? = null
 
     init {
+        if (!File(this.absolutePath).exists()) {
+            throw IllegalAccessError("This file doesn't exist")
+        }
         this.mediaItem = MediaItem.Builder()
             .setUri(this.uri)
             .build()

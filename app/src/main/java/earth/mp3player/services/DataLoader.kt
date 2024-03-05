@@ -141,7 +141,10 @@ object DataLoader {
                     musicMediaItemSortedMap[music] = music.mediaItem
                 } catch (_: IllegalAccessError) {
                     // No music found
-                    return
+                    if (album != null && album.musicSortedMap.isEmpty()) {
+                        albumMap.remove(album.id)
+                    }
+                    continue
                 }
                 loadFolders(music = music)
 

@@ -68,6 +68,7 @@ import earth.mp3player.ui.appBars.MP3BottomAppBar
 import earth.mp3player.ui.appBars.MP3TopAppBar
 import earth.mp3player.ui.theme.MP3Theme
 import kotlinx.coroutines.runBlocking
+import java.util.SortedMap
 
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
@@ -87,7 +88,7 @@ class MainActivity : ComponentActivity() {
             val folderMap = remember { sortedMapOf<Long, Folder>() }
             val artistMap = remember { sortedMapOf<String, Artist>() }
             val albumMap = remember { sortedMapOf<Long, Album>() }
-            val genreMap = remember { sortedMapOf<String, Genre>() }
+            val genreMap: SortedMap<String, Genre> = remember { sortedMapOf() }
 
             if (isAudioAllowed.value) {
                 DataLoader.loadAllData(

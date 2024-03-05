@@ -42,12 +42,11 @@ import earth.mp3player.models.Album
 import earth.mp3player.models.Artist
 import earth.mp3player.models.Folder
 import earth.mp3player.models.Media
-import java.util.SortedMap
 
 @Composable
 fun MediaCardList(
     modifier: Modifier = Modifier,
-    mediaMap: SortedMap<Long, Media>,
+    mediaMap: Map<Long, Media>,
     openMedia: (media: Media) -> Unit
 ) {
     val lazyState = rememberLazyListState()

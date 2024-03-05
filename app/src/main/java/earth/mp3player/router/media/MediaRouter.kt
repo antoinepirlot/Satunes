@@ -241,12 +241,14 @@ fun MediaRouter(
 
         composable(MediaDestination.GENRES.link) {
             val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
+            val mediaMap: MutableMap<Long, Media> = sortedMapOf()
             genreMap.forEach { (_: String, genre: Genre) ->
                 musicMediaItemSortedMap.putAll(genre.musicMediaItemMap)
+                mediaMap.putIfAbsent(genre.id, genre)
             }
             @Suppress("UNCHECKED_CAST")
             MediaListView(
-                mediaMap = genreMap as SortedMap<Long, Media>, //String is cast to Long
+                mediaMap = mediaMap,
                 openMedia = { clickedMedia: Media ->
                     val genre: Genre = clickedMedia as Genre
                     playbackController.loadMusic(

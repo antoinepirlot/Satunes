@@ -25,10 +25,17 @@
 
 package earth.mp3player.models
 
+import android.content.Context
 import android.net.Uri
+import android.os.storage.StorageManager
+import android.os.storage.StorageVolume
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.core.content.getSystemService
 import androidx.media3.common.MediaItem
 import earth.mp3player.services.PlaybackController
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.io.File
 
 class Music(
@@ -40,17 +47,28 @@ class Music(
     var folder: Folder? = null,
     var artist: Artist? = null,
     var album: Album? = null,
+    conext: Context
 ) : Media {
 
     val mediaItem: MediaItem
-    val absolutePath: String = "${PlaybackController.ROOT_PATH}/$relativePath/$name"
+    var absolutePath: String? = "${PlaybackController.ROOT_PATH}/$relativePath/$name"
     val uri: Uri = Uri.Builder().appendPath(this.absolutePath).build()
     var artwork: ImageBitmap? = null
 
     init {
-        if (!File(this.absolutePath).exists()) {
-            throw IllegalAccessError("This file doesn't exist")
+        val storageManager = context.getSystemService<StorageManager>()
+        val storageVolumes: List<StorageVolume> = storageManager!!.storageVolumes
+        //TODO check to load from all storages volumes
+        for (volume in storageVolumes) {
+            absolutePath = "${volume.directory!!.path}/$relativePath/$name"
+            if (!File(this.absolutePath).exists()) {
+                throw IllegalAccessError("This file doesn't exist")
+            }
+            CoroutineScope(Dispatchers.Main).launch {
+                val uri: Uri = Uri.parse(volume.directory!!.path)
+            }
         }
+
         this.mediaItem = MediaItem.Builder()
             .setUri(this.uri)
             .build()

@@ -33,6 +33,7 @@ import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.os.Environment
 import android.os.storage.StorageManager
+import android.os.storage.StorageVolume
 import android.provider.MediaStore
 import androidx.compose.runtime.MutableLongState
 import androidx.compose.runtime.mutableLongStateOf
@@ -138,9 +139,6 @@ object DataLoader {
                     album = loadAlbum(cursor = it)
                     albumMap[album.id] = album
                 }
-                val storageManager = context.getSystemService<StorageManager>()
-                val storageVolumes = storageManager!!.storageVolumes
-                //TODO check to load from all storages volumes
                 var music: Music? = null
                 try {
                     music = loadMusic(context = context, cursor = it, album = album)

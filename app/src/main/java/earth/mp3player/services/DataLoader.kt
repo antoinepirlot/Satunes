@@ -131,7 +131,7 @@ object DataLoader {
                 var artist: Artist? = null
                 var album: Album? = null
 
-                if (albumIdColumn != null && albumIdColumn != null) {
+                if (albumIdColumn != null && albumNameColumn != null) {
                     album = loadAlbum(cursor = it)
                     albumMap[album.id] = album
                 }

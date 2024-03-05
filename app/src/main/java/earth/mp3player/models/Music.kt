@@ -33,9 +33,6 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.core.content.getSystemService
 import androidx.media3.common.MediaItem
 import earth.mp3player.services.PlaybackController
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import java.io.File
 
 class Music(
@@ -43,16 +40,16 @@ class Music(
     override val name: String,
     val duration: Long,
     val size: Int,
-    val relativePath: String,
+    var relativePath: String,
     var folder: Folder? = null,
     var artist: Artist? = null,
     var album: Album? = null,
-    conext: Context
+    context: Context
 ) : Media {
 
     val mediaItem: MediaItem
     var absolutePath: String? = "${PlaybackController.ROOT_PATH}/$relativePath/$name"
-    val uri: Uri = Uri.Builder().appendPath(this.absolutePath).build()
+    var uri: Uri = Uri.Builder().appendPath(this.absolutePath).build()
     var artwork: ImageBitmap? = null
 
     init {
@@ -61,14 +58,19 @@ class Music(
         //TODO check to load from all storages volumes
         for (volume in storageVolumes) {
             absolutePath = "${volume.directory!!.path}/$relativePath/$name"
-            if (!File(this.absolutePath).exists()) {
-                throw IllegalAccessError("This file doesn't exist")
+            val file = File(this.absolutePath!!)
+            if (!File(this.absolutePath!!).exists()) {
+                if (storageVolumes.last() == volume) {
+                    throw IllegalAccessException("This media doesn't exist")
+                }
+                continue
             }
-            CoroutineScope(Dispatchers.Main).launch {
-                val uri: Uri = Uri.parse(volume.directory!!.path)
+            if (storageVolumes.size > 1) {
+                relativePath = "${volume.directory!!.path.split("/").last()}/$relativePath"
             }
+            this.uri = Uri.parse(absolutePath)
+            break
         }
-
         this.mediaItem = MediaItem.Builder()
             .setUri(this.uri)
             .build()

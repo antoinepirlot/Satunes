@@ -31,15 +31,10 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.media.MediaMetadataRetriever
 import android.net.Uri
-import android.os.Environment
-import android.os.storage.StorageManager
-import android.os.storage.StorageVolume
 import android.provider.MediaStore
 import androidx.compose.runtime.MutableLongState
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.ui.graphics.asImageBitmap
-import androidx.core.content.ContextCompat.getSystemService
-import androidx.core.content.getSystemService
 import androidx.media3.common.MediaItem
 import earth.mp3player.models.Album
 import earth.mp3player.models.Artist
@@ -48,7 +43,6 @@ import earth.mp3player.models.Music
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.io.File
 import java.util.SortedMap
 
 object DataLoader {
@@ -183,6 +177,7 @@ object DataLoader {
         val size = cursor.getInt(musicSizeColumn!!)
         val relativePath = cursor.getString(relativePathColumn!!)
         val music: Music = Music(
+            context = context,
             id = id,
             name = name,
             duration = duration,

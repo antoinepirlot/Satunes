@@ -31,6 +31,7 @@ import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import earth.mp3player.models.Media
 import earth.mp3player.models.Music
@@ -69,7 +70,12 @@ fun MediaListView(
 @Composable
 @Preview
 fun MediaListViewPreview() {
-    val map = sortedMapOf(Pair<Long, Media>(1, Music(1, "Musique", 0, 0, "", null)))
+    val map = sortedMapOf(
+        Pair<Long, Media>(
+            1,
+            Music(1, "Musique", 0, 0, "", null, context = LocalContext.current)
+        )
+    )
     MediaListView(
         mediaMap = map,
         openMedia = {},

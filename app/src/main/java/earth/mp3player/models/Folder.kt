@@ -87,7 +87,7 @@ class Folder(
                 }
             }
             if (subFolder == null) {
-                subFolder = Folder(folderId.longValue, folderName)
+                subFolder = Folder(folderId.longValue, folderName, parentFolder = this)
                 folderMap[folderId.longValue] = subFolder
                 folderId.longValue++
                 parentFolder.subFolderList[subFolder.id] = subFolder

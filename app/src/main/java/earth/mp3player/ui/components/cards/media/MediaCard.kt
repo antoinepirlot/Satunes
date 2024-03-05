@@ -36,6 +36,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import earth.mp3player.models.Music
 
@@ -68,7 +69,7 @@ fun MediaCard(
 @Composable
 @Preview
 fun CardPreview() {
-    val music = Music(1, "Il avait les mots", 2, 2, "relative path")
+    val music = Music(1, "Il avait les mots", 2, 2, "relative path", context = LocalContext.current)
     MediaCard(
         modifier = Modifier.fillMaxSize(),
         text = music.name,

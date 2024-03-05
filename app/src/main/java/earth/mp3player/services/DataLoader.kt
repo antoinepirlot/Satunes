@@ -30,6 +30,7 @@ import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.media.MediaMetadataRetriever
+import android.net.Uri
 import android.provider.MediaStore
 import androidx.compose.runtime.MutableLongState
 import androidx.compose.runtime.mutableLongStateOf
@@ -46,7 +47,7 @@ import java.util.SortedMap
 
 object DataLoader {
     const val FIRST_FOLDER_INDEX: Long = 1
-    private val URI = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+    private val URI: Uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
 
     // Music variables
     private var musicIdColumn: Int? = null
@@ -128,13 +129,21 @@ object DataLoader {
                 var artist: Artist? = null
                 var album: Album? = null
 
-                if (albumIdColumn != null && albumIdColumn != null) {
+                if (albumIdColumn != null && albumNameColumn != null) {
                     album = loadAlbum(cursor = it)
                     albumMap[album.id] = album
                 }
-                val music: Music = loadMusic(context = context, cursor = it, album = album)
-                musicMediaItemSortedMap[music] = music.mediaItem
-
+                var music: Music? = null
+                try {
+                    music = loadMusic(context = context, cursor = it, album = album)
+                    musicMediaItemSortedMap[music] = music.mediaItem
+                } catch (_: IllegalAccessError) {
+                    // No music found
+                    if (album != null && album.musicSortedMap.isEmpty()) {
+                        albumMap.remove(album.id)
+                    }
+                    continue
+                }
                 loadFolders(music = music)
 
                 if (artistIdColumn != null && artistNameColumn != null) {
@@ -168,6 +177,7 @@ object DataLoader {
         val size = cursor.getInt(musicSizeColumn!!)
         val relativePath = cursor.getString(relativePathColumn!!)
         val music: Music = Music(
+            context = context,
             id = id,
             name = name,
             duration = duration,

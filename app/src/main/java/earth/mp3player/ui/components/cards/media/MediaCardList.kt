@@ -37,7 +37,9 @@ import androidx.compose.material.icons.rounded.Album
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import earth.mp3player.R
 import earth.mp3player.models.Album
 import earth.mp3player.models.Artist
 import earth.mp3player.models.Folder
@@ -63,9 +65,19 @@ fun MediaCardList(
                 ) { media: Media ->
                     // First pair is image vector and second one is content description (String)
                     val pair = getRightIconAnDescription(media)
+                    val mediaName: String =
+                        if (media is Folder && media.parentFolder == null) {
+                            when (media.name) {
+                                "0" -> stringResource(id = R.string.this_device)
+                                else -> "${stringResource(id = R.string.external_storage)}: ${media.name}"
+                            }
+                        } else {
+                            media.name
+                        }
+
                     MediaCard(
                         modifier = modifier,
-                        text = media.name,
+                        text = mediaName,
                         imageVector = pair.first,
                         contentDescription = pair.second,
                         onClick = { openMedia(media) }

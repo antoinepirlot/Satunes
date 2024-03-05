@@ -55,10 +55,8 @@ class Music(
     init {
         val storageManager = context.getSystemService<StorageManager>()
         val storageVolumes: List<StorageVolume> = storageManager!!.storageVolumes
-        //TODO check to load from all storages volumes
         for (volume in storageVolumes) {
             absolutePath = "${volume.directory!!.path}/$relativePath/$name"
-            val file = File(this.absolutePath!!)
             if (!File(this.absolutePath!!).exists()) {
                 if (storageVolumes.last() == volume) {
                     throw IllegalAccessException("This media doesn't exist")

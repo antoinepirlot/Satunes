@@ -29,27 +29,19 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Folder
-import androidx.compose.material.icons.filled.MusicNote
-import androidx.compose.material.icons.rounded.Album
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import earth.mp3player.R
-import earth.mp3player.models.Album
-import earth.mp3player.models.Artist
 import earth.mp3player.models.Folder
 import earth.mp3player.models.Media
-import java.util.SortedMap
+import earth.mp3player.ui.utils.getRightIconAndDescription
 
 @Composable
 fun MediaCardList(
     modifier: Modifier = Modifier,
-    mediaMap: SortedMap<Long, Media>,
+    mediaMap: Map<Long, Media>,
     openMedia: (media: Media) -> Unit
 ) {
     val lazyState = rememberLazyListState()
@@ -64,7 +56,7 @@ fun MediaCardList(
                     key = { it.id }
                 ) { media: Media ->
                     // First pair is image vector and second one is content description (String)
-                    val pair = getRightIconAnDescription(media)
+                    val pair = getRightIconAndDescription(media)
                     val mediaName: String =
                         if (media is Folder && media.parentFolder == null) {
                             when (media.name) {
@@ -74,7 +66,6 @@ fun MediaCardList(
                         } else {
                             media.name
                         }
-
                     MediaCard(
                         modifier = modifier,
                         text = mediaName,
@@ -95,26 +86,4 @@ fun CardListPreview() {
         mediaMap = sortedMapOf(),
         openMedia = {}
     )
-}
-
-private fun getRightIconAnDescription(media: Media): Pair<ImageVector, String> {
-    return when (media) {
-        is Folder -> {
-            Icons.Filled.Folder to "Arrow Forward"
-        }
-
-        is Artist -> {
-            Icons.Filled.AccountCircle to "Account Circle"
-        }
-
-        is Album -> {
-            Icons.Rounded.Album to "Album Icon"
-        }
-
-        else -> {
-            // In that case, media is Music
-            Icons.Filled.MusicNote to "Play Arrow"
-        }
-    }
-
 }

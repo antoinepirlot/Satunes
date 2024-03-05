@@ -57,6 +57,7 @@ import androidx.navigation.compose.rememberNavController
 import earth.mp3player.models.Album
 import earth.mp3player.models.Artist
 import earth.mp3player.models.Folder
+import earth.mp3player.models.Genre
 import earth.mp3player.models.Music
 import earth.mp3player.router.main.MainRouter
 import earth.mp3player.router.media.MediaDestination
@@ -67,6 +68,7 @@ import earth.mp3player.ui.appBars.MP3BottomAppBar
 import earth.mp3player.ui.appBars.MP3TopAppBar
 import earth.mp3player.ui.theme.MP3Theme
 import kotlinx.coroutines.runBlocking
+import java.util.SortedMap
 
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
@@ -86,6 +88,8 @@ class MainActivity : ComponentActivity() {
             val folderMap = remember { sortedMapOf<Long, Folder>() }
             val artistMap = remember { sortedMapOf<String, Artist>() }
             val albumMap = remember { sortedMapOf<Long, Album>() }
+            val genreMap: SortedMap<String, Genre> = remember { sortedMapOf() }
+
             if (isAudioAllowed.value) {
                 DataLoader.loadAllData(
                     context = LocalContext.current,
@@ -93,7 +97,8 @@ class MainActivity : ComponentActivity() {
                     rootFolderMap = rootFolderList,
                     folderMap = folderMap,
                     artistMap = artistMap,
-                    albumMap = albumMap
+                    albumMap = albumMap,
+                    genreMap = genreMap
                 )
             }
 
@@ -148,6 +153,7 @@ class MainActivity : ComponentActivity() {
                                 allArtistSortedMap = artistMap,
                                 allAlbumSortedMap = albumMap,
                                 allMusicMediaItemsMap = musicMediaItemSortedMap,
+                                genreMap = genreMap
                             )
                         }
                     }

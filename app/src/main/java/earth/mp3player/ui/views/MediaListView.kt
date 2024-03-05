@@ -39,12 +39,11 @@ import earth.mp3player.services.PlaybackController
 import earth.mp3player.ui.components.cards.media.MediaCardList
 import earth.mp3player.ui.components.music.bars.ShowCurrentMusicButton
 import earth.mp3player.ui.components.music.buttons.ShuffleAllButton
-import java.util.SortedMap
 
 @Composable
 fun MediaListView(
     modifier: Modifier = Modifier,
-    mediaMap: SortedMap<Long, Media>,
+    mediaMap: Map<Long, Media>,
     openMedia: (media: Media) -> Unit,
     shuffleMusicAction: () -> Unit,
     onFABClick: () -> Unit

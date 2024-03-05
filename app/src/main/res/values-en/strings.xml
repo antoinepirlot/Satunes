@@ -6,6 +6,7 @@
     <string name="tracks">Tracks</string>
     <string name="play_all">Shuffle All Musics</string>
     <string name="bottom_bar">Bottom Navigation Bar</string>
+    <string name="genres">Genres</string>
     <string name="this_device">This Device</string>
     <string name="external_storage">External Storage</string>
 </resources>

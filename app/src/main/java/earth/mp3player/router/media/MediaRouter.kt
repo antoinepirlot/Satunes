@@ -60,6 +60,7 @@ import androidx.navigation.compose.composable
 import earth.mp3player.models.Album
 import earth.mp3player.models.Artist
 import earth.mp3player.models.Folder
+import earth.mp3player.models.Genre
 import earth.mp3player.models.Media
 import earth.mp3player.models.Music
 import earth.mp3player.services.PlaybackController
@@ -79,6 +80,7 @@ fun MediaRouter(
     allAlbumSortedMap: SortedMap<Long, Album>,
     allMusicMediaItemsMap: SortedMap<Music, MediaItem>,
     folderMap: Map<Long, Folder>,
+    genreMap: Map<String, Genre>
 ) {
     val mapToShow: SortedMap<Long, Media> = remember { sortedMapOf() }
     val playbackController: PlaybackController = PlaybackController.getInstance()
@@ -237,6 +239,52 @@ fun MediaRouter(
             )
         }
 
+        composable(MediaDestination.GENRES.link) {
+            val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
+            val mediaMap: MutableMap<Long, Media> = mutableMapOf()
+            genreMap.forEach { (_: String, genre: Genre) ->
+                musicMediaItemSortedMap.putAll(genre.musicMediaItemMap)
+                mediaMap.putIfAbsent(genre.id, genre)
+            }
+            MediaListView(
+                mediaMap = mediaMap,
+                openMedia = { clickedMedia: Media ->
+                    openMedia(navController = navController, media = clickedMedia)
+                },
+                shuffleMusicAction = {
+                    playbackController.loadMusic(
+                        musicMediaItemSortedMap = musicMediaItemSortedMap,
+                        shuffleMode = true
+                    )
+                    openMedia(navController = navController)
+                },
+                onFABClick = { openCurrentMusic(navController = navController) }
+            )
+        }
+
+        composable("${MediaDestination.GENRES.link}/{name}") {
+            val genreName: String = it.arguments!!.getString("name")!!
+            val genre = genreMap[genreName]!!
+            MediaListView(
+                mediaMap = genre.musicMap,
+                openMedia = { clickedMedia: Media ->
+                    playbackController.loadMusic(
+                        musicMediaItemSortedMap = genre.musicMediaItemMap
+                    )
+                    openMedia(navController = navController, media = clickedMedia)
+                },
+                shuffleMusicAction = {
+                    playbackController.loadMusic(
+                        musicMediaItemSortedMap = genre.musicMediaItemMap,
+                        shuffleMode = true
+                    )
+                    openMedia(navController = navController)
+                },
+                onFABClick = { openCurrentMusic(navController = navController) }
+            )
+        }
+
+
         composable(MediaDestination.MUSICS.link) {
             val mediaMap: SortedMap<Long, Media> = sortedMapOf()
             allMusicMediaItemsMap.keys.forEach { music: Music ->
@@ -301,9 +349,7 @@ private fun openMediaFromFolder(
             openMedia(navController, media)
         }
 
-        is Folder -> {
-            navController.navigate(getDestinationOf(media))
-        }
+        is Folder -> navController.navigate(getDestinationOf(media))
     }
 
 }
@@ -318,21 +364,15 @@ private fun openMediaFromFolder(
  */
 fun getDestinationOf(media: Media?): String {
     return when (media) {
-        is Folder -> {
-            "${MediaDestination.FOLDERS.link}/${media.id}"
-        }
+        is Folder -> "${MediaDestination.FOLDERS.link}/${media.id}"
 
-        is Artist -> {
-            "${MediaDestination.ARTISTS.link}/${media.name}"
-        }
+        is Artist -> "${MediaDestination.ARTISTS.link}/${media.name}"
 
-        is Album -> {
-            "${MediaDestination.ALBUMS.link}/${media.id}"
-        }
+        is Album -> "${MediaDestination.ALBUMS.link}/${media.id}"
 
-        else -> {
-            MediaDestination.PLAYBACK.link
-        }
+        is Genre -> "${MediaDestination.GENRES.link}/${media.name}"
+
+        else -> MediaDestination.PLAYBACK.link
     }
 }
 

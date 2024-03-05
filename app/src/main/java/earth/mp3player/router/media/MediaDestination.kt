@@ -56,5 +56,6 @@ enum class MediaDestination(val link: String) {
     MUSICS("/musics"),
     PLAYBACK("/playback"),
     ALBUMS("/albums"),
+    GENRES("/genres"),
     SETTINGS("/settings"),
 }

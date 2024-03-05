@@ -11,7 +11,7 @@
  *
  *  You should have received a copy of the GNU General Public License along with MP3 Player.
  *  If not, see <https://www.gnu.org/licenses/>.
-
+ *
  *  ***** INFORMATIONS ABOUT THE AUTHOR *****
  *  The author of this file is Antoine Pirlot, the owner of this project.
  *  You find this original project on github.
@@ -20,17 +20,44 @@
  *  This current project's link is: https://github.com/antoinepirlot/MP3-Player
  *
  *  You can contact me via my email: pirlot.antoine@outlook.com
- * PS: I don't answer quickly.
+ *  PS: I don't answer quickly.
  */
 
 package earth.mp3player.models
 
-import earth.mp3player.R
+import androidx.media3.common.MediaItem
+import java.util.SortedMap
 
-enum class MenuTitle(val stringId: Int) {
-    FOLDERS(stringId = R.string.folders),
-    ARTISTS(stringId = R.string.artists),
-    MUSIC(stringId = R.string.tracks),
-    ALBUMS(stringId = R.string.albums),
-    GENRES(stringId = R.string.genres)
+/**
+ * @author Antoine Pirlot on 04-03-24
+ */
+class Genre(
+    override val id: Long,
+    override var name: String,
+) : Media {
+
+    val musicMap: SortedMap<Long, Music> = sortedMapOf()
+    val musicMediaItemMap: SortedMap<Music, MediaItem> = sortedMapOf()
+
+    fun addMusic(music: Music) {
+        musicMap.putIfAbsent(music.id, music)
+        musicMediaItemMap.putIfAbsent(music, music.mediaItem)
+    }
+
+    fun getMusicList(): List<Music> {
+        return this.musicMap.values.toList()
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Genre
+
+        return name == other.name
+    }
+
+    override fun hashCode(): Int {
+        return name.hashCode()
+    }
 }

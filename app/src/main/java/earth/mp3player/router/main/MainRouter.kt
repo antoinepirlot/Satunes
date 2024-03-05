@@ -59,6 +59,7 @@ import androidx.navigation.compose.composable
 import earth.mp3player.models.Album
 import earth.mp3player.models.Artist
 import earth.mp3player.models.Folder
+import earth.mp3player.models.Genre
 import earth.mp3player.models.Music
 import earth.mp3player.router.media.MediaDestination
 import earth.mp3player.router.media.MediaRouter
@@ -79,6 +80,7 @@ fun MainRouter(
     allAlbumSortedMap: SortedMap<Long, Album>,
     allMusicMediaItemsMap: SortedMap<Music, MediaItem>,
     folderMap: Map<Long, Folder>,
+    genreMap: SortedMap<String, Genre>
 ) {
     NavHost(
         modifier = modifier,
@@ -93,7 +95,8 @@ fun MainRouter(
                 allArtistSortedMap = allArtistSortedMap,
                 allAlbumSortedMap = allAlbumSortedMap,
                 allMusicMediaItemsMap = allMusicMediaItemsMap,
-                folderMap = folderMap
+                folderMap = folderMap,
+                genreMap = genreMap
             )
         }
 

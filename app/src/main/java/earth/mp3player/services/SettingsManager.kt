@@ -45,39 +45,44 @@ object SettingsManager {
     private const val DEFAULT_FOLDERS_CHECKED = true
     private const val DEFAULT_ARTISTS_CHECKED = true
     private const val DEFAULT_ALBUMS_CHECKED = true
+    private const val DEFAULT_GENRE_CHECKED = true
 
     private val PREFERENCES_DATA_STORE = preferencesDataStore("settings")
     private val FOLDERS_CHECKED_PREFERENCES_KEY = booleanPreferencesKey("folders_checked")
     private val ARTISTS_CHECKED_PREFERENCES_KEY = booleanPreferencesKey("artist_checked")
     private val ALBUMS_CHECKED_PREFERENCES_KEY = booleanPreferencesKey("albums_checked")
+    private val GENRE_CHECKED_PREFERENCES_KEY = booleanPreferencesKey("genres_checked")
 
     private val Context.dataStore: DataStore<Preferences> by PREFERENCES_DATA_STORE
 
     val foldersChecked: MutableState<Boolean> = mutableStateOf(DEFAULT_FOLDERS_CHECKED)
     val artistsChecked: MutableState<Boolean> = mutableStateOf(DEFAULT_ARTISTS_CHECKED)
     val albumsChecked: MutableState<Boolean> = mutableStateOf(DEFAULT_ALBUMS_CHECKED)
+    val genreChecked: MutableState<Boolean> = mutableStateOf(DEFAULT_GENRE_CHECKED)
 
     val menuTitleCheckedMap: Map<MenuTitle, MutableState<Boolean>> = mapOf(
         Pair(MenuTitle.FOLDERS, foldersChecked),
         Pair(MenuTitle.ARTISTS, artistsChecked),
         Pair(MenuTitle.ALBUMS, albumsChecked),
+        Pair(MenuTitle.GENRES, genreChecked),
     )
 
     suspend fun loadSettings(context: Context) {
         //Find a way to do it in one flow (maybe it's not possible)
         foldersChecked.value = context.dataStore.data.map { preferences: Preferences ->
-            preferences[FOLDERS_CHECKED_PREFERENCES_KEY]
-                ?: DEFAULT_FOLDERS_CHECKED
+            preferences[FOLDERS_CHECKED_PREFERENCES_KEY] ?: DEFAULT_FOLDERS_CHECKED
         }.first()
 
         artistsChecked.value = context.dataStore.data.map { preferences: Preferences ->
-            preferences[ARTISTS_CHECKED_PREFERENCES_KEY]
-                ?: DEFAULT_ARTISTS_CHECKED
+            preferences[ARTISTS_CHECKED_PREFERENCES_KEY] ?: DEFAULT_ARTISTS_CHECKED
         }.first()
 
         albumsChecked.value = context.dataStore.data.map { preferences: Preferences ->
-            preferences[ALBUMS_CHECKED_PREFERENCES_KEY]
-                ?: DEFAULT_ALBUMS_CHECKED
+            preferences[ALBUMS_CHECKED_PREFERENCES_KEY] ?: DEFAULT_ALBUMS_CHECKED
+        }.first()
+
+        genreChecked.value = context.dataStore.data.map { preferences: Preferences ->
+            preferences[GENRE_CHECKED_PREFERENCES_KEY] ?: DEFAULT_GENRE_CHECKED
         }.first()
     }
 
@@ -98,6 +103,12 @@ object SettingsManager {
             MenuTitle.ALBUMS -> {
                 context.dataStore.edit { preferences: MutablePreferences ->
                     preferences[ALBUMS_CHECKED_PREFERENCES_KEY] = !albumsChecked.value
+                }
+            }
+
+            MenuTitle.GENRES -> {
+                context.dataStore.edit { preferences: MutablePreferences ->
+                    preferences[GENRE_CHECKED_PREFERENCES_KEY] = !genreChecked.value
                 }
             }
 

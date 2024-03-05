@@ -33,7 +33,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import earth.mp3player.models.Media
-import earth.mp3player.ui.utils.getRightIconAnDescription
+import earth.mp3player.ui.utils.getRightIconAndDescription
 
 @Composable
 fun MediaCardList(
@@ -53,7 +53,7 @@ fun MediaCardList(
                     key = { it.id }
                 ) { media: Media ->
                     // First pair is image vector and second one is content description (String)
-                    val pair = getRightIconAnDescription(media)
+                    val pair = getRightIconAndDescription(media)
                     MediaCard(
                         modifier = modifier,
                         text = media.name,

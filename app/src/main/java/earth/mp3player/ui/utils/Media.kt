@@ -29,8 +29,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.MusicNote
+import androidx.compose.material.icons.rounded.AccountCircle
 import androidx.compose.material.icons.rounded.Album
+import androidx.compose.material.icons.rounded.Audiotrack
 import androidx.compose.material.icons.rounded.Category
+import androidx.compose.material.icons.rounded.Folder
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.media3.common.MediaItem
 import earth.mp3player.models.Album
@@ -38,6 +41,7 @@ import earth.mp3player.models.Artist
 import earth.mp3player.models.Folder
 import earth.mp3player.models.Genre
 import earth.mp3player.models.Media
+import earth.mp3player.models.MenuTitle
 import earth.mp3player.models.Music
 import earth.mp3player.services.PlaybackController
 import java.util.SortedMap
@@ -78,7 +82,7 @@ fun getMusicListFromFolder(folder: Folder): SortedMap<Music, MediaItem> {
     return mapOfMusic
 }
 
-fun getRightIconAnDescription(media: Media): Pair<ImageVector, String> {
+fun getRightIconAndDescription(media: Media): Pair<ImageVector, String> {
     return when (media) {
         is Folder -> {
             Icons.Filled.Folder to "Arrow Forward"
@@ -101,5 +105,18 @@ fun getRightIconAnDescription(media: Media): Pair<ImageVector, String> {
             Icons.Filled.MusicNote to "Play Arrow"
         }
     }
+}
 
+fun getRightIconAndDescription(menuTitle: MenuTitle): Pair<ImageVector, String> {
+    return when (menuTitle) {
+        MenuTitle.FOLDERS -> Icons.Rounded.Folder to "Folder Icon"
+
+        MenuTitle.ARTISTS -> Icons.Rounded.AccountCircle to "Artist Icon"
+
+        MenuTitle.ALBUMS -> Icons.Rounded.Album to "Album Icon"
+
+        MenuTitle.GENRES -> Icons.Rounded.Category to "Genres Icon"
+
+        else -> Icons.Rounded.Audiotrack to "Music Icon"
+    }
 }

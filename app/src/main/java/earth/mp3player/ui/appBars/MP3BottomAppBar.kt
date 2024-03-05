@@ -26,12 +26,6 @@
 package earth.mp3player.ui.appBars
 
 import android.annotation.SuppressLint
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.AccountCircle
-import androidx.compose.material.icons.rounded.Album
-import androidx.compose.material.icons.rounded.Audiotrack
-import androidx.compose.material.icons.rounded.Category
-import androidx.compose.material.icons.rounded.Folder
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -46,6 +40,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import earth.mp3player.models.MenuTitle
 import earth.mp3player.router.media.MediaDestination
 import earth.mp3player.services.SettingsManager
+import earth.mp3player.ui.utils.getRightIconAndDescription
 
 @Composable
 fun MP3BottomAppBar(
@@ -64,7 +59,7 @@ fun MP3BottomAppBar(
             menuTitleList.remove(menuTitle)
         }
     }
-    val selectedSection: MutableState<MenuTitle> =
+    val selectedMenuTitle: MutableState<MenuTitle> =
         // Update the tab by default if settings has changed
         if (SettingsManager.foldersChecked.value) {
             rememberSaveable { mutableStateOf(MenuTitle.FOLDERS) }
@@ -81,13 +76,13 @@ fun MP3BottomAppBar(
     NavigationBar(
         modifier = modifier
     ) {
-        menuTitleList.forEach { section: MenuTitle ->
+        menuTitleList.forEach { menuTitle: MenuTitle ->
             NavigationBarItem(
-                label = { Text(text = stringResource(id = section.stringId)) },
-                selected = selectedSection.value == section,
+                label = { Text(text = stringResource(id = menuTitle.stringId)) },
+                selected = selectedMenuTitle.value == menuTitle,
                 onClick = {
-                    selectedSection.value = section
-                    when (section) {
+                    selectedMenuTitle.value = menuTitle
+                    when (menuTitle) {
                         MenuTitle.FOLDERS -> {
                             startDestination.value = MediaDestination.FOLDERS.link
                         }
@@ -111,44 +106,11 @@ fun MP3BottomAppBar(
                     }
                 },
                 icon = {
-                    when (section) {
-                        MenuTitle.FOLDERS -> {
-                            Icon(
-                                imageVector = Icons.Rounded.Folder,
-                                contentDescription = "Folder Icon"
-                            )
-                        }
-
-                        MenuTitle.ARTISTS -> {
-                            Icon(
-                                imageVector = Icons.Rounded.AccountCircle,
-                                contentDescription = "Artist Icon"
-                            )
-
-                        }
-
-                        MenuTitle.ALBUMS -> {
-                            Icon(
-                                imageVector = Icons.Rounded.Album,
-                                contentDescription = "Album Icon"
-                            )
-                        }
-
-                        MenuTitle.GENRES -> {
-                            Icon(
-                                imageVector = Icons.Rounded.Category,
-                                contentDescription = "Genres Icon"
-                            )
-                        }
-
-                        MenuTitle.MUSIC -> {
-                            Icon(
-                                imageVector = Icons.Rounded.Audiotrack,
-                                contentDescription = "Music Icon"
-                            )
-
-                        }
-                    }
+                    val pair = getRightIconAndDescription(menuTitle = menuTitle)
+                    Icon(
+                        imageVector = pair.first,
+                        contentDescription = pair.second
+                    )
                 }
             )
         }

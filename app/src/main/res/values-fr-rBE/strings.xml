@@ -11,4 +11,5 @@
     <string name="this_device">Cet Appareil</string>
     <string name="external_storage">Stockage Externe</string>
     <string name="playback_settings">Paramètres de lecture</string>
+    <string name="closed_app_playback">Lecture si l\'application est fermée</string>
 </resources>

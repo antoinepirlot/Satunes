@@ -35,6 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import earth.mp3player.models.MenuTitle
 import earth.mp3player.services.SettingsManager
 import earth.mp3player.ui.views.settings.Settings
 import kotlinx.coroutines.runBlocking
@@ -47,6 +48,8 @@ import kotlinx.coroutines.runBlocking
 fun SettingsSwitchList(
     modifier: Modifier = Modifier,
     checkedMap: Map<Settings, MutableState<Boolean>>,
+    onCheckedChangeMap: Map<Settings, () -> Unit>? = null,
+    onCheckedChange: () -> Unit = {}
 ) {
     val context: Context = LocalContext.current
     LazyColumn {
@@ -59,8 +62,50 @@ fun SettingsSwitchList(
                     text = stringResource(id = setting.stringId),
                     checked = checkedMap[setting]!!.value,
                     onCheckedChange = {
-                        runBlocking {
-                            SettingsManager.switchClosedAppPlaybackChecked(context = context)
+                        if (onCheckedChangeMap == null) {
+                            when (setting) {
+                                Settings.FOLDERS_CHECKED -> {
+                                    runBlocking {
+                                        SettingsManager.switchMenuTitle(
+                                            context = context,
+                                            menuTitle = MenuTitle.FOLDERS
+                                        )
+                                    }
+                                }
+
+                                Settings.ARTISTS_CHECKED -> {
+                                    runBlocking {
+                                        SettingsManager.switchMenuTitle(
+                                            context = context,
+                                            menuTitle = MenuTitle.ARTISTS
+                                        )
+                                    }
+                                }
+
+                                Settings.ALBUMS_CHECKED -> {
+                                    runBlocking {
+                                        SettingsManager.switchMenuTitle(
+                                            context = context,
+                                            menuTitle = MenuTitle.ALBUMS
+                                        )
+                                    }
+                                }
+
+                                Settings.GENRES_CHECKED -> {
+                                    runBlocking {
+                                        SettingsManager.switchMenuTitle(
+                                            context = context,
+                                            menuTitle = MenuTitle.GENRES
+                                        )
+                                    }
+                                }
+
+                                else -> {
+                                    onCheckedChange()
+                                }
+                            }
+                        } else {
+                            onCheckedChangeMap[setting]!!()
                         }
                     }
                 )
@@ -72,5 +117,5 @@ fun SettingsSwitchList(
 @Composable
 @Preview
 fun SettingsSwitchListPreview() {
-    SettingsSwitchList(checkedMap = mapOf())
+    SettingsSwitchList(checkedMap = mapOf(), onCheckedChangeMap = mapOf())
 }

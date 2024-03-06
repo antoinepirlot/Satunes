@@ -52,11 +52,25 @@ fun PlaybackSettingsView(
 ) {
     val context: Context = LocalContext.current
     val checkedMap: Map<Settings, MutableState<Boolean>> = mapOf(
-        Pair(first = Settings.CLOSED_APP_PLAYBACK, second = SettingsManager.closedAppPlaybackChecked)
+        Pair(
+            first = Settings.CLOSED_APP_PLAYBACK,
+            second = SettingsManager.closedAppPlaybackChecked
+        )
     )
-    
+
+    val onCheckedChangedMap: Map<Settings, () -> Unit> = mapOf(
+        Pair(first = Settings.CLOSED_APP_PLAYBACK, second = {
+            runBlocking {
+                SettingsManager.switchClosedAppPlaybackChecked(context = context)
+            }
+        }),
+    )
+
     Column(modifier = modifier) {
-        SettingsSwitchList(checkedMap = checkedMap)
+        SettingsSwitchList(
+            checkedMap = checkedMap,
+            onCheckedChangeMap = onCheckedChangedMap
+        )
     }
 }
 

@@ -32,4 +32,8 @@ import earth.mp3player.R
  */
 enum class Settings(val stringId: Int) {
     CLOSED_APP_PLAYBACK(stringId = R.string.closed_app_playback),
+    FOLDERS_CHECKED(stringId = R.string.folders),
+    ARTISTS_CHECKED(stringId = R.string.artists),
+    ALBUMS_CHECKED(stringId = R.string.albums),
+    GENRES_CHECKED(stringId = R.string.genres),
 }

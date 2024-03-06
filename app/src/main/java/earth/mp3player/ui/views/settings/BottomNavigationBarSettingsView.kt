@@ -47,6 +47,7 @@ import earth.mp3player.R
 import earth.mp3player.models.MenuTitle
 import earth.mp3player.services.SettingsManager
 import earth.mp3player.ui.components.settings.SettingWithSwitch
+import earth.mp3player.ui.components.settings.SettingsSwitchList
 import kotlinx.coroutines.runBlocking
 
 /**
@@ -62,34 +63,16 @@ fun BottomNavigationBarSettingsView(
     val artistsChecked = rememberSaveable { SettingsManager.artistsChecked }
     val albumsChecked = rememberSaveable { SettingsManager.albumsChecked }
 
-    val menuTitleCheckedMap: Map<MenuTitle, MutableState<Boolean>> =
-        SettingsManager.menuTitleCheckedMap
+    val checkedMap: Map<Settings, MutableState<Boolean>> = mapOf(
+        Pair(first = Settings.FOLDERS_CHECKED, second = SettingsManager.foldersChecked),
+        Pair(first = Settings.ARTISTS_CHECKED, second = SettingsManager.artistsChecked),
+        Pair(first = Settings.ALBUMS_CHECKED, second = SettingsManager.albumsChecked),
+        Pair(first = Settings.GENRES_CHECKED, second = SettingsManager.genreChecked)
+    )
 
     Column(modifier = modifier) {
         Text(text = stringResource(id = R.string.bottom_bar))
-        LazyColumn {
-            items(
-                items = menuTitleCheckedMap.keys.toList(),
-                key = { it.stringId }
-            ) { menuTitle: MenuTitle ->
-                ListItem(
-                    headlineContent = {
-                        SettingWithSwitch(
-                            text = stringResource(id = menuTitle.stringId),
-                            checked = menuTitleCheckedMap[menuTitle]!!.value,
-                            onCheckedChange = {
-                                runBlocking {
-                                    SettingsManager.switchMenuTitle(
-                                        context = context,
-                                        menuTitle = menuTitle
-                                    )
-                                }
-                            }
-                        )
-                    }
-                )
-            }
-        }
+        SettingsSwitchList(checkedMap = checkedMap)
     }
 }
 

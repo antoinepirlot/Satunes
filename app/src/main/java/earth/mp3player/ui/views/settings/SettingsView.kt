@@ -23,7 +23,7 @@
  *  PS: I don't answer quickly.
  */
 
-package earth.mp3player.ui.views
+package earth.mp3player.ui.views.settings
 
 import android.content.Context
 import androidx.compose.foundation.layout.Box

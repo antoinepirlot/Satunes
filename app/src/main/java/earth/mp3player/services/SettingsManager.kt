@@ -35,6 +35,7 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.preferencesDataStore
 import earth.mp3player.models.MenuTitle
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
 
@@ -77,6 +78,7 @@ object SettingsManager {
     )
 
     suspend fun loadSettings(context: Context) {
+        // Using first() at the end and for nothing, prevent wrong UI data switch synchronisation
         context.dataStore.data.map { preferences: Preferences ->
             foldersChecked.value =
                 preferences[FOLDERS_CHECKED_PREFERENCES_KEY] ?: DEFAULT_FOLDERS_CHECKED
@@ -95,7 +97,7 @@ object SettingsManager {
 
             pauseIfNoisy.value =
                 preferences[PAUSE_IF_NOISY_PREFERENCES_KEY] ?: DEFAULT_PAUSE_IF_NOISY
-        }
+        }.first()
     }
 
     suspend fun switchMenuTitle(context: Context, menuTitle: MenuTitle) {

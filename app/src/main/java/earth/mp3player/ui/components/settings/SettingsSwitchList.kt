@@ -63,46 +63,8 @@ fun SettingsSwitchList(
                     checked = checkedMap[setting]!!.value,
                     onCheckedChange = {
                         if (onCheckedChangeMap == null) {
-                            when (setting) {
-                                Settings.FOLDERS_CHECKED -> {
-                                    runBlocking {
-                                        SettingsManager.switchMenuTitle(
-                                            context = context,
-                                            menuTitle = MenuTitle.FOLDERS
-                                        )
-                                    }
-                                }
-
-                                Settings.ARTISTS_CHECKED -> {
-                                    runBlocking {
-                                        SettingsManager.switchMenuTitle(
-                                            context = context,
-                                            menuTitle = MenuTitle.ARTISTS
-                                        )
-                                    }
-                                }
-
-                                Settings.ALBUMS_CHECKED -> {
-                                    runBlocking {
-                                        SettingsManager.switchMenuTitle(
-                                            context = context,
-                                            menuTitle = MenuTitle.ALBUMS
-                                        )
-                                    }
-                                }
-
-                                Settings.GENRES_CHECKED -> {
-                                    runBlocking {
-                                        SettingsManager.switchMenuTitle(
-                                            context = context,
-                                            menuTitle = MenuTitle.GENRES
-                                        )
-                                    }
-                                }
-
-                                else -> {
-                                    onCheckedChange()
-                                }
+                            if (!runIfIsSwitchMenuTitles(context = context, setting = setting)) {
+                                onCheckedChange()
                             }
                         } else {
                             onCheckedChangeMap[setting]!!()
@@ -118,4 +80,49 @@ fun SettingsSwitchList(
 @Preview
 fun SettingsSwitchListPreview() {
     SettingsSwitchList(checkedMap = mapOf(), onCheckedChangeMap = mapOf())
+}
+
+private fun runIfIsSwitchMenuTitles(context: Context, setting: Settings): Boolean {
+    when (setting) {
+        Settings.FOLDERS_CHECKED -> {
+            runBlocking {
+                SettingsManager.switchMenuTitle(
+                    context = context,
+                    menuTitle = MenuTitle.FOLDERS
+                )
+            }
+        }
+
+        Settings.ARTISTS_CHECKED -> {
+            runBlocking {
+                SettingsManager.switchMenuTitle(
+                    context = context,
+                    menuTitle = MenuTitle.ARTISTS
+                )
+            }
+        }
+
+        Settings.ALBUMS_CHECKED -> {
+            runBlocking {
+                SettingsManager.switchMenuTitle(
+                    context = context,
+                    menuTitle = MenuTitle.ALBUMS
+                )
+            }
+        }
+
+        Settings.GENRES_CHECKED -> {
+            runBlocking {
+                SettingsManager.switchMenuTitle(
+                    context = context,
+                    menuTitle = MenuTitle.GENRES
+                )
+            }
+        }
+
+        else -> {
+            return false
+        }
+    }
+    return true
 }

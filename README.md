@@ -9,11 +9,28 @@ If you decide to use my code to create new app, you can but you have to use the 
 
 # UPDATES
 
+## 0.4 (Android Upside Down Cake and later)
+
+### 0.4.0-beta
+
+Features:
+
+* Show genres list and play music from them
+* Settings
+  * Allow users to stop the playback if the app is closed from multitasking
+  * Allow users to pause playback if the headset is disconnected (cable or bluetooth)
+
+Fix issues:
+
+* Music from external storage can be played
+* Show main storage as Root folder (e.g. "This Device" or "External Storage: C45-54")
+
+
 ## 0.3 (Android Upside Down Cake and later)
 
 ### 0.3.2-beta
 
-Fix: issues:
+Fix issues:
 
 * Disabling shuffle activation from outside the app (for example asking assistant to shuffle)
 

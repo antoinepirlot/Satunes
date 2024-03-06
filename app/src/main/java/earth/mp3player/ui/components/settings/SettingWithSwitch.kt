@@ -26,22 +26,15 @@
 package earth.mp3player.ui.components.settings
 
 import android.annotation.SuppressLint
-import android.content.Context
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import earth.mp3player.services.SettingsManager
-import kotlinx.coroutines.runBlocking
 
 /**
  *   @author Antoine Pirlot 06/03/2024
@@ -54,8 +47,6 @@ fun SettingWithSwitch(
     checked: Boolean,
     onCheckedChange: () -> Unit
 ) {
-    val context: Context = LocalContext.current
-
     Row(
         modifier = Modifier.fillMaxWidth()
     ) {

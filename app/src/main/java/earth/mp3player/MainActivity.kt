@@ -26,7 +26,6 @@
 package earth.mp3player
 
 import android.Manifest.permission.READ_MEDIA_AUDIO
-import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -73,14 +72,13 @@ import java.util.SortedMap
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
+        runBlocking {
+            SettingsManager.loadSettings(context = this@MainActivity)
+        }
         super.onCreate(savedInstanceState)
         val isAudioAllowed: MutableState<Boolean> = mutableStateOf(isAudioAllowed())
         requestPermission(isAudioAllowed = isAudioAllowed)
         setContent {
-            val context: Context = LocalContext.current
-            runBlocking {
-                SettingsManager.loadSettings(context = context)
-            }
             @Suppress("NAME_SHADOWING")
             val isAudioAllowed = rememberSaveable { isAudioAllowed }
             val musicMediaItemSortedMap = remember { sortedMapOf<Music, MediaItem>() }

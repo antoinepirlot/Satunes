@@ -56,51 +56,9 @@ import kotlinx.coroutines.runBlocking
 fun SettingsView(
     modifier: Modifier = Modifier
 ) {
-    // TODO move these check to main activity and change composition of router
-    val foldersChecked = rememberSaveable { SettingsManager.foldersChecked }
-    val artistsChecked = rememberSaveable { SettingsManager.artistsChecked }
-    val albumsChecked = rememberSaveable { SettingsManager.albumsChecked }
-
-    val menuTitleCheckedMap: Map<MenuTitle, MutableState<Boolean>> =
-        SettingsManager.menuTitleCheckedMap
-
-    val context: Context = LocalContext.current
     Box(modifier = modifier) {
         Column {
-            Text(text = stringResource(id = R.string.bottom_bar))
-            LazyColumn {
-                items(
-                    items = menuTitleCheckedMap.keys.toList(),
-                    key = { it.stringId }
-                ) { menuTitle: MenuTitle ->
-                    ListItem(
-                        headlineContent = {
-                            Row(
-                                modifier = modifier.fillMaxWidth()
-                            ) {
-                                Text(text = stringResource(id = menuTitle.stringId))
-                                Box(
-                                    contentAlignment = Alignment.CenterEnd
-                                ) {
-                                    val checked: MutableState<Boolean> =
-                                        menuTitleCheckedMap[menuTitle]!!
-                                    Switch(
-                                        checked = checked.value,
-                                        onCheckedChange = {
-                                            runBlocking {
-                                                SettingsManager.switchMenuTitle(
-                                                    context = context,
-                                                    menuTitle = menuTitle
-                                                )
-                                            }
-                                        }
-                                    )
-                                }
-                            }
-                        }
-                    )
-                }
-            }
+            BottomNavigationBarSettingsView()
         }
     }
 }

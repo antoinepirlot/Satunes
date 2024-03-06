@@ -31,14 +31,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.ListItem
-import earth.mp3player.R
 import earth.mp3player.services.SettingsManager
-import earth.mp3player.ui.components.settings.SettingWithSwitch
 import earth.mp3player.ui.components.settings.SettingsSwitchList
 import kotlinx.coroutines.runBlocking
 
@@ -55,6 +49,10 @@ fun PlaybackSettingsView(
         Pair(
             first = Settings.CLOSED_APP_PLAYBACK,
             second = SettingsManager.closedAppPlaybackChecked
+        ),
+        Pair(
+            first = Settings.PAUSE_IF_NOISY,
+            second = SettingsManager.pauseIfNoisy
         )
     )
 
@@ -64,6 +62,9 @@ fun PlaybackSettingsView(
                 SettingsManager.switchClosedAppPlaybackChecked(context = context)
             }
         }),
+        Pair(first = Settings.PAUSE_IF_NOISY, second = {
+            SettingsManager.switchPauseIfNoisy(context = context)
+        })
     )
 
     Column(modifier = modifier) {

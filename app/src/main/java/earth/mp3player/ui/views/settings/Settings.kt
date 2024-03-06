@@ -36,4 +36,5 @@ enum class Settings(val stringId: Int) {
     ARTISTS_CHECKED(stringId = R.string.artists),
     ALBUMS_CHECKED(stringId = R.string.albums),
     GENRES_CHECKED(stringId = R.string.genres),
+    PAUSE_IF_NOISY(stringId = R.string.pause_if_noisy),
 }

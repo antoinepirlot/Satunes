@@ -64,9 +64,7 @@ class Music(
                 }
                 continue
             }
-            if (storageVolumes.size > 1) {
-                relativePath = "${volume.directory!!.path.split("/").last()}/$relativePath"
-            }
+            relativePath = "${volume.directory!!.path.split("/").last()}/$relativePath"
             this.uri = Uri.parse(absolutePath)
             break
         }

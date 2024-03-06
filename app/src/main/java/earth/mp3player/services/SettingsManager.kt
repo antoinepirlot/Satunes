@@ -73,27 +73,21 @@ object SettingsManager {
     )
 
     suspend fun loadSettings(context: Context) {
-        //Find a way to do it in one flow (maybe it's not possible)
-        foldersChecked.value = context.dataStore.data.map { preferences: Preferences ->
-            preferences[FOLDERS_CHECKED_PREFERENCES_KEY] ?: DEFAULT_FOLDERS_CHECKED
-        }.first()
-
-        artistsChecked.value = context.dataStore.data.map { preferences: Preferences ->
-            preferences[ARTISTS_CHECKED_PREFERENCES_KEY] ?: DEFAULT_ARTISTS_CHECKED
-        }.first()
-
-        albumsChecked.value = context.dataStore.data.map { preferences: Preferences ->
-            preferences[ALBUMS_CHECKED_PREFERENCES_KEY] ?: DEFAULT_ALBUMS_CHECKED
-        }.first()
-
-        genreChecked.value = context.dataStore.data.map { preferences: Preferences ->
-            preferences[GENRE_CHECKED_PREFERENCES_KEY] ?: DEFAULT_GENRE_CHECKED
-        }.first()
-
         context.dataStore.data.map { preferences: Preferences ->
-            preferences[CLOSED_APP_PLAYBACK_CHECKED_PREFERENCES_KEY]
-                ?: DEFAULT_CLOSED_APP_PLAYBACK_CHECKED
-            closedAppPlaybackChecked.value = preferences[CLOSED_APP_PLAYBACK_CHECKED_PREFERENCES_KEY]!!
+            foldersChecked.value =
+                preferences[FOLDERS_CHECKED_PREFERENCES_KEY] ?: DEFAULT_FOLDERS_CHECKED
+
+            artistsChecked.value =
+                preferences[ARTISTS_CHECKED_PREFERENCES_KEY] ?: DEFAULT_ARTISTS_CHECKED
+
+            albumsChecked.value =
+                preferences[ALBUMS_CHECKED_PREFERENCES_KEY] ?: DEFAULT_ALBUMS_CHECKED
+
+            genreChecked.value = preferences[GENRE_CHECKED_PREFERENCES_KEY] ?: DEFAULT_GENRE_CHECKED
+
+            closedAppPlaybackChecked.value =
+                preferences[CLOSED_APP_PLAYBACK_CHECKED_PREFERENCES_KEY]
+                    ?: DEFAULT_CLOSED_APP_PLAYBACK_CHECKED
         }
     }
 
@@ -101,38 +95,42 @@ object SettingsManager {
         when (menuTitle) {
             MenuTitle.FOLDERS -> {
                 context.dataStore.edit { preferences: MutablePreferences ->
+                    foldersChecked.value = !foldersChecked.value
                     preferences[FOLDERS_CHECKED_PREFERENCES_KEY] = !foldersChecked.value
                 }
             }
 
             MenuTitle.ARTISTS -> {
                 context.dataStore.edit { preferences: MutablePreferences ->
-                    preferences[ARTISTS_CHECKED_PREFERENCES_KEY] = !artistsChecked.value
+                    artistsChecked.value = !artistsChecked.value
+                    preferences[ARTISTS_CHECKED_PREFERENCES_KEY] = artistsChecked.value
                 }
             }
 
             MenuTitle.ALBUMS -> {
                 context.dataStore.edit { preferences: MutablePreferences ->
-                    preferences[ALBUMS_CHECKED_PREFERENCES_KEY] = !albumsChecked.value
+                    albumsChecked.value = !albumsChecked.value
+                    preferences[ALBUMS_CHECKED_PREFERENCES_KEY] = albumsChecked.value
                 }
             }
 
             MenuTitle.GENRES -> {
                 context.dataStore.edit { preferences: MutablePreferences ->
-                    preferences[GENRE_CHECKED_PREFERENCES_KEY] = !genreChecked.value
+                    genreChecked.value = !genreChecked.value
+                    preferences[GENRE_CHECKED_PREFERENCES_KEY] = genreChecked.value
                 }
             }
 
             MenuTitle.MUSIC -> { /*Do nothing*/
             }
         }
-        loadSettings(context = context)
     }
 
     suspend fun switchClosedAppPlaybackChecked(context: Context) {
         context.dataStore.edit { preferences: MutablePreferences ->
             closedAppPlaybackChecked.value = !closedAppPlaybackChecked.value
-            preferences[CLOSED_APP_PLAYBACK_CHECKED_PREFERENCES_KEY] = closedAppPlaybackChecked.value
+            preferences[CLOSED_APP_PLAYBACK_CHECKED_PREFERENCES_KEY] =
+                closedAppPlaybackChecked.value
         }
     }
 }

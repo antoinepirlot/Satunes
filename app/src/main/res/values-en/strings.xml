@@ -9,4 +9,7 @@
     <string name="genres">Genres</string>
     <string name="this_device">This Device</string>
     <string name="external_storage">External Storage</string>
+    <string name="playback_settings">Playback Settings</string>
+    <string name="closed_app_playback">Playback if the app is closed</string>
+    <string name="pause_if_noisy">Pause if headset is unplugged (need restart)</string>
 </resources>

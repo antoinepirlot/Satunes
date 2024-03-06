@@ -63,7 +63,7 @@ import earth.mp3player.models.Genre
 import earth.mp3player.models.Music
 import earth.mp3player.router.media.MediaDestination
 import earth.mp3player.router.media.MediaRouter
-import earth.mp3player.ui.views.SettingsView
+import earth.mp3player.ui.views.settings.SettingsView
 import java.util.SortedMap
 
 /**

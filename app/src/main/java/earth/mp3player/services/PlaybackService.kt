@@ -43,7 +43,7 @@ class PlaybackService : MediaSessionService() {
     override fun onCreate() {
         super.onCreate()
         val exoPlayer = ExoPlayer.Builder(this)
-            .setHandleAudioBecomingNoisy(true) // Pause when bluetooth or headset disconnect
+            .setHandleAudioBecomingNoisy(SettingsManager.pauseIfNoisy.value) // Pause when bluetooth or headset disconnect
             .build()
 
         val audioOffloadPreferences = TrackSelectionParameters.AudioOffloadPreferences.Builder()
@@ -60,7 +60,7 @@ class PlaybackService : MediaSessionService() {
 
     override fun onTaskRemoved(rootIntent: Intent?) {
         val player = mediaSession?.player!!
-        if (!player.playWhenReady || player.mediaItemCount == 0) {
+        if (!player.playWhenReady || player.mediaItemCount == 0 || !SettingsManager.closedAppPlaybackChecked.value) {
             stopSelf()
         }
     }

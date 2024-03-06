@@ -37,21 +37,28 @@ import androidx.datastore.preferences.preferencesDataStore
 import earth.mp3player.models.MenuTitle
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.runBlocking
 
 /**
  * @author Antoine Pirlot on 02-03-24
  */
 object SettingsManager {
+
     private const val DEFAULT_FOLDERS_CHECKED = true
     private const val DEFAULT_ARTISTS_CHECKED = true
     private const val DEFAULT_ALBUMS_CHECKED = true
     private const val DEFAULT_GENRE_CHECKED = true
+    private const val DEFAULT_CLOSED_APP_PLAYBACK_CHECKED = false //No playback after closed app
+    private const val DEFAULT_PAUSE_IF_NOISY = true
 
     private val PREFERENCES_DATA_STORE = preferencesDataStore("settings")
     private val FOLDERS_CHECKED_PREFERENCES_KEY = booleanPreferencesKey("folders_checked")
     private val ARTISTS_CHECKED_PREFERENCES_KEY = booleanPreferencesKey("artist_checked")
     private val ALBUMS_CHECKED_PREFERENCES_KEY = booleanPreferencesKey("albums_checked")
     private val GENRE_CHECKED_PREFERENCES_KEY = booleanPreferencesKey("genres_checked")
+    private val CLOSED_APP_PLAYBACK_CHECKED_PREFERENCES_KEY =
+        booleanPreferencesKey("closed_app_playback_checked")
+    private val PAUSE_IF_NOISY_PREFERENCES_KEY = booleanPreferencesKey("pause_if_noisy")
 
     private val Context.dataStore: DataStore<Preferences> by PREFERENCES_DATA_STORE
 
@@ -59,6 +66,9 @@ object SettingsManager {
     val artistsChecked: MutableState<Boolean> = mutableStateOf(DEFAULT_ARTISTS_CHECKED)
     val albumsChecked: MutableState<Boolean> = mutableStateOf(DEFAULT_ALBUMS_CHECKED)
     val genreChecked: MutableState<Boolean> = mutableStateOf(DEFAULT_GENRE_CHECKED)
+    val closedAppPlaybackChecked: MutableState<Boolean> =
+        mutableStateOf(DEFAULT_CLOSED_APP_PLAYBACK_CHECKED)
+    val pauseIfNoisy: MutableState<Boolean> = mutableStateOf(DEFAULT_PAUSE_IF_NOISY)
 
     val menuTitleCheckedMap: Map<MenuTitle, MutableState<Boolean>> = mapOf(
         Pair(MenuTitle.FOLDERS, foldersChecked),
@@ -68,21 +78,25 @@ object SettingsManager {
     )
 
     suspend fun loadSettings(context: Context) {
-        //Find a way to do it in one flow (maybe it's not possible)
-        foldersChecked.value = context.dataStore.data.map { preferences: Preferences ->
-            preferences[FOLDERS_CHECKED_PREFERENCES_KEY] ?: DEFAULT_FOLDERS_CHECKED
-        }.first()
+        // Using first() at the end and for nothing, prevent wrong UI data switch synchronisation
+        context.dataStore.data.map { preferences: Preferences ->
+            foldersChecked.value =
+                preferences[FOLDERS_CHECKED_PREFERENCES_KEY] ?: DEFAULT_FOLDERS_CHECKED
 
-        artistsChecked.value = context.dataStore.data.map { preferences: Preferences ->
-            preferences[ARTISTS_CHECKED_PREFERENCES_KEY] ?: DEFAULT_ARTISTS_CHECKED
-        }.first()
+            artistsChecked.value =
+                preferences[ARTISTS_CHECKED_PREFERENCES_KEY] ?: DEFAULT_ARTISTS_CHECKED
 
-        albumsChecked.value = context.dataStore.data.map { preferences: Preferences ->
-            preferences[ALBUMS_CHECKED_PREFERENCES_KEY] ?: DEFAULT_ALBUMS_CHECKED
-        }.first()
+            albumsChecked.value =
+                preferences[ALBUMS_CHECKED_PREFERENCES_KEY] ?: DEFAULT_ALBUMS_CHECKED
 
-        genreChecked.value = context.dataStore.data.map { preferences: Preferences ->
-            preferences[GENRE_CHECKED_PREFERENCES_KEY] ?: DEFAULT_GENRE_CHECKED
+            genreChecked.value = preferences[GENRE_CHECKED_PREFERENCES_KEY] ?: DEFAULT_GENRE_CHECKED
+
+            closedAppPlaybackChecked.value =
+                preferences[CLOSED_APP_PLAYBACK_CHECKED_PREFERENCES_KEY]
+                    ?: DEFAULT_CLOSED_APP_PLAYBACK_CHECKED
+
+            pauseIfNoisy.value =
+                preferences[PAUSE_IF_NOISY_PREFERENCES_KEY] ?: DEFAULT_PAUSE_IF_NOISY
         }.first()
     }
 
@@ -90,31 +104,51 @@ object SettingsManager {
         when (menuTitle) {
             MenuTitle.FOLDERS -> {
                 context.dataStore.edit { preferences: MutablePreferences ->
+                    foldersChecked.value = !foldersChecked.value
                     preferences[FOLDERS_CHECKED_PREFERENCES_KEY] = !foldersChecked.value
                 }
             }
 
             MenuTitle.ARTISTS -> {
                 context.dataStore.edit { preferences: MutablePreferences ->
-                    preferences[ARTISTS_CHECKED_PREFERENCES_KEY] = !artistsChecked.value
+                    artistsChecked.value = !artistsChecked.value
+                    preferences[ARTISTS_CHECKED_PREFERENCES_KEY] = artistsChecked.value
                 }
             }
 
             MenuTitle.ALBUMS -> {
                 context.dataStore.edit { preferences: MutablePreferences ->
-                    preferences[ALBUMS_CHECKED_PREFERENCES_KEY] = !albumsChecked.value
+                    albumsChecked.value = !albumsChecked.value
+                    preferences[ALBUMS_CHECKED_PREFERENCES_KEY] = albumsChecked.value
                 }
             }
 
             MenuTitle.GENRES -> {
                 context.dataStore.edit { preferences: MutablePreferences ->
-                    preferences[GENRE_CHECKED_PREFERENCES_KEY] = !genreChecked.value
+                    genreChecked.value = !genreChecked.value
+                    preferences[GENRE_CHECKED_PREFERENCES_KEY] = genreChecked.value
                 }
             }
 
             MenuTitle.MUSIC -> { /*Do nothing*/
             }
         }
-        loadSettings(context = context)
+    }
+
+    suspend fun switchClosedAppPlaybackChecked(context: Context) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            closedAppPlaybackChecked.value = !closedAppPlaybackChecked.value
+            preferences[CLOSED_APP_PLAYBACK_CHECKED_PREFERENCES_KEY] =
+                closedAppPlaybackChecked.value
+        }
+    }
+
+    fun switchPauseIfNoisy(context: Context) {
+        runBlocking {
+            context.dataStore.edit { preferences: MutablePreferences ->
+                pauseIfNoisy.value = !pauseIfNoisy.value
+                preferences[PAUSE_IF_NOISY_PREFERENCES_KEY] = pauseIfNoisy.value
+            }
+        }
     }
 }

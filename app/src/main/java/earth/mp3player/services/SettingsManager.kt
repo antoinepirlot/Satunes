@@ -46,12 +46,15 @@ object SettingsManager {
     private const val DEFAULT_ARTISTS_CHECKED = true
     private const val DEFAULT_ALBUMS_CHECKED = true
     private const val DEFAULT_GENRE_CHECKED = true
+    private const val DEFAULT_CLOSED_APP_PLAYBACK_CHECKED = false //No playback after closed app
 
     private val PREFERENCES_DATA_STORE = preferencesDataStore("settings")
     private val FOLDERS_CHECKED_PREFERENCES_KEY = booleanPreferencesKey("folders_checked")
     private val ARTISTS_CHECKED_PREFERENCES_KEY = booleanPreferencesKey("artist_checked")
     private val ALBUMS_CHECKED_PREFERENCES_KEY = booleanPreferencesKey("albums_checked")
     private val GENRE_CHECKED_PREFERENCES_KEY = booleanPreferencesKey("genres_checked")
+    private val CLOSED_APP_PLAYBACK_CHECKED_PREFERENCES_KEY =
+        booleanPreferencesKey("closed_app_playback_checked")
 
     private val Context.dataStore: DataStore<Preferences> by PREFERENCES_DATA_STORE
 
@@ -59,6 +62,8 @@ object SettingsManager {
     val artistsChecked: MutableState<Boolean> = mutableStateOf(DEFAULT_ARTISTS_CHECKED)
     val albumsChecked: MutableState<Boolean> = mutableStateOf(DEFAULT_ALBUMS_CHECKED)
     val genreChecked: MutableState<Boolean> = mutableStateOf(DEFAULT_GENRE_CHECKED)
+    val closedAppPlaybackChecked: MutableState<Boolean> =
+        mutableStateOf(DEFAULT_CLOSED_APP_PLAYBACK_CHECKED)
 
     val menuTitleCheckedMap: Map<MenuTitle, MutableState<Boolean>> = mapOf(
         Pair(MenuTitle.FOLDERS, foldersChecked),
@@ -84,6 +89,12 @@ object SettingsManager {
         genreChecked.value = context.dataStore.data.map { preferences: Preferences ->
             preferences[GENRE_CHECKED_PREFERENCES_KEY] ?: DEFAULT_GENRE_CHECKED
         }.first()
+
+        context.dataStore.data.map { preferences: Preferences ->
+            preferences[CLOSED_APP_PLAYBACK_CHECKED_PREFERENCES_KEY]
+                ?: DEFAULT_CLOSED_APP_PLAYBACK_CHECKED
+            closedAppPlaybackChecked.value = preferences[CLOSED_APP_PLAYBACK_CHECKED_PREFERENCES_KEY]!!
+        }
     }
 
     suspend fun switchMenuTitle(context: Context, menuTitle: MenuTitle) {
@@ -116,5 +127,12 @@ object SettingsManager {
             }
         }
         loadSettings(context = context)
+    }
+
+    suspend fun switchClosedAppPlaybackChecked(context: Context) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            closedAppPlaybackChecked.value = !closedAppPlaybackChecked.value
+            preferences[CLOSED_APP_PLAYBACK_CHECKED_PREFERENCES_KEY] = closedAppPlaybackChecked.value
+        }
     }
 }

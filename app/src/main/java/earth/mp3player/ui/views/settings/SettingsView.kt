@@ -59,6 +59,7 @@ fun SettingsView(
     Box(modifier = modifier) {
         Column {
             BottomNavigationBarSettingsView()
+            PlaybackSettingsView()
         }
     }
 }

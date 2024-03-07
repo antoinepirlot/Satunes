@@ -156,7 +156,7 @@ object DataLoader {
 
                 if (albumIdColumn != null && albumNameColumn != null) {
                     album = loadAlbum(cursor = it)
-                    albumMap[album.name] = album
+                    albumMap[album.title] = album
                 }
                 var music: Music? = null
                 try {
@@ -165,7 +165,7 @@ object DataLoader {
                 } catch (_: IllegalAccessError) {
                     // No music found
                     if (album != null && album.musicSortedMap.isEmpty()) {
-                        albumMap.remove(album.name)
+                        albumMap.remove(album.title)
                     }
                     continue
                 }

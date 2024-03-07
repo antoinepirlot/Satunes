@@ -51,7 +51,7 @@ import java.util.SortedMap
  */
 
 object DataLoader {
-    const val FIRST_FOLDER_INDEX: Long = 1
+    private const val FIRST_FOLDER_INDEX: Long = 1
     private val URI: Uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
 
     // Music variables
@@ -69,8 +69,6 @@ object DataLoader {
     // Artists variables
     private var artistIdColumn: Int? = null
     private var artistNameColumn: Int? = null
-    private var artistNbOfTracksColumn: Int? = null
-    private var artistNbOfAlbumsColumn: Int? = null
 
     //Genres varibles
     private var genreIdColumn: Int? = null
@@ -162,7 +160,7 @@ object DataLoader {
                     album = loadAlbum(cursor = it)
                     albumMap[album.title] = album
                 }
-                var music: Music? = null
+                var music: Music
                 try {
                     music = loadMusic(context = context, cursor = it, album = album)
                     musicMediaItemSortedMap[music] = music.mediaItem
@@ -171,8 +169,9 @@ object DataLoader {
                     if (album != null && album.musicSortedMap.isEmpty()) {
                         albumMap.remove(album.title)
                     }
-                    continue
+                    continue // Continue the while loop
                 }
+
                 loadFolders(music = music)
 
                 try {
@@ -186,7 +185,7 @@ object DataLoader {
                 }
 
                 if (artistIdColumn != null && artistNameColumn != null) {
-                    var artist = loadArtist(cursor = it)
+                    artist = loadArtist(cursor = it)
                     artistMap.putIfAbsent(artist.title, artist)
                     artist = artistMap[artist.title]!! //The id is not the same for all same artists
                     artist.musicList.add(music)
@@ -217,7 +216,7 @@ object DataLoader {
         val duration: Long = cursor.getLong(musicDurationColumn!!)
         val size = cursor.getInt(musicSizeColumn!!)
         val relativePath: String = cursor.getString(relativePathColumn!!)
-        val music: Music = Music(
+        val music = Music(
             context = context,
             id = id,
             title = title,
@@ -243,7 +242,7 @@ object DataLoader {
         //Put it in Dispatchers.IO make the app not freezing while starting
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val mediaMetadataRetriever: MediaMetadataRetriever = MediaMetadataRetriever()
+                val mediaMetadataRetriever = MediaMetadataRetriever()
                 mediaMetadataRetriever.setDataSource(context, music.uri)
                 val artwork: ByteArray? = mediaMetadataRetriever.embeddedPicture
                 if (artwork != null) {

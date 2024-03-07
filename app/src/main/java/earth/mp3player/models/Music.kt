@@ -54,7 +54,7 @@ class Music(
 ) : Media {
 
     val mediaItem: MediaItem
-    var absolutePath: String? = "${PlaybackController.ROOT_PATH}/$relativePath/$displayName"
+    private var absolutePath: String? = "${PlaybackController.ROOT_PATH}/$relativePath/$displayName"
     var uri: Uri = Uri.Builder().appendPath(this.absolutePath).build()
     var artwork: ImageBitmap? = null
 

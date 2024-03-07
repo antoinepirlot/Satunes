@@ -48,7 +48,7 @@ fun SettingWithSwitch(
     onCheckedChange: () -> Unit
 ) {
     Row(
-        modifier = Modifier.fillMaxWidth()
+        modifier = modifier.fillMaxWidth()
     ) {
         Text(text = text)
         Box(

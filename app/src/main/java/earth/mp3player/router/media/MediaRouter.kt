@@ -105,7 +105,9 @@ fun MediaRouter(
                 },
                 shuffleMusicAction = {
                     val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
-                    rootFolderMap.forEach { _, folder: Folder ->
+                    @Suppress("NAME_SHADOWING")
+                    rootFolderMap.forEach { (_, folder: Media) ->
+                        val folder = folder as Folder
                         musicMediaItemSortedMap.putAll(folder.getAllMusic())
                     }
                     playbackController.loadMusic(
@@ -160,7 +162,7 @@ fun MediaRouter(
                 },
                 shuffleMusicAction = {
                     playbackController.loadMusic(
-                        musicMediaItemSortedMap = allMusicMediaItemsMap as SortedMap<Music, MediaItem>,
+                        musicMediaItemSortedMap = allMusicMediaItemsMap,
                         shuffleMode = true
                     )
                     openMedia(navController = navController)

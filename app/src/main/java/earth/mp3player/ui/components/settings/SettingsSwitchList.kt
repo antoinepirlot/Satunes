@@ -52,7 +52,9 @@ fun SettingsSwitchList(
     onCheckedChange: () -> Unit = {}
 ) {
     val context: Context = LocalContext.current
-    LazyColumn {
+    LazyColumn(
+        modifier = modifier
+    ) {
         items(
             items = checkedMap.keys.toList(),
             key = { it.stringId }

@@ -34,8 +34,6 @@ import java.util.SortedMap
 class Artist(
     override val id: Long,
     override var title: String,
-    val numberOfTracks: Int = 0,
-    val numberOfAlbums: Int = 0,
     val musicList: MutableList<Music> = mutableListOf(),
     val albumSortedMap: SortedMap<String, Album> = sortedMapOf()
 ) : Media {

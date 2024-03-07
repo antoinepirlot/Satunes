@@ -25,7 +25,6 @@
 
 package earth.mp3player.models
 
-import android.net.Uri
 import androidx.media3.common.MediaItem
 import java.util.SortedMap
 
@@ -37,7 +36,6 @@ class Album(
     override val title: String,
     var artist: Artist? = null,
     val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf(),
-    var albumArtWorkUri: Uri = Uri.EMPTY,
 ) : Media {
 
     val musicSortedMap: SortedMap<Long, Music> = sortedMapOf()

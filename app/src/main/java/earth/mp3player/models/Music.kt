@@ -76,4 +76,26 @@ class Music(
             this.album!!.addMusic(music = this)
         }
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Music
+
+        if (displayName != other.displayName) return false
+        if (artist != other.artist) return false
+        if (album != other.album) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = displayName.hashCode()
+        result = 31 * result + (artist?.hashCode() ?: 0)
+        result = 31 * result + (album?.hashCode() ?: 0)
+        return result
+    }
+
+
 }

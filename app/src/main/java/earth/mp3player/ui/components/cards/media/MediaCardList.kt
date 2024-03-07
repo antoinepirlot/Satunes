@@ -36,12 +36,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import earth.mp3player.R
 import earth.mp3player.models.Folder
 import earth.mp3player.models.Media
+import earth.mp3player.models.Music
 import earth.mp3player.ui.utils.getRightIconAndDescription
 
 @Composable
-fun MediaCardList(
+fun <T: Comparable<T>> MediaCardList(
     modifier: Modifier = Modifier,
-    mediaMap: Map<Long, Media>,
+    mediaMap: Map<T, Media>,
     openMedia: (media: Media) -> Unit
 ) {
     val lazyState = rememberLazyListState()
@@ -81,9 +82,9 @@ fun MediaCardList(
 
 @Composable
 @Preview
-fun CardListPreview() {
+fun <T : Comparable<T>> CardListPreview() {
     MediaCardList(
-        mediaMap = sortedMapOf(),
+        mediaMap = sortedMapOf<T, Media>(),
         openMedia = {}
     )
 }

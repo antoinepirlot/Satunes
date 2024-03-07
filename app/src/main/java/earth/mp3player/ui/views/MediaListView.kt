@@ -41,9 +41,9 @@ import earth.mp3player.ui.components.music.bars.ShowCurrentMusicButton
 import earth.mp3player.ui.components.music.buttons.ShuffleAllButton
 
 @Composable
-fun MediaListView(
+fun <T: Comparable<T>> MediaListView(
     modifier: Modifier = Modifier,
-    mediaMap: Map<Long, Media>,
+    mediaMap: Map<T, Media>,
     openMedia: (media: Media) -> Unit,
     shuffleMusicAction: () -> Unit,
     onFABClick: () -> Unit

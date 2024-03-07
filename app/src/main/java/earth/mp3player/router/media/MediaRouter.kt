@@ -156,7 +156,7 @@ fun MediaRouter(
                 },
                 shuffleMusicAction = {
                     playbackController.loadMusic(
-                        musicMediaItemSortedMap = allMusicMediaItemsMap,
+                        musicMediaItemSortedMap = allMusicMediaItemsMap as SortedMap<Music, MediaItem>,
                         shuffleMode = true
                     )
                     openMedia(navController = navController)
@@ -286,9 +286,10 @@ fun MediaRouter(
 
 
         composable(MediaDestination.MUSICS.link) {
-            val mediaMap: SortedMap<Long, Media> = sortedMapOf()
+            //Find a way to do something more aesthetic but it works
+            val mediaMap: SortedMap<Music, Media> = sortedMapOf()
             allMusicMediaItemsMap.keys.forEach { music: Music ->
-                mediaMap[music.id] = music
+                mediaMap[music] = music
             }
             MediaListView(
                 mediaMap = mediaMap,

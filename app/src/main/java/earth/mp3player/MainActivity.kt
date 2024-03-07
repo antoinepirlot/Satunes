@@ -85,7 +85,7 @@ class MainActivity : ComponentActivity() {
             val rootFolderList = remember { sortedMapOf<Long, Folder>() }
             val folderMap = remember { sortedMapOf<Long, Folder>() }
             val artistMap = remember { sortedMapOf<String, Artist>() }
-            val albumMap = remember { sortedMapOf<Long, Album>() }
+            val albumMap = remember { sortedMapOf<String, Album>() }
             val genreMap: SortedMap<String, Genre> = remember { sortedMapOf() }
 
             if (isAudioAllowed.value) {

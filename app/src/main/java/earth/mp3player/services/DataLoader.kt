@@ -86,7 +86,7 @@ object DataLoader {
         rootFolderMap: SortedMap<Long, Folder>,
         folderMap: SortedMap<Long, Folder>,
         artistMap: SortedMap<String, Artist>,
-        albumMap: SortedMap<Long, Album>,
+        albumMap: SortedMap<String, Album>,
         genreMap: SortedMap<String, Genre>
     ) {
         this.musicMediaItemSortedMap = musicMediaItemSortedMap
@@ -153,7 +153,7 @@ object DataLoader {
 
                 if (albumIdColumn != null && albumNameColumn != null) {
                     album = loadAlbum(cursor = it)
-                    albumMap[album.id] = album
+                    albumMap[album.name] = album
                 }
                 var music: Music? = null
                 try {
@@ -162,7 +162,7 @@ object DataLoader {
                 } catch (_: IllegalAccessError) {
                     // No music found
                     if (album != null && album.musicSortedMap.isEmpty()) {
-                        albumMap.remove(album.id)
+                        albumMap.remove(album.name)
                     }
                     continue
                 }

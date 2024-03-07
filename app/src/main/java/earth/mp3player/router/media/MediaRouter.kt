@@ -77,7 +77,7 @@ fun MediaRouter(
     startDestination: String,
     rootFolderMap: SortedMap<Long, Folder>,
     allArtistSortedMap: SortedMap<String, Artist>,
-    allAlbumSortedMap: SortedMap<Long, Album>,
+    allAlbumSortedMap: SortedMap<String, Album>,
     allMusicMediaItemsMap: SortedMap<Music, MediaItem>,
     folderMap: Map<Long, Folder>,
     genreMap: Map<String, Genre>
@@ -194,7 +194,7 @@ fun MediaRouter(
 
         composable(MediaDestination.ALBUMS.link) {
             val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
-            allAlbumSortedMap.forEach { (_: Long, album: Album) ->
+            allAlbumSortedMap.forEach { (_: String, album: Album) ->
                 musicMediaItemSortedMap.putAll(album.musicMediaItemSortedMap)
             }
 
@@ -217,7 +217,14 @@ fun MediaRouter(
 
         composable("${MediaDestination.ALBUMS.link}/{id}") {
             val albumId: Long = it.arguments!!.getString("id")!!.toLong()
-            val album: Album = allAlbumSortedMap[albumId]!!
+            var albumName: String? = null
+            allAlbumSortedMap.forEach { (name: String, album: Album) ->
+                if (album.id == albumId) {
+                    albumName = name
+                    return@forEach
+                }
+            }
+            val album: Album = allAlbumSortedMap[albumName]!!
 
             @Suppress("UNCHECKED_CAST")
             MediaListView(

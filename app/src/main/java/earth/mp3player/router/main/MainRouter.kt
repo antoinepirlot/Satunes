@@ -77,7 +77,7 @@ fun MainRouter(
     mediaRouterStartDestination: String,
     rootFolderMap: SortedMap<Long, Folder>,
     allArtistSortedMap: SortedMap<String, Artist>,
-    allAlbumSortedMap: SortedMap<Long, Album>,
+    allAlbumSortedMap: SortedMap<String, Album>,
     allMusicMediaItemsMap: SortedMap<Music, MediaItem>,
     folderMap: Map<Long, Folder>,
     genreMap: SortedMap<String, Genre>

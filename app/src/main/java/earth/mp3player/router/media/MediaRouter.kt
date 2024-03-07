@@ -56,8 +56,7 @@ fun MediaRouter(
     navController: NavHostController,
     startDestination: String,
 ) {
-    val mapToShow: SortedMap<Long, Media> = remember { sortedMapOf() }
-    val playbackController: PlaybackController = PlaybackController.getInstance()
+    val playbackController: PlaybackController = remember { PlaybackController.getInstance() }
 
     NavHost(
         modifier = modifier,
@@ -66,9 +65,10 @@ fun MediaRouter(
     ) {
         composable(MediaDestination.FOLDERS.link) {
             // /!\ This route prevent back gesture to exit the app
+            val rootFolderMap: SortedMap<Long, Folder> = remember { DataManager.rootFolderMap }
             @Suppress("UNCHECKED_CAST")
             MediaListView(
-                mediaMap = DataManager.rootFolderMap as SortedMap<Long, Media>,
+                mediaMap = rootFolderMap as SortedMap<Long, Media>,
 
                 openMedia = { clickedMedia: Media ->
                     openMediaFromFolder(navController, clickedMedia)
@@ -77,7 +77,7 @@ fun MediaRouter(
                 shuffleMusicAction = {
                     val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
                     @Suppress("NAME_SHADOWING")
-                    DataManager.rootFolderMap.forEach { (_, folder: Media) ->
+                    rootFolderMap.forEach { (_, folder: Media) ->
                         val folder = folder as Folder
                         musicMediaItemSortedMap.putAll(folder.getAllMusic())
                     }
@@ -94,9 +94,9 @@ fun MediaRouter(
 
         composable("${MediaDestination.FOLDERS.link}/{id}") {
             val folderId = it.arguments!!.getString("id")!!.toLong()
-            val folder: Folder = DataManager.folderMap[folderId]!!
-
-            mapToShow.clear()
+            val folderMap: SortedMap<Long, Folder> = remember { DataManager.folderMap }
+            val folder: Folder = folderMap[folderId]!!
+            val mapToShow: SortedMap<Long, Media> = sortedMapOf()
 
             //Load sub-folders
             mapToShow.putAll(folder.getSubFolderListAsMedia())
@@ -128,9 +128,12 @@ fun MediaRouter(
         }
 
         composable(MediaDestination.ARTISTS.link) {
+            val musicMediaItemMap: SortedMap<Music, MediaItem> =
+                remember { DataManager.musicMediaItemSortedMap }
+            val artistMap: SortedMap<String, Artist> = remember { DataManager.artistMap }
             @Suppress("UNCHECKED_CAST")
             MediaListView(
-                mediaMap = DataManager.artistMap as SortedMap<Long, Media>,
+                mediaMap = artistMap as SortedMap<Long, Media>,
 
                 openMedia = { clickedMedia: Media ->
                     openMedia(
@@ -141,7 +144,7 @@ fun MediaRouter(
 
                 shuffleMusicAction = {
                     playbackController.loadMusic(
-                        musicMediaItemSortedMap = DataManager.musicMediaItemSortedMap,
+                        musicMediaItemSortedMap = musicMediaItemMap,
                         shuffleMode = true
                     )
                     openMedia(navController = navController)
@@ -152,8 +155,9 @@ fun MediaRouter(
         }
 
         composable("${MediaDestination.ARTISTS.link}/{name}") {
+            val artistMap: SortedMap<String, Artist> = remember { DataManager.artistMap }
             val artistName: String = it.arguments!!.getString("name")!!
-            val artist: Artist = DataManager.artistMap[artistName]!!
+            val artist: Artist = artistMap[artistName]!!
             val musicMap: SortedMap<Long, Media> = sortedMapOf()
 
             artist.musicList.forEach { music: Music ->
@@ -186,15 +190,16 @@ fun MediaRouter(
         }
 
         composable(MediaDestination.ALBUMS.link) {
+            val albumMap: SortedMap<String, Album> = remember { DataManager.albumMap }
             val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
 
-            DataManager.albumMap.forEach { (_: String, album: Album) ->
+            albumMap.forEach { (_: String, album: Album) ->
                 musicMediaItemSortedMap.putAll(album.musicMediaItemSortedMap)
             }
 
             @Suppress("UNCHECKED_CAST")
             MediaListView(
-                mediaMap = DataManager.albumMap as SortedMap<Long, Media>,
+                mediaMap = albumMap as SortedMap<Long, Media>,
 
                 openMedia = { clickedMedia: Media ->
                     openMedia(navController = navController, media = clickedMedia)
@@ -215,15 +220,16 @@ fun MediaRouter(
         composable("${MediaDestination.ALBUMS.link}/{id}") {
             val albumId: Long = it.arguments!!.getString("id")!!.toLong()
             var albumName: String? = null
+            val albumMap: SortedMap<String, Album> = remember { DataManager.albumMap }
 
-            DataManager.albumMap.forEach { (name: String, album: Album) ->
+            albumMap.forEach { (name: String, album: Album) ->
                 if (album.id == albumId) {
                     albumName = name
                     return@forEach
                 }
             }
 
-            val album: Album = DataManager.albumMap[albumName]!!
+            val album: Album = albumMap[albumName]!!
 
             @Suppress("UNCHECKED_CAST")
             MediaListView(
@@ -251,8 +257,9 @@ fun MediaRouter(
         composable(MediaDestination.GENRES.link) {
             val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
             val mediaMap: MutableMap<Long, Media> = mutableMapOf()
+            val genreMap: SortedMap<String, Genre> = remember { DataManager.genreMap }
 
-            DataManager.genreMap.forEach { (_: String, genre: Genre) ->
+            genreMap.forEach { (_: String, genre: Genre) ->
                 musicMediaItemSortedMap.putAll(genre.musicMediaItemMap)
                 mediaMap.putIfAbsent(genre.id, genre)
             }
@@ -278,7 +285,8 @@ fun MediaRouter(
 
         composable("${MediaDestination.GENRES.link}/{name}") {
             val genreName: String = it.arguments!!.getString("name")!!
-            val genre = DataManager.genreMap[genreName]!!
+            val genreMap: SortedMap<String, Genre> = remember { DataManager.genreMap }
+            val genre = genreMap[genreName]!!
 
             MediaListView(
                 mediaMap = genre.musicMap,
@@ -306,8 +314,10 @@ fun MediaRouter(
         composable(MediaDestination.MUSICS.link) {
             //Find a way to do something more aesthetic but it works
             val mediaMap: SortedMap<Music, Media> = sortedMapOf()
+            val musicMediaItemMap: SortedMap<Music, MediaItem> =
+                remember { DataManager.musicMediaItemSortedMap }
 
-            DataManager.musicMediaItemSortedMap.keys.forEach { music: Music ->
+            musicMediaItemMap.keys.forEach { music: Music ->
                 mediaMap[music] = music
             }
 
@@ -316,7 +326,7 @@ fun MediaRouter(
 
                 openMedia = { clickedMedia: Media ->
                     playbackController.loadMusic(
-                        musicMediaItemSortedMap = DataManager.musicMediaItemSortedMap
+                        musicMediaItemSortedMap = musicMediaItemMap
                     )
                     openMedia(
                         navController,
@@ -326,7 +336,7 @@ fun MediaRouter(
 
                 shuffleMusicAction = {
                     playbackController.loadMusic(
-                        musicMediaItemSortedMap = DataManager.musicMediaItemSortedMap,
+                        musicMediaItemSortedMap = musicMediaItemMap,
                         shuffleMode = true
                     )
                     openMedia(navController = navController)

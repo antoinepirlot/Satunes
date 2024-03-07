@@ -26,6 +26,7 @@
 package earth.mp3player
 
 import android.Manifest.permission.READ_MEDIA_AUDIO
+import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -79,14 +80,16 @@ class MainActivity : ComponentActivity() {
         requestPermission(isAudioAllowed = isAudioAllowed)
 
         setContent {
+            val context: Context = LocalContext.current
+
             @Suppress("NAME_SHADOWING")
             val isAudioAllowed = rememberSaveable { isAudioAllowed }
 
             if (isAudioAllowed.value) {
-                DataLoader.loadAllData(context = LocalContext.current)
+                DataLoader.loadAllData(context = context)
             }
 
-            PlaybackController.initInstance(context = LocalContext.current)
+            PlaybackController.initInstance(context = context)
 
             MP3Theme {
                 Surface(

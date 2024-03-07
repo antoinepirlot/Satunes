@@ -244,10 +244,7 @@ class PlaybackController private constructor(
             return instance
         }
 
-        fun initInstance(
-            context: Context,
-            musicMediaItemSortedMap: SortedMap<Music, MediaItem>
-        ): PlaybackController {
+        fun initInstance(context: Context): PlaybackController {
             if (!Companion::instance.isInitialized) {
                 val sessionToken =
                     SessionToken(context, ComponentName(context, PlaybackService::class.java))
@@ -255,7 +252,7 @@ class PlaybackController private constructor(
                 instance = PlaybackController(
                     context = context,
                     sessionToken = sessionToken,
-                    musicMediaItemSortedMap = musicMediaItemSortedMap,
+                    musicMediaItemSortedMap = DataManager.musicMediaItemSortedMap,
                 )
             }
 

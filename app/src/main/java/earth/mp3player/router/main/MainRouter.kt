@@ -52,19 +52,12 @@ package earth.mp3player.router.main
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.media3.common.MediaItem
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import earth.mp3player.models.Album
-import earth.mp3player.models.Artist
-import earth.mp3player.models.Folder
-import earth.mp3player.models.Genre
-import earth.mp3player.models.Music
 import earth.mp3player.router.media.MediaDestination
 import earth.mp3player.router.media.MediaRouter
 import earth.mp3player.ui.views.settings.SettingsView
-import java.util.SortedMap
 
 /**
  * @author Antoine Pirlot on 02-03-24
@@ -76,14 +69,6 @@ fun MainRouter(
     navController: NavHostController,
     mediaRouterNavController: NavHostController,
     mediaRouterStartDestination: String,
-
-    //Maps
-    rootFolderMap: SortedMap<Long, Folder>,
-    allArtistSortedMap: SortedMap<String, Artist>,
-    allAlbumSortedMap: SortedMap<String, Album>,
-    allMusicMediaItemsMap: SortedMap<Music, MediaItem>,
-    folderMap: Map<Long, Folder>,
-    genreMap: SortedMap<String, Genre>
 ) {
     NavHost(
         modifier = modifier,
@@ -93,15 +78,7 @@ fun MainRouter(
         composable(MainDestination.ROOT.link) {
             MediaRouter(
                 navController = mediaRouterNavController,
-                startDestination = mediaRouterStartDestination,
-
-                //Maps
-                rootFolderMap = rootFolderMap,
-                allArtistSortedMap = allArtistSortedMap,
-                allAlbumSortedMap = allAlbumSortedMap,
-                allMusicMediaItemsMap = allMusicMediaItemsMap,
-                folderMap = folderMap,
-                genreMap = genreMap
+                startDestination = mediaRouterStartDestination
             )
         }
 

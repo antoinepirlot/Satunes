@@ -43,21 +43,14 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.media3.common.MediaItem
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import earth.mp3player.models.Album
-import earth.mp3player.models.Artist
-import earth.mp3player.models.Folder
-import earth.mp3player.models.Genre
-import earth.mp3player.models.Music
 import earth.mp3player.router.main.MainRouter
 import earth.mp3player.router.media.MediaDestination
 import earth.mp3player.services.DataLoader
@@ -67,7 +60,6 @@ import earth.mp3player.ui.appBars.MP3BottomAppBar
 import earth.mp3player.ui.appBars.MP3TopAppBar
 import earth.mp3player.ui.theme.MP3Theme
 import kotlinx.coroutines.runBlocking
-import java.util.SortedMap
 
 /**
  * @author Antoine Pirlot on 18/01/24
@@ -89,29 +81,12 @@ class MainActivity : ComponentActivity() {
         setContent {
             @Suppress("NAME_SHADOWING")
             val isAudioAllowed = rememberSaveable { isAudioAllowed }
-            val musicMediaItemSortedMap = remember { sortedMapOf<Music, MediaItem>() }
-            val rootFolderList = remember { sortedMapOf<Long, Folder>() }
-            val folderMap = remember { sortedMapOf<Long, Folder>() }
-            val artistMap = remember { sortedMapOf<String, Artist>() }
-            val albumMap = remember { sortedMapOf<String, Album>() }
-            val genreMap: SortedMap<String, Genre> = remember { sortedMapOf() }
 
             if (isAudioAllowed.value) {
-                DataLoader.loadAllData(
-                    context = LocalContext.current,
-                    musicMediaItemSortedMap = musicMediaItemSortedMap,
-                    rootFolderMap = rootFolderList,
-                    folderMap = folderMap,
-                    artistMap = artistMap,
-                    albumMap = albumMap,
-                    genreMap = genreMap
-                )
+                DataLoader.loadAllData(context = LocalContext.current)
             }
 
-            PlaybackController.initInstance(
-                context = LocalContext.current,
-                musicMediaItemSortedMap = musicMediaItemSortedMap
-            )
+            PlaybackController.initInstance(context = LocalContext.current)
 
             MP3Theme {
                 Surface(
@@ -152,15 +127,7 @@ class MainActivity : ComponentActivity() {
                             MainRouter(
                                 navController = mainRouterNavController,
                                 mediaRouterNavController = mediaRouterNavController,
-                                mediaRouterStartDestination = mediaRouterStartMediaDestination.value,
-
-                                //Maps
-                                rootFolderMap = rootFolderList,
-                                folderMap = folderMap,
-                                allArtistSortedMap = artistMap,
-                                allAlbumSortedMap = albumMap,
-                                allMusicMediaItemsMap = musicMediaItemSortedMap,
-                                genreMap = genreMap
+                                mediaRouterStartDestination = mediaRouterStartMediaDestination.value
                             )
                         }
                     }

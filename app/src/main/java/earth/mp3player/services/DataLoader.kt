@@ -35,7 +35,6 @@ import android.provider.MediaStore
 import androidx.compose.runtime.MutableLongState
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.ui.graphics.asImageBitmap
-import androidx.media3.common.MediaItem
 import earth.mp3player.models.Album
 import earth.mp3player.models.Artist
 import earth.mp3player.models.Folder
@@ -44,7 +43,6 @@ import earth.mp3player.models.Music
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.SortedMap
 
 /**
  * @author Antoine Pirlot on 22/02/24
@@ -73,31 +71,9 @@ object DataLoader {
     //Genres variables
     private var genreIdColumn: Int? = null
     private var genreNameColumn: Int? = null
-
-    private lateinit var musicMediaItemSortedMap: SortedMap<Music, MediaItem>
-    private lateinit var rootFolderMap: SortedMap<Long, Folder>
-    private lateinit var folderMap: SortedMap<Long, Folder>
-    private lateinit var artistMap: SortedMap<String, Artist>
-    private lateinit var genreMap: SortedMap<String, Genre>
-
     private var folderId: MutableLongState = mutableLongStateOf(FIRST_FOLDER_INDEX)
 
-
-    fun loadAllData(
-        context: Context,
-        musicMediaItemSortedMap: SortedMap<Music, MediaItem>,
-        rootFolderMap: SortedMap<Long, Folder>,
-        folderMap: SortedMap<Long, Folder>,
-        artistMap: SortedMap<String, Artist>,
-        albumMap: SortedMap<String, Album>,
-        genreMap: SortedMap<String, Genre>
-    ) {
-        this.musicMediaItemSortedMap = musicMediaItemSortedMap
-        this.rootFolderMap = rootFolderMap
-        this.folderMap = folderMap
-        this.artistMap = artistMap
-        this.genreMap = genreMap
-
+    fun loadAllData(context: Context) {
         val projection = arrayOf(
             // AUDIO
             MediaStore.Audio.Media._ID,
@@ -119,6 +95,7 @@ object DataLoader {
             MediaStore.Audio.Media.GENRE_ID,
             MediaStore.Audio.Media.GENRE
         )
+
         context.contentResolver.query(URI, projection, null, null)?.use {
             // Cache music columns indices.
             musicIdColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Media._ID)
@@ -163,17 +140,17 @@ object DataLoader {
                 //Load albums
                 if (albumIdColumn != null && albumNameColumn != null) {
                     album = loadAlbum(cursor = it)
-                    albumMap[album.title] = album
+                    DataManager.albumMap[album.title] = album
                 }
 
                 //Load music
                 try {
                     music = loadMusic(context = context, cursor = it, album = album)
-                    musicMediaItemSortedMap[music] = music.mediaItem
+                    DataManager.musicMediaItemSortedMap[music] = music.mediaItem
                 } catch (_: IllegalAccessError) {
                     // No music found
                     if (album != null && album.musicSortedMap.isEmpty()) {
-                        albumMap.remove(album.title)
+                        DataManager.albumMap.remove(album.title)
                     }
                     continue // Continue the while loop
                 }
@@ -184,8 +161,9 @@ object DataLoader {
                 //Load Genres
                 try {
                     var genre: Genre = loadGenre(cursor = it)
-                    genreMap.putIfAbsent(genre.title, genre)
-                    genre = genreMap[genre.title]!! // The id is not the same for all same genre
+                    DataManager.genreMap.putIfAbsent(genre.title, genre)
+                    // The id is not the same for all same genre
+                    genre = DataManager.genreMap[genre.title]!!
                     music.genre = genre
                     genre.addMusic(music)
                 } catch (_: Exception) {
@@ -195,8 +173,9 @@ object DataLoader {
                 //Load Artists
                 if (artistIdColumn != null && artistNameColumn != null) {
                     artist = loadArtist(cursor = it)
-                    artistMap.putIfAbsent(artist.title, artist)
-                    artist = artistMap[artist.title]!! //The id is not the same for all same artists
+                    DataManager.artistMap.putIfAbsent(artist.title, artist)
+                    //The id is not the same for all same artists
+                    artist = DataManager.artistMap[artist.title]!!
                     artist.musicList.add(music)
                     music.artist = artist
                 }
@@ -290,7 +269,7 @@ object DataLoader {
 
         var rootFolder: Folder? = null
 
-        rootFolderMap.values.forEach { folder: Folder ->
+        DataManager.rootFolderMap.values.forEach { folder: Folder ->
             if (folder.title == splitPath[0]) {
                 rootFolder = folder
                 return@forEach
@@ -300,16 +279,16 @@ object DataLoader {
         if (rootFolder == null) {
             // No root folders in the list
             rootFolder = Folder(folderId.longValue, splitPath[0])
-            folderMap[folderId.longValue] = rootFolder!!
+            DataManager.folderMap[folderId.longValue] = rootFolder!!
             folderId.longValue++
-            rootFolderMap[rootFolder!!.id] = rootFolder!!
+            DataManager.rootFolderMap[rootFolder!!.id] = rootFolder!!
         }
 
         splitPath.removeAt(0)
         rootFolder!!.createSubFolders(
             splitPath.toMutableList(),
             folderId,
-            folderMap
+            DataManager.folderMap
         )
 
         val subfolder = rootFolder!!.getSubFolder(splitPath.toMutableList())!!

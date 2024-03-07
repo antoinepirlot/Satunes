@@ -34,7 +34,7 @@ import java.util.SortedMap
  */
 class Album(
     override val id: Long,
-    override val name: String,
+    override val title: String,
     var artist: Artist? = null,
     val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf(),
     var albumArtWorkUri: Uri = Uri.EMPTY,

@@ -25,17 +25,34 @@
 
 package earth.mp3player.models
 
-interface Media : Comparable<Music> {
+interface Media : Comparable<Media> {
     val id: Long
-    val name: String
+    val title: String
 
-    override fun compareTo(other: Music): Int {
-        return if (other.id == this.id) {
-            0
-        } else if (other.id < this.id) {
-            1
-        } else {
-            -1
+    override fun compareTo(other: Media): Int {
+        if (this == other) {
+            return 0
         }
+        val o1CharArray: CharArray = this.title.toCharArray()
+        val o2CharArray: CharArray = other.title.toCharArray()
+        for (i in o1CharArray.indices) {
+            if (i > o1CharArray.lastIndex || i > o2CharArray.lastIndex ) {
+                return if (o1CharArray.size > o2CharArray.size) {
+                    1
+                } else {
+                    -1
+                }
+            }
+
+            val o1Char: Char = o1CharArray[i].lowercaseChar()
+            val o2Char: Char = o2CharArray[i].lowercaseChar()
+            if(o1Char.code < o2Char.code) {
+                return -1
+            }
+            if (o1Char.code > o2Char.code) {
+                return 1
+            }
+        }
+        return 0
     }
 }

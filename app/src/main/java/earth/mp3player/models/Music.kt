@@ -37,7 +37,8 @@ import java.io.File
 
 class Music(
     override val id: Long,
-    override val name: String,
+    val displayName: String,
+    override val title: String = displayName,
     val duration: Long,
     val size: Int,
     var relativePath: String,
@@ -49,7 +50,7 @@ class Music(
 ) : Media {
 
     val mediaItem: MediaItem
-    var absolutePath: String? = "${PlaybackController.ROOT_PATH}/$relativePath/$name"
+    var absolutePath: String? = "${PlaybackController.ROOT_PATH}/$relativePath/$displayName"
     var uri: Uri = Uri.Builder().appendPath(this.absolutePath).build()
     var artwork: ImageBitmap? = null
 
@@ -57,7 +58,7 @@ class Music(
         val storageManager = context.getSystemService<StorageManager>()
         val storageVolumes: List<StorageVolume> = storageManager!!.storageVolumes
         for (volume in storageVolumes) {
-            absolutePath = "${volume.directory!!.path}/$relativePath/$name"
+            absolutePath = "${volume.directory!!.path}/$relativePath/$displayName"
             if (!File(this.absolutePath!!).exists()) {
                 if (storageVolumes.last() == volume) {
                     throw IllegalAccessException("This media doesn't exist")
@@ -75,4 +76,25 @@ class Music(
             this.album!!.addMusic(music = this)
         }
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Music
+
+        if (displayName != other.displayName) return false
+        if (artist != other.artist) return false
+        if (album != other.album) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = displayName.hashCode()
+        result = 31 * result + (artist?.hashCode() ?: 0)
+        result = 31 * result + (album?.hashCode() ?: 0)
+        return result
+    }
+
 }

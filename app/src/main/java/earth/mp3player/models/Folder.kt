@@ -31,7 +31,7 @@ import java.util.SortedMap
 
 class Folder(
     override val id: Long,
-    override var name: String,
+    override var title: String,
     var parentFolder: Folder? = null,
     private val subFolderList: SortedMap<Long, Folder> = sortedMapOf(),
     val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
@@ -82,7 +82,7 @@ class Folder(
         subFolderNameChainList.forEach { folderName: String ->
             var subFolder: Folder? = null
             for (folder in parentFolder.subFolderList.values) {
-                if (folder.name == folderName) {
+                if (folder.title == folderName) {
                     subFolder = folder
                 }
             }
@@ -105,12 +105,12 @@ class Folder(
      */
     fun getSubFolder(splitPath: MutableList<String>): Folder? {
         if (splitPath.isEmpty()
-            || (splitPath.size == 1 && this.name == splitPath[0])
+            || (splitPath.size == 1 && this.title == splitPath[0])
         ) {
             return this
         }
         this.subFolderList.values.forEach { subFolder: Folder ->
-            if (subFolder.name == splitPath[0]) {
+            if (subFolder.title == splitPath[0]) {
                 splitPath.remove(splitPath[0])
                 return subFolder.getSubFolder(splitPath)
             }
@@ -135,14 +135,14 @@ class Folder(
 
         other as Folder
 
-        if (name != other.name) return false
+        if (title != other.title) return false
         if (parentFolder != other.parentFolder) return false
         if (subFolderList != other.subFolderList) return false
         return musicMediaItemSortedMap == other.musicMediaItemSortedMap
     }
 
     override fun hashCode(): Int {
-        var result = name.hashCode()
+        var result = title.hashCode()
         result = 31 * result + (parentFolder?.hashCode() ?: 0)
         result = 31 * result + subFolderList.hashCode()
         result = 31 * result + musicMediaItemSortedMap.hashCode()
@@ -150,6 +150,6 @@ class Folder(
     }
 
     override fun toString(): String {
-        return this.name
+        return this.title
     }
 }

@@ -33,7 +33,7 @@ import java.util.SortedMap
  */
 class Genre(
     override val id: Long,
-    override var name: String,
+    override var title: String,
 ) : Media {
 
     val musicMap: SortedMap<Long, Music> = sortedMapOf()
@@ -54,10 +54,10 @@ class Genre(
 
         other as Genre
 
-        return name == other.name
+        return title == other.title
     }
 
     override fun hashCode(): Int {
-        return name.hashCode()
+        return title.hashCode()
     }
 }

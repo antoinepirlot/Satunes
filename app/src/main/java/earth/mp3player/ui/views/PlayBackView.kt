@@ -57,7 +57,7 @@ fun PlayBackView(
             verticalArrangement = Arrangement.Bottom,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = musicPlaying.value!!.name)
+            Text(text = musicPlaying.value!!.title)
             MusicControlBar(
                 modifier = modifier
                     .fillMaxWidth()

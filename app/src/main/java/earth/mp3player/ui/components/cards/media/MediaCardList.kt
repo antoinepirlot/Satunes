@@ -59,12 +59,12 @@ fun MediaCardList(
                     val pair = getRightIconAndDescription(media)
                     val mediaName: String =
                         if (media is Folder && media.parentFolder == null) {
-                            when (media.name) {
+                            when (media.title) {
                                 "0" -> stringResource(id = R.string.this_device)
-                                else -> "${stringResource(id = R.string.external_storage)}: ${media.name}"
+                                else -> "${stringResource(id = R.string.external_storage)}: ${media.title}"
                             }
                         } else {
-                            media.name
+                            media.title
                         }
                     MediaCard(
                         modifier = modifier,

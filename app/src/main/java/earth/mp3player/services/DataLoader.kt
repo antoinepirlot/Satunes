@@ -53,6 +53,7 @@ object DataLoader {
     // Music variables
     private var musicIdColumn: Int? = null
     private var musicNameColumn: Int? = null
+    private var musicTitleColumn: Int? = null
     private var musicDurationColumn: Int? = null
     private var musicSizeColumn: Int? = null
     private var relativePathColumn: Int? = null
@@ -99,6 +100,7 @@ object DataLoader {
             // AUDIO
             MediaStore.Audio.Media._ID,
             MediaStore.Audio.Media.DISPLAY_NAME,
+            MediaStore.Audio.Media.TITLE,
             MediaStore.Audio.Media.DURATION,
             MediaStore.Audio.Media.SIZE,
             MediaStore.Audio.Media.RELATIVE_PATH,
@@ -117,6 +119,7 @@ object DataLoader {
             musicIdColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Media._ID)
             musicNameColumn =
                 it.getColumnIndexOrThrow(MediaStore.Audio.Media.DISPLAY_NAME)
+            musicTitleColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE)
             musicDurationColumn =
                 it.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION)
             musicSizeColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE)
@@ -170,8 +173,8 @@ object DataLoader {
 
                 try {
                     var genre: Genre = loadGenre(cursor = it)
-                    genreMap.putIfAbsent(genre.name, genre)
-                    genre = genreMap[genre.name]!! // The id is not the same for all same genre
+                    genreMap.putIfAbsent(genre.title, genre)
+                    genre = genreMap[genre.title]!! // The id is not the same for all same genre
                     music.genre = genre
                     genre.addMusic(music)
                 } catch (_: Exception) {
@@ -180,8 +183,8 @@ object DataLoader {
 
                 if (artistIdColumn != null && artistNameColumn != null) {
                     var artist = loadArtist(cursor = it)
-                    artistMap.putIfAbsent(artist.name, artist)
-                    artist = artistMap[artist.name]!! //The id is not the same for all same artists
+                    artistMap.putIfAbsent(artist.title, artist)
+                    artist = artistMap[artist.title]!! //The id is not the same for all same artists
                     artist.musicList.add(music)
                     music.artist = artist
                 }
@@ -203,15 +206,18 @@ object DataLoader {
      */
     private fun loadMusic(context: Context, cursor: Cursor, album: Album?): Music {
         // Get values of columns for a given music.
-        val id = cursor.getLong(musicIdColumn!!)
-        val name = cursor.getString(musicNameColumn!!)
-        val duration = cursor.getLong(musicDurationColumn!!)
+        val id: Long = cursor.getLong(musicIdColumn!!)
+        val displayName: String = cursor.getString(musicNameColumn!!)
+        var title: String = cursor.getString(musicTitleColumn!!)
+        if (title.isBlank()) title = displayName
+        val duration: Long = cursor.getLong(musicDurationColumn!!)
         val size = cursor.getInt(musicSizeColumn!!)
-        val relativePath = cursor.getString(relativePathColumn!!)
+        val relativePath: String = cursor.getString(relativePathColumn!!)
         val music: Music = Music(
             context = context,
             id = id,
-            name = name,
+            title = title,
+            displayName = displayName,
             duration = duration,
             size = size,
             relativePath = relativePath,
@@ -263,7 +269,7 @@ object DataLoader {
 
         var rootFolder: Folder? = null
         rootFolderMap.values.forEach { folder: Folder ->
-            if (folder.name == splitPath[0]) {
+            if (folder.title == splitPath[0]) {
                 rootFolder = folder
                 return@forEach
             }
@@ -290,7 +296,7 @@ object DataLoader {
     private fun loadAlbum(cursor: Cursor): Album {
         val id: Long = cursor.getLong(albumIdColumn!!)
         val name = cursor.getString(albumNameColumn!!)
-        return Album(id = id, name = name)
+        return Album(id = id, title = name)
     }
 
     private fun loadArtist(cursor: Cursor): Artist {
@@ -299,12 +305,12 @@ object DataLoader {
         val name = cursor.getString(artistNameColumn!!)
 //            val nbOfTracks = cursor.getInt(artistNbOfTracksColumn!!)
 //            val nbOfAlbums = cursor.getInt(artistNbOfAlbumsColumn!!)
-        return Artist(id = id, name = name)
+        return Artist(id = id, title = name)
     }
 
     private fun loadGenre(cursor: Cursor): Genre {
         val id = cursor.getLong(genreIdColumn!!)
         val name = cursor.getString(genreNameColumn!!)
-        return Genre(id = id, name = name)
+        return Genre(id = id, title = name)
     }
 }

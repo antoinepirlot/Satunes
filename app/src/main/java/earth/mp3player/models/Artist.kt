@@ -29,7 +29,7 @@ import java.util.SortedMap
 
 class Artist(
     override val id: Long,
-    override var name: String,
+    override var title: String,
     val numberOfTracks: Int = 0,
     val numberOfAlbums: Int = 0,
     val musicList: MutableList<Music> = mutableListOf(),
@@ -37,11 +37,11 @@ class Artist(
 ) : Media {
 
     fun addAlbum(album: Album) {
-        this.albumSortedMap.putIfAbsent(album.name, album)
+        this.albumSortedMap.putIfAbsent(album.title, album)
     }
 
     override fun toString(): String {
-        return this.name
+        return this.title
     }
 
     override fun equals(other: Any?): Boolean {
@@ -50,10 +50,10 @@ class Artist(
 
         other as Artist
 
-        return name == other.name
+        return title == other.title
     }
 
     override fun hashCode(): Int {
-        return name.hashCode()
+        return title.hashCode()
     }
 }

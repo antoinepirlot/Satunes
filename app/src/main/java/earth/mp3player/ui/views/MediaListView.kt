@@ -72,7 +72,14 @@ fun MediaListViewPreview() {
     val map = sortedMapOf(
         Pair<Long, Media>(
             1,
-            Music(1, "Musique", 0, 0, "", null, context = LocalContext.current)
+            Music(
+                1,
+                displayName = "Musique",
+                duration = 0,
+                size = 0,
+                relativePath = "",
+                context = LocalContext.current
+            )
         )
     )
     MediaListView(

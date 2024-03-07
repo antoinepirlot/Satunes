@@ -366,11 +366,11 @@ fun getDestinationOf(media: Media?): String {
     return when (media) {
         is Folder -> "${MediaDestination.FOLDERS.link}/${media.id}"
 
-        is Artist -> "${MediaDestination.ARTISTS.link}/${media.name}"
+        is Artist -> "${MediaDestination.ARTISTS.link}/${media.title}"
 
         is Album -> "${MediaDestination.ALBUMS.link}/${media.id}"
 
-        is Genre -> "${MediaDestination.GENRES.link}/${media.name}"
+        is Genre -> "${MediaDestination.GENRES.link}/${media.title}"
 
         else -> MediaDestination.PLAYBACK.link
     }

@@ -69,10 +69,17 @@ fun MediaCard(
 @Composable
 @Preview
 fun CardPreview() {
-    val music = Music(1, "Il avait les mots", 2, 2, "relative path", context = LocalContext.current)
+    val music = Music(
+        id = 1,
+        displayName = "Il avait les mots" ,
+        duration = 2,
+        size = 2,
+        relativePath = "relative path",
+        context = LocalContext.current
+    )
     MediaCard(
         modifier = Modifier.fillMaxSize(),
-        text = music.name,
+        text = music.title,
         imageVector = Icons.Filled.PlayArrow,
         onClick = {})
 }

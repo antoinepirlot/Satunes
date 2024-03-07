@@ -57,6 +57,7 @@ fun CurrentMusicBar(
 
     ) {
     var visible by remember { mutableStateOf(true) }
+
     TextButton(onClick = { visible = !visible }) {
         AnimatedVisibility(visible = visible,
             enter = expandVertically(expandFrom = Alignment.Top) { 20 },
@@ -66,7 +67,8 @@ fun CurrentMusicBar(
                 modifier = modifier
                     .fillMaxWidth()
                     .height(56.dp)
-                    .clickable { visible = !visible }) {
+                    .clickable { visible = !visible }
+            ) {
                 Image(imageVector = Icons.Default.MusicNote, contentDescription = "Musique")
             }
         }

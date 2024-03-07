@@ -61,6 +61,7 @@ class Music(
     init {
         val storageManager = context.getSystemService<StorageManager>()
         val storageVolumes: List<StorageVolume> = storageManager!!.storageVolumes
+
         for (volume in storageVolumes) {
             absolutePath = "${volume.directory!!.path}/$relativePath/$displayName"
             if (!File(this.absolutePath!!).exists()) {
@@ -73,9 +74,11 @@ class Music(
             this.uri = Uri.parse(absolutePath)
             break
         }
+
         this.mediaItem = MediaItem.Builder()
             .setUri(this.uri)
             .build()
+
         if (this.album != null) {
             this.album!!.addMusic(music = this)
         }

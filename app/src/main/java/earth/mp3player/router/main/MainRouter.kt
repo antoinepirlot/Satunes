@@ -76,6 +76,8 @@ fun MainRouter(
     navController: NavHostController,
     mediaRouterNavController: NavHostController,
     mediaRouterStartDestination: String,
+
+    //Maps
     rootFolderMap: SortedMap<Long, Folder>,
     allArtistSortedMap: SortedMap<String, Artist>,
     allAlbumSortedMap: SortedMap<String, Album>,
@@ -92,6 +94,8 @@ fun MainRouter(
             MediaRouter(
                 navController = mediaRouterNavController,
                 startDestination = mediaRouterStartDestination,
+
+                //Maps
                 rootFolderMap = rootFolderMap,
                 allArtistSortedMap = allArtistSortedMap,
                 allAlbumSortedMap = allAlbumSortedMap,

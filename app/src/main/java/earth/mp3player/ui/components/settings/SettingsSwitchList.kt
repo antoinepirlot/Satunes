@@ -126,5 +126,6 @@ private fun runIfIsSwitchMenuTitles(context: Context, setting: Settings): Boolea
             return false
         }
     }
+
     return true
 }

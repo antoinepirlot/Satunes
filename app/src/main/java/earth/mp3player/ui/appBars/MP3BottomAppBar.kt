@@ -58,11 +58,13 @@ fun MP3BottomAppBar(
         MenuTitle.GENRES,
         MenuTitle.MUSIC,
     )
+
     SettingsManager.menuTitleCheckedMap.forEach { (menuTitle: MenuTitle, checked: MutableState<Boolean>) ->
         if (!checked.value) {
             menuTitleList.remove(menuTitle)
         }
     }
+
     val selectedMenuTitle: MutableState<MenuTitle> =
         // Update the tab by default if settings has changed
         if (SettingsManager.foldersChecked.value) {
@@ -111,6 +113,7 @@ fun MP3BottomAppBar(
                 },
                 icon = {
                     val pair = getRightIconAndDescription(menuTitle = menuTitle)
+
                     Icon(
                         imageVector = pair.first,
                         contentDescription = pair.second

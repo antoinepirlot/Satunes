@@ -79,9 +79,13 @@ class MainActivity : ComponentActivity() {
         runBlocking {
             SettingsManager.loadSettings(context = this@MainActivity)
         }
+
         super.onCreate(savedInstanceState)
+
         val isAudioAllowed: MutableState<Boolean> = mutableStateOf(isAudioAllowed())
+
         requestPermission(isAudioAllowed = isAudioAllowed)
+
         setContent {
             @Suppress("NAME_SHADOWING")
             val isAudioAllowed = rememberSaveable { isAudioAllowed }
@@ -127,7 +131,6 @@ class MainActivity : ComponentActivity() {
                         } else {
                             rememberSaveable { mutableStateOf(MediaDestination.MUSICS.link) }
                         }
-
                     val mainRouterNavController = rememberNavController()
                     val mediaRouterNavController: NavHostController = rememberNavController()
 
@@ -150,6 +153,8 @@ class MainActivity : ComponentActivity() {
                                 navController = mainRouterNavController,
                                 mediaRouterNavController = mediaRouterNavController,
                                 mediaRouterStartDestination = mediaRouterStartMediaDestination.value,
+
+                                //Maps
                                 rootFolderMap = rootFolderList,
                                 folderMap = folderMap,
                                 allArtistSortedMap = artistMap,

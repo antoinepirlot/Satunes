@@ -41,6 +41,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import earth.mp3player.services.PlaybackController
@@ -84,10 +85,13 @@ fun MusicControlBar(
                 modifier = Modifier.size(playPauseButtonSize),
                 onClick = { playbackController.playPause() }
             ) {
+                val iconWithDescription: Pair<ImageVector, String> =
+                    getPlayPauseIconWithDescription(isPlaying = isPlaying.value)
+
                 Icon(
                     modifier = Modifier.size(playPauseButtonSize),
-                    imageVector = if (isPlaying.value) Icons.Filled.PauseCircle else Icons.Filled.PlayCircle,
-                    contentDescription = if (isPlaying.value) "Pause" else "Play",
+                    imageVector = iconWithDescription.first,
+                    contentDescription = iconWithDescription.second,
                 )
             }
 
@@ -105,4 +109,12 @@ fun MusicControlBar(
 @Preview
 fun MediaControlBarPreview() {
     MusicControlBar()
+}
+
+private fun getPlayPauseIconWithDescription(isPlaying: Boolean): Pair<ImageVector, String> {
+    return if (isPlaying) {
+        Icons.Filled.PauseCircle to "Pause"
+    } else {
+        Icons.Filled.PlayCircle to "Play"
+    }
 }

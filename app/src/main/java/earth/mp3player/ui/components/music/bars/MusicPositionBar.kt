@@ -74,17 +74,12 @@ fun MusicPositionBar(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             val maxDuration: Long = musicPlaying!!.duration
-            Text(
-                text = (
-                        if (isUpdating) getMillisToTimeText((newPositionPercentage * maxDuration).toLong())
-                        else getMillisToTimeText((currentPositionPercentage * maxDuration).toLong())
-                        ),
-            )
-            Text(
-                text = (
-                        getMillisToTimeText(maxDuration)
-                        ),
-            )
+            val currentPositionTimeText =
+                if (isUpdating) getMillisToTimeText((newPositionPercentage * maxDuration).toLong())
+                else getMillisToTimeText((currentPositionPercentage * maxDuration).toLong())
+
+            Text(text = currentPositionTimeText)
+            Text(text = getMillisToTimeText(maxDuration))
         }
     }
 

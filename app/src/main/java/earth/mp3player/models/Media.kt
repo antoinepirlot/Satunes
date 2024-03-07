@@ -37,8 +37,11 @@ interface Media : Comparable<Media> {
 
     override fun compareTo(other: Media): Int {
         val thisTitleNormalized: String =
-                Normalizer.normalize(this.title.lowercase(), Normalizer.Form.NFD)
-        val otherTitleNormalized: String = Normalizer.normalize(other.title.lowercase(), Normalizer.Form.NFD)
+            Normalizer.normalize(this.title.lowercase(), Normalizer.Form.NFD)
+
+        val otherTitleNormalized: String =
+            Normalizer.normalize(other.title.lowercase(), Normalizer.Form.NFD)
+
         return thisTitleNormalized.compareTo(otherTitleNormalized)
     }
 }

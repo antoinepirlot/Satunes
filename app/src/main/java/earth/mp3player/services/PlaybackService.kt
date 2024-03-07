@@ -59,11 +59,13 @@ class PlaybackService : MediaSessionService() {
             .buildUpon()
             .setAudioOffloadPreferences(audioOffloadPreferences)
             .build()
+
         mediaSession = MediaSession.Builder(this, exoPlayer).build()
     }
 
     override fun onTaskRemoved(rootIntent: Intent?) {
         val player = mediaSession?.player!!
+
         if (!player.playWhenReady || player.mediaItemCount == 0 || !SettingsManager.closedAppPlaybackChecked.value) {
             stopSelf()
         }
@@ -75,6 +77,7 @@ class PlaybackService : MediaSessionService() {
             release()
             mediaSession = null
         }
+
         super.onDestroy()
     }
 

@@ -56,12 +56,14 @@ fun PlayBackView(
     val albumArtworkSize = 200.dp
     Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         AlbumArtwork(modifier = modifier.size(albumArtworkSize))
+
         Column(
             modifier = modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Bottom,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(text = musicPlaying.value!!.title)
+
             MusicControlBar(
                 modifier = modifier
                     .fillMaxWidth()

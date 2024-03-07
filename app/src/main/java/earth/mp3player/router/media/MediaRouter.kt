@@ -57,6 +57,7 @@ fun MediaRouter(
     startDestination: String,
 ) {
     val playbackController: PlaybackController = remember { PlaybackController.getInstance() }
+
     NavHost(
         modifier = modifier,
         navController = navController,

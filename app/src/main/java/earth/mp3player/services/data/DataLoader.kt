@@ -95,96 +95,95 @@ object DataLoader {
             MediaStore.Audio.Media.GENRE_ID,
             MediaStore.Audio.Media.GENRE
         )
-        CoroutineScope(Dispatchers.Main).launch {
-            context.contentResolver.query(URI, projection, null, null)?.use {
-                // Cache music columns indices.
-                musicIdColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Media._ID)
-                musicNameColumn =
-                    it.getColumnIndexOrThrow(MediaStore.Audio.Media.DISPLAY_NAME)
-                musicTitleColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE)
-                musicDurationColumn =
-                    it.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION)
-                musicSizeColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE)
-                relativePathColumn =
-                    it.getColumnIndexOrThrow(MediaStore.Audio.Media.RELATIVE_PATH)
 
-                //Cache album columns indices
-                try {
-                    albumIdColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Albums.ALBUM_ID)
-                    albumNameColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Albums.ALBUM)
-                } catch (_: IllegalArgumentException) {
-                    // No album
+        context.contentResolver.query(URI, projection, null, null)?.use {
+            // Cache music columns indices.
+            musicIdColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Media._ID)
+            musicNameColumn =
+                it.getColumnIndexOrThrow(MediaStore.Audio.Media.DISPLAY_NAME)
+            musicTitleColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE)
+            musicDurationColumn =
+                it.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION)
+            musicSizeColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE)
+            relativePathColumn =
+                it.getColumnIndexOrThrow(MediaStore.Audio.Media.RELATIVE_PATH)
+
+            //Cache album columns indices
+            try {
+                albumIdColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Albums.ALBUM_ID)
+                albumNameColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Albums.ALBUM)
+            } catch (_: IllegalArgumentException) {
+                // No album
+            }
+
+            // Cache artist columns indices.
+            try {
+                artistIdColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Artists._ID)
+                artistNameColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Artists.ARTIST)
+            } catch (_: IllegalArgumentException) {
+                // No artist
+            }
+
+            // Cache Genre columns indices.
+            try {
+                genreIdColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Media.GENRE_ID)
+                genreNameColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Media.GENRE)
+            } catch (_: IllegalArgumentException) {
+                // No genre
+            }
+            // TODO find a way to coroutine this and fix issue with recomposition with sorted map
+            while (it.moveToNext()) {
+                var artist: Artist? = null
+                var album: Album? = null
+                var music: Music
+
+                //Load album
+                if (albumIdColumn != null && albumNameColumn != null) {
+                    album = loadAlbum(cursor = it)
+                    DataManager.albumMap[album.title] = album
                 }
 
-                // Cache artist columns indices.
+                //Load music
                 try {
-                    artistIdColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Artists._ID)
-                    artistNameColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Artists.ARTIST)
-                } catch (_: IllegalArgumentException) {
-                    // No artist
+                    music = loadMusic(context = context, cursor = it, album = album)
+                    DataManager.musicMediaItemSortedMap[music] = music.mediaItem
+                } catch (_: IllegalAccessError) {
+                    // No music found
+                    if (album != null && album.musicSortedMap.isEmpty()) {
+                        DataManager.albumMap.remove(album.title)
+                    }
+                    continue // Continue the while loop
                 }
 
-                // Cache Genre columns indices.
+                //Load Folder
+                loadFolders(music = music)
+
+                //Load Genre
                 try {
-                    genreIdColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Media.GENRE_ID)
-                    genreNameColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Media.GENRE)
-                } catch (_: IllegalArgumentException) {
-                    // No genre
+                    var genre: Genre = loadGenre(cursor = it)
+                    DataManager.genreMap.putIfAbsent(genre.title, genre)
+                    // The id is not the same for all same genre
+                    genre = DataManager.genreMap[genre.title]!!
+                    music.genre = genre
+                    genre.addMusic(music)
+                } catch (_: Exception) {
+                    //No Genre
                 }
 
-                while (it.moveToNext()) {
-                    var artist: Artist? = null
-                    var album: Album? = null
-                    var music: Music
+                //Load Artist
+                if (artistIdColumn != null && artistNameColumn != null) {
+                    artist = loadArtist(cursor = it)
+                    DataManager.artistMap.putIfAbsent(artist.title, artist)
+                    //The id is not the same for all same artists
+                    artist = DataManager.artistMap[artist.title]!!
+                    artist.musicList.add(music)
+                    music.artist = artist
+                }
 
-                    //Load album
-                    if (albumIdColumn != null && albumNameColumn != null) {
-                        album = loadAlbum(cursor = it)
-                        DataManager.albumMap[album.title] = album
-                    }
-
-                    //Load music
-                    try {
-                        music = loadMusic(context = context, cursor = it, album = album)
-                        DataManager.musicMediaItemSortedMap[music] = music.mediaItem
-                    } catch (_: IllegalAccessError) {
-                        // No music found
-                        if (album != null && album.musicSortedMap.isEmpty()) {
-                            DataManager.albumMap.remove(album.title)
-                        }
-                        continue // Continue the while loop
-                    }
-
-                    //Load Folder
-                    loadFolders(music = music)
-
-                    //Load Genre
-                    try {
-                        var genre: Genre = loadGenre(cursor = it)
-                        DataManager.genreMap.putIfAbsent(genre.title, genre)
-                        // The id is not the same for all same genre
-                        genre = DataManager.genreMap[genre.title]!!
-                        music.genre = genre
-                        genre.addMusic(music)
-                    } catch (_: Exception) {
-                        //No Genre
-                    }
-
-                    //Load Artist
-                    if (artistIdColumn != null && artistNameColumn != null) {
-                        artist = loadArtist(cursor = it)
-                        DataManager.artistMap.putIfAbsent(artist.title, artist)
-                        //The id is not the same for all same artists
-                        artist = DataManager.artistMap[artist.title]!!
-                        artist.musicList.add(music)
-                        music.artist = artist
-                    }
-
-                    //Link album and artist if exists
-                    if (artist != null && album != null) {
-                        artist.addAlbum(album)
-                        album.artist = artist
-                    }
+                //Link album and artist if exists
+                if (artist != null && album != null) {
+                    artist.addAlbum(album)
+                    album.artist = artist
                 }
             }
         }

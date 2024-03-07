@@ -11,6 +11,12 @@ If you decide to use my code to create new app, you can but you have to use the 
 
 ## 0.4 (Android Upside Down Cake and later)
 
+### 0.4.1-beta
+
+Fix issues:
+
+* Musics, Albums, etc. (Media) are sort by their title.
+
 ### 0.4.0-beta
 
 Features:

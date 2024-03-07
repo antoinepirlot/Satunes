@@ -23,7 +23,7 @@
  *  PS: I don't answer quickly.
  */
 
-package earth.mp3player.services
+package earth.mp3player.services.data
 
 import androidx.media3.common.MediaItem
 import earth.mp3player.models.Album

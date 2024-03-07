@@ -53,9 +53,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import earth.mp3player.router.main.MainRouter
 import earth.mp3player.router.media.MediaDestination
-import earth.mp3player.services.DataLoader
-import earth.mp3player.services.PlaybackController
-import earth.mp3player.services.SettingsManager
+import earth.mp3player.services.data.DataLoader
+import earth.mp3player.services.playback.PlaybackController
+import earth.mp3player.services.settings.SettingsManager
 import earth.mp3player.ui.appBars.MP3BottomAppBar
 import earth.mp3player.ui.appBars.MP3TopAppBar
 import earth.mp3player.ui.theme.MP3Theme

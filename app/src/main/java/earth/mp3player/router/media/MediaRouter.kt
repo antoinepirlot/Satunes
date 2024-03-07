@@ -38,8 +38,8 @@ import earth.mp3player.models.Folder
 import earth.mp3player.models.Genre
 import earth.mp3player.models.Media
 import earth.mp3player.models.Music
-import earth.mp3player.services.DataManager
-import earth.mp3player.services.PlaybackController
+import earth.mp3player.services.data.DataManager
+import earth.mp3player.services.playback.PlaybackController
 import earth.mp3player.ui.utils.getMusicListFromFolder
 import earth.mp3player.ui.utils.startMusic
 import earth.mp3player.ui.views.MediaListView

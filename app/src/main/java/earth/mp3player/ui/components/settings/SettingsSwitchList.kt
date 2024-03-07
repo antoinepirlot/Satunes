@@ -36,7 +36,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import earth.mp3player.models.MenuTitle
-import earth.mp3player.services.SettingsManager
+import earth.mp3player.services.settings.SettingsManager
 import earth.mp3player.ui.views.settings.Settings
 import kotlinx.coroutines.runBlocking
 

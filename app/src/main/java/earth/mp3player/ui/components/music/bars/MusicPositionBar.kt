@@ -40,7 +40,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import earth.mp3player.services.PlaybackController
+import earth.mp3player.services.playback.PlaybackController
 import earth.mp3player.ui.utils.getMillisToTimeText
 
 /**

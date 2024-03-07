@@ -32,7 +32,7 @@ import android.os.storage.StorageVolume
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.core.content.getSystemService
 import androidx.media3.common.MediaItem
-import earth.mp3player.services.PlaybackController
+import earth.mp3player.services.playback.PlaybackController
 import java.io.File
 
 /**

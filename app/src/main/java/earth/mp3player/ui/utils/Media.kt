@@ -43,7 +43,7 @@ import earth.mp3player.models.Genre
 import earth.mp3player.models.Media
 import earth.mp3player.models.MenuTitle
 import earth.mp3player.models.Music
-import earth.mp3player.services.PlaybackController
+import earth.mp3player.services.playback.PlaybackController
 import java.util.SortedMap
 
 /**

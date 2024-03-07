@@ -40,6 +40,10 @@ import earth.mp3player.ui.components.cards.media.MediaCardList
 import earth.mp3player.ui.components.music.bars.ShowCurrentMusicButton
 import earth.mp3player.ui.components.music.buttons.ShuffleAllButton
 
+/**
+ * @author Antoine Pirlot on 01/02/24
+ */
+
 @Composable
 fun <T: Comparable<T>> MediaListView(
     modifier: Modifier = Modifier,

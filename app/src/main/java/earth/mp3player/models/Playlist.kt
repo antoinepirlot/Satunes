@@ -28,6 +28,10 @@ package earth.mp3player.models
 import androidx.media3.common.MediaItem
 import java.util.SortedMap
 
+/**
+ * @author Antoine Pirlot on 18/02/24
+ */
+
 class Playlist(
     musicMediaItemSortedMap: SortedMap<Music, MediaItem>,
 ) {

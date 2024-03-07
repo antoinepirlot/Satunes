@@ -38,6 +38,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import earth.mp3player.R
 
+/**
+ * @author Antoine Pirlot on 01/02/24
+ */
+
 @Composable
 fun ShuffleAllButton(
     modifier: Modifier = Modifier,

@@ -36,8 +36,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import earth.mp3player.R
 import earth.mp3player.models.Folder
 import earth.mp3player.models.Media
-import earth.mp3player.models.Music
 import earth.mp3player.ui.utils.getRightIconAndDescription
+
+/**
+ * @author Antoine Pirlot on 16/01/24
+ */
 
 @Composable
 fun <T: Comparable<T>> MediaCardList(

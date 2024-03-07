@@ -46,6 +46,9 @@ import earth.mp3player.models.Music
 import earth.mp3player.services.PlaybackController
 import java.util.SortedMap
 
+/**
+ * @author Antoine Pirlot on 27/01/24
+ */
 
 /**
  * Start the music

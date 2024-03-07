@@ -36,6 +36,10 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import earth.mp3player.services.PlaybackController
 
+/**
+ * @author Antoine Pirlot on 29/01/24
+ */
+
 @Composable
 fun ShuffleMusicButton(
     modifier: Modifier = Modifier

@@ -33,6 +33,10 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.session.MediaSession
 import androidx.media3.session.MediaSessionService
 
+/**
+ * @author Antoine Pirlot on 31/01/24
+ */
+
 class PlaybackService : MediaSessionService() {
 
     companion object {

@@ -70,6 +70,10 @@ import earth.mp3player.ui.views.MediaListView
 import earth.mp3player.ui.views.PlayBackView
 import java.util.SortedMap
 
+/**
+ * @author Antoine Pirlot on 23-01-24
+ */
+
 @Composable
 fun MediaRouter(
     modifier: Modifier = Modifier,

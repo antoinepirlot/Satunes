@@ -35,6 +35,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
+/**
+ * @author Antoine Pirlot on 3/02/24
+ */
 
 @Composable
 fun ShowCurrentMusicButton(

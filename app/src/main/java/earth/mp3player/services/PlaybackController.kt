@@ -48,6 +48,10 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.SortedMap
 
+/**
+ * @author Antoine Pirlot on 31/01/24
+ */
+
 class PlaybackController private constructor(
     context: Context,
     sessionToken: SessionToken,

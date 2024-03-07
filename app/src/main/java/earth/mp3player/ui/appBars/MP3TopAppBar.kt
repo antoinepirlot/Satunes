@@ -46,6 +46,10 @@ import androidx.navigation.compose.rememberNavController
 import earth.mp3player.R
 import earth.mp3player.router.media.MediaDestination
 
+/**
+ * @author Antoine Pirlot on 16/01/24
+ */
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MP3TopAppBar(

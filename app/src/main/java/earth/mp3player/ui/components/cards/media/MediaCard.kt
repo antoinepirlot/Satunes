@@ -40,6 +40,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import earth.mp3player.models.Music
 
+/**
+ * @author Antoine Pirlot on 16/01/24
+ */
+
 @Composable
 fun MediaCard(
     modifier: Modifier = Modifier,

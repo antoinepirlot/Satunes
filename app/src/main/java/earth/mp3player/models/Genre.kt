@@ -29,8 +29,9 @@ import androidx.media3.common.MediaItem
 import java.util.SortedMap
 
 /**
- * @author Antoine Pirlot on 04-03-24
+ * @author Antoine Pirlot on 04/03/24
  */
+
 class Genre(
     override val id: Long,
     override var title: String,

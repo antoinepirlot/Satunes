@@ -42,6 +42,10 @@ import earth.mp3player.router.media.MediaDestination
 import earth.mp3player.services.SettingsManager
 import earth.mp3player.ui.utils.getRightIconAndDescription
 
+/**
+ * @author Antoine Pirlot on 03/02/24
+ */
+
 @Composable
 fun MP3BottomAppBar(
     modifier: Modifier = Modifier,

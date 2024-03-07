@@ -69,6 +69,10 @@ import earth.mp3player.ui.theme.MP3Theme
 import kotlinx.coroutines.runBlocking
 import java.util.SortedMap
 
+/**
+ * @author Antoine Pirlot on 18/01/24
+ */
+
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {

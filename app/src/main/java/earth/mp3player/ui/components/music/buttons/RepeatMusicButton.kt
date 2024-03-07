@@ -39,6 +39,10 @@ import androidx.media3.common.Player.REPEAT_MODE_ALL
 import androidx.media3.common.Player.REPEAT_MODE_ONE
 import earth.mp3player.services.PlaybackController
 
+/**
+ * @author Antoine Pirlot on 29/01/24
+ */
+
 @Composable
 fun RepeatMusicButton(
     modifier: Modifier = Modifier

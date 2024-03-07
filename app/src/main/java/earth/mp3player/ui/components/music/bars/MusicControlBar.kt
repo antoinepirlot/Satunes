@@ -49,6 +49,10 @@ import earth.mp3player.ui.components.music.buttons.PreviousMusicButton
 import earth.mp3player.ui.components.music.buttons.RepeatMusicButton
 import earth.mp3player.ui.components.music.buttons.ShuffleMusicButton
 
+/**
+ * @author Antoine Pirlot on 25/01/24
+ */
+
 @Composable
 fun MusicControlBar(
     modifier: Modifier = Modifier,

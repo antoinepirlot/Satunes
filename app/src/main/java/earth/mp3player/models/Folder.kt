@@ -29,6 +29,10 @@ import androidx.compose.runtime.MutableLongState
 import androidx.media3.common.MediaItem
 import java.util.SortedMap
 
+/**
+ * @author Antoine Pirlot on 19/01/24
+ */
+
 class Folder(
     override val id: Long,
     override var title: String,

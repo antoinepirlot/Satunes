@@ -27,6 +27,10 @@ package earth.mp3player.models
 
 import java.util.SortedMap
 
+/**
+ * @author Antoine Pirlot on 23/01/24
+ */
+
 class Artist(
     override val id: Long,
     override var title: String,

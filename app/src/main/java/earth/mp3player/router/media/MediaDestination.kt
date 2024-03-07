@@ -50,6 +50,10 @@
 
 package earth.mp3player.router.media
 
+/**
+ * @author Antoine Pirlot on 24-01-24
+ */
+
 enum class MediaDestination(val link: String) {
     FOLDERS("/folders"),
     ARTISTS("/artists"),

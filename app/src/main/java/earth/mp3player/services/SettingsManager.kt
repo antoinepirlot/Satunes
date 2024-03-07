@@ -42,6 +42,7 @@ import kotlinx.coroutines.runBlocking
 /**
  * @author Antoine Pirlot on 02-03-24
  */
+
 object SettingsManager {
 
     private const val DEFAULT_FOLDERS_CHECKED = true

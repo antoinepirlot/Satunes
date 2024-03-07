@@ -43,6 +43,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import earth.mp3player.services.PlaybackController
 import earth.mp3player.ui.utils.getMillisToTimeText
 
+/**
+ * @author Antoine Pirlot on 23/02/24
+ */
 
 @Composable
 fun MusicPositionBar(

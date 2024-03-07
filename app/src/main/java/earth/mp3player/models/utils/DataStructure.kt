@@ -23,10 +23,11 @@
  * PS: I don't answer quickly.
  */
 
-
-
-
 package earth.mp3player.models.utils
+
+/**
+ * @author Antoine Pirlot on 20/02/24
+ */
 
 fun <T> loadObjectsTo(toList: MutableList<T>, fromList: List<T>) {
     toList.clear()

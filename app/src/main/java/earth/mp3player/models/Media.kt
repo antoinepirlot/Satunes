@@ -25,8 +25,11 @@
 
 package earth.mp3player.models
 
-import androidx.compose.ui.text.toLowerCase
 import java.text.Normalizer
+
+/**
+ * @author Antoine Pirlot on 24/01/24
+ */
 
 interface Media : Comparable<Media> {
     val id: Long

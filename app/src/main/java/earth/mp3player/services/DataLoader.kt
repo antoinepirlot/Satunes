@@ -46,6 +46,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.SortedMap
 
+/**
+ * @author Antoine Pirlot on 22/02/24
+ */
+
 object DataLoader {
     const val FIRST_FOLDER_INDEX: Long = 1
     private val URI: Uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI

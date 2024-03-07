@@ -44,6 +44,10 @@ import earth.mp3player.services.PlaybackController
 import earth.mp3player.ui.components.music.AlbumArtwork
 import earth.mp3player.ui.components.music.bars.MusicControlBar
 
+/**
+ * @author Antoine Pirlot on 25/01/24
+ */
+
 @Composable
 fun PlayBackView(
     modifier: Modifier = Modifier,

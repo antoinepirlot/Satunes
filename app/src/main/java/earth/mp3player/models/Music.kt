@@ -35,6 +35,10 @@ import androidx.media3.common.MediaItem
 import earth.mp3player.services.PlaybackController
 import java.io.File
 
+/**
+ * @author Antoine Pirlot on 19/01/24
+ */
+
 class Music(
     override val id: Long,
     val displayName: String,

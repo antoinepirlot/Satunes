@@ -30,7 +30,7 @@ import androidx.media3.common.MediaItem
 import java.util.SortedMap
 
 /**
- * @author Antoine Pirlot on 26-02-24
+ * @author Antoine Pirlot on 26/02/24
  */
 class Album(
     override val id: Long,

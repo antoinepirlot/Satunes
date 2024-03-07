@@ -37,6 +37,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import earth.mp3player.services.PlaybackController
 
+/**
+ * @author Antoine Pirlot on 26/01/24
+ */
+
 @Composable
 fun NextMusicButton(
     modifier: Modifier = Modifier

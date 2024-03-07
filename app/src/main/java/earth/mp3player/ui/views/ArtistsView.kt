@@ -29,6 +29,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 
+/**
+ * @author Antoine Pirlot on 19/01/24
+ */
+
 @Composable
 fun ArtistsView(
     modifier: Modifier = Modifier

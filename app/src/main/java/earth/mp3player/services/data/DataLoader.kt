@@ -162,7 +162,7 @@ object DataLoader {
                 var album: Album? = null
                 var music: Music
 
-                //Load albums
+                //Load album
                 if (albumIdColumn != null && albumNameColumn != null) {
                     album = loadAlbum(cursor = it)
                     DataManager.albumMap[album.title] = album
@@ -180,10 +180,10 @@ object DataLoader {
                     continue // Continue the while loop
                 }
 
-                //Load Folders
+                //Load Folder
                 loadFolders(music = music)
 
-                //Load Genres
+                //Load Genre
                 try {
                     var genre: Genre = loadGenre(cursor = it)
                     DataManager.genreMap.putIfAbsent(genre.title, genre)
@@ -195,7 +195,7 @@ object DataLoader {
                     //No Genre
                 }
 
-                //Load Artists
+                //Load Artist
                 if (artistIdColumn != null && artistNameColumn != null) {
                     artist = loadArtist(cursor = it)
                     DataManager.artistMap.putIfAbsent(artist.title, artist)
@@ -205,7 +205,7 @@ object DataLoader {
                     music.artist = artist
                 }
 
-                //Link album and artists if exsits
+                //Link album and artist if exists
                 if (artist != null && album != null) {
                     artist.addAlbum(album)
                     album.artist = artist

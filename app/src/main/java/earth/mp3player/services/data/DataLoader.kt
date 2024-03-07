@@ -131,6 +131,7 @@ object DataLoader {
             } catch (_: IllegalArgumentException) {
                 // No genre
             }
+            // TODO find a way to coroutine this and fix issue with recomposition with sorted map
             while (it.moveToNext()) {
                 var artist: Artist? = null
                 var album: Album? = null

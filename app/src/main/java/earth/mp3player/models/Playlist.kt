@@ -96,6 +96,19 @@ class Playlist(
         return this.musicList.lastIndex
     }
 
+    /**
+     * Get media items list of media items between fromIndex and toIndex included.
+     *
+     * If toIndex is greater than the last index of the music list, then it's replaced by last index
+     * If fromIndex is less than 0, then it's replaced by 0.
+     *
+     * @param fromIndex the first music index to get
+     * @param toIndex the last music index to get
+     *
+     * @throws IllegalArgumentException if fromIndex is greater than toIndex
+     *
+     * @return a list of media items fromIndex toIndex included.
+     */
     @Suppress("NAME_SHADOWING")
     fun getMediaItems(fromIndex: Int, toIndex: Int): List<MediaItem> {
         val toIndex = if (toIndex > this.musicList.lastIndex) this.musicList.lastIndex else toIndex

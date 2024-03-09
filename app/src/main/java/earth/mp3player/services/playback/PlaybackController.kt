@@ -261,6 +261,16 @@ class PlaybackController private constructor(
         }
     }
 
+    /**
+     * Start the playback.
+     *
+     * If the music to play is null, then play the first music of the playlist, otherwise play the
+     * music to play.
+     *
+     * If music to play is the music playing, then do nothing.
+     *
+     * @param musicToPlay the music to play if it's not null, by default it's null.
+     */
     fun start(musicToPlay: Music? = null) {
         if (!this.isLoaded.value) {
             throw IllegalStateException("The playlist has not been loaded, you can't play music")

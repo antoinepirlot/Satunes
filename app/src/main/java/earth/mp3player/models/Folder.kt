@@ -29,6 +29,10 @@ import androidx.compose.runtime.MutableLongState
 import androidx.media3.common.MediaItem
 import java.util.SortedMap
 
+/**
+ * @author Antoine Pirlot on 19/01/24
+ */
+
 class Folder(
     override val id: Long,
     override var title: String,
@@ -76,22 +80,23 @@ class Folder(
         folderId: MutableLongState,
         folderMap: SortedMap<Long, Folder>
     ) {
-        //TODO A folder have multiple sub-folders, check to use one instance per folder
-        //TODO check if it works
         var parentFolder = this
         subFolderNameChainList.forEach { folderName: String ->
             var subFolder: Folder? = null
+
             for (folder in parentFolder.subFolderList.values) {
                 if (folder.title == folderName) {
                     subFolder = folder
                 }
             }
+
             if (subFolder == null) {
                 subFolder = Folder(folderId.longValue, folderName, parentFolder = this)
                 folderMap[folderId.longValue] = subFolder
                 folderId.longValue++
                 parentFolder.subFolderList[subFolder.id] = subFolder
             }
+
             parentFolder = subFolder
         }
     }
@@ -109,23 +114,28 @@ class Folder(
         ) {
             return this
         }
+
         this.subFolderList.values.forEach { subFolder: Folder ->
             if (subFolder.title == splitPath[0]) {
                 splitPath.remove(splitPath[0])
                 return subFolder.getSubFolder(splitPath)
             }
         }
+
         return null
     }
 
     fun getAllMusic(): SortedMap<Music, MediaItem> {
         val musicMediaSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
+
         musicMediaSortedMap.putAll(this.musicMediaItemSortedMap)
+
         if (this.subFolderList.isNotEmpty()) {
             this.subFolderList.forEach { (_, folder: Folder) ->
                 musicMediaSortedMap.putAll(folder.getAllMusic())
             }
         }
+
         return musicMediaSortedMap
     }
 

@@ -40,9 +40,12 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import earth.mp3player.services.PlaybackController
+import earth.mp3player.services.playback.PlaybackController
 import earth.mp3player.ui.utils.getMillisToTimeText
 
+/**
+ * @author Antoine Pirlot on 23/02/24
+ */
 
 @Composable
 fun MusicPositionBar(
@@ -71,17 +74,12 @@ fun MusicPositionBar(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             val maxDuration: Long = musicPlaying!!.duration
-            Text(
-                text = (
-                        if (isUpdating) getMillisToTimeText((newPositionPercentage * maxDuration).toLong())
-                        else getMillisToTimeText((currentPositionPercentage * maxDuration).toLong())
-                        ),
-            )
-            Text(
-                text = (
-                        getMillisToTimeText(maxDuration)
-                        ),
-            )
+            val currentPositionTimeText =
+                if (isUpdating) getMillisToTimeText((newPositionPercentage * maxDuration).toLong())
+                else getMillisToTimeText((currentPositionPercentage * maxDuration).toLong())
+
+            Text(text = currentPositionTimeText)
+            Text(text = getMillisToTimeText(maxDuration))
         }
     }
 

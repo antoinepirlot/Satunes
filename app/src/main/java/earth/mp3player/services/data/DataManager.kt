@@ -36,7 +36,7 @@
  *
  *  You should have received a copy of the GNU General Public License along with MP3 Player.
  *  If not, see <https://www.gnu.org/licenses/>.
-
+ *
  *  ***** INFORMATIONS ABOUT THE AUTHOR *****
  *  The author of this file is Antoine Pirlot, the owner of this project.
  *  You find this original project on github.
@@ -45,21 +45,28 @@
  *  This current project's link is: https://github.com/antoinepirlot/MP3-Player
  *
  *  You can contact me via my email: pirlot.antoine@outlook.com
- * PS: I don't answer quickly.
+ *  PS: I don't answer quickly.
  */
 
-package earth.mp3player.router.media
+package earth.mp3player.services.data
+
+import androidx.media3.common.MediaItem
+import earth.mp3player.models.Album
+import earth.mp3player.models.Artist
+import earth.mp3player.models.Folder
+import earth.mp3player.models.Genre
+import earth.mp3player.models.Music
+import java.util.SortedMap
 
 /**
- * @author Antoine Pirlot on 24-01-24
+ * @author Antoine Pirlot on 07/03/2024
  */
 
-enum class MediaDestination(val link: String) {
-    FOLDERS("/folders"),
-    ARTISTS("/artists"),
-    MUSICS("/musics"),
-    PLAYBACK("/playback"),
-    ALBUMS("/albums"),
-    GENRES("/genres"),
-    SETTINGS("/settings"),
+object DataManager {
+    val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
+    val rootFolderMap: SortedMap<Long, Folder> = sortedMapOf()
+    val folderMap: SortedMap<Long, Folder> = sortedMapOf()
+    val artistMap: SortedMap<String, Artist> = sortedMapOf()
+    val albumMap: SortedMap<String, Album> = sortedMapOf()
+    val genreMap: SortedMap<String, Genre> = sortedMapOf()
 }

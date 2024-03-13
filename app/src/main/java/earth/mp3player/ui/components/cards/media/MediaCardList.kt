@@ -36,45 +36,54 @@ import androidx.compose.ui.tooling.preview.Preview
 import earth.mp3player.R
 import earth.mp3player.models.Folder
 import earth.mp3player.models.Media
-import earth.mp3player.models.Music
 import earth.mp3player.ui.utils.getRightIconAndDescription
 
+/**
+ * @author Antoine Pirlot on 16/01/24
+ */
+
 @Composable
-fun <T: Comparable<T>> MediaCardList(
+fun <T : Comparable<T>> MediaCardList(
     modifier: Modifier = Modifier,
     mediaMap: Map<T, Media>,
     openMedia: (media: Media) -> Unit
 ) {
     val lazyState = rememberLazyListState()
-    if (mediaMap.isNotEmpty()) { // It fixes issue while accessing last folder in chain
-        Column {
-            LazyColumn(
-                modifier = modifier,
-                state = lazyState
-            ) {
-                items(
-                    items = mediaMap.values.toList(),
-                    key = { it.id }
-                ) { media: Media ->
-                    // First pair is image vector and second one is content description (String)
-                    val pair = getRightIconAndDescription(media)
-                    val mediaName: String =
-                        if (media is Folder && media.parentFolder == null) {
-                            when (media.title) {
-                                "0" -> stringResource(id = R.string.this_device)
-                                else -> "${stringResource(id = R.string.external_storage)}: ${media.title}"
-                            }
-                        } else {
-                            media.title
+
+    if (mediaMap.isEmpty()) {
+        // It fixes issue while accessing last folder in chain
+        return
+    }
+
+    Column {
+        LazyColumn(
+            modifier = modifier,
+            state = lazyState
+        ) {
+            items(
+                items = mediaMap.values.toList(),
+                key = { it.id }
+            ) { media: Media ->
+                // First pair is image vector and second one is content description (String)
+                val pair = getRightIconAndDescription(media)
+                val mediaName: String =
+                    if (media is Folder && media.parentFolder == null) {
+                        when (media.title) {
+                            "0" -> stringResource(id = R.string.this_device)
+
+                            else -> "${stringResource(id = R.string.external_storage)}: ${media.title}"
                         }
-                    MediaCard(
-                        modifier = modifier,
-                        text = mediaName,
-                        imageVector = pair.first,
-                        contentDescription = pair.second,
-                        onClick = { openMedia(media) }
-                    )
-                }
+                    } else {
+                        media.title
+                    }
+
+                MediaCard(
+                    modifier = modifier,
+                    text = mediaName,
+                    imageVector = pair.first,
+                    contentDescription = pair.second,
+                    onClick = { openMedia(media) }
+                )
             }
         }
     }

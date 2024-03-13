@@ -28,6 +28,7 @@ package earth.mp3player.router.main
 /**
  * @author Antoine Pirlot on 02-03-24
  */
+
 enum class MainDestination(val link: String) {
     ROOT(link = "/")
 }

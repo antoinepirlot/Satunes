@@ -25,8 +25,11 @@
 
 package earth.mp3player.models
 
-import androidx.compose.ui.text.toLowerCase
 import java.text.Normalizer
+
+/**
+ * @author Antoine Pirlot on 24/01/24
+ */
 
 interface Media : Comparable<Media> {
     val id: Long
@@ -34,8 +37,11 @@ interface Media : Comparable<Media> {
 
     override fun compareTo(other: Media): Int {
         val thisTitleNormalized: String =
-                Normalizer.normalize(this.title.lowercase(), Normalizer.Form.NFD)
-        val otherTitleNormalized: String = Normalizer.normalize(other.title.lowercase(), Normalizer.Form.NFD)
+            Normalizer.normalize(this.title.lowercase(), Normalizer.Form.NFD)
+
+        val otherTitleNormalized: String =
+            Normalizer.normalize(other.title.lowercase(), Normalizer.Form.NFD)
+
         return thisTitleNormalized.compareTo(otherTitleNormalized)
     }
 }

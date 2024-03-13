@@ -35,10 +35,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import earth.mp3player.models.Media
 import earth.mp3player.models.Music
-import earth.mp3player.services.PlaybackController
+import earth.mp3player.services.playback.PlaybackController
 import earth.mp3player.ui.components.cards.media.MediaCardList
 import earth.mp3player.ui.components.music.bars.ShowCurrentMusicButton
 import earth.mp3player.ui.components.music.buttons.ShuffleAllButton
+
+/**
+ * @author Antoine Pirlot on 01/02/24
+ */
 
 @Composable
 fun <T: Comparable<T>> MediaListView(

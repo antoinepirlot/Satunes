@@ -32,7 +32,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import earth.mp3player.services.SettingsManager
+import earth.mp3player.services.settings.SettingsManager
 import earth.mp3player.ui.components.settings.SettingsSwitchList
 import kotlinx.coroutines.runBlocking
 

@@ -40,9 +40,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import earth.mp3player.services.PlaybackController
+import earth.mp3player.services.playback.PlaybackController
 import earth.mp3player.ui.components.music.AlbumArtwork
 import earth.mp3player.ui.components.music.bars.MusicControlBar
+
+/**
+ * @author Antoine Pirlot on 25/01/24
+ */
 
 @Composable
 fun PlayBackView(
@@ -52,12 +56,14 @@ fun PlayBackView(
     val albumArtworkSize = 200.dp
     Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         AlbumArtwork(modifier = modifier.size(albumArtworkSize))
+
         Column(
             modifier = modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Bottom,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(text = musicPlaying.value!!.title)
+
             MusicControlBar(
                 modifier = modifier
                     .fillMaxWidth()

@@ -11,7 +11,7 @@
  *
  *  You should have received a copy of the GNU General Public License along with MP3 Player.
  *  If not, see <https://www.gnu.org/licenses/>.
-
+ *
  *  ***** INFORMATIONS ABOUT THE AUTHOR *****
  *  The author of this file is Antoine Pirlot, the owner of this project.
  *  You find this original project on github.
@@ -20,12 +20,16 @@
  *  This current project's link is: https://github.com/antoinepirlot/MP3-Player
  *
  *  You can contact me via my email: pirlot.antoine@outlook.com
- * PS: I don't answer quickly.
+ *  PS: I don't answer quickly.
  */
 
 package earth.mp3player.ui.utils
 
 import java.util.concurrent.TimeUnit
+
+/**
+ * @author Antoine Pirlot on 23/02/24
+ */
 
 fun getMillisToTimeText(milliseconds: Long): String {
     var toReturn = ""

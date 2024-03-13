@@ -36,7 +36,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import earth.mp3player.models.MenuTitle
-import earth.mp3player.services.SettingsManager
+import earth.mp3player.services.settings.SettingsManager
 import earth.mp3player.ui.views.settings.Settings
 import kotlinx.coroutines.runBlocking
 
@@ -52,7 +52,9 @@ fun SettingsSwitchList(
     onCheckedChange: () -> Unit = {}
 ) {
     val context: Context = LocalContext.current
-    LazyColumn {
+    LazyColumn(
+        modifier = modifier
+    ) {
         items(
             items = checkedMap.keys.toList(),
             key = { it.stringId }
@@ -124,5 +126,6 @@ private fun runIfIsSwitchMenuTitles(context: Context, setting: Settings): Boolea
             return false
         }
     }
+
     return true
 }

@@ -47,12 +47,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
+/**
+ * @author Antoine Pirlot on 01/02/24
+ */
+
 @Composable
 fun CurrentMusicBar(
     modifier: Modifier = Modifier,
 
     ) {
     var visible by remember { mutableStateOf(true) }
+
     TextButton(onClick = { visible = !visible }) {
         AnimatedVisibility(visible = visible,
             enter = expandVertically(expandFrom = Alignment.Top) { 20 },
@@ -62,7 +67,8 @@ fun CurrentMusicBar(
                 modifier = modifier
                     .fillMaxWidth()
                     .height(56.dp)
-                    .clickable { visible = !visible }) {
+                    .clickable { visible = !visible }
+            ) {
                 Image(imageVector = Icons.Default.MusicNote, contentDescription = "Musique")
             }
         }

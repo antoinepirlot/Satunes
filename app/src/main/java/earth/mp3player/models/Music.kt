@@ -32,8 +32,12 @@ import android.os.storage.StorageVolume
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.core.content.getSystemService
 import androidx.media3.common.MediaItem
-import earth.mp3player.services.PlaybackController
+import earth.mp3player.services.playback.PlaybackController
 import java.io.File
+
+/**
+ * @author Antoine Pirlot on 19/01/24
+ */
 
 class Music(
     override val id: Long,
@@ -50,13 +54,14 @@ class Music(
 ) : Media {
 
     val mediaItem: MediaItem
-    var absolutePath: String? = "${PlaybackController.ROOT_PATH}/$relativePath/$displayName"
+    private var absolutePath: String? = "${PlaybackController.ROOT_PATH}/$relativePath/$displayName"
     var uri: Uri = Uri.Builder().appendPath(this.absolutePath).build()
     var artwork: ImageBitmap? = null
 
     init {
         val storageManager = context.getSystemService<StorageManager>()
         val storageVolumes: List<StorageVolume> = storageManager!!.storageVolumes
+
         for (volume in storageVolumes) {
             absolutePath = "${volume.directory!!.path}/$relativePath/$displayName"
             if (!File(this.absolutePath!!).exists()) {
@@ -69,9 +74,11 @@ class Music(
             this.uri = Uri.parse(absolutePath)
             break
         }
+
         this.mediaItem = MediaItem.Builder()
             .setUri(this.uri)
             .build()
+
         if (this.album != null) {
             this.album!!.addMusic(music = this)
         }

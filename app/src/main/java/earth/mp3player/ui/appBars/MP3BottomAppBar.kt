@@ -39,8 +39,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import earth.mp3player.models.MenuTitle
 import earth.mp3player.router.media.MediaDestination
-import earth.mp3player.services.SettingsManager
+import earth.mp3player.services.settings.SettingsManager
 import earth.mp3player.ui.utils.getRightIconAndDescription
+
+/**
+ * @author Antoine Pirlot on 03/02/24
+ */
 
 @Composable
 fun MP3BottomAppBar(
@@ -54,11 +58,13 @@ fun MP3BottomAppBar(
         MenuTitle.GENRES,
         MenuTitle.MUSIC,
     )
+
     SettingsManager.menuTitleCheckedMap.forEach { (menuTitle: MenuTitle, checked: MutableState<Boolean>) ->
         if (!checked.value) {
             menuTitleList.remove(menuTitle)
         }
     }
+
     val selectedMenuTitle: MutableState<MenuTitle> =
         // Update the tab by default if settings has changed
         if (SettingsManager.foldersChecked.value) {
@@ -107,6 +113,7 @@ fun MP3BottomAppBar(
                 },
                 icon = {
                     val pair = getRightIconAndDescription(menuTitle = menuTitle)
+
                     Icon(
                         imageVector = pair.first,
                         contentDescription = pair.second

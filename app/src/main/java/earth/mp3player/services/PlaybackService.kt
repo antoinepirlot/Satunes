@@ -27,6 +27,7 @@ package earth.mp3player.services
 
 import android.content.Intent
 import androidx.annotation.OptIn
+import androidx.media3.common.AudioAttributes
 import androidx.media3.common.TrackSelectionParameters
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
@@ -42,8 +43,10 @@ class PlaybackService : MediaSessionService() {
     @OptIn(UnstableApi::class)
     override fun onCreate() {
         super.onCreate()
+
         val exoPlayer = ExoPlayer.Builder(this)
             .setHandleAudioBecomingNoisy(SettingsManager.pauseIfNoisy.value) // Pause when bluetooth or headset disconnect
+            .setAudioAttributes(AudioAttributes.DEFAULT, true)
             .build()
 
         val audioOffloadPreferences = TrackSelectionParameters.AudioOffloadPreferences.Builder()

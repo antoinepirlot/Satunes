@@ -340,8 +340,7 @@ class PlaybackController private constructor(
     }
 
     fun seekTo(positionPercentage: Float) {
-        //TODO remove second condition (cause issue, prevent playing playback in that case)
-        if (this.musicPlaying.value == null || !this.isPlaying.value || this.isEnded) {
+        if (this.musicPlaying.value == null || this.isEnded) {
             throw IllegalStateException("Impossible to seek while no music is playing")
         }
 

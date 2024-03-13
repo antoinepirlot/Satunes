@@ -32,6 +32,7 @@ import android.os.storage.StorageVolume
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.core.content.getSystemService
 import androidx.media3.common.MediaItem
+import androidx.media3.common.MediaMetadata
 import earth.mp3player.services.playback.PlaybackController
 import java.io.File
 
@@ -75,8 +76,15 @@ class Music(
             break
         }
 
+        val mediaMetaData: MediaMetadata = MediaMetadata.Builder()
+            .setArtist(if (this.artist != null) this.artist!!.title else null)
+            .setTitle(this.title)
+            .setGenre(if (this.genre != null) this.genre!!.title else null)
+            .setAlbumTitle(if (this.album != null) this.album!!.title else null)
+            .build()
         this.mediaItem = MediaItem.Builder()
             .setUri(this.uri)
+            .setMediaMetadata(mediaMetaData)
             .build()
 
         if (this.album != null) {

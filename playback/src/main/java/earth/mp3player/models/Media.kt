@@ -25,7 +25,9 @@
 
 package earth.mp3player.models
 
+import androidx.media3.common.MediaItem
 import java.text.Normalizer
+import java.util.SortedMap
 
 /**
  * @author Antoine Pirlot on 24/01/24
@@ -34,6 +36,8 @@ import java.text.Normalizer
 interface Media : Comparable<Media> {
     val id: Long
     val title: String
+    val musicMediaItemSortedMap: SortedMap<Music, MediaItem>
+        get() = sortedMapOf()
 
     override fun compareTo(other: Media): Int {
         val thisTitleNormalized: String =

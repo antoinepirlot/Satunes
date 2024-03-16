@@ -35,7 +35,7 @@ class Album(
     override val id: Long,
     override val title: String,
     var artist: Artist? = null,
-    val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf(),
+    override val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf(),
 ) : Media {
 
     val musicSortedMap: SortedMap<Long, Music> = sortedMapOf()

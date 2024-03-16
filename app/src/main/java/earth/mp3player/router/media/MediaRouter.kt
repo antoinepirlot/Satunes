@@ -260,7 +260,7 @@ fun MediaRouter(
             val genreMap: SortedMap<String, Genre> = remember { DataManager.genreMap }
 
             genreMap.forEach { (_: String, genre: Genre) ->
-                musicMediaItemSortedMap.putAll(genre.musicMediaItemMap)
+                musicMediaItemSortedMap.putAll(genre.musicMediaItemSortedMap)
                 mediaMap.putIfAbsent(genre.id, genre)
             }
 
@@ -293,14 +293,14 @@ fun MediaRouter(
 
                 openMedia = { clickedMedia: Media ->
                     playbackController.loadMusic(
-                        musicMediaItemSortedMap = genre.musicMediaItemMap
+                        musicMediaItemSortedMap = genre.musicMediaItemSortedMap
                     )
                     openMedia(navController = navController, media = clickedMedia)
                 },
 
                 shuffleMusicAction = {
                     playbackController.loadMusic(
-                        musicMediaItemSortedMap = genre.musicMediaItemMap,
+                        musicMediaItemSortedMap = genre.musicMediaItemSortedMap,
                         shuffleMode = true
                     )
                     openMedia(navController = navController)

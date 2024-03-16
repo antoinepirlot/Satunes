@@ -38,7 +38,7 @@ class Folder(
     override var title: String,
     var parentFolder: Folder? = null,
     private val subFolderList: SortedMap<Long, Folder> = sortedMapOf(),
-    val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
+    override val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
 ) : Media {
 
 

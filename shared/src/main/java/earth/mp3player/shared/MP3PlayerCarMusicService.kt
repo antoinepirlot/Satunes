@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat.MediaItem
 import android.support.v4.media.session.MediaSessionCompat
 import androidx.media.MediaBrowserServiceCompat
-import earth.mp3player.models.Folder
+import earth.mp3player.models.Media
 import earth.mp3player.services.data.DataLoader
 import earth.mp3player.services.data.DataManager
 import earth.mp3player.services.playback.PlaybackController
@@ -101,23 +101,28 @@ class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
         var children: MutableList<MediaItem>? = null
         when (parentId) {
             ScreenPages.ALL_FOLDERS.id -> {
-                children = getAllFolderMediaItemList()
+                children =
+                    getAllMediaMediaItemList(mediaList = DataManager.folderMap.values.toList())
             }
 
             ScreenPages.ALL_ARTISTS.id -> {
-
+                children =
+                    getAllMediaMediaItemList(mediaList = DataManager.artistMap.values.toList())
             }
 
             ScreenPages.ALL_ALBUMS.id -> {
-
+                children =
+                    getAllMediaMediaItemList(mediaList = DataManager.albumMap.values.toList())
             }
 
             ScreenPages.ALL_GENRES.id -> {
-
+                children =
+                    getAllMediaMediaItemList(mediaList = DataManager.genreMap.values.toList())
             }
 
             ScreenPages.ALL_MUSICS.id -> {
-
+                children =
+                    getAllMediaMediaItemList(mediaList = DataManager.musicMediaItemSortedMap.keys.toList())
             }
 
             ScreenPages.ROOT.id -> {
@@ -146,17 +151,16 @@ class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
      *
      * @param folder the folder to get subfolders as media item, root folder if null
      */
-    private fun getAllFolderMediaItemList(): MutableList<MediaItem> {
+    private fun getAllMediaMediaItemList(mediaList: List<Media>): MutableList<MediaItem> {
         val mediaItemList: MutableList<MediaItem> = mutableListOf()
-        val folderList: List<Folder> = DataManager.folderMap.values.toList()
-        for (folder: Folder in folderList) {
-            if (folder.musicMediaItemSortedMap.isEmpty()) {
+        for (media: Media in mediaList) {
+            if (media.musicMediaItemSortedMap.isEmpty()) {
                 continue
             }
             val mediaItem: MediaItem = buildMediaItem(
-                id = folder.id.toString(),
+                id = media.id.toString(),
                 description = "Folder",
-                title = folder.title,
+                title = media.title,
                 flags = MediaItem.FLAG_BROWSABLE
             )
             mediaItemList.add(mediaItem)

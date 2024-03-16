@@ -38,11 +38,11 @@ class Genre(
 ) : Media {
 
     val musicMap: SortedMap<Long, Music> = sortedMapOf()
-    val musicMediaItemMap: SortedMap<Music, MediaItem> = sortedMapOf()
+    override val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
 
     fun addMusic(music: Music) {
         musicMap.putIfAbsent(music.id, music)
-        musicMediaItemMap.putIfAbsent(music, music.mediaItem)
+        musicMediaItemSortedMap.putIfAbsent(music, music.mediaItem)
     }
 
     override fun equals(other: Any?): Boolean {

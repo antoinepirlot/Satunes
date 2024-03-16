@@ -23,7 +23,7 @@
  *  PS: I don't answer quickly.
  */
 
-package earth.mp3player.shared
+package services
 
 import android.os.Bundle
 import android.support.v4.media.session.MediaSessionCompat

@@ -6,6 +6,7 @@ import android.support.v4.media.MediaBrowserCompat.MediaItem
 import android.support.v4.media.session.MediaSessionCompat
 import androidx.media.MediaBrowserServiceCompat
 import earth.mp3player.models.Media
+import earth.mp3player.models.Music
 import earth.mp3player.services.data.DataLoader
 import earth.mp3player.services.data.DataManager
 import earth.mp3player.services.playback.PlaybackController
@@ -157,11 +158,17 @@ class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
             if (media.musicMediaItemSortedMap.isEmpty()) {
                 continue
             }
+            val flags: Int =
+                if (media is Music) {
+                    MediaItem.FLAG_PLAYABLE
+                } else {
+                    MediaItem.FLAG_BROWSABLE
+                }
             val mediaItem: MediaItem = buildMediaItem(
                 id = media.id.toString(),
                 description = "Folder",
                 title = media.title,
-                flags = MediaItem.FLAG_BROWSABLE
+                flags = flags
             )
             mediaItemList.add(mediaItem)
         }

@@ -20,5 +20,18 @@ android {
 }
 
 dependencies {
+    /**
+     * Base
+     */
+    implementation("androidx.activity:activity-compose:1.8.2")
+
+    /**
+     * Media
+     */
     implementation("androidx.media:media:1.7.0")
+
+    /**
+     * Playback
+     */
+    implementation(project(":playback"))
 }

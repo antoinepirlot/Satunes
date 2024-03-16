@@ -52,6 +52,9 @@ object DataLoader {
     private const val FIRST_FOLDER_INDEX: Long = 1
     private val URI: Uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
 
+    var isLoaded: Boolean = false
+    var isLoading: Boolean = false
+
     // Music variables
     private var musicIdColumn: Int? = null
     private var musicNameColumn: Int? = null
@@ -74,6 +77,7 @@ object DataLoader {
     private var folderId: MutableLongState = mutableLongStateOf(FIRST_FOLDER_INDEX)
 
     fun loadAllData(context: Context) {
+        isLoading = true
         val projection = arrayOf(
             // AUDIO
             MediaStore.Audio.Media._ID,
@@ -187,6 +191,8 @@ object DataLoader {
                 }
             }
         }
+        isLoaded = true
+        isLoading = false
     }
 
     /**

@@ -100,6 +100,10 @@ class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
     override fun onLoadChildren(parentId: String, result: Result<MutableList<MediaItem>>) {
         var children: MutableList<MediaItem>? = null
         when (parentId) {
+            ScreenPages.ROOT.id -> {
+                children = getHomeScreen()
+            }
+
             ScreenPages.ALL_FOLDERS.id -> {
                 children =
                     getAllMediaMediaItemList(mediaList = DataManager.folderMap.values.toList())
@@ -123,10 +127,6 @@ class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
             ScreenPages.ALL_MUSICS.id -> {
                 children =
                     getAllMediaMediaItemList(mediaList = DataManager.musicMediaItemSortedMap.keys.toList())
-            }
-
-            ScreenPages.ROOT.id -> {
-                children = getHomeScreen()
             }
         }
         result.sendResult(children)

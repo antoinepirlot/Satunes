@@ -101,7 +101,7 @@ class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
         var children: MutableList<MediaItem>? = null
         when (parentId) {
             ScreenPages.ALL_FOLDERS.id -> {
-                children = getFolderMediaItemList()
+                children = getAllFolderMediaItemList()
             }
 
             ScreenPages.ALL_ARTISTS.id -> {
@@ -122,13 +122,6 @@ class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
 
             ScreenPages.ROOT.id -> {
                 children = getHomeScreen()
-            }
-        }
-        if (children == null) {
-            if (parentId.startsWith("${ScreenPages.ALL_FOLDERS.id}/")) {
-                val folderId: Long = parentId.split("/").last().toLong()
-                val folder: Folder = DataManager.folderMap[folderId]!!
-                children = getFolderMediaItemList(folder = folder)
             }
         }
         result.sendResult(children)
@@ -153,16 +146,17 @@ class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
      *
      * @param folder the folder to get subfolders as media item, root folder if null
      */
-    private fun getFolderMediaItemList(folder: Folder? = null): MutableList<MediaItem> {
+    private fun getAllFolderMediaItemList(): MutableList<MediaItem> {
         val mediaItemList: MutableList<MediaItem> = mutableListOf()
-        val subfolderList: List<Folder> =
-            folder?.getSubFolderList()?.values?.toList()
-                ?: DataManager.rootFolderMap.values.toList()
-        for (subFolder: Folder in subfolderList) {
+        val folderList: List<Folder> = DataManager.folderMap.values.toList()
+        for (folder: Folder in folderList) {
+            if (folder.musicMediaItemSortedMap.isEmpty()) {
+                continue
+            }
             val mediaItem: MediaItem = buildMediaItem(
-                id = subFolder.id.toString(),
+                id = folder.id.toString(),
                 description = "Folder",
-                title = subFolder.title,
+                title = folder.title,
                 flags = MediaItem.FLAG_BROWSABLE
             )
             mediaItemList.add(mediaItem)

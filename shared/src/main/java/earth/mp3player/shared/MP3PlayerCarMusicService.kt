@@ -55,7 +55,7 @@ import java.util.ArrayList
  * &lt;/automotiveApp&gt;
  *
  */
-class MyMusicService : MediaBrowserServiceCompat() {
+class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
 
     private lateinit var session: MediaSessionCompat
 

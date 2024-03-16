@@ -13,7 +13,7 @@
          MediaBrowser (for browsing) and MediaController (for playback control)
         -->
         <service
-            android:name="earth.mp3player.shared.MyMusicService"
+            android:name="earth.mp3player.shared.MP3PlayerCarMusicService"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.media.browse.MediaBrowserService" />

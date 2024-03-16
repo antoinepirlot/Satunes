@@ -1,14 +1,15 @@
 package earth.mp3player.shared
 
 import android.annotation.SuppressLint
-import android.media.MediaDescription
 import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat.MediaItem
-import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.session.MediaSessionCompat
 import androidx.media.MediaBrowserServiceCompat
+import earth.mp3player.models.Folder
 import earth.mp3player.services.data.DataLoader
+import earth.mp3player.services.data.DataManager
 import earth.mp3player.services.playback.PlaybackController
+import earth.mp3player.shared.utils.buildMediaItem
 
 
 /**
@@ -97,20 +98,75 @@ class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
     }
 
     override fun onLoadChildren(parentId: String, result: Result<MutableList<MediaItem>>) {
-        val children: MutableList<MediaItem> = getHomeScreen()
+        var children: MutableList<MediaItem>? = null
+        when (parentId) {
+            SCREEN_PAGES.ALL_FOLDERS.id -> {
+                children = getFolderMediaItemList()
+            }
+
+            SCREEN_PAGES.ALL_ARTISTS.id -> {
+
+            }
+
+            SCREEN_PAGES.ALL_ALBUMS.id -> {
+
+            }
+
+            SCREEN_PAGES.ALL_GENRES.id -> {
+
+            }
+
+            SCREEN_PAGES.ALL_MUSICS.id -> {
+
+            }
+
+            SCREEN_PAGES.ROOT.id -> {
+                children = getHomeScreen()
+            }
+        }
+        if (children == null) {
+            if (parentId.startsWith("${SCREEN_PAGES.ALL_FOLDERS.id}/")) {
+                val folderId: Long = parentId.split("/").last().toLong()
+                val folder: Folder = DataManager.folderMap[folderId]!!
+                children = getFolderMediaItemList(folder = folder)
+            }
+        }
         result.sendResult(children)
     }
 
     private fun getHomeScreen(): MutableList<MediaItem> {
-        val mediaDescription: MediaDescription = MediaDescription.Builder()
-            .setMediaId("1")
-            .setDescription("")
-            .build()
-        val description: MediaDescriptionCompat =
-            MediaDescriptionCompat.fromMediaDescription(mediaDescription)
-        val children: MutableList<MediaItem> =
-            mutableListOf(MediaItem(description, MediaItem.FLAG_PLAYABLE))
-
+        val children: MutableList<MediaItem> = mutableListOf()
+        for (page: SCREEN_PAGES in pages) {
+            val mediaItem: MediaItem = buildMediaItem(
+                id = page.id,
+                description = page.description,
+                title = page.title,
+                flags = MediaItem.FLAG_BROWSABLE
+            )
+            children.add(mediaItem)
+        }
         return children
+    }
+
+    /**
+     * Get a list of media item based on the folder. If it is null, then return the root folders list
+     *
+     * @param folder the folder to get subfolders as media item, root folder if null
+     */
+    private fun getFolderMediaItemList(folder: Folder? = null): MutableList<MediaItem> {
+        val mediaItemList: MutableList<MediaItem> = mutableListOf()
+        val subfolderList: List<Folder> =
+            folder?.getSubFolderList()?.values?.toList()
+                ?: DataManager.rootFolderMap.values.toList()
+        for (subFolder: Folder in subfolderList) {
+            val mediaItem: MediaItem = buildMediaItem(
+                id = subFolder.id.toString(),
+                description = "Folder",
+                title = subFolder.title,
+                flags = MediaItem.FLAG_BROWSABLE
+            )
+            mediaItemList.add(mediaItem)
+        }
+        return mediaItemList
     }
 }

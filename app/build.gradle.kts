@@ -136,5 +136,5 @@ dependencies {
     /**
      * Playback Services
      */
-    implementation(project(":services"))
+    implementation(project(":playback"))
 }

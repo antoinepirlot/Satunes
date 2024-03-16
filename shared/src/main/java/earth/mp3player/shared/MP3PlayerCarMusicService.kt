@@ -154,6 +154,8 @@ class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
      * it is browsable.
      *
      * @param mediaList the media list that contains all media to transform to MediaItem
+     *
+     * @return a mutable list of MediaItem
      */
     private fun getAllMediaMediaItemList(mediaList: List<Media>): MutableList<MediaItem> {
         val mediaItemList: MutableList<MediaItem> = mutableListOf()

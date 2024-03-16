@@ -28,6 +28,12 @@ package earth.mp3player.shared.utils
 import android.media.MediaDescription
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaDescriptionCompat
+import earth.mp3player.models.Album
+import earth.mp3player.models.Artist
+import earth.mp3player.models.Folder
+import earth.mp3player.models.Genre
+import earth.mp3player.models.Media
+import earth.mp3player.models.Music
 
 /**
  * @author Antoine Pirlot on 16/03/2024
@@ -46,6 +52,38 @@ fun buildMediaItem(
         .setMediaId(id)
         .setDescription(description)
         .setTitle(title)
+        .build()
+    val mediaDescriptionCompat: MediaDescriptionCompat =
+        MediaDescriptionCompat.fromMediaDescription(mediaDescription)
+    return MediaBrowserCompat.MediaItem(
+        mediaDescriptionCompat,
+        flags
+    )
+}
+
+/**
+ * Build a media item
+ */
+fun buildMediaItem(media: Media): MediaBrowserCompat.MediaItem {
+    val flags: Int =
+        if (media is Music) {
+            MediaBrowserCompat.MediaItem.FLAG_PLAYABLE
+        } else {
+            MediaBrowserCompat.MediaItem.FLAG_BROWSABLE
+        }
+    val description: String =
+        when (media) {
+            is Music -> "Music"
+            is Folder -> "Folder"
+            is Artist -> "Artist"
+            is Album -> "Album"
+            is Genre -> "Genre"
+            else -> throw IllegalArgumentException("An issue occurred with Media interface")
+        }
+    val mediaDescription: MediaDescription = MediaDescription.Builder()
+        .setMediaId(media.id.toString())
+        .setDescription(description)
+        .setTitle(media.title)
         .build()
     val mediaDescriptionCompat: MediaDescriptionCompat =
         MediaDescriptionCompat.fromMediaDescription(mediaDescription)

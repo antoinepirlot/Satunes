@@ -11,7 +11,7 @@
  *
  *  You should have received a copy of the GNU General Public License along with MP3 Player.
  *  If not, see <https://www.gnu.org/licenses/>.
-
+ *
  *  ***** INFORMATIONS ABOUT THE AUTHOR *****
  *  The author of this file is Antoine Pirlot, the owner of this project.
  *  You find this original project on github.
@@ -20,21 +20,36 @@
  *  This current project's link is: https://github.com/antoinepirlot/MP3-Player
  *
  *  You can contact me via my email: pirlot.antoine@outlook.com
- * PS: I don't answer quickly.
+ *  PS: I don't answer quickly.
  */
 
-package earth.mp3player.models
+package earth.mp3player.shared
 
-import earth.mp3player.R
+import android.os.Bundle
+import android.support.v4.media.session.MediaSessionCompat
 
 /**
- * @author Antoine Pirlot on 03/02/24
+ * @author Antoine Pirlot on 16/03/2024
  */
+object MP3PlayerCarCallBack : MediaSessionCompat.Callback() {
+    //TODO
+    override fun onPlay() {}
 
-enum class MenuTitle(val stringId: Int) {
-    FOLDERS(stringId = R.string.folders),
-    ARTISTS(stringId = R.string.artists),
-    MUSIC(stringId = R.string.tracks),
-    ALBUMS(stringId = R.string.albums),
-    GENRES(stringId = R.string.genres)
+    override fun onSkipToQueueItem(queueId: Long) {}
+
+    override fun onSeekTo(position: Long) {}
+
+    override fun onPlayFromMediaId(mediaId: String?, extras: Bundle?) {}
+
+    override fun onPause() {}
+
+    override fun onStop() {}
+
+    override fun onSkipToNext() {}
+
+    override fun onSkipToPrevious() {}
+
+    override fun onCustomAction(action: String?, extras: Bundle?) {}
+
+    override fun onPlayFromSearch(query: String?, extras: Bundle?) {}
 }

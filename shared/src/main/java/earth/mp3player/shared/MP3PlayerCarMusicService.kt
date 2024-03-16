@@ -1,10 +1,13 @@
 package earth.mp3player.shared
 
 import android.annotation.SuppressLint
+import android.media.MediaDescription
 import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat.MediaItem
+import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.session.MediaSessionCompat
 import androidx.media.MediaBrowserServiceCompat
+
 
 /**
  * This class provides a MediaBrowser through a service. It exposes the media library to a browsing
@@ -58,35 +61,13 @@ class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
 
     private lateinit var session: MediaSessionCompat
 
-    private val callback = object : MediaSessionCompat.Callback() {
-        override fun onPlay() {}
-
-        override fun onSkipToQueueItem(queueId: Long) {}
-
-        override fun onSeekTo(position: Long) {}
-
-        override fun onPlayFromMediaId(mediaId: String?, extras: Bundle?) {}
-
-        override fun onPause() {}
-
-        override fun onStop() {}
-
-        override fun onSkipToNext() {}
-
-        override fun onSkipToPrevious() {}
-
-        override fun onCustomAction(action: String?, extras: Bundle?) {}
-
-        override fun onPlayFromSearch(query: String?, extras: Bundle?) {}
-    }
-
     override fun onCreate() {
         super.onCreate()
 
         val className: String = this.javaClass.name.split(".").last()
         session = MediaSessionCompat(this, className)
         sessionToken = session.sessionToken
-        session.setCallback(callback)
+        session.setCallback(MP3PlayerCarCallBack)
         session.setFlags(
             MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS or
                     MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS
@@ -107,6 +88,15 @@ class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
     }
 
     override fun onLoadChildren(parentId: String, result: Result<MutableList<MediaItem>>) {
-        result.sendResult(ArrayList())
+        val mediaDescription: MediaDescription = MediaDescription.Builder()
+            .setMediaId("1")
+            .setDescription("Tracks")
+            .build()
+        val description: MediaDescriptionCompat =
+            MediaDescriptionCompat.fromMediaDescription(mediaDescription)
+        val children: MutableList<MediaItem> = mutableListOf(
+            MediaItem(description, MediaItem.FLAG_PLAYABLE)
+        )
+        result.sendResult(children)
     }
 }

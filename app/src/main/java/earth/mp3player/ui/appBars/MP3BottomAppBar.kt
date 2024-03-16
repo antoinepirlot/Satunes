@@ -51,7 +51,7 @@ fun MP3BottomAppBar(
     modifier: Modifier = Modifier,
     startDestination: MutableState<String>
 ) {
-    val menuTitleList: MutableList<MenuTitle> = mutableListOf(
+    val menuTitleLists: MutableList<MenuTitle> = mutableListOf(
         MenuTitle.FOLDERS,
         MenuTitle.ARTISTS,
         MenuTitle.ALBUMS,
@@ -61,7 +61,7 @@ fun MP3BottomAppBar(
 
     SettingsManager.menuTitleCheckedMap.forEach { (menuTitle: MenuTitle, checked: MutableState<Boolean>) ->
         if (!checked.value) {
-            menuTitleList.remove(menuTitle)
+            menuTitleLists.remove(menuTitle)
         }
     }
 
@@ -82,7 +82,7 @@ fun MP3BottomAppBar(
     NavigationBar(
         modifier = modifier
     ) {
-        menuTitleList.forEach { menuTitle: MenuTitle ->
+        menuTitleLists.forEach { menuTitle: MenuTitle ->
             NavigationBarItem(
                 label = { Text(text = stringResource(id = menuTitle.stringId)) },
                 selected = selectedMenuTitle.value == menuTitle,

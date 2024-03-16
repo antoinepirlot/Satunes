@@ -132,4 +132,9 @@ dependencies {
      * Android Auto
      */
     implementation(project(":shared"))
+
+    /**
+     * Playback Services
+     */
+    implementation(project(":services"))
 }

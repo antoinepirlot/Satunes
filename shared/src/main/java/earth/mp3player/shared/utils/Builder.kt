@@ -80,15 +80,10 @@ fun buildMediaItem(media: Media): MediaBrowserCompat.MediaItem {
             is Genre -> "Genre"
             else -> throw IllegalArgumentException("An issue occurred with Media interface")
         }
-    val mediaDescription: MediaDescription = MediaDescription.Builder()
-        .setMediaId(media.id.toString())
-        .setDescription(description)
-        .setTitle(media.title)
-        .build()
-    val mediaDescriptionCompat: MediaDescriptionCompat =
-        MediaDescriptionCompat.fromMediaDescription(mediaDescription)
-    return MediaBrowserCompat.MediaItem(
-        mediaDescriptionCompat,
-        flags
+    return buildMediaItem(
+        id = media.id.toString(),
+        description = description,
+        title = media.title,
+        flags = flags
     )
 }

@@ -117,6 +117,7 @@ class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
 
     private lateinit var session: MediaSessionCompat
     private lateinit var playbackController: PlaybackController
+    //TODO try remembering path to music
 
     override fun onCreate() {
         super.onCreate()

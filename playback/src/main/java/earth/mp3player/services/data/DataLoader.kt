@@ -181,6 +181,7 @@ object DataLoader {
                     //The id is not the same for all same artists
                     artist = DataManager.artistMap[artist.title]!!
                     artist.musicList.add(music)
+                    artist.musicMediaItemSortedMap.putIfAbsent(music, music.mediaItem)
                     music.artist = artist
                 }
 

@@ -25,6 +25,7 @@
 
 package earth.mp3player.models
 
+import androidx.media3.common.MediaItem
 import java.util.SortedMap
 
 /**
@@ -37,6 +38,8 @@ class Artist(
     val musicList: MutableList<Music> = mutableListOf(),
     val albumSortedMap: SortedMap<String, Album> = sortedMapOf()
 ) : Media {
+
+    override val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
 
     fun addAlbum(album: Album) {
         this.albumSortedMap.putIfAbsent(album.title, album)

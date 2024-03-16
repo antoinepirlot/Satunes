@@ -94,7 +94,7 @@ class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
         clientUid: Int,
         rootHints: Bundle?
     ): BrowserRoot? {
-        return BrowserRoot("root", null)
+        return BrowserRoot(SCREEN_PAGES.ROOT.id, null)
     }
 
     override fun onLoadChildren(parentId: String, result: Result<MutableList<MediaItem>>) {

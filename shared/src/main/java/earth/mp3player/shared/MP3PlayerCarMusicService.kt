@@ -3,10 +3,8 @@ package earth.mp3player.shared
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat.MediaItem
-import androidx.media.MediaBrowserServiceCompat
 import android.support.v4.media.session.MediaSessionCompat
-
-import java.util.ArrayList
+import androidx.media.MediaBrowserServiceCompat
 
 /**
  * This class provides a MediaBrowser through a service. It exposes the media library to a browsing
@@ -55,6 +53,7 @@ import java.util.ArrayList
  * &lt;/automotiveApp&gt;
  *
  */
+
 class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
 
     private lateinit var session: MediaSessionCompat
@@ -84,7 +83,8 @@ class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
     override fun onCreate() {
         super.onCreate()
 
-        session = MediaSessionCompat(this, "MyMusicService")
+        val className: String = this.javaClass.name.split(".").last()
+        session = MediaSessionCompat(this, className)
         sessionToken = session.sessionToken
         session.setCallback(callback)
         session.setFlags(

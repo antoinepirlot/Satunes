@@ -148,9 +148,12 @@ class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
     }
 
     /**
-     * Get a list of media item based on the folder. If it is null, then return the root folders list
+     * Get a list of media item based on the media.
      *
-     * @param folder the folder to get subfolders as media item, root folder if null
+     * It creates all MediaItem from all media, if it is a music then it is playable, otherwise
+     * it is browsable.
+     *
+     * @param mediaList the media list that contains all media to transform to MediaItem
      */
     private fun getAllMediaMediaItemList(mediaList: List<Media>): MutableList<MediaItem> {
         val mediaItemList: MutableList<MediaItem> = mutableListOf()

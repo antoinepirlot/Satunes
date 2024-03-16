@@ -94,38 +94,38 @@ class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
         clientUid: Int,
         rootHints: Bundle?
     ): BrowserRoot? {
-        return BrowserRoot(SCREEN_PAGES.ROOT.id, null)
+        return BrowserRoot(ScreenPages.ROOT.id, null)
     }
 
     override fun onLoadChildren(parentId: String, result: Result<MutableList<MediaItem>>) {
         var children: MutableList<MediaItem>? = null
         when (parentId) {
-            SCREEN_PAGES.ALL_FOLDERS.id -> {
+            ScreenPages.ALL_FOLDERS.id -> {
                 children = getFolderMediaItemList()
             }
 
-            SCREEN_PAGES.ALL_ARTISTS.id -> {
+            ScreenPages.ALL_ARTISTS.id -> {
 
             }
 
-            SCREEN_PAGES.ALL_ALBUMS.id -> {
+            ScreenPages.ALL_ALBUMS.id -> {
 
             }
 
-            SCREEN_PAGES.ALL_GENRES.id -> {
+            ScreenPages.ALL_GENRES.id -> {
 
             }
 
-            SCREEN_PAGES.ALL_MUSICS.id -> {
+            ScreenPages.ALL_MUSICS.id -> {
 
             }
 
-            SCREEN_PAGES.ROOT.id -> {
+            ScreenPages.ROOT.id -> {
                 children = getHomeScreen()
             }
         }
         if (children == null) {
-            if (parentId.startsWith("${SCREEN_PAGES.ALL_FOLDERS.id}/")) {
+            if (parentId.startsWith("${ScreenPages.ALL_FOLDERS.id}/")) {
                 val folderId: Long = parentId.split("/").last().toLong()
                 val folder: Folder = DataManager.folderMap[folderId]!!
                 children = getFolderMediaItemList(folder = folder)
@@ -136,7 +136,7 @@ class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
 
     private fun getHomeScreen(): MutableList<MediaItem> {
         val children: MutableList<MediaItem> = mutableListOf()
-        for (page: SCREEN_PAGES in pages) {
+        for (page: ScreenPages in pages) {
             val mediaItem: MediaItem = buildMediaItem(
                 id = page.id,
                 description = page.description,

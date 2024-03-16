@@ -30,7 +30,7 @@ package earth.mp3player.shared
  */
 
 
-enum class SCREEN_PAGES(
+enum class ScreenPages(
     val id: String,
     val description: String,
     val title: String,
@@ -43,10 +43,10 @@ enum class SCREEN_PAGES(
     ALL_MUSICS(id = "musics", description = "List of all musics", title = "MUSICS"),
 }
 
-val pages: List<SCREEN_PAGES> = listOf(
-    SCREEN_PAGES.ALL_FOLDERS,
-    SCREEN_PAGES.ALL_MUSICS,
-    SCREEN_PAGES.ALL_ARTISTS,
-    SCREEN_PAGES.ALL_ALBUMS,
-    SCREEN_PAGES.ALL_GENRES,
+val pages: List<ScreenPages> = listOf(
+    ScreenPages.ALL_FOLDERS,
+    ScreenPages.ALL_MUSICS,
+    ScreenPages.ALL_ARTISTS,
+    ScreenPages.ALL_ALBUMS,
+    ScreenPages.ALL_GENRES,
 )

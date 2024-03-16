@@ -6,6 +6,7 @@ import android.support.v4.media.MediaBrowserCompat.MediaItem
 import android.support.v4.media.session.MediaSessionCompat
 import androidx.media.MediaBrowserServiceCompat
 import earth.mp3player.models.Media
+import earth.mp3player.models.Music
 import earth.mp3player.services.data.DataLoader
 import earth.mp3player.services.data.DataManager
 import earth.mp3player.services.playback.PlaybackController
@@ -159,7 +160,7 @@ class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
     private fun getAllMediaMediaItemList(mediaList: List<Media>): MutableList<MediaItem> {
         val mediaItemList: MutableList<MediaItem> = mutableListOf()
         for (media: Media in mediaList) {
-            if (media.musicMediaItemSortedMap.isEmpty()) {
+            if (media !is Music && media.musicMediaItemSortedMap.isEmpty()) {
                 continue
             }
 

@@ -23,7 +23,7 @@
  *  PS: I don't answer quickly.
  */
 
-package earth.mp3player.shared.utils
+package earth.mp3player.utils
 
 import android.media.MediaDescription
 import android.support.v4.media.MediaBrowserCompat

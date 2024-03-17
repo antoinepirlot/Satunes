@@ -26,6 +26,7 @@
 package earth.mp3player.utils
 
 import android.media.MediaDescription
+import android.net.Uri
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaDescriptionCompat
 import earth.mp3player.models.Album
@@ -46,12 +47,14 @@ fun buildMediaItem(
     id: String,
     description: String,
     title: String,
+    uri: Uri? = null,
     flags: Int
 ): MediaBrowserCompat.MediaItem {
     val mediaDescription: MediaDescription = MediaDescription.Builder()
         .setMediaId(id)
         .setDescription(description)
         .setTitle(title)
+        .setMediaUri(uri)
         .build()
     val mediaDescriptionCompat: MediaDescriptionCompat =
         MediaDescriptionCompat.fromMediaDescription(mediaDescription)
@@ -84,6 +87,7 @@ fun buildMediaItem(media: Media): MediaBrowserCompat.MediaItem {
         id = media.id.toString(),
         description = description,
         title = media.title,
+        uri = if (media is Music) media.uri else null,
         flags = flags
     )
 }

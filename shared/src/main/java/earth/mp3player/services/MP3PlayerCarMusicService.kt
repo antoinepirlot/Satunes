@@ -30,7 +30,9 @@ import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat.MediaItem
 import android.support.v4.media.session.MediaSessionCompat
 import androidx.media.MediaBrowserServiceCompat
-import earth.mp3player.models.Folder
+import earth.mp3player.models.Album
+import earth.mp3player.models.Artist
+import earth.mp3player.models.Genre
 import earth.mp3player.models.Media
 import earth.mp3player.models.Music
 import earth.mp3player.pages.ScreenPages
@@ -228,23 +230,51 @@ class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
     }
 
     /**
-     * Get the media from the mediaId, assume that mediaId is never the id of a music.
+     * Get the media from the media referencer, assume that mediaId is never the id of a music.
+     *
+     * @param mediaId the media referencer, it's the media id.
      *
      * @return a mutable list of media item.
      */
     private fun getAllMediaMediaItemList(mediaId: Long): MutableList<MediaItem> {
-        val mediaList: MutableList<Media> = mutableListOf()
+        var media: Media? = null
         when (this.routeDeque.oneBeforeLast()) {
-            ScreenPages.ROOT.id -> throw IllegalStateException("An error occurred in the route processing")
-            ScreenPages.ALL_FOLDERS.id -> {
-                val folder: Folder = DataManager.folderMap.get(key = mediaId)!!
-                mediaList.addAll(folder.musicMediaItemSortedMap.keys.toList())
+            ScreenPages.ROOT.id, ScreenPages.ALL_MUSICS.id -> throw IllegalStateException("An error occurred in the route processing")
+            ScreenPages.ALL_FOLDERS.id -> media = DataManager.folderMap[mediaId]!!
+            ScreenPages.ALL_ARTISTS.id -> {
+                //TODO create artist map with id
+                DataManager.artistMap.forEach { (_, artist: Artist) ->
+                    if (artist.id == mediaId) {
+                        media = artist
+                        return@forEach
+                    }
+                }
             }
 
-            ScreenPages.ALL_ARTISTS.id -> {
-//                mediaList.add(DataManager.artistMap.get(key = mediaId)!!)
+            ScreenPages.ALL_ALBUMS.id -> {
+                //TODO create album map with id
+                val id: Long = mediaId.toLong()
+                DataManager.albumMap.forEach { (_, album: Album) ->
+                    if (album.id == id) {
+                        media = album
+                        return@forEach
+                    }
+                }
+            }
+
+            ScreenPages.ALL_GENRES.id -> {
+                //TODO create genre map with id
+                val id: Long = mediaId
+                DataManager.genreMap.forEach { (_, genre: Genre) ->
+                    if (genre.id == id) {
+                        media = genre
+                        return@forEach
+                    }
+                }
             }
         }
-        return this.getAllMediaMediaItemList(mediaList = mediaList)
+        return this.getAllMediaMediaItemList(
+            mediaList = media?.musicMediaItemSortedMap?.keys?.toList() ?: mutableListOf()
+        )
     }
 }

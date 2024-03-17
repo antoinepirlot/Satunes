@@ -32,7 +32,6 @@ import android.support.v4.media.session.MediaSessionCompat
 import androidx.media.MediaBrowserServiceCompat
 import earth.mp3player.models.Album
 import earth.mp3player.models.Artist
-import earth.mp3player.models.Folder
 import earth.mp3player.models.Genre
 import earth.mp3player.models.Media
 import earth.mp3player.models.Music
@@ -42,7 +41,6 @@ import earth.mp3player.services.data.DataLoader
 import earth.mp3player.services.data.DataManager
 import earth.mp3player.services.playback.PlaybackController
 import earth.mp3player.utils.buildMediaItem
-import java.util.SortedMap
 
 /**
  * @author Antoine Pirlot on 16/03/2024
@@ -51,7 +49,10 @@ class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
 
     private lateinit var session: MediaSessionCompat
     private lateinit var playbackController: PlaybackController
-    private val routeDeque: RouteDeque = RouteDeque()
+
+    companion object {
+        val routeDeque: RouteDeque = RouteDeque()
+    }
 
     override fun onCreate() {
         super.onCreate()
@@ -65,7 +66,7 @@ class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
                     MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS
         )
 
-        this.routeDeque.resetRouteDeque()
+        routeDeque.resetRouteDeque()
 
         //Init playback
         playbackController = PlaybackController.initInstance(baseContext)
@@ -91,7 +92,7 @@ class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
         var children: MutableList<MediaItem>? = null
         when (parentId) {
             ScreenPages.ROOT.id -> {
-                this.routeDeque.resetRouteDeque()
+                routeDeque.resetRouteDeque()
                 result.sendResult(getHomeScreen())
                 return
             }
@@ -99,46 +100,46 @@ class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
             ScreenPages.ALL_FOLDERS.id -> {
                 children =
                     getAllMediaMediaItemList(mediaList = DataManager.folderMap.values.toList())
-                this.routeDeque.resetRouteDeque()
-                this.routeDeque.addLast(parentId)
+                routeDeque.resetRouteDeque()
+                routeDeque.addLast(parentId)
             }
 
             ScreenPages.ALL_ARTISTS.id -> {
                 children =
                     getAllMediaMediaItemList(mediaList = DataManager.artistMap.values.toList())
-                this.routeDeque.resetRouteDeque()
-                this.routeDeque.addLast(parentId)
+                routeDeque.resetRouteDeque()
+                routeDeque.addLast(parentId)
             }
 
             ScreenPages.ALL_ALBUMS.id -> {
                 children =
                     getAllMediaMediaItemList(mediaList = DataManager.albumMap.values.toList())
-                this.routeDeque.resetRouteDeque()
-                this.routeDeque.addLast(parentId)
+                routeDeque.resetRouteDeque()
+                routeDeque.addLast(parentId)
 
             }
 
             ScreenPages.ALL_GENRES.id -> {
                 children =
                     getAllMediaMediaItemList(mediaList = DataManager.genreMap.values.toList())
-                this.routeDeque.resetRouteDeque()
-                this.routeDeque.addLast(parentId)
+                routeDeque.resetRouteDeque()
+                routeDeque.addLast(parentId)
             }
 
             ScreenPages.ALL_MUSICS.id -> {
                 children =
                     getAllMediaMediaItemList(mediaList = DataManager.musicMediaItemSortedMap.keys.toList())
-                this.routeDeque.resetRouteDeque()
-                this.routeDeque.addLast(parentId)
+                routeDeque.resetRouteDeque()
+                routeDeque.addLast(parentId)
             }
 
             else -> {
                 //When a music is selected, loadChildren is not called, so it's never a music
-                if (this.routeDeque.isEmpty()) {
+                if (routeDeque.isEmpty()) {
                     result.sendResult(null)
                     return
                 }
-                this.routeDeque.addLast(parentId)
+                routeDeque.addLast(parentId)
                 children = this.getAllMediaMediaItemList(mediaId = parentId.toLong())
             }
         }
@@ -192,19 +193,15 @@ class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
      */
     private fun getAllMediaMediaItemList(mediaId: Long): MutableList<MediaItem> {
         var media: Media? = null
-        when (this.routeDeque.oneBeforeLast()) {
+        when (routeDeque.oneBeforeLast()) {
             //TODO OPTIMISATION NEEDED (Use media interface)
             ScreenPages.ROOT.id, ScreenPages.ALL_MUSICS.id -> throw IllegalStateException("An error occurred in the route processing")
-            ScreenPages.ALL_FOLDERS.id -> {
-                media = DataManager.folderMap[mediaId]!!
-                this.loadMusic()
-            }
+            ScreenPages.ALL_FOLDERS.id -> media = DataManager.folderMap[mediaId]!!
             ScreenPages.ALL_ARTISTS.id -> {
                 //TODO create artist map with id
                 DataManager.artistMap.forEach { (_, artist: Artist) ->
                     if (artist.id == mediaId) {
                         media = artist
-                        this.loadMusic()
                         return@forEach
                     }
                 }
@@ -216,7 +213,6 @@ class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
                 DataManager.albumMap.forEach { (_, album: Album) ->
                     if (album.id == id) {
                         media = album
-                        this.loadMusic()
                         return@forEach
                     }
                 }
@@ -228,7 +224,6 @@ class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
                 DataManager.genreMap.forEach { (_, genre: Genre) ->
                     if (genre.id == id) {
                         media = genre
-                        this.loadMusic()
                         return@forEach
                     }
                 }
@@ -237,35 +232,5 @@ class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
         return this.getAllMediaMediaItemList(
             mediaList = media?.musicMediaItemSortedMap?.keys?.toList() ?: mutableListOf()
         )
-    }
-
-    /**
-     * Load music from the last route deque route.
-     */
-    private fun loadMusic() {
-        val playbackController: PlaybackController = PlaybackController.getInstance()
-        if (this.routeDeque.last() == ScreenPages.ALL_MUSICS.id) {
-            //Load all music
-            playbackController.loadMusic(
-                musicMediaItemSortedMap = DataManager.musicMediaItemSortedMap
-            )
-        }
-
-        val mediaId: Long = this.routeDeque.last().toLong()
-
-        val musicMediaItemSortedMap: SortedMap<Music, androidx.media3.common.MediaItem> =
-            when (this.routeDeque.oneBeforeLast()) {
-                ScreenPages.ALL_FOLDERS.id -> {
-                    //Current folder has to be loaded (music)
-                    val folder: Folder = DataManager.folderMap[mediaId]!!
-                    folder.musicMediaItemSortedMap
-                }
-
-                else -> {
-                    val media: Media = DataManager.artistMap.values.first { it.id == mediaId }
-                    media.musicMediaItemSortedMap
-                }
-            }
-        playbackController.loadMusic(musicMediaItemSortedMap = musicMediaItemSortedMap)
     }
 }

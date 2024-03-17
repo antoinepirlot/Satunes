@@ -77,9 +77,16 @@ package earth.mp3player.services
 
 import android.os.Bundle
 import android.support.v4.media.session.MediaSessionCompat
+import androidx.media3.common.MediaItem
+import earth.mp3player.models.Album
+import earth.mp3player.models.Artist
+import earth.mp3player.models.Folder
+import earth.mp3player.models.Genre
 import earth.mp3player.models.Music
+import earth.mp3player.pages.ScreenPages
 import earth.mp3player.services.data.DataManager
 import earth.mp3player.services.playback.PlaybackController
+import java.util.SortedMap
 
 /**
  * @author Antoine Pirlot on 16/03/2024
@@ -92,14 +99,59 @@ object MP3PlayerCarCallBack : MediaSessionCompat.Callback() {
 
     override fun onSeekTo(position: Long) {}
 
-    override fun onPlayFromMediaId(mediaId: String?, extras: Bundle?) {
-        val id: Long = mediaId!!.toLong()
-        DataManager.musicMediaItemSortedMap.keys.forEach { music: Music ->
-            if (music.id == id) {
-                PlaybackController.getInstance().start(musicToPlay = music)
-                return@forEach
-            }
+    override fun onPlayFromMediaId(mediaId: String, extras: Bundle?) {
+        val id: Long = mediaId.toLong()
+        val music: Music = DataManager.musicMediaItemSortedMap.keys.first { it.id == id }
+        this.loadMusic()
+        PlaybackController.getInstance().start(musicToPlay = music)
+    }
+
+    /**
+     * Load music from the last route deque route.
+     */
+    private fun loadMusic() {
+        val routeDeque: RouteDeque = MP3PlayerCarMusicService.routeDeque
+
+        @Suppress("NAME_SHADOWING")
+        val lastRoute: String = routeDeque.last()
+
+        val playbackController: PlaybackController = PlaybackController.getInstance()
+
+        if (lastRoute == ScreenPages.ROOT.id) {
+            playbackController.loadMusic(musicMediaItemSortedMap = DataManager.musicMediaItemSortedMap)
+            return
         }
+
+        val mediaId: Long = lastRoute.toLong()
+
+        val musicMediaItemSortedMap: SortedMap<Music, MediaItem> =
+            when (routeDeque.oneBeforeLast()) {
+                ScreenPages.ALL_FOLDERS.id -> {
+                    //Current folder has to be loaded (music)
+                    val folder: Folder = DataManager.folderMap[mediaId]!!
+                    folder.musicMediaItemSortedMap
+                }
+
+                ScreenPages.ALL_ALBUMS.id -> {
+                    val album: Album = DataManager.albumMap.values.first { it.id == mediaId }
+                    album.musicMediaItemSortedMap
+                }
+
+                ScreenPages.ALL_ARTISTS.id -> {
+                    val artist: Artist = DataManager.artistMap.values.first { it.id == mediaId }
+                    artist.musicMediaItemSortedMap
+                }
+
+                ScreenPages.ALL_GENRES.id -> {
+                    val genre: Genre = DataManager.genreMap.values.first { it.id == mediaId }
+                    genre.musicMediaItemSortedMap
+                }
+
+                else -> {
+                    DataManager.musicMediaItemSortedMap
+                }
+            }
+        playbackController.loadMusic(musicMediaItemSortedMap = musicMediaItemSortedMap)
     }
 
     override fun onPause() {}

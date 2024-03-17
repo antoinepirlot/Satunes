@@ -133,7 +133,11 @@ class PlaybackController private constructor(
             super.onPositionDiscontinuity(oldPosition, newPosition, reason)
 
             currentPositionProgression.floatValue =
-                newPosition.positionMs.toFloat() / musicPlaying.value!!.duration
+                if (musicPlaying.value == null) {
+                    0f
+                } else {
+                    newPosition.positionMs.toFloat() / musicPlaying.value!!.duration
+                }
         }
 
         override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {

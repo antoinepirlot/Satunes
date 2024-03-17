@@ -92,6 +92,8 @@ import java.util.SortedMap
  * @author Antoine Pirlot on 16/03/2024
  */
 object MP3PlayerCarCallBack : MediaSessionCompat.Callback() {
+    private var mediaIdLoaded: Long? = null
+
     //TODO
     override fun onPlay() {}
 
@@ -117,7 +119,7 @@ object MP3PlayerCarCallBack : MediaSessionCompat.Callback() {
 
         val playbackController: PlaybackController = PlaybackController.getInstance()
 
-        if (lastRoute == ScreenPages.ROOT.id) {
+        if (lastRoute == ScreenPages.ROOT.id || lastRoute == ScreenPages.ALL_MUSICS.id) {
             playbackController.loadMusic(musicMediaItemSortedMap = DataManager.musicMediaItemSortedMap)
             return
         }

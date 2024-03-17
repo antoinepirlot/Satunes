@@ -27,8 +27,10 @@ package earth.mp3player.utils
 
 import android.media.MediaDescription
 import android.net.Uri
+import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaDescriptionCompat
+import androidx.media.utils.MediaConstants
 import earth.mp3player.models.Album
 import earth.mp3player.models.Artist
 import earth.mp3player.models.Folder
@@ -47,14 +49,18 @@ fun buildMediaItem(
     id: String,
     description: String,
     title: String,
+    subtitle: String? = null,
     uri: Uri? = null,
+    extras: Bundle? = null,
     flags: Int
 ): MediaBrowserCompat.MediaItem {
     val mediaDescription: MediaDescription = MediaDescription.Builder()
         .setMediaId(id)
         .setDescription(description)
         .setTitle(title)
+        .setSubtitle(subtitle)
         .setMediaUri(uri)
+        .setExtras(extras)
         .build()
     val mediaDescriptionCompat: MediaDescriptionCompat =
         MediaDescriptionCompat.fromMediaDescription(mediaDescription)
@@ -83,9 +89,15 @@ fun buildMediaItem(media: Media): MediaBrowserCompat.MediaItem {
             is Genre -> "Genre"
             else -> throw IllegalArgumentException("An issue occurred with Media interface")
         }
+    val extras: Bundle = Bundle()
+    extras.putString(
+        MediaConstants.DESCRIPTION_EXTRAS_KEY_CONTENT_STYLE_GROUP_TITLE,
+        description
+    )
     return buildMediaItem(
         id = media.id.toString(),
         description = description,
+        subtitle = if (media is Music && media.artist != null) media.artist!!.title else null,
         title = media.title,
         uri = if (media is Music) media.uri else null,
         flags = flags

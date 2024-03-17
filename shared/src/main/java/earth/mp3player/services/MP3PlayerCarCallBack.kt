@@ -26,7 +26,10 @@
 package earth.mp3player.services
 
 import android.os.Bundle
+import android.support.v4.media.MediaDescriptionCompat
+import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
+import androidx.media.utils.MediaConstants
 import androidx.media3.common.MediaItem
 import earth.mp3player.models.Album
 import earth.mp3player.models.Artist
@@ -56,6 +59,29 @@ object MP3PlayerCarCallBack : MediaSessionCompat.Callback() {
         val music: Music = DataManager.musicMediaItemSortedMap.keys.first { it.id == id }
         this.loadMusic()
         PlaybackController.getInstance().start(musicToPlay = music)
+
+        val mediaSession: MediaSessionCompat = MP3PlayerCarMusicService.session
+        mediaSession.setMetadata(
+            MediaMetadataCompat.Builder()
+                .putString(
+                    MediaMetadataCompat.METADATA_KEY_DISPLAY_TITLE, "Song Name"
+                )
+                .putString(
+                    MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE, "Artist name"
+                )
+//                .putString(
+//                    MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI,
+//                    albumArtUri.toString())
+                .putLong(
+                    MediaConstants.METADATA_KEY_IS_EXPLICIT,
+                    MediaConstants.METADATA_VALUE_ATTRIBUTE_PRESENT
+                )
+                .putLong(
+                    MediaDescriptionCompat.EXTRA_DOWNLOAD_STATUS,
+                    MediaDescriptionCompat.STATUS_DOWNLOADED
+                )
+                .build()
+        )
     }
 
     /**

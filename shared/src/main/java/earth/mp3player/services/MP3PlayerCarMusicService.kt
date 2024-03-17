@@ -47,11 +47,11 @@ import earth.mp3player.utils.buildMediaItem
  */
 class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
 
-    private lateinit var session: MediaSessionCompat
     private lateinit var playbackController: PlaybackController
 
     companion object {
         val routeDeque: RouteDeque = RouteDeque()
+        lateinit var session: MediaSessionCompat
     }
 
     override fun onCreate() {

@@ -32,6 +32,7 @@ import android.support.v4.media.session.MediaSessionCompat
 import androidx.media.MediaBrowserServiceCompat
 import earth.mp3player.models.Album
 import earth.mp3player.models.Artist
+import earth.mp3player.models.Folder
 import earth.mp3player.models.Genre
 import earth.mp3player.models.Media
 import earth.mp3player.models.Music
@@ -41,6 +42,7 @@ import earth.mp3player.services.data.DataLoader
 import earth.mp3player.services.data.DataManager
 import earth.mp3player.services.playback.PlaybackController
 import earth.mp3player.utils.buildMediaItem
+import java.util.SortedMap
 
 /**
  * @author Antoine Pirlot on 16/03/2024
@@ -182,6 +184,7 @@ class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
 
     /**
      * Get the media from the media referencer, assume that mediaId is never the id of a music.
+     * When the route is in pages, then load musics of the right media.
      *
      * @param mediaId the media referencer, it's the media id.
      *
@@ -190,13 +193,18 @@ class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
     private fun getAllMediaMediaItemList(mediaId: Long): MutableList<MediaItem> {
         var media: Media? = null
         when (this.routeDeque.oneBeforeLast()) {
+            //TODO OPTIMISATION NEEDED (Use media interface)
             ScreenPages.ROOT.id, ScreenPages.ALL_MUSICS.id -> throw IllegalStateException("An error occurred in the route processing")
-            ScreenPages.ALL_FOLDERS.id -> media = DataManager.folderMap[mediaId]!!
+            ScreenPages.ALL_FOLDERS.id -> {
+                media = DataManager.folderMap[mediaId]!!
+                this.loadMusic()
+            }
             ScreenPages.ALL_ARTISTS.id -> {
                 //TODO create artist map with id
                 DataManager.artistMap.forEach { (_, artist: Artist) ->
                     if (artist.id == mediaId) {
                         media = artist
+                        this.loadMusic()
                         return@forEach
                     }
                 }
@@ -208,6 +216,7 @@ class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
                 DataManager.albumMap.forEach { (_, album: Album) ->
                     if (album.id == id) {
                         media = album
+                        this.loadMusic()
                         return@forEach
                     }
                 }
@@ -219,6 +228,7 @@ class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
                 DataManager.genreMap.forEach { (_, genre: Genre) ->
                     if (genre.id == id) {
                         media = genre
+                        this.loadMusic()
                         return@forEach
                     }
                 }
@@ -227,5 +237,35 @@ class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
         return this.getAllMediaMediaItemList(
             mediaList = media?.musicMediaItemSortedMap?.keys?.toList() ?: mutableListOf()
         )
+    }
+
+    /**
+     * Load music from the last route deque route.
+     */
+    private fun loadMusic() {
+        val playbackController: PlaybackController = PlaybackController.getInstance()
+        if (this.routeDeque.last() == ScreenPages.ALL_MUSICS.id) {
+            //Load all music
+            playbackController.loadMusic(
+                musicMediaItemSortedMap = DataManager.musicMediaItemSortedMap
+            )
+        }
+
+        val mediaId: Long = this.routeDeque.last().toLong()
+
+        val musicMediaItemSortedMap: SortedMap<Music, androidx.media3.common.MediaItem> =
+            when (this.routeDeque.oneBeforeLast()) {
+                ScreenPages.ALL_FOLDERS.id -> {
+                    //Current folder has to be loaded (music)
+                    val folder: Folder = DataManager.folderMap[mediaId]!!
+                    folder.musicMediaItemSortedMap
+                }
+
+                else -> {
+                    val media: Media = DataManager.artistMap.values.first { it.id == mediaId }
+                    media.musicMediaItemSortedMap
+                }
+            }
+        playbackController.loadMusic(musicMediaItemSortedMap = musicMediaItemSortedMap)
     }
 }

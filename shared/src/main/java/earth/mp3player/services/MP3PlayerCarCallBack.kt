@@ -77,6 +77,9 @@ package earth.mp3player.services
 
 import android.os.Bundle
 import android.support.v4.media.session.MediaSessionCompat
+import earth.mp3player.models.Music
+import earth.mp3player.services.data.DataManager
+import earth.mp3player.services.playback.PlaybackController
 
 /**
  * @author Antoine Pirlot on 16/03/2024
@@ -89,7 +92,15 @@ object MP3PlayerCarCallBack : MediaSessionCompat.Callback() {
 
     override fun onSeekTo(position: Long) {}
 
-    override fun onPlayFromMediaId(mediaId: String?, extras: Bundle?) {}
+    override fun onPlayFromMediaId(mediaId: String?, extras: Bundle?) {
+        val id: Long = mediaId!!.toLong()
+        DataManager.musicMediaItemSortedMap.keys.forEach { music: Music ->
+            if (music.id == id) {
+                PlaybackController.getInstance().start(musicToPlay = music)
+                return@forEach
+            }
+        }
+    }
 
     override fun onPause() {}
 

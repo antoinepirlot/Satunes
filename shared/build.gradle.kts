@@ -28,7 +28,10 @@ dependencies {
     /**
      * Media
      */
-    implementation("androidx.media:media:1.7.0")
+    val mediaVersion = "1.7.0"
+    val media3Version = "1.2.1"
+    implementation("androidx.media:media:$mediaVersion")
+    implementation("androidx.media3:media3-common:$media3Version")
 
     /**
      * Playback

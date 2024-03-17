@@ -30,6 +30,7 @@ import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat.MediaItem
 import android.support.v4.media.session.MediaSessionCompat
 import androidx.media.MediaBrowserServiceCompat
+import earth.mp3player.models.Folder
 import earth.mp3player.models.Media
 import earth.mp3player.models.Music
 import earth.mp3player.pages.ScreenPages
@@ -95,7 +96,7 @@ class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
 
     private lateinit var session: MediaSessionCompat
     private lateinit var playbackController: PlaybackController
-    //TODO try remembering path to music
+    private val routeDeque: RouteDeque = RouteDeque()
 
     override fun onCreate() {
         super.onCreate()
@@ -108,6 +109,8 @@ class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
             MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS or
                     MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS
         )
+
+        this.routeDeque.resetRouteDeque()
 
         //Init playback
         playbackController = PlaybackController.initInstance(baseContext)
@@ -133,32 +136,55 @@ class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
         var children: MutableList<MediaItem>? = null
         when (parentId) {
             ScreenPages.ROOT.id -> {
-                children = getHomeScreen()
+                this.routeDeque.resetRouteDeque()
+                result.sendResult(getHomeScreen())
+                return
             }
 
             ScreenPages.ALL_FOLDERS.id -> {
                 children =
                     getAllMediaMediaItemList(mediaList = DataManager.folderMap.values.toList())
+                this.routeDeque.resetRouteDeque()
+                this.routeDeque.addLast(parentId)
             }
 
             ScreenPages.ALL_ARTISTS.id -> {
                 children =
                     getAllMediaMediaItemList(mediaList = DataManager.artistMap.values.toList())
+                this.routeDeque.resetRouteDeque()
+                this.routeDeque.addLast(parentId)
             }
 
             ScreenPages.ALL_ALBUMS.id -> {
                 children =
                     getAllMediaMediaItemList(mediaList = DataManager.albumMap.values.toList())
+                this.routeDeque.resetRouteDeque()
+                this.routeDeque.addLast(parentId)
+
             }
 
             ScreenPages.ALL_GENRES.id -> {
                 children =
                     getAllMediaMediaItemList(mediaList = DataManager.genreMap.values.toList())
+                this.routeDeque.resetRouteDeque()
+                this.routeDeque.addLast(parentId)
             }
 
             ScreenPages.ALL_MUSICS.id -> {
                 children =
                     getAllMediaMediaItemList(mediaList = DataManager.musicMediaItemSortedMap.keys.toList())
+                this.routeDeque.resetRouteDeque()
+                this.routeDeque.addLast(parentId)
+            }
+
+            else -> {
+                //When a music is selected, loadChildren is not called, so it's never a music
+                if (this.routeDeque.isEmpty()) {
+                    result.sendResult(null)
+                    return
+                }
+                this.routeDeque.addLast(parentId)
+                children = this.getAllMediaMediaItemList(mediaId = parentId.toLong())
             }
         }
         result.sendResult(children)
@@ -199,5 +225,26 @@ class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
             mediaItemList.add(mediaItem)
         }
         return mediaItemList
+    }
+
+    /**
+     * Get the media from the mediaId, assume that mediaId is never the id of a music.
+     *
+     * @return a mutable list of media item.
+     */
+    private fun getAllMediaMediaItemList(mediaId: Long): MutableList<MediaItem> {
+        val mediaList: MutableList<Media> = mutableListOf()
+        when (this.routeDeque.oneBeforeLast()) {
+            ScreenPages.ROOT.id -> throw IllegalStateException("An error occurred in the route processing")
+            ScreenPages.ALL_FOLDERS.id -> {
+                val folder: Folder = DataManager.folderMap.get(key = mediaId)!!
+                mediaList.addAll(folder.musicMediaItemSortedMap.keys.toList())
+            }
+
+            ScreenPages.ALL_ARTISTS.id -> {
+//                mediaList.add(DataManager.artistMap.get(key = mediaId)!!)
+            }
+        }
+        return this.getAllMediaMediaItemList(mediaList = mediaList)
     }
 }

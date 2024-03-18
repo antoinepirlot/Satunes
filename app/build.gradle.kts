@@ -127,11 +127,11 @@ dependencies {
      */
     val dataStoreVersion = "1.0.0"
     implementation("androidx.datastore:datastore-preferences:$dataStoreVersion")
+    implementation(project(":car"))
 
     /**
      * Android Auto
      */
-    implementation(project(":shared"))
 
     /**
      * Playback Services

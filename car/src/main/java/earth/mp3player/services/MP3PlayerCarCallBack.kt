@@ -48,11 +48,22 @@ object MP3PlayerCarCallBack : MediaSessionCompat.Callback() {
     private var mediaIdLoaded: Long? = null
 
     //TODO
-    override fun onPlay() {}
+    override fun onPlay() {
+        val playbackController: PlaybackController = PlaybackController.getInstance()
+        playbackController.play()
+    }
+
+    override fun onPause() {
+        val playbackController: PlaybackController = PlaybackController.getInstance()
+        playbackController.pause()
+    }
 
     override fun onSkipToQueueItem(queueId: Long) {}
 
-    override fun onSeekTo(position: Long) {}
+    override fun onSeekTo(position: Long) {
+        val playbackController: PlaybackController = PlaybackController.getInstance()
+        playbackController.seekTo(positionMs = position)
+    }
 
     override fun onPlayFromMediaId(mediaId: String, extras: Bundle?) {
         val id: Long = mediaId.toLong()
@@ -132,15 +143,19 @@ object MP3PlayerCarCallBack : MediaSessionCompat.Callback() {
         playbackController.loadMusic(musicMediaItemSortedMap = musicMediaItemSortedMap)
     }
 
-    override fun onPause() {}
+    override fun onStop() {
+        val playbackController: PlaybackController = PlaybackController.getInstance()
+        playbackController.stop()
+    }
 
-    override fun onStop() {}
+    override fun onSkipToNext() {
+        val playbackController: PlaybackController = PlaybackController.getInstance()
+        playbackController.playNext()
+    }
 
-    override fun onSkipToNext() {}
+    override fun onSkipToPrevious() {
+        val playbackController: PlaybackController = PlaybackController.getInstance()
+        playbackController.playPrevious()
+    }
 
-    override fun onSkipToPrevious() {}
-
-    override fun onCustomAction(action: String?, extras: Bundle?) {}
-
-    override fun onPlayFromSearch(query: String?, extras: Bundle?) {}
 }

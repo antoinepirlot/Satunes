@@ -327,6 +327,22 @@ class PlaybackController private constructor(
         }
     }
 
+    fun play() {
+        if (!isPlaying.value) {
+            this.playPause()
+        }
+    }
+
+    fun pause() {
+        if (isPlaying.value) {
+            this.playPause()
+        }
+    }
+
+    fun stop() {
+        this.mediaController.stop()
+    }
+
     fun playNext() {
         if (playlist.musicCount() > 1) {
             this.mediaController.seekToNext()

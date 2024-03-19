@@ -29,6 +29,11 @@ import android.os.Bundle
 import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
+import android.support.v4.media.session.PlaybackStateCompat
+import android.support.v4.media.session.PlaybackStateCompat.ACTION_PAUSE
+import android.support.v4.media.session.PlaybackStateCompat.ACTION_PLAY
+import android.support.v4.media.session.PlaybackStateCompat.STATE_PAUSED
+import android.support.v4.media.session.PlaybackStateCompat.STATE_PLAYING
 import androidx.media.utils.MediaConstants
 import androidx.media3.common.MediaItem
 import earth.mp3player.models.Album
@@ -56,6 +61,7 @@ object MP3PlayerCarCallBack : MediaSessionCompat.Callback() {
     override fun onPause() {
         val playbackController: PlaybackController = PlaybackController.getInstance()
         playbackController.pause()
+        setPlaybackState(state = STATE_PAUSED, action = ACTION_PLAY)
     }
 
     override fun onSkipToQueueItem(queueId: Long) {}
@@ -93,6 +99,14 @@ object MP3PlayerCarCallBack : MediaSessionCompat.Callback() {
                 )
                 .build()
         )
+        setPlaybackState(state = STATE_PLAYING, action = ACTION_PAUSE)
+    }
+
+    private fun setPlaybackState(state: Int, action: Long) {
+        val playbackState = PlaybackStateCompat.Builder()
+            .setState(state, 0, 1F)
+            .setActions(action)
+        MP3PlayerCarMusicService.session.setPlaybackState(playbackState.build())
     }
 
     /**

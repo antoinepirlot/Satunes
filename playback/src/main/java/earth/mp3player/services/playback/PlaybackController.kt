@@ -343,6 +343,10 @@ class PlaybackController private constructor(
         this.mediaController.stop()
     }
 
+    fun getCurrentPosition(): Long {
+        return this.mediaController.currentPosition
+    }
+
     fun playNext() {
         if (playlist.musicCount() > 1) {
             this.mediaController.seekToNext()

@@ -104,8 +104,10 @@ object MP3PlayerCarCallBack : MediaSessionCompat.Callback() {
     }
 
     private fun setPlaybackState(state: Int, action: Long) {
+        val playbackController: PlaybackController = PlaybackController.getInstance()
+        val currentPosition: Long = playbackController.getCurrentPosition()
         val playbackState = PlaybackStateCompat.Builder()
-            .setState(state, 0, 1F)
+            .setState(state, currentPosition, 1F)
             .setActions(action)
         MP3PlayerCarMusicService.session.setPlaybackState(playbackState.build())
     }

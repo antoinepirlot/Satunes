@@ -100,15 +100,29 @@ object MP3PlayerCarCallBack : MediaSessionCompat.Callback() {
                 )
                 .build()
         )
-        setPlaybackState(state = STATE_PLAYING, action = ACTION_PAUSE)
+        setPlaybackState(musicId = id, state = STATE_PLAYING, action = ACTION_PAUSE)
     }
 
-    private fun setPlaybackState(state: Int, action: Long) {
+    /**
+     * Update the session playback.
+     *
+     * @param musicId the music id (from playback library).
+     * @param state the state of playback.
+     * @param action to run if clicked on button in playback screen.
+     */
+    private fun setPlaybackState(musicId: Long? = null, state: Int, action: Long) {
         val playbackController: PlaybackController = PlaybackController.getInstance()
         val currentPosition: Long = playbackController.getCurrentPosition()
-        val playbackState = PlaybackStateCompat.Builder()
-            .setState(state, currentPosition, 1F)
-            .setActions(action)
+        val playbackState = if (musicId != null) {
+            PlaybackStateCompat.Builder()
+                .setState(state, currentPosition, 1F)
+                .setActions(action)
+                .setActiveQueueItemId(musicId)
+        } else {
+            PlaybackStateCompat.Builder()
+                .setState(state, currentPosition, 1F)
+                .setActions(action)
+        }
         MP3PlayerCarMusicService.session.setPlaybackState(playbackState.build())
     }
 
@@ -116,6 +130,7 @@ object MP3PlayerCarCallBack : MediaSessionCompat.Callback() {
      * Load music from the last route deque route.
      */
     private fun loadMusic() {
+        MP3PlayerCarMusicService.updateQueue()
         val routeDeque: RouteDeque = MP3PlayerCarMusicService.routeDeque
 
         @Suppress("NAME_SHADOWING")

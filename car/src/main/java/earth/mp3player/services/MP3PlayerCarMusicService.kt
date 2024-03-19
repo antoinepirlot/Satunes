@@ -57,7 +57,7 @@ class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
         private val loadedQueueItemList: MutableList<QueueItem> = mutableListOf()
 
         fun updateQueue() {
-            MP3PlayerCarMusicService.session.setQueue(loadedQueueItemList)
+            session.setQueue(loadedQueueItemList)
         }
     }
 
@@ -68,10 +68,6 @@ class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
         session = MediaSessionCompat(this, className)
         sessionToken = session.sessionToken
         session.setCallback(MP3PlayerCarCallBack)
-        session.setFlags(
-            MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS or
-                    MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS
-        )
 
         routeDeque.resetRouteDeque()
 
@@ -91,12 +87,12 @@ class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
         clientPackageName: String,
         clientUid: Int,
         rootHints: Bundle?
-    ): BrowserRoot? {
+    ): BrowserRoot {
         return BrowserRoot(ScreenPages.ROOT.id, null)
     }
 
     override fun onLoadChildren(parentId: String, result: Result<MutableList<MediaItem>>) {
-        var children: MutableList<MediaItem>? = null
+        val children: MutableList<MediaItem>?
         when (parentId) {
             ScreenPages.ROOT.id -> {
                 routeDeque.resetRouteDeque()
@@ -221,7 +217,7 @@ class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
 
             ScreenPages.ALL_ALBUMS.id -> {
                 //TODO create album map with id
-                val id: Long = mediaId.toLong()
+                val id: Long = mediaId
                 DataManager.albumMap.forEach { (_, album: Album) ->
                     if (album.id == id) {
                         media = album

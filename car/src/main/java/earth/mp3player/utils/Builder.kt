@@ -89,7 +89,7 @@ fun buildMediaItem(media: Media): MediaBrowserCompat.MediaItem {
             is Genre -> "Genre"
             else -> throw IllegalArgumentException("An issue occurred with Media interface")
         }
-    val extras: Bundle = Bundle()
+    val extras = Bundle()
     extras.putString(
         MediaConstants.DESCRIPTION_EXTRAS_KEY_CONTENT_STYLE_GROUP_TITLE,
         description

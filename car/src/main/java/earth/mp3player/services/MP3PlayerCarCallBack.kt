@@ -50,7 +50,6 @@ import java.util.SortedMap
  * @author Antoine Pirlot on 16/03/2024
  */
 object MP3PlayerCarCallBack : MediaSessionCompat.Callback() {
-    private var mediaIdLoaded: Long? = null
 
     //TODO
     override fun onPlay() {
@@ -133,7 +132,6 @@ object MP3PlayerCarCallBack : MediaSessionCompat.Callback() {
         MP3PlayerCarMusicService.updateQueue()
         val routeDeque: RouteDeque = MP3PlayerCarMusicService.routeDeque
 
-        @Suppress("NAME_SHADOWING")
         val lastRoute: String = routeDeque.last()
 
         val playbackController: PlaybackController = PlaybackController.getInstance()

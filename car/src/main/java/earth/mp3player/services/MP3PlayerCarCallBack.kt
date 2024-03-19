@@ -157,11 +157,6 @@ object MP3PlayerCarCallBack : MediaSessionCompat.Callback() {
         playbackController.loadMusic(musicMediaItemSortedMap = musicMediaItemSortedMap)
     }
 
-    override fun onStop() {
-        val playbackController: PlaybackController = PlaybackController.getInstance()
-        playbackController.stop()
-    }
-
     override fun onSkipToNext() {
         val playbackController: PlaybackController = PlaybackController.getInstance()
         playbackController.playNext()

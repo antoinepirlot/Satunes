@@ -26,10 +26,13 @@
 package earth.mp3player.services
 
 import android.annotation.SuppressLint
+import android.app.PendingIntent
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat.MediaItem
 import android.support.v4.media.session.MediaSessionCompat
 import androidx.media.MediaBrowserServiceCompat
+import androidx.media.session.MediaButtonReceiver
 import earth.mp3player.models.Album
 import earth.mp3player.models.Artist
 import earth.mp3player.models.Genre
@@ -52,6 +55,7 @@ class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
     companion object {
         val routeDeque: RouteDeque = RouteDeque()
         lateinit var session: MediaSessionCompat
+        val musicMediaItemMap: MutableMap<Music, MediaItem> = mutableMapOf()
     }
 
     override fun onCreate() {
@@ -178,6 +182,9 @@ class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
             }
 
             val mediaItem: MediaItem = buildMediaItem(media = media)
+            if (media is Music) {
+                musicMediaItemMap[media] = mediaItem
+            }
             mediaItemList.add(mediaItem)
         }
         return mediaItemList

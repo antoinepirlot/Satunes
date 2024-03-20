@@ -31,6 +31,7 @@ import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.support.v4.media.session.PlaybackStateCompat.ACTION_PAUSE
 import android.support.v4.media.session.PlaybackStateCompat.ACTION_PLAY
+import android.support.v4.media.session.PlaybackStateCompat.ACTION_SEEK_TO
 import android.support.v4.media.session.PlaybackStateCompat.ACTION_SKIP_TO_NEXT
 import android.support.v4.media.session.PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS
 import android.support.v4.media.session.PlaybackStateCompat.STATE_PAUSED
@@ -78,7 +79,13 @@ object MP3PlayerCarCallBack : MediaSessionCompat.Callback() {
         val music: Music = DataManager.musicMediaItemSortedMap.keys.first { it.id == id }
         this.loadMusic()
         PlaybackController.getInstance().start(musicToPlay = music)
+        this.updateMediaPlaying()
+        setPlaybackState(state = STATE_PLAYING, actions = ACTIONS_ON_PLAY)
+    }
 
+    private fun updateMediaPlaying() {
+        val playbackController: PlaybackController = PlaybackController.getInstance()
+        val music: Music = playbackController.musicPlaying.value!!
         val mediaSession: MediaSessionCompat = MP3PlayerCarMusicService.session
         mediaSession.setMetadata(
             MediaMetadataCompat.Builder()
@@ -86,7 +93,6 @@ object MP3PlayerCarCallBack : MediaSessionCompat.Callback() {
                 .putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE, music.artist?.title)
                 .build()
         )
-        setPlaybackState(state = STATE_PLAYING, actions = ACTIONS_ON_PLAY)
     }
 
     /**
@@ -156,11 +162,15 @@ object MP3PlayerCarCallBack : MediaSessionCompat.Callback() {
     override fun onSkipToNext() {
         val playbackController: PlaybackController = PlaybackController.getInstance()
         playbackController.playNext()
+        this.updateMediaPlaying()
+        this.setPlaybackState(state = STATE_PLAYING, actions = ACTIONS_ON_PLAY)
     }
 
     override fun onSkipToPrevious() {
         val playbackController: PlaybackController = PlaybackController.getInstance()
         playbackController.playPrevious()
+        this.updateMediaPlaying()
+        this.setPlaybackState(state = STATE_PLAYING, actions = ACTIONS_ON_PLAY)
     }
 
 }

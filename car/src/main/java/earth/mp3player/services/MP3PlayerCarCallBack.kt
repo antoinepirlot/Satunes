@@ -59,13 +59,13 @@ object MP3PlayerCarCallBack : MediaSessionCompat.Callback() {
     override fun onPlay() {
         val playbackController: PlaybackController = PlaybackController.getInstance()
         playbackController.play()
-        setPlaybackState(state = STATE_PLAYING, actions = ACTIONS_ON_PLAY)
+        updatePlaybackState(state = STATE_PLAYING, actions = ACTIONS_ON_PLAY)
     }
 
     override fun onPause() {
         val playbackController: PlaybackController = PlaybackController.getInstance()
         playbackController.pause()
-        setPlaybackState(state = STATE_PAUSED, actions = ACTIONS_ON_PAUSE)
+        updatePlaybackState(state = STATE_PAUSED, actions = ACTIONS_ON_PAUSE)
     }
 
     override fun onSkipToQueueItem(queueId: Long) {}
@@ -73,7 +73,7 @@ object MP3PlayerCarCallBack : MediaSessionCompat.Callback() {
     override fun onSeekTo(position: Long) {
         val playbackController: PlaybackController = PlaybackController.getInstance()
         playbackController.seekTo(positionMs = position)
-        this.setPlaybackState(STATE_PLAYING, ACTIONS_ON_PLAY)
+        this.updatePlaybackState(STATE_PLAYING, ACTIONS_ON_PLAY)
     }
 
     override fun onPlayFromMediaId(mediaId: String, extras: Bundle?) {
@@ -82,21 +82,21 @@ object MP3PlayerCarCallBack : MediaSessionCompat.Callback() {
         this.loadMusic()
         PlaybackController.getInstance().start(musicToPlay = music)
         this.updateMediaPlaying()
-        setPlaybackState(state = STATE_PLAYING, actions = ACTIONS_ON_PLAY)
+        updatePlaybackState(state = STATE_PLAYING, actions = ACTIONS_ON_PLAY)
     }
 
     override fun onSkipToNext() {
         val playbackController: PlaybackController = PlaybackController.getInstance()
         playbackController.playNext()
         this.updateMediaPlaying()
-        this.setPlaybackState(state = STATE_PLAYING, actions = ACTIONS_ON_PLAY)
+        this.updatePlaybackState(state = STATE_PLAYING, actions = ACTIONS_ON_PLAY)
     }
 
     override fun onSkipToPrevious() {
         val playbackController: PlaybackController = PlaybackController.getInstance()
         playbackController.playPrevious()
         this.updateMediaPlaying()
-        this.setPlaybackState(state = STATE_PLAYING, actions = ACTIONS_ON_PLAY)
+        this.updatePlaybackState(state = STATE_PLAYING, actions = ACTIONS_ON_PLAY)
     }
 
     private fun updateMediaPlaying() {
@@ -119,7 +119,7 @@ object MP3PlayerCarCallBack : MediaSessionCompat.Callback() {
      * @param state the state of playback.
      * @param actions to run if clicked on button in playback screen.
      */
-    private fun setPlaybackState(state: Int, actions: Long) {
+    private fun updatePlaybackState(state: Int, actions: Long) {
         val playbackController: PlaybackController = PlaybackController.getInstance()
         val musicPlaying: Music = playbackController.musicPlaying.value!!
         val currentPosition: Long = playbackController.getCurrentPosition()

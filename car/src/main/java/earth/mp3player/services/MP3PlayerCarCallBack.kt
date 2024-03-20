@@ -83,9 +83,6 @@ object MP3PlayerCarCallBack : MediaSessionCompat.Callback() {
                     MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE,
                     music.artist?.title
                 )
-//                .putString(
-//                    MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI,
-//                    albumArtUri.toString())
                 .build()
         )
         setPlaybackState(state = STATE_PLAYING, action = ACTION_PAUSE)

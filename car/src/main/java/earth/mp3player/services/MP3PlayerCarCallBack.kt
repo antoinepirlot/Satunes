@@ -31,6 +31,8 @@ import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.support.v4.media.session.PlaybackStateCompat.ACTION_PAUSE
 import android.support.v4.media.session.PlaybackStateCompat.ACTION_PLAY
+import android.support.v4.media.session.PlaybackStateCompat.ACTION_SKIP_TO_NEXT
+import android.support.v4.media.session.PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS
 import android.support.v4.media.session.PlaybackStateCompat.STATE_PAUSED
 import android.support.v4.media.session.PlaybackStateCompat.STATE_PLAYING
 import androidx.media3.common.MediaItem
@@ -48,18 +50,20 @@ import java.util.SortedMap
  * @author Antoine Pirlot on 16/03/2024
  */
 object MP3PlayerCarCallBack : MediaSessionCompat.Callback() {
+    private const val ACTIONS_ON_PLAY: Long = ACTION_PAUSE or ACTION_SKIP_TO_NEXT or ACTION_SKIP_TO_PREVIOUS
+    private const val ACTIONS_ON_PAUSE: Long = ACTION_PLAY or ACTION_SKIP_TO_NEXT or ACTION_SKIP_TO_PREVIOUS
 
     //TODO
     override fun onPlay() {
         val playbackController: PlaybackController = PlaybackController.getInstance()
         playbackController.play()
-        setPlaybackState(state = STATE_PLAYING, action = ACTION_PAUSE)
+        setPlaybackState(state = STATE_PLAYING, actions = ACTIONS_ON_PLAY)
     }
 
     override fun onPause() {
         val playbackController: PlaybackController = PlaybackController.getInstance()
         playbackController.pause()
-        setPlaybackState(state = STATE_PAUSED, action = ACTION_PLAY)
+        setPlaybackState(state = STATE_PAUSED, actions = ACTIONS_ON_PAUSE)
     }
 
     override fun onSkipToQueueItem(queueId: Long) {}
@@ -82,21 +86,21 @@ object MP3PlayerCarCallBack : MediaSessionCompat.Callback() {
                 .putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE, music.artist?.title)
                 .build()
         )
-        setPlaybackState(state = STATE_PLAYING, action = ACTION_PAUSE)
+        setPlaybackState(state = STATE_PLAYING, actions = ACTIONS_ON_PLAY)
     }
 
     /**
      * Update the session playback.
      *
      * @param state the state of playback.
-     * @param action to run if clicked on button in playback screen.
+     * @param actions to run if clicked on button in playback screen.
      */
-    private fun setPlaybackState(state: Int, action: Long) {
+    private fun setPlaybackState(state: Int, actions: Long) {
         val playbackController: PlaybackController = PlaybackController.getInstance()
         val currentPosition: Long = playbackController.getCurrentPosition()
         val playbackState = PlaybackStateCompat.Builder()
             .setState(state, currentPosition, 1F)
-            .setActions(action)
+            .setActions(actions)
             .setActiveQueueItemId(playbackController.musicPlaying.value!!.id)
         MP3PlayerCarMusicService.session.setPlaybackState(playbackState.build())
     }

@@ -71,7 +71,13 @@ object MP3PlayerCarCallBack : MediaSessionCompat.Callback() {
         updatePlaybackState(state = STATE_PAUSED, actions = ACTIONS_ON_PAUSE)
     }
 
-    override fun onSkipToQueueItem(queueId: Long) {}
+    override fun onSkipToQueueItem(queueId: Long) {
+        val playbackController: PlaybackController = PlaybackController.getInstance()
+        val musicToPlay: Music = DataManager.musicMediaItemSortedMap.keys.first { it.id == queueId }
+        playbackController.start(musicToPlay = musicToPlay)
+        this.updateMediaPlaying()
+        this.updatePlaybackState(STATE_PLAYING, ACTIONS_ON_PLAY)
+    }
 
     override fun onSeekTo(position: Long) {
         val playbackController: PlaybackController = PlaybackController.getInstance()

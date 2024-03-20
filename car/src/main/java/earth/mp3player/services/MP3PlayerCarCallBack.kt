@@ -99,29 +99,22 @@ object MP3PlayerCarCallBack : MediaSessionCompat.Callback() {
                 )
                 .build()
         )
-        setPlaybackState(musicId = id, state = STATE_PLAYING, action = ACTION_PAUSE)
+        setPlaybackState(state = STATE_PLAYING, action = ACTION_PAUSE)
     }
 
     /**
      * Update the session playback.
      *
-     * @param musicId the music id (from playback library).
      * @param state the state of playback.
      * @param action to run if clicked on button in playback screen.
      */
-    private fun setPlaybackState(musicId: Long? = null, state: Int, action: Long) {
+    private fun setPlaybackState(state: Int, action: Long) {
         val playbackController: PlaybackController = PlaybackController.getInstance()
         val currentPosition: Long = playbackController.getCurrentPosition()
-        val playbackState = if (musicId != null) {
-            PlaybackStateCompat.Builder()
-                .setState(state, currentPosition, 1F)
-                .setActions(action)
-                .setActiveQueueItemId(musicId)
-        } else {
-            PlaybackStateCompat.Builder()
-                .setState(state, currentPosition, 1F)
-                .setActions(action)
-        }
+        val playbackState = PlaybackStateCompat.Builder()
+            .setState(state, currentPosition, 1F)
+            .setActions(action)
+            .setActiveQueueItemId(playbackController.musicPlaying.value!!.id)
         MP3PlayerCarMusicService.session.setPlaybackState(playbackState.build())
     }
 

@@ -84,6 +84,20 @@ object MP3PlayerCarCallBack : MediaSessionCompat.Callback() {
         setPlaybackState(state = STATE_PLAYING, actions = ACTIONS_ON_PLAY)
     }
 
+    override fun onSkipToNext() {
+        val playbackController: PlaybackController = PlaybackController.getInstance()
+        playbackController.playNext()
+        this.updateMediaPlaying()
+        this.setPlaybackState(state = STATE_PLAYING, actions = ACTIONS_ON_PLAY)
+    }
+
+    override fun onSkipToPrevious() {
+        val playbackController: PlaybackController = PlaybackController.getInstance()
+        playbackController.playPrevious()
+        this.updateMediaPlaying()
+        this.setPlaybackState(state = STATE_PLAYING, actions = ACTIONS_ON_PLAY)
+    }
+
     private fun updateMediaPlaying() {
         val playbackController: PlaybackController = PlaybackController.getInstance()
         val music: Music = playbackController.musicPlaying.value!!
@@ -110,7 +124,8 @@ object MP3PlayerCarCallBack : MediaSessionCompat.Callback() {
         val extras: Bundle = Bundle()
         extras.putString(
             MediaConstants.PLAYBACK_STATE_EXTRAS_KEY_MEDIA_ID,
-            musicPlaying.id.toString())
+            musicPlaying.id.toString()
+        )
 
         val playbackState = PlaybackStateCompat.Builder()
             .setState(state, currentPosition, 1F)
@@ -167,19 +182,4 @@ object MP3PlayerCarCallBack : MediaSessionCompat.Callback() {
             }
         playbackController.loadMusic(musicMediaItemSortedMap = musicMediaItemSortedMap)
     }
-
-    override fun onSkipToNext() {
-        val playbackController: PlaybackController = PlaybackController.getInstance()
-        playbackController.playNext()
-        this.updateMediaPlaying()
-        this.setPlaybackState(state = STATE_PLAYING, actions = ACTIONS_ON_PLAY)
-    }
-
-    override fun onSkipToPrevious() {
-        val playbackController: PlaybackController = PlaybackController.getInstance()
-        playbackController.playPrevious()
-        this.updateMediaPlaying()
-        this.setPlaybackState(state = STATE_PLAYING, actions = ACTIONS_ON_PLAY)
-    }
-
 }

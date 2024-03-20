@@ -36,6 +36,7 @@ import android.support.v4.media.session.PlaybackStateCompat.ACTION_SKIP_TO_NEXT
 import android.support.v4.media.session.PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS
 import android.support.v4.media.session.PlaybackStateCompat.STATE_PAUSED
 import android.support.v4.media.session.PlaybackStateCompat.STATE_PLAYING
+import androidx.media.utils.MediaConstants
 import androidx.media3.common.MediaItem
 import earth.mp3player.models.Album
 import earth.mp3player.models.Artist
@@ -51,8 +52,8 @@ import java.util.SortedMap
  * @author Antoine Pirlot on 16/03/2024
  */
 object MP3PlayerCarCallBack : MediaSessionCompat.Callback() {
-    private const val ACTIONS_ON_PLAY: Long = ACTION_PAUSE or ACTION_SKIP_TO_NEXT or ACTION_SKIP_TO_PREVIOUS
-    private const val ACTIONS_ON_PAUSE: Long = ACTION_PLAY or ACTION_SKIP_TO_NEXT or ACTION_SKIP_TO_PREVIOUS
+    private const val ACTIONS_ON_PLAY: Long = ACTION_PAUSE or ACTION_SKIP_TO_NEXT or ACTION_SKIP_TO_PREVIOUS or ACTION_SEEK_TO
+    private const val ACTIONS_ON_PAUSE: Long = ACTION_PLAY or ACTION_SKIP_TO_NEXT or ACTION_SKIP_TO_PREVIOUS or ACTION_SEEK_TO
 
     //TODO
     override fun onPlay() {
@@ -89,6 +90,7 @@ object MP3PlayerCarCallBack : MediaSessionCompat.Callback() {
         val mediaSession: MediaSessionCompat = MP3PlayerCarMusicService.session
         mediaSession.setMetadata(
             MediaMetadataCompat.Builder()
+                .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, music.id.toString())
                 .putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_TITLE, music.title)
                 .putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE, music.artist?.title)
                 .build()
@@ -103,11 +105,18 @@ object MP3PlayerCarCallBack : MediaSessionCompat.Callback() {
      */
     private fun setPlaybackState(state: Int, actions: Long) {
         val playbackController: PlaybackController = PlaybackController.getInstance()
+        val musicPlaying: Music = playbackController.musicPlaying.value!!
         val currentPosition: Long = playbackController.getCurrentPosition()
+        val extras: Bundle = Bundle()
+        extras.putString(
+            MediaConstants.PLAYBACK_STATE_EXTRAS_KEY_MEDIA_ID,
+            musicPlaying.id.toString())
+
         val playbackState = PlaybackStateCompat.Builder()
             .setState(state, currentPosition, 1F)
             .setActions(actions)
-            .setActiveQueueItemId(playbackController.musicPlaying.value!!.id)
+            .setActiveQueueItemId(musicPlaying.id)
+            .setExtras(extras)
         MP3PlayerCarMusicService.session.setPlaybackState(playbackState.build())
     }
 

@@ -111,15 +111,13 @@ object MP3PlayerCarCallBack : MediaSessionCompat.Callback() {
     private fun updateMediaPlaying() {
         val playbackController: PlaybackController = PlaybackController.getInstance()
         val music: Music = playbackController.musicPlaying.value!!
-        val mediaSession: MediaSessionCompat = MP3PlayerCarMusicService.session
-        mediaSession.setMetadata(
-            MediaMetadataCompat.Builder()
-                .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, music.id.toString())
-                .putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_TITLE, music.title)
-                .putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE, music.artist?.title)
-                .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, music.duration)
-                .build()
-        )
+        val metaData: MediaMetadataCompat = MediaMetadataCompat.Builder()
+            .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, music.id.toString())
+            .putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_TITLE, music.title)
+            .putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE, music.artist?.title)
+            .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, music.duration)
+            .build()
+        MP3PlayerCarMusicService.session.setMetadata(metaData)
     }
 
     /**

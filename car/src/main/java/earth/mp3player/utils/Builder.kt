@@ -94,6 +94,13 @@ fun buildMediaItem(media: Media): MediaBrowserCompat.MediaItem {
         MediaConstants.DESCRIPTION_EXTRAS_KEY_CONTENT_STYLE_GROUP_TITLE,
         description
     )
+    if (media is Music) {
+        extras.putInt(
+            MediaConstants.DESCRIPTION_EXTRAS_KEY_COMPLETION_STATUS,
+            MediaConstants.DESCRIPTION_EXTRAS_VALUE_COMPLETION_STATUS_NOT_PLAYED
+        )
+        extras.putDouble(MediaConstants.DESCRIPTION_EXTRAS_KEY_COMPLETION_PERCENTAGE, 0.0)
+    }
     return buildMediaItem(
         id = media.id.toString(),
         description = description,

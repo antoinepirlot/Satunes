@@ -107,6 +107,7 @@ object MP3PlayerCarCallBack : MediaSessionCompat.Callback() {
                 .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, music.id.toString())
                 .putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_TITLE, music.title)
                 .putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE, music.artist?.title)
+                .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, music.duration)
                 .build()
         )
     }

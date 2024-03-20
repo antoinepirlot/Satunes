@@ -58,6 +58,9 @@ object MP3PlayerCarCallBack : MediaSessionCompat.Callback() {
     //TODO
     override fun onPlay() {
         val playbackController: PlaybackController = PlaybackController.getInstance()
+        if (!playbackController.isLoaded.value) {
+            return
+        }
         playbackController.play()
         updatePlaybackState(state = STATE_PLAYING, actions = ACTIONS_ON_PLAY)
     }

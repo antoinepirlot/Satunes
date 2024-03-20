@@ -127,12 +127,13 @@ object MP3PlayerCarCallBack : MediaSessionCompat.Callback() {
             musicPlaying.id.toString()
         )
 
-        val playbackState = PlaybackStateCompat.Builder()
+        val playbackState: PlaybackStateCompat = PlaybackStateCompat.Builder()
             .setState(state, currentPosition, 1F)
             .setActions(actions)
             .setActiveQueueItemId(musicPlaying.id)
             .setExtras(extras)
-        MP3PlayerCarMusicService.session.setPlaybackState(playbackState.build())
+            .build()
+        MP3PlayerCarMusicService.session.setPlaybackState(playbackState)
     }
 
     /**

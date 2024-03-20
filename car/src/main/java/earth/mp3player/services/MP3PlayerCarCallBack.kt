@@ -73,6 +73,7 @@ object MP3PlayerCarCallBack : MediaSessionCompat.Callback() {
     override fun onSeekTo(position: Long) {
         val playbackController: PlaybackController = PlaybackController.getInstance()
         playbackController.seekTo(positionMs = position)
+        this.setPlaybackState(STATE_PLAYING, ACTIONS_ON_PLAY)
     }
 
     override fun onPlayFromMediaId(mediaId: String, extras: Bundle?) {

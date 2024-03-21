@@ -9,6 +9,24 @@ If you decide to use my code to create new app, you can but you have to use the 
 
 # UPDATES
 
+## 0.5 (Android Upside Down Cake and later)
+
+### 0.5.0-beta
+
+Features:
+
+* Android Auto support
+  * To activate app: in Android Auto go to android auto settings.
+    1) Multiple click on "Version" to activate dev mode. 
+    2) Go to Dev's settings and activate Unknown sources" as this app is not published on Google Play Store.
+    3) Add app in launcher.
+    4) Enjoy
+
+Fix issues:
+
+* Optimisation
+* Show all music information on notification
+
 ## 0.4 (Android Upside Down Cake and later)
 
 ### 0.4.2-beta

@@ -16,11 +16,12 @@ If you decide to use my code to create new app, you can but you have to use the 
 Features:
 
 * Android Auto support
-  * To activate app: in Android Auto go to android auto settings.
-    1) Multiple click on "Version" to activate dev mode. 
-    2) Go to Dev's settings and activate Unknown sources" as this app is not published on Google Play Store.
-    3) Add app in launcher.
-    4) Enjoy
+  * To activate app in Android Auto:
+    1) Go to Android Auto settings.
+    2) Multiple click on "Version" to activate dev mode. 
+    3) Go to Dev's settings and activate Unknown sources" as this app is not published on Google Play Store.
+    4) Add app in launcher.
+    5) Enjoy
 
 Fix issues:
 

@@ -129,6 +129,7 @@ object MP3PlayerCarCallBack : MediaSessionCompat.Callback() {
                 if (musicPlaying != playbackController.musicPlaying.value) {
                     musicPlaying = playbackController.musicPlaying.value!!
                     updateMediaPlaying()
+                    updatePlaybackState(STATE_PLAYING, ACTIONS_ON_PLAY)
                 }
                 delay(1000) // Wait one second to avoid refreshing all the time
             }

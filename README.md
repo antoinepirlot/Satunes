@@ -19,7 +19,7 @@ Features:
   * To activate app in Android Auto:
     1) Go to Android Auto settings.
     2) Multiple click on "Version" to activate dev mode. 
-    3) Go to Dev's settings and activate Unknown sources" as this app is not published on Google Play Store.
+    3) Go to Dev's settings and activate "Unknown sources" as this app is not published on Google Play Store.
     4) Add app in launcher.
     5) Enjoy
 

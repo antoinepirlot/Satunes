@@ -162,7 +162,7 @@ object MP3PlayerCarCallBack : MediaSessionCompat.Callback() {
         val playbackController: PlaybackController = PlaybackController.getInstance()
         val musicPlaying: Music = playbackController.musicPlaying.value!!
         val currentPosition: Long = playbackController.getCurrentPosition()
-        val extras: Bundle = Bundle()
+        val extras = Bundle()
         extras.putString(
             MediaConstants.PLAYBACK_STATE_EXTRAS_KEY_MEDIA_ID,
             musicPlaying.id.toString()

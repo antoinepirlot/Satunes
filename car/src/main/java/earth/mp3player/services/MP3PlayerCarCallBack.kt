@@ -119,20 +119,21 @@ object MP3PlayerCarCallBack : MediaSessionCompat.Callback() {
         if (updatingMediaData) {
             return
         }
-        updateMediaPlaying()
         updatingMediaData = true
         //TODO make android auto do it instead of this coroutine
         CoroutineScope(Dispatchers.Main).launch {
+            updateMediaPlaying()
             val playbackController: PlaybackController = PlaybackController.getInstance()
             var musicPlaying: Music = playbackController.musicPlaying.value!!
             while (playbackController.isPlaying.value) {
+                updatePlaybackState(STATE_PLAYING, ACTIONS_ON_PLAY)
                 if (musicPlaying != playbackController.musicPlaying.value) {
                     musicPlaying = playbackController.musicPlaying.value!!
                     updateMediaPlaying()
-                    updatePlaybackState(STATE_PLAYING, ACTIONS_ON_PLAY)
                 }
                 delay(1000) // Wait one second to avoid refreshing all the time
             }
+            updatePlaybackState(STATE_PAUSED, ACTIONS_ON_PAUSE)
             updatingMediaData = false
         }
     }

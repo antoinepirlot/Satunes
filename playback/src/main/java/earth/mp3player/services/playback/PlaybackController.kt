@@ -170,7 +170,6 @@ class PlaybackController private constructor(
             updateHasNext()
             updateHasPrevious()
             mediaController.play()
-            isEnded = DEFAULT_IS_ENDED
         }
 
         private fun next(repeatMode: Int) {

@@ -69,4 +69,20 @@ object DataManager {
     val artistMap: SortedMap<String, Artist> = sortedMapOf()
     val albumMap: SortedMap<String, Album> = sortedMapOf()
     val genreMap: SortedMap<String, Genre> = sortedMapOf()
+
+    fun getArtist(artistId: Long): Artist {
+        return artistMap.values.first { it.id == artistId }
+    }
+
+    fun getAlbum(albumId: Long): Album {
+        return albumMap.values.first { it.id == albumId }
+    }
+
+    fun getFolder(folderId: Long): Folder {
+        return folderMap[folderId]!!
+    }
+
+    fun getGenre(genreId: Long): Genre {
+        return genreMap.values.first { it.id == genreId }
+    }
 }

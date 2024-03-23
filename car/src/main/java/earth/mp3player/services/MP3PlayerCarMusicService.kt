@@ -31,9 +31,6 @@ import android.support.v4.media.MediaBrowserCompat.MediaItem
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.MediaSessionCompat.QueueItem
 import androidx.media.MediaBrowserServiceCompat
-import earth.mp3player.models.Album
-import earth.mp3player.models.Artist
-import earth.mp3player.models.Genre
 import earth.mp3player.models.Media
 import earth.mp3player.models.Music
 import earth.mp3player.pages.ScreenPages
@@ -203,39 +200,17 @@ class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
      * @return a mutable list of media item.
      */
     private fun getAllMediaMediaItemList(mediaId: Long): MutableList<MediaItem> {
-        var media: Media? = null
-        when (routeDeque.oneBeforeLast()) {
-            //TODO OPTIMISATION NEEDED (Use media interface)
-            ScreenPages.ROOT.id, ScreenPages.ALL_MUSICS.id -> throw IllegalStateException("An error occurred in the route processing")
-            ScreenPages.ALL_FOLDERS.id -> media = DataManager.folderMap[mediaId]!!
-            ScreenPages.ALL_ARTISTS.id -> {
-                DataManager.artistMap.forEach { (_, artist: Artist) ->
-                    if (artist.id == mediaId) {
-                        media = artist
-                        return@forEach
-                    }
-                }
-            }
+        val oneBeforeLastRoute: String = routeDeque.oneBeforeLast()
+        if (oneBeforeLastRoute == ScreenPages.ROOT.id || oneBeforeLastRoute == ScreenPages.ALL_MUSICS.id) {
+            throw IllegalStateException("An error occurred in the route processing")
+        }
 
-            ScreenPages.ALL_ALBUMS.id -> {
-                val id: Long = mediaId
-                DataManager.albumMap.forEach { (_, album: Album) ->
-                    if (album.id == id) {
-                        media = album
-                        return@forEach
-                    }
-                }
-            }
-
-            ScreenPages.ALL_GENRES.id -> {
-                val id: Long = mediaId
-                DataManager.genreMap.forEach { (_, genre: Genre) ->
-                    if (genre.id == id) {
-                        media = genre
-                        return@forEach
-                    }
-                }
-            }
+        val media: Media? = when (oneBeforeLastRoute) {
+            ScreenPages.ALL_FOLDERS.id -> DataManager.getFolder(folderId = mediaId)
+            ScreenPages.ALL_ARTISTS.id -> DataManager.getArtist(artistId = mediaId)
+            ScreenPages.ALL_ALBUMS.id -> DataManager.getAlbum(albumId = mediaId)
+            ScreenPages.ALL_GENRES.id -> DataManager.getGenre(genreId = mediaId)
+            else -> null
         }
 
         return this.getAllMediaMediaItemList(

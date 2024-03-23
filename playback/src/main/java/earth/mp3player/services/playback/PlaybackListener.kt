@@ -38,7 +38,7 @@ import kotlinx.coroutines.launch
 /**
  * @author Antoine Pirlot on 23/03/2024
  */
-object PlaybackListener : Player.Listener {
+open class PlaybackListener : Player.Listener {
 
     override fun onPlaybackStateChanged(playbackState: Int) {
         super.onPlaybackStateChanged(playbackState)

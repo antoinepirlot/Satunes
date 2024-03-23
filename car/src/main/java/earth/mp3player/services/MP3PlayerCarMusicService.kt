@@ -70,6 +70,7 @@ class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
 
         //Init playback
         playbackController = PlaybackController.initInstance(baseContext)
+        playbackController.listener = MP3CarPlaybackListener
         while (DataLoader.isLoading) {
             //Wait loading finished
         }

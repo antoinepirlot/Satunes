@@ -72,6 +72,8 @@ class PlaybackController private constructor(
     var currentPositionProgression: MutableFloatState =
         mutableFloatStateOf(DEFAULT_CURRENT_POSITION_PROGRESSION)
 
+    var listener: Player.Listener = PlaybackListener()
+
     init {
         val controllerFuture = MediaController.Builder(context, sessionToken).buildAsync()
 
@@ -128,8 +130,6 @@ class PlaybackController private constructor(
             return getInstance()
         }
     }
-
-    private val listener = PlaybackListener
 
     /**
      * Start the playback.

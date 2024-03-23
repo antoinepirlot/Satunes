@@ -209,7 +209,6 @@ class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
             ScreenPages.ROOT.id, ScreenPages.ALL_MUSICS.id -> throw IllegalStateException("An error occurred in the route processing")
             ScreenPages.ALL_FOLDERS.id -> media = DataManager.folderMap[mediaId]!!
             ScreenPages.ALL_ARTISTS.id -> {
-                //TODO create artist map with id
                 DataManager.artistMap.forEach { (_, artist: Artist) ->
                     if (artist.id == mediaId) {
                         media = artist
@@ -219,7 +218,6 @@ class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
             }
 
             ScreenPages.ALL_ALBUMS.id -> {
-                //TODO create album map with id
                 val id: Long = mediaId
                 DataManager.albumMap.forEach { (_, album: Album) ->
                     if (album.id == id) {
@@ -230,7 +228,6 @@ class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
             }
 
             ScreenPages.ALL_GENRES.id -> {
-                //TODO create genre map with id
                 val id: Long = mediaId
                 DataManager.genreMap.forEach { (_, genre: Genre) ->
                     if (genre.id == id) {
@@ -240,6 +237,7 @@ class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
                 }
             }
         }
+
         return this.getAllMediaMediaItemList(
             mediaList = media?.musicMediaItemSortedMap?.keys?.toList() ?: mutableListOf()
         )

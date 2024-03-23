@@ -30,15 +30,13 @@ import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat.MediaItem
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.MediaSessionCompat.QueueItem
+import android.support.v4.media.session.PlaybackStateCompat.STATE_PAUSED
+import android.support.v4.media.session.PlaybackStateCompat.STATE_PLAYING
 import androidx.media.MediaBrowserServiceCompat
-import earth.mp3player.models.Album
-import earth.mp3player.models.Artist
-import earth.mp3player.models.Genre
 import earth.mp3player.models.Media
 import earth.mp3player.models.Music
 import earth.mp3player.pages.ScreenPages
 import earth.mp3player.pages.pages
-import earth.mp3player.services.data.DataLoader
 import earth.mp3player.services.data.DataManager
 import earth.mp3player.services.playback.PlaybackController
 import earth.mp3player.utils.buildMediaItem
@@ -72,9 +70,27 @@ class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
         routeDeque.resetRouteDeque()
 
         //Init playback
-        playbackController = PlaybackController.initInstance(baseContext)
-        if (!DataLoader.isLoaded && !DataLoader.isLoading) {
-            DataLoader.loadAllData(baseContext)
+        playbackController =
+            PlaybackController.initInstance(baseContext, listener = MP3CarPlaybackListener)
+        if (playbackController.isLoaded.value) {
+            loadAllPlaybackData()
+        }
+    }
+
+    private fun loadAllPlaybackData() {
+        val playbackController: PlaybackController = PlaybackController.getInstance()
+        getAllMediaMediaItemList(playbackController.playlist.musicList)
+        MP3CarPlaybackListener.updateMediaPlaying()
+        if (playbackController.isPlaying.value) {
+            MP3CarPlaybackListener.updatePlaybackState(
+                state = STATE_PLAYING,
+                actions = MP3PlayerCarCallBack.ACTIONS_ON_PLAY
+            )
+        } else {
+            MP3CarPlaybackListener.updatePlaybackState(
+                state = STATE_PAUSED,
+                actions = MP3PlayerCarCallBack.ACTIONS_ON_PAUSE
+            )
         }
     }
 
@@ -200,43 +216,19 @@ class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
      * @return a mutable list of media item.
      */
     private fun getAllMediaMediaItemList(mediaId: Long): MutableList<MediaItem> {
-        var media: Media? = null
-        when (routeDeque.oneBeforeLast()) {
-            //TODO OPTIMISATION NEEDED (Use media interface)
-            ScreenPages.ROOT.id, ScreenPages.ALL_MUSICS.id -> throw IllegalStateException("An error occurred in the route processing")
-            ScreenPages.ALL_FOLDERS.id -> media = DataManager.folderMap[mediaId]!!
-            ScreenPages.ALL_ARTISTS.id -> {
-                //TODO create artist map with id
-                DataManager.artistMap.forEach { (_, artist: Artist) ->
-                    if (artist.id == mediaId) {
-                        media = artist
-                        return@forEach
-                    }
-                }
-            }
-
-            ScreenPages.ALL_ALBUMS.id -> {
-                //TODO create album map with id
-                val id: Long = mediaId
-                DataManager.albumMap.forEach { (_, album: Album) ->
-                    if (album.id == id) {
-                        media = album
-                        return@forEach
-                    }
-                }
-            }
-
-            ScreenPages.ALL_GENRES.id -> {
-                //TODO create genre map with id
-                val id: Long = mediaId
-                DataManager.genreMap.forEach { (_, genre: Genre) ->
-                    if (genre.id == id) {
-                        media = genre
-                        return@forEach
-                    }
-                }
-            }
+        val oneBeforeLastRoute: String = routeDeque.oneBeforeLast()
+        if (oneBeforeLastRoute == ScreenPages.ROOT.id || oneBeforeLastRoute == ScreenPages.ALL_MUSICS.id) {
+            throw IllegalStateException("An error occurred in the route processing")
         }
+
+        val media: Media? = when (oneBeforeLastRoute) {
+            ScreenPages.ALL_FOLDERS.id -> DataManager.getFolder(folderId = mediaId)
+            ScreenPages.ALL_ARTISTS.id -> DataManager.getArtist(artistId = mediaId)
+            ScreenPages.ALL_ALBUMS.id -> DataManager.getAlbum(albumId = mediaId)
+            ScreenPages.ALL_GENRES.id -> DataManager.getGenre(genreId = mediaId)
+            else -> null
+        }
+
         return this.getAllMediaMediaItemList(
             mediaList = media?.musicMediaItemSortedMap?.keys?.toList() ?: mutableListOf()
         )

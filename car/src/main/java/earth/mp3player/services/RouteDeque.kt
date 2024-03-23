@@ -47,15 +47,6 @@ class RouteDeque {
         this.routeDeque.addFirst(ScreenPages.ROOT.id)
     }
 
-    fun backTo(route: String) {
-        if (!this.routeDeque.contains(route)) {
-            throw IllegalArgumentException("This route has not been added to the route dequeue.")
-        }
-        while (this.routeDeque.last() != route) {
-            this.routeDeque.removeLast()
-        }
-    }
-
     fun addLast(route: String) {
         if (!this.routeDeque.contains(route)) {
             this.routeDeque.addLast(route)
@@ -76,21 +67,5 @@ class RouteDeque {
             throw ArrayIndexOutOfBoundsException("The index is $index and is out of bound")
         }
         return this.routeDeque[index]
-    }
-
-    /**
-     * Return the index of the specified route. -1 if the route doesn't exist.
-     *
-     * @param route the route to get index
-     *
-     * @return the route index or -1 if no route was found.
-     */
-    fun getIndex(route: String): Int {
-        for (i: Int in this.routeDeque.indices) {
-            if (this.get(index = i) == route) {
-                return i
-            }
-        }
-        return -1
     }
 }

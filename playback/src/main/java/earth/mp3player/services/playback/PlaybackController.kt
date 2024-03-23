@@ -28,7 +28,6 @@ package earth.mp3player.services.playback
 import android.content.ComponentName
 import android.content.Context
 import android.os.Environment
-import androidx.annotation.OptIn
 import androidx.compose.runtime.MutableFloatState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableFloatStateOf
@@ -37,16 +36,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.core.content.ContextCompat
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
-import androidx.media3.common.util.UnstableApi
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
 import earth.mp3player.models.Music
 import earth.mp3player.models.Playlist
+import earth.mp3player.services.data.DataLoader
 import earth.mp3player.services.data.DataManager
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import java.util.SortedMap
 
 /**
@@ -58,12 +53,14 @@ class PlaybackController private constructor(
     sessionToken: SessionToken,
     musicMediaItemSortedMap: SortedMap<Music, MediaItem>,
 ) {
-    private lateinit var mediaController: MediaController
+    internal lateinit var mediaController: MediaController
 
-    private var playlist: Playlist
-    private var musicPlayingIndex: Int = DEFAULT_MUSIC_PLAYING_INDEX
-    private var isEnded: Boolean = DEFAULT_IS_ENDED
-    private var isUpdatingPosition: Boolean = DEFAULT_IS_UPDATING_POSITION
+    var playlist: Playlist
+        internal set
+
+    internal var musicPlayingIndex: Int = DEFAULT_MUSIC_PLAYING_INDEX
+    internal var isEnded: Boolean = DEFAULT_IS_ENDED
+    internal var isUpdatingPosition: Boolean = DEFAULT_IS_UPDATING_POSITION
 
 
     // Mutable var are used in ui, it needs to be recomposed
@@ -78,6 +75,8 @@ class PlaybackController private constructor(
     var currentPositionProgression: MutableFloatState =
         mutableFloatStateOf(DEFAULT_CURRENT_POSITION_PROGRESSION)
 
+    private var listener: Player.Listener = PlaybackListener()
+
     init {
         val controllerFuture = MediaController.Builder(context, sessionToken).buildAsync()
 
@@ -87,139 +86,10 @@ class PlaybackController private constructor(
 
         this.playlist = Playlist(musicMediaItemSortedMap = musicMediaItemSortedMap)
     }
-
-    private val listener = object : Player.Listener {
-        override fun onPlaybackStateChanged(playbackState: Int) {
-            super.onPlaybackStateChanged(playbackState)
-
-            if (playbackState == Player.STATE_ENDED) {
-                isEnded = !DEFAULT_IS_ENDED
-            }
-        }
-
-        override fun onShuffleModeEnabledChanged(shuffleModeEnabled: Boolean) {
-            // Do nothing
-        }
-
-        override fun onIsPlayingChanged(isPlaying: Boolean) {
-            super.onIsPlayingChanged(isPlaying)
-
-            instance.isPlaying.value = isPlaying
-            isEnded = DEFAULT_IS_ENDED
-            updateCurrentPosition()
-        }
-
-        /**
-         * Prevents MediaController to shuffle music
-         */
-        @OptIn(UnstableApi::class)
-        override fun onEvents(player: Player, events: Player.Events) {
-            super.onEvents(player, events)
-
-            if (events.contains(Player.EVENT_SHUFFLE_MODE_ENABLED_CHANGED)) {
-                //Stop making media controller shuffled
-                //Shuffle is managed by PlaybackController not by media controller.
-                //This line avoid mismatch with song on screen and the one playing
-                player.shuffleModeEnabled = false
-            }
-        }
-
-        override fun onPositionDiscontinuity(
-            oldPosition: Player.PositionInfo,
-            newPosition: Player.PositionInfo,
-            reason: Int
-        ) {
-            super.onPositionDiscontinuity(oldPosition, newPosition, reason)
-
-            currentPositionProgression.floatValue =
-                if (musicPlaying.value == null) {
-                    0f
-                } else {
-                    newPosition.positionMs.toFloat() / musicPlaying.value!!.duration
-                }
-        }
-
-        override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
-            super.onMediaItemTransition(mediaItem, reason)
-
-            if (musicPlaying.value == null || playlist.musicCount() <= 1) {
-                //Fix issue while loading for the first time
-                return
-            }
-
-            if (mediaItem != musicPlaying.value!!.mediaItem) {
-                if (
-                    reason == Player.MEDIA_ITEM_TRANSITION_REASON_SEEK
-                    || reason == Player.MEDIA_ITEM_TRANSITION_REASON_AUTO
-                ) {
-                    val previousMusic: Music? =
-                        if (musicPlayingIndex != DEFAULT_MUSIC_PLAYING_INDEX) playlist.musicList[musicPlayingIndex - 1]
-                        else null
-
-                    if (previousMusic == null || mediaItem != previousMusic.mediaItem) {
-                        // Next button has been clicked
-                        next(repeatMode = repeatMode.value)
-                    } else {
-                        // Previous button has been clicked
-                        previous(repeatMode = repeatMode.value)
-                    }
-                }
-            }
-
-            musicPlaying.value = playlist.musicList[musicPlayingIndex]
-            updateHasNext()
-            updateHasPrevious()
-            mediaController.play()
-            isEnded = DEFAULT_IS_ENDED
-        }
-
-        private fun next(repeatMode: Int) {
-            // The next button has been clicked
-            when (repeatMode) {
-                Player.REPEAT_MODE_OFF, Player.REPEAT_MODE_ONE -> {
-                    musicPlayingIndex++
-                }
-
-                Player.REPEAT_MODE_ALL -> {
-                    if (musicPlayingIndex + 1 == playlist.musicList.size) {
-                        musicPlayingIndex = 0
-                    } else {
-                        musicPlayingIndex++
-                    }
-                }
-            }
-        }
-
-        private fun previous(repeatMode: Int) {
-            when (repeatMode) {
-                Player.REPEAT_MODE_OFF, Player.REPEAT_MODE_ONE -> {
-                    musicPlayingIndex--
-                }
-
-                Player.REPEAT_MODE_ALL -> {
-                    if (musicPlayingIndex == DEFAULT_MUSIC_PLAYING_INDEX) {
-                        musicPlayingIndex = playlist.musicList.lastIndex
-                    } else {
-                        musicPlayingIndex--
-                    }
-                }
-            }
-        }
-    }
-
-
-    private fun updateHasPrevious() {
-        this.hasPrevious.value = musicPlaying.value != this.playlist.musicList.last()
-    }
-
-    private fun updateHasNext() {
-        this.hasNext.value = musicPlaying.value != playlist.musicList.last()
-    }
-
     companion object {
-        private const val DEFAULT_MUSIC_PLAYING_INDEX: Int = 0
-        private const val DEFAULT_IS_UPDATING_POSITION: Boolean = false
-        private const val DEFAULT_IS_ENDED: Boolean = false
+        internal const val DEFAULT_MUSIC_PLAYING_INDEX: Int = 0
+        internal const val DEFAULT_IS_UPDATING_POSITION: Boolean = false
+        internal const val DEFAULT_IS_ENDED: Boolean = false
 
         const val DEFAULT_IS_PLAYING_VALUE: Boolean = false
         const val DEFAULT_REPEAT_MODE: Int = Player.REPEAT_MODE_OFF
@@ -248,7 +118,7 @@ class PlaybackController private constructor(
             return instance
         }
 
-        fun initInstance(context: Context): PlaybackController {
+        fun initInstance(context: Context, listener: Player.Listener? = null): PlaybackController {
             if (!Companion::instance.isInitialized) {
                 val sessionToken =
                     SessionToken(context, ComponentName(context, PlaybackService::class.java))
@@ -258,6 +128,26 @@ class PlaybackController private constructor(
                     sessionToken = sessionToken,
                     musicMediaItemSortedMap = DataManager.musicMediaItemSortedMap,
                 )
+            } else if (listener != null) {
+                while (!instance::mediaController.isInitialized) {
+                    // Wait it is initialized
+                }
+                val wasPlaying: Boolean = instance.isPlaying.value
+                if (instance.isPlaying.value) {
+                    instance.pause()
+                }
+                instance.mediaController.removeListener(instance.listener)
+                instance.mediaController.addListener(listener)
+                instance.mediaController.prepare()
+                if (wasPlaying) {
+                    instance.play()
+                }
+            }
+
+            instance.listener = listener ?: instance.listener
+
+            if (!DataLoader.isLoaded) {
+                DataLoader.loadAllData(context)
             }
 
             return getInstance()
@@ -304,8 +194,11 @@ class PlaybackController private constructor(
                 }
             }
         }
-
-        this.mediaController.seekTo(this.musicPlayingIndex, 0)
+        if (this.mediaController.currentMediaItemIndex == this.musicPlayingIndex) {
+            this.mediaController.play()
+        } else {
+            this.mediaController.seekTo(this.musicPlayingIndex, 0)
+        }
     }
 
     fun playPause() {
@@ -368,37 +261,6 @@ class PlaybackController private constructor(
         val newPosition: Long = (positionPercentage * maxPosition).toLong()
 
         this.seekTo(positionMs = newPosition)
-    }
-
-    /**
-     * Launch a coroutine where the currentPositionProgression is updated every 1 second.
-     * If this function is already running, just return by using isUpdatingPosition.
-     */
-    private fun updateCurrentPosition() {
-        if (this.isUpdatingPosition || musicPlaying.value == null) {
-            return
-        }
-
-        CoroutineScope(Dispatchers.Main).launch {
-            isUpdatingPosition = !DEFAULT_IS_UPDATING_POSITION
-
-            while (isPlaying.value) {
-                val maxPosition: Long = musicPlaying.value!!.duration
-                val newPosition: Long = mediaController.currentPosition
-
-                currentPositionProgression.floatValue =
-                    newPosition.toFloat() / maxPosition.toFloat()
-
-                delay(1000) // Wait one second to avoid refreshing all the time
-            }
-
-            if (isEnded) {
-                // It means the music has reached the end of playlist and the music is finished
-                currentPositionProgression.floatValue = 1f
-            }
-
-            isUpdatingPosition = DEFAULT_IS_UPDATING_POSITION
-        }
     }
 
     /**

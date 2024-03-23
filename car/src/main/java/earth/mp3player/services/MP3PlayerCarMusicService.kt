@@ -73,6 +73,9 @@ class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
 
         //Init playback
         playbackController = PlaybackController.initInstance(baseContext)
+        while (DataLoader.isLoading) {
+            //Wait loading finished
+        }
         if (!DataLoader.isLoaded && !DataLoader.isLoading) {
             DataLoader.loadAllData(baseContext)
         }

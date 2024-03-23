@@ -68,7 +68,8 @@ class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
         routeDeque.resetRouteDeque()
 
         //Init playback
-        playbackController = PlaybackController.initInstance(baseContext)
+        playbackController =
+            PlaybackController.initInstance(baseContext, listener = MP3CarPlaybackListener)
     }
 
     @SuppressLint("MissingSuperCall")

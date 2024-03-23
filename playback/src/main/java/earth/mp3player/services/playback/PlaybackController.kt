@@ -86,7 +86,6 @@ class PlaybackController private constructor(
         }, ContextCompat.getMainExecutor(context))
 
         this.playlist = Playlist(musicMediaItemSortedMap = musicMediaItemSortedMap)
-        //PlaybackService.mediaSession.player.mediaMetadata.
     }
 
     private val listener = object : Player.Listener {

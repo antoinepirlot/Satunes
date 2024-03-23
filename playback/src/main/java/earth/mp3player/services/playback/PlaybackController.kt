@@ -178,7 +178,11 @@ class PlaybackController private constructor(
                 }
             }
         }
-        this.mediaController.seekTo(this.musicPlayingIndex, 0)
+        if (this.mediaController.currentMediaItemIndex == this.musicPlayingIndex) {
+            this.mediaController.play()
+        } else {
+            this.mediaController.seekTo(this.musicPlayingIndex, 0)
+        }
     }
 
     fun playPause() {

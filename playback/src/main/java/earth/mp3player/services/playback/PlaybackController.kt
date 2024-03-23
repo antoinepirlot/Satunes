@@ -86,7 +86,6 @@ class PlaybackController private constructor(
         }, ContextCompat.getMainExecutor(context))
 
         this.playlist = Playlist(musicMediaItemSortedMap = musicMediaItemSortedMap)
-        //PlaybackService.mediaSession.player.mediaMetadata.
     }
 
     private val listener = object : Player.Listener {
@@ -307,11 +306,6 @@ class PlaybackController private constructor(
         }
 
         this.mediaController.seekTo(this.musicPlayingIndex, 0)
-        this.mediaController.play()
-        this.isPlaying.value = true
-        this.isEnded = DEFAULT_IS_ENDED
-        this.updateHasNext()
-        this.updateHasPrevious()
     }
 
     fun playPause() {

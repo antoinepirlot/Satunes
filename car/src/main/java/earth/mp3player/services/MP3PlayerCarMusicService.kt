@@ -35,7 +35,6 @@ import earth.mp3player.models.Media
 import earth.mp3player.models.Music
 import earth.mp3player.pages.ScreenPages
 import earth.mp3player.pages.pages
-import earth.mp3player.services.data.DataLoader
 import earth.mp3player.services.data.DataManager
 import earth.mp3player.services.playback.PlaybackController
 import earth.mp3player.utils.buildMediaItem
@@ -70,13 +69,6 @@ class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
 
         //Init playback
         playbackController = PlaybackController.initInstance(baseContext)
-        playbackController.listener = MP3CarPlaybackListener
-        while (DataLoader.isLoading) {
-            //Wait loading finished
-        }
-        if (!DataLoader.isLoaded) {
-            DataLoader.loadAllData(baseContext)
-        }
     }
 
     @SuppressLint("MissingSuperCall")

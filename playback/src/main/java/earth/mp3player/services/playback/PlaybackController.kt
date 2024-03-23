@@ -40,6 +40,7 @@ import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
 import earth.mp3player.models.Music
 import earth.mp3player.models.Playlist
+import earth.mp3player.services.data.DataLoader
 import earth.mp3player.services.data.DataManager
 import java.util.SortedMap
 
@@ -72,7 +73,7 @@ class PlaybackController private constructor(
     var currentPositionProgression: MutableFloatState =
         mutableFloatStateOf(DEFAULT_CURRENT_POSITION_PROGRESSION)
 
-    var listener: Player.Listener = PlaybackListener()
+    private var listener: Player.Listener = PlaybackListener()
 
     init {
         val controllerFuture = MediaController.Builder(context, sessionToken).buildAsync()
@@ -115,7 +116,7 @@ class PlaybackController private constructor(
             return instance
         }
 
-        fun initInstance(context: Context): PlaybackController {
+        fun initInstance(context: Context, listener: Player.Listener? = null): PlaybackController {
             if (!Companion::instance.isInitialized) {
                 val sessionToken =
                     SessionToken(context, ComponentName(context, PlaybackService::class.java))
@@ -125,6 +126,12 @@ class PlaybackController private constructor(
                     sessionToken = sessionToken,
                     musicMediaItemSortedMap = DataManager.musicMediaItemSortedMap,
                 )
+            }
+
+            instance.listener = listener ?: instance.listener
+
+            if (!DataLoader.isLoaded) {
+                DataLoader.loadAllData(context)
             }
 
             return getInstance()

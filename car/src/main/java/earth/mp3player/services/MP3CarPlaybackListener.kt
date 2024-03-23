@@ -56,6 +56,7 @@ object MP3CarPlaybackListener : PlaybackListener() {
         super.onMediaItemTransition(mediaItem, reason)
 
         updateMediaPlaying()
+        updatePlaybackState(state = STATE_PLAYING, actions = ACTIONS_ON_PLAY)
     }
 
     private fun updateMediaPlaying() {

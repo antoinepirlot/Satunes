@@ -126,6 +126,17 @@ class PlaybackController private constructor(
                     sessionToken = sessionToken,
                     musicMediaItemSortedMap = DataManager.musicMediaItemSortedMap,
                 )
+            } else if (listener != null) {
+                val wasPlaying: Boolean = instance.isPlaying.value
+                if (instance.isPlaying.value) {
+                    instance.pause()
+                }
+                instance.mediaController.removeListener(instance.listener)
+                instance.mediaController.addListener(listener)
+                instance.mediaController.prepare()
+                if (wasPlaying) {
+                    instance.play()
+                }
             }
 
             instance.listener = listener ?: instance.listener

@@ -55,7 +55,9 @@ class PlaybackController private constructor(
 ) {
     internal lateinit var mediaController: MediaController
 
-    internal var playlist: Playlist
+    var playlist: Playlist
+        internal set
+
     internal var musicPlayingIndex: Int = DEFAULT_MUSIC_PLAYING_INDEX
     internal var isEnded: Boolean = DEFAULT_IS_ENDED
     internal var isUpdatingPosition: Boolean = DEFAULT_IS_UPDATING_POSITION
@@ -127,6 +129,9 @@ class PlaybackController private constructor(
                     musicMediaItemSortedMap = DataManager.musicMediaItemSortedMap,
                 )
             } else if (listener != null) {
+                while (!instance::mediaController.isInitialized) {
+                    // Wait it is initialized
+                }
                 val wasPlaying: Boolean = instance.isPlaying.value
                 if (instance.isPlaying.value) {
                     instance.pause()

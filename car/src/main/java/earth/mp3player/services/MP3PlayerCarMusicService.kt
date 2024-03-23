@@ -30,6 +30,8 @@ import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat.MediaItem
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.MediaSessionCompat.QueueItem
+import android.support.v4.media.session.PlaybackStateCompat.STATE_PAUSED
+import android.support.v4.media.session.PlaybackStateCompat.STATE_PLAYING
 import androidx.media.MediaBrowserServiceCompat
 import earth.mp3player.models.Media
 import earth.mp3player.models.Music
@@ -70,6 +72,26 @@ class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
         //Init playback
         playbackController =
             PlaybackController.initInstance(baseContext, listener = MP3CarPlaybackListener)
+        if (playbackController.isLoaded.value) {
+            loadAllPlaybackData()
+        }
+    }
+
+    private fun loadAllPlaybackData() {
+        val playbackController: PlaybackController = PlaybackController.getInstance()
+        getAllMediaMediaItemList(playbackController.playlist.musicList)
+        MP3CarPlaybackListener.updateMediaPlaying()
+        if (playbackController.isPlaying.value) {
+            MP3CarPlaybackListener.updatePlaybackState(
+                state = STATE_PLAYING,
+                actions = MP3PlayerCarCallBack.ACTIONS_ON_PLAY
+            )
+        } else {
+            MP3CarPlaybackListener.updatePlaybackState(
+                state = STATE_PAUSED,
+                actions = MP3PlayerCarCallBack.ACTIONS_ON_PAUSE
+            )
+        }
     }
 
     @SuppressLint("MissingSuperCall")

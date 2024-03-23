@@ -59,8 +59,11 @@ object MP3CarPlaybackListener : PlaybackListener() {
         updatePlaybackState(state = STATE_PLAYING, actions = ACTIONS_ON_PLAY)
     }
 
-    private fun updateMediaPlaying() {
+    internal fun updateMediaPlaying() {
         val playbackController: PlaybackController = PlaybackController.getInstance()
+        if (!playbackController.isLoaded.value) {
+            return
+        }
         val musicPlaying: Music = playbackController.musicPlaying.value!!
         val metaData: MediaMetadataCompat = MediaMetadataCompat.Builder()
             .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, musicPlaying.id.toString())
@@ -80,8 +83,11 @@ object MP3CarPlaybackListener : PlaybackListener() {
      * @param state the state of playback.
      * @param actions to run if clicked on button in playback screen.
      */
-    private fun updatePlaybackState(state: Int, actions: Long) {
+    internal fun updatePlaybackState(state: Int, actions: Long) {
         val playbackController: PlaybackController = PlaybackController.getInstance()
+        if (!playbackController.isLoaded.value) {
+            return
+        }
         val musicPlaying: Music = playbackController.musicPlaying.value!!
         val currentPosition: Long = playbackController.getCurrentPosition()
         val extras = Bundle()

@@ -73,7 +73,7 @@ class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
         while (DataLoader.isLoading) {
             //Wait loading finished
         }
-        if (!DataLoader.isLoaded && !DataLoader.isLoading) {
+        if (!DataLoader.isLoaded) {
             DataLoader.loadAllData(baseContext)
         }
     }

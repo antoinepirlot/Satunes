@@ -171,9 +171,6 @@ class PlaybackController private constructor(
                 }
             }
         }
-        //Do it to avoid no synchronized state
-        isPlaying.value = true
-        isEnded = false
         this.mediaController.seekTo(this.musicPlayingIndex, 0)
     }
 

@@ -26,17 +26,12 @@
 package earth.mp3player.services
 
 import android.os.Bundle
-import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
-import android.support.v4.media.session.PlaybackStateCompat
 import android.support.v4.media.session.PlaybackStateCompat.ACTION_PAUSE
 import android.support.v4.media.session.PlaybackStateCompat.ACTION_PLAY
 import android.support.v4.media.session.PlaybackStateCompat.ACTION_SEEK_TO
 import android.support.v4.media.session.PlaybackStateCompat.ACTION_SKIP_TO_NEXT
 import android.support.v4.media.session.PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS
-import android.support.v4.media.session.PlaybackStateCompat.STATE_PAUSED
-import android.support.v4.media.session.PlaybackStateCompat.STATE_PLAYING
-import androidx.media.utils.MediaConstants
 import androidx.media3.common.MediaItem
 import earth.mp3player.models.Album
 import earth.mp3player.models.Artist
@@ -46,50 +41,39 @@ import earth.mp3player.models.Music
 import earth.mp3player.pages.ScreenPages
 import earth.mp3player.services.data.DataManager
 import earth.mp3player.services.playback.PlaybackController
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import java.util.SortedMap
 
 /**
  * @author Antoine Pirlot on 16/03/2024
  */
 object MP3PlayerCarCallBack : MediaSessionCompat.Callback() {
-    private const val ACTIONS_ON_PLAY: Long = ACTION_PAUSE or ACTION_SKIP_TO_NEXT or ACTION_SKIP_TO_PREVIOUS or ACTION_SEEK_TO
-    private const val ACTIONS_ON_PAUSE: Long = ACTION_PLAY or ACTION_SKIP_TO_NEXT or ACTION_SKIP_TO_PREVIOUS or ACTION_SEEK_TO
-    private var updatingMediaData: Boolean = false
+    internal const val ACTIONS_ON_PLAY: Long =
+        ACTION_PAUSE or ACTION_SKIP_TO_NEXT or ACTION_SKIP_TO_PREVIOUS or ACTION_SEEK_TO
+    internal const val ACTIONS_ON_PAUSE: Long =
+        ACTION_PLAY or ACTION_SKIP_TO_NEXT or ACTION_SKIP_TO_PREVIOUS or ACTION_SEEK_TO
 
-    //TODO
     override fun onPlay() {
         val playbackController: PlaybackController = PlaybackController.getInstance()
         if (!playbackController.isLoaded.value) {
             return
         }
         playbackController.play()
-        this.automaticMetaDataRefresh()
-        updatePlaybackState(state = STATE_PLAYING, actions = ACTIONS_ON_PLAY)
     }
 
     override fun onPause() {
         val playbackController: PlaybackController = PlaybackController.getInstance()
         playbackController.pause()
-        updatePlaybackState(state = STATE_PAUSED, actions = ACTIONS_ON_PAUSE)
     }
 
     override fun onSkipToQueueItem(queueId: Long) {
         val playbackController: PlaybackController = PlaybackController.getInstance()
         val musicToPlay: Music = DataManager.musicMediaItemSortedMap.keys.first { it.id == queueId }
         playbackController.start(musicToPlay = musicToPlay)
-        this.automaticMetaDataRefresh()
-        this.updatePlaybackState(STATE_PLAYING, ACTIONS_ON_PLAY)
     }
 
     override fun onSeekTo(position: Long) {
         val playbackController: PlaybackController = PlaybackController.getInstance()
         playbackController.seekTo(positionMs = position)
-        this.automaticMetaDataRefresh()
-        this.updatePlaybackState(STATE_PLAYING, ACTIONS_ON_PLAY)
     }
 
     override fun onPlayFromMediaId(mediaId: String, extras: Bundle?) {
@@ -97,85 +81,16 @@ object MP3PlayerCarCallBack : MediaSessionCompat.Callback() {
         val music: Music = DataManager.musicMediaItemSortedMap.keys.first { it.id == id }
         this.loadMusic()
         PlaybackController.getInstance().start(musicToPlay = music)
-        this.automaticMetaDataRefresh()
-        updatePlaybackState(state = STATE_PLAYING, actions = ACTIONS_ON_PLAY)
     }
 
     override fun onSkipToNext() {
         val playbackController: PlaybackController = PlaybackController.getInstance()
         playbackController.playNext()
-        this.automaticMetaDataRefresh()
-        this.updatePlaybackState(state = STATE_PLAYING, actions = ACTIONS_ON_PLAY)
     }
 
     override fun onSkipToPrevious() {
         val playbackController: PlaybackController = PlaybackController.getInstance()
         playbackController.playPrevious()
-        this.automaticMetaDataRefresh()
-        this.updatePlaybackState(state = STATE_PLAYING, actions = ACTIONS_ON_PLAY)
-    }
-
-    private fun automaticMetaDataRefresh() {
-        if (updatingMediaData) {
-            return
-        }
-        updatingMediaData = true
-        //TODO make android auto do it instead of this coroutine
-        CoroutineScope(Dispatchers.Main).launch {
-            updateMediaPlaying()
-            val playbackController: PlaybackController = PlaybackController.getInstance()
-            var musicPlaying: Music = playbackController.musicPlaying.value!!
-            while (playbackController.isPlaying.value) {
-                updatePlaybackState(STATE_PLAYING, ACTIONS_ON_PLAY)
-                if (musicPlaying != playbackController.musicPlaying.value) {
-                    musicPlaying = playbackController.musicPlaying.value!!
-                    updateMediaPlaying()
-                }
-                delay(1000) // Wait one second to avoid refreshing all the time
-            }
-            updatePlaybackState(STATE_PAUSED, ACTIONS_ON_PAUSE)
-            updatingMediaData = false
-        }
-    }
-
-    private fun updateMediaPlaying() {
-        val playbackController: PlaybackController = PlaybackController.getInstance()
-        val musicPlaying: Music = playbackController.musicPlaying.value!!
-        val metaData: MediaMetadataCompat = MediaMetadataCompat.Builder()
-            .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, musicPlaying.id.toString())
-            .putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_TITLE, musicPlaying.title)
-            .putString(
-                MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE,
-                musicPlaying.artist?.title
-            )
-            .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, musicPlaying.duration)
-            .build()
-        MP3PlayerCarMusicService.session.setMetadata(metaData)
-    }
-
-    /**
-     * Update the session playback.
-     *
-     * @param state the state of playback.
-     * @param actions to run if clicked on button in playback screen.
-     */
-    private fun updatePlaybackState(state: Int, actions: Long) {
-        val playbackController: PlaybackController = PlaybackController.getInstance()
-        val musicPlaying: Music = playbackController.musicPlaying.value!!
-        val currentPosition: Long = playbackController.getCurrentPosition()
-        val extras = Bundle()
-        extras.putString(
-            MediaConstants.PLAYBACK_STATE_EXTRAS_KEY_MEDIA_ID,
-            musicPlaying.id.toString()
-        )
-
-        val playbackState: PlaybackStateCompat = PlaybackStateCompat.Builder()
-            .setState(state, currentPosition, 1F)
-            .setActions(actions)
-            .setActiveQueueItemId(musicPlaying.id)
-            .setExtras(extras)
-            .build()
-        MP3PlayerCarMusicService.session.setPlaybackState(playbackState)
     }
 
     /**

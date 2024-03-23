@@ -25,6 +25,17 @@
 
 package earth.mp3player.services
 
+import android.os.Bundle
+import android.support.v4.media.MediaMetadataCompat
+import android.support.v4.media.session.PlaybackStateCompat
+import android.support.v4.media.session.PlaybackStateCompat.STATE_PAUSED
+import android.support.v4.media.session.PlaybackStateCompat.STATE_PLAYING
+import androidx.media.utils.MediaConstants
+import androidx.media3.common.MediaItem
+import earth.mp3player.models.Music
+import earth.mp3player.services.MP3PlayerCarCallBack.ACTIONS_ON_PAUSE
+import earth.mp3player.services.MP3PlayerCarCallBack.ACTIONS_ON_PLAY
+import earth.mp3player.services.playback.PlaybackController
 import earth.mp3player.services.playback.PlaybackListener
 
 /**
@@ -33,5 +44,57 @@ import earth.mp3player.services.playback.PlaybackListener
 object MP3CarPlaybackListener : PlaybackListener() {
     override fun onIsPlayingChanged(isPlaying: Boolean) {
         super.onIsPlayingChanged(isPlaying)
+
+        if (isPlaying) {
+            updatePlaybackState(state = STATE_PLAYING, actions = ACTIONS_ON_PLAY)
+        } else {
+            updatePlaybackState(state = STATE_PAUSED, actions = ACTIONS_ON_PAUSE)
+        }
+    }
+
+    override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
+        super.onMediaItemTransition(mediaItem, reason)
+
+        updateMediaPlaying()
+    }
+
+    private fun updateMediaPlaying() {
+        val playbackController: PlaybackController = PlaybackController.getInstance()
+        val musicPlaying: Music = playbackController.musicPlaying.value!!
+        val metaData: MediaMetadataCompat = MediaMetadataCompat.Builder()
+            .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, musicPlaying.id.toString())
+            .putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_TITLE, musicPlaying.title)
+            .putString(
+                MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE,
+                musicPlaying.artist?.title
+            )
+            .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, musicPlaying.duration)
+            .build()
+        MP3PlayerCarMusicService.session.setMetadata(metaData)
+    }
+
+    /**
+     * Update the session playback.
+     *
+     * @param state the state of playback.
+     * @param actions to run if clicked on button in playback screen.
+     */
+    private fun updatePlaybackState(state: Int, actions: Long) {
+        val playbackController: PlaybackController = PlaybackController.getInstance()
+        val musicPlaying: Music = playbackController.musicPlaying.value!!
+        val currentPosition: Long = playbackController.getCurrentPosition()
+        val extras = Bundle()
+        extras.putString(
+            MediaConstants.PLAYBACK_STATE_EXTRAS_KEY_MEDIA_ID,
+            musicPlaying.id.toString()
+        )
+
+        val playbackState: PlaybackStateCompat = PlaybackStateCompat.Builder()
+            .setState(state, currentPosition, 1F)
+            .setActions(actions)
+            .setActiveQueueItemId(musicPlaying.id)
+            .setExtras(extras)
+            .build()
+        MP3PlayerCarMusicService.session.setPlaybackState(playbackState)
     }
 }

@@ -11,6 +11,13 @@ If you decide to use my code to create new app, you can but you have to use the 
 
 ## 0.5 (Android Upside Down Cake and later)
 
+### 0.5.1-beta
+
+Fix issues:
+
+* Optimisation of Android Auto
+* Playback is correctly synchronized
+
 ### 0.5.0-beta
 
 Features:

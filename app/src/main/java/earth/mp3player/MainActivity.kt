@@ -25,9 +25,12 @@
 
 package earth.mp3player
 
+import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.Manifest.permission.READ_MEDIA_AUDIO
 import android.content.Context
 import android.content.pm.PackageManager
+import android.os.Build
+import android.os.Build.VERSION_CODES.TIRAMISU
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -66,6 +69,7 @@ import kotlinx.coroutines.runBlocking
  */
 
 class MainActivity : ComponentActivity() {
+
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         runBlocking {
@@ -76,7 +80,11 @@ class MainActivity : ComponentActivity() {
 
         val isAudioAllowed: MutableState<Boolean> = mutableStateOf(isAudioAllowed())
 
-        requestPermission(isAudioAllowed = isAudioAllowed)
+        if (Build.VERSION.SDK_INT >= TIRAMISU) {
+            requestPermission(isAudioAllowed = isAudioAllowed, READ_MEDIA_AUDIO)
+        } else {
+            requestPermission(isAudioAllowed = isAudioAllowed, READ_EXTERNAL_STORAGE)
+        }
 
         setContent {
             val context: Context = LocalContext.current
@@ -137,27 +145,34 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun requestPermission(isAudioAllowed: MutableState<Boolean>) {
+    private fun requestPermission(isAudioAllowed: MutableState<Boolean>, permission: String) {
         when {
             !isAudioAllowed() -> {
-                requestPermissionLauncher(isAudioAllowed = isAudioAllowed).launch(READ_MEDIA_AUDIO)
+                requestPermissionLauncher(isAudioAllowed = isAudioAllowed).launch(permission)
             }
 
-            ActivityCompat.shouldShowRequestPermissionRationale(this, READ_MEDIA_AUDIO) -> {
+            ActivityCompat.shouldShowRequestPermissionRationale(this, permission) -> {
                 // Additional rationale should be displayed
             }
 
             else -> {
                 // Permission has not been asked yet
-                requestPermissionLauncher(isAudioAllowed = isAudioAllowed).launch(READ_MEDIA_AUDIO)
+                requestPermissionLauncher(isAudioAllowed = isAudioAllowed).launch(permission)
             }
         }
     }
 
     private fun isAudioAllowed(): Boolean {
-        return ContextCompat.checkSelfPermission(
-            this,
-            READ_MEDIA_AUDIO
-        ) == PackageManager.PERMISSION_GRANTED
+        return if (Build.VERSION.SDK_INT >= TIRAMISU) {
+            ContextCompat.checkSelfPermission(
+                this,
+                READ_MEDIA_AUDIO
+            ) == PackageManager.PERMISSION_GRANTED
+        } else {
+            ContextCompat.checkSelfPermission(
+                this,
+                READ_EXTERNAL_STORAGE
+            ) == PackageManager.PERMISSION_GRANTED
+        }
     }
 }

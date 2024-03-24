@@ -9,7 +9,13 @@ If you decide to use my code to create new app, you can but you have to use the 
 
 # UPDATES
 
-## 0.5 (Android Upside Down Cake and later)
+## 0.6 (Android 11 Red Velvet Cake and later)
+
+### 0.6.0-beta
+
+This version make the app compatible with Android 11 Red Velvet Cake and later.
+
+## 0.5 (Android 14 Upside Down Cake and later)
 
 ### 0.5.1-beta
 
@@ -35,7 +41,7 @@ Fix issues:
 * Optimisation
 * Show all music information on notification
 
-## 0.4 (Android Upside Down Cake and later)
+## 0.4 (Android 14 Upside Down Cake and later)
 
 ### 0.4.2-beta
 
@@ -63,8 +69,7 @@ Fix issues:
 * Music from external storage can be played
 * Show main storage as Root folder (e.g. "This Device" or "External Storage: C45-54")
 
-
-## 0.3 (Android Upside Down Cake and later)
+## 0.3 (Android 14 Upside Down Cake and later)
 
 ### 0.3.2-beta
 
@@ -88,7 +93,7 @@ New functionalities has landed. Now you can
 * Setting Page
     * Change bottom bar tabs by removing folders, artists or albums tabs
 
-## 0.2 (Android Upside Down Cake and later)
+## 0.2 (Android 14 Upside Down Cake and later)
 
 ### 0.2.1-beta
 
@@ -102,7 +107,7 @@ In this version the album artwork is shown on the playback screen the music cont
 move
 to the bottom of the screen.
 
-## 0.1 (Android Upside Down Cake and later)
+## 0.1 (Android 14 Upside Down Cake and later)
 
 ### 0.1.0-beta
 

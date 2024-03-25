@@ -7,6 +7,8 @@ This entire project is under GNU/GPL v3 and it's applied on all version of this 
 
 If you decide to use my code to create new app, you can but you have to use the same license :p
 
+To activate Android Auto you can find instructions [here](#050-beta)
+
 # UPDATES
 
 ## 0.6 (Android 11 Red Velvet Cake and later)

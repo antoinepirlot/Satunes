@@ -137,4 +137,10 @@ dependencies {
      * Playback Services
      */
     implementation(project(":playback"))
+
+    /**
+     * Database
+     */
+    implementation(project(":database"))
+
 }

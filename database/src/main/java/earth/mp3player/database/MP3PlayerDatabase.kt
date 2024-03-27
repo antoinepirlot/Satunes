@@ -61,17 +61,17 @@ import earth.mp3player.database.models.tables.Playlist
 )
 abstract class MP3PlayerDatabase: RoomDatabase() {
     companion object {
-        private lateinit var database: MP3PlayerDatabase
+        private var database: MP3PlayerDatabase? = null
 
         fun getDatabase(context: Context): MP3PlayerDatabase {
-            if (!Companion::database::isInitialized.get()) {
+            if (database == null) {
                 database = Room.databaseBuilder(
                     context = context,
                     MP3PlayerDatabase::class.java,
                     "MP3Player-database"
                 ).build()
             }
-            return database
+            return database!!
         }
     }
 

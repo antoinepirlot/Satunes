@@ -26,6 +26,7 @@
 package earth.mp3player.database
 
 import androidx.room.Database
+import androidx.room.RoomDatabase
 import earth.mp3player.database.daos.AlbumDAO
 import earth.mp3player.database.daos.ArtistDAO
 import earth.mp3player.database.daos.FolderDAO
@@ -56,7 +57,7 @@ import earth.mp3player.database.models.tables.Playlist
     ],
     version = 1
 )
-abstract class MP3PlayerDatabase {
+abstract class MP3PlayerDatabase: RoomDatabase() {
     abstract fun albumDao(): AlbumDAO
     abstract fun artistDao(): ArtistDAO
     abstract fun folderDao(): FolderDAO

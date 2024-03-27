@@ -1,6 +1,6 @@
 # MP3 Player (VERSION FRANCAISE)
 
-You can find this file in [english](README.md)
+You can find this file in [english](README-en.md)
 
 MP3 Player est un lecteur de musique (lol). 
 Tu peux l'utiliser pour écouter ta musique présente sur ton appareil Android. (Android 11 Red Velvet Cake et plus récent).

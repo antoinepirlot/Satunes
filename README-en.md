@@ -1,6 +1,6 @@
 # MP3 Player (ENGLISH VERSION)
 
-Vous pouvez retrouver ce fichier en [français](README-FR.md)
+Vous pouvez retrouver ce fichier en [français](README.md)
 
 MP3 Player is a MP3 Player (lol). Use it to listen your music from your audio files stored in your Android phone (Android Upside Down Cake and later).
 This application is still in development and contains bugs and bad ui.

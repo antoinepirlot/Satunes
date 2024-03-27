@@ -60,4 +60,9 @@ dependencies {
      */
     val dataStoreVersion = "1.0.0"
     implementation("androidx.datastore:datastore-preferences:$dataStoreVersion")
+
+    /**
+     * Database
+     */
+    implementation(project(":database"))
 }

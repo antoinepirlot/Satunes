@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "earth.mp3player"
+    namespace = "earth.mp3player.playback"
     compileSdk = 34
 
     defaultConfig {

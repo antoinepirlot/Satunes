@@ -38,9 +38,9 @@ data class Music(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "music_id") val id: Long,
     @ColumnInfo(name = "title") val title: String,
-    @ColumnInfo(name = "absolute_path") val absolutePath: String,
+    @ColumnInfo(name = "relative_path") val relativePath: String,
     @ColumnInfo(name = "folder_id") val folderId: Long,
-    @ColumnInfo(name = "genre_id") val genreId: Long,
-    @ColumnInfo(name = "album_id") val albumId: Long,
-    @ColumnInfo(name = "artist_id") val artistId: Long,
+    @ColumnInfo(name = "genre_id") val genreId: Long? = null,
+    @ColumnInfo(name = "album_id") val albumId: Long? = null,
+    @ColumnInfo(name = "artist_id") val artistId: Long? = null,
 )

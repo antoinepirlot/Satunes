@@ -60,6 +60,7 @@ import android.provider.MediaStore
 import androidx.compose.runtime.MutableLongState
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.ui.graphics.asImageBitmap
+import earth.mp3player.database.DatabaseManager
 import earth.mp3player.playback.models.Album
 import earth.mp3player.playback.models.Artist
 import earth.mp3player.playback.models.Folder
@@ -68,6 +69,7 @@ import earth.mp3player.playback.models.Music
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import earth.mp3player.database.models.tables.Music as DbMusic
 
 /**
  * @author Antoine Pirlot on 22/02/24
@@ -215,6 +217,17 @@ object DataLoader {
                     artist.addAlbum(album)
                     album.artist = artist
                 }
+
+                val array: Array<out DbMusic> = arrayOf(
+                    DbMusic(
+                        id = music.id,
+                        title = music.title,
+                        relativePath = music.relativePath,
+                        folderId = music.folder!!.id
+                    )
+                )
+                val databaseManager: DatabaseManager = DatabaseManager(context = context)
+                databaseManager.insertAll(musics = array)
             }
         }
         isLoaded = true

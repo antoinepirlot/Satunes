@@ -32,6 +32,7 @@ import earth.mp3player.database.models.tables.Artist
 import earth.mp3player.database.models.tables.Folder
 import earth.mp3player.database.models.tables.Genre
 import earth.mp3player.database.models.tables.Music
+import earth.mp3player.database.models.tables.MusicsPlaylistsRel
 import earth.mp3player.database.models.tables.Playlist
 
 /**
@@ -45,6 +46,7 @@ import earth.mp3player.database.models.tables.Playlist
         Folder::class,
         Genre::class,
         Music::class,
+        MusicsPlaylistsRel::class,
         Playlist::class
     ],
     version = 1

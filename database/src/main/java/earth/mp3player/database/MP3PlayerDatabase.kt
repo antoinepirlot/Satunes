@@ -25,7 +25,9 @@
 
 package earth.mp3player.database
 
+import android.content.Context
 import androidx.room.Database
+import androidx.room.Room
 import androidx.room.RoomDatabase
 import earth.mp3player.database.daos.AlbumDAO
 import earth.mp3player.database.daos.ArtistDAO
@@ -58,6 +60,21 @@ import earth.mp3player.database.models.tables.Playlist
     version = 1
 )
 abstract class MP3PlayerDatabase: RoomDatabase() {
+    companion object {
+        private lateinit var database: MP3PlayerDatabase
+
+        fun getDatabase(context: Context): MP3PlayerDatabase {
+            if (!Companion::database::isInitialized.get()) {
+                database = Room.databaseBuilder(
+                    context = context,
+                    MP3PlayerDatabase::class.java,
+                    "MP3Player-database"
+                ).build()
+            }
+            return database
+        }
+    }
+
     abstract fun albumDao(): AlbumDAO
     abstract fun artistDao(): ArtistDAO
     abstract fun folderDao(): FolderDAO

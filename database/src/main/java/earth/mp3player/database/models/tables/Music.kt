@@ -40,7 +40,7 @@ data class Music(
     @ColumnInfo(name = "title") val title: String,
     @ColumnInfo(name = "relative_path") val relativePath: String,
     @ColumnInfo(name = "folder_id") val folderId: Long,
-    @ColumnInfo(name = "genre_id") val genreId: Long? = null,
+    @ColumnInfo(name = "genre_id") var genreId: Long? = null,
     @ColumnInfo(name = "album_id") val albumId: Long? = null,
     @ColumnInfo(name = "artist_id") val artistId: Long? = null,
 )

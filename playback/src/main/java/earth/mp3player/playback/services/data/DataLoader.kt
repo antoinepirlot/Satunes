@@ -23,31 +23,6 @@
  * PS: I don't answer quickly.
  */
 
-/*
- *  This file is part of MP3 Player.
- *
- *  MP3 Player is free software: you can redistribute it and/or modify it under
- *  the terms of the GNU General Public License as published by the Free Software Foundation,
- *  either version 3 of the License, or (at your option) any later version.
- *
- *  MP3 Player is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- *   without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *  See the GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License along with MP3 Player.
- *  If not, see <https://www.gnu.org/licenses/>.
- *
- *  ***** INFORMATIONS ABOUT THE AUTHOR *****
- *  The author of this file is Antoine Pirlot, the owner of this project.
- *  You find this original project on github.
- *
- *  My github link is: https://github.com/antoinepirlot
- *  This current project's link is: https://github.com/antoinepirlot/MP3-Player
- *
- *  You can contact me via my email: pirlot.antoine@outlook.com
- *  PS: I don't answer quickly.
- */
-
 package earth.mp3player.playback.services.data
 
 import android.content.Context
@@ -69,6 +44,7 @@ import earth.mp3player.playback.models.Music
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import earth.mp3player.database.models.tables.Genre as DbGenre
 import earth.mp3player.database.models.tables.Music as DbMusic
 
 /**
@@ -128,6 +104,8 @@ object DataLoader {
         )
 
         context.contentResolver.query(URI, projection, null, null)?.use {
+            val databaseManager: DatabaseManager = DatabaseManager(context = context)
+
             // Cache music columns indices.
             musicIdColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Media._ID)
             musicNameColumn =
@@ -189,6 +167,13 @@ object DataLoader {
                 //Load Folder
                 loadFolders(music = music)
 
+                val dbMusic = DbMusic(
+                    id = music.id,
+                    title = music.title,
+                    relativePath = music.relativePath,
+                    folderId = music.folder!!.id
+                )
+
                 //Load Genre
                 try {
                     var genre: Genre = loadGenre(cursor = it)
@@ -197,6 +182,10 @@ object DataLoader {
                     genre = DataManager.genreMap[genre.title]!!
                     music.genre = genre
                     genre.addMusic(music)
+                    val dbGenre = DbGenre(id = genre.id, title = genre.title)
+                    databaseManager.insertAll(genres = arrayOf(dbGenre))
+                    //TODO insert all at the end of all music loaded
+                    dbMusic.genreId = genre.id
                 } catch (_: Exception) {
                     //No Genre
                 }
@@ -218,16 +207,7 @@ object DataLoader {
                     album.artist = artist
                 }
 
-                val array: Array<out DbMusic> = arrayOf(
-                    DbMusic(
-                        id = music.id,
-                        title = music.title,
-                        relativePath = music.relativePath,
-                        folderId = music.folder!!.id
-                    )
-                )
-                val databaseManager: DatabaseManager = DatabaseManager(context = context)
-                databaseManager.insertAll(musics = array)
+                databaseManager.insertAll(musics = arrayOf(dbMusic))
             }
         }
         isLoaded = true

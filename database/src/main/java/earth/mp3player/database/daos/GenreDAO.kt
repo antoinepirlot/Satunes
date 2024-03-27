@@ -26,9 +26,11 @@
 package earth.mp3player.database.daos
 
 import androidx.room.Dao
+import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
 import earth.mp3player.database.models.relations.GenreWithMusics
+import earth.mp3player.database.models.tables.Genre
 
 /**
  * @author Antoine Pirlot on 27/03/2024
@@ -37,7 +39,13 @@ import earth.mp3player.database.models.relations.GenreWithMusics
 @Dao
 interface GenreDAO {
 
+    @Query("SELECT :genre FROM genres")
+    fun getGenre(genre: Genre): Genre
+
     @Transaction
     @Query("SELECT * FROM genres")
     fun getGenresWithMusics(): List<GenreWithMusics>
+
+    @Insert
+    fun insertAll(vararg genre: Genre)
 }

@@ -26,7 +26,9 @@
 package earth.mp3player.database
 
 import android.content.Context
+import earth.mp3player.database.daos.GenreDAO
 import earth.mp3player.database.daos.MusicDAO
+import earth.mp3player.database.models.tables.Genre
 import earth.mp3player.database.models.tables.Music
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -37,10 +39,23 @@ import kotlinx.coroutines.launch
  */
 class DatabaseManager(context: Context) {
     private val musicDao: MusicDAO = MP3PlayerDatabase.getDatabase(context = context).musicDao()
+    private val genreDao: GenreDAO = MP3PlayerDatabase.getDatabase(context = context).genreDao()
 
     fun insertAll(vararg musics: Music) {
         CoroutineScope(Dispatchers.IO).launch {
             musicDao.insertAll(*musics)
+        }
+    }
+
+    fun insertAll(vararg genres: Genre) {
+        CoroutineScope(Dispatchers.IO).launch {
+            genreDao.insertAll(*genres)
+        }
+    }
+
+    fun get(genre: Genre) {
+        CoroutineScope(Dispatchers.IO).launch {
+            genreDao.getGenre(genre)
         }
     }
 }

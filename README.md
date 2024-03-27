@@ -1,4 +1,4 @@
-# MP3 Player
+# MP3 Player (ENGLISH VERSION)
 
 Vous pouvez retrouver ce fichier en [français](README-FR.md)
 

@@ -26,6 +26,9 @@
 package earth.mp3player.database.daos
 
 import androidx.room.Dao
+import androidx.room.Query
+import androidx.room.Transaction
+import earth.mp3player.database.models.relations.PlaylistWithMusics
 
 /**
  * @author Antoine Pirlot on 27/03/2024
@@ -33,4 +36,8 @@ import androidx.room.Dao
 
 @Dao
 interface PlaylistDAO {
+
+    @Transaction
+    @Query("SELECT * FROM  playlists")
+    fun getPlaylistsWithMusics(): List<PlaylistWithMusics>
 }

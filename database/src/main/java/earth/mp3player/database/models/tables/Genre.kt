@@ -69,6 +69,7 @@ import androidx.room.PrimaryKey
     ]
 )
 data class Genre(
-    @PrimaryKey(autoGenerate = true) val id: Long,
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "genre_id") val id: Long,
     @ColumnInfo(name = "title") val title: String,
 )

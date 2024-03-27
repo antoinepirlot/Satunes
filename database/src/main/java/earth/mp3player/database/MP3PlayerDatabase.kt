@@ -57,7 +57,8 @@ import earth.mp3player.database.models.tables.Playlist
         MusicsPlaylistsRel::class,
         Playlist::class
     ],
-    version = 1
+    version = 1,
+    exportSchema = false
 )
 abstract class MP3PlayerDatabase: RoomDatabase() {
     companion object {

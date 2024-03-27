@@ -102,7 +102,6 @@ package earth.mp3player.database.models.tables
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
-import androidx.room.Index
 import androidx.room.PrimaryKey
 
 /**
@@ -111,7 +110,8 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "musics")
 data class Music(
-    @PrimaryKey(autoGenerate = true) val id: Long,
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "music_id") val id: Long,
     @ColumnInfo(name = "title") val title: String,
     @ColumnInfo(name = "absolute_path") val absolutePath: String,
     @ColumnInfo(name = "folder_id") val folderId: Long,

@@ -86,7 +86,7 @@ import earth.mp3player.database.models.tables.Music
 data class FolderWithMusics (
     @Embedded val folder: Folder,
     @Relation(
-        parentColumn = "id",
+        parentColumn = "folder_id",
         entityColumn = "folder_id"
     )
     val musics: List<Music>

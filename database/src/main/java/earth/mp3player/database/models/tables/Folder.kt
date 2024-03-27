@@ -60,6 +60,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "folders")
 data class Folder (
-    @PrimaryKey(autoGenerate = true) val id: Long,
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "folder_id") val id: Long,
     @ColumnInfo(name = "title") val title: String
 )

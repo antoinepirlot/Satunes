@@ -86,7 +86,7 @@ import earth.mp3player.database.models.tables.Music
 data class ArtistWithMusics (
     @Embedded val artist: Artist,
     @Relation(
-        parentColumn = "id",
+        parentColumn = "artist_id",
         entityColumn = "artist_id"
     )
     val musics: List<Music>

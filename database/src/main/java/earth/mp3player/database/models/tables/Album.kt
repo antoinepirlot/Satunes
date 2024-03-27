@@ -60,6 +60,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "albums")
 data class Album (
-    @PrimaryKey(autoGenerate = true) val id: Long,
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "album_id") val id: Long,
     @ColumnInfo(name = "title") val title: String,
 )

@@ -103,40 +103,7 @@ object DataLoader {
         )
 
         context.contentResolver.query(URI, projection, null, null)?.use {
-            // Cache music columns indices.
-            musicIdColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Media._ID)
-            musicNameColumn =
-                it.getColumnIndexOrThrow(MediaStore.Audio.Media.DISPLAY_NAME)
-            musicTitleColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE)
-            musicDurationColumn =
-                it.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION)
-            musicSizeColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE)
-            relativePathColumn =
-                it.getColumnIndexOrThrow(MediaStore.Audio.Media.RELATIVE_PATH)
-
-            //Cache album columns indices
-            try {
-                albumIdColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Albums.ALBUM_ID)
-                albumNameColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Albums.ALBUM)
-            } catch (_: IllegalArgumentException) {
-                // No album
-            }
-
-            // Cache artist columns indices.
-            try {
-                artistIdColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Artists._ID)
-                artistNameColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Artists.ARTIST)
-            } catch (_: IllegalArgumentException) {
-                // No artist
-            }
-
-            // Cache Genre columns indices.
-            try {
-                genreIdColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Media.GENRE_ID)
-                genreNameColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Media.GENRE)
-            } catch (_: IllegalArgumentException) {
-                // No genre
-            }
+            cacheColums(cursor = it)
             // TODO find a way to coroutine this and fix issue with recomposition with sorted map
             while (it.moveToNext()) {
                 loadData(cursor = it, context = context)
@@ -144,6 +111,46 @@ object DataLoader {
         }
         isLoaded = true
         isLoading = false
+    }
+
+    /**
+     * Cache columns and columns indices for data to load
+     */
+    private fun cacheColums(cursor: Cursor) {
+        // Cache music columns indices.
+        musicIdColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID)
+        musicNameColumn =
+            cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DISPLAY_NAME)
+        musicTitleColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE)
+        musicDurationColumn =
+            cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION)
+        musicSizeColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE)
+        relativePathColumn =
+            cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.RELATIVE_PATH)
+
+        //Cache album columns indices
+        try {
+            albumIdColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Albums.ALBUM_ID)
+            albumNameColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Albums.ALBUM)
+        } catch (_: IllegalArgumentException) {
+            // No album
+        }
+
+        // Cache artist columns indices.
+        try {
+            artistIdColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Artists._ID)
+            artistNameColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Artists.ARTIST)
+        } catch (_: IllegalArgumentException) {
+            // No artist
+        }
+
+        // Cache Genre columns indices.
+        try {
+            genreIdColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.GENRE_ID)
+            genreNameColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.GENRE)
+        } catch (_: IllegalArgumentException) {
+            // No genre
+        }
     }
 
     private fun loadData(cursor: Cursor, context: Context) {

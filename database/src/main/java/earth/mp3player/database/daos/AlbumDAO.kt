@@ -29,6 +29,7 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
 import earth.mp3player.database.models.relations.AlbumWithMusics
+import earth.mp3player.database.models.tables.Album
 
 /**
  * @author Antoine Pirlot on 27/03/2024
@@ -36,6 +37,9 @@ import earth.mp3player.database.models.relations.AlbumWithMusics
 
 @Dao
 interface AlbumDAO {
+
+    @Query("SELECT * FROM albums WHERE album_id = :id")
+    fun getAlbum(id: Long): Album?
 
     @Transaction
     @Query("SELECT * FROM albums")

@@ -28,9 +28,11 @@ package earth.mp3player.database
 import android.content.Context
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import earth.mp3player.database.daos.AlbumDAO
 import earth.mp3player.database.daos.FolderDAO
 import earth.mp3player.database.daos.GenreDAO
 import earth.mp3player.database.daos.MusicDAO
+import earth.mp3player.database.models.tables.Album
 import earth.mp3player.database.models.tables.Folder
 import earth.mp3player.database.models.tables.Genre
 import earth.mp3player.database.models.tables.Music
@@ -46,6 +48,7 @@ class DatabaseManager(context: Context) {
     private val musicDao: MusicDAO = database.musicDao()
     private val genreDao: GenreDAO = database.genreDao()
     private val folderDao: FolderDAO = database.folderDao()
+    private val albumDao: AlbumDAO = database.albumDao()
 
     fun insertAll(vararg musics: Music) {
         CoroutineScope(Dispatchers.IO).launch {
@@ -81,5 +84,13 @@ class DatabaseManager(context: Context) {
             folder.value = folderDao.getFolder(id = id)
         }
         return folder
+    }
+
+    fun getAlbum(id: Long): MutableState<Album?> {
+        val album: MutableState<Album?> = mutableStateOf(null)
+        CoroutineScope(Dispatchers.IO).launch {
+            album.value = albumDao.getAlbum(id = id)
+        }
+        return album
     }
 }

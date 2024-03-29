@@ -26,6 +26,7 @@
 package earth.mp3player.database.daos
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
@@ -48,4 +49,7 @@ interface FolderDAO {
 
     @Insert
     fun insert(vararg folders: Folder)
+
+    @Delete
+    fun delete(folder: Folder)
 }

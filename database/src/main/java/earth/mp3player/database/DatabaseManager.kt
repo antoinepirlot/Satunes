@@ -33,6 +33,7 @@ import earth.mp3player.database.daos.ArtistDAO
 import earth.mp3player.database.daos.FolderDAO
 import earth.mp3player.database.daos.GenreDAO
 import earth.mp3player.database.daos.MusicDAO
+import earth.mp3player.database.models.Media
 import earth.mp3player.database.models.tables.Album
 import earth.mp3player.database.models.tables.Artist
 import earth.mp3player.database.models.tables.Folder
@@ -121,5 +122,17 @@ class DatabaseManager(context: Context) {
             artist.value = artistDao.getArtist(id = id)
         }
         return artist
+    }
+
+    fun delete(media: Media) {
+        CoroutineScope(Dispatchers.IO).launch {
+            when (media) {
+                is Album -> albumDao.delete(album = media)
+                is Artist -> artistDao.delete(artist = media)
+                is Folder -> folderDao.delete(folder = media)
+                is Genre -> genreDao.delete(genre = media)
+                is Music -> musicDao.delete(music = media)
+            }
+        }
     }
 }

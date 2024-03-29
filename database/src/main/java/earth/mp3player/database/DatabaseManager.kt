@@ -26,6 +26,8 @@
 package earth.mp3player.database
 
 import android.content.Context
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import earth.mp3player.database.daos.GenreDAO
 import earth.mp3player.database.daos.MusicDAO
 import earth.mp3player.database.models.tables.Genre
@@ -54,9 +56,19 @@ class DatabaseManager(context: Context) {
         }
     }
 
-    fun get(genre: Genre) {
+    fun getMusic(id: Long): MutableState<Music?> {
+        val music: MutableState<Music?> = mutableStateOf(null)
         CoroutineScope(Dispatchers.IO).launch {
-            genreDao.getGenre(genre.id)
+            music.value = musicDao.get(id = id)
         }
+        return music
+    }
+
+    fun getGenre(id: Long): MutableState<Genre?> {
+        val genre: MutableState<Genre?> = mutableStateOf(null)
+        CoroutineScope(Dispatchers.IO).launch {
+            genre.value = genreDao.getGenre(id = id)
+        }
+        return genre
     }
 }

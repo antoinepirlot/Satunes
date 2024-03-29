@@ -37,6 +37,10 @@ import earth.mp3player.database.models.tables.Music
 
 @Dao
 interface MusicDAO {
+
+    @Query("SELECT * FROM musics WHERE music_id == :id")
+    fun get(id: Long): Music?
+
     @Query("SELECT * FROM musics")
     fun getAll(): List<Music>
 

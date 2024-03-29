@@ -103,7 +103,7 @@ object DataLoader {
         )
 
         context.contentResolver.query(URI, projection, null, null)?.use {
-            cacheColums(cursor = it)
+            cacheColumns(cursor = it)
             // TODO find a way to coroutine this and fix issue with recomposition with sorted map
             while (it.moveToNext()) {
                 loadData(cursor = it, context = context)
@@ -116,7 +116,7 @@ object DataLoader {
     /**
      * Cache columns and columns indices for data to load
      */
-    private fun cacheColums(cursor: Cursor) {
+    private fun cacheColumns(cursor: Cursor) {
         // Cache music columns indices.
         musicIdColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID)
         musicNameColumn =

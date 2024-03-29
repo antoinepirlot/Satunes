@@ -9,6 +9,17 @@ This entire project is under GNU/GPL v3 and it's applied on all version of this 
 
 If you decide to use my code to create new app, you can but you have to use the same license :p
 
+Installation instructions:
+1) Click on [Release](https://github.com/antoinepirlot/MP3-Player/releases)
+2) Choose your version
+3) Click on "Assets" to deploy a menu that contains the installation file.
+4) Click on the file file_name.apk (A file will be downloaded on your device).
+5) Once the file is downaloded, open it.
+6) Allow the unknwon application installation (It's required as the app is not deployed on the Play Store).
+7) Install the app (you'll maybe startInstalle l'application (it is likely that you will have to start step 5 again).
+9) I recommand you to deactvate unknown app installation for the app from where you install the app.
+10) Enjoy you music freely and passion :D
+
 To activate Android Auto you can find instructions [here](#050-beta)
 
 # UPDATES

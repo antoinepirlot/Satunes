@@ -39,8 +39,8 @@ import earth.mp3player.database.models.tables.Genre
 @Dao
 interface GenreDAO {
 
-    @Query("SELECT :genre FROM genres")
-    fun getGenre(genre: Genre): Genre
+    @Query("SELECT * FROM genres WHERE genre_id = :id")
+    fun getGenre(id: Long): Genre
 
     @Transaction
     @Query("SELECT * FROM genres")

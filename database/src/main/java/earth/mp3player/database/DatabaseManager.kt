@@ -55,7 +55,7 @@ class DatabaseManager(context: Context) {
 
     fun get(genre: Genre) {
         CoroutineScope(Dispatchers.IO).launch {
-            genreDao.getGenre(genre)
+            genreDao.getGenre(genre.id)
         }
     }
 }

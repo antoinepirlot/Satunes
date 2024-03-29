@@ -253,10 +253,6 @@ class PlaybackController private constructor(
         }
     }
 
-    fun stop() {
-        this.mediaController.stop()
-    }
-
     fun getCurrentPosition(): Long {
         return this.mediaController.currentPosition
     }

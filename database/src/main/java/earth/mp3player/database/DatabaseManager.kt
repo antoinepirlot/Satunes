@@ -71,6 +71,12 @@ class DatabaseManager(context: Context) {
         }
     }
 
+    fun insert(vararg albums: Album) {
+        CoroutineScope(Dispatchers.IO).launch {
+            albumDao.insert(albums = albums)
+        }
+    }
+
     fun getMusic(id: Long): MutableState<Music?> {
         val music: MutableState<Music?> = mutableStateOf(null)
         CoroutineScope(Dispatchers.IO).launch {

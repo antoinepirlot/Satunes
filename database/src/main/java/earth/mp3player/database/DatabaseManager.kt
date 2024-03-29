@@ -65,9 +65,9 @@ class DatabaseManager(context: Context) {
         }
     }
 
-    fun insert(vararg folder: Folder) {
+    fun insert(vararg folders: Folder) {
         CoroutineScope(Dispatchers.IO).launch {
-            folderDao.insert(*folder)
+            folderDao.insert(folders = folders)
         }
     }
 

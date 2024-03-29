@@ -47,5 +47,5 @@ interface FolderDAO {
     fun getFoldersWithMusics(): List<FolderWithMusics>
 
     @Insert
-    fun insert(vararg folder: Folder)
+    fun insert(vararg folders: Folder)
 }

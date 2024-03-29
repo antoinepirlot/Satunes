@@ -55,13 +55,13 @@ class DatabaseManager(context: Context) {
 
     fun insertAll(vararg musics: Music) {
         CoroutineScope(Dispatchers.IO).launch {
-            musicDao.insertAll(*musics)
+            musicDao.insert(musics = musics)
         }
     }
 
     fun insertAll(vararg genres: Genre) {
         CoroutineScope(Dispatchers.IO).launch {
-            genreDao.insertAll(*genres)
+            genreDao.insert(genres = genres)
         }
     }
 

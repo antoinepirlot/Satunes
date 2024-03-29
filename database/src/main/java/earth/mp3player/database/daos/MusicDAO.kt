@@ -45,7 +45,7 @@ interface MusicDAO {
     fun getAll(): List<Music>
 
     @Insert
-    fun insertAll(vararg musics: Music)
+    fun insert(vararg musics: Music)
 
     @Delete
     fun delete(music: Music)

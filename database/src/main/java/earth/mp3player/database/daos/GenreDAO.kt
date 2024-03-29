@@ -47,5 +47,5 @@ interface GenreDAO {
     fun getGenresWithMusics(): List<GenreWithMusics>
 
     @Insert
-    fun insertAll(vararg genre: Genre)
+    fun insert(vararg genres: Genre)
 }

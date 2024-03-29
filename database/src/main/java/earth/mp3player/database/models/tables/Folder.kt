@@ -28,6 +28,7 @@ package earth.mp3player.database.models.tables
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import earth.mp3player.database.models.Media
 
 /**
  * @author Antoine Pirlot on 27/03/2024
@@ -36,6 +37,6 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "folders")
 data class Folder (
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "folder_id") val id: Long,
-    @ColumnInfo(name = "title") val title: String
-)
+    @ColumnInfo(name = "folder_id") override val id: Long,
+    @ColumnInfo(name = "title") override val title: String
+) : Media

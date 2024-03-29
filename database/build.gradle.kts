@@ -42,6 +42,15 @@ dependencies {
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 
+    /**
+     * Mutable State
+     */
+    implementation(platform("androidx.compose:compose-bom:2023.08.00"))
+    implementation("androidx.compose.material3:material3")
+
+    /**
+     * Database Android Room
+     */
     val roomVersion = "2.6.1"
 
     implementation("androidx.room:room-runtime:$roomVersion")

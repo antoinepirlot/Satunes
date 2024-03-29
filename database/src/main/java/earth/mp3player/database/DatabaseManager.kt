@@ -53,13 +53,13 @@ class DatabaseManager(context: Context) {
     private val albumDao: AlbumDAO = database.albumDao()
     private val artistDao: ArtistDAO = database.artistDao()
 
-    fun insertAll(vararg musics: Music) {
+    fun insert(vararg musics: Music) {
         CoroutineScope(Dispatchers.IO).launch {
             musicDao.insert(musics = musics)
         }
     }
 
-    fun insertAll(vararg genres: Genre) {
+    fun insert(vararg genres: Genre) {
         CoroutineScope(Dispatchers.IO).launch {
             genreDao.insert(genres = genres)
         }

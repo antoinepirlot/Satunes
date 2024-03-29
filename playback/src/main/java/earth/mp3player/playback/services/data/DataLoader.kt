@@ -183,7 +183,7 @@ object DataLoader {
                     music.genre = genre
                     genre.addMusic(music)
                     val dbGenre = DbGenre(id = genre.id, title = genre.title)
-                    databaseManager.insertAll(genres = arrayOf(dbGenre))
+                    databaseManager.insert(genres = arrayOf(dbGenre))
                     //TODO insert all at the end of all music loaded
                     dbMusic.genreId = genre.id
                 } catch (_: Exception) {
@@ -207,7 +207,7 @@ object DataLoader {
                     album.artist = artist
                 }
 
-                databaseManager.insertAll(musics = arrayOf(dbMusic))
+                databaseManager.insert(musics = arrayOf(dbMusic))
             }
         }
         isLoaded = true

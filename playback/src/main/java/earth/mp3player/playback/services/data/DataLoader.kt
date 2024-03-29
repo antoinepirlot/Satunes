@@ -35,7 +35,6 @@ import android.provider.MediaStore
 import androidx.compose.runtime.MutableLongState
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.ui.graphics.asImageBitmap
-import earth.mp3player.database.DatabaseManager
 import earth.mp3player.playback.models.Album
 import earth.mp3player.playback.models.Artist
 import earth.mp3player.playback.models.Folder
@@ -44,8 +43,6 @@ import earth.mp3player.playback.models.Music
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import earth.mp3player.database.models.tables.Genre as DbGenre
-import earth.mp3player.database.models.tables.Music as DbMusic
 
 /**
  * @author Antoine Pirlot on 22/02/24
@@ -81,6 +78,8 @@ object DataLoader {
 
     fun loadAllData(context: Context) {
         isLoading = true
+        //TODO 1: get data from database
+        //TODO 2: update database from storage
         val projection = arrayOf(
             // AUDIO
             MediaStore.Audio.Media._ID,
@@ -104,8 +103,6 @@ object DataLoader {
         )
 
         context.contentResolver.query(URI, projection, null, null)?.use {
-            val databaseManager: DatabaseManager = DatabaseManager(context = context)
-
             // Cache music columns indices.
             musicIdColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Media._ID)
             musicNameColumn =
@@ -142,76 +139,67 @@ object DataLoader {
             }
             // TODO find a way to coroutine this and fix issue with recomposition with sorted map
             while (it.moveToNext()) {
-                var artist: Artist? = null
-                var album: Album? = null
-                var music: Music
-
-                //Load album
-                if (albumIdColumn != null && albumNameColumn != null) {
-                    album = loadAlbum(cursor = it)
-                    DataManager.albumMap[album.title] = album
-                }
-
-                //Load music
-                try {
-                    music = loadMusic(context = context, cursor = it, album = album)
-                    DataManager.musicMediaItemSortedMap[music] = music.mediaItem
-                } catch (_: IllegalAccessError) {
-                    // No music found
-                    if (album != null && album.musicSortedMap.isEmpty()) {
-                        DataManager.albumMap.remove(album.title)
-                    }
-                    continue // Continue the while loop
-                }
-
-                //Load Folder
-                loadFolders(music = music)
-
-                val dbMusic = DbMusic(
-                    id = music.id,
-                    title = music.title,
-                    relativePath = music.relativePath,
-                    folderId = music.folder!!.id
-                )
-
-                //Load Genre
-                try {
-                    var genre: Genre = loadGenre(cursor = it)
-                    DataManager.genreMap.putIfAbsent(genre.title, genre)
-                    // The id is not the same for all same genre
-                    genre = DataManager.genreMap[genre.title]!!
-                    music.genre = genre
-                    genre.addMusic(music)
-                    val dbGenre = DbGenre(id = genre.id, title = genre.title)
-                    databaseManager.insert(genres = arrayOf(dbGenre))
-                    //TODO insert all at the end of all music loaded
-                    dbMusic.genreId = genre.id
-                } catch (_: Exception) {
-                    //No Genre
-                }
-
-                //Load Artist
-                if (artistIdColumn != null && artistNameColumn != null) {
-                    artist = loadArtist(cursor = it)
-                    DataManager.artistMap.putIfAbsent(artist.title, artist)
-                    //The id is not the same for all same artists
-                    artist = DataManager.artistMap[artist.title]!!
-                    artist.musicList.add(music)
-                    artist.musicMediaItemSortedMap.putIfAbsent(music, music.mediaItem)
-                    music.artist = artist
-                }
-
-                //Link album and artist if exists
-                if (artist != null && album != null) {
-                    artist.addAlbum(album)
-                    album.artist = artist
-                }
-
-                databaseManager.insert(musics = arrayOf(dbMusic))
+                loadData(cursor = it, context = context)
             }
         }
         isLoaded = true
         isLoading = false
+    }
+
+    private fun loadData(cursor: Cursor, context: Context) {
+        var artist: Artist? = null
+        var album: Album? = null
+        val music: Music
+
+        //Load album
+        if (albumIdColumn != null && albumNameColumn != null) {
+            album = loadAlbum(cursor = cursor)
+            DataManager.albumMap[album.title] = album
+        }
+
+        //Load music
+        try {
+            music = loadMusic(context = context, cursor = cursor, album = album)
+            DataManager.musicMediaItemSortedMap[music] = music.mediaItem
+        } catch (_: IllegalAccessError) {
+            // No music found
+            if (album != null && album.musicSortedMap.isEmpty()) {
+                DataManager.albumMap.remove(album.title)
+            }
+            return // Continue the while loop
+        }
+
+        //Load Folder
+        loadFolders(music = music)
+
+        //Load Genre
+        try {
+            var genre: Genre = loadGenre(cursor = cursor)
+            DataManager.genreMap.putIfAbsent(genre.title, genre)
+            // The id is not the same for all same genre
+            genre = DataManager.genreMap[genre.title]!!
+            music.genre = genre
+            genre.addMusic(music)
+        } catch (_: Exception) {
+            //No Genre
+        }
+
+        //Load Artist
+        if (artistIdColumn != null && artistNameColumn != null) {
+            artist = loadArtist(cursor = cursor)
+            DataManager.artistMap.putIfAbsent(artist.title, artist)
+            //The id is not the same for all same artists
+            artist = DataManager.artistMap[artist.title]!!
+            artist.musicList.add(music)
+            artist.musicMediaItemSortedMap.putIfAbsent(music, music.mediaItem)
+            music.artist = artist
+        }
+
+        //Link album and artist if exists
+        if (artist != null && album != null) {
+            artist.addAlbum(album)
+            album.artist = artist
+        }
     }
 
     /**

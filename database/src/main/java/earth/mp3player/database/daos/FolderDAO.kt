@@ -26,6 +26,7 @@
 package earth.mp3player.database.daos
 
 import androidx.room.Dao
+import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
 import earth.mp3player.database.models.relations.FolderWithMusics
@@ -44,4 +45,7 @@ interface FolderDAO {
     @Transaction
     @Query("SELECT * FROM folders")
     fun getFoldersWithMusics(): List<FolderWithMusics>
+
+    @Insert
+    fun insert(vararg folder: Folder)
 }

@@ -65,6 +65,12 @@ class DatabaseManager(context: Context) {
         }
     }
 
+    fun insert(vararg folder: Folder) {
+        CoroutineScope(Dispatchers.IO).launch {
+            folderDao.insert(*folder)
+        }
+    }
+
     fun getMusic(id: Long): MutableState<Music?> {
         val music: MutableState<Music?> = mutableStateOf(null)
         CoroutineScope(Dispatchers.IO).launch {

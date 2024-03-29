@@ -38,8 +38,9 @@ import kotlinx.coroutines.launch
  * @author Antoine Pirlot on 27/03/2024
  */
 class DatabaseManager(context: Context) {
-    private val musicDao: MusicDAO = MP3PlayerDatabase.getDatabase(context = context).musicDao()
-    private val genreDao: GenreDAO = MP3PlayerDatabase.getDatabase(context = context).genreDao()
+    private val database: MP3PlayerDatabase = MP3PlayerDatabase.getDatabase(context = context)
+    private val musicDao: MusicDAO = database.musicDao()
+    private val genreDao: GenreDAO = database.genreDao()
 
     fun insertAll(vararg musics: Music) {
         CoroutineScope(Dispatchers.IO).launch {

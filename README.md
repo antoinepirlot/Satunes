@@ -10,6 +10,17 @@ L'entierté du projet est sous la licence GNU/GPL v3 et s'applique à toutes les
 
 Tu as le droit de réutiliser mon code pour créer une nouvelle application dérivée mais tu devras utiliser la même licence ou une licence compatible.
 
+Voici les instructions pour installer l'application:
+1) Clique sur [Release](https://github.com/antoinepirlot/MP3-Player/releases)
+2) Choisi ta version
+3) Clique sur "Assets" pour dérouler un menu qui contient le fichier d'installation
+4) Clique sur le fichier nom_du_fichier.apk (Un fichier va se télécharger sur ton appareil)
+5) Une fois le téléchargement terminé, ouvre le fichier
+6) Autorise l'installation d'application inconnue. (C'est nécéssaire car l'application n'est dépployée sur le Play Store).
+7) Installe l'application (il est probable que tu doives recommencer l'étape 5).
+8) Je te recommande te désactiver l'installation d'applis inconnue de l'application depuis laquelle tu as ouvert le fichier.
+9) Profite de ta musique en toute liberté :D
+
 Pour activer Android Auto clique [ici](#050-beta) pour savoir comment faire.
 
 # UPDATES

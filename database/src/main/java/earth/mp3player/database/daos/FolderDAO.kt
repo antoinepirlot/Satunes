@@ -29,6 +29,7 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
 import earth.mp3player.database.models.relations.FolderWithMusics
+import earth.mp3player.database.models.tables.Folder
 
 /**
  * @author Antoine Pirlot on 27/03/2024
@@ -36,6 +37,9 @@ import earth.mp3player.database.models.relations.FolderWithMusics
 
 @Dao
 interface FolderDAO {
+
+    @Query("SELECT * FROM folders WHERE folder_id = :id")
+    fun getFolder(id: Long): Folder?
 
     @Transaction
     @Query("SELECT * FROM folders")

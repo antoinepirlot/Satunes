@@ -26,6 +26,7 @@
 package earth.mp3player.database.daos
 
 import androidx.room.Dao
+import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
 import earth.mp3player.database.models.relations.ArtistWithMusics
@@ -44,4 +45,7 @@ interface ArtistDAO {
     @Transaction
     @Query("SELECT * FROM artists")
     fun getArtistsWithMusics(): List<ArtistWithMusics>
+
+    @Insert
+    fun insert(vararg artists: Artist)
 }

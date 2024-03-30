@@ -26,6 +26,7 @@
 package earth.mp3player.app.ui.utils
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.QueueMusic
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.MusicNote
@@ -119,6 +120,8 @@ fun getRightIconAndDescription(menuTitle: MenuTitle): Pair<ImageVector, String> 
         MenuTitle.ALBUMS -> Icons.Rounded.Album to "Album Icon"
 
         MenuTitle.GENRES -> Icons.Rounded.Category to "Genres Icon"
+
+        MenuTitle.PLAYLISTS -> Icons.AutoMirrored.Rounded.QueueMusic to "Playlist Icon"
 
         else -> Icons.Rounded.Audiotrack to "Music Icon"
     }

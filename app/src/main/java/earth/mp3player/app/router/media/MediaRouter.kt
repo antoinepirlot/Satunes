@@ -36,6 +36,7 @@ import earth.mp3player.app.ui.utils.getMusicListFromFolder
 import earth.mp3player.app.ui.utils.startMusic
 import earth.mp3player.app.ui.views.MediaListView
 import earth.mp3player.app.ui.views.PlayBackView
+import earth.mp3player.app.ui.views.PlaylistView
 import earth.mp3player.database.models.Album
 import earth.mp3player.database.models.Artist
 import earth.mp3player.database.models.Folder
@@ -310,6 +311,9 @@ fun MediaRouter(
             )
         }
 
+        composable(MediaDestination.PLAYLISTS.link) {
+            PlaylistView()
+        }
 
         composable(MediaDestination.MUSICS.link) {
             //Find a way to do something more aesthetic but it works

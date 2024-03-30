@@ -37,10 +37,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import earth.mp3player.playback.models.MenuTitle
 import earth.mp3player.app.router.media.MediaDestination
-import earth.mp3player.playback.services.settings.SettingsManager
 import earth.mp3player.app.ui.utils.getRightIconAndDescription
+import earth.mp3player.playback.models.MenuTitle
+import earth.mp3player.playback.services.settings.SettingsManager
 
 /**
  * @author Antoine Pirlot on 03/02/24
@@ -57,6 +57,7 @@ fun MP3BottomAppBar(
         MenuTitle.ALBUMS,
         MenuTitle.GENRES,
         MenuTitle.MUSIC,
+        MenuTitle.PLAYLISTS
     )
 
     SettingsManager.menuTitleCheckedMap.forEach { (menuTitle: MenuTitle, checked: MutableState<Boolean>) ->
@@ -75,6 +76,8 @@ fun MP3BottomAppBar(
             rememberSaveable { mutableStateOf(MenuTitle.ALBUMS) }
         } else if (SettingsManager.genreChecked.value) {
             rememberSaveable { mutableStateOf(MenuTitle.GENRES) }
+        } else if (SettingsManager.playlistsChecked.value) {
+            rememberSaveable { mutableStateOf(MenuTitle.PLAYLISTS) }
         } else {
             rememberSaveable { mutableStateOf(MenuTitle.MUSIC) }
         }
@@ -103,6 +106,10 @@ fun MP3BottomAppBar(
 
                         MenuTitle.GENRES -> {
                             startDestination.value = MediaDestination.GENRES.link
+                        }
+
+                        MenuTitle.PLAYLISTS -> {
+                            startDestination.value = MediaDestination.PLAYLISTS.link
                         }
 
                         MenuTitle.MUSIC -> {

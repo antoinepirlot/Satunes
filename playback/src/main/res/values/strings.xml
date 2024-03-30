@@ -5,5 +5,5 @@
     <string name="tracks">Musiques</string>
     <string name="albums" translatable="false">Albums</string>
     <string name="genres" translatable="false">Genres</string>
-    <string name="playlists">Playlists</string>
+    <string name="playlists" translatable="false">Playlists</string>
 </resources>

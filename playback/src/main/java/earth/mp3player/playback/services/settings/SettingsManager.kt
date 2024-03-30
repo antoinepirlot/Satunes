@@ -49,6 +49,7 @@ object SettingsManager {
     private const val DEFAULT_ARTISTS_CHECKED = true
     private const val DEFAULT_ALBUMS_CHECKED = true
     private const val DEFAULT_GENRE_CHECKED = true
+    private const val DEFAULT_PLAYLIST_CHECKED = true
     private const val DEFAULT_CLOSED_APP_PLAYBACK_CHECKED = false //No playback after closed app
     private const val DEFAULT_PAUSE_IF_NOISY = true
 
@@ -57,6 +58,7 @@ object SettingsManager {
     private val ARTISTS_CHECKED_PREFERENCES_KEY = booleanPreferencesKey("artist_checked")
     private val ALBUMS_CHECKED_PREFERENCES_KEY = booleanPreferencesKey("albums_checked")
     private val GENRE_CHECKED_PREFERENCES_KEY = booleanPreferencesKey("genres_checked")
+    private val PLAYLISTS_CHECKED_PREFERENCES_KEY = booleanPreferencesKey("playlists_checked")
     private val CLOSED_APP_PLAYBACK_CHECKED_PREFERENCES_KEY =
         booleanPreferencesKey("closed_app_playback_checked")
     private val PAUSE_IF_NOISY_PREFERENCES_KEY = booleanPreferencesKey("pause_if_noisy")
@@ -67,6 +69,7 @@ object SettingsManager {
     val artistsChecked: MutableState<Boolean> = mutableStateOf(DEFAULT_ARTISTS_CHECKED)
     val albumsChecked: MutableState<Boolean> = mutableStateOf(DEFAULT_ALBUMS_CHECKED)
     val genreChecked: MutableState<Boolean> = mutableStateOf(DEFAULT_GENRE_CHECKED)
+    val playlistsChecked: MutableState<Boolean> = mutableStateOf(DEFAULT_PLAYLIST_CHECKED)
     val closedAppPlaybackChecked: MutableState<Boolean> =
         mutableStateOf(DEFAULT_CLOSED_APP_PLAYBACK_CHECKED)
     val pauseIfNoisy: MutableState<Boolean> = mutableStateOf(DEFAULT_PAUSE_IF_NOISY)
@@ -76,6 +79,7 @@ object SettingsManager {
         Pair(MenuTitle.ARTISTS, artistsChecked),
         Pair(MenuTitle.ALBUMS, albumsChecked),
         Pair(MenuTitle.GENRES, genreChecked),
+        Pair(MenuTitle.PLAYLISTS, playlistsChecked)
     )
 
     suspend fun loadSettings(context: Context) {
@@ -91,6 +95,9 @@ object SettingsManager {
                 preferences[ALBUMS_CHECKED_PREFERENCES_KEY] ?: DEFAULT_ALBUMS_CHECKED
 
             genreChecked.value = preferences[GENRE_CHECKED_PREFERENCES_KEY] ?: DEFAULT_GENRE_CHECKED
+
+            playlistsChecked.value =
+                preferences[PLAYLISTS_CHECKED_PREFERENCES_KEY] ?: DEFAULT_PLAYLIST_CHECKED
 
             closedAppPlaybackChecked.value =
                 preferences[CLOSED_APP_PLAYBACK_CHECKED_PREFERENCES_KEY]
@@ -128,6 +135,13 @@ object SettingsManager {
                 context.dataStore.edit { preferences: MutablePreferences ->
                     genreChecked.value = !genreChecked.value
                     preferences[GENRE_CHECKED_PREFERENCES_KEY] = genreChecked.value
+                }
+            }
+
+            MenuTitle.PLAYLISTS -> {
+                context.dataStore.edit { preferences: MutablePreferences ->
+                    playlistsChecked.value = !playlistsChecked.value
+                    preferences[PLAYLISTS_CHECKED_PREFERENCES_KEY] = playlistsChecked.value
                 }
             }
 

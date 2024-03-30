@@ -36,5 +36,6 @@ enum class MenuTitle(open val stringId: Int) {
     ARTISTS(stringId = R.string.artists),
     MUSIC(stringId = R.string.tracks),
     ALBUMS(stringId = R.string.albums),
-    GENRES(stringId = R.string.genres)
+    GENRES(stringId = R.string.genres),
+    PLAYLISTS(stringId = R.string.playlists)
 }

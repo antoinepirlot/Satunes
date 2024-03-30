@@ -70,12 +70,25 @@ class DatabaseManager(context: Context) {
         return music
     }
 
-    fun insertMusicToPlaylist(music: Music, playlist: Playlist) {
+    fun insertMusicToPlaylists(music: Music, playlistsIds: MutableList<Long>) {
         CoroutineScope(Dispatchers.IO).launch {
-            val musicsPlaylistsRel: MusicsPlaylistsRel =
-                MusicsPlaylistsRel(musicId = music.id, playlistId = playlist.id)
-            musicsPlaylistsRelDAO.insert(musicsPlaylistsRel)
-            DataManager.playlistWithMusicsMap.values.first { it.playlist.id == playlist.id }
+            val musicDb: MusicDB? = musicDao.get(music.id)
+            if (musicDb == null) {
+                music.musicDB = MusicDB(id = music.id)
+                musicDao.insert(music.musicDB!!)
+            }
+            playlistsIds.forEach { playlistId: Long ->
+                val musicsPlaylistsRel =
+                    MusicsPlaylistsRel(musicId = music.id, playlistId = playlistId)
+                try {
+                    musicsPlaylistsRelDAO.insert(musicsPlaylistsRel)
+                } catch (_: SQLiteConstraintException) {
+                    return@launch
+                }
+                DataManager.playlistWithMusicsMap.values.first { it.playlist.id == playlistId }!!.musics.add(
+                    music.musicDB!!
+                )
+            }
         }
     }
 

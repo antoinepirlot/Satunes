@@ -52,6 +52,8 @@ import earth.mp3player.database.models.Media
 import earth.mp3player.database.models.Music
 import earth.mp3player.database.models.relations.PlaylistWithMusics
 import earth.mp3player.database.models.tables.MusicDB
+import earth.mp3player.database.services.DatabaseManager
+import earth.mp3player.services.PlaylistSelectionManager
 import earth.mp3player.ui.components.music.options.MusicOptionsDialog
 
 /**
@@ -117,12 +119,16 @@ fun MediaCard(
     Divider(modifier = modifier)
 
     // Music options dialog
-    if (showMusicOptions) {
+    if (showMusicOptions && media is Music) {
         val context = LocalContext.current
         MusicOptionsDialog(
             musicTitle = title,
             onAddToPlaylist = {
-                //TODO open playlist selection
+                val db: DatabaseManager = DatabaseManager(context = context)
+                db.insertMusicToPlaylists(
+                    music = media,
+                    playlistsIds = PlaylistSelectionManager.checkedPlaylistIds
+                )
                 showMusicOptions = false
             },
             onDismissRequest = { showMusicOptions = false }

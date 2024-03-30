@@ -25,14 +25,17 @@
 
 package earth.mp3player.ui.components.music.options
 
+import android.content.Context
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.PlaylistAdd
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import earth.mp3player.R
@@ -45,8 +48,11 @@ import earth.mp3player.ui.components.forms.PlaylistSelectionForm
 @Composable
 fun PlaylistSelectionDialog(
     modifier: Modifier = Modifier,
-    onDismissRequest: () -> Unit
+    onDismissRequest: () -> Unit,
+    onConfirm: () -> Unit,
 ) {
+    val context: Context = LocalContext.current
+
     AlertDialog(
         icon = {
             Icon(
@@ -63,7 +69,11 @@ fun PlaylistSelectionDialog(
             }
         },
         onDismissRequest = onDismissRequest,
-        confirmButton = { /*TODO*/ }
+        confirmButton = {
+            TextButton(onClick = onConfirm) {
+                Text(text = stringResource(id = R.string.add))
+            }
+        }
     )
 }
 
@@ -71,6 +81,7 @@ fun PlaylistSelectionDialog(
 @Composable
 fun PlaylistSelectionDialogPreview() {
     PlaylistSelectionDialog(
-        onDismissRequest = {}
+        onDismissRequest = {},
+        onConfirm = {}
     )
 }

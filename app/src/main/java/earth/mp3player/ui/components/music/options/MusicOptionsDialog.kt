@@ -111,9 +111,12 @@ fun MusicOptionsDialog(
                         Text(text = stringResource(id = R.string.add_to_playlist))
                     }
                     if (showPlaylistSelectionDialog) {
-                        PlaylistSelectionDialog(onDismissRequest = {
-                            showPlaylistSelectionDialog = false
-                        })
+                        PlaylistSelectionDialog(
+                            onDismissRequest = {
+                                showPlaylistSelectionDialog = false
+                            },
+                            onConfirm = onAddToPlaylist
+                        )
                     }
                 }
             }

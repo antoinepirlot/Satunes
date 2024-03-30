@@ -64,7 +64,7 @@ data class Music private constructor(
     private var absolutePath: String = "$ROOT_PATH/$relativePath/$displayName"
     var uri: Uri = Uri.Builder().appendPath(this.absolutePath).build()
     var artwork: ImageBitmap? = null
-    val musicDB: MusicDB = MusicDB(id = this.id)
+    var musicDB: MusicDB? = null
 
     companion object {
         val ROOT_PATH: String = Environment.getExternalStorageDirectory().path

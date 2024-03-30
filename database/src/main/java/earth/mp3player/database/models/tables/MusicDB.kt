@@ -27,7 +27,10 @@ package earth.mp3player.database.models.tables
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
+import earth.mp3player.database.models.Music
+import earth.mp3player.database.services.DataManager
 
 /**
  * @author Antoine Pirlot on 30/03/2024
@@ -37,4 +40,7 @@ import androidx.room.PrimaryKey
 data class MusicDB(
     @PrimaryKey
     @ColumnInfo("music_id") val id: Long
-)
+) {
+    @Ignore
+    var music: Music = DataManager.musicMediaItemSortedMap.keys.first { it.musicDB == this }
+}

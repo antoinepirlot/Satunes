@@ -103,6 +103,8 @@ object DataLoader {
                 loadData(cursor = it, context = context)
             }
         }
+
+        DatabaseManager(context = context).loadAllPlaylistsWithMusic()
         isLoaded = true
         isLoading = false
     }

@@ -30,6 +30,8 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import earth.mp3player.database.MP3PlayerDatabase
 import earth.mp3player.database.daos.MusicDAO
+import earth.mp3player.database.daos.PlaylistDAO
+import earth.mp3player.database.models.relations.PlaylistWithMusics
 import earth.mp3player.database.models.tables.MusicDB
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -41,6 +43,18 @@ import kotlinx.coroutines.launch
 class DatabaseManager(context: Context) {
     private val database: MP3PlayerDatabase = MP3PlayerDatabase.getDatabase(context = context)
     private val musicDao: MusicDAO = database.musicDao()
+    private val playlistDao: PlaylistDAO = database.playlistDao()
+
+    fun loadAllPlaylistsWithMusic() {
+        CoroutineScope(Dispatchers.IO).launch {
+            val playlistsWithMusicsList: List<PlaylistWithMusics> =
+                playlistDao.getPlaylistsWithMusics()
+            playlistsWithMusicsList.forEach { playlistWithMusics: PlaylistWithMusics ->
+                DataManager.playlistWithMusicsMap[playlistWithMusics.playlist.title] =
+                    playlistWithMusics
+            }
+        }
+    }
 
     fun getMusic(id: Long): MutableState<MusicDB?> {
         val music: MutableState<MusicDB?> = mutableStateOf(null)

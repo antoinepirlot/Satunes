@@ -36,7 +36,6 @@ import earth.mp3player.app.ui.utils.getMusicListFromFolder
 import earth.mp3player.app.ui.utils.startMusic
 import earth.mp3player.app.ui.views.MediaListView
 import earth.mp3player.app.ui.views.PlayBackView
-import earth.mp3player.app.ui.views.PlaylistView
 import earth.mp3player.database.models.Album
 import earth.mp3player.database.models.Artist
 import earth.mp3player.database.models.Folder
@@ -312,7 +311,17 @@ fun MediaRouter(
         }
 
         composable(MediaDestination.PLAYLISTS.link) {
-            PlaylistView()
+            @Suppress("UNCHECKED_CAST")
+            val playlistsWithMusics: SortedMap<String, Media> =
+                DataManager.playlistWithMusicsMap as SortedMap<String, Media>
+            MediaListView(
+                mediaMap = playlistsWithMusics,
+                openMedia = { clickedMedia: Media ->
+                    openMedia(navController = navController, media = clickedMedia)
+                },
+                shuffleMusicAction = { /* TODO */ },
+                onFABClick = { openCurrentMusic(navController = navController) }
+            )
         }
 
         composable(MediaDestination.MUSICS.link) {

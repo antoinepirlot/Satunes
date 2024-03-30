@@ -31,6 +31,7 @@ import earth.mp3player.database.models.Artist
 import earth.mp3player.database.models.Folder
 import earth.mp3player.database.models.Genre
 import earth.mp3player.database.models.Music
+import earth.mp3player.database.models.relations.PlaylistWithMusics
 import java.util.SortedMap
 
 /**
@@ -44,6 +45,7 @@ object DataManager {
     val artistMap: SortedMap<String, Artist> = sortedMapOf()
     val albumMap: SortedMap<String, Album> = sortedMapOf()
     val genreMap: SortedMap<String, Genre> = sortedMapOf()
+    val playlistWithMusicsMap: SortedMap<String, PlaylistWithMusics> = sortedMapOf()
 
     fun getArtist(artistId: Long): Artist {
         return artistMap.values.first { it.id == artistId }
@@ -59,5 +61,9 @@ object DataManager {
 
     fun getGenre(genreId: Long): Genre {
         return genreMap.values.first { it.id == genreId }
+    }
+
+    fun getPlaylist(playlistId: Long): PlaylistWithMusics {
+        return playlistWithMusicsMap.values.first { it.playlist.id == playlistId }
     }
 }

@@ -26,8 +26,10 @@
 package earth.mp3player.database.models.relations
 
 import androidx.room.Embedded
+import androidx.room.Ignore
 import androidx.room.Junction
 import androidx.room.Relation
+import earth.mp3player.database.models.Media
 import earth.mp3player.database.models.tables.MusicDB
 import earth.mp3player.database.models.tables.MusicsPlaylistsRel
 import earth.mp3player.database.models.tables.Playlist
@@ -43,4 +45,9 @@ data class PlaylistWithMusics(
         associateBy = Junction(MusicsPlaylistsRel::class)
     )
     val musics: List<MusicDB>
-)
+) : Media {
+    @Ignore
+    override val id: Long = -1 // Not used
+    @Ignore
+    override val title: String = "Wrong Class" // Not used
+}

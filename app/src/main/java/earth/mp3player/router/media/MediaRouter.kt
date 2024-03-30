@@ -318,7 +318,7 @@ fun MediaRouter(
         }
 
         composable("${MediaDestination.PLAYLISTS.link}/{id}") {
-            val playlistId: Long = it.arguments!!.getLong("id")
+            val playlistId: Long = it.arguments!!.getString("id")!!.toLong()
             val playlist: PlaylistWithMusics = DataManager.getPlaylist(playlistId = playlistId)
             val musicSortedMap: SortedMap<String, Media> = sortedMapOf()
             playlist.musics.forEach { musicDb: MusicDB ->

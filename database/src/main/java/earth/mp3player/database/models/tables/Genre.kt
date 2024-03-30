@@ -25,11 +25,15 @@
 
 package earth.mp3player.database.models.tables
 
+import androidx.media3.common.MediaItem
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import earth.mp3player.database.models.Media
+import earth.mp3player.database.models.dto.GenreDTO
+import earth.mp3player.database.models.dto.MusicDTO
+import java.util.SortedMap
 
 /**
  * @author Antoine Pirlot on 27/03/2024
@@ -48,4 +52,28 @@ data class Genre(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "genre_id") override val id: Long,
     @ColumnInfo(name = "title") override val title: String,
-) : Media
+) : GenreDTO {
+    @Ignore
+    override val musicMap: SortedMap<Long, MusicDTO> = sortedMapOf()
+
+    @Ignore
+    override val musicMediaItemSortedMap: SortedMap<MusicDTO, MediaItem> = sortedMapOf()
+
+    fun addMusic(music: Music) {
+        musicMap.putIfAbsent(music.id, music)
+        musicMediaItemSortedMap.putIfAbsent(music, music.mediaItem)
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Genre
+
+        return title == other.title
+    }
+
+    override fun hashCode(): Int {
+        return title.hashCode()
+    }
+}

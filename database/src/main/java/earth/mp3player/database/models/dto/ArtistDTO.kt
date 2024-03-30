@@ -23,22 +23,19 @@
  * PS: I don't answer quickly.
  */
 
-package earth.mp3player.database.models.relations
+package earth.mp3player.database.models.dto
 
-import androidx.room.Embedded
-import androidx.room.Relation
-import earth.mp3player.database.models.tables.Genre
+import androidx.media3.common.MediaItem
+import earth.mp3player.database.models.Media
 import earth.mp3player.database.models.tables.Music
+import java.util.SortedMap
 
 /**
- * @author Antoine Pirlot on 27/03/2024
+ * @author Antoine Pirlot on 30/03/2024
  */
-
-data class GenreWithMusics (
-    @Embedded val genre: Genre,
-    @Relation(
-        parentColumn = "genre_id",
-        entityColumn = "genre_id"
-    )
-    val musics: List<Music>
-)
+interface ArtistDTO : Media {
+    override val id: Long
+    override val title: String
+    val albumSortedMap: SortedMap<String, AlbumDTO>
+    override val musicMediaItemSortedMap: SortedMap<MusicDTO, MediaItem>
+}

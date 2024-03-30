@@ -25,10 +25,28 @@
 
 package earth.mp3player.database.models
 
+import androidx.media3.common.MediaItem
+import earth.mp3player.database.models.dto.MusicDTO
+import earth.mp3player.database.models.tables.Music
+import java.text.Normalizer
+import java.util.SortedMap
+
 /**
  * @author Antoine Pirlot on 29/03/2024
  */
-interface Media {
+interface Media : Comparable<Media> {
     val id: Long
     val title: String
+    val musicMediaItemSortedMap: SortedMap<MusicDTO, MediaItem>
+        get() = sortedMapOf()
+
+    override fun compareTo(other: Media): Int {
+        val thisTitleNormalized: String =
+            Normalizer.normalize(this.title.lowercase(), Normalizer.Form.NFD)
+
+        val otherTitleNormalized: String =
+            Normalizer.normalize(other.title.lowercase(), Normalizer.Form.NFD)
+
+        return thisTitleNormalized.compareTo(otherTitleNormalized)
+    }
 }

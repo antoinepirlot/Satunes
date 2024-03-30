@@ -25,10 +25,15 @@
 
 package earth.mp3player.database.models.tables
 
+import androidx.media3.common.MediaItem
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
-import earth.mp3player.database.models.Media
+import earth.mp3player.database.models.dto.AlbumDTO
+import earth.mp3player.database.models.dto.ArtistDTO
+import earth.mp3player.database.models.dto.MusicDTO
+import java.util.SortedMap
 
 /**
  * @author Antoine Pirlot on 27/03/2024
@@ -39,4 +44,42 @@ data class Artist(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "artist_id") override val id: Long,
     @ColumnInfo(name = "title") override val title: String,
-) : Media
+) : ArtistDTO {
+    @Ignore
+    var musicList: MutableList<MusicDTO> = mutableListOf()
+        private set
+
+    @Ignore
+    override var albumSortedMap: SortedMap<String, AlbumDTO> = sortedMapOf()
+        private set
+
+    @Ignore
+    override val musicMediaItemSortedMap: SortedMap<MusicDTO, MediaItem> = sortedMapOf()
+
+    constructor(id: Long, title: String, musicList: MutableList<MusicDTO>, albumSortedMap: SortedMap<String, AlbumDTO>)
+            : this(id = id, title = title) {
+        this.albumSortedMap = albumSortedMap
+        this.musicList = musicList
+    }
+
+    fun addAlbum(album: Album) {
+        this.albumSortedMap.putIfAbsent(album.title, album)
+    }
+
+    override fun toString(): String {
+        return this.title
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Artist
+
+        return title == other.title
+    }
+
+    override fun hashCode(): Int {
+        return title.hashCode()
+    }
+}

@@ -49,6 +49,13 @@ dependencies {
     implementation("androidx.compose.material3:material3")
 
     /**
+     * Media
+     */
+    val media3Version = "1.2.1"
+
+    implementation("androidx.media3:media3-common:$media3Version")
+
+    /**
      * Database Android Room
      */
     val roomVersion = "2.6.1"

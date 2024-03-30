@@ -25,18 +25,51 @@
 
 package earth.mp3player.database.models.tables
 
+import androidx.media3.common.MediaItem
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
-import earth.mp3player.database.models.Media
+import earth.mp3player.database.models.dto.AlbumDTO
+import earth.mp3player.database.models.dto.MusicDTO
+import java.util.SortedMap
 
 /**
  * @author Antoine Pirlot on 27/03/2024
  */
 
 @Entity(tableName = "albums")
-data class Album (
+data class Album(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "album_id") override val id: Long,
     @ColumnInfo(name = "title") override val title: String,
-) : Media
+) : AlbumDTO {
+    @Ignore
+    override var musicMediaItemSortedMap: SortedMap<MusicDTO, MediaItem> = sortedMapOf()
+        private set
+
+    @Ignore
+    override val musicSortedMap: SortedMap<Long, MusicDTO> = sortedMapOf()
+
+    constructor(id: Long, title: String, musicMediaItemSortedMap: SortedMap<MusicDTO, MediaItem>)
+            : this(id = id, title = title) {
+        this.musicMediaItemSortedMap = musicMediaItemSortedMap
+    }
+
+    init {
+        musicMediaItemSortedMap.forEach { (music: MusicDTO, _: MediaItem) ->
+            musicSortedMap[music.id] = music
+        }
+    }
+
+    /**
+     * Add music to this album by adding music in musicMediaItemSortedMap
+     * and in musicSortedMap.
+     *
+     * @param music the music to add
+     */
+    fun addMusic(music: Music) {
+        this.musicMediaItemSortedMap[music] = music.mediaItem
+        this.musicSortedMap[music.id] = music
+    }
+}

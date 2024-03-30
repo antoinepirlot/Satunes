@@ -23,22 +23,34 @@
  * PS: I don't answer quickly.
  */
 
-package earth.mp3player.database.models.relations
+package earth.mp3player.database.models.dto
 
-import androidx.room.Embedded
-import androidx.room.Relation
+import android.net.Uri
+import androidx.compose.ui.graphics.ImageBitmap
+import earth.mp3player.database.models.Media
+import earth.mp3player.database.models.tables.Artist
+import earth.mp3player.database.models.tables.Folder
 import earth.mp3player.database.models.tables.Genre
-import earth.mp3player.database.models.tables.Music
 
 /**
- * @author Antoine Pirlot on 27/03/2024
+ * @author Antoine Pirlot on 30/03/2024
  */
-
-data class GenreWithMusics (
-    @Embedded val genre: Genre,
-    @Relation(
-        parentColumn = "genre_id",
-        entityColumn = "genre_id"
-    )
-    val musics: List<Music>
-)
+interface MusicDTO : Media {
+    override val id: Long
+    override val title: String
+    var relativePath: String
+    val folderId: Long
+    var genreId: Long?
+    val albumId: Long?
+    val artistId: Long?
+    val displayName: String
+    val duration: Long
+    val size: Int
+    var folder: FolderDTO?
+    var artist: ArtistDTO?
+    var album: AlbumDTO?
+    var genre: GenreDTO?
+    var absolutePath: String?
+    var uri: Uri
+    var artwork: ImageBitmap?
+}

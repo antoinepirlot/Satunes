@@ -48,7 +48,8 @@ fun BottomNavigationBarSettingsView(
         Pair(first = Settings.FOLDERS_CHECKED, second = SettingsManager.foldersChecked),
         Pair(first = Settings.ARTISTS_CHECKED, second = SettingsManager.artistsChecked),
         Pair(first = Settings.ALBUMS_CHECKED, second = SettingsManager.albumsChecked),
-        Pair(first = Settings.GENRES_CHECKED, second = SettingsManager.genresChecked)
+        Pair(first = Settings.GENRES_CHECKED, second = SettingsManager.genresChecked),
+        Pair(first = Settings.PLAYLISTS_CHECKED, second = SettingsManager.playlistsChecked),
     )
 
     Column(modifier = modifier) {

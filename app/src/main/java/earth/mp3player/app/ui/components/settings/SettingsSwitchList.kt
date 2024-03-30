@@ -35,9 +35,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import earth.mp3player.app.ui.views.settings.Settings
 import earth.mp3player.playback.models.MenuTitle
 import earth.mp3player.playback.services.settings.SettingsManager
-import earth.mp3player.app.ui.views.settings.Settings
 import kotlinx.coroutines.runBlocking
 
 /**
@@ -118,6 +118,15 @@ private fun runIfIsSwitchMenuTitles(context: Context, setting: Settings): Boolea
                 SettingsManager.switchMenuTitle(
                     context = context,
                     menuTitle = MenuTitle.GENRES
+                )
+            }
+        }
+
+        Settings.PLAYLISTS_CHECKED -> {
+            runBlocking {
+                SettingsManager.switchMenuTitle(
+                    context = context,
+                    menuTitle = MenuTitle.PLAYLISTS
                 )
             }
         }

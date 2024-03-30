@@ -44,6 +44,7 @@ import earth.mp3player.ui.utils.getMusicListFromFolder
 import earth.mp3player.ui.utils.startMusic
 import earth.mp3player.ui.views.MediaListView
 import earth.mp3player.ui.views.PlayBackView
+import earth.mp3player.ui.views.PlaylistView
 import java.util.SortedMap
 
 /**
@@ -311,17 +312,7 @@ fun MediaRouter(
         }
 
         composable(MediaDestination.PLAYLISTS.link) {
-            @Suppress("UNCHECKED_CAST")
-            val playlistsWithMusics: SortedMap<String, Media> =
-                DataManager.playlistWithMusicsMap as SortedMap<String, Media>
-            MediaListView(
-                mediaMap = playlistsWithMusics,
-                openMedia = { clickedMedia: Media ->
-                    openMedia(navController = navController, media = clickedMedia)
-                },
-                shuffleMusicAction = { /* TODO */ },
-                onFABClick = { openCurrentMusic(navController = navController) }
-            )
+            PlaylistView()
         }
 
         composable(MediaDestination.MUSICS.link) {

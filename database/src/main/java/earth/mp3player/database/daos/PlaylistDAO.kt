@@ -26,9 +26,11 @@
 package earth.mp3player.database.daos
 
 import androidx.room.Dao
+import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
 import earth.mp3player.database.models.relations.PlaylistWithMusics
+import earth.mp3player.database.models.tables.Playlist
 
 /**
  * @author Antoine Pirlot on 27/03/2024
@@ -40,4 +42,7 @@ interface PlaylistDAO {
     @Transaction
     @Query("SELECT * FROM  playlists")
     fun getPlaylistsWithMusics(): List<PlaylistWithMusics>
+
+    @Insert
+    fun insert(vararg playlists: Playlist)
 }

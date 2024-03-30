@@ -71,9 +71,6 @@ object DataLoader {
 
     fun loadAllData(context: Context) {
         isLoading = true
-        //TODO replace playback's object media with database's objects
-        //TODO 1: get data from database
-        //TODO 2: update database from storage
         val projection = arrayOf(
             // AUDIO
             MediaStore.Audio.Media._ID,

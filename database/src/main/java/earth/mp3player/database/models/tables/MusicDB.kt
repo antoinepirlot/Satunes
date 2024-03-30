@@ -29,6 +29,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
+import earth.mp3player.database.models.Media
 import earth.mp3player.database.models.Music
 import earth.mp3player.database.services.DataManager
 
@@ -39,8 +40,11 @@ import earth.mp3player.database.services.DataManager
 @Entity("musics")
 data class MusicDB(
     @PrimaryKey
-    @ColumnInfo("music_id") val id: Long
-) {
+    @ColumnInfo("music_id") override val id: Long
+) : Media {
+    @Ignore
+    override val title: String = "Title is not used for MusicDB class." // Not used
+
     @Ignore
     var music: Music = DataManager.musicMediaItemSortedMap.keys.first { it.musicDB == this }
 }

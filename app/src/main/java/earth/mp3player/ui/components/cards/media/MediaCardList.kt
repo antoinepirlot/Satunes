@@ -36,6 +36,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import earth.mp3player.R
 import earth.mp3player.database.models.Folder
 import earth.mp3player.database.models.Media
+import earth.mp3player.database.models.relations.PlaylistWithMusics
+import earth.mp3player.database.models.tables.MusicDB
 import earth.mp3player.ui.utils.getRightIconAndDescription
 
 /**
@@ -73,6 +75,10 @@ fun <T : Comparable<T>> MediaCardList(
 
                             else -> "${stringResource(id = R.string.external_storage)}: ${media.title}"
                         }
+                    } else if (media is PlaylistWithMusics) {
+                        media.playlist.title
+                    } else if (media is MusicDB) {
+                        media.music.title
                     } else {
                         media.title
                     }

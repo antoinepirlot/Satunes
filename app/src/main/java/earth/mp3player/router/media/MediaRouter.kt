@@ -38,6 +38,8 @@ import earth.mp3player.database.models.Folder
 import earth.mp3player.database.models.Genre
 import earth.mp3player.database.models.Media
 import earth.mp3player.database.models.Music
+import earth.mp3player.database.models.relations.PlaylistWithMusics
+import earth.mp3player.database.models.tables.MusicDB
 import earth.mp3player.database.services.DataManager
 import earth.mp3player.playback.services.playback.PlaybackController
 import earth.mp3player.ui.utils.getMusicListFromFolder
@@ -312,7 +314,24 @@ fun MediaRouter(
         }
 
         composable(MediaDestination.PLAYLISTS.link) {
-            PlaylistView()
+            PlaylistView(navController = navController)
+        }
+
+        composable("${MediaDestination.PLAYLISTS.link}/{id}") {
+            val playlistId: Long = it.arguments!!.getLong("id")
+            val playlist: PlaylistWithMusics = DataManager.getPlaylist(playlistId = playlistId)
+            val musicSortedMap: SortedMap<String, Media> = sortedMapOf()
+            playlist.musics.forEach { musicDb: MusicDB ->
+                musicSortedMap[musicDb.music.title] = musicDb.music
+            }
+            MediaListView(
+                mediaMap = musicSortedMap,
+                openMedia = { clickedMedia: Media ->
+                    openMedia(navController = navController, media = clickedMedia)
+                },
+                shuffleMusicAction = { /*TODO*/ },
+                onFABClick = { openCurrentMusic(navController = navController) }
+            )
         }
 
         composable(MediaDestination.MUSICS.link) {
@@ -367,14 +386,13 @@ fun MediaRouter(
  * @param navController the nav controller to redirect to the good path
  * @param media the media to open
  */
-private fun openMedia(
+fun openMedia(
     navController: NavHostController,
     media: Media? = null
 ) {
     if (media == null || media is Music) {
         startMusic(media)
     }
-
     navController.navigate(getDestinationOf(media))
 }
 
@@ -412,6 +430,8 @@ fun getDestinationOf(media: Media?): String {
         is Album -> "${MediaDestination.ALBUMS.link}/${media.id}"
 
         is Genre -> "${MediaDestination.GENRES.link}/${media.title}"
+
+        is PlaylistWithMusics -> "${MediaDestination.PLAYLISTS.link}/${media.playlist.id}"
 
         else -> MediaDestination.PLAYBACK.link
     }

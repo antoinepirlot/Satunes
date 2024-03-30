@@ -38,9 +38,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import earth.mp3player.database.models.Media
 import earth.mp3player.database.models.tables.Playlist
+import earth.mp3player.database.services.DataManager
 import earth.mp3player.database.services.DatabaseManager
+import earth.mp3player.router.media.openMedia
 import earth.mp3player.ui.components.forms.PlaylistCreationForm
+import java.util.SortedMap
 
 /**
  * @author Antoine Pirlot on 30/03/2024
@@ -48,7 +54,8 @@ import earth.mp3player.ui.components.forms.PlaylistCreationForm
 
 @Composable
 fun PlaylistView(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navController: NavHostController,
 ) {
     val context: Context = LocalContext.current
     var openAlertDialog by remember { mutableStateOf(false) }
@@ -70,10 +77,23 @@ fun PlaylistView(
             )
         }
     }
+    @Suppress("UNCHECKED_CAST")
+    val playlistMap: SortedMap<String, Media> =
+        DataManager.playlistWithMusicsMap as SortedMap<String, Media>
+
+    MediaListView(
+        mediaMap = playlistMap,
+        openMedia = { clickedMedia: Media ->
+            openMedia(navController = navController, media = clickedMedia)
+        },
+        shuffleMusicAction = { /*TODO*/ }
+    ) {
+
+    }
 }
 
 @Preview
 @Composable
 fun PlaylistViewPreview() {
-    PlaylistView()
+    PlaylistView(navController = rememberNavController())
 }

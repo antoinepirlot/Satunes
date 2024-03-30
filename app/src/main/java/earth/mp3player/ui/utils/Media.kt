@@ -43,6 +43,7 @@ import earth.mp3player.database.models.Folder
 import earth.mp3player.database.models.Genre
 import earth.mp3player.database.models.Media
 import earth.mp3player.database.models.Music
+import earth.mp3player.database.models.relations.PlaylistWithMusics
 import earth.mp3player.playback.models.MenuTitle
 import earth.mp3player.playback.services.playback.PlaybackController
 import java.util.SortedMap
@@ -88,22 +89,11 @@ fun getMusicListFromFolder(folder: Folder): SortedMap<Music, MediaItem> {
 
 fun getRightIconAndDescription(media: Media): Pair<ImageVector, String> {
     return when (media) {
-        is Folder -> {
-            Icons.Filled.Folder to "Arrow Forward"
-        }
-
-        is Artist -> {
-            Icons.Filled.AccountCircle to "Account Circle"
-        }
-
-        is Album -> {
-            Icons.Rounded.Album to "Album Icon"
-        }
-
-        is Genre -> {
-            Icons.Rounded.Category to "Genres Icon"
-        }
-
+        is Folder -> Icons.Filled.Folder to "Arrow Forward"
+        is Artist -> Icons.Filled.AccountCircle to "Account Circle"
+        is Album -> Icons.Rounded.Album to "Album Icon"
+        is Genre -> Icons.Rounded.Category to "Genres Icon"
+        is PlaylistWithMusics -> Icons.AutoMirrored.Rounded.QueueMusic to "Playlist Icon"
         else -> {
             // In that case, media is Music
             Icons.Filled.MusicNote to "Play Arrow"

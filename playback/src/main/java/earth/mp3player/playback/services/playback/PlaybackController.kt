@@ -27,7 +27,6 @@ package earth.mp3player.playback.services.playback
 
 import android.content.ComponentName
 import android.content.Context
-import android.os.Environment
 import androidx.compose.runtime.MutableFloatState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableFloatStateOf
@@ -99,7 +98,6 @@ class PlaybackController private constructor(
         const val DEFAULT_IS_LOADED: Boolean = false
         const val DEFAULT_CURRENT_POSITION_PROGRESSION: Float = 0f
 
-        val ROOT_PATH: String = Environment.getExternalStorageDirectory().path
         val DEFAULT_MUSIC_PLAYING = null
 
         private lateinit var instance: PlaybackController

@@ -44,7 +44,7 @@ data class PlaylistWithMusics(
         entityColumn = "music_id",
         associateBy = Junction(MusicsPlaylistsRel::class)
     )
-    val musics: List<MusicDB>
+    val musics: MutableList<MusicDB>
 ) : Media {
     @Ignore
     override val id: Long = -1 // Not used

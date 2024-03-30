@@ -12,4 +12,5 @@
     <string name="create_playlist">Create a new playlist</string>
     <string name="cancel">Cancel</string>
     <string name="create">Create</string>
+    <string name="add_to_playlist">Add to a playlist</string>
 </resources>

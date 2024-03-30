@@ -35,6 +35,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
@@ -48,7 +52,7 @@ import earth.mp3player.database.models.Media
 import earth.mp3player.database.models.Music
 import earth.mp3player.database.models.relations.PlaylistWithMusics
 import earth.mp3player.database.models.tables.MusicDB
-import earth.mp3player.services.UiStateDataManager.showMusicOptions
+import earth.mp3player.ui.components.music.MusicOptionsDialog
 
 /**
  * @author Antoine Pirlot on 16/01/24
@@ -64,6 +68,7 @@ fun MediaCard(
     onClick: () -> Unit
 ) {
     val haptics = LocalHapticFeedback.current
+    var showMusicOptions: Boolean by rememberSaveable { mutableStateOf(false) }
     val title: String =
         if (media is Folder && media.parentFolder == null) {
             when (media.title) {
@@ -82,17 +87,17 @@ fun MediaCard(
     Box(
         modifier = modifier.combinedClickable(
             onClick = {
-                if (!showMusicOptions.value) {
+                if (!showMusicOptions) {
                     onClick()
                 }
-                showMusicOptions.value = false
+                showMusicOptions = false
             },
             onLongClick = {
                 if (media is Music) {
-                    if (!showMusicOptions.value) {
+                    if (!showMusicOptions) {
                         haptics.performHapticFeedback(HapticFeedbackType.LongPress)
                     }
-                    showMusicOptions.value = !showMusicOptions.value
+                    showMusicOptions = !showMusicOptions
                 }
             }
         ),
@@ -110,6 +115,19 @@ fun MediaCard(
         )
     }
     Divider(modifier = modifier)
+
+    // Music options dialog
+    if (showMusicOptions) {
+        val context = LocalContext.current
+        MusicOptionsDialog(
+            musicTitle = title,
+            onAddToPlaylist = {
+                //TODO open playlist selection
+                showMusicOptions = false
+            },
+            onDismissRequest = { showMusicOptions = false }
+        )
+    }
 }
 
 @Composable

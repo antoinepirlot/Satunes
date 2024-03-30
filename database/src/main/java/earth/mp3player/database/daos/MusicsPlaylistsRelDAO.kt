@@ -23,14 +23,19 @@
  *  PS: I don't answer quickly.
  */
 
-package earth.mp3player.services
+package earth.mp3player.database.daos
 
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
+import androidx.room.Dao
+import androidx.room.Insert
+import earth.mp3player.database.models.tables.MusicsPlaylistsRel
 
 /**
  * @author Antoine Pirlot on 30/03/2024
  */
-object UiStateDataManager {
-    val showMusicOptions: MutableState<Boolean> = mutableStateOf(false)
+
+@Dao
+interface MusicsPlaylistsRelDAO {
+
+    @Insert
+    fun insert(musicsPlaylistsRel: MusicsPlaylistsRel)
 }

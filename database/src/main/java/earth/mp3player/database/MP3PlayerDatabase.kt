@@ -30,6 +30,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import earth.mp3player.database.daos.MusicDAO
+import earth.mp3player.database.daos.MusicsPlaylistsRelDAO
 import earth.mp3player.database.daos.PlaylistDAO
 import earth.mp3player.database.models.tables.MusicDB
 import earth.mp3player.database.models.tables.MusicsPlaylistsRel
@@ -66,4 +67,5 @@ abstract class MP3PlayerDatabase: RoomDatabase() {
 
     abstract fun musicDao(): MusicDAO
     abstract fun playlistDao(): PlaylistDAO
+    abstract fun musicsPlaylistsRelDao(): MusicsPlaylistsRelDAO
 }

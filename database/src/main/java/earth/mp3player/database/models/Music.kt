@@ -26,15 +26,22 @@
 package earth.mp3player.database.models
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.os.Environment
 import android.os.storage.StorageManager
 import android.os.storage.StorageVolume
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.core.content.getSystemService
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import earth.mp3player.database.models.tables.MusicDB
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.io.File
 
 /**
@@ -105,6 +112,36 @@ data class Music private constructor(
 
         if (this.album != null) {
             this.album!!.addMusic(music = this)
+        }
+        loadAlbumArtwork(context = context)
+    }
+
+    /**
+     * Load the artwork from a media meta data retriever.
+     * Decode the byte array to set music's artwork as ImageBitmap
+     * If there's an artwork add it to music as ImageBitmap.
+     *
+     * @param context the context
+     */
+    private fun loadAlbumArtwork(context: Context) {
+        val music: Music = this
+        //Put it in Dispatchers.IO make the app not freezing while starting
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val mediaMetadataRetriever = MediaMetadataRetriever()
+
+                mediaMetadataRetriever.setDataSource(context, music.uri)
+
+                val artwork: ByteArray? = mediaMetadataRetriever.embeddedPicture
+
+                if (artwork != null) {
+                    val bitmap: Bitmap = BitmapFactory.decodeByteArray(artwork, 0, artwork.size)
+                    music.artwork = bitmap.asImageBitmap()
+                }
+            } catch (_: Exception) {
+                /* No artwork found*/
+                music.artwork = null
+            }
         }
     }
 

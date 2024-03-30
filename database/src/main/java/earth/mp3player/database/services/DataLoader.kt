@@ -27,22 +27,15 @@ package earth.mp3player.database.services
 
 import android.content.Context
 import android.database.Cursor
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.provider.MediaStore
 import androidx.compose.runtime.MutableLongState
 import androidx.compose.runtime.mutableLongStateOf
-import androidx.compose.ui.graphics.asImageBitmap
 import earth.mp3player.database.models.Album
 import earth.mp3player.database.models.Artist
 import earth.mp3player.database.models.Folder
 import earth.mp3player.database.models.Genre
 import earth.mp3player.database.models.Music
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 /**
  * @author Antoine Pirlot on 22/02/24
@@ -239,38 +232,7 @@ object DataLoader {
             context = context
         )
 
-        loadAlbumArtwork(context = context, music = music)
-
         return music
-    }
-
-    /**
-     * Load the artwork from a media meta data retriever.
-     * Decode the byte array to set music's artwork as ImageBitmap
-     * If there's an artwork add it to music as ImageBitmap.
-     *
-     * @param context the context
-     * @param music the music to add the artwork
-     */
-    private fun loadAlbumArtwork(context: Context, music: Music) {
-        //Put it in Dispatchers.IO make the app not freezing while starting
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val mediaMetadataRetriever = MediaMetadataRetriever()
-
-                mediaMetadataRetriever.setDataSource(context, music.uri)
-
-                val artwork: ByteArray? = mediaMetadataRetriever.embeddedPicture
-
-                if (artwork != null) {
-                    val bitmap: Bitmap = BitmapFactory.decodeByteArray(artwork, 0, artwork.size)
-                    music.artwork = bitmap.asImageBitmap()
-                }
-            } catch (_: Exception) {
-                /* No artwork found*/
-                music.artwork = null
-            }
-        }
     }
 
     /**

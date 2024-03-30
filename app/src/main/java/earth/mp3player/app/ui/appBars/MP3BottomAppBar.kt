@@ -74,7 +74,7 @@ fun MP3BottomAppBar(
             rememberSaveable { mutableStateOf(MenuTitle.ARTISTS) }
         } else if (SettingsManager.albumsChecked.value) {
             rememberSaveable { mutableStateOf(MenuTitle.ALBUMS) }
-        } else if (SettingsManager.genreChecked.value) {
+        } else if (SettingsManager.genresChecked.value) {
             rememberSaveable { mutableStateOf(MenuTitle.GENRES) }
         } else if (SettingsManager.playlistsChecked.value) {
             rememberSaveable { mutableStateOf(MenuTitle.PLAYLISTS) }

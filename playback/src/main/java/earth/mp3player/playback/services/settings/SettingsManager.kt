@@ -68,7 +68,7 @@ object SettingsManager {
     val foldersChecked: MutableState<Boolean> = mutableStateOf(DEFAULT_FOLDERS_CHECKED)
     val artistsChecked: MutableState<Boolean> = mutableStateOf(DEFAULT_ARTISTS_CHECKED)
     val albumsChecked: MutableState<Boolean> = mutableStateOf(DEFAULT_ALBUMS_CHECKED)
-    val genreChecked: MutableState<Boolean> = mutableStateOf(DEFAULT_GENRE_CHECKED)
+    val genresChecked: MutableState<Boolean> = mutableStateOf(DEFAULT_GENRE_CHECKED)
     val playlistsChecked: MutableState<Boolean> = mutableStateOf(DEFAULT_PLAYLIST_CHECKED)
     val closedAppPlaybackChecked: MutableState<Boolean> =
         mutableStateOf(DEFAULT_CLOSED_APP_PLAYBACK_CHECKED)
@@ -78,7 +78,7 @@ object SettingsManager {
         Pair(MenuTitle.FOLDERS, foldersChecked),
         Pair(MenuTitle.ARTISTS, artistsChecked),
         Pair(MenuTitle.ALBUMS, albumsChecked),
-        Pair(MenuTitle.GENRES, genreChecked),
+        Pair(MenuTitle.GENRES, genresChecked),
         Pair(MenuTitle.PLAYLISTS, playlistsChecked)
     )
 
@@ -94,7 +94,8 @@ object SettingsManager {
             albumsChecked.value =
                 preferences[ALBUMS_CHECKED_PREFERENCES_KEY] ?: DEFAULT_ALBUMS_CHECKED
 
-            genreChecked.value = preferences[GENRE_CHECKED_PREFERENCES_KEY] ?: DEFAULT_GENRE_CHECKED
+            genresChecked.value =
+                preferences[GENRE_CHECKED_PREFERENCES_KEY] ?: DEFAULT_GENRE_CHECKED
 
             playlistsChecked.value =
                 preferences[PLAYLISTS_CHECKED_PREFERENCES_KEY] ?: DEFAULT_PLAYLIST_CHECKED
@@ -133,8 +134,8 @@ object SettingsManager {
 
             MenuTitle.GENRES -> {
                 context.dataStore.edit { preferences: MutablePreferences ->
-                    genreChecked.value = !genreChecked.value
-                    preferences[GENRE_CHECKED_PREFERENCES_KEY] = genreChecked.value
+                    genresChecked.value = !genresChecked.value
+                    preferences[GENRE_CHECKED_PREFERENCES_KEY] = genresChecked.value
                 }
             }
 

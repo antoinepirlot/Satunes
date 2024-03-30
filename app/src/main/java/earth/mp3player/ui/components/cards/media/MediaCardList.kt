@@ -67,6 +67,8 @@ fun <T : Comparable<T>> MediaCardList(
                 key = {
                     if (it is PlaylistWithMusics) {
                         it.playlist.id
+                    } else if (it is MusicDB) {
+                        it.music.id
                     } else {
                         it.id
                     }

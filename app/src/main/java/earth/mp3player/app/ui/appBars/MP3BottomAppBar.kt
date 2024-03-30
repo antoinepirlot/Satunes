@@ -81,13 +81,18 @@ fun MP3BottomAppBar(
         } else {
             rememberSaveable { mutableStateOf(MenuTitle.MUSIC) }
         }
+    val hasMaxFiveItems: Boolean = menuTitleLists.size <= 5
 
     NavigationBar(
         modifier = modifier
     ) {
         menuTitleLists.forEach { menuTitle: MenuTitle ->
             NavigationBarItem(
-                label = { Text(text = stringResource(id = menuTitle.stringId)) },
+                label = {
+                    if (hasMaxFiveItems) {
+                        Text(text = stringResource(id = menuTitle.stringId))
+                    }
+                },
                 selected = selectedMenuTitle.value == menuTitle,
                 onClick = {
                     selectedMenuTitle.value = menuTitle

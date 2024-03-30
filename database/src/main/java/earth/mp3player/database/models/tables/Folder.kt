@@ -43,6 +43,7 @@ data class Folder (
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "folder_id") override val id: Long,
     @ColumnInfo(name = "title") override val title: String,
+    @ColumnInfo(name = "parent__folder_id") var parentFolderId: Long = -1
 ) : Media {
     @Ignore
     var parentFolder: Folder? = null

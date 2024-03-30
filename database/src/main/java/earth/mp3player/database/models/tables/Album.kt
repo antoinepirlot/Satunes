@@ -42,6 +42,7 @@ data class Album(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "album_id") override val id: Long,
     @ColumnInfo(name = "title") override val title: String,
+    @ColumnInfo(name = "artist_id") val artistId: Long? = null,
 ) : Media {
     @Ignore
     var artist: Artist? = null
@@ -53,8 +54,8 @@ data class Album(
     @Ignore
     val musicSortedMap: SortedMap<Long, Music> = sortedMapOf()
 
-    constructor(id: Long, title: String, artist: Artist? = null, musicMediaItemSortedMap: SortedMap<Music, MediaItem>)
-            : this(id = id, title = title) {
+    constructor(id: Long, title: String, artistId: Long? = null, artist: Artist? = null, musicMediaItemSortedMap: SortedMap<Music, MediaItem>)
+            : this(id = id, title = title, artistId = artistId) {
         this.artist = artist
         this.musicMediaItemSortedMap = musicMediaItemSortedMap
     }

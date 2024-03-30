@@ -50,21 +50,21 @@ data class Music (
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "music_id") override val id: Long,
     @ColumnInfo(name = "title") override val title: String,
+    @ColumnInfo(name = "display_name") val displayName: String,
+    @ColumnInfo(name = "duration") val duration: Long,
+    @ColumnInfo(name = "size") val size: Int,
     @ColumnInfo(name = "relative_path") var relativePath: String,
+    @ColumnInfo(name = "absolute_path") var absolutePath: String = "${ROOT_PATH}/$relativePath/$displayName",
     @ColumnInfo(name = "folder_id") val folderId: Long,
     @ColumnInfo(name = "genre_id") var genreId: Long? = null,
     @ColumnInfo(name = "album_id") val albumId: Long? = null,
     @ColumnInfo(name = "artist_id") val artistId: Long? = null,
 ) : Media {
-    @Ignore var displayName: String? = null
-    @Ignore var duration: Long = -1
-    @Ignore var size: Int = -1
     @Ignore var folder: Folder? = null
     @Ignore var artist: Artist? = null
     @Ignore var album: Album? = null
     @Ignore var genre: Genre? = null
     @Ignore lateinit var mediaItem: MediaItem
-    @Ignore var absolutePath: String? = "${ROOT_PATH}/$relativePath/$displayName"
     @Ignore var uri: Uri = Uri.Builder().appendPath(this.absolutePath).build()
     @Ignore var artwork: ImageBitmap? = null
 
@@ -79,12 +79,10 @@ data class Music (
                 artist: Artist? = null, album: Album? = null, genre: Genre? = null,
                 context: Context
     ) : this(
-        id = id, title = title, relativePath = relativePath, folderId = folderId, genreId = genreId,
-        albumId = albumId, artistId = artistId
+        id = id, title = title, displayName = displayName, duration = duration, size = size,
+        relativePath = relativePath, folderId = folderId, genreId = genreId, albumId = albumId,
+        artistId = artistId
     ) {
-        this.displayName = displayName
-        this.duration = duration
-        this.size = size
         this.album = album
         this.folder = folder
         this.genre = genre
@@ -94,7 +92,7 @@ data class Music (
 
         for (volume in storageVolumes) {
             absolutePath = "${volume.directory!!.path}/$relativePath/$displayName"
-            if (!File(this.absolutePath!!).exists()) {
+            if (!File(this.absolutePath).exists()) {
                 if (storageVolumes.last() == volume) {
                     throw IllegalAccessException("This media doesn't exist")
                 }

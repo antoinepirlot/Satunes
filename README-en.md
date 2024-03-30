@@ -20,6 +20,8 @@ Installation instructions:
 9) I recommand you to deactvate unknown app installation for the app from where you install the app.
 10) Enjoy you music freely and passion :D
 
+If you like the app and want to support me click [here](https://fr.tipeee.com/antoinepirlot).
+
 To activate Android Auto you can find instructions [here](#050-beta)
 
 # UPDATES

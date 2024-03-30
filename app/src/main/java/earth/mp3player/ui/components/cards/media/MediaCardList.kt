@@ -64,7 +64,13 @@ fun <T : Comparable<T>> MediaCardList(
         ) {
             items(
                 items = mediaMap.values.toList(),
-                key = { it.id }
+                key = {
+                    if (it is PlaylistWithMusics) {
+                        it.playlist.id
+                    } else {
+                        it.id
+                    }
+                }
             ) { media: Media ->
                 // First pair is image vector and second one is content description (String)
                 val pair = getRightIconAndDescription(media)

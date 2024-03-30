@@ -26,6 +26,7 @@
 package earth.mp3player.database.services
 
 import android.content.Context
+import android.database.sqlite.SQLiteConstraintException
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import earth.mp3player.database.MP3PlayerDatabase
@@ -86,7 +87,11 @@ class DatabaseManager(context: Context) {
 
     fun insertOne(playlist: Playlist) {
         CoroutineScope(Dispatchers.IO).launch {
-            playlist.id = playlistDao.insertOne(playlist = playlist)
+            try {
+                playlist.id = playlistDao.insertOne(playlist = playlist)
+            } catch (_: SQLiteConstraintException) {
+                return@launch
+            }
             DataManager.playlistWithMusicsMap[playlist.title] =
                 playlistDao.getPlaylistWithMusics(playlistId = playlist.id)
         }

@@ -30,9 +30,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
-import earth.mp3player.database.models.dto.AlbumDTO
-import earth.mp3player.database.models.dto.ArtistDTO
-import earth.mp3player.database.models.dto.MusicDTO
+import earth.mp3player.database.models.Media
 import java.util.SortedMap
 
 /**
@@ -44,19 +42,19 @@ data class Artist(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "artist_id") override val id: Long,
     @ColumnInfo(name = "title") override val title: String,
-) : ArtistDTO {
+) : Media {
     @Ignore
-    var musicList: MutableList<MusicDTO> = mutableListOf()
+    var musicList: MutableList<Music> = mutableListOf()
         private set
 
     @Ignore
-    override var albumSortedMap: SortedMap<String, AlbumDTO> = sortedMapOf()
+    var albumSortedMap: SortedMap<String, Album> = sortedMapOf()
         private set
 
     @Ignore
-    override val musicMediaItemSortedMap: SortedMap<MusicDTO, MediaItem> = sortedMapOf()
+    override val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
 
-    constructor(id: Long, title: String, musicList: MutableList<MusicDTO>, albumSortedMap: SortedMap<String, AlbumDTO>)
+    constructor(id: Long, title: String, musicList: MutableList<Music>, albumSortedMap: SortedMap<String, Album>)
             : this(id = id, title = title) {
         this.albumSortedMap = albumSortedMap
         this.musicList = musicList

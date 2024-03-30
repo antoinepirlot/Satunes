@@ -38,11 +38,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
-import earth.mp3player.database.models.dto.AlbumDTO
-import earth.mp3player.database.models.dto.ArtistDTO
-import earth.mp3player.database.models.dto.FolderDTO
-import earth.mp3player.database.models.dto.GenreDTO
-import earth.mp3player.database.models.dto.MusicDTO
+import earth.mp3player.database.models.Media
 import java.io.File
 
 /**
@@ -54,23 +50,23 @@ data class Music (
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "music_id") override val id: Long,
     @ColumnInfo(name = "title") override val title: String,
-    @ColumnInfo(name = "relative_path") override var relativePath: String,
-    @ColumnInfo(name = "folder_id") override val folderId: Long,
-    @ColumnInfo(name = "genre_id") override var genreId: Long? = null,
-    @ColumnInfo(name = "album_id") override val albumId: Long? = null,
-    @ColumnInfo(name = "artist_id") override val artistId: Long? = null,
-) : MusicDTO {
-    @Ignore override lateinit var displayName: String
-    @Ignore override var duration: Long = -1
-    @Ignore override var size: Int = -1
-    @Ignore override var folder: FolderDTO? = null
-    @Ignore override var artist: ArtistDTO? = null
-    @Ignore override var album: AlbumDTO? = null
-    @Ignore override var genre: GenreDTO? = null
+    @ColumnInfo(name = "relative_path") var relativePath: String,
+    @ColumnInfo(name = "folder_id") val folderId: Long,
+    @ColumnInfo(name = "genre_id") var genreId: Long? = null,
+    @ColumnInfo(name = "album_id") val albumId: Long? = null,
+    @ColumnInfo(name = "artist_id") val artistId: Long? = null,
+) : Media {
+    @Ignore lateinit var displayName: String
+    @Ignore var duration: Long = -1
+    @Ignore var size: Int = -1
+    @Ignore var folder: Folder? = null
+    @Ignore var artist: Artist? = null
+    @Ignore var album: Album? = null
+    @Ignore var genre: Genre? = null
     @Ignore lateinit var mediaItem: MediaItem
-    @Ignore override var absolutePath: String? = "${ROOT_PATH}/$relativePath/$displayName"
-    @Ignore override var uri: Uri = Uri.Builder().appendPath(this.absolutePath).build()
-    @Ignore override var artwork: ImageBitmap? = null
+    @Ignore var absolutePath: String? = "${ROOT_PATH}/$relativePath/$displayName"
+    @Ignore var uri: Uri = Uri.Builder().appendPath(this.absolutePath).build()
+    @Ignore var artwork: ImageBitmap? = null
 
     companion object {
         val ROOT_PATH: String = Environment.getExternalStorageDirectory().path
@@ -79,8 +75,8 @@ data class Music (
     //Init
     constructor(id: Long, title: String, relativePath: String, folderId: Long,
                 genreId: Long? = null, albumId: Long? = null, artistId: Long? = null,
-                displayName: String, duration: Long, size: Int, folder: FolderDTO? = null,
-                artist: ArtistDTO? = null, album: AlbumDTO? = null, genre: GenreDTO? = null,
+                displayName: String, duration: Long, size: Int, folder: Folder? = null,
+                artist: Artist? = null, album: Album? = null, genre: Genre? = null,
                 context: Context
     ) : this(
         id = id, title = title, relativePath = relativePath, folderId = folderId, genreId = genreId,
@@ -121,9 +117,7 @@ data class Music (
             .build()
 
         if (this.album != null) {
-            @Suppress("NAME_SHADOWING")
-            val album: Album = this.album as Album
-            album.addMusic(music = this)
+            this.album!!.addMusic(music = this)
         }
     }
 

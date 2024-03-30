@@ -31,8 +31,7 @@ import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import earth.mp3player.database.models.dto.GenreDTO
-import earth.mp3player.database.models.dto.MusicDTO
+import earth.mp3player.database.models.Media
 import java.util.SortedMap
 
 /**
@@ -52,12 +51,12 @@ data class Genre(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "genre_id") override val id: Long,
     @ColumnInfo(name = "title") override val title: String,
-) : GenreDTO {
+) : Media {
     @Ignore
-    override val musicMap: SortedMap<Long, MusicDTO> = sortedMapOf()
+    val musicMap: SortedMap<Long, Music> = sortedMapOf()
 
     @Ignore
-    override val musicMediaItemSortedMap: SortedMap<MusicDTO, MediaItem> = sortedMapOf()
+    override val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
 
     fun addMusic(music: Music) {
         musicMap.putIfAbsent(music.id, music)

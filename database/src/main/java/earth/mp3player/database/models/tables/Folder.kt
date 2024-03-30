@@ -32,8 +32,6 @@ import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import earth.mp3player.database.models.Media
-import earth.mp3player.database.models.dto.FolderDTO
-import earth.mp3player.database.models.dto.MusicDTO
 import java.util.SortedMap
 
 /**
@@ -45,23 +43,23 @@ data class Folder (
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "folder_id") override val id: Long,
     @ColumnInfo(name = "title") override val title: String,
-) : FolderDTO {
+) : Media {
     @Ignore
-    override var parentFolder: Folder? = null
+    var parentFolder: Folder? = null
 
     @Ignore
-    private var subFolderList: SortedMap<Long, FolderDTO> = sortedMapOf()
+    private var subFolderList: SortedMap<Long, Folder> = sortedMapOf()
 
     @Ignore
-    override var musicMediaItemSortedMap: SortedMap<MusicDTO, MediaItem> = sortedMapOf()
+    override var musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
         private set
 
     constructor(
         id: Long,
         title: String,
         parentFolder: Folder? = null,
-        subFolderList: SortedMap<Long, FolderDTO> = sortedMapOf(),
-        musicMediaItemSortedMap: SortedMap<MusicDTO, MediaItem> = sortedMapOf()
+        subFolderList: SortedMap<Long, Folder> = sortedMapOf(),
+        musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
     ): this(id = id, title = title) {
         this.parentFolder = parentFolder
         this.subFolderList = subFolderList
@@ -73,7 +71,7 @@ data class Folder (
      *
      * @return a list of subfolder and each subfolder is a Folder object
      */
-    fun getSubFolderList(): SortedMap<Long, FolderDTO> {
+    fun getSubFolderList(): SortedMap<Long, Folder> {
         return this.subFolderList
     }
 
@@ -94,7 +92,7 @@ data class Folder (
 
     /**
      * Add sub folders in chain to this folder. For example the list is; "Android", "music", "favorites"
-     * The rresult will be Android folder contains music folder and music folder contains favorite folder.
+     * The result will be Android folder contains music folder and music folder contains favorite folder.
      * /!\ It's NOT this folder that contains Android, music and favorite folder side by side.
      * @param subFolderNameChainList : the relative path that contains the sub folders names
      *                                 It's a path not all the subfolder of this folder
@@ -141,8 +139,7 @@ data class Folder (
             return this
         }
 
-        this.subFolderList.values.forEach {
-            val subFolder: Folder = it as Folder
+        this.subFolderList.values.forEach { subFolder: Folder ->
             if (subFolder.title == splitPath[0]) {
                 splitPath.remove(splitPath[0])
                 return subFolder.getSubFolder(splitPath)
@@ -152,14 +149,13 @@ data class Folder (
         return null
     }
 
-    fun getAllMusic(): SortedMap<MusicDTO, MediaItem> {
-        val musicMediaSortedMap: SortedMap<MusicDTO, MediaItem> = sortedMapOf()
+    fun getAllMusic(): SortedMap<Music, MediaItem> {
+        val musicMediaSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
 
         musicMediaSortedMap.putAll(this.musicMediaItemSortedMap)
 
         if (this.subFolderList.isNotEmpty()) {
-            this.subFolderList.forEach {
-                val folder: Folder = it.value as Folder
+            this.subFolderList.forEach { (_, folder: Folder) ->
                 musicMediaSortedMap.putAll(folder.getAllMusic())
             }
         }

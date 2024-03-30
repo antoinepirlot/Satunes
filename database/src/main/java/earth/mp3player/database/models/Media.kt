@@ -26,7 +26,6 @@
 package earth.mp3player.database.models
 
 import androidx.media3.common.MediaItem
-import earth.mp3player.database.models.dto.MusicDTO
 import earth.mp3player.database.models.tables.Music
 import java.text.Normalizer
 import java.util.SortedMap
@@ -37,7 +36,7 @@ import java.util.SortedMap
 interface Media : Comparable<Media> {
     val id: Long
     val title: String
-    val musicMediaItemSortedMap: SortedMap<MusicDTO, MediaItem>
+    val musicMediaItemSortedMap: SortedMap<Music, MediaItem>
         get() = sortedMapOf()
 
     override fun compareTo(other: Media): Int {

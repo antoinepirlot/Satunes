@@ -24,6 +24,8 @@
  */
 package earth.mp3player.ui.components.cards.media
 
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
@@ -32,40 +34,80 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import earth.mp3player.R
+import earth.mp3player.database.models.Folder
+import earth.mp3player.database.models.Media
 import earth.mp3player.database.models.Music
+import earth.mp3player.database.models.relations.PlaylistWithMusics
+import earth.mp3player.database.models.tables.MusicDB
+import earth.mp3player.services.UiStateDataManager.showMusicOptions
 
 /**
  * @author Antoine Pirlot on 16/01/24
  */
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MediaCard(
     modifier: Modifier = Modifier,
-    text: String,
+    media: Media,
     imageVector: ImageVector,
     contentDescription: String? = null,
     onClick: () -> Unit
 ) {
-    Box(modifier = modifier) {
-        TextButton(onClick = onClick) {
-            ListItem(
-                headlineContent = {
-                    Text(text = text)
-                },
-                leadingContent = {
-                    Icon(
-                        imageVector = imageVector,
-                        contentDescription = contentDescription
-                    )
-                }
-            )
+    val haptics = LocalHapticFeedback.current
+    val title: String =
+        if (media is Folder && media.parentFolder == null) {
+            when (media.title) {
+                "0" -> stringResource(id = R.string.this_device)
+
+                else -> "${stringResource(id = R.string.external_storage)}: ${media.title}"
+            }
+        } else if (media is PlaylistWithMusics) {
+            media.playlist.title
+        } else if (media is MusicDB) {
+            media.music.title
+        } else {
+            media.title
         }
+
+    Box(
+        modifier = modifier.combinedClickable(
+            onClick = {
+                if (!showMusicOptions.value) {
+                    onClick()
+                }
+                showMusicOptions.value = false
+            },
+            onLongClick = {
+                if (media is Music) {
+                    if (!showMusicOptions.value) {
+                        haptics.performHapticFeedback(HapticFeedbackType.LongPress)
+                    }
+                    showMusicOptions.value = !showMusicOptions.value
+                }
+            }
+        ),
+    ) {
+        ListItem(
+            headlineContent = {
+                Text(text = title)
+            },
+            leadingContent = {
+                Icon(
+                    imageVector = imageVector,
+                    contentDescription = contentDescription
+                )
+            }
+        )
     }
     Divider(modifier = modifier)
 }
@@ -76,7 +118,7 @@ fun CardPreview() {
     val music = Music(
         id = 1,
         title = "",
-        displayName = "Il avait les mots" ,
+        displayName = "Il avait les mots",
         duration = 2,
         size = 2,
         relativePath = "relative path",
@@ -84,7 +126,7 @@ fun CardPreview() {
     )
     MediaCard(
         modifier = Modifier.fillMaxSize(),
-        text = music.title,
+        media = music,
         imageVector = Icons.Filled.PlayArrow,
         onClick = {})
 }

@@ -31,10 +31,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import earth.mp3player.R
-import earth.mp3player.database.models.Folder
 import earth.mp3player.database.models.Media
 import earth.mp3player.database.models.relations.PlaylistWithMusics
 import earth.mp3player.database.models.tables.MusicDB
@@ -74,24 +71,9 @@ fun <T : Comparable<T>> MediaCardList(
             ) { media: Media ->
                 // First pair is image vector and second one is content description (String)
                 val pair = getRightIconAndDescription(media)
-                val mediaName: String =
-                    if (media is Folder && media.parentFolder == null) {
-                        when (media.title) {
-                            "0" -> stringResource(id = R.string.this_device)
-
-                            else -> "${stringResource(id = R.string.external_storage)}: ${media.title}"
-                        }
-                    } else if (media is PlaylistWithMusics) {
-                        media.playlist.title
-                    } else if (media is MusicDB) {
-                        media.music.title
-                    } else {
-                        media.title
-                    }
-
                 MediaCard(
                     modifier = modifier,
-                    text = mediaName,
+                    media = media,
                     imageVector = pair.first,
                     contentDescription = pair.second,
                     onClick = { openMedia(media) }

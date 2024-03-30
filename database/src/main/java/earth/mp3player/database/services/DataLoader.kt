@@ -23,7 +23,7 @@
  * PS: I don't answer quickly.
  */
 
-package earth.mp3player.playback.services.data
+package earth.mp3player.database.services
 
 import android.content.Context
 import android.database.Cursor

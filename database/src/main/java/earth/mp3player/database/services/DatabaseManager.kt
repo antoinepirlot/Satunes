@@ -42,18 +42,18 @@ class DatabaseManager(context: Context) {
     private val database: MP3PlayerDatabase = MP3PlayerDatabase.getDatabase(context = context)
     private val musicDao: MusicDAO = database.musicDao()
 
-    fun insert(vararg musics: MusicDB) {
-        CoroutineScope(Dispatchers.IO).launch {
-            musicDao.insert(musics = musics)
-        }
-    }
-
     fun getMusic(id: Long): MutableState<MusicDB?> {
         val music: MutableState<MusicDB?> = mutableStateOf(null)
         CoroutineScope(Dispatchers.IO).launch {
             music.value = musicDao.get(id = id)
         }
         return music
+    }
+
+    fun insert(vararg musics: MusicDB) {
+        CoroutineScope(Dispatchers.IO).launch {
+            musicDao.insert(musics = musics)
+        }
     }
 
     fun delete(music: MusicDB) {

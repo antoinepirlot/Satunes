@@ -21,6 +21,8 @@ Voici les instructions pour installer l'application:
 8) Je te recommande te désactiver l'installation d'applis inconnue de l'application depuis laquelle tu as ouvert le fichier.
 9) Profite de ta musique en toute liberté :D
 
+Si l'application te plait et que tu as envie de me soutenir, n'hésite pas à le faire [ici](https://fr.tipeee.com/antoinepirlot)
+
 Pour activer Android Auto clique [ici](#050-beta) pour savoir comment faire.
 
 # UPDATES

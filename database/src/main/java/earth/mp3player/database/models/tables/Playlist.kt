@@ -37,6 +37,6 @@ import earth.mp3player.database.models.Media
 @Entity(tableName = "playlists")
 data class Playlist (
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "playlist_id") override val id: Long,
+    @ColumnInfo(name = "playlist_id") override var id: Long,
     @ColumnInfo(name = "title") override val title: String,
 ) : Media

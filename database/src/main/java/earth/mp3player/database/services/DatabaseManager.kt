@@ -65,15 +65,17 @@ class DatabaseManager(context: Context) {
         return music
     }
 
-    fun insert(vararg musics: MusicDB) {
+    fun insertOne(vararg musics: MusicDB) {
         CoroutineScope(Dispatchers.IO).launch {
             musicDao.insert(musics = musics)
         }
     }
 
-    fun insert(vararg playlists: Playlist) {
+    fun insertOne(playlist: Playlist) {
         CoroutineScope(Dispatchers.IO).launch {
-            playlistDao.insert(playlists = playlists)
+            playlist.id = playlistDao.insertOne(playlist = playlist)
+            DataManager.playlistWithMusicsMap[playlist.title] =
+                playlistDao.getPlaylistWithMusics(playlistId = playlist.id)
         }
     }
 

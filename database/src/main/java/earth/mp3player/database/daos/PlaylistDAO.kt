@@ -40,9 +40,16 @@ import earth.mp3player.database.models.tables.Playlist
 interface PlaylistDAO {
 
     @Transaction
+    @Query("SELECT * FROM playlists WHERE playlist_id = :playlistId")
+    fun getPlaylistWithMusics(playlistId: Long): PlaylistWithMusics?
+
+    @Transaction
     @Query("SELECT * FROM  playlists")
     fun getPlaylistsWithMusics(): List<PlaylistWithMusics>
 
     @Insert
-    fun insert(vararg playlists: Playlist)
+    fun insertAll(vararg playlists: Playlist)
+
+    @Insert
+    fun insertOne(playlist: Playlist): Long
 }

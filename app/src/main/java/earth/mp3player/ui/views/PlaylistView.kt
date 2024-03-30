@@ -72,7 +72,7 @@ fun PlaylistView(
                 PlaylistCreationForm(
                     onConfirm = { playlistTitle: String ->
                         val playlist: Playlist = Playlist(id = 0, title = playlistTitle)
-                        DatabaseManager(context = context).insert(playlist)
+                        DatabaseManager(context = context).insertOne(playlist)
                         openAlertDialog = false
                     },
                     onDismissRequest = { openAlertDialog = false }

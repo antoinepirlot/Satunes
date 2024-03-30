@@ -56,7 +56,7 @@ data class Music (
     @ColumnInfo(name = "album_id") val albumId: Long? = null,
     @ColumnInfo(name = "artist_id") val artistId: Long? = null,
 ) : Media {
-    @Ignore lateinit var displayName: String
+    @Ignore var displayName: String? = null
     @Ignore var duration: Long = -1
     @Ignore var size: Int = -1
     @Ignore var folder: Folder? = null

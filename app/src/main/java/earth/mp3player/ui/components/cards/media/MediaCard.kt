@@ -52,7 +52,7 @@ import earth.mp3player.database.models.Media
 import earth.mp3player.database.models.Music
 import earth.mp3player.database.models.relations.PlaylistWithMusics
 import earth.mp3player.database.models.tables.MusicDB
-import earth.mp3player.ui.components.music.MusicOptionsDialog
+import earth.mp3player.ui.components.music.options.MusicOptionsDialog
 
 /**
  * @author Antoine Pirlot on 16/01/24

@@ -26,6 +26,7 @@
 package earth.mp3player.ui.views
 
 import android.content.Context
+import androidx.compose.foundation.layout.Column
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.PlaylistAdd
 import androidx.compose.material3.FloatingActionButton
@@ -59,36 +60,38 @@ fun PlaylistView(
 ) {
     val context: Context = LocalContext.current
     var openAlertDialog by remember { mutableStateOf(false) }
-    FloatingActionButton(onClick = { openAlertDialog = true }) {
-        Icon(
-            imageVector = Icons.AutoMirrored.Rounded.PlaylistAdd,
-            contentDescription = "Create a playlist button"
-        )
-    }
-    when {
-        openAlertDialog -> {
-            PlaylistCreationForm(
-                onConfirm = { playlistTitle: String ->
-                    val playlist: Playlist = Playlist(id = 0, title = playlistTitle)
-                    DatabaseManager(context = context).insert(playlist)
-                    openAlertDialog = false
-                },
-                onDismissRequest = { openAlertDialog = false }
+    Column {
+        FloatingActionButton(onClick = { openAlertDialog = true }) {
+            Icon(
+                imageVector = Icons.AutoMirrored.Rounded.PlaylistAdd,
+                contentDescription = "Create a playlist button"
             )
         }
-    }
-    @Suppress("UNCHECKED_CAST")
-    val playlistMap: SortedMap<String, Media> =
-        DataManager.playlistWithMusicsMap as SortedMap<String, Media>
+        when {
+            openAlertDialog -> {
+                PlaylistCreationForm(
+                    onConfirm = { playlistTitle: String ->
+                        val playlist: Playlist = Playlist(id = 0, title = playlistTitle)
+                        DatabaseManager(context = context).insert(playlist)
+                        openAlertDialog = false
+                    },
+                    onDismissRequest = { openAlertDialog = false }
+                )
+            }
+        }
+        @Suppress("UNCHECKED_CAST")
+        val playlistMap: SortedMap<String, Media> =
+            DataManager.playlistWithMusicsMap as SortedMap<String, Media>
 
-    MediaListView(
-        mediaMap = playlistMap,
-        openMedia = { clickedMedia: Media ->
-            openMedia(navController = navController, media = clickedMedia)
-        },
-        shuffleMusicAction = { /*TODO*/ }
-    ) {
+        MediaListView(
+            mediaMap = playlistMap,
+            openMedia = { clickedMedia: Media ->
+                openMedia(navController = navController, media = clickedMedia)
+            },
+            shuffleMusicAction = { /*TODO*/ }
+        ) {
 
+        }
     }
 }
 

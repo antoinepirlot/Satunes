@@ -34,9 +34,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import earth.mp3player.app.R
-import earth.mp3player.database.models.tables.Folder
-import earth.mp3player.database.models.Media
 import earth.mp3player.app.ui.utils.getRightIconAndDescription
+import earth.mp3player.database.models.Folder
+import earth.mp3player.database.models.Media
 
 /**
  * @author Antoine Pirlot on 16/01/24

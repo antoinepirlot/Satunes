@@ -38,7 +38,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import earth.mp3player.database.models.tables.Music
+import earth.mp3player.database.models.Music
 
 /**
  * @author Antoine Pirlot on 16/01/24

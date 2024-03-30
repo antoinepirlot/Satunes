@@ -37,7 +37,7 @@ import earth.mp3player.car.pages.ScreenPages
 import earth.mp3player.car.pages.pages
 import earth.mp3player.car.utils.buildMediaItem
 import earth.mp3player.database.models.Media
-import earth.mp3player.database.models.tables.Music
+import earth.mp3player.database.models.Music
 import earth.mp3player.database.services.DataManager
 import earth.mp3player.playback.services.playback.PlaybackController
 

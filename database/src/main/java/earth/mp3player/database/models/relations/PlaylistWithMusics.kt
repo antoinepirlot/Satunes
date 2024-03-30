@@ -28,7 +28,7 @@ package earth.mp3player.database.models.relations
 import androidx.room.Embedded
 import androidx.room.Junction
 import androidx.room.Relation
-import earth.mp3player.database.models.tables.Music
+import earth.mp3player.database.models.tables.MusicDB
 import earth.mp3player.database.models.tables.MusicsPlaylistsRel
 import earth.mp3player.database.models.tables.Playlist
 
@@ -42,5 +42,5 @@ data class PlaylistWithMusics(
         entityColumn = "music_id",
         associateBy = Junction(MusicsPlaylistsRel::class)
     )
-    val musics: List<Music>
+    val musics: List<MusicDB>
 )

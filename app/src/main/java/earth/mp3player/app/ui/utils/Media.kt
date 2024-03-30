@@ -36,13 +36,13 @@ import androidx.compose.material.icons.rounded.Category
 import androidx.compose.material.icons.rounded.Folder
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.media3.common.MediaItem
-import earth.mp3player.database.models.tables.Album
-import earth.mp3player.database.models.tables.Artist
-import earth.mp3player.database.models.tables.Folder
-import earth.mp3player.database.models.tables.Genre
+import earth.mp3player.database.models.Album
+import earth.mp3player.database.models.Artist
+import earth.mp3player.database.models.Folder
+import earth.mp3player.database.models.Genre
 import earth.mp3player.database.models.Media
+import earth.mp3player.database.models.Music
 import earth.mp3player.playback.models.MenuTitle
-import earth.mp3player.database.models.tables.Music
 import earth.mp3player.playback.services.playback.PlaybackController
 import java.util.SortedMap
 

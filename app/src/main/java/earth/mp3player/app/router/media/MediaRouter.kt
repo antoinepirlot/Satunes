@@ -32,18 +32,18 @@ import androidx.media3.common.MediaItem
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import earth.mp3player.database.models.tables.Album
-import earth.mp3player.database.models.tables.Artist
-import earth.mp3player.database.models.tables.Folder
-import earth.mp3player.database.models.tables.Genre
-import earth.mp3player.database.models.Media
-import earth.mp3player.database.models.tables.Music
-import earth.mp3player.database.services.DataManager
-import earth.mp3player.playback.services.playback.PlaybackController
 import earth.mp3player.app.ui.utils.getMusicListFromFolder
 import earth.mp3player.app.ui.utils.startMusic
 import earth.mp3player.app.ui.views.MediaListView
 import earth.mp3player.app.ui.views.PlayBackView
+import earth.mp3player.database.models.Album
+import earth.mp3player.database.models.Artist
+import earth.mp3player.database.models.Folder
+import earth.mp3player.database.models.Genre
+import earth.mp3player.database.models.Media
+import earth.mp3player.database.models.Music
+import earth.mp3player.database.services.DataManager
+import earth.mp3player.playback.services.playback.PlaybackController
 import java.util.SortedMap
 
 /**

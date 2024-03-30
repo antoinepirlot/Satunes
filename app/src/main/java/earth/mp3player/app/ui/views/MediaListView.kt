@@ -33,12 +33,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import earth.mp3player.database.models.Media
-import earth.mp3player.database.models.tables.Music
-import earth.mp3player.playback.services.playback.PlaybackController
 import earth.mp3player.app.ui.components.cards.media.MediaCardList
 import earth.mp3player.app.ui.components.music.bars.ShowCurrentMusicButton
 import earth.mp3player.app.ui.components.music.buttons.ShuffleAllButton
+import earth.mp3player.database.models.Media
+import earth.mp3player.database.models.Music
+import earth.mp3player.playback.services.playback.PlaybackController
 
 /**
  * @author Antoine Pirlot on 01/02/24

@@ -26,11 +26,11 @@
 package earth.mp3player.database.services
 
 import androidx.media3.common.MediaItem
-import earth.mp3player.database.models.tables.Album
-import earth.mp3player.database.models.tables.Artist
-import earth.mp3player.database.models.tables.Folder
-import earth.mp3player.database.models.tables.Genre
-import earth.mp3player.database.models.tables.Music
+import earth.mp3player.database.models.Album
+import earth.mp3player.database.models.Artist
+import earth.mp3player.database.models.Folder
+import earth.mp3player.database.models.Genre
+import earth.mp3player.database.models.Music
 import java.util.SortedMap
 
 /**

@@ -26,7 +26,7 @@
 package earth.mp3player.playback.models
 
 import androidx.media3.common.MediaItem
-import earth.mp3player.database.models.tables.Music
+import earth.mp3player.database.models.Music
 import java.util.SortedMap
 
 /**

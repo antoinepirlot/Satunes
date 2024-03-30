@@ -1,4 +1,29 @@
 /*
+ *  This file is part of MP3 Player.
+ *
+ *  MP3 Player is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software Foundation,
+ *  either version 3 of the License, or (at your option) any later version.
+ *
+ *  MP3 Player is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ *   without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *  See the GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License along with MP3 Player.
+ *  If not, see <https://www.gnu.org/licenses/>.
+ *
+ *  ***** INFORMATIONS ABOUT THE AUTHOR *****
+ *  The author of this file is Antoine Pirlot, the owner of this project.
+ *  You find this original project on github.
+ *
+ *  My github link is: https://github.com/antoinepirlot
+ *  This current project's link is: https://github.com/antoinepirlot/MP3-Player
+ *
+ *  You can contact me via my email: pirlot.antoine@outlook.com
+ *  PS: I don't answer quickly.
+ */
+
+/*
  * This file is part of MP3 Player.
  *
  * MP3 Player is free software: you can redistribute it and/or modify it under
@@ -23,7 +48,7 @@
  * PS: I don't answer quickly.
  */
 
-package earth.mp3player.database.models.tables
+package earth.mp3player.database.models
 
 import android.content.Context
 import android.net.Uri
@@ -34,59 +59,48 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.core.content.getSystemService
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.Ignore
-import androidx.room.PrimaryKey
-import earth.mp3player.database.models.Media
+import earth.mp3player.database.models.tables.MusicDB
 import java.io.File
 
 /**
  * @author Antoine Pirlot on 27/03/2024
  */
 
-@Entity(tableName = "musics")
-data class Music (
-    @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "music_id") override val id: Long,
-    @ColumnInfo(name = "title") override val title: String,
-    @ColumnInfo(name = "display_name") val displayName: String,
-    @ColumnInfo(name = "duration") val duration: Long,
-    @ColumnInfo(name = "size") val size: Int,
-    @ColumnInfo(name = "relative_path") var relativePath: String,
-    @ColumnInfo(name = "absolute_path") var absolutePath: String = "${ROOT_PATH}/$relativePath/$displayName",
-    @ColumnInfo(name = "folder_id") val folderId: Long,
-    @ColumnInfo(name = "genre_id") var genreId: Long? = null,
-    @ColumnInfo(name = "album_id") val albumId: Long? = null,
-    @ColumnInfo(name = "artist_id") val artistId: Long? = null,
+data class Music private constructor(
+    override val id: Long,
+    override var title: String,
+    var displayName: String,
+    val duration: Long = 0,
+    val size: Int = 0,
+    var relativePath: String,
+    var folder: Folder? = null,
+    var artist: Artist? = null,
+    var album: Album? = null,
+    var genre: Genre? = null,
 ) : Media {
-    @Ignore var folder: Folder? = null
-    @Ignore var artist: Artist? = null
-    @Ignore var album: Album? = null
-    @Ignore var genre: Genre? = null
-    @Ignore lateinit var mediaItem: MediaItem
-    @Ignore var uri: Uri = Uri.Builder().appendPath(this.absolutePath).build()
-    @Ignore var artwork: ImageBitmap? = null
+    lateinit var mediaItem: MediaItem
+    private var absolutePath: String = "$ROOT_PATH/$relativePath/$displayName"
+    var uri: Uri = Uri.Builder().appendPath(this.absolutePath).build()
+    var artwork: ImageBitmap? = null
+    val musicDB: MusicDB = MusicDB(id = this.id)
 
     companion object {
         val ROOT_PATH: String = Environment.getExternalStorageDirectory().path
     }
 
-    //Init
-    constructor(id: Long, title: String, relativePath: String, folderId: Long = -1,
-                genreId: Long? = null, albumId: Long? = null, artistId: Long? = null,
-                displayName: String, duration: Long, size: Int, folder: Folder? = null,
-                artist: Artist? = null, album: Album? = null, genre: Genre? = null,
-                context: Context
-    ) : this(
-        id = id, title = title, displayName = displayName, duration = duration, size = size,
-        relativePath = relativePath, folderId = folderId, genreId = genreId, albumId = albumId,
-        artistId = artistId
-    ) {
-        this.album = album
-        this.folder = folder
-        this.genre = genre
-
+    constructor(
+        id: Long,
+        title: String,
+        displayName: String,
+        duration: Long,
+        size: Int,
+        relativePath: String,
+        folder: Folder? = null,
+        artist: Artist? = null,
+        album: Album? = null,
+        genre: Genre? = null,
+        context: Context
+    ) : this(id, title, displayName, duration, size, relativePath, folder, artist, album, genre) {
         val storageManager = context.getSystemService<StorageManager>()
         val storageVolumes: List<StorageVolume> = storageManager!!.storageVolumes
 

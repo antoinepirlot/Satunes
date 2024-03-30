@@ -23,28 +23,18 @@
  *  PS: I don't answer quickly.
  */
 
-package earth.mp3player.database.models
+package earth.mp3player.database.models.tables
 
-import androidx.media3.common.MediaItem
-import java.text.Normalizer
-import java.util.SortedMap
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
 /**
- * @author Antoine Pirlot on 29/03/2024
+ * @author Antoine Pirlot on 30/03/2024
  */
-interface Media : Comparable<Media> {
-    val id: Long
-    val title: String
-    val musicMediaItemSortedMap: SortedMap<Music, MediaItem>
-        get() = sortedMapOf()
 
-    override fun compareTo(other: Media): Int {
-        val thisTitleNormalized: String =
-            Normalizer.normalize(this.title.lowercase(), Normalizer.Form.NFD)
-
-        val otherTitleNormalized: String =
-            Normalizer.normalize(other.title.lowercase(), Normalizer.Form.NFD)
-
-        return thisTitleNormalized.compareTo(otherTitleNormalized)
-    }
-}
+@Entity("musics")
+data class MusicDB(
+    @PrimaryKey
+    @ColumnInfo("music_id") val id: Long
+)

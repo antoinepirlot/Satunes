@@ -57,12 +57,11 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import earth.mp3player.app.router.main.MainRouter
 import earth.mp3player.app.router.media.MediaDestination
-import earth.mp3player.playback.services.playback.PlaybackController
-import earth.mp3player.playback.services.settings.SettingsManager
 import earth.mp3player.app.ui.appBars.MP3BottomAppBar
 import earth.mp3player.app.ui.appBars.MP3TopAppBar
 import earth.mp3player.app.ui.theme.MP3Theme
-import earth.mp3player.database.MP3PlayerDatabase
+import earth.mp3player.playback.services.playback.PlaybackController
+import earth.mp3player.playback.services.settings.SettingsManager
 import kotlinx.coroutines.runBlocking
 
 /**
@@ -91,7 +90,6 @@ class MainActivity : ComponentActivity() {
             val context: Context = LocalContext.current
 
             PlaybackController.initInstance(context = context)
-            val database: MP3PlayerDatabase = MP3PlayerDatabase.getDatabase(context = context)
 
             MP3Theme {
                 Surface(

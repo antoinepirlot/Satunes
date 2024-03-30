@@ -29,7 +29,7 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
-import earth.mp3player.database.models.tables.Music
+import earth.mp3player.database.models.tables.MusicDB
 
 /**
  * @author Antoine Pirlot on 27/03/2024
@@ -39,14 +39,14 @@ import earth.mp3player.database.models.tables.Music
 interface MusicDAO {
 
     @Query("SELECT * FROM musics WHERE music_id == :id")
-    fun get(id: Long): Music?
+    fun get(id: Long): MusicDB?
 
     @Query("SELECT * FROM musics")
-    fun getAll(): List<Music>
+    fun getAll(): List<MusicDB>
 
     @Insert
-    fun insert(vararg musics: Music)
+    fun insert(vararg musics: MusicDB)
 
     @Delete
-    fun delete(music: Music)
+    fun delete(music: MusicDB)
 }

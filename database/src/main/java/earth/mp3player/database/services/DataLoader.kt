@@ -35,11 +35,11 @@ import android.provider.MediaStore
 import androidx.compose.runtime.MutableLongState
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.ui.graphics.asImageBitmap
-import earth.mp3player.database.models.tables.Album
-import earth.mp3player.database.models.tables.Artist
-import earth.mp3player.database.models.tables.Folder
-import earth.mp3player.database.models.tables.Genre
-import earth.mp3player.database.models.tables.Music
+import earth.mp3player.database.models.Album
+import earth.mp3player.database.models.Artist
+import earth.mp3player.database.models.Folder
+import earth.mp3player.database.models.Genre
+import earth.mp3player.database.models.Music
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

@@ -23,54 +23,44 @@
  *  PS: I don't answer quickly.
  */
 
-package earth.mp3player.ui.components.music.options
+package earth.mp3player.ui.components.forms
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.rounded.PlaylistAdd
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import earth.mp3player.R
-import earth.mp3player.ui.components.forms.PlaylistSelectionForm
+import earth.mp3player.database.models.relations.PlaylistWithMusics
+import earth.mp3player.database.services.DataManager
 
 /**
  * @author Antoine Pirlot on 30/03/2024
  */
 
 @Composable
-fun PlaylistSelectionDialog(
+fun PlaylistSelectionForm(
     modifier: Modifier = Modifier,
-    onDismissRequest: () -> Unit
 ) {
-    AlertDialog(
-        icon = {
-            Icon(
-                imageVector = Icons.AutoMirrored.Rounded.PlaylistAdd,
-                contentDescription = "Playlist Selection Icon"
-            )
-        },
-        title = {
-            Text(text = stringResource(id = R.string.add_to_playlist))
-        },
-        text = {
-            Column {
-                PlaylistSelectionForm()
-            }
-        },
-        onDismissRequest = onDismissRequest,
-        confirmButton = { /*TODO*/ }
-    )
+    val lazyState = rememberLazyListState()
+    val playlistList: List<PlaylistWithMusics> =
+        DataManager.playlistWithMusicsMap.values.toList()
+
+    LazyColumn(
+        modifier = modifier,
+        state = lazyState
+    ) {
+        items(
+            items = playlistList,
+            key = { it.playlist.id }
+        ) { playlistWithMusics: PlaylistWithMusics ->
+            PlaylistSelectionCheckbox(playlist = playlistWithMusics.playlist)
+        }
+    }
 }
 
 @Preview
 @Composable
-fun PlaylistSelectionDialogPreview() {
-    PlaylistSelectionDialog(
-        onDismissRequest = {}
-    )
+fun PlaylistSelectionFormPreview() {
+    PlaylistSelectionForm()
 }

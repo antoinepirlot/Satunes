@@ -38,7 +38,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import earth.mp3player.playback.models.Music
+import earth.mp3player.database.models.tables.Music
 
 /**
  * @author Antoine Pirlot on 16/01/24
@@ -75,6 +75,7 @@ fun MediaCard(
 fun CardPreview() {
     val music = Music(
         id = 1,
+        title = "",
         displayName = "Il avait les mots" ,
         duration = 2,
         size = 2,

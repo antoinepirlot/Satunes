@@ -35,11 +35,11 @@ import android.provider.MediaStore
 import androidx.compose.runtime.MutableLongState
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.ui.graphics.asImageBitmap
-import earth.mp3player.playback.models.Album
-import earth.mp3player.playback.models.Artist
-import earth.mp3player.playback.models.Folder
-import earth.mp3player.playback.models.Genre
-import earth.mp3player.playback.models.Music
+import earth.mp3player.database.models.tables.Album
+import earth.mp3player.database.models.tables.Artist
+import earth.mp3player.database.models.tables.Folder
+import earth.mp3player.database.models.tables.Genre
+import earth.mp3player.database.models.tables.Music
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -229,14 +229,14 @@ object DataLoader {
         if (title.isBlank()) title = displayName
 
         val music = Music(
-            context = context,
             id = id,
             title = title,
+            relativePath = relativePath,
             displayName = displayName,
             duration = duration,
             size = size,
-            relativePath = relativePath,
-            album = album
+            album = album,
+            context = context
         )
 
         loadAlbumArtwork(context = context, music = music)

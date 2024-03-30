@@ -36,4 +36,9 @@ dependencies {
      * Playback
      */
     implementation(project(":playback"))
+
+    /**
+     * Database
+     */
+    implementation(project(":database"))
 }

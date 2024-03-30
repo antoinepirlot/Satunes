@@ -34,11 +34,11 @@ import android.support.v4.media.session.PlaybackStateCompat.ACTION_SKIP_TO_NEXT
 import android.support.v4.media.session.PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS
 import androidx.media3.common.MediaItem
 import earth.mp3player.car.pages.ScreenPages
-import earth.mp3player.playback.models.Album
-import earth.mp3player.playback.models.Artist
-import earth.mp3player.playback.models.Folder
-import earth.mp3player.playback.models.Genre
-import earth.mp3player.playback.models.Music
+import earth.mp3player.database.models.tables.Album
+import earth.mp3player.database.models.tables.Artist
+import earth.mp3player.database.models.tables.Folder
+import earth.mp3player.database.models.tables.Genre
+import earth.mp3player.database.models.tables.Music
 import earth.mp3player.playback.services.data.DataManager
 import earth.mp3player.playback.services.playback.PlaybackController
 import java.util.SortedMap

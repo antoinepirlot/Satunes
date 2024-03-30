@@ -34,7 +34,7 @@ import androidx.media.utils.MediaConstants
 import androidx.media3.common.MediaItem
 import earth.mp3player.car.playback.MP3PlayerCarCallBack.ACTIONS_ON_PAUSE
 import earth.mp3player.car.playback.MP3PlayerCarCallBack.ACTIONS_ON_PLAY
-import earth.mp3player.playback.models.Music
+import earth.mp3player.database.models.tables.Music
 import earth.mp3player.playback.services.playback.PlaybackController
 import earth.mp3player.playback.services.playback.PlaybackListener
 

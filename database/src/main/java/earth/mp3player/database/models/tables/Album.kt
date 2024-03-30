@@ -44,14 +44,18 @@ data class Album(
     @ColumnInfo(name = "title") override val title: String,
 ) : Media {
     @Ignore
+    var artist: Artist? = null
+
+    @Ignore
     override var musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
         private set
 
     @Ignore
     val musicSortedMap: SortedMap<Long, Music> = sortedMapOf()
 
-    constructor(id: Long, title: String, musicMediaItemSortedMap: SortedMap<Music, MediaItem>)
+    constructor(id: Long, title: String, artist: Artist? = null, musicMediaItemSortedMap: SortedMap<Music, MediaItem>)
             : this(id = id, title = title) {
+        this.artist = artist
         this.musicMediaItemSortedMap = musicMediaItemSortedMap
     }
 

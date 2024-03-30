@@ -73,7 +73,7 @@ data class Music (
     }
 
     //Init
-    constructor(id: Long, title: String, relativePath: String, folderId: Long,
+    constructor(id: Long, title: String, relativePath: String, folderId: Long = -1,
                 genreId: Long? = null, albumId: Long? = null, artistId: Long? = null,
                 displayName: String, duration: Long, size: Int, folder: Folder? = null,
                 artist: Artist? = null, album: Album? = null, genre: Genre? = null,

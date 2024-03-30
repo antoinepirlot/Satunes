@@ -30,12 +30,12 @@ import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaDescriptionCompat
 import androidx.media.utils.MediaConstants
-import earth.mp3player.playback.models.Album
-import earth.mp3player.playback.models.Artist
-import earth.mp3player.playback.models.Folder
-import earth.mp3player.playback.models.Genre
-import earth.mp3player.playback.models.Media
-import earth.mp3player.playback.models.Music
+import earth.mp3player.database.models.tables.Album
+import earth.mp3player.database.models.tables.Artist
+import earth.mp3player.database.models.tables.Folder
+import earth.mp3player.database.models.tables.Genre
+import earth.mp3player.database.models.Media
+import earth.mp3player.database.models.tables.Music
 
 /**
  * @author Antoine Pirlot on 16/03/2024

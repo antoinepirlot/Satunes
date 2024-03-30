@@ -36,8 +36,8 @@ import androidx.media.MediaBrowserServiceCompat
 import earth.mp3player.car.pages.ScreenPages
 import earth.mp3player.car.pages.pages
 import earth.mp3player.car.utils.buildMediaItem
-import earth.mp3player.playback.models.Media
-import earth.mp3player.playback.models.Music
+import earth.mp3player.database.models.Media
+import earth.mp3player.database.models.tables.Music
 import earth.mp3player.playback.services.data.DataManager
 import earth.mp3player.playback.services.playback.PlaybackController
 

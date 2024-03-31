@@ -38,7 +38,6 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.core.content.getSystemService
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
-import earth.mp3player.database.models.tables.MusicDB
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -64,7 +63,6 @@ data class Music private constructor(
     private var absolutePath: String = "$ROOT_PATH/$relativePath/$displayName"
     var uri: Uri = Uri.Builder().appendPath(this.absolutePath).build()
     var artwork: ImageBitmap? = null
-    var musicDB: MusicDB? = null
 
     companion object {
         val ROOT_PATH: String = Environment.getExternalStorageDirectory().path

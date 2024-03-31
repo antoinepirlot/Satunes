@@ -72,10 +72,11 @@ class DatabaseManager(context: Context) {
 
     fun insertMusicToPlaylists(music: Music, playlists: MutableList<PlaylistWithMusics>) {
         CoroutineScope(Dispatchers.IO).launch {
-            val musicDb: MusicDB? = musicDao.get(music.id)
+            var musicDb: MusicDB? = musicDao.get(music.id)
             if (musicDb == null) {
-                music.musicDB = MusicDB(id = music.id)
-                musicDao.insert(music.musicDB!!)
+                musicDb = MusicDB(id = music.id)
+                musicDao.insert(musicDb)
+
             }
             playlists.forEach { playlistWithMusics: PlaylistWithMusics ->
                 val musicsPlaylistsRel =
@@ -90,7 +91,7 @@ class DatabaseManager(context: Context) {
                     return@launch
                 }
                 DataManager.playlistWithMusicsMap.values.first { it.playlist.id == playlistWithMusics.playlist.id }!!.musics.add(
-                    music.musicDB!!
+                    musicDb
                 )
             }
         }

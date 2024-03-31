@@ -65,12 +65,12 @@ data class PlaylistWithMusics(
     }
 
     fun addMusic(music: Music) {
-        musics.add(music.musicDB!!)
+        musics.add(MusicDB(id = music.id))
         musicMediaItemSortedMap[music] = music.mediaItem
     }
 
     fun removeMusic(music: Music) {
-        musics.remove(music.musicDB)
+        musics.remove(MusicDB(id = music.id))
         musicMediaItemSortedMap.remove(music)
     }
 }

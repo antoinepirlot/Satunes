@@ -32,7 +32,7 @@ import earth.mp3player.database.models.relations.PlaylistWithMusics
  */
 object PlaylistSelectionManager {
     /**
-     * Mutable list of checked playlist'ids to know where to add music from form
+     * Mutable list of checked playlists' ids to know where to add music from form
      */
     val checkedPlaylistWithMusics: MutableList<PlaylistWithMusics> = mutableListOf()
 }

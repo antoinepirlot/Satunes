@@ -54,7 +54,7 @@ fun PlaylistSelectionForm(
             items = playlistList,
             key = { it.playlist.id }
         ) { playlistWithMusics: PlaylistWithMusics ->
-            PlaylistSelectionCheckbox(playlist = playlistWithMusics.playlist)
+            PlaylistSelectionCheckbox(playlistWithMusics = playlistWithMusics)
         }
     }
 }

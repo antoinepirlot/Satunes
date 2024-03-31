@@ -60,8 +60,11 @@ data class PlaylistWithMusics(
 
     init {
         musics.forEach { musicDB: MusicDB ->
-            val music: Music = musicDB.music
-            musicMediaItemSortedMap[music] = music.mediaItem
+            addMusic(music = musicDB.music)
         }
+    }
+
+    fun addMusic(music: Music) {
+        musicMediaItemSortedMap[music] = music.mediaItem
     }
 }

@@ -39,7 +39,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import earth.mp3player.database.models.tables.Playlist
+import earth.mp3player.database.models.relations.PlaylistWithMusics
 import earth.mp3player.services.PlaylistSelectionManager
 
 /**
@@ -49,22 +49,22 @@ import earth.mp3player.services.PlaylistSelectionManager
 @Composable
 fun PlaylistSelectionCheckbox(
     modifier: Modifier = Modifier,
-    playlist: Playlist
+    playlistWithMusics: PlaylistWithMusics
 ) {
     var checked: Boolean by rememberSaveable { mutableStateOf(false) }
     Row(modifier = modifier) {
         Checkbox(checked = checked, onCheckedChange = {
             checked = !checked
             if (checked) {
-                PlaylistSelectionManager.checkedPlaylistIds.add(playlist.id)
+                PlaylistSelectionManager.checkedPlaylistWithMusics.add(playlistWithMusics)
             } else {
-                PlaylistSelectionManager.checkedPlaylistIds.remove(playlist.id)
+                PlaylistSelectionManager.checkedPlaylistWithMusics.remove(playlistWithMusics)
             }
         })
         Spacer(modifier = modifier.size(10.dp))
         Text(
             modifier = Modifier.align(Alignment.CenterVertically),
-            text = playlist.title
+            text = playlistWithMusics.playlist.title
         )
     }
 }

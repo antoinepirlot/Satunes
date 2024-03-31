@@ -25,6 +25,8 @@
 
 package earth.mp3player.services
 
+import earth.mp3player.database.models.relations.PlaylistWithMusics
+
 /**
  * @author Antoine Pirlot on 30/03/2024
  */
@@ -32,5 +34,5 @@ object PlaylistSelectionManager {
     /**
      * Mutable list of checked playlist'ids to know where to add music from form
      */
-    val checkedPlaylistIds: MutableList<Long> = mutableListOf()
+    val checkedPlaylistWithMusics: MutableList<PlaylistWithMusics> = mutableListOf()
 }

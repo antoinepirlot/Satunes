@@ -327,9 +327,19 @@ fun MediaRouter(
             MediaListView(
                 mediaMap = musicSortedMap,
                 openMedia = { clickedMedia: Media ->
+                    //TODO load playlist to playback
+                    PlaybackController.getInstance().loadMusic(
+                        musicMediaItemSortedMap = playlist.musicMediaItemSortedMap
+                    )
                     openMedia(navController = navController, media = clickedMedia)
                 },
-                shuffleMusicAction = { /*TODO*/ },
+                shuffleMusicAction = {
+                    PlaybackController.getInstance().loadMusic(
+                        musicMediaItemSortedMap = playlist.musicMediaItemSortedMap,
+                        shuffleMode = true
+                    )
+                    openMedia(navController = navController)
+                },
                 onFABClick = { openCurrentMusic(navController = navController) }
             )
         }

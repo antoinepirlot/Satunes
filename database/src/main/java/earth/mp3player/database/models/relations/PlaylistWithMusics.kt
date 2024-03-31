@@ -25,14 +25,17 @@
 
 package earth.mp3player.database.models.relations
 
+import androidx.media3.common.MediaItem
 import androidx.room.Embedded
 import androidx.room.Ignore
 import androidx.room.Junction
 import androidx.room.Relation
 import earth.mp3player.database.models.Media
+import earth.mp3player.database.models.Music
 import earth.mp3player.database.models.tables.MusicDB
 import earth.mp3player.database.models.tables.MusicsPlaylistsRel
 import earth.mp3player.database.models.tables.Playlist
+import java.util.SortedMap
 
 /**
  * @author Antoine Pirlot on 27/03/2024
@@ -51,4 +54,14 @@ data class PlaylistWithMusics(
 
     @Ignore
     override val title: String = "Title is not used for PlaylistWithMusics class." // Not used
+
+    @Ignore
+    override val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
+
+    init {
+        musics.forEach { musicDB: MusicDB ->
+            val music: Music = musicDB.music
+            musicMediaItemSortedMap[music] = music.mediaItem
+        }
+    }
 }

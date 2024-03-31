@@ -88,7 +88,7 @@ fun PlaylistView(
             openMedia = { clickedMedia: Media ->
                 openMedia(navController = navController, media = clickedMedia)
             },
-            shuffleMusicAction = { /*TODO*/ }
+            shuffleMusicAction = { /* Nothing to do TODO find a way to disable this button */ }
         ) {
 
         }

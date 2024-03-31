@@ -119,4 +119,14 @@ class DatabaseManager(context: Context) {
             musicDao.delete(music = music)
         }
     }
+
+    fun removeMusicFromPlaylist(music: Music, playlist: PlaylistWithMusics) {
+        CoroutineScope(Dispatchers.IO).launch {
+            musicsPlaylistsRelDAO.delete(musicId = music.id, playlistId = playlist.playlist.id)
+            playlist.removeMusic(music = music)
+            if (!musicsPlaylistsRelDAO.isMusicInPlaylist(musicId = music.id)) {
+                musicDao.delete(MusicDB(id = music.id))
+            }
+        }
+    }
 }

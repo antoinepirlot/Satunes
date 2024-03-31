@@ -27,6 +27,7 @@ package earth.mp3player.database.daos
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.Query
 import earth.mp3player.database.models.tables.MusicsPlaylistsRel
 
 /**
@@ -38,4 +39,10 @@ interface MusicsPlaylistsRelDAO {
 
     @Insert
     fun insert(musicsPlaylistsRel: MusicsPlaylistsRel)
+
+    @Query("DELETE FROM musics_playlists_rel WHERE music_id = :musicId AND playlist_id = :playlistId")
+    fun delete(musicId: Long, playlistId: Long)
+
+    @Query("SELECT music_id FROM musics_playlists_rel WHERE music_id = :musicId")
+    fun isMusicInPlaylist(musicId: Long): Boolean
 }

@@ -60,11 +60,17 @@ data class PlaylistWithMusics(
 
     init {
         musics.forEach { musicDB: MusicDB ->
-            addMusic(music = musicDB.music)
+            musicMediaItemSortedMap[musicDB.music] = musicDB.music.mediaItem
         }
     }
 
     fun addMusic(music: Music) {
+        musics.add(music.musicDB!!)
         musicMediaItemSortedMap[music] = music.mediaItem
+    }
+
+    fun removeMusic(music: Music) {
+        musics.remove(music.musicDB)
+        musicMediaItemSortedMap.remove(music)
     }
 }

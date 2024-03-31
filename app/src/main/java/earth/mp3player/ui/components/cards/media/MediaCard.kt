@@ -131,6 +131,14 @@ fun MediaCard(
                 )
                 showMusicOptions = false
             },
+            onRemoveFromPlaylist = {
+                val db: DatabaseManager = DatabaseManager(context = context)
+                db.removeMusicFromPlaylist(
+                    music = media,
+                    playlist = PlaylistSelectionManager.openedPlaylist!!
+                )
+                showMusicOptions = false
+            },
             onDismissRequest = { showMusicOptions = false }
         )
     }

@@ -35,4 +35,6 @@ object PlaylistSelectionManager {
      * Mutable list of checked playlists' ids to know where to add music from form
      */
     val checkedPlaylistWithMusics: MutableList<PlaylistWithMusics> = mutableListOf()
+
+    var openedPlaylist: PlaylistWithMusics? = null
 }

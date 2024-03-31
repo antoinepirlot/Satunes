@@ -14,4 +14,5 @@
     <string name="create">Créer</string>
     <string name="add_to_playlist">Ajouter à une playlist</string>
     <string name="add">Ajouter</string>
+    <string name="remove_from_playlist">Supprimer de la playlist</string>
 </resources>

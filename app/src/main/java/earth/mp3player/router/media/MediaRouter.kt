@@ -42,6 +42,7 @@ import earth.mp3player.database.models.relations.PlaylistWithMusics
 import earth.mp3player.database.models.tables.MusicDB
 import earth.mp3player.database.services.DataManager
 import earth.mp3player.playback.services.playback.PlaybackController
+import earth.mp3player.services.PlaylistSelectionManager
 import earth.mp3player.ui.utils.getMusicListFromFolder
 import earth.mp3player.ui.utils.startMusic
 import earth.mp3player.ui.views.MediaListView
@@ -320,6 +321,8 @@ fun MediaRouter(
         composable("${MediaDestination.PLAYLISTS.link}/{id}") {
             val playlistId: Long = it.arguments!!.getString("id")!!.toLong()
             val playlist: PlaylistWithMusics = DataManager.getPlaylist(playlistId = playlistId)
+            //TODO try using nav controller instead try to remember it in an object if possible
+            PlaylistSelectionManager.openedPlaylist = playlist
             val musicSortedMap: SortedMap<String, Media> = sortedMapOf()
             playlist.musics.forEach { musicDb: MusicDB ->
                 musicSortedMap[musicDb.music.title] = musicDb.music
@@ -400,6 +403,7 @@ fun openMedia(
     navController: NavHostController,
     media: Media? = null
 ) {
+    PlaylistSelectionManager.openedPlaylist = null
     if (media == null || media is Music) {
         startMusic(media)
     }

@@ -1,4 +1,4 @@
-# MP3 Player (🇫🇷)
+# Lecteur MP3 (🇫🇷)
 
 You can find this file in [english 🇬🇧](README-en.md).
 

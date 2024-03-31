@@ -55,6 +55,7 @@ import earth.mp3player.database.models.tables.MusicDB
 import earth.mp3player.database.services.DatabaseManager
 import earth.mp3player.services.PlaylistSelectionManager
 import earth.mp3player.ui.components.music.options.MusicOptionsDialog
+import earth.mp3player.ui.components.playlist.PlaylistOptionsDialog
 
 /**
  * @author Antoine Pirlot on 16/01/24
@@ -71,6 +72,7 @@ fun MediaCard(
 ) {
     val haptics = LocalHapticFeedback.current
     var showMusicOptions: Boolean by rememberSaveable { mutableStateOf(false) }
+    var showPlaylistOptions: Boolean by rememberSaveable { mutableStateOf(false) }
     val title: String =
         if (media is Folder && media.parentFolder == null) {
             when (media.title) {
@@ -95,11 +97,20 @@ fun MediaCard(
                 showMusicOptions = false
             },
             onLongClick = {
-                if (media is Music) {
-                    if (!showMusicOptions) {
-                        haptics.performHapticFeedback(HapticFeedbackType.LongPress)
+                when (media) {
+                    is Music -> {
+                        if (!showMusicOptions) {
+                            haptics.performHapticFeedback(HapticFeedbackType.LongPress)
+                        }
+                        showMusicOptions = !showMusicOptions
                     }
-                    showMusicOptions = !showMusicOptions
+
+                    is PlaylistWithMusics -> {
+                        if (!showMusicOptions) {
+                            haptics.performHapticFeedback(HapticFeedbackType.LongPress)
+                        }
+                        showPlaylistOptions = !showPlaylistOptions
+                    }
                 }
             }
         ),
@@ -140,6 +151,20 @@ fun MediaCard(
                 showMusicOptions = false
             },
             onDismissRequest = { showMusicOptions = false }
+        )
+    }
+
+    // Playlist option dialog
+    if (showPlaylistOptions && media is PlaylistWithMusics) {
+        val context = LocalContext.current
+        PlaylistOptionsDialog(
+            playlistTitle = media.title,
+            onRemovePlaylist = {
+                val db = DatabaseManager(context = context)
+                db.removePlaylist(playlist = media)
+                showPlaylistOptions = false
+            },
+            onDismissRequest = { showPlaylistOptions = false }
         )
     }
 }

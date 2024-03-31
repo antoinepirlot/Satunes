@@ -40,6 +40,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import earth.mp3player.database.models.relations.PlaylistWithMusics
+import earth.mp3player.database.models.tables.Playlist
 import earth.mp3player.services.PlaylistSelectionManager
 
 /**
@@ -71,8 +72,11 @@ fun PlaylistSelectionCheckbox(
 
 @Preview
 @Composable
-fun PlaylistSelectionCheckboxPreview(
-    modifier: Modifier = Modifier
-) {
-
+fun PlaylistSelectionCheckboxPreview() {
+    PlaylistSelectionCheckbox(
+        playlistWithMusics = PlaylistWithMusics(
+            playlist = Playlist(id = 0, title = ""),
+            musics = mutableListOf()
+        )
+    )
 }

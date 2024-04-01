@@ -32,18 +32,22 @@ import androidx.media3.common.MediaItem
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import earth.mp3player.models.Album
-import earth.mp3player.models.Artist
-import earth.mp3player.models.Folder
-import earth.mp3player.models.Genre
-import earth.mp3player.models.Media
-import earth.mp3player.models.Music
-import earth.mp3player.services.data.DataManager
-import earth.mp3player.services.playback.PlaybackController
+import earth.mp3player.database.models.Album
+import earth.mp3player.database.models.Artist
+import earth.mp3player.database.models.Folder
+import earth.mp3player.database.models.Genre
+import earth.mp3player.database.models.Media
+import earth.mp3player.database.models.Music
+import earth.mp3player.database.models.relations.PlaylistWithMusics
+import earth.mp3player.database.models.tables.MusicDB
+import earth.mp3player.database.services.DataManager
+import earth.mp3player.playback.services.playback.PlaybackController
+import earth.mp3player.services.PlaylistSelectionManager
 import earth.mp3player.ui.utils.getMusicListFromFolder
 import earth.mp3player.ui.utils.startMusic
 import earth.mp3player.ui.views.MediaListView
 import earth.mp3player.ui.views.PlayBackView
+import earth.mp3player.ui.views.PlaylistView
 import java.util.SortedMap
 
 /**
@@ -67,6 +71,7 @@ fun MediaRouter(
             // /!\ This route prevent back gesture to exit the app
             val rootFolderMap: SortedMap<Long, Folder> = remember { DataManager.rootFolderMap }
             @Suppress("UNCHECKED_CAST")
+            resetOpenedPlaylist()
             MediaListView(
                 mediaMap = rootFolderMap as SortedMap<Long, Media>,
 
@@ -108,6 +113,7 @@ fun MediaRouter(
                 mapToShow[music.id] = music
             }
 
+            resetOpenedPlaylist()
             MediaListView(
                 mediaMap = mapToShow,
 
@@ -132,6 +138,7 @@ fun MediaRouter(
                 remember { DataManager.musicMediaItemSortedMap }
             val artistMap: SortedMap<String, Artist> = remember { DataManager.artistMap }
             @Suppress("UNCHECKED_CAST")
+            (resetOpenedPlaylist())
             MediaListView(
                 mediaMap = artistMap as SortedMap<Long, Media>,
 
@@ -164,6 +171,7 @@ fun MediaRouter(
                 musicMap[music.id] = music
             }
 
+            resetOpenedPlaylist()
             MediaListView(
                 mediaMap = musicMap,
 
@@ -197,6 +205,7 @@ fun MediaRouter(
                 musicMediaItemSortedMap.putAll(album.musicMediaItemSortedMap)
             }
 
+            resetOpenedPlaylist()
             @Suppress("UNCHECKED_CAST")
             MediaListView(
                 mediaMap = albumMap as SortedMap<Long, Media>,
@@ -231,8 +240,9 @@ fun MediaRouter(
 
             val album: Album = albumMap[albumName]!!
 
+            resetOpenedPlaylist()
             @Suppress("UNCHECKED_CAST")
-            MediaListView(
+            (MediaListView(
                 mediaMap = album.musicSortedMap as SortedMap<Long, Media>,
 
                 openMedia = { clickedMedia: Media ->
@@ -251,7 +261,7 @@ fun MediaRouter(
                 },
 
                 onFABClick = { openCurrentMusic(navController = navController) }
-            )
+            ))
         }
 
         composable(MediaDestination.GENRES.link) {
@@ -264,6 +274,7 @@ fun MediaRouter(
                 mediaMap.putIfAbsent(genre.id, genre)
             }
 
+            resetOpenedPlaylist()
             MediaListView(
                 mediaMap = mediaMap,
 
@@ -288,6 +299,7 @@ fun MediaRouter(
             val genreMap: SortedMap<String, Genre> = remember { DataManager.genreMap }
             val genre = genreMap[genreName]!!
 
+            resetOpenedPlaylist()
             MediaListView(
                 mediaMap = genre.musicMap,
 
@@ -310,6 +322,39 @@ fun MediaRouter(
             )
         }
 
+        composable(MediaDestination.PLAYLISTS.link) {
+            resetOpenedPlaylist()
+            PlaylistView(navController = navController)
+        }
+
+        composable("${MediaDestination.PLAYLISTS.link}/{id}") {
+            val playlistId: Long = it.arguments!!.getString("id")!!.toLong()
+            val playlist: PlaylistWithMusics = DataManager.getPlaylist(playlistId = playlistId)
+            //TODO try using nav controller instead try to remember it in an object if possible
+            PlaylistSelectionManager.openedPlaylist = playlist
+            val musicSortedMap: SortedMap<String, Media> = sortedMapOf()
+            playlist.musics.forEach { musicDb: MusicDB ->
+                musicSortedMap[musicDb.music.title] = musicDb.music
+            }
+            MediaListView(
+                mediaMap = musicSortedMap,
+                openMedia = { clickedMedia: Media ->
+                    //TODO load playlist to playback
+                    PlaybackController.getInstance().loadMusic(
+                        musicMediaItemSortedMap = playlist.musicMediaItemSortedMap
+                    )
+                    openMedia(navController = navController, media = clickedMedia)
+                },
+                shuffleMusicAction = {
+                    PlaybackController.getInstance().loadMusic(
+                        musicMediaItemSortedMap = playlist.musicMediaItemSortedMap,
+                        shuffleMode = true
+                    )
+                    openMedia(navController = navController)
+                },
+                onFABClick = { openCurrentMusic(navController = navController) }
+            )
+        }
 
         composable(MediaDestination.MUSICS.link) {
             //Find a way to do something more aesthetic but it works
@@ -320,7 +365,7 @@ fun MediaRouter(
             musicMediaItemMap.keys.forEach { music: Music ->
                 mediaMap[music] = music
             }
-
+            resetOpenedPlaylist()
             MediaListView(
                 mediaMap = mediaMap,
 
@@ -363,14 +408,14 @@ fun MediaRouter(
  * @param navController the nav controller to redirect to the good path
  * @param media the media to open
  */
-private fun openMedia(
+fun openMedia(
     navController: NavHostController,
     media: Media? = null
 ) {
+    PlaylistSelectionManager.openedPlaylist = null
     if (media == null || media is Music) {
         startMusic(media)
     }
-
     navController.navigate(getDestinationOf(media))
 }
 
@@ -409,6 +454,8 @@ fun getDestinationOf(media: Media?): String {
 
         is Genre -> "${MediaDestination.GENRES.link}/${media.title}"
 
+        is PlaylistWithMusics -> "${MediaDestination.PLAYLISTS.link}/${media.playlist.id}"
+
         else -> MediaDestination.PLAYBACK.link
     }
 }
@@ -424,4 +471,8 @@ fun openCurrentMusic(navController: NavHostController) {
         ?: throw IllegalStateException("No music is currently playing, this button can be accessible")
 
     navController.navigate(getDestinationOf(musicPlaying))
+}
+
+private fun resetOpenedPlaylist() {
+    PlaylistSelectionManager.openedPlaylist = null
 }

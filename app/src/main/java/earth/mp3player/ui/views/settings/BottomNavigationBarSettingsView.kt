@@ -33,7 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import earth.mp3player.R
-import earth.mp3player.services.settings.SettingsManager
+import earth.mp3player.playback.services.settings.SettingsManager
 import earth.mp3player.ui.components.settings.SettingsSwitchList
 
 /**
@@ -48,7 +48,8 @@ fun BottomNavigationBarSettingsView(
         Pair(first = Settings.FOLDERS_CHECKED, second = SettingsManager.foldersChecked),
         Pair(first = Settings.ARTISTS_CHECKED, second = SettingsManager.artistsChecked),
         Pair(first = Settings.ALBUMS_CHECKED, second = SettingsManager.albumsChecked),
-        Pair(first = Settings.GENRES_CHECKED, second = SettingsManager.genreChecked)
+        Pair(first = Settings.GENRES_CHECKED, second = SettingsManager.genresChecked),
+        Pair(first = Settings.PLAYLISTS_CHECKED, second = SettingsManager.playlistsChecked),
     )
 
     Column(modifier = modifier) {

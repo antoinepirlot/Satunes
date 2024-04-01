@@ -25,16 +25,23 @@
 
 package earth.mp3player.ui.views.settings
 
-import earth.mp3player.R
+import earth.mp3player.R.string.closed_app_playback
+import earth.mp3player.R.string.pause_if_noisy
+import earth.mp3player.playback.R.string.albums
+import earth.mp3player.playback.R.string.artists
+import earth.mp3player.playback.R.string.folders
+import earth.mp3player.playback.R.string.genres
+import earth.mp3player.playback.R.string.playlists
 
 /**
  *   @author Antoine Pirlot 06/03/2024
  */
 enum class Settings(val stringId: Int) {
-    CLOSED_APP_PLAYBACK(stringId = R.string.closed_app_playback),
-    FOLDERS_CHECKED(stringId = R.string.folders),
-    ARTISTS_CHECKED(stringId = R.string.artists),
-    ALBUMS_CHECKED(stringId = R.string.albums),
-    GENRES_CHECKED(stringId = R.string.genres),
-    PAUSE_IF_NOISY(stringId = R.string.pause_if_noisy),
+    CLOSED_APP_PLAYBACK(stringId = closed_app_playback),
+    FOLDERS_CHECKED(stringId = folders),
+    ARTISTS_CHECKED(stringId = artists),
+    ALBUMS_CHECKED(stringId = albums),
+    GENRES_CHECKED(stringId = genres),
+    PAUSE_IF_NOISY(stringId = pause_if_noisy),
+    PLAYLISTS_CHECKED(stringId = playlists),
 }

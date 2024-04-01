@@ -33,9 +33,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import earth.mp3player.models.Media
-import earth.mp3player.models.Music
-import earth.mp3player.services.playback.PlaybackController
+import earth.mp3player.database.models.Media
+import earth.mp3player.database.models.Music
+import earth.mp3player.playback.services.playback.PlaybackController
 import earth.mp3player.ui.components.cards.media.MediaCardList
 import earth.mp3player.ui.components.music.bars.ShowCurrentMusicButton
 import earth.mp3player.ui.components.music.buttons.ShuffleAllButton
@@ -78,6 +78,7 @@ fun MediaListViewPreview() {
             1,
             Music(
                 1,
+                title = "title",
                 displayName = "Musique",
                 duration = 0,
                 size = 0,

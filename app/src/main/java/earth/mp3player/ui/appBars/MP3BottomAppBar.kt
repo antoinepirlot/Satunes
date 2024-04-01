@@ -37,9 +37,9 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import earth.mp3player.models.MenuTitle
+import earth.mp3player.playback.models.MenuTitle
+import earth.mp3player.playback.services.settings.SettingsManager
 import earth.mp3player.router.media.MediaDestination
-import earth.mp3player.services.settings.SettingsManager
 import earth.mp3player.ui.utils.getRightIconAndDescription
 
 /**
@@ -57,6 +57,7 @@ fun MP3BottomAppBar(
         MenuTitle.ALBUMS,
         MenuTitle.GENRES,
         MenuTitle.MUSIC,
+        MenuTitle.PLAYLISTS
     )
 
     SettingsManager.menuTitleCheckedMap.forEach { (menuTitle: MenuTitle, checked: MutableState<Boolean>) ->
@@ -73,18 +74,25 @@ fun MP3BottomAppBar(
             rememberSaveable { mutableStateOf(MenuTitle.ARTISTS) }
         } else if (SettingsManager.albumsChecked.value) {
             rememberSaveable { mutableStateOf(MenuTitle.ALBUMS) }
-        } else if (SettingsManager.genreChecked.value) {
+        } else if (SettingsManager.genresChecked.value) {
             rememberSaveable { mutableStateOf(MenuTitle.GENRES) }
+        } else if (SettingsManager.playlistsChecked.value) {
+            rememberSaveable { mutableStateOf(MenuTitle.PLAYLISTS) }
         } else {
             rememberSaveable { mutableStateOf(MenuTitle.MUSIC) }
         }
+    val hasMaxFiveItems: Boolean = menuTitleLists.size <= 5
 
     NavigationBar(
         modifier = modifier
     ) {
         menuTitleLists.forEach { menuTitle: MenuTitle ->
             NavigationBarItem(
-                label = { Text(text = stringResource(id = menuTitle.stringId)) },
+                label = {
+                    if (hasMaxFiveItems) {
+                        Text(text = stringResource(id = menuTitle.stringId))
+                    }
+                },
                 selected = selectedMenuTitle.value == menuTitle,
                 onClick = {
                     selectedMenuTitle.value = menuTitle
@@ -103,6 +111,10 @@ fun MP3BottomAppBar(
 
                         MenuTitle.GENRES -> {
                             startDestination.value = MediaDestination.GENRES.link
+                        }
+
+                        MenuTitle.PLAYLISTS -> {
+                            startDestination.value = MediaDestination.PLAYLISTS.link
                         }
 
                         MenuTitle.MUSIC -> {

@@ -37,7 +37,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.media3.common.Player.REPEAT_MODE_ALL
 import androidx.media3.common.Player.REPEAT_MODE_ONE
-import earth.mp3player.services.playback.PlaybackController
+import earth.mp3player.playback.services.playback.PlaybackController
 
 /**
  * @author Antoine Pirlot on 29/01/24

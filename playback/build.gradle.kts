@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "earth.mp3player"
+    namespace = "earth.mp3player.playback"
     compileSdk = 34
 
     defaultConfig {
@@ -60,4 +60,9 @@ dependencies {
      */
     val dataStoreVersion = "1.0.0"
     implementation("androidx.datastore:datastore-preferences:$dataStoreVersion")
+
+    /**
+     * Database
+     */
+    implementation(project(":database"))
 }

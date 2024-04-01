@@ -37,7 +37,6 @@ import earth.mp3player.database.models.Music
 import earth.mp3player.playback.services.playback.PlaybackController
 import earth.mp3player.router.media.openCurrentMusic
 import earth.mp3player.router.media.openMedia
-import earth.mp3player.router.media.openMediaFromFolder
 import earth.mp3player.router.media.resetOpenedPlaylist
 import java.util.SortedMap
 
@@ -65,7 +64,8 @@ fun ArtistView(
         mediaMap = musicMap,
 
         openMedia = { clickedMedia: Media ->
-            openMediaFromFolder(navController, clickedMedia)
+            playbackController.loadMusic(musicMediaItemSortedMap = artist.musicMediaItemSortedMap)
+            openMedia(navController, clickedMedia)
         },
 
         shuffleMusicAction = {

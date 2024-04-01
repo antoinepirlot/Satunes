@@ -237,7 +237,7 @@ fun openMedia(
 }
 
 
-fun openMediaFromFolder(
+private fun openMediaFromFolder(
     navController: NavHostController,
     media: Media
 ) {

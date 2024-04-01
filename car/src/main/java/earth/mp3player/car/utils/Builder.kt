@@ -36,6 +36,7 @@ import earth.mp3player.database.models.Folder
 import earth.mp3player.database.models.Genre
 import earth.mp3player.database.models.Media
 import earth.mp3player.database.models.Music
+import earth.mp3player.database.models.relations.PlaylistWithMusics
 
 /**
  * @author Antoine Pirlot on 16/03/2024
@@ -84,6 +85,7 @@ fun buildMediaItem(media: Media): MediaBrowserCompat.MediaItem {
             is Artist -> "Artist"
             is Album -> "Album"
             is Genre -> "Genre"
+            is PlaylistWithMusics -> "Playlist"
             else -> throw IllegalArgumentException("An issue occurred with Media interface")
         }
     val extras = Bundle()
@@ -99,10 +101,10 @@ fun buildMediaItem(media: Media): MediaBrowserCompat.MediaItem {
         extras.putDouble(MediaConstants.DESCRIPTION_EXTRAS_KEY_COMPLETION_PERCENTAGE, 0.0)
     }
     return buildMediaItem(
-        id = media.id.toString(),
+        id = if (media is PlaylistWithMusics) media.playlist.id.toString() else media.id.toString(),
         description = description,
         subtitle = if (media is Music && media.artist != null) media.artist!!.title else null,
-        title = media.title,
+        title = if (media is PlaylistWithMusics) media.playlist.title else media.title,
         uri = if (media is Music) media.uri else null,
         flags = flags
     )

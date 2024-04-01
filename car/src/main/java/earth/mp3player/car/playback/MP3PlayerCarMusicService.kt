@@ -152,6 +152,13 @@ class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
                 routeDeque.addLast(parentId)
             }
 
+            ScreenPages.ALL_PLAYLISTS.id -> {
+                children =
+                    getAllMediaMediaItemList(mediaList = DataManager.playlistWithMusicsMap.values.toList())
+                routeDeque.resetRouteDeque()
+                routeDeque.addLast(parentId)
+            }
+
             else -> {
                 //When a music is selected, loadChildren is not called, so it's never a music
                 if (routeDeque.isEmpty()) {
@@ -226,6 +233,7 @@ class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
             ScreenPages.ALL_ARTISTS.id -> DataManager.getArtist(artistId = mediaId)
             ScreenPages.ALL_ALBUMS.id -> DataManager.getAlbum(albumId = mediaId)
             ScreenPages.ALL_GENRES.id -> DataManager.getGenre(genreId = mediaId)
+            ScreenPages.ALL_PLAYLISTS.id -> DataManager.getPlaylist(playlistId = mediaId)
             else -> null
         }
 

@@ -27,6 +27,14 @@ Pour activer Android Auto clique [ici](#050-beta) pour savoir comment faire.
 
 # UPDATES
 
+## 0.7 (Android 11 Red Velvet Cake et ultérieur)
+
+### 0.7.0-beta
+
+Fonctionnalités:
+
+* Ajout des playlists
+
 ## 0.6 (Android 11 Red Velvet Cake et ultérieur)
 
 ### 0.6.0-beta

@@ -26,6 +26,14 @@ To activate Android Auto you can find instructions [here](#050-beta)
 
 # UPDATES
 
+## 0.7 (Android 11 Red Velvet Cake and later)
+
+### 0.7.0-beta
+
+Fonctionnalités:
+
+* Add Playlist System
+
 ## 0.6 (Android 11 Red Velvet Cake and later)
 
 ### 0.6.0-beta

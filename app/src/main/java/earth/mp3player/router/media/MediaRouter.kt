@@ -46,6 +46,7 @@ import earth.mp3player.ui.utils.getMusicListFromFolder
 import earth.mp3player.ui.utils.startMusic
 import earth.mp3player.ui.views.PlayBackView
 import earth.mp3player.ui.views.main.AllMusicsListView
+import earth.mp3player.ui.views.main.GenreView
 import earth.mp3player.ui.views.main.MediaListView
 import earth.mp3player.ui.views.main.PlaylistListView
 import earth.mp3player.ui.views.main.PlaylistView
@@ -299,28 +300,7 @@ fun MediaRouter(
             val genreName: String = it.arguments!!.getString("name")!!
             val genreMap: SortedMap<String, Genre> = remember { DataManager.genreMap }
             val genre = genreMap[genreName]!!
-
-            resetOpenedPlaylist()
-            MediaListView(
-                mediaMap = genre.musicMap,
-
-                openMedia = { clickedMedia: Media ->
-                    playbackController.loadMusic(
-                        musicMediaItemSortedMap = genre.musicMediaItemSortedMap
-                    )
-                    openMedia(navController = navController, media = clickedMedia)
-                },
-
-                shuffleMusicAction = {
-                    playbackController.loadMusic(
-                        musicMediaItemSortedMap = genre.musicMediaItemSortedMap,
-                        shuffleMode = true
-                    )
-                    openMedia(navController = navController)
-                },
-
-                onFABClick = { openCurrentMusic(navController = navController) }
-            )
+            GenreView(navController = navController, genre = genre)
         }
 
         composable(MediaDestination.PLAYLISTS.link) {

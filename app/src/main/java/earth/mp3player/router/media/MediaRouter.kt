@@ -232,15 +232,7 @@ fun MediaRouter(
 
         composable("${MediaDestination.ALBUMS.link}/{id}") {
             val albumId: Long = it.arguments!!.getString("id")!!.toLong()
-            var albumName: String? = null
-            val albumMap: SortedMap<String, Album> = remember { DataManager.albumMap }
-            albumMap.forEach { (name: String, album: Album) ->
-                if (album.id == albumId) {
-                    albumName = name
-                    return@forEach
-                }
-            }
-            val album: Album = albumMap[albumName]!!
+            val album: Album = DataManager.getAlbum(albumId)
             AlbumView(navController = navController, album = album)
         }
 

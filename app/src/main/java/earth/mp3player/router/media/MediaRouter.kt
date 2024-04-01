@@ -51,6 +51,7 @@ import earth.mp3player.ui.views.main.AllArtistsListView
 import earth.mp3player.ui.views.main.AllGenresListView
 import earth.mp3player.ui.views.main.AllMusicsListView
 import earth.mp3player.ui.views.main.ArtistView
+import earth.mp3player.ui.views.main.FolderView
 import earth.mp3player.ui.views.main.GenreView
 import earth.mp3player.ui.views.main.MediaListView
 import earth.mp3player.ui.views.main.PlaylistListView
@@ -106,38 +107,8 @@ fun MediaRouter(
 
         composable("${MediaDestination.FOLDERS.link}/{id}") {
             val folderId = it.arguments!!.getString("id")!!.toLong()
-            val folderMap: SortedMap<Long, Folder> = remember { DataManager.folderMap }
-            val folder: Folder = folderMap[folderId]!!
-            val mapToShow: SortedMap<Long, Media> = sortedMapOf()
-
-            //Load sub-folders
-            mapToShow.putAll(folder.getSubFolderListAsMedia())
-
-            //Load sub-folder's musics
-            val folderMusicMediaItemSortedMap: SortedMap<Music, MediaItem> =
-                folder.musicMediaItemSortedMap
-            folderMusicMediaItemSortedMap.forEach { (music: Music, _) ->
-                mapToShow[music.id] = music
-            }
-
-            resetOpenedPlaylist()
-            MediaListView(
-                mediaMap = mapToShow,
-
-                openMedia = { clickedMedia: Media ->
-                    openMediaFromFolder(navController, clickedMedia)
-                },
-
-                shuffleMusicAction = {
-                    playbackController.loadMusic(
-                        musicMediaItemSortedMap = folder.getAllMusic(),
-                        shuffleMode = true
-                    )
-                    openMedia(navController = navController)
-                },
-
-                onFABClick = { openCurrentMusic(navController) }
-            )
+            val folder: Folder = remember { DataManager.getFolder(folderId = folderId) }
+            FolderView(navController = navController, folder = folder)
         }
 
         composable(MediaDestination.ARTISTS.link) {
@@ -214,7 +185,7 @@ fun openMedia(
 }
 
 
-private fun openMediaFromFolder(
+fun openMediaFromFolder(
     navController: NavHostController,
     media: Media
 ) {

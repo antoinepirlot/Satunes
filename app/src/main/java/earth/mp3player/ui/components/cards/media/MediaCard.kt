@@ -22,6 +22,7 @@
  *  You can contact me via my email: pirlot.antoine@outlook.com
  * PS: I don't answer quickly.
  */
+
 package earth.mp3player.ui.components.cards.media
 
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -135,7 +136,7 @@ fun MediaCard(
         MusicOptionsDialog(
             musicTitle = title,
             onAddToPlaylist = {
-                val db: DatabaseManager = DatabaseManager(context = context)
+                val db = DatabaseManager(context = context)
                 db.insertMusicToPlaylists(
                     music = media,
                     playlists = PlaylistSelectionManager.checkedPlaylistWithMusics
@@ -143,7 +144,7 @@ fun MediaCard(
                 showMusicOptions = false
             },
             onRemoveFromPlaylist = {
-                val db: DatabaseManager = DatabaseManager(context = context)
+                val db = DatabaseManager(context = context)
                 db.removeMusicFromPlaylist(
                     music = media,
                     playlist = PlaylistSelectionManager.openedPlaylist!!

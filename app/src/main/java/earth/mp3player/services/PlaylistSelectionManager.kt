@@ -36,5 +36,8 @@ object PlaylistSelectionManager {
      */
     val checkedPlaylistWithMusics: MutableList<PlaylistWithMusics> = mutableListOf()
 
+    /**
+     * Contains the playlist the user is viewing or null if the user is elsewhere
+     */
     var openedPlaylist: PlaylistWithMusics? = null
 }

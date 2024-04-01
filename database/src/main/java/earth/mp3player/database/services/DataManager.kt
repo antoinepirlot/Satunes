@@ -32,8 +32,6 @@ import earth.mp3player.database.models.Folder
 import earth.mp3player.database.models.Genre
 import earth.mp3player.database.models.Music
 import earth.mp3player.database.models.relations.PlaylistWithMusics
-import earth.mp3player.database.models.tables.MusicDB
-import earth.mp3player.database.models.tables.Playlist
 import java.util.SortedMap
 
 /**
@@ -53,6 +51,10 @@ object DataManager {
         return artistMap.values.first { it.id == artistId }
     }
 
+    fun getArtist(artistName: String): Artist {
+        return artistMap[artistName]!!
+    }
+
     fun getAlbum(albumId: Long): Album {
         return albumMap.values.first { it.id == albumId }
     }
@@ -65,14 +67,11 @@ object DataManager {
         return genreMap.values.first { it.id == genreId }
     }
 
-    fun getPlaylist(playlistId: Long): PlaylistWithMusics {
-        return playlistWithMusicsMap.values.first { it.playlist.id == playlistId }
+    fun getGenre(genreName: String): Genre {
+        return genreMap[genreName]!!
     }
 
-    fun addMusicToPlaylist(music: Music, playlist: Playlist) {
-        val playlistWthMusics: PlaylistWithMusics = playlistWithMusicsMap.values.first {
-            it.playlist.id == playlist.id
-        }
-        playlistWthMusics.musics.add(MusicDB(music.id))
+    fun getPlaylist(playlistId: Long): PlaylistWithMusics {
+        return playlistWithMusicsMap.values.first { it.playlist.id == playlistId }
     }
 }

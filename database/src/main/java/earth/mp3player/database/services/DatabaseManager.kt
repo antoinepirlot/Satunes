@@ -27,8 +27,6 @@ package earth.mp3player.database.services
 
 import android.content.Context
 import android.database.sqlite.SQLiteConstraintException
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import earth.mp3player.database.MP3PlayerDatabase
 import earth.mp3player.database.daos.MusicDAO
 import earth.mp3player.database.daos.MusicsPlaylistsRelDAO
@@ -62,14 +60,6 @@ class DatabaseManager(context: Context) {
         }
     }
 
-    fun getMusic(id: Long): MutableState<MusicDB?> {
-        val music: MutableState<MusicDB?> = mutableStateOf(null)
-        CoroutineScope(Dispatchers.IO).launch {
-            music.value = musicDao.get(id = id)
-        }
-        return music
-    }
-
     fun insertMusicToPlaylists(music: Music, playlists: MutableList<PlaylistWithMusics>) {
         CoroutineScope(Dispatchers.IO).launch {
             var musicDb: MusicDB? = musicDao.get(music.id)
@@ -97,12 +87,6 @@ class DatabaseManager(context: Context) {
         }
     }
 
-    fun insertOne(vararg musics: MusicDB) {
-        CoroutineScope(Dispatchers.IO).launch {
-            musicDao.insert(musics = musics)
-        }
-    }
-
     fun insertOne(playlist: Playlist) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -112,12 +96,6 @@ class DatabaseManager(context: Context) {
             }
             DataManager.playlistWithMusicsMap[playlist.title] =
                 playlistDao.getPlaylistWithMusics(playlistId = playlist.id)
-        }
-    }
-
-    fun delete(music: MusicDB) {
-        CoroutineScope(Dispatchers.IO).launch {
-            musicDao.delete(music = music)
         }
     }
 

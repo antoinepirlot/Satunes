@@ -28,27 +28,26 @@ package earth.mp3player.router.media
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.media3.common.MediaItem
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import earth.mp3player.database.models.Album
 import earth.mp3player.database.models.Artist
 import earth.mp3player.database.models.Folder
-import earth.mp3player.database.models.Genre
-import earth.mp3player.database.models.Media
-import earth.mp3player.database.models.Music
 import earth.mp3player.database.models.relations.PlaylistWithMusics
-import earth.mp3player.database.models.tables.MusicDB
 import earth.mp3player.database.services.DataManager
-import earth.mp3player.playback.services.playback.PlaybackController
-import earth.mp3player.services.PlaylistSelectionManager
-import earth.mp3player.ui.utils.getMusicListFromFolder
-import earth.mp3player.ui.utils.startMusic
-import earth.mp3player.ui.views.MediaListView
 import earth.mp3player.ui.views.PlayBackView
-import earth.mp3player.ui.views.PlaylistView
-import java.util.SortedMap
+import earth.mp3player.ui.views.main.album.AlbumView
+import earth.mp3player.ui.views.main.album.AllAlbumsListView
+import earth.mp3player.ui.views.main.artist.AllArtistsListView
+import earth.mp3player.ui.views.main.artist.ArtistView
+import earth.mp3player.ui.views.main.folder.FolderView
+import earth.mp3player.ui.views.main.folder.RootFolderView
+import earth.mp3player.ui.views.main.genre.AllGenresListView
+import earth.mp3player.ui.views.main.genre.GenreView
+import earth.mp3player.ui.views.main.music.AllMusicsListView
+import earth.mp3player.ui.views.main.playlist.PlaylistListView
+import earth.mp3player.ui.views.main.playlist.PlaylistView
 
 /**
  * @author Antoine Pirlot on 23-01-24
@@ -60,8 +59,6 @@ fun MediaRouter(
     navController: NavHostController,
     startDestination: String,
 ) {
-    val playbackController: PlaybackController = remember { PlaybackController.getInstance() }
-
     NavHost(
         modifier = modifier,
         navController = navController,
@@ -69,410 +66,63 @@ fun MediaRouter(
     ) {
         composable(MediaDestination.FOLDERS.link) {
             // /!\ This route prevent back gesture to exit the app
-            val rootFolderMap: SortedMap<Long, Folder> = remember { DataManager.rootFolderMap }
-            @Suppress("UNCHECKED_CAST")
-            resetOpenedPlaylist()
-            MediaListView(
-                mediaMap = rootFolderMap as SortedMap<Long, Media>,
-
-                openMedia = { clickedMedia: Media ->
-                    openMediaFromFolder(navController, clickedMedia)
-                },
-
-                shuffleMusicAction = {
-                    val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
-                    @Suppress("NAME_SHADOWING")
-                    rootFolderMap.forEach { (_, folder: Media) ->
-                        val folder = folder as Folder
-                        musicMediaItemSortedMap.putAll(folder.getAllMusic())
-                    }
-                    playbackController.loadMusic(
-                        musicMediaItemSortedMap = musicMediaItemSortedMap,
-                        shuffleMode = true
-                    )
-                    openMedia(navController = navController)
-                },
-
-                onFABClick = { openCurrentMusic(navController) }
-            )
+            RootFolderView(navController = navController)
         }
 
         composable("${MediaDestination.FOLDERS.link}/{id}") {
             val folderId = it.arguments!!.getString("id")!!.toLong()
-            val folderMap: SortedMap<Long, Folder> = remember { DataManager.folderMap }
-            val folder: Folder = folderMap[folderId]!!
-            val mapToShow: SortedMap<Long, Media> = sortedMapOf()
-
-            //Load sub-folders
-            mapToShow.putAll(folder.getSubFolderListAsMedia())
-
-            //Load sub-folder's musics
-            val folderMusicMediaItemSortedMap: SortedMap<Music, MediaItem> =
-                folder.musicMediaItemSortedMap
-            folderMusicMediaItemSortedMap.forEach { (music: Music, _) ->
-                mapToShow[music.id] = music
-            }
-
-            resetOpenedPlaylist()
-            MediaListView(
-                mediaMap = mapToShow,
-
-                openMedia = { clickedMedia: Media ->
-                    openMediaFromFolder(navController, clickedMedia)
-                },
-
-                shuffleMusicAction = {
-                    playbackController.loadMusic(
-                        musicMediaItemSortedMap = folder.getAllMusic(),
-                        shuffleMode = true
-                    )
-                    openMedia(navController = navController)
-                },
-
-                onFABClick = { openCurrentMusic(navController) }
-            )
+            val folder: Folder = remember { DataManager.getFolder(folderId = folderId) }
+            FolderView(navController = navController, folder = folder)
         }
 
         composable(MediaDestination.ARTISTS.link) {
-            val musicMediaItemMap: SortedMap<Music, MediaItem> =
-                remember { DataManager.musicMediaItemSortedMap }
-            val artistMap: SortedMap<String, Artist> = remember { DataManager.artistMap }
-            @Suppress("UNCHECKED_CAST")
-            (resetOpenedPlaylist())
-            MediaListView(
-                mediaMap = artistMap as SortedMap<Long, Media>,
-
-                openMedia = { clickedMedia: Media ->
-                    openMedia(
-                        navController,
-                        clickedMedia
-                    )
-                },
-
-                shuffleMusicAction = {
-                    playbackController.loadMusic(
-                        musicMediaItemSortedMap = musicMediaItemMap,
-                        shuffleMode = true
-                    )
-                    openMedia(navController = navController)
-                },
-
-                onFABClick = { openCurrentMusic(navController) }
-            )
+            AllArtistsListView(navController = navController)
         }
 
         composable("${MediaDestination.ARTISTS.link}/{name}") {
-            val artistMap: SortedMap<String, Artist> = remember { DataManager.artistMap }
             val artistName: String = it.arguments!!.getString("name")!!
-            val artist: Artist = artistMap[artistName]!!
-            val musicMap: SortedMap<Long, Media> = sortedMapOf()
-
-            artist.musicList.forEach { music: Music ->
-                musicMap[music.id] = music
-            }
-
-            resetOpenedPlaylist()
-            MediaListView(
-                mediaMap = musicMap,
-
-                openMedia = { clickedMedia: Media ->
-                    openMediaFromFolder(navController, clickedMedia)
-                },
-
-                shuffleMusicAction = {
-                    val musicMediaItemMap: SortedMap<Music, MediaItem> = sortedMapOf()
-
-                    artist.musicList.forEach { music: Music ->
-                        musicMediaItemMap[music] = music.mediaItem
-                    }
-
-                    playbackController.loadMusic(
-                        musicMediaItemSortedMap = musicMediaItemMap,
-                        shuffleMode = true
-                    )
-                    openMedia(navController = navController)
-                },
-
-                onFABClick = { openCurrentMusic(navController) }
-            )
+            val artist: Artist = remember { DataManager.getArtist(artistName) }
+            ArtistView(navController = navController, artist = artist)
         }
 
         composable(MediaDestination.ALBUMS.link) {
-            val albumMap: SortedMap<String, Album> = remember { DataManager.albumMap }
-            val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
-
-            albumMap.forEach { (_: String, album: Album) ->
-                musicMediaItemSortedMap.putAll(album.musicMediaItemSortedMap)
-            }
-
-            resetOpenedPlaylist()
-            @Suppress("UNCHECKED_CAST")
-            MediaListView(
-                mediaMap = albumMap as SortedMap<Long, Media>,
-
-                openMedia = { clickedMedia: Media ->
-                    openMedia(navController = navController, media = clickedMedia)
-                },
-
-                shuffleMusicAction = {
-                    playbackController.loadMusic(
-                        musicMediaItemSortedMap = musicMediaItemSortedMap,
-                        shuffleMode = true
-                    )
-                    openMedia(navController = navController)
-                },
-
-                onFABClick = { openCurrentMusic(navController = navController) }
-            )
+            AllAlbumsListView(navController = navController)
         }
 
         composable("${MediaDestination.ALBUMS.link}/{id}") {
             val albumId: Long = it.arguments!!.getString("id")!!.toLong()
-            var albumName: String? = null
-            val albumMap: SortedMap<String, Album> = remember { DataManager.albumMap }
-
-            albumMap.forEach { (name: String, album: Album) ->
-                if (album.id == albumId) {
-                    albumName = name
-                    return@forEach
-                }
-            }
-
-            val album: Album = albumMap[albumName]!!
-
-            resetOpenedPlaylist()
-            @Suppress("UNCHECKED_CAST")
-            (MediaListView(
-                mediaMap = album.musicSortedMap as SortedMap<Long, Media>,
-
-                openMedia = { clickedMedia: Media ->
-                    playbackController.loadMusic(
-                        musicMediaItemSortedMap = album.musicMediaItemSortedMap
-                    )
-                    openMedia(navController = navController, media = clickedMedia)
-                },
-
-                shuffleMusicAction = {
-                    playbackController.loadMusic(
-                        musicMediaItemSortedMap = album.musicMediaItemSortedMap,
-                        shuffleMode = true
-                    )
-                    openMedia(navController = navController)
-                },
-
-                onFABClick = { openCurrentMusic(navController = navController) }
-            ))
+            val album: Album = remember { DataManager.getAlbum(albumId) }
+            AlbumView(navController = navController, album = album)
         }
 
         composable(MediaDestination.GENRES.link) {
-            val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
-            val mediaMap: MutableMap<Long, Media> = mutableMapOf()
-            val genreMap: SortedMap<String, Genre> = remember { DataManager.genreMap }
-
-            genreMap.forEach { (_: String, genre: Genre) ->
-                musicMediaItemSortedMap.putAll(genre.musicMediaItemSortedMap)
-                mediaMap.putIfAbsent(genre.id, genre)
-            }
-
-            resetOpenedPlaylist()
-            MediaListView(
-                mediaMap = mediaMap,
-
-                openMedia = { clickedMedia: Media ->
-                    openMedia(navController = navController, media = clickedMedia)
-                },
-
-                shuffleMusicAction = {
-                    playbackController.loadMusic(
-                        musicMediaItemSortedMap = musicMediaItemSortedMap,
-                        shuffleMode = true
-                    )
-                    openMedia(navController = navController)
-                },
-
-                onFABClick = { openCurrentMusic(navController = navController) }
-            )
+            AllGenresListView(navController = navController)
         }
 
         composable("${MediaDestination.GENRES.link}/{name}") {
             val genreName: String = it.arguments!!.getString("name")!!
-            val genreMap: SortedMap<String, Genre> = remember { DataManager.genreMap }
-            val genre = genreMap[genreName]!!
-
-            resetOpenedPlaylist()
-            MediaListView(
-                mediaMap = genre.musicMap,
-
-                openMedia = { clickedMedia: Media ->
-                    playbackController.loadMusic(
-                        musicMediaItemSortedMap = genre.musicMediaItemSortedMap
-                    )
-                    openMedia(navController = navController, media = clickedMedia)
-                },
-
-                shuffleMusicAction = {
-                    playbackController.loadMusic(
-                        musicMediaItemSortedMap = genre.musicMediaItemSortedMap,
-                        shuffleMode = true
-                    )
-                    openMedia(navController = navController)
-                },
-
-                onFABClick = { openCurrentMusic(navController = navController) }
-            )
+            val genre = remember { DataManager.getGenre(genreName = genreName) }
+            GenreView(navController = navController, genre = genre)
         }
 
         composable(MediaDestination.PLAYLISTS.link) {
-            resetOpenedPlaylist()
-            PlaylistView(navController = navController)
+            PlaylistListView(navController = navController)
         }
 
         composable("${MediaDestination.PLAYLISTS.link}/{id}") {
             val playlistId: Long = it.arguments!!.getString("id")!!.toLong()
-            val playlist: PlaylistWithMusics = DataManager.getPlaylist(playlistId = playlistId)
-            //TODO try using nav controller instead try to remember it in an object if possible
-            PlaylistSelectionManager.openedPlaylist = playlist
-            val musicSortedMap: SortedMap<String, Media> = sortedMapOf()
-            playlist.musics.forEach { musicDb: MusicDB ->
-                musicSortedMap[musicDb.music.title] = musicDb.music
+            val playlist: PlaylistWithMusics = remember {
+                DataManager.getPlaylist(playlistId = playlistId)
             }
-            MediaListView(
-                mediaMap = musicSortedMap,
-                openMedia = { clickedMedia: Media ->
-                    //TODO load playlist to playback
-                    PlaybackController.getInstance().loadMusic(
-                        musicMediaItemSortedMap = playlist.musicMediaItemSortedMap
-                    )
-                    openMedia(navController = navController, media = clickedMedia)
-                },
-                shuffleMusicAction = {
-                    PlaybackController.getInstance().loadMusic(
-                        musicMediaItemSortedMap = playlist.musicMediaItemSortedMap,
-                        shuffleMode = true
-                    )
-                    openMedia(navController = navController)
-                },
-                onFABClick = { openCurrentMusic(navController = navController) }
-            )
+            PlaylistView(navController = navController, playlist = playlist)
         }
 
         composable(MediaDestination.MUSICS.link) {
-            //Find a way to do something more aesthetic but it works
-            val mediaMap: SortedMap<Music, Media> = sortedMapOf()
-            val musicMediaItemMap: SortedMap<Music, MediaItem> =
-                remember { DataManager.musicMediaItemSortedMap }
-
-            musicMediaItemMap.keys.forEach { music: Music ->
-                mediaMap[music] = music
-            }
-            resetOpenedPlaylist()
-            MediaListView(
-                mediaMap = mediaMap,
-
-                openMedia = { clickedMedia: Media ->
-                    playbackController.loadMusic(
-                        musicMediaItemSortedMap = musicMediaItemMap
-                    )
-                    openMedia(
-                        navController,
-                        clickedMedia
-                    )
-                },
-
-                shuffleMusicAction = {
-                    playbackController.loadMusic(
-                        musicMediaItemSortedMap = musicMediaItemMap,
-                        shuffleMode = true
-                    )
-                    openMedia(navController = navController)
-                },
-
-                onFABClick = { openCurrentMusic(navController) }
-            )
+            AllMusicsListView(navController = navController)
         }
 
         composable(MediaDestination.PLAYBACK.link) {
             PlayBackView()
         }
     }
-}
-
-/**
- * Open the media, when it is:
- *      Music: navigate to the media's destination and start music with exoplayer
- *
- *      Folder: navigate to the media's destination
- *
- *      Artist: navigate to the media's destination
- *
- * @param navController the nav controller to redirect to the good path
- * @param media the media to open
- */
-fun openMedia(
-    navController: NavHostController,
-    media: Media? = null
-) {
-    PlaylistSelectionManager.openedPlaylist = null
-    if (media == null || media is Music) {
-        startMusic(media)
-    }
-    navController.navigate(getDestinationOf(media))
-}
-
-
-private fun openMediaFromFolder(
-    navController: NavHostController,
-    media: Media
-) {
-    when (media) {
-        is Music -> {
-            val playbackController = PlaybackController.getInstance()
-            playbackController.loadMusic(musicMediaItemSortedMap = getMusicListFromFolder(media.folder!!))
-            openMedia(navController, media)
-        }
-
-        is Folder -> navController.navigate(getDestinationOf(media))
-    }
-
-}
-
-/**
- * Return the destination link of media (folder, artists or music) with its id.
- * For example if media is folder, it returns: /folders/5
- *
- * @param media the media to get the destination link
- *
- * @return the media destination link with the media's id
- */
-fun getDestinationOf(media: Media?): String {
-    return when (media) {
-        is Folder -> "${MediaDestination.FOLDERS.link}/${media.id}"
-
-        is Artist -> "${MediaDestination.ARTISTS.link}/${media.title}"
-
-        is Album -> "${MediaDestination.ALBUMS.link}/${media.id}"
-
-        is Genre -> "${MediaDestination.GENRES.link}/${media.title}"
-
-        is PlaylistWithMusics -> "${MediaDestination.PLAYLISTS.link}/${media.playlist.id}"
-
-        else -> MediaDestination.PLAYBACK.link
-    }
-}
-
-/**
- * Open the current playing music
- *
- * @throws IllegalStateException if there's no music playing
- */
-fun openCurrentMusic(navController: NavHostController) {
-    val playbackController: PlaybackController = PlaybackController.getInstance()
-    val musicPlaying = playbackController.musicPlaying.value
-        ?: throw IllegalStateException("No music is currently playing, this button can be accessible")
-
-    navController.navigate(getDestinationOf(musicPlaying))
-}
-
-private fun resetOpenedPlaylist() {
-    PlaylistSelectionManager.openedPlaylist = null
 }

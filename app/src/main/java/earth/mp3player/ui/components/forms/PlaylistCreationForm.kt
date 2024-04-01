@@ -29,7 +29,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.PlaylistAdd
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -48,7 +47,6 @@ import earth.mp3player.R
  * @author Antoine Pirlot on 30/03/2024
  */
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PlaylistCreationForm(
     modifier: Modifier = Modifier,

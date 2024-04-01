@@ -51,7 +51,7 @@ data class Folder (
     }
 
     /**
-     * Get the list of subfolders as media
+     * Get the list of sub-folders as media
      *
      * @return a list of subfolder and each subfolder is cast to Media object
      */

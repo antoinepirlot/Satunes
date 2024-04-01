@@ -29,7 +29,6 @@ package earth.mp3player.car.pages
  * @author Antoine Pirlot on 16/03/2024
  */
 
-
 enum class ScreenPages(
     val id: String,
     val description: String,
@@ -41,6 +40,7 @@ enum class ScreenPages(
     ALL_ALBUMS(id = "albums", description = "List of all albums", title = "ALBUMS"),
     ALL_GENRES(id = "genres", description = "List of all genres", title = "GENRES"),
     ALL_MUSICS(id = "musics", description = "List of all musics", title = "MUSICS"),
+    ALL_PLAYLISTS(id = "playlists", description = "List of all playlists", title = "PLAYLISTS")
 }
 
 val pages: List<ScreenPages> = listOf(
@@ -49,4 +49,5 @@ val pages: List<ScreenPages> = listOf(
     ScreenPages.ALL_ARTISTS,
     ScreenPages.ALL_ALBUMS,
     ScreenPages.ALL_GENRES,
+    ScreenPages.ALL_PLAYLISTS
 )

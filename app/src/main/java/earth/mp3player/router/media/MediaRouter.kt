@@ -45,6 +45,7 @@ import earth.mp3player.services.PlaylistSelectionManager
 import earth.mp3player.ui.utils.getMusicListFromFolder
 import earth.mp3player.ui.utils.startMusic
 import earth.mp3player.ui.views.PlayBackView
+import earth.mp3player.ui.views.main.AlbumView
 import earth.mp3player.ui.views.main.AllGenresListView
 import earth.mp3player.ui.views.main.AllMusicsListView
 import earth.mp3player.ui.views.main.GenreView
@@ -233,38 +234,14 @@ fun MediaRouter(
             val albumId: Long = it.arguments!!.getString("id")!!.toLong()
             var albumName: String? = null
             val albumMap: SortedMap<String, Album> = remember { DataManager.albumMap }
-
             albumMap.forEach { (name: String, album: Album) ->
                 if (album.id == albumId) {
                     albumName = name
                     return@forEach
                 }
             }
-
             val album: Album = albumMap[albumName]!!
-
-            resetOpenedPlaylist()
-            @Suppress("UNCHECKED_CAST")
-            (MediaListView(
-                mediaMap = album.musicSortedMap as SortedMap<Long, Media>,
-
-                openMedia = { clickedMedia: Media ->
-                    playbackController.loadMusic(
-                        musicMediaItemSortedMap = album.musicMediaItemSortedMap
-                    )
-                    openMedia(navController = navController, media = clickedMedia)
-                },
-
-                shuffleMusicAction = {
-                    playbackController.loadMusic(
-                        musicMediaItemSortedMap = album.musicMediaItemSortedMap,
-                        shuffleMode = true
-                    )
-                    openMedia(navController = navController)
-                },
-
-                onFABClick = { openCurrentMusic(navController = navController) }
-            ))
+            AlbumView(navController = navController, album = album)
         }
 
         composable(MediaDestination.GENRES.link) {

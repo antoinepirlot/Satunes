@@ -67,6 +67,19 @@ fun PlaylistView(
                 contentDescription = "Create a playlist button"
             )
         }
+        @Suppress("UNCHECKED_CAST")
+        val playlistMap: SortedMap<String, Media> =
+            DataManager.playlistWithMusicsMap as SortedMap<String, Media>
+
+        MediaListView(
+            mediaMap = playlistMap,
+            openMedia = { clickedMedia: Media ->
+                openMedia(navController = navController, media = clickedMedia)
+            },
+            shuffleMusicAction = { /* Nothing to do TODO find a way to disable this button */ },
+            onFABClick = { /* TODO */ }
+        )
+
         when {
             openAlertDialog -> {
                 PlaylistCreationForm(
@@ -78,19 +91,6 @@ fun PlaylistView(
                     onDismissRequest = { openAlertDialog = false }
                 )
             }
-        }
-        @Suppress("UNCHECKED_CAST")
-        val playlistMap: SortedMap<String, Media> =
-            DataManager.playlistWithMusicsMap as SortedMap<String, Media>
-
-        MediaListView(
-            mediaMap = playlistMap,
-            openMedia = { clickedMedia: Media ->
-                openMedia(navController = navController, media = clickedMedia)
-            },
-            shuffleMusicAction = { /* Nothing to do TODO find a way to disable this button */ }
-        ) {
-
         }
     }
 }

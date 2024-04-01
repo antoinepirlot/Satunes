@@ -45,6 +45,7 @@ import earth.mp3player.services.PlaylistSelectionManager
 import earth.mp3player.ui.utils.getMusicListFromFolder
 import earth.mp3player.ui.utils.startMusic
 import earth.mp3player.ui.views.PlayBackView
+import earth.mp3player.ui.views.main.AllGenresListView
 import earth.mp3player.ui.views.main.AllMusicsListView
 import earth.mp3player.ui.views.main.GenreView
 import earth.mp3player.ui.views.main.MediaListView
@@ -267,33 +268,7 @@ fun MediaRouter(
         }
 
         composable(MediaDestination.GENRES.link) {
-            val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
-            val mediaMap: MutableMap<Long, Media> = mutableMapOf()
-            val genreMap: SortedMap<String, Genre> = remember { DataManager.genreMap }
-
-            genreMap.forEach { (_: String, genre: Genre) ->
-                musicMediaItemSortedMap.putAll(genre.musicMediaItemSortedMap)
-                mediaMap.putIfAbsent(genre.id, genre)
-            }
-
-            resetOpenedPlaylist()
-            MediaListView(
-                mediaMap = mediaMap,
-
-                openMedia = { clickedMedia: Media ->
-                    openMedia(navController = navController, media = clickedMedia)
-                },
-
-                shuffleMusicAction = {
-                    playbackController.loadMusic(
-                        musicMediaItemSortedMap = musicMediaItemSortedMap,
-                        shuffleMode = true
-                    )
-                    openMedia(navController = navController)
-                },
-
-                onFABClick = { openCurrentMusic(navController = navController) }
-            )
+            AllGenresListView(navController = navController)
         }
 
         composable("${MediaDestination.GENRES.link}/{name}") {

@@ -23,19 +23,24 @@
  *  PS: I don't answer quickly.
  */
 
-package earth.mp3player.ui.views.main
+package earth.mp3player.ui.views.main.album
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.media3.common.MediaItem
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import earth.mp3player.database.models.Album
 import earth.mp3player.database.models.Media
+import earth.mp3player.database.models.Music
+import earth.mp3player.database.services.DataManager
 import earth.mp3player.playback.services.playback.PlaybackController
 import earth.mp3player.router.media.utils.openCurrentMusic
 import earth.mp3player.router.media.utils.openMedia
 import earth.mp3player.router.media.utils.resetOpenedPlaylist
+import earth.mp3player.ui.views.main.MediaListView
 import java.util.SortedMap
 
 /**
@@ -43,45 +48,43 @@ import java.util.SortedMap
  */
 
 @Composable
-fun AlbumView(
+fun AllAlbumsListView(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    album: Album,
 ) {
     val playbackController: PlaybackController = PlaybackController.getInstance()
 
+    val albumMap: SortedMap<String, Album> = remember { DataManager.albumMap }
+    val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
+
+    albumMap.forEach { (_: String, album: Album) ->
+        musicMediaItemSortedMap.putAll(album.musicMediaItemSortedMap)
+    }
+
     resetOpenedPlaylist()
     @Suppress("UNCHECKED_CAST")
-    MediaListView(
+    (MediaListView(
         modifier = modifier,
-        mediaMap = album.musicSortedMap as SortedMap<Long, Media>,
+        mediaMap = albumMap as SortedMap<Long, Media>,
+
         openMedia = { clickedMedia: Media ->
-            playbackController.loadMusic(
-                musicMediaItemSortedMap = album.musicMediaItemSortedMap
-            )
             openMedia(navController = navController, media = clickedMedia)
         },
+
         shuffleMusicAction = {
             playbackController.loadMusic(
-                musicMediaItemSortedMap = album.musicMediaItemSortedMap,
+                musicMediaItemSortedMap = musicMediaItemSortedMap,
                 shuffleMode = true
             )
             openMedia(navController = navController)
         },
+
         onFABClick = { openCurrentMusic(navController = navController) }
-    )
+    ))
 }
 
 @Preview
 @Composable
-fun AlbumViewPreview() {
-    AlbumView(
-        navController = rememberNavController(),
-        album = Album(
-            id = 0,
-            title = "Album title",
-            artist = null,
-            musicMediaItemSortedMap = sortedMapOf()
-        )
-    )
+fun AllAlbumsListViewPreview() {
+    AllAlbumsListView(navController = rememberNavController())
 }

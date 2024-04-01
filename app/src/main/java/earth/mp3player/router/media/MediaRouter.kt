@@ -39,17 +39,17 @@ import earth.mp3player.database.models.relations.PlaylistWithMusics
 import earth.mp3player.database.services.DataManager
 import earth.mp3player.playback.services.playback.PlaybackController
 import earth.mp3player.ui.views.PlayBackView
-import earth.mp3player.ui.views.main.AlbumView
-import earth.mp3player.ui.views.main.AllAlbumsListView
-import earth.mp3player.ui.views.main.AllArtistsListView
-import earth.mp3player.ui.views.main.AllGenresListView
-import earth.mp3player.ui.views.main.AllMusicsListView
-import earth.mp3player.ui.views.main.ArtistView
-import earth.mp3player.ui.views.main.FolderView
-import earth.mp3player.ui.views.main.GenreView
-import earth.mp3player.ui.views.main.PlaylistListView
-import earth.mp3player.ui.views.main.PlaylistView
-import earth.mp3player.ui.views.main.RootFolderView
+import earth.mp3player.ui.views.main.album.AlbumView
+import earth.mp3player.ui.views.main.album.AllAlbumsListView
+import earth.mp3player.ui.views.main.artist.AllArtistsListView
+import earth.mp3player.ui.views.main.artist.ArtistView
+import earth.mp3player.ui.views.main.folder.FolderView
+import earth.mp3player.ui.views.main.folder.RootFolderView
+import earth.mp3player.ui.views.main.genre.AllGenresListView
+import earth.mp3player.ui.views.main.genre.GenreView
+import earth.mp3player.ui.views.main.music.AllMusicsListView
+import earth.mp3player.ui.views.main.playlist.PlaylistListView
+import earth.mp3player.ui.views.main.playlist.PlaylistView
 import java.util.SortedMap
 
 /**

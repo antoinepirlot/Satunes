@@ -64,7 +64,7 @@ fun PlaylistListView(
     val context: Context = LocalContext.current
     var openAlertDialog by remember { mutableStateOf(false) }
     resetOpenedPlaylist()
-    Column {
+    Column(modifier = modifier) {
         FloatingActionButton(onClick = { openAlertDialog = true }) {
             Icon(
                 imageVector = Icons.AutoMirrored.Rounded.PlaylistAdd,
@@ -88,7 +88,7 @@ fun PlaylistListView(
             openAlertDialog -> {
                 PlaylistCreationForm(
                     onConfirm = { playlistTitle: String ->
-                        val playlist: Playlist = Playlist(id = 0, title = playlistTitle)
+                        val playlist = Playlist(id = 0, title = playlistTitle)
                         DatabaseManager(context = context).insertOne(playlist)
                         openAlertDialog = false
                     },

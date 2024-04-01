@@ -61,7 +61,6 @@ fun PlaylistView(
         modifier = modifier,
         mediaMap = musicSortedMap,
         openMedia = { clickedMedia: Media ->
-            //TODO load playlist to playback
             PlaybackController.getInstance().loadMusic(
                 musicMediaItemSortedMap = playlist.musicMediaItemSortedMap
             )

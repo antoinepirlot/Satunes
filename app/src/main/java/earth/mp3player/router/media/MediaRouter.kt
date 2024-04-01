@@ -39,7 +39,6 @@ import earth.mp3player.database.models.Genre
 import earth.mp3player.database.models.Media
 import earth.mp3player.database.models.Music
 import earth.mp3player.database.models.relations.PlaylistWithMusics
-import earth.mp3player.database.models.tables.MusicDB
 import earth.mp3player.database.services.DataManager
 import earth.mp3player.playback.services.playback.PlaybackController
 import earth.mp3player.services.PlaylistSelectionManager
@@ -49,6 +48,7 @@ import earth.mp3player.ui.views.PlayBackView
 import earth.mp3player.ui.views.main.MediaListView
 import earth.mp3player.ui.views.main.MusicsListView
 import earth.mp3player.ui.views.main.PlaylistListView
+import earth.mp3player.ui.views.main.PlaylistView
 import java.util.SortedMap
 
 /**
@@ -331,30 +331,7 @@ fun MediaRouter(
         composable("${MediaDestination.PLAYLISTS.link}/{id}") {
             val playlistId: Long = it.arguments!!.getString("id")!!.toLong()
             val playlist: PlaylistWithMusics = DataManager.getPlaylist(playlistId = playlistId)
-            //TODO try using nav controller instead try to remember it in an object if possible
-            PlaylistSelectionManager.openedPlaylist = playlist
-            val musicSortedMap: SortedMap<String, Media> = sortedMapOf()
-            playlist.musics.forEach { musicDb: MusicDB ->
-                musicSortedMap[musicDb.music.title] = musicDb.music
-            }
-            MediaListView(
-                mediaMap = musicSortedMap,
-                openMedia = { clickedMedia: Media ->
-                    //TODO load playlist to playback
-                    PlaybackController.getInstance().loadMusic(
-                        musicMediaItemSortedMap = playlist.musicMediaItemSortedMap
-                    )
-                    openMedia(navController = navController, media = clickedMedia)
-                },
-                shuffleMusicAction = {
-                    PlaybackController.getInstance().loadMusic(
-                        musicMediaItemSortedMap = playlist.musicMediaItemSortedMap,
-                        shuffleMode = true
-                    )
-                    openMedia(navController = navController)
-                },
-                onFABClick = { openCurrentMusic(navController = navController) }
-            )
+            PlaylistView(navController = navController, playlist = playlist)
         }
 
         composable(MediaDestination.MUSICS.link) {

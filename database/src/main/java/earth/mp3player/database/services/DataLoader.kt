@@ -69,6 +69,9 @@ object DataLoader {
     private var genreNameColumn: Int? = null
     private var folderId: MutableLongState = mutableLongStateOf(FIRST_FOLDER_INDEX)
 
+    /**
+     * Load all Media data from device's storage.
+     */
     fun loadAllData(context: Context) {
         isLoading = true
         val projection = arrayOf(
@@ -146,6 +149,9 @@ object DataLoader {
         }
     }
 
+    /**
+     * Load data from cursor
+     */
     private fun loadData(cursor: Cursor, context: Context) {
         var artist: Artist? = null
         var album: Album? = null

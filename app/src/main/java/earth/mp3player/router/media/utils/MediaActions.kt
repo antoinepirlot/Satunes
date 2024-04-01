@@ -65,6 +65,12 @@ fun openMedia(
     navController.navigate(getDestinationOf(media))
 }
 
+/**
+ * Open media from folders' views if the media is:
+ *      Music: It loads folder's musics data to playback and open the media that is music.
+ *
+ *      Folder: navigate to the folder's view
+ */
 fun openMediaFromFolder(
     navController: NavHostController,
     media: Media
@@ -118,6 +124,9 @@ fun openCurrentMusic(navController: NavHostController) {
     navController.navigate(getDestinationOf(musicPlaying))
 }
 
+/**
+ * Set opened playlist from PlaylistSelectionManager to null to indicates the user is elsewhere
+ */
 fun resetOpenedPlaylist() {
     PlaylistSelectionManager.openedPlaylist = null
 }

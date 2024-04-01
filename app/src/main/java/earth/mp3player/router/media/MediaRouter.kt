@@ -28,7 +28,6 @@ package earth.mp3player.router.media
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.media3.common.MediaItem
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -53,9 +52,9 @@ import earth.mp3player.ui.views.main.AllMusicsListView
 import earth.mp3player.ui.views.main.ArtistView
 import earth.mp3player.ui.views.main.FolderView
 import earth.mp3player.ui.views.main.GenreView
-import earth.mp3player.ui.views.main.MediaListView
 import earth.mp3player.ui.views.main.PlaylistListView
 import earth.mp3player.ui.views.main.PlaylistView
+import earth.mp3player.ui.views.main.RootFolderView
 import java.util.SortedMap
 
 /**
@@ -77,32 +76,7 @@ fun MediaRouter(
     ) {
         composable(MediaDestination.FOLDERS.link) {
             // /!\ This route prevent back gesture to exit the app
-            val rootFolderMap: SortedMap<Long, Folder> = remember { DataManager.rootFolderMap }
-            @Suppress("UNCHECKED_CAST")
-            resetOpenedPlaylist()
-            MediaListView(
-                mediaMap = rootFolderMap as SortedMap<Long, Media>,
-
-                openMedia = { clickedMedia: Media ->
-                    openMediaFromFolder(navController, clickedMedia)
-                },
-
-                shuffleMusicAction = {
-                    val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
-                    @Suppress("NAME_SHADOWING")
-                    rootFolderMap.forEach { (_, folder: Media) ->
-                        val folder = folder as Folder
-                        musicMediaItemSortedMap.putAll(folder.getAllMusic())
-                    }
-                    playbackController.loadMusic(
-                        musicMediaItemSortedMap = musicMediaItemSortedMap,
-                        shuffleMode = true
-                    )
-                    openMedia(navController = navController)
-                },
-
-                onFABClick = { openCurrentMusic(navController) }
-            )
+            RootFolderView(navController = navController)
         }
 
         composable("${MediaDestination.FOLDERS.link}/{id}") {

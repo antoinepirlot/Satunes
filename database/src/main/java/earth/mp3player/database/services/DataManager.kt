@@ -53,6 +53,10 @@ object DataManager {
         return artistMap.values.first { it.id == artistId }
     }
 
+    fun getArtist(artistName: String): Artist {
+        return artistMap[artistName]!!
+    }
+
     fun getAlbum(albumId: Long): Album {
         return albumMap.values.first { it.id == albumId }
     }

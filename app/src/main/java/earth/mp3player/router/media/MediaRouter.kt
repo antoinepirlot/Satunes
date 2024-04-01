@@ -49,6 +49,7 @@ import earth.mp3player.ui.views.main.AlbumView
 import earth.mp3player.ui.views.main.AllAlbumsListView
 import earth.mp3player.ui.views.main.AllGenresListView
 import earth.mp3player.ui.views.main.AllMusicsListView
+import earth.mp3player.ui.views.main.ArtistView
 import earth.mp3player.ui.views.main.GenreView
 import earth.mp3player.ui.views.main.MediaListView
 import earth.mp3player.ui.views.main.PlaylistListView
@@ -167,39 +168,9 @@ fun MediaRouter(
         }
 
         composable("${MediaDestination.ARTISTS.link}/{name}") {
-            val artistMap: SortedMap<String, Artist> = remember { DataManager.artistMap }
             val artistName: String = it.arguments!!.getString("name")!!
-            val artist: Artist = artistMap[artistName]!!
-            val musicMap: SortedMap<Long, Media> = sortedMapOf()
-
-            artist.musicList.forEach { music: Music ->
-                musicMap[music.id] = music
-            }
-
-            resetOpenedPlaylist()
-            MediaListView(
-                mediaMap = musicMap,
-
-                openMedia = { clickedMedia: Media ->
-                    openMediaFromFolder(navController, clickedMedia)
-                },
-
-                shuffleMusicAction = {
-                    val musicMediaItemMap: SortedMap<Music, MediaItem> = sortedMapOf()
-
-                    artist.musicList.forEach { music: Music ->
-                        musicMediaItemMap[music] = music.mediaItem
-                    }
-
-                    playbackController.loadMusic(
-                        musicMediaItemSortedMap = musicMediaItemMap,
-                        shuffleMode = true
-                    )
-                    openMedia(navController = navController)
-                },
-
-                onFABClick = { openCurrentMusic(navController) }
-            )
+            val artist: Artist = DataManager.getArtist(artistName)
+            ArtistView(navController = navController, artist = artist)
         }
 
         composable(MediaDestination.ALBUMS.link) {
@@ -266,7 +237,7 @@ fun openMedia(
 }
 
 
-private fun openMediaFromFolder(
+fun openMediaFromFolder(
     navController: NavHostController,
     media: Media
 ) {

@@ -45,8 +45,8 @@ import earth.mp3player.database.models.Media
 import earth.mp3player.database.models.tables.Playlist
 import earth.mp3player.database.services.DataManager
 import earth.mp3player.database.services.DatabaseManager
-import earth.mp3player.router.media.openMedia
-import earth.mp3player.router.media.resetOpenedPlaylist
+import earth.mp3player.router.media.utils.openMedia
+import earth.mp3player.router.media.utils.resetOpenedPlaylist
 import earth.mp3player.ui.components.forms.PlaylistCreationForm
 import java.util.SortedMap
 

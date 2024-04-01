@@ -37,10 +37,10 @@ import earth.mp3player.database.models.Media
 import earth.mp3player.database.models.Music
 import earth.mp3player.database.services.DataManager
 import earth.mp3player.playback.services.playback.PlaybackController
-import earth.mp3player.router.media.openCurrentMusic
-import earth.mp3player.router.media.openMedia
-import earth.mp3player.router.media.openMediaFromFolder
-import earth.mp3player.router.media.resetOpenedPlaylist
+import earth.mp3player.router.media.utils.openCurrentMusic
+import earth.mp3player.router.media.utils.openMedia
+import earth.mp3player.router.media.utils.openMediaFromFolder
+import earth.mp3player.router.media.utils.resetOpenedPlaylist
 import java.util.SortedMap
 
 /**

@@ -35,8 +35,8 @@ import earth.mp3player.database.models.relations.PlaylistWithMusics
 import earth.mp3player.database.models.tables.MusicDB
 import earth.mp3player.database.models.tables.Playlist
 import earth.mp3player.playback.services.playback.PlaybackController
-import earth.mp3player.router.media.openCurrentMusic
-import earth.mp3player.router.media.openMedia
+import earth.mp3player.router.media.utils.openCurrentMusic
+import earth.mp3player.router.media.utils.openMedia
 import earth.mp3player.services.PlaylistSelectionManager
 import java.util.SortedMap
 

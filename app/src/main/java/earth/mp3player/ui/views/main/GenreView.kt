@@ -33,9 +33,9 @@ import androidx.navigation.compose.rememberNavController
 import earth.mp3player.database.models.Genre
 import earth.mp3player.database.models.Media
 import earth.mp3player.playback.services.playback.PlaybackController
-import earth.mp3player.router.media.openCurrentMusic
-import earth.mp3player.router.media.openMedia
-import earth.mp3player.router.media.resetOpenedPlaylist
+import earth.mp3player.router.media.utils.openCurrentMusic
+import earth.mp3player.router.media.utils.openMedia
+import earth.mp3player.router.media.utils.resetOpenedPlaylist
 
 /**
  * @author Antoine Pirlot on 01/04/2024

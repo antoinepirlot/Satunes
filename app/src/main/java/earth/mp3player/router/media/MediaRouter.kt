@@ -35,14 +35,9 @@ import earth.mp3player.database.models.Album
 import earth.mp3player.database.models.Artist
 import earth.mp3player.database.models.Folder
 import earth.mp3player.database.models.Genre
-import earth.mp3player.database.models.Media
-import earth.mp3player.database.models.Music
 import earth.mp3player.database.models.relations.PlaylistWithMusics
 import earth.mp3player.database.services.DataManager
 import earth.mp3player.playback.services.playback.PlaybackController
-import earth.mp3player.services.PlaylistSelectionManager
-import earth.mp3player.ui.utils.getMusicListFromFolder
-import earth.mp3player.ui.utils.startMusic
 import earth.mp3player.ui.views.PlayBackView
 import earth.mp3player.ui.views.main.AlbumView
 import earth.mp3player.ui.views.main.AllAlbumsListView
@@ -136,84 +131,4 @@ fun MediaRouter(
             PlayBackView()
         }
     }
-}
-
-/**
- * Open the media, when it is:
- *      Music: navigate to the media's destination and start music with exoplayer
- *
- *      Folder: navigate to the media's destination
- *
- *      Artist: navigate to the media's destination
- *
- * @param navController the nav controller to redirect to the good path
- * @param media the media to open
- */
-fun openMedia(
-    navController: NavHostController,
-    media: Media? = null
-) {
-    PlaylistSelectionManager.openedPlaylist = null
-    if (media == null || media is Music) {
-        startMusic(media)
-    }
-    navController.navigate(getDestinationOf(media))
-}
-
-
-fun openMediaFromFolder(
-    navController: NavHostController,
-    media: Media
-) {
-    when (media) {
-        is Music -> {
-            val playbackController = PlaybackController.getInstance()
-            playbackController.loadMusic(musicMediaItemSortedMap = getMusicListFromFolder(media.folder!!))
-            openMedia(navController, media)
-        }
-
-        is Folder -> navController.navigate(getDestinationOf(media))
-    }
-
-}
-
-/**
- * Return the destination link of media (folder, artists or music) with its id.
- * For example if media is folder, it returns: /folders/5
- *
- * @param media the media to get the destination link
- *
- * @return the media destination link with the media's id
- */
-fun getDestinationOf(media: Media?): String {
-    return when (media) {
-        is Folder -> "${MediaDestination.FOLDERS.link}/${media.id}"
-
-        is Artist -> "${MediaDestination.ARTISTS.link}/${media.title}"
-
-        is Album -> "${MediaDestination.ALBUMS.link}/${media.id}"
-
-        is Genre -> "${MediaDestination.GENRES.link}/${media.title}"
-
-        is PlaylistWithMusics -> "${MediaDestination.PLAYLISTS.link}/${media.playlist.id}"
-
-        else -> MediaDestination.PLAYBACK.link
-    }
-}
-
-/**
- * Open the current playing music
- *
- * @throws IllegalStateException if there's no music playing
- */
-fun openCurrentMusic(navController: NavHostController) {
-    val playbackController: PlaybackController = PlaybackController.getInstance()
-    val musicPlaying = playbackController.musicPlaying.value
-        ?: throw IllegalStateException("No music is currently playing, this button can be accessible")
-
-    navController.navigate(getDestinationOf(musicPlaying))
-}
-
-fun resetOpenedPlaylist() {
-    PlaylistSelectionManager.openedPlaylist = null
 }

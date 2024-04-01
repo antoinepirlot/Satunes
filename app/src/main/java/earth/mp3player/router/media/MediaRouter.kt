@@ -324,7 +324,6 @@ fun MediaRouter(
         }
 
         composable(MediaDestination.PLAYLISTS.link) {
-            resetOpenedPlaylist()
             PlaylistListView(navController = navController)
         }
 

@@ -46,6 +46,7 @@ import earth.mp3player.database.models.tables.Playlist
 import earth.mp3player.database.services.DataManager
 import earth.mp3player.database.services.DatabaseManager
 import earth.mp3player.router.media.openMedia
+import earth.mp3player.router.media.resetOpenedPlaylist
 import earth.mp3player.ui.components.forms.PlaylistCreationForm
 import java.util.SortedMap
 
@@ -60,6 +61,7 @@ fun PlaylistListView(
 ) {
     val context: Context = LocalContext.current
     var openAlertDialog by remember { mutableStateOf(false) }
+    resetOpenedPlaylist()
     Column {
         FloatingActionButton(onClick = { openAlertDialog = true }) {
             Icon(

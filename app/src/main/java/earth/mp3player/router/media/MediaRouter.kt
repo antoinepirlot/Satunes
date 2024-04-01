@@ -47,6 +47,7 @@ import earth.mp3player.ui.utils.startMusic
 import earth.mp3player.ui.views.PlayBackView
 import earth.mp3player.ui.views.main.AlbumView
 import earth.mp3player.ui.views.main.AllAlbumsListView
+import earth.mp3player.ui.views.main.AllArtistsListView
 import earth.mp3player.ui.views.main.AllGenresListView
 import earth.mp3player.ui.views.main.AllMusicsListView
 import earth.mp3player.ui.views.main.ArtistView
@@ -140,31 +141,7 @@ fun MediaRouter(
         }
 
         composable(MediaDestination.ARTISTS.link) {
-            val musicMediaItemMap: SortedMap<Music, MediaItem> =
-                remember { DataManager.musicMediaItemSortedMap }
-            val artistMap: SortedMap<String, Artist> = remember { DataManager.artistMap }
-            @Suppress("UNCHECKED_CAST")
-            (resetOpenedPlaylist())
-            MediaListView(
-                mediaMap = artistMap as SortedMap<Long, Media>,
-
-                openMedia = { clickedMedia: Media ->
-                    openMedia(
-                        navController,
-                        clickedMedia
-                    )
-                },
-
-                shuffleMusicAction = {
-                    playbackController.loadMusic(
-                        musicMediaItemSortedMap = musicMediaItemMap,
-                        shuffleMode = true
-                    )
-                    openMedia(navController = navController)
-                },
-
-                onFABClick = { openCurrentMusic(navController) }
-            )
+            AllArtistsListView(navController = navController)
         }
 
         composable("${MediaDestination.ARTISTS.link}/{name}") {

@@ -117,7 +117,7 @@ fun MediaRouter(
 
         composable("${MediaDestination.ARTISTS.link}/{name}") {
             val artistName: String = it.arguments!!.getString("name")!!
-            val artist: Artist = DataManager.getArtist(artistName)
+            val artist: Artist = remember { DataManager.getArtist(artistName) }
             ArtistView(navController = navController, artist = artist)
         }
 
@@ -127,7 +127,7 @@ fun MediaRouter(
 
         composable("${MediaDestination.ALBUMS.link}/{id}") {
             val albumId: Long = it.arguments!!.getString("id")!!.toLong()
-            val album: Album = DataManager.getAlbum(albumId)
+            val album: Album = remember { DataManager.getAlbum(albumId) }
             AlbumView(navController = navController, album = album)
         }
 
@@ -138,7 +138,7 @@ fun MediaRouter(
         composable("${MediaDestination.GENRES.link}/{name}") {
             val genreName: String = it.arguments!!.getString("name")!!
             val genreMap: SortedMap<String, Genre> = remember { DataManager.genreMap }
-            val genre = genreMap[genreName]!!
+            val genre = remember { DataManager.getGenre(genreName = genreName) }
             GenreView(navController = navController, genre = genre)
         }
 
@@ -148,7 +148,9 @@ fun MediaRouter(
 
         composable("${MediaDestination.PLAYLISTS.link}/{id}") {
             val playlistId: Long = it.arguments!!.getString("id")!!.toLong()
-            val playlist: PlaylistWithMusics = DataManager.getPlaylist(playlistId = playlistId)
+            val playlist: PlaylistWithMusics = remember {
+                DataManager.getPlaylist(playlistId = playlistId)
+            }
             PlaylistView(navController = navController, playlist = playlist)
         }
 

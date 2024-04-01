@@ -69,6 +69,10 @@ object DataManager {
         return genreMap.values.first { it.id == genreId }
     }
 
+    fun getGenre(genreName: String): Genre {
+        return genreMap[genreName]!!
+    }
+
     fun getPlaylist(playlistId: Long): PlaylistWithMusics {
         return playlistWithMusicsMap.values.first { it.playlist.id == playlistId }
     }

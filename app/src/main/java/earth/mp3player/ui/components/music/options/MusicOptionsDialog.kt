@@ -47,6 +47,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import earth.mp3player.R
+import earth.mp3player.services.PlaylistSelectionManager
 
 /**
  * @author Antoine Pirlot on 30/03/2024
@@ -97,17 +98,19 @@ fun MusicOptionsDialog(
                         )
                     }
                 }
-                TextButton(onClick = {
-                    onRemoveFromPlaylist()
-                    onDismissRequest()
-                }) {
-                    Row {
-                        Icon(
-                            imageVector = Icons.Rounded.PlaylistRemove,
-                            contentDescription = "Playlist remove icon"
-                        )
-                        Spacer(modifier = Modifier.size(SPACER_SIZE))
-                        Text(text = stringResource(id = R.string.remove_from_playlist))
+                if (PlaylistSelectionManager.openedPlaylist != null) {
+                    TextButton(onClick = {
+                        onRemoveFromPlaylist()
+                        onDismissRequest()
+                    }) {
+                        Row {
+                            Icon(
+                                imageVector = Icons.Rounded.PlaylistRemove,
+                                contentDescription = "Playlist remove icon"
+                            )
+                            Spacer(modifier = Modifier.size(SPACER_SIZE))
+                            Text(text = stringResource(id = R.string.remove_from_playlist))
+                        }
                     }
                 }
             }

@@ -34,10 +34,8 @@ import androidx.navigation.compose.composable
 import earth.mp3player.database.models.Album
 import earth.mp3player.database.models.Artist
 import earth.mp3player.database.models.Folder
-import earth.mp3player.database.models.Genre
 import earth.mp3player.database.models.relations.PlaylistWithMusics
 import earth.mp3player.database.services.DataManager
-import earth.mp3player.playback.services.playback.PlaybackController
 import earth.mp3player.ui.views.PlayBackView
 import earth.mp3player.ui.views.main.album.AlbumView
 import earth.mp3player.ui.views.main.album.AllAlbumsListView
@@ -50,7 +48,6 @@ import earth.mp3player.ui.views.main.genre.GenreView
 import earth.mp3player.ui.views.main.music.AllMusicsListView
 import earth.mp3player.ui.views.main.playlist.PlaylistListView
 import earth.mp3player.ui.views.main.playlist.PlaylistView
-import java.util.SortedMap
 
 /**
  * @author Antoine Pirlot on 23-01-24
@@ -62,8 +59,6 @@ fun MediaRouter(
     navController: NavHostController,
     startDestination: String,
 ) {
-    val playbackController: PlaybackController = remember { PlaybackController.getInstance() }
-
     NavHost(
         modifier = modifier,
         navController = navController,
@@ -106,7 +101,6 @@ fun MediaRouter(
 
         composable("${MediaDestination.GENRES.link}/{name}") {
             val genreName: String = it.arguments!!.getString("name")!!
-            val genreMap: SortedMap<String, Genre> = remember { DataManager.genreMap }
             val genre = remember { DataManager.getGenre(genreName = genreName) }
             GenreView(navController = navController, genre = genre)
         }

@@ -46,7 +46,7 @@ object DataLoader {
     private val URI: Uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
 
     var isLoaded: Boolean = false
-    var isLoading: Boolean = false
+    private var isLoading: Boolean = false
 
     // Music variables
     private var musicIdColumn: Int? = null
@@ -220,7 +220,7 @@ object DataLoader {
 
         if (title.isBlank()) title = displayName
 
-        val music = Music(
+        return Music(
             id = id,
             title = title,
             relativePath = relativePath,
@@ -230,12 +230,10 @@ object DataLoader {
             album = album,
             context = context
         )
-
-        return music
     }
 
     /**
-     * Load folders and subfolders (creaate them if not exists) where the music is present
+     * Load folders and sub-folders (create them if not exists) where the music is present
      *
      * @param music the music to add to the folder
      */

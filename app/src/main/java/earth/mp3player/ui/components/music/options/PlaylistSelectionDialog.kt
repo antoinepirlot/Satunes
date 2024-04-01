@@ -25,7 +25,6 @@
 
 package earth.mp3player.ui.components.music.options
 
-import android.content.Context
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.PlaylistAdd
@@ -35,7 +34,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import earth.mp3player.R
@@ -51,9 +49,8 @@ fun PlaylistSelectionDialog(
     onDismissRequest: () -> Unit,
     onConfirm: () -> Unit,
 ) {
-    val context: Context = LocalContext.current
-
     AlertDialog(
+        modifier = modifier,
         icon = {
             Icon(
                 imageVector = Icons.AutoMirrored.Rounded.PlaylistAdd,

@@ -54,7 +54,7 @@ import java.util.SortedMap
  */
 
 @Composable
-fun PlaylistView(
+fun PlaylistListView(
     modifier: Modifier = Modifier,
     navController: NavHostController,
 ) {
@@ -97,6 +97,6 @@ fun PlaylistView(
 
 @Preview
 @Composable
-fun PlaylistViewPreview() {
-    PlaylistView(navController = rememberNavController())
+fun PlaylistListViewPreview() {
+    PlaylistListView(navController = rememberNavController())
 }

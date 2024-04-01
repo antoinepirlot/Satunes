@@ -48,7 +48,7 @@ import earth.mp3player.ui.utils.startMusic
 import earth.mp3player.ui.views.PlayBackView
 import earth.mp3player.ui.views.main.MediaListView
 import earth.mp3player.ui.views.main.MusicsListView
-import earth.mp3player.ui.views.main.PlaylistView
+import earth.mp3player.ui.views.main.PlaylistListView
 import java.util.SortedMap
 
 /**
@@ -325,7 +325,7 @@ fun MediaRouter(
 
         composable(MediaDestination.PLAYLISTS.link) {
             resetOpenedPlaylist()
-            PlaylistView(navController = navController)
+            PlaylistListView(navController = navController)
         }
 
         composable("${MediaDestination.PLAYLISTS.link}/{id}") {

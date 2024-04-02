@@ -29,10 +29,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.rounded.QueueMusic
-import androidx.compose.material.icons.rounded.MusicNote
-import androidx.compose.material.icons.rounded.PlaylistRemove
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -48,6 +44,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import earth.mp3player.R
 import earth.mp3player.services.PlaylistSelectionManager
+import earth.mp3player.ui.views.MP3PlayerIcons
 
 /**
  * @author Antoine Pirlot on 30/03/2024
@@ -69,7 +66,7 @@ fun MusicOptionsDialog(
         modifier = modifier,
         icon = {
             Icon(
-                imageVector = Icons.Rounded.MusicNote,
+                imageVector = MP3PlayerIcons.MUSIC.imageVector,
                 contentDescription = "Music Options Icon"
             )
         },
@@ -82,9 +79,10 @@ fun MusicOptionsDialog(
                     showPlaylistSelectionDialog = true
                 }) {
                     Row {
+                        val playlistIcon: MP3PlayerIcons = MP3PlayerIcons.PLAYLIST
                         Icon(
-                            imageVector = Icons.AutoMirrored.Rounded.QueueMusic,
-                            contentDescription = "Playlist Icon"
+                            imageVector = playlistIcon.imageVector,
+                            contentDescription = playlistIcon.description
                         )
                         Spacer(modifier = Modifier.size(SPACER_SIZE))
                         Text(text = stringResource(id = R.string.add_to_playlist))
@@ -104,9 +102,10 @@ fun MusicOptionsDialog(
                         onDismissRequest()
                     }) {
                         Row {
+                            val playlistRemoveIcon: MP3PlayerIcons = MP3PlayerIcons.PLAYLIST_REMOVE
                             Icon(
-                                imageVector = Icons.Rounded.PlaylistRemove,
-                                contentDescription = "Playlist remove icon"
+                                imageVector = playlistRemoveIcon.imageVector,
+                                contentDescription = playlistRemoveIcon.description
                             )
                             Spacer(modifier = Modifier.size(SPACER_SIZE))
                             Text(text = stringResource(id = R.string.remove_from_playlist))

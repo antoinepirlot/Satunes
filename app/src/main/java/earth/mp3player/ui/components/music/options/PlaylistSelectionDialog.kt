@@ -26,8 +26,6 @@
 package earth.mp3player.ui.components.music.options
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.rounded.PlaylistAdd
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -38,6 +36,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import earth.mp3player.R
 import earth.mp3player.ui.components.forms.PlaylistSelectionForm
+import earth.mp3player.ui.views.MP3PlayerIcons
 
 /**
  * @author Antoine Pirlot on 30/03/2024
@@ -53,7 +52,7 @@ fun PlaylistSelectionDialog(
         modifier = modifier,
         icon = {
             Icon(
-                imageVector = Icons.AutoMirrored.Rounded.PlaylistAdd,
+                imageVector = MP3PlayerIcons.PLAYLIST_ADD.imageVector,
                 contentDescription = "Playlist Selection Icon"
             )
         },

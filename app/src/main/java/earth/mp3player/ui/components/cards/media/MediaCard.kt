@@ -29,8 +29,6 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
@@ -41,14 +39,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import earth.mp3player.R
+import earth.mp3player.database.models.Album
+import earth.mp3player.database.models.Artist
 import earth.mp3player.database.models.Folder
+import earth.mp3player.database.models.Genre
 import earth.mp3player.database.models.Media
 import earth.mp3player.database.models.Music
 import earth.mp3player.database.models.relations.PlaylistWithMusics
@@ -57,6 +57,7 @@ import earth.mp3player.database.services.DatabaseManager
 import earth.mp3player.services.PlaylistSelectionManager
 import earth.mp3player.ui.components.music.options.MusicOptionsDialog
 import earth.mp3player.ui.components.playlist.PlaylistOptionsDialog
+import earth.mp3player.ui.views.MP3PlayerIcons
 
 /**
  * @author Antoine Pirlot on 16/01/24
@@ -67,8 +68,6 @@ import earth.mp3player.ui.components.playlist.PlaylistOptionsDialog
 fun MediaCard(
     modifier: Modifier = Modifier,
     media: Media,
-    imageVector: ImageVector,
-    contentDescription: String? = null,
     onClick: () -> Unit
 ) {
     val haptics = LocalHapticFeedback.current
@@ -121,9 +120,10 @@ fun MediaCard(
                 Text(text = title)
             },
             leadingContent = {
+                val mediaIcon: MP3PlayerIcons = getRightIconAndDescription(media = media)
                 Icon(
-                    imageVector = imageVector,
-                    contentDescription = contentDescription
+                    imageVector = mediaIcon.imageVector,
+                    contentDescription = mediaIcon.description
                 )
             }
         )
@@ -170,6 +170,17 @@ fun MediaCard(
     }
 }
 
+private fun getRightIconAndDescription(media: Media): MP3PlayerIcons {
+    return when (media) {
+        is Folder -> MP3PlayerIcons.FOLDER
+        is Artist -> MP3PlayerIcons.ARTIST
+        is Album -> MP3PlayerIcons.ALBUM
+        is Genre -> MP3PlayerIcons.GENRES
+        is PlaylistWithMusics -> MP3PlayerIcons.PLAYLIST
+        else -> MP3PlayerIcons.MUSIC // In that case, media is Music
+    }
+}
+
 @Composable
 @Preview
 fun CardPreview() {
@@ -185,6 +196,5 @@ fun CardPreview() {
     MediaCard(
         modifier = Modifier.fillMaxSize(),
         media = music,
-        imageVector = Icons.Filled.PlayArrow,
         onClick = {})
 }

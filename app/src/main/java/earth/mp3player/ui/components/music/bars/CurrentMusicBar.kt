@@ -34,8 +34,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.MusicNote
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -46,6 +44,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import earth.mp3player.ui.views.MP3PlayerIcons
 
 /**
  * @author Antoine Pirlot on 01/02/24
@@ -69,7 +68,8 @@ fun CurrentMusicBar(
                     .height(56.dp)
                     .clickable { visible = !visible }
             ) {
-                Image(imageVector = Icons.Default.MusicNote, contentDescription = "Musique")
+                val icon: MP3PlayerIcons = MP3PlayerIcons.MUSIC
+                Image(imageVector = icon.imageVector, contentDescription = icon.description)
             }
         }
     }

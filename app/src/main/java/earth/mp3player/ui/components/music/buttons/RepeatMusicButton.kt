@@ -25,19 +25,15 @@
 
 package earth.mp3player.ui.components.music.buttons
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Repeat
-import androidx.compose.material.icons.filled.RepeatOn
-import androidx.compose.material.icons.filled.RepeatOneOn
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.media3.common.Player.REPEAT_MODE_ALL
 import androidx.media3.common.Player.REPEAT_MODE_ONE
 import earth.mp3player.playback.services.playback.PlaybackController
+import earth.mp3player.ui.views.MP3PlayerIcons
 
 /**
  * @author Antoine Pirlot on 29/01/24
@@ -51,10 +47,11 @@ fun RepeatMusicButton(
         modifier = modifier,
         onClick = { PlaybackController.getInstance().switchRepeatMode() }
     ) {
+        val icon: MP3PlayerIcons = getRightRepeatIcon()
         Icon(
             modifier = modifier,
-            imageVector = getImageVector(),
-            contentDescription = "Repeat"
+            imageVector = icon.imageVector,
+            contentDescription = icon.description
         )
     }
 }
@@ -65,18 +62,18 @@ fun RepeatMusicButtonPreview() {
     RepeatMusicButton()
 }
 
-private fun getImageVector(): ImageVector {
+private fun getRightRepeatIcon(): MP3PlayerIcons {
     return when (PlaybackController.getInstance().repeatMode.value) {
         REPEAT_MODE_ONE -> {
-            Icons.Filled.RepeatOneOn
+            MP3PlayerIcons.REPEAT_ONE_ON
         }
 
         REPEAT_MODE_ALL -> {
-            Icons.Filled.RepeatOn
+            MP3PlayerIcons.REPEAT_ON
         }
 
         else -> {
-            Icons.Filled.Repeat
+            MP3PlayerIcons.REPEAT
         }
     }
 }

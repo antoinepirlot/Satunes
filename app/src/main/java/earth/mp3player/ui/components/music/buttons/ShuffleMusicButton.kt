@@ -25,16 +25,13 @@
 
 package earth.mp3player.ui.components.music.buttons
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Shuffle
-import androidx.compose.material.icons.filled.ShuffleOn
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import earth.mp3player.playback.services.playback.PlaybackController
+import earth.mp3player.ui.views.MP3PlayerIcons
 
 /**
  * @author Antoine Pirlot on 29/01/24
@@ -50,10 +47,11 @@ fun ShuffleMusicButton(
         modifier = modifier,
         onClick = { playbackController.switchShuffleMode() }
     ) {
+        val icon = getRightRepeatIcon()
         Icon(
             modifier = modifier,
-            imageVector = getImageVector(),
-            contentDescription = "Shuffle mode"
+            imageVector = icon.imageVector,
+            contentDescription = icon.description
         )
     }
 }
@@ -64,10 +62,10 @@ fun ShuffleMusicButtonPreview() {
     ShuffleMusicButton()
 }
 
-private fun getImageVector(): ImageVector {
+private fun getRightRepeatIcon(): MP3PlayerIcons {
     return if (PlaybackController.getInstance().isShuffle.value) {
-        Icons.Filled.ShuffleOn
+        MP3PlayerIcons.SHUFFLE_ON
     } else {
-        Icons.Filled.Shuffle
+        MP3PlayerIcons.SHUFFLE
     }
 }

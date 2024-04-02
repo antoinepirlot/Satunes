@@ -25,27 +25,19 @@
 
 package earth.mp3player.ui.utils
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.rounded.QueueMusic
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Folder
-import androidx.compose.material.icons.filled.MusicNote
-import androidx.compose.material.icons.rounded.AccountCircle
-import androidx.compose.material.icons.rounded.Album
-import androidx.compose.material.icons.rounded.Audiotrack
-import androidx.compose.material.icons.rounded.Category
-import androidx.compose.material.icons.rounded.Folder
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.media3.common.MediaItem
-import earth.mp3player.database.models.Album
-import earth.mp3player.database.models.Artist
 import earth.mp3player.database.models.Folder
-import earth.mp3player.database.models.Genre
 import earth.mp3player.database.models.Media
 import earth.mp3player.database.models.Music
-import earth.mp3player.database.models.relations.PlaylistWithMusics
 import earth.mp3player.playback.models.MenuTitle
 import earth.mp3player.playback.services.playback.PlaybackController
+import earth.mp3player.ui.views.MP3PlayerIcons.ALBUM
+import earth.mp3player.ui.views.MP3PlayerIcons.ARTIST
+import earth.mp3player.ui.views.MP3PlayerIcons.FOLDER
+import earth.mp3player.ui.views.MP3PlayerIcons.GENRES
+import earth.mp3player.ui.views.MP3PlayerIcons.MUSIC
+import earth.mp3player.ui.views.MP3PlayerIcons.PLAYLIST
 import java.util.SortedMap
 
 /**
@@ -87,32 +79,18 @@ fun getMusicListFromFolder(folder: Folder): SortedMap<Music, MediaItem> {
     return mapOfMusic
 }
 
-fun getRightIconAndDescription(media: Media): Pair<ImageVector, String> {
-    return when (media) {
-        is Folder -> Icons.Filled.Folder to "Arrow Forward"
-        is Artist -> Icons.Filled.AccountCircle to "Account Circle"
-        is Album -> Icons.Rounded.Album to "Album Icon"
-        is Genre -> Icons.Rounded.Category to "Genres Icon"
-        is PlaylistWithMusics -> Icons.AutoMirrored.Rounded.QueueMusic to "Playlist Icon"
-        else -> {
-            // In that case, media is Music
-            Icons.Filled.MusicNote to "Play Arrow"
-        }
-    }
-}
-
 fun getRightIconAndDescription(menuTitle: MenuTitle): Pair<ImageVector, String> {
     return when (menuTitle) {
-        MenuTitle.FOLDERS -> Icons.Rounded.Folder to "Folder Icon"
+        MenuTitle.FOLDERS -> FOLDER.imageVector to FOLDER.description
 
-        MenuTitle.ARTISTS -> Icons.Rounded.AccountCircle to "Artist Icon"
+        MenuTitle.ARTISTS -> ARTIST.imageVector to ARTIST.description
 
-        MenuTitle.ALBUMS -> Icons.Rounded.Album to "Album Icon"
+        MenuTitle.ALBUMS -> ALBUM.imageVector to ALBUM.description
 
-        MenuTitle.GENRES -> Icons.Rounded.Category to "Genres Icon"
+        MenuTitle.GENRES -> GENRES.imageVector to GENRES.description
 
-        MenuTitle.PLAYLISTS -> Icons.AutoMirrored.Rounded.QueueMusic to "Playlist Icon"
+        MenuTitle.PLAYLISTS -> PLAYLIST.imageVector to PLAYLIST.description
 
-        else -> Icons.Rounded.Audiotrack to "Music Icon"
+        else -> MUSIC.imageVector to MUSIC.description
     }
 }

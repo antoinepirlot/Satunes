@@ -79,7 +79,7 @@ fun MusicOptionsDialog(
                     showPlaylistSelectionDialog = true
                 }) {
                     Row {
-                        val playlistIcon: MP3PlayerIcons = MP3PlayerIcons.PLAYLIST
+                        val playlistIcon: MP3PlayerIcons = MP3PlayerIcons.PLAYLIST_ADD
                         Icon(
                             imageVector = playlistIcon.imageVector,
                             contentDescription = playlistIcon.description

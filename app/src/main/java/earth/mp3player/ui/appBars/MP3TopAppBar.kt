@@ -25,8 +25,6 @@
 
 package earth.mp3player.ui.appBars
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -45,6 +43,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import earth.mp3player.R
 import earth.mp3player.router.media.MediaDestination
+import earth.mp3player.ui.views.MP3PlayerIcons
 
 /**
  * @author Antoine Pirlot on 16/01/24
@@ -77,9 +76,10 @@ fun MP3TopAppBar(
                     navController.navigate(MediaDestination.SETTINGS.link)
                 }
             ) {
+                val settingsIcon: MP3PlayerIcons = MP3PlayerIcons.SETTINGS
                 Icon(
-                    imageVector = Icons.Filled.Settings,
-                    contentDescription = "Settings"
+                    imageVector = settingsIcon.imageVector,
+                    contentDescription = settingsIcon.description
                 )
             }
         },

@@ -27,8 +27,6 @@ package earth.mp3player.ui.views.main.playlist
 
 import android.content.Context
 import androidx.compose.foundation.layout.Column
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.rounded.PlaylistAdd
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
@@ -49,6 +47,7 @@ import earth.mp3player.router.media.utils.openCurrentMusic
 import earth.mp3player.router.media.utils.openMedia
 import earth.mp3player.router.media.utils.resetOpenedPlaylist
 import earth.mp3player.ui.components.forms.PlaylistCreationForm
+import earth.mp3player.ui.views.MP3PlayerIcons
 import earth.mp3player.ui.views.main.MediaListView
 import java.util.SortedMap
 
@@ -67,7 +66,7 @@ fun PlaylistListView(
     Column(modifier = modifier) {
         FloatingActionButton(onClick = { openAlertDialog = true }) {
             Icon(
-                imageVector = Icons.AutoMirrored.Rounded.PlaylistAdd,
+                imageVector = MP3PlayerIcons.PLAYLIST_ADD.imageVector,
                 contentDescription = "Create a playlist button"
             )
         }

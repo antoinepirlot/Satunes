@@ -32,16 +32,12 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.PauseCircle
-import androidx.compose.material.icons.filled.PlayCircle
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import earth.mp3player.playback.services.playback.PlaybackController
@@ -49,6 +45,7 @@ import earth.mp3player.ui.components.music.buttons.NextMusicButton
 import earth.mp3player.ui.components.music.buttons.PreviousMusicButton
 import earth.mp3player.ui.components.music.buttons.RepeatMusicButton
 import earth.mp3player.ui.components.music.buttons.ShuffleMusicButton
+import earth.mp3player.ui.views.MP3PlayerIcons
 
 /**
  * @author Antoine Pirlot on 25/01/24
@@ -85,13 +82,13 @@ fun MusicControlBar(
                 modifier = Modifier.size(playPauseButtonSize),
                 onClick = { playbackController.playPause() }
             ) {
-                val iconWithDescription: Pair<ImageVector, String> =
+                val icon: MP3PlayerIcons =
                     getPlayPauseIconWithDescription(isPlaying = isPlaying.value)
 
                 Icon(
                     modifier = Modifier.size(playPauseButtonSize),
-                    imageVector = iconWithDescription.first,
-                    contentDescription = iconWithDescription.second,
+                    imageVector = icon.imageVector,
+                    contentDescription = icon.description,
                 )
             }
 
@@ -111,10 +108,10 @@ fun MediaControlBarPreview() {
     MusicControlBar()
 }
 
-private fun getPlayPauseIconWithDescription(isPlaying: Boolean): Pair<ImageVector, String> {
+private fun getPlayPauseIconWithDescription(isPlaying: Boolean): MP3PlayerIcons {
     return if (isPlaying) {
-        Icons.Filled.PauseCircle to "Pause"
+        MP3PlayerIcons.PAUSE
     } else {
-        Icons.Filled.PlayCircle to "Play"
+        MP3PlayerIcons.PLAY
     }
 }

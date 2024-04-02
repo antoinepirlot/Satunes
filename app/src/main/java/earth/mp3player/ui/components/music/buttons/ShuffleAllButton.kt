@@ -26,8 +26,6 @@
 package earth.mp3player.ui.components.music.buttons
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Shuffle
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
@@ -37,6 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import earth.mp3player.R
+import earth.mp3player.ui.views.MP3PlayerIcons
 
 /**
  * @author Antoine Pirlot on 01/02/24
@@ -55,7 +54,7 @@ fun ShuffleAllButton(
                 },
                 leadingContent = {
                     Icon(
-                        imageVector = Icons.Rounded.Shuffle,
+                        imageVector = MP3PlayerIcons.SHUFFLE.imageVector,
                         contentDescription = "Shuffle All Musics Button"
                     )
                 }

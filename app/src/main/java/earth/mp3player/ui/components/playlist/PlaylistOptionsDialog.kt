@@ -29,9 +29,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.rounded.QueueMusic
-import androidx.compose.material.icons.rounded.PlaylistRemove
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -42,6 +39,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import earth.mp3player.R
+import earth.mp3player.ui.views.MP3PlayerIcons
 
 /**
  * @author Antoine Pirlot on 01/04/2024
@@ -60,7 +58,7 @@ fun PlaylistOptionsDialog(
         modifier = modifier,
         icon = {
             Icon(
-                imageVector = Icons.AutoMirrored.Rounded.QueueMusic,
+                imageVector = MP3PlayerIcons.PLAYLIST.imageVector,
                 contentDescription = "Playlist Options Icon"
             )
         },
@@ -74,9 +72,10 @@ fun PlaylistOptionsDialog(
                     onDismissRequest()
                 }) {
                     Row {
+                        val playlistRemoveIcon: MP3PlayerIcons = MP3PlayerIcons.PLAYLIST_REMOVE
                         Icon(
-                            imageVector = Icons.Rounded.PlaylistRemove,
-                            contentDescription = "Playlist remove icon"
+                            imageVector = playlistRemoveIcon.imageVector,
+                            contentDescription = playlistRemoveIcon.description
                         )
                         Spacer(modifier = Modifier.size(SPACER_SIZE))
                         Text(text = stringResource(id = R.string.remove_playlist))

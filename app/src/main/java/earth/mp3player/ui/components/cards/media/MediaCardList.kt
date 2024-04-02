@@ -35,7 +35,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import earth.mp3player.database.models.Media
 import earth.mp3player.database.models.relations.PlaylistWithMusics
 import earth.mp3player.database.models.tables.MusicDB
-import earth.mp3player.ui.utils.getRightIconAndDescription
 
 /**
  * @author Antoine Pirlot on 16/01/24
@@ -69,13 +68,9 @@ fun <T : Comparable<T>> MediaCardList(
                     }
                 }
             ) { media: Media ->
-                // First pair is image vector and second one is content description (String)
-                val pair = getRightIconAndDescription(media)
                 MediaCard(
                     modifier = modifier,
                     media = media,
-                    imageVector = pair.first,
-                    contentDescription = pair.second,
                     onClick = { openMedia(media) }
                 )
             }

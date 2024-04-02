@@ -30,6 +30,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
@@ -50,13 +51,19 @@ fun <T: Comparable<T>> MediaListView(
     mediaMap: Map<T, Media>,
     openMedia: (media: Media) -> Unit,
     shuffleMusicAction: () -> Unit,
-    onFABClick: () -> Unit
+    onFABClick: () -> Unit,
+    extraButtons: @Composable () -> Unit = { /*By default there's no extra buttons*/ },
 ) {
     Scaffold(
         modifier = modifier,
         floatingActionButton = {
-            if (PlaybackController.getInstance().musicPlaying.value != null) {
-                ShowCurrentMusicButton(onClick = onFABClick)
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                extraButtons()
+                if (PlaybackController.getInstance().musicPlaying.value != null) {
+                    ShowCurrentMusicButton(onClick = onFABClick)
+                }
             }
         },
         floatingActionButtonPosition = FabPosition.End

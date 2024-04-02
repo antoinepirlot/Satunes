@@ -29,7 +29,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.PlaylistAdd
 import androidx.compose.material.icons.automirrored.rounded.QueueMusic
 import androidx.compose.material.icons.filled.PauseCircle
-import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.PlayCircle
 import androidx.compose.material.icons.filled.Repeat
 import androidx.compose.material.icons.filled.RepeatOn
 import androidx.compose.material.icons.filled.RepeatOneOn
@@ -56,7 +56,7 @@ enum class MP3PlayerIcons(val imageVector: ImageVector, val description: String)
     GENRES(imageVector = Icons.Rounded.Category, description = "Genre Icon"),
     MUSIC(imageVector = Icons.Rounded.MusicNote, description = "Music Icon"),
     PAUSE(imageVector = Icons.Filled.PauseCircle, description = "Pause Icon"),
-    PLAY(imageVector = Icons.Filled.PlayArrow, description = "Play Icon"),
+    PLAY(imageVector = Icons.Filled.PlayCircle, description = "Play Icon"),
     PLAYLIST(imageVector = Icons.AutoMirrored.Rounded.QueueMusic, description = "Playlist Icon"),
     PLAYLIST_ADD(
         imageVector = Icons.AutoMirrored.Rounded.PlaylistAdd,

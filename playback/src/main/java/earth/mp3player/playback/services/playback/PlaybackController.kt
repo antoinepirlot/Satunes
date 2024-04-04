@@ -60,6 +60,7 @@ class PlaybackController private constructor(
     internal var musicPlayingIndex: Int = DEFAULT_MUSIC_PLAYING_INDEX
     internal var isEnded: Boolean = DEFAULT_IS_ENDED
     internal var isUpdatingPosition: Boolean = DEFAULT_IS_UPDATING_POSITION
+    internal var isMediaTransitionFromList: Boolean = DEFAULT_IS_MEDIA_TRANSITION_FROM_LIST
 
 
     // Mutable var are used in ui, it needs to be recomposed
@@ -96,6 +97,7 @@ class PlaybackController private constructor(
         const val DEFAULT_HAS_NEXT: Boolean = false
         const val DEFAULT_HAS_PREVIOUS: Boolean = false
         const val DEFAULT_IS_LOADED: Boolean = false
+        const val DEFAULT_IS_MEDIA_TRANSITION_FROM_LIST: Boolean = false
         const val DEFAULT_CURRENT_POSITION_PROGRESSION: Float = 0f
 
         val DEFAULT_MUSIC_PLAYING = null
@@ -166,7 +168,7 @@ class PlaybackController private constructor(
         if (!this.isLoaded.value) {
             throw IllegalStateException("The playlist has not been loaded, you can't play music")
         }
-
+        isMediaTransitionFromList = true
         when (musicToPlay) {
             null -> {
                 //Play from the beginning

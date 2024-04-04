@@ -57,7 +57,7 @@ open class PlaybackListener : Player.Listener {
         super.onIsPlayingChanged(isPlaying)
         val playbackController: PlaybackController = PlaybackController.getInstance()
 
-        PlaybackController.getInstance().isPlaying.value = isPlaying
+        playbackController.isPlaying.value = isPlaying
         playbackController.isEnded = PlaybackController.DEFAULT_IS_ENDED
         updateCurrentPosition()
     }
@@ -94,40 +94,36 @@ open class PlaybackListener : Player.Listener {
     }
 
     override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
-        super.onMediaItemTransition(mediaItem, reason)
-        val playbackController: PlaybackController = PlaybackController.getInstance()
-
-        if (playbackController.musicPlaying.value == null || playbackController.playlist.musicCount() <= 1) {
-            //Fix issue while loading for the first time
+        if (mediaItem == null) {
             return
         }
 
-        if (mediaItem != playbackController.musicPlaying.value!!.mediaItem) {
-            if (
-                reason == Player.MEDIA_ITEM_TRANSITION_REASON_SEEK
-                || reason == Player.MEDIA_ITEM_TRANSITION_REASON_AUTO
-            ) {
-                val previousMusic: Music? =
-                    if (playbackController.musicPlayingIndex != PlaybackController.DEFAULT_MUSIC_PLAYING_INDEX)
-                        playbackController.playlist.musicList[playbackController.musicPlayingIndex - 1]
-                    else
-                        null
+        val playbackController: PlaybackController = PlaybackController.getInstance()
+        if (
+            reason == Player.MEDIA_ITEM_TRANSITION_REASON_SEEK
+            || reason == Player.MEDIA_ITEM_TRANSITION_REASON_AUTO
+        ) {
+            super.onMediaItemTransition(mediaItem, reason)
+            if (playbackController.isMediaTransitionFromList) {
+                updateMusicPlaying()
+                playbackController.isMediaTransitionFromList = false
+                return
+            }
 
-                if (previousMusic == null || mediaItem != previousMusic.mediaItem) {
-                    // Next button has been clicked
-                    next(repeatMode = playbackController.repeatMode.value)
-                } else {
-                    // Previous button has been clicked
-                    previous(repeatMode = playbackController.repeatMode.value)
-                }
+            val previousMusic: Music? =
+                if (playbackController.musicPlayingIndex != PlaybackController.DEFAULT_MUSIC_PLAYING_INDEX)
+                    playbackController.playlist.musicList[playbackController.musicPlayingIndex - 1]
+                else
+                    null
+
+            if (previousMusic == null || mediaItem != previousMusic.mediaItem) {
+                // Next button has been clicked
+                next(repeatMode = playbackController.repeatMode.value)
+            } else {
+                // Previous button has been clicked
+                previous(repeatMode = playbackController.repeatMode.value)
             }
         }
-
-        playbackController.musicPlaying.value =
-            playbackController.playlist.musicList[playbackController.musicPlayingIndex]
-        updateHasNext()
-        updateHasPrevious()
-        playbackController.mediaController.play()
     }
 
     private fun updateHasPrevious() {
@@ -178,9 +174,7 @@ open class PlaybackListener : Player.Listener {
         val playbackController: PlaybackController = PlaybackController.getInstance()
         // The next button has been clicked
         when (repeatMode) {
-            Player.REPEAT_MODE_OFF, Player.REPEAT_MODE_ONE -> {
-                playbackController.musicPlayingIndex++
-            }
+            Player.REPEAT_MODE_OFF, Player.REPEAT_MODE_ONE -> playbackController.musicPlayingIndex++
 
             Player.REPEAT_MODE_ALL -> {
                 if (playbackController.musicPlayingIndex + 1 == playbackController.playlist.musicList.size) {
@@ -190,14 +184,13 @@ open class PlaybackListener : Player.Listener {
                 }
             }
         }
+        updateMusicPlaying()
     }
 
     private fun previous(repeatMode: Int) {
         val playbackController: PlaybackController = PlaybackController.getInstance()
         when (repeatMode) {
-            Player.REPEAT_MODE_OFF, Player.REPEAT_MODE_ONE -> {
-                playbackController.musicPlayingIndex--
-            }
+            Player.REPEAT_MODE_OFF, Player.REPEAT_MODE_ONE -> playbackController.musicPlayingIndex--
 
             Player.REPEAT_MODE_ALL -> {
                 if (playbackController.musicPlayingIndex == PlaybackController.DEFAULT_MUSIC_PLAYING_INDEX) {
@@ -208,5 +201,15 @@ open class PlaybackListener : Player.Listener {
                 }
             }
         }
+        updateMusicPlaying()
+    }
+
+    private fun updateMusicPlaying() {
+        val playbackController: PlaybackController = PlaybackController.getInstance()
+        playbackController.musicPlaying.value =
+            playbackController.playlist.musicList[playbackController.musicPlayingIndex]
+        updateHasNext()
+        updateHasPrevious()
+        playbackController.mediaController.play()
     }
 }

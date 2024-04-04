@@ -130,7 +130,7 @@ class PlaybackController private constructor(
                 )
             } else if (listener != null) {
                 while (!instance::mediaController.isInitialized) {
-                    // Wait it is initialized
+                    // Wait it is initializing
                 }
                 val wasPlaying: Boolean = instance.isPlaying.value
                 if (instance.isPlaying.value) {

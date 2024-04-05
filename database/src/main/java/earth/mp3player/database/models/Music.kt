@@ -104,6 +104,7 @@ data class Music private constructor(
             .setAlbumTitle(if (this.album != null) this.album!!.title else null)
             .build()
         this.mediaItem = MediaItem.Builder()
+            .setMediaId(this.id.toString())
             .setUri(this.uri)
             .setMediaMetadata(mediaMetaData)
             .build()

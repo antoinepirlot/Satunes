@@ -14,7 +14,7 @@ Voici les instructions pour installer l'application:
 1) Clique sur [Release](https://github.com/antoinepirlot/MP3-Player/releases)
 2) Choisi ta version
 3) Clique sur "Assets" pour dérouler un menu qui contient le fichier d'installation
-4) Clique sur le fichier nom_du_fichier.apk (Un fichier va se télécharger sur ton appareil)
+4) Clique sur le fichier MP3-Player_vx.y.z.apk (Un fichier va se télécharger sur ton appareil)
 5) Une fois le téléchargement terminé, ouvre le fichier
 6) Autorise l'installation d'application inconnue. (C'est nécéssaire car l'application n'est dépployée sur le Play Store).
 7) Installe l'application (il est probable que tu doives recommencer l'étape 5).

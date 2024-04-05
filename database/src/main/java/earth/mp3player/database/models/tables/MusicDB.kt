@@ -46,5 +46,5 @@ data class MusicDB(
     override val title: String = "Title is not used for MusicDB class." // Not used
 
     @Ignore
-    var music: Music = DataManager.musicMediaItemSortedMap.keys.first { it.id == this.id }
+    var music: Music = DataManager.getMusic(musicId = this.id)
 }

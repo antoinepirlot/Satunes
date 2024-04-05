@@ -47,6 +47,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -55,12 +56,14 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import earth.mp3player.database.services.DataLoader
 import earth.mp3player.playback.services.playback.PlaybackController
 import earth.mp3player.playback.services.settings.SettingsManager
 import earth.mp3player.router.main.MainRouter
 import earth.mp3player.router.media.MediaDestination
 import earth.mp3player.ui.appBars.MP3BottomAppBar
 import earth.mp3player.ui.appBars.MP3TopAppBar
+import earth.mp3player.ui.components.LoadingCircle
 import earth.mp3player.ui.theme.MP3Theme
 import kotlinx.coroutines.runBlocking
 
@@ -127,6 +130,12 @@ class MainActivity : ComponentActivity() {
                         Column(
                             modifier = Modifier.padding(innerPadding)
                         ) {
+                            val isLoading: MutableState<Boolean> = remember { DataLoader.isLoading }
+
+                            if (isLoading.value) {
+                                LoadingCircle()
+                                return@Scaffold
+                            }
                             MainRouter(
                                 navController = mainRouterNavController,
                                 mediaRouterNavController = mediaRouterNavController,

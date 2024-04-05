@@ -61,7 +61,7 @@ fun AllArtistsListView(
     resetOpenedPlaylist()
 
     @Suppress("UNCHECKED_CAST")
-    (MediaListView(
+    MediaListView(
         modifier = modifier,
         mediaMap = artistMap as SortedMap<Long, Media>,
 
@@ -81,7 +81,7 @@ fun AllArtistsListView(
         },
 
         onFABClick = { openCurrentMusic(navController) }
-    ))
+    )
 }
 
 @Preview

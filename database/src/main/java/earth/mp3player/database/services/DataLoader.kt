@@ -30,12 +30,17 @@ import android.database.Cursor
 import android.net.Uri
 import android.provider.MediaStore
 import androidx.compose.runtime.MutableLongState
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.mutableStateOf
 import earth.mp3player.database.models.Album
 import earth.mp3player.database.models.Artist
 import earth.mp3player.database.models.Folder
 import earth.mp3player.database.models.Genre
 import earth.mp3player.database.models.Music
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 /**
  * @author Antoine Pirlot on 22/02/24
@@ -46,7 +51,7 @@ object DataLoader {
     private val URI: Uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
 
     var isLoaded: Boolean = false
-    private var isLoading: Boolean = false
+    var isLoading: MutableState<Boolean> = mutableStateOf(false)
 
     // Music variables
     private var musicIdColumn: Int? = null
@@ -67,46 +72,48 @@ object DataLoader {
     //Genres variables
     private var genreIdColumn: Int? = null
     private var genreNameColumn: Int? = null
-    private var folderId: MutableLongState = mutableLongStateOf(FIRST_FOLDER_INDEX)
 
     /**
      * Load all Media data from device's storage.
      */
     fun loadAllData(context: Context) {
-        isLoading = true
-        val projection = arrayOf(
-            // AUDIO
-            MediaStore.Audio.Media._ID,
-            MediaStore.Audio.Media.DISPLAY_NAME,
-            MediaStore.Audio.Media.TITLE,
-            MediaStore.Audio.Media.DURATION,
-            MediaStore.Audio.Media.SIZE,
-            MediaStore.Audio.Media.RELATIVE_PATH,
+        isLoading.value = true
+        CoroutineScope(Dispatchers.IO).launch {
+            val projection = arrayOf(
+                // AUDIO
+                MediaStore.Audio.Media._ID,
+                MediaStore.Audio.Media.DISPLAY_NAME,
+                MediaStore.Audio.Media.TITLE,
+                MediaStore.Audio.Media.DURATION,
+                MediaStore.Audio.Media.SIZE,
+                MediaStore.Audio.Media.RELATIVE_PATH,
 
-            //ALBUMS
-            MediaStore.Audio.Albums.ALBUM_ID,
-            MediaStore.Audio.Albums.ALBUM,
+                //ALBUMS
+                MediaStore.Audio.Albums.ALBUM_ID,
+                MediaStore.Audio.Albums.ALBUM,
 
-            //ARTISTS
-            MediaStore.Audio.Artists._ID,
-            MediaStore.Audio.Artists.ARTIST,
+                //ARTISTS
+                MediaStore.Audio.Artists._ID,
+                MediaStore.Audio.Artists.ARTIST,
 
-            //Genre
-            MediaStore.Audio.Media.GENRE_ID,
-            MediaStore.Audio.Media.GENRE
-        )
+                //Genre
+                MediaStore.Audio.Media.GENRE_ID,
+                MediaStore.Audio.Media.GENRE
+            )
 
-        context.contentResolver.query(URI, projection, null, null)?.use {
-            loadColumns(cursor = it)
-            // TODO find a way to coroutine this and fix issue with recomposition with sorted map
-            while (it.moveToNext()) {
-                loadData(cursor = it, context = context)
+            context.contentResolver.query(URI, projection, null, null)?.use {
+                loadColumns(cursor = it)
+                // TODO find a way to coroutine this and fix issue with recomposition with sorted map
+                val folderId: MutableLongState = mutableLongStateOf(FIRST_FOLDER_INDEX)
+                while (it.moveToNext()) {
+                    loadData(cursor = it, context = context, folderId = folderId)
+                }
             }
-        }
 
-        DatabaseManager(context = context).loadAllPlaylistsWithMusic()
-        isLoaded = true
-        isLoading = false
+            DatabaseManager(context = context).loadAllPlaylistsWithMusic()
+            isLoaded = true
+            isLoading.value = false
+        }
     }
 
     /**
@@ -152,7 +159,7 @@ object DataLoader {
     /**
      * Load data from cursor
      */
-    private fun loadData(cursor: Cursor, context: Context) {
+    private fun loadData(cursor: Cursor, context: Context, folderId: MutableLongState) {
         var artist: Artist? = null
         var album: Album? = null
         val music: Music
@@ -176,7 +183,7 @@ object DataLoader {
         }
 
         //Load Folder
-        loadFolders(music = music)
+        loadFolders(music = music, folderId = folderId)
 
         //Load Genre
         try {
@@ -245,6 +252,7 @@ object DataLoader {
      */
     private fun loadFolders(
         music: Music,
+        folderId: MutableLongState,
     ) {
         val splitPath = music.relativePath.split("/").toMutableList()
 

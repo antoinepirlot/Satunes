@@ -26,6 +26,8 @@
 package earth.mp3player.router.media
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -34,6 +36,7 @@ import androidx.navigation.compose.composable
 import earth.mp3player.database.models.Album
 import earth.mp3player.database.models.Artist
 import earth.mp3player.database.models.Folder
+import earth.mp3player.database.models.Genre
 import earth.mp3player.database.models.relations.PlaylistWithMusics
 import earth.mp3player.database.services.DataManager
 import earth.mp3player.ui.views.PlayBackView
@@ -71,7 +74,7 @@ fun MediaRouter(
 
         composable("${MediaDestination.FOLDERS.link}/{id}") {
             val folderId = it.arguments!!.getString("id")!!.toLong()
-            val folder: Folder = remember { DataManager.getFolder(folderId = folderId) }
+            val folder: Folder by remember { mutableStateOf(DataManager.getFolder(folderId = folderId)) }
             FolderView(navController = navController, folder = folder)
         }
 
@@ -81,7 +84,7 @@ fun MediaRouter(
 
         composable("${MediaDestination.ARTISTS.link}/{name}") {
             val artistName: String = it.arguments!!.getString("name")!!
-            val artist: Artist = remember { DataManager.getArtist(artistName) }
+            val artist: Artist by remember { mutableStateOf(DataManager.getArtist(artistName)) }
             ArtistView(navController = navController, artist = artist)
         }
 
@@ -91,7 +94,7 @@ fun MediaRouter(
 
         composable("${MediaDestination.ALBUMS.link}/{id}") {
             val albumId: Long = it.arguments!!.getString("id")!!.toLong()
-            val album: Album = remember { DataManager.getAlbum(albumId) }
+            val album: Album by remember { mutableStateOf(DataManager.getAlbum(albumId)) }
             AlbumView(navController = navController, album = album)
         }
 
@@ -101,7 +104,7 @@ fun MediaRouter(
 
         composable("${MediaDestination.GENRES.link}/{name}") {
             val genreName: String = it.arguments!!.getString("name")!!
-            val genre = remember { DataManager.getGenre(genreName = genreName) }
+            val genre: Genre by remember { mutableStateOf(DataManager.getGenre(genreName = genreName)) }
             GenreView(navController = navController, genre = genre)
         }
 
@@ -111,8 +114,8 @@ fun MediaRouter(
 
         composable("${MediaDestination.PLAYLISTS.link}/{id}") {
             val playlistId: Long = it.arguments!!.getString("id")!!.toLong()
-            val playlist: PlaylistWithMusics = remember {
-                DataManager.getPlaylist(playlistId = playlistId)
+            val playlist: PlaylistWithMusics by remember {
+                mutableStateOf(DataManager.getPlaylist(playlistId = playlistId))
             }
             PlaylistView(navController = navController, playlist = playlist)
         }

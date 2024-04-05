@@ -30,6 +30,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import earth.mp3player.database.models.Media
@@ -67,7 +70,8 @@ fun <T : Comparable<T>> MediaCardList(
                         else -> it.id
                     }
                 }
-            ) { media: Media ->
+            ) {
+                val media: Media by remember { mutableStateOf(it) }
                 MediaCard(
                     modifier = modifier,
                     media = media,

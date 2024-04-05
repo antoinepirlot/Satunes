@@ -188,7 +188,7 @@ class PlaybackController private constructor(
         if (mediaController.currentMediaItemIndex == musicPlayingIndex) {
             mediaController.play()
         } else {
-            mediaController.seekTo(musicPlayingIndex, 0)
+            seekTo(musicIndex = musicPlayingIndex)
         }
     }
 
@@ -248,6 +248,20 @@ class PlaybackController private constructor(
         val newPosition: Long = (positionPercentage * maxPosition).toLong()
 
         this.seekTo(positionMs = newPosition)
+    }
+
+    fun seekTo(music: Music, positionMs: Long = 0) {
+        val musicIndex: Int = playlist.getMusicIndex(music)
+        seekTo(musicIndex = musicIndex, positionMs)
+    }
+
+    fun seekTo(musicId: Long, positionMs: Long = 0) {
+        val music: Music = DataManager.getMusic(musicId)
+        seekTo(music = music, positionMs)
+    }
+
+    fun seekTo(musicIndex: Int, positionMs: Long = 0) {
+        mediaController.seekTo(musicIndex, positionMs)
     }
 
     /**

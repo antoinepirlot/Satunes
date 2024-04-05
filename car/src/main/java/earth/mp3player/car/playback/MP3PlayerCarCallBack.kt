@@ -68,8 +68,7 @@ object MP3PlayerCarCallBack : MediaSessionCompat.Callback() {
 
     override fun onSkipToQueueItem(queueId: Long) {
         val playbackController: PlaybackController = PlaybackController.getInstance()
-        val musicToPlay: Music = DataManager.getMusic(musicId = queueId)
-        playbackController.start(musicToPlay = musicToPlay)
+        playbackController.seekTo(musicId = queueId)
     }
 
     override fun onSeekTo(position: Long) {

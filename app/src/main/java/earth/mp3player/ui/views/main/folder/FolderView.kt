@@ -26,6 +26,7 @@
 package earth.mp3player.ui.views.main.folder
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.media3.common.MediaItem
@@ -53,15 +54,15 @@ fun FolderView(
     folder: Folder,
 ) {
     val playbackController: PlaybackController = PlaybackController.getInstance()
-
+    val folderMusicMediaItemSortedMap: SortedMap<Music, MediaItem> = remember {
+        folder.musicMediaItemSortedMap
+    }
     val mapToShow: SortedMap<Long, Media> = sortedMapOf()
 
     //Load sub-folders
     mapToShow.putAll(folder.getSubFolderListAsMedia())
 
     //Load sub-folder's musics
-    val folderMusicMediaItemSortedMap: SortedMap<Music, MediaItem> =
-        folder.musicMediaItemSortedMap
     folderMusicMediaItemSortedMap.forEach { (music: Music, _) ->
         mapToShow[music.id] = music
     }

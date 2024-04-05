@@ -64,7 +64,7 @@ fun PlaylistListView(
     Column(modifier = modifier) {
         @Suppress("UNCHECKED_CAST")
         val playlistMap: SortedMap<String, Media> =
-            DataManager.playlistWithMusicsMap as SortedMap<String, Media>
+            remember { DataManager.playlistWithMusicsMap as SortedMap<String, Media> }
 
         MediaListView(
             mediaMap = playlistMap,

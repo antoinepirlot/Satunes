@@ -51,11 +51,11 @@ fun AllMusicsListView(
     modifier: Modifier = Modifier,
     navController: NavHostController
 ) {
-    val playbackController: PlaybackController = remember { PlaybackController.getInstance() }
+    val playbackController: PlaybackController = PlaybackController.getInstance()
     //Find a way to do something more aesthetic but it works
-    val mediaMap: SortedMap<Music, Media> = sortedMapOf()
     val musicMediaItemMap: SortedMap<Music, MediaItem> =
         remember { DataManager.musicMediaItemSortedMap }
+    val mediaMap: SortedMap<Music, Media> = sortedMapOf()
 
     musicMediaItemMap.keys.forEach { music: Music ->
         mediaMap[music] = music

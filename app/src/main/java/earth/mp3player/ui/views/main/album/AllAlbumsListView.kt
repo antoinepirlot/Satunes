@@ -55,6 +55,7 @@ fun AllAlbumsListView(
     val playbackController: PlaybackController = PlaybackController.getInstance()
 
     val albumMap: SortedMap<String, Album> = remember { DataManager.albumMap }
+
     val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
 
     albumMap.forEach { (_: String, album: Album) ->
@@ -63,7 +64,7 @@ fun AllAlbumsListView(
 
     resetOpenedPlaylist()
     @Suppress("UNCHECKED_CAST")
-    (MediaListView(
+    MediaListView(
         modifier = modifier,
         mediaMap = albumMap as SortedMap<Long, Media>,
 
@@ -80,7 +81,7 @@ fun AllAlbumsListView(
         },
 
         onFABClick = { openCurrentMusic(navController = navController) }
-    ))
+    )
 }
 
 @Preview

@@ -53,10 +53,9 @@ fun AllGenresListView(
     navController: NavHostController,
 ) {
     val playbackController: PlaybackController = PlaybackController.getInstance()
-
+    val genreMap: SortedMap<String, Genre> = remember { DataManager.genreMap }
     val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
     val mediaMap: MutableMap<Long, Media> = mutableMapOf()
-    val genreMap: SortedMap<String, Genre> = remember { DataManager.genreMap }
 
     genreMap.forEach { (_: String, genre: Genre) ->
         musicMediaItemSortedMap.putAll(genre.musicMediaItemSortedMap)

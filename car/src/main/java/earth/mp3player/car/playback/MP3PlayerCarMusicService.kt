@@ -38,6 +38,7 @@ import earth.mp3player.car.pages.pages
 import earth.mp3player.car.utils.buildMediaItem
 import earth.mp3player.database.models.Media
 import earth.mp3player.database.models.Music
+import earth.mp3player.database.services.DataLoader
 import earth.mp3player.database.services.DataManager
 import earth.mp3player.playback.services.playback.PlaybackController
 
@@ -72,6 +73,9 @@ class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
         //Init playback
         playbackController =
             PlaybackController.initInstance(baseContext, listener = MP3CarPlaybackListener)
+        while (DataLoader.isLoading.value) {
+            //Wait
+        }
         if (playbackController.isLoaded.value) {
             loadAllPlaybackData()
         }
@@ -118,21 +122,21 @@ class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
 
             ScreenPages.ALL_FOLDERS.id -> {
                 children =
-                    getAllMediaMediaItemList(mediaList = DataManager.folderMap.values.toList())
+                    getAllMediaMediaItemList(mediaList = DataManager.folderMap.values)
                 routeDeque.resetRouteDeque()
                 routeDeque.addLast(parentId)
             }
 
             ScreenPages.ALL_ARTISTS.id -> {
                 children =
-                    getAllMediaMediaItemList(mediaList = DataManager.artistMap.values.toList())
+                    getAllMediaMediaItemList(mediaList = DataManager.artistMap.values)
                 routeDeque.resetRouteDeque()
                 routeDeque.addLast(parentId)
             }
 
             ScreenPages.ALL_ALBUMS.id -> {
                 children =
-                    getAllMediaMediaItemList(mediaList = DataManager.albumMap.values.toList())
+                    getAllMediaMediaItemList(mediaList = DataManager.albumMap.values)
                 routeDeque.resetRouteDeque()
                 routeDeque.addLast(parentId)
 
@@ -140,21 +144,21 @@ class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
 
             ScreenPages.ALL_GENRES.id -> {
                 children =
-                    getAllMediaMediaItemList(mediaList = DataManager.genreMap.values.toList())
+                    getAllMediaMediaItemList(mediaList = DataManager.genreMap.values)
                 routeDeque.resetRouteDeque()
                 routeDeque.addLast(parentId)
             }
 
             ScreenPages.ALL_MUSICS.id -> {
                 children =
-                    getAllMediaMediaItemList(mediaList = DataManager.musicMediaItemSortedMap.keys.toList())
+                    getAllMediaMediaItemList(mediaList = DataManager.musicMediaItemSortedMap.keys)
                 routeDeque.resetRouteDeque()
                 routeDeque.addLast(parentId)
             }
 
             ScreenPages.ALL_PLAYLISTS.id -> {
                 children =
-                    getAllMediaMediaItemList(mediaList = DataManager.playlistWithMusicsMap.values.toList())
+                    getAllMediaMediaItemList(mediaList = DataManager.playlistWithMusicsMap.values)
                 routeDeque.resetRouteDeque()
                 routeDeque.addLast(parentId)
             }
@@ -196,7 +200,7 @@ class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
      *
      * @return a mutable list of MediaItem
      */
-    private fun getAllMediaMediaItemList(mediaList: List<Media>): MutableList<MediaItem> {
+    private fun getAllMediaMediaItemList(mediaList: Collection<Media>): MutableList<MediaItem> {
         val mediaItemList: MutableList<MediaItem> = mutableListOf()
         loadedQueueItemList.clear()
         for (media: Media in mediaList) {

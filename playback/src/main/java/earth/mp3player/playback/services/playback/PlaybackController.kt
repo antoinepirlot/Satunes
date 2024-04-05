@@ -144,7 +144,7 @@ class PlaybackController private constructor(
 
             instance.listener = listener ?: instance.listener
 
-            if (!DataLoader.isLoaded) {
+            if (!DataLoader.isLoaded && !DataLoader.isLoading.value) {
                 DataLoader.loadAllData(context)
             }
 

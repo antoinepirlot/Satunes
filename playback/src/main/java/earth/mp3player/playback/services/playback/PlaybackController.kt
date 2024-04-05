@@ -61,7 +61,6 @@ class PlaybackController private constructor(
     internal var isEnded: Boolean = DEFAULT_IS_ENDED
     internal var isUpdatingPosition: Boolean = DEFAULT_IS_UPDATING_POSITION
 
-
     // Mutable var are used in ui, it needs to be recomposed
     // I use mutable to avoid using function with multiples params like to add listener
     var musicPlaying: MutableState<Music?> = mutableStateOf(DEFAULT_MUSIC_PLAYING)
@@ -85,6 +84,7 @@ class PlaybackController private constructor(
 
         this.playlist = Playlist(musicMediaItemSortedMap = musicMediaItemSortedMap)
     }
+
     companion object {
         internal const val DEFAULT_MUSIC_PLAYING_INDEX: Int = 0
         internal const val DEFAULT_IS_UPDATING_POSITION: Boolean = false
@@ -128,7 +128,7 @@ class PlaybackController private constructor(
                 )
             } else if (listener != null) {
                 while (!instance::mediaController.isInitialized) {
-                    // Wait it is initialized
+                    // Wait it is initializing
                 }
                 val wasPlaying: Boolean = instance.isPlaying.value
                 if (instance.isPlaying.value) {
@@ -163,15 +163,14 @@ class PlaybackController private constructor(
      * @param musicToPlay the music to play if it's not null, by default it's null.
      */
     fun start(musicToPlay: Music? = null) {
-        if (!this.isLoaded.value) {
+        if (!isLoaded.value) {
             throw IllegalStateException("The playlist has not been loaded, you can't play music")
         }
-
         when (musicToPlay) {
             null -> {
+                //Keep it first to prevent the first playing is always null and so... app crash
                 //Play from the beginning
-                this.musicPlayingIndex = DEFAULT_MUSIC_PLAYING_INDEX
-                this.musicPlaying.value = this.playlist.musicList[musicPlayingIndex]
+                musicPlayingIndex = DEFAULT_MUSIC_PLAYING_INDEX
             }
 
             this.musicPlaying.value -> {
@@ -181,21 +180,15 @@ class PlaybackController private constructor(
 
             else -> {
                 // The music to play has to be played
-                for (i: Int in this.playlist.musicList.indices) {
-                    val music = this.playlist.musicList[i]
+                musicPlayingIndex = playlist.getMusicIndex(music = musicToPlay)
 
-                    if (musicToPlay == music) {
-                        this.musicPlaying.value = music
-                        this.musicPlayingIndex = i
-                        break
-                    }
-                }
             }
         }
-        if (this.mediaController.currentMediaItemIndex == this.musicPlayingIndex) {
-            this.mediaController.play()
+        musicPlaying.value = playlist.getMusic(musicIndex = musicPlayingIndex)
+        if (mediaController.currentMediaItemIndex == musicPlayingIndex) {
+            mediaController.play()
         } else {
-            this.mediaController.seekTo(this.musicPlayingIndex, 0)
+            seekTo(musicIndex = musicPlayingIndex)
         }
     }
 
@@ -255,6 +248,20 @@ class PlaybackController private constructor(
         val newPosition: Long = (positionPercentage * maxPosition).toLong()
 
         this.seekTo(positionMs = newPosition)
+    }
+
+    fun seekTo(music: Music, positionMs: Long = 0) {
+        val musicIndex: Int = playlist.getMusicIndex(music)
+        seekTo(musicIndex = musicIndex, positionMs)
+    }
+
+    fun seekTo(musicId: Long, positionMs: Long = 0) {
+        val music: Music = DataManager.getMusic(musicId)
+        seekTo(music = music, positionMs)
+    }
+
+    fun seekTo(musicIndex: Int, positionMs: Long = 0) {
+        mediaController.seekTo(musicIndex, positionMs)
     }
 
     /**

@@ -47,6 +47,18 @@ object DataManager {
     val genreMap: SortedMap<String, Genre> = sortedMapOf()
     val playlistWithMusicsMap: SortedMap<String, PlaylistWithMusics> = sortedMapOf()
 
+    fun getMusic(musicId: Long): Music {
+        return musicMediaItemSortedMap.keys.first { it.id == musicId }
+    }
+
+    fun getMusic(mediaItem: MediaItem): Music {
+        return getMusic(musicId = mediaItem.mediaId.toLong())
+    }
+
+    fun getMediaItem(music: Music): MediaItem {
+        return musicMediaItemSortedMap[music]!!
+    }
+
     fun getArtist(artistId: Long): Artist {
         return artistMap.values.first { it.id == artistId }
     }

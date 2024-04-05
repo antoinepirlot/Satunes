@@ -86,6 +86,10 @@ class Playlist(
         return this.musicList.indexOf(music)
     }
 
+    fun getMusic(musicIndex: Int): Music {
+        return this.musicList[musicIndex]
+    }
+
     /**
      * Return the number of music into the playlist
      */

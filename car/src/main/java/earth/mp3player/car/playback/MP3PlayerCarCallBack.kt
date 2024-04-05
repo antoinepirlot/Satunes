@@ -39,6 +39,7 @@ import earth.mp3player.database.models.Artist
 import earth.mp3player.database.models.Folder
 import earth.mp3player.database.models.Genre
 import earth.mp3player.database.models.Music
+import earth.mp3player.database.models.relations.PlaylistWithMusics
 import earth.mp3player.database.services.DataManager
 import earth.mp3player.playback.services.playback.PlaybackController
 import java.util.SortedMap
@@ -67,8 +68,7 @@ object MP3PlayerCarCallBack : MediaSessionCompat.Callback() {
 
     override fun onSkipToQueueItem(queueId: Long) {
         val playbackController: PlaybackController = PlaybackController.getInstance()
-        val musicToPlay: Music = DataManager.musicMediaItemSortedMap.keys.first { it.id == queueId }
-        playbackController.start(musicToPlay = musicToPlay)
+        playbackController.seekTo(musicId = queueId)
     }
 
     override fun onSeekTo(position: Long) {
@@ -78,7 +78,7 @@ object MP3PlayerCarCallBack : MediaSessionCompat.Callback() {
 
     override fun onPlayFromMediaId(mediaId: String, extras: Bundle?) {
         val id: Long = mediaId.toLong()
-        val music: Music = DataManager.musicMediaItemSortedMap.keys.first { it.id == id }
+        val music: Music = DataManager.getMusic(musicId = id)
         loadMusic()
         PlaybackController.getInstance().start(musicToPlay = music)
     }
@@ -115,23 +115,28 @@ object MP3PlayerCarCallBack : MediaSessionCompat.Callback() {
             when (routeDeque.oneBeforeLast()) {
                 ScreenPages.ALL_FOLDERS.id -> {
                     //Current folder has to be loaded (music)
-                    val folder: Folder = DataManager.folderMap[mediaId]!!
+                    val folder: Folder = DataManager.getFolder(folderId = mediaId)
                     folder.musicMediaItemSortedMap
                 }
 
                 ScreenPages.ALL_ALBUMS.id -> {
-                    val album: Album = DataManager.albumMap.values.first { it.id == mediaId }
+                    val album: Album = DataManager.getAlbum(albumId = mediaId)
                     album.musicMediaItemSortedMap
                 }
 
                 ScreenPages.ALL_ARTISTS.id -> {
-                    val artist: Artist = DataManager.artistMap.values.first { it.id == mediaId }
+                    val artist: Artist = DataManager.getArtist(artistId = mediaId)
                     artist.musicMediaItemSortedMap
                 }
 
                 ScreenPages.ALL_GENRES.id -> {
-                    val genre: Genre = DataManager.genreMap.values.first { it.id == mediaId }
+                    val genre: Genre = DataManager.getGenre(genreId = mediaId)
                     genre.musicMediaItemSortedMap
+                }
+
+                ScreenPages.ALL_PLAYLISTS.id -> {
+                    val playlistWithMusics: PlaylistWithMusics = DataManager.getPlaylist(mediaId)
+                    playlistWithMusics.musicMediaItemSortedMap
                 }
 
                 else -> {

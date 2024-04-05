@@ -86,4 +86,8 @@ object DataManager {
     fun getPlaylist(playlistId: Long): PlaylistWithMusics {
         return playlistWithMusicsMap.values.first { it.playlist.id == playlistId }
     }
+
+    fun removePlaylist(playlistWithMusics: PlaylistWithMusics) {
+        playlistWithMusicsMap.remove(playlistWithMusics.playlist.title)
+    }
 }

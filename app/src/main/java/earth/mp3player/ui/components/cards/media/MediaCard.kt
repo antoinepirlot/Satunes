@@ -162,7 +162,7 @@ fun MediaCard(
             playlistTitle = media.title,
             onRemovePlaylist = {
                 val db = DatabaseManager(context = context)
-                db.removePlaylist(playlist = media)
+                db.removePlaylist(playlistToRemove = media)
                 showPlaylistOptions = false
             },
             onDismissRequest = { showPlaylistOptions = false }

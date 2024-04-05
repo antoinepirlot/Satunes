@@ -29,6 +29,20 @@ Pour activer Android Auto clique [ici](#050-beta) pour savoir comment faire.
 
 ## 0.7 (Android 11 Red Velvet Cake et ultérieur)
 
+### 0.7.1-beta
+
+Maintenant, l'application possède son icône 🤗 (notez que je ne suis pas un artiste 🤭).
+
+Résolution des problèmes:
+
+* Le bouton pour créer une playlist est maintenant situé en bas à droite de l'écran.
+* Le playback a été remanié et les changements de pistes ne devraient faire de problème avec
+  l'affichage de la musique en cours de lecture.
+* Un cercle de chargement apparaît au lancement lorsqu'il y a beaucoup de musiques à charger afin d'
+  éviter un lancement plus lent de l'application.
+* La musique ne se met plus en pause automatiquement dans Android Auto lors d'un changement de
+  musique depuis la liste de lecture.
+
 ### 0.7.0-beta
 
 Fonctionnalités:

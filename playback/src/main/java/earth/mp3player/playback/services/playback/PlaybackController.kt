@@ -84,6 +84,7 @@ class PlaybackController private constructor(
 
         this.playlist = Playlist(musicMediaItemSortedMap = musicMediaItemSortedMap)
     }
+
     companion object {
         internal const val DEFAULT_MUSIC_PLAYING_INDEX: Int = 0
         internal const val DEFAULT_IS_UPDATING_POSITION: Boolean = false
@@ -162,14 +163,14 @@ class PlaybackController private constructor(
      * @param musicToPlay the music to play if it's not null, by default it's null.
      */
     fun start(musicToPlay: Music? = null) {
-        if (!this.isLoaded.value) {
+        if (!isLoaded.value) {
             throw IllegalStateException("The playlist has not been loaded, you can't play music")
         }
         when (musicToPlay) {
             null -> {
+                //Keep it first to prevent the first playing is always null and so... app crash
                 //Play from the beginning
-                this.musicPlayingIndex = DEFAULT_MUSIC_PLAYING_INDEX
-                this.musicPlaying.value = this.playlist.musicList[musicPlayingIndex]
+                musicPlayingIndex = DEFAULT_MUSIC_PLAYING_INDEX
             }
 
             this.musicPlaying.value -> {
@@ -179,21 +180,15 @@ class PlaybackController private constructor(
 
             else -> {
                 // The music to play has to be played
-                for (i: Int in this.playlist.musicList.indices) {
-                    val music = this.playlist.musicList[i]
+                musicPlayingIndex = playlist.getMusicIndex(music = musicToPlay)
 
-                    if (musicToPlay == music) {
-                        this.musicPlaying.value = music
-                        this.musicPlayingIndex = i
-                        break
-                    }
-                }
             }
         }
-        if (this.mediaController.currentMediaItemIndex == this.musicPlayingIndex) {
-            this.mediaController.play()
+        musicPlaying.value = playlist.getMusic(musicIndex = musicPlayingIndex)
+        if (mediaController.currentMediaItemIndex == musicPlayingIndex) {
+            mediaController.play()
         } else {
-            this.mediaController.seekTo(this.musicPlayingIndex, 0)
+            mediaController.seekTo(musicPlayingIndex, 0)
         }
     }
 

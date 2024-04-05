@@ -109,6 +109,7 @@ open class PlaybackListener : Player.Listener {
                 playbackController.playlist.musicList[playbackController.musicPlayingIndex]
             updateHasNext()
             updateHasPrevious()
+            playbackController.mediaController.play()
         }
     }
 

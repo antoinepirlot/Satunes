@@ -68,7 +68,7 @@ object MP3PlayerCarCallBack : MediaSessionCompat.Callback() {
 
     override fun onSkipToQueueItem(queueId: Long) {
         val playbackController: PlaybackController = PlaybackController.getInstance()
-        val musicToPlay: Music = DataManager.musicMediaItemSortedMap.keys.first { it.id == queueId }
+        val musicToPlay: Music = DataManager.getMusic(musicId = queueId)
         playbackController.start(musicToPlay = musicToPlay)
     }
 
@@ -79,7 +79,7 @@ object MP3PlayerCarCallBack : MediaSessionCompat.Callback() {
 
     override fun onPlayFromMediaId(mediaId: String, extras: Bundle?) {
         val id: Long = mediaId.toLong()
-        val music: Music = DataManager.musicMediaItemSortedMap.keys.first { it.id == id }
+        val music: Music = DataManager.getMusic(musicId = id)
         loadMusic()
         PlaybackController.getInstance().start(musicToPlay = music)
     }

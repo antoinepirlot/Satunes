@@ -30,7 +30,9 @@ import android.database.Cursor
 import android.net.Uri
 import android.provider.MediaStore
 import androidx.compose.runtime.MutableLongState
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.mutableStateOf
 import earth.mp3player.database.models.Album
 import earth.mp3player.database.models.Artist
 import earth.mp3player.database.models.Folder
@@ -49,7 +51,7 @@ object DataLoader {
     private val URI: Uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
 
     var isLoaded: Boolean = false
-    private var isLoading: Boolean = false
+    var isLoading: MutableState<Boolean> = mutableStateOf(false)
 
     // Music variables
     private var musicIdColumn: Int? = null
@@ -75,8 +77,8 @@ object DataLoader {
      * Load all Media data from device's storage.
      */
     fun loadAllData(context: Context) {
+        isLoading.value = true
         CoroutineScope(Dispatchers.IO).launch {
-            isLoading = true
             val projection = arrayOf(
                 // AUDIO
                 MediaStore.Audio.Media._ID,
@@ -110,7 +112,7 @@ object DataLoader {
 
             DatabaseManager(context = context).loadAllPlaylistsWithMusic()
             isLoaded = true
-            isLoading = false
+            isLoading.value = false
         }
     }
 

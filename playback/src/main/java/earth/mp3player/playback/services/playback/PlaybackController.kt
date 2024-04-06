@@ -230,9 +230,7 @@ class PlaybackController private constructor(
     }
 
     fun playPrevious() {
-        if (playlist.musicCount() > 1) {
-            mediaController.seekToPrevious()
-        }
+        mediaController.seekToPrevious()
     }
 
     fun seekTo(positionMs: Long) {

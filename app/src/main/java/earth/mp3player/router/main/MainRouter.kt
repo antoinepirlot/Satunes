@@ -26,12 +26,16 @@
 package earth.mp3player.router.main
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import earth.mp3player.database.services.DataLoader
 import earth.mp3player.router.media.MediaDestination
 import earth.mp3player.router.media.MediaRouter
+import earth.mp3player.ui.components.LoadingCircle
 import earth.mp3player.ui.views.settings.SettingsView
 
 /**
@@ -51,10 +55,16 @@ fun MainRouter(
         startDestination = MainDestination.ROOT.link
     ) {
         composable(MainDestination.ROOT.link) {
-            MediaRouter(
-                navController = mediaRouterNavController,
-                startDestination = mediaRouterStartDestination
-            )
+            val isLoading: MutableState<Boolean> = remember { DataLoader.isLoading }
+
+            if (isLoading.value) {
+                LoadingCircle()
+            } else {
+                MediaRouter(
+                    navController = mediaRouterNavController,
+                    startDestination = mediaRouterStartDestination
+                )
+            }
         }
 
         composable(MediaDestination.SETTINGS.link) {

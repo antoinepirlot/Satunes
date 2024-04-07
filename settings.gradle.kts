@@ -13,7 +13,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "MP3 Player"
+rootProject.name = "Galactic Music"
 include(":app")
 include(":car")
 include(":playback")

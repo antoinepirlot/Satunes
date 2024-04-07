@@ -27,6 +27,7 @@ package earth.mp3player.ui.views.main.album
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -82,7 +83,8 @@ fun AlbumViewPreview() {
             id = 0,
             title = "Album title",
             artist = null,
-            musicMediaItemSortedMap = sortedMapOf()
+            musicMediaItemSortedMap = sortedMapOf(),
+            context = LocalContext.current
         )
     )
 }

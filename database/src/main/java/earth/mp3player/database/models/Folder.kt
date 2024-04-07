@@ -25,6 +25,7 @@
 
 package earth.mp3player.database.models
 
+import android.content.Context
 import androidx.compose.runtime.MutableLongState
 import androidx.media3.common.MediaItem
 import java.util.SortedMap
@@ -33,12 +34,13 @@ import java.util.SortedMap
  * @author Antoine Pirlot on 27/03/2024
  */
 
-data class Folder (
+data class Folder(
     override val id: Long,
-    override val title: String,
+    override var title: String,
     var parentFolder: Folder? = null,
     private var subFolderList: SortedMap<Long, Folder> = sortedMapOf(),
-    override var musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
+    override var musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf(),
+    val context: Context,
 ) : Media {
 
     /**
@@ -82,15 +84,18 @@ data class Folder (
         var parentFolder = this
         subFolderNameChainList.forEach { folderName: String ->
             var subFolder: Folder? = null
-
             for (folder in parentFolder.subFolderList.values) {
                 if (folder.title == folderName) {
                     subFolder = folder
                 }
             }
-
             if (subFolder == null) {
-                subFolder = Folder(folderId.longValue, folderName, parentFolder = this)
+                subFolder = Folder(
+                    context = context,
+                    id = folderId.longValue,
+                    title = folderName,
+                    parentFolder = parentFolder
+                )
                 folderMap[folderId.longValue] = subFolder
                 folderId.longValue++
                 parentFolder.subFolderList[subFolder.id] = subFolder
@@ -113,7 +118,6 @@ data class Folder (
         ) {
             return this
         }
-
         this.subFolderList.values.forEach { subFolder: Folder ->
             if (subFolder.title == splitPath[0]) {
                 splitPath.remove(splitPath[0])

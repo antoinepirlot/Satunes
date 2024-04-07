@@ -82,11 +82,7 @@ data class Music(
                 }
                 continue
             }
-            relativePath = computeString(
-                context = context,
-                string = "${volume.directory!!.path.split("/").last()}/$relativePath",
-                isPath = true
-            )
+            relativePath = "${volume.directory!!.path.split("/").last()}/$relativePath"
             uri = Uri.parse(absolutePath)
             break
         }
@@ -96,6 +92,7 @@ data class Music(
         }
         mediaItem = getMediaMetadata()
         loadAlbumArtwork(context = context)
+        title = computeString(context = context, string = title)
     }
 
 

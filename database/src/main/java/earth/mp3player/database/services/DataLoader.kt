@@ -33,6 +33,7 @@ import androidx.compose.runtime.MutableLongState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
+import earth.mp3player.database.R
 import earth.mp3player.database.models.Album
 import earth.mp3player.database.models.Artist
 import earth.mp3player.database.models.Folder
@@ -185,7 +186,7 @@ object DataLoader {
         }
 
         //Load Folder
-        loadFolders(music = music, folderId = folderId)
+        loadFolders(context = context, music = music, folderId = folderId)
 
         //Load Genre
         try {
@@ -241,10 +242,8 @@ object DataLoader {
         }
         val displayName: String = cursor.getString(musicNameColumn!!)
         var title: String = cursor.getString(musicTitleColumn!!)
-        title = if (title.isBlank()) {
-            computeString(context = context, string = displayName)
-        } else {
-            computeString(context = context, string = title)
+        if (title.isBlank()) {
+            title = displayName
         }
         return Music(
             id = id,
@@ -264,14 +263,18 @@ object DataLoader {
      * @param music the music to add to the folder
      */
     private fun loadFolders(
+        context: Context,
         music: Music,
         folderId: MutableLongState,
     ) {
-        val splitPath = music.relativePath.split("/").toMutableList()
+        val splitPath: MutableList<String> = mutableListOf()
+        music.relativePath.split("/").forEach {
+            splitPath.add(computeString(context = context, string = it))
+        }
 
-        if (splitPath.last().isBlank()) {
+        if (splitPath.last() == context.resources.getString(R.string.unknown)) {
             //remove the blank folder
-            splitPath.removeAt(splitPath.lastIndex)
+            splitPath.removeLast()
         }
 
         var rootFolder: Folder? = null
@@ -285,7 +288,11 @@ object DataLoader {
 
         if (rootFolder == null) {
             // No root folders in the list
-            rootFolder = Folder(folderId.longValue, splitPath[0])
+            rootFolder = Folder(
+                id = folderId.longValue,
+                title = splitPath[0],
+                context = context
+            )
             DataManager.folderMap[folderId.longValue] = rootFolder!!
             folderId.longValue++
             DataManager.rootFolderMap[rootFolder!!.id] = rootFolder!!
@@ -297,7 +304,6 @@ object DataLoader {
             folderId,
             DataManager.folderMap
         )
-
         val subfolder = rootFolder!!.getSubFolder(splitPath.toMutableList())!!
 
         subfolder.addMusic(music)
@@ -305,23 +311,23 @@ object DataLoader {
 
     private fun loadAlbum(context: Context, cursor: Cursor): Album {
         val id: Long = cursor.getLong(albumIdColumn!!)
-        val name = computeString(context = context, string = cursor.getString(albumNameColumn!!))
+        val name = cursor.getString(albumNameColumn!!)
 
-        return Album(id = id, title = name)
+        return Album(id = id, title = name, context = context)
     }
 
     private fun loadArtist(context: Context, cursor: Cursor): Artist {
         // Get values of columns for a given artist.
         val id = cursor.getLong(artistIdColumn!!)
-        val name = computeString(context = context, string = cursor.getString(artistNameColumn!!))
+        val name = cursor.getString(artistNameColumn!!)
 
-        return Artist(id = id, title = name)
+        return Artist(id = id, title = name, context = context)
     }
 
     private fun loadGenre(context: Context, cursor: Cursor): Genre {
         val id = cursor.getLong(genreIdColumn!!)
-        val name = computeString(context = context, string = cursor.getString(genreNameColumn!!))
+        val name = cursor.getString(genreNameColumn!!)
 
-        return Genre(id = id, title = name)
+        return Genre(id = id, title = name, context = context)
     }
 }

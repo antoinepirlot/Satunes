@@ -27,6 +27,7 @@ package earth.mp3player.ui.views.main.genre
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -78,7 +79,7 @@ fun GenreView(
 fun GenreViewPreview() {
     GenreView(
         navController = rememberNavController(),
-        genre = Genre(id = 0, "Genre")
+        genre = Genre(id = 0, "Genre", context = LocalContext.current)
     )
 }
 

@@ -34,17 +34,38 @@ import earth.mp3player.database.R
 
 private const val REPLACING_CHAR = "_"
 
-fun computeString(context: Context, string: String, isPath: Boolean = false): String {
+internal fun computeString(context: Context, string: String, isPath: Boolean = false): String {
     return if (isPath) {
         if (string.isBlank()) {
             throw IllegalArgumentException("The relative path is blank")
         }
-        string.replace(regex = Regex(pattern = "[,!?;:\"^|{}¨]"), REPLACING_CHAR)
+        encodeForUri(text = string, isPath = true)
     } else {
         if (string.isBlank()) {
             context.resources.getString(R.string.unknown)
         } else {
-            string.replace(regex = Regex(pattern = "[,!?;:\"/^|\\\\{}¨]"), REPLACING_CHAR)
+            encodeForUri(text = string)
         }
     }
 }
+
+@OptIn(ExperimentalStdlibApi::class)
+fun encodeForUri(text: String, isPath: Boolean = false): String {
+    val regex = Regex("[^\\w_.-]") // Matches characters except what's inside
+    val regexPath = Regex("[^\\w_./\\-]") // Matches characters except what's inside
+    return if (isPath) {
+        text.replace(regexPath) { matchResult: MatchResult ->
+            // Encode each matched character
+            val code: String = matchResult.value.toCharArray()[0].code.toUInt().toString(16)
+            "%${code}"
+        }
+    } else {
+        text.replace(regex) { matchResult: MatchResult ->
+            // Encode each matched character
+            val code: String = matchResult.value.toCharArray()[0].code.toUInt().toString(16)
+            "%${code}"
+        }
+    }
+}
+
+

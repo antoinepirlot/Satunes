@@ -47,7 +47,6 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
@@ -58,7 +57,6 @@ import androidx.navigation.compose.rememberNavController
 import earth.galacticmusic.playback.services.playback.PlaybackController
 import earth.galacticmusic.playback.services.settings.SettingsManager
 import earth.galacticmusic.router.main.MainRouter
-import earth.galacticmusic.router.media.MediaDestination
 import earth.galacticmusic.ui.appBars.MP3BottomAppBar
 import earth.galacticmusic.ui.appBars.MP3TopAppBar
 import earth.galacticmusic.ui.theme.MP3Theme
@@ -98,39 +96,30 @@ class MainActivity : ComponentActivity() {
                 ) {
                     val scrollBehavior =
                         TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
-                    val mediaRouterStartMediaDestination =
-                        // Update the tab by default if settings has changed
-                        if (SettingsManager.foldersChecked.value) {
-                            rememberSaveable { mutableStateOf(MediaDestination.FOLDERS.link) }
-                        } else if (SettingsManager.artistsChecked.value) {
-                            rememberSaveable { mutableStateOf(MediaDestination.ARTISTS.link) }
-                        } else if (SettingsManager.albumsChecked.value) {
-                            rememberSaveable { mutableStateOf(MediaDestination.ALBUMS.link) }
-                        } else {
-                            rememberSaveable { mutableStateOf(MediaDestination.MUSICS.link) }
-                        }
-                    val mainRouterNavController = rememberNavController()
-                    val mediaRouterNavController: NavHostController = rememberNavController()
+                    val mainNavController = rememberNavController()
+                    val mediaNavController: NavHostController = rememberNavController()
 
                     Scaffold(
                         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
                         topBar = {
                             MP3TopAppBar(
                                 scrollBehavior = scrollBehavior,
-                                navController = mainRouterNavController
+                                mainNavController = mainNavController
                             )
                         },
                         bottomBar = {
-                            MP3BottomAppBar(startDestination = mediaRouterStartMediaDestination)
+                            MP3BottomAppBar(
+                                mainNavController = mainNavController,
+                                mediaNavController = mediaNavController
+                            )
                         }
                     ) { innerPadding ->
                         Column(
                             modifier = Modifier.padding(innerPadding)
                         ) {
                             MainRouter(
-                                navController = mainRouterNavController,
-                                mediaRouterNavController = mediaRouterNavController,
-                                mediaRouterStartDestination = mediaRouterStartMediaDestination.value
+                                mainNavController = mainNavController,
+                                mediaNavController = mediaNavController
                             )
                         }
                     }

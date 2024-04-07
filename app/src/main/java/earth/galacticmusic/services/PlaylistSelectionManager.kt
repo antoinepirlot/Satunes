@@ -30,7 +30,7 @@ import earth.galacticmusic.database.models.relations.PlaylistWithMusics
 /**
  * @author Antoine Pirlot on 30/03/2024
  */
-object PlaylistSelectionManager {
+internal object PlaylistSelectionManager {
     /**
      * Mutable list of checked playlists' ids to know where to add music from form
      */

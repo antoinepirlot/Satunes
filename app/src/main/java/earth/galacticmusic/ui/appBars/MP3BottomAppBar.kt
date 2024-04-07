@@ -37,8 +37,11 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import earth.galacticmusic.playback.models.MenuTitle
 import earth.galacticmusic.playback.services.settings.SettingsManager
+import earth.galacticmusic.router.main.MainDestination
 import earth.galacticmusic.router.media.MediaDestination
 import earth.galacticmusic.ui.utils.getRightIconAndDescription
 
@@ -49,8 +52,12 @@ import earth.galacticmusic.ui.utils.getRightIconAndDescription
 @Composable
 fun MP3BottomAppBar(
     modifier: Modifier = Modifier,
-    startDestination: MutableState<String>
+    mediaNavController: NavHostController,
+    mainNavController: NavHostController,
 ) {
+    if (mediaNavController == mainNavController) {
+        throw IllegalArgumentException("Media and Main nav controller can't be the same")
+    }
     val menuTitleLists: MutableList<MenuTitle> = mutableListOf(
         MenuTitle.FOLDERS,
         MenuTitle.ARTISTS,
@@ -96,29 +103,33 @@ fun MP3BottomAppBar(
                 selected = selectedMenuTitle.value == menuTitle,
                 onClick = {
                     selectedMenuTitle.value = menuTitle
+                    if (mainNavController.currentBackStackEntry!!.destination.route!! == MainDestination.SETTINGS.link) {
+                        mainNavController.popBackStack()
+                    }
+                    mediaNavController.popBackStack()
                     when (menuTitle) {
                         MenuTitle.FOLDERS -> {
-                            startDestination.value = MediaDestination.FOLDERS.link
+                            mediaNavController.navigate(MediaDestination.FOLDERS.link)
                         }
 
                         MenuTitle.ARTISTS -> {
-                            startDestination.value = MediaDestination.ARTISTS.link
+                            mediaNavController.navigate(MediaDestination.ARTISTS.link)
                         }
 
                         MenuTitle.ALBUMS -> {
-                            startDestination.value = MediaDestination.ALBUMS.link
+                            mediaNavController.navigate(MediaDestination.ALBUMS.link)
                         }
 
                         MenuTitle.GENRES -> {
-                            startDestination.value = MediaDestination.GENRES.link
+                            mediaNavController.navigate(MediaDestination.GENRES.link)
                         }
 
                         MenuTitle.PLAYLISTS -> {
-                            startDestination.value = MediaDestination.PLAYLISTS.link
+                            mediaNavController.navigate(MediaDestination.PLAYLISTS.link)
                         }
 
                         MenuTitle.MUSIC -> {
-                            startDestination.value = MediaDestination.MUSICS.link
+                            mediaNavController.navigate(MediaDestination.MUSICS.link)
                         }
 
                     }
@@ -140,5 +151,8 @@ fun MP3BottomAppBar(
 @Preview
 @Composable
 fun MP3BottomAppBarPreview() {
-    MP3BottomAppBar(startDestination = mutableStateOf(MediaDestination.FOLDERS.link))
+    MP3BottomAppBar(
+        mainNavController = rememberNavController(),
+        mediaNavController = rememberNavController()
+    )
 }

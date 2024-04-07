@@ -29,7 +29,7 @@ package earth.galacticmusic.router.media
  * @author Antoine Pirlot on 24-01-24
  */
 
-enum class MediaDestination(val link: String) {
+internal enum class MediaDestination(val link: String) {
     FOLDERS("/folders"),
     ARTISTS("/artists"),
     MUSICS("/musics"),
@@ -37,5 +37,4 @@ enum class MediaDestination(val link: String) {
     ALBUMS("/albums"),
     GENRES("/genres"),
     PLAYLISTS("/playlists"),
-    SETTINGS("/settings"),
 }

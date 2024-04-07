@@ -26,16 +26,11 @@
 package earth.galacticmusic.router.main
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import earth.galacticmusic.database.services.DataLoader
-import earth.galacticmusic.router.media.MediaDestination
 import earth.galacticmusic.router.media.MediaRouter
-import earth.galacticmusic.ui.components.LoadingCircle
 import earth.galacticmusic.ui.views.settings.SettingsView
 
 /**
@@ -43,31 +38,21 @@ import earth.galacticmusic.ui.views.settings.SettingsView
  */
 
 @Composable
-fun MainRouter(
+internal fun MainRouter(
     modifier: Modifier = Modifier,
-    navController: NavHostController,
-    mediaRouterNavController: NavHostController,
-    mediaRouterStartDestination: String,
+    mainNavController: NavHostController,
+    mediaNavController: NavHostController,
 ) {
     NavHost(
         modifier = modifier,
-        navController = navController,
+        navController = mainNavController,
         startDestination = MainDestination.ROOT.link
     ) {
         composable(MainDestination.ROOT.link) {
-            val isLoading: MutableState<Boolean> = remember { DataLoader.isLoading }
-
-            if (isLoading.value) {
-                LoadingCircle()
-            } else {
-                MediaRouter(
-                    navController = mediaRouterNavController,
-                    startDestination = mediaRouterStartDestination
-                )
-            }
+            MediaRouter(navController = mediaNavController)
         }
 
-        composable(MediaDestination.SETTINGS.link) {
+        composable(MainDestination.SETTINGS.link) {
             SettingsView()
         }
     }

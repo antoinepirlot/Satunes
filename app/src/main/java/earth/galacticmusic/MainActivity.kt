@@ -47,7 +47,6 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
@@ -57,9 +56,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import earth.galacticmusic.playback.services.playback.PlaybackController
 import earth.galacticmusic.playback.services.settings.SettingsManager
-import earth.galacticmusic.router.main.MainDestination
 import earth.galacticmusic.router.main.MainRouter
-import earth.galacticmusic.router.media.MediaDestination
 import earth.galacticmusic.ui.appBars.MP3BottomAppBar
 import earth.galacticmusic.ui.appBars.MP3TopAppBar
 import earth.galacticmusic.ui.theme.MP3Theme
@@ -99,19 +96,6 @@ class MainActivity : ComponentActivity() {
                 ) {
                     val scrollBehavior =
                         TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
-                    val mediaRouterStartMediaDestination: MutableState<String> =
-                        // Update the tab by default if settings has changed
-                        if (SettingsManager.foldersChecked.value) {
-                            rememberSaveable { mutableStateOf(MediaDestination.FOLDERS.link) }
-                        } else if (SettingsManager.artistsChecked.value) {
-                            rememberSaveable { mutableStateOf(MediaDestination.ARTISTS.link) }
-                        } else if (SettingsManager.albumsChecked.value) {
-                            rememberSaveable { mutableStateOf(MediaDestination.ALBUMS.link) }
-                        } else {
-                            rememberSaveable { mutableStateOf(MediaDestination.MUSICS.link) }
-                        }
-                    val mainStartDestination: MutableState<String> =
-                        rememberSaveable { mutableStateOf(MainDestination.ROOT.link) }
                     val mainNavController = rememberNavController()
                     val mediaNavController: NavHostController = rememberNavController()
 
@@ -134,9 +118,8 @@ class MainActivity : ComponentActivity() {
                             modifier = Modifier.padding(innerPadding)
                         ) {
                             MainRouter(
-                                navController = mainNavController,
-                                mediaNavController = mediaNavController,
-                                mediaStartDestination = mediaRouterStartMediaDestination.value
+                                mainNavController = mainNavController,
+                                mediaNavController = mediaNavController
                             )
                         }
                     }

@@ -26,6 +26,7 @@
 package earth.galacticmusic.router.media
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -38,7 +39,9 @@ import earth.galacticmusic.database.models.Artist
 import earth.galacticmusic.database.models.Folder
 import earth.galacticmusic.database.models.Genre
 import earth.galacticmusic.database.models.relations.PlaylistWithMusics
+import earth.galacticmusic.database.services.DataLoader
 import earth.galacticmusic.database.services.DataManager
+import earth.galacticmusic.ui.components.LoadingCircle
 import earth.galacticmusic.ui.views.PlayBackView
 import earth.galacticmusic.ui.views.main.album.AlbumView
 import earth.galacticmusic.ui.views.main.album.AllAlbumsListView
@@ -60,72 +63,121 @@ import earth.galacticmusic.ui.views.main.playlist.PlaylistView
 internal fun MediaRouter(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    startDestination: String,
 ) {
+    val isLoading: MutableState<Boolean> = remember { DataLoader.isLoading }
+
     NavHost(
         modifier = modifier,
         navController = navController,
-        startDestination = startDestination
+        startDestination = MediaDestination.FOLDERS.link
     ) {
         composable(MediaDestination.FOLDERS.link) {
             // /!\ This route prevent back gesture to exit the app
-            RootFolderView(navController = navController)
+            if (isLoading.value) {
+                LoadingCircle()
+            } else {
+                RootFolderView(navController = navController)
+            }
         }
 
         composable("${MediaDestination.FOLDERS.link}/{id}") {
-            val folderId = it.arguments!!.getString("id")!!.toLong()
-            val folder: Folder by remember { mutableStateOf(DataManager.getFolder(folderId = folderId)) }
-            FolderView(navController = navController, folder = folder)
+            if (isLoading.value) {
+                LoadingCircle()
+            } else {
+                val folderId = it.arguments!!.getString("id")!!.toLong()
+                val folder: Folder by remember { mutableStateOf(DataManager.getFolder(folderId = folderId)) }
+                FolderView(navController = navController, folder = folder)
+            }
         }
 
         composable(MediaDestination.ARTISTS.link) {
-            AllArtistsListView(navController = navController)
+            if (isLoading.value) {
+                LoadingCircle()
+            } else {
+                AllArtistsListView(navController = navController)
+            }
         }
 
         composable("${MediaDestination.ARTISTS.link}/{name}") {
-            val artistName: String = it.arguments!!.getString("name")!!
-            val artist: Artist by remember { mutableStateOf(DataManager.getArtist(artistName)) }
-            ArtistView(navController = navController, artist = artist)
+            if (isLoading.value) {
+                LoadingCircle()
+            } else {
+                val artistName: String = it.arguments!!.getString("name")!!
+                val artist: Artist by remember { mutableStateOf(DataManager.getArtist(artistName)) }
+                ArtistView(navController = navController, artist = artist)
+            }
         }
 
         composable(MediaDestination.ALBUMS.link) {
-            AllAlbumsListView(navController = navController)
+            if (isLoading.value) {
+                LoadingCircle()
+            } else {
+                AllAlbumsListView(navController = navController)
+            }
         }
 
         composable("${MediaDestination.ALBUMS.link}/{id}") {
-            val albumId: Long = it.arguments!!.getString("id")!!.toLong()
-            val album: Album by remember { mutableStateOf(DataManager.getAlbum(albumId)) }
-            AlbumView(navController = navController, album = album)
+            if (isLoading.value) {
+                LoadingCircle()
+            } else {
+                val albumId: Long = it.arguments!!.getString("id")!!.toLong()
+                val album: Album by remember { mutableStateOf(DataManager.getAlbum(albumId)) }
+                AlbumView(navController = navController, album = album)
+            }
         }
 
         composable(MediaDestination.GENRES.link) {
-            AllGenresListView(navController = navController)
+            if (isLoading.value) {
+                LoadingCircle()
+            } else {
+                AllGenresListView(navController = navController)
+            }
         }
 
         composable("${MediaDestination.GENRES.link}/{name}") {
-            val genreName: String = it.arguments!!.getString("name")!!
-            val genre: Genre by remember { mutableStateOf(DataManager.getGenre(genreName = genreName)) }
-            GenreView(navController = navController, genre = genre)
+            if (isLoading.value) {
+                LoadingCircle()
+            } else {
+                val genreName: String = it.arguments!!.getString("name")!!
+                val genre: Genre by remember { mutableStateOf(DataManager.getGenre(genreName = genreName)) }
+                GenreView(navController = navController, genre = genre)
+            }
         }
 
         composable(MediaDestination.PLAYLISTS.link) {
-            PlaylistListView(navController = navController)
+            if (isLoading.value) {
+                LoadingCircle()
+            } else {
+                PlaylistListView(navController = navController)
+            }
         }
 
         composable("${MediaDestination.PLAYLISTS.link}/{id}") {
-            val playlistId: Long = it.arguments!!.getString("id")!!.toLong()
-            val playlist: PlaylistWithMusics by remember {
-                mutableStateOf(DataManager.getPlaylist(playlistId = playlistId))
+            if (isLoading.value) {
+                LoadingCircle()
+            } else {
+                val playlistId: Long = it.arguments!!.getString("id")!!.toLong()
+                val playlist: PlaylistWithMusics by remember {
+                    mutableStateOf(DataManager.getPlaylist(playlistId = playlistId))
+                }
+                PlaylistView(navController = navController, playlist = playlist)
             }
-            PlaylistView(navController = navController, playlist = playlist)
         }
 
         composable(MediaDestination.MUSICS.link) {
-            AllMusicsListView(navController = navController)
+            if (isLoading.value) {
+                LoadingCircle()
+            } else {
+                AllMusicsListView(navController = navController)
+            }
         }
 
         composable(MediaDestination.PLAYBACK.link) {
-            PlayBackView()
+            if (isLoading.value) {
+                LoadingCircle()
+            } else {
+                PlayBackView()
+            }
         }
     }
 }

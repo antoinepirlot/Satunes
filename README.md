@@ -40,6 +40,19 @@ Si l'application te plait et que tu as envie de me soutenir, n'hésite pas à le
 
 ## 0.7 (Android 11 Red Velvet Cake et ultérieur)
 
+### 0.7.2-beta
+
+MP3 Player devient Galactic Music. Tu devras desinstaller l'ancienne application car la nouvelle s'
+installera comme une autre application. (Promis, à l'avenir ça ne devrait plus arriver sauf cas de
+force majeur).
+
+Améliorations, Optimisation et Résolution de problèmes:
+
+* La navigation entre les pages est plus intuitive
+* Correctif apporté au playback
+* Les caractères spéciaux sont échappés, cela règles des problèmes d'ouverture de dossier/media avec
+  un nom contenant un caractère spécial (par exemple: Hip-Hop/Rap)
+
 ### 0.7.1-beta
 
 Maintenant, l'application possède son icône 🤗 (notez que je ne suis pas un artiste 🤭).

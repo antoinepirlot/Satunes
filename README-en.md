@@ -39,6 +39,19 @@ If you like the app and want to support me click [here](https://tipeee.com/antoi
 
 ## 0.7 (Android 11 Red Velvet Cake and later)
 
+### 0.7.2-beta
+
+MP3 Player becomes Galactic Music. You will have to uninstall the old application because the new
+one will be installed as a new application.
+(I promise, in the future this should no longer happen except in special cases).
+
+## Improvements, Optimization and Troubleshooting:
+
+* Navigation between pages is more intuitive
+* Corrections made to playback
+* Special characters are escaped, this fixes problems opening folder/media with a name containing a
+  special character (for example: Hip-Hop/Rap)
+
 ### 0.7.1-beta
 
 Now the app has its own icon 🤗 (note that I'm not an artist 🤭).

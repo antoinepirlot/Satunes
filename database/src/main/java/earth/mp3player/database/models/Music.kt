@@ -83,6 +83,15 @@ data class Music(
                 continue
             }
             relativePath = "${volume.directory!!.path.split("/").last()}/$relativePath"
+
+            absolutePath = computeString(
+                context = context,
+                string = absolutePath,
+                isPath = true
+            )
+            if (title.lowercase().contains("selfie")) {
+                println()
+            }
             uri = Uri.parse(absolutePath)
             break
         }

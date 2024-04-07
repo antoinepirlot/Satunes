@@ -54,6 +54,7 @@ import earth.mp3player.database.models.Music
 import earth.mp3player.database.models.relations.PlaylistWithMusics
 import earth.mp3player.database.models.tables.MusicDB
 import earth.mp3player.database.services.DatabaseManager
+import earth.mp3player.database.services.utils.unescape
 import earth.mp3player.services.PlaylistSelectionManager
 import earth.mp3player.ui.components.music.options.MusicOptionsDialog
 import earth.mp3player.ui.components.playlist.PlaylistOptionsDialog
@@ -117,7 +118,7 @@ fun MediaCard(
     ) {
         ListItem(
             headlineContent = {
-                Text(text = title)
+                Text(text = unescape(title))
             },
             leadingContent = {
                 val mediaIcon: MP3PlayerIcons = getRightIconAndDescription(media = media)

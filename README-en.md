@@ -1,4 +1,4 @@
-# MP3 Player (🇬🇧)
+# Galactic Music (🇬🇧)
 
 Vous pouvez retrouver ce fichier en [français 🇫🇷](README.md)
 

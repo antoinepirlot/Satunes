@@ -29,7 +29,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
@@ -128,7 +128,7 @@ fun MediaCard(
             }
         )
     }
-    Divider(modifier = modifier)
+    HorizontalDivider(modifier = modifier)
 
     // Music options dialog
     if (showMusicOptions && media is Music) {
@@ -196,5 +196,6 @@ fun CardPreview() {
     MediaCard(
         modifier = Modifier.fillMaxSize(),
         media = music,
-        onClick = {})
+        onClick = {}
+    )
 }

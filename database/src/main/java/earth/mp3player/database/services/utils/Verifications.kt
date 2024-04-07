@@ -2,7 +2,7 @@
  * This file is part of MP3 Player.
  *
  * MP3 Player is free software: you can redistribute it and/or modify it under
- *  the terms of the GNU General Public License as published by the Free Software Foundation,
+ * the terms of the GNU General Public License as published by the Free Software Foundation,
  * either version 3 of the License, or (at your option) any later version.
  *
  * MP3 Player is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -23,21 +23,28 @@
  * PS: I don't answer quickly.
  */
 
-package earth.mp3player.database.models.tables
+package earth.mp3player.database.services.utils
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.Index
-import androidx.room.PrimaryKey
-import earth.mp3player.database.models.Media
+import android.content.Context
+import earth.mp3player.database.R
 
 /**
- * @author Antoine Pirlot on 27/03/2024
+ * @author Antoine Pirlot on 07/04/2024
  */
 
-@Entity(tableName = "playlists", indices = [Index(value = ["title"], unique = true)])
-data class Playlist(
-    @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "playlist_id") override var id: Long,
-    @ColumnInfo(name = "title") override var title: String,
-) : Media
+private const val REPLACING_CHAR = "_"
+
+fun computeString(context: Context, string: String, isPath: Boolean = false): String {
+    return if (isPath) {
+        if (string.isBlank()) {
+            throw IllegalArgumentException("The relative path is blank")
+        }
+        string.replace(regex = Regex(pattern = "[,!?;:\"^|{}¨]"), REPLACING_CHAR)
+    } else {
+        if (string.isBlank()) {
+            context.resources.getString(R.string.unknown)
+        } else {
+            string.replace(regex = Regex(pattern = "[,!?;:\"/^|\\\\{}¨]"), REPLACING_CHAR)
+        }
+    }
+}

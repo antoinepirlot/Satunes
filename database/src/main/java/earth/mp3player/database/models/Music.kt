@@ -38,6 +38,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.core.content.getSystemService
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
+import earth.mp3player.database.services.utils.computeString
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -47,10 +48,10 @@ import java.io.File
  * @author Antoine Pirlot on 27/03/2024
  */
 
-data class Music private constructor(
+data class Music(
     override val id: Long,
     override var title: String,
-    var displayName: String,
+    private val displayName: String,
     val duration: Long = 0,
     val size: Int = 0,
     var relativePath: String,
@@ -58,8 +59,9 @@ data class Music private constructor(
     var artist: Artist? = null,
     var album: Album? = null,
     var genre: Genre? = null,
+    val context: Context,
 ) : Media {
-    lateinit var mediaItem: MediaItem
+    var mediaItem: MediaItem
     private var absolutePath: String = "$ROOT_PATH/$relativePath/$displayName"
     var uri: Uri = Uri.Builder().appendPath(this.absolutePath).build()
     var artwork: ImageBitmap? = null
@@ -68,51 +70,47 @@ data class Music private constructor(
         val ROOT_PATH: String = Environment.getExternalStorageDirectory().path
     }
 
-    constructor(
-        id: Long,
-        title: String,
-        displayName: String,
-        duration: Long,
-        size: Int,
-        relativePath: String,
-        folder: Folder? = null,
-        artist: Artist? = null,
-        album: Album? = null,
-        genre: Genre? = null,
-        context: Context
-    ) : this(id, title, displayName, duration, size, relativePath, folder, artist, album, genre) {
+    init {
         val storageManager = context.getSystemService<StorageManager>()
         val storageVolumes: List<StorageVolume> = storageManager!!.storageVolumes
 
         for (volume in storageVolumes) {
             absolutePath = "${volume.directory!!.path}/$relativePath/$displayName"
-            if (!File(this.absolutePath).exists()) {
+            if (!File(absolutePath).exists()) {
                 if (storageVolumes.last() == volume) {
                     throw IllegalAccessException("This media doesn't exist")
                 }
                 continue
             }
-            this.relativePath = "${volume.directory!!.path.split("/").last()}/$relativePath"
-            this.uri = Uri.parse(absolutePath)
+            relativePath = computeString(
+                context = context,
+                string = "${volume.directory!!.path.split("/").last()}/$relativePath",
+                isPath = true
+            )
+            uri = Uri.parse(absolutePath)
             break
         }
 
+        if (album != null) {
+            album!!.addMusic(music = this)
+        }
+        mediaItem = getMediaMetadata()
+        loadAlbumArtwork(context = context)
+    }
+
+
+    private fun getMediaMetadata(): MediaItem {
         val mediaMetaData: MediaMetadata = MediaMetadata.Builder()
-            .setArtist(if (this.artist != null) this.artist!!.title else null)
-            .setTitle(this.title)
-            .setGenre(if (this.genre != null) this.genre!!.title else null)
-            .setAlbumTitle(if (this.album != null) this.album!!.title else null)
+            .setArtist(if (artist != null) artist!!.title else null)
+            .setTitle(title)
+            .setGenre(if (genre != null) genre!!.title else null)
+            .setAlbumTitle(if (album != null) album!!.title else null)
             .build()
-        this.mediaItem = MediaItem.Builder()
-            .setMediaId(this.id.toString())
-            .setUri(this.uri)
+        return MediaItem.Builder()
+            .setMediaId(id.toString())
+            .setUri(uri)
             .setMediaMetadata(mediaMetaData)
             .build()
-
-        if (this.album != null) {
-            this.album!!.addMusic(music = this)
-        }
-        loadAlbumArtwork(context = context)
     }
 
     /**
@@ -123,13 +121,13 @@ data class Music private constructor(
      * @param context the context
      */
     private fun loadAlbumArtwork(context: Context) {
-        val music: Music = this
         //Put it in Dispatchers.IO make the app not freezing while starting
+        val music: Music = this
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val mediaMetadataRetriever = MediaMetadataRetriever()
 
-                mediaMetadataRetriever.setDataSource(context, music.uri)
+                mediaMetadataRetriever.setDataSource(context, uri)
 
                 val artwork: ByteArray? = mediaMetadataRetriever.embeddedPicture
 
@@ -139,7 +137,7 @@ data class Music private constructor(
                 }
             } catch (_: Exception) {
                 /* No artwork found*/
-                music.artwork = null
+                artwork = null
             }
         }
     }

@@ -1,4 +1,4 @@
-# Lecteur MP3 (🇫🇷)
+# Galactic Music (🇫🇷)
 
 You can find this file in [english 🇬🇧](README-en.md).
 

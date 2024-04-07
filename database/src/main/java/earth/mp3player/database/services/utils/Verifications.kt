@@ -34,7 +34,7 @@ import earth.mp3player.database.R
 
 private const val REPLACING_CHAR = "_"
 
-internal fun computeString(context: Context, string: String, isPath: Boolean = false): String {
+fun computeString(context: Context, string: String, isPath: Boolean = false): String {
     return if (isPath) {
         if (string.isBlank()) {
             throw IllegalArgumentException("The relative path is blank")

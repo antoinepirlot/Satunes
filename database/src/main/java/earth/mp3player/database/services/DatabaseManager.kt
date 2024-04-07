@@ -36,6 +36,7 @@ import earth.mp3player.database.models.relations.PlaylistWithMusics
 import earth.mp3player.database.models.tables.MusicDB
 import earth.mp3player.database.models.tables.MusicsPlaylistsRel
 import earth.mp3player.database.models.tables.Playlist
+import earth.mp3player.database.services.utils.computeString
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -87,7 +88,8 @@ class DatabaseManager(context: Context) {
         }
     }
 
-    fun insertOne(playlist: Playlist) {
+    fun insertOne(context: Context, playlist: Playlist) {
+        playlist.title = computeString(context = context, playlist.title)
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 playlist.id = playlistDao.insertOne(playlist = playlist)

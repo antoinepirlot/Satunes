@@ -31,6 +31,8 @@ If you decide to use my code to create new app, you can but you have to use the 
 4) Add app in launcher.
 5) Enjoy
 
+##
+
 If you like the app and want to support me click [here](https://tipeee.com/antoinepirlot).
 
 # UPDATES

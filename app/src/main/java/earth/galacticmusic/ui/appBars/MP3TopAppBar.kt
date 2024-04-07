@@ -56,7 +56,6 @@ fun MP3TopAppBar(
     modifier: Modifier = Modifier,
     scrollBehavior: TopAppBarScrollBehavior,
     mainNavController: NavHostController,
-    mediaNavController: NavHostController,
 ) {
 
     CenterAlignedTopAppBar(
@@ -104,6 +103,5 @@ fun HomeTopAppBarPreview() {
         modifier = Modifier,
         scrollBehavior = scrollBehavior,
         mainNavController = rememberNavController(),
-        mediaNavController = rememberNavController()
     )
 }

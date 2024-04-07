@@ -120,8 +120,7 @@ class MainActivity : ComponentActivity() {
                         topBar = {
                             MP3TopAppBar(
                                 scrollBehavior = scrollBehavior,
-                                mainNavController = mainNavController,
-                                mediaNavController = mediaNavController
+                                mainNavController = mainNavController
                             )
                         },
                         bottomBar = {

@@ -9,7 +9,7 @@ This entire project is under GNU/GPL v3 and it's applied on all version of this 
 
 If you decide to use my code to create new app, you can but you have to use the same license :p
 
-Installation instructions:
+# Installation
 1) Click on [Release](https://github.com/antoinepirlot/MP3-Player/releases)
 2) Choose your version
 3) Click on "Assets" to deploy a menu that contains the installation file.

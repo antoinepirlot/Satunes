@@ -38,6 +38,7 @@ import earth.mp3player.database.models.Artist
 import earth.mp3player.database.models.Folder
 import earth.mp3player.database.models.Genre
 import earth.mp3player.database.models.Music
+import earth.mp3player.database.services.utils.computeString
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -119,7 +120,8 @@ object DataLoader {
     /**
      * Cache columns and columns indices for data to load
      */
-    private fun loadColumns(cursor: Cursor) {
+    private fun
+            loadColumns(cursor: Cursor) {
         // Cache music columns indices.
         musicIdColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID)
         musicNameColumn =
@@ -166,7 +168,7 @@ object DataLoader {
 
         //Load album
         if (albumIdColumn != null && albumNameColumn != null) {
-            album = loadAlbum(cursor = cursor)
+            album = loadAlbum(context = context, cursor = cursor)
             DataManager.albumMap[album.title] = album
         }
 
@@ -187,7 +189,7 @@ object DataLoader {
 
         //Load Genre
         try {
-            var genre: Genre = loadGenre(cursor = cursor)
+            var genre: Genre = loadGenre(context = context, cursor = cursor)
             DataManager.genreMap.putIfAbsent(genre.title, genre)
             // The id is not the same for all same genre
             genre = DataManager.genreMap[genre.title]!!
@@ -199,7 +201,7 @@ object DataLoader {
 
         //Load Artist
         if (artistIdColumn != null && artistNameColumn != null) {
-            artist = loadArtist(cursor = cursor)
+            artist = loadArtist(context = context, cursor = cursor)
             DataManager.artistMap.putIfAbsent(artist.title, artist)
             //The id is not the same for all same artists
             artist = DataManager.artistMap[artist.title]!!
@@ -224,15 +226,26 @@ object DataLoader {
      */
     private fun loadMusic(context: Context, cursor: Cursor, album: Album?): Music {
         // Get values of columns for a given music.
+        val relativePath: String = cursor.getString(relativePathColumn!!)
         val id: Long = cursor.getLong(musicIdColumn!!)
+        if (id < 1) {
+            throw IllegalArgumentException("The id is less than 1")
+        }
+        val size = cursor.getInt(musicSizeColumn!!)
+        if (size < 0) {
+            throw IllegalArgumentException("Size is less than 0")
+        }
+        val duration: Long = cursor.getLong(musicDurationColumn!!)
+        if (duration < 0) {
+            throw IllegalArgumentException("Duration is less than 0")
+        }
         val displayName: String = cursor.getString(musicNameColumn!!)
         var title: String = cursor.getString(musicTitleColumn!!)
-        val duration: Long = cursor.getLong(musicDurationColumn!!)
-        val size = cursor.getInt(musicSizeColumn!!)
-        val relativePath: String = cursor.getString(relativePathColumn!!)
-
-        if (title.isBlank()) title = displayName
-
+        title = if (title.isBlank()) {
+            computeString(context = context, string = displayName)
+        } else {
+            computeString(context = context, string = title)
+        }
         return Music(
             id = id,
             title = title,
@@ -290,24 +303,24 @@ object DataLoader {
         subfolder.addMusic(music)
     }
 
-    private fun loadAlbum(cursor: Cursor): Album {
+    private fun loadAlbum(context: Context, cursor: Cursor): Album {
         val id: Long = cursor.getLong(albumIdColumn!!)
-        val name = cursor.getString(albumNameColumn!!)
+        val name = computeString(context = context, string = cursor.getString(albumNameColumn!!))
 
         return Album(id = id, title = name)
     }
 
-    private fun loadArtist(cursor: Cursor): Artist {
+    private fun loadArtist(context: Context, cursor: Cursor): Artist {
         // Get values of columns for a given artist.
         val id = cursor.getLong(artistIdColumn!!)
-        val name = cursor.getString(artistNameColumn!!)
+        val name = computeString(context = context, string = cursor.getString(artistNameColumn!!))
 
         return Artist(id = id, title = name)
     }
 
-    private fun loadGenre(cursor: Cursor): Genre {
+    private fun loadGenre(context: Context, cursor: Cursor): Genre {
         val id = cursor.getLong(genreIdColumn!!)
-        val name = cursor.getString(genreNameColumn!!)
+        val name = computeString(context = context, string = cursor.getString(genreNameColumn!!))
 
         return Genre(id = id, title = name)
     }

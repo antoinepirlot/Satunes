@@ -196,5 +196,6 @@ fun CardPreview() {
     MediaCard(
         modifier = Modifier.fillMaxSize(),
         media = music,
-        onClick = {})
+        onClick = {}
+    )
 }

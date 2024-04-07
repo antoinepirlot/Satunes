@@ -10,7 +10,7 @@ L'entierté du projet est sous la licence GNU/GPL v3 et s'applique à toutes les
 
 Tu as le droit de réutiliser mon code pour créer une nouvelle application dérivée mais tu devras utiliser la même licence ou une licence compatible.
 
-Voici les instructions pour installer l'application:
+# Installation
 1) Clique sur [Release](https://github.com/antoinepirlot/MP3-Player/releases)
 2) Choisi ta version
 3) Clique sur "Assets" pour dérouler un menu qui contient le fichier d'installation

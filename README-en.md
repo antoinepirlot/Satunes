@@ -10,6 +10,9 @@ This entire project is under GNU/GPL v3 and it's applied on all version of this 
 If you decide to use my code to create new app, you can but you have to use the same license :p
 
 # Installation
+
+## Application
+
 1) Click on [Release](https://github.com/antoinepirlot/MP3-Player/releases)
 2) Choose your version
 3) Click on "Assets" to deploy a menu that contains the installation file.
@@ -20,9 +23,15 @@ If you decide to use my code to create new app, you can but you have to use the 
 9) I recommand you to deactvate unknown app installation for the app from where you install the app.
 10) Enjoy you music freely and passion :D
 
-If you like the app and want to support me click [here](https://tipeee.com/antoinepirlot).
+## Android Auto
+    
+1) Go to Android Auto settings.
+2) Multiple click on "Version" to activate dev mode. 
+3) Go to Dev's settings and activate "Unknown sources" as this app is not published on Google Play Store.
+4) Add app in launcher.
+5) Enjoy
 
-To activate Android Auto you can find instructions [here](#050-beta)
+If you like the app and want to support me click [here](https://tipeee.com/antoinepirlot).
 
 # UPDATES
 
@@ -67,12 +76,7 @@ Fix issues:
 Features:
 
 * Android Auto support
-  * To activate app in Android Auto:
-    1) Go to Android Auto settings.
-    2) Multiple click on "Version" to activate dev mode. 
-    3) Go to Dev's settings and activate "Unknown sources" as this app is not published on Google Play Store.
-    4) Add app in launcher.
-    5) Enjoy
+** To activate Android Auto you can find instructions [here](#050-beta)
 
 Fix issues:
 

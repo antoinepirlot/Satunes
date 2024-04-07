@@ -124,7 +124,10 @@ class MainActivity : ComponentActivity() {
                             )
                         },
                         bottomBar = {
-                            MP3BottomAppBar(startDestination = mediaRouterStartMediaDestination)
+                            MP3BottomAppBar(
+                                mainNavController = mainNavController,
+                                mediaNavController = mediaNavController
+                            )
                         }
                     ) { innerPadding ->
                         Column(

@@ -40,6 +40,7 @@ import earth.galacticmusic.database.models.Folder
 import earth.galacticmusic.database.models.Genre
 import earth.galacticmusic.database.models.Music
 import earth.galacticmusic.database.services.utils.computeString
+import earth.galacticmusic.database.services.utils.unescape
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -268,8 +269,8 @@ object DataLoader {
         folderId: MutableLongState,
     ) {
         val splitPath: MutableList<String> = mutableListOf()
-        music.relativePath.split("/").forEach {
-            splitPath.add(computeString(context = context, string = it))
+        unescape(music.relativePath).split("/").forEach {
+            splitPath.add(computeString(context = context, text = it))
         }
 
         if (splitPath.last() == context.resources.getString(R.string.unknown)) {
@@ -311,7 +312,7 @@ object DataLoader {
 
     private fun loadAlbum(context: Context, cursor: Cursor): Album {
         val id: Long = cursor.getLong(albumIdColumn!!)
-        val name = cursor.getString(albumNameColumn!!)
+        val name = computeString(context = context, text = cursor.getString(albumNameColumn!!))
 
         return Album(id = id, title = name, context = context)
     }
@@ -319,14 +320,14 @@ object DataLoader {
     private fun loadArtist(context: Context, cursor: Cursor): Artist {
         // Get values of columns for a given artist.
         val id = cursor.getLong(artistIdColumn!!)
-        val name = cursor.getString(artistNameColumn!!)
+        val name = computeString(context = context, text = cursor.getString(artistNameColumn!!))
 
         return Artist(id = id, title = name, context = context)
     }
 
     private fun loadGenre(context: Context, cursor: Cursor): Genre {
         val id = cursor.getLong(genreIdColumn!!)
-        val name = cursor.getString(genreNameColumn!!)
+        val name = computeString(context = context, text = cursor.getString(genreNameColumn!!))
 
         return Genre(id = id, title = name, context = context)
     }

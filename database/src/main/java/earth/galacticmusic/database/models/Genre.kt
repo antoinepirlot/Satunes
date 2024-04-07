@@ -27,7 +27,6 @@ package earth.galacticmusic.database.models
 
 import android.content.Context
 import androidx.media3.common.MediaItem
-import earth.galacticmusic.database.services.utils.computeString
 import java.util.SortedMap
 
 /**
@@ -41,10 +40,6 @@ data class Genre(
 ) : Media {
     val musicMap: SortedMap<Long, Music> = sortedMapOf()
     override val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
-
-    init {
-        title = computeString(context = context, string = title)
-    }
 
     fun addMusic(music: Music) {
         musicMap.putIfAbsent(music.id, music)

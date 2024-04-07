@@ -39,6 +39,7 @@ import androidx.core.content.getSystemService
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import earth.galacticmusic.database.services.utils.computeString
+import earth.galacticmusic.database.services.utils.unescape
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -51,7 +52,7 @@ import java.io.File
 data class Music(
     override val id: Long,
     override var title: String,
-    private val displayName: String,
+    private var displayName: String,
     val duration: Long = 0,
     val size: Int = 0,
     var relativePath: String,
@@ -63,7 +64,7 @@ data class Music(
 ) : Media {
     var mediaItem: MediaItem
     private var absolutePath: String = "$ROOT_PATH/$relativePath/$displayName"
-    var uri: Uri = Uri.Builder().appendPath(this.absolutePath).build()
+    lateinit var uri: Uri
     var artwork: ImageBitmap? = null
 
     companion object {
@@ -73,22 +74,19 @@ data class Music(
     init {
         val storageManager = context.getSystemService<StorageManager>()
         val storageVolumes: List<StorageVolume> = storageManager!!.storageVolumes
-
         for (volume in storageVolumes) {
-            absolutePath = "${volume.directory!!.path}/$relativePath/$displayName"
+            absolutePath = "${volume.directory!!.path}/${unescape(relativePath)}/${
+                unescape(displayName)
+            }"
             if (!File(absolutePath).exists()) {
                 if (storageVolumes.last() == volume) {
                     throw IllegalAccessException("This media doesn't exist")
                 }
                 continue
             }
+            absolutePath = computeString(context = context, text = absolutePath)
             relativePath = "${volume.directory!!.path.split("/").last()}/$relativePath"
 
-            absolutePath = computeString(
-                context = context,
-                string = absolutePath,
-                isPath = true
-            )
             if (title.lowercase().contains("selfie")) {
                 println()
             }
@@ -101,7 +99,12 @@ data class Music(
         }
         mediaItem = getMediaMetadata()
         loadAlbumArtwork(context = context)
-        title = computeString(context = context, string = title)
+
+        if (displayName != title) {
+            displayName = computeString(context = context, text = displayName)
+        }
+        title = computeString(context = context, text = title)
+        relativePath = computeString(context = context, text = relativePath)
     }
 
 

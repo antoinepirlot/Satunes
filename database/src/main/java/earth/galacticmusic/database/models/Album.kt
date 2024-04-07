@@ -27,7 +27,6 @@ package earth.galacticmusic.database.models
 
 import android.content.Context
 import androidx.media3.common.MediaItem
-import earth.galacticmusic.database.services.utils.computeString
 import java.util.SortedMap
 
 /**
@@ -47,8 +46,6 @@ data class Album(
         musicMediaItemSortedMap.forEach { (music: Music, _: MediaItem) ->
             musicSortedMap[music.id] = music
         }
-
-        title = computeString(context = context, string = title)
     }
 
     /**

@@ -78,6 +78,7 @@ Fonctionnalités:
 
 * Support pour Android Auto
     * Pour activer Android Auto clique [ici](#android-auto) pour savoir comment faire.
+
 Résolutions de problèmes:
 
 * Optimisation

@@ -82,11 +82,16 @@ data class Music(
                 }
                 continue
             }
-            relativePath = computeString(
+            relativePath = "${volume.directory!!.path.split("/").last()}/$relativePath"
+
+            absolutePath = computeString(
                 context = context,
-                string = "${volume.directory!!.path.split("/").last()}/$relativePath",
+                string = absolutePath,
                 isPath = true
             )
+            if (title.lowercase().contains("selfie")) {
+                println()
+            }
             uri = Uri.parse(absolutePath)
             break
         }
@@ -96,6 +101,7 @@ data class Music(
         }
         mediaItem = getMediaMetadata()
         loadAlbumArtwork(context = context)
+        title = computeString(context = context, string = title)
     }
 
 

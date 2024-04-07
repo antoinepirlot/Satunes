@@ -32,19 +32,37 @@ import earth.mp3player.database.R
  * @author Antoine Pirlot on 07/04/2024
  */
 
-private const val REPLACING_CHAR = "_"
-
-fun computeString(context: Context, string: String, isPath: Boolean = false): String {
+internal fun computeString(context: Context, string: String, isPath: Boolean = false): String {
     return if (isPath) {
         if (string.isBlank()) {
             throw IllegalArgumentException("The relative path is blank")
         }
-        string.replace(regex = Regex(pattern = "[,!?;:\"^|{}¨]"), REPLACING_CHAR)
+        escape(text = string, isPath = true)
     } else {
         if (string.isBlank()) {
             context.resources.getString(R.string.unknown)
         } else {
-            string.replace(regex = Regex(pattern = "[,!?;:\"/^|\\\\{}¨]"), REPLACING_CHAR)
+            escape(text = string)
         }
     }
 }
+
+private fun escape(text: String, isPath: Boolean = false): String {
+    val regex = Regex("[^\\w_.-]") // Matches characters except what's inside
+    val regexPath = Regex("[^\\w_./\\-]") // Matches characters except what's inside
+    return text.replace(if (isPath) regexPath else regex) { matchResult: MatchResult ->
+        // Encode each matched character
+        val code: String = matchResult.value.toCharArray()[0].code.toUInt().toString(16)
+        "%$code"
+    }
+}
+
+fun unescape(text: String): String {
+    val regex = Regex("%[0-9A-Fa-f]{2}") // Matches "%XX" format (hexadecimal)
+    return text.replace(regex) { matchResult: MatchResult ->
+        val code = matchResult.value.substring(1, 3) // Extract hex code
+        code.toInt(16).toChar().toString() // Convert hex code to character
+    }
+}
+
+

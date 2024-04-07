@@ -25,7 +25,9 @@
 
 package earth.mp3player.database.models
 
+import android.content.Context
 import androidx.media3.common.MediaItem
+import earth.mp3player.database.services.utils.computeString
 import java.util.SortedMap
 
 /**
@@ -34,10 +36,15 @@ import java.util.SortedMap
 
 data class Genre(
     override val id: Long,
-    override val title: String,
+    override var title: String,
+    val context: Context,
 ) : Media {
     val musicMap: SortedMap<Long, Music> = sortedMapOf()
     override val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
+
+    init {
+        title = computeString(context = context, string = title)
+    }
 
     fun addMusic(music: Music) {
         musicMap.putIfAbsent(music.id, music)

@@ -57,7 +57,7 @@ import earth.galacticmusic.ui.views.main.playlist.PlaylistView
  */
 
 @Composable
-fun MediaRouter(
+internal fun MediaRouter(
     modifier: Modifier = Modifier,
     navController: NavHostController,
     startDestination: String,

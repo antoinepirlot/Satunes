@@ -57,6 +57,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import earth.galacticmusic.playback.services.playback.PlaybackController
 import earth.galacticmusic.playback.services.settings.SettingsManager
+import earth.galacticmusic.router.main.MainDestination
 import earth.galacticmusic.router.main.MainRouter
 import earth.galacticmusic.router.media.MediaDestination
 import earth.galacticmusic.ui.appBars.MP3BottomAppBar
@@ -98,7 +99,7 @@ class MainActivity : ComponentActivity() {
                 ) {
                     val scrollBehavior =
                         TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
-                    val mediaRouterStartMediaDestination =
+                    val mediaRouterStartMediaDestination: MutableState<String> =
                         // Update the tab by default if settings has changed
                         if (SettingsManager.foldersChecked.value) {
                             rememberSaveable { mutableStateOf(MediaDestination.FOLDERS.link) }
@@ -109,15 +110,18 @@ class MainActivity : ComponentActivity() {
                         } else {
                             rememberSaveable { mutableStateOf(MediaDestination.MUSICS.link) }
                         }
-                    val mainRouterNavController = rememberNavController()
-                    val mediaRouterNavController: NavHostController = rememberNavController()
+                    val mainStartDestination: MutableState<String> =
+                        rememberSaveable { mutableStateOf(MainDestination.ROOT.link) }
+                    val mainNavController = rememberNavController()
+                    val mediaNavController: NavHostController = rememberNavController()
 
                     Scaffold(
                         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
                         topBar = {
                             MP3TopAppBar(
                                 scrollBehavior = scrollBehavior,
-                                navController = mainRouterNavController
+                                mainNavController = mainNavController,
+                                mediaNavController = mediaNavController
                             )
                         },
                         bottomBar = {
@@ -128,9 +132,9 @@ class MainActivity : ComponentActivity() {
                             modifier = Modifier.padding(innerPadding)
                         ) {
                             MainRouter(
-                                navController = mainRouterNavController,
-                                mediaRouterNavController = mediaRouterNavController,
-                                mediaRouterStartDestination = mediaRouterStartMediaDestination.value
+                                navController = mainNavController,
+                                mediaNavController = mediaNavController,
+                                mediaStartDestination = mediaRouterStartMediaDestination.value
                             )
                         }
                     }

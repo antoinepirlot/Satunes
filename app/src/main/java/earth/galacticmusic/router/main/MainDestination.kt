@@ -29,6 +29,7 @@ package earth.galacticmusic.router.main
  * @author Antoine Pirlot on 02-03-24
  */
 
-enum class MainDestination(val link: String) {
-    ROOT(link = "/")
+internal enum class MainDestination(val link: String) {
+    ROOT(link = "/"),
+    SETTINGS(link = "/settings"),
 }

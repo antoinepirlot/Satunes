@@ -33,7 +33,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import earth.galacticmusic.database.services.DataLoader
-import earth.galacticmusic.router.media.MediaDestination
 import earth.galacticmusic.router.media.MediaRouter
 import earth.galacticmusic.ui.components.LoadingCircle
 import earth.galacticmusic.ui.views.settings.SettingsView
@@ -43,11 +42,11 @@ import earth.galacticmusic.ui.views.settings.SettingsView
  */
 
 @Composable
-fun MainRouter(
+internal fun MainRouter(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    mediaRouterNavController: NavHostController,
-    mediaRouterStartDestination: String,
+    mediaNavController: NavHostController,
+    mediaStartDestination: String,
 ) {
     NavHost(
         modifier = modifier,
@@ -61,13 +60,13 @@ fun MainRouter(
                 LoadingCircle()
             } else {
                 MediaRouter(
-                    navController = mediaRouterNavController,
-                    startDestination = mediaRouterStartDestination
+                    navController = mediaNavController,
+                    startDestination = mediaStartDestination
                 )
             }
         }
 
-        composable(MediaDestination.SETTINGS.link) {
+        composable(MainDestination.SETTINGS.link) {
             SettingsView()
         }
     }

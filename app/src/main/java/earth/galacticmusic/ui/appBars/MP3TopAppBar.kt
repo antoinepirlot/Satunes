@@ -25,6 +25,7 @@
 
 package earth.galacticmusic.ui.appBars
 
+import android.annotation.SuppressLint
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -42,7 +43,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import earth.galacticmusic.R
-import earth.galacticmusic.router.media.MediaDestination
+import earth.galacticmusic.router.main.MainDestination
 import earth.galacticmusic.ui.views.MP3PlayerIcons
 
 /**
@@ -54,7 +55,8 @@ import earth.galacticmusic.ui.views.MP3PlayerIcons
 fun MP3TopAppBar(
     modifier: Modifier = Modifier,
     scrollBehavior: TopAppBarScrollBehavior,
-    navController: NavHostController
+    mainNavController: NavHostController,
+    mediaNavController: NavHostController,
 ) {
 
     CenterAlignedTopAppBar(
@@ -73,7 +75,10 @@ fun MP3TopAppBar(
         actions = {
             IconButton(
                 onClick = {
-                    navController.navigate(MediaDestination.SETTINGS.link)
+                    when (mainNavController.currentBackStackEntry!!.destination.route!!) {
+                        MainDestination.SETTINGS.link -> mainNavController.popBackStack()
+                        MainDestination.ROOT.link -> mainNavController.navigate(MainDestination.SETTINGS.link)
+                    }
                 }
             ) {
                 val settingsIcon: MP3PlayerIcons = MP3PlayerIcons.SETTINGS
@@ -87,6 +92,7 @@ fun MP3TopAppBar(
     )
 }
 
+@SuppressLint("UnrememberedMutableState")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @Preview
@@ -97,6 +103,7 @@ fun HomeTopAppBarPreview() {
     MP3TopAppBar(
         modifier = Modifier,
         scrollBehavior = scrollBehavior,
-        navController = rememberNavController()
+        mainNavController = rememberNavController(),
+        mediaNavController = rememberNavController()
     )
 }

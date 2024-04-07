@@ -76,7 +76,7 @@ Fix issues:
 Features:
 
 * Android Auto support
-** To activate Android Auto you can find instructions [here](#050-beta)
+** To activate Android Auto you can find instructions [here](#android-auto)
 
 Fix issues:
 

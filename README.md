@@ -21,9 +21,17 @@ Tu as le droit de réutiliser mon code pour créer une nouvelle application dér
 8) Je te recommande te désactiver l'installation d'applis inconnue de l'application depuis laquelle tu as ouvert le fichier.
 9) Profite de ta musique en toute liberté :D
 
-Si l'application te plait et que tu as envie de me soutenir, n'hésite pas à le faire [ici](https://fr.tipeee.com/antoinepirlot).
+## Android Auto
 
-Pour activer Android Auto clique [ici](#050-beta) pour savoir comment faire.
+1) Va dans les paramètres de Android Auto.
+2) Cliques plusieurs fois sur le bouton "Version" pour activer les paramètres développeurs.
+3) Va dans les paramètres développeurs en cliquant sur les 3 boutons en haut à droite et active le paramètre "Sources Inconnues" car mon application n'est pas publiée dans le Google Play Store.
+4) Il n'y a plus qu'à ajouter l'application au lanceur d'application de Android Auto dans le menu "Personnaliser le lanceur"
+5) Bonne écoute et bon voyage ;)
+
+##
+
+Si l'application te plait et que tu as envie de me soutenir, n'hésite pas à le faire [ici](https://fr.tipeee.com/antoinepirlot).
 
 # UPDATES
 
@@ -69,13 +77,7 @@ Résolutions de problèmes:
 Fonctionnalités:
 
 * Support pour Android Auto
-    * Pour activer l'application dans Android Auto:
-        1) Va dans les paramètres de Android Auto.
-        2) Cliques plusieurs fois sur le bouton "Version" pour activer les paramètres développeurs.
-        3) Va dans les paramètres développeurs en cliquant sur les 3 boutons en haut à droite et active le paramètre "Sources Inconnues" car mon application n'est pas publiée dans le Google Play Store.
-        4) Il n'y a plus qu'à ajouter l'application au lanceur d'application de Android Auto dans le menu "Personnaliser le lanceur"
-        5) Bonne écoute et bon voyage ;)
-
+    * Pour activer Android Auto clique [ici](#android-auto) pour savoir comment faire.
 Résolutions de problèmes:
 
 * Optimisation

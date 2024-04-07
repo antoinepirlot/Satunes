@@ -37,6 +37,7 @@ import earth.galacticmusic.database.models.Genre
 import earth.galacticmusic.database.models.Media
 import earth.galacticmusic.database.models.Music
 import earth.galacticmusic.database.models.relations.PlaylistWithMusics
+import earth.galacticmusic.database.services.utils.unescape
 
 /**
  * @author Antoine Pirlot on 16/03/2024
@@ -57,8 +58,8 @@ fun buildMediaItem(
     val mediaDescription: MediaDescriptionCompat = MediaDescriptionCompat.Builder()
         .setMediaId(id)
         .setDescription(description)
-        .setTitle(title)
-        .setSubtitle(subtitle)
+        .setTitle(unescape(text = title))
+        .setSubtitle(if (subtitle == null) subtitle else unescape(text = subtitle))
         .setMediaUri(uri)
         .setExtras(extras)
         .build()

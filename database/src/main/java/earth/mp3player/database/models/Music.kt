@@ -39,7 +39,6 @@ import androidx.core.content.getSystemService
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import earth.mp3player.database.services.utils.computeString
-import earth.mp3player.database.services.utils.unescape
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -75,21 +74,16 @@ data class Music(
         val storageManager = context.getSystemService<StorageManager>()
         val storageVolumes: List<StorageVolume> = storageManager!!.storageVolumes
         for (volume in storageVolumes) {
-            absolutePath = "${volume.directory!!.path}/${unescape(relativePath)}/${
-                unescape(displayName)
-            }"
+            absolutePath = "${volume.directory!!.path}/${relativePath}/${displayName}"
             if (!File(absolutePath).exists()) {
                 if (storageVolumes.last() == volume) {
                     throw IllegalAccessException("This media doesn't exist")
                 }
                 continue
             }
-            absolutePath = computeString(context = context, text = absolutePath)
+            absolutePath = computeString(context = context, text = absolutePath, isPath = true)
             relativePath = "${volume.directory!!.path.split("/").last()}/$relativePath"
 
-            if (title.lowercase().contains("selfie")) {
-                println()
-            }
             uri = Uri.parse(absolutePath)
             break
         }

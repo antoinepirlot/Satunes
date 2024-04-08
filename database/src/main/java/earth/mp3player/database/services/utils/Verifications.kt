@@ -54,17 +54,14 @@ private fun escape(text: String, isPath: Boolean = false): String {
         // Encode each matched character
         val char = matchResult.value.toCharArray()[0]
         val code: String = char.code.toString(16)
-        "%$code%"
+        "%$code"
     }
 }
 
 fun unescape(text: String): String {
-    val regex = Regex("%[0-9A-Fa-f]{2,4}%") // Matches "%XXXX%" format (hexadecimal)
+    val regex = Regex("%[0-9A-Fa-f]{2}") // Matches "%XX" format (hexadecimal)
     return text.replace(regex) { matchResult: MatchResult ->
-        val code = matchResult.value.substring(
-            1,
-            matchResult.value.length - 1
-        ) // Extract hex code between %
+        val code = matchResult.value.substring(1, 3) // Extract hex code 
         code.toInt(16).toChar().toString() // Convert hex code to character
     }
 }

@@ -1,4 +1,4 @@
-# Galactic Music (🇫🇷)
+# Lecteur MP3 (🇫🇷)
 
 You can find this file in [english 🇬🇧](README-en.md).
 
@@ -41,10 +41,6 @@ Si l'application te plait et que tu as envie de me soutenir, n'hésite pas à le
 ## 0.7 (Android 11 Red Velvet Cake et ultérieur)
 
 ### 0.7.2-beta
-
-MP3 Player devient Galactic Music. Tu devras desinstaller l'ancienne application car la nouvelle s'
-installera comme une autre application. (Promis, à l'avenir ça ne devrait plus arriver sauf cas de
-force majeur).
 
 Améliorations, Optimisation et Résolution de problèmes:
 

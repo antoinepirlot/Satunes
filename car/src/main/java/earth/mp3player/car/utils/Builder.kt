@@ -26,6 +26,7 @@
 package earth.mp3player.car.utils
 
 import android.net.Uri
+import android.net.Uri.decode
 import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaDescriptionCompat
@@ -37,7 +38,6 @@ import earth.mp3player.database.models.Genre
 import earth.mp3player.database.models.Media
 import earth.mp3player.database.models.Music
 import earth.mp3player.database.models.relations.PlaylistWithMusics
-import earth.mp3player.database.services.utils.unescape
 
 /**
  * @author Antoine Pirlot on 16/03/2024
@@ -58,8 +58,8 @@ fun buildMediaItem(
     val mediaDescription: MediaDescriptionCompat = MediaDescriptionCompat.Builder()
         .setMediaId(id)
         .setDescription(description)
-        .setTitle(unescape(text = title))
-        .setSubtitle(if (subtitle == null) subtitle else unescape(text = subtitle))
+        .setTitle(decode(title))
+        .setSubtitle(if (subtitle == null) null else decode(subtitle))
         .setMediaUri(uri)
         .setExtras(extras)
         .build()

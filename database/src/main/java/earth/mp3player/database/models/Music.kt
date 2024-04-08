@@ -38,7 +38,6 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.core.content.getSystemService
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
-import earth.mp3player.database.services.utils.computeString
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -81,7 +80,7 @@ data class Music(
                 }
                 continue
             }
-            absolutePath = computeString(context = context, text = absolutePath, isPath = true)
+            absolutePath = Uri.encode(absolutePath)
             relativePath = "${volume.directory!!.path.split("/").last()}/$relativePath"
 
             uri = Uri.parse(absolutePath)
@@ -95,10 +94,10 @@ data class Music(
         loadAlbumArtwork(context = context)
 
         if (displayName != title) {
-            displayName = computeString(context = context, text = displayName)
+            displayName = Uri.encode(displayName)
         }
-        title = computeString(context = context, text = title)
-        relativePath = computeString(context = context, text = relativePath)
+        title = Uri.encode(title)
+        relativePath = Uri.encode(relativePath)
     }
 
 

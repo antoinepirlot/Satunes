@@ -32,7 +32,7 @@ import earth.mp3player.database.R
  * @author Antoine Pirlot on 07/04/2024
  */
 
-internal fun computeString(context: Context, text: String, isPath: Boolean = false): String {
+private fun computeString(context: Context, text: String, isPath: Boolean = false): String {
     return if (isPath) {
         if (text.isBlank()) {
             throw IllegalArgumentException("The relative path is blank")
@@ -54,18 +54,18 @@ private fun escape(text: String, isPath: Boolean = false): String {
         var escapedChars = ""
         matchResult.value.toCharArray().forEach { c: Char ->
             val hexaCode: String = c.code.toString(16)
-            if (c.code > 127) {  // Check for characters above ASCII range
+            escapedChars += if (c.code > 127) {  // Check for characters above ASCII range
                 // Encode Unicode character using toHexString
-                escapedChars += "\\u${hexaCode.padStart(4, '0')}"
+                "\\u${hexaCode.padStart(4, '0')}"
             } else {
-                escapedChars += "%${hexaCode}"
+                "%${hexaCode}"
             }
         }
         escapedChars
     }
 }
 
-fun unescape(text: String): String {
+private fun unescape(text: String): String {
     val regex = Regex("(%[0-9a-fA-F]{2})|(\\\\u[0-9a-fA-F]{4})")
     return text.replace(regex) { matchResult ->
         var unescapedText = ""

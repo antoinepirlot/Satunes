@@ -26,6 +26,7 @@
 package earth.mp3player.ui.views
 
 import android.annotation.SuppressLint
+import android.net.Uri.decode
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -40,7 +41,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import earth.mp3player.database.services.utils.unescape
 import earth.mp3player.playback.services.playback.PlaybackController
 import earth.mp3player.ui.components.music.AlbumArtwork
 import earth.mp3player.ui.components.music.bars.MusicControlBar
@@ -63,7 +63,7 @@ fun PlayBackView(
             verticalArrangement = Arrangement.Bottom,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = unescape(musicPlaying.value!!.title))
+            Text(text = decode(musicPlaying.value!!.title))
 
             MusicControlBar(
                 modifier = modifier

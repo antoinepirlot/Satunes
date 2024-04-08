@@ -25,6 +25,7 @@
 
 package earth.mp3player.ui.components.music.options
 
+import android.net.Uri.decode
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -43,7 +44,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import earth.mp3player.R
-import earth.mp3player.database.services.utils.unescape
 import earth.mp3player.services.PlaylistSelectionManager
 import earth.mp3player.ui.views.MP3PlayerIcons
 
@@ -72,7 +72,7 @@ fun MusicOptionsDialog(
             )
         },
         title = {
-            Text(text = unescape(musicTitle))
+            Text(text = decode(musicTitle))
         },
         text = {
             Column {

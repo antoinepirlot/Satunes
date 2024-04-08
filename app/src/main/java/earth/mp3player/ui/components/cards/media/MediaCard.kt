@@ -25,6 +25,7 @@
 
 package earth.mp3player.ui.components.cards.media
 
+import android.net.Uri.decode
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
@@ -54,7 +55,6 @@ import earth.mp3player.database.models.Music
 import earth.mp3player.database.models.relations.PlaylistWithMusics
 import earth.mp3player.database.models.tables.MusicDB
 import earth.mp3player.database.services.DatabaseManager
-import earth.mp3player.database.services.utils.unescape
 import earth.mp3player.services.PlaylistSelectionManager
 import earth.mp3player.ui.components.music.options.MusicOptionsDialog
 import earth.mp3player.ui.components.playlist.PlaylistOptionsDialog
@@ -118,7 +118,7 @@ fun MediaCard(
     ) {
         ListItem(
             headlineContent = {
-                Text(text = unescape(title))
+                Text(text = decode(title))
             },
             leadingContent = {
                 val mediaIcon: MP3PlayerIcons = getRightIconAndDescription(media = media)

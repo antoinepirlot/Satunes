@@ -39,8 +39,6 @@ import earth.mp3player.database.models.Artist
 import earth.mp3player.database.models.Folder
 import earth.mp3player.database.models.Genre
 import earth.mp3player.database.models.Music
-import earth.mp3player.database.services.utils.computeString
-import earth.mp3player.database.services.utils.unescape
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -269,8 +267,8 @@ object DataLoader {
         folderId: MutableLongState,
     ) {
         val splitPath: MutableList<String> = mutableListOf()
-        unescape(music.relativePath).split("/").forEach {
-            splitPath.add(computeString(context = context, text = it))
+        Uri.decode(music.relativePath).split("/").forEach {
+            splitPath.add(Uri.encode(it))
         }
 
         if (splitPath.last() == context.resources.getString(R.string.unknown)) {
@@ -312,7 +310,7 @@ object DataLoader {
 
     private fun loadAlbum(context: Context, cursor: Cursor): Album {
         val id: Long = cursor.getLong(albumIdColumn!!)
-        val name = computeString(context = context, text = cursor.getString(albumNameColumn!!))
+        val name = Uri.encode(cursor.getString(albumNameColumn!!))
 
         return Album(id = id, title = name, context = context)
     }
@@ -320,14 +318,14 @@ object DataLoader {
     private fun loadArtist(context: Context, cursor: Cursor): Artist {
         // Get values of columns for a given artist.
         val id = cursor.getLong(artistIdColumn!!)
-        val name = computeString(context = context, text = cursor.getString(artistNameColumn!!))
+        val name = Uri.encode(cursor.getString(artistNameColumn!!))
 
         return Artist(id = id, title = name, context = context)
     }
 
     private fun loadGenre(context: Context, cursor: Cursor): Genre {
         val id = cursor.getLong(genreIdColumn!!)
-        val name = computeString(context = context, text = cursor.getString(genreNameColumn!!))
+        val name = Uri.encode(cursor.getString(genreNameColumn!!))
 
         return Genre(id = id, title = name, context = context)
     }

@@ -50,41 +50,60 @@ internal fun computeString(context: Context, text: String, isPath: Boolean = fal
 private fun escape(text: String, isPath: Boolean = false): String {
     val regex = Regex("[^\\w_.-]") // Matches characters except what's inside
     val regexPath = Regex("[^\\w_./\\\\-]") // Matches characters except what's inside
-    val text = text.replace(if (isPath) regexPath else regex) { matchResult ->
-        val char = matchResult.value.toCharArray()[0]
-        val code: String = char.code.toString(16)
-        if (char.code > 127) {  // Check for characters above ASCII range
-            // Encode Unicode character using toHexString
-            "\\u${code.padStart(4, '0')}"
-        } else {
-            "%${code}"
+    return text.replace(if (isPath) regexPath else regex) { matchResult ->
+        var escapedChars = ""
+        matchResult.value.toCharArray().forEach { c: Char ->
+            val hexaCode: String = c.code.toString(16)
+            if (c.code > 127) {  // Check for characters above ASCII range
+                // Encode Unicode character using toHexString
+                escapedChars += "\\u${hexaCode.padStart(4, '0')}"
+            } else {
+                escapedChars += "%${hexaCode}"
+            }
         }
+        escapedChars
     }
-
-    return text
 }
 
 fun unescape(text: String): String {
-//    val regex = Regex("%[0-9A-Fa-f]{2}") // Matches "%XX" format (hexadecimal)
-//    return text.replace(regex) { matchResult: MatchResult ->
-//        val code = matchResult.value.substring(1, 3) // Extract hex code
-//        code.toInt(16).toChar().toString() // Convert hex code to character
-//    }
-
     val regex = Regex("(%[0-9a-fA-F]{2})|(\\\\u[0-9a-fA-F]{4})")
-    val to = text.replace(regex) { matchResult ->
-        val char = matchResult.value
-        if (char.startsWith("\\u")) {
+    return text.replace(regex) { matchResult ->
+        var unescapedText = ""
+        val s: String = matchResult.value
+        if (s.startsWith("\\u")) {
             // Decode Unicode escape sequence
-            val code = matchResult.value.substring(2, 5) // Extract hex code
-            code.toInt(16).toChar().toString()
-        } else {
+            unescapedText += decodeUnicode(text = s)
+        } else if (s.startsWith("%")) {
             // Remove escaped character
-            val code = matchResult.value.substring(1, 3) // Extract hex code
-            code.toInt(16).toChar().toString()
+            unescapedText += decodeAscii(text = s)
+        }
+        unescapedText
+    }
+}
+
+/**
+ * Decode Ascii String (format: %xy) (hexadecimal)
+ */
+private fun decodeAscii(text: String): String {
+    var decoded = ""
+    val splitText: List<String> = text.split("%")
+    splitText.forEach { s: String ->
+        if (s.isNotBlank()) {
+            // Extract hex code
+            decoded += s.toInt(16).toChar().toString()
         }
     }
-    return to
+    return decoded
+}
+
+private fun decodeUnicode(text: String): String {
+    var decoded = ""
+    text.split("\\u").forEach { s: String ->
+        if (s.isNotBlank()) {
+            decoded += s.toInt(16).toChar().toString()
+        }
+    }
+    return decoded
 }
 
 

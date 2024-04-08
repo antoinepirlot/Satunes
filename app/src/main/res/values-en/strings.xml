@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">MP3 Player</string>
     <string name="play_all">Shuffle All Musics</string>
     <string name="bottom_bar">Bottom Navigation Bar</string>
     <string name="this_device">This Device</string>

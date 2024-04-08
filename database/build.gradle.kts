@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "earth.galacticmusic.database"
+    namespace = "earth.mp3player.database"
     compileSdk = 34
 
     defaultConfig {

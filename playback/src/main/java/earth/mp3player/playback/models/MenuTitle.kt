@@ -34,7 +34,7 @@ import earth.mp3player.playback.R
 enum class MenuTitle(open val stringId: Int) {
     FOLDERS(stringId = R.string.folders),
     ARTISTS(stringId = R.string.artists),
-    MUSIC(stringId = R.string.tracks),
+    MUSICS(stringId = R.string.tracks),
     ALBUMS(stringId = R.string.albums),
     GENRES(stringId = R.string.genres),
     PLAYLISTS(stringId = R.string.playlists)

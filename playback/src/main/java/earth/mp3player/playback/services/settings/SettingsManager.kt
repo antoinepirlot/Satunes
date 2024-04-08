@@ -146,7 +146,7 @@ object SettingsManager {
                 }
             }
 
-            MenuTitle.MUSIC -> { /*Do nothing*/
+            MenuTitle.MUSICS -> { /*Do nothing*/
             }
         }
     }

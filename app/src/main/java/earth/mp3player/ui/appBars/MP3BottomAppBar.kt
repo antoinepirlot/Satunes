@@ -63,7 +63,7 @@ fun MP3BottomAppBar(
         MenuTitle.ARTISTS,
         MenuTitle.ALBUMS,
         MenuTitle.GENRES,
-        MenuTitle.MUSIC,
+        MenuTitle.MUSICS,
         MenuTitle.PLAYLISTS
     )
 
@@ -86,7 +86,7 @@ fun MP3BottomAppBar(
         } else if (SettingsManager.playlistsChecked.value) {
             rememberSaveable { mutableStateOf(MenuTitle.PLAYLISTS) }
         } else {
-            rememberSaveable { mutableStateOf(MenuTitle.MUSIC) }
+            rememberSaveable { mutableStateOf(MenuTitle.MUSICS) }
         }
     val hasMaxFiveItems: Boolean = menuTitleLists.size <= 5
 
@@ -103,33 +103,40 @@ fun MP3BottomAppBar(
                 selected = selectedMenuTitle.value == menuTitle,
                 onClick = {
                     selectedMenuTitle.value = menuTitle
-                    if (mainNavController.currentBackStackEntry!!.destination.route!! == MainDestination.SETTINGS.link) {
+                    val currentMainRoute: String =
+                        mainNavController.currentBackStackEntry!!.destination.route!!
+                    if (currentMainRoute == MainDestination.SETTINGS.link) {
                         mainNavController.popBackStack()
                     }
-                    mediaNavController.popBackStack()
                     when (menuTitle) {
                         MenuTitle.FOLDERS -> {
-                            mediaNavController.navigate(MediaDestination.FOLDERS.link)
+                            val rootRoute: String = MediaDestination.FOLDERS.link
+                            backToRoot(rootRoute = rootRoute, navController = mediaNavController)
                         }
 
                         MenuTitle.ARTISTS -> {
-                            mediaNavController.navigate(MediaDestination.ARTISTS.link)
+                            val rootRoute: String = MediaDestination.ARTISTS.link
+                            backToRoot(rootRoute = rootRoute, navController = mediaNavController)
                         }
 
                         MenuTitle.ALBUMS -> {
-                            mediaNavController.navigate(MediaDestination.ALBUMS.link)
+                            val rootRoute: String = MediaDestination.ALBUMS.link
+                            backToRoot(rootRoute = rootRoute, navController = mediaNavController)
                         }
 
                         MenuTitle.GENRES -> {
-                            mediaNavController.navigate(MediaDestination.GENRES.link)
+                            val rootRoute: String = MediaDestination.GENRES.link
+                            backToRoot(rootRoute = rootRoute, navController = mediaNavController)
                         }
 
                         MenuTitle.PLAYLISTS -> {
-                            mediaNavController.navigate(MediaDestination.PLAYLISTS.link)
+                            val rootRoute: String = MediaDestination.PLAYLISTS.link
+                            backToRoot(rootRoute = rootRoute, navController = mediaNavController)
                         }
 
-                        MenuTitle.MUSIC -> {
-                            mediaNavController.navigate(MediaDestination.MUSICS.link)
+                        MenuTitle.MUSICS -> {
+                            val rootRoute: String = MediaDestination.MUSICS.link
+                            backToRoot(rootRoute = rootRoute, navController = mediaNavController)
                         }
 
                     }
@@ -147,12 +154,27 @@ fun MP3BottomAppBar(
     }
 }
 
+private fun backToRoot(rootRoute: String, navController: NavHostController) {
+    var currentRoute: String? = navController.currentBackStackEntry!!.destination.route!!
+    while (currentRoute != null && currentRoute != MainDestination.ROOT.link && currentRoute != rootRoute) {
+        navController.popBackStack()
+        currentRoute = try {
+            navController.currentBackStackEntry!!.destination.route!!
+        } catch (_: NullPointerException) {
+            null
+        }
+    }
+    if (currentRoute == null || (currentRoute == MainDestination.ROOT.link && rootRoute != MainDestination.ROOT.link)) {
+        navController.navigate(rootRoute)
+    }
+}
+
 @SuppressLint("UnrememberedMutableState")
 @Preview
 @Composable
 fun MP3BottomAppBarPreview() {
     MP3BottomAppBar(
         mainNavController = rememberNavController(),
-        mediaNavController = rememberNavController()
+        mediaNavController = rememberNavController(),
     )
 }

@@ -158,10 +158,10 @@ private fun backToRoot(rootRoute: String, navController: NavHostController) {
     var currentRoute: String? = navController.currentBackStackEntry!!.destination.route!!
     while (currentRoute != null && currentRoute != MainDestination.ROOT.link && currentRoute != rootRoute) {
         navController.popBackStack()
-        try {
-            currentRoute = navController.currentBackStackEntry!!.destination.route!!
+        currentRoute = try {
+            navController.currentBackStackEntry!!.destination.route!!
         } catch (_: NullPointerException) {
-            currentRoute = null
+            null
         }
     }
     if (currentRoute == null || (currentRoute == MainDestination.ROOT.link && rootRoute != MainDestination.ROOT.link)) {

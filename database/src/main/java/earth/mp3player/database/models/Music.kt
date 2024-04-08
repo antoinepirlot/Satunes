@@ -61,7 +61,7 @@ data class Music(
     val context: Context,
 ) : Media {
     var mediaItem: MediaItem
-    private var absolutePath: String = "$ROOT_PATH/$relativePath/$displayName"
+    private var absolutePath: String = "$ROOT_PATH/$relativePath$displayName"
     lateinit var uri: Uri
     var artwork: ImageBitmap? = null
 
@@ -73,7 +73,7 @@ data class Music(
         val storageManager = context.getSystemService<StorageManager>()
         val storageVolumes: List<StorageVolume> = storageManager!!.storageVolumes
         for (volume in storageVolumes) {
-            absolutePath = "${volume.directory!!.path}/${relativePath}/${displayName}"
+            absolutePath = "${volume.directory!!.path}/${relativePath}${displayName}"
             if (!File(absolutePath).exists()) {
                 if (storageVolumes.last() == volume) {
                     throw IllegalAccessException("This media doesn't exist")

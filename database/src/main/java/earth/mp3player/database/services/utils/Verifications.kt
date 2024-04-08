@@ -32,6 +32,21 @@ import earth.mp3player.database.R
  * @author Antoine Pirlot on 07/04/2024
  */
 
+/**
+ * Escape "/" and "\"
+ */
+internal fun escapeSlashes(text: String): String {
+    val regex = Regex("[/\\\\]") // Matches characters except what's inside
+    return text.replace(regex) { matchResult ->
+        var escapedChars = ""
+        matchResult.value.toCharArray().forEach { c: Char ->
+            val hexaCode: String = c.code.toString(16)
+            escapedChars += "%${hexaCode}"
+        }
+        escapedChars
+    }
+}
+
 private fun computeString(context: Context, text: String, isPath: Boolean = false): String {
     return if (isPath) {
         if (text.isBlank()) {

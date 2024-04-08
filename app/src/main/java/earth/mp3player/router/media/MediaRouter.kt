@@ -25,6 +25,7 @@
 
 package earth.mp3player.router.media
 
+import android.net.Uri.encode
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
@@ -102,7 +103,7 @@ internal fun MediaRouter(
             if (isLoading.value) {
                 LoadingCircle()
             } else {
-                val artistName: String = it.arguments!!.getString("name")!!
+                val artistName: String = encode(it.arguments!!.getString("name")!!)
                 val artist: Artist by remember { mutableStateOf(DataManager.getArtist(artistName)) }
                 ArtistView(navController = navController, artist = artist)
             }
@@ -138,7 +139,7 @@ internal fun MediaRouter(
             if (isLoading.value) {
                 LoadingCircle()
             } else {
-                val genreName: String = it.arguments!!.getString("name")!!
+                val genreName: String = encode(it.arguments!!.getString("name")!!)
                 val genre: Genre by remember { mutableStateOf(DataManager.getGenre(genreName = genreName)) }
                 GenreView(navController = navController, genre = genre)
             }

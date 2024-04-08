@@ -271,7 +271,8 @@ object DataLoader {
             splitPath.add(Uri.encode(it))
         }
 
-        if (splitPath.last() == context.resources.getString(R.string.unknown)) {
+        val last: String = splitPath.last()
+        if (last.isBlank() || last == context.resources.getString(R.string.unknown)) {
             //remove the blank folder
             splitPath.removeLast()
         }

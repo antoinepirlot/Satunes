@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "earth.galacticmusic.car"
+    namespace = "earth.mp3player.car"
     compileSdk = 34
 
     defaultConfig {

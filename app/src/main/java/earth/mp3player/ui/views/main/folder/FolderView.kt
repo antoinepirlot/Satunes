@@ -28,7 +28,6 @@ package earth.mp3player.ui.views.main.folder
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.media3.common.MediaItem
 import androidx.navigation.NavHostController
@@ -94,6 +93,6 @@ fun FolderView(
 fun FolderViewPreview() {
     FolderView(
         navController = rememberNavController(),
-        folder = Folder(id = 0, title = "Folder title", context = LocalContext.current)
+        folder = Folder(id = 0, title = "Folder title")
     )
 }

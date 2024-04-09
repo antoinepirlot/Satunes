@@ -38,6 +38,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.core.content.getSystemService
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
+import earth.mp3player.database.services.DataManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -60,7 +61,7 @@ data class Music(
     var genre: Genre? = null,
     val context: Context,
 ) : Media {
-    var mediaItem: MediaItem
+    lateinit var mediaItem: MediaItem
     private var absolutePath: String = "$ROOT_PATH/$relativePath$displayName"
     lateinit var uri: Uri
     var artwork: ImageBitmap? = null
@@ -70,34 +71,36 @@ data class Music(
     }
 
     init {
-        val storageManager = context.getSystemService<StorageManager>()
-        val storageVolumes: List<StorageVolume> = storageManager!!.storageVolumes
-        for (volume in storageVolumes) {
-            absolutePath = "${volume.directory!!.path}/${relativePath}${displayName}"
-            if (!File(absolutePath).exists()) {
-                if (storageVolumes.last() == volume) {
-                    throw IllegalAccessException("This media doesn't exist")
+        val displayNameCoroutine: String = displayName
+        CoroutineScope(Dispatchers.IO).launch {
+            val storageManager = context.getSystemService<StorageManager>()
+            val storageVolumes: List<StorageVolume> = storageManager!!.storageVolumes
+            for (volume in storageVolumes) {
+                absolutePath = "${volume.directory!!.path}/${relativePath}${displayNameCoroutine}"
+                if (!File(absolutePath).exists()) {
+                    if (storageVolumes.last() == volume) {
+                        throw IllegalAccessException("This media doesn't exist")
+                    }
+                    continue
                 }
-                continue
+                absolutePath = Uri.encode(absolutePath)
+                relativePath = "${volume.directory!!.path.split("/").last()}/$relativePath"
+                relativePath = Uri.encode(relativePath)
+                uri = Uri.parse(absolutePath)
+                mediaItem = getMediaMetadata()
+                DataManager.musicMediaItemSortedMap[this@Music] = mediaItem
+                album?.addMusic(music = this@Music)
+                artist?.addMusic(music = this@Music)
+                genre?.addMusic(music = this@Music)
+                folder?.addMusic(music = this@Music)
+                loadAlbumArtwork(context = context)
             }
-            absolutePath = Uri.encode(absolutePath)
-            relativePath = "${volume.directory!!.path.split("/").last()}/$relativePath"
-
-            uri = Uri.parse(absolutePath)
-            break
         }
-
-        if (album != null) {
-            album!!.addMusic(music = this)
-        }
-        mediaItem = getMediaMetadata()
-        loadAlbumArtwork(context = context)
 
         if (displayName != title) {
             displayName = Uri.encode(displayName)
         }
         title = Uri.encode(title)
-        relativePath = Uri.encode(relativePath)
     }
 
 

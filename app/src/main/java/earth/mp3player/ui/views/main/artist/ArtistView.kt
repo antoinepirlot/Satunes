@@ -27,7 +27,6 @@ package earth.mp3player.ui.views.main.artist
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.media3.common.MediaItem
 import androidx.navigation.NavHostController
@@ -97,8 +96,7 @@ fun ArtistViewPreview() {
             id = 0,
             title = "Artist title",
             musicList = mutableListOf(),
-            albumSortedMap = sortedMapOf(),
-            context = LocalContext.current
+            albumSortedMap = sortedMapOf()
         )
     )
 }

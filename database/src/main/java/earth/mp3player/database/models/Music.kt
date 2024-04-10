@@ -98,7 +98,6 @@ class Music(
      */
     private fun loadAlbumArtwork(context: Context) {
         //Put it in Dispatchers.IO make the app not freezing while starting
-        val music: Music = this
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val mediaMetadataRetriever = MediaMetadataRetriever()
@@ -109,7 +108,7 @@ class Music(
 
                 if (artwork != null) {
                     val bitmap: Bitmap = BitmapFactory.decodeByteArray(artwork, 0, artwork.size)
-                    music.artwork = bitmap.asImageBitmap()
+                    this@Music.artwork = bitmap.asImageBitmap()
                 }
             } catch (_: Exception) {
                 /* No artwork found*/

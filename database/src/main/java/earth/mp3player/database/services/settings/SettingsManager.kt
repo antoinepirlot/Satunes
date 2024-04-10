@@ -2,7 +2,7 @@
  * This file is part of MP3 Player.
  *
  * MP3 Player is free software: you can redistribute it and/or modify it under
- *  the terms of the GNU General Public License as published by the Free Software Foundation,
+ * the terms of the GNU General Public License as published by the Free Software Foundation,
  * either version 3 of the License, or (at your option) any later version.
  *
  * MP3 Player is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -23,7 +23,7 @@
  * PS: I don't answer quickly.
  */
 
-package earth.mp3player.playback.services.settings
+package earth.mp3player.database.services.settings
 
 import android.content.Context
 import androidx.compose.runtime.MutableState
@@ -34,7 +34,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.preferencesDataStore
-import earth.mp3player.playback.models.MenuTitle
+import earth.mp3player.database.models.MenuTitle
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
@@ -114,7 +114,7 @@ object SettingsManager {
             MenuTitle.FOLDERS -> {
                 context.dataStore.edit { preferences: MutablePreferences ->
                     foldersChecked.value = !foldersChecked.value
-                    preferences[FOLDERS_CHECKED_PREFERENCES_KEY] = !foldersChecked.value
+                    preferences[FOLDERS_CHECKED_PREFERENCES_KEY] = foldersChecked.value
                 }
             }
 

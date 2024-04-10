@@ -33,7 +33,7 @@ import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.session.MediaSession
 import androidx.media3.session.MediaSessionService
-import earth.mp3player.playback.services.settings.SettingsManager
+import earth.mp3player.database.services.settings.SettingsManager
 
 /**
  * @author Antoine Pirlot on 31/01/24

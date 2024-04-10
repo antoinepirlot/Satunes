@@ -45,8 +45,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import earth.mp3player.database.services.settings.SettingsManager
 import earth.mp3player.playback.services.playback.PlaybackController
-import earth.mp3player.playback.services.settings.SettingsManager
 import earth.mp3player.ui.theme.MP3Theme
 import kotlinx.coroutines.runBlocking
 

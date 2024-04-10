@@ -27,11 +27,11 @@ package earth.mp3player.ui.views.settings
 
 import earth.mp3player.R.string.closed_app_playback
 import earth.mp3player.R.string.pause_if_noisy
-import earth.mp3player.playback.R.string.albums
-import earth.mp3player.playback.R.string.artists
-import earth.mp3player.playback.R.string.folders
-import earth.mp3player.playback.R.string.genres
-import earth.mp3player.playback.R.string.playlists
+import earth.mp3player.database.R.string.albums
+import earth.mp3player.database.R.string.artists
+import earth.mp3player.database.R.string.folders
+import earth.mp3player.database.R.string.genres
+import earth.mp3player.database.R.string.playlists
 
 /**
  *   @author Antoine Pirlot 06/03/2024

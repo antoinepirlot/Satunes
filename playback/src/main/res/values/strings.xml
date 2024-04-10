@@ -1,9 +1,3 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="folders">Fichiers</string>
-    <string name="artists">Artistes</string>
-    <string name="tracks">Musiques</string>
-    <string name="albums" translatable="false">Albums</string>
-    <string name="genres" translatable="false">Genres</string>
-    <string name="playlists" translatable="false">Playlists</string>
 </resources>

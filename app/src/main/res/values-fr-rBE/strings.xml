@@ -7,7 +7,7 @@
     <string name="external_storage">Stockage Externe</string>
     <string name="playback_settings">Paramètres de lecture</string>
     <string name="closed_app_playback">Lecture si l\'application est fermée</string>
-    <string name="pause_if_noisy">Pause si le casque est débranché Pause si le casque est débranché (rédémarrage requis)</string>
+    <string name="pause_if_noisy">Pause si le casque est débranché (redémarrage requis)</string>
     <string name="playlist_form">Nom de la playlist</string>
     <string name="create_playlist">Crée une nouvelle playlist</string>
     <string name="cancel">Annuler</string>
@@ -16,4 +16,5 @@
     <string name="add">Ajouter</string>
     <string name="remove_from_playlist">Supprimer de la playlist</string>
     <string name="remove_playlist">Supprimer la playlist</string>
+    <string name="settings">Paramètres</string>
 </resources>

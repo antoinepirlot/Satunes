@@ -36,29 +36,17 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import earth.mp3player.playback.services.playback.PlaybackController
 import earth.mp3player.playback.services.settings.SettingsManager
-import earth.mp3player.router.main.MainRouter
-import earth.mp3player.ui.appBars.MP3BottomAppBar
-import earth.mp3player.ui.appBars.MP3TopAppBar
 import earth.mp3player.ui.theme.MP3Theme
 import kotlinx.coroutines.runBlocking
 
@@ -68,61 +56,26 @@ import kotlinx.coroutines.runBlocking
 
 class MainActivity : ComponentActivity() {
 
-    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         runBlocking {
             SettingsManager.loadSettings(context = this@MainActivity)
         }
-
         super.onCreate(savedInstanceState)
-
         val isAudioAllowed: MutableState<Boolean> = mutableStateOf(isAudioAllowed())
-
         if (Build.VERSION.SDK_INT >= TIRAMISU) {
             requestPermission(isAudioAllowed = isAudioAllowed, READ_MEDIA_AUDIO)
         } else {
             requestPermission(isAudioAllowed = isAudioAllowed, READ_EXTERNAL_STORAGE)
         }
-
         setContent {
             val context: Context = LocalContext.current
-
             PlaybackController.initInstance(context = context)
-
             MP3Theme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    val scrollBehavior =
-                        TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
-                    val mainNavController = rememberNavController()
-                    val mediaNavController: NavHostController = rememberNavController()
-
-                    Scaffold(
-                        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-                        topBar = {
-                            MP3TopAppBar(
-                                scrollBehavior = scrollBehavior,
-                                mainNavController = mainNavController
-                            )
-                        },
-                        bottomBar = {
-                            MP3BottomAppBar(
-                                mainNavController = mainNavController,
-                                mediaNavController = mediaNavController
-                            )
-                        }
-                    ) { innerPadding ->
-                        Column(
-                            modifier = Modifier.padding(innerPadding)
-                        ) {
-                            MainRouter(
-                                mainNavController = mainNavController,
-                                mediaNavController = mediaNavController
-                            )
-                        }
-                    }
+                    Application()
                 }
             }
         }

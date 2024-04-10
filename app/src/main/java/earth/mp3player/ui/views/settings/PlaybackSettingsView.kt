@@ -31,9 +31,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import earth.mp3player.R
 import earth.mp3player.playback.services.settings.SettingsManager
 import earth.mp3player.ui.components.settings.SettingsSwitchList
+import earth.mp3player.ui.components.texts.Title
 import kotlinx.coroutines.runBlocking
 
 /**
@@ -68,6 +71,7 @@ fun PlaybackSettingsView(
     )
 
     Column(modifier = modifier) {
+        Title(text = stringResource(id = R.string.playback_settings))
         SettingsSwitchList(
             checkedMap = checkedMap,
             onCheckedChangeMap = onCheckedChangedMap

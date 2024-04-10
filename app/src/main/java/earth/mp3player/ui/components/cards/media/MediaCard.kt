@@ -191,7 +191,8 @@ fun CardPreview() {
         displayName = "Il avait les mots",
         duration = 2,
         size = 2,
-        relativePath = "relative path",
+        folder = Folder(title = "Folder"),
+        absolutePath = "absolute path",
         context = LocalContext.current
     )
     MediaCard(

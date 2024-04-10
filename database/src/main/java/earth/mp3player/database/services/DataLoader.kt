@@ -29,11 +29,8 @@ import android.content.Context
 import android.database.Cursor
 import android.net.Uri
 import android.provider.MediaStore
-import androidx.compose.runtime.MutableLongState
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
-import earth.mp3player.database.R
 import earth.mp3player.database.models.Album
 import earth.mp3player.database.models.Artist
 import earth.mp3player.database.models.Folder
@@ -48,7 +45,6 @@ import kotlinx.coroutines.launch
  */
 
 object DataLoader {
-    private const val FIRST_FOLDER_INDEX: Long = 1
     private val URI: Uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
 
     var isLoaded: Boolean = false
@@ -61,6 +57,7 @@ object DataLoader {
     private var musicDurationColumn: Int? = null
     private var musicSizeColumn: Int? = null
     private var relativePathColumn: Int? = null
+    private var absolutePathColumnId: Int? = null
 
     // Albums variables
     private var albumIdColumn: Int? = null
@@ -88,6 +85,7 @@ object DataLoader {
                 MediaStore.Audio.Media.DURATION,
                 MediaStore.Audio.Media.SIZE,
                 MediaStore.Audio.Media.RELATIVE_PATH,
+                MediaStore.Audio.Media.DATA,
 
                 //ALBUMS
                 MediaStore.Audio.Albums.ALBUM_ID,
@@ -104,10 +102,8 @@ object DataLoader {
 
             context.contentResolver.query(URI, projection, null, null)?.use {
                 loadColumns(cursor = it)
-                // TODO find a way to coroutine this and fix issue with recomposition with sorted map
-                val folderId: MutableLongState = mutableLongStateOf(FIRST_FOLDER_INDEX)
                 while (it.moveToNext()) {
-                    loadData(cursor = it, context = context, folderId = folderId)
+                    loadData(cursor = it, context = context)
                 }
             }
 
@@ -132,6 +128,9 @@ object DataLoader {
         musicSizeColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE)
         relativePathColumn =
             cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.RELATIVE_PATH)
+
+        absolutePathColumnId = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA)
+
 
         //Cache album columns indices
         try {
@@ -161,59 +160,58 @@ object DataLoader {
     /**
      * Load data from cursor
      */
-    private fun loadData(cursor: Cursor, context: Context, folderId: MutableLongState) {
+    private fun loadData(cursor: Cursor, context: Context) {
         var artist: Artist? = null
         var album: Album? = null
-        val music: Music
+        var genre: Genre? = null
 
         //Load album
-        if (albumIdColumn != null && albumNameColumn != null) {
-            album = loadAlbum(context = context, cursor = cursor)
-            DataManager.albumMap[album.title] = album
-        }
-
-        //Load music
         try {
-            music = loadMusic(context = context, cursor = cursor, album = album)
-            DataManager.musicMediaItemSortedMap[music] = music.mediaItem
-        } catch (_: IllegalAccessError) {
-            // No music found
-            if (album != null && album.musicSortedMap.isEmpty()) {
-                DataManager.albumMap.remove(album.title)
-            }
-            return // Continue the while loop
-        }
-
-        //Load Folder
-        loadFolders(context = context, music = music, folderId = folderId)
-
-        //Load Genre
-        try {
-            var genre: Genre = loadGenre(context = context, cursor = cursor)
-            DataManager.genreMap.putIfAbsent(genre.title, genre)
-            // The id is not the same for all same genre
-            genre = DataManager.genreMap[genre.title]!!
-            music.genre = genre
-            genre.addMusic(music)
+            album = loadAlbum(cursor = cursor)
         } catch (_: Exception) {
-            //No Genre
+            //No Album
         }
 
         //Load Artist
-        if (artistIdColumn != null && artistNameColumn != null) {
-            artist = loadArtist(context = context, cursor = cursor)
-            DataManager.artistMap.putIfAbsent(artist.title, artist)
-            //The id is not the same for all same artists
-            artist = DataManager.artistMap[artist.title]!!
-            artist.musicList.add(music)
-            artist.musicMediaItemSortedMap.putIfAbsent(music, music.mediaItem)
-            music.artist = artist
+        try {
+            artist = loadArtist(cursor = cursor)
+        } catch (_: Exception) {
+            //No artist
         }
 
         //Link album and artist if exists
         if (artist != null && album != null) {
             artist.addAlbum(album)
             album.artist = artist
+        }
+
+        //Load Genre
+        try {
+            genre = loadGenre(cursor = cursor)
+        } catch (_: Exception) {
+            //No genre
+        }
+
+        //Load Folder
+        val absolutePath: String = Uri.encode(cursor.getString(absolutePathColumnId!!))
+        val folder: Folder = loadFolder(absolutePath = absolutePath)
+
+        //Load music and folder inside load music function
+        try {
+            loadMusic(
+                context = context,
+                cursor = cursor,
+                album = album,
+                artist = artist,
+                folder = folder,
+                genre = genre,
+                absolutePath = absolutePath,
+            )
+        } catch (_: IllegalAccessError) {
+            // No music found
+            if (album != null && album.musicSortedMap.isEmpty()) {
+                DataManager.albumMap.remove(album.title)
+            }
         }
     }
 
@@ -224,9 +222,16 @@ object DataLoader {
      *
      * @return the created music
      */
-    private fun loadMusic(context: Context, cursor: Cursor, album: Album?): Music {
+    private fun loadMusic(
+        context: Context,
+        cursor: Cursor,
+        album: Album?,
+        artist: Artist?,
+        folder: Folder,
+        genre: Genre?,
+        absolutePath: String,
+    ): Music {
         // Get values of columns for a given music.
-        val relativePath: String = cursor.getString(relativePathColumn!!)
         val id: Long = cursor.getLong(musicIdColumn!!)
         if (id < 1) {
             throw IllegalArgumentException("The id is less than 1")
@@ -244,37 +249,37 @@ object DataLoader {
         if (title.isBlank()) {
             title = displayName
         }
+
         return Music(
             id = id,
             title = title,
-            relativePath = relativePath,
+            absolutePath = absolutePath,
             displayName = displayName,
             duration = duration,
             size = size,
             album = album,
+            artist = artist,
+            folder = folder,
+            genre = genre,
             context = context
         )
     }
 
     /**
-     * Load folders and sub-folders (create them if not exists) where the music is present
+     * Load folder (create it if not exists) where the music is present
      *
-     * @param music the music to add to the folder
+     * @param absolutePath the absolute path to create folder and sub-folders if not already created
      */
-    private fun loadFolders(
-        context: Context,
-        music: Music,
-        folderId: MutableLongState,
-    ) {
+    private fun loadFolder(absolutePath: String): Folder {
         val splitPath: MutableList<String> = mutableListOf()
-        Uri.decode(music.relativePath).split("/").forEach {
-            splitPath.add(Uri.encode(it))
-        }
-
-        val last: String = splitPath.last()
-        if (last.isBlank() || last == context.resources.getString(R.string.unknown)) {
-            //remove the blank folder
-            splitPath.removeLast()
+        val splitList: List<String> = Uri.decode(absolutePath).split("/")
+        for (index: Int in 0..<splitList.lastIndex) {
+            //Don't create a folder for the file (no folder called music.mp3)
+            //The last name is a file
+            val folderName: String = splitList[index]
+            if (folderName !in listOf("", "storage", "emulated")) {
+                splitPath.add(Uri.encode(folderName))
+            }
         }
 
         var rootFolder: Folder? = null
@@ -288,46 +293,43 @@ object DataLoader {
 
         if (rootFolder == null) {
             // No root folders in the list
-            rootFolder = Folder(
-                id = folderId.longValue,
-                title = splitPath[0],
-                context = context
-            )
-            DataManager.folderMap[folderId.longValue] = rootFolder!!
-            folderId.longValue++
+            rootFolder = Folder(title = splitPath[0])
+            DataManager.folderMap[rootFolder!!.id] = rootFolder!!
             DataManager.rootFolderMap[rootFolder!!.id] = rootFolder!!
         }
 
         splitPath.removeAt(0)
-        rootFolder!!.createSubFolders(
-            splitPath.toMutableList(),
-            folderId,
-            DataManager.folderMap
-        )
-        val subfolder = rootFolder!!.getSubFolder(splitPath.toMutableList())!!
-
-        subfolder.addMusic(music)
+        rootFolder!!.createSubFolders(splitPath.toMutableList())
+        return rootFolder!!.getSubFolder(splitPath.toMutableList())!!
     }
 
-    private fun loadAlbum(context: Context, cursor: Cursor): Album {
+    private fun loadAlbum(cursor: Cursor): Album {
         val id: Long = cursor.getLong(albumIdColumn!!)
         val name = Uri.encode(cursor.getString(albumNameColumn!!))
 
-        return Album(id = id, title = name, context = context)
+        val album = Album(id = id, title = name)
+        DataManager.albumMap[album.title] = album
+        return album
     }
 
-    private fun loadArtist(context: Context, cursor: Cursor): Artist {
+    private fun loadArtist(cursor: Cursor): Artist {
         // Get values of columns for a given artist.
         val id = cursor.getLong(artistIdColumn!!)
         val name = Uri.encode(cursor.getString(artistNameColumn!!))
 
-        return Artist(id = id, title = name, context = context)
+        val artist = Artist(id = id, title = name)
+        DataManager.artistMap.putIfAbsent(artist.title, artist)
+        //The id is not the same for all same artists
+        return DataManager.artistMap[artist.title]!!
     }
 
-    private fun loadGenre(context: Context, cursor: Cursor): Genre {
+    private fun loadGenre(cursor: Cursor): Genre {
         val id = cursor.getLong(genreIdColumn!!)
         val name = Uri.encode(cursor.getString(genreNameColumn!!))
 
-        return Genre(id = id, title = name, context = context)
+        val genre = Genre(id = id, title = name)
+        DataManager.genreMap.putIfAbsent(genre.title, genre)
+        // The id is not the same for all same genre
+        return DataManager.genreMap[genre.title]!!
     }
 }

@@ -30,74 +30,48 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.media.MediaMetadataRetriever
 import android.net.Uri
-import android.os.Environment
-import android.os.storage.StorageManager
-import android.os.storage.StorageVolume
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
-import androidx.core.content.getSystemService
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
+import earth.mp3player.database.services.DataManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.io.File
 
 /**
  * @author Antoine Pirlot on 27/03/2024
  */
 
-data class Music(
+class Music(
     override val id: Long,
     override var title: String,
     private var displayName: String,
+    val absolutePath: String,
     val duration: Long = 0,
     val size: Int = 0,
-    var relativePath: String,
-    var folder: Folder? = null,
+    var folder: Folder?,
     var artist: Artist? = null,
     var album: Album? = null,
     var genre: Genre? = null,
-    val context: Context,
+    context: Context,
 ) : Media {
-    var mediaItem: MediaItem
-    private var absolutePath: String = "$ROOT_PATH/$relativePath$displayName"
-    lateinit var uri: Uri
+    var uri: Uri = Uri.parse(absolutePath) // Must be init before media item
+    val mediaItem: MediaItem = getMediaMetadata()
     var artwork: ImageBitmap? = null
 
-    companion object {
-        val ROOT_PATH: String = Environment.getExternalStorageDirectory().path
-    }
-
     init {
-        val storageManager = context.getSystemService<StorageManager>()
-        val storageVolumes: List<StorageVolume> = storageManager!!.storageVolumes
-        for (volume in storageVolumes) {
-            absolutePath = "${volume.directory!!.path}/${relativePath}${displayName}"
-            if (!File(absolutePath).exists()) {
-                if (storageVolumes.last() == volume) {
-                    throw IllegalAccessException("This media doesn't exist")
-                }
-                continue
-            }
-            absolutePath = Uri.encode(absolutePath)
-            relativePath = "${volume.directory!!.path.split("/").last()}/$relativePath"
-
-            uri = Uri.parse(absolutePath)
-            break
-        }
-
-        if (album != null) {
-            album!!.addMusic(music = this)
-        }
-        mediaItem = getMediaMetadata()
+        DataManager.musicMediaItemSortedMap[this@Music] = mediaItem
+        album?.addMusic(music = this@Music)
+        artist?.addMusic(music = this@Music)
+        genre?.addMusic(music = this@Music)
+        folder?.addMusic(music = this@Music)
         loadAlbumArtwork(context = context)
 
         if (displayName != title) {
             displayName = Uri.encode(displayName)
         }
         title = Uri.encode(title)
-        relativePath = Uri.encode(relativePath)
     }
 
 
@@ -124,7 +98,6 @@ data class Music(
      */
     private fun loadAlbumArtwork(context: Context) {
         //Put it in Dispatchers.IO make the app not freezing while starting
-        val music: Music = this
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val mediaMetadataRetriever = MediaMetadataRetriever()
@@ -135,7 +108,7 @@ data class Music(
 
                 if (artwork != null) {
                     val bitmap: Bitmap = BitmapFactory.decodeByteArray(artwork, 0, artwork.size)
-                    music.artwork = bitmap.asImageBitmap()
+                    this@Music.artwork = bitmap.asImageBitmap()
                 }
             } catch (_: Exception) {
                 /* No artwork found*/

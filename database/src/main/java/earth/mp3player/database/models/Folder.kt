@@ -25,9 +25,8 @@
 
 package earth.mp3player.database.models
 
-import android.content.Context
-import androidx.compose.runtime.MutableLongState
 import androidx.media3.common.MediaItem
+import earth.mp3player.database.services.DataManager
 import java.util.SortedMap
 
 /**
@@ -35,13 +34,20 @@ import java.util.SortedMap
  */
 
 data class Folder(
-    override val id: Long,
+    override var id: Long = nextFolderId,
     override var title: String,
     var parentFolder: Folder? = null,
     private var subFolderList: SortedMap<Long, Folder> = sortedMapOf(),
     override var musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf(),
-    val context: Context,
 ) : Media {
+
+    companion object {
+        var nextFolderId: Long = 1
+    }
+
+    init {
+        nextFolderId++
+    }
 
     /**
      * Get the list of subfolder
@@ -62,9 +68,9 @@ data class Folder(
         return this.subFolderList as SortedMap<Long, Media>
     }
 
-    fun addMusic(musicData: Music) {
-        musicData.folder = this
-        this.musicMediaItemSortedMap[musicData] = musicData.mediaItem
+    fun addMusic(music: Music) {
+        music.folder = this
+        this.musicMediaItemSortedMap[music] = music.mediaItem
     }
 
     /**
@@ -73,13 +79,10 @@ data class Folder(
      * /!\ It's NOT this folder that contains Android, music and favorite folder side by side.
      * @param subFolderNameChainList : the relative path that contains the sub folders names
      *                                 It's a path not all the subfolder of this folder
-     * @param folderId : the next folder id
      *
      */
     fun createSubFolders(
         subFolderNameChainList: MutableList<String>,
-        folderId: MutableLongState,
-        folderMap: SortedMap<Long, Folder>
     ) {
         var parentFolder = this
         subFolderNameChainList.forEach { folderName: String ->
@@ -90,14 +93,8 @@ data class Folder(
                 }
             }
             if (subFolder == null) {
-                subFolder = Folder(
-                    context = context,
-                    id = folderId.longValue,
-                    title = folderName,
-                    parentFolder = parentFolder
-                )
-                folderMap[folderId.longValue] = subFolder
-                folderId.longValue++
+                subFolder = Folder(title = folderName, parentFolder = parentFolder)
+                DataManager.folderMap[subFolder.id] = subFolder
                 parentFolder.subFolderList[subFolder.id] = subFolder
             }
 

@@ -25,7 +25,6 @@
 
 package earth.mp3player.database.models
 
-import android.content.Context
 import androidx.media3.common.MediaItem
 import java.util.SortedMap
 
@@ -38,15 +37,8 @@ data class Album(
     override var title: String,
     var artist: Artist? = null,
     override val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf(),
-    val context: Context,
 ) : Media {
     val musicSortedMap: SortedMap<Long, Music> = sortedMapOf()
-
-    init {
-        musicMediaItemSortedMap.forEach { (music: Music, _: MediaItem) ->
-            musicSortedMap[music.id] = music
-        }
-    }
 
     /**
      * Add music to this album by adding music in musicMediaItemSortedMap

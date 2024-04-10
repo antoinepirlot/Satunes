@@ -28,13 +28,9 @@ package earth.mp3player.database.services
 import android.content.Context
 import android.database.Cursor
 import android.net.Uri
-import android.os.storage.StorageManager
-import android.os.storage.StorageVolume
 import android.provider.MediaStore
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.core.content.getSystemService
-import earth.mp3player.database.R
 import earth.mp3player.database.models.Album
 import earth.mp3player.database.models.Artist
 import earth.mp3player.database.models.Folder
@@ -43,7 +39,6 @@ import earth.mp3player.database.models.Music
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.io.File
 
 /**
  * @author Antoine Pirlot on 22/02/24
@@ -62,6 +57,7 @@ object DataLoader {
     private var musicDurationColumn: Int? = null
     private var musicSizeColumn: Int? = null
     private var relativePathColumn: Int? = null
+    private var absolutePathColumnId: Int? = null
 
     // Albums variables
     private var albumIdColumn: Int? = null
@@ -89,6 +85,7 @@ object DataLoader {
                 MediaStore.Audio.Media.DURATION,
                 MediaStore.Audio.Media.SIZE,
                 MediaStore.Audio.Media.RELATIVE_PATH,
+                MediaStore.Audio.Media.DATA,
 
                 //ALBUMS
                 MediaStore.Audio.Albums.ALBUM_ID,
@@ -131,6 +128,9 @@ object DataLoader {
         musicSizeColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE)
         relativePathColumn =
             cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.RELATIVE_PATH)
+
+        absolutePathColumnId = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA)
+
 
         //Cache album columns indices
         try {
@@ -193,12 +193,8 @@ object DataLoader {
         }
 
         //Load Folder
-        val displayName: String = cursor.getString(musicNameColumn!!)
-        val relativePath: String = cursor.getString(relativePathColumn!!) + displayName
-        val absolutePath: String =
-            Uri.encode(getAbsolutePath(context = context, relativePath = relativePath))
-
-        val folder: Folder = loadFolder(context = context, absolutePath = absolutePath)
+        val absolutePath: String = Uri.encode(cursor.getString(absolutePathColumnId!!))
+        val folder: Folder = loadFolder(absolutePath = absolutePath)
 
         //Load music and folder inside load music function
         try {
@@ -269,33 +265,12 @@ object DataLoader {
         )
     }
 
-    private fun getAbsolutePath(context: Context, relativePath: String): String {
-        var absolutePath = ""
-        val storageManager = context.getSystemService<StorageManager>()
-        val storageVolumes: List<StorageVolume> = storageManager!!.storageVolumes
-        for (volume in storageVolumes) {
-            absolutePath = "${volume.directory!!.path}/${relativePath}"
-            if (File(absolutePath).exists()) {
-                break
-            }
-            if (storageVolumes.last() == volume) {
-                throw IllegalAccessException("This media doesn't exist")
-            }
-        }
-        return absolutePath
-    }
-
     /**
      * Load folder (create it if not exists) where the music is present
      *
-     * @param cursor the cursor containing music informations
-     * @param context the context :p
-     * @param nextFolderId the next folder id
+     * @param absolutePath the absolute path to create folder and sub-folders if not already created
      */
-    private fun loadFolder(
-        context: Context,
-        absolutePath: String,
-    ): Folder {
+    private fun loadFolder(absolutePath: String): Folder {
         val splitPath: MutableList<String> = mutableListOf()
         val splitList: List<String> = Uri.decode(absolutePath).split("/")
         for (index: Int in 0..<splitList.lastIndex) {
@@ -308,11 +283,11 @@ object DataLoader {
         }
 
 
-        val last: String = splitPath.last()
-        if (last.isBlank() || last == context.resources.getString(R.string.unknown)) {
-            //remove the blank folder
-            splitPath.removeLast()
-        }
+//        val last: String = splitPath.last()
+//        if (last.isBlank() || last == context.resources.getString(R.string.unknown)) {
+//            //remove the blank folder
+//            splitPath.removeLast()
+//        }
 
         var rootFolder: Folder? = null
 

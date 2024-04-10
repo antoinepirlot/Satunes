@@ -44,7 +44,7 @@ Si l'application te plait et que tu as envie de me soutenir, n'hésite pas à le
 
 Améliorations, Optimisation et Résolution de problèmes:
 
-* Le chargement des données a été optimisé et beaucoup plus rapide.
+* Le chargement des données a été optimisé et est beaucoup plus rapide.
 * Tous les textes affichés dans Android Auto sont maintenant déchappés pour voir les bons
   caractères.
 

@@ -114,7 +114,7 @@ object SettingsManager {
             MenuTitle.FOLDERS -> {
                 context.dataStore.edit { preferences: MutablePreferences ->
                     foldersChecked.value = !foldersChecked.value
-                    preferences[FOLDERS_CHECKED_PREFERENCES_KEY] = !foldersChecked.value
+                    preferences[FOLDERS_CHECKED_PREFERENCES_KEY] = foldersChecked.value
                 }
             }
 

@@ -27,10 +27,17 @@ package earth.mp3player.ui.views.settings
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import earth.mp3player.R
+import earth.mp3player.ui.components.texts.Title
 
 /**
  * @author Antoine Pirlot on 02/03/24
@@ -42,6 +49,8 @@ fun SettingsView(
 ) {
     Box(modifier = modifier) {
         Column {
+            Title(text = stringResource(id = R.string.settings), fontSize = 40.sp)
+            Spacer(modifier.size(20.dp))
             BottomNavigationBarSettingsView()
             HorizontalDivider()
             PlaybackSettingsView()

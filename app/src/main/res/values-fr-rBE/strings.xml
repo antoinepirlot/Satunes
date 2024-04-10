@@ -16,4 +16,5 @@
     <string name="add">Ajouter</string>
     <string name="remove_from_playlist">Supprimer de la playlist</string>
     <string name="remove_playlist">Supprimer la playlist</string>
+    <string name="settings">Paramètres</string>
 </resources>

@@ -56,12 +56,6 @@ dependencies {
     implementation("androidx.media3:media3-ui:$media3Version")
 
     /**
-     * DataStore
-     */
-    val dataStoreVersion = "1.0.0"
-    implementation("androidx.datastore:datastore-preferences:$dataStoreVersion")
-
-    /**
      * Database
      */
     implementation(project(":database"))

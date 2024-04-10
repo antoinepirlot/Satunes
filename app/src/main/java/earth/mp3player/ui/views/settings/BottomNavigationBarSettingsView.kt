@@ -32,7 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import earth.mp3player.R
-import earth.mp3player.playback.services.settings.SettingsManager
+import earth.mp3player.database.services.settings.SettingsManager
 import earth.mp3player.ui.components.settings.SettingsSwitchList
 import earth.mp3player.ui.components.texts.Title
 

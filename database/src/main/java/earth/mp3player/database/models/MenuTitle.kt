@@ -2,7 +2,7 @@
  * This file is part of MP3 Player.
  *
  * MP3 Player is free software: you can redistribute it and/or modify it under
- *  the terms of the GNU General Public License as published by the Free Software Foundation,
+ * the terms of the GNU General Public License as published by the Free Software Foundation,
  * either version 3 of the License, or (at your option) any later version.
  *
  * MP3 Player is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -23,9 +23,9 @@
  * PS: I don't answer quickly.
  */
 
-package earth.mp3player.playback.models
+package earth.mp3player.database.models
 
-import earth.mp3player.playback.R
+import earth.mp3player.database.R
 
 /**
  * @author Antoine Pirlot on 03/02/24
@@ -34,7 +34,7 @@ import earth.mp3player.playback.R
 enum class MenuTitle(open val stringId: Int) {
     FOLDERS(stringId = R.string.folders),
     ARTISTS(stringId = R.string.artists),
-    MUSICS(stringId = R.string.tracks),
+    MUSICS(stringId = R.string.musics),
     ALBUMS(stringId = R.string.albums),
     GENRES(stringId = R.string.genres),
     PLAYLISTS(stringId = R.string.playlists)

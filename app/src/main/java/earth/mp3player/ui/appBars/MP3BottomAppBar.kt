@@ -39,8 +39,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import earth.mp3player.playback.models.MenuTitle
-import earth.mp3player.playback.services.settings.SettingsManager
+import earth.mp3player.database.models.MenuTitle
+import earth.mp3player.database.services.settings.SettingsManager
 import earth.mp3player.router.main.MainDestination
 import earth.mp3player.router.media.MediaDestination
 import earth.mp3player.ui.utils.getRightIconAndDescription

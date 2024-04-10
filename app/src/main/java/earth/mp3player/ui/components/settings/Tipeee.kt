@@ -26,41 +26,47 @@
 package earth.mp3player.ui.components.settings
 
 import android.content.Context
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import earth.mp3player.R
 import earth.mp3player.ui.components.settings.utils.openUrl
+import earth.mp3player.ui.utils.showToast
 
 /**
  * @author Antoine Pirlot on 10/04/2024
  */
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun Tipeee(
     modifier: Modifier = Modifier
 ) {
+    val haptics = LocalHapticFeedback.current
     val context: Context = LocalContext.current
     val tipeeeUrl: String = "https://fr.tipeee.com/antoinepirlot"
-    Row(modifier = modifier.fillMaxWidth()) {
-        Text(
-            modifier = Modifier.align(Alignment.CenterVertically),
-            text = stringResource(id = R.string.tipeee)
-        )
-        TextButton(onClick = { openUrl(context = context, url = tipeeeUrl) }) {
-            Text(
-                modifier = Modifier.align(Alignment.CenterVertically),
-                text = tipeeeUrl
-            )
-        }
-    }
+    Image(
+        modifier = modifier
+            .size(60.dp)
+            .combinedClickable(
+                onClick = { openUrl(context = context, url = tipeeeUrl) },
+                onLongClick = {
+                    haptics.performHapticFeedback(HapticFeedbackType.LongPress)
+                    showToast(context = context, message = tipeeeUrl)
+                }
+            ),
+        painter = painterResource(id = R.drawable.tipeee_logo),
+        contentDescription = "Tipeee Logo",
+    )
 }
 
 @Preview

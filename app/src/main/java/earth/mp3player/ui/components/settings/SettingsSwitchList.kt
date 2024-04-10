@@ -26,8 +26,7 @@
 package earth.mp3player.ui.components.settings
 
 import android.content.Context
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.ListItem
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -52,28 +51,31 @@ fun SettingsSwitchList(
     onCheckedChange: () -> Unit = {}
 ) {
     val context: Context = LocalContext.current
-    LazyColumn(
+    Column(
         modifier = modifier
     ) {
-        items(
-            items = checkedMap.keys.toList(),
-            key = { it.stringId }
-        ) { setting: Settings ->
-            ListItem(headlineContent = {
-                SettingWithSwitch(
-                    text = stringResource(id = setting.stringId),
-                    checked = checkedMap[setting]!!.value,
-                    onCheckedChange = {
-                        if (onCheckedChangeMap == null) {
-                            if (!runIfIsSwitchMenuTitles(context = context, setting = setting)) {
-                                onCheckedChange()
+        for (setting: Settings in checkedMap.keys.toList()) {
+            ListItem(
+                headlineContent = {
+                    SettingWithSwitch(
+                        text = stringResource(id = setting.stringId),
+                        checked = checkedMap[setting]!!.value,
+                        onCheckedChange = {
+                            if (onCheckedChangeMap == null) {
+                                if (!runIfIsSwitchMenuTitles(
+                                        context = context,
+                                        setting = setting
+                                    )
+                                ) {
+                                    onCheckedChange()
+                                }
+                            } else {
+                                onCheckedChangeMap[setting]!!()
                             }
-                        } else {
-                            onCheckedChangeMap[setting]!!()
                         }
-                    }
-                )
-            })
+                    )
+                }
+            )
         }
     }
 }

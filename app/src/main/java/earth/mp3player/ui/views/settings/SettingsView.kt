@@ -25,16 +25,14 @@
 
 package earth.mp3player.ui.views.settings
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import earth.mp3player.R
 import earth.mp3player.ui.components.texts.Title
@@ -47,10 +45,11 @@ import earth.mp3player.ui.components.texts.Title
 fun SettingsView(
     modifier: Modifier = Modifier
 ) {
-    Box(modifier = modifier) {
-        Column {
-            Title(text = stringResource(id = R.string.settings), fontSize = 40.sp)
-            Spacer(modifier.size(20.dp))
+    val scrollState = rememberScrollState()
+    Column(modifier = modifier) {
+        Title(text = stringResource(id = R.string.settings), fontSize = 40.sp)
+        HorizontalDivider()
+        Column(modifier = Modifier.verticalScroll(state = scrollState)) {
             BottomNavigationBarSettingsView()
             HorizontalDivider()
             PlaybackSettingsView()

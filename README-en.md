@@ -43,7 +43,7 @@ If you like the app and want to support me click [here](https://tipeee.com/antoi
 
 Improvements, Optimization and Troubleshooting:
 
-* Data loading has been optimized and much faster.
+* Data loading has been optimized and is much faster.
 * All text displayed in Android Auto is now escaped to see the correct characters.
 
 ### 0.7.2-beta

@@ -297,9 +297,13 @@ object DataLoader {
         absolutePath: String,
     ): Folder {
         val splitPath: MutableList<String> = mutableListOf()
-        Uri.decode(absolutePath).split("/").forEach {
-            if (it !in listOf("", "storage", "emulated")) {
-                splitPath.add(Uri.encode(it))
+        val splitList: List<String> = Uri.decode(absolutePath).split("/")
+        for (index: Int in 0..<splitList.lastIndex) {
+            //Don't create a folder for the file (no folder called music.mp3)
+            //The last name is a file
+            val folderName: String = splitList[index]
+            if (folderName !in listOf("", "storage", "emulated")) {
+                splitPath.add(Uri.encode(folderName))
             }
         }
 

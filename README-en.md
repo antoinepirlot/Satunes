@@ -39,6 +39,13 @@ If you like the app and want to support me click [here](https://tipeee.com/antoi
 
 ## 0.7 (Android 11 Red Velvet Cake and later)
 
+### 0.7.3-beta
+
+Improvements, Optimization and Troubleshooting:
+
+* Data loading has been optimized and much faster.
+* All text displayed in Android Auto is now escaped to see the correct characters.
+
 ### 0.7.2-beta
 
 Improvements, Optimization and Troubleshooting:

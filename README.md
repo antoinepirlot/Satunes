@@ -40,6 +40,14 @@ Si l'application te plait et que tu as envie de me soutenir, n'hésite pas à le
 
 ## 0.7 (Android 11 Red Velvet Cake et ultérieur)
 
+### 0.7.3-beta
+
+Améliorations, Optimisation et Résolution de problèmes:
+
+* Le chargement des données a été optimisé et beaucoup plus rapide.
+* Tous les textes affichés dans Android Auto sont maintenant déchappés pour voir les bons
+  caractères.
+
 ### 0.7.2-beta
 
 Améliorations, Optimisation et Résolution de problèmes:

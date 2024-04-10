@@ -27,6 +27,7 @@ package earth.mp3player.ui.views.settings
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -42,6 +43,7 @@ fun SettingsView(
     Box(modifier = modifier) {
         Column {
             BottomNavigationBarSettingsView()
+            HorizontalDivider()
             PlaybackSettingsView()
         }
     }

@@ -39,7 +39,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import earth.mp3player.router.main.MainRouter
-import earth.mp3player.ui.appBars.bottom.MP3BottomAppBar
+import earth.mp3player.ui.appBars.bottom.MainBottomAppBar
 
 /**
  * @author Antoine Pirlot on 10/04/2024
@@ -56,7 +56,7 @@ fun ApplicationScaffold(
     Scaffold(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         bottomBar = {
-            MP3BottomAppBar(
+            MainBottomAppBar(
                 mainNavController = mainNavController,
                 mediaNavController = mediaNavController
             )

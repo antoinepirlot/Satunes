@@ -52,7 +52,7 @@ import earth.mp3player.ui.views.MP3PlayerIcons
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MP3TopAppBar(
+fun MainTopAppBar(
     modifier: Modifier = Modifier,
     scrollBehavior: TopAppBarScrollBehavior,
     mainNavController: NavHostController,
@@ -95,11 +95,11 @@ fun MP3TopAppBar(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @Preview
-fun HomeTopAppBarPreview() {
+fun MainTopAppBarPreview() {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(
         rememberTopAppBarState()
     )
-    MP3TopAppBar(
+    MainTopAppBar(
         modifier = Modifier,
         scrollBehavior = scrollBehavior,
         mainNavController = rememberNavController(),

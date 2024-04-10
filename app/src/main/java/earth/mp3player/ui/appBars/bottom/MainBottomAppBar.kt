@@ -50,7 +50,7 @@ import earth.mp3player.ui.utils.getRightIconAndDescription
  */
 
 @Composable
-fun MP3BottomAppBar(
+fun MainBottomAppBar(
     modifier: Modifier = Modifier,
     mediaNavController: NavHostController,
     mainNavController: NavHostController,
@@ -172,8 +172,8 @@ private fun backToRoot(rootRoute: String, navController: NavHostController) {
 @SuppressLint("UnrememberedMutableState")
 @Preview
 @Composable
-fun MP3BottomAppBarPreview() {
-    MP3BottomAppBar(
+fun MainBottomAppBarPreview() {
+    MainBottomAppBar(
         mainNavController = rememberNavController(),
         mediaNavController = rememberNavController(),
     )

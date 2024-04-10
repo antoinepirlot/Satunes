@@ -71,9 +71,7 @@ fun PlaybackSettingsView(
     )
 
     Column(modifier = modifier) {
-        Title(
-            text = stringResource(id = R.string.playback_settings)
-        )
+        Title(text = stringResource(id = R.string.playback_settings))
         SettingsSwitchList(
             checkedMap = checkedMap,
             onCheckedChangeMap = onCheckedChangedMap

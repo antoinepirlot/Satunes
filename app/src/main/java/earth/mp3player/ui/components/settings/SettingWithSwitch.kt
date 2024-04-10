@@ -26,7 +26,7 @@
 package earth.mp3player.ui.components.settings
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Switch
@@ -48,17 +48,16 @@ fun SettingWithSwitch(
     onCheckedChange: () -> Unit
 ) {
     Row(
-        modifier = modifier.fillMaxWidth()
+        modifier = modifier
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(text = text)
-        Box(
-            contentAlignment = Alignment.CenterEnd
-        ) {
-            Switch(
-                checked = checked,
-                onCheckedChange = { onCheckedChange() }
-            )
-        }
+        Text(text = text, Modifier.align(Alignment.CenterVertically))
+        Switch(
+            modifier = Modifier.align(Alignment.CenterVertically),
+            checked = checked,
+            onCheckedChange = { onCheckedChange() }
+        )
     }
 }
 

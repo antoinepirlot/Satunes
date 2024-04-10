@@ -28,11 +28,12 @@ package earth.mp3player.database.services
 import android.content.Context
 import android.database.Cursor
 import android.net.Uri
+import android.os.storage.StorageManager
+import android.os.storage.StorageVolume
 import android.provider.MediaStore
-import androidx.compose.runtime.MutableLongState
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.core.content.getSystemService
 import earth.mp3player.database.R
 import earth.mp3player.database.models.Album
 import earth.mp3player.database.models.Artist
@@ -42,13 +43,13 @@ import earth.mp3player.database.models.Music
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.io.File
 
 /**
  * @author Antoine Pirlot on 22/02/24
  */
 
 object DataLoader {
-    private const val FIRST_FOLDER_INDEX: Long = 1
     private val URI: Uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
 
     var isLoaded: Boolean = false
@@ -104,9 +105,8 @@ object DataLoader {
 
             context.contentResolver.query(URI, projection, null, null)?.use {
                 loadColumns(cursor = it)
-                val nextFolderId: MutableLongState = mutableLongStateOf(FIRST_FOLDER_INDEX)
                 while (it.moveToNext()) {
-                    loadData(cursor = it, context = context, nextFolderId = nextFolderId)
+                    loadData(cursor = it, context = context)
                 }
             }
 
@@ -160,7 +160,7 @@ object DataLoader {
     /**
      * Load data from cursor
      */
-    private fun loadData(cursor: Cursor, context: Context, nextFolderId: MutableLongState) {
+    private fun loadData(cursor: Cursor, context: Context) {
         var artist: Artist? = null
         var album: Album? = null
         var genre: Genre? = null
@@ -193,10 +193,14 @@ object DataLoader {
         }
 
         //Load Folder
-        val folder: Folder =
-            loadFolder(cursor = cursor, context = context, nextFolderId = nextFolderId)
+        val displayName: String = cursor.getString(musicNameColumn!!)
+        val relativePath: String = cursor.getString(relativePathColumn!!) + displayName
+        val absolutePath: String =
+            Uri.encode(getAbsolutePath(context = context, relativePath = relativePath))
 
-        //Load music
+        val folder: Folder = loadFolder(context = context, absolutePath = absolutePath)
+
+        //Load music and folder inside load music function
         try {
             loadMusic(
                 context = context,
@@ -205,6 +209,7 @@ object DataLoader {
                 artist = artist,
                 folder = folder,
                 genre = genre,
+                absolutePath = absolutePath,
             )
         } catch (_: IllegalAccessError) {
             // No music found
@@ -212,7 +217,6 @@ object DataLoader {
                 DataManager.albumMap.remove(album.title)
             }
         }
-        println()
     }
 
     /**
@@ -229,9 +233,9 @@ object DataLoader {
         artist: Artist?,
         folder: Folder,
         genre: Genre?,
+        absolutePath: String,
     ): Music {
         // Get values of columns for a given music.
-        val relativePath: String = cursor.getString(relativePathColumn!!)
         val id: Long = cursor.getLong(musicIdColumn!!)
         if (id < 1) {
             throw IllegalArgumentException("The id is less than 1")
@@ -249,10 +253,11 @@ object DataLoader {
         if (title.isBlank()) {
             title = displayName
         }
+
         return Music(
             id = id,
             title = title,
-            relativePath = relativePath,
+            absolutePath = absolutePath,
             displayName = displayName,
             duration = duration,
             size = size,
@@ -264,6 +269,22 @@ object DataLoader {
         )
     }
 
+    private fun getAbsolutePath(context: Context, relativePath: String): String {
+        var absolutePath = ""
+        val storageManager = context.getSystemService<StorageManager>()
+        val storageVolumes: List<StorageVolume> = storageManager!!.storageVolumes
+        for (volume in storageVolumes) {
+            absolutePath = "${volume.directory!!.path}/${relativePath}"
+            if (!File(absolutePath).exists()) {
+                if (storageVolumes.last() == volume) {
+                    throw IllegalAccessException("This media doesn't exist")
+                }
+                continue
+            }
+        }
+        return absolutePath
+    }
+
     /**
      * Load folder (create it if not exists) where the music is present
      *
@@ -272,15 +293,16 @@ object DataLoader {
      * @param nextFolderId the next folder id
      */
     private fun loadFolder(
-        cursor: Cursor,
         context: Context,
-        nextFolderId: MutableLongState,
+        absolutePath: String,
     ): Folder {
-        val relativePath: String = cursor.getString(relativePathColumn!!)
         val splitPath: MutableList<String> = mutableListOf()
-        Uri.decode(relativePath).split("/").forEach {
-            splitPath.add(Uri.encode(it))
+        Uri.decode(absolutePath).split("/").forEach {
+            if (it !in listOf("", "storage", "emulated")) {
+                splitPath.add(Uri.encode(it))
+            }
         }
+
 
         val last: String = splitPath.last()
         if (last.isBlank() || last == context.resources.getString(R.string.unknown)) {
@@ -299,14 +321,13 @@ object DataLoader {
 
         if (rootFolder == null) {
             // No root folders in the list
-            rootFolder = Folder(id = nextFolderId.longValue, title = splitPath[0])
-            DataManager.folderMap[nextFolderId.longValue] = rootFolder!!
-            nextFolderId.longValue++
+            rootFolder = Folder(title = splitPath[0])
+            DataManager.folderMap[rootFolder!!.id] = rootFolder!!
             DataManager.rootFolderMap[rootFolder!!.id] = rootFolder!!
         }
 
         splitPath.removeAt(0)
-        rootFolder!!.createSubFolders(splitPath.toMutableList(), nextFolderId = nextFolderId)
+        rootFolder!!.createSubFolders(splitPath.toMutableList())
         return rootFolder!!.getSubFolder(splitPath.toMutableList())!!
     }
 

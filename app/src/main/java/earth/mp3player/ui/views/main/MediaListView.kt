@@ -34,6 +34,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import earth.mp3player.database.models.Folder
 import earth.mp3player.database.models.Media
 import earth.mp3player.database.models.Music
 import earth.mp3player.playback.services.playback.PlaybackController
@@ -89,7 +90,8 @@ fun MediaListViewPreview() {
                 displayName = "Musique",
                 duration = 0,
                 size = 0,
-                relativePath = "",
+                absolutePath = "",
+                folder = Folder(title = "Folder"),
                 context = LocalContext.current
             )
         )

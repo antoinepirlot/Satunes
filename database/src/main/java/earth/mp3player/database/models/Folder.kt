@@ -25,7 +25,6 @@
 
 package earth.mp3player.database.models
 
-import androidx.compose.runtime.MutableLongState
 import androidx.media3.common.MediaItem
 import earth.mp3player.database.services.DataManager
 import java.util.SortedMap
@@ -35,12 +34,20 @@ import java.util.SortedMap
  */
 
 data class Folder(
-    override val id: Long,
+    override var id: Long = nextFolderId,
     override var title: String,
     var parentFolder: Folder? = null,
     private var subFolderList: SortedMap<Long, Folder> = sortedMapOf(),
     override var musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf(),
 ) : Media {
+
+    companion object {
+        var nextFolderId: Long = 1
+    }
+
+    init {
+        nextFolderId++
+    }
 
     /**
      * Get the list of subfolder
@@ -72,12 +79,10 @@ data class Folder(
      * /!\ It's NOT this folder that contains Android, music and favorite folder side by side.
      * @param subFolderNameChainList : the relative path that contains the sub folders names
      *                                 It's a path not all the subfolder of this folder
-     * @param nextFolderId : the next folder id
      *
      */
     fun createSubFolders(
         subFolderNameChainList: MutableList<String>,
-        nextFolderId: MutableLongState,
     ) {
         var parentFolder = this
         subFolderNameChainList.forEach { folderName: String ->
@@ -88,13 +93,8 @@ data class Folder(
                 }
             }
             if (subFolder == null) {
-                subFolder = Folder(
-                    id = nextFolderId.longValue,
-                    title = folderName,
-                    parentFolder = parentFolder
-                )
-                DataManager.folderMap[nextFolderId.longValue] = subFolder
-                nextFolderId.longValue++
+                subFolder = Folder(title = folderName, parentFolder = parentFolder)
+                DataManager.folderMap[subFolder.id] = subFolder
                 parentFolder.subFolderList[subFolder.id] = subFolder
             }
 

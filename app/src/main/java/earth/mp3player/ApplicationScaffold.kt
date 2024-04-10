@@ -40,6 +40,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import earth.mp3player.router.main.MainRouter
 import earth.mp3player.ui.appBars.bottom.MainBottomAppBar
+import earth.mp3player.ui.appBars.top.SecondTopAppBar
 
 /**
  * @author Antoine Pirlot on 10/04/2024
@@ -55,6 +56,7 @@ fun ApplicationScaffold(
     val mediaNavController: NavHostController = rememberNavController()
     Scaffold(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        topBar = { SecondTopAppBar() },
         bottomBar = {
             MainBottomAppBar(
                 mainNavController = mainNavController,

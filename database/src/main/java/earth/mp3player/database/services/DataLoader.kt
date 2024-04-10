@@ -275,11 +275,11 @@ object DataLoader {
         val storageVolumes: List<StorageVolume> = storageManager!!.storageVolumes
         for (volume in storageVolumes) {
             absolutePath = "${volume.directory!!.path}/${relativePath}"
-            if (!File(absolutePath).exists()) {
-                if (storageVolumes.last() == volume) {
-                    throw IllegalAccessException("This media doesn't exist")
-                }
-                continue
+            if (File(absolutePath).exists()) {
+                break
+            }
+            if (storageVolumes.last() == volume) {
+                throw IllegalAccessException("This media doesn't exist")
             }
         }
         return absolutePath

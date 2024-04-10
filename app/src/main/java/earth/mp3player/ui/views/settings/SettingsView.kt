@@ -54,6 +54,8 @@ fun SettingsView(
             BottomNavigationBarSettingsView()
             HorizontalDivider()
             PlaybackSettingsView()
+            HorizontalDivider()
+            AboutView()
         }
     }
 }

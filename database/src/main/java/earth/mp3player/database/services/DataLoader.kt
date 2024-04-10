@@ -282,13 +282,6 @@ object DataLoader {
             }
         }
 
-
-//        val last: String = splitPath.last()
-//        if (last.isBlank() || last == context.resources.getString(R.string.unknown)) {
-//            //remove the blank folder
-//            splitPath.removeLast()
-//        }
-
         var rootFolder: Folder? = null
 
         DataManager.rootFolderMap.values.forEach { folder: Folder ->

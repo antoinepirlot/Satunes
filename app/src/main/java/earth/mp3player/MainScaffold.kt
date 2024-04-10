@@ -35,7 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
-import earth.mp3player.ui.appBars.MP3TopAppBar
+import earth.mp3player.ui.appBars.top.MP3TopAppBar
 
 /**
  * @author Antoine Pirlot on 10/04/2024

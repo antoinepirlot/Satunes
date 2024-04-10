@@ -94,6 +94,7 @@ data class Music(
                 genre?.addMusic(music = this@Music)
                 folder?.addMusic(music = this@Music)
                 loadAlbumArtwork(context = context)
+                break
             }
         }
 

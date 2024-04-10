@@ -25,6 +25,7 @@
 
 package earth.mp3player.car.playback
 
+import android.net.Uri.decode
 import android.os.Bundle
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.PlaybackStateCompat
@@ -78,10 +79,10 @@ object MP3CarPlaybackListener : PlaybackListener() {
         val musicPlaying: Music = playbackController.musicPlaying.value!!
         val metaData: MediaMetadataCompat = MediaMetadataCompat.Builder()
             .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, musicPlaying.id.toString())
-            .putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_TITLE, musicPlaying.title)
+            .putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_TITLE, decode(musicPlaying.title))
             .putString(
                 MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE,
-                musicPlaying.artist?.title
+                decode(musicPlaying.artist?.title)
             )
             .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, musicPlaying.duration)
             .build()

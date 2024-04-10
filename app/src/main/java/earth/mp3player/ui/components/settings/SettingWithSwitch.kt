@@ -48,11 +48,15 @@ fun SettingWithSwitch(
     onCheckedChange: () -> Unit
 ) {
     Row(
-        modifier = modifier
-            .fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(text = text, Modifier.align(Alignment.CenterVertically))
+        Text(
+            text = text,
+            Modifier
+                .align(Alignment.CenterVertically)
+                .fillMaxWidth(0.9f) // Fix the button to be outside the screen if text is long
+        )
         Switch(
             modifier = Modifier.align(Alignment.CenterVertically),
             checked = checked,

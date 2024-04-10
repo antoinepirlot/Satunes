@@ -23,7 +23,7 @@
  * PS: I don't answer quickly.
  */
 
-package earth.mp3player.ui.appBars.bottom
+package earth.mp3player.ui.appBars
 
 import android.annotation.SuppressLint
 import androidx.compose.material3.Icon
@@ -50,7 +50,7 @@ import earth.mp3player.ui.utils.getRightIconAndDescription
  */
 
 @Composable
-fun MainBottomAppBar(
+fun MP3BottomAppBar(
     modifier: Modifier = Modifier,
     mediaNavController: NavHostController,
     mainNavController: NavHostController,
@@ -173,7 +173,7 @@ private fun backToRoot(rootRoute: String, navController: NavHostController) {
 @Preview
 @Composable
 fun MainBottomAppBarPreview() {
-    MainBottomAppBar(
+    MP3BottomAppBar(
         mainNavController = rememberNavController(),
         mediaNavController = rememberNavController(),
     )

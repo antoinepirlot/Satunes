@@ -42,7 +42,6 @@ import earth.mp3player.database.models.Genre
 import earth.mp3player.database.models.relations.PlaylistWithMusics
 import earth.mp3player.database.services.DataLoader
 import earth.mp3player.database.services.DataManager
-import earth.mp3player.services.RoutersManager
 import earth.mp3player.ui.components.LoadingCircle
 import earth.mp3player.ui.views.PlayBackView
 import earth.mp3player.ui.views.main.album.AlbumView
@@ -71,11 +70,10 @@ internal fun MediaRouter(
     NavHost(
         modifier = modifier,
         navController = navController,
-        startDestination = RoutersManager.mediaStartDestination
+        startDestination = MediaDestination.FOLDERS.link
     ) {
         composable(MediaDestination.FOLDERS.link) {
             // /!\ This route prevent back gesture to exit the app
-            RoutersManager.mediaCurrentRoute.value = it.destination.route!!
             if (isLoading.value) {
                 LoadingCircle()
             } else {
@@ -84,7 +82,6 @@ internal fun MediaRouter(
         }
 
         composable("${MediaDestination.FOLDERS.link}/{id}") {
-            RoutersManager.mediaCurrentRoute.value = it.destination.route!!
             if (isLoading.value) {
                 LoadingCircle()
             } else {
@@ -95,7 +92,6 @@ internal fun MediaRouter(
         }
 
         composable(MediaDestination.ARTISTS.link) {
-            RoutersManager.mediaCurrentRoute.value = it.destination.route!!
             if (isLoading.value) {
                 LoadingCircle()
             } else {
@@ -104,7 +100,6 @@ internal fun MediaRouter(
         }
 
         composable("${MediaDestination.ARTISTS.link}/{name}") {
-            RoutersManager.mediaCurrentRoute.value = it.destination.route!!
             if (isLoading.value) {
                 LoadingCircle()
             } else {
@@ -115,7 +110,6 @@ internal fun MediaRouter(
         }
 
         composable(MediaDestination.ALBUMS.link) {
-            RoutersManager.mediaCurrentRoute.value = it.destination.route!!
             if (isLoading.value) {
                 LoadingCircle()
             } else {
@@ -124,7 +118,6 @@ internal fun MediaRouter(
         }
 
         composable("${MediaDestination.ALBUMS.link}/{id}") {
-            RoutersManager.mediaCurrentRoute.value = it.destination.route!!
             if (isLoading.value) {
                 LoadingCircle()
             } else {
@@ -135,7 +128,6 @@ internal fun MediaRouter(
         }
 
         composable(MediaDestination.GENRES.link) {
-            RoutersManager.mediaCurrentRoute.value = it.destination.route!!
             if (isLoading.value) {
                 LoadingCircle()
             } else {
@@ -144,7 +136,6 @@ internal fun MediaRouter(
         }
 
         composable("${MediaDestination.GENRES.link}/{name}") {
-            RoutersManager.mediaCurrentRoute.value = it.destination.route!!
             if (isLoading.value) {
                 LoadingCircle()
             } else {
@@ -155,7 +146,6 @@ internal fun MediaRouter(
         }
 
         composable(MediaDestination.PLAYLISTS.link) {
-            RoutersManager.mediaCurrentRoute.value = it.destination.route!!
             if (isLoading.value) {
                 LoadingCircle()
             } else {
@@ -164,7 +154,6 @@ internal fun MediaRouter(
         }
 
         composable("${MediaDestination.PLAYLISTS.link}/{id}") {
-            RoutersManager.mediaCurrentRoute.value = it.destination.route!!
             if (isLoading.value) {
                 LoadingCircle()
             } else {
@@ -177,7 +166,6 @@ internal fun MediaRouter(
         }
 
         composable(MediaDestination.MUSICS.link) {
-            RoutersManager.mediaCurrentRoute.value = it.destination.route!!
             if (isLoading.value) {
                 LoadingCircle()
             } else {
@@ -186,7 +174,6 @@ internal fun MediaRouter(
         }
 
         composable(MediaDestination.PLAYBACK.link) {
-            RoutersManager.mediaCurrentRoute.value = it.destination.route!!
             if (isLoading.value) {
                 LoadingCircle()
             } else {

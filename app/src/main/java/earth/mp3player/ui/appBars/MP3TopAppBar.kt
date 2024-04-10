@@ -23,7 +23,7 @@
  * PS: I don't answer quickly.
  */
 
-package earth.mp3player.ui.appBars.top
+package earth.mp3player.ui.appBars
 
 import android.annotation.SuppressLint
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -52,7 +52,7 @@ import earth.mp3player.ui.views.MP3PlayerIcons
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainTopAppBar(
+fun MP3TopAppBar(
     modifier: Modifier = Modifier,
     scrollBehavior: TopAppBarScrollBehavior,
     mainNavController: NavHostController,
@@ -99,7 +99,7 @@ fun MainTopAppBarPreview() {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(
         rememberTopAppBarState()
     )
-    MainTopAppBar(
+    MP3TopAppBar(
         modifier = Modifier,
         scrollBehavior = scrollBehavior,
         mainNavController = rememberNavController(),

@@ -25,6 +25,7 @@
 
 package earth.mp3player
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -34,8 +35,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import earth.mp3player.ui.appBars.top.MainTopAppBar
+import earth.mp3player.router.main.MainRouter
+import earth.mp3player.ui.appBars.MP3BottomAppBar
+import earth.mp3player.ui.appBars.MP3TopAppBar
 
 /**
  * @author Antoine Pirlot on 10/04/2024
@@ -43,31 +47,41 @@ import earth.mp3player.ui.appBars.top.MainTopAppBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScaffold(
+fun Application(
     modifier: Modifier = Modifier,
 ) {
     val scrollBehavior =
         TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
     val mainNavController = rememberNavController()
+    val mediaNavController: NavHostController = rememberNavController()
     Scaffold(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            MainTopAppBar(
+            MP3TopAppBar(
                 scrollBehavior = scrollBehavior,
                 mainNavController = mainNavController
             )
+        },
+        bottomBar = {
+            MP3BottomAppBar(
+                mainNavController = mainNavController,
+                mediaNavController = mediaNavController
+            )
         }
     ) { innerPadding ->
-        ApplicationScaffold(
-            modifier = modifier.padding(innerPadding),
-            scrollBehavior = scrollBehavior,
-            mainNavController = mainNavController,
-        )
+        Column(
+            modifier = Modifier.padding(innerPadding)
+        ) {
+            MainRouter(
+                mainNavController = mainNavController,
+                mediaNavController = mediaNavController
+            )
+        }
     }
 }
 
 @Preview
 @Composable
-fun MainScaffoldPreview() {
-    MainScaffold()
+fun ApplicationPreview() {
+    Application()
 }

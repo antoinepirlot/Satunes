@@ -20,4 +20,5 @@
     <string name="about_text">Tu peux cliquer sur les icones pour visiter mes différentes pages et me soutenir 🤗.\nSi tu veux faire un don, clique sur le bouton tipeee 😃.</string>
     <string name="about">A Propos</string>
     <string name="current_version">"Version installée: "</string>
+    <string name="check_update">Rechercher une mise à jour</string>
 </resources>

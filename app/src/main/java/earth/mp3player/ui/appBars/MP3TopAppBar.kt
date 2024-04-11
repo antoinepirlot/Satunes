@@ -45,7 +45,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import earth.mp3player.R
-import earth.mp3player.internet.UpdateManager
 import earth.mp3player.router.main.MainDestination
 import earth.mp3player.ui.views.MP3PlayerIcons
 
@@ -77,7 +76,6 @@ fun MP3TopAppBar(
             val context: Context = LocalContext.current
             IconButton(
                 onClick = {
-                    UpdateManager.checkUpdate(context = context)
                     when (mainNavController.currentBackStackEntry!!.destination.route!!) {
                         MainDestination.SETTINGS.link -> mainNavController.popBackStack()
                         MainDestination.ROOT.link -> mainNavController.navigate(MainDestination.SETTINGS.link)

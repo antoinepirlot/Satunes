@@ -21,4 +21,5 @@
     <string name="about">A Propos</string>
     <string name="version" translatable="false">Version</string>
     <string name="current_version">"Version installée: "</string>
+    <string name="check_update">Rechercher une mise à jour</string>
 </resources>

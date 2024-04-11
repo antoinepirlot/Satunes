@@ -41,17 +41,17 @@ import java.util.SortedMap
 
 object DataManager {
     val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
-    private val musicMapById: SortedMap<Long, Music> = sortedMapOf()
+    private val musicMapById: MutableMap<Long, Music> = mutableMapOf()
     val rootFolderMap: SortedMap<Long, Folder> = sortedMapOf()
     val folderMap: SortedMap<Long, Folder> = sortedMapOf()
     val artistMap: SortedMap<String, Artist> = sortedMapOf()
-    private val artistMapById: SortedMap<Long, Artist> = sortedMapOf()
+    private val artistMapById: MutableMap<Long, Artist> = mutableMapOf()
     val albumMap: SortedMap<String, Album> = sortedMapOf()
-    private val albumMapById: SortedMap<Long, Album> = sortedMapOf()
+    private val albumMapById: MutableMap<Long, Album> = mutableMapOf()
     val genreMap: SortedMap<String, Genre> = sortedMapOf()
-    private val genreMapById: SortedMap<Long, Genre> = sortedMapOf()
+    private val genreMapById: MutableMap<Long, Genre> = mutableMapOf()
     val playlistWithMusicsMap: SortedMap<String, PlaylistWithMusics> = sortedMapOf() //TODO Remove
-    private val playlistWithMusicsMapById: SortedMap<Long, PlaylistWithMusics> = sortedMapOf()
+    private val playlistWithMusicsMapById: MutableMap<Long, PlaylistWithMusics> = mutableMapOf()
 
     fun getMusic(musicId: Long): Music {
         return musicMapById[musicId]!!

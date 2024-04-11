@@ -50,6 +50,7 @@ import earth.mp3player.ui.components.music.AlbumArtwork
 fun AlbumGridCard(
     modifier: Modifier = Modifier,
     album: Album,
+    onClick: (album: Album?) -> Unit,
 ) {
     Box(
         modifier = modifier.size(250.dp),
@@ -62,7 +63,8 @@ fun AlbumGridCard(
                 modifier
                     .size(225.dp)
                     .align(Alignment.CenterHorizontally),
-                artwork = album.artwork
+                album = album,
+                onClick = onClick
             )
             Text(
                 modifier = Modifier.fillMaxWidth(),
@@ -77,5 +79,5 @@ fun AlbumGridCard(
 @Preview
 @Composable
 fun AlbumGridCardPreview() {
-    AlbumGridCard(album = Album(id = 1, title = "Album #1"))
+    AlbumGridCard(album = Album(id = 1, title = "Album #1"), onClick = {})
 }

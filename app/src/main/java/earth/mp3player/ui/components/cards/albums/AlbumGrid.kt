@@ -50,6 +50,7 @@ import earth.mp3player.ui.components.texts.Title
 fun AlbumGrid(
     modifier: Modifier = Modifier,
     mediaList: List<Album>,
+    onClick: (album: Album?) -> Unit,
 ) {
     Box {
         Column {
@@ -63,7 +64,7 @@ fun AlbumGrid(
                     items = mediaList,
                     key = { it.id }
                 ) { album: Album ->
-                    AlbumGridCard(album = album)
+                    AlbumGridCard(album = album, onClick = onClick)
                     Spacer(modifier = modifier.size(16.dp))
                 }
             }
@@ -78,5 +79,5 @@ fun AlbumGridPreview() {
     for (i: Int in 0..10) {
         albumList.add(Album(id = i.toLong(), title = "Album #$i"))
     }
-    AlbumGrid(mediaList = albumList)
+    AlbumGrid(mediaList = albumList, onClick = {})
 }

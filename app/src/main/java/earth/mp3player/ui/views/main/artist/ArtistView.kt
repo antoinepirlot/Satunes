@@ -64,7 +64,9 @@ fun ArtistView(
     resetOpenedPlaylist()
 
     Column {
-        AlbumGrid(mediaList = artist.albumSortedMap.values.toList())
+        AlbumGrid(
+            mediaList = artist.albumSortedMap.values.toList(),
+            onClick = { openMedia(navController = navController, media = it) })
         MediaListView(
             modifier = modifier,
             mediaMap = musicMap,

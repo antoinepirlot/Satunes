@@ -32,7 +32,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import earth.mp3player.R
@@ -47,19 +46,19 @@ import earth.mp3player.playback.services.playback.PlaybackController
 @Composable
 fun AlbumArtwork(
     modifier: Modifier = Modifier,
-    artwork: ImageBitmap? = null,
-    onClick: () -> Unit = { /* Do nothing by default */ }
+    album: Album? = null,
+    onClick: (album: Album?) -> Unit = { /* Do nothing by default */ }
 ) {
     Box(
         modifier = modifier
             .clickable {
-                onClick()
+                onClick(album)
             },
     ) {
-        if (artwork != null) {
+        if (album?.artwork != null) {
             Image(
                 modifier = modifier,
-                bitmap = artwork,
+                bitmap = album.artwork!!,
                 contentDescription = "Music Playing Album Artwork"
             )
         } else {
@@ -80,8 +79,8 @@ fun MusicPlayingAlbumArtwork(
     val musicPlaying: Music? by remember { PlaybackController.getInstance().musicPlaying }
     AlbumArtwork(
         modifier = modifier,
-        artwork = musicPlaying!!.artwork,
-        onClick = { onClick(musicPlaying!!.album) }
+        album = musicPlaying!!.album,
+        onClick = onClick
     )
 }
 

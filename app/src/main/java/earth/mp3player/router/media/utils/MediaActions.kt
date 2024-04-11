@@ -33,7 +33,7 @@ import earth.mp3player.database.models.Genre
 import earth.mp3player.database.models.Media
 import earth.mp3player.database.models.Music
 import earth.mp3player.database.models.relations.PlaylistWithMusics
-import earth.mp3player.playback.services.playback.PlaybackController
+import earth.mp3player.playback.services.PlaybackController
 import earth.mp3player.router.media.MediaDestination
 import earth.mp3player.services.PlaylistSelectionManager
 import earth.mp3player.ui.utils.getMusicListFromFolder

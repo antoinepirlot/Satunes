@@ -42,7 +42,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import earth.mp3player.database.models.Album
-import earth.mp3player.playback.services.playback.PlaybackController
+import earth.mp3player.playback.services.PlaybackController
 import earth.mp3player.ui.components.music.MusicPlayingAlbumArtwork
 import earth.mp3player.ui.components.music.bars.MusicControlBar
 

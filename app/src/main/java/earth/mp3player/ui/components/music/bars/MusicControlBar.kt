@@ -40,7 +40,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import earth.mp3player.playback.services.playback.PlaybackController
+import earth.mp3player.playback.services.PlaybackController
 import earth.mp3player.ui.components.music.buttons.NextMusicButton
 import earth.mp3player.ui.components.music.buttons.PreviousMusicButton
 import earth.mp3player.ui.components.music.buttons.RepeatMusicButton

@@ -4,7 +4,7 @@
     <application
         android:supportsRtl="true">
         <service
-            android:name="earth.mp3player.playback.services.playback.PlaybackService"
+            android:name="earth.mp3player.playback.services.PlaybackService"
             android:exported="true"
             android:foregroundServiceType="mediaPlayback">
             <intent-filter>

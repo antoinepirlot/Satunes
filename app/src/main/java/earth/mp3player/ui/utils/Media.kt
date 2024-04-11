@@ -31,7 +31,7 @@ import earth.mp3player.database.models.Folder
 import earth.mp3player.database.models.Media
 import earth.mp3player.database.models.MenuTitle
 import earth.mp3player.database.models.Music
-import earth.mp3player.playback.services.playback.PlaybackController
+import earth.mp3player.playback.services.PlaybackController
 import earth.mp3player.ui.views.MP3PlayerIcons.ALBUM
 import earth.mp3player.ui.views.MP3PlayerIcons.ARTIST
 import earth.mp3player.ui.views.MP3PlayerIcons.FOLDER

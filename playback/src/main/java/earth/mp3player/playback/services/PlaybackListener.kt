@@ -2,7 +2,7 @@
  * This file is part of MP3 Player.
  *
  * MP3 Player is free software: you can redistribute it and/or modify it under
- *  the terms of the GNU General Public License as published by the Free Software Foundation,
+ * the terms of the GNU General Public License as published by the Free Software Foundation,
  * either version 3 of the License, or (at your option) any later version.
  *
  * MP3 Player is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -23,7 +23,7 @@
  * PS: I don't answer quickly.
  */
 
-package earth.mp3player.playback.services.playback
+package earth.mp3player.playback.services
 
 import androidx.annotation.OptIn
 import androidx.media3.common.MediaItem

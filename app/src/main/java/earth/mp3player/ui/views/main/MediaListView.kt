@@ -37,7 +37,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import earth.mp3player.database.models.Folder
 import earth.mp3player.database.models.Media
 import earth.mp3player.database.models.Music
-import earth.mp3player.playback.services.playback.PlaybackController
+import earth.mp3player.playback.services.PlaybackController
 import earth.mp3player.ui.components.cards.media.MediaCardList
 import earth.mp3player.ui.components.music.bars.ShowCurrentMusicButton
 import earth.mp3player.ui.components.music.buttons.ShuffleAllButton

@@ -23,59 +23,41 @@
  * PS: I don't answer quickly.
  */
 
-package earth.mp3player.ui.components.texts
+package earth.mp3player.ui.views.main
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import earth.mp3player.database.models.Artist
+import earth.mp3player.database.models.Media
 
 /**
- * @author Antoine Pirlot on 10/04/2024
+ * @author Antoine Pirlot on 11/04/2024
  */
 
 @Composable
-fun Title(
+fun MediaView(
     modifier: Modifier = Modifier,
-    text: String,
-    fontSize: TextUnit = 40.sp,
-    textAlign: TextAlign = TextAlign.Center,
-    fontWeight: FontWeight = FontWeight.Bold
+    media: Media
 ) {
-    val align: Alignment =
-        when (textAlign) {
-            TextAlign.Center -> Alignment.Center
-            TextAlign.Right -> Alignment.CenterEnd
-            else -> Alignment.CenterStart
+    Column(modifier = modifier) {
+        Box(modifier = Modifier.padding(60.dp)) {
+            //TODO show a pannel with the media icon and title
         }
-    val textStyle = TextStyle(
-        fontWeight = fontWeight,
-        textAlign = textAlign,
-        fontSize = fontSize
-    )
-    Box(modifier = modifier.fillMaxWidth()) {
-        Text(
-            text = text,
-            modifier = Modifier
-                .align(align)
-                .padding(bottom = 16.dp),
-            style = textStyle,
-        )
+        //Here if it is an artist show albums as grid
+        if (media is Artist) {
+
+        }
+        //Here it is the list of music
     }
 }
 
 @Preview
 @Composable
-fun TitlePreview() {
-    Title(text = "Hello World!")
+fun MediaViewPreview() {
+    MediaView(media = Artist(id = 0, title = "Artist"))
 }

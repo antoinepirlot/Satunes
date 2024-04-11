@@ -109,6 +109,9 @@ class Music(
                 if (artwork != null) {
                     val bitmap: Bitmap = BitmapFactory.decodeByteArray(artwork, 0, artwork.size)
                     this@Music.artwork = bitmap.asImageBitmap()
+                    if (this@Music.album != null && this@Music.album!!.artwork == null) {
+                        this@Music.album!!.artwork = this@Music.artwork
+                    }
                 }
             } catch (_: Exception) {
                 /* No artwork found*/

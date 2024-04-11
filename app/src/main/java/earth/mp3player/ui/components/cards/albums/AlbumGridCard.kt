@@ -23,59 +23,62 @@
  * PS: I don't answer quickly.
  */
 
-package earth.mp3player.ui.components.texts
+package earth.mp3player.ui.components.cards.albums
 
+import android.net.Uri.decode
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import earth.mp3player.database.models.Album
+import earth.mp3player.ui.components.music.AlbumArtwork
 
 /**
- * @author Antoine Pirlot on 10/04/2024
+ * @author Antoine Pirlot on 11/04/2024
  */
 
 @Composable
-fun Title(
+fun AlbumGridCard(
     modifier: Modifier = Modifier,
-    text: String,
-    fontSize: TextUnit = 40.sp,
-    textAlign: TextAlign = TextAlign.Center,
-    fontWeight: FontWeight = FontWeight.Bold
+    album: Album,
+    onClick: (album: Album?) -> Unit,
 ) {
-    val align: Alignment =
-        when (textAlign) {
-            TextAlign.Center -> Alignment.Center
-            TextAlign.Right -> Alignment.CenterEnd
-            else -> Alignment.CenterStart
+    Box(
+        modifier = modifier.size(250.dp),
+    ) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
+            AlbumArtwork(
+                modifier
+                    .size(225.dp)
+                    .align(Alignment.CenterHorizontally),
+                album = album,
+                onClick = onClick
+            )
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                fontSize = 20.sp,
+                textAlign = TextAlign.Center,
+                text = decode(album.title)
+            )
         }
-    val textStyle = TextStyle(
-        fontWeight = fontWeight,
-        textAlign = textAlign,
-        fontSize = fontSize
-    )
-    Box(modifier = modifier.fillMaxWidth()) {
-        Text(
-            text = text,
-            modifier = Modifier
-                .align(align)
-                .padding(bottom = 16.dp),
-            style = textStyle,
-        )
     }
 }
 
 @Preview
 @Composable
-fun TitlePreview() {
-    Title(text = "Hello World!")
+fun AlbumGridCardPreview() {
+    AlbumGridCard(album = Album(id = 1, title = "Album #1"), onClick = {})
 }

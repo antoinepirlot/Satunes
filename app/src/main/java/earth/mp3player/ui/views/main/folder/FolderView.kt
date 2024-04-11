@@ -25,10 +25,13 @@
 
 package earth.mp3player.ui.views.main.folder
 
+import android.net.Uri.decode
+import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.sp
 import androidx.media3.common.MediaItem
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -40,7 +43,9 @@ import earth.mp3player.router.media.utils.openCurrentMusic
 import earth.mp3player.router.media.utils.openMedia
 import earth.mp3player.router.media.utils.openMediaFromFolder
 import earth.mp3player.router.media.utils.resetOpenedPlaylist
+import earth.mp3player.ui.components.texts.Title
 import earth.mp3player.ui.views.main.MediaListView
+import earth.mp3player.ui.views.main.utils.getRootFolderName
 import java.util.SortedMap
 
 /**
@@ -68,24 +73,38 @@ fun FolderView(
     }
 
     resetOpenedPlaylist()
-    MediaListView(
-        modifier = modifier,
-        mediaMap = mapToShow,
+    Column(modifier = modifier) {
+        if (folder.parentFolder == null) {
+            Title(text = '/' + getRootFolderName(title = folder.title))
+        } else {
+            val allPath: MutableList<String> = folder.absolutePath.split("/").toMutableList()
+            allPath.removeFirst()
+            allPath[0] = getRootFolderName(title = allPath[0])
+            var path: String = ""
+            for (s: String in allPath) {
+                path += "/${decode(s)}"
+            }
+            Title(text = path, fontSize = 20.sp)
+        }
 
-        openMedia = { clickedMedia: Media ->
-            openMediaFromFolder(navController, clickedMedia)
-        },
+        MediaListView(
+            mediaMap = mapToShow,
 
-        shuffleMusicAction = {
-            playbackController.loadMusic(
-                musicMediaItemSortedMap = folder.getAllMusic(),
-                shuffleMode = true
-            )
-            openMedia(navController = navController)
-        },
+            openMedia = { clickedMedia: Media ->
+                openMediaFromFolder(navController, clickedMedia)
+            },
 
-        onFABClick = { openCurrentMusic(navController) }
-    )
+            shuffleMusicAction = {
+                playbackController.loadMusic(
+                    musicMediaItemSortedMap = folder.getAllMusic(),
+                    shuffleMode = true
+                )
+                openMedia(navController = navController)
+            },
+
+            onFABClick = { openCurrentMusic(navController) }
+        )
+    }
 }
 
 @Preview

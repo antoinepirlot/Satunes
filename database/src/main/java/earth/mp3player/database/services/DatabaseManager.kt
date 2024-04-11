@@ -27,7 +27,6 @@ package earth.mp3player.database.services
 
 import android.content.Context
 import android.database.sqlite.SQLiteConstraintException
-import android.net.Uri.encode
 import earth.mp3player.database.MP3PlayerDatabase
 import earth.mp3player.database.daos.MusicDAO
 import earth.mp3player.database.daos.MusicsPlaylistsRelDAO
@@ -88,7 +87,6 @@ class DatabaseManager(context: Context) {
     }
 
     fun insertOne(playlist: Playlist) {
-        playlist.title = encode(playlist.title)
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 playlist.id = playlistDao.insertOne(playlist = playlist)

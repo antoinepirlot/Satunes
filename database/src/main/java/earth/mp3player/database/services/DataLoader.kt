@@ -211,7 +211,7 @@ object DataLoader {
         } catch (_: IllegalAccessError) {
             // No music found
             if (album != null && album.musicSortedMap.isEmpty()) {
-                DataManager.albumMap.remove(album.title)
+                DataManager.removeAlbum(album = album)
             }
         }
     }
@@ -295,8 +295,7 @@ object DataLoader {
         if (rootFolder == null) {
             // No root folders in the list
             rootFolder = Folder(title = splitPath[0])
-            DataManager.folderMap[rootFolder!!.id] = rootFolder!!
-            DataManager.rootFolderMap[rootFolder!!.id] = rootFolder!!
+            DataManager.addFolder(folder = rootFolder!!)
         }
 
         splitPath.removeAt(0)
@@ -309,8 +308,8 @@ object DataLoader {
         val name = Uri.encode(cursor.getString(albumNameColumn!!))
 
         val album = Album(id = id, title = name)
-        DataManager.albumMap[album.title] = album
-        return album
+        DataManager.addAlbum(album = album)
+        return DataManager.getAlbum(albumId = album.id)
     }
 
     private fun loadArtist(cursor: Cursor): Artist {
@@ -319,9 +318,9 @@ object DataLoader {
         val name = Uri.encode(cursor.getString(artistNameColumn!!))
 
         val artist = Artist(id = id, title = name)
-        DataManager.artistMap.putIfAbsent(artist.title, artist)
+        DataManager.addArtist(artist = artist)
         //The id is not the same for all same artists
-        return DataManager.artistMap[artist.title]!!
+        return DataManager.getArtist(artistId = artist.id)
     }
 
     private fun loadGenre(cursor: Cursor): Genre {
@@ -329,8 +328,8 @@ object DataLoader {
         val name = Uri.encode(cursor.getString(genreNameColumn!!))
 
         val genre = Genre(id = id, title = name)
-        DataManager.genreMap.putIfAbsent(genre.title, genre)
+        DataManager.addGenre(genre = genre)
         // The id is not the same for all same genre
-        return DataManager.genreMap[genre.title]!!
+        return DataManager.getGenre(genreId = genre.id)
     }
 }

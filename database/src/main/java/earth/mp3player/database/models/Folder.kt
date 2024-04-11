@@ -100,7 +100,7 @@ data class Folder(
             }
             if (subFolder == null) {
                 subFolder = Folder(title = folderName, parentFolder = parentFolder)
-                DataManager.folderMap[subFolder.id] = subFolder
+                DataManager.addFolder(folder = subFolder)
                 parentFolder.subFolderList[subFolder.id] = subFolder
             }
 

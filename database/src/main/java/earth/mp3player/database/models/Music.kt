@@ -30,6 +30,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.media.MediaMetadataRetriever
 import android.net.Uri
+import android.net.Uri.decode
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.media3.common.MediaItem
@@ -67,20 +68,15 @@ class Music(
         genre?.addMusic(music = this@Music)
         folder?.addMusic(music = this@Music)
         loadAlbumArtwork(context = context)
-
-        if (displayName != title) {
-            displayName = Uri.encode(displayName)
-        }
-        title = Uri.encode(title)
     }
 
 
     private fun getMediaMetadata(): MediaItem {
         val mediaMetaData: MediaMetadata = MediaMetadata.Builder()
-            .setArtist(if (artist != null) artist!!.title else null)
-            .setTitle(title)
-            .setGenre(if (genre != null) genre!!.title else null)
-            .setAlbumTitle(if (album != null) album!!.title else null)
+            .setArtist(if (artist != null) decode(artist!!.title) else null)
+            .setTitle(decode(title))
+            .setGenre(if (genre != null) decode(genre!!.title) else null)
+            .setAlbumTitle(if (album != null) decode(album!!.title) else null)
             .build()
         return MediaItem.Builder()
             .setMediaId(id.toString())

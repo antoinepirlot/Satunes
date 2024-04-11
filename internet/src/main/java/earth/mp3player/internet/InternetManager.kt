@@ -54,8 +54,4 @@ internal class InternetManager(context: Context) {
                 )
 
     }
-
-    internal fun checkUpdate() {
-
-    }
 }

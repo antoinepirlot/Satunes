@@ -58,7 +58,7 @@ object UpdateManager {
         try {
             CoroutineScope(Dispatchers.IO).launch {
                 val url = "https://github.com/antoinepirlot/MP3-Player/releases"
-                val httpClient: OkHttpClient = OkHttpClient()
+                val httpClient = OkHttpClient()
                 val req: Request = Request.Builder()
                     .url(url)
                     .build()

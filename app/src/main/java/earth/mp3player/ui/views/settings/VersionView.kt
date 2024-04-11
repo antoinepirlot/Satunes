@@ -49,10 +49,11 @@ fun VersionView(
 ) {
     val context: Context = LocalContext.current
     val currentVersion = getCurrentVersion(context = context)
+    UpdateManager.checkUpdate(context = context)
     Column(modifier = modifier.padding(16.dp)) {
         Title(text = stringResource(id = R.string.version))
         Text(text = stringResource(id = R.string.current_version) + currentVersion)
-        if (isUpdateAvailable(context = context)) {
+        if (UpdateManager.updateAvailable.value) {
             Text(text = stringResource(id = R.string.update_available))
         } else {
             Text(text = stringResource(id = R.string.no_update))
@@ -62,13 +63,6 @@ fun VersionView(
 
 private fun getCurrentVersion(context: Context): String {
     return context.packageManager.getPackageInfo(context.packageName, 0).versionName
-}
-
-private fun isUpdateAvailable(context: Context): Boolean {
-    return when (UpdateManager.checkUpdate(context = context)) {
-        1 -> true
-        else -> false
-    }
 }
 
 @Preview

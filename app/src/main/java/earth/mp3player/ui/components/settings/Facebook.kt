@@ -23,51 +23,28 @@
  * PS: I don't answer quickly.
  */
 
-package earth.mp3player.ui.components.texts
+package earth.mp3player.ui.components.settings
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.TextUnit
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import earth.mp3player.R
+import earth.mp3player.ui.components.images.ImageWithLink
 
 /**
- * @author Antoine Pirlot on 10/04/2024
+ * @author Antoine Pirlot on 11/04/2024
  */
 
 @Composable
-fun Title(
-    modifier: Modifier = Modifier,
-    text: String,
-    fontSize: TextUnit = 20.sp
+fun Facebook(
+    modifier: Modifier = Modifier
 ) {
-    val textStyle = TextStyle(
-        fontWeight = FontWeight.Bold,
-        textAlign = TextAlign.Center,
-        fontSize = fontSize
-    )
-    Box(modifier = modifier.fillMaxWidth()) {
-        Text(
-            text = text,
-            modifier = Modifier
-                .align(Alignment.Center)
-                .padding(bottom = 16.dp),
-            style = textStyle,
-        )
-    }
+    val facebookUrl = "https://www.facebook.com/profile.php?id=61557929940182"
+    ImageWithLink(modifier = modifier, url = facebookUrl, painterId = R.drawable.facebook_logo)
 }
 
 @Preview
 @Composable
-fun TitlePreview() {
-    Title(text = "Hello World!")
+fun FacebookPreview() {
+    Facebook()
 }

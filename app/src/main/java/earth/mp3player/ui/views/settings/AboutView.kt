@@ -23,51 +23,53 @@
  * PS: I don't answer quickly.
  */
 
-package earth.mp3player.ui.components.texts
+package earth.mp3player.ui.views.settings
 
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import earth.mp3player.R
+import earth.mp3player.ui.components.settings.Facebook
+import earth.mp3player.ui.components.settings.GitHub
+import earth.mp3player.ui.components.settings.Tipeee
+import earth.mp3player.ui.components.texts.Title
 
 /**
  * @author Antoine Pirlot on 10/04/2024
  */
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun Title(
-    modifier: Modifier = Modifier,
-    text: String,
-    fontSize: TextUnit = 20.sp
+fun AboutView(
+    modifier: Modifier = Modifier
 ) {
-    val textStyle = TextStyle(
-        fontWeight = FontWeight.Bold,
-        textAlign = TextAlign.Center,
-        fontSize = fontSize
-    )
-    Box(modifier = modifier.fillMaxWidth()) {
+    Column(modifier.padding(16.dp)) {
+        Title(text = stringResource(id = R.string.about))
         Text(
-            text = text,
-            modifier = Modifier
-                .align(Alignment.Center)
-                .padding(bottom = 16.dp),
-            style = textStyle,
+            text = stringResource(id = R.string.about_text)
         )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Tipeee()
+            Facebook()
+            GitHub()
+        }
     }
 }
 
 @Preview
 @Composable
-fun TitlePreview() {
-    Title(text = "Hello World!")
+fun AboutViewPreview() {
+    AboutView()
 }

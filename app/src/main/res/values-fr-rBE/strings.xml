@@ -17,4 +17,6 @@
     <string name="remove_from_playlist">Supprimer de la playlist</string>
     <string name="remove_playlist">Supprimer la playlist</string>
     <string name="settings">Paramètres</string>
+    <string name="about_text">Tu peux cliquer sur les icones pour visiter mes différentes pages et me soutenir 🤗.\nSi tu veux faire un don, clique sur le bouton tipeee 😃.</string>
+    <string name="about">A Propos</string>
 </resources>

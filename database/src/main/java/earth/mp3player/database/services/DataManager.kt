@@ -50,7 +50,7 @@ object DataManager {
     private val albumMapById: SortedMap<Long, Album> = sortedMapOf()
     val genreMap: SortedMap<String, Genre> = sortedMapOf()
     private val genreMapById: SortedMap<Long, Genre> = sortedMapOf()
-    val playlistWithMusicsMap: SortedMap<String, PlaylistWithMusics> = sortedMapOf()
+    val playlistWithMusicsMap: SortedMap<String, PlaylistWithMusics> = sortedMapOf() //TODO Remove
     private val playlistWithMusicsMapById: SortedMap<Long, PlaylistWithMusics> = sortedMapOf()
 
     fun getMusic(musicId: Long): Music {
@@ -82,9 +82,12 @@ object DataManager {
         return artistMap[artistName]!!
     }
 
-    fun addArtist(artist: Artist) {
+    fun addArtist(artist: Artist): Artist {
         artistMap.putIfAbsent(artist.title, artist)
-        artistMapById.putIfAbsent(artist.id, artist)
+        //You can have multiple same artist's name but different id, but it's the same artist.
+        val artistToReturn: Artist = artistMap[artist.title]!!
+        artistMapById.putIfAbsent(artistToReturn.id, artist)
+        return artistToReturn
     }
 
     fun getAlbum(albumId: Long): Album {
@@ -120,9 +123,12 @@ object DataManager {
         return genreMap[genreName]!!
     }
 
-    fun addGenre(genre: Genre) {
+    fun addGenre(genre: Genre): Genre {
         genreMap.putIfAbsent(genre.title, genre)
-        genreMapById.putIfAbsent(genre.id, genre)
+        //You can have multiple same genre's name but different id, but it's the same genre.
+        val genreToReturn: Genre = genreMap[genre.title]!!
+        genreMapById.putIfAbsent(genreToReturn.id, genre)
+        return genreToReturn
     }
 
     fun getPlaylist(playlistId: Long): PlaylistWithMusics {

@@ -309,7 +309,7 @@ object DataLoader {
 
         val album = Album(id = id, title = name)
         DataManager.addAlbum(album = album)
-        return DataManager.getAlbum(albumId = album.id)
+        return album
     }
 
     private fun loadArtist(cursor: Cursor): Artist {
@@ -318,9 +318,7 @@ object DataLoader {
         val name = Uri.encode(cursor.getString(artistNameColumn!!))
 
         val artist = Artist(id = id, title = name)
-        DataManager.addArtist(artist = artist)
-        //The id is not the same for all same artists
-        return DataManager.getArtist(artistId = artist.id)
+        return DataManager.addArtist(artist = artist)
     }
 
     private fun loadGenre(cursor: Cursor): Genre {
@@ -328,8 +326,6 @@ object DataLoader {
         val name = Uri.encode(cursor.getString(genreNameColumn!!))
 
         val genre = Genre(id = id, title = name)
-        DataManager.addGenre(genre = genre)
-        // The id is not the same for all same genre
-        return DataManager.getGenre(genreId = genre.id)
+        return DataManager.addGenre(genre = genre)
     }
 }

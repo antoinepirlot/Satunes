@@ -26,6 +26,7 @@
 package earth.mp3player.ui.views.main.playlist
 
 import android.content.Context
+import android.net.Uri.encode
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -81,7 +82,7 @@ fun PlaylistListView(
             openAlertDialog -> {
                 PlaylistCreationForm(
                     onConfirm = { playlistTitle: String ->
-                        val playlist = Playlist(id = 0, title = playlistTitle)
+                        val playlist = Playlist(id = 0, title = encode(playlistTitle))
                         DatabaseManager(context = context).insertOne(playlist = playlist)
                         openAlertDialog = false
                     },

@@ -62,7 +62,7 @@ class Music(
     var artwork: ImageBitmap? = null
 
     init {
-        DataManager.musicMediaItemSortedMap[this@Music] = mediaItem
+        DataManager.addMusic(music = this)
         album?.addMusic(music = this@Music)
         artist?.addMusic(music = this@Music)
         genre?.addMusic(music = this@Music)

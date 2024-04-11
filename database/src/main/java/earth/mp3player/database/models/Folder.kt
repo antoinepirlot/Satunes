@@ -34,7 +34,7 @@ import java.util.SortedMap
  */
 
 data class Folder(
-    override var id: Long = nextFolderId,
+    override var id: Long = nextId,
     override var title: String,
     var parentFolder: Folder? = null,
     private var subFolderList: SortedMap<Long, Folder> = sortedMapOf(),
@@ -48,11 +48,11 @@ data class Folder(
     }
 
     companion object {
-        var nextFolderId: Long = 1
+        var nextId: Long = 1
     }
 
     init {
-        nextFolderId++
+        nextId++
     }
 
     /**
@@ -100,7 +100,7 @@ data class Folder(
             }
             if (subFolder == null) {
                 subFolder = Folder(title = folderName, parentFolder = parentFolder)
-                DataManager.folderMap[subFolder.id] = subFolder
+                DataManager.addFolder(folder = subFolder)
                 parentFolder.subFolderList[subFolder.id] = subFolder
             }
 

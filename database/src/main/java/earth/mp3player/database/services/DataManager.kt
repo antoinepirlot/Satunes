@@ -32,6 +32,7 @@ import earth.mp3player.database.models.Folder
 import earth.mp3player.database.models.Genre
 import earth.mp3player.database.models.Music
 import earth.mp3player.database.models.relations.PlaylistWithMusics
+import earth.mp3player.database.models.tables.Playlist
 import java.util.SortedMap
 
 /**
@@ -40,15 +41,20 @@ import java.util.SortedMap
 
 object DataManager {
     val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
+    private val musicMapById: MutableMap<Long, Music> = mutableMapOf()
     val rootFolderMap: SortedMap<Long, Folder> = sortedMapOf()
     val folderMap: SortedMap<Long, Folder> = sortedMapOf()
     val artistMap: SortedMap<String, Artist> = sortedMapOf()
+    private val artistMapById: MutableMap<Long, Artist> = mutableMapOf()
     val albumMap: SortedMap<String, Album> = sortedMapOf()
+    private val albumMapById: MutableMap<Long, Album> = mutableMapOf()
     val genreMap: SortedMap<String, Genre> = sortedMapOf()
-    val playlistWithMusicsMap: SortedMap<String, PlaylistWithMusics> = sortedMapOf()
+    private val genreMapById: MutableMap<Long, Genre> = mutableMapOf()
+    val playlistWithMusicsMap: SortedMap<String, PlaylistWithMusics> = sortedMapOf() //TODO Remove
+    private val playlistWithMusicsMapById: MutableMap<Long, PlaylistWithMusics> = mutableMapOf()
 
     fun getMusic(musicId: Long): Music {
-        return musicMediaItemSortedMap.keys.first { it.id == musicId }
+        return musicMapById[musicId]!!
     }
 
     fun getMusic(mediaItem: MediaItem): Music {
@@ -59,35 +65,99 @@ object DataManager {
         return musicMediaItemSortedMap[music]!!
     }
 
+    fun addMusic(music: Music) {
+        musicMediaItemSortedMap.putIfAbsent(music, music.mediaItem)
+        musicMapById.putIfAbsent(music.id, music)
+    }
+
+    fun getArtist(artist: Artist): Artist {
+        return artistMapById[artist.id]!!
+    }
+
     fun getArtist(artistId: Long): Artist {
-        return artistMap.values.first { it.id == artistId }
+        return artistMapById[artistId]!!
     }
 
     fun getArtist(artistName: String): Artist {
         return artistMap[artistName]!!
     }
 
+    fun addArtist(artist: Artist): Artist {
+        artistMap.putIfAbsent(artist.title, artist)
+        //You can have multiple same artist's name but different id, but it's the same artist.
+        val artistToReturn: Artist = artistMap[artist.title]!!
+        artistMapById.putIfAbsent(artistToReturn.id, artist)
+        return artistToReturn
+    }
+
+    fun removeArtist(artist: Artist) {
+        artistMap.remove(artist.title)
+        artistMapById.remove(artist.id)
+    }
+
     fun getAlbum(albumId: Long): Album {
-        return albumMap.values.first { it.id == albumId }
+        return albumMapById[albumId]!!
+    }
+
+    fun addAlbum(album: Album) {
+        albumMap.putIfAbsent(album.title, album)
+        albumMapById.putIfAbsent(album.id, album)
+    }
+
+    fun removeAlbum(album: Album) {
+        albumMap.remove(album.title)
+        albumMapById.remove(album.id)
     }
 
     fun getFolder(folderId: Long): Folder {
         return folderMap[folderId]!!
     }
 
+    fun addFolder(folder: Folder) {
+        folderMap.putIfAbsent(folder.id, folder)
+        if (folder.parentFolder == null) {
+            rootFolderMap.putIfAbsent(folder.id, folder)
+        }
+    }
+
+    fun removeFolder(folder: Folder) {
+        folderMap.remove(folder.id)
+        rootFolderMap.remove(folder.id)
+    }
+
     fun getGenre(genreId: Long): Genre {
-        return genreMap.values.first { it.id == genreId }
+        return genreMapById[genreId]!!
     }
 
     fun getGenre(genreName: String): Genre {
         return genreMap[genreName]!!
     }
 
+    fun addGenre(genre: Genre): Genre {
+        genreMap.putIfAbsent(genre.title, genre)
+        //You can have multiple same genre's name but different id, but it's the same genre.
+        val genreToReturn: Genre = genreMap[genre.title]!!
+        genreMapById.putIfAbsent(genreToReturn.id, genre)
+        return genreToReturn
+    }
+
+    fun removeGenre(genre: Genre) {
+        genreMap.remove(genre.title)
+        genreMapById.remove(genre.id)
+    }
+
     fun getPlaylist(playlistId: Long): PlaylistWithMusics {
-        return playlistWithMusicsMap.values.first { it.playlist.id == playlistId }
+        return playlistWithMusicsMapById[playlistId]!!
+    }
+
+    fun addPlaylist(playlistWithMusics: PlaylistWithMusics) {
+        val playlist: Playlist = playlistWithMusics.playlist
+        playlistWithMusicsMap.putIfAbsent(playlist.title, playlistWithMusics)
+        playlistWithMusicsMapById.putIfAbsent(playlist.id, playlistWithMusics)
     }
 
     fun removePlaylist(playlistWithMusics: PlaylistWithMusics) {
         playlistWithMusicsMap.remove(playlistWithMusics.playlist.title)
+        playlistWithMusicsMapById.remove(playlistWithMusics.playlist.id)
     }
 }

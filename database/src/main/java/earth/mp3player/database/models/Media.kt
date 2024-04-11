@@ -35,6 +35,7 @@ import java.util.SortedMap
 interface Media : Comparable<Media> {
     val id: Long
     val title: String
+
     val musicMediaItemSortedMap: SortedMap<Music, MediaItem>
         get() = sortedMapOf()
 

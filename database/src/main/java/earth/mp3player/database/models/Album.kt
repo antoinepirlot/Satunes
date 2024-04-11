@@ -34,13 +34,21 @@ import java.util.SortedMap
  */
 
 data class Album(
-    override val id: Long,
+    override val id: Long = nextId,
     override var title: String,
     var artist: Artist? = null,
     override val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf(),
 ) : Media {
     val musicSortedMap: SortedMap<Long, Music> = sortedMapOf()
     var artwork: ImageBitmap? = null
+
+    companion object {
+        var nextId: Long = 1
+    }
+
+    init {
+        nextId++
+    }
 
     /**
      * Add music to this album by adding music in musicMediaItemSortedMap

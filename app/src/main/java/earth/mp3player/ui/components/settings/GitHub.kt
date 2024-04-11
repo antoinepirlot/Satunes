@@ -23,51 +23,34 @@
  * PS: I don't answer quickly.
  */
 
-package earth.mp3player.ui.views.settings
+package earth.mp3player.ui.components.settings
 
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import earth.mp3player.R
-import earth.mp3player.ui.components.settings.Facebook
-import earth.mp3player.ui.components.settings.GitHub
-import earth.mp3player.ui.components.settings.Tipeee
-import earth.mp3player.ui.components.texts.Title
+import earth.mp3player.ui.components.images.ImageWithLink
 
 /**
- * @author Antoine Pirlot on 10/04/2024
+ * @author Antoine Pirlot on 11/04/2024
  */
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun AboutView(
-    modifier: Modifier = Modifier
+fun GitHub(
+    modifier: Modifier = Modifier,
 ) {
-    Column(modifier = modifier) {
-        Title(text = stringResource(id = R.string.about))
-        Text(
-            text = stringResource(id = R.string.about_text)
-        )
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Tipeee()
-            Facebook()
-            GitHub()
-        }
-    }
+    val gitHubUrl = "https://github.com/antoinepirlot/MP3-Player"
+    ImageWithLink(
+        modifier = modifier,
+        url = gitHubUrl,
+        painterId = R.drawable.github_logo,
+        imageBackgroundColor = Color.White
+    )
 }
 
 @Preview
 @Composable
-fun AboutViewPreview() {
-    AboutView()
+fun GitHubPreview() {
+    GitHub()
 }

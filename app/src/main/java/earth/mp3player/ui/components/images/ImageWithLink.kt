@@ -28,12 +28,16 @@ package earth.mp3player.ui.components.images
 import android.content.Context
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
@@ -54,23 +58,27 @@ fun ImageWithLink(
     modifier: Modifier = Modifier,
     url: String,
     painterId: Int,
+    imageBackgroundColor: Color? = null
 ) {
     val haptics = LocalHapticFeedback.current
     val context: Context = LocalContext.current
-    Image(
-        modifier = modifier
-            .size(60.dp)
-            .clip(RoundedCornerShape(20.dp))
-            .combinedClickable(
-                onClick = { openUrl(context = context, url = url) },
-                onLongClick = {
-                    haptics.performHapticFeedback(HapticFeedbackType.LongPress)
-                    showToast(context = context, message = url)
-                }
-            ),
-        painter = painterResource(id = painterId),
-        contentDescription = "Tipeee Logo",
-    )
+    Box(modifier.size(50.dp)) {
+        Image(
+            modifier = Modifier
+                .clip(CircleShape)
+                .align(Alignment.Center)
+                .background(imageBackgroundColor ?: Color.Unspecified)
+                .combinedClickable(
+                    onClick = { openUrl(context = context, url = url) },
+                    onLongClick = {
+                        haptics.performHapticFeedback(HapticFeedbackType.LongPress)
+                        showToast(context = context, message = url)
+                    }
+                ),
+            painter = painterResource(id = painterId),
+            contentDescription = "Tipeee Logo",
+        )
+    }
 }
 
 @Preview

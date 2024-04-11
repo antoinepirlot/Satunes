@@ -25,6 +25,8 @@
 
 package earth.mp3player.ui.views.main.album
 
+import android.net.Uri.decode
+import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -36,6 +38,7 @@ import earth.mp3player.playback.services.playback.PlaybackController
 import earth.mp3player.router.media.utils.openCurrentMusic
 import earth.mp3player.router.media.utils.openMedia
 import earth.mp3player.router.media.utils.resetOpenedPlaylist
+import earth.mp3player.ui.components.texts.Title
 import earth.mp3player.ui.views.main.MediaListView
 import java.util.SortedMap
 
@@ -52,25 +55,29 @@ fun AlbumView(
     val playbackController: PlaybackController = PlaybackController.getInstance()
 
     resetOpenedPlaylist()
-    @Suppress("UNCHECKED_CAST")
-    MediaListView(
-        modifier = modifier,
-        mediaMap = album.musicSortedMap as SortedMap<Long, Media>,
-        openMedia = { clickedMedia: Media ->
-            playbackController.loadMusic(
-                musicMediaItemSortedMap = album.musicMediaItemSortedMap
-            )
-            openMedia(navController = navController, media = clickedMedia)
-        },
-        shuffleMusicAction = {
-            playbackController.loadMusic(
-                musicMediaItemSortedMap = album.musicMediaItemSortedMap,
-                shuffleMode = true
-            )
-            openMedia(navController = navController)
-        },
-        onFABClick = { openCurrentMusic(navController = navController) }
-    )
+
+    Column(modifier = modifier) {
+        Title(text = decode(album.title))
+
+        @Suppress("UNCHECKED_CAST")
+        MediaListView(
+            mediaMap = album.musicSortedMap as SortedMap<Long, Media>,
+            openMedia = { clickedMedia: Media ->
+                playbackController.loadMusic(
+                    musicMediaItemSortedMap = album.musicMediaItemSortedMap
+                )
+                openMedia(navController = navController, media = clickedMedia)
+            },
+            shuffleMusicAction = {
+                playbackController.loadMusic(
+                    musicMediaItemSortedMap = album.musicMediaItemSortedMap,
+                    shuffleMode = true
+                )
+                openMedia(navController = navController)
+            },
+            onFABClick = { openCurrentMusic(navController = navController) }
+        )
+    }
 }
 
 @Preview

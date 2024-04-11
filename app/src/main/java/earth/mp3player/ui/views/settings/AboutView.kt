@@ -37,6 +37,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import earth.mp3player.R
 import earth.mp3player.ui.components.settings.Facebook
 import earth.mp3player.ui.components.settings.GitHub
@@ -53,7 +54,7 @@ fun AboutView(
     modifier: Modifier = Modifier
 ) {
     Column(modifier.padding(16.dp)) {
-        Title(text = stringResource(id = R.string.about))
+        Title(text = stringResource(id = R.string.about), fontSize = 20.sp)
         Text(
             text = stringResource(id = R.string.about_text)
         )

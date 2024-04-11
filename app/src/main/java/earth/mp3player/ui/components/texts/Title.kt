@@ -48,7 +48,7 @@ import androidx.compose.ui.unit.sp
 fun Title(
     modifier: Modifier = Modifier,
     text: String,
-    fontSize: TextUnit = 20.sp,
+    fontSize: TextUnit = 40.sp,
     textAlign: TextAlign = TextAlign.Center,
     fontWeight: FontWeight = FontWeight.Bold
 ) {

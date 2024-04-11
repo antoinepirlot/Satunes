@@ -30,7 +30,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.sp
 import androidx.media3.common.MediaItem
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -67,15 +66,11 @@ fun ArtistView(
     resetOpenedPlaylist()
 
     Column {
-        Title(
-            fontSize = 30.sp,
-            text = decode(artist.title)
-        )
+        Title(text = decode(artist.title))
         AlbumGrid(
             mediaList = artist.albumSortedMap.values.toList(),
             onClick = { openMedia(navController = navController, media = it) })
         MediaListView(
-            modifier = modifier,
             mediaMap = musicMap,
 
             openMedia = { clickedMedia: Media ->

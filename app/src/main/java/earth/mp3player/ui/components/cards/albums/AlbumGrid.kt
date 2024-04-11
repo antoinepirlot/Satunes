@@ -39,6 +39,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import earth.mp3player.database.R
 import earth.mp3player.database.models.Album
 import earth.mp3player.ui.components.texts.Title
@@ -57,7 +58,8 @@ fun AlbumGrid(
         Column {
             Title(
                 text = stringResource(id = R.string.albums),
-                textAlign = TextAlign.Left
+                textAlign = TextAlign.Left,
+                fontSize = 20.sp
             )
             val lazyState = rememberLazyListState()
             LazyRow(

@@ -37,6 +37,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import earth.mp3player.R
 import earth.mp3player.internet.UpdateAvailableStatus
 import earth.mp3player.internet.UpdateAvailableStatus.AVAILABLE
@@ -61,7 +62,7 @@ fun VersionView(
     val isCheckingUpdate: Boolean by remember { UpdateManager.isCheckingUpdate }
     val updateAvailable: UpdateAvailableStatus by remember { UpdateManager.updateAvailable }
     Column(modifier = modifier.padding(16.dp)) {
-        Title(text = stringResource(id = R.string.version))
+        Title(text = stringResource(id = R.string.version), fontSize = 20.sp)
         Text(text = stringResource(id = R.string.current_version) + currentVersion)
         //Check update is done when pressing setting button in top app bar
         if (isCheckingUpdate) {

@@ -33,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.sp
 import earth.mp3player.R
 import earth.mp3player.database.services.settings.SettingsManager
 import earth.mp3player.ui.components.settings.SettingsSwitchList
@@ -71,7 +72,7 @@ fun PlaybackSettingsView(
     )
 
     Column(modifier = modifier) {
-        Title(text = stringResource(id = R.string.playback_settings))
+        Title(text = stringResource(id = R.string.playback_settings), fontSize = 20.sp)
         SettingsSwitchList(
             checkedMap = checkedMap,
             onCheckedChangeMap = onCheckedChangedMap

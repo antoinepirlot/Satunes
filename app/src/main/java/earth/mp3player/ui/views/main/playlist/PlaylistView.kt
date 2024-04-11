@@ -25,6 +25,8 @@
 
 package earth.mp3player.ui.views.main.playlist
 
+import android.net.Uri.decode
+import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -38,6 +40,7 @@ import earth.mp3player.playback.services.playback.PlaybackController
 import earth.mp3player.router.media.utils.openCurrentMusic
 import earth.mp3player.router.media.utils.openMedia
 import earth.mp3player.services.PlaylistSelectionManager
+import earth.mp3player.ui.components.texts.Title
 import earth.mp3player.ui.views.main.MediaListView
 import java.util.SortedMap
 
@@ -57,24 +60,28 @@ fun PlaylistView(
     playlist.musics.forEach { musicDb: MusicDB ->
         musicSortedMap[musicDb.music.title] = musicDb.music
     }
-    MediaListView(
-        modifier = modifier,
-        mediaMap = musicSortedMap,
-        openMedia = { clickedMedia: Media ->
-            PlaybackController.getInstance().loadMusic(
-                musicMediaItemSortedMap = playlist.musicMediaItemSortedMap
-            )
-            openMedia(navController = navController, media = clickedMedia)
-        },
-        shuffleMusicAction = {
-            PlaybackController.getInstance().loadMusic(
-                musicMediaItemSortedMap = playlist.musicMediaItemSortedMap,
-                shuffleMode = true
-            )
-            openMedia(navController = navController)
-        },
-        onFABClick = { openCurrentMusic(navController = navController) }
-    )
+
+    Column(modifier = modifier) {
+        Title(text = decode(playlist.playlist.title))
+
+        MediaListView(
+            mediaMap = musicSortedMap,
+            openMedia = { clickedMedia: Media ->
+                PlaybackController.getInstance().loadMusic(
+                    musicMediaItemSortedMap = playlist.musicMediaItemSortedMap
+                )
+                openMedia(navController = navController, media = clickedMedia)
+            },
+            shuffleMusicAction = {
+                PlaybackController.getInstance().loadMusic(
+                    musicMediaItemSortedMap = playlist.musicMediaItemSortedMap,
+                    shuffleMode = true
+                )
+                openMedia(navController = navController)
+            },
+            onFABClick = { openCurrentMusic(navController = navController) }
+        )
+    }
 }
 
 @Preview

@@ -33,7 +33,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.sp
 import earth.mp3player.R
 import earth.mp3player.ui.components.texts.Title
 
@@ -47,7 +46,7 @@ fun SettingsView(
 ) {
     val scrollState = rememberScrollState()
     Column(modifier = modifier) {
-        Title(text = stringResource(id = R.string.settings), fontSize = 40.sp)
+        Title(text = stringResource(id = R.string.settings))
         HorizontalDivider()
         Column(modifier = Modifier.verticalScroll(state = scrollState)) {
             BottomNavigationBarSettingsView()

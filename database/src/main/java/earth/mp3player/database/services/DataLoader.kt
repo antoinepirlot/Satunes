@@ -307,7 +307,7 @@ object DataLoader {
         val id: Long = cursor.getLong(albumIdColumn!!)
         val name = Uri.encode(cursor.getString(albumNameColumn!!))
 
-        val album = Album(id = id, title = name)
+        val album = Album(title = name)
         DataManager.addAlbum(album = album)
         return album
     }
@@ -317,7 +317,7 @@ object DataLoader {
         val id = cursor.getLong(artistIdColumn!!)
         val name = Uri.encode(cursor.getString(artistNameColumn!!))
 
-        val artist = Artist(id = id, title = name)
+        val artist = Artist(title = name)
         return DataManager.addArtist(artist = artist)
     }
 
@@ -325,7 +325,7 @@ object DataLoader {
         val id = cursor.getLong(genreIdColumn!!)
         val name = Uri.encode(cursor.getString(genreNameColumn!!))
 
-        val genre = Genre(id = id, title = name)
+        val genre = Genre(title = name)
         return DataManager.addGenre(genre = genre)
     }
 }

@@ -33,11 +33,19 @@ import java.util.SortedMap
  */
 
 data class Genre(
-    override val id: Long,
+    override val id: Long = nextId,
     override var title: String,
 ) : Media {
     val musicMap: SortedMap<Long, Music> = sortedMapOf()
     override val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
+
+    companion object {
+        var nextId: Long = 1
+    }
+
+    init {
+        nextId++
+    }
 
     fun addMusic(music: Music) {
         musicMap.putIfAbsent(music.id, music)

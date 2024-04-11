@@ -36,6 +36,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import earth.mp3player.R
+import earth.mp3player.internet.UpdateManager
 import earth.mp3player.ui.components.texts.Title
 
 /**
@@ -46,11 +47,12 @@ import earth.mp3player.ui.components.texts.Title
 fun VersionView(
     modifier: Modifier = Modifier,
 ) {
-    val currentVersion = getCurrentVersion(context = LocalContext.current)
+    val context: Context = LocalContext.current
+    val currentVersion = getCurrentVersion(context = context)
     Column(modifier = modifier.padding(16.dp)) {
         Title(text = stringResource(id = R.string.version))
         Text(text = stringResource(id = R.string.current_version) + currentVersion)
-        if (isUpdateAvailable()) {
+        if (isUpdateAvailable(context = context)) {
             Text(text = stringResource(id = R.string.update_available))
         } else {
             Text(text = stringResource(id = R.string.no_update))
@@ -62,9 +64,11 @@ private fun getCurrentVersion(context: Context): String {
     return context.packageManager.getPackageInfo(context.packageName, 0).versionName
 }
 
-private fun isUpdateAvailable(): Boolean {
-    // TODO
-    return false
+private fun isUpdateAvailable(context: Context): Boolean {
+    return when (UpdateManager.checkUpdate(context = context)) {
+        1 -> true
+        else -> false
+    }
 }
 
 @Preview

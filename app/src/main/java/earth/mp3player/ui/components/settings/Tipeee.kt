@@ -39,7 +39,7 @@ import earth.mp3player.ui.components.images.ImageWithLink
 fun Tipeee(
     modifier: Modifier = Modifier
 ) {
-    val tipeeeUrl = "https://fr.tipeee.com/antoinepirlot"
+    val tipeeeUrl = "https://tipeee.com/antoinepirlot"
     ImageWithLink(modifier = modifier, url = tipeeeUrl, painterId = R.drawable.tipeee_logo)
 }
 

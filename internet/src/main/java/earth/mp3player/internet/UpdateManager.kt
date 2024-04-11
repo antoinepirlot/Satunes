@@ -39,7 +39,6 @@ import okhttp3.Response
  * @author Antoine Pirlot on 11/04/2024
  */
 object UpdateManager {
-
     val updateAvailable: MutableState<Boolean> = mutableStateOf(false)
 
     /**
@@ -57,19 +56,65 @@ object UpdateManager {
         //Check update
         try {
             CoroutineScope(Dispatchers.IO).launch {
+                //Get all versions
                 val url = "https://github.com/antoinepirlot/MP3-Player/releases"
                 val httpClient = OkHttpClient()
                 val req: Request = Request.Builder()
                     .url(url)
                     .build()
                 val res: Response = httpClient.newCall(req).execute()
-                when (res.code) {
-                    200 -> updateAvailable.value = true
-                    else -> updateAvailable.value = false
+                if (!res.isSuccessful) {
+                    res.close()
+                    updateAvailable.value = false
+                    return@launch
+                }
+                val page: String = res.body!!.string()
+                res.close()
+
+                val currentVersion: String = 'v' + getCurrentVersion(context = context)
+                if (isBeta(currentVersion)) {
+                    checkBetaVersion(page = page, currentVersion = currentVersion)
+                } else {
+                    checkReleaseVersion(page = page, currentVersion = currentVersion)
                 }
             }
         } catch (_: Exception) {
             //Don't crash the app if not internet connection
+            println()
         }
+    }
+
+    private fun isBeta(version: String): Boolean {
+        return version.split("-").last() == "beta"
+    }
+
+    private fun checkBetaVersion(page: String, currentVersion: String) {
+        val latestBetaVersion: String? =
+            Regex("/antoinepirlot/MP3-Player/releases/tag/v[0-9]+\\.[0-9]+\\.[0-9]+(-beta)?").find(
+                page,
+                0
+            )?.value?.split("/")?.last()
+        if (latestBetaVersion == null) {
+            updateAvailable.value = false
+        } else {
+            updateAvailable.value = latestBetaVersion != currentVersion
+        }
+    }
+
+    private fun checkReleaseVersion(page: String, currentVersion: String) {
+        val latestBetaVersion: String? =
+            Regex("/antoinepirlot/MP3-Player/releases/tag/v[0-9]+\\.[0-9]+\\.[0-9]+^(-beta)").find(
+                page,
+                0
+            )?.value?.split("/")?.last()
+        if (latestBetaVersion == null) {
+            updateAvailable.value = false
+        } else {
+            updateAvailable.value = latestBetaVersion != currentVersion
+        }
+    }
+
+    fun getCurrentVersion(context: Context): String {
+        return context.packageManager.getPackageInfo(context.packageName, 0).versionName
     }
 }

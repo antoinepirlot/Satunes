@@ -26,18 +26,18 @@
 package earth.mp3player.ui.components.music
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import earth.mp3player.R
+import earth.mp3player.database.models.Album
+import earth.mp3player.database.models.Music
 import earth.mp3player.playback.services.playback.PlaybackController
 
 /**
@@ -48,9 +48,13 @@ import earth.mp3player.playback.services.playback.PlaybackController
 fun AlbumArtwork(
     modifier: Modifier = Modifier,
     artwork: ImageBitmap? = null,
+    onClick: () -> Unit = { /* Do nothing by default */ }
 ) {
     Box(
-        modifier = modifier.clip(RoundedCornerShape(16.dp)),
+        modifier = modifier
+            .clickable {
+                onClick()
+            },
     ) {
         if (artwork != null) {
             Image(
@@ -71,13 +75,18 @@ fun AlbumArtwork(
 @Composable
 fun MusicPlayingAlbumArtwork(
     modifier: Modifier = Modifier,
+    onClick: (album: Album?) -> Unit = { /* Do nothing by default */ }
 ) {
-    val musicPlaying by remember { PlaybackController.getInstance().musicPlaying }
-    AlbumArtwork(modifier = modifier, artwork = musicPlaying!!.artwork)
+    val musicPlaying: Music? by remember { PlaybackController.getInstance().musicPlaying }
+    AlbumArtwork(
+        modifier = modifier,
+        artwork = musicPlaying!!.artwork,
+        onClick = { onClick(musicPlaying!!.album) }
+    )
 }
 
 @Composable
 @Preview
 fun AlbumArtworkPreview() {
-
+    AlbumArtwork()
 }

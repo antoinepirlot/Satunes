@@ -42,6 +42,7 @@ import earth.mp3player.database.models.Genre
 import earth.mp3player.database.models.relations.PlaylistWithMusics
 import earth.mp3player.database.services.DataLoader
 import earth.mp3player.database.services.DataManager
+import earth.mp3player.router.media.utils.openMedia
 import earth.mp3player.ui.components.LoadingCircle
 import earth.mp3player.ui.views.PlayBackView
 import earth.mp3player.ui.views.main.album.AlbumView
@@ -177,7 +178,11 @@ internal fun MediaRouter(
             if (isLoading.value) {
                 LoadingCircle()
             } else {
-                PlayBackView()
+                PlayBackView(onClick = { album: Album? ->
+                    if (album != null) {
+                        openMedia(navController = navController, media = album)
+                    }
+                })
             }
         }
     }

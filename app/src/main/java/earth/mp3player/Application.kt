@@ -52,7 +52,7 @@ fun Application(
 ) {
     val scrollBehavior =
         TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
-    val mainNavController = rememberNavController()
+    val mainNavController: NavHostController = rememberNavController()
     val mediaNavController: NavHostController = rememberNavController()
     Scaffold(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),

@@ -108,38 +108,19 @@ fun MP3BottomAppBar(
                     if (currentMainRoute == MainDestination.SETTINGS.link) {
                         mainNavController.popBackStack()
                     }
-                    when (menuTitle) {
-                        MenuTitle.FOLDERS -> {
-                            val rootRoute: String = MediaDestination.FOLDERS.link
-                            backToRoot(rootRoute = rootRoute, navController = mediaNavController)
-                        }
-
-                        MenuTitle.ARTISTS -> {
-                            val rootRoute: String = MediaDestination.ARTISTS.link
-                            backToRoot(rootRoute = rootRoute, navController = mediaNavController)
-                        }
-
-                        MenuTitle.ALBUMS -> {
-                            val rootRoute: String = MediaDestination.ALBUMS.link
-                            backToRoot(rootRoute = rootRoute, navController = mediaNavController)
-                        }
-
-                        MenuTitle.GENRES -> {
-                            val rootRoute: String = MediaDestination.GENRES.link
-                            backToRoot(rootRoute = rootRoute, navController = mediaNavController)
-                        }
-
-                        MenuTitle.PLAYLISTS -> {
-                            val rootRoute: String = MediaDestination.PLAYLISTS.link
-                            backToRoot(rootRoute = rootRoute, navController = mediaNavController)
-                        }
-
-                        MenuTitle.MUSICS -> {
-                            val rootRoute: String = MediaDestination.MUSICS.link
-                            backToRoot(rootRoute = rootRoute, navController = mediaNavController)
-                        }
+                    val rootRoute: String = when (menuTitle) {
+                        MenuTitle.FOLDERS -> MediaDestination.FOLDERS.link
+                        MenuTitle.ARTISTS -> MediaDestination.ARTISTS.link
+                        MenuTitle.ALBUMS -> MediaDestination.ALBUMS.link
+                        MenuTitle.GENRES -> MediaDestination.GENRES.link
+                        MenuTitle.PLAYLISTS -> MediaDestination.PLAYLISTS.link
+                        MenuTitle.MUSICS -> MediaDestination.MUSICS.link
 
                     }
+                    backToRoot(
+                        rootRoute = rootRoute,
+                        navController = mediaNavController
+                    )
                 },
                 icon = {
                     val pair = getRightIconAndDescription(menuTitle = menuTitle)

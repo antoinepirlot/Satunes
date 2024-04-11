@@ -27,12 +27,16 @@ package earth.mp3player.ui.components.music
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import earth.mp3player.R
 import earth.mp3player.playback.services.playback.PlaybackController
 
@@ -42,17 +46,16 @@ import earth.mp3player.playback.services.playback.PlaybackController
 
 @Composable
 fun AlbumArtwork(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    artwork: ImageBitmap? = null,
 ) {
-    val musicPlaying by remember { PlaybackController.getInstance().musicPlaying }
-
     Box(
-        modifier = modifier,
+        modifier = modifier.clip(RoundedCornerShape(16.dp)),
     ) {
-        if (musicPlaying!!.artwork != null) {
+        if (artwork != null) {
             Image(
                 modifier = modifier,
-                bitmap = musicPlaying!!.artwork!!,
+                bitmap = artwork,
                 contentDescription = "Music Playing Album Artwork"
             )
         } else {
@@ -63,6 +66,14 @@ fun AlbumArtwork(
             )
         }
     }
+}
+
+@Composable
+fun MusicPlayingAlbumArtwork(
+    modifier: Modifier = Modifier,
+) {
+    val musicPlaying by remember { PlaybackController.getInstance().musicPlaying }
+    AlbumArtwork(modifier = modifier, artwork = musicPlaying!!.artwork)
 }
 
 @Composable

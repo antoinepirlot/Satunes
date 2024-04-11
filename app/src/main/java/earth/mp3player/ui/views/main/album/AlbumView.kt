@@ -53,7 +53,7 @@ fun AlbumView(
 
     resetOpenedPlaylist()
     @Suppress("UNCHECKED_CAST")
-    (MediaListView(
+    MediaListView(
         modifier = modifier,
         mediaMap = album.musicSortedMap as SortedMap<Long, Media>,
         openMedia = { clickedMedia: Media ->
@@ -70,7 +70,7 @@ fun AlbumView(
             openMedia(navController = navController)
         },
         onFABClick = { openCurrentMusic(navController = navController) }
-    ))
+    )
 }
 
 @Preview

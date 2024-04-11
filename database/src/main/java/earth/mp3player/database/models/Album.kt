@@ -25,6 +25,7 @@
 
 package earth.mp3player.database.models
 
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.media3.common.MediaItem
 import java.util.SortedMap
 
@@ -39,6 +40,7 @@ data class Album(
     override val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf(),
 ) : Media {
     val musicSortedMap: SortedMap<Long, Music> = sortedMapOf()
+    var artwork: ImageBitmap? = null
 
     /**
      * Add music to this album by adding music in musicMediaItemSortedMap

@@ -210,6 +210,9 @@ object DataLoader {
             if (genre != null && genre.musicMap.isEmpty()) {
                 DataManager.removeGenre(genre = genre)
             }
+            if (folder.musicMediaItemSortedMap.isEmpty()) {
+                DataManager.removeFolder(folder = folder)
+            }
         }
     }
 

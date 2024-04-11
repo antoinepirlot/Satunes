@@ -120,6 +120,11 @@ object DataManager {
         }
     }
 
+    fun removeFolder(folder: Folder) {
+        folderMap.remove(folder.id)
+        rootFolderMap.remove(folder.id)
+    }
+
     fun getGenre(genreId: Long): Genre {
         return genreMapById[genreId]!!
     }

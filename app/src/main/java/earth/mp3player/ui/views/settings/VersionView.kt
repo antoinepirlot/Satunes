@@ -29,6 +29,7 @@ import android.content.Context
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -46,6 +47,7 @@ import earth.mp3player.internet.UpdateAvailableStatus.UP_TO_DATE
 import earth.mp3player.internet.UpdateManager
 import earth.mp3player.internet.UpdateManager.getCurrentVersion
 import earth.mp3player.ui.components.LoadingCircle
+import earth.mp3player.ui.components.settings.utils.openUrl
 import earth.mp3player.ui.components.texts.Title
 import earth.mp3player.internet.R as RInternet
 
@@ -70,7 +72,16 @@ fun VersionView(
         } else {
             when (updateAvailable) {
                 CANNOT_CHECK -> Text(text = stringResource(id = RInternet.string.cannot_check_update))
-                AVAILABLE -> Text(text = stringResource(id = RInternet.string.update_available))
+                AVAILABLE -> {
+                    TextButton(onClick = {
+                        openUrl(
+                            context = context,
+                            url = AVAILABLE.updateLink!!
+                        )
+                    }) {
+                        Text(text = stringResource(id = RInternet.string.update_available))
+                    }
+                }
                 UP_TO_DATE -> Text(text = stringResource(id = RInternet.string.no_update))
             }
         }

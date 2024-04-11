@@ -28,7 +28,7 @@ package earth.mp3player.internet
 /**
  * @author Antoine Pirlot on 11/04/2024
  */
-enum class UpdateAvailableStatus {
+enum class UpdateAvailableStatus(var updateLink: String? = null) {
     AVAILABLE,
     CANNOT_CHECK,
     UP_TO_DATE

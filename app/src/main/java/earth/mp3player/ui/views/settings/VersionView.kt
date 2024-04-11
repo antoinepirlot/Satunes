@@ -43,6 +43,7 @@ import earth.mp3player.R
 import earth.mp3player.internet.UpdateAvailableStatus
 import earth.mp3player.internet.UpdateAvailableStatus.AVAILABLE
 import earth.mp3player.internet.UpdateAvailableStatus.CANNOT_CHECK
+import earth.mp3player.internet.UpdateAvailableStatus.UNDEFINED
 import earth.mp3player.internet.UpdateAvailableStatus.UP_TO_DATE
 import earth.mp3player.internet.UpdateManager
 import earth.mp3player.internet.UpdateManager.getCurrentVersion
@@ -73,6 +74,8 @@ fun VersionView(
             LoadingCircle(modifier.padding(bottom = 16.dp))
         } else {
             when (updateAvailable) {
+                UNDEFINED -> CheckUpdateButton()
+
                 CANNOT_CHECK -> {
                     CheckUpdateButton()
                     showToast(

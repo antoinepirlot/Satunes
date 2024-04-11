@@ -31,5 +31,6 @@ package earth.mp3player.internet
 enum class UpdateAvailableStatus(var updateLink: String? = null) {
     AVAILABLE,
     CANNOT_CHECK,
-    UP_TO_DATE
+    UNDEFINED,
+    UP_TO_DATE,
 }

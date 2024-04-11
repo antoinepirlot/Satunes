@@ -40,7 +40,7 @@ import okhttp3.Response
  */
 object UpdateManager {
     val updateAvailable: MutableState<UpdateAvailableStatus> =
-        mutableStateOf(UpdateAvailableStatus.CANNOT_CHECK)
+        mutableStateOf(UpdateAvailableStatus.UNDEFINED)
     val isCheckingUpdate: MutableState<Boolean> = mutableStateOf(false)
 
     private const val URL = "https://github.com/antoinepirlot/MP3-Player/releases"
@@ -90,9 +90,7 @@ object UpdateManager {
         }
     }
 
-    private fun isBeta(version: String): Boolean {
-        return version.split("-").last() == "beta"
-    }
+    private fun isBeta(version: String): Boolean = version.split("-").last() == "beta"
 
     private fun checkBetaVersion(page: String, currentVersion: String) {
         val latestBetaVersion: String? =

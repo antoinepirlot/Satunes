@@ -55,8 +55,7 @@ class DatabaseManager(context: Context) {
             val playlistsWithMusicsList: List<PlaylistWithMusics> =
                 playlistDao.getPlaylistsWithMusics()
             playlistsWithMusicsList.forEach { playlistWithMusics: PlaylistWithMusics ->
-                DataManager.playlistWithMusicsMap[playlistWithMusics.playlist.title] =
-                    playlistWithMusics
+                DataManager.addPlaylist(playlistWithMusics = playlistWithMusics)
             }
         }
     }
@@ -81,9 +80,9 @@ class DatabaseManager(context: Context) {
                 } catch (_: SQLiteConstraintException) {
                     return@launch
                 }
-                DataManager.playlistWithMusicsMap.values.first { it.playlist.id == playlistWithMusics.playlist.id }!!.musics.add(
-                    musicDb
-                )
+                val playlist: PlaylistWithMusics =
+                    DataManager.getPlaylist(playlistId = playlistWithMusics.playlist.id)
+                playlist.musics.add(musicDb)
             }
         }
     }
@@ -96,8 +95,9 @@ class DatabaseManager(context: Context) {
             } catch (_: SQLiteConstraintException) {
                 return@launch
             }
-            DataManager.playlistWithMusicsMap[playlist.title] =
-                playlistDao.getPlaylistWithMusics(playlistId = playlist.id)
+            val playlistWithMusics: PlaylistWithMusics =
+                playlistDao.getPlaylistWithMusics(playlistId = playlist.id)!!
+            DataManager.addPlaylist(playlistWithMusics = playlistWithMusics)
         }
     }
 

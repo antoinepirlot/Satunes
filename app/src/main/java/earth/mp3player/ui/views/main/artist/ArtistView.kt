@@ -25,6 +25,7 @@
 
 package earth.mp3player.ui.views.main.artist
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -38,6 +39,7 @@ import earth.mp3player.playback.services.playback.PlaybackController
 import earth.mp3player.router.media.utils.openCurrentMusic
 import earth.mp3player.router.media.utils.openMedia
 import earth.mp3player.router.media.utils.resetOpenedPlaylist
+import earth.mp3player.ui.components.cards.albums.AlbumGrid
 import earth.mp3player.ui.views.main.MediaListView
 import java.util.SortedMap
 
@@ -60,31 +62,35 @@ fun ArtistView(
     }
 
     resetOpenedPlaylist()
-    MediaListView(
-        modifier = modifier,
-        mediaMap = musicMap,
 
-        openMedia = { clickedMedia: Media ->
-            playbackController.loadMusic(musicMediaItemSortedMap = artist.musicMediaItemSortedMap)
-            openMedia(navController, clickedMedia)
-        },
+    Column {
+        AlbumGrid(mediaList = artist.albumSortedMap.values.toList())
+        MediaListView(
+            modifier = modifier,
+            mediaMap = musicMap,
 
-        shuffleMusicAction = {
-            val musicMediaItemMap: SortedMap<Music, MediaItem> = sortedMapOf()
+            openMedia = { clickedMedia: Media ->
+                playbackController.loadMusic(musicMediaItemSortedMap = artist.musicMediaItemSortedMap)
+                openMedia(navController, clickedMedia)
+            },
 
-            artist.musicList.forEach { music: Music ->
-                musicMediaItemMap[music] = music.mediaItem
-            }
+            shuffleMusicAction = {
+                val musicMediaItemMap: SortedMap<Music, MediaItem> = sortedMapOf()
 
-            playbackController.loadMusic(
-                musicMediaItemSortedMap = musicMediaItemMap,
-                shuffleMode = true
-            )
-            openMedia(navController = navController)
-        },
+                artist.musicList.forEach { music: Music ->
+                    musicMediaItemMap[music] = music.mediaItem
+                }
 
-        onFABClick = { openCurrentMusic(navController) }
-    )
+                playbackController.loadMusic(
+                    musicMediaItemSortedMap = musicMediaItemMap,
+                    shuffleMode = true
+                )
+                openMedia(navController = navController)
+            },
+
+            onFABClick = { openCurrentMusic(navController) }
+        )
+    }
 }
 
 @Preview

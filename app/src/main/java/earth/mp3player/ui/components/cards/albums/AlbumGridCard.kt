@@ -60,7 +60,7 @@ fun AlbumGridCard(
         ) {
             AlbumArtwork(
                 modifier
-                    .size(230.dp)
+                    .size(225.dp)
                     .align(Alignment.CenterHorizontally),
                 artwork = album.artwork
             )

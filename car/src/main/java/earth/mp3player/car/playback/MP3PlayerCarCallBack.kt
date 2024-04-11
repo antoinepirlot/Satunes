@@ -41,7 +41,7 @@ import earth.mp3player.database.models.Genre
 import earth.mp3player.database.models.Music
 import earth.mp3player.database.models.relations.PlaylistWithMusics
 import earth.mp3player.database.services.DataManager
-import earth.mp3player.playback.services.playback.PlaybackController
+import earth.mp3player.playback.services.PlaybackController
 import java.util.SortedMap
 
 /**

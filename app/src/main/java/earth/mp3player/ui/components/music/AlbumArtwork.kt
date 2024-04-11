@@ -37,7 +37,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import earth.mp3player.R
 import earth.mp3player.database.models.Album
 import earth.mp3player.database.models.Music
-import earth.mp3player.playback.services.playback.PlaybackController
+import earth.mp3player.playback.services.PlaybackController
 
 /**
  * @author Antoine Pirlot on 29/02/24

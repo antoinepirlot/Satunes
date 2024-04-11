@@ -33,7 +33,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import earth.mp3player.playback.services.playback.PlaybackController
+import earth.mp3player.playback.services.PlaybackController
 import earth.mp3player.ui.views.MP3PlayerIcons
 
 /**

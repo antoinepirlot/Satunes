@@ -28,6 +28,7 @@ package earth.mp3player.database.services
 import android.content.Context
 import android.database.Cursor
 import android.net.Uri
+import android.net.Uri.encode
 import android.provider.MediaStore
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -244,8 +245,8 @@ object DataLoader {
         if (duration < 0) {
             throw IllegalArgumentException("Duration is less than 0")
         }
-        val displayName: String = cursor.getString(musicNameColumn!!)
-        var title: String = cursor.getString(musicTitleColumn!!)
+        val displayName: String = encode(cursor.getString(musicNameColumn!!))
+        var title: String = encode(cursor.getString(musicTitleColumn!!))
         if (title.isBlank()) {
             title = displayName
         }

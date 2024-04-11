@@ -25,6 +25,7 @@
 
 package earth.mp3player.ui.components.cards.albums
 
+import android.net.Uri.decode
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -70,7 +71,7 @@ fun AlbumGridCard(
                 modifier = Modifier.fillMaxWidth(),
                 fontSize = 20.sp,
                 textAlign = TextAlign.Center,
-                text = album.title
+                text = decode(album.title)
             )
         }
     }

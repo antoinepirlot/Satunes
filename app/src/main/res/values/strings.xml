@@ -21,6 +21,4 @@
     <string name="about">A Propos</string>
     <string name="version" translatable="false">Version</string>
     <string name="current_version">"Version installée: "</string>
-    <string name="update_available">Une mise à jour est disponible</string>
-    <string name="no_update">L\'application est à jour</string>
 </resources>

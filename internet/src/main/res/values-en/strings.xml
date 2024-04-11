@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="update_available">An update is available</string>
+    <string name="no_update">The app is up to date</string>
+    <string name="cannot_check_update">Unable to check if the application is up to date</string>
+</resources>

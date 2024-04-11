@@ -20,6 +20,4 @@
     <string name="about_text">You can click on the icons to visit my different pages and support me 🤗.\nIf you want to donate, click on the tipeee button 😃.</string>
     <string name="about">About</string>
     <string name="current_version">"Current Version: "</string>
-    <string name="update_available">An update is available</string>
-    <string name="no_update">The app is up to date</string>
 </resources>

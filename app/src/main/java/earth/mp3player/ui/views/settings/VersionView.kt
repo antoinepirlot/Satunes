@@ -38,10 +38,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import earth.mp3player.R
+import earth.mp3player.internet.UpdateAvailableStatus
+import earth.mp3player.internet.UpdateAvailableStatus.AVAILABLE
+import earth.mp3player.internet.UpdateAvailableStatus.CANNOT_CHECK
+import earth.mp3player.internet.UpdateAvailableStatus.UP_TO_DATE
 import earth.mp3player.internet.UpdateManager
 import earth.mp3player.internet.UpdateManager.getCurrentVersion
 import earth.mp3player.ui.components.LoadingCircle
 import earth.mp3player.ui.components.texts.Title
+import earth.mp3player.internet.R as RInternet
 
 /**
  * @author Antoine Pirlot on 11/04/2024
@@ -53,8 +58,8 @@ fun VersionView(
 ) {
     val context: Context = LocalContext.current
     val currentVersion = getCurrentVersion(context = context)
-    val isCheckingUpdate by remember { UpdateManager.isCheckingUpdate }
-    val updateAvailable by remember { UpdateManager.updateAvailable }
+    val isCheckingUpdate: Boolean by remember { UpdateManager.isCheckingUpdate }
+    val updateAvailable: UpdateAvailableStatus by remember { UpdateManager.updateAvailable }
     Column(modifier = modifier.padding(16.dp)) {
         Title(text = stringResource(id = R.string.version))
         Text(text = stringResource(id = R.string.current_version) + currentVersion)
@@ -62,10 +67,10 @@ fun VersionView(
         if (isCheckingUpdate) {
             LoadingCircle(modifier.padding(bottom = 16.dp))
         } else {
-            if (updateAvailable) {
-                Text(text = stringResource(id = R.string.update_available))
-            } else {
-                Text(text = stringResource(id = R.string.no_update))
+            when (updateAvailable) {
+                CANNOT_CHECK -> Text(text = stringResource(id = RInternet.string.cannot_check_update))
+                AVAILABLE -> Text(text = stringResource(id = RInternet.string.update_available))
+                UP_TO_DATE -> Text(text = stringResource(id = RInternet.string.no_update))
             }
         }
     }

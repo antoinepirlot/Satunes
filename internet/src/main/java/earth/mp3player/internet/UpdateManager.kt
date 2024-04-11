@@ -39,7 +39,8 @@ import okhttp3.Response
  * @author Antoine Pirlot on 11/04/2024
  */
 object UpdateManager {
-    val updateAvailable: MutableState<Boolean> = mutableStateOf(false)
+    val updateAvailable: MutableState<UpdateAvailableStatus> =
+        mutableStateOf(UpdateAvailableStatus.CANNOT_CHECK)
     val isCheckingUpdate: MutableState<Boolean> = mutableStateOf(false)
 
     /**
@@ -54,6 +55,7 @@ object UpdateManager {
         try {
             val internetManager = InternetManager(context = context)
             if (!internetManager.isConnected()) {
+                updateAvailable.value = UpdateAvailableStatus.CANNOT_CHECK
                 return
             }
             isCheckingUpdate.value = true
@@ -67,7 +69,7 @@ object UpdateManager {
                 val res: Response = httpClient.newCall(req).execute()
                 if (!res.isSuccessful) {
                     res.close()
-                    updateAvailable.value = false
+                    updateAvailable.value = UpdateAvailableStatus.CANNOT_CHECK
                     return@launch
                 }
                 val page: String = res.body!!.string()
@@ -97,11 +99,12 @@ object UpdateManager {
                 page,
                 0
             )?.value?.split("/")?.last()
-        if (latestBetaVersion == null) {
-            updateAvailable.value = false
-        } else {
-            updateAvailable.value = latestBetaVersion != currentVersion
-        }
+        updateAvailable.value =
+            if (latestBetaVersion != null && latestBetaVersion != currentVersion) {
+                UpdateAvailableStatus.AVAILABLE
+            } else {
+                UpdateAvailableStatus.UP_TO_DATE
+            }
     }
 
     private fun checkReleaseVersion(page: String, currentVersion: String) {
@@ -110,11 +113,12 @@ object UpdateManager {
                 page,
                 0
             )?.value?.split("/")?.last()
-        if (latestBetaVersion == null) {
-            updateAvailable.value = false
-        } else {
-            updateAvailable.value = latestBetaVersion != currentVersion
-        }
+        updateAvailable.value =
+            if (latestBetaVersion != null && latestBetaVersion != currentVersion) {
+                UpdateAvailableStatus.AVAILABLE
+            } else {
+                UpdateAvailableStatus.UP_TO_DATE
+            }
     }
 
     fun getCurrentVersion(context: Context): String {

@@ -40,28 +40,25 @@ import okhttp3.Response
  */
 object UpdateManager {
     val updateAvailable: MutableState<UpdateAvailableStatus> =
-        mutableStateOf(UpdateAvailableStatus.CANNOT_CHECK)
+        mutableStateOf(UpdateAvailableStatus.UNDEFINED)
     val isCheckingUpdate: MutableState<Boolean> = mutableStateOf(false)
 
     private const val URL = "https://github.com/antoinepirlot/MP3-Player/releases"
 
     /**
      * Checks if an update is available if there's an internet connection.
-     *
-     * @return -1 if there's no internet connection
-     * @return 0 if there's there's no update
-     * @return 1 if there's an update available
      */
     fun checkUpdate(context: Context) {
         //Check update
+        isCheckingUpdate.value = true
         try {
             val internetManager = InternetManager(context = context)
             if (!internetManager.isConnected()) {
                 UpdateAvailableStatus.CANNOT_CHECK.updateLink = null
                 updateAvailable.value = UpdateAvailableStatus.CANNOT_CHECK
+                isCheckingUpdate.value = false
                 return
             }
-            isCheckingUpdate.value = true
             CoroutineScope(Dispatchers.IO).launch {
                 //Get all versions
                 val httpClient = OkHttpClient()
@@ -73,6 +70,7 @@ object UpdateManager {
                     res.close()
                     UpdateAvailableStatus.CANNOT_CHECK.updateLink = null
                     updateAvailable.value = UpdateAvailableStatus.CANNOT_CHECK
+                    isCheckingUpdate.value = false
                     return@launch
                 }
                 val page: String = res.body!!.string()
@@ -88,13 +86,11 @@ object UpdateManager {
             }
         } catch (_: Exception) {
             //Don't crash the app if not internet connection
-            println()
+            isCheckingUpdate.value = false
         }
     }
 
-    private fun isBeta(version: String): Boolean {
-        return version.split("-").last() == "beta"
-    }
+    private fun isBeta(version: String): Boolean = version.split("-").last() == "beta"
 
     private fun checkBetaVersion(page: String, currentVersion: String) {
         val latestBetaVersion: String? =

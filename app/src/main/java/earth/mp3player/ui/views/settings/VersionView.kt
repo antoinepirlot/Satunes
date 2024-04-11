@@ -43,12 +43,15 @@ import earth.mp3player.R
 import earth.mp3player.internet.UpdateAvailableStatus
 import earth.mp3player.internet.UpdateAvailableStatus.AVAILABLE
 import earth.mp3player.internet.UpdateAvailableStatus.CANNOT_CHECK
+import earth.mp3player.internet.UpdateAvailableStatus.UNDEFINED
 import earth.mp3player.internet.UpdateAvailableStatus.UP_TO_DATE
 import earth.mp3player.internet.UpdateManager
 import earth.mp3player.internet.UpdateManager.getCurrentVersion
 import earth.mp3player.ui.components.LoadingCircle
+import earth.mp3player.ui.components.settings.CheckUpdateButton
 import earth.mp3player.ui.components.settings.utils.openUrl
 import earth.mp3player.ui.components.texts.Title
+import earth.mp3player.ui.utils.showToast
 import earth.mp3player.internet.R as RInternet
 
 /**
@@ -71,7 +74,16 @@ fun VersionView(
             LoadingCircle(modifier.padding(bottom = 16.dp))
         } else {
             when (updateAvailable) {
-                CANNOT_CHECK -> Text(text = stringResource(id = RInternet.string.cannot_check_update))
+                UNDEFINED -> CheckUpdateButton()
+
+                CANNOT_CHECK -> {
+                    CheckUpdateButton()
+                    showToast(
+                        context = context,
+                        message = stringResource(id = RInternet.string.cannot_check_update)
+                    )
+                }
+
                 AVAILABLE -> {
                     TextButton(onClick = {
                         openUrl(
@@ -82,7 +94,14 @@ fun VersionView(
                         Text(text = stringResource(id = RInternet.string.update_available))
                     }
                 }
-                UP_TO_DATE -> Text(text = stringResource(id = RInternet.string.no_update))
+
+                UP_TO_DATE -> {
+                    CheckUpdateButton()
+                    showToast(
+                        context = context,
+                        message = stringResource(id = RInternet.string.no_update)
+                    )
+                }
             }
         }
     }

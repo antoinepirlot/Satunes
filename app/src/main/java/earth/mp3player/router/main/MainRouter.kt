@@ -30,6 +30,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import earth.mp3player.internet.UpdateAvailableStatus
+import earth.mp3player.internet.UpdateManager
 import earth.mp3player.router.media.MediaRouter
 import earth.mp3player.ui.views.settings.SettingsView
 
@@ -49,6 +51,9 @@ internal fun MainRouter(
         startDestination = MainDestination.ROOT.link
     ) {
         composable(MainDestination.ROOT.link) {
+            if (UpdateManager.updateAvailable.value != UpdateAvailableStatus.AVAILABLE) {
+                UpdateManager.updateAvailable.value = UpdateAvailableStatus.UNDEFINED
+            }
             MediaRouter(navController = mediaNavController)
         }
 

@@ -19,4 +19,5 @@
     <string name="settings">Settings</string>
     <string name="about_text">You can click on the icons to visit my different pages and support me 🤗.\nIf you want to donate, click on the tipeee button 😃.</string>
     <string name="about">About</string>
+    <string name="current_version">"Current Version: "</string>
 </resources>

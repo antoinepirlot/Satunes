@@ -26,6 +26,7 @@
 package earth.mp3player.ui.appBars
 
 import android.annotation.SuppressLint
+import android.content.Context
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -37,12 +38,14 @@ import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import earth.mp3player.R
+import earth.mp3player.internet.UpdateManager
 import earth.mp3player.router.main.MainDestination
 import earth.mp3player.ui.views.MP3PlayerIcons
 
@@ -57,7 +60,6 @@ fun MP3TopAppBar(
     scrollBehavior: TopAppBarScrollBehavior,
     mainNavController: NavHostController,
 ) {
-
     CenterAlignedTopAppBar(
         modifier = modifier,
         colors = TopAppBarDefaults.topAppBarColors(
@@ -72,8 +74,10 @@ fun MP3TopAppBar(
             )
         },
         actions = {
+            val context: Context = LocalContext.current
             IconButton(
                 onClick = {
+                    UpdateManager.checkUpdate(context = context)
                     when (mainNavController.currentBackStackEntry!!.destination.route!!) {
                         MainDestination.SETTINGS.link -> mainNavController.popBackStack()
                         MainDestination.ROOT.link -> mainNavController.navigate(MainDestination.SETTINGS.link)

@@ -143,4 +143,8 @@ dependencies {
      */
     implementation(project(":database"))
 
+    /**
+     * Update
+     */
+    implementation(project(":internet"))
 }

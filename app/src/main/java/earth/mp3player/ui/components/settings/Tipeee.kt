@@ -30,8 +30,10 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
@@ -57,6 +59,7 @@ fun Tipeee(
     Image(
         modifier = modifier
             .size(60.dp)
+            .clip(RoundedCornerShape(20.dp))
             .combinedClickable(
                 onClick = { openUrl(context = context, url = tipeeeUrl) },
                 onLongClick = {

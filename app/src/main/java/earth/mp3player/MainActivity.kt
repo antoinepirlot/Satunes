@@ -27,7 +27,6 @@ package earth.mp3player
 
 import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.Manifest.permission.READ_MEDIA_AUDIO
-import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Build.VERSION_CODES.TIRAMISU
@@ -39,10 +38,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import earth.mp3player.database.services.settings.SettingsManager
@@ -61,15 +57,13 @@ class MainActivity : ComponentActivity() {
             SettingsManager.loadSettings(context = this@MainActivity)
         }
         super.onCreate(savedInstanceState)
-        val isAudioAllowed: MutableState<Boolean> = mutableStateOf(isAudioAllowed())
         if (Build.VERSION.SDK_INT >= TIRAMISU) {
-            requestPermission(isAudioAllowed = isAudioAllowed, READ_MEDIA_AUDIO)
+            requestPermission(READ_MEDIA_AUDIO)
         } else {
-            requestPermission(isAudioAllowed = isAudioAllowed, READ_EXTERNAL_STORAGE)
+            requestPermission(READ_EXTERNAL_STORAGE)
         }
+        PlaybackController.initInstance(context = baseContext)
         setContent {
-            val context: Context = LocalContext.current
-            PlaybackController.initInstance(context = context)
             MP3Theme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -81,16 +75,14 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun requestPermissionLauncher(isAudioAllowed: MutableState<Boolean>): ActivityResultLauncher<String> {
-        return registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
-            isAudioAllowed.value = isGranted
-        }
+    private fun requestPermissionLauncher(): ActivityResultLauncher<String> {
+        return registerForActivityResult(ActivityResultContracts.RequestPermission()) {}
     }
 
-    private fun requestPermission(isAudioAllowed: MutableState<Boolean>, permission: String) {
+    private fun requestPermission(permission: String) {
         when {
             !isAudioAllowed() -> {
-                requestPermissionLauncher(isAudioAllowed = isAudioAllowed).launch(permission)
+                requestPermissionLauncher().launch(permission)
             }
 
             ActivityCompat.shouldShowRequestPermissionRationale(this, permission) -> {
@@ -99,7 +91,7 @@ class MainActivity : ComponentActivity() {
 
             else -> {
                 // Permission has not been asked yet
-                requestPermissionLauncher(isAudioAllowed = isAudioAllowed).launch(permission)
+                requestPermissionLauncher().launch(permission)
             }
         }
     }

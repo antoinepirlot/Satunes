@@ -43,6 +43,8 @@ object UpdateManager {
         mutableStateOf(UpdateAvailableStatus.CANNOT_CHECK)
     val isCheckingUpdate: MutableState<Boolean> = mutableStateOf(false)
 
+    private const val URL = "https://github.com/antoinepirlot/MP3-Player/releases"
+
     /**
      * Checks if an update is available if there's an internet connection.
      *
@@ -55,20 +57,21 @@ object UpdateManager {
         try {
             val internetManager = InternetManager(context = context)
             if (!internetManager.isConnected()) {
+                UpdateAvailableStatus.CANNOT_CHECK.updateLink = null
                 updateAvailable.value = UpdateAvailableStatus.CANNOT_CHECK
                 return
             }
             isCheckingUpdate.value = true
             CoroutineScope(Dispatchers.IO).launch {
                 //Get all versions
-                val url = "https://github.com/antoinepirlot/MP3-Player/releases"
                 val httpClient = OkHttpClient()
                 val req: Request = Request.Builder()
-                    .url(url)
+                    .url(URL)
                     .build()
                 val res: Response = httpClient.newCall(req).execute()
                 if (!res.isSuccessful) {
                     res.close()
+                    UpdateAvailableStatus.CANNOT_CHECK.updateLink = null
                     updateAvailable.value = UpdateAvailableStatus.CANNOT_CHECK
                     return@launch
                 }
@@ -101,22 +104,26 @@ object UpdateManager {
             )?.value?.split("/")?.last()
         updateAvailable.value =
             if (latestBetaVersion != null && latestBetaVersion != currentVersion) {
+                UpdateAvailableStatus.AVAILABLE.updateLink = "$URL/tag/$latestBetaVersion"
                 UpdateAvailableStatus.AVAILABLE
             } else {
+                UpdateAvailableStatus.UP_TO_DATE.updateLink = null
                 UpdateAvailableStatus.UP_TO_DATE
             }
     }
 
     private fun checkReleaseVersion(page: String, currentVersion: String) {
-        val latestBetaVersion: String? =
+        val latestReleaseVersion: String? =
             Regex("/antoinepirlot/MP3-Player/releases/tag/v[0-9]+\\.[0-9]+\\.[0-9]+^(-beta)").find(
                 page,
                 0
             )?.value?.split("/")?.last()
         updateAvailable.value =
-            if (latestBetaVersion != null && latestBetaVersion != currentVersion) {
+            if (latestReleaseVersion != null && latestReleaseVersion != currentVersion) {
+                UpdateAvailableStatus.AVAILABLE.updateLink = "$URL/tag/$latestReleaseVersion"
                 UpdateAvailableStatus.AVAILABLE
             } else {
+                UpdateAvailableStatus.UP_TO_DATE.updateLink = null
                 UpdateAvailableStatus.UP_TO_DATE
             }
     }

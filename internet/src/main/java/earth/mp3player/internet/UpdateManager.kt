@@ -40,6 +40,7 @@ import okhttp3.Response
  */
 object UpdateManager {
     val updateAvailable: MutableState<Boolean> = mutableStateOf(false)
+    val isCheckingUpdate: MutableState<Boolean> = mutableStateOf(false)
 
     /**
      * Checks if an update is available if there's an internet connection.
@@ -49,12 +50,13 @@ object UpdateManager {
      * @return 1 if there's an update available
      */
     fun checkUpdate(context: Context) {
-        val internetManager = InternetManager(context = context)
-        if (!internetManager.isConnected()) {
-            return
-        }
         //Check update
         try {
+            val internetManager = InternetManager(context = context)
+            if (!internetManager.isConnected()) {
+                return
+            }
+            isCheckingUpdate.value = true
             CoroutineScope(Dispatchers.IO).launch {
                 //Get all versions
                 val url = "https://github.com/antoinepirlot/MP3-Player/releases"
@@ -77,6 +79,7 @@ object UpdateManager {
                 } else {
                     checkReleaseVersion(page = page, currentVersion = currentVersion)
                 }
+                isCheckingUpdate.value = false
             }
         } catch (_: Exception) {
             //Don't crash the app if not internet connection

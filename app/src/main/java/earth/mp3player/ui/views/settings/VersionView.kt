@@ -30,6 +30,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -38,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import earth.mp3player.R
 import earth.mp3player.internet.UpdateManager
 import earth.mp3player.internet.UpdateManager.getCurrentVersion
+import earth.mp3player.ui.components.LoadingCircle
 import earth.mp3player.ui.components.texts.Title
 
 /**
@@ -50,14 +53,20 @@ fun VersionView(
 ) {
     val context: Context = LocalContext.current
     val currentVersion = getCurrentVersion(context = context)
+    val isCheckingUpdate by remember { UpdateManager.isCheckingUpdate }
+    val updateAvailable by remember { UpdateManager.updateAvailable }
     Column(modifier = modifier.padding(16.dp)) {
         Title(text = stringResource(id = R.string.version))
         Text(text = stringResource(id = R.string.current_version) + currentVersion)
         //Check update is done when pressing setting button in top app bar
-        if (UpdateManager.updateAvailable.value) {
-            Text(text = stringResource(id = R.string.update_available))
+        if (isCheckingUpdate) {
+            LoadingCircle(modifier.padding(bottom = 16.dp))
         } else {
-            Text(text = stringResource(id = R.string.no_update))
+            if (updateAvailable) {
+                Text(text = stringResource(id = R.string.update_available))
+            } else {
+                Text(text = stringResource(id = R.string.no_update))
+            }
         }
     }
 }

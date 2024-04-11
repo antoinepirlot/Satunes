@@ -19,4 +19,7 @@
     <string name="settings">Paramètres</string>
     <string name="about_text">Tu peux cliquer sur les icones pour visiter mes différentes pages et me soutenir 🤗.\nSi tu veux faire un don, clique sur le bouton tipeee 😃.</string>
     <string name="about">A Propos</string>
+    <string name="current_version">"Version installée: "</string>
+    <string name="update_available">Une mise à jour est disponible</string>
+    <string name="no_update">L\'application est à jour</string>
 </resources>

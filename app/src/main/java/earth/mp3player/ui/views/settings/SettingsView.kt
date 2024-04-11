@@ -55,6 +55,8 @@ fun SettingsView(
             PlaybackSettingsView()
             HorizontalDivider()
             AboutView()
+            HorizontalDivider()
+            VersionView()
         }
     }
 }

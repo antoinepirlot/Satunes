@@ -41,6 +41,12 @@ data class Folder(
     override var musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf(),
 ) : Media {
 
+    val absolutePath: String = if (parentFolder == null) {
+        "/$title"
+    } else {
+        parentFolder!!.absolutePath + "/$title"
+    }
+
     companion object {
         var nextFolderId: Long = 1
     }

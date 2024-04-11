@@ -43,9 +43,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import earth.mp3player.R
 import earth.mp3player.database.models.Album
 import earth.mp3player.database.models.Artist
 import earth.mp3player.database.models.Folder
@@ -59,6 +57,7 @@ import earth.mp3player.services.PlaylistSelectionManager
 import earth.mp3player.ui.components.music.options.MusicOptionsDialog
 import earth.mp3player.ui.components.playlist.PlaylistOptionsDialog
 import earth.mp3player.ui.views.MP3PlayerIcons
+import earth.mp3player.ui.views.main.utils.getRootFolderName
 
 /**
  * @author Antoine Pirlot on 16/01/24
@@ -76,11 +75,7 @@ fun MediaCard(
     var showPlaylistOptions: Boolean by rememberSaveable { mutableStateOf(false) }
     val title: String =
         if (media is Folder && media.parentFolder == null) {
-            when (media.title) {
-                "0" -> stringResource(id = R.string.this_device)
-
-                else -> "${stringResource(id = R.string.external_storage)}: ${media.title}"
-            }
+            getRootFolderName(title = media.title)
         } else if (media is PlaylistWithMusics) {
             media.playlist.title
         } else if (media is MusicDB) {

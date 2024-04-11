@@ -56,7 +56,7 @@ fun RootFolderView(
     val playbackController: PlaybackController = PlaybackController.getInstance()
 
     val rootFolderMap: SortedMap<Long, Folder> = remember { DataManager.rootFolderMap }
-    (resetOpenedPlaylist())
+    resetOpenedPlaylist()
     MediaListView(
         modifier = modifier,
         mediaMap = rootFolderMap,

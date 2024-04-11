@@ -48,18 +48,26 @@ import androidx.compose.ui.unit.sp
 fun Title(
     modifier: Modifier = Modifier,
     text: String,
-    fontSize: TextUnit = 20.sp
+    fontSize: TextUnit = 20.sp,
+    textAlign: TextAlign = TextAlign.Center,
+    fontWeight: FontWeight = FontWeight.Bold
 ) {
+    val align: Alignment =
+        when (textAlign) {
+            TextAlign.Center -> Alignment.Center
+            TextAlign.Right -> Alignment.CenterEnd
+            else -> Alignment.CenterStart
+        }
     val textStyle = TextStyle(
-        fontWeight = FontWeight.Bold,
-        textAlign = TextAlign.Center,
+        fontWeight = fontWeight,
+        textAlign = textAlign,
         fontSize = fontSize
     )
     Box(modifier = modifier.fillMaxWidth()) {
         Text(
             text = text,
             modifier = Modifier
-                .align(Alignment.Center)
+                .align(align)
                 .padding(bottom = 16.dp),
             style = textStyle,
         )

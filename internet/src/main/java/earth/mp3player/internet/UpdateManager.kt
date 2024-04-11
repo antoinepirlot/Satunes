@@ -47,21 +47,18 @@ object UpdateManager {
 
     /**
      * Checks if an update is available if there's an internet connection.
-     *
-     * @return -1 if there's no internet connection
-     * @return 0 if there's there's no update
-     * @return 1 if there's an update available
      */
     fun checkUpdate(context: Context) {
         //Check update
+        isCheckingUpdate.value = true
         try {
             val internetManager = InternetManager(context = context)
             if (!internetManager.isConnected()) {
                 UpdateAvailableStatus.CANNOT_CHECK.updateLink = null
                 updateAvailable.value = UpdateAvailableStatus.CANNOT_CHECK
+                isCheckingUpdate.value = false
                 return
             }
-            isCheckingUpdate.value = true
             CoroutineScope(Dispatchers.IO).launch {
                 //Get all versions
                 val httpClient = OkHttpClient()
@@ -73,6 +70,7 @@ object UpdateManager {
                     res.close()
                     UpdateAvailableStatus.CANNOT_CHECK.updateLink = null
                     updateAvailable.value = UpdateAvailableStatus.CANNOT_CHECK
+                    isCheckingUpdate.value = false
                     return@launch
                 }
                 val page: String = res.body!!.string()
@@ -88,7 +86,7 @@ object UpdateManager {
             }
         } catch (_: Exception) {
             //Don't crash the app if not internet connection
-            println()
+            isCheckingUpdate.value = false
         }
     }
 

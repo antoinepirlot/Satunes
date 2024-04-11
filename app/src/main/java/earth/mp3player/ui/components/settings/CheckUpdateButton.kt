@@ -26,7 +26,6 @@
 package earth.mp3player.ui.components.settings
 
 import android.content.Context
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -44,18 +43,21 @@ import earth.mp3player.internet.UpdateManager
  * @author Antoine Pirlot on 11/04/2024
  */
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CheckUpdateButton(
     modifier: Modifier = Modifier,
 ) {
     val context: Context = LocalContext.current
     val haptics: HapticFeedback = LocalHapticFeedback.current
-    Button(onClick = {
-        haptics.performHapticFeedback(hapticFeedbackType = HapticFeedbackType.TextHandleMove)
-        UpdateManager.checkUpdate(context = context)
-    }) {
+    Button(
+        modifier = modifier,
+        onClick = {
+            haptics.performHapticFeedback(hapticFeedbackType = HapticFeedbackType.TextHandleMove)
+            UpdateManager.checkUpdate(context = context)
+        }
+    ) {
         Text(text = stringResource(id = R.string.check_update))
+
     }
 }
 

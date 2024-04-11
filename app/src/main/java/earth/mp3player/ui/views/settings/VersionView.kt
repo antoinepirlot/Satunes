@@ -50,6 +50,7 @@ import earth.mp3player.ui.components.LoadingCircle
 import earth.mp3player.ui.components.settings.CheckUpdateButton
 import earth.mp3player.ui.components.settings.utils.openUrl
 import earth.mp3player.ui.components.texts.Title
+import earth.mp3player.ui.utils.showToast
 import earth.mp3player.internet.R as RInternet
 
 /**
@@ -74,8 +75,12 @@ fun VersionView(
             when (updateAvailable) {
                 CANNOT_CHECK -> {
                     CheckUpdateButton()
-                    Text(text = stringResource(id = RInternet.string.cannot_check_update))
+                    showToast(
+                        context = context,
+                        message = stringResource(id = RInternet.string.cannot_check_update)
+                    )
                 }
+
                 AVAILABLE -> {
                     TextButton(onClick = {
                         openUrl(
@@ -89,7 +94,10 @@ fun VersionView(
 
                 UP_TO_DATE -> {
                     CheckUpdateButton()
-                    Text(text = stringResource(id = RInternet.string.no_update))
+                    showToast(
+                        context = context,
+                        message = stringResource(id = RInternet.string.no_update)
+                    )
                 }
             }
         }

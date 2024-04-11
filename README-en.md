@@ -37,6 +37,24 @@ If you like the app and want to support me click [here](https://tipeee.com/antoi
 
 # UPDATES
 
+## 0.8 (Android 11 Red Velvet Cake and later)
+
+### 0.8.0-beta
+
+New features:
+
+* It is possible to check if an update is available from settings.
+* Added new sections to the settings page.
+* Added title to show where the user is located.
+* Added a horizontal list displaying all artist's albums.
+* Possibility to click on album (in the artist page or from the currently playing music) to display
+  the album page.
+
+Improvements, Optimization and Troubleshooting:
+
+* The setting that allows you to hide the file tab is repaired, the setting is saved correctly.
+* The display of the settings page has been redesigned and improved.
+
 ## 0.7 (Android 11 Red Velvet Cake and later)
 
 ### 0.7.3-beta

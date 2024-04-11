@@ -62,9 +62,10 @@ fun ImageWithLink(
 ) {
     val haptics = LocalHapticFeedback.current
     val context: Context = LocalContext.current
-    Box(modifier.size(50.dp)) {
+    Box(modifier = modifier) {
         Image(
             modifier = Modifier
+                .size(60.dp)
                 .clip(CircleShape)
                 .align(Alignment.Center)
                 .background(imageBackgroundColor ?: Color.Unspecified)

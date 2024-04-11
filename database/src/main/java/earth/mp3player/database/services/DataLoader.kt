@@ -61,15 +61,12 @@ object DataLoader {
     private var absolutePathColumnId: Int? = null
 
     // Albums variables
-    private var albumIdColumn: Int? = null
     private var albumNameColumn: Int? = null
 
     // Artists variables
-    private var artistIdColumn: Int? = null
     private var artistNameColumn: Int? = null
 
     //Genres variables
-    private var genreIdColumn: Int? = null
     private var genreNameColumn: Int? = null
 
     /**
@@ -89,15 +86,12 @@ object DataLoader {
                 MediaStore.Audio.Media.DATA,
 
                 //ALBUMS
-                MediaStore.Audio.Albums.ALBUM_ID,
                 MediaStore.Audio.Albums.ALBUM,
 
                 //ARTISTS
-                MediaStore.Audio.Artists._ID,
                 MediaStore.Audio.Artists.ARTIST,
 
                 //Genre
-                MediaStore.Audio.Media.GENRE_ID,
                 MediaStore.Audio.Media.GENRE
             )
 
@@ -135,7 +129,6 @@ object DataLoader {
 
         //Cache album columns indices
         try {
-            albumIdColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Albums.ALBUM_ID)
             albumNameColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Albums.ALBUM)
         } catch (_: IllegalArgumentException) {
             // No album
@@ -143,7 +136,6 @@ object DataLoader {
 
         // Cache artist columns indices.
         try {
-            artistIdColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Artists._ID)
             artistNameColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Artists.ARTIST)
         } catch (_: IllegalArgumentException) {
             // No artist
@@ -151,7 +143,6 @@ object DataLoader {
 
         // Cache Genre columns indices.
         try {
-            genreIdColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.GENRE_ID)
             genreNameColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.GENRE)
         } catch (_: IllegalArgumentException) {
             // No genre
@@ -194,7 +185,7 @@ object DataLoader {
         }
 
         //Load Folder
-        val absolutePath: String = Uri.encode(cursor.getString(absolutePathColumnId!!))
+        val absolutePath: String = encode(cursor.getString(absolutePathColumnId!!))
         val folder: Folder = loadFolder(absolutePath = absolutePath)
 
         //Load music and folder inside load music function
@@ -212,6 +203,12 @@ object DataLoader {
             // No music found
             if (album != null && album.musicSortedMap.isEmpty()) {
                 DataManager.removeAlbum(album = album)
+            }
+            if (artist != null && artist.musicList.isEmpty()) {
+                DataManager.removeArtist(artist = artist)
+            }
+            if (genre != null && genre.musicMap.isEmpty()) {
+                DataManager.removeGenre(genre = genre)
             }
         }
     }
@@ -304,8 +301,7 @@ object DataLoader {
     }
 
     private fun loadAlbum(cursor: Cursor): Album {
-        val id: Long = cursor.getLong(albumIdColumn!!)
-        val name = Uri.encode(cursor.getString(albumNameColumn!!))
+        val name = encode(cursor.getString(albumNameColumn!!))
 
         val album = Album(title = name)
         DataManager.addAlbum(album = album)
@@ -314,16 +310,14 @@ object DataLoader {
 
     private fun loadArtist(cursor: Cursor): Artist {
         // Get values of columns for a given artist.
-        val id = cursor.getLong(artistIdColumn!!)
-        val name = Uri.encode(cursor.getString(artistNameColumn!!))
+        val name = encode(cursor.getString(artistNameColumn!!))
 
         val artist = Artist(title = name)
         return DataManager.addArtist(artist = artist)
     }
 
     private fun loadGenre(cursor: Cursor): Genre {
-        val id = cursor.getLong(genreIdColumn!!)
-        val name = Uri.encode(cursor.getString(genreNameColumn!!))
+        val name = encode(cursor.getString(genreNameColumn!!))
 
         val genre = Genre(title = name)
         return DataManager.addGenre(genre = genre)

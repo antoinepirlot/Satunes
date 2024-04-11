@@ -90,6 +90,11 @@ object DataManager {
         return artistToReturn
     }
 
+    fun removeArtist(artist: Artist) {
+        artistMap.remove(artist.title)
+        artistMapById.remove(artist.id)
+    }
+
     fun getAlbum(albumId: Long): Album {
         return albumMapById[albumId]!!
     }
@@ -129,6 +134,11 @@ object DataManager {
         val genreToReturn: Genre = genreMap[genre.title]!!
         genreMapById.putIfAbsent(genreToReturn.id, genre)
         return genreToReturn
+    }
+
+    fun removeGenre(genre: Genre) {
+        genreMap.remove(genre.title)
+        genreMapById.remove(genre.id)
     }
 
     fun getPlaylist(playlistId: Long): PlaylistWithMusics {

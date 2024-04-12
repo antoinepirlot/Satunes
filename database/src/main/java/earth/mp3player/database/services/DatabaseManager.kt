@@ -65,7 +65,6 @@ class DatabaseManager(context: Context) {
             if (musicDb == null) {
                 musicDb = MusicDB(id = music.id)
                 musicDao.insert(musicDb)
-
             }
             playlists.forEach { playlistWithMusics: PlaylistWithMusics ->
                 val musicsPlaylistsRel =
@@ -79,9 +78,6 @@ class DatabaseManager(context: Context) {
                 } catch (_: SQLiteConstraintException) {
                     return@launch
                 }
-                val playlist: PlaylistWithMusics =
-                    DataManager.getPlaylist(playlistId = playlistWithMusics.playlist.id)
-                playlist.musics.add(musicDb)
             }
         }
     }

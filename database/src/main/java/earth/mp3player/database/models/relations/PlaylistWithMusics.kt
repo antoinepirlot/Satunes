@@ -50,7 +50,7 @@ data class PlaylistWithMusics(
     val musics: MutableList<MusicDB>
 ) : Media {
     @Ignore
-    override val id: Long = -1 // Not used
+    override val id: Long = playlist.id // Not used
 
     @Ignore
     override val title: String = "Title is not used for PlaylistWithMusics class." // Not used

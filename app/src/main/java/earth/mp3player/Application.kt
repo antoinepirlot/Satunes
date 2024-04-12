@@ -37,7 +37,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import earth.mp3player.router.main.MainRouter
+import earth.mp3player.router.Router
 import earth.mp3player.ui.appBars.MP3BottomAppBar
 import earth.mp3player.ui.appBars.MP3TopAppBar
 
@@ -52,30 +52,16 @@ fun Application(
 ) {
     val scrollBehavior =
         TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
-    val mainNavController = rememberNavController()
-    val mediaNavController: NavHostController = rememberNavController()
+    val navController: NavHostController = rememberNavController()
     Scaffold(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-        topBar = {
-            MP3TopAppBar(
-                scrollBehavior = scrollBehavior,
-                mainNavController = mainNavController
-            )
-        },
-        bottomBar = {
-            MP3BottomAppBar(
-                mainNavController = mainNavController,
-                mediaNavController = mediaNavController
-            )
-        }
+        topBar = { MP3TopAppBar(scrollBehavior = scrollBehavior, navController = navController) },
+        bottomBar = { MP3BottomAppBar(navController = navController) }
     ) { innerPadding ->
         Column(
             modifier = Modifier.padding(innerPadding)
         ) {
-            MainRouter(
-                mainNavController = mainNavController,
-                mediaNavController = mediaNavController
-            )
+            Router(navController = navController)
         }
     }
 }

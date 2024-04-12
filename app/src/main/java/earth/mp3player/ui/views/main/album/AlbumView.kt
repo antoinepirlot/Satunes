@@ -35,9 +35,9 @@ import androidx.navigation.compose.rememberNavController
 import earth.mp3player.database.models.Album
 import earth.mp3player.database.models.Media
 import earth.mp3player.playback.services.PlaybackController
-import earth.mp3player.router.media.utils.openCurrentMusic
-import earth.mp3player.router.media.utils.openMedia
-import earth.mp3player.router.media.utils.resetOpenedPlaylist
+import earth.mp3player.router.utils.openCurrentMusic
+import earth.mp3player.router.utils.openMedia
+import earth.mp3player.router.utils.resetOpenedPlaylist
 import earth.mp3player.ui.components.texts.Title
 import earth.mp3player.ui.views.main.MediaListView
 import java.util.SortedMap

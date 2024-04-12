@@ -119,10 +119,13 @@ class PlaybackController private constructor(
         fun initInstance(context: Context, listener: Player.Listener? = null): PlaybackController {
             if (!Companion::instance.isInitialized) {
                 val sessionToken =
-                    SessionToken(context, ComponentName(context, PlaybackService::class.java))
+                    SessionToken(
+                        context.applicationContext,
+                        ComponentName(context, PlaybackService::class.java)
+                    )
 
                 instance = PlaybackController(
-                    context = context,
+                    context = context.applicationContext,
                     sessionToken = sessionToken,
                     musicMediaItemSortedMap = DataManager.musicMediaItemSortedMap,
                 )
@@ -145,7 +148,7 @@ class PlaybackController private constructor(
             instance.listener = listener ?: instance.listener
 
             if (!DataLoader.isLoaded && !DataLoader.isLoading.value) {
-                DataLoader.loadAllData(context)
+                DataLoader.loadAllData(context.applicationContext)
             }
 
             return getInstance()

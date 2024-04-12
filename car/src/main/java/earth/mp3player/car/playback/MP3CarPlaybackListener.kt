@@ -33,7 +33,6 @@ import android.support.v4.media.session.PlaybackStateCompat.STATE_PAUSED
 import android.support.v4.media.session.PlaybackStateCompat.STATE_PLAYING
 import androidx.media.utils.MediaConstants
 import androidx.media3.common.MediaItem
-import androidx.media3.common.Player
 import earth.mp3player.car.playback.MP3PlayerCarCallBack.ACTIONS_ON_PAUSE
 import earth.mp3player.car.playback.MP3PlayerCarCallBack.ACTIONS_ON_PLAY
 import earth.mp3player.database.models.Music
@@ -59,16 +58,6 @@ object MP3CarPlaybackListener : PlaybackListener() {
 
         updateMediaPlaying()
         updatePlaybackState(state = STATE_PLAYING, actions = ACTIONS_ON_PLAY)
-    }
-
-    override fun onEvents(player: Player, events: Player.Events) {
-        super.onEvents(player, events)
-        if (events.contains(Player.EVENT_PLAYER_ERROR)) {
-            // No a good practice but i don't understand why music pause sometimes in android auto
-            // After switching from queue and playing next automatically.
-            val playbackController: PlaybackController = PlaybackController.getInstance()
-            playbackController.play()
-        }
     }
 
     internal fun updateMediaPlaying() {

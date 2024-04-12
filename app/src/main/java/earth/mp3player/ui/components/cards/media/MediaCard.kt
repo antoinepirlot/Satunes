@@ -155,7 +155,7 @@ fun MediaCard(
     if (showPlaylistOptions && media is PlaylistWithMusics) {
         val context = LocalContext.current
         PlaylistOptionsDialog(
-            playlistTitle = media.title,
+            playlistWithMusics = media,
             onRemovePlaylist = {
                 val db = DatabaseManager(context = context)
                 db.removePlaylist(playlistToRemove = media)

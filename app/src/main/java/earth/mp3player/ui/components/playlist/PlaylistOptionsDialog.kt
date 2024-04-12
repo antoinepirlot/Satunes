@@ -40,6 +40,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import earth.mp3player.R
+import earth.mp3player.database.models.relations.PlaylistWithMusics
+import earth.mp3player.database.models.tables.Playlist
 import earth.mp3player.ui.views.MP3PlayerIcons
 
 /**
@@ -51,7 +53,7 @@ val SPACER_SIZE = 10.dp
 @Composable
 fun PlaylistOptionsDialog(
     modifier: Modifier = Modifier,
-    playlistTitle: String,
+    playlistWithMusics: PlaylistWithMusics,
     onRemovePlaylist: () -> Unit,
     onDismissRequest: () -> Unit,
 ) {
@@ -64,7 +66,7 @@ fun PlaylistOptionsDialog(
             )
         },
         title = {
-            Text(text = decode(playlistTitle))
+            Text(text = decode(playlistWithMusics.playlist.title))
         },
         text = {
             Column {
@@ -95,7 +97,7 @@ fun PlaylistOptionsDialog(
 @Composable
 fun PlaylistOptionsDialogPreview() {
     PlaylistOptionsDialog(
-        playlistTitle = "Playlist title",
+        playlistWithMusics = PlaylistWithMusics(Playlist(1, ""), mutableListOf()),
         onRemovePlaylist = {},
         onDismissRequest = {},
     )

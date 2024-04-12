@@ -65,7 +65,6 @@ class DatabaseManager(context: Context) {
             if (musicDb == null) {
                 musicDb = MusicDB(id = music.id)
                 musicDao.insert(musicDb)
-
             }
             playlists.forEach { playlistWithMusics: PlaylistWithMusics ->
                 val musicsPlaylistsRel =

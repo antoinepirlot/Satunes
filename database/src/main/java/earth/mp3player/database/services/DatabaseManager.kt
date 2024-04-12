@@ -79,9 +79,6 @@ class DatabaseManager(context: Context) {
                 } catch (_: SQLiteConstraintException) {
                     return@launch
                 }
-                val playlist: PlaylistWithMusics =
-                    DataManager.getPlaylist(playlistId = playlistWithMusics.playlist.id)
-                playlist.musics.add(musicDb)
             }
         }
     }

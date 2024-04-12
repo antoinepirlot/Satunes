@@ -55,7 +55,7 @@ Améliorations, Optimisation et Résolution de problèmes:
 
 * Le paramètre qui permet de masquer l'onglet fichier est réparé, le paramètre est enregistré
   correctement.
-* L'affichage de la page paramètre à été repensée et améliorée.
+* L'affichage de la page paramètre à été repensé et amélioré.
 
 ## 0.7 (Android 11 Red Velvet Cake et ultérieur)
 

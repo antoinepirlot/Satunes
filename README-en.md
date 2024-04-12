@@ -47,10 +47,9 @@ New features:
 * Added new sections to the settings page.
 * Added title to show where the user is located.
 * Added a horizontal list displaying all artist's albums.
-* Possibility to click on album (in the artist page or from the currently playing music) to display
-  the album page.
+* Possibility to click on album (in the artist page or from the currently playing music) to display the album page.
 
-Improvements, Optimization and Troubleshooting:
+Improvements, Optimizations and Troubleshooting:
 
 * The setting that allows you to hide the file tab is repaired, the setting is saved correctly.
 * The display of the settings page has been redesigned and improved.

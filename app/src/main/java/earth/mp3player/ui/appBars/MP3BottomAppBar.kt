@@ -107,10 +107,7 @@ fun MP3BottomAppBar(
                         MenuTitle.MUSICS -> Destination.MUSICS.link
 
                     }
-                    goToRoute(
-                        mediaRoute = rootRoute,
-                        mediaNavController = navController,
-                    )
+                    backToRoot(rootRoute = rootRoute, navController = navController)
                 },
                 icon = {
                     val pair = getRightIconAndDescription(menuTitle = menuTitle)
@@ -129,40 +126,23 @@ fun MP3BottomAppBar(
  * Redirect controller to the state where the user is in a bottom button's view.
  * For example, if the user click on Album button and he is in settings, then it redirects to albums.
  *
- * @param mediaRoute the media route to go
- * @param mediaNavController this nav controller is redirected to the media route
- */
-private fun goToRoute(
-    mediaRoute: String,
-    mediaNavController: NavHostController
-) {
-    var currentMediaRoute: String? = mediaNavController.currentBackStackEntry?.destination?.route
-    if (currentMediaRoute == mediaRoute) {
-        return
-    }
-    currentMediaRoute = backToRoot(rootRoute = mediaRoute, navController = mediaNavController)
-    if (currentMediaRoute == null || currentMediaRoute == "/") {
-        //Media route could never be "/"
-        mediaNavController.navigate(mediaRoute)
-    }
-}
-
-/**
- * The nav controller will be roll back to the rootRoot.
- * If current route is null, then stop doing it.
- *
  * @param rootRoute the root route to go
- * @param navController the nav controller that needs to rollback
- *
- * @return the current root route of the nav controller
+ * @param navController this nav controller is redirected to the media route
  */
-private fun backToRoot(rootRoute: String, navController: NavHostController): String? {
-    var currentRoute: String? = navController.currentBackStackEntry?.destination?.route
-    while (currentRoute != null && currentRoute != rootRoute) {
-        navController.popBackStack()
-        currentRoute = navController.currentBackStackEntry?.destination?.route
+private fun backToRoot(
+    rootRoute: String,
+    navController: NavHostController
+) {
+    var currentRoute: String? = navController.currentBackStackEntry!!.destination.route!!
+    if (currentRoute != rootRoute) {
+        while (currentRoute != null && currentRoute != rootRoute) {
+            navController.popBackStack()
+            currentRoute = navController.currentBackStackEntry?.destination?.route
+        }
+        if (currentRoute == null) {
+            navController.navigate(rootRoute)
+        }
     }
-    return currentRoute
 }
 
 @SuppressLint("UnrememberedMutableState")

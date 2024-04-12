@@ -45,16 +45,14 @@ Si l'application te plait et que tu as envie de me soutenir, n'hésite pas à le
 Nouvelles Fonctionnalités:
 
 * Il est possible de vérifier si une mise à jour est disponible via les paramètres.
-* Ajout de nouvelles section dans la page paramètres.
+* Ajout de nouvelles sections dans la page paramètres.
 * Ajout de titre indiquant où l'utilisateur se trouve.
 * Ajout d'une liste horizontale affichant les albums d'un artiste.
-* Possiblité de cliquer sur l'album (dans la page d'un artiste ou depuis la musique en cours de
-  lecture) pour afficher la page de l'album.
+* Possibilité de cliquer sur l'album (dans la page d'un artiste ou depuis la musique en cours de lecture) pour afficher la page de l'album.
 
-Améliorations, Optimisation et Résolution de problèmes:
+Améliorations, Optimisations et Résolutions de problèmes:
 
-* Le paramètre qui permet de masquer l'onglet fichier est réparé, le paramètre est enregistré
-  correctement.
+* Le paramètre qui permet de masquer l'onglet fichier est réparé, le paramètre est enregistré correctement.
 * L'affichage de la page paramètre à été repensé et amélioré.
 
 ## 0.7 (Android 11 Red Velvet Cake et ultérieur)

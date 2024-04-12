@@ -25,6 +25,7 @@
 
 package earth.mp3player.internet
 
+import android.app.Application
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
@@ -33,7 +34,7 @@ import android.net.NetworkCapabilities
 /**
  * @author Antoine Pirlot on 11/04/2024
  */
-internal class InternetManager(context: Context) {
+internal class InternetManager(context: Context) : Application() {
     private val connectivityManager: ConnectivityManager =
         context.getSystemService(ConnectivityManager::class.java)
 

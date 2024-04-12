@@ -39,6 +39,19 @@ import okhttp3.Response
  * @author Antoine Pirlot on 11/04/2024
  */
 object UpdateManager {
+    private const val ALPHA: String = "alpha"
+    private const val BETA: String = "beta"
+    private const val PREVIEW: String = "preview"
+
+    private val ALPHA_REGEX: Regex =
+        Regex("\"/antoinepirlot/MP3-Player/releases/tag/v[0-9]+\\.[0-9]+\\.[0-9]+.*\"")
+    private val BETA_REGEX: Regex =
+        Regex("\"/antoinepirlot/MP3-Player/releases/tag/v[0-9]+\\.[0-9]+\\.[0-9]+(?!-alpha).*\"")
+    private val PREVIEW_REGEX: Regex =
+        Regex("\"/antoinepirlot/MP3-Player/releases/tag/v[0-9]+\\.[0-9]+\\.[0-9]+(?!-alpha)(?!-beta)\"")
+    private val RELEASE_REGEX: Regex =
+        Regex("\"/antoinepirlot/MP3-Player/releases/tag/v[0-9]+\\.[0-9]+\\.[0-9]+\"")
+
     val updateAvailable: MutableState<UpdateAvailableStatus> =
         mutableStateOf(UpdateAvailableStatus.UNDEFINED)
     val isCheckingUpdate: MutableState<Boolean> = mutableStateOf(false)
@@ -77,11 +90,7 @@ object UpdateManager {
                 res.close()
 
                 val currentVersion: String = 'v' + getCurrentVersion(context = context)
-                if (isBeta(currentVersion)) {
-                    checkBetaVersion(page = page, currentVersion = currentVersion)
-                } else {
-                    checkReleaseVersion(page = page, currentVersion = currentVersion)
-                }
+                checkUpdate(page = page, currentVersion = currentVersion)
                 isCheckingUpdate.value = false
             }
         } catch (_: Exception) {
@@ -90,36 +99,25 @@ object UpdateManager {
         }
     }
 
-    private fun isBeta(version: String): Boolean = version.split("-").last() == "beta"
-
-    private fun checkBetaVersion(page: String, currentVersion: String) {
-        val latestBetaVersion: String? =
-            Regex("/antoinepirlot/MP3-Player/releases/tag/v[0-9]+\\.[0-9]+\\.[0-9]+(-beta)?").find(
+    private fun checkUpdate(page: String, currentVersion: String) {
+        val currentVersionType: String = currentVersion.split("-").last()
+        val regex: Regex = when (currentVersionType) {
+            ALPHA -> ALPHA_REGEX
+            BETA -> BETA_REGEX
+            PREVIEW -> PREVIEW_REGEX
+            else -> RELEASE_REGEX
+        }
+        val latestVersion: String? =
+            regex.find(
                 page,
                 0
-            )?.value?.split("/")?.last()
+            )?.value?.split("/")?.last()?.split("\"")?.first()
         updateAvailable.value =
-            if (latestBetaVersion != null && latestBetaVersion != currentVersion) {
-                UpdateAvailableStatus.AVAILABLE.updateLink = "$URL/tag/$latestBetaVersion"
+            if (latestVersion != null && latestVersion != currentVersion) {
+                UpdateAvailableStatus.AVAILABLE.updateLink = "$URL/tag/$latestVersion"
                 UpdateAvailableStatus.AVAILABLE
             } else {
-                UpdateAvailableStatus.UP_TO_DATE.updateLink = null
-                UpdateAvailableStatus.UP_TO_DATE
-            }
-    }
-
-    private fun checkReleaseVersion(page: String, currentVersion: String) {
-        val latestReleaseVersion: String? =
-            Regex("/antoinepirlot/MP3-Player/releases/tag/v[0-9]+\\.[0-9]+\\.[0-9]+^(-beta)").find(
-                page,
-                0
-            )?.value?.split("/")?.last()
-        updateAvailable.value =
-            if (latestReleaseVersion != null && latestReleaseVersion != currentVersion) {
-                UpdateAvailableStatus.AVAILABLE.updateLink = "$URL/tag/$latestReleaseVersion"
-                UpdateAvailableStatus.AVAILABLE
-            } else {
-                UpdateAvailableStatus.UP_TO_DATE.updateLink = null
+                UpdateAvailableStatus.AVAILABLE.updateLink = null
                 UpdateAvailableStatus.UP_TO_DATE
             }
     }

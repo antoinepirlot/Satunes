@@ -23,7 +23,7 @@
  *  PS: I don't answer quickly.
  */
 
-package earth.mp3player.router.media.utils
+package earth.mp3player.router.utils
 
 import androidx.navigation.NavHostController
 import earth.mp3player.database.models.Album
@@ -34,7 +34,7 @@ import earth.mp3player.database.models.Media
 import earth.mp3player.database.models.Music
 import earth.mp3player.database.models.relations.PlaylistWithMusics
 import earth.mp3player.playback.services.PlaybackController
-import earth.mp3player.router.media.MediaDestination
+import earth.mp3player.router.Destination
 import earth.mp3player.services.PlaylistSelectionManager
 import earth.mp3player.ui.utils.getMusicListFromFolder
 import earth.mp3player.ui.utils.startMusic
@@ -97,17 +97,17 @@ fun openMediaFromFolder(
  */
 private fun getDestinationOf(media: Media?): String {
     return when (media) {
-        is Folder -> "${MediaDestination.FOLDERS.link}/${media.id}"
+        is Folder -> "${Destination.FOLDERS.link}/${media.id}"
 
-        is Artist -> "${MediaDestination.ARTISTS.link}/${media.title}"
+        is Artist -> "${Destination.ARTISTS.link}/${media.title}"
 
-        is Album -> "${MediaDestination.ALBUMS.link}/${media.id}"
+        is Album -> "${Destination.ALBUMS.link}/${media.id}"
 
-        is Genre -> "${MediaDestination.GENRES.link}/${media.title}"
+        is Genre -> "${Destination.GENRES.link}/${media.title}"
 
-        is PlaylistWithMusics -> "${MediaDestination.PLAYLISTS.link}/${media.playlist.id}"
+        is PlaylistWithMusics -> "${Destination.PLAYLISTS.link}/${media.playlist.id}"
 
-        else -> MediaDestination.PLAYBACK.link
+        else -> Destination.PLAYBACK.link
     }
 }
 

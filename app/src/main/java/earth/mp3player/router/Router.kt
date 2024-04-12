@@ -1,29 +1,29 @@
 /*
- *  This file is part of MP3 Player.
+ * This file is part of MP3 Player.
  *
- *  MP3 Player is free software: you can redistribute it and/or modify it under
- *  the terms of the GNU General Public License as published by the Free Software Foundation,
- *  either version 3 of the License, or (at your option) any later version.
+ * MP3 Player is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later version.
  *
- *  MP3 Player is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- *   without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *  See the GNU General Public License for more details.
+ * MP3 Player is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License along with MP3 Player.
- *  If not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along with MP3 Player.
+ * If not, see <https://www.gnu.org/licenses/>.
  *
- *  ***** INFORMATIONS ABOUT THE AUTHOR *****
- *  The author of this file is Antoine Pirlot, the owner of this project.
- *  You find this original project on github.
+ * **** INFORMATIONS ABOUT THE AUTHOR *****
+ * The author of this file is Antoine Pirlot, the owner of this project.
+ * You find this original project on github.
  *
- *  My github link is: https://github.com/antoinepirlot
- *  This current project's link is: https://github.com/antoinepirlot/MP3-Player
+ * My github link is: https://github.com/antoinepirlot
+ * This current project's link is: https://github.com/antoinepirlot/MP3-Player
  *
- *  You can contact me via my email: pirlot.antoine@outlook.com
- *  PS: I don't answer quickly.
+ * You can contact me via my email: pirlot.antoine@outlook.com
+ * PS: I don't answer quickly.
  */
 
-package earth.mp3player.router.media
+package earth.mp3player.router
 
 import android.net.Uri.encode
 import androidx.compose.runtime.Composable
@@ -42,7 +42,7 @@ import earth.mp3player.database.models.Genre
 import earth.mp3player.database.models.relations.PlaylistWithMusics
 import earth.mp3player.database.services.DataLoader
 import earth.mp3player.database.services.DataManager
-import earth.mp3player.router.media.utils.openMedia
+import earth.mp3player.router.utils.openMedia
 import earth.mp3player.ui.components.LoadingCircle
 import earth.mp3player.ui.views.PlayBackView
 import earth.mp3player.ui.views.main.album.AlbumView
@@ -56,13 +56,14 @@ import earth.mp3player.ui.views.main.genre.GenreView
 import earth.mp3player.ui.views.main.music.AllMusicsListView
 import earth.mp3player.ui.views.main.playlist.PlaylistListView
 import earth.mp3player.ui.views.main.playlist.PlaylistView
+import earth.mp3player.ui.views.settings.SettingsView
 
 /**
  * @author Antoine Pirlot on 23-01-24
  */
 
 @Composable
-internal fun MediaRouter(
+internal fun Router(
     modifier: Modifier = Modifier,
     navController: NavHostController,
 ) {
@@ -71,9 +72,10 @@ internal fun MediaRouter(
     NavHost(
         modifier = modifier,
         navController = navController,
-        startDestination = MediaDestination.FOLDERS.link
+        startDestination = Destination.FOLDERS.link
     ) {
-        composable(MediaDestination.FOLDERS.link) {
+
+        composable(Destination.FOLDERS.link) {
             // /!\ This route prevent back gesture to exit the app
             if (isLoading.value) {
                 LoadingCircle()
@@ -82,7 +84,7 @@ internal fun MediaRouter(
             }
         }
 
-        composable("${MediaDestination.FOLDERS.link}/{id}") {
+        composable("${Destination.FOLDERS.link}/{id}") {
             if (isLoading.value) {
                 LoadingCircle()
             } else {
@@ -92,7 +94,7 @@ internal fun MediaRouter(
             }
         }
 
-        composable(MediaDestination.ARTISTS.link) {
+        composable(Destination.ARTISTS.link) {
             if (isLoading.value) {
                 LoadingCircle()
             } else {
@@ -100,7 +102,7 @@ internal fun MediaRouter(
             }
         }
 
-        composable("${MediaDestination.ARTISTS.link}/{name}") {
+        composable("${Destination.ARTISTS.link}/{name}") {
             if (isLoading.value) {
                 LoadingCircle()
             } else {
@@ -110,7 +112,7 @@ internal fun MediaRouter(
             }
         }
 
-        composable(MediaDestination.ALBUMS.link) {
+        composable(Destination.ALBUMS.link) {
             if (isLoading.value) {
                 LoadingCircle()
             } else {
@@ -118,7 +120,7 @@ internal fun MediaRouter(
             }
         }
 
-        composable("${MediaDestination.ALBUMS.link}/{id}") {
+        composable("${Destination.ALBUMS.link}/{id}") {
             if (isLoading.value) {
                 LoadingCircle()
             } else {
@@ -128,7 +130,7 @@ internal fun MediaRouter(
             }
         }
 
-        composable(MediaDestination.GENRES.link) {
+        composable(Destination.GENRES.link) {
             if (isLoading.value) {
                 LoadingCircle()
             } else {
@@ -136,7 +138,7 @@ internal fun MediaRouter(
             }
         }
 
-        composable("${MediaDestination.GENRES.link}/{name}") {
+        composable("${Destination.GENRES.link}/{name}") {
             if (isLoading.value) {
                 LoadingCircle()
             } else {
@@ -146,7 +148,7 @@ internal fun MediaRouter(
             }
         }
 
-        composable(MediaDestination.PLAYLISTS.link) {
+        composable(Destination.PLAYLISTS.link) {
             if (isLoading.value) {
                 LoadingCircle()
             } else {
@@ -154,7 +156,7 @@ internal fun MediaRouter(
             }
         }
 
-        composable("${MediaDestination.PLAYLISTS.link}/{id}") {
+        composable("${Destination.PLAYLISTS.link}/{id}") {
             if (isLoading.value) {
                 LoadingCircle()
             } else {
@@ -166,7 +168,7 @@ internal fun MediaRouter(
             }
         }
 
-        composable(MediaDestination.MUSICS.link) {
+        composable(Destination.MUSICS.link) {
             if (isLoading.value) {
                 LoadingCircle()
             } else {
@@ -174,7 +176,7 @@ internal fun MediaRouter(
             }
         }
 
-        composable(MediaDestination.PLAYBACK.link) {
+        composable(Destination.PLAYBACK.link) {
             if (isLoading.value) {
                 LoadingCircle()
             } else {
@@ -184,6 +186,10 @@ internal fun MediaRouter(
                     }
                 })
             }
+        }
+
+        composable(Destination.SETTINGS.link) {
+            SettingsView()
         }
     }
 }

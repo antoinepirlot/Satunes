@@ -37,8 +37,8 @@ import earth.mp3player.database.models.relations.PlaylistWithMusics
 import earth.mp3player.database.models.tables.MusicDB
 import earth.mp3player.database.models.tables.Playlist
 import earth.mp3player.playback.services.PlaybackController
-import earth.mp3player.router.media.utils.openCurrentMusic
-import earth.mp3player.router.media.utils.openMedia
+import earth.mp3player.router.utils.openCurrentMusic
+import earth.mp3player.router.utils.openMedia
 import earth.mp3player.services.PlaylistSelectionManager
 import earth.mp3player.ui.components.texts.Title
 import earth.mp3player.ui.views.main.MediaListView

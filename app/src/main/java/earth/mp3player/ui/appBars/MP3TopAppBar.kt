@@ -45,7 +45,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import earth.mp3player.R
-import earth.mp3player.router.main.MainDestination
+import earth.mp3player.internet.UpdateAvailableStatus
+import earth.mp3player.internet.UpdateManager
+import earth.mp3player.router.Destination
 import earth.mp3player.ui.views.MP3PlayerIcons
 
 /**
@@ -57,7 +59,7 @@ import earth.mp3player.ui.views.MP3PlayerIcons
 fun MP3TopAppBar(
     modifier: Modifier = Modifier,
     scrollBehavior: TopAppBarScrollBehavior,
-    mainNavController: NavHostController,
+    navController: NavHostController,
 ) {
     CenterAlignedTopAppBar(
         modifier = modifier,
@@ -76,9 +78,12 @@ fun MP3TopAppBar(
             val context: Context = LocalContext.current
             IconButton(
                 onClick = {
-                    when (mainNavController.currentBackStackEntry!!.destination.route!!) {
-                        MainDestination.SETTINGS.link -> mainNavController.popBackStack()
-                        MainDestination.ROOT.link -> mainNavController.navigate(MainDestination.SETTINGS.link)
+                    if (UpdateManager.updateAvailable.value != UpdateAvailableStatus.AVAILABLE) {
+                        UpdateManager.updateAvailable.value = UpdateAvailableStatus.UNDEFINED
+                    }
+                    when (navController.currentBackStackEntry!!.destination.route!!) {
+                        Destination.SETTINGS.link -> navController.popBackStack()
+                        else -> navController.navigate(Destination.SETTINGS.link)
                     }
                 }
             ) {
@@ -104,6 +109,6 @@ fun MainTopAppBarPreview() {
     MP3TopAppBar(
         modifier = Modifier,
         scrollBehavior = scrollBehavior,
-        mainNavController = rememberNavController(),
+        navController = rememberNavController(),
     )
 }

@@ -41,8 +41,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import earth.mp3player.database.models.MenuTitle
 import earth.mp3player.database.services.settings.SettingsManager
-import earth.mp3player.router.main.MainDestination
-import earth.mp3player.router.media.MediaDestination
+import earth.mp3player.router.Destination
 import earth.mp3player.ui.utils.getRightIconAndDescription
 
 /**
@@ -52,12 +51,8 @@ import earth.mp3player.ui.utils.getRightIconAndDescription
 @Composable
 fun MP3BottomAppBar(
     modifier: Modifier = Modifier,
-    mediaNavController: NavHostController,
-    mainNavController: NavHostController,
+    navController: NavHostController,
 ) {
-    if (mediaNavController == mainNavController) {
-        throw IllegalArgumentException("Media and Main nav controller can't be the same")
-    }
     val menuTitleLists: MutableList<MenuTitle> = mutableListOf(
         MenuTitle.FOLDERS,
         MenuTitle.ARTISTS,
@@ -103,23 +98,18 @@ fun MP3BottomAppBar(
                 selected = selectedMenuTitle.value == menuTitle,
                 onClick = {
                     selectedMenuTitle.value = menuTitle
-                    val currentMainRoute: String =
-                        mainNavController.currentBackStackEntry!!.destination.route!!
-                    if (currentMainRoute == MainDestination.SETTINGS.link) {
-                        mainNavController.popBackStack()
-                    }
                     val rootRoute: String = when (menuTitle) {
-                        MenuTitle.FOLDERS -> MediaDestination.FOLDERS.link
-                        MenuTitle.ARTISTS -> MediaDestination.ARTISTS.link
-                        MenuTitle.ALBUMS -> MediaDestination.ALBUMS.link
-                        MenuTitle.GENRES -> MediaDestination.GENRES.link
-                        MenuTitle.PLAYLISTS -> MediaDestination.PLAYLISTS.link
-                        MenuTitle.MUSICS -> MediaDestination.MUSICS.link
+                        MenuTitle.FOLDERS -> Destination.FOLDERS.link
+                        MenuTitle.ARTISTS -> Destination.ARTISTS.link
+                        MenuTitle.ALBUMS -> Destination.ALBUMS.link
+                        MenuTitle.GENRES -> Destination.GENRES.link
+                        MenuTitle.PLAYLISTS -> Destination.PLAYLISTS.link
+                        MenuTitle.MUSICS -> Destination.MUSICS.link
 
                     }
-                    backToRoot(
-                        rootRoute = rootRoute,
-                        navController = mediaNavController
+                    goToRoute(
+                        mediaRoute = rootRoute,
+                        mediaNavController = navController,
                     )
                 },
                 icon = {
@@ -135,27 +125,49 @@ fun MP3BottomAppBar(
     }
 }
 
-private fun backToRoot(rootRoute: String, navController: NavHostController) {
-    var currentRoute: String? = navController.currentBackStackEntry!!.destination.route!!
-    while (currentRoute != null && currentRoute != MainDestination.ROOT.link && currentRoute != rootRoute) {
+/**
+ * Redirect controller to the state where the user is in a bottom button's view.
+ * For example, if the user click on Album button and he is in settings, then it redirects to albums.
+ *
+ * @param mediaRoute the media route to go
+ * @param mediaNavController this nav controller is redirected to the media route
+ */
+private fun goToRoute(
+    mediaRoute: String,
+    mediaNavController: NavHostController
+) {
+    var currentMediaRoute: String? = mediaNavController.currentBackStackEntry?.destination?.route
+    if (currentMediaRoute == mediaRoute) {
+        return
+    }
+    currentMediaRoute = backToRoot(rootRoute = mediaRoute, navController = mediaNavController)
+    if (currentMediaRoute == null || currentMediaRoute == "/") {
+        //Media route could never be "/"
+        mediaNavController.navigate(mediaRoute)
+    }
+}
+
+/**
+ * The nav controller will be roll back to the rootRoot.
+ * If current route is null, then stop doing it.
+ *
+ * @param rootRoute the root route to go
+ * @param navController the nav controller that needs to rollback
+ *
+ * @return the current root route of the nav controller
+ */
+private fun backToRoot(rootRoute: String, navController: NavHostController): String? {
+    var currentRoute: String? = navController.currentBackStackEntry?.destination?.route
+    while (currentRoute != null && currentRoute != rootRoute) {
         navController.popBackStack()
-        currentRoute = try {
-            navController.currentBackStackEntry!!.destination.route!!
-        } catch (_: NullPointerException) {
-            null
-        }
+        currentRoute = navController.currentBackStackEntry?.destination?.route
     }
-    if (currentRoute == null || (currentRoute == MainDestination.ROOT.link && rootRoute != MainDestination.ROOT.link)) {
-        navController.navigate(rootRoute)
-    }
+    return currentRoute
 }
 
 @SuppressLint("UnrememberedMutableState")
 @Preview
 @Composable
 fun MainBottomAppBarPreview() {
-    MP3BottomAppBar(
-        mainNavController = rememberNavController(),
-        mediaNavController = rememberNavController(),
-    )
+    MP3BottomAppBar(navController = rememberNavController())
 }

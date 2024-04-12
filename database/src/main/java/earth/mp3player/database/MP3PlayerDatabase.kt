@@ -49,7 +49,7 @@ import earth.mp3player.database.models.tables.Playlist
     version = 1,
     exportSchema = false
 )
-abstract class MP3PlayerDatabase: RoomDatabase() {
+internal abstract class MP3PlayerDatabase : RoomDatabase() {
     companion object {
         private var database: MP3PlayerDatabase? = null
 

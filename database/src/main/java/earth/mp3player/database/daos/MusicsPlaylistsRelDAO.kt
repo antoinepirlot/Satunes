@@ -35,7 +35,7 @@ import earth.mp3player.database.models.tables.MusicsPlaylistsRel
  */
 
 @Dao
-interface MusicsPlaylistsRelDAO {
+internal interface MusicsPlaylistsRelDAO {
 
     @Insert
     fun insert(musicsPlaylistsRel: MusicsPlaylistsRel)

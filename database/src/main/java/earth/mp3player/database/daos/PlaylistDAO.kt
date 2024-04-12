@@ -38,7 +38,7 @@ import earth.mp3player.database.models.tables.Playlist
  */
 
 @Dao
-interface PlaylistDAO {
+internal interface PlaylistDAO {
 
     @Transaction
     @Query("SELECT * FROM playlists WHERE playlist_id = :playlistId")

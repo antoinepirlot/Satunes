@@ -29,8 +29,9 @@ Tu as le droit de réutiliser mon code pour créer une nouvelle application dér
 1) Va dans les paramètres de Android Auto.
 2) Cliques plusieurs fois sur le bouton "Version" pour activer les paramètres développeurs.
 3) Va dans les paramètres développeurs en cliquant sur les 3 boutons en haut à droite et active le paramètre "Sources Inconnues" car mon application n'est pas publiée dans le Google Play Store.
-4) Il n'y a plus qu'à ajouter l'application au lanceur d'application de Android Auto dans le menu "Personnaliser le lanceur"
-5) Bonne écoute et bon voyage ;)
+4) Clique sur les 3 boutons comme au point 3, mais clique sur "Quitter le mode développeur" le paramètre que tu viens d'activer sera enregistré.
+5) Il n'y a plus qu'à ajouter l'application au lanceur d'application de Android Auto dans le menu "Personnaliser le lanceur"
+6) Bonne écoute et bon voyage ;)
 
 ##
 

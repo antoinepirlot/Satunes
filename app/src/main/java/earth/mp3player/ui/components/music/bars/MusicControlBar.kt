@@ -66,9 +66,10 @@ fun MusicControlBar(
     val playPauseButtonSize = 80.dp
     val optionButtonSize = 30.dp
 
-    Column(modifier = modifier) {
+    Column {
         MusicPositionBar(modifier = Modifier.padding(horizontal = 16.dp))
         Row(
+            modifier = modifier,
             horizontalArrangement = horizontalArrangement,
             verticalAlignment = verticalAlignment
         ) {

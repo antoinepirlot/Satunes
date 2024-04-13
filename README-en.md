@@ -55,9 +55,8 @@ Improvements, Optimizations and Troubleshooting:
     added to the application (except in cases of major forces).
   * Preview: This is a release candidate which, if all goes well, will be deployed as a stable
     version.
-  * Stable: This is a ready-to-use version. This is the recommended version for normal use. However,
-    it may still present some bugs but these will be rare and will not prevent the functions from
-    working.
+  * Stable: This is a ready-to-use version. This is the recommended version for normal use. However, it may still present some bugs but these will be fixed
+     rare and will not prevent the functionality from functioning properly.
 * Adding music to several playlists is basically fixed.
 * Crashes occurring when recomposing the UI following changes such as "Screen rotation" or "
   Activation of dark mode" will no longer cause the application to crash.

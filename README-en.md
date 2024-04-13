@@ -28,8 +28,9 @@ If you decide to use my code to create new app, you can but you have to use the 
 1) Go to Android Auto settings.
 2) Multiple click on "Version" to activate dev mode. 
 3) Go to Dev's settings and activate "Unknown sources" as this app is not published on Google Play Store.
-4) Add app in launcher.
-5) Enjoy
+4) Click on the 3 buttons as in point 3, but click on "Exit developer mode" the setting you just activated will be saved.
+5) Add app in launcher.
+6) Enjoy
 
 ##
 

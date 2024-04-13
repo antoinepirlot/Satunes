@@ -45,18 +45,31 @@ object UpdateManager {
 
     private val ALPHA_REGEX: Regex =
         Regex("\"/antoinepirlot/MP3-Player/releases/tag/v[0-9]+\\.[0-9]+\\.[0-9]+.*\"")
+    private val ALPHA_APK_REGEX: Regex = Regex(">.*v[0-9]+\\.[0-9]+\\.[0-9]+.*\\.apk<")
+
     private val BETA_REGEX: Regex =
-        Regex("\"/antoinepirlot/MP3-Player/releases/tag/v[0-9]+\\.[0-9]+\\.[0-9]+(?!-alpha).*\"")
+        Regex("\"/antoinepirlot/MP3-Player/releases/tag/v[0-9]+\\.[0-9]+\\.[0-9]+(?!-$ALPHA).*\"")
+    private val BETA_APK_REGEX: Regex = Regex(">.*v[0-9]+\\.[0-9]+\\.[0-9]+(?!-$ALPHA).*\\.apk<")
+
     private val PREVIEW_REGEX: Regex =
-        Regex("\"/antoinepirlot/MP3-Player/releases/tag/v[0-9]+\\.[0-9]+\\.[0-9]+(?!-alpha)(?!-beta)\"")
+        Regex("\"/antoinepirlot/MP3-Player/releases/tag/v[0-9]+\\.[0-9]+\\.[0-9]+(?!-$ALPHA)(?!-$BETA)\"")
+    private val PREVIEW_APK_REGEX: Regex =
+        Regex(">.*v[0-9]+\\.[0-9]+\\.[0-9]+(?!-$ALPHA)(?!-$BETA)\\.apk<")
+
     private val RELEASE_REGEX: Regex =
         Regex("\"/antoinepirlot/MP3-Player/releases/tag/v[0-9]+\\.[0-9]+\\.[0-9]+\"")
+    private val RELEASE_APK_REGEX: Regex = Regex(">.*v[0-9]+\\.[0-9]+\\.[0-9]+.apk\"<")
+
+    private const val RELEASES_URL = "https://github.com/antoinepirlot/MP3-Player/releases"
+
+    private var versionType: String = "" //Alpha, Beta, Preview or "" for Stable version
 
     val updateAvailable: MutableState<UpdateAvailableStatus> =
         mutableStateOf(UpdateAvailableStatus.UNDEFINED)
     val isCheckingUpdate: MutableState<Boolean> = mutableStateOf(false)
-
-    private const val RELEASES_URL = "https://github.com/antoinepirlot/MP3-Player/releases"
+    val latestVersion: MutableState<String?> = mutableStateOf(null)
+    val downloadStatus: MutableState<APKDownloadStatus> =
+        mutableStateOf(APKDownloadStatus.NOT_STARTED)
 
     private fun getUrlResponse(context: Context, url: String): Response? {
         val internetManager = InternetManager(context = context)
@@ -120,6 +133,7 @@ object UpdateManager {
             )?.value?.split("/")?.last()?.split("\"")?.first()
         updateAvailable.value =
             if (latestVersion != null && latestVersion != currentVersion) {
+                this.latestVersion.value = latestVersion
                 UpdateAvailableStatus.AVAILABLE.updateLink = "$RELEASES_URL/tag/$latestVersion"
                 UpdateAvailableStatus.AVAILABLE
             } else {
@@ -129,6 +143,37 @@ object UpdateManager {
     }
 
     fun getCurrentVersion(context: Context): String {
-        return context.packageManager.getPackageInfo(context.packageName, 0).versionName
+        val versionName: String =
+            context.packageManager.getPackageInfo(context.packageName, 0).versionName
+        versionType = versionName.split("-").last()
+        return versionName
+    }
+
+    private fun downloadUpdateApk(context: Context) {
+        if (updateAvailable.value != UpdateAvailableStatus.AVAILABLE) {
+            //Can't be downloaded
+            return
+        }
+
+        val regex: Regex =
+            when (versionType) {
+                ALPHA -> ALPHA_APK_REGEX
+                BETA -> BETA_APK_REGEX
+                PREVIEW -> PREVIEW_APK_REGEX
+                else -> RELEASE_APK_REGEX
+            }
+//        var apkFileName: String? = regex.find(
+//            page,
+//            0
+//        )?.value
+//        if (apkFileName == null) {
+//            downloadStatus.value = APKDownloadStatus.UNDETERMINED
+//            return
+//        }
+//
+//        //TODO redownload the page
+//        apkFileName = apkFileName.toCharArray(startIndex = 1, endIndex = apkFileName.length - 1).toString() //Avoid > and <
+//        val downloadUrl: String = "$RELEASES_URL/$latestVersion/$apkFileName"
+//        println(downloadUrl)
     }
 }

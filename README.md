@@ -60,7 +60,7 @@ Améliorations, Optimisations et Résolutions de problèmes:
     stable.
   * Stable: Il s'agit d'une version prête à l'emploi. C'est la version recomandée pour une
     utilisation normale. Elle peut cependant encore présenter quelques bugs mais ceux-ci se feront
-    rare et n'empêcheront pas le fonctionnement des fonctionalités.
+    rare et n'empêcheront pas le bon fonctionnement des fonctionalités.
 * L'ajout de musiques à plusieurs playlists est en principe réglé.
 * Les crash survenant lors d'une recomposition de l'UI suite à des changements comme "Rotation de
   l'écran" ou encore "Activation du mode sombre" ne feront plus crasher l'application.

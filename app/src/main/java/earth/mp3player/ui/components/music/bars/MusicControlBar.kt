@@ -30,6 +30,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
@@ -65,10 +66,9 @@ fun MusicControlBar(
     val playPauseButtonSize = 80.dp
     val optionButtonSize = 30.dp
 
-    Column {
-        MusicPositionBar()
+    Column(modifier = modifier) {
+        MusicPositionBar(modifier = Modifier.padding(horizontal = 16.dp))
         Row(
-            modifier = modifier,
             horizontalArrangement = horizontalArrangement,
             verticalAlignment = verticalAlignment
         ) {

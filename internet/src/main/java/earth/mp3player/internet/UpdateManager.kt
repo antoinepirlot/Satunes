@@ -56,7 +56,22 @@ object UpdateManager {
         mutableStateOf(UpdateAvailableStatus.UNDEFINED)
     val isCheckingUpdate: MutableState<Boolean> = mutableStateOf(false)
 
-    private const val URL = "https://github.com/antoinepirlot/MP3-Player/releases"
+    private const val RELEASES_URL = "https://github.com/antoinepirlot/MP3-Player/releases"
+
+    private fun getUrlResponse(context: Context, url: String): Response? {
+        val internetManager = InternetManager(context = context)
+        if (!internetManager.isConnected()) {
+            UpdateAvailableStatus.CANNOT_CHECK.updateLink = null
+            updateAvailable.value = UpdateAvailableStatus.CANNOT_CHECK
+            isCheckingUpdate.value = false
+            return null
+        }
+        val httpClient = OkHttpClient()
+        val req: Request = Request.Builder()
+            .url(url)
+            .build()
+        return httpClient.newCall(req).execute()
+    }
 
     /**
      * Checks if an update is available if there's an internet connection.
@@ -64,22 +79,11 @@ object UpdateManager {
     fun checkUpdate(context: Context) {
         //Check update
         isCheckingUpdate.value = true
-        try {
-            val internetManager = InternetManager(context = context)
-            if (!internetManager.isConnected()) {
-                UpdateAvailableStatus.CANNOT_CHECK.updateLink = null
-                updateAvailable.value = UpdateAvailableStatus.CANNOT_CHECK
-                isCheckingUpdate.value = false
-                return
-            }
-            CoroutineScope(Dispatchers.IO).launch {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
                 //Get all versions
-                val httpClient = OkHttpClient()
-                val req: Request = Request.Builder()
-                    .url(URL)
-                    .build()
-                val res: Response = httpClient.newCall(req).execute()
-                if (!res.isSuccessful) {
+                val res: Response? = getUrlResponse(context = context, url = RELEASES_URL)
+                if (!res!!.isSuccessful) {
                     res.close()
                     UpdateAvailableStatus.CANNOT_CHECK.updateLink = null
                     updateAvailable.value = UpdateAvailableStatus.CANNOT_CHECK
@@ -91,11 +95,13 @@ object UpdateManager {
 
                 val currentVersion: String = 'v' + getCurrentVersion(context = context)
                 checkUpdate(page = page, currentVersion = currentVersion)
+            } catch (_: Exception) {
+                //Don't crash the app if an error occurred internet connection
+                //Don't care of internet
+                updateAvailable.value = UpdateAvailableStatus.CANNOT_CHECK
+            } finally {
                 isCheckingUpdate.value = false
             }
-        } catch (_: Exception) {
-            //Don't crash the app if not internet connection
-            isCheckingUpdate.value = false
         }
     }
 
@@ -114,7 +120,7 @@ object UpdateManager {
             )?.value?.split("/")?.last()?.split("\"")?.first()
         updateAvailable.value =
             if (latestVersion != null && latestVersion != currentVersion) {
-                UpdateAvailableStatus.AVAILABLE.updateLink = "$URL/tag/$latestVersion"
+                UpdateAvailableStatus.AVAILABLE.updateLink = "$RELEASES_URL/tag/$latestVersion"
                 UpdateAvailableStatus.AVAILABLE
             } else {
                 UpdateAvailableStatus.AVAILABLE.updateLink = null

@@ -26,6 +26,7 @@
 package earth.mp3player.database.services
 
 import androidx.media3.common.MediaItem
+import earth.mp3player.database.exceptions.MusicNotFoundException
 import earth.mp3player.database.models.Album
 import earth.mp3player.database.models.Artist
 import earth.mp3player.database.models.Folder
@@ -54,7 +55,13 @@ object DataManager {
     private val playlistWithMusicsMapById: MutableMap<Long, PlaylistWithMusics> = mutableMapOf()
 
     fun getMusic(musicId: Long): Music {
+        try {
         return musicMapById[musicId]!!
+        } catch (_: NullPointerException) {
+            //That means the music is not more present in the phone storage
+            //Happens when the database is loaded with old informations.
+            throw MusicNotFoundException(musicId = musicId)
+        }
     }
 
     fun getMusic(mediaItem: MediaItem): Music {

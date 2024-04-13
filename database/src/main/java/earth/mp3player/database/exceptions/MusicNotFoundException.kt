@@ -2,7 +2,7 @@
  * This file is part of MP3 Player.
  *
  * MP3 Player is free software: you can redistribute it and/or modify it under
- *  the terms of the GNU General Public License as published by the Free Software Foundation,
+ * the terms of the GNU General Public License as published by the Free Software Foundation,
  * either version 3 of the License, or (at your option) any later version.
  *
  * MP3 Player is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -23,36 +23,11 @@
  * PS: I don't answer quickly.
  */
 
-package earth.mp3player.database.daos
-
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
-import earth.mp3player.database.models.tables.MusicDB
+package earth.mp3player.database.exceptions
 
 /**
- * @author Antoine Pirlot on 27/03/2024
+ * @author Antoine Pirlot on 13/04/2024
  */
-
-@Dao
-internal interface MusicDAO {
-
-    @Query("SELECT count(music_id) FROM musics")
-    fun count(): Long
-
-    @Query("SELECT * FROM musics WHERE music_id == :id")
-    fun get(id: Long): MusicDB?
-
-    @Query("SELECT * FROM musics")
-    fun getAll(): List<MusicDB>
-
-    @Insert
-    fun insert(vararg musics: MusicDB)
-
-    @Delete
-    fun delete(music: MusicDB)
-
-    @Query("DELETE from musics WHERE music_id = :musicId")
-    fun remove(musicId: Long)
-}
+class MusicNotFoundException(
+    val musicId: Long
+) : Exception()

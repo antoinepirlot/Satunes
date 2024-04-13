@@ -25,6 +25,7 @@
 
 package earth.mp3player.database.models
 
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.media3.common.MediaItem
 import java.util.SortedMap
 
@@ -38,6 +39,7 @@ data class Artist(
     var musicList: MutableList<Music> = mutableListOf(),
     var albumSortedMap: SortedMap<String, Album> = sortedMapOf(),
 ) : Media {
+    override var artwork: ImageBitmap? = null
     override val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
 
     companion object {

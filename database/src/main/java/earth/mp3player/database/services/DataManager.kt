@@ -26,6 +26,7 @@
 package earth.mp3player.database.services
 
 import androidx.media3.common.MediaItem
+import earth.mp3player.database.exceptions.DuplicatedAlbumException
 import earth.mp3player.database.exceptions.MusicNotFoundException
 import earth.mp3player.database.models.Album
 import earth.mp3player.database.models.Artist
@@ -107,6 +108,10 @@ object DataManager {
     }
 
     fun addAlbum(album: Album) {
+        if (albumMapById.containsValue(value = album)) {
+            val existingAlbum: Album = albumMapById.values.first { it == album }
+            throw DuplicatedAlbumException(existingAlbum = existingAlbum)
+        }
         albumMap.putIfAbsent(album.title, album)
         albumMapById.putIfAbsent(album.id, album)
     }

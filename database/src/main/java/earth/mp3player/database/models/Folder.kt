@@ -25,6 +25,7 @@
 
 package earth.mp3player.database.models
 
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.media3.common.MediaItem
 import earth.mp3player.database.services.DataManager
 import java.util.SortedMap
@@ -40,6 +41,7 @@ data class Folder(
     private var subFolderList: SortedMap<Long, Folder> = sortedMapOf(),
     override var musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf(),
 ) : Media {
+    override var artwork: ImageBitmap? = null
 
     val absolutePath: String = if (parentFolder == null) {
         "/$title"

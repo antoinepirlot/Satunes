@@ -25,6 +25,7 @@
 
 package earth.mp3player.database.models.relations
 
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.media3.common.MediaItem
 import androidx.room.Embedded
 import androidx.room.Ignore
@@ -49,6 +50,8 @@ data class PlaylistWithMusics(
     )
     val musics: MutableList<MusicDB>
 ) : Media {
+    @Ignore
+    override var artwork: ImageBitmap? = null
     @Ignore
     override val id: Long = playlist.id // Not used
 

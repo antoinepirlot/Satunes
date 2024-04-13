@@ -64,7 +64,7 @@ fun AlbumGridCard(
                 modifier
                     .size(225.dp)
                     .align(Alignment.CenterHorizontally),
-                album = album,
+                media = album,
                 onClick = onClick
             )
             Text(

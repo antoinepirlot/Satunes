@@ -59,7 +59,7 @@ class Music(
 ) : Media {
     var uri: Uri = Uri.parse(absolutePath) // Must be init before media item
     val mediaItem: MediaItem = getMediaMetadata()
-    var artwork: ImageBitmap? = null
+    override var artwork: ImageBitmap? = null
 
     init {
         DataManager.addMusic(music = this)

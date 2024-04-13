@@ -36,5 +36,5 @@ If you decide to use my code to create new app, you can but you have to use the 
 
 If you like the app and want to support me click [here](https://tipeee.com/antoinepirlot).
 
-# UPDATES
-If you want to know about updates, [click here.](UPDATES_EN.md)
+# Releases
+If you want to know about different releases and what they added, [click here.](UPDATES_EN.md)

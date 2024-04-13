@@ -279,7 +279,7 @@ object DataLoader {
             //The last name is a file
             val folderName: String = splitList[index]
             if (folderName !in listOf("", "storage", "emulated")) {
-                splitPath.add(Uri.encode(folderName))
+                splitPath.add(encode(folderName))
             }
         }
 

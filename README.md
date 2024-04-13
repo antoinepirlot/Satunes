@@ -40,6 +40,44 @@ Si l'application te plait et que tu as envie de me soutenir, n'hésite pas à le
 
 ## 0.8 (Android 11 Red Velvet Cake et ultérieur)
 
+### 0.8.1-beta
+
+Améliorations, Optimisations et Résolutions de problèmes:
+
+* Lorsque l'utilisateur a ajouté des musique aux playlists mais qu'il décide de les supprimer de
+  l'appareil. L'application supprime les musiques manquante des playlists. Cela empêche
+  l'application de crasher à chaque lancement.
+* Le système de mise à jour à été repensé. Maintenant, l'utilisateur doit cliquer sur un bouton dans
+  les paramètres. Ce n'est plus automatique afin d'éviter des consomations de données inutiles.
+* La vérification des mises à jour a été corrigée et prend maintenant en compte 4 types de mises à
+  jour:
+  * Alpha: Il s'agit des versions les plus expérimentales et les plus buguées. Les fonctionnalités
+    ne sont pas marquée dans le marbre et peuvent disparaître avec une mise à jour ultérieure.
+  * Beta: Il s'agit des versions de tests permettant de régler les problèmes des nouvelles
+    fonctionnalités. Celle-ci seront ajouté définitivement à l'application (sauf cas de force
+    majeur).
+  * Preview: Il s'agit d'une version candidate qui, si tout ce passe bien, sera déployée en version
+    stable.
+  * Stable: Il s'agit d'une version prête à l'emploi. C'est la version recomandée pour une
+    utilisation normale. Elle peut cependant encore présenter quelques bugs mais ceux-ci se feront
+    rare et n'empêcheront pas le fonctionnement des fonctionalités.
+* L'ajout de musiques à plusieurs playlists est en principe réglé.
+* Les crash survenant lors d'une recomposition de l'UI suite à des changements comme "Rotation de
+  l'écran" ou encore "Activation du mode sombre" ne feront plus crasher l'application.
+* La navigation a été corigée, maintenant l'utilisateur peut revenir à d'autre écrans principaux
+  depuis les paramètre suite à une recompositions de l'écran comme indiqué au point précédent.
+* Lors du lancement de l'application, elle ne devrait plus crasher suite à des problèmes liés à
+  l'initialisation du playback.
+* La structure des données a été révisée afin de régler certains problèmes comme l'ouverture d'un
+  album qui n'était pas le bon ou qui faisait crasher l'application lorsque 2 albums ont le même
+  nom.
+* Optimisation du chargement des données ainsi que du changement du mode aléatoire (grâce aux
+  coroutines de Kotlin)
+* La barre de progression a été réduite sur les côtés pour éviter un conflit avec la navigation par
+  geste.
+* Le playback dans Android Auto a été réglé. Cela se traduira par une possible augmentation de
+  l'utilisation de la batterie mais ceci n'a pas encore pu être vérifié.
+
 ### 0.8.0-beta
 
 Nouvelles Fonctionnalités:

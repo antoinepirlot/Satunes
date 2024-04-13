@@ -39,6 +39,39 @@ If you like the app and want to support me click [here](https://tipeee.com/antoi
 
 ## 0.8 (Android 11 Red Velvet Cake and later)
 
+### 0.8.1-beta
+
+Improvements, Optimizations and Troubleshooting:
+
+* When the user has added music to playlists but decides to delete them from the device, the
+  application deletes missing music from playlists. This prevents the application from crashing
+  every time you launch it.
+* The update system has been redesigned. Now the user needs to click a button in the settings. This
+  is no longer automatic in order to avoid unnecessary data consumption.
+* Update checking has been fixed and now takes into account 4 types of updates:
+  * Alpha: These are the most experimental and buggy versions. Features are not set in stone and may
+    disappear with a subsequent update.
+  * Beta: These are test versions to resolve problems with new features. This will be permanently
+    added to the application (except in cases of major forces).
+  * Preview: This is a release candidate which, if all goes well, will be deployed as a stable
+    version.
+  * Stable: This is a ready-to-use version. This is the recommended version for normal use. However,
+    it may still present some bugs but these will be rare and will not prevent the functions from
+    working.
+* Adding music to several playlists is basically fixed.
+* Crashes occurring when recomposing the UI following changes such as "Screen rotation" or "
+  Activation of dark mode" will no longer cause the application to crash.
+* The navigation has been corrected, now the user can return to other main screens from the settings
+  following a recomposition of the screen as indicated in the previous point.
+* When launching the application, it should no longer crash due to problems related to playback
+  initialization.
+* The data structure has been revised to resolve certain problems such as opening an album that was
+  not the correct one or causing the application to crash when 2 albums have the same name.
+* Optimization of data loading as well as the change of random mode (thanks to Kotlin coroutines).
+* The progress bar has been collapsed on the sides to avoid conflict with gesture navigation.
+* Playback in Android Auto has been fixed. This will result in a possible increase in battery usage
+  but this has not yet been verified.
+
 ### 0.8.0-beta
 
 New features:

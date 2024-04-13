@@ -25,6 +25,7 @@
 
 package earth.mp3player.database.models.tables
 
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Ignore
@@ -42,6 +43,8 @@ data class MusicDB(
     @PrimaryKey
     @ColumnInfo("music_id") override val id: Long
 ) : Media {
+    @Ignore
+    override var artwork: ImageBitmap? = null
     @Ignore
     override val title: String = "Title is not used for MusicDB class." // Not used
 

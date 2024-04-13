@@ -25,8 +25,10 @@
 
 package earth.mp3player.database.models.tables
 
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import earth.mp3player.database.models.Media
@@ -40,4 +42,7 @@ data class Playlist(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "playlist_id") override var id: Long,
     @ColumnInfo(name = "title") override var title: String,
-) : Media
+) : Media {
+    @Ignore
+    override var artwork: ImageBitmap? = null
+}

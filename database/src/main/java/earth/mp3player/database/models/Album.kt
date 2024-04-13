@@ -40,7 +40,7 @@ data class Album(
     override val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf(),
 ) : Media {
     val musicSortedMap: SortedMap<Long, Music> = sortedMapOf()
-    var artwork: ImageBitmap? = null
+    override var artwork: ImageBitmap? = null
 
     companion object {
         var nextId: Long = 1

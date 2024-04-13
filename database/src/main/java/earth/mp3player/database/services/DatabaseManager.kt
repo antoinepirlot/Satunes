@@ -53,7 +53,7 @@ class DatabaseManager(context: Context) {
     fun loadAllPlaylistsWithMusic() {
         CoroutineScope(Dispatchers.IO).launch {
             var playlistsWithMusicsList: List<PlaylistWithMusics>? = null
-            while (musicDao.count() > 0 && playlistsWithMusicsList == null) {
+            while (playlistsWithMusicsList == null) {
                 try {
                     playlistsWithMusicsList = playlistDao.getPlaylistsWithMusics()
                     playlistsWithMusicsList.forEach { playlistWithMusics: PlaylistWithMusics ->

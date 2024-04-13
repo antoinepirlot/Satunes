@@ -31,6 +31,7 @@ import earth.mp3player.database.MP3PlayerDatabase
 import earth.mp3player.database.daos.MusicDAO
 import earth.mp3player.database.daos.MusicsPlaylistsRelDAO
 import earth.mp3player.database.daos.PlaylistDAO
+import earth.mp3player.database.exceptions.MusicNotFoundException
 import earth.mp3player.database.models.Music
 import earth.mp3player.database.models.relations.PlaylistWithMusics
 import earth.mp3player.database.models.tables.MusicDB
@@ -51,10 +52,16 @@ class DatabaseManager(context: Context) {
 
     fun loadAllPlaylistsWithMusic() {
         CoroutineScope(Dispatchers.IO).launch {
-            val playlistsWithMusicsList: List<PlaylistWithMusics> =
-                playlistDao.getPlaylistsWithMusics()
-            playlistsWithMusicsList.forEach { playlistWithMusics: PlaylistWithMusics ->
-                DataManager.addPlaylist(playlistWithMusics = playlistWithMusics)
+            var playlistsWithMusicsList: List<PlaylistWithMusics>? = null
+            while (playlistsWithMusicsList == null) {
+                try {
+                    playlistsWithMusicsList = playlistDao.getPlaylistsWithMusics()
+                    playlistsWithMusicsList.forEach { playlistWithMusics: PlaylistWithMusics ->
+                        DataManager.addPlaylist(playlistWithMusics = playlistWithMusics)
+                    }
+                } catch (e: MusicNotFoundException) {
+                    musicDao.remove(musicId = e.musicId)
+                }
             }
         }
     }

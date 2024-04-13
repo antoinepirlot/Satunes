@@ -32,6 +32,7 @@ import android.net.Uri.encode
 import android.provider.MediaStore
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import earth.mp3player.database.exceptions.DuplicatedAlbumException
 import earth.mp3player.database.models.Album
 import earth.mp3player.database.models.Artist
 import earth.mp3player.database.models.Folder
@@ -157,13 +158,6 @@ object DataLoader {
         var album: Album? = null
         var genre: Genre? = null
 
-        //Load album
-        try {
-            album = loadAlbum(cursor = cursor)
-        } catch (_: Exception) {
-            //No Album
-        }
-
         //Load Artist
         try {
             artist = loadArtist(cursor = cursor)
@@ -171,10 +165,21 @@ object DataLoader {
             //No artist
         }
 
-        //Link album and artist if exists
-        if (artist != null && album != null) {
-            artist.addAlbum(album)
-            album.artist = artist
+        //Load album
+        try {
+            album = loadAlbum(cursor = cursor, artist = artist)
+        } catch (e: DuplicatedAlbumException) {
+            // The album already exist
+            album = e.existingAlbum
+        } catch (_: Exception) {
+            //No Album
+        }
+
+        //Link album to artist if the album doesn't already have the album
+        if (album != null && artist != null) {
+            if (!artist.albumSortedMap.containsValue(value = album)) {
+                artist.addAlbum(album = album)
+            }
         }
 
         //Load Genre
@@ -303,20 +308,20 @@ object DataLoader {
         return rootFolder!!.getSubFolder(splitPath.toMutableList())!!
     }
 
-    private fun loadAlbum(cursor: Cursor): Album {
-        val name = encode(cursor.getString(albumNameColumn!!))
-
-        val album = Album(title = name)
-        DataManager.addAlbum(album = album)
-        return album
-    }
-
     private fun loadArtist(cursor: Cursor): Artist {
         // Get values of columns for a given artist.
         val name = encode(cursor.getString(artistNameColumn!!))
 
         val artist = Artist(title = name)
         return DataManager.addArtist(artist = artist)
+    }
+
+    private fun loadAlbum(cursor: Cursor, artist: Artist?): Album {
+        val name = encode(cursor.getString(albumNameColumn!!))
+
+        val album = Album(title = name, artist = artist)
+        DataManager.addAlbum(album = album)
+        return album
     }
 
     private fun loadGenre(cursor: Cursor): Genre {

@@ -1,4 +1,4 @@
-# UPDATES (🇫🇷)
+# Mises A Jour (🇫🇷)
 You can find this file in [english 🇬🇧](UPDATES_EN.md)
 ## 0.8 (Android 11 Red Velvet Cake et ultérieur)
 

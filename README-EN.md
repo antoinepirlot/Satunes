@@ -38,8 +38,3 @@ If you like the app and want to support me click [here](https://tipeee.com/antoi
 
 # UPDATES
 If you want to know about updates, [click here.](UPDATES_EN.md)
-
-### 0.1.0-beta
-
-This version is the very first version of this app (in beta).
-It includes basics functionalities of an mp3 player.

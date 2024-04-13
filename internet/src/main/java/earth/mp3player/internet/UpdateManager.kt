@@ -71,6 +71,8 @@ object UpdateManager {
 
     private const val RELEASES_URL = "https://github.com/antoinepirlot/MP3-Player/releases"
 
+    private const val MIME_TYPE = "application/vnd.android.package-archive"
+
     private var versionType: String = "" //Alpha, Beta, Preview or "" for Stable version
 
     val updateAvailable: MutableState<UpdateAvailableStatus> =
@@ -121,9 +123,8 @@ object UpdateManager {
                 val page: String = res.body!!.string()
                 res.close()
 
-                //TODO
                 val currentVersion: String =
-                    'v' + "0.7.3-beta"//getCurrentVersion(context = context)
+                    'v' + getCurrentVersion(context = context)
                 checkUpdate(page = page, currentVersion = currentVersion)
             } catch (_: Exception) {
                 //Don't crash the app if an error occurred internet connection
@@ -132,8 +133,6 @@ object UpdateManager {
             } finally {
                 isCheckingUpdate.value = false
             }
-            //TODO remove
-            downloadUpdateApk(context = context)
         }
     }
 
@@ -168,44 +167,53 @@ object UpdateManager {
         return versionName
     }
 
+    //TODO add button to run it
     private fun downloadUpdateApk(context: Context) {
         CoroutineScope(Dispatchers.IO).launch {
             if (updateAvailable.value != UpdateAvailableStatus.AVAILABLE) {
                 //Can't be downloaded
+                downloadStatus.value = APKDownloadStatus.NOT_FOUND
                 return@launch
             }
             val downloadUrl: String = getDownloadUrl(context = context) ?: return@launch
             val appName: String = downloadUrl.split("/").last().split("_").first()
             val downloadManager: DownloadManager = context.getSystemService()!!
-            val req: DownloadManager.Request = DownloadManager.Request(Uri.parse(downloadUrl))
-            req.setDestinationInExternalFilesDir(context, Environment.DIRECTORY_DOWNLOADS, appName)
+            val downloadUri: Uri = Uri.parse(downloadUrl)
+            val req: DownloadManager.Request = DownloadManager.Request(downloadUri)
+            req.setMimeType(MIME_TYPE)
+            val destination =
+                "file://" + context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
+                    .toString() + "/$appName"
+            val destinationUri: Uri = Uri.parse(destination)
+            req.setDestinationUri(destinationUri)
+
             req.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
-            downloadManager.enqueue(req)
-            requestInstallation(context = context, downloadManager = downloadManager)
+            val downloadId: Long = downloadManager.enqueue(req)
+            requestInstallation(context = context, downloadId = downloadId)
+            downloadStatus.value = APKDownloadStatus.FOUND
         }
     }
 
-    private fun requestInstallation(context: Context, downloadManager: DownloadManager) {
-        val onComplete: BroadcastReceiver = object : BroadcastReceiver() {
+    private fun requestInstallation(context: Context, downloadId: Long) {
+        val onComplete = object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
                 if (intent.action == DownloadManager.ACTION_DOWNLOAD_COMPLETE) {
-                    val downloadId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
-                    if (downloadId != -1L) {
-                        // Ouvrir le fichier APK pour l'installation
-                        val installIntent = Intent(Intent.ACTION_VIEW)
-                        installIntent.setDataAndType(
-                            downloadManager.getUriForDownloadedFile(downloadId),
-                            "application/vnd.android.package-archive"
-                        )
-                        context.startActivity(installIntent)
-                    }
+                    val downloadManager: DownloadManager =
+                        context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+                    val contentUri: Uri = downloadManager.getUriForDownloadedFile(downloadId)
+                    val install = Intent(Intent.ACTION_VIEW)
+                    install.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                    install.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    install.putExtra(Intent.EXTRA_NOT_UNKNOWN_SOURCE, true)
+                    install.data = contentUri
+                    context.startActivity(install)
+                    context.unregisterReceiver(this)
                 }
             }
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             context.registerReceiver(
-                onComplete,
-                IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE),
+                onComplete, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE),
                 Context.RECEIVER_EXPORTED
             )
         }
@@ -231,6 +239,7 @@ object UpdateManager {
         )!!
         if (!res.isSuccessful) {
             res.close()
+            downloadStatus.value = APKDownloadStatus.NOT_FOUND
             return null
         }
         val page: String = res.body!!.string()
@@ -240,7 +249,7 @@ object UpdateManager {
             0
         )?.value
         if (apkFileName == null) {
-            downloadStatus.value = APKDownloadStatus.UNDETERMINED
+            downloadStatus.value = APKDownloadStatus.NOT_FOUND
             return null
         }
 

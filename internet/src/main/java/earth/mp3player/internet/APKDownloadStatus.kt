@@ -32,5 +32,4 @@ enum class APKDownloadStatus {
     NOT_STARTED,
     NOT_FOUND,
     FOUND,
-    UNDETERMINED,
 }

@@ -41,6 +41,9 @@ import earth.mp3player.database.models.Music
 import earth.mp3player.database.services.DataLoader
 import earth.mp3player.database.services.DataManager
 import earth.mp3player.playback.models.Playlist
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.util.SortedMap
 
 /**
@@ -297,14 +300,16 @@ class PlaybackController private constructor(
      *      2) If the shuffle mode is enabling shuffle the playlist
      */
     fun switchShuffleMode() {
-        this.isShuffle.value = !this.isShuffle.value
-        if (this.playlist.musicCount() > 1) {
-            if (!this.isShuffle.value) {
-                // Deactivate shuffle
-                this.undoShuffle()
-            } else {
-                // Activate shuffle mode
-                this.shuffle()
+        CoroutineScope(Dispatchers.Main).launch {
+            isShuffle.value = !isShuffle.value
+            if (playlist.musicCount() > 1) {
+                if (!isShuffle.value) {
+                    // Deactivate shuffle
+                    undoShuffle()
+                } else {
+                    // Activate shuffle mode
+                    shuffle()
+                }
             }
         }
     }

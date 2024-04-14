@@ -37,7 +37,6 @@ internal object DownloadReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.action == DownloadManager.ACTION_DOWNLOAD_COMPLETE) {
             UpdateManager.downloadStatus.value = APKDownloadStatus.DOWNLOADED
-
         }
     }
 }

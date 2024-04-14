@@ -167,6 +167,10 @@ object UpdateDownloadManager {
                 DownloadReceiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE),
                 Context.RECEIVER_EXPORTED
             )
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            context.registerReceiver(
+                DownloadReceiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE)
+            )
         }
     }
 

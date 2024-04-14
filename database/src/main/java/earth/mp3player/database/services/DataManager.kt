@@ -36,6 +36,7 @@ import earth.mp3player.database.models.Music
 import earth.mp3player.database.models.relations.PlaylistWithMusics
 import earth.mp3player.database.models.tables.Playlist
 import java.util.SortedMap
+import java.util.SortedSet
 
 /**
  * @author Antoine Pirlot on 07/03/2024
@@ -48,7 +49,7 @@ object DataManager {
     val folderMap: SortedMap<Long, Folder> = sortedMapOf()
     val artistMap: SortedMap<String, Artist> = sortedMapOf()
     private val artistMapById: MutableMap<Long, Artist> = mutableMapOf()
-    val albumMap: SortedMap<String, Album> = sortedMapOf()
+    val albumSet: SortedSet<Album> = sortedSetOf()
     private val albumMapById: MutableMap<Long, Album> = mutableMapOf()
     val genreMap: SortedMap<String, Genre> = sortedMapOf()
     private val genreMapById: MutableMap<Long, Genre> = mutableMapOf()
@@ -112,12 +113,12 @@ object DataManager {
             val existingAlbum: Album = albumMapById.values.first { it == album }
             throw DuplicatedAlbumException(existingAlbum = existingAlbum)
         }
-        albumMap.putIfAbsent(album.title, album)
+        albumSet.add(album)
         albumMapById.putIfAbsent(album.id, album)
     }
 
     fun removeAlbum(album: Album) {
-        albumMap.remove(album.title)
+        albumSet.remove(album)
         albumMapById.remove(album.id)
     }
 

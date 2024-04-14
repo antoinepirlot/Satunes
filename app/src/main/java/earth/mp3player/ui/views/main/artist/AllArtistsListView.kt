@@ -63,7 +63,7 @@ fun AllArtistsListView(
     @Suppress("UNCHECKED_CAST")
     MediaListView(
         modifier = modifier,
-        mediaMap = artistMap as SortedMap<Long, Media>,
+        mediaList = artistMap.values.toList(),
 
         openMedia = { clickedMedia: Media ->
             openMedia(

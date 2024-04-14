@@ -44,14 +44,14 @@ import earth.mp3player.database.models.tables.MusicDB
  */
 
 @Composable
-fun <T : Comparable<T>> MediaCardList(
+fun MediaCardList(
     modifier: Modifier = Modifier,
-    mediaMap: Map<T, Media>,
+    mediaList: List<Media>,
     openMedia: (media: Media) -> Unit
 ) {
     val lazyState = rememberLazyListState()
 
-    if (mediaMap.isEmpty()) {
+    if (mediaList.isEmpty()) {
         // It fixes issue while accessing last folder in chain
         return
     }
@@ -62,7 +62,7 @@ fun <T : Comparable<T>> MediaCardList(
             state = lazyState
         ) {
             items(
-                items = mediaMap.values.toList(),
+                items = mediaList,
                 key = {
                     when (it) {
                         is PlaylistWithMusics -> it.playlist.id
@@ -84,9 +84,9 @@ fun <T : Comparable<T>> MediaCardList(
 
 @Composable
 @Preview
-fun <T : Comparable<T>> CardListPreview() {
+fun CardListPreview() {
     MediaCardList(
-        mediaMap = sortedMapOf<T, Media>(),
+        mediaList = listOf(),
         openMedia = {}
     )
 }

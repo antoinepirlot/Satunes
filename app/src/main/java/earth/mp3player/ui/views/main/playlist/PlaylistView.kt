@@ -34,7 +34,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import earth.mp3player.database.models.Media
 import earth.mp3player.database.models.relations.PlaylistWithMusics
-import earth.mp3player.database.models.tables.MusicDB
 import earth.mp3player.database.models.tables.Playlist
 import earth.mp3player.playback.services.PlaybackController
 import earth.mp3player.router.utils.openCurrentMusic
@@ -42,7 +41,6 @@ import earth.mp3player.router.utils.openMedia
 import earth.mp3player.services.PlaylistSelectionManager
 import earth.mp3player.ui.components.texts.Title
 import earth.mp3player.ui.views.main.MediaListView
-import java.util.SortedMap
 
 /**
  * @author Antoine Pirlot on 01/04/2024
@@ -56,16 +54,12 @@ fun PlaylistView(
 ) {
     //TODO try using nav controller instead try to remember it in an object if possible
     PlaylistSelectionManager.openedPlaylist = playlist
-    val musicSortedMap: SortedMap<String, Media> = sortedMapOf()
-    playlist.musics.forEach { musicDb: MusicDB ->
-        musicSortedMap[musicDb.music.title] = musicDb.music
-    }
 
     Column(modifier = modifier) {
         Title(text = decode(playlist.playlist.title))
 
         MediaListView(
-            mediaMap = musicSortedMap,
+            mediaList = playlist.musics,
             openMedia = { clickedMedia: Media ->
                 PlaybackController.getInstance().loadMusic(
                     musicMediaItemSortedMap = playlist.musicMediaItemSortedMap

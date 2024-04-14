@@ -55,15 +55,11 @@ fun AllMusicsListView(
     //Find a way to do something more aesthetic but it works
     val musicMediaItemMap: SortedMap<Music, MediaItem> =
         remember { DataManager.musicMediaItemSortedMap }
-    val mediaMap: SortedMap<Music, Media> = sortedMapOf()
-
-    musicMediaItemMap.keys.forEach { music: Music ->
-        mediaMap[music] = music
-    }
     resetOpenedPlaylist()
+
     MediaListView(
         modifier = modifier,
-        mediaMap = mediaMap,
+        mediaList = musicMediaItemMap.keys.toList(),
 
         openMedia = { clickedMedia: Media ->
             playbackController.loadMusic(

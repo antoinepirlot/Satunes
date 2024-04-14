@@ -58,7 +58,7 @@ fun GenreView(
         Title(text = decode(genre.title))
 
         MediaListView(
-            mediaMap = genre.musicMap,
+            mediaList = genre.musicMap.values.toList(),
 
             openMedia = { clickedMedia: Media ->
                 playbackController.loadMusic(

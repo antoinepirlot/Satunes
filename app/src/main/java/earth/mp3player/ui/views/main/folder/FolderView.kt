@@ -65,7 +65,7 @@ fun FolderView(
     val mapToShow: SortedMap<Long, Media> = sortedMapOf()
 
     //Load sub-folders
-    mapToShow.putAll(folder.getSubFolderListAsMedia())
+    mapToShow.putAll(folder.getSubFolderMapAsMedia())
 
     //Load sub-folder's musics
     folderMusicMediaItemSortedMap.forEach { (music: Music, _) ->
@@ -88,7 +88,7 @@ fun FolderView(
         }
 
         MediaListView(
-            mediaMap = mapToShow,
+            mediaList = mapToShow.values.toList(),
 
             openMedia = { clickedMedia: Media ->
                 openMediaFromFolder(navController, clickedMedia)

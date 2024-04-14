@@ -42,6 +42,7 @@ import earth.mp3player.router.utils.openMedia
 import earth.mp3player.router.utils.resetOpenedPlaylist
 import earth.mp3player.ui.views.main.MediaListView
 import java.util.SortedMap
+import java.util.SortedSet
 
 /**
  * @author Antoine Pirlot on 01/04/2024
@@ -54,11 +55,11 @@ fun AllAlbumsListView(
 ) {
     val playbackController: PlaybackController = PlaybackController.getInstance()
 
-    val albumMap: SortedMap<String, Album> = remember { DataManager.albumMap }
+    val albumSet: SortedSet<Album> = remember { DataManager.albumSet }
 
     val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
 
-    albumMap.forEach { (_: String, album: Album) ->
+    albumSet.forEach { album: Album ->
         musicMediaItemSortedMap.putAll(album.musicMediaItemSortedMap)
     }
 
@@ -66,7 +67,7 @@ fun AllAlbumsListView(
     @Suppress("UNCHECKED_CAST")
     MediaListView(
         modifier = modifier,
-        mediaMap = albumMap as SortedMap<Long, Media>,
+        mediaList = albumSet.toList(),
 
         openMedia = { clickedMedia: Media ->
             openMedia(navController = navController, media = clickedMedia)

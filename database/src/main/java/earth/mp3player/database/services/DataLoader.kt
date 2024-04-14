@@ -74,6 +74,7 @@ object DataLoader {
 
     private const val UNKNOWN_ARTIST = "<unknown>"
     private const val UNKNOWN_ALBUM = "Unknown Album"
+    private const val UNKNOWN_GENRE = "<unknown>"
 
     /**
      * Load all Media data from device's storage.
@@ -184,7 +185,7 @@ object DataLoader {
 
         //Load Genre
         try {
-            genre = loadGenre(cursor = cursor)
+            genre = loadGenre(context = context, cursor = cursor)
         } catch (_: Exception) {
             //No genre
         }
@@ -350,10 +351,18 @@ object DataLoader {
         }
     }
 
-    private fun loadGenre(cursor: Cursor): Genre {
+    private fun loadGenre(context: Context, cursor: Cursor): Genre {
         val name = encode(cursor.getString(genreNameColumn!!))
-
-        val genre = Genre(title = name)
-        return DataManager.addGenre(genre = genre)
+        return if (decode(name) == UNKNOWN_GENRE) {
+            // Assign the Unknown Genre
+            try {
+                DataManager.getGenre(encode(context.getString(R.string.unknown_genre)))
+            } catch (_: NullPointerException) {
+                val newGenre = Genre(title = encode(context.getString(R.string.unknown_genre)))
+                DataManager.addGenre(genre = newGenre)
+            }
+        } else {
+            DataManager.addGenre(genre = Genre(title = name))
+        }
     }
 }

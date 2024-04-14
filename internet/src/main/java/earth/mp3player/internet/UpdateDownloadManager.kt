@@ -161,7 +161,6 @@ object UpdateDownloadManager {
         return "${RELEASES_URL}/download/${UpdateManager.latestVersion.value}/$apkFileName"
     }
 
-    //TODO make it available for Android R and later
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
     private fun setDownloadReceiver(context: Context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {

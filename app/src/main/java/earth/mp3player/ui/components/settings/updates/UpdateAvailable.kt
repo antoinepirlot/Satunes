@@ -28,7 +28,8 @@ package earth.mp3player.ui.components.settings.updates
 import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -40,6 +41,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import earth.mp3player.internet.R
 import earth.mp3player.internet.UpdateAvailableStatus
 import earth.mp3player.internet.UpdateManager
+import earth.mp3player.ui.components.playlist.SPACER_SIZE
 import earth.mp3player.ui.components.settings.utils.openUrl
 
 /**
@@ -52,7 +54,7 @@ fun UpdateAvailable(
 ) {
     val context: Context = LocalContext.current
     Row(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier,
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -65,6 +67,7 @@ fun UpdateAvailable(
         }) {
             Text(text = stringResource(id = R.string.see_details))
         }
+        Spacer(modifier = modifier.size(SPACER_SIZE))
         Button(onClick = { UpdateManager.downloadUpdateApk(context = context) }) {
             Text(text = stringResource(id = R.string.download_update))
         }

@@ -108,7 +108,7 @@ object UpdateManager {
 
                 //TODO remove hard coded old version
                 val currentVersion: String =
-                    'v' + "0.7.0-beta"//getCurrentVersion(context = context)
+                    'v' + "0.1.0-beta"//getCurrentVersion(context = context)
                 val updateUrl: String? = getUpdateUrl(page = page, currentVersion = currentVersion)
                 UpdateAvailableStatus.AVAILABLE.updateLink = updateUrl
                 if (updateUrl == null) {

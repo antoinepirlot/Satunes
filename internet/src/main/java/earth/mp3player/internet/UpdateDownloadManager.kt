@@ -82,7 +82,7 @@ object UpdateDownloadManager {
                 }
                 val downloadUrl: String =
                     getDownloadUrl(context = context, activity = activity) ?: return@launch
-                val appName: String = downloadUrl.split("/").last().split("_").first()
+                val appName: String = downloadUrl.split("/").last()
                 val downloadManager: DownloadManager = context.getSystemService()!!
                 val downloadUri: Uri = Uri.parse(downloadUrl)
                 val req: DownloadManager.Request = DownloadManager.Request(downloadUri)

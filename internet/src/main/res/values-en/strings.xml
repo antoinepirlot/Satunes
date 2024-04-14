@@ -9,7 +9,7 @@
     <string name="download_not_found">File not found</string>
     <string name="download_failed">Downloading Error</string>
     <string name="downloaded">Update downloaded</string>
-    <string name="downloading">Downloading...</string>
-    <string name="download_checking">File searching...</string>
-    <string name="checking_update">Checking update...</string>
+    <string name="downloading">Downloading…</string>
+    <string name="download_checking">File searching…</string>
+    <string name="checking_update">Checking update…</string>
 </resources>

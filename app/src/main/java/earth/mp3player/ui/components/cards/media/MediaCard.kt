@@ -113,6 +113,9 @@ fun MediaCard(
     ) {
         ListItem(
             headlineContent = {
+                if (media is Album) {
+                    Text(text = decode(title) + " - " + decode(media.artist!!.title))
+                }
                 Text(text = decode(title))
             },
             leadingContent = {

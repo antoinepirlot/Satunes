@@ -40,7 +40,6 @@ import earth.mp3player.router.utils.openMedia
 import earth.mp3player.router.utils.resetOpenedPlaylist
 import earth.mp3player.ui.components.texts.Title
 import earth.mp3player.ui.views.main.MediaListView
-import java.util.SortedMap
 
 /**
  * @author Antoine Pirlot on 01/04/2024
@@ -59,9 +58,8 @@ fun AlbumView(
     Column(modifier = modifier) {
         Title(text = decode(album.title))
 
-        @Suppress("UNCHECKED_CAST")
         MediaListView(
-            mediaMap = album.musicSortedMap as SortedMap<Long, Media>,
+            mediaList = album.musicSortedMap.values.toList(),
             openMedia = { clickedMedia: Media ->
                 playbackController.loadMusic(
                     musicMediaItemSortedMap = album.musicMediaItemSortedMap

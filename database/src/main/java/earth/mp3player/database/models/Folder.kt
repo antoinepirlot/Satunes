@@ -38,7 +38,7 @@ data class Folder(
     override var id: Long = nextId,
     override var title: String,
     var parentFolder: Folder? = null,
-    private var subFolderList: SortedMap<Long, Folder> = sortedMapOf(),
+    private var subFolderMap: SortedMap<Long, Folder> = sortedMapOf(),
     override var musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf(),
 ) : Media {
     override var artwork: ImageBitmap? = null
@@ -63,7 +63,7 @@ data class Folder(
      * @return a list of subfolder and each subfolder is a Folder object
      */
     fun getSubFolderList(): SortedMap<Long, Folder> {
-        return this.subFolderList
+        return this.subFolderMap
     }
 
     /**
@@ -71,9 +71,9 @@ data class Folder(
      *
      * @return a list of subfolder and each subfolder is cast to Media object
      */
-    fun getSubFolderListAsMedia(): SortedMap<Long, Media> {
+    fun getSubFolderMapAsMedia(): SortedMap<Long, Media> {
         @Suppress("UNCHECKED_CAST")
-        return this.subFolderList as SortedMap<Long, Media>
+        return this.subFolderMap as SortedMap<Long, Media>
     }
 
     fun addMusic(music: Music) {
@@ -95,7 +95,7 @@ data class Folder(
         var parentFolder = this
         subFolderNameChainList.forEach { folderName: String ->
             var subFolder: Folder? = null
-            for (folder in parentFolder.subFolderList.values) {
+            for (folder in parentFolder.subFolderMap.values) {
                 if (folder.title == folderName) {
                     subFolder = folder
                 }
@@ -103,7 +103,7 @@ data class Folder(
             if (subFolder == null) {
                 subFolder = Folder(title = folderName, parentFolder = parentFolder)
                 DataManager.addFolder(folder = subFolder)
-                parentFolder.subFolderList[subFolder.id] = subFolder
+                parentFolder.subFolderMap[subFolder.id] = subFolder
             }
 
             parentFolder = subFolder
@@ -123,7 +123,7 @@ data class Folder(
         ) {
             return this
         }
-        this.subFolderList.values.forEach { subFolder: Folder ->
+        this.subFolderMap.values.forEach { subFolder: Folder ->
             if (subFolder.title == splitPath[0]) {
                 splitPath.remove(splitPath[0])
                 return subFolder.getSubFolder(splitPath)
@@ -138,8 +138,8 @@ data class Folder(
 
         musicMediaSortedMap.putAll(this.musicMediaItemSortedMap)
 
-        if (this.subFolderList.isNotEmpty()) {
-            this.subFolderList.forEach { (_, folder: Folder) ->
+        if (this.subFolderMap.isNotEmpty()) {
+            this.subFolderMap.forEach { (_, folder: Folder) ->
                 musicMediaSortedMap.putAll(folder.getAllMusic())
             }
         }
@@ -155,14 +155,14 @@ data class Folder(
 
         if (title != other.title) return false
         if (parentFolder != other.parentFolder) return false
-        if (subFolderList != other.subFolderList) return false
+        if (subFolderMap != other.subFolderMap) return false
         return musicMediaItemSortedMap == other.musicMediaItemSortedMap
     }
 
     override fun hashCode(): Int {
         var result = title.hashCode()
         result = 31 * result + (parentFolder?.hashCode() ?: 0)
-        result = 31 * result + subFolderList.hashCode()
+        result = 31 * result + subFolderMap.hashCode()
         result = 31 * result + musicMediaItemSortedMap.hashCode()
         return result
     }

@@ -55,17 +55,11 @@ fun AllGenresListView(
     val playbackController: PlaybackController = PlaybackController.getInstance()
     val genreMap: SortedMap<String, Genre> = remember { DataManager.genreMap }
     val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
-    val mediaMap: MutableMap<Long, Media> = mutableMapOf()
-
-    genreMap.forEach { (_: String, genre: Genre) ->
-        musicMediaItemSortedMap.putAll(genre.musicMediaItemSortedMap)
-        mediaMap.putIfAbsent(genre.id, genre)
-    }
 
     resetOpenedPlaylist()
     MediaListView(
         modifier = modifier,
-        mediaMap = mediaMap,
+        mediaList = genreMap.values.toList(),
 
         openMedia = { clickedMedia: Media ->
             openMedia(navController = navController, media = clickedMedia)

@@ -57,12 +57,6 @@ fun ArtistView(
 ) {
     val playbackController: PlaybackController = PlaybackController.getInstance()
 
-    val musicMap: SortedMap<Long, Media> = sortedMapOf()
-
-    artist.musicList.forEach { music: Music ->
-        musicMap[music.id] = music
-    }
-
     resetOpenedPlaylist()
 
     Column {
@@ -71,7 +65,7 @@ fun ArtistView(
             mediaList = artist.albumSortedMap.values.toList(),
             onClick = { openMedia(navController = navController, media = it) })
         MediaListView(
-            mediaMap = musicMap,
+            mediaList = artist.musicList,
 
             openMedia = { clickedMedia: Media ->
                 playbackController.loadMusic(musicMediaItemSortedMap = artist.musicMediaItemSortedMap)

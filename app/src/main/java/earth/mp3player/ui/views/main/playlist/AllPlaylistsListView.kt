@@ -68,7 +68,7 @@ fun PlaylistListView(
             remember { DataManager.playlistWithMusicsMap as SortedMap<String, Media> }
 
         MediaListView(
-            mediaMap = playlistMap,
+            mediaList = playlistMap.values.toList(),
             openMedia = { clickedMedia: Media ->
                 openMedia(navController = navController, media = clickedMedia)
             },

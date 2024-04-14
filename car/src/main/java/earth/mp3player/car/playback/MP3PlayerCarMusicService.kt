@@ -136,7 +136,7 @@ class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
 
             ScreenPages.ALL_ALBUMS.id -> {
                 children =
-                    getAllMediaMediaItemList(mediaList = DataManager.albumMap.values)
+                    getAllMediaMediaItemList(mediaList = DataManager.albumSet)
                 routeDeque.resetRouteDeque()
                 routeDeque.addLast(parentId)
 

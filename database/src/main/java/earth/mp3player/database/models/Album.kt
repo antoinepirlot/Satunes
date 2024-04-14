@@ -79,5 +79,15 @@ data class Album(
         return result
     }
 
-
+    override fun compareTo(other: Media): Int {
+        other as Album
+        val titleCompared: Int = super.compareTo(other)
+        if (artist == null || other.artist == null) {
+            return titleCompared
+        }
+        if (titleCompared == 0) {
+            return artist!!.compareTo(other.artist!!)
+        }
+        return titleCompared
+    }
 }

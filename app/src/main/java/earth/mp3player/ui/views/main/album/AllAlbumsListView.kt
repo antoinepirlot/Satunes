@@ -64,7 +64,6 @@ fun AllAlbumsListView(
     }
 
     resetOpenedPlaylist()
-    @Suppress("UNCHECKED_CAST")
     MediaListView(
         modifier = modifier,
         mediaList = albumSet.toList(),

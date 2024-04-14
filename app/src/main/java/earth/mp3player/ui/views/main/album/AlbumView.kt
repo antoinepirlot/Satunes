@@ -58,7 +58,6 @@ fun AlbumView(
     Column(modifier = modifier) {
         Title(text = decode(album.title))
 
-        @Suppress("UNCHECKED_CAST")
         MediaListView(
             mediaList = album.musicSortedMap.values.toList(),
             openMedia = { clickedMedia: Media ->

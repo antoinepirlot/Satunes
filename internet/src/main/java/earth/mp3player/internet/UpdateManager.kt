@@ -26,13 +26,13 @@
 package earth.mp3player.internet
 
 import android.app.DownloadManager
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.core.content.getSystemService
@@ -74,8 +74,9 @@ object UpdateManager {
     private const val MIME_TYPE = "application/vnd.android.package-archive"
 
     private var versionType: String = "" //Alpha, Beta, Preview or "" for Stable version
+    private var downloadId: Long = -1
 
-    val updateAvailable: MutableState<UpdateAvailableStatus> =
+    val updateAvailableStatus: MutableState<UpdateAvailableStatus> =
         mutableStateOf(UpdateAvailableStatus.UNDEFINED)
     val isCheckingUpdate: MutableState<Boolean> = mutableStateOf(false)
     val latestVersion: MutableState<String?> = mutableStateOf(null)
@@ -92,7 +93,7 @@ object UpdateManager {
         val internetManager = InternetManager(context = context)
         if (!internetManager.isConnected()) {
             UpdateAvailableStatus.CANNOT_CHECK.updateLink = null
-            updateAvailable.value = UpdateAvailableStatus.CANNOT_CHECK
+            updateAvailableStatus.value = UpdateAvailableStatus.CANNOT_CHECK
             isCheckingUpdate.value = false
             return null
         }
@@ -104,7 +105,8 @@ object UpdateManager {
     }
 
     /**
-     * Checks if an update is available if there's an internet connection.
+     * Checks if an update is available if there's an internet connection
+     * and update the available update link.
      */
     fun checkUpdate(context: Context) {
         //Check update
@@ -116,7 +118,7 @@ object UpdateManager {
                 if (!res.isSuccessful) {
                     res.close()
                     UpdateAvailableStatus.CANNOT_CHECK.updateLink = null
-                    updateAvailable.value = UpdateAvailableStatus.CANNOT_CHECK
+                    updateAvailableStatus.value = UpdateAvailableStatus.CANNOT_CHECK
                     isCheckingUpdate.value = false
                     return@launch
                 }
@@ -125,18 +127,32 @@ object UpdateManager {
 
                 val currentVersion: String =
                     'v' + getCurrentVersion(context = context)
-                checkUpdate(page = page, currentVersion = currentVersion)
+                val updateUrl: String? = getUpdateUrl(page = page, currentVersion = currentVersion)
+                UpdateAvailableStatus.AVAILABLE.updateLink = updateUrl
+                if (updateUrl == null) {
+                    updateAvailableStatus.value = UpdateAvailableStatus.UP_TO_DATE
+                } else {
+                    updateAvailableStatus.value = UpdateAvailableStatus.AVAILABLE
+                }
             } catch (_: Exception) {
                 //Don't crash the app if an error occurred internet connection
                 //Don't care of internet
-                updateAvailable.value = UpdateAvailableStatus.CANNOT_CHECK
+                updateAvailableStatus.value = UpdateAvailableStatus.CANNOT_CHECK
             } finally {
                 isCheckingUpdate.value = false
             }
         }
     }
 
-    private fun checkUpdate(page: String, currentVersion: String) {
+    /**
+     * Generate the update URL and return it.
+     *
+     * @param page the html page of github releases
+     * @param currentVersion the version of the installed app (e.g. vx.y.z[-[versionType]])
+     *
+     * @return the generated update url from page or null if the app is up to date.
+     */
+    private fun getUpdateUrl(page: String, currentVersion: String): String? {
         val currentVersionType: String = currentVersion.split("-").last()
         val regex: Regex = when (currentVersionType) {
             ALPHA -> ALPHA_REGEX
@@ -149,15 +165,13 @@ object UpdateManager {
                 page,
                 0
             )?.value?.split("/")?.last()?.split("\"")?.first()
-        updateAvailable.value =
-            if (latestVersion != null && latestVersion != currentVersion) {
-                this.latestVersion.value = latestVersion
-                UpdateAvailableStatus.AVAILABLE.updateLink = "$RELEASES_URL/tag/$latestVersion"
-                UpdateAvailableStatus.AVAILABLE
-            } else {
-                UpdateAvailableStatus.AVAILABLE.updateLink = null
-                UpdateAvailableStatus.UP_TO_DATE
-            }
+        return if (latestVersion != null && latestVersion != currentVersion) {
+            this.latestVersion.value = latestVersion
+            "$RELEASES_URL/tag/$latestVersion"
+            //                UpdateAvailableStatus.AVAILABLE
+        } else {
+            null
+        }
     }
 
     fun getCurrentVersion(context: Context): String {
@@ -168,54 +182,35 @@ object UpdateManager {
     }
 
     //TODO add button to run it
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     private fun downloadUpdateApk(context: Context) {
+        downloadStatus.value = APKDownloadStatus.CHECKING
         CoroutineScope(Dispatchers.IO).launch {
-            if (updateAvailable.value != UpdateAvailableStatus.AVAILABLE) {
-                //Can't be downloaded
-                downloadStatus.value = APKDownloadStatus.NOT_FOUND
-                return@launch
-            }
-            val downloadUrl: String = getDownloadUrl(context = context) ?: return@launch
-            val appName: String = downloadUrl.split("/").last().split("_").first()
-            val downloadManager: DownloadManager = context.getSystemService()!!
-            val downloadUri: Uri = Uri.parse(downloadUrl)
-            val req: DownloadManager.Request = DownloadManager.Request(downloadUri)
-            req.setMimeType(MIME_TYPE)
-            val destination =
-                "file://" + context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
-                    .toString() + "/$appName"
-            val destinationUri: Uri = Uri.parse(destination)
-            req.setDestinationUri(destinationUri)
-
-            req.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
-            val downloadId: Long = downloadManager.enqueue(req)
-            requestInstallation(context = context, downloadId = downloadId)
-            downloadStatus.value = APKDownloadStatus.FOUND
-        }
-    }
-
-    private fun requestInstallation(context: Context, downloadId: Long) {
-        val onComplete = object : BroadcastReceiver() {
-            override fun onReceive(context: Context, intent: Intent) {
-                if (intent.action == DownloadManager.ACTION_DOWNLOAD_COMPLETE) {
-                    val downloadManager: DownloadManager =
-                        context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-                    val contentUri: Uri = downloadManager.getUriForDownloadedFile(downloadId)
-                    val install = Intent(Intent.ACTION_VIEW)
-                    install.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                    install.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                    install.putExtra(Intent.EXTRA_NOT_UNKNOWN_SOURCE, true)
-                    install.data = contentUri
-                    context.startActivity(install)
-                    context.unregisterReceiver(this)
+            try {
+                if (updateAvailableStatus.value != UpdateAvailableStatus.AVAILABLE) {
+                    //Can't be downloaded
+                    downloadStatus.value = APKDownloadStatus.NOT_FOUND
+                    return@launch
                 }
+                val downloadUrl: String = getDownloadUrl(context = context) ?: return@launch
+                val appName: String = downloadUrl.split("/").last().split("_").first()
+                val downloadManager: DownloadManager = context.getSystemService()!!
+                val downloadUri: Uri = Uri.parse(downloadUrl)
+                val req: DownloadManager.Request = DownloadManager.Request(downloadUri)
+                req.setMimeType(MIME_TYPE)
+                val destination =
+                    "file://" + context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
+                        .toString() + "/$appName"
+                val destinationUri: Uri = Uri.parse(destination)
+                req.setDestinationUri(destinationUri)
+
+                req.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
+                setDownloadReceiver(context = context)
+                downloadId = downloadManager.enqueue(req)
+                downloadStatus.value = APKDownloadStatus.DOWNLOADING
+            } catch (_: Exception) {
+                downloadStatus.value = APKDownloadStatus.FAILED
             }
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            context.registerReceiver(
-                onComplete, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE),
-                Context.RECEIVER_EXPORTED
-            )
         }
     }
 
@@ -255,5 +250,30 @@ object UpdateManager {
 
         apkFileName = apkFileName.drop(1).dropLast(1) //Avoid > and <
         return "$RELEASES_URL/download/${latestVersion.value}/$apkFileName"
+    }
+
+
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    private fun setDownloadReceiver(context: Context) {
+        context.registerReceiver(
+            DownloadReceiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE),
+            Context.RECEIVER_EXPORTED
+        )
+    }
+
+    /**
+     * Launch the installation procedure by request the user to install the app.
+     */
+    private fun startInstallation(context: Context) {
+        val downloadManager: DownloadManager =
+            context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+        val contentUri: Uri = downloadManager.getUriForDownloadedFile(downloadId)
+        val install = Intent(Intent.ACTION_VIEW)
+        install.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        install.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        install.putExtra(Intent.EXTRA_NOT_UNKNOWN_SOURCE, true)
+        install.data = contentUri
+        context.startActivity(install)
+        context.unregisterReceiver(DownloadReceiver)
     }
 }

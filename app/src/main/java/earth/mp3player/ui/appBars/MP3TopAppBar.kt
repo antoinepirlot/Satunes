@@ -75,8 +75,8 @@ fun MP3TopAppBar(
         actions = {
             IconButton(
                 onClick = {
-                    if (UpdateManager.updateAvailable.value != UpdateAvailableStatus.AVAILABLE) {
-                        UpdateManager.updateAvailable.value = UpdateAvailableStatus.UNDEFINED
+                    if (UpdateManager.updateAvailableStatus.value != UpdateAvailableStatus.AVAILABLE) {
+                        UpdateManager.updateAvailableStatus.value = UpdateAvailableStatus.UNDEFINED
                     }
                     when (navController.currentBackStackEntry!!.destination.route!!) {
                         Destination.SETTINGS.link -> navController.popBackStack()

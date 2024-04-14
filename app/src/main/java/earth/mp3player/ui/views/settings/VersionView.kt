@@ -65,7 +65,7 @@ fun VersionView(
     val context: Context = LocalContext.current
     val currentVersion = getCurrentVersion(context = context)
     val isCheckingUpdate: Boolean by remember { UpdateManager.isCheckingUpdate }
-    val updateAvailable: UpdateAvailableStatus by remember { UpdateManager.updateAvailable }
+    val updateAvailable: UpdateAvailableStatus by remember { UpdateManager.updateAvailableStatus }
     Column(modifier = modifier.padding(16.dp)) {
         Title(text = stringResource(id = R.string.version), fontSize = 20.sp)
         Text(text = stringResource(id = R.string.current_version) + currentVersion)

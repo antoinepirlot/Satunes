@@ -26,10 +26,10 @@
 package earth.mp3player.ui.views.settings
 
 import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -48,10 +48,9 @@ import earth.mp3player.internet.UpdateAvailableStatus.UP_TO_DATE
 import earth.mp3player.internet.UpdateManager
 import earth.mp3player.internet.UpdateManager.getCurrentVersion
 import earth.mp3player.ui.components.LoadingCircle
-import earth.mp3player.ui.components.settings.CheckUpdateButton
-import earth.mp3player.ui.components.settings.utils.openUrl
+import earth.mp3player.ui.components.buttons.updates.CheckUpdateButton
+import earth.mp3player.ui.components.settings.UpdateAvailable
 import earth.mp3player.ui.components.texts.Title
-import earth.mp3player.ui.utils.showToast
 import earth.mp3player.internet.R as RInternet
 
 /**
@@ -65,43 +64,37 @@ fun VersionView(
     val context: Context = LocalContext.current
     val currentVersion = getCurrentVersion(context = context)
     val isCheckingUpdate: Boolean by remember { UpdateManager.isCheckingUpdate }
-    val updateAvailable: UpdateAvailableStatus by remember { UpdateManager.updateAvailable }
+    val updateAvailable: UpdateAvailableStatus by remember { UpdateManager.updateAvailableStatus }
     Column(modifier = modifier.padding(16.dp)) {
         Title(text = stringResource(id = R.string.version), fontSize = 20.sp)
         Text(text = stringResource(id = R.string.current_version) + currentVersion)
         //Check update is done when pressing setting button in top app bar
         if (isCheckingUpdate) {
             LoadingCircle(modifier.padding(bottom = 16.dp))
-        } else {
-            when (updateAvailable) {
-                UNDEFINED -> CheckUpdateButton()
+            return
+        }
 
-                CANNOT_CHECK -> {
-                    CheckUpdateButton()
-                    showToast(
-                        context = context,
-                        message = stringResource(id = RInternet.string.cannot_check_update)
-                    )
-                }
+        when (updateAvailable) {
+            UNDEFINED -> CheckUpdateButton()
 
-                AVAILABLE -> {
-                    TextButton(onClick = {
-                        openUrl(
-                            context = context,
-                            url = AVAILABLE.updateLink!!
-                        )
-                    }) {
-                        Text(text = stringResource(id = RInternet.string.update_available))
-                    }
-                }
+            CANNOT_CHECK -> {
+                CheckUpdateButton()
+                Toast.makeText(
+                    context,
+                    stringResource(id = RInternet.string.cannot_check_update),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
 
-                UP_TO_DATE -> {
-                    CheckUpdateButton()
-                    showToast(
-                        context = context,
-                        message = stringResource(id = RInternet.string.no_update)
-                    )
-                }
+            AVAILABLE -> UpdateAvailable()
+
+            UP_TO_DATE -> {
+                CheckUpdateButton()
+                Toast.makeText(
+                    context,
+                    stringResource(id = RInternet.string.no_update),
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }

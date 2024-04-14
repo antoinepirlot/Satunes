@@ -23,46 +23,38 @@
  * PS: I don't answer quickly.
  */
 
-package earth.mp3player.ui.components.settings
+package earth.mp3player.ui.components.buttons.updates
 
 import android.content.Context
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.hapticfeedback.HapticFeedback
-import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import earth.mp3player.R
-import earth.mp3player.internet.UpdateManager
+import earth.mp3player.internet.R
+import earth.mp3player.internet.UpdateDownloadManager
 
 /**
- * @author Antoine Pirlot on 11/04/2024
+ * @author Antoine Pirlot on 14/04/2024
  */
 
 @Composable
-fun CheckUpdateButton(
+fun DownloadButton(
     modifier: Modifier = Modifier,
 ) {
     val context: Context = LocalContext.current
-    val haptics: HapticFeedback = LocalHapticFeedback.current
     Button(
         modifier = modifier,
-        onClick = {
-            haptics.performHapticFeedback(hapticFeedbackType = HapticFeedbackType.TextHandleMove)
-            UpdateManager.checkUpdate(context = context)
-        }
+        onClick = { UpdateDownloadManager.downloadUpdateApk(context = context) }
     ) {
-        Text(text = stringResource(id = R.string.check_update))
-
+        Text(text = stringResource(id = R.string.download_update))
     }
 }
 
 @Preview
 @Composable
-fun CheckUpdateButtonPreview() {
-    CheckUpdateButton()
+fun DownloadButtonPreview() {
+    DownloadButton()
 }

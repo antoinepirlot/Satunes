@@ -23,15 +23,16 @@
  * PS: I don't answer quickly.
  */
 
-package earth.mp3player.ui.utils
-
-import android.content.Context
-import android.widget.Toast
+package earth.mp3player.internet
 
 /**
- * @author Antoine Pirlot on 10/04/2024
+ * @author Antoine Pirlot on 13/04/2024
  */
-
-fun showToast(context: Context, message: String, duration: Int = Toast.LENGTH_SHORT) {
-    Toast.makeText(context, message, duration).show()
+enum class APKDownloadStatus {
+    CHECKING,
+    DOWNLOADED,
+    DOWNLOADING,
+    NOT_STARTED,
+    NOT_FOUND,
+    FAILED,
 }

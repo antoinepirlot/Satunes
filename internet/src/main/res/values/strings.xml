@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="update_available">Une mise à jour est disponible, clique ici pour la télécharger</string>
+    <string name="update_available">Une mise à jour est disponible</string>
     <string name="no_update">L\'application est à jour</string>
     <string name="cannot_check_update">Impossible de vérifier si l\'application est à jour</string>
+    <string name="download_update">Télécharger</string>
+    <string name="see_details">Voir les détails</string>
+    <string name="install_request">Installer</string>
+    <string name="download_not_found">Fichier non trouvé</string>
+    <string name="download_failed">Echec lors du téléchargement</string>
+    <string name="downloaded">Mise à jour téléchargée</string>
+    <string name="downloading">Téléchargement en cours…</string>
+    <string name="download_checking">Recherche du fichier…</string>
+    <string name="checking_update">Recherche de mise à jour…</string>
 </resources>

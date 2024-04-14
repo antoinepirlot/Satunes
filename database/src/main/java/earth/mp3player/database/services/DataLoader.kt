@@ -28,6 +28,7 @@ package earth.mp3player.database.services
 import android.content.Context
 import android.database.Cursor
 import android.net.Uri
+import android.net.Uri.decode
 import android.net.Uri.encode
 import android.provider.MediaStore
 import androidx.compose.runtime.MutableState
@@ -70,6 +71,9 @@ object DataLoader {
 
     //Genres variables
     private var genreNameColumn: Int? = null
+
+    private const val UNKNOWN_ARTIST = "<unknown>"
+    private const val UNKNOWN_ALBUM = "Unknown Album"
 
     /**
      * Load all Media data from device's storage.
@@ -307,7 +311,7 @@ object DataLoader {
     private fun loadArtist(context: Context, cursor: Cursor): Artist {
         // Get values of columns for a given artist.
         val name = encode(cursor.getString(artistNameColumn!!))
-        return if (name == encode("<unknown>")) {
+        return if (decode(name) == UNKNOWN_ARTIST) {
             // Assign the Unknown Artist
             try {
                 DataManager.getArtist(encode(context.getString(R.string.unknown_artist)))
@@ -322,10 +326,28 @@ object DataLoader {
 
     private fun loadAlbum(context: Context, cursor: Cursor, artist: Artist?): Album {
         val name = encode(cursor.getString(albumNameColumn!!))
-
-        val album = Album(title = name, artist = artist)
-        DataManager.addAlbum(album = album)
-        return album
+        return if (decode(name) == UNKNOWN_ALBUM) {
+            // Assign the Unknown Album
+            try {
+                val album: Album =
+                    DataManager.getAlbum(encode(context.getString(R.string.unknown_album)))
+                if (album.artist != artist) {
+                    throw NoSuchElementException()
+                }
+                album
+            } catch (_: NoSuchElementException) {
+                val newAlbum = Album(
+                    title = encode(context.getString(R.string.unknown_album)),
+                    artist = artist
+                )
+                DataManager.addAlbum(album = newAlbum)
+                newAlbum
+            }
+        } else {
+            val newAlbum = Album(title = name, artist = artist)
+            DataManager.addAlbum(album = newAlbum)
+            newAlbum
+        }
     }
 
     private fun loadGenre(cursor: Cursor): Genre {

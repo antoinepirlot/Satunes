@@ -108,6 +108,10 @@ object DataManager {
         return albumMapById[albumId]!!
     }
 
+    fun getAlbum(albumName: String): Album {
+        return albumSet.first { it.title == albumName }
+    }
+
     fun addAlbum(album: Album) {
         if (albumMapById.containsValue(value = album)) {
             val existingAlbum: Album = albumMapById.values.first { it == album }

@@ -54,7 +54,6 @@ import kotlinx.coroutines.runBlocking
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        DataCleanerManager.removeApkFiles(context = baseContext)
         runBlocking {
             SettingsManager.loadSettings(context = this@MainActivity)
         }
@@ -75,6 +74,7 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+        DataCleanerManager.removeApkFiles(context = baseContext)
     }
 
     private fun requestPermissionLauncher(): ActivityResultLauncher<String> {

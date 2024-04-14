@@ -27,6 +27,7 @@ package earth.mp3player.ui.components.settings
 
 import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
@@ -34,7 +35,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -58,27 +58,39 @@ fun UpdateAvailable(
     modifier: Modifier = Modifier,
 ) {
     val context: Context = LocalContext.current
-    Row(
+    Column(
         modifier = modifier,
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+        verticalArrangement = Arrangement.Center
     ) {
         Text(text = stringResource(id = R.string.update_available))
-        SeeDetailsButton()
-        Spacer(modifier = modifier.size(SPACER_SIZE))
-        val downloadStatus: APKDownloadStatus by remember { UpdateManager.downloadStatus }
-        when (downloadStatus) {
-            APKDownloadStatus.CHECKING -> LoadingCircle()
-            APKDownloadStatus.DOWNLOADED -> InstallRequestButton()
-            APKDownloadStatus.DOWNLOADING -> LoadingCircle()
-            APKDownloadStatus.NOT_STARTED -> DownloadButton()
-            APKDownloadStatus.NOT_FOUND -> {
-                val message: String = stringResource(id = R.string.download_not_found)
-                showToast(context = context, message = message)
-            }
+        Row {
+            SeeDetailsButton()
+            Spacer(modifier = Modifier.size(SPACER_SIZE))
+            val downloadStatus: APKDownloadStatus by remember { UpdateManager.downloadStatus }
+            var message: String? = null
+            when (downloadStatus) {
+                APKDownloadStatus.CHECKING -> {
+                    message = stringResource(id = R.string.download_checking)
+                    LoadingCircle()
+                }
 
-            APKDownloadStatus.FAILED -> {
-                val message: String = stringResource(id = R.string.download_failed)
+                APKDownloadStatus.DOWNLOADED -> {
+                    message = stringResource(id = R.string.downloaded)
+                    InstallRequestButton()
+                }
+
+                APKDownloadStatus.DOWNLOADING -> {
+                    message = stringResource(id = R.string.downloading)
+                    LoadingCircle()
+                }
+
+                APKDownloadStatus.NOT_STARTED -> DownloadButton()
+                APKDownloadStatus.NOT_FOUND -> message =
+                    stringResource(id = R.string.download_not_found)
+
+                APKDownloadStatus.FAILED -> message = stringResource(id = R.string.download_failed)
+            }
+            if (message != null) {
                 showToast(context = context, message = message)
             }
         }

@@ -25,6 +25,7 @@
 
 package earth.mp3player.internet
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.DownloadManager
 import android.content.Context
@@ -161,17 +162,17 @@ object UpdateDownloadManager {
     }
 
     //TODO make it available for Android R and later
+    @SuppressLint("UnspecifiedRegisterReceiverFlag")
     private fun setDownloadReceiver(context: Context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             context.registerReceiver(
                 DownloadReceiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE),
                 Context.RECEIVER_EXPORTED
             )
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        } else
             context.registerReceiver(
                 DownloadReceiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE)
             )
-        }
     }
 
     /**

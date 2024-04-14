@@ -4,4 +4,7 @@
     <string name="artists">Artistes</string>
     <string name="musics">Musiques</string>
     <string name="unknown">Inconnu</string>
+    <string name="unknown_artist">Artiste Inconnu</string>
+    <string name="unknown_album">Album Inconnu</string>
+    <string name="unknown_genre">Genre Inconnu</string>
 </resources>

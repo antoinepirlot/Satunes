@@ -7,4 +7,7 @@
     <string name="genres" translatable="false">Genres</string>
     <string name="playlists" translatable="false">Playlists</string>
     <string name="unknown">Inconnu</string>
+    <string name="unknown_artist">Artiste Inconnu</string>
+    <string name="unknown_album">Album Inconnu</string>
+    <string name="unknown_genre">Genre Inconnu</string>
 </resources>

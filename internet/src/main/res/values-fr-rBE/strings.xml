@@ -5,4 +5,7 @@
     <string name="no_update">L\'application est à jour</string>
     <string name="download_update">Télécharger la mise à jour</string>
     <string name="see_details">Voir les détails</string>
+    <string name="install_request">Installer la mise à jour</string>
+    <string name="download_not_found">Fichier non trouvé</string>
+    <string name="download_failed">Echec lors du téléchargement</string>
 </resources>

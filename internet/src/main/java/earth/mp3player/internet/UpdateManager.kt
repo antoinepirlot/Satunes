@@ -265,7 +265,7 @@ object UpdateManager {
     /**
      * Launch the installation procedure by request the user to install the app.
      */
-    private fun startInstallation(context: Context) {
+    fun installUpdate(context: Context) {
         val downloadManager: DownloadManager =
             context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
         val contentUri: Uri = downloadManager.getUriForDownloadedFile(downloadId)

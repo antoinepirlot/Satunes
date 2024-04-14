@@ -5,4 +5,7 @@
     <string name="cannot_check_update">Unable to check if the application is up to date</string>
     <string name="download_update">Download update</string>
     <string name="see_details">See details</string>
+    <string name="install_request">Install update</string>
+    <string name="download_not_found">File not found</string>
+    <string name="download_failed">Downloading Error</string>
 </resources>

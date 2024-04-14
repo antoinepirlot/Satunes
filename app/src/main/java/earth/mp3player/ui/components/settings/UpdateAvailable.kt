@@ -32,15 +32,22 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import earth.mp3player.internet.APKDownloadStatus
 import earth.mp3player.internet.R
+import earth.mp3player.internet.UpdateManager
+import earth.mp3player.ui.components.LoadingCircle
 import earth.mp3player.ui.components.buttons.updates.DownloadButton
+import earth.mp3player.ui.components.buttons.updates.InstallRequestButton
 import earth.mp3player.ui.components.buttons.updates.SeeDetailsButton
 import earth.mp3player.ui.components.playlist.SPACER_SIZE
+import earth.mp3player.ui.utils.showToast
 
 /**
  * @author Antoine Pirlot on 14/04/2024
@@ -59,7 +66,22 @@ fun UpdateAvailable(
         Text(text = stringResource(id = R.string.update_available))
         SeeDetailsButton()
         Spacer(modifier = modifier.size(SPACER_SIZE))
-        DownloadButton()
+        val downloadStatus: APKDownloadStatus by remember { UpdateManager.downloadStatus }
+        when (downloadStatus) {
+            APKDownloadStatus.CHECKING -> LoadingCircle()
+            APKDownloadStatus.DOWNLOADED -> InstallRequestButton()
+            APKDownloadStatus.DOWNLOADING -> LoadingCircle()
+            APKDownloadStatus.NOT_STARTED -> DownloadButton()
+            APKDownloadStatus.NOT_FOUND -> {
+                val message: String = stringResource(id = R.string.download_not_found)
+                showToast(context = context, message = message)
+            }
+
+            APKDownloadStatus.FAILED -> {
+                val message: String = stringResource(id = R.string.download_failed)
+                showToast(context = context, message = message)
+            }
+        }
     }
 }
 

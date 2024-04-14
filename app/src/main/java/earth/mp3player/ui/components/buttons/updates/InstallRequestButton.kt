@@ -34,7 +34,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import earth.mp3player.internet.R
-import earth.mp3player.internet.UpdateManager
+import earth.mp3player.internet.UpdateDownloadManager
 
 /**
  * @author Antoine Pirlot on 14/04/2024
@@ -47,7 +47,7 @@ fun InstallRequestButton(
     val context: Context = LocalContext.current
     Button(
         modifier = modifier,
-        onClick = { UpdateManager.installUpdate(context = context) }
+        onClick = { UpdateDownloadManager.installUpdate(context = context) }
     ) {
         Text(text = stringResource(id = R.string.install_request))
     }

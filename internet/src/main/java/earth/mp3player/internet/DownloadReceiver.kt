@@ -33,7 +33,7 @@ import android.content.Intent
 /**
  * @author Antoine Pirlot on 14/04/2024
  */
-object DownloadReceiver : BroadcastReceiver() {
+internal object DownloadReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.action == DownloadManager.ACTION_DOWNLOAD_COMPLETE) {
             UpdateManager.downloadStatus.value = APKDownloadStatus.DOWNLOADED

@@ -26,17 +26,19 @@
 package earth.mp3player.internet
 
 import android.app.Activity
-import android.app.DownloadManager
 import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
-import android.net.Uri
-import android.os.Build
-import android.os.Environment
-import android.widget.Toast
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.core.content.getSystemService
+import earth.mp3player.internet.Versions.ALPHA
+import earth.mp3player.internet.Versions.ALPHA_REGEX
+import earth.mp3player.internet.Versions.BETA
+import earth.mp3player.internet.Versions.BETA_REGEX
+import earth.mp3player.internet.Versions.PREVIEW
+import earth.mp3player.internet.Versions.PREVIEW_REGEX
+import earth.mp3player.internet.Versions.RELEASES_URL
+import earth.mp3player.internet.Versions.RELEASE_REGEX
+import earth.mp3player.internet.Versions.versionType
+import earth.mp3player.internet.utils.showToastOnUiThread
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -49,34 +51,6 @@ import okhttp3.Response
  * @author Antoine Pirlot on 11/04/2024
  */
 object UpdateManager {
-    private const val ALPHA: String = "alpha"
-    private const val BETA: String = "beta"
-    private const val PREVIEW: String = "preview"
-
-    private val ALPHA_REGEX: Regex =
-        Regex("\"/antoinepirlot/MP3-Player/releases/tag/v[0-9]+\\.[0-9]+\\.[0-9]+.*\"")
-    private val ALPHA_APK_REGEX: Regex = Regex(">.*v[0-9]+\\.[0-9]+\\.[0-9]+.*\\.apk<")
-
-    private val BETA_REGEX: Regex =
-        Regex("\"/antoinepirlot/MP3-Player/releases/tag/v[0-9]+\\.[0-9]+\\.[0-9]+(?!-$ALPHA).*\"")
-    private val BETA_APK_REGEX: Regex = Regex(">.*v[0-9]+\\.[0-9]+\\.[0-9]+(?!-$ALPHA).*\\.apk<")
-
-    private val PREVIEW_REGEX: Regex =
-        Regex("\"/antoinepirlot/MP3-Player/releases/tag/v[0-9]+\\.[0-9]+\\.[0-9]+(?!-$ALPHA)(?!-$BETA)\"")
-    private val PREVIEW_APK_REGEX: Regex =
-        Regex(">.*v[0-9]+\\.[0-9]+\\.[0-9]+(?!-$ALPHA)(?!-$BETA)\\.apk<")
-
-    private val RELEASE_REGEX: Regex =
-        Regex("\"/antoinepirlot/MP3-Player/releases/tag/v[0-9]+\\.[0-9]+\\.[0-9]+\"")
-    private val RELEASE_APK_REGEX: Regex = Regex(">.*v[0-9]+\\.[0-9]+\\.[0-9]+.apk\"<")
-
-    private const val RELEASES_URL = "https://github.com/antoinepirlot/MP3-Player/releases"
-
-    private const val MIME_TYPE = "application/vnd.android.package-archive"
-
-    private var versionType: String = "" //Alpha, Beta, Preview or "" for Stable version
-    private var downloadId: Long = -1
-
     val updateAvailableStatus: MutableState<UpdateAvailableStatus> =
         mutableStateOf(UpdateAvailableStatus.UNDEFINED)
     val isCheckingUpdate: MutableState<Boolean> = mutableStateOf(false)
@@ -84,23 +58,13 @@ object UpdateManager {
     val downloadStatus: MutableState<APKDownloadStatus> =
         mutableStateOf(APKDownloadStatus.NOT_STARTED)
 
-    private fun showToastOnUiThread(context: Context, activity: Activity, message: String) {
-        activity.runOnUiThread {
-            Toast.makeText(
-                context.applicationContext,
-                message,
-                Toast.LENGTH_SHORT
-            ).show()
-        }
-    }
-
     /**
      * Create a httpclient and get the response matching url.
      *
      * @param context the context :p
      * @param url the url to get the response
      */
-    private fun getUrlResponse(context: Context, url: String): Response? {
+    fun getUrlResponse(context: Context, url: String): Response? {
         val internetManager = InternetManager(context = context)
         if (!internetManager.isConnected()) {
             UpdateAvailableStatus.CANNOT_CHECK.updateLink = null
@@ -114,7 +78,6 @@ object UpdateManager {
             .build()
         return httpClient.newCall(req).execute()
     }
-
 
     /**
      * Checks if an update is available if there's an internet connection
@@ -213,136 +176,5 @@ object UpdateManager {
             context.packageManager.getPackageInfo(context.packageName, 0).versionName
         versionType = versionName.split("-").last()
         return versionName
-    }
-
-    //TODO add button to run it
-    fun downloadUpdateApk(context: Context) {
-        if (downloadStatus.value == APKDownloadStatus.CHECKING || downloadStatus.value == APKDownloadStatus.DOWNLOADING) {
-            return
-        }
-        val activity = Activity()
-        CoroutineScope(Dispatchers.IO).launch {
-            downloadStatus.value = APKDownloadStatus.CHECKING
-            showToastOnUiThread(
-                context = context,
-                activity = activity,
-                message = context.getString(R.string.download_checking)
-            )
-            try {
-                if (updateAvailableStatus.value != UpdateAvailableStatus.AVAILABLE) {
-                    //Can't be downloaded
-                    downloadStatus.value = APKDownloadStatus.NOT_FOUND
-                    showToastOnUiThread(
-                        context = context,
-                        activity = activity,
-                        message = context.getString(R.string.download_not_found)
-                    )
-                    return@launch
-                }
-                val downloadUrl: String =
-                    getDownloadUrl(context = context, activity = activity) ?: return@launch
-                val appName: String = downloadUrl.split("/").last().split("_").first()
-                val downloadManager: DownloadManager = context.getSystemService()!!
-                val downloadUri: Uri = Uri.parse(downloadUrl)
-                val req: DownloadManager.Request = DownloadManager.Request(downloadUri)
-                req.setMimeType(MIME_TYPE)
-                val destination =
-                    "file://" + context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
-                        .toString() + "/$appName"
-                val destinationUri: Uri = Uri.parse(destination)
-                req.setDestinationUri(destinationUri)
-
-                req.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
-                setDownloadReceiver(context = context)
-                downloadId = downloadManager.enqueue(req)
-                downloadStatus.value = APKDownloadStatus.DOWNLOADING
-                showToastOnUiThread(
-                    context = context,
-                    activity = activity,
-                    message = context.getString(R.string.downloading)
-                )
-            } catch (_: Exception) {
-                downloadStatus.value = APKDownloadStatus.FAILED
-                showToastOnUiThread(
-                    context = context,
-                    activity = activity,
-                    message = context.getString(R.string.download_failed)
-                )
-            }
-        }
-    }
-
-    /**
-     * Get the download url for the latest version. It looks like:
-     * "https://github.com/antoinepirlot/MP3-Player/releases/download/vx.y.z-beta/[appName]_vx.y.z[-versionType].apk"
-     *
-     * @return the download url or null if not found
-     */
-    private fun getDownloadUrl(context: Context, activity: Activity): String? {
-        val regex: Regex =
-            when (versionType) {
-                ALPHA -> ALPHA_APK_REGEX
-                BETA -> BETA_APK_REGEX
-                PREVIEW -> PREVIEW_APK_REGEX
-                else -> RELEASE_APK_REGEX
-            }
-        val res: Response = getUrlResponse(
-            context = context,
-            url = "$RELEASES_URL/expanded_assets/${latestVersion.value}"
-        )!!
-        if (!res.isSuccessful) {
-            res.close()
-            downloadStatus.value = APKDownloadStatus.NOT_FOUND
-            showToastOnUiThread(
-                context = context,
-                activity = activity,
-                message = context.getString(R.string.download_not_found)
-            )
-            return null
-        }
-        val page: String = res.body!!.string()
-        res.close()
-        var apkFileName: String? = regex.find(
-            page,
-            0
-        )?.value
-        if (apkFileName == null) {
-            downloadStatus.value = APKDownloadStatus.NOT_FOUND
-            showToastOnUiThread(
-                context = context,
-                activity = activity,
-                message = context.getString(R.string.download_not_found)
-            )
-            return null
-        }
-
-        apkFileName = apkFileName.drop(1).dropLast(1) //Avoid > and <
-        return "$RELEASES_URL/download/${latestVersion.value}/$apkFileName"
-    }
-
-
-    //TODO make it available for Android R and later
-    private fun setDownloadReceiver(context: Context) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            context.registerReceiver(
-                DownloadReceiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE),
-                Context.RECEIVER_EXPORTED
-            )
-        }
-    }
-
-    /**
-     * Launch the installation procedure by request the user to install the app.
-     */
-    fun installUpdate(context: Context) {
-        val downloadManager: DownloadManager =
-            context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-        val contentUri: Uri = downloadManager.getUriForDownloadedFile(downloadId)
-        val install = Intent(Intent.ACTION_VIEW)
-        install.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-        install.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        install.putExtra(Intent.EXTRA_NOT_UNKNOWN_SOURCE, true)
-        install.data = contentUri
-        context.startActivity(install)
     }
 }

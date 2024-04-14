@@ -23,38 +23,22 @@
  * PS: I don't answer quickly.
  */
 
-package earth.mp3player.ui.components.buttons.updates
+package earth.mp3player.internet.utils
 
+import android.app.Activity
 import android.content.Context
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
-import earth.mp3player.internet.R
-import earth.mp3player.internet.UpdateDownloadManager
+import android.widget.Toast
 
 /**
  * @author Antoine Pirlot on 14/04/2024
  */
 
-@Composable
-fun DownloadButton(
-    modifier: Modifier = Modifier,
-) {
-    val context: Context = LocalContext.current
-    Button(
-        modifier = modifier,
-        onClick = { UpdateDownloadManager.downloadUpdateApk(context = context) }
-    ) {
-        Text(text = stringResource(id = R.string.download_update))
+internal fun showToastOnUiThread(context: Context, activity: Activity, message: String) {
+    activity.runOnUiThread {
+        Toast.makeText(
+            context.applicationContext,
+            message,
+            Toast.LENGTH_SHORT
+        ).show()
     }
-}
-
-@Preview
-@Composable
-fun DownloadButtonPreview() {
-    DownloadButton()
 }

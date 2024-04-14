@@ -171,7 +171,8 @@ object UpdateDownloadManager {
             )
         } else
             context.registerReceiver(
-                DownloadReceiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE)
+                DownloadReceiver,
+                IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE)
             )
     }
 

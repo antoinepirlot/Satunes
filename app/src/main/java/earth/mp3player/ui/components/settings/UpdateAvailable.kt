@@ -26,6 +26,7 @@
 package earth.mp3player.ui.components.settings
 
 import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -47,7 +48,6 @@ import earth.mp3player.ui.components.buttons.updates.DownloadButton
 import earth.mp3player.ui.components.buttons.updates.InstallRequestButton
 import earth.mp3player.ui.components.buttons.updates.SeeDetailsButton
 import earth.mp3player.ui.components.playlist.SPACER_SIZE
-import earth.mp3player.ui.utils.showToast
 
 /**
  * @author Antoine Pirlot on 14/04/2024
@@ -91,7 +91,7 @@ fun UpdateAvailable(
                 APKDownloadStatus.FAILED -> message = stringResource(id = R.string.download_failed)
             }
             if (message != null) {
-                showToast(context = context, message = message)
+                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
             }
         }
     }

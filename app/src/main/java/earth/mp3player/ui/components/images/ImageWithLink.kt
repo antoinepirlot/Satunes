@@ -26,6 +26,7 @@
 package earth.mp3player.ui.components.images
 
 import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -46,7 +47,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import earth.mp3player.R
 import earth.mp3player.ui.components.settings.utils.openUrl
-import earth.mp3player.ui.utils.showToast
 
 /**
  * @author Antoine Pirlot on 11/04/2024
@@ -73,7 +73,9 @@ fun ImageWithLink(
                     onClick = { openUrl(context = context, url = url) },
                     onLongClick = {
                         haptics.performHapticFeedback(HapticFeedbackType.LongPress)
-                        showToast(context = context, message = url)
+                        Toast
+                            .makeText(context, url, Toast.LENGTH_SHORT)
+                            .show()
                     }
                 ),
             painter = painterResource(id = painterId),

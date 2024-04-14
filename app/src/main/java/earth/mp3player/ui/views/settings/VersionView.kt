@@ -26,6 +26,7 @@
 package earth.mp3player.ui.views.settings
 
 import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
@@ -50,7 +51,6 @@ import earth.mp3player.ui.components.LoadingCircle
 import earth.mp3player.ui.components.buttons.updates.CheckUpdateButton
 import earth.mp3player.ui.components.settings.UpdateAvailable
 import earth.mp3player.ui.components.texts.Title
-import earth.mp3player.ui.utils.showToast
 import earth.mp3player.internet.R as RInternet
 
 /**
@@ -79,20 +79,22 @@ fun VersionView(
 
             CANNOT_CHECK -> {
                 CheckUpdateButton()
-                showToast(
-                    context = context,
-                    message = stringResource(id = RInternet.string.cannot_check_update)
-                )
+                Toast.makeText(
+                    context,
+                    stringResource(id = RInternet.string.cannot_check_update),
+                    Toast.LENGTH_SHORT
+                ).show()
             }
 
             AVAILABLE -> UpdateAvailable()
 
             UP_TO_DATE -> {
                 CheckUpdateButton()
-                showToast(
-                    context = context,
-                    message = stringResource(id = RInternet.string.no_update)
-                )
+                Toast.makeText(
+                    context,
+                    stringResource(id = RInternet.string.no_update),
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }

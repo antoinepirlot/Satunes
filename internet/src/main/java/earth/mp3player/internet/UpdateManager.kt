@@ -32,7 +32,6 @@ import android.content.IntentFilter
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
-import androidx.annotation.RequiresApi
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.core.content.getSystemService
@@ -125,8 +124,9 @@ object UpdateManager {
                 val page: String = res.body!!.string()
                 res.close()
 
+                //TODO remove hard coded old version
                 val currentVersion: String =
-                    'v' + getCurrentVersion(context = context)
+                    'v' + "0.7.0-beta"//getCurrentVersion(context = context)
                 val updateUrl: String? = getUpdateUrl(page = page, currentVersion = currentVersion)
                 UpdateAvailableStatus.AVAILABLE.updateLink = updateUrl
                 if (updateUrl == null) {
@@ -182,8 +182,7 @@ object UpdateManager {
     }
 
     //TODO add button to run it
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-    private fun downloadUpdateApk(context: Context) {
+    fun downloadUpdateApk(context: Context) {
         downloadStatus.value = APKDownloadStatus.CHECKING
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -253,12 +252,14 @@ object UpdateManager {
     }
 
 
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    //TODO make it available for Android R and later
     private fun setDownloadReceiver(context: Context) {
-        context.registerReceiver(
-            DownloadReceiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE),
-            Context.RECEIVER_EXPORTED
-        )
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            context.registerReceiver(
+                DownloadReceiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE),
+                Context.RECEIVER_EXPORTED
+            )
+        }
     }
 
     /**

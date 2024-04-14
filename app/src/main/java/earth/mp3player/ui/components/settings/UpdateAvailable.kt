@@ -26,15 +26,20 @@
 package earth.mp3player.ui.components.settings
 
 import android.content.Context
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import earth.mp3player.internet.R
 import earth.mp3player.internet.UpdateAvailableStatus
+import earth.mp3player.internet.UpdateManager
 import earth.mp3player.ui.components.settings.utils.openUrl
 
 /**
@@ -46,13 +51,23 @@ fun UpdateAvailable(
     modifier: Modifier = Modifier,
 ) {
     val context: Context = LocalContext.current
-    TextButton(onClick = {
-        openUrl(
-            context = context,
-            url = UpdateAvailableStatus.AVAILABLE.updateLink!!
-        )
-    }) {
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
         Text(text = stringResource(id = R.string.update_available))
+        Button(onClick = {
+            openUrl(
+                context = context,
+                url = UpdateAvailableStatus.AVAILABLE.updateLink!!
+            )
+        }) {
+            Text(text = stringResource(id = R.string.see_details))
+        }
+        Button(onClick = { UpdateManager.downloadUpdateApk(context = context) }) {
+            Text(text = stringResource(id = R.string.download_update))
+        }
     }
 }
 

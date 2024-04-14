@@ -29,7 +29,6 @@ import android.content.Context
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -49,7 +48,7 @@ import earth.mp3player.internet.UpdateManager
 import earth.mp3player.internet.UpdateManager.getCurrentVersion
 import earth.mp3player.ui.components.LoadingCircle
 import earth.mp3player.ui.components.settings.CheckUpdateButton
-import earth.mp3player.ui.components.settings.utils.openUrl
+import earth.mp3player.ui.components.settings.UpdateAvailable
 import earth.mp3player.ui.components.texts.Title
 import earth.mp3player.ui.utils.showToast
 import earth.mp3player.internet.R as RInternet
@@ -72,36 +71,28 @@ fun VersionView(
         //Check update is done when pressing setting button in top app bar
         if (isCheckingUpdate) {
             LoadingCircle(modifier.padding(bottom = 16.dp))
-        } else {
-            when (updateAvailable) {
-                UNDEFINED -> CheckUpdateButton()
+            return
+        }
 
-                CANNOT_CHECK -> {
-                    CheckUpdateButton()
-                    showToast(
-                        context = context,
-                        message = stringResource(id = RInternet.string.cannot_check_update)
-                    )
-                }
+        when (updateAvailable) {
+            UNDEFINED -> CheckUpdateButton()
 
-                AVAILABLE -> {
-                    TextButton(onClick = {
-                        openUrl(
-                            context = context,
-                            url = AVAILABLE.updateLink!!
-                        )
-                    }) {
-                        Text(text = stringResource(id = RInternet.string.update_available))
-                    }
-                }
+            CANNOT_CHECK -> {
+                CheckUpdateButton()
+                showToast(
+                    context = context,
+                    message = stringResource(id = RInternet.string.cannot_check_update)
+                )
+            }
 
-                UP_TO_DATE -> {
-                    CheckUpdateButton()
-                    showToast(
-                        context = context,
-                        message = stringResource(id = RInternet.string.no_update)
-                    )
-                }
+            AVAILABLE -> UpdateAvailable()
+
+            UP_TO_DATE -> {
+                CheckUpdateButton()
+                showToast(
+                    context = context,
+                    message = stringResource(id = RInternet.string.no_update)
+                )
             }
         }
     }

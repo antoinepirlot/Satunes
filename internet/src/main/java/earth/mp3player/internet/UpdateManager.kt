@@ -275,6 +275,5 @@ object UpdateManager {
         install.putExtra(Intent.EXTRA_NOT_UNKNOWN_SOURCE, true)
         install.data = contentUri
         context.startActivity(install)
-        context.unregisterReceiver(DownloadReceiver)
     }
 }

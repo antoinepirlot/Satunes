@@ -2,6 +2,13 @@
 Tu peux retrouver ce fichier en [français 🇫🇷](UPDATES_FR.md)
 ## 0.8 (Android 11 Red Velvet Cake and later)
 
+### 0.8.3-beta
+
+Improvements, Optimizations and Troubleshooting:
+
+* All albums that have the same name will be displayed on the screen.
+* Artists, albums and genres without names will have an associated name.
+
 ### 0.8.2-beta
 
 Improvements, Optimizations and Troubleshooting:

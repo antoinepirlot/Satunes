@@ -56,6 +56,9 @@ fun AllGenresListView(
     val genreMap: SortedMap<String, Genre> = remember { DataManager.genreMap }
     val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
 
+    genreMap.forEach { (_: String, genre: Genre) ->
+        musicMediaItemSortedMap.putAll(genre.musicMediaItemSortedMap)
+    }
     resetOpenedPlaylist()
     MediaListView(
         modifier = modifier,

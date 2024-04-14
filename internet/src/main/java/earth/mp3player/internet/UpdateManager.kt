@@ -25,6 +25,7 @@
 
 package earth.mp3player.internet
 
+import android.app.Activity
 import android.app.DownloadManager
 import android.content.Context
 import android.content.Intent
@@ -83,6 +84,16 @@ object UpdateManager {
     val downloadStatus: MutableState<APKDownloadStatus> =
         mutableStateOf(APKDownloadStatus.NOT_STARTED)
 
+    private fun showToastOnUiThread(context: Context, activity: Activity, message: String) {
+        activity.runOnUiThread {
+            Toast.makeText(
+                context.applicationContext,
+                message,
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+
     /**
      * Create a httpclient and get the response matching url.
      *
@@ -104,20 +115,21 @@ object UpdateManager {
         return httpClient.newCall(req).execute()
     }
 
+
     /**
      * Checks if an update is available if there's an internet connection
      * and update the available update link.
      */
     fun checkUpdate(context: Context) {
         //Check update
+        val activity = Activity()
         CoroutineScope(Dispatchers.IO).launch {
             isCheckingUpdate.value = true
-            Toast.makeText(
-                context.applicationContext,
-                context.getString(R.string.checking_update),
-                Toast.LENGTH_SHORT
+            showToastOnUiThread(
+                context = context,
+                activity = activity,
+                message = context.getString(R.string.checking_update)
             )
-                .show()
             try {
                 //Get all versions
                 val res: Response = getUrlResponse(context = context, url = RELEASES_URL)!!
@@ -138,28 +150,28 @@ object UpdateManager {
                 UpdateAvailableStatus.AVAILABLE.updateLink = updateUrl
                 if (updateUrl == null) {
                     updateAvailableStatus.value = UpdateAvailableStatus.UP_TO_DATE
-                    Toast.makeText(
-                        context.applicationContext,
-                        context.getString(R.string.no_update),
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    showToastOnUiThread(
+                        context = context,
+                        activity = activity,
+                        message = context.getString(R.string.no_update)
+                    )
                 } else {
                     updateAvailableStatus.value = UpdateAvailableStatus.AVAILABLE
-                    Toast.makeText(
-                        context.applicationContext,
-                        context.getString(R.string.update_available),
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    showToastOnUiThread(
+                        context = context,
+                        activity = activity,
+                        message = context.getString(R.string.update_available)
+                    )
                 }
             } catch (_: Exception) {
                 //Don't crash the app if an error occurred internet connection
                 //Don't care of internet
                 updateAvailableStatus.value = UpdateAvailableStatus.CANNOT_CHECK
-                Toast.makeText(
-                    context.applicationContext,
-                    context.getString(R.string.cannot_check_update),
-                    Toast.LENGTH_SHORT
-                ).show()
+                showToastOnUiThread(
+                    context = context,
+                    activity = activity,
+                    message = context.getString(R.string.cannot_check_update)
+                )
             } finally {
                 isCheckingUpdate.value = false
             }
@@ -205,25 +217,30 @@ object UpdateManager {
 
     //TODO add button to run it
     fun downloadUpdateApk(context: Context) {
+        if (downloadStatus.value == APKDownloadStatus.CHECKING || downloadStatus.value == APKDownloadStatus.DOWNLOADING) {
+            return
+        }
+        val activity = Activity()
         CoroutineScope(Dispatchers.IO).launch {
             downloadStatus.value = APKDownloadStatus.CHECKING
-            Toast.makeText(
-                context.applicationContext,
-                context.getString(R.string.download_checking),
-                Toast.LENGTH_SHORT
-            ).show()
+            showToastOnUiThread(
+                context = context,
+                activity = activity,
+                message = context.getString(R.string.download_checking)
+            )
             try {
                 if (updateAvailableStatus.value != UpdateAvailableStatus.AVAILABLE) {
                     //Can't be downloaded
                     downloadStatus.value = APKDownloadStatus.NOT_FOUND
-                    Toast.makeText(
-                        context.applicationContext,
-                        context.getString(R.string.download_not_found),
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    showToastOnUiThread(
+                        context = context,
+                        activity = activity,
+                        message = context.getString(R.string.download_not_found)
+                    )
                     return@launch
                 }
-                val downloadUrl: String = getDownloadUrl(context = context) ?: return@launch
+                val downloadUrl: String =
+                    getDownloadUrl(context = context, activity = activity) ?: return@launch
                 val appName: String = downloadUrl.split("/").last().split("_").first()
                 val downloadManager: DownloadManager = context.getSystemService()!!
                 val downloadUri: Uri = Uri.parse(downloadUrl)
@@ -239,29 +256,29 @@ object UpdateManager {
                 setDownloadReceiver(context = context)
                 downloadId = downloadManager.enqueue(req)
                 downloadStatus.value = APKDownloadStatus.DOWNLOADING
-                Toast.makeText(
-                    context.applicationContext,
-                    context.getString(R.string.downloading),
-                    Toast.LENGTH_SHORT
-                ).show()
+                showToastOnUiThread(
+                    context = context,
+                    activity = activity,
+                    message = context.getString(R.string.downloading)
+                )
             } catch (_: Exception) {
                 downloadStatus.value = APKDownloadStatus.FAILED
-                Toast.makeText(
-                    context.applicationContext,
-                    context.getString(R.string.download_failed),
-                    Toast.LENGTH_SHORT
-                ).show()
+                showToastOnUiThread(
+                    context = context,
+                    activity = activity,
+                    message = context.getString(R.string.download_failed)
+                )
             }
         }
     }
 
     /**
      * Get the download url for the latest version. It looks like:
-     * "https://github.com/antoinepirlot/MP3-Player/releases/download/vx.y.z-beta/[name]_vx.y.z[-versionType].apk"
+     * "https://github.com/antoinepirlot/MP3-Player/releases/download/vx.y.z-beta/[appName]_vx.y.z[-versionType].apk"
      *
      * @return the download url or null if not found
      */
-    private fun getDownloadUrl(context: Context): String? {
+    private fun getDownloadUrl(context: Context, activity: Activity): String? {
         val regex: Regex =
             when (versionType) {
                 ALPHA -> ALPHA_APK_REGEX
@@ -276,11 +293,11 @@ object UpdateManager {
         if (!res.isSuccessful) {
             res.close()
             downloadStatus.value = APKDownloadStatus.NOT_FOUND
-            Toast.makeText(
-                context.applicationContext,
-                context.getString(R.string.download_not_found),
-                Toast.LENGTH_SHORT
-            ).show()
+            showToastOnUiThread(
+                context = context,
+                activity = activity,
+                message = context.getString(R.string.download_not_found)
+            )
             return null
         }
         val page: String = res.body!!.string()
@@ -291,11 +308,11 @@ object UpdateManager {
         )?.value
         if (apkFileName == null) {
             downloadStatus.value = APKDownloadStatus.NOT_FOUND
-            Toast.makeText(
-                context.applicationContext,
-                context.getString(R.string.download_not_found),
-                Toast.LENGTH_SHORT
-            ).show()
+            showToastOnUiThread(
+                context = context,
+                activity = activity,
+                message = context.getString(R.string.download_not_found)
+            )
             return null
         }
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="cannot_check_update">Impossible de vérifier si l\'application est à jour</string>
-    <string name="update_available">"Une mise à jour est disponible: "</string>
+    <string name="update_available">Une mise à jour est disponible</string>
     <string name="no_update">L\'application est à jour</string>
     <string name="download_update">Télécharger</string>
     <string name="see_details">Voir les détails</string>

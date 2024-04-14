@@ -23,25 +23,18 @@
  * PS: I don't answer quickly.
  */
 
-package earth.mp3player.ui.components.settings.updates
+package earth.mp3player.ui.components.buttons.updates
 
 import android.content.Context
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import earth.mp3player.internet.R
 import earth.mp3player.internet.UpdateAvailableStatus
-import earth.mp3player.internet.UpdateManager
-import earth.mp3player.ui.components.playlist.SPACER_SIZE
 import earth.mp3player.ui.components.settings.utils.openUrl
 
 /**
@@ -49,33 +42,25 @@ import earth.mp3player.ui.components.settings.utils.openUrl
  */
 
 @Composable
-fun UpdateAvailable(
+fun SeeDetailsButton(
     modifier: Modifier = Modifier,
 ) {
     val context: Context = LocalContext.current
-    Row(
+    Button(
         modifier = modifier,
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(text = stringResource(id = R.string.update_available))
-        Button(onClick = {
+        onClick = {
             openUrl(
                 context = context,
                 url = UpdateAvailableStatus.AVAILABLE.updateLink!!
             )
-        }) {
-            Text(text = stringResource(id = R.string.see_details))
         }
-        Spacer(modifier = modifier.size(SPACER_SIZE))
-        Button(onClick = { UpdateManager.downloadUpdateApk(context = context) }) {
-            Text(text = stringResource(id = R.string.download_update))
-        }
+    ) {
+        Text(text = stringResource(id = R.string.see_details))
     }
 }
 
 @Preview
 @Composable
-fun UpdateAvailablePreview() {
-    UpdateAvailable()
+fun SeeDetailsButtonPreview() {
+    SeeDetailsButton()
 }

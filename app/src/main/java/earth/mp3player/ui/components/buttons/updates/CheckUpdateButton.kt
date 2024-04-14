@@ -23,7 +23,7 @@
  * PS: I don't answer quickly.
  */
 
-package earth.mp3player.ui.components.settings.updates
+package earth.mp3player.ui.components.buttons.updates
 
 import android.content.Context
 import androidx.compose.material3.Button

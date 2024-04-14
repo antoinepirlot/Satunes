@@ -47,8 +47,8 @@ import earth.mp3player.internet.UpdateAvailableStatus.UP_TO_DATE
 import earth.mp3player.internet.UpdateManager
 import earth.mp3player.internet.UpdateManager.getCurrentVersion
 import earth.mp3player.ui.components.LoadingCircle
-import earth.mp3player.ui.components.settings.updates.CheckUpdateButton
-import earth.mp3player.ui.components.settings.updates.UpdateAvailable
+import earth.mp3player.ui.components.buttons.updates.CheckUpdateButton
+import earth.mp3player.ui.components.settings.UpdateAvailable
 import earth.mp3player.ui.components.texts.Title
 import earth.mp3player.ui.utils.showToast
 import earth.mp3player.internet.R as RInternet

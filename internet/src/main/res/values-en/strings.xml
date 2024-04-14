@@ -11,4 +11,5 @@
     <string name="downloaded">Update downloaded</string>
     <string name="downloading">Downloading...</string>
     <string name="download_checking">File searching...</string>
+    <string name="checking_update">Checking update...</string>
 </resources>

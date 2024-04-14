@@ -2,6 +2,14 @@
 You can find this file in [english 🇬🇧](UPDATES_EN.md)
 ## 0.8 (Android 11 Red Velvet Cake et ultérieur)
 
+### 0.8.2-beta
+
+Améliorations, Optimisations et Résolutions de problèmes:
+
+* Les albums contiennent toutes leurs musiques. Un album est considéré comme identique si son titre
+  et son artist sont les mêmes.
+* Maintenant il est possible de télécharger et d'installer la mise à jour depuis l'application.
+
 ### 0.8.1-beta
 
 Améliorations, Optimisations et Résolutions de problèmes:

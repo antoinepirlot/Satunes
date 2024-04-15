@@ -27,6 +27,7 @@ package earth.mp3player.database.services
 
 import android.content.Context
 import android.database.Cursor
+import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.net.Uri.decode
 import android.net.Uri.encode
@@ -186,15 +187,16 @@ object DataLoader {
             }
         }
 
+        val absolutePath: String = encode(cursor.getString(absolutePathColumnId!!))
+
         //Load Genre
         try {
-            genre = loadGenre(context = context, cursor = cursor)
-        } catch (_: Exception) {
+            genre = loadGenre(context = context, cursor = cursor, absolutePath = absolutePath)
+        } catch (e: Exception) {
             //No genre
         }
 
         //Load Folder
-        val absolutePath: String = encode(cursor.getString(absolutePathColumnId!!))
         val folder: Folder = loadFolder(absolutePath = absolutePath)
 
         //Load music and folder inside load music function
@@ -354,8 +356,13 @@ object DataLoader {
         }
     }
 
-    private fun loadGenre(context: Context, cursor: Cursor): Genre {
-        val name = encode(cursor.getString(genreNameColumn!!))
+
+    private fun loadGenre(context: Context, cursor: Cursor, absolutePath: String): Genre {
+        val name: String = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            encode(cursor.getString(genreNameColumn!!))
+        } else {
+            getGenreNameApi29AndLess(absolutePath = absolutePath)
+        }
         return if (decode(name) == UNKNOWN_GENRE) {
             // Assign the Unknown Genre
             try {
@@ -367,5 +374,14 @@ object DataLoader {
         } else {
             DataManager.addGenre(genre = Genre(title = name))
         }
+    }
+
+    private fun getGenreNameApi29AndLess(absolutePath: String): String {
+        val mediaMetadataRetriever = MediaMetadataRetriever()
+        mediaMetadataRetriever.setDataSource(absolutePath)
+        val genre: String =
+            mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_GENRE)!!
+        mediaMetadataRetriever.release()
+        return genre
     }
 }

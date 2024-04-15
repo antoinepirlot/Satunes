@@ -101,6 +101,7 @@ class Music(
                 mediaMetadataRetriever.setDataSource(context, uri)
 
                 val artwork: ByteArray? = mediaMetadataRetriever.embeddedPicture
+                mediaMetadataRetriever.release()
 
                 if (artwork != null) {
                     val bitmap: Bitmap = BitmapFactory.decodeByteArray(artwork, 0, artwork.size)

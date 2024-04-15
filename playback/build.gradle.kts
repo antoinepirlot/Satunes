@@ -47,7 +47,7 @@ dependencies {
     /**
      * Media
      */
-    val media3Version = "1.2.1"
+    val media3Version = "1.3.1"
 
     implementation("androidx.media3:media3-common:$media3Version")
     implementation("androidx.media3:media3-exoplayer:$media3Version")

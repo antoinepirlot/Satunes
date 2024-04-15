@@ -30,6 +30,7 @@ import android.database.Cursor
 import android.net.Uri
 import android.net.Uri.decode
 import android.net.Uri.encode
+import android.os.Build
 import android.provider.MediaStore
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -82,7 +83,7 @@ object DataLoader {
     fun loadAllData(context: Context) {
         isLoading.value = true
         CoroutineScope(Dispatchers.IO).launch {
-            val projection = arrayOf(
+            val projection = mutableListOf(
                 // AUDIO
                 MediaStore.Audio.Media._ID,
                 MediaStore.Audio.Media.DISPLAY_NAME,
@@ -97,12 +98,14 @@ object DataLoader {
 
                 //ARTISTS
                 MediaStore.Audio.Artists.ARTIST,
-
-                //Genre
-                MediaStore.Audio.Media.GENRE
             )
 
-            context.contentResolver.query(URI, projection, null, null)?.use {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                //Genre
+                projection.add(MediaStore.Audio.Media.GENRE)
+            }
+
+            context.contentResolver.query(URI, projection.toTypedArray(), null, null)?.use {
                 loadColumns(cursor = it)
                 while (it.moveToNext()) {
                     loadData(cursor = it, context = context)

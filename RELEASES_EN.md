@@ -1,5 +1,5 @@
 # Releases (🇬🇧)
-Tu peux retrouver ce fichier en [français 🇫🇷](UPDATES_FR.md)
+Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 ## 0.8 (Android 11 Red Velvet Cake and later)
 
 ### 0.8.3-beta

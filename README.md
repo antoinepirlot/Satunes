@@ -38,4 +38,4 @@ Tu as le droit de réutiliser mon code pour créer une nouvelle application dér
 Si l'application te plait et que tu as envie de me soutenir, n'hésite pas à le faire [ici](https://fr.tipeee.com/antoinepirlot).
 
 # Versions
-Si tu souhaites voir les différentes versions de l'application et ce qu'elles contiennent, [clique ici.](UPDATES_FR.md)
+Si tu souhaites voir les différentes versions de l'application et ce qu'elles contiennent, [clique ici.](RELEASES_FR.md)

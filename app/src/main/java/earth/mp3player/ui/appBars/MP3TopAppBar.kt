@@ -44,7 +44,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import earth.mp3player.R
 import earth.mp3player.internet.UpdateAvailableStatus
-import earth.mp3player.internet.UpdateManager
+import earth.mp3player.internet.UpdateCheckManager
 import earth.mp3player.router.Destination
 import earth.mp3player.ui.views.MP3PlayerIcons
 
@@ -75,8 +75,8 @@ fun MP3TopAppBar(
         actions = {
             IconButton(
                 onClick = {
-                    if (UpdateManager.updateAvailableStatus.value != UpdateAvailableStatus.AVAILABLE) {
-                        UpdateManager.updateAvailableStatus.value = UpdateAvailableStatus.UNDEFINED
+                    if (UpdateCheckManager.updateAvailableStatus.value != UpdateAvailableStatus.AVAILABLE) {
+                        UpdateCheckManager.updateAvailableStatus.value = UpdateAvailableStatus.UNDEFINED
                     }
                     when (navController.currentBackStackEntry!!.destination.route!!) {
                         Destination.SETTINGS.link -> navController.popBackStack()

@@ -50,7 +50,7 @@ import okhttp3.Response
 /**
  * @author Antoine Pirlot on 11/04/2024
  */
-object UpdateManager {
+object UpdateCheckManager {
     val updateAvailableStatus: MutableState<UpdateAvailableStatus> =
         mutableStateOf(UpdateAvailableStatus.UNDEFINED)
     val isCheckingUpdate: MutableState<Boolean> = mutableStateOf(false)

@@ -45,8 +45,8 @@ import earth.mp3player.internet.UpdateAvailableStatus.AVAILABLE
 import earth.mp3player.internet.UpdateAvailableStatus.CANNOT_CHECK
 import earth.mp3player.internet.UpdateAvailableStatus.UNDEFINED
 import earth.mp3player.internet.UpdateAvailableStatus.UP_TO_DATE
-import earth.mp3player.internet.UpdateManager
-import earth.mp3player.internet.UpdateManager.getCurrentVersion
+import earth.mp3player.internet.UpdateCheckManager
+import earth.mp3player.internet.UpdateCheckManager.getCurrentVersion
 import earth.mp3player.ui.components.LoadingCircle
 import earth.mp3player.ui.components.buttons.updates.CheckUpdateButton
 import earth.mp3player.ui.components.settings.UpdateAvailable
@@ -63,8 +63,8 @@ fun VersionView(
 ) {
     val context: Context = LocalContext.current
     val currentVersion = getCurrentVersion(context = context)
-    val isCheckingUpdate: Boolean by remember { UpdateManager.isCheckingUpdate }
-    val updateAvailable: UpdateAvailableStatus by remember { UpdateManager.updateAvailableStatus }
+    val isCheckingUpdate: Boolean by remember { UpdateCheckManager.isCheckingUpdate }
+    val updateAvailable: UpdateAvailableStatus by remember { UpdateCheckManager.updateAvailableStatus }
     Column(modifier = modifier.padding(16.dp)) {
         Title(text = stringResource(id = R.string.version), fontSize = 20.sp)
         Text(text = stringResource(id = R.string.current_version) + currentVersion)

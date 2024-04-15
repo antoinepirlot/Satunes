@@ -1,5 +1,5 @@
 # Versions (🇫🇷)
-You can find this file in [english 🇬🇧](UPDATES_EN.md)
+You can find this file in [english 🇬🇧](RELEASES_EN.md)
 ## 0.8 (Android 11 Red Velvet Cake et ultérieur)
 
 ### 0.8.3-beta

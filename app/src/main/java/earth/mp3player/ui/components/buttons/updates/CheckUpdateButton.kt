@@ -37,7 +37,7 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import earth.mp3player.R
-import earth.mp3player.internet.UpdateManager
+import earth.mp3player.internet.UpdateCheckManager
 
 /**
  * @author Antoine Pirlot on 11/04/2024
@@ -53,7 +53,7 @@ fun CheckUpdateButton(
         modifier = modifier,
         onClick = {
             haptics.performHapticFeedback(hapticFeedbackType = HapticFeedbackType.TextHandleMove)
-            UpdateManager.checkUpdate(context = context)
+            UpdateCheckManager.checkUpdate(context = context)
         }
     ) {
         Text(text = stringResource(id = R.string.check_update))

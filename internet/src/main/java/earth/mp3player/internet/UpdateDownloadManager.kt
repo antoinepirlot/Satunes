@@ -58,21 +58,21 @@ object UpdateDownloadManager {
     private const val MIME_TYPE = "application/vnd.android.package-archive"
 
     fun downloadUpdateApk(context: Context) {
-        if (UpdateManager.downloadStatus.value == APKDownloadStatus.CHECKING || UpdateManager.downloadStatus.value == APKDownloadStatus.DOWNLOADING) {
+        if (UpdateCheckManager.downloadStatus.value == APKDownloadStatus.CHECKING || UpdateCheckManager.downloadStatus.value == APKDownloadStatus.DOWNLOADING) {
             return
         }
         val activity = Activity()
         CoroutineScope(Dispatchers.IO).launch {
-            UpdateManager.downloadStatus.value = APKDownloadStatus.CHECKING
+            UpdateCheckManager.downloadStatus.value = APKDownloadStatus.CHECKING
             showToastOnUiThread(
                 context = context,
                 activity = activity,
                 message = context.getString(R.string.download_checking)
             )
             try {
-                if (UpdateManager.updateAvailableStatus.value != UpdateAvailableStatus.AVAILABLE) {
+                if (UpdateCheckManager.updateAvailableStatus.value != UpdateAvailableStatus.AVAILABLE) {
                     //Can't be downloaded
-                    UpdateManager.downloadStatus.value = APKDownloadStatus.NOT_FOUND
+                    UpdateCheckManager.downloadStatus.value = APKDownloadStatus.NOT_FOUND
                     showToastOnUiThread(
                         context = context,
                         activity = activity,
@@ -96,14 +96,14 @@ object UpdateDownloadManager {
                 req.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
                 setDownloadReceiver(context = context)
                 downloadId = downloadManager.enqueue(req)
-                UpdateManager.downloadStatus.value = APKDownloadStatus.DOWNLOADING
+                UpdateCheckManager.downloadStatus.value = APKDownloadStatus.DOWNLOADING
                 showToastOnUiThread(
                     context = context,
                     activity = activity,
                     message = context.getString(R.string.downloading)
                 )
             } catch (_: Exception) {
-                UpdateManager.downloadStatus.value = APKDownloadStatus.FAILED
+                UpdateCheckManager.downloadStatus.value = APKDownloadStatus.FAILED
                 showToastOnUiThread(
                     context = context,
                     activity = activity,
@@ -127,13 +127,13 @@ object UpdateDownloadManager {
                 PREVIEW -> PREVIEW_APK_REGEX
                 else -> RELEASE_APK_REGEX
             }
-        val res: Response = UpdateManager.getUrlResponse(
+        val res: Response = UpdateCheckManager.getUrlResponse(
             context = context,
-            url = "${RELEASES_URL}/expanded_assets/${UpdateManager.latestVersion.value}"
+            url = "${RELEASES_URL}/expanded_assets/${UpdateCheckManager.latestVersion.value}"
         )!!
         if (!res.isSuccessful) {
             res.close()
-            UpdateManager.downloadStatus.value = APKDownloadStatus.NOT_FOUND
+            UpdateCheckManager.downloadStatus.value = APKDownloadStatus.NOT_FOUND
             showToastOnUiThread(
                 context = context,
                 activity = activity,
@@ -148,7 +148,7 @@ object UpdateDownloadManager {
             0
         )?.value
         if (apkFileName == null) {
-            UpdateManager.downloadStatus.value = APKDownloadStatus.NOT_FOUND
+            UpdateCheckManager.downloadStatus.value = APKDownloadStatus.NOT_FOUND
             showToastOnUiThread(
                 context = context,
                 activity = activity,
@@ -158,7 +158,7 @@ object UpdateDownloadManager {
         }
 
         apkFileName = apkFileName.drop(1).dropLast(1) //Avoid > and <
-        return "${RELEASES_URL}/download/${UpdateManager.latestVersion.value}/$apkFileName"
+        return "${RELEASES_URL}/download/${UpdateCheckManager.latestVersion.value}/$apkFileName"
     }
 
     @SuppressLint("UnspecifiedRegisterReceiverFlag")

@@ -43,7 +43,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import earth.mp3player.internet.APKDownloadStatus
 import earth.mp3player.internet.R
-import earth.mp3player.internet.UpdateManager
+import earth.mp3player.internet.UpdateCheckManager
 import earth.mp3player.ui.components.LoadingCircle
 import earth.mp3player.ui.components.buttons.updates.DownloadButton
 import earth.mp3player.ui.components.buttons.updates.InstallRequestButton
@@ -67,7 +67,7 @@ fun UpdateAvailable(
         Row(verticalAlignment = Alignment.CenterVertically) {
             SeeDetailsButton()
             Spacer(modifier = Modifier.size(SPACER_SIZE))
-            val downloadStatus: APKDownloadStatus by remember { UpdateManager.downloadStatus }
+            val downloadStatus: APKDownloadStatus by remember { UpdateCheckManager.downloadStatus }
             var message: String? = null
             when (downloadStatus) {
                 APKDownloadStatus.CHECKING -> {

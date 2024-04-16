@@ -388,6 +388,6 @@ object DataLoader {
                 UNKNOWN_GENRE
             }
         genreCursor.close()
-        return genreName
+        return encode(genreName)
     }
 }

@@ -61,7 +61,6 @@ object DataLoader {
     private var musicTitleColumn: Int? = null
     private var musicDurationColumn: Int? = null
     private var musicSizeColumn: Int? = null
-    private var relativePathColumn: Int? = null
     private var absolutePathColumnId: Int? = null
 
     // Albums variables
@@ -90,7 +89,6 @@ object DataLoader {
                 MediaStore.Audio.Media.TITLE,
                 MediaStore.Audio.Media.DURATION,
                 MediaStore.Audio.Media.SIZE,
-                MediaStore.Audio.Media.RELATIVE_PATH,
                 MediaStore.Audio.Media.DATA,
 
                 //ALBUMS
@@ -131,8 +129,6 @@ object DataLoader {
         musicDurationColumn =
             cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION)
         musicSizeColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE)
-        relativePathColumn =
-            cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.RELATIVE_PATH)
 
         absolutePathColumnId = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA)
 
@@ -153,7 +149,9 @@ object DataLoader {
 
         // Cache Genre columns indices.
         try {
-            genreNameColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.GENRE)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                genreNameColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.GENRE)
+            }
         } catch (_: IllegalArgumentException) {
             // No genre
         }

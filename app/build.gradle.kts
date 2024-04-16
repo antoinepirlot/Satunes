@@ -16,7 +16,7 @@ android {
 
     defaultConfig {
         applicationId = nameSpace
-        minSdk = 30
+        minSdk = 29
         targetSdk = 34
         versionCode = 19
         versionName = "0.8.3-beta"
@@ -83,7 +83,7 @@ dependencies {
     /**
      * Media
      */
-    val media3Version = "1.2.1"
+    val media3Version = "1.3.1"
 
     implementation("androidx.media3:media3-common:$media3Version")
     implementation("androidx.media3:media3-exoplayer:$media3Version")

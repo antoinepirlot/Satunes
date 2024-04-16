@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+
+    <!-- requestLegacyExternalStorage = true is needed for Android Q and less compatibility-->
     <application
+        android:requestLegacyExternalStorage="true"
         android:supportsRtl="true">
         <service
             android:name="earth.mp3player.playback.services.PlaybackService"

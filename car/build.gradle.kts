@@ -8,7 +8,7 @@ android {
     compileSdk = 34
 
     defaultConfig {
-        minSdk = 30
+        minSdk = 29
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -28,7 +28,7 @@ dependencies {
      * Media
      */
     val mediaVersion = "1.7.0"
-    val media3Version = "1.2.1"
+    val media3Version = "1.3.1"
     implementation("androidx.media:media:$mediaVersion")
     implementation("androidx.media3:media3-common:$media3Version")
 

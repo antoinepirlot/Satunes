@@ -30,6 +30,7 @@ import android.database.Cursor
 import android.net.Uri
 import android.net.Uri.decode
 import android.net.Uri.encode
+import android.os.Build
 import android.provider.MediaStore
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -82,7 +83,7 @@ object DataLoader {
     fun loadAllData(context: Context) {
         isLoading.value = true
         CoroutineScope(Dispatchers.IO).launch {
-            val projection = arrayOf(
+            val projection = mutableListOf(
                 // AUDIO
                 MediaStore.Audio.Media._ID,
                 MediaStore.Audio.Media.DISPLAY_NAME,
@@ -97,12 +98,14 @@ object DataLoader {
 
                 //ARTISTS
                 MediaStore.Audio.Artists.ARTIST,
-
-                //Genre
-                MediaStore.Audio.Media.GENRE
             )
 
-            context.contentResolver.query(URI, projection, null, null)?.use {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                //Genre
+                projection.add(MediaStore.Audio.Media.GENRE)
+            }
+
+            context.contentResolver.query(URI, projection.toTypedArray(), null, null)?.use {
                 loadColumns(cursor = it)
                 while (it.moveToNext()) {
                     loadData(cursor = it, context = context)
@@ -183,15 +186,16 @@ object DataLoader {
             }
         }
 
+        val absolutePath: String = encode(cursor.getString(absolutePathColumnId!!))
+
         //Load Genre
         try {
-            genre = loadGenre(context = context, cursor = cursor)
-        } catch (_: Exception) {
+            genre = loadGenre(context = context, cursor = cursor, absolutePath = absolutePath)
+        } catch (e: Exception) {
             //No genre
         }
 
         //Load Folder
-        val absolutePath: String = encode(cursor.getString(absolutePathColumnId!!))
         val folder: Folder = loadFolder(absolutePath = absolutePath)
 
         //Load music and folder inside load music function
@@ -351,8 +355,13 @@ object DataLoader {
         }
     }
 
-    private fun loadGenre(context: Context, cursor: Cursor): Genre {
-        val name = encode(cursor.getString(genreNameColumn!!))
+
+    private fun loadGenre(context: Context, cursor: Cursor, absolutePath: String): Genre {
+        val name: String = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            encode(cursor.getString(genreNameColumn!!))
+        } else {
+            getGenreNameForAndroidQAndLess(context = context, cursor = cursor)
+        }
         return if (decode(name) == UNKNOWN_GENRE) {
             // Assign the Unknown Genre
             try {
@@ -364,5 +373,23 @@ object DataLoader {
         } else {
             DataManager.addGenre(genre = Genre(title = name))
         }
+    }
+
+    private fun getGenreNameForAndroidQAndLess(context: Context, cursor: Cursor): String {
+        val genreProj: Array<String> =
+            arrayOf(MediaStore.Audio.Genres._ID, MediaStore.Audio.Genres.NAME)
+        val musicId: Int = cursor.getInt(musicIdColumn!!)
+        val genreUri: Uri = MediaStore.Audio.Genres.getContentUriForAudioId("external", musicId)
+        val genreCursor: Cursor? =
+            context.contentResolver.query(genreUri, genreProj, null, null, null)
+        val genreIndex: Int = genreCursor!!.getColumnIndexOrThrow(MediaStore.Audio.Genres.NAME)
+        val genreName: String =
+            if (genreCursor.moveToNext()) {
+                genreCursor.getString(genreIndex)
+            } else {
+                UNKNOWN_GENRE
+            }
+        genreCursor.close()
+        return genreName
     }
 }

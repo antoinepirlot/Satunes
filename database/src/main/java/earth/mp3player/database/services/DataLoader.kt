@@ -27,7 +27,6 @@ package earth.mp3player.database.services
 
 import android.content.Context
 import android.database.Cursor
-import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.net.Uri.decode
 import android.net.Uri.encode
@@ -361,7 +360,7 @@ object DataLoader {
         val name: String = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             encode(cursor.getString(genreNameColumn!!))
         } else {
-            getGenreNameApi29AndLess(absolutePath = absolutePath)
+            getGenreNameForAndroidQAndLess(context = context, cursor = cursor)
         }
         return if (decode(name) == UNKNOWN_GENRE) {
             // Assign the Unknown Genre
@@ -376,12 +375,21 @@ object DataLoader {
         }
     }
 
-    private fun getGenreNameApi29AndLess(absolutePath: String): String {
-        val mediaMetadataRetriever = MediaMetadataRetriever()
-        mediaMetadataRetriever.setDataSource(absolutePath)
-        val genre: String =
-            mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_GENRE)!!
-        mediaMetadataRetriever.release()
-        return genre
+    private fun getGenreNameForAndroidQAndLess(context: Context, cursor: Cursor): String {
+        val genreProj: Array<String> =
+            arrayOf(MediaStore.Audio.Genres._ID, MediaStore.Audio.Genres.NAME)
+        val musicId: Int = cursor.getInt(musicIdColumn!!)
+        val genreUri: Uri = MediaStore.Audio.Genres.getContentUriForAudioId("external", musicId)
+        val genreCursor: Cursor? =
+            context.contentResolver.query(genreUri, genreProj, null, null, null)
+        val genreIndex: Int = genreCursor!!.getColumnIndexOrThrow(MediaStore.Audio.Genres.NAME)
+        val genreName: String =
+            if (genreCursor.moveToNext()) {
+                genreCursor.getString(genreIndex)
+            } else {
+                UNKNOWN_GENRE
+            }
+        genreCursor.close()
+        return genreName
     }
 }

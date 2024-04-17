@@ -53,6 +53,8 @@ object MP3PlayerCarCallBack : MediaSessionCompat.Callback() {
     internal const val ACTIONS_ON_PAUSE: Long =
         ACTION_PLAY or ACTION_SKIP_TO_NEXT or ACTION_SKIP_TO_PREVIOUS or ACTION_SEEK_TO
 
+    internal const val ACTION_SHUFFLE = "ACTION_SHUFFLE"
+
     override fun onPlay() {
         val playbackController: PlaybackController = PlaybackController.getInstance()
         if (!playbackController.isLoaded.value) {

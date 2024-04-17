@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name" translatable="false">car</string>
+    <string name="shuffle">Aléatoire</string>
 </resources>

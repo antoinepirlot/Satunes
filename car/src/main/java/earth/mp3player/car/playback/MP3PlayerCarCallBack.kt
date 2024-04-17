@@ -77,10 +77,14 @@ object MP3PlayerCarCallBack : MediaSessionCompat.Callback() {
     }
 
     override fun onPlayFromMediaId(mediaId: String, extras: Bundle?) {
-        val id: Long = mediaId.toLong()
-        val music: Music = DataManager.getMusic(musicId = id)
-        loadMusic()
-        PlaybackController.getInstance().start(musicToPlay = music)
+        val shuffleMode: Boolean = mediaId == "shuffle"
+        loadMusic(shuffleMode = shuffleMode)
+        val playbackController: PlaybackController = PlaybackController.getInstance()
+        var musicToPlay: Music? = null
+        if (!shuffleMode) {
+            musicToPlay = DataManager.getMusic(musicId = mediaId.toLong())
+        }
+        playbackController.start(musicToPlay = musicToPlay)
     }
 
     override fun onSkipToNext() {
@@ -96,7 +100,7 @@ object MP3PlayerCarCallBack : MediaSessionCompat.Callback() {
     /**
      * Load music from the last route deque route.
      */
-    private fun loadMusic() {
+    private fun loadMusic(shuffleMode: Boolean = false) {
         MP3PlayerCarMusicService.updateQueue()
         val routeDeque: RouteDeque = MP3PlayerCarMusicService.routeDeque
 
@@ -105,7 +109,7 @@ object MP3PlayerCarCallBack : MediaSessionCompat.Callback() {
         val playbackController: PlaybackController = PlaybackController.getInstance()
 
         if (lastRoute == ScreenPages.ROOT.id || lastRoute == ScreenPages.ALL_MUSICS.id) {
-            playbackController.loadMusic(musicMediaItemSortedMap = DataManager.musicMediaItemSortedMap)
+            playbackController.loadMusic(musicMediaItemSortedMap = DataManager.musicMediaItemSortedMap, shuffleMode = shuffleMode)
             return
         }
 
@@ -143,6 +147,6 @@ object MP3PlayerCarCallBack : MediaSessionCompat.Callback() {
                     DataManager.musicMediaItemSortedMap
                 }
             }
-        playbackController.loadMusic(musicMediaItemSortedMap = musicMediaItemSortedMap)
+        playbackController.loadMusic(musicMediaItemSortedMap = musicMediaItemSortedMap, shuffleMode = shuffleMode)
     }
 }

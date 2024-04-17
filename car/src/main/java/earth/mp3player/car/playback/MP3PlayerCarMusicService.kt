@@ -33,6 +33,7 @@ import android.support.v4.media.session.MediaSessionCompat.QueueItem
 import android.support.v4.media.session.PlaybackStateCompat.STATE_PAUSED
 import android.support.v4.media.session.PlaybackStateCompat.STATE_PLAYING
 import androidx.media.MediaBrowserServiceCompat
+import earth.mp3player.car.R
 import earth.mp3player.car.pages.ScreenPages
 import earth.mp3player.car.pages.pages
 import earth.mp3player.car.utils.buildMediaItem
@@ -112,7 +113,7 @@ class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
     }
 
     override fun onLoadChildren(parentId: String, result: Result<MutableList<MediaItem>>) {
-        val children: MutableList<MediaItem>?
+        val children: MutableList<MediaItem> = mutableListOf(getShuffleButton())
         when (parentId) {
             ScreenPages.ROOT.id -> {
                 routeDeque.resetRouteDeque()
@@ -121,44 +122,38 @@ class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
             }
 
             ScreenPages.ALL_FOLDERS.id -> {
-                children =
-                    getAllMediaMediaItemList(mediaList = DataManager.folderMap.values)
+                children.addAll(getAllMediaMediaItemList(mediaList = DataManager.folderMap.values))
                 routeDeque.resetRouteDeque()
                 routeDeque.addLast(parentId)
             }
 
             ScreenPages.ALL_ARTISTS.id -> {
-                children =
-                    getAllMediaMediaItemList(mediaList = DataManager.artistMap.values)
+                children.addAll(getAllMediaMediaItemList(mediaList = DataManager.artistMap.values))
                 routeDeque.resetRouteDeque()
                 routeDeque.addLast(parentId)
             }
 
             ScreenPages.ALL_ALBUMS.id -> {
-                children =
-                    getAllMediaMediaItemList(mediaList = DataManager.albumSet)
+                children.addAll(getAllMediaMediaItemList(mediaList = DataManager.albumSet))
                 routeDeque.resetRouteDeque()
                 routeDeque.addLast(parentId)
 
             }
 
             ScreenPages.ALL_GENRES.id -> {
-                children =
-                    getAllMediaMediaItemList(mediaList = DataManager.genreMap.values)
+                children.addAll(getAllMediaMediaItemList(mediaList = DataManager.genreMap.values))
                 routeDeque.resetRouteDeque()
                 routeDeque.addLast(parentId)
             }
 
             ScreenPages.ALL_MUSICS.id -> {
-                children =
-                    getAllMediaMediaItemList(mediaList = DataManager.musicMediaItemSortedMap.keys)
+                children.addAll(getAllMediaMediaItemList(mediaList = DataManager.musicMediaItemSortedMap.keys))
                 routeDeque.resetRouteDeque()
                 routeDeque.addLast(parentId)
             }
 
             ScreenPages.ALL_PLAYLISTS.id -> {
-                children =
-                    getAllMediaMediaItemList(mediaList = DataManager.playlistWithMusicsMap.values)
+                children.addAll(getAllMediaMediaItemList(mediaList = DataManager.playlistWithMusicsMap.values))
                 routeDeque.resetRouteDeque()
                 routeDeque.addLast(parentId)
             }
@@ -170,10 +165,19 @@ class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
                     return
                 }
                 routeDeque.addLast(parentId)
-                children = this.getAllMediaMediaItemList(mediaId = parentId.toLong())
+                children.addAll(getAllMediaMediaItemList(mediaId = parentId.toLong()))
             }
         }
         result.sendResult(children)
+    }
+
+    private fun getShuffleButton(): MediaItem {
+        return buildMediaItem(
+            id = "shuffle",
+            description = "Shuffle Button",
+            title = "Shuffle",
+            flags = MediaItem.FLAG_PLAYABLE
+        )
     }
 
     private fun getHomeScreen(): MutableList<MediaItem> {
@@ -219,10 +223,10 @@ class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
     }
 
     /**
-     * Get the media from the media referencer, assume that mediaId is never the id of a music.
+     * Get the media from the media referenced, assume that mediaId is never the id of a music.
      * When the route is in pages, then load musics of the right media.
      *
-     * @param mediaId the media referencer, it's the media id.
+     * @param mediaId the media referenced, it's the media id.
      *
      * @return a mutable list of media item.
      */

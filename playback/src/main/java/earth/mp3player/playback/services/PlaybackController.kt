@@ -318,11 +318,10 @@ class PlaybackController private constructor(
      * Move music playing to the first index and remove other
      * the music playing has to take its original place.
      */
-    private fun shuffle() {
+    fun shuffle() {
         if (this.musicPlaying.value == null) {
             // No music playing
             this.playlist.shuffle()
-
             return
         } else {
             this.playlist.shuffle(musicIndex = this.musicPlayingIndex)

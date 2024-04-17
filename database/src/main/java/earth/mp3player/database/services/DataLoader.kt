@@ -178,7 +178,7 @@ object DataLoader {
         }
 
         //Link album to artist if the album doesn't already have the album
-        if (album != null && artist != null) {
+        if (album != null) {
             if (!artist.albumSortedMap.containsValue(value = album)) {
                 artist.addAlbum(album = album)
             }
@@ -188,7 +188,7 @@ object DataLoader {
 
         //Load Genre
         try {
-            genre = loadGenre(context = context, cursor = cursor, absolutePath = absolutePath)
+            genre = loadGenre(context = context, cursor = cursor)
         } catch (e: Exception) {
             //No genre
         }
@@ -212,7 +212,7 @@ object DataLoader {
             if (album != null && album.musicSortedMap.isEmpty()) {
                 DataManager.removeAlbum(album = album)
             }
-            if (artist != null && artist.musicList.isEmpty()) {
+            if (artist.musicList.isEmpty()) {
                 DataManager.removeArtist(artist = artist)
             }
             if (genre != null && genre.musicMap.isEmpty()) {
@@ -281,7 +281,7 @@ object DataLoader {
      */
     private fun loadFolder(absolutePath: String): Folder {
         val splitPath: MutableList<String> = mutableListOf()
-        val splitList: List<String> = Uri.decode(absolutePath).split("/")
+        val splitList: List<String> = decode(absolutePath).split("/")
         for (index: Int in 0..<splitList.lastIndex) {
             //Don't create a folder for the file (no folder called music.mp3)
             //The last name is a file
@@ -354,7 +354,7 @@ object DataLoader {
     }
 
 
-    private fun loadGenre(context: Context, cursor: Cursor, absolutePath: String): Genre {
+    private fun loadGenre(context: Context, cursor: Cursor): Genre {
         val name: String = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             encode(cursor.getString(genreNameColumn!!))
         } else {

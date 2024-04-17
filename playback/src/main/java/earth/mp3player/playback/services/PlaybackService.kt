@@ -51,7 +51,6 @@ class PlaybackService : MediaSessionService() {
             .setAudioAttributes(AudioAttributes.DEFAULT, true)
             .build()
 
-        // Don't set audio offload to true, it makes playback pause automatically when using android auto.
         val audioOffloadPreferences = AudioOffloadPreferences.Builder()
             .setAudioOffloadMode(AudioOffloadPreferences.AUDIO_OFFLOAD_MODE_ENABLED)
             .setIsGaplessSupportRequired(true)

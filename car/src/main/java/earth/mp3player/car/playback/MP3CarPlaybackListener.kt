@@ -34,9 +34,11 @@ import android.support.v4.media.session.PlaybackStateCompat.STATE_PAUSED
 import android.support.v4.media.session.PlaybackStateCompat.STATE_PLAYING
 import androidx.media.utils.MediaConstants
 import androidx.media3.common.MediaItem
+import androidx.media3.common.Player
 import earth.mp3player.car.R
 import earth.mp3player.car.playback.MP3PlayerCarCallBack.ACTIONS_ON_PAUSE
 import earth.mp3player.car.playback.MP3PlayerCarCallBack.ACTIONS_ON_PLAY
+import earth.mp3player.car.playback.MP3PlayerCarCallBack.ACTION_REPEAT
 import earth.mp3player.car.playback.MP3PlayerCarCallBack.ACTION_SHUFFLE
 import earth.mp3player.database.models.Music
 import earth.mp3player.playback.services.PlaybackController
@@ -99,13 +101,23 @@ object MP3CarPlaybackListener : PlaybackListener() {
             MediaConstants.PLAYBACK_STATE_EXTRAS_KEY_MEDIA_ID,
             musicPlaying.id.toString()
         )
-        val customAction = CustomAction.Builder(
+        val shuffleAction = CustomAction.Builder(
             ACTION_SHUFFLE,
             "Shuffle Mode",
             if (playbackController.isShuffle.value) R.drawable.shuffle_on else R.drawable.shuffle_off
         ).build()
+        val repeatAction = CustomAction.Builder(
+            ACTION_REPEAT,
+            "Repeat Mode",
+            when (playbackController.repeatMode.value) {
+                Player.REPEAT_MODE_ALL -> R.drawable.repeat_on
+                Player.REPEAT_MODE_ONE -> R.drawable.repeat_one_on
+                else -> R.drawable.repeat_off
+            }
+        ).build()
         val playbackState: PlaybackStateCompat = PlaybackStateCompat.Builder()
-            .addCustomAction(customAction)
+            .addCustomAction(shuffleAction)
+            .addCustomAction(repeatAction)
             .setState(state, currentPosition, 1F)
             .setActions(actions)
             .setActiveQueueItemId(musicPlaying.id)

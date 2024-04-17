@@ -56,6 +56,7 @@ object MP3PlayerCarCallBack : MediaSessionCompat.Callback() {
         ACTION_PLAY or ACTION_SKIP_TO_NEXT or ACTION_SKIP_TO_PREVIOUS or ACTION_SEEK_TO
 
     internal const val ACTION_SHUFFLE = "ACTION_SHUFFLE"
+    internal const val ACTION_REPEAT = "ACTION_REPEAT"
 
     override fun onPlay() {
         val playbackController: PlaybackController = PlaybackController.getInstance()
@@ -103,15 +104,31 @@ object MP3PlayerCarCallBack : MediaSessionCompat.Callback() {
 
     override fun onCustomAction(action: String?, extras: Bundle?) {
         super.onCustomAction(action, extras)
-        if (action == ACTION_SHUFFLE) {
-            val playbackController: PlaybackController = PlaybackController.getInstance()
-            playbackController.switchShuffleMode()
-            //Update playback state from here as no listener function is called for this action.
-            val state: Int = if (playbackController.isPlaying.value) STATE_PLAYING else STATE_PAUSED
-            val actions: Long =
-                if (playbackController.isPlaying.value) ACTIONS_ON_PLAY else ACTIONS_ON_PAUSE
-            MP3CarPlaybackListener.updatePlaybackState(state = state, actions = actions)
+        when (action) {
+            ACTION_SHUFFLE -> onShuffle(action = action)
+            ACTION_REPEAT -> onRepeat(action = action)
         }
+    }
+
+    private fun onShuffle(action: String?) {
+        val playbackController: PlaybackController = PlaybackController.getInstance()
+        playbackController.switchShuffleMode()
+        //Update playback state from here as no listener function is called for this action.
+        val state: Int =
+            if (playbackController.isPlaying.value) STATE_PLAYING else STATE_PAUSED
+        val actions: Long =
+            if (playbackController.isPlaying.value) ACTIONS_ON_PLAY else ACTIONS_ON_PAUSE
+        MP3CarPlaybackListener.updatePlaybackState(state = state, actions = actions)
+    }
+
+    private fun onRepeat(action: String?) {
+        val playbackController: PlaybackController = PlaybackController.getInstance()
+        playbackController.switchRepeatMode()
+        val state: Int =
+            if (playbackController.isPlaying.value) STATE_PLAYING else STATE_PAUSED
+        val actions: Long =
+            if (playbackController.isPlaying.value) ACTIONS_ON_PLAY else ACTIONS_ON_PAUSE
+        MP3CarPlaybackListener.updatePlaybackState(state = state, actions = actions)
     }
 
     /**

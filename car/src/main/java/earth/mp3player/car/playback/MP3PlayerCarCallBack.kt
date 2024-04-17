@@ -32,6 +32,8 @@ import android.support.v4.media.session.PlaybackStateCompat.ACTION_PLAY
 import android.support.v4.media.session.PlaybackStateCompat.ACTION_SEEK_TO
 import android.support.v4.media.session.PlaybackStateCompat.ACTION_SKIP_TO_NEXT
 import android.support.v4.media.session.PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS
+import android.support.v4.media.session.PlaybackStateCompat.STATE_PAUSED
+import android.support.v4.media.session.PlaybackStateCompat.STATE_PLAYING
 import androidx.media3.common.MediaItem
 import earth.mp3player.car.pages.ScreenPages
 import earth.mp3player.database.models.Album
@@ -97,6 +99,19 @@ object MP3PlayerCarCallBack : MediaSessionCompat.Callback() {
     override fun onSkipToPrevious() {
         val playbackController: PlaybackController = PlaybackController.getInstance()
         playbackController.playPrevious()
+    }
+
+    override fun onCustomAction(action: String?, extras: Bundle?) {
+        super.onCustomAction(action, extras)
+        if (action == ACTION_SHUFFLE) {
+            val playbackController: PlaybackController = PlaybackController.getInstance()
+            playbackController.switchShuffleMode()
+            //Update playback state from here as no listener function is called for this action.
+            val state: Int = if (playbackController.isPlaying.value) STATE_PLAYING else STATE_PAUSED
+            val actions: Long =
+                if (playbackController.isPlaying.value) ACTIONS_ON_PLAY else ACTIONS_ON_PAUSE
+            MP3CarPlaybackListener.updatePlaybackState(state = state, actions = actions)
+        }
     }
 
     /**

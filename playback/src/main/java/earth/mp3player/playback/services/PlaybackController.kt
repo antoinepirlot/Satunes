@@ -300,8 +300,8 @@ class PlaybackController private constructor(
      *      2) If the shuffle mode is enabling shuffle the playlist
      */
     fun switchShuffleMode() {
+        isShuffle.value = !isShuffle.value
         CoroutineScope(Dispatchers.Main).launch {
-            isShuffle.value = !isShuffle.value
             if (playlist.musicCount() > 1) {
                 if (!isShuffle.value) {
                     // Deactivate shuffle

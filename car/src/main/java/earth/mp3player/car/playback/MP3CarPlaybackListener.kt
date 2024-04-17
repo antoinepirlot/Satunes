@@ -99,7 +99,6 @@ object MP3CarPlaybackListener : PlaybackListener() {
             MediaConstants.PLAYBACK_STATE_EXTRAS_KEY_MEDIA_ID,
             musicPlaying.id.toString()
         )
-        //TODO
         val customAction = CustomAction.Builder(
             ACTION_SHUFFLE,
             "Shuffle Mode",

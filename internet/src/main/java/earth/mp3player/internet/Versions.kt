@@ -34,23 +34,23 @@ internal object Versions {
     internal const val PREVIEW: String = "preview"
 
     internal val ALPHA_REGEX: Regex =
-        Regex("\"/antoinepirlot/MP3-Player/releases/tag/v[0-9]+\\.[0-9]+\\.[0-9]+.*\"")
+        Regex("\"/antoinepirlot/.*/releases/tag/v[0-9]+\\.[0-9]+\\.[0-9]+.*\"")
     internal val ALPHA_APK_REGEX: Regex = Regex(">.*v[0-9]+\\.[0-9]+\\.[0-9]+.*\\.apk<")
 
     internal val BETA_REGEX: Regex =
-        Regex("\"/antoinepirlot/MP3-Player/releases/tag/v[0-9]+\\.[0-9]+\\.[0-9]+(?!-$ALPHA).*\"")
+        Regex("\"/antoinepirlot/.*/releases/tag/v[0-9]+\\.[0-9]+\\.[0-9]+(?!-$ALPHA).*\"")
     internal val BETA_APK_REGEX: Regex = Regex(">.*v[0-9]+\\.[0-9]+\\.[0-9]+(?!-$ALPHA).*\\.apk<")
 
     internal val PREVIEW_REGEX: Regex =
-        Regex("\"/antoinepirlot/MP3-Player/releases/tag/v[0-9]+\\.[0-9]+\\.[0-9]+(?!-$ALPHA)(?!-$BETA)\"")
+        Regex("\"/antoinepirlot/.*/releases/tag/v[0-9]+\\.[0-9]+\\.[0-9]+(?!-$ALPHA)(?!-$BETA)\"")
     internal val PREVIEW_APK_REGEX: Regex =
         Regex(">.*v[0-9]+\\.[0-9]+\\.[0-9]+(?!-$ALPHA)(?!-$BETA)\\.apk<")
 
     internal val RELEASE_REGEX: Regex =
-        Regex("\"/antoinepirlot/MP3-Player/releases/tag/v[0-9]+\\.[0-9]+\\.[0-9]+\"")
+        Regex("\"/antoinepirlot/.*/releases/tag/v[0-9]+\\.[0-9]+\\.[0-9]+\"")
     internal val RELEASE_APK_REGEX: Regex = Regex(">.*v[0-9]+\\.[0-9]+\\.[0-9]+.apk\"<")
 
-    internal const val RELEASES_URL = "https://github.com/antoinepirlot/MP3-Player/releases"
+    internal const val RELEASES_URL = "https://github.com/antoinepirlot/Satunes/releases"
 
     internal var versionType: String = "" //Alpha, Beta, Preview or "" for Stable version
 }

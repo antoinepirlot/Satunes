@@ -108,27 +108,23 @@ object MP3PlayerCarCallBack : MediaSessionCompat.Callback() {
             ACTION_SHUFFLE -> switchShuffleMode(action = action)
             ACTION_REPEAT -> switchRepeatMode()
         }
+        //Update playback state from here as no listener function is called for this action.
+        val playbackController: PlaybackController = PlaybackController.getInstance()
+        val state: Int =
+            if (playbackController.isPlaying.value) STATE_PLAYING else STATE_PAUSED
+        val actions: Long =
+            if (playbackController.isPlaying.value) ACTIONS_ON_PLAY else ACTIONS_ON_PAUSE
+        MP3CarPlaybackListener.updatePlaybackState(state = state, actions = actions)
     }
 
     private fun switchShuffleMode(action: String?) {
         val playbackController: PlaybackController = PlaybackController.getInstance()
         playbackController.switchShuffleMode()
-        //Update playback state from here as no listener function is called for this action.
-        val state: Int =
-            if (playbackController.isPlaying.value) STATE_PLAYING else STATE_PAUSED
-        val actions: Long =
-            if (playbackController.isPlaying.value) ACTIONS_ON_PLAY else ACTIONS_ON_PAUSE
-        MP3CarPlaybackListener.updatePlaybackState(state = state, actions = actions)
     }
 
     private fun switchRepeatMode() {
         val playbackController: PlaybackController = PlaybackController.getInstance()
         playbackController.switchRepeatMode()
-        val state: Int =
-            if (playbackController.isPlaying.value) STATE_PLAYING else STATE_PAUSED
-        val actions: Long =
-            if (playbackController.isPlaying.value) ACTIONS_ON_PLAY else ACTIONS_ON_PAUSE
-        MP3CarPlaybackListener.updatePlaybackState(state = state, actions = actions)
     }
 
     /**

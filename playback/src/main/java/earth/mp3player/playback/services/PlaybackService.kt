@@ -28,6 +28,7 @@ package earth.mp3player.playback.services
 import android.content.Intent
 import androidx.annotation.OptIn
 import androidx.media3.common.AudioAttributes
+import androidx.media3.common.TrackSelectionParameters.AudioOffloadPreferences
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.session.MediaSession
@@ -50,10 +51,15 @@ class PlaybackService : MediaSessionService() {
             .setAudioAttributes(AudioAttributes.DEFAULT, true)
             .build()
 
-        // Don't set audio offload to true, it makes playback pause automatically when using android auto.
+        //TODO check if don't cause android auto issues
+        val audioOffloadPreferences = AudioOffloadPreferences.Builder()
+            .setAudioOffloadMode(AudioOffloadPreferences.AUDIO_OFFLOAD_MODE_ENABLED)
+            .setIsGaplessSupportRequired(true)
+            .build()
 
         exoPlayer.trackSelectionParameters = exoPlayer.trackSelectionParameters
             .buildUpon()
+            .setAudioOffloadPreferences(audioOffloadPreferences)
             .build()
 
         mediaSession = MediaSession.Builder(this, exoPlayer).build()

@@ -32,6 +32,8 @@ import android.support.v4.media.session.PlaybackStateCompat.ACTION_PLAY
 import android.support.v4.media.session.PlaybackStateCompat.ACTION_SEEK_TO
 import android.support.v4.media.session.PlaybackStateCompat.ACTION_SKIP_TO_NEXT
 import android.support.v4.media.session.PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS
+import android.support.v4.media.session.PlaybackStateCompat.STATE_PAUSED
+import android.support.v4.media.session.PlaybackStateCompat.STATE_PLAYING
 import androidx.media3.common.MediaItem
 import earth.mp3player.car.pages.ScreenPages
 import earth.mp3player.database.models.Album
@@ -52,6 +54,9 @@ object MP3PlayerCarCallBack : MediaSessionCompat.Callback() {
         ACTION_PAUSE or ACTION_SKIP_TO_NEXT or ACTION_SKIP_TO_PREVIOUS or ACTION_SEEK_TO
     internal const val ACTIONS_ON_PAUSE: Long =
         ACTION_PLAY or ACTION_SKIP_TO_NEXT or ACTION_SKIP_TO_PREVIOUS or ACTION_SEEK_TO
+
+    internal const val ACTION_SHUFFLE = "ACTION_SHUFFLE"
+    internal const val ACTION_REPEAT = "ACTION_REPEAT"
 
     override fun onPlay() {
         val playbackController: PlaybackController = PlaybackController.getInstance()
@@ -77,10 +82,14 @@ object MP3PlayerCarCallBack : MediaSessionCompat.Callback() {
     }
 
     override fun onPlayFromMediaId(mediaId: String, extras: Bundle?) {
-        val id: Long = mediaId.toLong()
-        val music: Music = DataManager.getMusic(musicId = id)
-        loadMusic()
-        PlaybackController.getInstance().start(musicToPlay = music)
+        val shuffleMode: Boolean = mediaId == "shuffle"
+        loadMusic(shuffleMode = shuffleMode)
+        val playbackController: PlaybackController = PlaybackController.getInstance()
+        var musicToPlay: Music? = null
+        if (!shuffleMode) {
+            musicToPlay = DataManager.getMusic(musicId = mediaId.toLong())
+        }
+        playbackController.start(musicToPlay = musicToPlay)
     }
 
     override fun onSkipToNext() {
@@ -93,10 +102,35 @@ object MP3PlayerCarCallBack : MediaSessionCompat.Callback() {
         playbackController.playPrevious()
     }
 
+    override fun onCustomAction(action: String?, extras: Bundle?) {
+        super.onCustomAction(action, extras)
+        when (action) {
+            ACTION_SHUFFLE -> switchShuffleMode(action = action)
+            ACTION_REPEAT -> switchRepeatMode()
+        }
+        //Update playback state from here as no listener function is called for this action.
+        val playbackController: PlaybackController = PlaybackController.getInstance()
+        val state: Int =
+            if (playbackController.isPlaying.value) STATE_PLAYING else STATE_PAUSED
+        val actions: Long =
+            if (playbackController.isPlaying.value) ACTIONS_ON_PLAY else ACTIONS_ON_PAUSE
+        MP3CarPlaybackListener.updatePlaybackState(state = state, actions = actions)
+    }
+
+    private fun switchShuffleMode(action: String?) {
+        val playbackController: PlaybackController = PlaybackController.getInstance()
+        playbackController.switchShuffleMode()
+    }
+
+    private fun switchRepeatMode() {
+        val playbackController: PlaybackController = PlaybackController.getInstance()
+        playbackController.switchRepeatMode()
+    }
+
     /**
      * Load music from the last route deque route.
      */
-    private fun loadMusic() {
+    private fun loadMusic(shuffleMode: Boolean = false) {
         MP3PlayerCarMusicService.updateQueue()
         val routeDeque: RouteDeque = MP3PlayerCarMusicService.routeDeque
 
@@ -105,7 +139,7 @@ object MP3PlayerCarCallBack : MediaSessionCompat.Callback() {
         val playbackController: PlaybackController = PlaybackController.getInstance()
 
         if (lastRoute == ScreenPages.ROOT.id || lastRoute == ScreenPages.ALL_MUSICS.id) {
-            playbackController.loadMusic(musicMediaItemSortedMap = DataManager.musicMediaItemSortedMap)
+            playbackController.loadMusic(musicMediaItemSortedMap = DataManager.musicMediaItemSortedMap, shuffleMode = shuffleMode)
             return
         }
 
@@ -143,6 +177,6 @@ object MP3PlayerCarCallBack : MediaSessionCompat.Callback() {
                     DataManager.musicMediaItemSortedMap
                 }
             }
-        playbackController.loadMusic(musicMediaItemSortedMap = musicMediaItemSortedMap)
+        playbackController.loadMusic(musicMediaItemSortedMap = musicMediaItemSortedMap, shuffleMode = shuffleMode)
     }
 }

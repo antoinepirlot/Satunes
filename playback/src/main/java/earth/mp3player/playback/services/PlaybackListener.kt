@@ -93,13 +93,10 @@ open class PlaybackListener : Player.Listener {
     }
 
     override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
-        if (mediaItem == null) {
-            return
-        }
-
         if (
             reason == Player.MEDIA_ITEM_TRANSITION_REASON_SEEK
             || reason == Player.MEDIA_ITEM_TRANSITION_REASON_AUTO
+            || reason == Player.MEDIA_ITEM_TRANSITION_REASON_PLAYLIST_CHANGED
         ) {
             super.onMediaItemTransition(mediaItem, reason)
             val playbackController: PlaybackController = PlaybackController.getInstance()

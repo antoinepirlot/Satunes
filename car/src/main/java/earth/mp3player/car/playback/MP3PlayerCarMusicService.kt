@@ -33,7 +33,6 @@ import android.support.v4.media.session.MediaSessionCompat.QueueItem
 import android.support.v4.media.session.PlaybackStateCompat.STATE_PAUSED
 import android.support.v4.media.session.PlaybackStateCompat.STATE_PLAYING
 import androidx.media.MediaBrowserServiceCompat
-import earth.mp3player.car.R
 import earth.mp3player.car.pages.ScreenPages
 import earth.mp3player.car.pages.pages
 import earth.mp3player.car.utils.buildMediaItem
@@ -113,7 +112,7 @@ class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
     }
 
     override fun onLoadChildren(parentId: String, result: Result<MutableList<MediaItem>>) {
-        val children: MutableList<MediaItem> = mutableListOf(getShuffleButton())
+        val children: MutableList<MediaItem> = mutableListOf()
         when (parentId) {
             ScreenPages.ROOT.id -> {
                 routeDeque.resetRouteDeque()
@@ -147,6 +146,7 @@ class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
             }
 
             ScreenPages.ALL_MUSICS.id -> {
+                children.add(getShuffleButton())
                 children.addAll(getAllMediaMediaItemList(mediaList = DataManager.musicMediaItemSortedMap.keys))
                 routeDeque.resetRouteDeque()
                 routeDeque.addLast(parentId)

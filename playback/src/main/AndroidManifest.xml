@@ -9,7 +9,7 @@
         android:requestLegacyExternalStorage="true"
         android:supportsRtl="true">
         <service
-            android:name="earth.mp3player.playback.services.PlaybackService"
+            android:name="earth.satunes.playback.services.PlaybackService"
             android:exported="true"
             android:foregroundServiceType="mediaPlayback">
             <intent-filter>

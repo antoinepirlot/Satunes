@@ -12,7 +12,7 @@
         android:theme="@style/Theme.MP3">
 
         <activity
-            android:name="earth.mp3player.MainActivity"
+            android:name="earth.satunes.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.MP3">
             <intent-filter>

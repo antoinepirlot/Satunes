@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Lecteur MP3</string>
     <string name="play_all">Lire en mode aléatoire</string>
     <string name="bottom_bar">Barre de navigation</string>
     <string name="this_device">Cet Appareil</string>

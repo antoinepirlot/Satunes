@@ -2,7 +2,7 @@
 
 Vous pouvez retrouver ce fichier en [français 🇫🇷](README.md)
 
-MP3 Player is a MP3 Player (lol). Use it to listen your music from your audio files stored in your Android phone (Android Upside Down Cake and later).
+Satunes is a mp3 player on Android. Use it to listen your music from your audio files stored in your Android phone (Android Upside Down Cake and later).
 This application is still in development and contains bugs and bad ui.
 
 This entire project is under GNU/GPL v3 and it's applied on all version of this project (even the code pushed from the very first commit.).
@@ -16,7 +16,7 @@ If you decide to use my code to create new app, you can but you have to use the 
 1) Click on [Release](https://github.com/antoinepirlot/MP3-Player/releases)
 2) Choose your version
 3) Click on "Assets" to deploy a menu that contains the installation file.
-4) Click on the file MP3-Player_vx.y.z.apk (A file will be downloaded on your device).
+4) Click on the file Satunes_vx.y.z.apk (A file will be downloaded on your device).
 5) Once the file is downaloded, open it.
 6) Allow the unknwon application installation (It's required as the app is not deployed on the Play Store).
 7) Install the app (it is likely that you will have to start step 5 again).

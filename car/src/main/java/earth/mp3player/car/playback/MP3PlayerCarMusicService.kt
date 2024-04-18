@@ -245,8 +245,12 @@ class MP3PlayerCarMusicService : MediaBrowserServiceCompat() {
             else -> null
         }
 
-        return this.getAllMediaMediaItemList(
-            mediaList = media?.musicMediaItemSortedMap?.keys?.toList() ?: mutableListOf()
+        val listToReturn: MutableList<MediaItem> = mutableListOf(getShuffleButton())
+        listToReturn.addAll(
+            this.getAllMediaMediaItemList(
+                mediaList = media?.musicMediaItemSortedMap?.keys?.toList() ?: mutableListOf()
+            )
         )
+        return listToReturn
     }
 }

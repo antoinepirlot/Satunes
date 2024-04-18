@@ -1,8 +1,8 @@
-# Lecteur MP3 (🇫🇷)
+# Satunes (🇫🇷)
 
 You can find this file in [english 🇬🇧](README-EN.md).
 
-MP3 Player est un lecteur de musique (lol). 
+Satunes est un lecteur de musique pour Android. 
 Tu peux l'utiliser pour écouter ta musique présente sur ton appareil Android. (Android 11 Red Velvet Cake et plus récent).
 Cette application est en cours de développement et peut contenir des bugs et problèmes d'optimisations.
 
@@ -17,7 +17,7 @@ Tu as le droit de réutiliser mon code pour créer une nouvelle application dér
 1) Clique sur [Release](https://github.com/antoinepirlot/MP3-Player/releases)
 2) Choisi ta version
 3) Clique sur "Assets" pour dérouler un menu qui contient le fichier d'installation
-4) Clique sur le fichier MP3-Player_vx.y.z.apk (Un fichier va se télécharger sur ton appareil)
+4) Clique sur le fichier Satunes_vx.y.z.apk (Un fichier va se télécharger sur ton appareil)
 5) Une fois le téléchargement terminé, ouvre le fichier
 6) Autorise l'installation d'application inconnue. (C'est nécéssaire car l'application n'est dépployée sur le Play Store).
 7) Installe l'application (il est probable que tu doives recommencer l'étape 5).

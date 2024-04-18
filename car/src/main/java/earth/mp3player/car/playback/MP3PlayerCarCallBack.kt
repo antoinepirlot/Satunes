@@ -105,12 +105,12 @@ object MP3PlayerCarCallBack : MediaSessionCompat.Callback() {
     override fun onCustomAction(action: String?, extras: Bundle?) {
         super.onCustomAction(action, extras)
         when (action) {
-            ACTION_SHUFFLE -> onShuffle(action = action)
-            ACTION_REPEAT -> onRepeat(action = action)
+            ACTION_SHUFFLE -> switchShuffleMode(action = action)
+            ACTION_REPEAT -> switchRepeatMode()
         }
     }
 
-    private fun onShuffle(action: String?) {
+    private fun switchShuffleMode(action: String?) {
         val playbackController: PlaybackController = PlaybackController.getInstance()
         playbackController.switchShuffleMode()
         //Update playback state from here as no listener function is called for this action.
@@ -121,7 +121,7 @@ object MP3PlayerCarCallBack : MediaSessionCompat.Callback() {
         MP3CarPlaybackListener.updatePlaybackState(state = state, actions = actions)
     }
 
-    private fun onRepeat(action: String?) {
+    private fun switchRepeatMode() {
         val playbackController: PlaybackController = PlaybackController.getInstance()
         playbackController.switchRepeatMode()
         val state: Int =

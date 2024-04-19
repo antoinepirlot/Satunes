@@ -25,7 +25,7 @@
 
 package earth.satunes.ui.views.settings
 
-import earth.satunes.R.string.closed_app_playback
+import earth.satunes.R.string.playback_when_paused
 import earth.satunes.R.string.pause_if_noisy
 import earth.satunes.database.R.string.albums
 import earth.satunes.database.R.string.artists
@@ -37,7 +37,7 @@ import earth.satunes.database.R.string.playlists
  *   @author Antoine Pirlot 06/03/2024
  */
 enum class Settings(val stringId: Int) {
-    CLOSED_APP_PLAYBACK(stringId = closed_app_playback),
+    PLAYBACK_WHEN_CLOSED(stringId = playback_when_paused),
     FOLDERS_CHECKED(stringId = folders),
     ARTISTS_CHECKED(stringId = artists),
     ALBUMS_CHECKED(stringId = albums),

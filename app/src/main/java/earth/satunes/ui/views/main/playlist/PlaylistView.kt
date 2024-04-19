@@ -39,6 +39,7 @@ import earth.satunes.playback.services.PlaybackController
 import earth.satunes.router.utils.openCurrentMusic
 import earth.satunes.router.utils.openMedia
 import earth.satunes.services.PlaylistSelectionManager
+import earth.satunes.ui.components.playlist.PlaylistHeader
 import earth.satunes.ui.components.texts.Title
 import earth.satunes.ui.views.main.MediaListView
 
@@ -57,7 +58,7 @@ fun PlaylistView(
 
     Column(modifier = modifier) {
         Title(text = decode(playlist.playlist.title))
-
+        PlaylistHeader(playlist = playlist)
         MediaListView(
             mediaList = playlist.musics,
             openMedia = { clickedMedia: Media ->

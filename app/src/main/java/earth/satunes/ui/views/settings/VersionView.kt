@@ -75,27 +75,8 @@ fun VersionView(
         }
 
         when (updateAvailable) {
-            UNDEFINED -> CheckUpdateButton()
-
-            CANNOT_CHECK -> {
-                CheckUpdateButton()
-                Toast.makeText(
-                    context,
-                    stringResource(id = RInternet.string.cannot_check_update),
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-
+            UNDEFINED, CANNOT_CHECK, UP_TO_DATE -> CheckUpdateButton()
             AVAILABLE -> UpdateAvailable()
-
-            UP_TO_DATE -> {
-                CheckUpdateButton()
-                Toast.makeText(
-                    context,
-                    stringResource(id = RInternet.string.no_update),
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
         }
     }
 }

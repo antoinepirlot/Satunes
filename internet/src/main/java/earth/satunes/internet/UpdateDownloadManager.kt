@@ -109,6 +109,7 @@ object UpdateDownloadManager {
                     activity = activity,
                     message = context.getString(R.string.download_failed)
                 )
+                UpdateCheckManager.updateAvailableStatus.value = UpdateAvailableStatus.UNDEFINED
             }
         }
     }

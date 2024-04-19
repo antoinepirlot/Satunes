@@ -42,18 +42,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import earth.satunes.R
 import earth.satunes.database.models.relations.PlaylistWithMusics
 import earth.satunes.database.services.DataManager
 import earth.satunes.services.MediaSelectionManager
+import earth.satunes.ui.components.cards.dialog.DialogOption
 import earth.satunes.ui.views.SatunesIcons
 
 /**
  * @author Antoine Pirlot on 30/03/2024
  */
 
-private val SPACER_SIZE = 10.dp
 
 @Composable
 fun MusicOptionsDialog(
@@ -78,51 +77,49 @@ fun MusicOptionsDialog(
         },
         text = {
             Column {
-                TextButton(onClick = {
-                    showPlaylistSelectionDialog = true
-                }) {
-                    Row {
+                DialogOption(
+                    onClick = { showPlaylistSelectionDialog = true },
+                    icon = {
                         val playlistIcon: SatunesIcons = SatunesIcons.PLAYLIST_ADD
                         Icon(
                             imageVector = playlistIcon.imageVector,
                             contentDescription = playlistIcon.description
                         )
-                        Spacer(modifier = Modifier.size(SPACER_SIZE))
-                        Text(text = stringResource(id = R.string.add_to_playlist))
-                    }
-                    if (showPlaylistSelectionDialog) {
-                        val playlistList: List<PlaylistWithMusics> =
-                            DataManager.playlistWithMusicsMap.values.toList()
-                        MediaSelectionDialog(
-                            onDismissRequest = {
-                                showPlaylistSelectionDialog = false
-                            },
-                            onConfirm = onAddToPlaylist,
-                            mediaList = playlistList,
-                            icon = {
-                                Icon(
-                                    imageVector = SatunesIcons.PLAYLIST_ADD.imageVector,
-                                    contentDescription = "Playlist Selection Icon"
-                                )
-                            }
-                        )
-                    }
+                    },
+                    text = stringResource(id = R.string.add_to_playlist)
+                )
+                if (showPlaylistSelectionDialog) {
+                    val playlistList: List<PlaylistWithMusics> =
+                        DataManager.playlistWithMusicsMap.values.toList()
+                    MediaSelectionDialog(
+                        onDismissRequest = {
+                            showPlaylistSelectionDialog = false
+                        },
+                        onConfirm = onAddToPlaylist,
+                        mediaList = playlistList,
+                        icon = {
+                            Icon(
+                                imageVector = SatunesIcons.PLAYLIST_ADD.imageVector,
+                                contentDescription = "Playlist Selection Icon"
+                            )
+                        }
+                    )
                 }
                 if (MediaSelectionManager.openedPlaylist != null) {
-                    TextButton(onClick = {
-                        onRemoveFromPlaylist()
-                        onDismissRequest()
-                    }) {
-                        Row {
+                    DialogOption(
+                        onClick = {
+                            onRemoveFromPlaylist()
+                            onDismissRequest()
+                        },
+                        icon = {
                             val playlistRemoveIcon: SatunesIcons = SatunesIcons.PLAYLIST_REMOVE
                             Icon(
                                 imageVector = playlistRemoveIcon.imageVector,
                                 contentDescription = playlistRemoveIcon.description
                             )
-                            Spacer(modifier = Modifier.size(SPACER_SIZE))
-                            Text(text = stringResource(id = R.string.remove_from_playlist))
-                        }
-                    }
+                        },
+                        text = stringResource(id = R.string.remove_from_playlist)
+                    )
                 }
             }
         },

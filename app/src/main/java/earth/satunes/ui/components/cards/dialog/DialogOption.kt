@@ -23,60 +23,42 @@
  * PS: I don't answer quickly.
  */
 
-package earth.satunes.ui.components.dialog
+package earth.satunes.ui.components.cards.dialog
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.AlertDialog
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import earth.satunes.R
-import earth.satunes.database.models.Media
-import earth.satunes.ui.components.cards.dialog.DialogOption
-import earth.satunes.ui.components.forms.MediaSelectionForm
+import androidx.compose.ui.unit.dp
 
 /**
- * @author Antoine Pirlot on 30/03/2024
+ * @author Antoine Pirlot on 19/04/2024
  */
 
+private val SPACER_SIZE = 10.dp
+
 @Composable
-fun MediaSelectionDialog(
+fun DialogOption(
     modifier: Modifier = Modifier,
-    onDismissRequest: () -> Unit,
-    onConfirm: () -> Unit,
-    mediaList: List<Media>,
+    onClick: () -> Unit,
     icon: @Composable () -> Unit,
+    text: String,
 ) {
-    AlertDialog(
-        modifier = modifier,
-        icon = icon,
-        title = {
-            Text(text = stringResource(id = R.string.add_to_playlist))
-        },
-        text = {
-            Column {
-                MediaSelectionForm(mediaList = mediaList)
-            }
-        },
-        onDismissRequest = onDismissRequest,
-        confirmButton = {
-            TextButton(onClick = onConfirm) {
-                Text(text = stringResource(id = R.string.add))
-            }
+    TextButton(onClick = onClick) {
+        Row {
+            icon()
+            Spacer(modifier = Modifier.size(SPACER_SIZE))
+            Text(text = text)
         }
-    )
+    }
 }
 
 @Preview
 @Composable
-fun PlaylistSelectionDialogPreview() {
-    MediaSelectionDialog(
-        icon = {},
-        onDismissRequest = {},
-        onConfirm = {},
-        mediaList = listOf()
-    )
+fun DialogOptionPreview() {
+    DialogOption(onClick = {}, icon = {}, text = "Dialog Option")
 }

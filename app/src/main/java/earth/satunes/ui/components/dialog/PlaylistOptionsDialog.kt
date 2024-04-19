@@ -42,6 +42,7 @@ import androidx.compose.ui.unit.dp
 import earth.satunes.R
 import earth.satunes.database.models.relations.PlaylistWithMusics
 import earth.satunes.database.models.tables.Playlist
+import earth.satunes.ui.components.cards.dialog.DialogOption
 import earth.satunes.ui.views.SatunesIcons
 
 /**
@@ -70,20 +71,19 @@ fun PlaylistOptionsDialog(
         },
         text = {
             Column {
-                TextButton(onClick = {
+                DialogOption(onClick = {
                     onRemovePlaylist()
                     onDismissRequest()
-                }) {
-                    Row {
+                    },
+                    icon = {
                         val playlistRemoveIcon: SatunesIcons = SatunesIcons.PLAYLIST_REMOVE
                         Icon(
                             imageVector = playlistRemoveIcon.imageVector,
                             contentDescription = playlistRemoveIcon.description
                         )
-                        Spacer(modifier = Modifier.size(SPACER_SIZE))
-                        Text(text = stringResource(id = R.string.remove_playlist))
-                    }
-                }
+                    },
+                    text = stringResource(id = R.string.remove_playlist)
+                )
             }
         },
         onDismissRequest = {
@@ -97,7 +97,7 @@ fun PlaylistOptionsDialog(
 @Composable
 fun PlaylistOptionsDialogPreview() {
     PlaylistOptionsDialog(
-        playlistWithMusics = PlaylistWithMusics(Playlist(1, ""), mutableListOf()),
+        playlistWithMusics = PlaylistWithMusics(Playlist(1, "Playlist Title"), mutableListOf()),
         onRemovePlaylist = {},
         onDismissRequest = {},
     )

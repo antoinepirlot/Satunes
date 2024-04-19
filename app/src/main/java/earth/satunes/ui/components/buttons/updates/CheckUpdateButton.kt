@@ -57,7 +57,6 @@ fun CheckUpdateButton(
         }
     ) {
         Text(text = stringResource(id = R.string.check_update))
-
     }
 }
 

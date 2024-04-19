@@ -25,10 +25,12 @@
 
 package earth.satunes.internet
 
+import android.app.Activity
 import android.app.DownloadManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import earth.satunes.internet.utils.showToastOnUiThread
 
 /**
  * @author Antoine Pirlot on 14/04/2024
@@ -37,6 +39,7 @@ internal object DownloadReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.action == DownloadManager.ACTION_DOWNLOAD_COMPLETE) {
             UpdateCheckManager.downloadStatus.value = APKDownloadStatus.DOWNLOADED
+            showToastOnUiThread(context = context, activity = Activity(), context.getString(R.string.downloaded))
         }
     }
 }

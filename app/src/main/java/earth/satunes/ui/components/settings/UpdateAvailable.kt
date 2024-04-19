@@ -68,31 +68,11 @@ fun UpdateAvailable(
             SeeDetailsButton()
             Spacer(modifier = Modifier.size(SPACER_SIZE))
             val downloadStatus: APKDownloadStatus by remember { UpdateCheckManager.downloadStatus }
-            var message: String? = null
             when (downloadStatus) {
-                APKDownloadStatus.CHECKING -> {
-                    message = stringResource(id = R.string.download_checking)
-                    LoadingCircle()
-                }
-
-                APKDownloadStatus.DOWNLOADED -> {
-                    message = stringResource(id = R.string.downloaded)
-                    InstallRequestButton()
-                }
-
-                APKDownloadStatus.DOWNLOADING -> {
-                    message = stringResource(id = R.string.downloading)
-                    LoadingCircle()
-                }
-
+                APKDownloadStatus.CHECKING, APKDownloadStatus.DOWNLOADING -> LoadingCircle()
+                APKDownloadStatus.DOWNLOADED -> InstallRequestButton()
                 APKDownloadStatus.NOT_STARTED -> DownloadButton()
-                APKDownloadStatus.NOT_FOUND -> message =
-                    stringResource(id = R.string.download_not_found)
-
-                APKDownloadStatus.FAILED -> message = stringResource(id = R.string.download_failed)
-            }
-            if (message != null) {
-                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                else -> return
             }
         }
     }

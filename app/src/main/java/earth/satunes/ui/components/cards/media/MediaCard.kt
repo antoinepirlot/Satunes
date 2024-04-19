@@ -54,8 +54,8 @@ import earth.satunes.database.models.relations.PlaylistWithMusics
 import earth.satunes.database.models.tables.MusicDB
 import earth.satunes.database.services.DatabaseManager
 import earth.satunes.services.MediaSelectionManager
-import earth.satunes.ui.components.music.options.MusicOptionsDialog
-import earth.satunes.ui.components.playlist.PlaylistOptionsDialog
+import earth.satunes.ui.components.dialog.MusicOptionsDialog
+import earth.satunes.ui.components.dialog.PlaylistOptionsDialog
 import earth.satunes.ui.views.SatunesIcons
 import earth.satunes.ui.views.main.utils.getRootFolderName
 

@@ -43,8 +43,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import earth.satunes.database.models.Album
 import earth.satunes.playback.services.PlaybackController
-import earth.satunes.ui.components.music.MusicPlayingAlbumArtwork
-import earth.satunes.ui.components.music.bars.MusicControlBar
+import earth.satunes.ui.components.MusicPlayingAlbumArtwork
+import earth.satunes.ui.components.bars.MusicControlBar
 
 /**
  * @author Antoine Pirlot on 25/01/24

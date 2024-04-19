@@ -41,7 +41,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import earth.satunes.database.models.Album
-import earth.satunes.ui.components.music.AlbumArtwork
+import earth.satunes.ui.components.AlbumArtwork
 
 /**
  * @author Antoine Pirlot on 11/04/2024

@@ -39,8 +39,8 @@ import earth.satunes.database.models.Media
 import earth.satunes.database.models.Music
 import earth.satunes.playback.services.PlaybackController
 import earth.satunes.ui.components.cards.media.MediaCardList
-import earth.satunes.ui.components.music.bars.ShowCurrentMusicButton
-import earth.satunes.ui.components.music.buttons.ShuffleAllButton
+import earth.satunes.ui.components.bars.ShowCurrentMusicButton
+import earth.satunes.ui.components.buttons.music.ShuffleAllButton
 
 /**
  * @author Antoine Pirlot on 01/02/24

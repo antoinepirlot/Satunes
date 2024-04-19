@@ -23,7 +23,7 @@
  * PS: I don't answer quickly.
  */
 
-package earth.satunes.ui.buttons
+package earth.satunes.ui.components.buttons.playlist
 
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -32,7 +32,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import earth.satunes.R
-import earth.satunes.database.models.relations.PlaylistWithMusics
 
 /**
  * @author Antoine Pirlot on 19/04/2024

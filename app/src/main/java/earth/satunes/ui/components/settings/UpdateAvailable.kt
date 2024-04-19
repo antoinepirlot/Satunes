@@ -26,7 +26,6 @@
 package earth.satunes.ui.components.settings
 
 import android.content.Context
-import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -41,6 +40,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import earth.satunes.internet.APKDownloadStatus
 import earth.satunes.internet.R
 import earth.satunes.internet.UpdateCheckManager
@@ -48,11 +48,12 @@ import earth.satunes.ui.components.LoadingCircle
 import earth.satunes.ui.components.buttons.updates.DownloadButton
 import earth.satunes.ui.components.buttons.updates.InstallRequestButton
 import earth.satunes.ui.components.buttons.updates.SeeDetailsButton
-import earth.satunes.ui.components.playlist.SPACER_SIZE
 
 /**
  * @author Antoine Pirlot on 14/04/2024
  */
+
+private val SPACER_SIZE = 10.dp
 
 @Composable
 fun UpdateAvailable(

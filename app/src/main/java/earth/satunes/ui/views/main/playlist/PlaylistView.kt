@@ -43,7 +43,7 @@ import earth.satunes.playback.services.PlaybackController
 import earth.satunes.router.utils.openCurrentMusic
 import earth.satunes.router.utils.openMedia
 import earth.satunes.services.MediaSelectionManager
-import earth.satunes.ui.buttons.AddMusicsToPlaylistButtons
+import earth.satunes.ui.components.buttons.playlist.AddMusicsToPlaylistButtons
 import earth.satunes.ui.components.texts.Title
 import earth.satunes.ui.views.main.MediaListView
 

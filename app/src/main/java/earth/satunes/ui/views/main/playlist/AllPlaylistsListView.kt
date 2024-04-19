@@ -46,7 +46,7 @@ import earth.satunes.router.utils.openCurrentMusic
 import earth.satunes.router.utils.openMedia
 import earth.satunes.router.utils.resetOpenedPlaylist
 import earth.satunes.ui.components.forms.PlaylistCreationForm
-import earth.satunes.ui.components.playlist.AddPlaylistButton
+import earth.satunes.ui.components.buttons.playlist.AddPlaylistButton
 import earth.satunes.ui.views.main.MediaListView
 import java.util.SortedMap
 

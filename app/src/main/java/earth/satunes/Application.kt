@@ -38,8 +38,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import earth.satunes.router.Router
-import earth.satunes.ui.appBars.SatunesBottomAppBar
-import earth.satunes.ui.appBars.SatunesTopAppBar
+import earth.satunes.ui.components.appBars.SatunesBottomAppBar
+import earth.satunes.ui.components.appBars.SatunesTopAppBar
 
 /**
  * @author Antoine Pirlot on 10/04/2024

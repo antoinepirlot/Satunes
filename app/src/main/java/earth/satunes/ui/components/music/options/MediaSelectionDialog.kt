@@ -27,7 +27,6 @@ package earth.satunes.ui.components.music.options
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -35,33 +34,30 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import earth.satunes.R
-import earth.satunes.ui.components.forms.PlaylistSelectionForm
-import earth.satunes.ui.views.SatunesIcons
+import earth.satunes.database.models.Media
+import earth.satunes.ui.components.forms.MediaSelectionForm
 
 /**
  * @author Antoine Pirlot on 30/03/2024
  */
 
 @Composable
-fun PlaylistSelectionDialog(
+fun MediaSelectionDialog(
     modifier: Modifier = Modifier,
     onDismissRequest: () -> Unit,
     onConfirm: () -> Unit,
+    mediaList: List<Media>,
+    icon: @Composable () -> Unit,
 ) {
     AlertDialog(
         modifier = modifier,
-        icon = {
-            Icon(
-                imageVector = SatunesIcons.PLAYLIST_ADD.imageVector,
-                contentDescription = "Playlist Selection Icon"
-            )
-        },
+        icon = icon,
         title = {
             Text(text = stringResource(id = R.string.add_to_playlist))
         },
         text = {
             Column {
-                PlaylistSelectionForm()
+                MediaSelectionForm(mediaList = mediaList)
             }
         },
         onDismissRequest = onDismissRequest,
@@ -76,8 +72,10 @@ fun PlaylistSelectionDialog(
 @Preview
 @Composable
 fun PlaylistSelectionDialogPreview() {
-    PlaylistSelectionDialog(
+    MediaSelectionDialog(
+        icon = {},
         onDismissRequest = {},
-        onConfirm = {}
+        onConfirm = {},
+        mediaList = listOf()
     )
 }

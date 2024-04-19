@@ -40,42 +40,63 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import earth.satunes.database.models.Media
+import earth.satunes.database.models.Music
 import earth.satunes.database.models.relations.PlaylistWithMusics
 import earth.satunes.database.models.tables.Playlist
-import earth.satunes.services.PlaylistSelectionManager
+import earth.satunes.services.MediaSelectionManager
 
 /**
  * @author Antoine Pirlot on 30/03/2024
  */
 
 @Composable
-fun PlaylistSelectionCheckbox(
+fun MediaSelectionCheckbox(
     modifier: Modifier = Modifier,
-    playlistWithMusics: PlaylistWithMusics
+    media: Media
 ) {
     var checked: Boolean by rememberSaveable { mutableStateOf(false) }
+    val text: String = if (media is PlaylistWithMusics) decode(media.playlist.title)
+                       else decode(media.title)
+
     Row(modifier = modifier) {
         Checkbox(checked = checked, onCheckedChange = {
             checked = !checked
-            if (checked) {
-                PlaylistSelectionManager.checkedPlaylistWithMusics.add(playlistWithMusics)
-            } else {
-                PlaylistSelectionManager.checkedPlaylistWithMusics.remove(playlistWithMusics)
+            if (media is PlaylistWithMusics) {
+                checkPlaylist(checked = checked, playlist = media)
+            } else if (media is Music) {
+                checkMusic(checked = checked, music = media)
             }
         })
         Spacer(modifier = modifier.size(10.dp))
         Text(
             modifier = Modifier.align(Alignment.CenterVertically),
-            text = decode(playlistWithMusics.playlist.title)
+            text = text
         )
+    }
+}
+
+private fun checkPlaylist(checked: Boolean, playlist: PlaylistWithMusics) {
+    if (checked) {
+        MediaSelectionManager.checkedPlaylistWithMusics.add(playlist)
+    } else {
+        MediaSelectionManager.checkedPlaylistWithMusics.remove(playlist)
+    }
+}
+
+private fun checkMusic(checked: Boolean, music: Music) {
+    if (checked) {
+        MediaSelectionManager.checkedMusics.add(music)
+    } else {
+        MediaSelectionManager.checkedMusics.remove(music)
     }
 }
 
 @Preview
 @Composable
 fun PlaylistSelectionCheckboxPreview() {
-    PlaylistSelectionCheckbox(
-        playlistWithMusics = PlaylistWithMusics(
+    MediaSelectionCheckbox(
+        media = PlaylistWithMusics(
             playlist = Playlist(id = 0, title = ""),
             musics = mutableListOf()
         )

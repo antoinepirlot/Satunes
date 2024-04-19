@@ -53,7 +53,7 @@ import earth.satunes.database.models.Music
 import earth.satunes.database.models.relations.PlaylistWithMusics
 import earth.satunes.database.models.tables.MusicDB
 import earth.satunes.database.services.DatabaseManager
-import earth.satunes.services.PlaylistSelectionManager
+import earth.satunes.services.MediaSelectionManager
 import earth.satunes.ui.components.music.options.MusicOptionsDialog
 import earth.satunes.ui.components.playlist.PlaylistOptionsDialog
 import earth.satunes.ui.views.SatunesIcons
@@ -138,7 +138,7 @@ fun MediaCard(
                 val db = DatabaseManager(context = context)
                 db.insertMusicToPlaylists(
                     music = media,
-                    playlists = PlaylistSelectionManager.checkedPlaylistWithMusics
+                    playlists = MediaSelectionManager.checkedPlaylistWithMusics
                 )
                 showMusicOptions = false
             },
@@ -146,7 +146,7 @@ fun MediaCard(
                 val db = DatabaseManager(context = context)
                 db.removeMusicFromPlaylist(
                     music = media,
-                    playlist = PlaylistSelectionManager.openedPlaylist!!
+                    playlist = MediaSelectionManager.openedPlaylist!!
                 )
                 showMusicOptions = false
             },

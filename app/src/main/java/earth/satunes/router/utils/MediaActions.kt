@@ -35,7 +35,7 @@ import earth.satunes.database.models.Music
 import earth.satunes.database.models.relations.PlaylistWithMusics
 import earth.satunes.playback.services.PlaybackController
 import earth.satunes.router.Destination
-import earth.satunes.services.PlaylistSelectionManager
+import earth.satunes.services.MediaSelectionManager
 import earth.satunes.ui.utils.getMusicListFromFolder
 import earth.satunes.ui.utils.startMusic
 
@@ -58,7 +58,7 @@ fun openMedia(
     navController: NavHostController,
     media: Media? = null
 ) {
-    PlaylistSelectionManager.openedPlaylist = null
+    MediaSelectionManager.openedPlaylist = null
     if (media == null || media is Music) {
         startMusic(media)
     }
@@ -128,5 +128,5 @@ fun openCurrentMusic(navController: NavHostController) {
  * Set opened playlist from PlaylistSelectionManager to null to indicates the user is elsewhere
  */
 fun resetOpenedPlaylist() {
-    PlaylistSelectionManager.openedPlaylist = null
+    MediaSelectionManager.openedPlaylist = null
 }

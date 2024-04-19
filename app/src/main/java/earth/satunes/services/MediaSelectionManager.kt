@@ -23,44 +23,24 @@
  *  PS: I don't answer quickly.
  */
 
-package earth.satunes.ui.components.forms
+package earth.satunes.services
 
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import earth.satunes.database.models.Music
 import earth.satunes.database.models.relations.PlaylistWithMusics
-import earth.satunes.database.services.DataManager
 
 /**
  * @author Antoine Pirlot on 30/03/2024
  */
+internal object MediaSelectionManager {
+    /**
+     * Mutable list of checked playlists' ids to know where to add music from form
+     */
+    val checkedPlaylistWithMusics: MutableList<PlaylistWithMusics> = mutableListOf()
 
-@Composable
-fun PlaylistSelectionForm(
-    modifier: Modifier = Modifier,
-) {
-    val lazyState = rememberLazyListState()
-    val playlistList: List<PlaylistWithMusics> =
-        DataManager.playlistWithMusicsMap.values.toList()
+    /**
+     * Contains the playlist the user is viewing or null if the user is elsewhere
+     */
+    var openedPlaylist: PlaylistWithMusics? = null
 
-    LazyColumn(
-        modifier = modifier,
-        state = lazyState
-    ) {
-        items(
-            items = playlistList,
-            key = { it.playlist.id }
-        ) { playlistWithMusics: PlaylistWithMusics ->
-            PlaylistSelectionCheckbox(playlistWithMusics = playlistWithMusics)
-        }
-    }
-}
-
-@Preview
-@Composable
-fun PlaylistSelectionFormPreview() {
-    PlaylistSelectionForm()
+    val checkedMusics: MutableList<Music> = mutableListOf()
 }

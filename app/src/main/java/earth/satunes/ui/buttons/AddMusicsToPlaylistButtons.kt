@@ -23,7 +23,7 @@
  * PS: I don't answer quickly.
  */
 
-package earth.satunes.ui.components.playlist.buttons
+package earth.satunes.ui.buttons
 
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text

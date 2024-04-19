@@ -44,7 +44,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import earth.satunes.R
-import earth.satunes.services.PlaylistSelectionManager
+import earth.satunes.database.models.relations.PlaylistWithMusics
+import earth.satunes.database.services.DataManager
+import earth.satunes.services.MediaSelectionManager
 import earth.satunes.ui.views.SatunesIcons
 
 /**
@@ -89,15 +91,24 @@ fun MusicOptionsDialog(
                         Text(text = stringResource(id = R.string.add_to_playlist))
                     }
                     if (showPlaylistSelectionDialog) {
-                        PlaylistSelectionDialog(
+                        val playlistList: List<PlaylistWithMusics> =
+                            DataManager.playlistWithMusicsMap.values.toList()
+                        MediaSelectionDialog(
                             onDismissRequest = {
                                 showPlaylistSelectionDialog = false
                             },
-                            onConfirm = onAddToPlaylist
+                            onConfirm = onAddToPlaylist,
+                            mediaList = playlistList,
+                            icon = {
+                                Icon(
+                                    imageVector = SatunesIcons.PLAYLIST_ADD.imageVector,
+                                    contentDescription = "Playlist Selection Icon"
+                                )
+                            }
                         )
                     }
                 }
-                if (PlaylistSelectionManager.openedPlaylist != null) {
+                if (MediaSelectionManager.openedPlaylist != null) {
                     TextButton(onClick = {
                         onRemoveFromPlaylist()
                         onDismissRequest()

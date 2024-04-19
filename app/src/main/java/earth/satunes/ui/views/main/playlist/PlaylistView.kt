@@ -28,6 +28,10 @@ package earth.satunes.ui.views.main.playlist
 import android.net.Uri.decode
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
@@ -38,8 +42,8 @@ import earth.satunes.database.models.tables.Playlist
 import earth.satunes.playback.services.PlaybackController
 import earth.satunes.router.utils.openCurrentMusic
 import earth.satunes.router.utils.openMedia
-import earth.satunes.services.PlaylistSelectionManager
-import earth.satunes.ui.components.playlist.PlaylistHeader
+import earth.satunes.services.MediaSelectionManager
+import earth.satunes.ui.buttons.AddMusicsToPlaylistButtons
 import earth.satunes.ui.components.texts.Title
 import earth.satunes.ui.views.main.MediaListView
 
@@ -54,11 +58,11 @@ fun PlaylistView(
     playlist: PlaylistWithMusics,
 ) {
     //TODO try using nav controller instead try to remember it in an object if possible
-    PlaylistSelectionManager.openedPlaylist = playlist
+    MediaSelectionManager.openedPlaylist = playlist
+    var openMusicSelectionDialog: Boolean by remember { mutableStateOf(false) }
 
     Column(modifier = modifier) {
         Title(text = decode(playlist.playlist.title))
-        PlaylistHeader(playlist = playlist)
         MediaListView(
             mediaList = playlist.musics,
             openMedia = { clickedMedia: Media ->
@@ -74,8 +78,12 @@ fun PlaylistView(
                 )
                 openMedia(navController = navController)
             },
-            onFABClick = { openCurrentMusic(navController = navController) }
+            onFABClick = { openCurrentMusic(navController = navController) },
+            extraButtons = { AddMusicsToPlaylistButtons(onClick = { openMusicSelectionDialog = true }) }
         )
+        if (openMusicSelectionDialog) {
+
+        }
     }
 }
 

@@ -51,8 +51,8 @@ fun PlaybackSettingsView(
     val context: Context = LocalContext.current
     val checkedMap: Map<Settings, MutableState<Boolean>> = mapOf(
         Pair(
-            first = Settings.CLOSED_APP_PLAYBACK,
-            second = SettingsManager.closedAppPlaybackChecked
+            first = Settings.PLAYBACK_WHEN_CLOSED,
+            second = SettingsManager.playbackWhenClosedChecked
         ),
         Pair(
             first = Settings.PAUSE_IF_NOISY,
@@ -61,9 +61,9 @@ fun PlaybackSettingsView(
     )
 
     val onCheckedChangedMap: Map<Settings, () -> Unit> = mapOf(
-        Pair(first = Settings.CLOSED_APP_PLAYBACK, second = {
+        Pair(first = Settings.PLAYBACK_WHEN_CLOSED, second = {
             runBlocking {
-                SettingsManager.switchClosedAppPlaybackChecked(context = context)
+                SettingsManager.switchPlaybackWhenClosedChecked(context = context)
             }
         }),
         Pair(first = Settings.PAUSE_IF_NOISY, second = {

@@ -50,7 +50,7 @@ object SettingsManager {
     private const val DEFAULT_ALBUMS_CHECKED = true
     private const val DEFAULT_GENRE_CHECKED = true
     private const val DEFAULT_PLAYLIST_CHECKED = true
-    private const val DEFAULT_CLOSED_APP_PLAYBACK_CHECKED = false //No playback after closed app
+    private const val DEFAULT_PLAYBACK_WHEN_CLOSED_CHECKED = false //App stop after removed app from multi-task if false
     private const val DEFAULT_PAUSE_IF_NOISY = true
 
     private val PREFERENCES_DATA_STORE = preferencesDataStore("settings")
@@ -59,8 +59,8 @@ object SettingsManager {
     private val ALBUMS_CHECKED_PREFERENCES_KEY = booleanPreferencesKey("albums_checked")
     private val GENRE_CHECKED_PREFERENCES_KEY = booleanPreferencesKey("genres_checked")
     private val PLAYLISTS_CHECKED_PREFERENCES_KEY = booleanPreferencesKey("playlists_checked")
-    private val CLOSED_APP_PLAYBACK_CHECKED_PREFERENCES_KEY =
-        booleanPreferencesKey("closed_app_playback_checked")
+    private val PLAYBACK_WHEN_CLOSED_CHECKED_PREFERENCES_KEY =
+        booleanPreferencesKey("playback_when_closed_checked")
     private val PAUSE_IF_NOISY_PREFERENCES_KEY = booleanPreferencesKey("pause_if_noisy")
 
     private val Context.dataStore: DataStore<Preferences> by PREFERENCES_DATA_STORE
@@ -70,8 +70,8 @@ object SettingsManager {
     val albumsChecked: MutableState<Boolean> = mutableStateOf(DEFAULT_ALBUMS_CHECKED)
     val genresChecked: MutableState<Boolean> = mutableStateOf(DEFAULT_GENRE_CHECKED)
     val playlistsChecked: MutableState<Boolean> = mutableStateOf(DEFAULT_PLAYLIST_CHECKED)
-    val closedAppPlaybackChecked: MutableState<Boolean> =
-        mutableStateOf(DEFAULT_CLOSED_APP_PLAYBACK_CHECKED)
+    val playbackWhenClosedChecked: MutableState<Boolean> =
+        mutableStateOf(DEFAULT_PLAYBACK_WHEN_CLOSED_CHECKED)
     val pauseIfNoisy: MutableState<Boolean> = mutableStateOf(DEFAULT_PAUSE_IF_NOISY)
 
     val menuTitleCheckedMap: Map<MenuTitle, MutableState<Boolean>> = mapOf(
@@ -100,9 +100,9 @@ object SettingsManager {
             playlistsChecked.value =
                 preferences[PLAYLISTS_CHECKED_PREFERENCES_KEY] ?: DEFAULT_PLAYLIST_CHECKED
 
-            closedAppPlaybackChecked.value =
-                preferences[CLOSED_APP_PLAYBACK_CHECKED_PREFERENCES_KEY]
-                    ?: DEFAULT_CLOSED_APP_PLAYBACK_CHECKED
+            playbackWhenClosedChecked.value =
+                preferences[PLAYBACK_WHEN_CLOSED_CHECKED_PREFERENCES_KEY]
+                    ?: DEFAULT_PLAYBACK_WHEN_CLOSED_CHECKED
 
             pauseIfNoisy.value =
                 preferences[PAUSE_IF_NOISY_PREFERENCES_KEY] ?: DEFAULT_PAUSE_IF_NOISY
@@ -151,11 +151,11 @@ object SettingsManager {
         }
     }
 
-    suspend fun switchClosedAppPlaybackChecked(context: Context) {
+    suspend fun switchPlaybackWhenClosedChecked(context: Context) {
         context.dataStore.edit { preferences: MutablePreferences ->
-            closedAppPlaybackChecked.value = !closedAppPlaybackChecked.value
-            preferences[CLOSED_APP_PLAYBACK_CHECKED_PREFERENCES_KEY] =
-                closedAppPlaybackChecked.value
+            playbackWhenClosedChecked.value = !playbackWhenClosedChecked.value
+            preferences[PLAYBACK_WHEN_CLOSED_CHECKED_PREFERENCES_KEY] =
+                playbackWhenClosedChecked.value
         }
     }
 

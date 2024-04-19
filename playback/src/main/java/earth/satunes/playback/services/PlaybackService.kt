@@ -28,6 +28,7 @@ package earth.satunes.playback.services
 import android.content.Intent
 import androidx.annotation.OptIn
 import androidx.media3.common.AudioAttributes
+import androidx.media3.common.Player
 import androidx.media3.common.TrackSelectionParameters.AudioOffloadPreferences
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
@@ -66,15 +67,18 @@ class PlaybackService : MediaSessionService() {
     }
 
     override fun onTaskRemoved(rootIntent: Intent?) {
-        val player = mediaSession?.player!!
-
-        if (!player.playWhenReady || player.mediaItemCount == 0 || !SettingsManager.closedAppPlaybackChecked.value) {
+        if (!SettingsManager.playbackWhenClosedChecked.value) {
+            val player: Player = mediaSession!!.player
+            player.stop()
+            player.release()
             stopSelf()
+            super.onTaskRemoved(rootIntent)
         }
     }
 
     override fun onDestroy() {
         mediaSession?.run {
+            player.stop()
             player.release()
             release()
             mediaSession = null

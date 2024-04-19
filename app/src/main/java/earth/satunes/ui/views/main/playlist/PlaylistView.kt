@@ -27,6 +27,7 @@ package earth.satunes.ui.views.main.playlist
 
 import android.net.Uri.decode
 import androidx.compose.foundation.layout.Column
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,14 +38,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import earth.satunes.database.models.Media
+import earth.satunes.database.models.Music
 import earth.satunes.database.models.relations.PlaylistWithMusics
 import earth.satunes.database.models.tables.Playlist
+import earth.satunes.database.services.DataManager
 import earth.satunes.playback.services.PlaybackController
 import earth.satunes.router.utils.openCurrentMusic
 import earth.satunes.router.utils.openMedia
 import earth.satunes.services.MediaSelectionManager
 import earth.satunes.ui.components.buttons.playlist.AddMusicsToPlaylistButtons
+import earth.satunes.ui.components.dialog.MediaSelectionDialog
 import earth.satunes.ui.components.texts.Title
+import earth.satunes.ui.views.SatunesIcons
 import earth.satunes.ui.views.main.MediaListView
 
 /**
@@ -82,7 +87,16 @@ fun PlaylistView(
             extraButtons = { AddMusicsToPlaylistButtons(onClick = { openMusicSelectionDialog = true }) }
         )
         if (openMusicSelectionDialog) {
-
+            val allMusic: List<Music> = DataManager.musicMediaItemSortedMap.keys.toList()
+            MediaSelectionDialog(
+                onDismissRequest = { openMusicSelectionDialog = false },
+                onConfirm = { /*TODO*/ },
+                mediaList = allMusic,
+                icon = {
+                    val icon = SatunesIcons.PLAYLIST_ADD
+                    Icon(imageVector = icon.imageVector, contentDescription = icon.description)
+                }
+            )
         }
     }
 }

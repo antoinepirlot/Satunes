@@ -42,6 +42,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import earth.satunes.database.models.Album
 import earth.satunes.ui.components.AlbumArtwork
+import earth.satunes.ui.components.texts.NormalText
+import earth.satunes.ui.components.texts.Title
 
 /**
  * @author Antoine Pirlot on 11/04/2024
@@ -67,7 +69,7 @@ fun AlbumGridCard(
                 media = album,
                 onClick = onClick
             )
-            Text(
+            NormalText(
                 modifier = Modifier.fillMaxWidth(),
                 fontSize = 20.sp,
                 textAlign = TextAlign.Center,

@@ -71,6 +71,7 @@ import earth.satunes.services.MediaSelectionManager
 import earth.satunes.ui.components.AlbumArtwork
 import earth.satunes.ui.components.dialog.MusicOptionsDialog
 import earth.satunes.ui.components.dialog.PlaylistOptionsDialog
+import earth.satunes.ui.components.texts.NormalText
 import earth.satunes.ui.components.texts.Subtitle
 import earth.satunes.ui.views.SatunesIcons
 import earth.satunes.ui.views.utils.getRootFolderName
@@ -131,12 +132,12 @@ fun MediaCard(
             modifier = Modifier.height(70.dp),
             headlineContent = {
                 Column {
-                    Text(text = decode(title), maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    NormalText(text = title)
                     //Use two if for same thing because compilator doesn't like in one if for media.artist
                     if (media is Album) {
-                        Subtitle(text = decode(media.artist!!.title))
+                        Subtitle(text = media.artist!!.title)
                     } else if (media is Music) {
-                        Subtitle(text = decode(media.artist!!.title))
+                        Subtitle(text = media.artist!!.title)
                     }
                 }
             },

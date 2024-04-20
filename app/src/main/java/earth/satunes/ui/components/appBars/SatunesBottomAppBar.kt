@@ -42,6 +42,7 @@ import androidx.navigation.compose.rememberNavController
 import earth.satunes.database.models.MenuTitle
 import earth.satunes.database.services.settings.SettingsManager
 import earth.satunes.router.Destination
+import earth.satunes.ui.components.texts.NormalText
 import earth.satunes.ui.utils.getRightIconAndDescription
 
 /**
@@ -92,7 +93,7 @@ fun SatunesBottomAppBar(
             NavigationBarItem(
                 label = {
                     if (hasMaxFiveItems) {
-                        Text(text = stringResource(id = menuTitle.stringId))
+                        NormalText(text = stringResource(id = menuTitle.stringId))
                     }
                 },
                 selected = selectedMenuTitle.value == menuTitle,

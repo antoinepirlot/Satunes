@@ -26,6 +26,7 @@
 package earth.satunes.ui.components.texts
 
 import android.net.Uri
+import android.net.Uri.decode
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -45,18 +46,11 @@ fun Subtitle(
     maxLines: Int = 1,
     overflow: TextOverflow = TextOverflow.Ellipsis) {
     Text(
+        modifier = modifier,
         color = Color.Gray,
         fontSize = 15.sp,
-        text = text,
+        text = decode(text),
         maxLines = maxLines,
         overflow = overflow
     )
-}
-
-@Preview
-@Composable
-fun SubtitlePreview(
-    modifier: Modifier = Modifier
-) {
-    Subtitle(text = "Subtitle")
 }

@@ -50,6 +50,7 @@ import earth.satunes.internet.UpdateCheckManager.getCurrentVersion
 import earth.satunes.ui.components.LoadingCircle
 import earth.satunes.ui.components.buttons.updates.CheckUpdateButton
 import earth.satunes.ui.components.settings.UpdateAvailable
+import earth.satunes.ui.components.texts.NormalText
 import earth.satunes.ui.components.texts.Title
 import earth.satunes.internet.R as RInternet
 
@@ -67,7 +68,7 @@ fun VersionView(
     val updateAvailable: UpdateAvailableStatus by remember { UpdateCheckManager.updateAvailableStatus }
     Column(modifier = modifier.padding(16.dp)) {
         Title(text = stringResource(id = R.string.version), fontSize = 20.sp)
-        Text(text = stringResource(id = R.string.current_version) + currentVersion)
+        NormalText(text = stringResource(id = R.string.current_version) + currentVersion)
         //Check update is done when pressing setting button in top app bar
         if (isCheckingUpdate) {
             LoadingCircle(modifier.padding(bottom = 16.dp))

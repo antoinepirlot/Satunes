@@ -48,6 +48,7 @@ import earth.satunes.ui.components.LoadingCircle
 import earth.satunes.ui.components.buttons.updates.DownloadButton
 import earth.satunes.ui.components.buttons.updates.InstallRequestButton
 import earth.satunes.ui.components.buttons.updates.SeeDetailsButton
+import earth.satunes.ui.components.texts.NormalText
 
 /**
  * @author Antoine Pirlot on 14/04/2024
@@ -59,12 +60,11 @@ private val SPACER_SIZE = 10.dp
 fun UpdateAvailable(
     modifier: Modifier = Modifier,
 ) {
-    val context: Context = LocalContext.current
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.Center
     ) {
-        Text(text = stringResource(id = R.string.update_available))
+        NormalText(text = stringResource(id = R.string.update_available))
         Row(verticalAlignment = Alignment.CenterVertically) {
             SeeDetailsButton()
             Spacer(modifier = Modifier.size(SPACER_SIZE))

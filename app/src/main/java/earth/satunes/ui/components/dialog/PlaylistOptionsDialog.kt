@@ -43,6 +43,7 @@ import earth.satunes.R
 import earth.satunes.database.models.relations.PlaylistWithMusics
 import earth.satunes.database.models.tables.Playlist
 import earth.satunes.ui.components.cards.dialog.DialogOption
+import earth.satunes.ui.components.texts.NormalText
 import earth.satunes.ui.views.SatunesIcons
 
 /**
@@ -67,7 +68,7 @@ fun PlaylistOptionsDialog(
             )
         },
         title = {
-            Text(text = decode(playlistWithMusics.playlist.title))
+            NormalText(text = decode(playlistWithMusics.playlist.title))
         },
         text = {
             Column {

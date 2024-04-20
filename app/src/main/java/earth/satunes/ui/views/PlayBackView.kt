@@ -45,6 +45,7 @@ import earth.satunes.database.models.Album
 import earth.satunes.playback.services.PlaybackController
 import earth.satunes.ui.components.MusicPlayingAlbumArtwork
 import earth.satunes.ui.components.bars.MusicControlBar
+import earth.satunes.ui.components.texts.NormalText
 
 /**
  * @author Antoine Pirlot on 25/01/24
@@ -65,7 +66,7 @@ fun PlayBackView(
             verticalArrangement = Arrangement.Bottom,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = decode(musicPlaying.value!!.title))
+            NormalText(text = decode(musicPlaying.value!!.title))
 
             MusicControlBar(
                 modifier = modifier

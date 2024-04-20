@@ -46,6 +46,7 @@ import earth.satunes.R
 import earth.satunes.internet.UpdateAvailableStatus
 import earth.satunes.internet.UpdateCheckManager
 import earth.satunes.router.Destination
+import earth.satunes.ui.components.texts.NormalText
 import earth.satunes.ui.views.SatunesIcons
 
 /**
@@ -66,11 +67,7 @@ fun SatunesTopAppBar(
             titleContentColor = MaterialTheme.colorScheme.primary,
         ),
         title = {
-            Text(
-                stringResource(id = R.string.app_name),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
+            NormalText(text = stringResource(id = R.string.app_name))
         },
         actions = {
             IconButton(

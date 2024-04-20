@@ -23,57 +23,35 @@
  *  PS: I don't answer quickly.
  */
 
-package earth.satunes.ui.components.settings
+package earth.satunes.ui.components.texts
 
-import android.annotation.SuppressLint
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.Switch
+import android.net.Uri.decode
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import earth.satunes.ui.components.texts.NormalText
+import androidx.compose.ui.unit.TextUnit
 
 /**
- *   @author Antoine Pirlot 06/03/2024
+ * @author Antoine Pirlot on 20/04/2024
  */
 
 @Composable
-fun SettingWithSwitch(
+fun NormalText(
     modifier: Modifier = Modifier,
     text: String,
-    checked: Boolean,
-    onCheckedChange: () -> Unit
+    fontSize: TextUnit = TextUnit.Unspecified,
+    textAlign: TextAlign? = null,
+    maxLines: Int = 1,
+    overflow: TextOverflow = TextOverflow.Ellipsis
 ) {
-    Row(
-        modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        NormalText(
-            text = text,
-            maxLines = Int.MAX_VALUE,
-            modifier = Modifier
-                .align(Alignment.CenterVertically)
-                .fillMaxWidth(0.9f) // Fix the button to be outside the screen if text is long
-        )
-        Switch(
-            modifier = Modifier.align(Alignment.CenterVertically),
-            checked = checked,
-            onCheckedChange = { onCheckedChange() }
-        )
-    }
-}
-
-@SuppressLint("UnrememberedMutableState")
-@Composable
-@Preview
-fun SettingWithSwitchPreview() {
-    SettingWithSwitch(
-        text = "Setting Example",
-        checked = true,
-        onCheckedChange = {}
-    )
+    Text(
+        modifier = modifier,
+        text = decode(text),
+        fontSize = fontSize,
+        textAlign = textAlign,
+        maxLines = maxLines,
+        overflow = overflow)
 }

@@ -34,6 +34,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import earth.satunes.ui.components.texts.NormalText
 
 /**
  * @author Antoine Pirlot on 19/04/2024
@@ -52,7 +53,7 @@ fun DialogOption(
         Row {
             icon()
             Spacer(modifier = Modifier.size(SPACER_SIZE))
-            Text(text = text)
+            NormalText(text = text)
         }
     }
 }

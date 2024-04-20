@@ -23,7 +23,7 @@
  *  PS: I don't answer quickly.
  */
 
-package earth.satunes.internet
+package earth.satunes.internet.updates
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -35,15 +35,16 @@ import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import androidx.core.content.getSystemService
-import earth.satunes.internet.Versions.ALPHA
-import earth.satunes.internet.Versions.ALPHA_APK_REGEX
-import earth.satunes.internet.Versions.BETA
-import earth.satunes.internet.Versions.BETA_APK_REGEX
-import earth.satunes.internet.Versions.PREVIEW
-import earth.satunes.internet.Versions.PREVIEW_APK_REGEX
-import earth.satunes.internet.Versions.RELEASES_URL
-import earth.satunes.internet.Versions.RELEASE_APK_REGEX
-import earth.satunes.internet.Versions.versionType
+import earth.satunes.internet.R
+import earth.satunes.internet.updates.Versions.ALPHA
+import earth.satunes.internet.updates.Versions.ALPHA_APK_REGEX
+import earth.satunes.internet.updates.Versions.BETA
+import earth.satunes.internet.updates.Versions.BETA_APK_REGEX
+import earth.satunes.internet.updates.Versions.PREVIEW
+import earth.satunes.internet.updates.Versions.PREVIEW_APK_REGEX
+import earth.satunes.internet.updates.Versions.RELEASES_URL
+import earth.satunes.internet.updates.Versions.RELEASE_APK_REGEX
+import earth.satunes.internet.updates.Versions.versionType
 import earth.satunes.internet.utils.showToastOnUiThread
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

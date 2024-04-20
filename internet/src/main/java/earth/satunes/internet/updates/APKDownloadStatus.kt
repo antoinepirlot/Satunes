@@ -23,14 +23,16 @@
  *  PS: I don't answer quickly.
  */
 
-package earth.satunes.internet
+package earth.satunes.internet.updates
 
 /**
- * @author Antoine Pirlot on 11/04/2024
+ * @author Antoine Pirlot on 13/04/2024
  */
-enum class UpdateAvailableStatus(var updateLink: String? = null) {
-    AVAILABLE,
-    CANNOT_CHECK,
-    UNDEFINED,
-    UP_TO_DATE,
+enum class APKDownloadStatus {
+    CHECKING,
+    DOWNLOADED,
+    DOWNLOADING,
+    NOT_STARTED,
+    NOT_FOUND,
+    FAILED,
 }

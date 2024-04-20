@@ -23,45 +23,49 @@
  *  PS: I don't answer quickly.
  */
 
-package earth.satunes.ui.components.buttons.updates
+package earth.satunes.ui.components.dialog
 
-import android.content.Context
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material3.Icon
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.hapticfeedback.HapticFeedback
-import androidx.compose.ui.hapticfeedback.HapticFeedbackType
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalHapticFeedback
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import earth.satunes.R
-import earth.satunes.internet.updates.UpdateCheckManager
+import androidx.compose.ui.unit.dp
+import earth.satunes.ui.components.texts.NormalText
 
 /**
- * @author Antoine Pirlot on 11/04/2024
+ * @author Antoine Pirlot on 19/04/2024
  */
 
+private val SPACER_SIZE = 10.dp
+
 @Composable
-fun CheckUpdateButton(
+fun DialogOption(
     modifier: Modifier = Modifier,
+    onClick: () -> Unit,
+    icon: @Composable () -> Unit,
+    text: String,
 ) {
-    val context: Context = LocalContext.current
-    val haptics: HapticFeedback = LocalHapticFeedback.current
-    Button(
-        modifier = modifier,
-        onClick = {
-            haptics.performHapticFeedback(hapticFeedbackType = HapticFeedbackType.TextHandleMove)
-            UpdateCheckManager.checkUpdate(context = context)
+    TextButton(onClick = onClick) {
+        Row {
+            icon()
+            Spacer(modifier = Modifier.size(SPACER_SIZE))
+            NormalText(text = text)
         }
-    ) {
-        Text(text = stringResource(id = R.string.check_update))
     }
 }
 
 @Preview
 @Composable
-fun CheckUpdateButtonPreview() {
-    CheckUpdateButton()
+fun DialogOptionPreview() {
+    DialogOption(
+        onClick = {},
+        icon = { Icon(imageVector = Icons.Rounded.Add, contentDescription = "")},
+        text = "Dialog Option"
+    )
 }

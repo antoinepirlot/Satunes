@@ -23,16 +23,24 @@
  *  PS: I don't answer quickly.
  */
 
-package earth.satunes.internet
+package earth.satunes.internet.updates
+
+import android.app.Activity
+import android.app.DownloadManager
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import earth.satunes.internet.R
+import earth.satunes.internet.utils.showToastOnUiThread
 
 /**
- * @author Antoine Pirlot on 13/04/2024
+ * @author Antoine Pirlot on 14/04/2024
  */
-enum class APKDownloadStatus {
-    CHECKING,
-    DOWNLOADED,
-    DOWNLOADING,
-    NOT_STARTED,
-    NOT_FOUND,
-    FAILED,
+internal object DownloadReceiver : BroadcastReceiver() {
+    override fun onReceive(context: Context, intent: Intent) {
+        if (intent.action == DownloadManager.ACTION_DOWNLOAD_COMPLETE) {
+            UpdateCheckManager.downloadStatus.value = APKDownloadStatus.DOWNLOADED
+            showToastOnUiThread(context = context, activity = Activity(), context.getString(R.string.downloaded))
+        }
+    }
 }

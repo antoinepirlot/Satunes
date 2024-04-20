@@ -40,7 +40,6 @@ import earth.satunes.R
 import earth.satunes.database.models.relations.PlaylistWithMusics
 import earth.satunes.database.services.DataManager
 import earth.satunes.services.MediaSelectionManager
-import earth.satunes.ui.components.cards.dialog.DialogOption
 import earth.satunes.ui.components.texts.NormalText
 import earth.satunes.icons.SatunesIcons
 

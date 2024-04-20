@@ -25,14 +25,12 @@
 
 package earth.satunes.ui.components.cards.albums
 
-import android.net.Uri.decode
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,9 +39,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import earth.satunes.database.models.Album
-import earth.satunes.ui.components.AlbumArtwork
+import earth.satunes.ui.components.images.AlbumArtwork
 import earth.satunes.ui.components.texts.NormalText
-import earth.satunes.ui.components.texts.Title
 
 /**
  * @author Antoine Pirlot on 11/04/2024

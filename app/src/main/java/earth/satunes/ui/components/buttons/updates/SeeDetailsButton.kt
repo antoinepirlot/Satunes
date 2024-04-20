@@ -34,7 +34,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import earth.satunes.internet.R
-import earth.satunes.internet.UpdateAvailableStatus
+import earth.satunes.internet.updates.UpdateAvailableStatus
 import earth.satunes.ui.components.settings.utils.openUrl
 
 /**

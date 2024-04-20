@@ -97,8 +97,8 @@ dependencies {
     /**
      * Navigation
      */
-    val navVersion = "2.5.3"
-    implementation("androidx.navigation:navigation-fragment:$navVersion")
+    val navVersion = "2.7.7"
+    implementation("androidx.navigation:navigation-fragment-ktx:$navVersion")
 
     // Jetpack Compose Integration
     implementation("androidx.navigation:navigation-compose:$navVersion")

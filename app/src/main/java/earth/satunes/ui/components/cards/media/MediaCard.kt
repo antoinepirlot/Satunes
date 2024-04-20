@@ -30,6 +30,8 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -47,11 +49,15 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import earth.satunes.database.models.Album
 import earth.satunes.database.models.Artist
 import earth.satunes.database.models.Folder
@@ -65,6 +71,7 @@ import earth.satunes.services.MediaSelectionManager
 import earth.satunes.ui.components.AlbumArtwork
 import earth.satunes.ui.components.dialog.MusicOptionsDialog
 import earth.satunes.ui.components.dialog.PlaylistOptionsDialog
+import earth.satunes.ui.components.texts.Subtitle
 import earth.satunes.ui.views.SatunesIcons
 import earth.satunes.ui.views.utils.getRootFolderName
 
@@ -121,25 +128,36 @@ fun MediaCard(
         ),
     ) {
         ListItem(
-            modifier = Modifier.height(65.dp),
+            modifier = Modifier.height(70.dp),
             headlineContent = {
-                if (media is Album) {
-                    Text(text = decode(title) + " - " + decode(media.artist!!.title))
+                Column {
+                    Text(text = decode(title), maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    //Use two if for same thing because compilator doesn't like in one if for media.artist
+                    if (media is Album) {
+                        Subtitle(text = decode(media.artist!!.title))
+                    } else if (media is Music) {
+                        Subtitle(text = decode(media.artist!!.title))
+                    }
                 }
-                Text(text = decode(title))
             },
             leadingContent = {
-                Box(modifier = modifier.fillMaxHeight().width(55.dp)) {
+                Box(modifier = modifier
+                    .fillMaxHeight()
+                    .width(55.dp)) {
                     if (media.artwork != null) {
                         Image(
-                            modifier = Modifier.fillMaxSize().align(Alignment.Center),
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .align(Alignment.Center),
                             bitmap = media.artwork!!,
                             contentDescription = "Media Artwork"
                         )
                     } else {
                         val mediaIcon: SatunesIcons = getRightIconAndDescription(media = media)
                         Icon(
-                            modifier = Modifier.size(30.dp).align(Alignment.Center),
+                            modifier = Modifier
+                                .size(30.dp)
+                                .align(Alignment.Center),
                             imageVector = mediaIcon.imageVector,
                             contentDescription = mediaIcon.description
                         )

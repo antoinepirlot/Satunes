@@ -25,21 +25,19 @@
 
 package earth.satunes.ui.components.cards.media
 
-import android.net.Uri.decode
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -62,10 +60,11 @@ import earth.satunes.database.models.relations.PlaylistWithMusics
 import earth.satunes.database.models.tables.MusicDB
 import earth.satunes.database.services.DatabaseManager
 import earth.satunes.services.MediaSelectionManager
-import earth.satunes.ui.components.AlbumArtwork
 import earth.satunes.ui.components.dialog.MusicOptionsDialog
 import earth.satunes.ui.components.dialog.PlaylistOptionsDialog
-import earth.satunes.ui.views.SatunesIcons
+import earth.satunes.ui.components.texts.NormalText
+import earth.satunes.ui.components.texts.Subtitle
+import earth.satunes.icons.SatunesIcons
 import earth.satunes.ui.views.utils.getRootFolderName
 
 /**
@@ -121,25 +120,36 @@ fun MediaCard(
         ),
     ) {
         ListItem(
-            modifier = Modifier.height(65.dp),
+            modifier = Modifier.height(70.dp),
             headlineContent = {
-                if (media is Album) {
-                    Text(text = decode(title) + " - " + decode(media.artist!!.title))
+                Column {
+                    NormalText(text = title)
+                    //Use two if for same thing because compilator doesn't like in one if for media.artist
+                    if (media is Album) {
+                        Subtitle(text = media.artist!!.title)
+                    } else if (media is Music) {
+                        Subtitle(text = media.artist!!.title)
+                    }
                 }
-                Text(text = decode(title))
             },
             leadingContent = {
-                Box(modifier = modifier.fillMaxHeight().width(55.dp)) {
+                Box(modifier = modifier
+                    .fillMaxHeight()
+                    .width(55.dp)) {
                     if (media.artwork != null) {
                         Image(
-                            modifier = Modifier.fillMaxSize().align(Alignment.Center),
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .align(Alignment.Center),
                             bitmap = media.artwork!!,
                             contentDescription = "Media Artwork"
                         )
                     } else {
                         val mediaIcon: SatunesIcons = getRightIconAndDescription(media = media)
                         Icon(
-                            modifier = Modifier.size(30.dp).align(Alignment.Center),
+                            modifier = Modifier
+                                .size(30.dp)
+                                .align(Alignment.Center),
                             imageVector = mediaIcon.imageVector,
                             contentDescription = mediaIcon.description
                         )
@@ -211,6 +221,9 @@ fun CardPreview() {
         duration = 2,
         size = 2,
         folder = Folder(title = "Folder"),
+        album = Album(title = "Album Title"),
+        artist = Artist(title = "Artist Title"),
+        genre = Genre(title = "Genre Title"),
         absolutePath = "absolute path",
         context = LocalContext.current
     )

@@ -95,9 +95,7 @@ dependencies {
     /**
      * Icons
      */
-    val materialIconsVersion = "1.6.0"
-    implementation("androidx.compose.material:material-icons-core:$materialIconsVersion")
-    implementation("androidx.compose.material:material-icons-extended:$materialIconsVersion")
+    implementation(project(":icons"))
 
     /**
      * Navigation

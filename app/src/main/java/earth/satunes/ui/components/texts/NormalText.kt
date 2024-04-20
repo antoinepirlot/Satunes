@@ -23,22 +23,35 @@
  *  PS: I don't answer quickly.
  */
 
-package earth.satunes.router
+package earth.satunes.ui.components.texts
+
+import android.net.Uri.decode
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.TextUnit
 
 /**
- * @author Antoine Pirlot on 24-01-24
+ * @author Antoine Pirlot on 20/04/2024
  */
 
-internal enum class Destination(val link: String) {
-    ALBUMS(link = "/albums"),
-    ARTISTS(link = "/artists"),
-    FOLDERS(link = "/folders"),
-    GENRES(link = "/genres"),
-    MUSICS(link = "/musics"),
-    BOTTOM_BAR_SETTING(link = "/navbar_settings"),
-    PLAYBACK(link = "/playback"),
-    PLAYBACK_SETTINGS(link = "/playback_settings"),
-    PLAYLISTS(link = "/playlists"),
-    SETTINGS(link = "/settings"),
-    UPDATES(link = "/updates"),
+@Composable
+fun NormalText(
+    modifier: Modifier = Modifier,
+    text: String,
+    fontSize: TextUnit = TextUnit.Unspecified,
+    textAlign: TextAlign? = null,
+    maxLines: Int = 1,
+    overflow: TextOverflow = TextOverflow.Ellipsis
+) {
+    Text(
+        modifier = modifier,
+        text = decode(text),
+        fontSize = fontSize,
+        textAlign = textAlign,
+        maxLines = maxLines,
+        overflow = overflow)
 }

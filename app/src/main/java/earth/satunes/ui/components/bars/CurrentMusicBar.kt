@@ -44,7 +44,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import earth.satunes.ui.views.SatunesIcons
+import earth.satunes.icons.SatunesIcons
 
 /**
  * @author Antoine Pirlot on 01/02/24

@@ -42,6 +42,7 @@ import earth.satunes.R
 import earth.satunes.ui.components.settings.Facebook
 import earth.satunes.ui.components.settings.GitHub
 import earth.satunes.ui.components.settings.Tipeee
+import earth.satunes.ui.components.texts.NormalText
 import earth.satunes.ui.components.texts.Title
 
 /**
@@ -55,8 +56,9 @@ fun AboutView(
 ) {
     Column(modifier.padding(16.dp)) {
         Title(text = stringResource(id = R.string.about), fontSize = 20.sp)
-        Text(
-            text = stringResource(id = R.string.about_text)
+        NormalText(
+            text = stringResource(id = R.string.about_text),
+            maxLines = Int.MAX_VALUE
         )
         Row(
             modifier = Modifier.fillMaxWidth(),

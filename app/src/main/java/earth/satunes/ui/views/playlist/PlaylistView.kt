@@ -26,7 +26,6 @@
 package earth.satunes.ui.views.playlist
 
 import android.content.Context
-import android.net.Uri.decode
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
@@ -52,7 +51,7 @@ import earth.satunes.services.MediaSelectionManager
 import earth.satunes.ui.components.buttons.ExtraButton
 import earth.satunes.ui.components.dialog.MediaSelectionDialog
 import earth.satunes.ui.components.texts.Title
-import earth.satunes.ui.views.SatunesIcons
+import earth.satunes.icons.SatunesIcons
 import earth.satunes.ui.views.MediaListView
 
 /**
@@ -70,7 +69,7 @@ fun PlaylistView(
     var openAddMusicsDialog: Boolean by remember { mutableStateOf(false) }
 
     Column(modifier = modifier) {
-        Title(text = decode(playlist.playlist.title))
+        Title(text = playlist.playlist.title)
         MediaListView(
             mediaList = playlist.musics,
             openMedia = { clickedMedia: Media ->
@@ -79,15 +78,17 @@ fun PlaylistView(
                 )
                 openMedia(navController = navController, media = clickedMedia)
             },
-            shuffleMusicAction = {
-                PlaybackController.getInstance().loadMusic(
-                    musicMediaItemSortedMap = playlist.musicMediaItemSortedMap,
-                    shuffleMode = true
-                )
-                openMedia(navController = navController)
-            },
             onFABClick = { openCurrentMusic(navController = navController) },
-            extraButtons = { ExtraButton(icon = SatunesIcons.ADD, onClick = { openAddMusicsDialog = true }) }
+            extraButtons = {
+                ExtraButton(icon = SatunesIcons.ADD, onClick = { openAddMusicsDialog = true })
+                ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
+                    PlaybackController.getInstance().loadMusic(
+                        musicMediaItemSortedMap = playlist.musicMediaItemSortedMap,
+                        shuffleMode = true
+                    )
+                    openMedia(navController = navController)
+                })
+            }
         )
         if (openAddMusicsDialog) {
             val allMusic: List<Music> = DataManager.musicMediaItemSortedMap.keys.toList()

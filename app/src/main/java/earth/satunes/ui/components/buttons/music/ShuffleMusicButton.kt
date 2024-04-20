@@ -31,7 +31,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import earth.satunes.playback.services.PlaybackController
-import earth.satunes.ui.views.SatunesIcons
+import earth.satunes.icons.SatunesIcons
 
 /**
  * @author Antoine Pirlot on 29/01/24
@@ -47,7 +47,7 @@ fun ShuffleMusicButton(
         modifier = modifier,
         onClick = { playbackController.switchShuffleMode() }
     ) {
-        val icon = getRightRepeatIcon()
+        val icon = getRightShuffleIcon()
         Icon(
             modifier = modifier,
             imageVector = icon.imageVector,
@@ -62,7 +62,7 @@ fun ShuffleMusicButtonPreview() {
     ShuffleMusicButton()
 }
 
-private fun getRightRepeatIcon(): SatunesIcons {
+private fun getRightShuffleIcon(): SatunesIcons {
     return if (PlaybackController.getInstance().isShuffle.value) {
         SatunesIcons.SHUFFLE_ON
     } else {

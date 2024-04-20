@@ -43,8 +43,10 @@ import earth.satunes.router.utils.openCurrentMusic
 import earth.satunes.router.utils.openMedia
 import earth.satunes.router.utils.openMediaFromFolder
 import earth.satunes.router.utils.resetOpenedPlaylist
+import earth.satunes.ui.components.buttons.ExtraButton
 import earth.satunes.ui.components.texts.Title
 import earth.satunes.ui.views.MediaListView
+import earth.satunes.icons.SatunesIcons
 import earth.satunes.ui.views.utils.getRootFolderName
 import java.util.SortedMap
 
@@ -80,7 +82,7 @@ fun FolderView(
             val allPath: MutableList<String> = folder.absolutePath.split("/").toMutableList()
             allPath.removeFirst()
             allPath[0] = getRootFolderName(title = allPath[0])
-            var path: String = ""
+            var path = ""
             for (s: String in allPath) {
                 path += "/${decode(s)}"
             }
@@ -93,16 +95,16 @@ fun FolderView(
             openMedia = { clickedMedia: Media ->
                 openMediaFromFolder(navController, clickedMedia)
             },
-
-            shuffleMusicAction = {
-                playbackController.loadMusic(
-                    musicMediaItemSortedMap = folder.getAllMusic(),
-                    shuffleMode = true
-                )
-                openMedia(navController = navController)
-            },
-
-            onFABClick = { openCurrentMusic(navController) }
+            onFABClick = { openCurrentMusic(navController) },
+            extraButtons = {
+                ExtraButton(icon = SatunesIcons.SHUFFLE, onClick =  {
+                    playbackController.loadMusic(
+                        musicMediaItemSortedMap = folder.getAllMusic(),
+                        shuffleMode = true
+                    )
+                    openMedia(navController = navController)
+                })
+            }
         )
     }
 }

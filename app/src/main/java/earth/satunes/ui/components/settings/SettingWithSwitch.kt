@@ -35,6 +35,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import earth.satunes.ui.components.texts.NormalText
 
 /**
  *   @author Antoine Pirlot 06/03/2024
@@ -51,9 +52,10 @@ fun SettingWithSwitch(
         modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(
+        NormalText(
             text = text,
-            Modifier
+            maxLines = Int.MAX_VALUE,
+            modifier = Modifier
                 .align(Alignment.CenterVertically)
                 .fillMaxWidth(0.9f) // Fix the button to be outside the screen if text is long
         )

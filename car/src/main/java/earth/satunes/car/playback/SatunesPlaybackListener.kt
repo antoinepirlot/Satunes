@@ -35,7 +35,7 @@ import android.support.v4.media.session.PlaybackStateCompat.STATE_PLAYING
 import androidx.media.utils.MediaConstants
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
-import earth.satunes.car.R
+import earth.satunes.icons.R
 import earth.satunes.car.playback.SatunesCarCallBack.ACTIONS_ON_PAUSE
 import earth.satunes.car.playback.SatunesCarCallBack.ACTIONS_ON_PLAY
 import earth.satunes.car.playback.SatunesCarCallBack.ACTION_REPEAT

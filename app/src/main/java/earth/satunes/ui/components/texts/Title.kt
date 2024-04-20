@@ -25,6 +25,7 @@
 
 package earth.satunes.ui.components.texts
 
+import android.net.Uri.decode
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -65,7 +66,7 @@ fun Title(
     )
     Box(modifier = modifier.fillMaxWidth()) {
         Text(
-            text = text,
+            text = decode(text),
             modifier = Modifier
                 .align(align)
                 .padding(bottom = 16.dp),

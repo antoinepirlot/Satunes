@@ -32,7 +32,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import earth.satunes.ui.views.SatunesIcons
+import earth.satunes.icons.SatunesIcons
 
 /**
  * @author Antoine Pirlot on 20/04/2024
@@ -46,7 +46,7 @@ fun ExtraButton(
     onClick: () -> Unit,
 ) {
     FloatingActionButton(
-        modifier = modifier.padding(8.dp),
+        modifier = modifier.padding(bottom = 8.dp),
         onClick = onClick
     ) {
         @Suppress("NAME_SHADOWING")

@@ -161,37 +161,26 @@ object DataLoader {
      * Load data from cursor
      */
     private fun loadData(cursor: Cursor, context: Context) {
-        var album: Album? = null
-        var genre: Genre? = null
-
         //Load Artist
         val artist: Artist = loadArtist(context = context, cursor = cursor)
 
         //Load album
-        try {
-            album = loadAlbum(cursor = cursor, artist = artist, context = context)
+        val album: Album = try {
+            loadAlbum(cursor = cursor, artist = artist, context = context)
         } catch (e: DuplicatedAlbumException) {
             // The album already exist
-            album = e.existingAlbum
-        } catch (_: Exception) {
-            //No Album
+            e.existingAlbum
         }
 
         //Link album to artist if the album doesn't already have the album
-        if (album != null) {
-            if (!artist.albumSortedMap.containsValue(value = album)) {
-                artist.addAlbum(album = album)
-            }
+        if (!artist.albumSortedMap.containsValue(value = album)) {
+            artist.addAlbum(album = album)
         }
 
         val absolutePath: String = encode(cursor.getString(absolutePathColumnId!!))
 
         //Load Genre
-        try {
-            genre = loadGenre(context = context, cursor = cursor)
-        } catch (e: Exception) {
-            //No genre
-        }
+        val genre: Genre = loadGenre(context = context, cursor = cursor)
 
         //Load Folder
         val folder: Folder = loadFolder(absolutePath = absolutePath)
@@ -209,13 +198,13 @@ object DataLoader {
             )
         } catch (_: IllegalAccessError) {
             // No music found
-            if (album != null && album.musicSortedMap.isEmpty()) {
+            if (album.musicSortedMap.isEmpty()) {
                 DataManager.removeAlbum(album = album)
             }
             if (artist.musicList.isEmpty()) {
                 DataManager.removeArtist(artist = artist)
             }
-            if (genre != null && genre.musicMap.isEmpty()) {
+            if (genre.musicMap.isEmpty()) {
                 DataManager.removeGenre(genre = genre)
             }
             if (folder.musicMediaItemSortedMap.isEmpty()) {
@@ -234,10 +223,10 @@ object DataLoader {
     private fun loadMusic(
         context: Context,
         cursor: Cursor,
-        album: Album?,
-        artist: Artist?,
+        album: Album,
+        artist: Artist,
         folder: Folder,
-        genre: Genre?,
+        genre: Genre,
         absolutePath: String,
     ): Music {
         // Get values of columns for a given music.
@@ -313,41 +302,41 @@ object DataLoader {
 
     private fun loadArtist(context: Context, cursor: Cursor): Artist {
         // Get values of columns for a given artist.
-        val name = encode(cursor.getString(artistNameColumn!!))
-        return if (decode(name) == UNKNOWN_ARTIST) {
-            // Assign the Unknown Artist
-            try {
+        return try {
+            val name = encode(cursor.getString(artistNameColumn!!))
+            return if (decode(name) == UNKNOWN_ARTIST) {
+                // Assign the Unknown Artist
                 DataManager.getArtist(encode(context.getString(R.string.unknown_artist)))
-            } catch (_: NullPointerException) {
-                val newArtist = Artist(title = encode(context.getString(R.string.unknown_artist)))
-                DataManager.addArtist(artist = newArtist)
+            } else {
+                DataManager.addArtist(artist = Artist(title = name))
             }
-        } else {
-            DataManager.addArtist(artist = Artist(title = name))
+        } catch (_: NullPointerException) {
+            val newArtist = Artist(title = encode(context.getString(R.string.unknown_artist)))
+            DataManager.addArtist(artist = newArtist)
         }
     }
 
     private fun loadAlbum(context: Context, cursor: Cursor, artist: Artist?): Album {
-        val name = encode(cursor.getString(albumNameColumn!!))
-        return if (decode(name) == UNKNOWN_ALBUM) {
-            // Assign the Unknown Album
-            try {
+        return try {
+            val name = encode(cursor.getString(albumNameColumn!!))
+            return if (decode(name) == UNKNOWN_ALBUM) {
+                // Assign the Unknown Album
                 val album: Album =
                     DataManager.getAlbum(encode(context.getString(R.string.unknown_album)))
                 if (album.artist != artist) {
                     throw NoSuchElementException()
                 }
                 album
-            } catch (_: NoSuchElementException) {
-                val newAlbum = Album(
-                    title = encode(context.getString(R.string.unknown_album)),
-                    artist = artist
-                )
+            } else {
+                val newAlbum = Album(title = name, artist = artist)
                 DataManager.addAlbum(album = newAlbum)
                 newAlbum
             }
-        } else {
-            val newAlbum = Album(title = name, artist = artist)
+        } catch (_: NoSuchElementException) {
+            val newAlbum = Album(
+                title = encode(context.getString(R.string.unknown_album)),
+                artist = artist
+            )
             DataManager.addAlbum(album = newAlbum)
             newAlbum
         }
@@ -355,21 +344,22 @@ object DataLoader {
 
 
     private fun loadGenre(context: Context, cursor: Cursor): Genre {
-        val name: String = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            encode(cursor.getString(genreNameColumn!!))
-        } else {
-            getGenreNameForAndroidQAndLess(context = context, cursor = cursor)
-        }
-        return if (decode(name) == UNKNOWN_GENRE) {
-            // Assign the Unknown Genre
-            try {
-                DataManager.getGenre(encode(context.getString(R.string.unknown_genre)))
-            } catch (_: NullPointerException) {
-                val newGenre = Genre(title = encode(context.getString(R.string.unknown_genre)))
-                DataManager.addGenre(genre = newGenre)
+        return try {
+            val name: String = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                encode(cursor.getString(genreNameColumn!!))
+            } else {
+                getGenreNameForAndroidQAndLess(context = context, cursor = cursor)
             }
-        } else {
-            DataManager.addGenre(genre = Genre(title = name))
+            return if (decode(name) == UNKNOWN_GENRE) {
+                // Assign the Unknown Genre
+                DataManager.getGenre(encode(context.getString(R.string.unknown_genre)))
+
+            } else {
+                DataManager.addGenre(genre = Genre(title = name))
+            }
+        } catch (_: NullPointerException) {
+            val newGenre = Genre(title = encode(context.getString(R.string.unknown_genre)))
+            DataManager.addGenre(genre = newGenre)
         }
     }
 

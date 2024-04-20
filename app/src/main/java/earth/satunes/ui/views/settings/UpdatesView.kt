@@ -26,10 +26,8 @@
 package earth.satunes.ui.views.settings
 
 import android.content.Context
-import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -50,15 +48,15 @@ import earth.satunes.internet.UpdateCheckManager.getCurrentVersion
 import earth.satunes.ui.components.LoadingCircle
 import earth.satunes.ui.components.buttons.updates.CheckUpdateButton
 import earth.satunes.ui.components.settings.UpdateAvailable
+import earth.satunes.ui.components.texts.NormalText
 import earth.satunes.ui.components.texts.Title
-import earth.satunes.internet.R as RInternet
 
 /**
  * @author Antoine Pirlot on 11/04/2024
  */
 
 @Composable
-fun VersionView(
+fun UpdatesView(
     modifier: Modifier = Modifier,
 ) {
     val context: Context = LocalContext.current
@@ -67,7 +65,7 @@ fun VersionView(
     val updateAvailable: UpdateAvailableStatus by remember { UpdateCheckManager.updateAvailableStatus }
     Column(modifier = modifier.padding(16.dp)) {
         Title(text = stringResource(id = R.string.version), fontSize = 20.sp)
-        Text(text = stringResource(id = R.string.current_version) + currentVersion)
+        NormalText(text = stringResource(id = R.string.current_version) + currentVersion)
         //Check update is done when pressing setting button in top app bar
         if (isCheckingUpdate) {
             LoadingCircle(modifier.padding(bottom = 16.dp))
@@ -84,5 +82,5 @@ fun VersionView(
 @Preview
 @Composable
 fun VersionViewPreview() {
-    VersionView()
+    UpdatesView()
 }

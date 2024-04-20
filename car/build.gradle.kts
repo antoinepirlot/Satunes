@@ -41,4 +41,9 @@ dependencies {
      * Database
      */
     implementation(project(":database"))
+
+    /**
+     * Icons
+     */
+    implementation(project(":icons"))
 }

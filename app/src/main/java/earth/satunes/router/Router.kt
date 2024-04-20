@@ -56,7 +56,10 @@ import earth.satunes.ui.views.genre.GenreView
 import earth.satunes.ui.views.music.AllMusicsListView
 import earth.satunes.ui.views.playlist.PlaylistListView
 import earth.satunes.ui.views.playlist.PlaylistView
+import earth.satunes.ui.views.settings.BottomNavigationBarSettingsView
+import earth.satunes.ui.views.settings.PlaybackSettingsView
 import earth.satunes.ui.views.settings.SettingsView
+import earth.satunes.ui.views.settings.UpdatesView
 
 /**
  * @author Antoine Pirlot on 23-01-24
@@ -180,16 +183,33 @@ internal fun Router(
             if (isLoading.value) {
                 LoadingCircle()
             } else {
-                PlayBackView(onClick = { album: Album? ->
-                    if (album != null) {
-                        openMedia(navController = navController, media = album)
+                PlayBackView(
+                    onAlbumClick = { album: Album? ->
+                        if (album != null) {
+                            openMedia(navController = navController, media = album)
+                        }
+                    },
+                    onArtistClick = { artist: Artist ->
+                        openMedia(navController = navController, media = artist)
                     }
-                })
+                )
             }
         }
 
         composable(Destination.SETTINGS.link) {
-            SettingsView()
+            SettingsView(navController = navController)
+        }
+
+        composable(Destination.BOTTOM_BAR_SETTING.link) {
+            BottomNavigationBarSettingsView()
+        }
+
+        composable(Destination.PLAYBACK_SETTINGS.link) {
+            PlaybackSettingsView()
+        }
+
+        composable(Destination.UPDATES.link) {
+            UpdatesView()
         }
     }
 }

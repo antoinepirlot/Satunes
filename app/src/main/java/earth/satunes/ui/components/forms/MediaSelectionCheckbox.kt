@@ -49,6 +49,7 @@ import earth.satunes.database.models.Music
 import earth.satunes.database.models.relations.PlaylistWithMusics
 import earth.satunes.database.models.tables.Playlist
 import earth.satunes.services.MediaSelectionManager
+import earth.satunes.ui.components.texts.NormalText
 
 /**
  * @author Antoine Pirlot on 30/03/2024
@@ -67,7 +68,7 @@ fun MediaSelectionCheckbox(
         Row(modifier = Modifier.fillMaxWidth()) {
             Checkbox(checked = checked.value, onCheckedChange = { onClick(checked, media) })
             Spacer(modifier = modifier.size(10.dp))
-            Text(
+            NormalText(
                 modifier = Modifier.align(Alignment.CenterVertically),
                 text = text
             )

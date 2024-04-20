@@ -37,6 +37,7 @@ import earth.satunes.R
 import earth.satunes.database.models.Media
 import earth.satunes.ui.components.cards.dialog.DialogOption
 import earth.satunes.ui.components.forms.MediaSelectionForm
+import earth.satunes.ui.components.texts.NormalText
 
 /**
  * @author Antoine Pirlot on 30/03/2024
@@ -54,7 +55,7 @@ fun MediaSelectionDialog(
         modifier = modifier,
         icon = icon,
         title = {
-            Text(text = stringResource(id = R.string.add_to_playlist))
+            NormalText(text = stringResource(id = R.string.add_to_playlist))
         },
         text = {
             Column {
@@ -64,7 +65,7 @@ fun MediaSelectionDialog(
         onDismissRequest = onDismissRequest,
         confirmButton = {
             TextButton(onClick = onConfirm) {
-                Text(text = stringResource(id = R.string.add))
+                NormalText(text = stringResource(id = R.string.add))
             }
         }
     )

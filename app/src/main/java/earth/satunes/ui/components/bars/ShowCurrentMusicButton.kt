@@ -32,7 +32,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import earth.satunes.ui.views.SatunesIcons
+import earth.satunes.icons.SatunesIcons
 
 /**
  * @author Antoine Pirlot on 3/02/24
@@ -44,10 +44,11 @@ fun ShowCurrentMusicButton(
     onClick: () -> Unit
 ) {
     LargeFloatingActionButton(
+        modifier = modifier,
         onClick = onClick
     ) {
         Icon(
-            modifier = modifier.size(60.dp),
+            modifier = Modifier.size(60.dp),
             imageVector = SatunesIcons.MUSIC.imageVector,
             contentDescription = "Show Current Music Icon"
         )

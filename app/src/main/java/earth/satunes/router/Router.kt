@@ -180,11 +180,16 @@ internal fun Router(
             if (isLoading.value) {
                 LoadingCircle()
             } else {
-                PlayBackView(onClick = { album: Album? ->
-                    if (album != null) {
-                        openMedia(navController = navController, media = album)
+                PlayBackView(
+                    onAlbumClick = { album: Album? ->
+                        if (album != null) {
+                            openMedia(navController = navController, media = album)
+                        }
+                    },
+                    onArtistClick = { artist: Artist ->
+                        openMedia(navController = navController, media = artist)
                     }
-                })
+                )
             }
         }
 

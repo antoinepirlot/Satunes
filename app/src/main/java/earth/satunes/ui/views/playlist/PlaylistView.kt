@@ -70,7 +70,7 @@ fun PlaylistView(
     var openAddMusicsDialog: Boolean by remember { mutableStateOf(false) }
 
     Column(modifier = modifier) {
-        Title(text = decode(playlist.playlist.title))
+        Title(text = playlist.playlist.title)
         MediaListView(
             mediaList = playlist.musics,
             openMedia = { clickedMedia: Media ->

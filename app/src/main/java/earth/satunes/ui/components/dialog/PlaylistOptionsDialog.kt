@@ -68,7 +68,7 @@ fun PlaylistOptionsDialog(
             )
         },
         title = {
-            NormalText(text = decode(playlistWithMusics.playlist.title))
+            NormalText(text = playlistWithMusics.playlist.title)
         },
         text = {
             Column {

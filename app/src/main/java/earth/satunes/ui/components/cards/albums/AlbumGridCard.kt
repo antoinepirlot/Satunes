@@ -73,7 +73,7 @@ fun AlbumGridCard(
                 modifier = Modifier.fillMaxWidth(),
                 fontSize = 20.sp,
                 textAlign = TextAlign.Center,
-                text = decode(album.title)
+                text = album.title
             )
         }
     }

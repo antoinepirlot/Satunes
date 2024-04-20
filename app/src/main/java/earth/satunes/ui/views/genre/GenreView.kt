@@ -55,7 +55,7 @@ fun GenreView(
     resetOpenedPlaylist()
 
     Column(modifier = modifier) {
-        Title(text = decode(genre.title))
+        Title(text = genre.title)
 
         MediaListView(
             mediaList = genre.musicMap.values.toList(),

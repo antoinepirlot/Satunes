@@ -74,7 +74,7 @@ fun MusicOptionsDialog(
             )
         },
         title = {
-            NormalText(text = decode(musicTitle))
+            NormalText(text = musicTitle)
         },
         text = {
             Column {

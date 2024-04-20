@@ -56,7 +56,7 @@ fun AlbumView(
     resetOpenedPlaylist()
 
     Column(modifier = modifier) {
-        Title(text = decode(album.title))
+        Title(text = album.title)
 
         MediaListView(
             mediaList = album.musicSortedMap.values.toList(),

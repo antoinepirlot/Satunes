@@ -64,19 +64,17 @@ fun PlayBackView(
         MusicPlayingAlbumArtwork(modifier = modifier.size(albumArtworkSize), onClick = onAlbumClick)
 
         Column(
-            modifier = modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxSize().padding(16.dp),
             verticalArrangement = Arrangement.Bottom,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             NormalText(text = musicPlaying.value!!.title)
             Subtitle(
-                modifier = Modifier.clickable { onArtistClick(musicPlaying.value!!.artist!!) },
-                text = musicPlaying.value!!.artist!!.title
+                modifier = Modifier.clickable { onArtistClick(musicPlaying.value!!.artist) },
+                text = musicPlaying.value!!.artist.title
             )
             MusicControlBar(
-                modifier = modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
+                modifier = Modifier.fillMaxWidth(),
             )
         }
     }

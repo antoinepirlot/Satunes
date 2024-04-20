@@ -67,7 +67,7 @@ fun MusicControlBar(
     val optionButtonSize = 30.dp
 
     Column {
-        MusicPositionBar(modifier = Modifier.padding(horizontal = 16.dp))
+        MusicPositionBar()
         Row(
             modifier = modifier,
             horizontalArrangement = horizontalArrangement,

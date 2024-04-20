@@ -40,7 +40,7 @@ import earth.satunes.router.utils.resetOpenedPlaylist
 import earth.satunes.ui.components.buttons.ExtraButton
 import earth.satunes.ui.components.texts.Title
 import earth.satunes.ui.views.MediaListView
-import earth.satunes.ui.views.SatunesIcons
+import earth.satunes.icons.SatunesIcons
 
 /**
  * @author Antoine Pirlot on 01/04/2024

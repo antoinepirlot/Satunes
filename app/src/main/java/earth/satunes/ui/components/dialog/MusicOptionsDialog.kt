@@ -25,15 +25,9 @@
 
 package earth.satunes.ui.components.dialog
 
-import android.net.Uri.decode
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -48,7 +42,7 @@ import earth.satunes.database.services.DataManager
 import earth.satunes.services.MediaSelectionManager
 import earth.satunes.ui.components.cards.dialog.DialogOption
 import earth.satunes.ui.components.texts.NormalText
-import earth.satunes.ui.views.SatunesIcons
+import earth.satunes.icons.SatunesIcons
 
 /**
  * @author Antoine Pirlot on 30/03/2024

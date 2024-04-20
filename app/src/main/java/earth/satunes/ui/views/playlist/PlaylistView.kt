@@ -26,7 +26,6 @@
 package earth.satunes.ui.views.playlist
 
 import android.content.Context
-import android.net.Uri.decode
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
@@ -52,7 +51,7 @@ import earth.satunes.services.MediaSelectionManager
 import earth.satunes.ui.components.buttons.ExtraButton
 import earth.satunes.ui.components.dialog.MediaSelectionDialog
 import earth.satunes.ui.components.texts.Title
-import earth.satunes.ui.views.SatunesIcons
+import earth.satunes.icons.SatunesIcons
 import earth.satunes.ui.views.MediaListView
 
 /**

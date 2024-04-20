@@ -25,23 +25,19 @@
 
 package earth.satunes.ui.components.cards.media
 
-import android.net.Uri.decode
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -49,15 +45,11 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import earth.satunes.database.models.Album
 import earth.satunes.database.models.Artist
 import earth.satunes.database.models.Folder
@@ -68,12 +60,11 @@ import earth.satunes.database.models.relations.PlaylistWithMusics
 import earth.satunes.database.models.tables.MusicDB
 import earth.satunes.database.services.DatabaseManager
 import earth.satunes.services.MediaSelectionManager
-import earth.satunes.ui.components.AlbumArtwork
 import earth.satunes.ui.components.dialog.MusicOptionsDialog
 import earth.satunes.ui.components.dialog.PlaylistOptionsDialog
 import earth.satunes.ui.components.texts.NormalText
 import earth.satunes.ui.components.texts.Subtitle
-import earth.satunes.ui.views.SatunesIcons
+import earth.satunes.icons.SatunesIcons
 import earth.satunes.ui.views.utils.getRootFolderName
 
 /**

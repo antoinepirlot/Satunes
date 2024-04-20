@@ -25,7 +25,6 @@
 
 package earth.satunes.ui.views.genre
 
-import android.net.Uri.decode
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -41,7 +40,7 @@ import earth.satunes.router.utils.resetOpenedPlaylist
 import earth.satunes.ui.components.buttons.ExtraButton
 import earth.satunes.ui.components.texts.Title
 import earth.satunes.ui.views.MediaListView
-import earth.satunes.ui.views.SatunesIcons
+import earth.satunes.icons.SatunesIcons
 
 /**
  * @author Antoine Pirlot on 01/04/2024

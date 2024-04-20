@@ -43,7 +43,7 @@ import earth.satunes.ui.components.buttons.ExtraButton
 import earth.satunes.ui.components.cards.albums.AlbumGrid
 import earth.satunes.ui.components.texts.Title
 import earth.satunes.ui.views.MediaListView
-import earth.satunes.ui.views.SatunesIcons
+import earth.satunes.icons.SatunesIcons
 import java.util.SortedMap
 
 /**

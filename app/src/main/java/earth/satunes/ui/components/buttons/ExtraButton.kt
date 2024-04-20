@@ -23,51 +23,46 @@
  *  PS: I don't answer quickly.
  */
 
-package earth.satunes
+package earth.satunes.ui.components.buttons
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberTopAppBarState
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
-import earth.satunes.router.Router
-import earth.satunes.ui.components.appBars.SatunesBottomAppBar
-import earth.satunes.ui.components.appBars.SatunesTopAppBar
+import androidx.compose.ui.unit.dp
+import earth.satunes.ui.views.SatunesIcons
 
 /**
- * @author Antoine Pirlot on 10/04/2024
+ * @author Antoine Pirlot on 20/04/2024
  */
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Application(
+fun ExtraButton(
     modifier: Modifier = Modifier,
+    icon: SatunesIcons,
+    description: String? = null,
+    onClick: () -> Unit,
 ) {
-    val scrollBehavior =
-        TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
-    val navController: NavHostController = rememberNavController()
-    Scaffold(
-        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-        topBar = { SatunesTopAppBar(scrollBehavior = scrollBehavior, navController = navController) },
-        bottomBar = { SatunesBottomAppBar(navController = navController) }
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier.padding(innerPadding)
-        ) {
-            Router(navController = navController)
+    FloatingActionButton(
+        modifier = modifier.padding(8.dp),
+        onClick = onClick
+    ) {
+        @Suppress("NAME_SHADOWING")
+        var description: String = description?: icon.description
+        if (description.isBlank()) {
+            description = icon.description
         }
+        Icon(imageVector = icon.imageVector, contentDescription = description)
     }
 }
 
 @Preview
 @Composable
-fun ApplicationPreview() {
-    Application()
+fun ExtraButtonPreview() {
+    ExtraButton(
+        icon = SatunesIcons.PLAYLIST_ADD,
+        onClick = {}
+    )
 }

@@ -107,7 +107,7 @@ object UpdateCheckManager {
                 res.close()
 
                 val currentVersion: String =
-                    'v' + "0.7.1-beta"//getCurrentVersion(context = context)
+                    'v' + getCurrentVersion(context = context)
                 val updateUrl: String? = getUpdateUrl(page = page, currentVersion = currentVersion)
                 UpdateAvailableStatus.AVAILABLE.updateLink = updateUrl
                 if (updateUrl == null) {

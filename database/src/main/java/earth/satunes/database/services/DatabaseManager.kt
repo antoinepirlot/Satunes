@@ -127,4 +127,12 @@ class DatabaseManager(context: Context) {
             DataManager.removePlaylist(playlistWithMusics = playlistToRemove)
         }
     }
+
+    fun insertMusicsToPlaylist(musics: MutableList<Music>, playlist: PlaylistWithMusics) {
+        CoroutineScope(Dispatchers.IO).launch {
+            musics.forEach { music: Music ->
+                insertMusicToPlaylists(music = music, playlists = mutableListOf(playlist))
+            }
+        }
+    }
 }

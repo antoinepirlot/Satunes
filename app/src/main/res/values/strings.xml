@@ -22,4 +22,5 @@
     <string name="version" translatable="false">Version</string>
     <string name="current_version">"Version installée: "</string>
     <string name="check_update">Rechercher une mise à jour</string>
+    <string name="add_musics_to_playlist">Ajouter des musiques</string>
 </resources>

@@ -28,6 +28,9 @@ package earth.satunes.ui.components.cards.dialog
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -61,5 +64,9 @@ fun DialogOption(
 @Preview
 @Composable
 fun DialogOptionPreview() {
-    DialogOption(onClick = {}, icon = {}, text = "Dialog Option")
+    DialogOption(
+        onClick = {},
+        icon = { Icon(imageVector = Icons.Rounded.Add, contentDescription = "")},
+        text = "Dialog Option"
+    )
 }

@@ -122,7 +122,7 @@ class MainActivity : ComponentActivity() {
     }
 
     /**
-     * When the user click on playing notification, the app is opened.
+     * Add pendingIntent to media session to activate notification on click behavior to open this app.
      */
     @OptIn(UnstableApi::class)
     private fun setNotificationOnClick() {

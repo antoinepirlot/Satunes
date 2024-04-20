@@ -147,4 +147,9 @@ dependencies {
      * Update
      */
     implementation(project(":internet"))
+
+    /**
+     * Widget
+     */
+    implementation(project(":widget"))
 }

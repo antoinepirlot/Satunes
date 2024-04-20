@@ -64,7 +64,7 @@ fun PlaylistView(
 ) {
     //TODO try using nav controller instead try to remember it in an object if possible
     MediaSelectionManager.openedPlaylist = playlist
-    var openMusicSelectionDialog: Boolean by remember { mutableStateOf(false) }
+    var openAddMusicsDialog: Boolean by remember { mutableStateOf(false) }
 
     Column(modifier = modifier) {
         Title(text = decode(playlist.playlist.title))
@@ -84,12 +84,12 @@ fun PlaylistView(
                 openMedia(navController = navController)
             },
             onFABClick = { openCurrentMusic(navController = navController) },
-            extraButtons = { AddMusicsToPlaylistButtons(onClick = { openMusicSelectionDialog = true }) }
+            extraButtons = { AddMusicsToPlaylistButtons(onClick = { openAddMusicsDialog = true }) }
         )
-        if (openMusicSelectionDialog) {
+        if (openAddMusicsDialog) {
             val allMusic: List<Music> = DataManager.musicMediaItemSortedMap.keys.toList()
             MediaSelectionDialog(
-                onDismissRequest = { openMusicSelectionDialog = false },
+                onDismissRequest = { openAddMusicsDialog = false },
                 onConfirm = { /*TODO*/ },
                 mediaList = allMusic,
                 icon = {

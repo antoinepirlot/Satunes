@@ -27,9 +27,15 @@ package earth.satunes.ui.components.cards.media
 
 import android.net.Uri.decode
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
@@ -39,11 +45,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import earth.satunes.database.models.Album
 import earth.satunes.database.models.Artist
 import earth.satunes.database.models.Folder
@@ -54,6 +62,7 @@ import earth.satunes.database.models.relations.PlaylistWithMusics
 import earth.satunes.database.models.tables.MusicDB
 import earth.satunes.database.services.DatabaseManager
 import earth.satunes.services.MediaSelectionManager
+import earth.satunes.ui.components.AlbumArtwork
 import earth.satunes.ui.components.dialog.MusicOptionsDialog
 import earth.satunes.ui.components.dialog.PlaylistOptionsDialog
 import earth.satunes.ui.views.SatunesIcons
@@ -112,6 +121,7 @@ fun MediaCard(
         ),
     ) {
         ListItem(
+            modifier = Modifier.height(65.dp),
             headlineContent = {
                 if (media is Album) {
                     Text(text = decode(title) + " - " + decode(media.artist!!.title))
@@ -119,11 +129,22 @@ fun MediaCard(
                 Text(text = decode(title))
             },
             leadingContent = {
-                val mediaIcon: SatunesIcons = getRightIconAndDescription(media = media)
-                Icon(
-                    imageVector = mediaIcon.imageVector,
-                    contentDescription = mediaIcon.description
-                )
+                Box(modifier = modifier.fillMaxHeight().width(55.dp)) {
+                    if (media.artwork != null) {
+                        Image(
+                            modifier = Modifier.fillMaxSize().align(Alignment.Center),
+                            bitmap = media.artwork!!,
+                            contentDescription = "Media Artwork"
+                        )
+                    } else {
+                        val mediaIcon: SatunesIcons = getRightIconAndDescription(media = media)
+                        Icon(
+                            modifier = Modifier.size(30.dp).align(Alignment.Center),
+                            imageVector = mediaIcon.imageVector,
+                            contentDescription = mediaIcon.description
+                        )
+                    }
+                }
             }
         )
     }

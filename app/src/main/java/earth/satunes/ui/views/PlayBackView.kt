@@ -59,24 +59,28 @@ fun PlayBackView(
     onArtistClick: (artist: Artist) -> Unit,
 ) {
     val musicPlaying = remember { PlaybackController.getInstance().musicPlaying }
-    val albumArtworkSize = 200.dp
-    Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        MusicPlayingAlbumArtwork(modifier = modifier.size(albumArtworkSize), onClick = onAlbumClick)
-
-        Column(
-            modifier = Modifier.fillMaxSize().padding(16.dp),
-            verticalArrangement = Arrangement.Bottom,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            NormalText(text = musicPlaying.value!!.title)
-            Subtitle(
-                modifier = Modifier.clickable { onArtistClick(musicPlaying.value!!.artist) },
-                text = musicPlaying.value!!.artist.title
-            )
-            MusicControlBar(
-                modifier = Modifier.fillMaxWidth(),
-            )
-        }
+    val albumArtworkSize = 350.dp
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.Bottom,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        MusicPlayingAlbumArtwork(
+            modifier = Modifier
+                .size(albumArtworkSize)
+                .padding(bottom = 40.dp),
+            onClick = onAlbumClick
+        )
+        NormalText(text = musicPlaying.value!!.title)
+        Subtitle(
+            modifier = Modifier.clickable { onArtistClick(musicPlaying.value!!.artist) },
+            text = musicPlaying.value!!.artist.title
+        )
+        MusicControlBar(
+            modifier = Modifier.fillMaxWidth(),
+        )
     }
 }
 

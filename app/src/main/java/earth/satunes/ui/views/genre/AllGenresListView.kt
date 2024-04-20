@@ -23,7 +23,7 @@
  *  PS: I don't answer quickly.
  */
 
-package earth.satunes.ui.views.main.music
+package earth.satunes.ui.views.genre
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -32,6 +32,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.media3.common.MediaItem
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import earth.satunes.database.models.Genre
 import earth.satunes.database.models.Media
 import earth.satunes.database.models.Music
 import earth.satunes.database.services.DataManager
@@ -39,7 +40,7 @@ import earth.satunes.playback.services.PlaybackController
 import earth.satunes.router.utils.openCurrentMusic
 import earth.satunes.router.utils.openMedia
 import earth.satunes.router.utils.resetOpenedPlaylist
-import earth.satunes.ui.views.main.MediaListView
+import earth.satunes.ui.views.MediaListView
 import java.util.SortedMap
 
 /**
@@ -47,44 +48,40 @@ import java.util.SortedMap
  */
 
 @Composable
-fun AllMusicsListView(
+fun AllGenresListView(
     modifier: Modifier = Modifier,
-    navController: NavHostController
+    navController: NavHostController,
 ) {
     val playbackController: PlaybackController = PlaybackController.getInstance()
-    //Find a way to do something more aesthetic but it works
-    val musicMediaItemMap: SortedMap<Music, MediaItem> =
-        remember { DataManager.musicMediaItemSortedMap }
-    resetOpenedPlaylist()
+    val genreMap: SortedMap<String, Genre> = remember { DataManager.genreMap }
+    val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
 
+    genreMap.forEach { (_: String, genre: Genre) ->
+        musicMediaItemSortedMap.putAll(genre.musicMediaItemSortedMap)
+    }
+    resetOpenedPlaylist()
     MediaListView(
         modifier = modifier,
-        mediaList = musicMediaItemMap.keys.toList(),
+        mediaList = genreMap.values.toList(),
 
         openMedia = { clickedMedia: Media ->
-            playbackController.loadMusic(
-                musicMediaItemSortedMap = musicMediaItemMap
-            )
-            openMedia(
-                navController,
-                clickedMedia
-            )
+            openMedia(navController = navController, media = clickedMedia)
         },
 
         shuffleMusicAction = {
             playbackController.loadMusic(
-                musicMediaItemSortedMap = musicMediaItemMap,
+                musicMediaItemSortedMap = musicMediaItemSortedMap,
                 shuffleMode = true
             )
             openMedia(navController = navController)
         },
 
-        onFABClick = { openCurrentMusic(navController) }
+        onFABClick = { openCurrentMusic(navController = navController) }
     )
 }
 
 @Preview
 @Composable
-fun MusicsListViewPreview() {
-    AllMusicsListView(navController = rememberNavController())
+fun AllGenresListViewPreview() {
+    AllGenresListView(navController = rememberNavController())
 }

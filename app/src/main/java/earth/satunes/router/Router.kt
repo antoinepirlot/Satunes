@@ -45,17 +45,17 @@ import earth.satunes.database.services.DataManager
 import earth.satunes.router.utils.openMedia
 import earth.satunes.ui.components.LoadingCircle
 import earth.satunes.ui.views.PlayBackView
-import earth.satunes.ui.views.main.album.AlbumView
-import earth.satunes.ui.views.main.album.AllAlbumsListView
-import earth.satunes.ui.views.main.artist.AllArtistsListView
-import earth.satunes.ui.views.main.artist.ArtistView
-import earth.satunes.ui.views.main.folder.FolderView
-import earth.satunes.ui.views.main.folder.RootFolderView
-import earth.satunes.ui.views.main.genre.AllGenresListView
-import earth.satunes.ui.views.main.genre.GenreView
-import earth.satunes.ui.views.main.music.AllMusicsListView
-import earth.satunes.ui.views.main.playlist.PlaylistListView
-import earth.satunes.ui.views.main.playlist.PlaylistView
+import earth.satunes.ui.views.album.AlbumView
+import earth.satunes.ui.views.album.AllAlbumsListView
+import earth.satunes.ui.views.artist.AllArtistsListView
+import earth.satunes.ui.views.artist.ArtistView
+import earth.satunes.ui.views.folder.FolderView
+import earth.satunes.ui.views.folder.RootFolderView
+import earth.satunes.ui.views.genre.AllGenresListView
+import earth.satunes.ui.views.genre.GenreView
+import earth.satunes.ui.views.music.AllMusicsListView
+import earth.satunes.ui.views.playlist.PlaylistListView
+import earth.satunes.ui.views.playlist.PlaylistView
 import earth.satunes.ui.views.settings.SettingsView
 
 /**

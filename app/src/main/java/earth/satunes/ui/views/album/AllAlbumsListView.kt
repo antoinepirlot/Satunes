@@ -23,7 +23,7 @@
  *  PS: I don't answer quickly.
  */
 
-package earth.satunes.ui.views.main.folder
+package earth.satunes.ui.views.album
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -32,46 +32,47 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.media3.common.MediaItem
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import earth.satunes.database.models.Folder
+import earth.satunes.database.models.Album
 import earth.satunes.database.models.Media
 import earth.satunes.database.models.Music
 import earth.satunes.database.services.DataManager
 import earth.satunes.playback.services.PlaybackController
 import earth.satunes.router.utils.openCurrentMusic
 import earth.satunes.router.utils.openMedia
-import earth.satunes.router.utils.openMediaFromFolder
 import earth.satunes.router.utils.resetOpenedPlaylist
-import earth.satunes.ui.views.main.MediaListView
+import earth.satunes.ui.views.MediaListView
 import java.util.SortedMap
+import java.util.SortedSet
 
 /**
  * @author Antoine Pirlot on 01/04/2024
  */
 
 @Composable
-fun RootFolderView(
+fun AllAlbumsListView(
     modifier: Modifier = Modifier,
     navController: NavHostController,
 ) {
     val playbackController: PlaybackController = PlaybackController.getInstance()
 
-    val rootFolderMap: SortedMap<Long, Folder> = remember { DataManager.rootFolderMap }
+    val albumSet: SortedSet<Album> = remember { DataManager.albumSet }
+
+    val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
+
+    albumSet.forEach { album: Album ->
+        musicMediaItemSortedMap.putAll(album.musicMediaItemSortedMap)
+    }
+
     resetOpenedPlaylist()
     MediaListView(
         modifier = modifier,
-        mediaList = rootFolderMap.values.toList(),
+        mediaList = albumSet.toList(),
 
         openMedia = { clickedMedia: Media ->
-            openMediaFromFolder(navController, clickedMedia)
+            openMedia(navController = navController, media = clickedMedia)
         },
 
         shuffleMusicAction = {
-            val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
-            @Suppress("NAME_SHADOWING")
-            rootFolderMap.forEach { (_, folder: Media) ->
-                val folder = folder as Folder
-                musicMediaItemSortedMap.putAll(folder.getAllMusic())
-            }
             playbackController.loadMusic(
                 musicMediaItemSortedMap = musicMediaItemSortedMap,
                 shuffleMode = true
@@ -79,12 +80,12 @@ fun RootFolderView(
             openMedia(navController = navController)
         },
 
-        onFABClick = { openCurrentMusic(navController) }
+        onFABClick = { openCurrentMusic(navController = navController) }
     )
 }
 
 @Preview
 @Composable
-fun RootFolderViewPreview() {
-    RootFolderView(navController = rememberNavController())
+fun AllAlbumsListViewPreview() {
+    AllAlbumsListView(navController = rememberNavController())
 }

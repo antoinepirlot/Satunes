@@ -23,7 +23,7 @@
  *  PS: I don't answer quickly.
  */
 
-package earth.satunes.ui.views.main.utils
+package earth.satunes.ui.views.utils
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource

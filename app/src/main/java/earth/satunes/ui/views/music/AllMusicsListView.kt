@@ -23,71 +23,68 @@
  *  PS: I don't answer quickly.
  */
 
-package earth.satunes.ui.views.main.album
+package earth.satunes.ui.views.music
 
-import android.net.Uri.decode
-import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.media3.common.MediaItem
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import earth.satunes.database.models.Album
 import earth.satunes.database.models.Media
+import earth.satunes.database.models.Music
+import earth.satunes.database.services.DataManager
 import earth.satunes.playback.services.PlaybackController
 import earth.satunes.router.utils.openCurrentMusic
 import earth.satunes.router.utils.openMedia
 import earth.satunes.router.utils.resetOpenedPlaylist
-import earth.satunes.ui.components.texts.Title
-import earth.satunes.ui.views.main.MediaListView
+import earth.satunes.ui.views.MediaListView
+import java.util.SortedMap
 
 /**
  * @author Antoine Pirlot on 01/04/2024
  */
 
 @Composable
-fun AlbumView(
+fun AllMusicsListView(
     modifier: Modifier = Modifier,
-    navController: NavHostController,
-    album: Album,
+    navController: NavHostController
 ) {
     val playbackController: PlaybackController = PlaybackController.getInstance()
-
+    //Find a way to do something more aesthetic but it works
+    val musicMediaItemMap: SortedMap<Music, MediaItem> =
+        remember { DataManager.musicMediaItemSortedMap }
     resetOpenedPlaylist()
 
-    Column(modifier = modifier) {
-        Title(text = decode(album.title))
+    MediaListView(
+        modifier = modifier,
+        mediaList = musicMediaItemMap.keys.toList(),
 
-        MediaListView(
-            mediaList = album.musicSortedMap.values.toList(),
-            openMedia = { clickedMedia: Media ->
-                playbackController.loadMusic(
-                    musicMediaItemSortedMap = album.musicMediaItemSortedMap
-                )
-                openMedia(navController = navController, media = clickedMedia)
-            },
-            shuffleMusicAction = {
-                playbackController.loadMusic(
-                    musicMediaItemSortedMap = album.musicMediaItemSortedMap,
-                    shuffleMode = true
-                )
-                openMedia(navController = navController)
-            },
-            onFABClick = { openCurrentMusic(navController = navController) }
-        )
-    }
+        openMedia = { clickedMedia: Media ->
+            playbackController.loadMusic(
+                musicMediaItemSortedMap = musicMediaItemMap
+            )
+            openMedia(
+                navController,
+                clickedMedia
+            )
+        },
+
+        shuffleMusicAction = {
+            playbackController.loadMusic(
+                musicMediaItemSortedMap = musicMediaItemMap,
+                shuffleMode = true
+            )
+            openMedia(navController = navController)
+        },
+
+        onFABClick = { openCurrentMusic(navController) }
+    )
 }
 
 @Preview
 @Composable
-fun AlbumViewPreview() {
-    AlbumView(
-        navController = rememberNavController(),
-        album = Album(
-            id = 0,
-            title = "Album title",
-            artist = null,
-            musicMediaItemSortedMap = sortedMapOf()
-        )
-    )
+fun MusicsListViewPreview() {
+    AllMusicsListView(navController = rememberNavController())
 }

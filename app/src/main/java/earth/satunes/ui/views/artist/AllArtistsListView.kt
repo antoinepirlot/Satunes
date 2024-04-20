@@ -23,11 +23,10 @@
  *  PS: I don't answer quickly.
  */
 
-package earth.satunes.ui.views.main.artist
+package earth.satunes.ui.views.artist
 
-import android.net.Uri.decode
-import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.media3.common.MediaItem
@@ -36,13 +35,12 @@ import androidx.navigation.compose.rememberNavController
 import earth.satunes.database.models.Artist
 import earth.satunes.database.models.Media
 import earth.satunes.database.models.Music
+import earth.satunes.database.services.DataManager
 import earth.satunes.playback.services.PlaybackController
 import earth.satunes.router.utils.openCurrentMusic
 import earth.satunes.router.utils.openMedia
 import earth.satunes.router.utils.resetOpenedPlaylist
-import earth.satunes.ui.components.cards.albums.AlbumGrid
-import earth.satunes.ui.components.texts.Title
-import earth.satunes.ui.views.main.MediaListView
+import earth.satunes.ui.views.MediaListView
 import java.util.SortedMap
 
 /**
@@ -50,57 +48,44 @@ import java.util.SortedMap
  */
 
 @Composable
-fun ArtistView(
+fun AllArtistsListView(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    artist: Artist,
 ) {
     val playbackController: PlaybackController = PlaybackController.getInstance()
 
+    val musicMediaItemMap: SortedMap<Music, MediaItem> =
+        remember { DataManager.musicMediaItemSortedMap }
+    val artistMap: SortedMap<String, Artist> = remember { DataManager.artistMap }
+
     resetOpenedPlaylist()
 
-    Column {
-        Title(text = decode(artist.title))
-        AlbumGrid(
-            mediaList = artist.albumSortedMap.values.toList(),
-            onClick = { openMedia(navController = navController, media = it) })
-        MediaListView(
-            mediaList = artist.musicList,
+    @Suppress("UNCHECKED_CAST")
+    (MediaListView(
+        modifier = modifier,
+        mediaList = artistMap.values.toList(),
 
-            openMedia = { clickedMedia: Media ->
-                playbackController.loadMusic(musicMediaItemSortedMap = artist.musicMediaItemSortedMap)
-                openMedia(navController, clickedMedia)
-            },
+        openMedia = { clickedMedia: Media ->
+            openMedia(
+                navController,
+                clickedMedia
+            )
+        },
 
-            shuffleMusicAction = {
-                val musicMediaItemMap: SortedMap<Music, MediaItem> = sortedMapOf()
+        shuffleMusicAction = {
+            playbackController.loadMusic(
+                musicMediaItemSortedMap = musicMediaItemMap,
+                shuffleMode = true
+            )
+            openMedia(navController = navController)
+        },
 
-                artist.musicList.forEach { music: Music ->
-                    musicMediaItemMap[music] = music.mediaItem
-                }
-
-                playbackController.loadMusic(
-                    musicMediaItemSortedMap = musicMediaItemMap,
-                    shuffleMode = true
-                )
-                openMedia(navController = navController)
-            },
-
-            onFABClick = { openCurrentMusic(navController) }
-        )
-    }
+        onFABClick = { openCurrentMusic(navController) }
+    ))
 }
 
 @Preview
 @Composable
-fun ArtistViewPreview() {
-    ArtistView(
-        navController = rememberNavController(),
-        artist = Artist(
-            id = 0,
-            title = "Artist title",
-            musicList = mutableListOf(),
-            albumSortedMap = sortedMapOf()
-        )
-    )
+fun AllArtistsListViewPreview() {
+    AllArtistsListView(navController = rememberNavController())
 }

@@ -23,7 +23,7 @@
  *  PS: I don't answer quickly.
  */
 
-package earth.satunes.ui.views.main.playlist
+package earth.satunes.ui.views.playlist
 
 import android.content.Context
 import android.net.Uri.encode
@@ -47,7 +47,7 @@ import earth.satunes.router.utils.openMedia
 import earth.satunes.router.utils.resetOpenedPlaylist
 import earth.satunes.ui.components.forms.PlaylistCreationForm
 import earth.satunes.ui.components.buttons.playlist.AddPlaylistButton
-import earth.satunes.ui.views.main.MediaListView
+import earth.satunes.ui.views.MediaListView
 import java.util.SortedMap
 
 /**

@@ -57,7 +57,7 @@ import earth.satunes.services.MediaSelectionManager
 import earth.satunes.ui.components.dialog.MusicOptionsDialog
 import earth.satunes.ui.components.dialog.PlaylistOptionsDialog
 import earth.satunes.ui.views.SatunesIcons
-import earth.satunes.ui.views.main.utils.getRootFolderName
+import earth.satunes.ui.views.utils.getRootFolderName
 
 /**
  * @author Antoine Pirlot on 16/01/24

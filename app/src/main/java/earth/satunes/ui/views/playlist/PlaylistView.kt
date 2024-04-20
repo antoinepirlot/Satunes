@@ -23,7 +23,7 @@
  *  PS: I don't answer quickly.
  */
 
-package earth.satunes.ui.views.main.playlist
+package earth.satunes.ui.views.playlist
 
 import android.net.Uri.decode
 import androidx.compose.foundation.layout.Column
@@ -50,7 +50,7 @@ import earth.satunes.ui.components.buttons.playlist.AddMusicsToPlaylistButtons
 import earth.satunes.ui.components.dialog.MediaSelectionDialog
 import earth.satunes.ui.components.texts.Title
 import earth.satunes.ui.views.SatunesIcons
-import earth.satunes.ui.views.main.MediaListView
+import earth.satunes.ui.views.MediaListView
 
 /**
  * @author Antoine Pirlot on 01/04/2024

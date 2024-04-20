@@ -1,5 +1,30 @@
 # Releases (🇬🇧)
 Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
+
+## 0.9 (Android 9 Pie and later)
+
+### 0.9.0-beta
+
+MP3 Player finally has its own name "Satunes". This version becomes compatible with Android 9 Pie and newer.
+
+New features:
+
+* Clicking on the notification opens the application where the user left it.
+* Compatibility with Android 9 Pie and newer
+* Ability to add several songs to a playlist
+* Ability to start shuffle and repeat a song in Android Auto
+
+Improvements, Optimizations and Troubleshooting:
+
+* The design has been improved.
+* Parameters have been moved to subsections for better separation.
+* Updates can be done regardless of the name of the application
+* Toasts will no longer be displayed twice when updating.
+* The album image is displayed in the album and music lists to make the lists more user-friendly.
+* Optimization of battery usage
+* Launching music from playlists is now fixed.
+* The library which allows navigation has been updated and brings new animations.
+
 ## 0.8 (Android 11 Red Velvet Cake and later)
 
 ### 0.8.3-beta

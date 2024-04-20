@@ -25,6 +25,7 @@
 
 package earth.satunes.ui.views.playlist
 
+import android.content.Context
 import android.net.Uri.decode
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Icon
@@ -34,6 +35,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -42,6 +44,7 @@ import earth.satunes.database.models.Music
 import earth.satunes.database.models.relations.PlaylistWithMusics
 import earth.satunes.database.models.tables.Playlist
 import earth.satunes.database.services.DataManager
+import earth.satunes.database.services.DatabaseManager
 import earth.satunes.playback.services.PlaybackController
 import earth.satunes.router.utils.openCurrentMusic
 import earth.satunes.router.utils.openMedia
@@ -88,9 +91,17 @@ fun PlaylistView(
         )
         if (openAddMusicsDialog) {
             val allMusic: List<Music> = DataManager.musicMediaItemSortedMap.keys.toList()
+            val context: Context = LocalContext.current
             MediaSelectionDialog(
                 onDismissRequest = { openAddMusicsDialog = false },
-                onConfirm = { /*TODO*/ },
+                onConfirm = {
+                    val db = DatabaseManager(context = context)
+                    db.insertMusicsToPlaylist(
+                        musics = MediaSelectionManager.checkedMusics,
+                        playlist = playlist
+                    )
+                    openAddMusicsDialog = false
+                },
                 mediaList = allMusic,
                 icon = {
                     val icon = SatunesIcons.PLAYLIST_ADD

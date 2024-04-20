@@ -71,7 +71,7 @@ fun PlaylistView(
     Column(modifier = modifier) {
         Title(text = playlist.playlist.title)
         MediaListView(
-            mediaList = playlist.musics,
+            mediaList = playlist.musicMediaItemSortedMap.keys.toList(),
             openMedia = { clickedMedia: Media ->
                 PlaybackController.getInstance().loadMusic(
                     musicMediaItemSortedMap = playlist.musicMediaItemSortedMap

@@ -40,7 +40,9 @@ import earth.satunes.playback.services.PlaybackController
 import earth.satunes.router.utils.openCurrentMusic
 import earth.satunes.router.utils.openMedia
 import earth.satunes.router.utils.resetOpenedPlaylist
+import earth.satunes.ui.components.buttons.ExtraButton
 import earth.satunes.ui.views.MediaListView
+import earth.satunes.ui.views.SatunesIcons
 import java.util.SortedMap
 import java.util.SortedSet
 
@@ -71,16 +73,16 @@ fun AllAlbumsListView(
         openMedia = { clickedMedia: Media ->
             openMedia(navController = navController, media = clickedMedia)
         },
-
-        shuffleMusicAction = {
-            playbackController.loadMusic(
-                musicMediaItemSortedMap = musicMediaItemSortedMap,
-                shuffleMode = true
-            )
-            openMedia(navController = navController)
-        },
-
-        onFABClick = { openCurrentMusic(navController = navController) }
+        onFABClick = { openCurrentMusic(navController = navController) },
+        extraButtons = {
+            ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
+                playbackController.loadMusic(
+                    musicMediaItemSortedMap = musicMediaItemSortedMap,
+                    shuffleMode = true
+                )
+                openMedia(navController = navController)
+            })
+        }
     )
 }
 

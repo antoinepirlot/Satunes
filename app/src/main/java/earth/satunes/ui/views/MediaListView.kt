@@ -54,7 +54,6 @@ fun MediaListView(
     modifier: Modifier = Modifier,
     mediaList: List<Media>,
     openMedia: (media: Media) -> Unit,
-    shuffleMusicAction: () -> Unit,
     onFABClick: () -> Unit,
     extraButtons: @Composable () -> Unit = { /*By default there's no extra buttons*/ },
 ) {
@@ -75,7 +74,6 @@ fun MediaListView(
         Column(
             modifier = Modifier.padding(innerPadding)
         ) {
-            ShuffleAllButton(onClick = shuffleMusicAction)
             MediaCardList(mediaList = mediaList, openMedia = openMedia)
         }
     }
@@ -102,7 +100,6 @@ fun MediaListViewPreview() {
     MediaListView(
         mediaList = map,
         openMedia = {},
-        shuffleMusicAction = {},
         onFABClick = {}
     )
 }

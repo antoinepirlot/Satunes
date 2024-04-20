@@ -44,10 +44,11 @@ fun ShowCurrentMusicButton(
     onClick: () -> Unit
 ) {
     LargeFloatingActionButton(
+        modifier = modifier,
         onClick = onClick
     ) {
         Icon(
-            modifier = modifier.size(60.dp),
+            modifier = Modifier.size(60.dp),
             imageVector = SatunesIcons.MUSIC.imageVector,
             contentDescription = "Show Current Music Icon"
         )

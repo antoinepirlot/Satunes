@@ -79,15 +79,17 @@ fun PlaylistView(
                 )
                 openMedia(navController = navController, media = clickedMedia)
             },
-            shuffleMusicAction = {
-                PlaybackController.getInstance().loadMusic(
-                    musicMediaItemSortedMap = playlist.musicMediaItemSortedMap,
-                    shuffleMode = true
-                )
-                openMedia(navController = navController)
-            },
             onFABClick = { openCurrentMusic(navController = navController) },
-            extraButtons = { ExtraButton(icon = SatunesIcons.ADD, onClick = { openAddMusicsDialog = true }) }
+            extraButtons = {
+                ExtraButton(icon = SatunesIcons.ADD, onClick = { openAddMusicsDialog = true })
+                ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
+                    PlaybackController.getInstance().loadMusic(
+                        musicMediaItemSortedMap = playlist.musicMediaItemSortedMap,
+                        shuffleMode = true
+                    )
+                    openMedia(navController = navController)
+                })
+            }
         )
         if (openAddMusicsDialog) {
             val allMusic: List<Music> = DataManager.musicMediaItemSortedMap.keys.toList()

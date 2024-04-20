@@ -38,8 +38,10 @@ import earth.satunes.playback.services.PlaybackController
 import earth.satunes.router.utils.openCurrentMusic
 import earth.satunes.router.utils.openMedia
 import earth.satunes.router.utils.resetOpenedPlaylist
+import earth.satunes.ui.components.buttons.ExtraButton
 import earth.satunes.ui.components.texts.Title
 import earth.satunes.ui.views.MediaListView
+import earth.satunes.ui.views.SatunesIcons
 
 /**
  * @author Antoine Pirlot on 01/04/2024
@@ -66,16 +68,16 @@ fun GenreView(
                 )
                 openMedia(navController = navController, media = clickedMedia)
             },
-
-            shuffleMusicAction = {
-                playbackController.loadMusic(
-                    musicMediaItemSortedMap = genre.musicMediaItemSortedMap,
-                    shuffleMode = true
-                )
-                openMedia(navController = navController)
-            },
-
-            onFABClick = { openCurrentMusic(navController = navController) }
+            onFABClick = { openCurrentMusic(navController = navController) },
+            extraButtons = {
+                ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
+                    playbackController.loadMusic(
+                        musicMediaItemSortedMap = genre.musicMediaItemSortedMap,
+                        shuffleMode = true
+                    )
+                    openMedia(navController = navController)
+                })
+            }
         )
     }
 }

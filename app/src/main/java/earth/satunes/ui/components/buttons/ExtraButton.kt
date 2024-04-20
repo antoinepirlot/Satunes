@@ -46,7 +46,7 @@ fun ExtraButton(
     onClick: () -> Unit,
 ) {
     FloatingActionButton(
-        modifier = modifier.padding(8.dp),
+        modifier = modifier.padding(bottom = 8.dp),
         onClick = onClick
     ) {
         @Suppress("NAME_SHADOWING")

@@ -41,7 +41,9 @@ import earth.satunes.router.utils.openCurrentMusic
 import earth.satunes.router.utils.openMedia
 import earth.satunes.router.utils.openMediaFromFolder
 import earth.satunes.router.utils.resetOpenedPlaylist
+import earth.satunes.ui.components.buttons.ExtraButton
 import earth.satunes.ui.views.MediaListView
+import earth.satunes.ui.views.SatunesIcons
 import java.util.SortedMap
 
 /**
@@ -64,22 +66,22 @@ fun RootFolderView(
         openMedia = { clickedMedia: Media ->
             openMediaFromFolder(navController, clickedMedia)
         },
-
-        shuffleMusicAction = {
-            val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
-            @Suppress("NAME_SHADOWING")
-            rootFolderMap.forEach { (_, folder: Media) ->
-                val folder = folder as Folder
-                musicMediaItemSortedMap.putAll(folder.getAllMusic())
-            }
-            playbackController.loadMusic(
-                musicMediaItemSortedMap = musicMediaItemSortedMap,
-                shuffleMode = true
-            )
-            openMedia(navController = navController)
-        },
-
-        onFABClick = { openCurrentMusic(navController) }
+        onFABClick = { openCurrentMusic(navController) },
+        extraButtons = {
+            ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
+                val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
+                @Suppress("NAME_SHADOWING")
+                rootFolderMap.forEach { (_, folder: Media) ->
+                    val folder = folder as Folder
+                    musicMediaItemSortedMap.putAll(folder.getAllMusic())
+                }
+                playbackController.loadMusic(
+                    musicMediaItemSortedMap = musicMediaItemSortedMap,
+                    shuffleMode = true
+                )
+                openMedia(navController = navController)
+            })
+        }
     )
 }
 

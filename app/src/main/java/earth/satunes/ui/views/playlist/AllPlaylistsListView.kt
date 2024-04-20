@@ -73,7 +73,6 @@ fun PlaylistListView(
             openMedia = { clickedMedia: Media ->
                 openMedia(navController = navController, media = clickedMedia)
             },
-            shuffleMusicAction = { /* Nothing to do TODO find a way to disable this button */ },
             onFABClick = { openCurrentMusic(navController = navController) },
             extraButtons = {
                 ExtraButton(icon = SatunesIcons.PLAYLIST_ADD, onClick = { openAlertDialog = true })

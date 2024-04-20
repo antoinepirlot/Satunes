@@ -27,6 +27,8 @@ package earth.satunes
 
 import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.Manifest.permission.READ_MEDIA_AUDIO
+import android.app.PendingIntent
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Build.VERSION_CODES.TIRAMISU
@@ -35,16 +37,22 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.OptIn
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.media3.common.util.UnstableApi
 import earth.satunes.database.services.DataCleanerManager
 import earth.satunes.database.services.settings.SettingsManager
 import earth.satunes.playback.services.PlaybackController
+import earth.satunes.playback.services.PlaybackService
 import earth.satunes.ui.theme.MP3Theme
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 /**
@@ -54,6 +62,7 @@ import kotlinx.coroutines.runBlocking
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setNotificationOnClick()
         runBlocking {
             SettingsManager.loadSettings(context = this@MainActivity)
         }
@@ -109,6 +118,22 @@ class MainActivity : ComponentActivity() {
                 this,
                 READ_EXTERNAL_STORAGE
             ) == PackageManager.PERMISSION_GRANTED
+        }
+    }
+
+    /**
+     * When the user click on playing notification, the app is opened.
+     */
+    @OptIn(UnstableApi::class)
+    private fun setNotificationOnClick() {
+        val intent: Intent = this.intent
+        CoroutineScope(Dispatchers.IO).launch {
+            while (PlaybackService.mediaSession == null) {
+                // The init has to be completed
+            }
+            val pendingIntent = PendingIntent.getActivity(baseContext.applicationContext, 0, intent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+            PlaybackService.mediaSession!!.setSessionActivity(pendingIntent)
         }
     }
 }

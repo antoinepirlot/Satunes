@@ -41,7 +41,10 @@ import earth.satunes.database.services.settings.SettingsManager
  */
 
 class PlaybackService : MediaSessionService() {
-    private var mediaSession: MediaSession? = null
+
+    companion object {
+        var mediaSession: MediaSession? = null
+    }
 
     @OptIn(UnstableApi::class)
     override fun onCreate() {

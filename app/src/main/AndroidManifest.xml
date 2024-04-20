@@ -13,6 +13,7 @@
 
         <activity
             android:name="earth.satunes.MainActivity"
+            android:launchMode="singleInstance"
             android:exported="true"
             android:theme="@style/Theme.MP3">
             <intent-filter>

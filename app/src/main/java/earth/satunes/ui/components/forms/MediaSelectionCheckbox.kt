@@ -26,12 +26,16 @@
 package earth.satunes.ui.components.forms
 
 import android.net.Uri.decode
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -55,41 +59,45 @@ fun MediaSelectionCheckbox(
     modifier: Modifier = Modifier,
     media: Media
 ) {
-    var checked: Boolean by rememberSaveable { mutableStateOf(false) }
+    var checked: MutableState<Boolean> = rememberSaveable { mutableStateOf(false) }
     val text: String = if (media is PlaylistWithMusics) decode(media.playlist.title)
-                       else decode(media.title)
+    else decode(media.title)
 
-    Row(modifier = modifier) {
-        Checkbox(checked = checked, onCheckedChange = {
-            checked = !checked
-            if (media is PlaylistWithMusics) {
-                checkPlaylist(checked = checked, playlist = media)
-            } else if (media is Music) {
-                checkMusic(checked = checked, music = media)
-            }
-        })
-        Spacer(modifier = modifier.size(10.dp))
-        Text(
-            modifier = Modifier.align(Alignment.CenterVertically),
-            text = text
-        )
+    Box(modifier = modifier.clickable { onClick(checked, media) }) {
+        Row(modifier = Modifier.fillMaxWidth()) {
+            Checkbox(checked = checked.value, onCheckedChange = { onClick(checked, media) })
+            Spacer(modifier = modifier.size(10.dp))
+            Text(
+                modifier = Modifier.align(Alignment.CenterVertically),
+                text = text
+            )
+        }
+    }
+}
+
+private fun onClick(checked: MutableState<Boolean>, media: Media) {
+    checked.value = !checked.value
+    if(checked.value) {
+        if (media is PlaylistWithMusics) {
+            MediaSelectionManager.checkedPlaylistWithMusics.add(media)
+        } else if (media is Music) {
+            MediaSelectionManager.checkedMusics.add(media)
+        }
+    } else {
+        if (media is PlaylistWithMusics) {
+            MediaSelectionManager.checkedPlaylistWithMusics.remove(media)
+        } else if (media is Music) {
+            MediaSelectionManager.checkedMusics.remove(media)
+        }
     }
 }
 
 private fun checkPlaylist(checked: Boolean, playlist: PlaylistWithMusics) {
-    if (checked) {
-        MediaSelectionManager.checkedPlaylistWithMusics.add(playlist)
-    } else {
-        MediaSelectionManager.checkedPlaylistWithMusics.remove(playlist)
-    }
+
 }
 
 private fun checkMusic(checked: Boolean, music: Music) {
-    if (checked) {
-        MediaSelectionManager.checkedMusics.add(music)
-    } else {
-        MediaSelectionManager.checkedMusics.remove(music)
-    }
+
 }
 
 @Preview

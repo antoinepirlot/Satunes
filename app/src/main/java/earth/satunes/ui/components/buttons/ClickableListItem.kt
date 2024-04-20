@@ -23,22 +23,41 @@
  *  PS: I don't answer quickly.
  */
 
-package earth.satunes.router
+package earth.satunes.ui.components.buttons
+
+import android.net.Uri.decode
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import earth.satunes.R
 
 /**
- * @author Antoine Pirlot on 24-01-24
+ * @author Antoine Pirlot on 20/04/2024
  */
 
-internal enum class Destination(val link: String) {
-    ALBUMS(link = "/albums"),
-    ARTISTS(link = "/artists"),
-    FOLDERS(link = "/folders"),
-    GENRES(link = "/genres"),
-    MUSICS(link = "/musics"),
-    BOTTOM_BAR_SETTING(link = "/navbar_settings"),
-    PLAYBACK(link = "/playback"),
-    PLAYBACK_SETTINGS(link = "/playback_settings"),
-    PLAYLISTS(link = "/playlists"),
-    SETTINGS(link = "/settings"),
-    UPDATES(link = "/updates"),
+@Composable
+fun ClickableListItem(
+    modifier: Modifier = Modifier,
+    text: String,
+    onClick: () -> Unit,
+) {
+    ListItem(
+        modifier = modifier.clickable {
+            onClick()
+        },
+        headlineContent = {
+            Text(text = decode(text))
+        }
+    )
+}
+
+@Preview
+@Composable
+fun ClickableListItemPreview() {
+    ClickableListItem(text = "Hello World!", onClick = {})
 }

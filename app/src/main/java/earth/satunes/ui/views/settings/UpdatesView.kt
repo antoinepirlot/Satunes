@@ -26,10 +26,8 @@
 package earth.satunes.ui.views.settings
 
 import android.content.Context
-import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -52,14 +50,13 @@ import earth.satunes.ui.components.buttons.updates.CheckUpdateButton
 import earth.satunes.ui.components.settings.UpdateAvailable
 import earth.satunes.ui.components.texts.NormalText
 import earth.satunes.ui.components.texts.Title
-import earth.satunes.internet.R as RInternet
 
 /**
  * @author Antoine Pirlot on 11/04/2024
  */
 
 @Composable
-fun VersionView(
+fun UpdatesView(
     modifier: Modifier = Modifier,
 ) {
     val context: Context = LocalContext.current
@@ -85,5 +82,5 @@ fun VersionView(
 @Preview
 @Composable
 fun VersionViewPreview() {
-    VersionView()
+    UpdatesView()
 }

@@ -230,6 +230,9 @@ fun CardPreview() {
         duration = 2,
         size = 2,
         folder = Folder(title = "Folder"),
+        album = Album(title = "Album Title"),
+        artist = Artist(title = "Artist Title"),
+        genre = Genre(title = "Genre Title"),
         absolutePath = "absolute path",
         context = LocalContext.current
     )

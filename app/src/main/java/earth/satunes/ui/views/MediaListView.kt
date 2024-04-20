@@ -34,7 +34,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import earth.satunes.database.models.Album
+import earth.satunes.database.models.Artist
 import earth.satunes.database.models.Folder
+import earth.satunes.database.models.Genre
 import earth.satunes.database.models.Media
 import earth.satunes.database.models.Music
 import earth.satunes.playback.services.PlaybackController
@@ -90,6 +93,9 @@ fun MediaListViewPreview() {
             size = 0,
             absolutePath = "",
             folder = Folder(title = "Folder"),
+            album = Album(title = "Album Title"),
+            artist = Artist(title = "Artist Title"),
+            genre = Genre(title = "Genre Title"),
             context = LocalContext.current
         )
     )

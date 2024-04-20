@@ -45,9 +45,10 @@ import earth.satunes.database.services.DatabaseManager
 import earth.satunes.router.utils.openCurrentMusic
 import earth.satunes.router.utils.openMedia
 import earth.satunes.router.utils.resetOpenedPlaylist
+import earth.satunes.ui.components.buttons.ExtraButton
 import earth.satunes.ui.components.forms.PlaylistCreationForm
-import earth.satunes.ui.components.buttons.playlist.AddPlaylistButton
 import earth.satunes.ui.views.MediaListView
+import earth.satunes.ui.views.SatunesIcons
 import java.util.SortedMap
 
 /**
@@ -73,10 +74,11 @@ fun PlaylistListView(
                 openMedia(navController = navController, media = clickedMedia)
             },
             shuffleMusicAction = { /* Nothing to do TODO find a way to disable this button */ },
-            onFABClick = { openCurrentMusic(navController = navController) }
-        ) {
-            AddPlaylistButton(onClick = { openAlertDialog = true })
-        }
+            onFABClick = { openCurrentMusic(navController = navController) },
+            extraButtons = {
+                ExtraButton(icon = SatunesIcons.PLAYLIST_ADD, onClick = { openAlertDialog = true })
+            }
+        )
 
         when {
             openAlertDialog -> {

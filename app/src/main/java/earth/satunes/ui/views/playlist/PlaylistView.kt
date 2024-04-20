@@ -49,7 +49,7 @@ import earth.satunes.playback.services.PlaybackController
 import earth.satunes.router.utils.openCurrentMusic
 import earth.satunes.router.utils.openMedia
 import earth.satunes.services.MediaSelectionManager
-import earth.satunes.ui.components.buttons.playlist.AddMusicsToPlaylistButtons
+import earth.satunes.ui.components.buttons.ExtraButton
 import earth.satunes.ui.components.dialog.MediaSelectionDialog
 import earth.satunes.ui.components.texts.Title
 import earth.satunes.ui.views.SatunesIcons
@@ -87,7 +87,7 @@ fun PlaylistView(
                 openMedia(navController = navController)
             },
             onFABClick = { openCurrentMusic(navController = navController) },
-            extraButtons = { AddMusicsToPlaylistButtons(onClick = { openAddMusicsDialog = true }) }
+            extraButtons = { ExtraButton(icon = SatunesIcons.ADD, onClick = { openAddMusicsDialog = true }) }
         )
         if (openAddMusicsDialog) {
             val allMusic: List<Music> = DataManager.musicMediaItemSortedMap.keys.toList()

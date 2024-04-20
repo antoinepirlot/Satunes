@@ -39,6 +39,7 @@ import androidx.compose.material.icons.filled.ShuffleOn
 import androidx.compose.material.icons.filled.SkipNext
 import androidx.compose.material.icons.filled.SkipPrevious
 import androidx.compose.material.icons.rounded.AccountCircle
+import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Album
 import androidx.compose.material.icons.rounded.Category
 import androidx.compose.material.icons.rounded.Folder
@@ -50,6 +51,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
  * @author Antoine Pirlot on 02/04/2024
  */
 enum class SatunesIcons(val imageVector: ImageVector, val description: String) {
+    ADD(imageVector = Icons.Rounded.Add, description = "Add Icon"),
     ALBUM(imageVector = Icons.Rounded.Album, description = "Album Icon"),
     ARTIST(imageVector = Icons.Rounded.AccountCircle, description = "Artist Icon"),
     FOLDER(imageVector = Icons.Rounded.Folder, description = "Folder Icon"),

@@ -37,7 +37,7 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import earth.satunes.R
-import earth.satunes.internet.UpdateCheckManager
+import earth.satunes.internet.updates.UpdateCheckManager
 
 /**
  * @author Antoine Pirlot on 11/04/2024

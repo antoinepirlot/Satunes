@@ -28,7 +28,6 @@ package earth.satunes.ui.views
 import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -43,7 +42,7 @@ import androidx.compose.ui.unit.dp
 import earth.satunes.database.models.Album
 import earth.satunes.database.models.Artist
 import earth.satunes.playback.services.PlaybackController
-import earth.satunes.ui.components.MusicPlayingAlbumArtwork
+import earth.satunes.ui.components.images.MusicPlayingAlbumArtwork
 import earth.satunes.ui.components.bars.MusicControlBar
 import earth.satunes.ui.components.texts.NormalText
 import earth.satunes.ui.components.texts.Subtitle

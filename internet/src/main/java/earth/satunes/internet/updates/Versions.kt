@@ -23,7 +23,7 @@
  *  PS: I don't answer quickly.
  */
 
-package earth.satunes.internet
+package earth.satunes.internet.updates
 
 /**
  * @author Antoine Pirlot on 14/04/2024

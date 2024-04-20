@@ -47,7 +47,7 @@ fun ShuffleMusicButton(
         modifier = modifier,
         onClick = { playbackController.switchShuffleMode() }
     ) {
-        val icon = getRightRepeatIcon()
+        val icon = getRightShuffleIcon()
         Icon(
             modifier = modifier,
             imageVector = icon.imageVector,
@@ -62,7 +62,7 @@ fun ShuffleMusicButtonPreview() {
     ShuffleMusicButton()
 }
 
-private fun getRightRepeatIcon(): SatunesIcons {
+private fun getRightShuffleIcon(): SatunesIcons {
     return if (PlaybackController.getInstance().isShuffle.value) {
         SatunesIcons.SHUFFLE_ON
     } else {

@@ -2,6 +2,11 @@ plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
     id("com.google.devtools.ksp")
+    id("androidx.room") version ("2.6.1")
+}
+
+room {
+    schemaDirectory("$projectDir/schemas")
 }
 
 android {

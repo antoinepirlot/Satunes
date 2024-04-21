@@ -36,5 +36,7 @@ If you decide to use my code to create new app, you can but you have to use the 
 
 If you like the app and want to support me click [here](https://tipeee.com/antoinepirlot).
 
+To follow this project on Facebook click [here](https://www.facebook.com/profile.php?id=61557929940182).
+
 # Releases
 If you want to know about different releases and what they added, [click here.](RELEASES_EN.md)

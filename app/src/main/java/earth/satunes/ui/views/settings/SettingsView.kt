@@ -33,7 +33,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import earth.satunes.R
+import earth.satunes.router.Destination
+import earth.satunes.ui.components.buttons.ClickableListItem
 import earth.satunes.ui.components.texts.Title
 
 /**
@@ -42,20 +46,27 @@ import earth.satunes.ui.components.texts.Title
 
 @Composable
 fun SettingsView(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navController: NavHostController
 ) {
     val scrollState = rememberScrollState()
     Column(modifier = modifier) {
         Title(text = stringResource(id = R.string.settings))
         HorizontalDivider()
         Column(modifier = Modifier.verticalScroll(state = scrollState)) {
-            BottomNavigationBarSettingsView()
+            ClickableListItem(text = stringResource(id = R.string.bottom_bar), onClick = {
+                navController.navigate(Destination.BOTTOM_BAR_SETTING.link)
+            })
             HorizontalDivider()
-            PlaybackSettingsView()
+            ClickableListItem(text = stringResource(id = R.string.playback_settings), onClick = {
+                navController.navigate(Destination.PLAYBACK_SETTINGS.link)
+            })
+            HorizontalDivider()
+            ClickableListItem(text = stringResource(id = R.string.version), onClick = {
+               navController.navigate(Destination.UPDATES.link)
+            })
             HorizontalDivider()
             AboutView()
-            HorizontalDivider()
-            VersionView()
         }
     }
 }
@@ -63,5 +74,5 @@ fun SettingsView(
 @Composable
 @Preview
 fun SettingsViewPreview() {
-    SettingsView()
+    SettingsView(navController = rememberNavController())
 }

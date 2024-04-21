@@ -23,21 +23,23 @@
  *  PS: I don't answer quickly.
  */
 
-package earth.satunes.internet
+package earth.satunes.internet.updates
 
 import android.app.Activity
 import android.content.Context
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import earth.satunes.internet.Versions.ALPHA
-import earth.satunes.internet.Versions.ALPHA_REGEX
-import earth.satunes.internet.Versions.BETA
-import earth.satunes.internet.Versions.BETA_REGEX
-import earth.satunes.internet.Versions.PREVIEW
-import earth.satunes.internet.Versions.PREVIEW_REGEX
-import earth.satunes.internet.Versions.RELEASES_URL
-import earth.satunes.internet.Versions.RELEASE_REGEX
-import earth.satunes.internet.Versions.versionType
+import earth.satunes.internet.InternetManager
+import earth.satunes.internet.R
+import earth.satunes.internet.updates.Versions.ALPHA
+import earth.satunes.internet.updates.Versions.ALPHA_REGEX
+import earth.satunes.internet.updates.Versions.BETA
+import earth.satunes.internet.updates.Versions.BETA_REGEX
+import earth.satunes.internet.updates.Versions.PREVIEW
+import earth.satunes.internet.updates.Versions.PREVIEW_REGEX
+import earth.satunes.internet.updates.Versions.RELEASES_URL
+import earth.satunes.internet.updates.Versions.RELEASE_REGEX
+import earth.satunes.internet.updates.Versions.versionType
 import earth.satunes.internet.utils.showToastOnUiThread
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -162,7 +164,7 @@ object UpdateCheckManager {
                 0
             )?.value?.split("/")?.last()?.split("\"")?.first()
         return if (latestVersion != null && latestVersion != currentVersion) {
-            this.latestVersion.value = latestVersion
+            UpdateCheckManager.latestVersion.value = latestVersion
             "$RELEASES_URL/tag/$latestVersion"
             //                UpdateAvailableStatus.AVAILABLE
         } else {

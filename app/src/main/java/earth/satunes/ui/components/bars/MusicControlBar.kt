@@ -30,7 +30,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
@@ -46,7 +45,7 @@ import earth.satunes.ui.components.buttons.music.NextMusicButton
 import earth.satunes.ui.components.buttons.music.PreviousMusicButton
 import earth.satunes.ui.components.buttons.music.RepeatMusicButton
 import earth.satunes.ui.components.buttons.music.ShuffleMusicButton
-import earth.satunes.ui.views.SatunesIcons
+import earth.satunes.icons.SatunesIcons
 
 /**
  * @author Antoine Pirlot on 25/01/24
@@ -67,7 +66,7 @@ fun MusicControlBar(
     val optionButtonSize = 30.dp
 
     Column {
-        MusicPositionBar(modifier = Modifier.padding(horizontal = 16.dp))
+        MusicPositionBar()
         Row(
             modifier = modifier,
             horizontalArrangement = horizontalArrangement,

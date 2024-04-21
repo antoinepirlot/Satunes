@@ -25,15 +25,9 @@
 
 package earth.satunes.ui.components.dialog
 
-import android.net.Uri.decode
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -42,8 +36,8 @@ import androidx.compose.ui.unit.dp
 import earth.satunes.R
 import earth.satunes.database.models.relations.PlaylistWithMusics
 import earth.satunes.database.models.tables.Playlist
-import earth.satunes.ui.components.cards.dialog.DialogOption
-import earth.satunes.ui.views.SatunesIcons
+import earth.satunes.ui.components.texts.NormalText
+import earth.satunes.icons.SatunesIcons
 
 /**
  * @author Antoine Pirlot on 01/04/2024
@@ -67,7 +61,7 @@ fun PlaylistOptionsDialog(
             )
         },
         title = {
-            Text(text = decode(playlistWithMusics.playlist.title))
+            NormalText(text = playlistWithMusics.playlist.title)
         },
         text = {
             Column {

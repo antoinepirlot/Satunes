@@ -4,7 +4,7 @@
     <string name="bottom_bar">Bottom Navigation Bar</string>
     <string name="this_device">This Device</string>
     <string name="external_storage">External Storage</string>
-    <string name="playback_settings">Playback Settings</string>
+    <string name="playback_settings">Playback</string>
     <string name="playback_when_paused">Playback if the app is closed</string>
     <string name="pause_if_noisy">Pause if headset is unplugged (need restart)</string>
     <string name="playlist_form">Playlist Name</string>
@@ -18,6 +18,7 @@
     <string name="settings">Settings</string>
     <string name="about_text">You can click on the icons to visit my different pages and support me 🤗.\nIf you want to donate, click on the tipeee button 😃.</string>
     <string name="about">About</string>
+    <string name="version">Updates</string>
     <string name="current_version">"Current Version: "</string>
     <string name="check_update">Check Update</string>
     <string name="add_musics_to_playlist">Add musics to playlist</string>

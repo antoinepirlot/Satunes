@@ -51,10 +51,10 @@ class Music(
     val absolutePath: String,
     val duration: Long = 0,
     val size: Int = 0,
-    var folder: Folder?,
-    var artist: Artist? = null,
-    var album: Album? = null,
-    var genre: Genre? = null,
+    var folder: Folder,
+    var artist: Artist,
+    var album: Album,
+    var genre: Genre,
     context: Context,
 ) : Media {
     var uri: Uri = Uri.parse(absolutePath) // Must be init before media item
@@ -63,20 +63,20 @@ class Music(
 
     init {
         DataManager.addMusic(music = this)
-        album?.addMusic(music = this@Music)
-        artist?.addMusic(music = this@Music)
-        genre?.addMusic(music = this@Music)
-        folder?.addMusic(music = this@Music)
+        album.addMusic(music = this@Music)
+        artist.addMusic(music = this@Music)
+        genre.addMusic(music = this@Music)
+        folder.addMusic(music = this@Music)
         loadAlbumArtwork(context = context)
     }
 
 
     private fun getMediaMetadata(): MediaItem {
         val mediaMetaData: MediaMetadata = MediaMetadata.Builder()
-            .setArtist(if (artist != null) decode(artist!!.title) else null)
+            .setArtist(decode(artist.title))
             .setTitle(decode(title))
-            .setGenre(if (genre != null) decode(genre!!.title) else null)
-            .setAlbumTitle(if (album != null) decode(album!!.title) else null)
+            .setGenre(decode(genre.title))
+            .setAlbumTitle(decode(album.title))
             .build()
         return MediaItem.Builder()
             .setMediaId(id.toString())
@@ -106,8 +106,8 @@ class Music(
                 if (artwork != null) {
                     val bitmap: Bitmap = BitmapFactory.decodeByteArray(artwork, 0, artwork.size)
                     this@Music.artwork = bitmap.asImageBitmap()
-                    if (this@Music.album != null && this@Music.album!!.artwork == null) {
-                        this@Music.album!!.artwork = this@Music.artwork
+                    if (this@Music.album.artwork == null) {
+                        this@Music.album.artwork = this@Music.artwork
                     }
                 }
             } catch (_: Exception) {
@@ -132,8 +132,8 @@ class Music(
 
     override fun hashCode(): Int {
         var result = displayName.hashCode()
-        result = 31 * result + (artist?.hashCode() ?: 0)
-        result = 31 * result + (album?.hashCode() ?: 0)
+        result = 31 * result + (artist.hashCode())
+        result = 31 * result + (album.hashCode())
         return result
     }
 }

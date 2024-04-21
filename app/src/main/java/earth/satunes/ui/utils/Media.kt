@@ -32,12 +32,12 @@ import earth.satunes.database.models.Media
 import earth.satunes.database.models.MenuTitle
 import earth.satunes.database.models.Music
 import earth.satunes.playback.services.PlaybackController
-import earth.satunes.ui.views.SatunesIcons.ALBUM
-import earth.satunes.ui.views.SatunesIcons.ARTIST
-import earth.satunes.ui.views.SatunesIcons.FOLDER
-import earth.satunes.ui.views.SatunesIcons.GENRES
-import earth.satunes.ui.views.SatunesIcons.MUSIC
-import earth.satunes.ui.views.SatunesIcons.PLAYLIST
+import earth.satunes.icons.SatunesIcons.ALBUM
+import earth.satunes.icons.SatunesIcons.ARTIST
+import earth.satunes.icons.SatunesIcons.FOLDER
+import earth.satunes.icons.SatunesIcons.GENRES
+import earth.satunes.icons.SatunesIcons.MUSIC
+import earth.satunes.icons.SatunesIcons.PLAYLIST
 import java.util.SortedMap
 
 /**

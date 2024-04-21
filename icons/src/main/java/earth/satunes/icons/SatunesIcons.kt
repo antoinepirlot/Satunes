@@ -23,28 +23,28 @@
  *  PS: I don't answer quickly.
  */
 
-package earth.satunes.ui.views
+package earth.satunes.icons
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.PlaylistAdd
 import androidx.compose.material.icons.automirrored.rounded.QueueMusic
-import androidx.compose.material.icons.filled.PauseCircle
-import androidx.compose.material.icons.filled.PlayCircle
-import androidx.compose.material.icons.filled.Repeat
-import androidx.compose.material.icons.filled.RepeatOn
-import androidx.compose.material.icons.filled.RepeatOneOn
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Shuffle
-import androidx.compose.material.icons.filled.ShuffleOn
-import androidx.compose.material.icons.filled.SkipNext
-import androidx.compose.material.icons.filled.SkipPrevious
 import androidx.compose.material.icons.rounded.AccountCircle
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Album
 import androidx.compose.material.icons.rounded.Category
 import androidx.compose.material.icons.rounded.Folder
 import androidx.compose.material.icons.rounded.MusicNote
+import androidx.compose.material.icons.rounded.PauseCircle
+import androidx.compose.material.icons.rounded.PlayCircle
 import androidx.compose.material.icons.rounded.PlaylistRemove
+import androidx.compose.material.icons.rounded.Repeat
+import androidx.compose.material.icons.rounded.RepeatOn
+import androidx.compose.material.icons.rounded.RepeatOneOn
+import androidx.compose.material.icons.rounded.Settings
+import androidx.compose.material.icons.rounded.Shuffle
+import androidx.compose.material.icons.rounded.ShuffleOn
+import androidx.compose.material.icons.rounded.SkipNext
+import androidx.compose.material.icons.rounded.SkipPrevious
 import androidx.compose.ui.graphics.vector.ImageVector
 
 /**
@@ -57,8 +57,8 @@ enum class SatunesIcons(val imageVector: ImageVector, val description: String) {
     FOLDER(imageVector = Icons.Rounded.Folder, description = "Folder Icon"),
     GENRES(imageVector = Icons.Rounded.Category, description = "Genre Icon"),
     MUSIC(imageVector = Icons.Rounded.MusicNote, description = "Music Icon"),
-    PAUSE(imageVector = Icons.Filled.PauseCircle, description = "Pause Icon"),
-    PLAY(imageVector = Icons.Filled.PlayCircle, description = "Play Icon"),
+    PAUSE(imageVector = Icons.Rounded.PauseCircle, description = "Pause Icon"),
+    PLAY(imageVector = Icons.Rounded.PlayCircle, description = "Play Icon"),
     PLAYLIST(imageVector = Icons.AutoMirrored.Rounded.QueueMusic, description = "Playlist Icon"),
     PLAYLIST_ADD(
         imageVector = Icons.AutoMirrored.Rounded.PlaylistAdd,
@@ -68,12 +68,12 @@ enum class SatunesIcons(val imageVector: ImageVector, val description: String) {
         imageVector = Icons.Rounded.PlaylistRemove,
         description = "Playlist Remove Icon"
     ),
-    REPEAT(imageVector = Icons.Filled.Repeat, description = "Repeat Icon"),
-    REPEAT_ON(imageVector = Icons.Filled.RepeatOn, description = "Repeat On"),
-    REPEAT_ONE_ON(imageVector = Icons.Filled.RepeatOneOn, description = "Repeat One On Icon"),
-    SETTINGS(imageVector = Icons.Filled.Settings, description = "Settings Icon"),
-    SHUFFLE(imageVector = Icons.Filled.Shuffle, description = "Shuffle Icon"),
-    SHUFFLE_ON(imageVector = Icons.Filled.ShuffleOn, description = "Shuffle on Icon"),
-    SKIP_NEXT(imageVector = Icons.Filled.SkipNext, description = "Skip Next Icon"),
-    SKIP_PREVIOUS(imageVector = Icons.Filled.SkipPrevious, description = "Skip Previous Icon"),
+    REPEAT(imageVector = Icons.Rounded.Repeat, description = "Repeat Icon"),
+    REPEAT_ON(imageVector = Icons.Rounded.RepeatOn, description = "Repeat On"),
+    REPEAT_ONE_ON(imageVector = Icons.Rounded.RepeatOneOn, description = "Repeat One On Icon"),
+    SETTINGS(imageVector = Icons.Rounded.Settings, description = "Settings Icon"),
+    SHUFFLE(imageVector = Icons.Rounded.Shuffle, description = "Shuffle Icon"),
+    SHUFFLE_ON(imageVector = Icons.Rounded.ShuffleOn, description = "Shuffle on Icon"),
+    SKIP_NEXT(imageVector = Icons.Rounded.SkipNext, description = "Skip Next Icon"),
+    SKIP_PREVIOUS(imageVector = Icons.Rounded.SkipPrevious, description = "Skip Previous Icon"),
 }

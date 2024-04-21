@@ -30,12 +30,15 @@ package earth.satunes.router
  */
 
 internal enum class Destination(val link: String) {
-    FOLDERS("/folders"),
-    ARTISTS("/artists"),
-    MUSICS("/musics"),
-    PLAYBACK("/playback"),
-    ALBUMS("/albums"),
-    GENRES("/genres"),
-    PLAYLISTS("/playlists"),
+    ALBUMS(link = "/albums"),
+    ARTISTS(link = "/artists"),
+    FOLDERS(link = "/folders"),
+    GENRES(link = "/genres"),
+    MUSICS(link = "/musics"),
+    BOTTOM_BAR_SETTING(link = "/navbar_settings"),
+    PLAYBACK(link = "/playback"),
+    PLAYBACK_SETTINGS(link = "/playback_settings"),
+    PLAYLISTS(link = "/playlists"),
     SETTINGS(link = "/settings"),
+    UPDATES(link = "/updates"),
 }

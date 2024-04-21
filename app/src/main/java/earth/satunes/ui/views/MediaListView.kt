@@ -23,31 +23,6 @@
  *  PS: I don't answer quickly.
  */
 
-/*
- * This file is part of Satunes.
- *
- *  Satunes is free software: you can redistribute it and/or modify it under
- *  the terms of the GNU General Public License as published by the Free Software Foundation,
- *  either version 3 of the License, or (at your option) any later version.
- *
- *  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- *  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *  See the GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License along with Satunes.
- *  If not, see <https://www.gnu.org/licenses/>.
- *
- *  **** INFORMATIONS ABOUT THE AUTHOR *****
- *  The author of this file is Antoine Pirlot, the owner of this project.
- *  You find this original project on github.
- *
- *  My github link is: https://github.com/antoinepirlot
- *  This current project's link is: https://github.com/antoinepirlot/Satunes
- *
- *  You can contact me via my email: pirlot.antoine@outlook.com
- *  PS: I don't answer quickly.
- */
-
 package earth.satunes.ui.views
 
 import androidx.compose.foundation.layout.Column
@@ -59,7 +34,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import earth.satunes.database.models.Album
+import earth.satunes.database.models.Artist
 import earth.satunes.database.models.Folder
+import earth.satunes.database.models.Genre
 import earth.satunes.database.models.Media
 import earth.satunes.database.models.Music
 import earth.satunes.playback.services.PlaybackController
@@ -76,7 +54,6 @@ fun MediaListView(
     modifier: Modifier = Modifier,
     mediaList: List<Media>,
     openMedia: (media: Media) -> Unit,
-    shuffleMusicAction: () -> Unit,
     onFABClick: () -> Unit,
     extraButtons: @Composable () -> Unit = { /*By default there's no extra buttons*/ },
 ) {
@@ -97,7 +74,6 @@ fun MediaListView(
         Column(
             modifier = Modifier.padding(innerPadding)
         ) {
-            ShuffleAllButton(onClick = shuffleMusicAction)
             MediaCardList(mediaList = mediaList, openMedia = openMedia)
         }
     }
@@ -115,13 +91,15 @@ fun MediaListViewPreview() {
             size = 0,
             absolutePath = "",
             folder = Folder(title = "Folder"),
+            album = Album(title = "Album Title"),
+            artist = Artist(title = "Artist Title"),
+            genre = Genre(title = "Genre Title"),
             context = LocalContext.current
         )
     )
     MediaListView(
         mediaList = map,
         openMedia = {},
-        shuffleMusicAction = {},
         onFABClick = {}
     )
 }

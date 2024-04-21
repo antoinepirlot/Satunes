@@ -25,29 +25,27 @@
 
 package earth.satunes.ui.components.settings
 
-import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import earth.satunes.internet.APKDownloadStatus
+import earth.satunes.internet.updates.APKDownloadStatus
 import earth.satunes.internet.R
-import earth.satunes.internet.UpdateCheckManager
+import earth.satunes.internet.updates.UpdateCheckManager
 import earth.satunes.ui.components.LoadingCircle
 import earth.satunes.ui.components.buttons.updates.DownloadButton
 import earth.satunes.ui.components.buttons.updates.InstallRequestButton
 import earth.satunes.ui.components.buttons.updates.SeeDetailsButton
+import earth.satunes.ui.components.texts.NormalText
 
 /**
  * @author Antoine Pirlot on 14/04/2024
@@ -59,12 +57,11 @@ private val SPACER_SIZE = 10.dp
 fun UpdateAvailable(
     modifier: Modifier = Modifier,
 ) {
-    val context: Context = LocalContext.current
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.Center
     ) {
-        Text(text = stringResource(id = R.string.update_available))
+        NormalText(text = stringResource(id = R.string.update_available))
         Row(verticalAlignment = Alignment.CenterVertically) {
             SeeDetailsButton()
             Spacer(modifier = Modifier.size(SPACER_SIZE))

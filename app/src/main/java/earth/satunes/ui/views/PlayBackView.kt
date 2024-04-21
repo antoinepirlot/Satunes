@@ -26,15 +26,13 @@
 package earth.satunes.ui.views
 
 import android.annotation.SuppressLint
-import android.net.Uri.decode
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -42,9 +40,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import earth.satunes.database.models.Album
+import earth.satunes.database.models.Artist
 import earth.satunes.playback.services.PlaybackController
-import earth.satunes.ui.components.MusicPlayingAlbumArtwork
+import earth.satunes.ui.components.images.MusicPlayingAlbumArtwork
 import earth.satunes.ui.components.bars.MusicControlBar
+import earth.satunes.ui.components.texts.NormalText
+import earth.satunes.ui.components.texts.Subtitle
 
 /**
  * @author Antoine Pirlot on 25/01/24
@@ -53,26 +54,32 @@ import earth.satunes.ui.components.bars.MusicControlBar
 @Composable
 fun PlayBackView(
     modifier: Modifier = Modifier,
-    onClick: (album: Album?) -> Unit,
+    onAlbumClick: (album: Album?) -> Unit,
+    onArtistClick: (artist: Artist) -> Unit,
 ) {
     val musicPlaying = remember { PlaybackController.getInstance().musicPlaying }
-    val albumArtworkSize = 200.dp
-    Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        MusicPlayingAlbumArtwork(modifier = modifier.size(albumArtworkSize), onClick = onClick)
-
-        Column(
-            modifier = modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Bottom,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(text = decode(musicPlaying.value!!.title))
-
-            MusicControlBar(
-                modifier = modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-            )
-        }
+    val albumArtworkSize = 350.dp
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.Bottom,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        MusicPlayingAlbumArtwork(
+            modifier = Modifier
+                .size(albumArtworkSize)
+                .padding(bottom = 40.dp),
+            onClick = onAlbumClick
+        )
+        NormalText(text = musicPlaying.value!!.title)
+        Subtitle(
+            modifier = Modifier.clickable { onArtistClick(musicPlaying.value!!.artist) },
+            text = musicPlaying.value!!.artist.title
+        )
+        MusicControlBar(
+            modifier = Modifier.fillMaxWidth(),
+        )
     }
 }
 
@@ -80,5 +87,5 @@ fun PlayBackView(
 @Composable
 @Preview
 fun PlayBackViewPreview() {
-    PlayBackView(onClick = {})
+    PlayBackView(onAlbumClick = {}, onArtistClick = {})
 }

@@ -26,6 +26,7 @@
 package earth.satunes.database
 
 import android.content.Context
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -47,7 +48,7 @@ import earth.satunes.database.models.tables.Playlist
         Playlist::class
     ],
     version = 1,
-    exportSchema = false
+    exportSchema = true,
 )
 internal abstract class SatunesDatabase : RoomDatabase() {
     companion object {

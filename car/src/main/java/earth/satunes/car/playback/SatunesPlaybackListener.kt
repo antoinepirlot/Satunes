@@ -78,6 +78,7 @@ object SatunesPlaybackListener : PlaybackListener() {
                 MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE,
                 decode(musicPlaying.artist?.title)
             )
+            .putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, musicPlaying.artwork)
             .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, musicPlaying.duration)
             .build()
         SatunesCarMusicService.session.setMetadata(metaData)

@@ -59,7 +59,7 @@ class Music(
 ) : Media {
     var uri: Uri = Uri.parse(absolutePath) // Must be init before media item
     val mediaItem: MediaItem = getMediaMetadata()
-    override var artwork: ImageBitmap? = null
+    override var artwork: Bitmap? = null
 
     init {
         DataManager.addMusic(music = this)
@@ -105,7 +105,7 @@ class Music(
 
                 if (artwork != null) {
                     val bitmap: Bitmap = BitmapFactory.decodeByteArray(artwork, 0, artwork.size)
-                    this@Music.artwork = bitmap.asImageBitmap()
+                    this@Music.artwork = bitmap
                     if (this@Music.album.artwork == null) {
                         this@Music.album.artwork = this@Music.artwork
                     }

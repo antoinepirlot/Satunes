@@ -45,6 +45,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
@@ -141,7 +142,7 @@ fun MediaCard(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .align(Alignment.Center),
-                            bitmap = media.artwork!!,
+                            bitmap = media.artwork!!.asImageBitmap(),
                             contentDescription = "Media Artwork"
                         )
                     } else {

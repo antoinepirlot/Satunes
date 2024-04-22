@@ -25,6 +25,7 @@
 
 package earth.satunes.database.models
 
+import android.graphics.Bitmap
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.media3.common.MediaItem
 import java.text.Normalizer
@@ -36,7 +37,7 @@ import java.util.SortedMap
 interface Media : Comparable<Media> {
     val id: Long
     val title: String
-    var artwork: ImageBitmap?
+    var artwork: Bitmap?
 
     val musicMediaItemSortedMap: SortedMap<Music, MediaItem>
         get() = sortedMapOf()

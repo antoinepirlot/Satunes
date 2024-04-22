@@ -33,6 +33,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import earth.satunes.R
@@ -66,7 +67,7 @@ fun AlbumArtwork(
         if (media.artwork != null) {
             Image(
                 modifier = Modifier.fillMaxSize(),
-                bitmap = media.artwork!!,
+                bitmap = media.artwork!!.asImageBitmap(),
                 contentDescription = "Music Playing Album Artwork"
             )
         } else {

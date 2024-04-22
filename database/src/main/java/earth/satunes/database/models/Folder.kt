@@ -25,6 +25,7 @@
 
 package earth.satunes.database.models
 
+import android.graphics.Bitmap
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.media3.common.MediaItem
 import earth.satunes.database.services.DataManager
@@ -41,7 +42,7 @@ data class Folder(
     private var subFolderMap: SortedMap<Long, Folder> = sortedMapOf(),
     override var musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf(),
 ) : Media {
-    override var artwork: ImageBitmap? = null
+    override var artwork: Bitmap? = null
 
     val absolutePath: String = if (parentFolder == null) {
         "/$title"

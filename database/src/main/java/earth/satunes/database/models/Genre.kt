@@ -25,6 +25,7 @@
 
 package earth.satunes.database.models
 
+import android.graphics.Bitmap
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.media3.common.MediaItem
 import java.util.SortedMap
@@ -37,7 +38,7 @@ data class Genre(
     override val id: Long = nextId,
     override var title: String,
 ) : Media {
-    override var artwork: ImageBitmap? = null
+    override var artwork: Bitmap? = null
     val musicMap: SortedMap<Long, Music> = sortedMapOf()
     override val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
 

@@ -25,6 +25,7 @@
 
 package earth.satunes.database.models.relations
 
+import android.graphics.Bitmap
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.media3.common.MediaItem
 import androidx.room.Embedded
@@ -51,7 +52,7 @@ data class PlaylistWithMusics(
     val musics: MutableList<MusicDB>
 ) : Media {
     @Ignore
-    override var artwork: ImageBitmap? = null
+    override var artwork: Bitmap? = null
     @Ignore
     override val id: Long = playlist.id // Not used
 

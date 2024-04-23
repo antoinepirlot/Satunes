@@ -53,7 +53,7 @@ object DataManager {
     private val albumMapById: MutableMap<Long, Album> = mutableMapOf()
     val genreMap: SortedMap<String, Genre> = sortedMapOf()
     private val genreMapById: MutableMap<Long, Genre> = mutableMapOf()
-    val playlistWithMusicsMap: SortedMap<String, PlaylistWithMusics> = sortedMapOf() //TODO Remove
+    val playlistWithMusicsMap: SortedMap<String, PlaylistWithMusics> = sortedMapOf()
     private val playlistWithMusicsMapById: MutableMap<Long, PlaylistWithMusics> = mutableMapOf()
 
     fun getMusic(musicId: Long): Music {

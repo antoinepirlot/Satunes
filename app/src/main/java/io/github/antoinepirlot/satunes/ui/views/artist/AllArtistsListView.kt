@@ -29,12 +29,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.media3.common.MediaItem
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Media
-import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.DataManager
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
@@ -54,9 +52,6 @@ fun AllArtistsListView(
     navController: NavHostController,
 ) {
     val playbackController: PlaybackController = PlaybackController.getInstance()
-
-    val musicMediaItemMap: SortedMap<Music, MediaItem> =
-        remember { DataManager.musicMediaItemSortedMap }
     val artistMap: SortedMap<String, Artist> = remember { DataManager.artistMap }
 
 
@@ -74,7 +69,7 @@ fun AllArtistsListView(
         extraButtons = {
             ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
                 playbackController.loadMusic(
-                    musicMediaItemSortedMap = musicMediaItemMap,
+                    musicMediaItemSortedMap = DataManager.musicMediaItemSortedMap,
                     shuffleMode = true
                 )
                 openMedia(navController = navController)

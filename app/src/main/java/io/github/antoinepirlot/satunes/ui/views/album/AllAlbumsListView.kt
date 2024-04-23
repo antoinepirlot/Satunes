@@ -58,12 +58,6 @@ fun AllAlbumsListView(
 
     val albumSet: SortedSet<Album> = remember { DataManager.albumSet }
 
-    val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
-
-    albumSet.forEach { album: Album ->
-        musicMediaItemSortedMap.putAll(album.musicMediaItemSortedMap)
-    }
-
     MediaListView(
         modifier = modifier,
         mediaList = albumSet.toList(),
@@ -74,6 +68,11 @@ fun AllAlbumsListView(
         onFABClick = { openCurrentMusic(navController = navController) },
         extraButtons = {
             ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
+                val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
+
+                albumSet.forEach { album: Album ->
+                    musicMediaItemSortedMap.putAll(album.musicMediaItemSortedMap)
+                }
                 playbackController.loadMusic(
                     musicMediaItemSortedMap = musicMediaItemSortedMap,
                     shuffleMode = true

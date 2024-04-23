@@ -36,6 +36,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.media3.common.MediaItem
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.database.models.Media
@@ -53,6 +54,7 @@ import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
 import io.github.antoinepirlot.satunes.ui.components.dialog.MediaSelectionDialog
 import io.github.antoinepirlot.satunes.ui.components.texts.Title
 import io.github.antoinepirlot.satunes.ui.views.MediaListView
+import java.util.SortedMap
 
 /**
  * @author Antoine Pirlot on 01/04/2024
@@ -69,8 +71,9 @@ fun PlaylistView(
 
     Column(modifier = modifier) {
         Title(text = playlist.playlist.title)
+        val musicMap: SortedMap<Music, MediaItem> = remember { playlist.musicMediaItemSortedMap }
         MediaListView(
-            mediaList = playlist.musicMediaItemSortedMap.keys.toList(),
+            mediaList = musicMap.keys.toList(),
             openMedia = { clickedMedia: Media ->
                 PlaybackController.getInstance().loadMusic(
                     musicMediaItemSortedMap = playlist.musicMediaItemSortedMap

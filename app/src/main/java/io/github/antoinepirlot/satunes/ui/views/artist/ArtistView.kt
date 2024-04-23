@@ -27,11 +27,13 @@ package io.github.antoinepirlot.satunes.ui.views.artist
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.media3.common.MediaItem
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.database.models.Music
@@ -60,11 +62,14 @@ fun ArtistView(
 
     Column(modifier = modifier) {
         Title(text = artist.title)
+        val albumMap: SortedMap<String, Album> = remember { artist.albumSortedMap }
         AlbumGrid(
-            mediaList = artist.albumSortedMap.values.toList(),
-            onClick = { openMedia(navController = navController, media = it) })
+            mediaList = albumMap.values.toList(),
+            onClick = { openMedia(navController = navController, media = it) }
+        )
+        val musicList: List<Music> = remember { artist.musicList }
         MediaListView(
-            mediaList = artist.musicList,
+            mediaList = musicList,
 
             openMedia = { clickedMedia: Media ->
                 playbackController.loadMusic(musicMediaItemSortedMap = artist.musicMediaItemSortedMap)

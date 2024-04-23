@@ -39,6 +39,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.database.models.Media
+import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
 import io.github.antoinepirlot.satunes.database.models.tables.Playlist
 import io.github.antoinepirlot.satunes.database.services.DataManager
 import io.github.antoinepirlot.satunes.database.services.DatabaseManager
@@ -62,10 +63,8 @@ fun PlaylistListView(
     val context: Context = LocalContext.current
     var openAlertDialog by remember { mutableStateOf(false) }
     Column(modifier = modifier) {
-        @Suppress("UNCHECKED_CAST")
-        val playlistMap: SortedMap<String, Media> =
-            remember { DataManager.playlistWithMusicsMap as SortedMap<String, Media> }
-
+        val playlistMap: SortedMap<String, PlaylistWithMusics> =
+            remember { DataManager.playlistWithMusicsMap }
         MediaListView(
             mediaList = playlistMap.values.toList(),
             openMedia = { clickedMedia: Media ->

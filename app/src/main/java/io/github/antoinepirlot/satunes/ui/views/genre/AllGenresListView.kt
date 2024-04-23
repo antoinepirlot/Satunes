@@ -55,11 +55,6 @@ fun AllGenresListView(
 ) {
     val playbackController: PlaybackController = PlaybackController.getInstance()
     val genreMap: SortedMap<String, Genre> = remember { DataManager.genreMap }
-    val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
-
-    genreMap.forEach { (_: String, genre: Genre) ->
-        musicMediaItemSortedMap.putAll(genre.musicMediaItemSortedMap)
-    }
     MediaListView(
         modifier = modifier,
         mediaList = genreMap.values.toList(),
@@ -70,6 +65,11 @@ fun AllGenresListView(
         onFABClick = { openCurrentMusic(navController = navController) },
         extraButtons = {
             ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
+                val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
+
+                genreMap.forEach { (_: String, genre: Genre) ->
+                    musicMediaItemSortedMap.putAll(genre.musicMediaItemSortedMap)
+                }
                 playbackController.loadMusic(
                     musicMediaItemSortedMap = musicMediaItemSortedMap,
                     shuffleMode = true

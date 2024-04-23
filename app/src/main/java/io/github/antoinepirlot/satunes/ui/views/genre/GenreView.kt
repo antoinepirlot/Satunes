@@ -27,12 +27,14 @@ package io.github.antoinepirlot.satunes.ui.views.genre
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.Media
+import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
@@ -40,6 +42,7 @@ import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
 import io.github.antoinepirlot.satunes.ui.components.texts.Title
 import io.github.antoinepirlot.satunes.ui.views.MediaListView
+import java.util.SortedMap
 
 /**
  * @author Antoine Pirlot on 01/04/2024
@@ -55,9 +58,9 @@ fun GenreView(
 
     Column(modifier = modifier) {
         Title(text = genre.title)
-
+        val musicMap: SortedMap<Long, Music> = remember { genre.musicMap }
         MediaListView(
-            mediaList = genre.musicMap.values.toList(),
+            mediaList = musicMap.values.toList(),
 
             openMedia = { clickedMedia: Media ->
                 playbackController.loadMusic(

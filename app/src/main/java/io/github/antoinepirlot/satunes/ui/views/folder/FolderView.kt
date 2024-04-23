@@ -63,15 +63,7 @@ fun FolderView(
     val folderMusicMediaItemSortedMap: SortedMap<Music, MediaItem> = remember {
         folder.musicMediaItemSortedMap
     }
-    val mapToShow: SortedMap<Long, Media> = sortedMapOf()
-
-    //Load sub-folders
-    mapToShow.putAll(folder.getSubFolderMapAsMedia())
-
-    //Load sub-folder's musics
-    folderMusicMediaItemSortedMap.forEach { (music: Music, _) ->
-        mapToShow[music.id] = music
-    }
+    val subFolderMap: SortedMap<Long, Media> = sortedMapOf()
 
     Column(modifier = modifier) {
         if (folder.parentFolder == null) {
@@ -86,10 +78,13 @@ fun FolderView(
             }
             Title(text = path, fontSize = 20.sp)
         }
-
+        loadSubfolders(
+            subFolderMap = subFolderMap,
+            folder = folder,
+            folderMusicMediaItemSortedMap = folderMusicMediaItemSortedMap
+        )
         MediaListView(
-            mediaList = mapToShow.values.toList(),
-
+            mediaList = subFolderMap.values.toList(),
             openMedia = { clickedMedia: Media ->
                 openMediaFromFolder(navController, clickedMedia)
             },
@@ -104,6 +99,20 @@ fun FolderView(
                 })
             }
         )
+    }
+}
+
+private fun loadSubfolders(
+    subFolderMap: SortedMap<Long, Media>,
+    folder: Folder,
+    folderMusicMediaItemSortedMap: SortedMap<Music, MediaItem>
+) {
+    //Load sub-folders
+    subFolderMap.putAll(folder.getSubFolderMapAsMedia())
+
+    //Load sub-folder's musics
+    folderMusicMediaItemSortedMap.forEach { (music: Music, _) ->
+        subFolderMap[music.id] = music
     }
 }
 

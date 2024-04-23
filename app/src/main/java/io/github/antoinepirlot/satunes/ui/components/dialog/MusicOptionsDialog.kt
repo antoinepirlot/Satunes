@@ -31,6 +31,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -41,6 +42,7 @@ import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMus
 import io.github.antoinepirlot.satunes.database.services.DataManager
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
+import java.util.SortedMap
 
 /**
  * @author Antoine Pirlot on 30/03/2024
@@ -83,14 +85,14 @@ fun MusicOptionsDialog(
                     text = stringResource(id = R.string.add_to_playlist)
                 )
                 if (showPlaylistSelectionDialog) {
-                    val playlistList: List<PlaylistWithMusics> =
-                        DataManager.playlistWithMusicsMap.values.toList()
+                    val playlistList: SortedMap<String, PlaylistWithMusics> =
+                        remember { DataManager.playlistWithMusicsMap }
                     MediaSelectionDialog(
                         onDismissRequest = {
                             showPlaylistSelectionDialog = false
                         },
                         onConfirm = onAddToPlaylist,
-                        mediaList = playlistList,
+                        mediaList = playlistList.values.toList(),
                         icon = {
                             Icon(
                                 imageVector = SatunesIcons.PLAYLIST_ADD.imageVector,

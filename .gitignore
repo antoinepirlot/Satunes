@@ -8,5 +8,5 @@
 .externalNativeBuild
 .cxx
 local.properties
-app/release
+release
 schemas

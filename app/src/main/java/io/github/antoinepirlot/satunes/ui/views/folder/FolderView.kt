@@ -38,15 +38,14 @@ import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.router.utils.openMediaFromFolder
-import io.github.antoinepirlot.satunes.router.utils.resetOpenedPlaylist
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
 import io.github.antoinepirlot.satunes.ui.components.texts.Title
 import io.github.antoinepirlot.satunes.ui.views.MediaListView
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.views.utils.getRootFolderName
 import java.util.SortedMap
 
@@ -74,7 +73,6 @@ fun FolderView(
         mapToShow[music.id] = music
     }
 
-    resetOpenedPlaylist()
     Column(modifier = modifier) {
         if (folder.parentFolder == null) {
             Title(text = '/' + getRootFolderName(title = folder.title))

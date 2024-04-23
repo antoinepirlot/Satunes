@@ -60,12 +60,12 @@ import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
 import io.github.antoinepirlot.satunes.database.models.tables.MusicDB
 import io.github.antoinepirlot.satunes.database.services.DatabaseManager
+import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.services.MediaSelectionManager
 import io.github.antoinepirlot.satunes.ui.components.dialog.MusicOptionsDialog
 import io.github.antoinepirlot.satunes.ui.components.dialog.PlaylistOptionsDialog
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 import io.github.antoinepirlot.satunes.ui.components.texts.Subtitle
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.views.utils.getRootFolderName
 
 /**
@@ -77,7 +77,8 @@ import io.github.antoinepirlot.satunes.ui.views.utils.getRootFolderName
 fun MediaCard(
     modifier: Modifier = Modifier,
     media: Media,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    openedPlaylistWithMusics: PlaylistWithMusics?
 ) {
     val haptics = LocalHapticFeedback.current
     var showMusicOptions: Boolean by rememberSaveable { mutableStateOf(false) }
@@ -129,14 +130,16 @@ fun MediaCard(
                     if (media is Album) {
                         Subtitle(text = media.artist!!.title)
                     } else if (media is Music) {
-                        Subtitle(text = media.artist!!.title)
+                        Subtitle(text = media.artist.title)
                     }
                 }
             },
             leadingContent = {
-                Box(modifier = modifier
-                    .fillMaxHeight()
-                    .width(55.dp)) {
+                Box(
+                    modifier = modifier
+                        .fillMaxHeight()
+                        .width(55.dp)
+                ) {
                     if (media.artwork != null) {
                         Image(
                             modifier = Modifier
@@ -166,6 +169,7 @@ fun MediaCard(
         val context = LocalContext.current
         MusicOptionsDialog(
             musicTitle = title,
+            openPlaylistWithMusics = openedPlaylistWithMusics,
             onAddToPlaylist = {
                 val db = DatabaseManager(context = context)
                 db.insertMusicToPlaylists(
@@ -178,7 +182,7 @@ fun MediaCard(
                 val db = DatabaseManager(context = context)
                 db.removeMusicFromPlaylist(
                     music = media,
-                    playlist = MediaSelectionManager.openedPlaylist!!
+                    playlist = openedPlaylistWithMusics!!
                 )
                 showMusicOptions = false
             },
@@ -231,6 +235,7 @@ fun CardPreview() {
     MediaCard(
         modifier = Modifier.fillMaxSize(),
         media = music,
-        onClick = {}
+        onClick = {},
+        openedPlaylistWithMusics = null
     )
 }

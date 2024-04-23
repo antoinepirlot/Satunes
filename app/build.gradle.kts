@@ -3,7 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
 }
 
-val nameSpace: String = "earth.satunes"
+val nameSpace: String = "io.github.antoinepirlot.satunes"
 
 android {
     namespace = nameSpace

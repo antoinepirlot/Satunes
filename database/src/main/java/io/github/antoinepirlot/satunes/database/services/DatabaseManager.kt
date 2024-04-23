@@ -94,12 +94,13 @@ class DatabaseManager(context: Context) {
     }
 
     fun insertOne(context: Context, playlist: Playlist) {
+        val activity = Activity()
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 playlist.id = playlistDao.insertOne(playlist = playlist)
             } catch (_: SQLiteConstraintException) {
                 val message: String = context.getString(R.string.playlist_already_exist)
-                showToastOnUiThread(context = context, activity = Activity(), message = message)
+                showToastOnUiThread(context = context, activity = activity, message = message)
                 return@launch
             }
             val playlistWithMusics: PlaylistWithMusics =

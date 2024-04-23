@@ -27,7 +27,9 @@ package io.github.antoinepirlot.satunes.ui.views.genre
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
@@ -59,6 +61,14 @@ fun GenreView(
     Column(modifier = modifier) {
         Title(text = genre.title)
         val musicMap: SortedMap<Long, Music> = remember { genre.musicMap }
+
+        //Recompose if data changed
+        var mapChanged: Boolean by remember { genre.musicMediaItemSortedMapUpdate }
+        if (mapChanged) {
+            mapChanged = false
+        }
+        //
+
         MediaListView(
             mediaList = musicMap.values.toList(),
 

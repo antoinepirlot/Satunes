@@ -26,8 +26,10 @@
 package io.github.antoinepirlot.satunes.database.models
 
 import android.graphics.Bitmap
-import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.media3.common.MediaItem
+import androidx.room.Ignore
 import io.github.antoinepirlot.satunes.database.services.DataManager
 import java.util.SortedMap
 
@@ -43,6 +45,9 @@ data class Folder(
     override var musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf(),
 ) : Media {
     override var artwork: Bitmap? = null
+
+    @Ignore
+    val musicMediaItemSortedMapUpdate: MutableState<Boolean> = mutableStateOf(false)
 
     val absolutePath: String = if (parentFolder == null) {
         "/$title"

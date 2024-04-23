@@ -26,7 +26,9 @@
 package io.github.antoinepirlot.satunes.ui.views.music
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.media3.common.MediaItem
@@ -56,6 +58,13 @@ fun AllMusicsListView(
     //Find a way to do something more aesthetic but it works
     val musicMediaItemMap: SortedMap<Music, MediaItem> =
         remember { DataManager.musicMediaItemSortedMap }
+
+    //Recompose if data changed
+    var mapChanged: Boolean by remember { DataManager.musicMediaItemSortedMapUpdated }
+    if (mapChanged) {
+        mapChanged = false
+    }
+    //
 
     MediaListView(
         modifier = modifier,

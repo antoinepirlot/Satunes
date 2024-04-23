@@ -27,7 +27,9 @@ package io.github.antoinepirlot.satunes.ui.views.artist
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.media3.common.MediaItem
@@ -63,6 +65,14 @@ fun ArtistView(
     Column(modifier = modifier) {
         Title(text = artist.title)
         val albumMap: SortedMap<String, Album> = remember { artist.albumSortedMap }
+
+        //Recompose if data changed
+        var mapChanged: Boolean by remember { artist.albumSortedMapUpdate }
+        if (mapChanged) {
+            mapChanged = false
+        }
+        //
+
         AlbumGrid(
             mediaList = albumMap.values.toList(),
             onClick = { openMedia(navController = navController, media = it) }

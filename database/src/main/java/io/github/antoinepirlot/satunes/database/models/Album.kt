@@ -26,8 +26,10 @@
 package io.github.antoinepirlot.satunes.database.models
 
 import android.graphics.Bitmap
-import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.media3.common.MediaItem
+import androidx.room.Ignore
 import java.util.SortedMap
 
 /**
@@ -41,6 +43,9 @@ data class Album(
     override val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf(),
 ) : Media {
     val musicSortedMap: SortedMap<Long, Music> = sortedMapOf()
+
+    @Ignore
+    val musicMediaItemSortedMapUpdate: MutableState<Boolean> = mutableStateOf(false)
     override var artwork: Bitmap? = null
 
     companion object {

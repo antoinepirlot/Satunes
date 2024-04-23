@@ -72,6 +72,14 @@ fun PlaylistView(
     Column(modifier = modifier) {
         Title(text = playlist.playlist.title)
         val musicMap: SortedMap<Music, MediaItem> = remember { playlist.musicMediaItemSortedMap }
+
+        //Recompose if data changed
+        var mapChanged: Boolean by remember { playlist.musicMediaItemSortedMapUpdate }
+        if (mapChanged) {
+            mapChanged = false
+        }
+        //
+
         MediaListView(
             mediaList = musicMap.keys.toList(),
             openMedia = { clickedMedia: Media ->

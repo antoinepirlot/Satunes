@@ -87,6 +87,14 @@ fun MusicOptionsDialog(
                 if (showPlaylistSelectionDialog) {
                     val playlistList: SortedMap<String, PlaylistWithMusics> =
                         remember { DataManager.playlistWithMusicsMap }
+
+                    //Recompose if data changed
+                    var mapChanged: Boolean by remember { DataManager.playlistWithMusicsMapUpdated }
+                    if (mapChanged) {
+                        mapChanged = false
+                    }
+                    //
+
                     MediaSelectionDialog(
                         onDismissRequest = {
                             showPlaylistSelectionDialog = false

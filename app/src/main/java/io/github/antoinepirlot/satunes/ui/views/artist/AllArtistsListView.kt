@@ -26,7 +26,9 @@
 package io.github.antoinepirlot.satunes.ui.views.artist
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
@@ -54,6 +56,12 @@ fun AllArtistsListView(
     val playbackController: PlaybackController = PlaybackController.getInstance()
     val artistMap: SortedMap<String, Artist> = remember { DataManager.artistMap }
 
+    //Recompose if data changed
+    var mapChanged: Boolean by remember { DataManager.artistMapUpdated }
+    if (mapChanged) {
+        mapChanged = false
+    }
+    //
 
     MediaListView(
         modifier = modifier,

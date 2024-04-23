@@ -76,14 +76,13 @@ class SatunesCarMusicService : MediaBrowserServiceCompat() {
         while (DataLoader.isLoading.value) {
             //Wait
         }
-        if (playbackController.isLoaded.value) {
+        if (DataLoader.isLoaded) {
             loadAllPlaybackData()
         }
     }
 
     private fun loadAllPlaybackData() {
         val playbackController: PlaybackController = PlaybackController.getInstance()
-        getAllMediaMediaItemList(playbackController.playlist.musicList)
         SatunesPlaybackListener.updateMediaPlaying()
         if (playbackController.isPlaying.value) {
             SatunesPlaybackListener.updatePlaybackState(
@@ -116,44 +115,44 @@ class SatunesCarMusicService : MediaBrowserServiceCompat() {
         when (parentId) {
             ScreenPages.ROOT.id -> {
                 routeDeque.resetRouteDeque()
-                result.sendResult(getHomeScreen())
+                result.sendResult(getHomeScreenBars())
                 return
             }
 
             ScreenPages.ALL_FOLDERS.id -> {
-                children.addAll(getAllMediaMediaItemList(mediaList = DataManager.folderMap.values))
+                children.addAll(getAllMediaItem(mediaList = DataManager.folderMap.values))
                 routeDeque.resetRouteDeque()
                 routeDeque.addLast(parentId)
             }
 
             ScreenPages.ALL_ARTISTS.id -> {
-                children.addAll(getAllMediaMediaItemList(mediaList = DataManager.artistMap.values))
+                children.addAll(getAllMediaItem(mediaList = DataManager.artistMap.values))
                 routeDeque.resetRouteDeque()
                 routeDeque.addLast(parentId)
             }
 
             ScreenPages.ALL_ALBUMS.id -> {
-                children.addAll(getAllMediaMediaItemList(mediaList = DataManager.albumSet))
+                children.addAll(getAllMediaItem(mediaList = DataManager.albumSet))
                 routeDeque.resetRouteDeque()
                 routeDeque.addLast(parentId)
 
             }
 
             ScreenPages.ALL_GENRES.id -> {
-                children.addAll(getAllMediaMediaItemList(mediaList = DataManager.genreMap.values))
+                children.addAll(getAllMediaItem(mediaList = DataManager.genreMap.values))
                 routeDeque.resetRouteDeque()
                 routeDeque.addLast(parentId)
             }
 
             ScreenPages.ALL_MUSICS.id -> {
                 children.add(getShuffleButton())
-                children.addAll(getAllMediaMediaItemList(mediaList = DataManager.musicMediaItemSortedMap.keys))
+                children.addAll(getAllMediaItem(mediaList = DataManager.musicMediaItemSortedMap.keys))
                 routeDeque.resetRouteDeque()
                 routeDeque.addLast(parentId)
             }
 
             ScreenPages.ALL_PLAYLISTS.id -> {
-                children.addAll(getAllMediaMediaItemList(mediaList = DataManager.playlistWithMusicsMap.values))
+                children.addAll(getAllMediaItem(mediaList = DataManager.playlistWithMusicsMap.values))
                 routeDeque.resetRouteDeque()
                 routeDeque.addLast(parentId)
             }
@@ -164,8 +163,8 @@ class SatunesCarMusicService : MediaBrowserServiceCompat() {
                     result.sendResult(null)
                     return
                 }
+                children.addAll(getAllMediaItem(mediaId = parentId.toLong()))
                 routeDeque.addLast(parentId)
-                children.addAll(getAllMediaMediaItemList(mediaId = parentId.toLong()))
             }
         }
         result.sendResult(children)
@@ -180,7 +179,7 @@ class SatunesCarMusicService : MediaBrowserServiceCompat() {
         )
     }
 
-    private fun getHomeScreen(): MutableList<MediaItem> {
+    private fun getHomeScreenBars(): MutableList<MediaItem> {
         val children: MutableList<MediaItem> = mutableListOf()
         for (page: ScreenPages in pages) {
             val mediaItem: MediaItem = buildMediaItem(
@@ -204,7 +203,7 @@ class SatunesCarMusicService : MediaBrowserServiceCompat() {
      *
      * @return a mutable list of MediaItem
      */
-    private fun getAllMediaMediaItemList(mediaList: Collection<Media>): MutableList<MediaItem> {
+    private fun getAllMediaItem(mediaList: Collection<Media>): MutableList<MediaItem> {
         val mediaItemList: MutableList<MediaItem> = mutableListOf()
         loadedQueueItemList.clear()
         for (media: Media in mediaList) {
@@ -230,7 +229,7 @@ class SatunesCarMusicService : MediaBrowserServiceCompat() {
      *
      * @return a mutable list of media item.
      */
-    private fun getAllMediaMediaItemList(mediaId: Long): MutableList<MediaItem> {
+    private fun getAllMediaItem(mediaId: Long): MutableList<MediaItem> {
         val oneBeforeLastRoute: String = routeDeque.oneBeforeLast()
         if (oneBeforeLastRoute == ScreenPages.ROOT.id || oneBeforeLastRoute == ScreenPages.ALL_MUSICS.id) {
             throw IllegalStateException("An error occurred in the route processing")
@@ -247,7 +246,7 @@ class SatunesCarMusicService : MediaBrowserServiceCompat() {
 
         val listToReturn: MutableList<MediaItem> = mutableListOf(getShuffleButton())
         listToReturn.addAll(
-            this.getAllMediaMediaItemList(
+            this.getAllMediaItem(
                 mediaList = media?.musicMediaItemSortedMap?.keys?.toList() ?: mutableListOf()
             )
         )

@@ -35,7 +35,6 @@ import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.router.Destination
-import io.github.antoinepirlot.satunes.services.MediaSelectionManager
 import io.github.antoinepirlot.satunes.ui.utils.getMusicListFromFolder
 import io.github.antoinepirlot.satunes.ui.utils.startMusic
 
@@ -58,7 +57,6 @@ fun openMedia(
     navController: NavHostController,
     media: Media? = null
 ) {
-    MediaSelectionManager.openedPlaylist = null
     if (media == null || media is Music) {
         startMusic(media)
     }
@@ -122,11 +120,4 @@ fun openCurrentMusic(navController: NavHostController) {
         ?: throw IllegalStateException("No music is currently playing, this button can be accessible")
 
     navController.navigate(getDestinationOf(musicPlaying))
-}
-
-/**
- * Set opened playlist from PlaylistSelectionManager to null to indicates the user is elsewhere
- */
-fun resetOpenedPlaylist() {
-    MediaSelectionManager.openedPlaylist = null
 }

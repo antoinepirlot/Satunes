@@ -26,7 +26,9 @@
 package io.github.antoinepirlot.satunes.ui.views.genre
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.media3.common.MediaItem
@@ -36,13 +38,12 @@ import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.DataManager
+import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.router.utils.openMedia
-import io.github.antoinepirlot.satunes.router.utils.resetOpenedPlaylist
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
 import io.github.antoinepirlot.satunes.ui.views.MediaListView
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import java.util.SortedMap
 
 /**
@@ -56,12 +57,14 @@ fun AllGenresListView(
 ) {
     val playbackController: PlaybackController = PlaybackController.getInstance()
     val genreMap: SortedMap<String, Genre> = remember { DataManager.genreMap }
-    val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
 
-    genreMap.forEach { (_: String, genre: Genre) ->
-        musicMediaItemSortedMap.putAll(genre.musicMediaItemSortedMap)
+    //Recompose if data changed
+    var mapChanged: Boolean by remember { DataManager.genreMapUpdated }
+    if (mapChanged) {
+        mapChanged = false
     }
-    resetOpenedPlaylist()
+    //
+
     MediaListView(
         modifier = modifier,
         mediaList = genreMap.values.toList(),
@@ -72,6 +75,11 @@ fun AllGenresListView(
         onFABClick = { openCurrentMusic(navController = navController) },
         extraButtons = {
             ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
+                val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
+
+                genreMap.forEach { (_: String, genre: Genre) ->
+                    musicMediaItemSortedMap.putAll(genre.musicMediaItemSortedMap)
+                }
                 playbackController.loadMusic(
                     musicMediaItemSortedMap = musicMediaItemSortedMap,
                     shuffleMode = true

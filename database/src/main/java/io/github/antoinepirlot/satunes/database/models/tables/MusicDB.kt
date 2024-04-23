@@ -25,6 +25,7 @@
 
 package io.github.antoinepirlot.satunes.database.models.tables
 
+import android.graphics.Bitmap
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -44,7 +45,7 @@ data class MusicDB(
     @ColumnInfo("music_id") override val id: Long
 ) : Media {
     @Ignore
-    override var artwork: ImageBitmap? = null
+    override var artwork: Bitmap? = null
     @Ignore
     override val title: String = "Title is not used for MusicDB class." // Not used
 

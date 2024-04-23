@@ -25,6 +25,7 @@
 
 package io.github.antoinepirlot.satunes.car.utils
 
+import android.graphics.Bitmap
 import android.net.Uri
 import android.net.Uri.decode
 import android.os.Bundle
@@ -52,6 +53,7 @@ fun buildMediaItem(
     title: String,
     subtitle: String? = null,
     uri: Uri? = null,
+    icon: Bitmap? = null,
     extras: Bundle? = null,
     flags: Int
 ): MediaBrowserCompat.MediaItem {
@@ -61,6 +63,7 @@ fun buildMediaItem(
         .setTitle(decode(title))
         .setSubtitle(if (subtitle == null) null else decode(subtitle))
         .setMediaUri(uri)
+        .setIconBitmap(icon)
         .setExtras(extras)
         .build()
     return MediaBrowserCompat.MediaItem(
@@ -107,6 +110,7 @@ fun buildMediaItem(media: Media): MediaBrowserCompat.MediaItem {
         subtitle = if (media is Music && media.artist != null) media.artist!!.title else null,
         title = if (media is PlaylistWithMusics) media.playlist.title else media.title,
         uri = if (media is Music) media.uri else null,
+        icon = media.artwork,
         flags = flags
     )
 }

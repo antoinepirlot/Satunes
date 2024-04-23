@@ -25,7 +25,9 @@
 
 package io.github.antoinepirlot.satunes.database.models.relations
 
-import androidx.compose.ui.graphics.ImageBitmap
+import android.graphics.Bitmap
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.media3.common.MediaItem
 import androidx.room.Embedded
 import androidx.room.Ignore
@@ -51,7 +53,7 @@ data class PlaylistWithMusics(
     val musics: MutableList<MusicDB>
 ) : Media {
     @Ignore
-    override var artwork: ImageBitmap? = null
+    override var artwork: Bitmap? = null
     @Ignore
     override val id: Long = playlist.id // Not used
 
@@ -61,6 +63,10 @@ data class PlaylistWithMusics(
     @Ignore
     override val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
 
+    @Ignore
+    val musicMediaItemSortedMapUpdate: MutableState<Boolean> = mutableStateOf(false)
+
+
     init {
         musics.forEach { musicDB: MusicDB ->
             musicMediaItemSortedMap[musicDB.music] = musicDB.music.mediaItem
@@ -69,11 +75,17 @@ data class PlaylistWithMusics(
 
     fun addMusic(music: Music) {
         musics.add(MusicDB(id = music.id))
-        musicMediaItemSortedMap[music] = music.mediaItem
+        if (!musicMediaItemSortedMap.contains(music)) {
+            musicMediaItemSortedMap[music] = music.mediaItem
+            musicMediaItemSortedMapUpdate.value = true
+        }
     }
 
     fun removeMusic(music: Music) {
         musics.remove(MusicDB(id = music.id))
-        musicMediaItemSortedMap.remove(music)
+        if (musicMediaItemSortedMap.contains(music)) {
+            musicMediaItemSortedMap.remove(music)
+            musicMediaItemSortedMapUpdate.value = true
+        }
     }
 }

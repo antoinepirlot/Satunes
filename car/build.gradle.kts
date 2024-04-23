@@ -46,4 +46,9 @@ dependencies {
      * Icons
      */
     implementation(project(":icons"))
+
+    /**
+     * Utils
+     */
+    implementation(project(":utils"))
 }

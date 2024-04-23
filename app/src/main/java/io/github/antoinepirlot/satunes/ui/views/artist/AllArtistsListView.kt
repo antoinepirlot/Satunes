@@ -26,23 +26,22 @@
 package io.github.antoinepirlot.satunes.ui.views.artist
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.media3.common.MediaItem
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Media
-import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.DataManager
+import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.router.utils.openMedia
-import io.github.antoinepirlot.satunes.router.utils.resetOpenedPlaylist
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
 import io.github.antoinepirlot.satunes.ui.views.MediaListView
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import java.util.SortedMap
 
 /**
@@ -55,12 +54,14 @@ fun AllArtistsListView(
     navController: NavHostController,
 ) {
     val playbackController: PlaybackController = PlaybackController.getInstance()
-
-    val musicMediaItemMap: SortedMap<Music, MediaItem> =
-        remember { DataManager.musicMediaItemSortedMap }
     val artistMap: SortedMap<String, Artist> = remember { DataManager.artistMap }
 
-    resetOpenedPlaylist()
+    //Recompose if data changed
+    var mapChanged: Boolean by remember { DataManager.artistMapUpdated }
+    if (mapChanged) {
+        mapChanged = false
+    }
+    //
 
     MediaListView(
         modifier = modifier,
@@ -76,7 +77,7 @@ fun AllArtistsListView(
         extraButtons = {
             ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
                 playbackController.loadMusic(
-                    musicMediaItemSortedMap = musicMediaItemMap,
+                    musicMediaItemSortedMap = DataManager.musicMediaItemSortedMap,
                     shuffleMode = true
                 )
                 openMedia(navController = navController)

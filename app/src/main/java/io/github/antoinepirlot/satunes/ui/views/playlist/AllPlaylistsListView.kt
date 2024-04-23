@@ -39,16 +39,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.database.models.Media
+import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
 import io.github.antoinepirlot.satunes.database.models.tables.Playlist
 import io.github.antoinepirlot.satunes.database.services.DataManager
 import io.github.antoinepirlot.satunes.database.services.DatabaseManager
+import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.router.utils.openMedia
-import io.github.antoinepirlot.satunes.router.utils.resetOpenedPlaylist
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
 import io.github.antoinepirlot.satunes.ui.components.forms.PlaylistCreationForm
 import io.github.antoinepirlot.satunes.ui.views.MediaListView
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import java.util.SortedMap
 
 /**
@@ -62,11 +62,16 @@ fun PlaylistListView(
 ) {
     val context: Context = LocalContext.current
     var openAlertDialog by remember { mutableStateOf(false) }
-    resetOpenedPlaylist()
     Column(modifier = modifier) {
-        @Suppress("UNCHECKED_CAST")
-        val playlistMap: SortedMap<String, Media> =
-            remember { DataManager.playlistWithMusicsMap as SortedMap<String, Media> }
+        val playlistMap: SortedMap<String, PlaylistWithMusics> =
+            remember { DataManager.playlistWithMusicsMap }
+
+        //Recompose if data changed
+        var mapChanged: Boolean by remember { DataManager.playlistWithMusicsMapUpdated }
+        if (mapChanged) {
+            mapChanged = false
+        }
+        //
 
         MediaListView(
             mediaList = playlistMap.values.toList(),
@@ -84,7 +89,10 @@ fun PlaylistListView(
                 PlaylistCreationForm(
                     onConfirm = { playlistTitle: String ->
                         val playlist = Playlist(id = 0, title = encode(playlistTitle))
-                        DatabaseManager(context = context).insertOne(playlist = playlist)
+                        DatabaseManager(context = context).insertOne(
+                            context = context,
+                            playlist = playlist
+                        )
                         openAlertDialog = false
                     },
                     onDismissRequest = { openAlertDialog = false }

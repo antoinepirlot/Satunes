@@ -47,7 +47,8 @@ import io.github.antoinepirlot.satunes.database.models.tables.MusicDB
 fun MediaCardList(
     modifier: Modifier = Modifier,
     mediaList: List<Media>,
-    openMedia: (media: Media) -> Unit
+    openMedia: (media: Media) -> Unit,
+    openedPlaylistWithMusics: PlaylistWithMusics?
 ) {
     val lazyState = rememberLazyListState()
 
@@ -75,7 +76,8 @@ fun MediaCardList(
                 MediaCard(
                     modifier = modifier,
                     media = media,
-                    onClick = { openMedia(media) }
+                    onClick = { openMedia(media) },
+                    openedPlaylistWithMusics = openedPlaylistWithMusics
                 )
             }
         }
@@ -87,6 +89,7 @@ fun MediaCardList(
 fun CardListPreview() {
     MediaCardList(
         mediaList = listOf(),
-        openMedia = {}
+        openMedia = {},
+        openedPlaylistWithMusics = null
     )
 }

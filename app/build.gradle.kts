@@ -1,3 +1,28 @@
+/*
+ * This file is part of Satunes.
+ *
+ *  Satunes is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software Foundation,
+ *  either version 3 of the License, or (at your option) any later version.
+ *
+ *  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ *  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *  See the GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License along with Satunes.
+ *  If not, see <https://www.gnu.org/licenses/>.
+ *
+ *  **** INFORMATIONS ABOUT THE AUTHOR *****
+ *  The author of this file is Antoine Pirlot, the owner of this project.
+ *  You find this original project on github.
+ *
+ *  My github link is: https://github.com/antoinepirlot
+ *  This current project's link is: https://github.com/antoinepirlot/Satunes
+ *
+ *  You can contact me via my email: pirlot.antoine@outlook.com
+ *  PS: I don't answer quickly.
+ */
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -18,8 +43,8 @@ android {
         applicationId = nameSpace
         minSdk = 27
         targetSdk = 34
-        versionCode = 20
-        versionName = "0.9.0-beta"
+        versionCode = 21
+        versionName = "0.9.1-beta"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -61,11 +86,11 @@ dependencies {
     /**
      * Base
      */
-    implementation("androidx.core:core-ktx:1.12.0")
+    implementation("androidx.core:core-ktx:1.13.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
-    implementation("androidx.activity:activity-compose:1.8.2")
+    implementation("androidx.activity:activity-compose:1.9.0")
     implementation("androidx.fragment:fragment-ktx:1.6.2")
-    implementation(platform("androidx.compose:compose-bom:2024.04.00"))
+    implementation(platform("androidx.compose:compose-bom:2024.04.01"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
@@ -75,7 +100,7 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation(platform("androidx.compose:compose-bom:2023.08.00"))
+    androidTestImplementation(platform("androidx.compose:compose-bom:2024.04.01"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
@@ -112,7 +137,7 @@ dependencies {
     /**
      * DataStore
      */
-    val dataStoreVersion = "1.0.0"
+    val dataStoreVersion = "1.1.0"
     implementation("androidx.datastore:datastore-preferences:$dataStoreVersion")
 
     /**
@@ -134,4 +159,9 @@ dependencies {
      * Update
      */
     implementation(project(":internet"))
+
+    /**
+     * Utils
+     */
+    implementation(project(":utils"))
 }

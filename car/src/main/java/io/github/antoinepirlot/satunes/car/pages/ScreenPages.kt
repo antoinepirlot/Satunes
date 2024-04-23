@@ -47,7 +47,7 @@ enum class ScreenPages(
  *  Tabs showed in Android Auto are in the same order as this list, change this list order also
  *  affect the order in Android Auto
  */
-val pages: List<ScreenPages> = listOf(
+internal val pages: List<ScreenPages> = listOf(
     ScreenPages.ALL_PLAYLISTS,
     ScreenPages.ALL_FOLDERS,
     ScreenPages.ALL_MUSICS,

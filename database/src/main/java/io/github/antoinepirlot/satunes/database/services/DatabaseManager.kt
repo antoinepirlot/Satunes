@@ -25,8 +25,11 @@
 
 package io.github.antoinepirlot.satunes.database.services
 
+import android.app.Activity
 import android.content.Context
 import android.database.sqlite.SQLiteConstraintException
+import android.widget.Toast
+import io.github.antoinepirlot.satunes.database.R
 import io.github.antoinepirlot.satunes.database.SatunesDatabase
 import io.github.antoinepirlot.satunes.database.daos.MusicDAO
 import io.github.antoinepirlot.satunes.database.daos.MusicsPlaylistsRelDAO
@@ -37,6 +40,7 @@ import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMus
 import io.github.antoinepirlot.satunes.database.models.tables.MusicDB
 import io.github.antoinepirlot.satunes.database.models.tables.MusicsPlaylistsRel
 import io.github.antoinepirlot.satunes.database.models.tables.Playlist
+import io.github.antoinepirlot.utils.showToastOnUiThread
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -89,11 +93,14 @@ class DatabaseManager(context: Context) {
         }
     }
 
-    fun insertOne(playlist: Playlist) {
+    fun insertOne(context: Context, playlist: Playlist) {
+        val activity = Activity()
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 playlist.id = playlistDao.insertOne(playlist = playlist)
             } catch (_: SQLiteConstraintException) {
+                val message: String = context.getString(R.string.playlist_already_exist)
+                showToastOnUiThread(context = context, activity = activity, message = message)
                 return@launch
             }
             val playlistWithMusics: PlaylistWithMusics =

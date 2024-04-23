@@ -67,16 +67,16 @@ object SatunesPlaybackListener : PlaybackListener() {
 
     internal fun updateMediaPlaying() {
         val playbackController: PlaybackController = PlaybackController.getInstance()
-        if (playbackController.musicPlaying.value == null || !playbackController.isLoaded.value) {
+        val musicPlaying: Music? = playbackController.musicPlaying.value
+        if (musicPlaying == null || !playbackController.isLoaded.value) {
             return
         }
-        val musicPlaying: Music = playbackController.musicPlaying.value!!
         val metaData: MediaMetadataCompat = MediaMetadataCompat.Builder()
             .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, musicPlaying.id.toString())
             .putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_TITLE, decode(musicPlaying.title))
             .putString(
                 MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE,
-                decode(musicPlaying.artist?.title)
+                decode(musicPlaying.artist.title)
             )
             .putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, musicPlaying.artwork)
             .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, musicPlaying.duration)
@@ -92,10 +92,10 @@ object SatunesPlaybackListener : PlaybackListener() {
      */
     internal fun updatePlaybackState(state: Int, actions: Long) {
         val playbackController: PlaybackController = PlaybackController.getInstance()
-        if (!playbackController.isLoaded.value) {
+        val musicPlaying: Music? = playbackController.musicPlaying.value
+        if (musicPlaying == null || !playbackController.isLoaded.value) {
             return
         }
-        val musicPlaying: Music = playbackController.musicPlaying.value!!
         val currentPosition: Long = playbackController.getCurrentPosition()
         val extras = Bundle()
         extras.putString(

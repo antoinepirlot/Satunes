@@ -41,11 +41,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.internet.updates.UpdateAvailableStatus
 import io.github.antoinepirlot.satunes.internet.updates.UpdateCheckManager
 import io.github.antoinepirlot.satunes.router.Destination
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
 
 /**
  * @author Antoine Pirlot on 16/01/24
@@ -74,7 +74,10 @@ fun SatunesTopAppBar(
                         UpdateCheckManager.updateAvailableStatus.value = UpdateAvailableStatus.UNDEFINED
                     }
                     when (navController.currentBackStackEntry!!.destination.route!!) {
-                        Destination.SETTINGS.link -> navController.popBackStack()
+                        Destination.SETTINGS.link, Destination.BOTTOM_BAR_SETTING.link,
+                        Destination.PLAYBACK_SETTINGS.link, Destination.UPDATES.link
+                        -> navController.popBackStack()
+
                         else -> navController.navigate(Destination.SETTINGS.link)
                     }
                 }

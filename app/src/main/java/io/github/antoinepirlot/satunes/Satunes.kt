@@ -67,11 +67,7 @@ fun Satunes(
                 topBar = { SatunesTopAppBar(scrollBehavior = scrollBehavior, navController = navController) },
                 bottomBar = { SatunesBottomAppBar(navController = navController) }
             ) { innerPadding ->
-                Column(
-                    modifier = Modifier.padding(innerPadding)
-                ) {
-                    Router(navController = navController)
-                }
+                Router(modifier = Modifier.padding(innerPadding), navController = navController)
             }
         }
     }

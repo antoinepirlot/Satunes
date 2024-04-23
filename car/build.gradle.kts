@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "earth.satunes.car"
+    namespace = "io.github.antoinepirlot.satunes.car"
     compileSdk = 34
 
     defaultConfig {

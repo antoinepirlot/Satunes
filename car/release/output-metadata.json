@@ -4,7 +4,7 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "earth.mp3player.shared",
+  "applicationId": "io.github.antoinepirlot.mp3player.shared",
   "variantName": "release",
   "elements": [
     {

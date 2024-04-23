@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "earth.satunes.icons"
+    namespace = "io.github.antoinepirlot.satunes.icons"
     compileSdk = 34
 
     defaultConfig {
@@ -40,4 +40,9 @@ dependencies {
     val materialIconsVersion = "1.6.6"
     implementation("androidx.compose.material:material-icons-core:$materialIconsVersion")
     implementation("androidx.compose.material:material-icons-extended:$materialIconsVersion")
+
+    /**
+     * Utils
+     */
+    implementation(project(":utils"))
 }

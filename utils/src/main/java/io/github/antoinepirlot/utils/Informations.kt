@@ -23,7 +23,7 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.internet.utils
+package io.github.antoinepirlot.utils
 
 import android.app.Activity
 import android.content.Context
@@ -33,7 +33,7 @@ import android.widget.Toast
  * @author Antoine Pirlot on 14/04/2024
  */
 
-internal fun showToastOnUiThread(context: Context, activity: Activity, message: String) {
+fun showToastOnUiThread(context: Context, activity: Activity, message: String) {
     activity.runOnUiThread {
         Toast.makeText(
             context.applicationContext,

@@ -59,4 +59,9 @@ dependencies {
      * Database
      */
     implementation(project(":database"))
+
+    /**
+     * Utils
+     */
+    implementation(project(":utils"))
 }

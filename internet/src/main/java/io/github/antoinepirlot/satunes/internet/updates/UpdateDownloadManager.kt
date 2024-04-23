@@ -45,7 +45,7 @@ import io.github.antoinepirlot.satunes.internet.updates.Versions.PREVIEW_APK_REG
 import io.github.antoinepirlot.satunes.internet.updates.Versions.RELEASES_URL
 import io.github.antoinepirlot.satunes.internet.updates.Versions.RELEASE_APK_REGEX
 import io.github.antoinepirlot.satunes.internet.updates.Versions.versionType
-import io.github.antoinepirlot.satunes.internet.utils.showToastOnUiThread
+import io.github.antoinepirlot.utils.showToastOnUiThread
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

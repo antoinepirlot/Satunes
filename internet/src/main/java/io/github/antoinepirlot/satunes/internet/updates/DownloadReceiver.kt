@@ -31,7 +31,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import io.github.antoinepirlot.satunes.internet.R
-import io.github.antoinepirlot.satunes.internet.utils.showToastOnUiThread
+import io.github.antoinepirlot.utils.showToastOnUiThread
 
 /**
  * @author Antoine Pirlot on 14/04/2024

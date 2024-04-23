@@ -134,4 +134,9 @@ dependencies {
      * Update
      */
     implementation(project(":internet"))
+
+    /**
+     * Utils
+     */
+    implementation(project(":utils"))
 }

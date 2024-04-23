@@ -75,4 +75,9 @@ dependencies {
     annotationProcessor("androidx.room:room-compiler:$roomVersion")
     // To use Kotlin Symbol Processing (KSP)
     ksp("androidx.room:room-compiler:$roomVersion")
+
+    /**
+     * Utils
+     */
+    implementation(project(":utils"))
 }

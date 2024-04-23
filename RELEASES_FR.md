@@ -3,6 +3,18 @@ You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
 ## 0.9 (Android 9 Pie et ultérieur)
 
+### 0.9.1-beta
+
+Améliorations, Optimisations et Résolutions de problèmes:
+
+* Changement du nom de domaine vers "io.github.antoinepirlot.satunes".
+* Le design a été retouché pour apporter des pochette d'album par défaut partout dans l'application.
+* Les pochettes d'albums s'affichent dans Android Auto.
+* Les migration de la base de données pourront être faites.
+* Réglage de quelques problème lors de l'initialisation de Android Auto dans certains cas.
+* La recomposition de l'écran lors de l'ajout de données comme des playlist est maintenant
+  opérationnel.
+
 ### 0.9.0-beta
 
 MP3 Player porte enfin son propre nom "Satunes". Cette version devient compatible Android 9 Pie et plus récent.

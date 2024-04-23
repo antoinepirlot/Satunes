@@ -40,9 +40,10 @@ import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
-import io.github.antoinepirlot.satunes.ui.components.cards.media.MediaCardList
 import io.github.antoinepirlot.satunes.ui.components.bars.ShowCurrentMusicButton
+import io.github.antoinepirlot.satunes.ui.components.cards.media.MediaCardList
 
 /**
  * @author Antoine Pirlot on 01/02/24
@@ -53,6 +54,7 @@ fun MediaListView(
     modifier: Modifier = Modifier,
     mediaList: List<Media>,
     openMedia: (media: Media) -> Unit,
+    openedPlaylistWithMusics: PlaylistWithMusics? = null,
     onFABClick: () -> Unit,
     extraButtons: @Composable () -> Unit = { /*By default there's no extra buttons*/ },
 ) {
@@ -73,7 +75,11 @@ fun MediaListView(
         Column(
             modifier = Modifier.padding(innerPadding)
         ) {
-            MediaCardList(mediaList = mediaList, openMedia = openMedia)
+            MediaCardList(
+                mediaList = mediaList,
+                openMedia = openMedia,
+                openedPlaylistWithMusics = openedPlaylistWithMusics
+            )
         }
     }
 }
@@ -99,6 +105,7 @@ fun MediaListViewPreview() {
     MediaListView(
         mediaList = map,
         openMedia = {},
-        onFABClick = {}
+        onFABClick = {},
+        openedPlaylistWithMusics = null
     )
 }

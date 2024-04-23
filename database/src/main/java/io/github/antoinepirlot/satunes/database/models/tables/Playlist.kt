@@ -25,6 +25,7 @@
 
 package io.github.antoinepirlot.satunes.database.models.tables
 
+import android.graphics.Bitmap
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -44,5 +45,5 @@ data class Playlist(
     @ColumnInfo(name = "title") override var title: String,
 ) : Media {
     @Ignore
-    override var artwork: ImageBitmap? = null
+    override var artwork: Bitmap? = null
 }

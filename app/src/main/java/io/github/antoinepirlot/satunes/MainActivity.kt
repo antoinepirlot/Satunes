@@ -38,10 +38,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.OptIn
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.ui.Modifier
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.media3.common.util.UnstableApi
@@ -49,7 +45,6 @@ import io.github.antoinepirlot.satunes.database.services.DataCleanerManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.playback.services.PlaybackService
-import io.github.antoinepirlot.satunes.ui.theme.MP3Theme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -74,14 +69,7 @@ class MainActivity : ComponentActivity() {
         }
         PlaybackController.initInstance(context = baseContext)
         setContent {
-            MP3Theme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    Application()
-                }
-            }
+            Satunes()
         }
         DataCleanerManager.removeApkFiles(context = baseContext)
     }

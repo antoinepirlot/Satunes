@@ -37,10 +37,5 @@ internal object MediaSelectionManager {
      */
     val checkedPlaylistWithMusics: MutableList<PlaylistWithMusics> = mutableListOf()
 
-    /**
-     * Contains the playlist the user is viewing or null if the user is elsewhere
-     */
-    var openedPlaylist: PlaylistWithMusics? = null
-
     val checkedMusics: MutableList<Music> = mutableListOf()
 }

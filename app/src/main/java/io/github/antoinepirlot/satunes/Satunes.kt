@@ -26,9 +26,12 @@
 package io.github.antoinepirlot.satunes
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
@@ -40,6 +43,7 @@ import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.router.Router
 import io.github.antoinepirlot.satunes.ui.components.bars.SatunesBottomAppBar
 import io.github.antoinepirlot.satunes.ui.components.bars.SatunesTopAppBar
+import io.github.antoinepirlot.satunes.ui.theme.SatunesTheme
 
 /**
  * @author Antoine Pirlot on 10/04/2024
@@ -47,27 +51,31 @@ import io.github.antoinepirlot.satunes.ui.components.bars.SatunesTopAppBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Application(
+fun Satunes(
     modifier: Modifier = Modifier,
 ) {
-    val scrollBehavior =
-        TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
-    val navController: NavHostController = rememberNavController()
-    Scaffold(
-        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-        topBar = { SatunesTopAppBar(scrollBehavior = scrollBehavior, navController = navController) },
-        bottomBar = { SatunesBottomAppBar(navController = navController) }
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier.padding(innerPadding)
+    SatunesTheme {
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background
         ) {
-            Router(navController = navController)
+            val scrollBehavior =
+                TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
+            val navController: NavHostController = rememberNavController()
+            Scaffold(
+                modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+                topBar = { SatunesTopAppBar(scrollBehavior = scrollBehavior, navController = navController) },
+                bottomBar = { SatunesBottomAppBar(navController = navController) }
+            ) { innerPadding ->
+                Router(modifier = Modifier.padding(innerPadding), navController = navController)
+            }
         }
     }
+
 }
 
 @Preview
 @Composable
 fun ApplicationPreview() {
-    Application()
+    Satunes()
 }

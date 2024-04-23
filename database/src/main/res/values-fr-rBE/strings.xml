@@ -7,4 +7,5 @@
     <string name="unknown_artist">Artiste Inconnu</string>
     <string name="unknown_album">Album Inconnu</string>
     <string name="unknown_genre">Genre Inconnu</string>
+    <string name="playlist_already_exist">Cette playlist a déjà été créée</string>
 </resources>

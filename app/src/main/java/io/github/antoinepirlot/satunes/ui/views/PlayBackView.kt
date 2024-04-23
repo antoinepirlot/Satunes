@@ -42,8 +42,8 @@ import androidx.compose.ui.unit.dp
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
-import io.github.antoinepirlot.satunes.ui.components.images.MusicPlayingAlbumArtwork
 import io.github.antoinepirlot.satunes.ui.components.bars.MusicControlBar
+import io.github.antoinepirlot.satunes.ui.components.images.MusicPlayingAlbumArtwork
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 import io.github.antoinepirlot.satunes.ui.components.texts.Subtitle
 
@@ -69,7 +69,7 @@ fun PlayBackView(
         MusicPlayingAlbumArtwork(
             modifier = Modifier
                 .size(albumArtworkSize)
-                .padding(bottom = 40.dp),
+                .padding(40.dp),
             onClick = onAlbumClick
         )
         NormalText(text = musicPlaying.value!!.title)

@@ -28,7 +28,9 @@ package io.github.antoinepirlot.satunes.ui.views.folder
 import android.net.Uri.decode
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
@@ -38,15 +40,14 @@ import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.router.utils.openMediaFromFolder
-import io.github.antoinepirlot.satunes.router.utils.resetOpenedPlaylist
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
 import io.github.antoinepirlot.satunes.ui.components.texts.Title
 import io.github.antoinepirlot.satunes.ui.views.MediaListView
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.views.utils.getRootFolderName
 import java.util.SortedMap
 
@@ -64,17 +65,16 @@ fun FolderView(
     val folderMusicMediaItemSortedMap: SortedMap<Music, MediaItem> = remember {
         folder.musicMediaItemSortedMap
     }
-    val mapToShow: SortedMap<Long, Media> = sortedMapOf()
 
-    //Load sub-folders
-    mapToShow.putAll(folder.getSubFolderMapAsMedia())
-
-    //Load sub-folder's musics
-    folderMusicMediaItemSortedMap.forEach { (music: Music, _) ->
-        mapToShow[music.id] = music
+    //Recompose if data changed
+    var mapChanged: Boolean by remember { folder.musicMediaItemSortedMapUpdate }
+    if (mapChanged) {
+        mapChanged = false
     }
+    //
 
-    resetOpenedPlaylist()
+    val subFolderMap: SortedMap<Long, Media> = sortedMapOf()
+
     Column(modifier = modifier) {
         if (folder.parentFolder == null) {
             Title(text = '/' + getRootFolderName(title = folder.title))
@@ -88,10 +88,13 @@ fun FolderView(
             }
             Title(text = path, fontSize = 20.sp)
         }
-
+        loadSubfolders(
+            subFolderMap = subFolderMap,
+            folder = folder,
+            folderMusicMediaItemSortedMap = folderMusicMediaItemSortedMap
+        )
         MediaListView(
-            mediaList = mapToShow.values.toList(),
-
+            mediaList = subFolderMap.values.toList(),
             openMedia = { clickedMedia: Media ->
                 openMediaFromFolder(navController, clickedMedia)
             },
@@ -106,6 +109,20 @@ fun FolderView(
                 })
             }
         )
+    }
+}
+
+private fun loadSubfolders(
+    subFolderMap: SortedMap<Long, Media>,
+    folder: Folder,
+    folderMusicMediaItemSortedMap: SortedMap<Music, MediaItem>
+) {
+    //Load sub-folders
+    subFolderMap.putAll(folder.getSubFolderMapAsMedia())
+
+    //Load sub-folder's musics
+    folderMusicMediaItemSortedMap.forEach { (music: Music, _) ->
+        subFolderMap[music.id] = music
     }
 }
 

@@ -31,11 +31,12 @@ import android.graphics.BitmapFactory
 import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.net.Uri.decode
-import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.asImageBitmap
+import androidx.core.content.res.ResourcesCompat
+import androidx.core.graphics.drawable.toBitmap
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import io.github.antoinepirlot.satunes.database.services.DataManager
+import io.github.antoinepirlot.satunes.icons.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -59,7 +60,7 @@ class Music(
 ) : Media {
     var uri: Uri = Uri.parse(absolutePath) // Must be init before media item
     val mediaItem: MediaItem = getMediaMetadata()
-    override var artwork: ImageBitmap? = null
+    override var artwork: Bitmap? = null
 
     init {
         DataManager.addMusic(music = this)
@@ -102,13 +103,18 @@ class Music(
 
                 val artwork: ByteArray? = mediaMetadataRetriever.embeddedPicture
                 mediaMetadataRetriever.release()
-
-                if (artwork != null) {
+                if (artwork == null) {
+                    this@Music.artwork = ResourcesCompat.getDrawable(
+                        context.resources,
+                        R.mipmap.empty_album_artwork_foreground,
+                        null
+                    )?.toBitmap()
+                } else {
                     val bitmap: Bitmap = BitmapFactory.decodeByteArray(artwork, 0, artwork.size)
-                    this@Music.artwork = bitmap.asImageBitmap()
-                    if (this@Music.album.artwork == null) {
-                        this@Music.album.artwork = this@Music.artwork
-                    }
+                    this@Music.artwork = bitmap
+                }
+                if (this@Music.album.artwork == null) {
+                    this@Music.album.artwork = this@Music.artwork
                 }
             } catch (_: Exception) {
                 /* No artwork found*/

@@ -27,23 +27,26 @@ package io.github.antoinepirlot.satunes.ui.views.artist
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.media3.common.MediaItem
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.router.utils.openMedia
-import io.github.antoinepirlot.satunes.router.utils.resetOpenedPlaylist
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
 import io.github.antoinepirlot.satunes.ui.components.cards.albums.AlbumGrid
 import io.github.antoinepirlot.satunes.ui.components.texts.Title
 import io.github.antoinepirlot.satunes.ui.views.MediaListView
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import java.util.SortedMap
 
 /**
@@ -58,15 +61,25 @@ fun ArtistView(
 ) {
     val playbackController: PlaybackController = PlaybackController.getInstance()
 
-    resetOpenedPlaylist()
 
     Column(modifier = modifier) {
         Title(text = artist.title)
+        val albumMap: SortedMap<String, Album> = remember { artist.albumSortedMap }
+
+        //Recompose if data changed
+        var mapChanged: Boolean by remember { artist.albumSortedMapUpdate }
+        if (mapChanged) {
+            mapChanged = false
+        }
+        //
+
         AlbumGrid(
-            mediaList = artist.albumSortedMap.values.toList(),
-            onClick = { openMedia(navController = navController, media = it) })
+            mediaList = albumMap.values.toList(),
+            onClick = { openMedia(navController = navController, media = it) }
+        )
+        val musicList: List<Music> = remember { artist.musicList }
         MediaListView(
-            mediaList = artist.musicList,
+            mediaList = musicList,
 
             openMedia = { clickedMedia: Media ->
                 playbackController.loadMusic(musicMediaItemSortedMap = artist.musicMediaItemSortedMap)

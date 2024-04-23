@@ -51,4 +51,9 @@ dependencies {
      * OkHttp3
      */
     implementation("com.squareup.okhttp3:okhttp:4.9.3")
+
+    /**
+     * Utils
+     */
+    implementation(project(":utils"))
 }

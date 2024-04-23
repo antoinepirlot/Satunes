@@ -67,7 +67,7 @@ object SatunesPlaybackListener : PlaybackListener() {
 
     internal fun updateMediaPlaying() {
         val playbackController: PlaybackController = PlaybackController.getInstance()
-        if (!playbackController.isLoaded.value) {
+        if (playbackController.musicPlaying.value == null || !playbackController.isLoaded.value) {
             return
         }
         val musicPlaying: Music = playbackController.musicPlaying.value!!

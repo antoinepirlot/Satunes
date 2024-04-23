@@ -83,7 +83,6 @@ class SatunesCarMusicService : MediaBrowserServiceCompat() {
 
     private fun loadAllPlaybackData() {
         val playbackController: PlaybackController = PlaybackController.getInstance()
-        getAllMediaMediaItemList(playbackController.playlist.musicList)
         SatunesPlaybackListener.updateMediaPlaying()
         if (playbackController.isPlaying.value) {
             SatunesPlaybackListener.updatePlaybackState(

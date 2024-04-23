@@ -20,8 +20,8 @@ If you decide to use my code to create new app, you can but you have to use the 
 5) Once the file is downaloded, open it.
 6) Allow the unknwon application installation (It's required as the app is not deployed on the Play Store).
 7) Install the app (it is likely that you will have to start step 5 again).
-9) I recommand you to deactvate unknown app installation for the app from where you install the app.
-10) Enjoy you music freely and passion :D
+9) I recommand you to disable unknown app installation for the app from where you installed the app.
+10) Enjoy you music freely :D
 
 ## Android Auto
     

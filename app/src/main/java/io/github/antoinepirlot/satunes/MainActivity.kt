@@ -49,7 +49,7 @@ import io.github.antoinepirlot.satunes.database.services.DataCleanerManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.playback.services.PlaybackService
-import io.github.antoinepirlot.satunes.ui.theme.MP3Theme
+import io.github.antoinepirlot.satunes.ui.theme.SatunesTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -74,7 +74,7 @@ class MainActivity : ComponentActivity() {
         }
         PlaybackController.initInstance(context = baseContext)
         setContent {
-            MP3Theme {
+            SatunesTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background

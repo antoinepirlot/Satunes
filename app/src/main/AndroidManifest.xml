@@ -12,7 +12,7 @@
         android:theme="@style/Theme.MP3">
 
         <activity
-            android:name="earth.satunes.MainActivity"
+            android:name=".MainActivity"
             android:launchMode="singleInstance"
             android:exported="true"
             android:theme="@style/Theme.MP3">

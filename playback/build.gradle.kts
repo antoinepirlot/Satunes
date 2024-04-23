@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "earth.satunes.playback"
+    namespace = "io.github.antoinepirlot.satunes.playback"
     compileSdk = 34
 
     defaultConfig {

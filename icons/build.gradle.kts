@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "earth.satunes.icons"
+    namespace = "io.github.antoinepirlot.satunes.icons"
     compileSdk = 34
 
     defaultConfig {

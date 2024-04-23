@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "earth.satunes.internet"
+    namespace = "io.github.antoinepirlot.satunes.internet"
     compileSdk = 34
 
     defaultConfig {

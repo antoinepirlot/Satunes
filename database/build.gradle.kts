@@ -10,7 +10,7 @@ room {
 }
 
 android {
-    namespace = "earth.satunes.database"
+    namespace = "io.github.antoinepirlot.satunes.database"
     compileSdk = 34
 
     defaultConfig {

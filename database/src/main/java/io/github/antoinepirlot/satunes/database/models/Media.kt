@@ -26,9 +26,7 @@
 package io.github.antoinepirlot.satunes.database.models
 
 import android.graphics.Bitmap
-import androidx.compose.ui.graphics.ImageBitmap
 import androidx.media3.common.MediaItem
-import java.text.Normalizer
 import java.util.SortedMap
 
 /**
@@ -43,12 +41,6 @@ interface Media : Comparable<Media> {
         get() = sortedMapOf()
 
     override fun compareTo(other: Media): Int {
-        val thisTitleNormalized: String =
-            Normalizer.normalize(this.title.lowercase(), Normalizer.Form.NFD)
-
-        val otherTitleNormalized: String =
-            Normalizer.normalize(other.title.lowercase(), Normalizer.Form.NFD)
-
-        return thisTitleNormalized.compareTo(otherTitleNormalized)
+        return StringComparator.compare(o1 = this.title, o2 = other.title)
     }
 }

@@ -22,4 +22,10 @@
     <string name="current_version">"Version installée: "</string>
     <string name="check_update">Rechercher une mise à jour</string>
     <string name="add_musics_to_playlist">Ajouter des musiques</string>
+    <string name="no_playlists">Tu n\'as pas encore créé de playlist. Clique sur le bouton \"+\" en bas à droite pour en créer une</string>
+    <string name="no_music_in_playlist">Cette playlist est vide. CLique sur le bouton \"+\" en bas à droite pour en ajouter</string>
+    <string name="no_music">Aucune musique n\'a été trouvée</string>
+    <string name="no_genre">Aucun genre n\'a été trouvé</string>
+    <string name="no_album">Il n\'y aucun album</string>
+    <string name="no_artist">Aucun artiste n\'a été trouvé</string>
 </resources>

@@ -22,4 +22,10 @@
     <string name="current_version">"Current Version: "</string>
     <string name="check_update">Check Update</string>
     <string name="add_musics_to_playlist">Add musics to playlist</string>
+    <string name="no_playlists">You haven\'t created a playlist yet. Click on the “+” button at the bottom right to create one</string>
+    <string name="no_music_in_playlist">This playlist is empty. Click on the “+” button at the bottom right to add more</string>
+    <string name="no_music">No music found</string>
+    <string name="no_genre">No genre found</string>
+    <string name="no_album">No album found</string>
+    <string name="no_artist">No artist found</string>
 </resources>

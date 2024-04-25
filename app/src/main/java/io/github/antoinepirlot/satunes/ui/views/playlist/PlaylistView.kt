@@ -35,10 +35,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.media3.common.MediaItem
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
@@ -99,7 +101,8 @@ fun PlaylistView(
                     )
                     openMedia(navController = navController)
                 })
-            }
+            },
+            emptyViewText = stringResource(id = R.string.no_music_in_playlist)
         )
         if (openAddMusicsDialog) {
             val allMusic: List<Music> = DataManager.musicMediaItemSortedMap.keys.toList()

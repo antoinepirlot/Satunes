@@ -97,7 +97,6 @@ object DataManager {
     }
 
     fun addMusic(music: Music) {
-        musicMediaItemSortedMap.putIfAbsent(music, music.mediaItem)
         if (!musicMediaItemSortedMap.contains(music)) {
             musicMediaItemSortedMap[music] = music.mediaItem
             musicMediaItemSortedMapUpdated.value = true

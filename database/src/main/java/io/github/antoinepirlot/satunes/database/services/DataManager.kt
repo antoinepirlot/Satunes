@@ -97,7 +97,6 @@ object DataManager {
     }
 
     fun addMusic(music: Music) {
-        musicMediaItemSortedMap.putIfAbsent(music, music.mediaItem)
         if (!musicMediaItemSortedMap.contains(music)) {
             musicMediaItemSortedMap[music] = music.mediaItem
             musicMediaItemSortedMapUpdated.value = true
@@ -145,7 +144,7 @@ object DataManager {
     }
 
     fun addAlbum(album: Album) {
-        if (albumMapById.contains(album.id)) {
+        if (albumSet.contains(album)) {
             val existingAlbum: Album = albumMapById.values.first { it == album }
             throw DuplicatedAlbumException(existingAlbum = existingAlbum)
         }

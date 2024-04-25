@@ -144,7 +144,7 @@ object DataManager {
     }
 
     fun addAlbum(album: Album) {
-        if (albumMapById.contains(album.id)) {
+        if (albumSet.contains(album)) {
             val existingAlbum: Album = albumMapById.values.first { it == album }
             throw DuplicatedAlbumException(existingAlbum = existingAlbum)
         }

@@ -53,7 +53,11 @@ fun MediaSelectionDialog(
         modifier = modifier,
         icon = icon,
         title = {
-            NormalText(text = stringResource(id = R.string.add_to_playlist))
+            if (mediaList.isEmpty()) {
+                NormalText(text = stringResource(id = R.string.no_music))
+            } else {
+                NormalText(text = stringResource(id = R.string.add_to_playlist))
+            } 
         },
         text = {
             Column {
@@ -63,7 +67,14 @@ fun MediaSelectionDialog(
         onDismissRequest = onDismissRequest,
         confirmButton = {
             TextButton(onClick = onConfirm) {
-                NormalText(text = stringResource(id = R.string.add))
+                if (mediaList.isNotEmpty()) {
+                    NormalText(text = stringResource(id = R.string.add))
+                }
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismissRequest) {
+                NormalText(text = stringResource(id = R.string.cancel))
             }
         }
     )

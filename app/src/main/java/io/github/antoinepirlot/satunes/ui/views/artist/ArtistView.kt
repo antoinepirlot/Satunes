@@ -31,10 +31,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.media3.common.MediaItem
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Media
@@ -87,20 +89,22 @@ fun ArtistView(
             },
             onFABClick = { openCurrentMusic(navController) },
             extraButtons = {
-                ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
-                    val musicMediaItemMap: SortedMap<Music, MediaItem> = sortedMapOf()
-
-                    artist.musicList.forEach { music: Music ->
-                        musicMediaItemMap[music] = music.mediaItem
-                    }
-
-                    playbackController.loadMusic(
-                        musicMediaItemSortedMap = musicMediaItemMap,
-                        shuffleMode = true
-                    )
-                    openMedia(navController = navController)
-                })
-            }
+                val musicMediaItemMap: SortedMap<Music, MediaItem> = sortedMapOf()
+                //Todo move this kind of code into object
+                artist.musicList.forEach { music: Music ->
+                    musicMediaItemMap[music] = music.mediaItem
+                }
+                if (musicMediaItemMap.isNotEmpty()) {
+                    ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
+                        playbackController.loadMusic(
+                            musicMediaItemSortedMap = musicMediaItemMap,
+                            shuffleMode = true
+                        )
+                        openMedia(navController = navController)
+                    })
+                }
+            },
+            emptyViewText = stringResource(id = R.string.no_music)
         )
     }
 }

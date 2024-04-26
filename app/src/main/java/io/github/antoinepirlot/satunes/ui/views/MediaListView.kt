@@ -33,7 +33,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Folder
@@ -42,6 +44,7 @@ import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
+import io.github.antoinepirlot.satunes.ui.components.EmptyView
 import io.github.antoinepirlot.satunes.ui.components.bars.ShowCurrentMusicButton
 import io.github.antoinepirlot.satunes.ui.components.cards.media.MediaCardList
 
@@ -57,6 +60,7 @@ fun MediaListView(
     openedPlaylistWithMusics: PlaylistWithMusics? = null,
     onFABClick: () -> Unit,
     extraButtons: @Composable () -> Unit = { /*By default there's no extra buttons*/ },
+    emptyViewText: String
 ) {
     Scaffold(
         modifier = modifier,
@@ -75,11 +79,15 @@ fun MediaListView(
         Column(
             modifier = Modifier.padding(innerPadding)
         ) {
-            MediaCardList(
-                mediaList = mediaList,
-                openMedia = openMedia,
-                openedPlaylistWithMusics = openedPlaylistWithMusics
-            )
+            if (mediaList.isNotEmpty()) {
+                MediaCardList(
+                    mediaList = mediaList,
+                    openMedia = openMedia,
+                    openedPlaylistWithMusics = openedPlaylistWithMusics
+                )
+            } else {
+                EmptyView(text = emptyViewText)
+            }
         }
     }
 }
@@ -106,6 +114,7 @@ fun MediaListViewPreview() {
         mediaList = map,
         openMedia = {},
         onFABClick = {},
-        openedPlaylistWithMusics = null
+        openedPlaylistWithMusics = null,
+        emptyViewText = "No data"
     )
 }

@@ -3,6 +3,14 @@ You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
 ## 0.9 (Android 9 Pie et ultérieur)
 
+### 0.9.2-beta
+
+Améliorations, Optimisations et Résolutions de problèmes:
+
+* Amélioration du tri
+* Les albums contiennent plus qu'une musique
+* Prise en compte du cas où aucune donnée n'a été chargée.
+
 ### 0.9.1-beta
 
 Améliorations, Optimisations et Résolutions de problèmes:

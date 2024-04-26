@@ -35,6 +35,7 @@ import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.database.models.StringComparator
 import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
 import io.github.antoinepirlot.satunes.database.models.tables.Playlist
 import java.util.SortedMap
@@ -57,7 +58,7 @@ object DataManager {
     val folderMap: SortedMap<Long, Folder> = sortedMapOf()
     val folderMapUpdated: MutableState<Boolean> = mutableStateOf(false)
 
-    val artistMap: SortedMap<String, Artist> = sortedMapOf()
+    val artistMap: SortedMap<String, Artist> = sortedMapOf(comparator = StringComparator)
     val artistMapUpdated: MutableState<Boolean> = mutableStateOf(false)
 
     private val artistMapById: MutableMap<Long, Artist> = mutableMapOf()
@@ -66,12 +67,13 @@ object DataManager {
 
     private val albumMapById: MutableMap<Long, Album> = mutableMapOf()
 
-    val genreMap: SortedMap<String, Genre> = sortedMapOf()
+    val genreMap: SortedMap<String, Genre> = sortedMapOf(comparator = StringComparator)
     val genreMapUpdated: MutableState<Boolean> = mutableStateOf(false)
 
     private val genreMapById: MutableMap<Long, Genre> = mutableMapOf()
 
-    val playlistWithMusicsMap: SortedMap<String, PlaylistWithMusics> = sortedMapOf()
+    val playlistWithMusicsMap: SortedMap<String, PlaylistWithMusics> =
+        sortedMapOf(comparator = StringComparator)
     val playlistWithMusicsMapUpdated: MutableState<Boolean> = mutableStateOf(false)
 
     private val playlistWithMusicsMapById: MutableMap<Long, PlaylistWithMusics> = mutableMapOf()
@@ -95,7 +97,6 @@ object DataManager {
     }
 
     fun addMusic(music: Music) {
-        musicMediaItemSortedMap.putIfAbsent(music, music.mediaItem)
         if (!musicMediaItemSortedMap.contains(music)) {
             musicMediaItemSortedMap[music] = music.mediaItem
             musicMediaItemSortedMapUpdated.value = true
@@ -143,7 +144,7 @@ object DataManager {
     }
 
     fun addAlbum(album: Album) {
-        if (albumMapById.contains(album.id)) {
+        if (albumSet.contains(album)) {
             val existingAlbum: Album = albumMapById.values.first { it == album }
             throw DuplicatedAlbumException(existingAlbum = existingAlbum)
         }

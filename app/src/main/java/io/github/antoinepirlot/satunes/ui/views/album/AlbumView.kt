@@ -91,7 +91,7 @@ fun AlbumView(
                     })
                 }
             },
-            emptyViewText = stringResource(id = R.string.no_album)
+            emptyViewText = stringResource(id = R.string.no_music)
         )
     }
 }

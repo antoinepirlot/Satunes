@@ -94,7 +94,7 @@ fun RootFolderView(
                 })
             }
         },
-        emptyViewText = stringResource(id = R.string.no_music)
+        emptyViewText = stringResource(id = R.string.no_folder)
     )
 }
 

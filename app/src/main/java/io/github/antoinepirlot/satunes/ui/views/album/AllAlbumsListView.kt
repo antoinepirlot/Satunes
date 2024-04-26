@@ -85,7 +85,7 @@ fun AllAlbumsListView(
                 })
             }
         },
-        emptyViewText = stringResource(id = R.string.no_music)
+        emptyViewText = stringResource(id = R.string.no_album)
     )
 }
 

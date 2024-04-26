@@ -34,6 +34,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Media
+import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.ui.components.forms.MediaSelectionForm
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 
@@ -47,6 +48,7 @@ fun MediaSelectionDialog(
     onDismissRequest: () -> Unit,
     onConfirm: () -> Unit,
     mediaList: List<Media>,
+    playlistTitle: String? = null,
     icon: @Composable () -> Unit,
 ) {
     AlertDialog(
@@ -55,9 +57,14 @@ fun MediaSelectionDialog(
         title = {
             if (mediaList.isEmpty()) {
                 NormalText(text = stringResource(id = R.string.no_music))
+            } else if (mediaList[0] is Music) {
+                if (playlistTitle == null) {
+                    throw IllegalStateException("PLaylist title is required when adding music to playist")
+                }
+                NormalText(text = stringResource(id = R.string.add_to) + playlistTitle)
             } else {
                 NormalText(text = stringResource(id = R.string.add_to_playlist))
-            } 
+            }
         },
         text = {
             Column {

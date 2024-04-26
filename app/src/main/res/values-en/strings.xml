@@ -28,4 +28,5 @@
     <string name="no_genre">No genre found</string>
     <string name="no_album">No album found</string>
     <string name="no_artist">No artist found</string>
+    <string name="loading_data">Loading Data…</string>
 </resources>

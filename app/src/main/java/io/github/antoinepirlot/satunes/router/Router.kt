@@ -43,7 +43,7 @@ import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMus
 import io.github.antoinepirlot.satunes.database.services.DataLoader
 import io.github.antoinepirlot.satunes.database.services.DataManager
 import io.github.antoinepirlot.satunes.router.utils.openMedia
-import io.github.antoinepirlot.satunes.ui.components.LoadingCircle
+import io.github.antoinepirlot.satunes.ui.views.LoadingView
 import io.github.antoinepirlot.satunes.ui.views.PlayBackView
 import io.github.antoinepirlot.satunes.ui.views.album.AlbumView
 import io.github.antoinepirlot.satunes.ui.views.album.AllAlbumsListView
@@ -81,7 +81,7 @@ internal fun Router(
         composable(Destination.FOLDERS.link) {
             // /!\ This route prevent back gesture to exit the app
             if (isLoading.value) {
-                LoadingCircle()
+                LoadingView()
             } else {
                 RootFolderView(navController = navController)
             }
@@ -89,7 +89,7 @@ internal fun Router(
 
         composable("${Destination.FOLDERS.link}/{id}") {
             if (isLoading.value) {
-                LoadingCircle()
+                LoadingView()
             } else {
                 val folderId = it.arguments!!.getString("id")!!.toLong()
                 val folder: Folder by remember { mutableStateOf(DataManager.getFolder(folderId = folderId)) }
@@ -99,7 +99,7 @@ internal fun Router(
 
         composable(Destination.ARTISTS.link) {
             if (isLoading.value) {
-                LoadingCircle()
+                LoadingView()
             } else {
                 AllArtistsListView(navController = navController)
             }
@@ -107,7 +107,7 @@ internal fun Router(
 
         composable("${Destination.ARTISTS.link}/{name}") {
             if (isLoading.value) {
-                LoadingCircle()
+                LoadingView()
             } else {
                 val artistName: String = encode(it.arguments!!.getString("name")!!)
                 val artist: Artist by remember { mutableStateOf(DataManager.getArtist(artistName)) }
@@ -117,7 +117,7 @@ internal fun Router(
 
         composable(Destination.ALBUMS.link) {
             if (isLoading.value) {
-                LoadingCircle()
+                LoadingView()
             } else {
                 AllAlbumsListView(navController = navController)
             }
@@ -125,7 +125,7 @@ internal fun Router(
 
         composable("${Destination.ALBUMS.link}/{id}") {
             if (isLoading.value) {
-                LoadingCircle()
+                LoadingView()
             } else {
                 val albumId: Long = it.arguments!!.getString("id")!!.toLong()
                 val album: Album by remember { mutableStateOf(DataManager.getAlbum(albumId)) }
@@ -135,7 +135,7 @@ internal fun Router(
 
         composable(Destination.GENRES.link) {
             if (isLoading.value) {
-                LoadingCircle()
+                LoadingView()
             } else {
                 AllGenresListView(navController = navController)
             }
@@ -143,7 +143,7 @@ internal fun Router(
 
         composable("${Destination.GENRES.link}/{name}") {
             if (isLoading.value) {
-                LoadingCircle()
+                LoadingView()
             } else {
                 val genreName: String = encode(it.arguments!!.getString("name")!!)
                 val genre: Genre by remember { mutableStateOf(DataManager.getGenre(genreName = genreName)) }
@@ -153,7 +153,7 @@ internal fun Router(
 
         composable(Destination.PLAYLISTS.link) {
             if (isLoading.value) {
-                LoadingCircle()
+                LoadingView()
             } else {
                 PlaylistListView(navController = navController)
             }
@@ -161,7 +161,7 @@ internal fun Router(
 
         composable("${Destination.PLAYLISTS.link}/{id}") {
             if (isLoading.value) {
-                LoadingCircle()
+                LoadingView()
             } else {
                 val playlistId: Long = it.arguments!!.getString("id")!!.toLong()
                 val playlist: PlaylistWithMusics by remember {
@@ -173,7 +173,7 @@ internal fun Router(
 
         composable(Destination.MUSICS.link) {
             if (isLoading.value) {
-                LoadingCircle()
+                LoadingView()
             } else {
                 AllMusicsListView(navController = navController)
             }
@@ -181,7 +181,7 @@ internal fun Router(
 
         composable(Destination.PLAYBACK.link) {
             if (isLoading.value) {
-                LoadingCircle()
+                LoadingView()
             } else {
                 PlayBackView(
                     onAlbumClick = { album: Album? ->

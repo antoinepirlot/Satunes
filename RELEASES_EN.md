@@ -3,6 +3,14 @@ Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
 ## 0.9 (Android 9 Pie and later)
 
+### 0.9.2-beta
+
+Improvements, Optimizations and Troubleshooting:
+
+* Improved sorting
+* Albums contain more than one song
+* Taking into account the case where no data has been loaded.
+
 ### 0.9.1-beta
 
 Improvements, Optimizations and Troubleshooting:

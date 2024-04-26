@@ -94,13 +94,15 @@ fun PlaylistView(
             onFABClick = { openCurrentMusic(navController = navController) },
             extraButtons = {
                 ExtraButton(icon = SatunesIcons.ADD, onClick = { openAddMusicsDialog = true })
-                ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
-                    PlaybackController.getInstance().loadMusic(
-                        musicMediaItemSortedMap = playlist.musicMediaItemSortedMap,
-                        shuffleMode = true
-                    )
-                    openMedia(navController = navController)
-                })
+                if (playlist.musicMediaItemSortedMap.isNotEmpty()) {
+                    ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
+                        PlaybackController.getInstance().loadMusic(
+                            musicMediaItemSortedMap = playlist.musicMediaItemSortedMap,
+                            shuffleMode = true
+                        )
+                        openMedia(navController = navController)
+                    })
+                }
             },
             emptyViewText = stringResource(id = R.string.no_music_in_playlist)
         )

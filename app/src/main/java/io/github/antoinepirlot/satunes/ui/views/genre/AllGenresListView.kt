@@ -76,18 +76,20 @@ fun AllGenresListView(
         },
         onFABClick = { openCurrentMusic(navController = navController) },
         extraButtons = {
-            ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
-                val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
+            if (genreMap.isNotEmpty()) {
+                ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
+                    val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
 
-                genreMap.forEach { (_: String, genre: Genre) ->
-                    musicMediaItemSortedMap.putAll(genre.musicMediaItemSortedMap)
-                }
-                playbackController.loadMusic(
-                    musicMediaItemSortedMap = musicMediaItemSortedMap,
-                    shuffleMode = true
-                )
-                openMedia(navController = navController)
-            })
+                    genreMap.forEach { (_: String, genre: Genre) ->
+                        musicMediaItemSortedMap.putAll(genre.musicMediaItemSortedMap)
+                    }
+                    playbackController.loadMusic(
+                        musicMediaItemSortedMap = musicMediaItemSortedMap,
+                        shuffleMode = true
+                    )
+                    openMedia(navController = navController)
+                })
+            }
         },
         emptyViewText = stringResource(id = R.string.no_genre)
     )

@@ -102,13 +102,16 @@ fun FolderView(
             },
             onFABClick = { openCurrentMusic(navController) },
             extraButtons = {
-                ExtraButton(icon = SatunesIcons.SHUFFLE, onClick =  {
-                    playbackController.loadMusic(
-                        musicMediaItemSortedMap = folder.getAllMusic(),
-                        shuffleMode = true
-                    )
-                    openMedia(navController = navController)
-                })
+                val folderMusics : SortedMap<Music, MediaItem> = folder.getAllMusic()
+                if (folderMusics.isNotEmpty()) {
+                    ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
+                        playbackController.loadMusic(
+                            musicMediaItemSortedMap = folderMusics,
+                            shuffleMode = true
+                        )
+                        openMedia(navController = navController)
+                    })
+                }
             },
             emptyViewText = stringResource(id = R.string.no_music)
         )

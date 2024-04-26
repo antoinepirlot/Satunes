@@ -78,19 +78,21 @@ fun RootFolderView(
         },
         onFABClick = { openCurrentMusic(navController) },
         extraButtons = {
-            ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
-                val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
-                @Suppress("NAME_SHADOWING")
-                rootFolderMap.forEach { (_, folder: Media) ->
-                    val folder = folder as Folder
-                    musicMediaItemSortedMap.putAll(folder.getAllMusic())
-                }
-                playbackController.loadMusic(
-                    musicMediaItemSortedMap = musicMediaItemSortedMap,
-                    shuffleMode = true
-                )
-                openMedia(navController = navController)
-            })
+            if (rootFolderMap.isNotEmpty()) {
+                ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
+                    val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
+                    @Suppress("NAME_SHADOWING")
+                    rootFolderMap.forEach { (_, folder: Media) ->
+                        val folder = folder as Folder
+                        musicMediaItemSortedMap.putAll(folder.getAllMusic())
+                    }
+                    playbackController.loadMusic(
+                        musicMediaItemSortedMap = musicMediaItemSortedMap,
+                        shuffleMode = true
+                    )
+                    openMedia(navController = navController)
+                })
+            }
         },
         emptyViewText = stringResource(id = R.string.no_music)
     )

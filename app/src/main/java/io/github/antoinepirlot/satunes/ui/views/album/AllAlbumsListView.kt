@@ -69,18 +69,21 @@ fun AllAlbumsListView(
         },
         onFABClick = { openCurrentMusic(navController = navController) },
         extraButtons = {
-            ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
-                val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
+            val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
+            // TODO Move into object
+            albumSet.forEach { album: Album ->
+                musicMediaItemSortedMap.putAll(album.musicMediaItemSortedMap)
+            }
+            if(musicMediaItemSortedMap.isNotEmpty()) {
+                ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
 
-                albumSet.forEach { album: Album ->
-                    musicMediaItemSortedMap.putAll(album.musicMediaItemSortedMap)
-                }
-                playbackController.loadMusic(
-                    musicMediaItemSortedMap = musicMediaItemSortedMap,
-                    shuffleMode = true
-                )
-                openMedia(navController = navController)
-            })
+                    playbackController.loadMusic(
+                        musicMediaItemSortedMap = musicMediaItemSortedMap,
+                        shuffleMode = true
+                    )
+                    openMedia(navController = navController)
+                })
+            }
         },
         emptyViewText = stringResource(id = R.string.no_music)
     )

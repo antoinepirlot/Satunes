@@ -82,13 +82,15 @@ fun GenreView(
             },
             onFABClick = { openCurrentMusic(navController = navController) },
             extraButtons = {
-                ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
-                    playbackController.loadMusic(
-                        musicMediaItemSortedMap = genre.musicMediaItemSortedMap,
-                        shuffleMode = true
-                    )
-                    openMedia(navController = navController)
-                })
+                if (genre.musicMediaItemSortedMap.isNotEmpty()) {
+                    ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
+                        playbackController.loadMusic(
+                            musicMediaItemSortedMap = genre.musicMediaItemSortedMap,
+                            shuffleMode = true
+                        )
+                        openMedia(navController = navController)
+                    })
+                }
             },
             emptyViewText = stringResource(id = R.string.no_music)
         )

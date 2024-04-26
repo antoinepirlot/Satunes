@@ -36,45 +36,6 @@ object StringComparator : Comparator<String> {
             Normalizer.normalize(o1, Normalizer.Form.NFD)
         val o2Normalized: String =
             Normalizer.normalize(o2, Normalizer.Form.NFD)
-
-        for (i: Int in o1Normalized.indices) {
-            if (i == o2Normalized.lastIndex + 1) {
-                break
-            }
-            val c1: Char = o1Normalized[i]
-            val c2: Char = o2Normalized[i]
-            if (!c1.isLetter() || !c2.isLetter()) {
-                return o1Normalized[i].compareTo(o2Normalized[i])
-            } else {
-                // c1 & c2 are both letters
-                if (c1 == c2) {
-                    // "A" == "A" or "a" == "a" it's trivial then continue as the verification is
-                    // not finished.
-                    continue
-                }
-                if (c1.lowercaseChar() == c2.lowercaseChar()) {
-                    // it's "A" == to "a" or "a" == "A". "A" > "a"
-                    return if (c1 > c2) { // ASCII Table Upper is less than Lower
-                        1
-                    } else {
-                        -1
-                    }
-                }
-                // Here it's something like "B" == "a", "a" > "B"
-                return if (c1.lowercaseChar() > c2.lowercaseChar()) {
-                    1
-                } else {
-                    -1
-                }
-            }
-        }
-        // At this stage, it's the same value but length has not been checked
-        return if (o1Normalized.length == o2Normalized.length) {
-            0
-        } else if (o1Normalized.length > o2Normalized.length) {
-            1
-        } else {
-            -1
-        }
+        return o1Normalized.compareTo(o2Normalized, ignoreCase = true)
     }
 }

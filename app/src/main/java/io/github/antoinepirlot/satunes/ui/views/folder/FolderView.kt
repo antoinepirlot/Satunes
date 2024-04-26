@@ -32,11 +32,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.media3.common.MediaItem
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.database.models.Music
@@ -100,14 +102,18 @@ fun FolderView(
             },
             onFABClick = { openCurrentMusic(navController) },
             extraButtons = {
-                ExtraButton(icon = SatunesIcons.SHUFFLE, onClick =  {
-                    playbackController.loadMusic(
-                        musicMediaItemSortedMap = folder.getAllMusic(),
-                        shuffleMode = true
-                    )
-                    openMedia(navController = navController)
-                })
-            }
+                val folderMusics : SortedMap<Music, MediaItem> = folder.getAllMusic()
+                if (folderMusics.isNotEmpty()) {
+                    ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
+                        playbackController.loadMusic(
+                            musicMediaItemSortedMap = folderMusics,
+                            shuffleMode = true
+                        )
+                        openMedia(navController = navController)
+                    })
+                }
+            },
+            emptyViewText = stringResource(id = R.string.no_music)
         )
     }
 }

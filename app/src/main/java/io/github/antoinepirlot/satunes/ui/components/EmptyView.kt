@@ -23,52 +23,37 @@
  * PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.dialog
+package io.github.antoinepirlot.satunes.ui.components
 
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Add
-import androidx.compose.material3.Icon
-import androidx.compose.material3.TextButton
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 
 /**
- * @author Antoine Pirlot on 19/04/2024
+ * @author Antoine Pirlot on 25/04/2024
  */
 
-private val SPACER_SIZE = 10.dp
-
 @Composable
-fun DialogOption(
+fun EmptyView(
     modifier: Modifier = Modifier,
-    onClick: () -> Unit,
-    icon: @Composable () -> Unit,
-    text: String,
+    text: String
 ) {
-    TextButton(
-        modifier = modifier,
-        onClick = onClick
+    Box(
+        modifier = modifier.fillMaxSize().padding(16.dp),
+        contentAlignment = Alignment.Center
     ) {
-        Row {
-            icon()
-            Spacer(modifier = Modifier.size(SPACER_SIZE))
-            NormalText(text = text)
-        }
+        Text(text = text)
     }
 }
 
 @Preview
 @Composable
-fun DialogOptionPreview() {
-    DialogOption(
-        onClick = {},
-        icon = { Icon(imageVector = Icons.Rounded.Add, contentDescription = "")},
-        text = "Dialog Option"
-    )
+fun EmptyViewPreview() {
+    EmptyView(text = "No data")
 }

@@ -1,4 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ This file is part of Satunes.
+  ~
+  ~ Satunes is free software: you can redistribute it and/or modify it under
+  ~  the terms of the GNU General Public License as published by the Free Software Foundation,
+  ~ either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+  ~ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+  ~ See the GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License along with Satunes.
+  ~ If not, see <https://www.gnu.org/licenses/>.
+  ~
+  ~ ***** INFORMATIONS ABOUT THE AUTHOR *****
+  ~ The author of this file is Antoine Pirlot, the owner of this project.
+  ~ You find this original project on github.
+  ~
+  ~ My github link is: https://github.com/antoinepirlot
+  ~ This current project's link is: https://github.com/antoinepirlot/MP3-Player
+  ~
+  ~ You can contact me via my email: pirlot.antoine@outlook.com
+  ~ PS: I don't answer quickly.
+  -->
+
 <resources>
     <string name="play_all">Shuffle All Musics</string>
     <string name="bottom_bar">Bottom Navigation Bar</string>
@@ -22,4 +47,13 @@
     <string name="current_version">"Current Version: "</string>
     <string name="check_update">Check Update</string>
     <string name="add_musics_to_playlist">Add musics to playlist</string>
+    <string name="no_playlists">You haven\'t created a playlist yet. Click on the “+” button at the bottom right to create one</string>
+    <string name="no_music_in_playlist">This playlist is empty. Click on the “+” button at the bottom right to add more</string>
+    <string name="no_music">No music found</string>
+    <string name="no_genre">No genre found</string>
+    <string name="no_album">No album found</string>
+    <string name="no_artist">No artist found</string>
+    <string name="loading_data">Loading Data…</string>
+    <string name="no_folder">No folder with musics found</string>
+    <string name="add_to">"Add to "</string>
 </resources>

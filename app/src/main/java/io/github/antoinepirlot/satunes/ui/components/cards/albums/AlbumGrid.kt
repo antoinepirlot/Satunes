@@ -40,8 +40,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import io.github.antoinepirlot.satunes.database.R
+import io.github.antoinepirlot.satunes.database.R as RDb
+import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Album
+import io.github.antoinepirlot.satunes.ui.components.EmptyView
 import io.github.antoinepirlot.satunes.ui.components.texts.Title
 
 /**
@@ -57,22 +59,26 @@ fun AlbumGrid(
     Box {
         Column {
             Title(
-                text = stringResource(id = R.string.albums),
+                text = stringResource(id = RDb.string.albums),
                 textAlign = TextAlign.Left,
                 fontSize = 20.sp
             )
-            val lazyState = rememberLazyListState()
-            LazyRow(
-                modifier = modifier.fillMaxWidth(),
-                state = lazyState
-            ) {
-                items(
-                    items = mediaList,
-                    key = { it.id }
-                ) { album: Album ->
-                    AlbumGridCard(album = album, onClick = onClick)
-                    Spacer(modifier = modifier.size(16.dp))
+            if (mediaList.isNotEmpty()) {
+                val lazyState = rememberLazyListState()
+                LazyRow(
+                    modifier = modifier.fillMaxWidth(),
+                    state = lazyState
+                ) {
+                    items(
+                        items = mediaList,
+                        key = { it.id }
+                    ) { album: Album ->
+                        AlbumGridCard(album = album, onClick = onClick)
+                        Spacer(modifier = modifier.size(16.dp))
+                    }
                 }
+            } else {
+                EmptyView(text = stringResource(id = R.string.no_album))
             }
         }
     }

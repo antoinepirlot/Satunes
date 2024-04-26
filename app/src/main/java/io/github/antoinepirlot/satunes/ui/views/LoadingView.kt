@@ -23,52 +23,47 @@
  * PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.dialog
+package io.github.antoinepirlot.satunes.ui.views
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Add
-import androidx.compose.material3.Icon
-import androidx.compose.material3.TextButton
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
+import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.ui.components.LoadingCircle
 
 /**
- * @author Antoine Pirlot on 19/04/2024
+ * @author Antoine Pirlot on 26/04/2024
  */
 
-private val SPACER_SIZE = 10.dp
-
 @Composable
-fun DialogOption(
+fun LoadingView(
     modifier: Modifier = Modifier,
-    onClick: () -> Unit,
-    icon: @Composable () -> Unit,
-    text: String,
 ) {
-    TextButton(
-        modifier = modifier,
-        onClick = onClick
+    Box(
+        modifier = modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
     ) {
-        Row {
-            icon()
-            Spacer(modifier = Modifier.size(SPACER_SIZE))
-            NormalText(text = text)
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            LoadingCircle(modifier = modifier.padding(bottom = 30.dp))
+            Text(text = stringResource(id = R.string.loading_data))
         }
     }
 }
 
 @Preview
 @Composable
-fun DialogOptionPreview() {
-    DialogOption(
-        onClick = {},
-        icon = { Icon(imageVector = Icons.Rounded.Add, contentDescription = "")},
-        text = "Dialog Option"
-    )
+fun LoadingViewPreview() {
+    LoadingView()
 }

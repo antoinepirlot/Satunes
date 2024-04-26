@@ -28,10 +28,12 @@ package io.github.antoinepirlot.satunes.ui.views.album
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.media3.common.MediaItem
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.database.models.Music
@@ -67,19 +69,23 @@ fun AllAlbumsListView(
         },
         onFABClick = { openCurrentMusic(navController = navController) },
         extraButtons = {
-            ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
-                val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
+            val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
+            // TODO Move into object
+            albumSet.forEach { album: Album ->
+                musicMediaItemSortedMap.putAll(album.musicMediaItemSortedMap)
+            }
+            if(musicMediaItemSortedMap.isNotEmpty()) {
+                ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
 
-                albumSet.forEach { album: Album ->
-                    musicMediaItemSortedMap.putAll(album.musicMediaItemSortedMap)
-                }
-                playbackController.loadMusic(
-                    musicMediaItemSortedMap = musicMediaItemSortedMap,
-                    shuffleMode = true
-                )
-                openMedia(navController = navController)
-            })
-        }
+                    playbackController.loadMusic(
+                        musicMediaItemSortedMap = musicMediaItemSortedMap,
+                        shuffleMode = true
+                    )
+                    openMedia(navController = navController)
+                })
+            }
+        },
+        emptyViewText = stringResource(id = R.string.no_album)
     )
 }
 

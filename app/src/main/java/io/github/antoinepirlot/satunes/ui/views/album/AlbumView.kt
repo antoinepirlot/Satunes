@@ -31,9 +31,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.database.models.Music
@@ -79,14 +81,17 @@ fun AlbumView(
             },
             onFABClick = { openCurrentMusic(navController = navController) },
             extraButtons = {
-                ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
-                    playbackController.loadMusic(
-                        musicMediaItemSortedMap = album.musicMediaItemSortedMap,
-                        shuffleMode = true
-                    )
-                    openMedia(navController = navController)
-                })
-            }
+                if (album.musicMediaItemSortedMap.isNotEmpty()) {
+                    ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
+                        playbackController.loadMusic(
+                            musicMediaItemSortedMap = album.musicMediaItemSortedMap,
+                            shuffleMode = true
+                        )
+                        openMedia(navController = navController)
+                    })
+                }
+            },
+            emptyViewText = stringResource(id = R.string.no_music)
         )
     }
 }

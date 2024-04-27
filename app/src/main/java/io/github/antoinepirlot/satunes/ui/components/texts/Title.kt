@@ -36,6 +36,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
@@ -54,6 +55,8 @@ fun Title(
     fontSize: TextUnit = 40.sp,
     textAlign: TextAlign = TextAlign.Center,
     fontWeight: FontWeight = FontWeight.Bold,
+    maxLines: Int = 1,
+    overflow: TextOverflow = TextOverflow.Ellipsis
 ) {
     val align: Alignment =
         when (textAlign) {
@@ -73,6 +76,8 @@ fun Title(
                 .align(align)
                 .padding(bottom = bottomPadding),
             style = textStyle,
+            maxLines = maxLines,
+            overflow = overflow,
         )
     }
 }

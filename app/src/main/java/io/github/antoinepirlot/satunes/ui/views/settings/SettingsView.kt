@@ -62,6 +62,10 @@ fun SettingsView(
                 navController.navigate(Destination.PLAYBACK_SETTINGS.link)
             })
             HorizontalDivider()
+            ClickableListItem(text = stringResource(id = R.string.exclusion_setting)) {
+                navController.navigate(Destination.EXCLUSION.link)
+            }
+            HorizontalDivider()
             ClickableListItem(text = stringResource(id = R.string.version), onClick = {
                navController.navigate(Destination.UPDATES.link)
             })

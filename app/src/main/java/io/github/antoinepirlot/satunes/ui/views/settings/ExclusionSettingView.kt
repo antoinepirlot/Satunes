@@ -23,23 +23,26 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.router
+package io.github.antoinepirlot.satunes.ui.views.settings
+
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 
 /**
- * @author Antoine Pirlot on 24-01-24
+ * @author Antoine Pirlot on 27/04/2024
  */
 
-internal enum class Destination(val link: String) {
-    ALBUMS(link = "/albums"),
-    ARTISTS(link = "/artists"),
-    EXCLUSION(link = "/exclusion"),
-    FOLDERS(link = "/folders"),
-    GENRES(link = "/genres"),
-    MUSICS(link = "/musics"),
-    BOTTOM_BAR_SETTING(link = "/navbar_settings"),
-    PLAYBACK(link = "/playback"),
-    PLAYBACK_SETTINGS(link = "/playback_settings"),
-    PLAYLISTS(link = "/playlists"),
-    SETTINGS(link = "/settings"),
-    UPDATES(link = "/updates"),
+@Composable
+fun ExclusionSettingView(
+    modifier: Modifier = Modifier
+) {
+    Text(text = "Hello World!")
+}
+
+@Preview
+@Composable
+fun ExclusionSettingViewPreview() {
+    ExclusionSettingView()
 }

@@ -63,7 +63,7 @@ class DatabaseManager(context: Context) {
     companion object {
         private const val PLAYLIST_JSON_OBJECT_NAME = "all_playlists"
         private val FILE_PATH: String =
-            Environment.getExternalStorageDirectory().absolutePath + '/' + Environment.DIRECTORY_DOCUMENTS + "Satunes.json"
+            Environment.getExternalStorageDirectory().absolutePath + '/' + Environment.DIRECTORY_DOCUMENTS + "/Satunes.json"
         val importingPlaylist: MutableState<Boolean> = mutableStateOf(false)
     }
 

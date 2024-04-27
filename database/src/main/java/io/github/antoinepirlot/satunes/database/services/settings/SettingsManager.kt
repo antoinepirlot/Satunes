@@ -80,8 +80,7 @@ object SettingsManager {
         mutableStateOf(DEFAULT_PLAYBACK_WHEN_CLOSED_CHECKED)
     val pauseIfNoisyChecked: MutableState<Boolean> = mutableStateOf(DEFAULT_PAUSE_IF_NOISY)
     val excludeRingtonesChecked: MutableState<Boolean> = mutableStateOf(DEFAULT_EXCLUDE_RINGTONES)
-    val barSpeedInSec: MutableState<Float> = mutableFloatStateOf(DEFAULT_BAR_SPEED_VALUE)
-
+    val barSpeed: MutableState<Float> = mutableFloatStateOf(DEFAULT_BAR_SPEED_VALUE)
 
     val menuTitleCheckedMap: Map<MenuTitle, MutableState<Boolean>> = mapOf(
         Pair(MenuTitle.FOLDERS, foldersChecked),
@@ -120,7 +119,7 @@ object SettingsManager {
                 excludeRingtonesChecked.value =
                     preferences[EXCLUDE_RINGTONES_KEY] ?: DEFAULT_EXCLUDE_RINGTONES
 
-                barSpeedInSec.value = preferences[BAR_SPEED_KEY] ?: DEFAULT_BAR_SPEED_VALUE
+                barSpeed.value = preferences[BAR_SPEED_KEY] ?: DEFAULT_BAR_SPEED_VALUE
             }.first()
         }
     }
@@ -200,8 +199,8 @@ object SettingsManager {
     fun updateBarSpeed(context: Context, newValue: Float) {
         runBlocking {
             context.dataStore.edit { preferences: MutablePreferences ->
-                barSpeedInSec.value = newValue
-                preferences[BAR_SPEED_KEY] = barSpeedInSec.value
+                barSpeed.value = newValue
+                preferences[BAR_SPEED_KEY] = barSpeed.value
             }
         }
     }

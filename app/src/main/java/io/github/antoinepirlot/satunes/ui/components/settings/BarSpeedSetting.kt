@@ -56,7 +56,7 @@ fun BarSpeedSetting(
     modifier: Modifier = Modifier,
 ) {
     val context: Context = LocalContext.current
-    val currentBarSpeed: Float by remember { SettingsManager.barSpeedInSec }
+    val currentBarSpeed: Float by remember { SettingsManager.barSpeed }
     var isUpdating: Boolean by remember { mutableStateOf(false) }
     var newBarSpeed: Float by remember { mutableFloatStateOf(currentBarSpeed) }
     Row(

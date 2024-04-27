@@ -56,8 +56,8 @@ import io.github.antoinepirlot.satunes.ui.views.genre.GenreView
 import io.github.antoinepirlot.satunes.ui.views.music.AllMusicsListView
 import io.github.antoinepirlot.satunes.ui.views.playlist.PlaylistListView
 import io.github.antoinepirlot.satunes.ui.views.playlist.PlaylistView
-import io.github.antoinepirlot.satunes.ui.views.settings.BottomNavigationBarSettingsView
-import io.github.antoinepirlot.satunes.ui.views.settings.PlaybackSettingsView
+import io.github.antoinepirlot.satunes.ui.views.settings.BottomNavigationBarSettingView
+import io.github.antoinepirlot.satunes.ui.views.settings.PlaybackSettingView
 import io.github.antoinepirlot.satunes.ui.views.settings.SettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.UpdatesView
 
@@ -201,11 +201,11 @@ internal fun Router(
         }
 
         composable(Destination.BOTTOM_BAR_SETTING.link) {
-            BottomNavigationBarSettingsView()
+            BottomNavigationBarSettingView()
         }
 
         composable(Destination.PLAYBACK_SETTINGS.link) {
-            PlaybackSettingsView()
+            PlaybackSettingView()
         }
 
         composable(Destination.UPDATES.link) {

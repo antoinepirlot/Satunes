@@ -48,7 +48,6 @@ fun SettingsSwitchList(
     modifier: Modifier = Modifier,
     checkedMap: Map<Settings, MutableState<Boolean>>,
     onCheckedChangeMap: Map<Settings, () -> Unit>? = null,
-    onCheckedChange: () -> Unit = {}
 ) {
     val context: Context = LocalContext.current
     Column(
@@ -62,13 +61,10 @@ fun SettingsSwitchList(
                         checked = checkedMap[setting]!!.value,
                         onCheckedChange = {
                             if (onCheckedChangeMap == null) {
-                                if (!runIfIsSwitchMenuTitles(
+                                runIfIsSwitchMenuTitles(
                                         context = context,
                                         setting = setting
-                                    )
-                                ) {
-                                    onCheckedChange()
-                                }
+                                )
                             } else {
                                 onCheckedChangeMap[setting]!!()
                             }

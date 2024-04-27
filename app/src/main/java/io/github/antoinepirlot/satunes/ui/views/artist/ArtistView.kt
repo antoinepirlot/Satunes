@@ -118,6 +118,10 @@ fun ArtistView(
                     musicMediaItemMap[music] = music.mediaItem
                 }
                 if (musicMediaItemMap.isNotEmpty()) {
+                    ExtraButton(icon = SatunesIcons.PLAY, onClick = {
+                        playbackController.loadMusic(musicMediaItemSortedMap = musicMediaItemMap)
+                        openMedia(navController = navController)
+                    })
                     ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
                         playbackController.loadMusic(
                             musicMediaItemSortedMap = musicMediaItemMap,

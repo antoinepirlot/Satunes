@@ -27,12 +27,14 @@ package io.github.antoinepirlot.satunes.database.services.settings
 
 import android.content.Context
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.MutablePreferences
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.floatPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import io.github.antoinepirlot.satunes.database.models.MenuTitle
 import kotlinx.coroutines.flow.first
@@ -44,6 +46,7 @@ import kotlinx.coroutines.runBlocking
  */
 
 object SettingsManager {
+
     private const val DEFAULT_FOLDERS_CHECKED = true
     private const val DEFAULT_ARTISTS_CHECKED = true
     private const val DEFAULT_ALBUMS_CHECKED = true
@@ -52,6 +55,7 @@ object SettingsManager {
     private const val DEFAULT_PLAYBACK_WHEN_CLOSED_CHECKED = false //App stop after removed app from multi-task if false
     private const val DEFAULT_PAUSE_IF_NOISY = true
     private const val DEFAULT_EXCLUDE_RINGTONES = true
+    private const val DEFAULT_BAR_SPEED_VALUE = 1f
 
     private val PREFERENCES_DATA_STORE = preferencesDataStore("settings")
     private val FOLDERS_CHECKED_PREFERENCES_KEY = booleanPreferencesKey("folders_checked")
@@ -63,6 +67,7 @@ object SettingsManager {
         booleanPreferencesKey("playback_when_closed_checked")
     private val PAUSE_IF_NOISY_PREFERENCES_KEY = booleanPreferencesKey("pause_if_noisy")
     private val EXCLUDE_RINGTONES_KEY = booleanPreferencesKey("exclude_ringtones")
+    private val BAR_SPEED_KEY = floatPreferencesKey("bar_speed")
 
     private val Context.dataStore: DataStore<Preferences> by PREFERENCES_DATA_STORE
 
@@ -75,6 +80,7 @@ object SettingsManager {
         mutableStateOf(DEFAULT_PLAYBACK_WHEN_CLOSED_CHECKED)
     val pauseIfNoisyChecked: MutableState<Boolean> = mutableStateOf(DEFAULT_PAUSE_IF_NOISY)
     val excludeRingtonesChecked: MutableState<Boolean> = mutableStateOf(DEFAULT_EXCLUDE_RINGTONES)
+    val barSpeedInSec: MutableState<Float> = mutableFloatStateOf(DEFAULT_BAR_SPEED_VALUE)
 
 
     val menuTitleCheckedMap: Map<MenuTitle, MutableState<Boolean>> = mapOf(
@@ -113,6 +119,8 @@ object SettingsManager {
 
                 excludeRingtonesChecked.value =
                     preferences[EXCLUDE_RINGTONES_KEY] ?: DEFAULT_EXCLUDE_RINGTONES
+
+                barSpeedInSec.value = preferences[BAR_SPEED_KEY] ?: DEFAULT_BAR_SPEED_VALUE
             }.first()
         }
     }
@@ -185,6 +193,15 @@ object SettingsManager {
             context.dataStore.edit { preferences: MutablePreferences ->
                 excludeRingtonesChecked.value = !excludeRingtonesChecked.value
                 preferences[EXCLUDE_RINGTONES_KEY] = excludeRingtonesChecked.value
+            }
+        }
+    }
+
+    fun updateBarSpeed(context: Context, newValue: Float) {
+        runBlocking {
+            context.dataStore.edit { preferences: MutablePreferences ->
+                barSpeedInSec.value = newValue
+                preferences[BAR_SPEED_KEY] = barSpeedInSec.value
             }
         }
     }

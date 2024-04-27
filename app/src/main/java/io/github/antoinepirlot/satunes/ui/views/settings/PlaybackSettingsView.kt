@@ -33,6 +33,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
+import io.github.antoinepirlot.satunes.ui.components.settings.BarSpeedSetting
 import io.github.antoinepirlot.satunes.ui.components.settings.SettingsSwitchList
 import io.github.antoinepirlot.satunes.ui.components.texts.Title
 
@@ -58,6 +59,7 @@ fun PlaybackSettingsView(
     Column(modifier = modifier) {
         Title(text = stringResource(id = R.string.playback_settings))
         SettingsSwitchList(checkedMap = checkedMap)
+        BarSpeedSetting()
     }
 }
 

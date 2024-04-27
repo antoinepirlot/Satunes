@@ -31,7 +31,6 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.sp
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.ui.components.settings.SettingsSwitchList
@@ -42,25 +41,28 @@ import io.github.antoinepirlot.satunes.ui.components.texts.Title
  */
 
 @Composable
-fun BottomNavigationBarSettingsView(
-    modifier: Modifier = Modifier,
+fun PlaybackSettingView(
+    modifier: Modifier = Modifier
 ) {
     val checkedMap: Map<Settings, MutableState<Boolean>> = mapOf(
-        Pair(first = Settings.FOLDERS_CHECKED, second = SettingsManager.foldersChecked),
-        Pair(first = Settings.ARTISTS_CHECKED, second = SettingsManager.artistsChecked),
-        Pair(first = Settings.ALBUMS_CHECKED, second = SettingsManager.albumsChecked),
-        Pair(first = Settings.GENRES_CHECKED, second = SettingsManager.genresChecked),
-        Pair(first = Settings.PLAYLISTS_CHECKED, second = SettingsManager.playlistsChecked),
+        Pair(
+            first = Settings.PLAYBACK_WHEN_CLOSED,
+            second = SettingsManager.playbackWhenClosedChecked
+        ),
+        Pair(
+            first = Settings.PAUSE_IF_NOISY,
+            second = SettingsManager.pauseIfNoisyChecked
+        )
     )
 
     Column(modifier = modifier) {
-        Title(text = stringResource(id = R.string.bottom_bar), fontSize = 20.sp)
+        Title(text = stringResource(id = R.string.playback_settings))
         SettingsSwitchList(checkedMap = checkedMap)
     }
 }
 
 @Composable
 @Preview
-fun BottomNavigationBarSettingsViewPreview() {
-    BottomNavigationBarSettingsView()
+fun PlaybackSettingViewPreview() {
+    PlaybackSettingView()
 }

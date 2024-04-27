@@ -25,26 +25,39 @@
 
 package io.github.antoinepirlot.satunes.ui.views.settings
 
-import io.github.antoinepirlot.satunes.R.string.exclude_ringtones
-import io.github.antoinepirlot.satunes.R.string.pause_if_noisy
-import io.github.antoinepirlot.satunes.R.string.playback_when_paused
-import io.github.antoinepirlot.satunes.database.R.string.albums
-import io.github.antoinepirlot.satunes.database.R.string.artists
-import io.github.antoinepirlot.satunes.database.R.string.folders
-import io.github.antoinepirlot.satunes.database.R.string.genres
-import io.github.antoinepirlot.satunes.database.R.string.playlists
-
+import androidx.compose.foundation.layout.Column
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
+import io.github.antoinepirlot.satunes.ui.components.settings.SettingsSwitchList
+import io.github.antoinepirlot.satunes.ui.components.texts.Title
 
 /**
- *   @author Antoine Pirlot 06/03/2024
+ * @author Antoine Pirlot on 27/04/2024
  */
-enum class Settings(val stringId: Int) {
-    PLAYBACK_WHEN_CLOSED(stringId = playback_when_paused),
-    FOLDERS_CHECKED(stringId = folders),
-    ARTISTS_CHECKED(stringId = artists),
-    ALBUMS_CHECKED(stringId = albums),
-    GENRES_CHECKED(stringId = genres),
-    PAUSE_IF_NOISY(stringId = pause_if_noisy),
-    PLAYLISTS_CHECKED(stringId = playlists),
-    EXCLUDE_RINGTONES(stringId = exclude_ringtones),
+
+@Composable
+fun ExclusionSettingView(
+    modifier: Modifier = Modifier
+) {
+    val checkedMap: Map<Settings, MutableState<Boolean>> = mapOf(
+        Pair(first = Settings.EXCLUDE_RINGTONES, second = SettingsManager.excludeRingtonesChecked)
+    )
+
+    Column(
+        modifier = modifier
+    ) {
+        Title(text = stringResource(id = R.string.exclusion_setting))
+        SettingsSwitchList(checkedMap = checkedMap)
+    }
+}
+
+@Preview
+@Composable
+fun ExclusionSettingViewPreview() {
+    ExclusionSettingView()
 }

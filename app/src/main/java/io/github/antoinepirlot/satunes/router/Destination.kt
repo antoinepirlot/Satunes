@@ -32,6 +32,7 @@ package io.github.antoinepirlot.satunes.router
 internal enum class Destination(val link: String) {
     ALBUMS(link = "/albums"),
     ARTISTS(link = "/artists"),
+    EXCLUSION(link = "/exclusion"),
     FOLDERS(link = "/folders"),
     GENRES(link = "/genres"),
     MUSICS(link = "/musics"),

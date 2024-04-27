@@ -106,7 +106,12 @@ class DatabaseManager(context: Context) {
         }
     }
 
-    fun insertOne(context: Context, playlist: Playlist, activity: Activity? = null) {
+    fun insertOne(
+        context: Context,
+        playlist: Playlist,
+        musicList: MutableList<MusicDB>? = null,
+        activity: Activity? = null
+    ) {
         @Suppress("NAME_SHADOWING")
         val activity = activity ?: Activity()
         CoroutineScope(Dispatchers.IO).launch {
@@ -120,6 +125,13 @@ class DatabaseManager(context: Context) {
             val playlistWithMusics: PlaylistWithMusics =
                 playlistDao.getPlaylistWithMusics(playlistId = playlist.id)!!
             DataManager.addPlaylist(playlistWithMusics = playlistWithMusics)
+
+            musicList?.forEach { musicDB: MusicDB ->
+                insertMusicToPlaylists(
+                    music = musicDB.music,
+                    playlists = mutableListOf(playlistWithMusics)
+                )
+            }
         }
     }
 
@@ -224,6 +236,7 @@ class DatabaseManager(context: Context) {
                     insertOne(
                         context = context,
                         playlist = playlistWithMusics.playlist,
+                        musicList = playlistWithMusics.musics,
                         activity = activity
                     )
                 }

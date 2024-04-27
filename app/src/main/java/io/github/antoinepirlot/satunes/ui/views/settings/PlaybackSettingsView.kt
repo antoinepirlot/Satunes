@@ -41,25 +41,28 @@ import io.github.antoinepirlot.satunes.ui.components.texts.Title
  */
 
 @Composable
-fun BottomNavigationBarSettingView(
-    modifier: Modifier = Modifier,
+fun PlaybackSettingsView(
+    modifier: Modifier = Modifier
 ) {
     val checkedMap: Map<Settings, MutableState<Boolean>> = mapOf(
-        Pair(first = Settings.FOLDERS_CHECKED, second = SettingsManager.foldersChecked),
-        Pair(first = Settings.ARTISTS_CHECKED, second = SettingsManager.artistsChecked),
-        Pair(first = Settings.ALBUMS_CHECKED, second = SettingsManager.albumsChecked),
-        Pair(first = Settings.GENRES_CHECKED, second = SettingsManager.genresChecked),
-        Pair(first = Settings.PLAYLISTS_CHECKED, second = SettingsManager.playlistsChecked),
+        Pair(
+            first = Settings.PLAYBACK_WHEN_CLOSED,
+            second = SettingsManager.playbackWhenClosedChecked
+        ),
+        Pair(
+            first = Settings.PAUSE_IF_NOISY,
+            second = SettingsManager.pauseIfNoisyChecked
+        )
     )
 
     Column(modifier = modifier) {
-        Title(text = stringResource(id = R.string.bottom_bar))
+        Title(text = stringResource(id = R.string.playback_settings))
         SettingsSwitchList(checkedMap = checkedMap)
     }
 }
 
 @Composable
 @Preview
-fun BottomNavigationBarSettingViewPreview() {
-    BottomNavigationBarSettingView()
+fun PlaybackSettingsViewPreview() {
+    PlaybackSettingsView()
 }

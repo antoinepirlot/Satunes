@@ -37,32 +37,27 @@ import io.github.antoinepirlot.satunes.ui.components.settings.SettingsSwitchList
 import io.github.antoinepirlot.satunes.ui.components.texts.Title
 
 /**
- *   @author Antoine Pirlot 06/03/2024
+ * @author Antoine Pirlot on 27/04/2024
  */
 
 @Composable
-fun PlaybackSettingView(
+fun ExclusionSettingsView(
     modifier: Modifier = Modifier
 ) {
     val checkedMap: Map<Settings, MutableState<Boolean>> = mapOf(
-        Pair(
-            first = Settings.PLAYBACK_WHEN_CLOSED,
-            second = SettingsManager.playbackWhenClosedChecked
-        ),
-        Pair(
-            first = Settings.PAUSE_IF_NOISY,
-            second = SettingsManager.pauseIfNoisyChecked
-        )
+        Pair(first = Settings.EXCLUDE_RINGTONES, second = SettingsManager.excludeRingtonesChecked)
     )
 
-    Column(modifier = modifier) {
-        Title(text = stringResource(id = R.string.playback_settings))
+    Column(
+        modifier = modifier
+    ) {
+        Title(text = stringResource(id = R.string.exclusion_setting))
         SettingsSwitchList(checkedMap = checkedMap)
     }
 }
 
-@Composable
 @Preview
-fun PlaybackSettingViewPreview() {
-    PlaybackSettingView()
+@Composable
+fun ExclusionSettingsViewPreview() {
+    ExclusionSettingsView()
 }

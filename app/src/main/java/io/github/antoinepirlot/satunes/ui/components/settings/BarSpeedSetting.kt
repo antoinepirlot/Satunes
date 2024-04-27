@@ -80,7 +80,8 @@ fun BarSpeedSetting(
                 SettingsManager.updateBarSpeed(context = context, newValue = newBarSpeed)
                 isUpdating = false
             },
-            steps = 2
+            valueRange = 0.1f..1f,
+            steps = 20
         )
     }
 }

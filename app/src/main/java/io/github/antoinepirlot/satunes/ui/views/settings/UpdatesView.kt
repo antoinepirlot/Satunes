@@ -36,7 +36,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.internet.updates.UpdateAvailableStatus
 import io.github.antoinepirlot.satunes.internet.updates.UpdateAvailableStatus.AVAILABLE
@@ -64,7 +63,7 @@ fun UpdatesView(
     val isCheckingUpdate: Boolean by remember { UpdateCheckManager.isCheckingUpdate }
     val updateAvailable: UpdateAvailableStatus by remember { UpdateCheckManager.updateAvailableStatus }
     Column(modifier = modifier.padding(16.dp)) {
-        Title(text = stringResource(id = R.string.version), fontSize = 20.sp)
+        Title(text = stringResource(id = R.string.version))
         NormalText(text = stringResource(id = R.string.current_version) + currentVersion)
         //Check update is done when pressing setting button in top app bar
         if (isCheckingUpdate) {

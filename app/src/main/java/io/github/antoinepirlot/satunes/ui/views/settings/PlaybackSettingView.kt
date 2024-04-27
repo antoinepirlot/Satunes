@@ -33,7 +33,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.sp
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.ui.components.settings.SettingsSwitchList
@@ -72,7 +71,7 @@ fun PlaybackSettingView(
     )
 
     Column(modifier = modifier) {
-        Title(text = stringResource(id = R.string.playback_settings), fontSize = 20.sp)
+        Title(text = stringResource(id = R.string.playback_settings))
         SettingsSwitchList(
             checkedMap = checkedMap,
             onCheckedChangeMap = onCheckedChangedMap

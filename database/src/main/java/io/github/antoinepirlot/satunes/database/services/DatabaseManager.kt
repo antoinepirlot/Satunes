@@ -147,22 +147,33 @@ class DatabaseManager(context: Context) {
     }
 
     fun exportPlaylist(context: Context, playlistWithMusics: PlaylistWithMusics) {
-        val activity = Activity()
         CoroutineScope(Dispatchers.IO).launch {
             val json: String = Json.encodeToString(playlistWithMusics)
-            try {
-                val file =
-                    File(Environment.getExternalStorageDirectory().absolutePath + '/' + Environment.DIRECTORY_DOCUMENTS + '/' + playlistWithMusics.playlist.title + ".json")
-                if (file.exists()) {
-                    file.delete()
-                }
-                file.createNewFile()
-                file.writeText(text = json, charset = Charsets.UTF_8)
-            } catch (e: Exception) {
-                val message: String = context.getString(R.string.export_failed)
-                showToastOnUiThread(context = context, activity = activity, message = message)
-                e.printStackTrace()
+            exportJson(context = context, json = json, fileName = playlistWithMusics.playlist.title)
+        }
+    }
+
+    fun exportAll(context: Context, vararg playlistWithMusics: PlaylistWithMusics) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val json = Json.encodeToString(playlistWithMusics)
+            exportJson(context = context, json = json, fileName = "Playlists")
+        }
+    }
+
+    private fun exportJson(context: Context, json: String, fileName: String) {
+        val activity = Activity()
+        try {
+            val file =
+                File(Environment.getExternalStorageDirectory().absolutePath + '/' + Environment.DIRECTORY_DOCUMENTS + '/' + fileName + ".json")
+            if (file.exists()) {
+                file.delete()
             }
+            file.createNewFile()
+            file.writeText(text = json, charset = Charsets.UTF_8)
+        } catch (e: Exception) {
+            val message: String = context.getString(R.string.export_failed)
+            showToastOnUiThread(context = context, activity = activity, message = message)
+            e.printStackTrace()
         }
     }
 }

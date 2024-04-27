@@ -106,8 +106,9 @@ class DatabaseManager(context: Context) {
         }
     }
 
-    fun insertOne(context: Context, playlist: Playlist) {
-        val activity = Activity()
+    fun insertOne(context: Context, playlist: Playlist, activity: Activity? = null) {
+        @Suppress("NAME_SHADOWING")
+        val activity = activity ?: Activity()
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 playlist.id = playlistDao.insertOne(playlist = playlist)
@@ -156,23 +157,12 @@ class DatabaseManager(context: Context) {
         }
     }
 
-    fun exportPlaylist(context: Context, playlistWithMusics: PlaylistWithMusics) {
-        val activity = Activity()
-        CoroutineScope(Dispatchers.IO).launch {
-            val json: String = Json.encodeToString(playlistWithMusics)
-            exportJson(context = context, activity = activity, json = json)
-        }
-    }
-
-    fun exportAll(context: Context) {
+    fun exportAll(context: Context, vararg playlistWithMusics: PlaylistWithMusics) {
         val activity = Activity()
         CoroutineScope(Dispatchers.IO).launch {
             var json = "{\"${Companion.PLAYLIST_JSON_OBJECT_NAME}\":["
-            DataManager.playlistWithMusicsMap.values.forEach { playlistWithMusics: PlaylistWithMusics? ->
-                json += Json.encodeToString(playlistWithMusics)
-                if (playlistWithMusics != DataManager.playlistWithMusicsMap.values.last()) {
-                    json += ','
-                }
+            playlistWithMusics.forEach { playlistWithMusics: PlaylistWithMusics ->
+                json += Json.encodeToString(playlistWithMusics) + ','
             }
             json += "]}"
             exportJson(context = context, activity = activity, json = json)
@@ -217,19 +207,25 @@ class DatabaseManager(context: Context) {
                     return@launch
                 }
 
-                val json: String = file.readText(charset = Charsets.UTF_8)
+                var json: String = file.readText(charset = Charsets.UTF_8)
                 if (!json.startsWith("{\"$PLAYLIST_JSON_OBJECT_NAME\":[") && !json.endsWith("]}")) {
                     throw IllegalArgumentException("It is not a json object")
                 }
-                val playlistsList: List<String> = json.split("{\"all_playlists\":[")[1].removeRange(
-                    json.lastIndex - 1,
-                    json.lastIndex
-                ).split(",")
-                // playlists is a list of json object of PlaylistWithMusics
-
-                playlistsList.forEach { playlist: String ->
-                    val playlistWithMusics: PlaylistWithMusics = Json.decodeFromString(playlist)
-                    insertOne(context = context, playlist = playlistWithMusics.playlist)
+                json = json.split("{\"all_playlists\":[")[1]
+                json = json.removeRange(json.lastIndex - 1..json.lastIndex)
+                if (json.isBlank()) {
+                    return@launch
+                }
+                var playlistList: List<String> = json.split("\"playlist\":")
+                playlistList = playlistList.subList(fromIndex = 1, toIndex = playlistList.lastIndex)
+                playlistList.forEach { s: String ->
+                    json = "{\"playlist\":" + s.removeRange(s.lastIndex - 1..s.lastIndex)
+                    val playlistWithMusics: PlaylistWithMusics = Json.decodeFromString(json)
+                    insertOne(
+                        context = context,
+                        playlist = playlistWithMusics.playlist,
+                        activity = activity
+                    )
                 }
             } catch (e: Exception) {
                 showToastOnUiThread(

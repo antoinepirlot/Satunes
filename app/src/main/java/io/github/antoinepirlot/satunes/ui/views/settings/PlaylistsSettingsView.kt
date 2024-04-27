@@ -38,6 +38,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.database.services.DataManager
 import io.github.antoinepirlot.satunes.database.services.DatabaseManager
 
 /**
@@ -53,7 +54,10 @@ fun PlaylistsSettingsView(
         modifier = modifier,
     ) {
         Button(onClick = {
-            DatabaseManager(context = context).exportAll(context = context)
+            DatabaseManager(context = context).exportAll(
+                context = context,
+                playlistWithMusics = DataManager.playlistWithMusicsMap.values.toTypedArray()
+            )
         }) {
             Text(text = stringResource(id = R.string.export_all))
         }

@@ -86,9 +86,9 @@ fun PlaylistOptionsDialog(
                 DialogOption(
                     onClick = {
                         DatabaseManager(context = context)
-                            .exportPlaylist(
+                            .exportAll(
                                 context = context,
-                                playlistWithMusics = playlistWithMusics
+                                playlistWithMusics = arrayOf(playlistWithMusics)
                             )
                     },
                     icon = {

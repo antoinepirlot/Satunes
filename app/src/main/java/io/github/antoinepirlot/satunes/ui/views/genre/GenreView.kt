@@ -26,7 +26,9 @@
 package io.github.antoinepirlot.satunes.ui.views.genre
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -89,6 +91,8 @@ fun GenreView(
             mediaList = albumSet.toList(),
             onClick = { openMedia(navController = navController, media = it) }
         )
+
+        Spacer(modifier = Modifier.size(30.dp))
 
         Title(
             modifier.padding(start = 16.dp),

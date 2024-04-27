@@ -28,7 +28,7 @@ package io.github.antoinepirlot.satunes.database.services
 import android.app.Activity
 import android.content.Context
 import android.database.sqlite.SQLiteConstraintException
-import android.widget.Toast
+import android.os.Environment
 import io.github.antoinepirlot.satunes.database.R
 import io.github.antoinepirlot.satunes.database.SatunesDatabase
 import io.github.antoinepirlot.satunes.database.daos.MusicDAO
@@ -44,6 +44,9 @@ import io.github.antoinepirlot.utils.showToastOnUiThread
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import java.io.File
 
 /**
  * @author Antoine Pirlot on 27/03/2024
@@ -139,6 +142,26 @@ class DatabaseManager(context: Context) {
         CoroutineScope(Dispatchers.IO).launch {
             musics.forEach { music: Music ->
                 insertMusicToPlaylists(music = music, playlists = mutableListOf(playlist))
+            }
+        }
+    }
+
+    fun exportPlaylist(context: Context, playlistWithMusics: PlaylistWithMusics) {
+        val activity = Activity()
+        CoroutineScope(Dispatchers.IO).launch {
+            val json: String = Json.encodeToString(playlistWithMusics)
+            try {
+                val file =
+                    File(Environment.DIRECTORY_DOCUMENTS + '/' + playlistWithMusics.playlist.title)
+                if (file.exists()) {
+                    file.delete()
+                }
+                file.createNewFile()
+                file.writeText(text = json, charset = Charsets.UTF_8)
+            } catch (e: Exception) {
+                val message: String = context.getString(R.string.export_failed)
+                showToastOnUiThread(context = context, activity = activity, message = message)
+                println(e)
             }
         }
     }

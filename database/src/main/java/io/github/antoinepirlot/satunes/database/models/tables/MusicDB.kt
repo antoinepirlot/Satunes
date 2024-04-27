@@ -26,7 +26,6 @@
 package io.github.antoinepirlot.satunes.database.models.tables
 
 import android.graphics.Bitmap
-import androidx.compose.ui.graphics.ImageBitmap
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Ignore
@@ -34,21 +33,27 @@ import androidx.room.PrimaryKey
 import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.DataManager
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
 /**
  * @author Antoine Pirlot on 30/03/2024
  */
 
+@Serializable
 @Entity("musics")
 data class MusicDB(
     @PrimaryKey
     @ColumnInfo("music_id") override val id: Long
 ) : Media {
     @Ignore
+    @Transient
     override var artwork: Bitmap? = null
     @Ignore
+    @Transient
     override val title: String = "Title is not used for MusicDB class." // Not used
 
     @Ignore
+    @Transient
     var music: Music = DataManager.getMusic(musicId = this.id)
 }

@@ -60,4 +60,5 @@
     <string name="exclude_ringtones">Exclude ringtones (restart needed)</string>
     <string name="bar_speed">"Progress bar speed: "</string>
     <string name="second">second</string>
+    <string name="export">Export</string>
 </resources>

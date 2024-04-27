@@ -38,11 +38,15 @@ import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.tables.MusicDB
 import io.github.antoinepirlot.satunes.database.models.tables.MusicsPlaylistsRel
 import io.github.antoinepirlot.satunes.database.models.tables.Playlist
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 import java.util.SortedMap
 
 /**
  * @author Antoine Pirlot on 27/03/2024
  */
+
+@Serializable
 data class PlaylistWithMusics(
     @Embedded val playlist: Playlist,
     @Relation(
@@ -53,17 +57,22 @@ data class PlaylistWithMusics(
     val musics: MutableList<MusicDB>
 ) : Media {
     @Ignore
+    @Transient
     override var artwork: Bitmap? = null
     @Ignore
+    @Transient
     override val id: Long = playlist.id // Not used
 
     @Ignore
+    @Transient
     override val title: String = "Title is not used for PlaylistWithMusics class." // Not used
 
     @Ignore
+    @Transient
     override val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
 
     @Ignore
+    @Transient
     val musicMediaItemSortedMapUpdate: MutableState<Boolean> = mutableStateOf(false)
 
 

@@ -37,7 +37,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.satunes.database.models.MenuTitle
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.ui.views.settings.Settings
-import kotlinx.coroutines.runBlocking
 
 /**
  *   @author Antoine Pirlot 06/03/2024
@@ -47,7 +46,6 @@ import kotlinx.coroutines.runBlocking
 fun SettingsSwitchList(
     modifier: Modifier = Modifier,
     checkedMap: Map<Settings, MutableState<Boolean>>,
-    onCheckedChangeMap: Map<Settings, () -> Unit>? = null,
 ) {
     val context: Context = LocalContext.current
     Column(
@@ -60,14 +58,10 @@ fun SettingsSwitchList(
                         text = stringResource(id = setting.stringId),
                         checked = checkedMap[setting]!!.value,
                         onCheckedChange = {
-                            if (onCheckedChangeMap == null) {
-                                runIfIsSwitchMenuTitles(
-                                        context = context,
-                                        setting = setting
-                                )
-                            } else {
-                                onCheckedChangeMap[setting]!!()
-                            }
+                            switchSetting(
+                                context = context,
+                                setting = setting
+                            )
                         }
                     )
                 }
@@ -79,59 +73,57 @@ fun SettingsSwitchList(
 @Composable
 @Preview
 fun SettingsSwitchListPreview() {
-    SettingsSwitchList(checkedMap = mapOf(), onCheckedChangeMap = mapOf())
+    SettingsSwitchList(checkedMap = mapOf())
 }
 
-private fun runIfIsSwitchMenuTitles(context: Context, setting: Settings): Boolean {
+private fun switchSetting(context: Context, setting: Settings) {
     when (setting) {
         Settings.FOLDERS_CHECKED -> {
-            runBlocking {
-                SettingsManager.switchMenuTitle(
-                    context = context,
-                    menuTitle = MenuTitle.FOLDERS
-                )
-            }
+            SettingsManager.switchMenuTitle(
+                context = context,
+                menuTitle = MenuTitle.FOLDERS
+            )
         }
 
         Settings.ARTISTS_CHECKED -> {
-            runBlocking {
-                SettingsManager.switchMenuTitle(
-                    context = context,
-                    menuTitle = MenuTitle.ARTISTS
-                )
-            }
+            SettingsManager.switchMenuTitle(
+                context = context,
+                menuTitle = MenuTitle.ARTISTS
+            )
         }
 
         Settings.ALBUMS_CHECKED -> {
-            runBlocking {
-                SettingsManager.switchMenuTitle(
-                    context = context,
-                    menuTitle = MenuTitle.ALBUMS
-                )
-            }
+            SettingsManager.switchMenuTitle(
+                context = context,
+                menuTitle = MenuTitle.ALBUMS
+            )
         }
 
         Settings.GENRES_CHECKED -> {
-            runBlocking {
-                SettingsManager.switchMenuTitle(
-                    context = context,
-                    menuTitle = MenuTitle.GENRES
-                )
-            }
+            SettingsManager.switchMenuTitle(
+                context = context,
+                menuTitle = MenuTitle.GENRES
+            )
         }
 
         Settings.PLAYLISTS_CHECKED -> {
-            runBlocking {
-                SettingsManager.switchMenuTitle(
-                    context = context,
-                    menuTitle = MenuTitle.PLAYLISTS
-                )
-            }
+            SettingsManager.switchMenuTitle(
+                context = context,
+                menuTitle = MenuTitle.PLAYLISTS
+            )
         }
 
-        else -> {
-            return false
+        Settings.PLAYBACK_WHEN_CLOSED -> {
+            SettingsManager.switchPlaybackWhenClosedChecked(context = context)
         }
+
+        Settings.PAUSE_IF_NOISY -> {
+            SettingsManager.switchPauseIfNoisy(context = context)
+        }
+
+        Settings.EXCLUDE_RINGTONES -> {
+            SettingsManager.switchExcludeRingtones(context = context)
+        }
+
     }
-    return true
 }

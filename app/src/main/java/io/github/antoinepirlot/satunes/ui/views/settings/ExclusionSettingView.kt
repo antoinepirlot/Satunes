@@ -25,10 +25,16 @@
 
 package io.github.antoinepirlot.satunes.ui.views.settings
 
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
+import io.github.antoinepirlot.satunes.ui.components.settings.SettingsSwitchList
+import io.github.antoinepirlot.satunes.ui.components.texts.Title
 
 /**
  * @author Antoine Pirlot on 27/04/2024
@@ -38,7 +44,16 @@ import androidx.compose.ui.tooling.preview.Preview
 fun ExclusionSettingView(
     modifier: Modifier = Modifier
 ) {
-    Text(text = "Hello World!")
+    val checkedMap: Map<Settings, MutableState<Boolean>> = mapOf(
+        Pair(first = Settings.EXCLUDE_RINGTONES, second = SettingsManager.excludeRingtonesChecked)
+    )
+
+    Column(
+        modifier = modifier
+    ) {
+        Title(text = stringResource(id = R.string.exclusion_setting))
+        SettingsSwitchList(checkedMap = checkedMap)
+    }
 }
 
 @Preview

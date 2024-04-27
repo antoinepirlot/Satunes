@@ -152,7 +152,7 @@ class DatabaseManager(context: Context) {
             val json: String = Json.encodeToString(playlistWithMusics)
             try {
                 val file =
-                    File(Environment.DIRECTORY_DOCUMENTS + '/' + playlistWithMusics.playlist.title)
+                    File(Environment.getExternalStorageDirectory().absolutePath + '/' + Environment.DIRECTORY_DOCUMENTS + '/' + playlistWithMusics.playlist.title + ".json")
                 if (file.exists()) {
                     file.delete()
                 }
@@ -161,7 +161,7 @@ class DatabaseManager(context: Context) {
             } catch (e: Exception) {
                 val message: String = context.getString(R.string.export_failed)
                 showToastOnUiThread(context = context, activity = activity, message = message)
-                println(e)
+                e.printStackTrace()
             }
         }
     }

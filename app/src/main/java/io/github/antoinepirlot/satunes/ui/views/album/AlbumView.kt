@@ -93,6 +93,10 @@ fun AlbumView(
             onFABClick = { openCurrentMusic(navController = navController) },
             extraButtons = {
                 if (album.musicMediaItemSortedMap.isNotEmpty()) {
+                    ExtraButton(icon = SatunesIcons.PLAY, onClick = {
+                        playbackController.loadMusic(album.musicMediaItemSortedMap)
+                        openMedia(navController = navController)
+                    })
                     ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
                         playbackController.loadMusic(
                             musicMediaItemSortedMap = album.musicMediaItemSortedMap,

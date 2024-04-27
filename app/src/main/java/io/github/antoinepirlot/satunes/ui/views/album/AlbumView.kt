@@ -37,6 +37,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.media3.common.MediaItem
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
@@ -73,7 +74,7 @@ fun AlbumView(
             media = album
         )
         Title(text = album.title)
-        val musicMap: SortedMap<Long, Music> = remember { album.musicSortedMap }
+        val musicMap: SortedMap<Music, MediaItem> = remember { album.musicMediaItemSortedMap }
 
         //Recompose if data changed
         var mapChanged: Boolean by remember { album.musicMediaItemSortedMapUpdate }
@@ -83,7 +84,7 @@ fun AlbumView(
         //
 
         MediaListView(
-            mediaList = musicMap.values.toList(),
+            mediaList = musicMap.keys.toList(),
             openMedia = { clickedMedia: Media ->
                 playbackController.loadMusic(
                     musicMediaItemSortedMap = album.musicMediaItemSortedMap

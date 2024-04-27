@@ -70,6 +70,7 @@ fun PlaylistView(
 ) {
     //TODO try using nav controller instead try to remember it in an object if possible
     var openAddMusicsDialog: Boolean by remember { mutableStateOf(false) }
+    val playbackController: PlaybackController = PlaybackController.getInstance()
 
     Column(modifier = modifier) {
         Title(text = playlist.playlist.title)
@@ -85,7 +86,7 @@ fun PlaylistView(
         MediaListView(
             mediaList = musicMap.keys.toList(),
             openMedia = { clickedMedia: Media ->
-                PlaybackController.getInstance().loadMusic(
+                playbackController.loadMusic(
                     musicMediaItemSortedMap = playlist.musicMediaItemSortedMap
                 )
                 openMedia(navController = navController, media = clickedMedia)
@@ -95,8 +96,12 @@ fun PlaylistView(
             extraButtons = {
                 ExtraButton(icon = SatunesIcons.ADD, onClick = { openAddMusicsDialog = true })
                 if (playlist.musicMediaItemSortedMap.isNotEmpty()) {
+                    ExtraButton(icon = SatunesIcons.PLAY, onClick = {
+                        playbackController.loadMusic(musicMediaItemSortedMap = playlist.musicMediaItemSortedMap)
+                        openMedia(navController = navController)
+                    })
                     ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
-                        PlaybackController.getInstance().loadMusic(
+                        playbackController.loadMusic(
                             musicMediaItemSortedMap = playlist.musicMediaItemSortedMap,
                             shuffleMode = true
                         )

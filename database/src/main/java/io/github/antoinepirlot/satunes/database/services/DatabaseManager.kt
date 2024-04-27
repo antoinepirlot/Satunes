@@ -52,10 +52,15 @@ import java.io.File
  * @author Antoine Pirlot on 27/03/2024
  */
 class DatabaseManager(context: Context) {
+
     private val database: SatunesDatabase = SatunesDatabase.getDatabase(context = context)
     private val musicDao: MusicDAO = database.musicDao()
     private val playlistDao: PlaylistDAO = database.playlistDao()
     private val musicsPlaylistsRelDAO: MusicsPlaylistsRelDAO = database.musicsPlaylistsRelDao()
+
+    companion object {
+        private const val PLAYLIST_JSON_OBJECT_NAME = "all_playlists"
+    }
 
     fun loadAllPlaylistsWithMusic() {
         CoroutineScope(Dispatchers.IO).launch {
@@ -147,21 +152,31 @@ class DatabaseManager(context: Context) {
     }
 
     fun exportPlaylist(context: Context, playlistWithMusics: PlaylistWithMusics) {
+        val activity = Activity()
         CoroutineScope(Dispatchers.IO).launch {
             val json: String = Json.encodeToString(playlistWithMusics)
-            exportJson(context = context, json = json, fileName = playlistWithMusics.playlist.title)
+            exportJson(
+                context = context,
+                activity = activity,
+                json = json,
+                fileName = playlistWithMusics.playlist.title
+            )
         }
     }
 
-    fun exportAll(context: Context, vararg playlistWithMusics: PlaylistWithMusics) {
-        CoroutineScope(Dispatchers.IO).launch {
-            val json = Json.encodeToString(playlistWithMusics)
-            exportJson(context = context, json = json, fileName = "Playlists")
-        }
-    }
-
-    private fun exportJson(context: Context, json: String, fileName: String) {
+    fun exportAll(context: Context) {
         val activity = Activity()
+        CoroutineScope(Dispatchers.IO).launch {
+            var json = "{\"${Companion.PLAYLIST_JSON_OBJECT_NAME}\":["
+            DataManager.playlistWithMusicsMap.values.forEach { playlistWithMusics: PlaylistWithMusics? ->
+                json += Json.encodeToString(playlistWithMusics) + ','
+            }
+            json += "]}"
+            exportJson(context = context, activity = activity, json = json, fileName = "Playlists")
+        }
+    }
+
+    private fun exportJson(context: Context, activity: Activity, json: String, fileName: String) {
         try {
             val file =
                 File(Environment.getExternalStorageDirectory().absolutePath + '/' + Environment.DIRECTORY_DOCUMENTS + '/' + fileName + ".json")

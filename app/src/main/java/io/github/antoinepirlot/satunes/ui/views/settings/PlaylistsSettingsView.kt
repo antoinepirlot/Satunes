@@ -23,24 +23,42 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.router
+package io.github.antoinepirlot.satunes.ui.views.settings
+
+import android.content.Context
+import androidx.compose.foundation.layout.Column
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.database.services.DatabaseManager
 
 /**
- * @author Antoine Pirlot on 24-01-24
+ * @author Antoine Pirlot on 27/04/2024
  */
 
-internal enum class Destination(val link: String) {
-    ALBUMS(link = "/albums"),
-    ARTISTS(link = "/artists"),
-    BOTTOM_BAR_SETTING(link = "/navbar_settings"),
-    EXCLUSION(link = "/exclusion"),
-    FOLDERS(link = "/folders"),
-    GENRES(link = "/genres"),
-    MUSICS(link = "/musics"),
-    PLAYBACK(link = "/playback"),
-    PLAYBACK_SETTINGS(link = "/playback_settings"),
-    PLAYLISTS(link = "/playlists"),
-    PLAYLISTS_SETTINGS(link = "/playlists_settings"),
-    SETTINGS(link = "/settings"),
-    UPDATES(link = "/updates"),
+@Composable
+fun PlaylistsSettingsView(
+    modifier: Modifier = Modifier,
+) {
+    val context: Context = LocalContext.current
+    Column(
+        modifier = modifier,
+    ) {
+        Button(onClick = {
+            DatabaseManager(context = context).exportAll(context = context)
+        }) {
+            Text(text = stringResource(id = R.string.export_all))
+        }
+    }
+}
+
+@Preview
+@Composable
+fun PlaylistsSettingsViewPreview() {
+    PlaylistsSettingsView()
 }

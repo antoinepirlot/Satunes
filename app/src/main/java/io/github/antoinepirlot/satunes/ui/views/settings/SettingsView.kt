@@ -39,6 +39,7 @@ import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.router.Destination
 import io.github.antoinepirlot.satunes.ui.components.buttons.ClickableListItem
 import io.github.antoinepirlot.satunes.ui.components.texts.Title
+import io.github.antoinepirlot.satunes.database.R as RDb
 
 /**
  * @author Antoine Pirlot on 02/03/24
@@ -64,6 +65,10 @@ fun SettingsView(
             HorizontalDivider()
             ClickableListItem(text = stringResource(id = R.string.exclusion_setting)) {
                 navController.navigate(Destination.EXCLUSION.link)
+            }
+            HorizontalDivider()
+            ClickableListItem(text = stringResource(id = RDb.string.playlists)) {
+                navController.navigate(Destination.PLAYLISTS_SETTINGS.link)
             }
             HorizontalDivider()
             ClickableListItem(text = stringResource(id = R.string.version), onClick = {

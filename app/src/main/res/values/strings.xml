@@ -58,5 +58,5 @@
     <string name="no_folder">Aucun dossier contenant de la musique n\'a été trouvé</string>
     <string name="add_to">"Ajouter à "</string>
     <string name="exclusion_setting">Exclusion de fichiers</string>
-    <string name="exclude_ringtones">Exclure les sonneries</string>
+    <string name="exclude_ringtones">Exclure les sonneries (redémarrage nécéssaire)</string>
 </resources>

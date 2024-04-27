@@ -57,5 +57,5 @@
     <string name="no_folder">No folder with musics found</string>
     <string name="add_to">"Add to "</string>
     <string name="exclusion_setting">Excluding files</string>
-    <string name="exclude_ringtones">Exclude ringtones</string>
+    <string name="exclude_ringtones">Exclude ringtones (restart needed)</string>
 </resources>

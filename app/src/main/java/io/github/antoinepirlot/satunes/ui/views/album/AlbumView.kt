@@ -77,9 +77,13 @@ fun AlbumView(
             media = album
         )
 
-        Title(text = album.title)
+        Title(
+            bottomPadding = 0.dp,
+            text = album.title
+        )
         Subtitle(
             modifier = Modifier
+                .padding(bottom = 16.dp)
                 .align(Alignment.CenterHorizontally)
                 .clickable {
                     openMedia(navController = navController, media = album.artist)

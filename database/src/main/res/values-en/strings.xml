@@ -32,5 +32,8 @@
     <string name="unknown_album">Unknown Album</string>
     <string name="unknown_genre">Unknown Genre</string>
     <string name="playlist_already_exist">This playlist already exists</string>
-    <string name="export_failed">Export failed</string>
+    <string name="exporting_failed">Export failed</string>
+    <string name="importing">Importing…</string>
+    <string name="importing_failed">Importing failed</string>
+    <string name="file_not_found">File not found</string>
 </resources>

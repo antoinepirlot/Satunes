@@ -29,6 +29,8 @@ import android.app.Activity
 import android.content.Context
 import android.database.sqlite.SQLiteConstraintException
 import android.os.Environment
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import io.github.antoinepirlot.satunes.database.R
 import io.github.antoinepirlot.satunes.database.SatunesDatabase
 import io.github.antoinepirlot.satunes.database.daos.MusicDAO
@@ -60,6 +62,9 @@ class DatabaseManager(context: Context) {
 
     companion object {
         private const val PLAYLIST_JSON_OBJECT_NAME = "all_playlists"
+        private val FILE_PATH: String =
+            Environment.getExternalStorageDirectory().absolutePath + '/' + Environment.DIRECTORY_DOCUMENTS + "Satunes.json"
+        val importingPlaylist: MutableState<Boolean> = mutableStateOf(false)
     }
 
     fun loadAllPlaylistsWithMusic() {
@@ -155,12 +160,7 @@ class DatabaseManager(context: Context) {
         val activity = Activity()
         CoroutineScope(Dispatchers.IO).launch {
             val json: String = Json.encodeToString(playlistWithMusics)
-            exportJson(
-                context = context,
-                activity = activity,
-                json = json,
-                fileName = playlistWithMusics.playlist.title
-            )
+            exportJson(context = context, activity = activity, json = json)
         }
     }
 
@@ -169,26 +169,78 @@ class DatabaseManager(context: Context) {
         CoroutineScope(Dispatchers.IO).launch {
             var json = "{\"${Companion.PLAYLIST_JSON_OBJECT_NAME}\":["
             DataManager.playlistWithMusicsMap.values.forEach { playlistWithMusics: PlaylistWithMusics? ->
-                json += Json.encodeToString(playlistWithMusics) + ','
+                json += Json.encodeToString(playlistWithMusics)
+                if (playlistWithMusics != DataManager.playlistWithMusicsMap.values.last()) {
+                    json += ','
+                }
             }
             json += "]}"
-            exportJson(context = context, activity = activity, json = json, fileName = "Playlists")
+            exportJson(context = context, activity = activity, json = json)
         }
     }
 
-    private fun exportJson(context: Context, activity: Activity, json: String, fileName: String) {
+    private fun exportJson(context: Context, activity: Activity, json: String) {
         try {
             val file =
-                File(Environment.getExternalStorageDirectory().absolutePath + '/' + Environment.DIRECTORY_DOCUMENTS + '/' + fileName + ".json")
+                File(FILE_PATH)
             if (file.exists()) {
                 file.delete()
             }
             file.createNewFile()
             file.writeText(text = json, charset = Charsets.UTF_8)
         } catch (e: Exception) {
-            val message: String = context.getString(R.string.export_failed)
+            val message: String = context.getString(R.string.exporting_failed)
             showToastOnUiThread(context = context, activity = activity, message = message)
             e.printStackTrace()
+        }
+    }
+
+    fun importPlaylists(context: Context) {
+        importingPlaylist.value = true
+        val activity = Activity()
+        CoroutineScope(Dispatchers.IO).launch {
+            showToastOnUiThread(
+                context = context,
+                activity = activity,
+                message = context.getString(R.string.importing)
+            )
+            try {
+                val file = File(FILE_PATH)
+                if (!file.exists()) {
+                    showToastOnUiThread(
+                        context,
+                        activity = activity,
+                        message = context.getString(R.string.file_not_found)
+                    )
+                    //TODO check if finally is even done
+                    importingPlaylist.value = false
+                    return@launch
+                }
+
+                val json: String = file.readText(charset = Charsets.UTF_8)
+                if (!json.startsWith("{\"$PLAYLIST_JSON_OBJECT_NAME\":[") && !json.endsWith("]}")) {
+                    throw IllegalArgumentException("It is not a json object")
+                }
+                val playlistsList: List<String> = json.split("{\"all_playlists\":[")[1].removeRange(
+                    json.lastIndex - 1,
+                    json.lastIndex
+                ).split(",")
+                // playlists is a list of json object of PlaylistWithMusics
+
+                playlistsList.forEach { playlist: String ->
+                    val playlistWithMusics: PlaylistWithMusics = Json.decodeFromString(playlist)
+                    insertOne(context = context, playlist = playlistWithMusics.playlist)
+                }
+            } catch (e: Exception) {
+                showToastOnUiThread(
+                    context = context,
+                    activity = activity,
+                    message = context.getString(R.string.importing_failed)
+                )
+                e.printStackTrace()
+            } finally {
+                importingPlaylist.value = false
+            }
         }
     }
 }

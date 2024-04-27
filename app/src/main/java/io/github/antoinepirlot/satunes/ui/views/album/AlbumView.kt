@@ -25,6 +25,7 @@
 
 package io.github.antoinepirlot.satunes.ui.views.album
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -33,6 +34,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -50,6 +52,7 @@ import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
 import io.github.antoinepirlot.satunes.ui.components.images.AlbumArtwork
+import io.github.antoinepirlot.satunes.ui.components.texts.Subtitle
 import io.github.antoinepirlot.satunes.ui.components.texts.Title
 import io.github.antoinepirlot.satunes.ui.views.MediaListView
 import java.util.SortedMap
@@ -73,7 +76,17 @@ fun AlbumView(
                 .size(250.dp),
             media = album
         )
+
         Title(text = album.title)
+        Subtitle(
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .clickable {
+                    openMedia(navController = navController, media = album.artist)
+                },
+            text = album.artist!!.title
+        )
+
         val musicMap: SortedMap<Music, MediaItem> = remember { album.musicMediaItemSortedMap }
 
         //Recompose if data changed

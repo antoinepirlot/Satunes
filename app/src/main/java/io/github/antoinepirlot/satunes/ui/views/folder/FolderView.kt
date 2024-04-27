@@ -79,7 +79,11 @@ fun FolderView(
 
     Column(modifier = modifier) {
         if (folder.parentFolder == null) {
-            Title(text = '/' + getRootFolderName(title = folder.title), fontSize = 20.sp)
+            Title(
+                text = '/' + getRootFolderName(title = folder.title),
+                fontSize = 20.sp,
+                maxLines = 2
+            )
         } else {
             val allPath: MutableList<String> = folder.absolutePath.split("/").toMutableList()
             allPath.removeFirst()
@@ -88,7 +92,7 @@ fun FolderView(
             for (s: String in allPath) {
                 path += "/${decode(s)}"
             }
-            Title(text = path, fontSize = 20.sp)
+            Title(text = path, fontSize = 20.sp, maxLines = 2)
         }
         loadSubfolders(
             subFolderMap = subFolderMap,

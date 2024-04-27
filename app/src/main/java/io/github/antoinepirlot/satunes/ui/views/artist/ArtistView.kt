@@ -78,9 +78,9 @@ fun ArtistView(
         val albumMap: SortedMap<String, Album> = remember { artist.albumSortedMap }
 
         //Recompose if data changed
-        var mapChanged: Boolean by remember { artist.albumSortedMapUpdate }
-        if (mapChanged) {
-            mapChanged = false
+        var albumMapChanged: Boolean by remember { artist.albumSortedMapUpdate }
+        if (albumMapChanged) {
+            albumMapChanged = false
         }
         //
         Title(
@@ -102,9 +102,16 @@ fun ArtistView(
             textAlign = TextAlign.Left,
             fontSize = 20.sp
         )
-        val musicList: List<Music> = remember { artist.musicList }
+        val musicMap: SortedMap<Music, MediaItem> = remember { artist.musicMediaItemSortedMap }
+        //Recompose if data changed
+        var musicMapChanged: Boolean by remember { artist.musicMediaItemSortedMapUpdate }
+        if (musicMapChanged) {
+            musicMapChanged = false
+        }
+        //
+
         MediaListView(
-            mediaList = musicList,
+            mediaList = musicMap.keys.toList(),
 
             openMedia = { clickedMedia: Media ->
                 playbackController.loadMusic(musicMediaItemSortedMap = artist.musicMediaItemSortedMap)
@@ -112,19 +119,14 @@ fun ArtistView(
             },
             onFABClick = { openCurrentMusic(navController) },
             extraButtons = {
-                val musicMediaItemMap: SortedMap<Music, MediaItem> = sortedMapOf()
-                //Todo move this kind of code into object
-                artist.musicList.forEach { music: Music ->
-                    musicMediaItemMap[music] = music.mediaItem
-                }
-                if (musicMediaItemMap.isNotEmpty()) {
+                if (artist.musicMediaItemSortedMap.isNotEmpty()) {
                     ExtraButton(icon = SatunesIcons.PLAY, onClick = {
-                        playbackController.loadMusic(musicMediaItemSortedMap = musicMediaItemMap)
+                        playbackController.loadMusic(musicMediaItemSortedMap = artist.musicMediaItemSortedMap)
                         openMedia(navController = navController)
                     })
                     ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
                         playbackController.loadMusic(
-                            musicMediaItemSortedMap = musicMediaItemMap,
+                            musicMediaItemSortedMap = artist.musicMediaItemSortedMap,
                             shuffleMode = true
                         )
                         openMedia(navController = navController)
@@ -144,7 +146,6 @@ fun ArtistViewPreview() {
         artist = Artist(
             id = 0,
             title = "Artist title",
-            musicList = mutableListOf(),
             albumSortedMap = sortedMapOf()
         )
     )

@@ -37,27 +37,29 @@ import io.github.antoinepirlot.satunes.ui.components.settings.SettingsSwitchList
 import io.github.antoinepirlot.satunes.ui.components.texts.Title
 
 /**
- * @author Antoine Pirlot on 27/04/2024
+ *   @author Antoine Pirlot 06/03/2024
  */
 
 @Composable
-fun ExclusionSettingView(
-    modifier: Modifier = Modifier
+fun BottomNavigationBarSettingsView(
+    modifier: Modifier = Modifier,
 ) {
     val checkedMap: Map<Settings, MutableState<Boolean>> = mapOf(
-        Pair(first = Settings.EXCLUDE_RINGTONES, second = SettingsManager.excludeRingtonesChecked)
+        Pair(first = Settings.FOLDERS_CHECKED, second = SettingsManager.foldersChecked),
+        Pair(first = Settings.ARTISTS_CHECKED, second = SettingsManager.artistsChecked),
+        Pair(first = Settings.ALBUMS_CHECKED, second = SettingsManager.albumsChecked),
+        Pair(first = Settings.GENRES_CHECKED, second = SettingsManager.genresChecked),
+        Pair(first = Settings.PLAYLISTS_CHECKED, second = SettingsManager.playlistsChecked),
     )
 
-    Column(
-        modifier = modifier
-    ) {
-        Title(text = stringResource(id = R.string.exclusion_setting))
+    Column(modifier = modifier) {
+        Title(text = stringResource(id = R.string.bottom_bar))
         SettingsSwitchList(checkedMap = checkedMap)
     }
 }
 
-@Preview
 @Composable
-fun ExclusionSettingViewPreview() {
-    ExclusionSettingView()
+@Preview
+fun BottomNavigationBarSettingsViewPreview() {
+    BottomNavigationBarSettingsView()
 }

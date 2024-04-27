@@ -59,4 +59,6 @@
     <string name="add_to">"Ajouter à "</string>
     <string name="exclusion_setting">Exclusion de fichiers</string>
     <string name="exclude_ringtones">Exclure les sonneries (redémarrage nécéssaire)</string>
+    <string name="bar_speed">"Vitesse de la barre de progression: "</string>
+    <string name="second">seconde</string>
 </resources>

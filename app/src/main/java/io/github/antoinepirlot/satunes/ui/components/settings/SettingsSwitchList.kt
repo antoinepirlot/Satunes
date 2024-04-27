@@ -125,5 +125,7 @@ private fun switchSetting(context: Context, setting: Settings) {
             SettingsManager.switchExcludeRingtones(context = context)
         }
 
+        else -> { /* Not a switch */
+        }
     }
 }

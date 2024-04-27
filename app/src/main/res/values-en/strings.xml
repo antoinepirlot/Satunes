@@ -58,4 +58,6 @@
     <string name="add_to">"Add to "</string>
     <string name="exclusion_setting">Excluding files</string>
     <string name="exclude_ringtones">Exclude ringtones (restart needed)</string>
+    <string name="bar_speed">"Progress bar speed: "</string>
+    <string name="second">second</string>
 </resources>

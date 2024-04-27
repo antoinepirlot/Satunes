@@ -29,6 +29,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -36,11 +37,14 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.ui.components.EmptyView
+import io.github.antoinepirlot.satunes.ui.components.texts.Title
 
 /**
  * @author Antoine Pirlot on 11/04/2024
@@ -55,6 +59,12 @@ fun AlbumGrid(
     Box(modifier = modifier) {
         Column {
             if (mediaList.isNotEmpty()) {
+                Title(
+                    modifier.padding(start = 16.dp),
+                    text = stringResource(id = io.github.antoinepirlot.satunes.database.R.string.albums),
+                    textAlign = TextAlign.Left,
+                    fontSize = 20.sp
+                )
                 val lazyState = rememberLazyListState()
                 LazyRow(
                     modifier = modifier.fillMaxWidth(),

@@ -83,12 +83,6 @@ fun ArtistView(
             albumMapChanged = false
         }
         //
-        Title(
-            modifier.padding(start = 16.dp),
-            text = stringResource(id = RDb.string.albums),
-            textAlign = TextAlign.Left,
-            fontSize = 20.sp
-        )
         AlbumGrid(
             mediaList = albumMap.values.toList(),
             onClick = { openMedia(navController = navController, media = it) }

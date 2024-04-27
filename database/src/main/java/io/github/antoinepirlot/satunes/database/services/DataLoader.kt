@@ -204,7 +204,7 @@ object DataLoader {
             if (artist.musicMediaItemSortedMap.isEmpty()) {
                 DataManager.removeArtist(artist = artist)
             }
-            if (genre.musicMap.isEmpty()) {
+            if (genre.musicMediaItemSortedMap.isEmpty()) {
                 DataManager.removeGenre(genre = genre)
             }
             if (folder.musicMediaItemSortedMap.isEmpty()) {

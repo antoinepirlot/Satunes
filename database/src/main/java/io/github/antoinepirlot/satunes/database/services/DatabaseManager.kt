@@ -176,7 +176,6 @@ class DatabaseManager(context: Context) {
     }
 
     fun exportPlaylists(context: Context, vararg playlistWithMusics: PlaylistWithMusics, uri: Uri) {
-        //TODO doesn't import last data
         CoroutineScope(Dispatchers.IO).launch {
             var json = "{\"${PLAYLIST_JSON_OBJECT_NAME}\":["
             playlistWithMusics.forEach { playlistWithMusics: PlaylistWithMusics ->
@@ -221,14 +220,14 @@ class DatabaseManager(context: Context) {
                     throw IllegalArgumentException("It is not the correct file")
                 }
                 json = json.split("{\"all_playlists\":[")[1]
-                json = json.removeRange(json.lastIndex - 1..json.lastIndex)
+                json = json.removeSuffix(",]}")
                 if (json.isBlank()) {
                     return@launch
                 }
                 var playlistList: List<String> = json.split("\"playlist\":")
-                playlistList = playlistList.subList(fromIndex = 1, toIndex = playlistList.lastIndex)
+                playlistList = playlistList.subList(fromIndex = 1, toIndex = playlistList.size)
                 playlistList.forEach { s: String ->
-                    json = "{\"playlist\":" + s.removeRange(s.lastIndex - 1..s.lastIndex)
+                    json = "{\"playlist\":" + s.removeSuffix(",{")
                     val playlistWithMusics: PlaylistWithMusics = Json.decodeFromString(json)
                     insertOne(
                         context = context,

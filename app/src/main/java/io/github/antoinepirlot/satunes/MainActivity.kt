@@ -136,6 +136,8 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    //TODO find a way to move it to database module, no solution found instead of here
+    // No enough knowledge about Activity
     fun createFileToExportPlaylists(defaultFileName: String) {
         if (playlistsToExport.isEmpty()) {
             showToastOnUiThread(

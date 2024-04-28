@@ -30,9 +30,12 @@ import android.Manifest.permission.READ_MEDIA_AUDIO
 import android.app.PendingIntent
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Build.VERSION_CODES.TIRAMISU
 import android.os.Bundle
+import android.os.Environment
+import android.provider.DocumentsContract
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
@@ -64,6 +67,8 @@ class MainActivity : ComponentActivity() {
         private const val IMPORT_PLAYLIST_CODE = 1
         private const val EXPORT_PLAYLIST_CODE = 2
         internal var playlistsToExport: Array<PlaylistWithMusics> = arrayOf()
+        private val DEFAULT_URI =
+            Uri.parse(Environment.getExternalStorageDirectory().path + '/' + Environment.DIRECTORY_DOCUMENTS)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -150,6 +155,7 @@ class MainActivity : ComponentActivity() {
             addCategory(Intent.CATEGORY_OPENABLE)
             type = "application/json"
             putExtra(Intent.EXTRA_TITLE, defaultFileName)
+            putExtra(DocumentsContract.EXTRA_INITIAL_URI, DEFAULT_URI)
         }
         startActivityForResult(intent, EXPORT_PLAYLIST_CODE)
     }
@@ -158,6 +164,7 @@ class MainActivity : ComponentActivity() {
         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
             addCategory(Intent.CATEGORY_OPENABLE)
             type = "application/json"
+            putExtra(DocumentsContract.EXTRA_INITIAL_URI, DEFAULT_URI)
         }
         startActivityForResult(intent, IMPORT_PLAYLIST_CODE)
     }

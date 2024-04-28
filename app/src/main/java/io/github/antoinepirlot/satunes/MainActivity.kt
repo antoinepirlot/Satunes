@@ -159,7 +159,7 @@ class MainActivity : ComponentActivity() {
             addCategory(Intent.CATEGORY_OPENABLE)
             type = "application/json"
         }
-        startActivityForResult(intent, 1)
+        startActivityForResult(intent, IMPORT_PLAYLIST_CODE)
     }
 
 

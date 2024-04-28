@@ -176,6 +176,7 @@ class DatabaseManager(context: Context) {
     }
 
     fun exportPlaylists(context: Context, vararg playlistWithMusics: PlaylistWithMusics, uri: Uri) {
+        //TODO doesn't import last data
         CoroutineScope(Dispatchers.IO).launch {
             var json = "{\"${PLAYLIST_JSON_OBJECT_NAME}\":["
             playlistWithMusics.forEach { playlistWithMusics: PlaylistWithMusics ->

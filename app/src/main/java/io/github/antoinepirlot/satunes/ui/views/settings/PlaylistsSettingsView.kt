@@ -26,12 +26,16 @@
 package io.github.antoinepirlot.satunes.ui.views.settings
 
 import android.content.Context
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -40,6 +44,8 @@ import androidx.compose.ui.unit.dp
 import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.services.DataManager
+import io.github.antoinepirlot.satunes.ui.components.texts.Title
+import io.github.antoinepirlot.satunes.database.R as RDb
 
 /**
  * @author Antoine Pirlot on 27/04/2024
@@ -50,18 +56,25 @@ fun PlaylistsSettingsView(
     modifier: Modifier = Modifier,
 ) {
     val context: Context = LocalContext.current
-    Row(
-        modifier = modifier,
+    Column(
+        modifier = modifier
+            .padding(16.dp)
+            .fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Button(onClick = {
-            MainActivity.playlistsToExport = DataManager.playlistWithMusicsMap.values.toTypedArray()
-            MainActivity.instance.createFileToExportPlaylists(defaultFileName = "Satunes.json")
-        }) {
-            Text(text = stringResource(id = R.string.export_all))
-        }
-        Spacer(modifier = Modifier.size(16.dp))
-        Button(onClick = { MainActivity.instance.openFileToImportPlaylists() }) {
-            Text(text = stringResource(id = R.string._import))
+        Title(text = stringResource(id = RDb.string.playlists))
+        Row {
+            Button(onClick = {
+                MainActivity.playlistsToExport =
+                    DataManager.playlistWithMusicsMap.values.toTypedArray()
+                MainActivity.instance.createFileToExportPlaylists(defaultFileName = "Satunes.json")
+            }) {
+                Text(text = stringResource(id = R.string.export_all))
+            }
+            Spacer(modifier = Modifier.size(16.dp))
+            Button(onClick = { MainActivity.instance.openFileToImportPlaylists() }) {
+                Text(text = stringResource(id = R.string._import))
+            }
         }
     }
 }

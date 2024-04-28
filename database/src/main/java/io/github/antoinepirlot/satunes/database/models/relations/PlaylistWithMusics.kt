@@ -78,23 +78,31 @@ data class PlaylistWithMusics(
 
     init {
         musics.forEach { musicDB: MusicDB ->
-            musicMediaItemSortedMap[musicDB.music] = musicDB.music.mediaItem
+            if (musicDB.music != null) {
+                musicMediaItemSortedMap[musicDB.music] = musicDB.music!!.mediaItem
+            }
         }
     }
 
     fun addMusic(music: Music) {
-        musics.add(MusicDB(id = music.id))
-        if (!musicMediaItemSortedMap.contains(music)) {
-            musicMediaItemSortedMap[music] = music.mediaItem
-            musicMediaItemSortedMapUpdate.value = true
+        val musicDb = MusicDB(id = music.id)
+        if (musicDb.music != null) {
+            musics.add(musicDb)
+            if (!musicMediaItemSortedMap.contains(music)) {
+                musicMediaItemSortedMap[music] = music.mediaItem
+                musicMediaItemSortedMapUpdate.value = true
+            }
         }
     }
 
     fun removeMusic(music: Music) {
-        musics.remove(MusicDB(id = music.id))
-        if (musicMediaItemSortedMap.contains(music)) {
-            musicMediaItemSortedMap.remove(music)
-            musicMediaItemSortedMapUpdate.value = true
+        val musicDb = MusicDB(id = music.id)
+        if (musicDb.music != null) {
+            musics.remove(musicDb)
+            if (musicMediaItemSortedMap.contains(music)) {
+                musicMediaItemSortedMap.remove(music)
+                musicMediaItemSortedMapUpdate.value = true
+            }
         }
     }
 }

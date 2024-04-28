@@ -91,7 +91,10 @@ class DatabaseManager(context: Context) {
     fun insertMusicToPlaylists(music: Music, playlists: MutableList<PlaylistWithMusics>) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                musicDao.insert(MusicDB(id = music.id))
+                val musicDB = MusicDB(id = music.id)
+                if (musicDB.music != null) {
+                    musicDao.insert()
+                }
             } catch (_: SQLiteConstraintException) {
                 // Do nothing
             }
@@ -130,10 +133,12 @@ class DatabaseManager(context: Context) {
             DataManager.addPlaylist(playlistWithMusics = playlistWithMusics)
 
             musicList?.forEach { musicDB: MusicDB ->
-                insertMusicToPlaylists(
-                    music = musicDB.music,
-                    playlists = mutableListOf(playlistWithMusics)
-                )
+                if (musicDB.music != null) {
+                    insertMusicToPlaylists(
+                        music = musicDB.music!!,
+                        playlists = mutableListOf(playlistWithMusics)
+                    )
+                }
             }
         }
     }
@@ -153,7 +158,7 @@ class DatabaseManager(context: Context) {
             playlistDao.remove(playlistToRemove.playlist)
             playlistToRemove.musics.forEach { musicDb: MusicDB ->
                 musicsPlaylistsRelDAO.delete(
-                    musicId = musicDb.music.id,
+                    musicId = musicDb.music!!.id,
                     playlistId = playlistToRemove.playlist.id
                 )
                 if (!musicsPlaylistsRelDAO.isMusicInPlaylist(musicId = musicDb.id)) {

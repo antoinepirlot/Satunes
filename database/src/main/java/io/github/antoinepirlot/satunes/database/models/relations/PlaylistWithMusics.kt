@@ -38,11 +38,15 @@ import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.tables.MusicDB
 import io.github.antoinepirlot.satunes.database.models.tables.MusicsPlaylistsRel
 import io.github.antoinepirlot.satunes.database.models.tables.Playlist
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 import java.util.SortedMap
 
 /**
  * @author Antoine Pirlot on 27/03/2024
  */
+
+@Serializable
 data class PlaylistWithMusics(
     @Embedded val playlist: Playlist,
     @Relation(
@@ -53,31 +57,42 @@ data class PlaylistWithMusics(
     val musics: MutableList<MusicDB>
 ) : Media {
     @Ignore
+    @Transient
     override var artwork: Bitmap? = null
+
     @Ignore
+    @Transient
     override val id: Long = playlist.id // Not used
 
     @Ignore
+    @Transient
     override val title: String = "Title is not used for PlaylistWithMusics class." // Not used
 
     @Ignore
+    @Transient
     override val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
 
     @Ignore
+    @Transient
     val musicMediaItemSortedMapUpdate: MutableState<Boolean> = mutableStateOf(false)
 
 
     init {
         musics.forEach { musicDB: MusicDB ->
-            musicMediaItemSortedMap[musicDB.music] = musicDB.music.mediaItem
+            if (musicDB.music != null) {
+                musicMediaItemSortedMap[musicDB.music] = musicDB.music!!.mediaItem
+            }
         }
     }
 
     fun addMusic(music: Music) {
-        musics.add(MusicDB(id = music.id))
-        if (!musicMediaItemSortedMap.contains(music)) {
-            musicMediaItemSortedMap[music] = music.mediaItem
-            musicMediaItemSortedMapUpdate.value = true
+        val musicDb = MusicDB(id = music.id)
+        if (musicDb.music != null) {
+            musics.add(musicDb)
+            if (!musicMediaItemSortedMap.contains(music)) {
+                musicMediaItemSortedMap[music] = music.mediaItem
+                musicMediaItemSortedMapUpdate.value = true
+            }
         }
     }
 

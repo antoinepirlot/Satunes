@@ -67,7 +67,7 @@ fun MediaCardList(
                 key = {
                     when (it) {
                         is PlaylistWithMusics -> it.playlist.id
-                        is MusicDB -> it.music.id
+                        is MusicDB -> it.music!!.id
                         else -> it.id
                     }
                 }

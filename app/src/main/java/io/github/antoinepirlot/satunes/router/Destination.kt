@@ -32,14 +32,15 @@ package io.github.antoinepirlot.satunes.router
 internal enum class Destination(val link: String) {
     ALBUMS(link = "/albums"),
     ARTISTS(link = "/artists"),
+    BOTTOM_BAR_SETTING(link = "/navbar_settings"),
     EXCLUSION(link = "/exclusion"),
     FOLDERS(link = "/folders"),
     GENRES(link = "/genres"),
     MUSICS(link = "/musics"),
-    BOTTOM_BAR_SETTING(link = "/navbar_settings"),
     PLAYBACK(link = "/playback"),
     PLAYBACK_SETTINGS(link = "/playback_settings"),
     PLAYLISTS(link = "/playlists"),
+    PLAYLISTS_SETTINGS(link = "/playlists_settings"),
     SETTINGS(link = "/settings"),
     UPDATES(link = "/updates"),
 }

@@ -59,6 +59,7 @@ import io.github.antoinepirlot.satunes.ui.views.playlist.PlaylistView
 import io.github.antoinepirlot.satunes.ui.views.settings.BottomNavigationBarSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.ExclusionSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.PlaybackSettingsView
+import io.github.antoinepirlot.satunes.ui.views.settings.PlaylistsSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.SettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.UpdatesView
 
@@ -215,6 +216,10 @@ internal fun Router(
 
         composable(Destination.EXCLUSION.link) {
             ExclusionSettingsView()
+        }
+
+        composable(Destination.PLAYLISTS_SETTINGS.link) {
+            PlaylistsSettingsView()
         }
     }
 }

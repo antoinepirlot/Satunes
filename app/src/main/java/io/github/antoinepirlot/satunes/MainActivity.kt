@@ -30,9 +30,12 @@ import android.Manifest.permission.READ_MEDIA_AUDIO
 import android.app.PendingIntent
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Build.VERSION_CODES.TIRAMISU
 import android.os.Bundle
+import android.os.Environment
+import android.provider.DocumentsContract
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
@@ -41,13 +44,17 @@ import androidx.annotation.OptIn
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.media3.common.util.UnstableApi
+import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
 import io.github.antoinepirlot.satunes.database.services.DataCleanerManager
+import io.github.antoinepirlot.satunes.database.services.DatabaseManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.playback.services.PlaybackService
+import io.github.antoinepirlot.utils.showToastOnUiThread
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import io.github.antoinepirlot.satunes.database.R as RDb
 
 /**
  * @author Antoine Pirlot on 18/01/24
@@ -55,7 +62,17 @@ import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
 
+    companion object {
+        internal lateinit var instance: MainActivity
+        private const val IMPORT_PLAYLIST_CODE = 1
+        private const val EXPORT_PLAYLIST_CODE = 2
+        internal var playlistsToExport: Array<PlaylistWithMusics> = arrayOf()
+        private val DEFAULT_URI =
+            Uri.parse(Environment.getExternalStorageDirectory().path + '/' + Environment.DIRECTORY_DOCUMENTS)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        instance = this
         setNotificationOnClick()
         SettingsManager.loadSettings(context = this@MainActivity)
         super.onCreate(savedInstanceState)
@@ -121,6 +138,63 @@ class MainActivity : ComponentActivity() {
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
             PlaybackService.mediaSession!!.setSessionActivity(pendingIntent)
+        }
+    }
+
+    //TODO find a way to move it to database module, no solution found instead of here
+    // No enough knowledge about Activity
+    fun createFileToExportPlaylists(defaultFileName: String) {
+        if (playlistsToExport.isEmpty()) {
+            showToastOnUiThread(
+                context = this,
+                message = this.getString(RDb.string.no_playlist)
+            )
+            return
+        }
+        val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = "application/json"
+            putExtra(Intent.EXTRA_TITLE, defaultFileName)
+            putExtra(DocumentsContract.EXTRA_INITIAL_URI, DEFAULT_URI)
+        }
+        startActivityForResult(intent, EXPORT_PLAYLIST_CODE)
+    }
+
+    fun openFileToImportPlaylists() {
+        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = "application/json"
+            putExtra(DocumentsContract.EXTRA_INITIAL_URI, DEFAULT_URI)
+        }
+        startActivityForResult(intent, IMPORT_PLAYLIST_CODE)
+    }
+
+
+    @Deprecated("This method has been deprecated in favor of using the Activity Result API\n      which brings increased type safety via an {@link ActivityResultContract} and the prebuilt\n      contracts for common intents available in\n      {@link androidx.activity.result.contract.ActivityResultContracts}, provides hooks for\n      testing, and allow receiving results in separate, testable classes independent from your\n      activity. Use\n      {@link #registerForActivityResult(ActivityResultContract, ActivityResultCallback)}\n      with the appropriate {@link ActivityResultContract} and handling the result in the\n      {@link ActivityResultCallback#onActivityResult(Object) callback}.")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == RESULT_OK) {
+            if (requestCode == EXPORT_PLAYLIST_CODE) {
+                data?.data?.also {
+                    if (it.path == null) {
+                        showToastOnUiThread(
+                            context = this,
+                            message = this.getString(R.string.no_file_created)
+                        )
+                    }
+                    DatabaseManager(context = this)
+                        .exportPlaylists(
+                            context = this,
+                            playlistWithMusics = playlistsToExport,
+                            uri = it
+                        )
+                    playlistsToExport = arrayOf()
+                }
+            } else if (requestCode == IMPORT_PLAYLIST_CODE) {
+                data?.data?.also {
+                    DatabaseManager(context = this).importPlaylists(context = this, uri = it)
+                }
+            }
         }
     }
 }

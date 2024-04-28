@@ -25,10 +25,13 @@
 
 package io.github.antoinepirlot.satunes.database.services
 
-import android.app.Activity
 import android.content.Context
 import android.database.sqlite.SQLiteConstraintException
-import android.widget.Toast
+import android.net.Uri
+import android.net.Uri.decode
+import android.os.ParcelFileDescriptor
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import io.github.antoinepirlot.satunes.database.R
 import io.github.antoinepirlot.satunes.database.SatunesDatabase
 import io.github.antoinepirlot.satunes.database.daos.MusicDAO
@@ -44,15 +47,28 @@ import io.github.antoinepirlot.utils.showToastOnUiThread
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import java.io.BufferedReader
+import java.io.FileNotFoundException
+import java.io.FileOutputStream
+import java.io.IOException
+import java.io.InputStreamReader
 
 /**
  * @author Antoine Pirlot on 27/03/2024
  */
 class DatabaseManager(context: Context) {
+
     private val database: SatunesDatabase = SatunesDatabase.getDatabase(context = context)
     private val musicDao: MusicDAO = database.musicDao()
     private val playlistDao: PlaylistDAO = database.playlistDao()
     private val musicsPlaylistsRelDAO: MusicsPlaylistsRelDAO = database.musicsPlaylistsRelDao()
+
+    companion object {
+        private const val PLAYLIST_JSON_OBJECT_NAME = "all_playlists"
+        val importingPlaylist: MutableState<Boolean> = mutableStateOf(false)
+    }
 
     fun loadAllPlaylistsWithMusic() {
         CoroutineScope(Dispatchers.IO).launch {
@@ -72,10 +88,13 @@ class DatabaseManager(context: Context) {
 
     fun insertMusicToPlaylists(music: Music, playlists: MutableList<PlaylistWithMusics>) {
         CoroutineScope(Dispatchers.IO).launch {
-            var musicDb: MusicDB? = musicDao.get(music.id)
-            if (musicDb == null) {
-                musicDb = MusicDB(id = music.id)
-                musicDao.insert(musicDb)
+            try {
+                val musicDB = MusicDB(id = music.id)
+                if (musicDB.music != null) {
+                    musicDao.insert()
+                }
+            } catch (_: SQLiteConstraintException) {
+                // Do nothing
             }
             playlists.forEach { playlistWithMusics: PlaylistWithMusics ->
                 val musicsPlaylistsRel =
@@ -87,25 +106,38 @@ class DatabaseManager(context: Context) {
                     musicsPlaylistsRelDAO.insert(musicsPlaylistsRel)
                     playlistWithMusics.addMusic(music = music)
                 } catch (_: SQLiteConstraintException) {
-                    return@launch
+                    // Do nothing
                 }
             }
         }
     }
 
-    fun insertOne(context: Context, playlist: Playlist) {
-        val activity = Activity()
+    fun insertOne(
+        context: Context,
+        playlist: Playlist,
+        musicList: MutableList<MusicDB>? = null,
+    ) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 playlist.id = playlistDao.insertOne(playlist = playlist)
             } catch (_: SQLiteConstraintException) {
-                val message: String = context.getString(R.string.playlist_already_exist)
-                showToastOnUiThread(context = context, activity = activity, message = message)
+                val message: String =
+                    decode(playlist.title) + context.getString(R.string.playlist_already_exist)
+                showToastOnUiThread(context = context, message = message)
                 return@launch
             }
             val playlistWithMusics: PlaylistWithMusics =
                 playlistDao.getPlaylistWithMusics(playlistId = playlist.id)!!
             DataManager.addPlaylist(playlistWithMusics = playlistWithMusics)
+
+            musicList?.forEach { musicDB: MusicDB ->
+                if (musicDB.music != null) {
+                    insertMusicToPlaylists(
+                        music = musicDB.music!!,
+                        playlists = mutableListOf(playlistWithMusics)
+                    )
+                }
+            }
         }
     }
 
@@ -124,7 +156,7 @@ class DatabaseManager(context: Context) {
             playlistDao.remove(playlistToRemove.playlist)
             playlistToRemove.musics.forEach { musicDb: MusicDB ->
                 musicsPlaylistsRelDAO.delete(
-                    musicId = musicDb.music.id,
+                    musicId = musicDb.music!!.id,
                     playlistId = playlistToRemove.playlist.id
                 )
                 if (!musicsPlaylistsRelDAO.isMusicInPlaylist(musicId = musicDb.id)) {
@@ -140,6 +172,118 @@ class DatabaseManager(context: Context) {
             musics.forEach { music: Music ->
                 insertMusicToPlaylists(music = music, playlists = mutableListOf(playlist))
             }
+        }
+    }
+
+    fun exportPlaylists(context: Context, vararg playlistWithMusics: PlaylistWithMusics, uri: Uri) {
+        CoroutineScope(Dispatchers.IO).launch {
+            var json = "{\"${PLAYLIST_JSON_OBJECT_NAME}\":["
+            playlistWithMusics.forEach { playlistWithMusics: PlaylistWithMusics ->
+                json += Json.encodeToString(playlistWithMusics) + ','
+            }
+            json += "]}"
+            exportJson(context = context, json = json, uri = uri)
+        }
+    }
+
+    private fun exportJson(context: Context, json: String, uri: Uri) {
+        try {
+            writeToUri(context = context, uri = uri, string = json)
+            showToastOnUiThread(
+                context = context,
+                message = context.getString(R.string.exporting_success)
+            )
+        } catch (e: Exception) {
+            val message: String = context.getString(R.string.exporting_failed)
+            showToastOnUiThread(context = context, message = message)
+            e.printStackTrace()
+        }
+    }
+
+    fun importPlaylists(context: Context, uri: Uri) {
+        importingPlaylist.value = true
+        CoroutineScope(Dispatchers.IO).launch {
+            showToastOnUiThread(
+                context = context,
+                message = context.getString(R.string.importing)
+            )
+            try {
+                if (uri.path == null) {
+                    showToastOnUiThread(
+                        context = context,
+                        message = context.getString(R.string.file_not_found)
+                    )
+                    return@launch
+                }
+                var json: String = readTextFromUri(context = context, uri = uri)
+                if (!json.startsWith("{\"$PLAYLIST_JSON_OBJECT_NAME\":[") && !json.endsWith("]}")) {
+                    throw IllegalArgumentException("It is not the correct file")
+                }
+                json = json.split("{\"all_playlists\":[")[1]
+                json = json.removeSuffix(",]}")
+                if (json.isBlank()) {
+                    return@launch
+                }
+                var playlistList: List<String> = json.split("\"playlist\":")
+                playlistList = playlistList.subList(fromIndex = 1, toIndex = playlistList.size)
+                playlistList.forEach { s: String ->
+                    json = "{\"playlist\":" + s.removeSuffix(",{")
+                    val playlistWithMusics: PlaylistWithMusics = Json.decodeFromString(json)
+                    insertOne(
+                        context = context,
+                        playlist = playlistWithMusics.playlist,
+                        musicList = playlistWithMusics.musics,
+                    )
+                }
+                showToastOnUiThread(
+                    context = context,
+                    message = context.getString(R.string.importing_success)
+                )
+            } catch (e: Exception) {
+                showToastOnUiThread(
+                    context = context,
+                    message = context.getString(R.string.importing_failed)
+                )
+                e.printStackTrace()
+            } finally {
+                importingPlaylist.value = false
+            }
+        }
+    }
+
+    /**
+     * Copied from https://developer.android.com/training/data-storage/shared/documents-files?hl=fr#open
+     */
+    @Throws(IOException::class)
+    private fun readTextFromUri(context: Context, uri: Uri): String {
+        val stringBuilder = StringBuilder()
+        context.contentResolver.openInputStream(uri)?.use { inputStream ->
+            BufferedReader(InputStreamReader(inputStream)).use { reader ->
+                var line: String? = reader.readLine()
+                while (line != null) {
+                    stringBuilder.append(line)
+                    line = reader.readLine()
+                }
+            }
+        }
+        return stringBuilder.toString()
+    }
+
+    /**
+     * Copied from https://developer.android.com/training/data-storage/shared/documents-files?hl=fr#edit
+     */
+    private fun writeToUri(context: Context, uri: Uri, string: String) {
+        try {
+            context.contentResolver.openFileDescriptor(uri, "w")
+                ?.use { parcelFileDescriptor: ParcelFileDescriptor ->
+                    FileOutputStream(parcelFileDescriptor.fileDescriptor).use { fileOutputStream: FileOutputStream ->
+                        fileOutputStream.write((string).toByteArray())
+                    }
+                }
+        } catch (e: FileNotFoundException) {
+            e.printStackTrace()
+        } catch (e: IOException) {
+            e.printStackTrace()
         }
     }
 }

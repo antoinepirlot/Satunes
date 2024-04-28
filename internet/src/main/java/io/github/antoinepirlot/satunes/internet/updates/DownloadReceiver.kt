@@ -25,7 +25,6 @@
 
 package io.github.antoinepirlot.satunes.internet.updates
 
-import android.app.Activity
 import android.app.DownloadManager
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -40,7 +39,7 @@ internal object DownloadReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.action == DownloadManager.ACTION_DOWNLOAD_COMPLETE) {
             UpdateCheckManager.downloadStatus.value = APKDownloadStatus.DOWNLOADED
-            showToastOnUiThread(context = context, activity = Activity(), context.getString(R.string.downloaded))
+            showToastOnUiThread(context = context, context.getString(R.string.downloaded))
         }
     }
 }

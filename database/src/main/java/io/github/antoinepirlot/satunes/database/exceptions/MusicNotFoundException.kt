@@ -30,4 +30,4 @@ package io.github.antoinepirlot.satunes.database.exceptions
  */
 class MusicNotFoundException(
     val musicId: Long
-) : Exception()
+) : NullPointerException()

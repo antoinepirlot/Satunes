@@ -26,18 +26,20 @@
 package io.github.antoinepirlot.satunes.database.models.tables
 
 import android.graphics.Bitmap
-import androidx.compose.ui.graphics.ImageBitmap
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import io.github.antoinepirlot.satunes.database.models.Media
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
 /**
  * @author Antoine Pirlot on 27/03/2024
  */
 
+@Serializable
 @Entity(tableName = "playlists", indices = [Index(value = ["title"], unique = true)])
 data class Playlist(
     @PrimaryKey(autoGenerate = true)
@@ -45,5 +47,6 @@ data class Playlist(
     @ColumnInfo(name = "title") override var title: String,
 ) : Media {
     @Ignore
+    @Transient
     override var artwork: Bitmap? = null
 }

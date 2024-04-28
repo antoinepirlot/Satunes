@@ -28,6 +28,7 @@ package io.github.antoinepirlot.satunes
 import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.Manifest.permission.READ_MEDIA_AUDIO
 import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
@@ -42,6 +43,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.media3.common.util.UnstableApi
 import io.github.antoinepirlot.satunes.database.services.DataCleanerManager
+import io.github.antoinepirlot.satunes.database.services.DatabaseManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.playback.services.PlaybackService
@@ -55,7 +57,14 @@ import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
 
+    companion object {
+        internal lateinit var instance: MainActivity
+        private const val IMPORT_PLAYLIST_CODE = 1
+        private const val EXPORT_PLAYLIST_CODE = 2
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        instance = this
         setNotificationOnClick()
         SettingsManager.loadSettings(context = this@MainActivity)
         super.onCreate(savedInstanceState)
@@ -121,6 +130,38 @@ class MainActivity : ComponentActivity() {
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
             PlaybackService.mediaSession!!.setSessionActivity(pendingIntent)
+        }
+    }
+
+    fun createFile(context: Context) {
+        val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = "application/json"
+            putExtra(Intent.EXTRA_TITLE, "Satunes.json")
+        }
+        startActivityForResult(intent, EXPORT_PLAYLIST_CODE)
+    }
+
+    fun openFile(context: Context) {
+        startActivity(intent)
+        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = "application/json"
+        }
+        startActivityForResult(intent, 1)
+    }
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == RESULT_OK) {
+            if (requestCode == EXPORT_PLAYLIST_CODE) {
+                DatabaseManager(context = this).exportPlaylists(this)
+            } else if (requestCode == IMPORT_PLAYLIST_CODE) {
+                data?.data?.also {
+                    DatabaseManager(context = this).importPlaylists(context = this, uri = it)
+                }
+            }
         }
     }
 }

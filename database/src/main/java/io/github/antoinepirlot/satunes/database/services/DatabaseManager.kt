@@ -28,7 +28,8 @@ package io.github.antoinepirlot.satunes.database.services
 import android.app.Activity
 import android.content.Context
 import android.database.sqlite.SQLiteConstraintException
-import android.os.Environment
+import android.net.Uri
+import android.os.ParcelFileDescriptor
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import io.github.antoinepirlot.satunes.database.R
@@ -48,7 +49,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import java.io.BufferedReader
 import java.io.File
+import java.io.FileDescriptor
+import java.io.IOException
+import java.io.InputStreamReader
 
 /**
  * @author Antoine Pirlot on 27/03/2024
@@ -62,8 +67,6 @@ class DatabaseManager(context: Context) {
 
     companion object {
         private const val PLAYLIST_JSON_OBJECT_NAME = "all_playlists"
-        private val FILE_PATH: String =
-            Environment.getExternalStorageDirectory().absolutePath + '/' + Environment.DIRECTORY_DOCUMENTS + "/Satunes.json"
         val importingPlaylist: MutableState<Boolean> = mutableStateOf(false)
     }
 
@@ -169,22 +172,21 @@ class DatabaseManager(context: Context) {
         }
     }
 
-    fun exportAll(context: Context, vararg playlistWithMusics: PlaylistWithMusics) {
-        val activity = Activity()
+    fun exportPlaylists(context: Context, vararg playlistWithMusics: PlaylistWithMusics) {
         CoroutineScope(Dispatchers.IO).launch {
             var json = "{\"${Companion.PLAYLIST_JSON_OBJECT_NAME}\":["
             playlistWithMusics.forEach { playlistWithMusics: PlaylistWithMusics ->
                 json += Json.encodeToString(playlistWithMusics) + ','
             }
             json += "]}"
-            exportJson(context = context, activity = activity, json = json)
+            exportJson(context = context, json = json, filePath = "")
         }
     }
 
-    private fun exportJson(context: Context, activity: Activity, json: String) {
+    private fun exportJson(context: Context, json: String, filePath: String) {
         try {
             val file =
-                File(FILE_PATH)
+                File(filePath)
             if (file.exists()) {
                 file.delete()
             }
@@ -192,36 +194,34 @@ class DatabaseManager(context: Context) {
             file.writeText(text = json, charset = Charsets.UTF_8)
         } catch (e: Exception) {
             val message: String = context.getString(R.string.exporting_failed)
-            showToastOnUiThread(context = context, activity = activity, message = message)
+            showToastOnUiThread(context = context, activity = Activity(), message = message)
             e.printStackTrace()
         }
     }
 
-    fun importPlaylists(context: Context) {
+    fun importPlaylists(context: Context, uri: Uri) {
         importingPlaylist.value = true
-        val activity = Activity()
         CoroutineScope(Dispatchers.IO).launch {
             showToastOnUiThread(
                 context = context,
-                activity = activity,
+                activity = context as Activity,
                 message = context.getString(R.string.importing)
             )
+            val parcelFileDescriptor: ParcelFileDescriptor? =
+                context.contentResolver.openFileDescriptor(uri, "r")
             try {
-                val file = File(FILE_PATH)
-                if (!file.exists()) {
+                if (parcelFileDescriptor == null) {
                     showToastOnUiThread(
-                        context,
-                        activity = activity,
+                        context = context,
+                        activity = context,
                         message = context.getString(R.string.file_not_found)
                     )
-                    //TODO check if finally is even done
-                    importingPlaylist.value = false
                     return@launch
                 }
-
-                var json: String = file.readText(charset = Charsets.UTF_8)
+                val fileDescriptor: FileDescriptor = parcelFileDescriptor.fileDescriptor
+                var json: String = readTextFromUri(context = context, uri = uri)
                 if (!json.startsWith("{\"$PLAYLIST_JSON_OBJECT_NAME\":[") && !json.endsWith("]}")) {
-                    throw IllegalArgumentException("It is not a json object")
+                    throw IllegalArgumentException("It is not the correct file")
                 }
                 json = json.split("{\"all_playlists\":[")[1]
                 json = json.removeRange(json.lastIndex - 1..json.lastIndex)
@@ -237,19 +237,38 @@ class DatabaseManager(context: Context) {
                         context = context,
                         playlist = playlistWithMusics.playlist,
                         musicList = playlistWithMusics.musics,
-                        activity = activity
+                        activity = context as Activity
                     )
                 }
             } catch (e: Exception) {
                 showToastOnUiThread(
                     context = context,
-                    activity = activity,
+                    activity = context as Activity,
                     message = context.getString(R.string.importing_failed)
                 )
                 e.printStackTrace()
             } finally {
+                parcelFileDescriptor!!.close()
                 importingPlaylist.value = false
             }
         }
+    }
+
+    /**
+     * Copied from https://developer.android.com/training/data-storage/shared/documents-files?hl=fr#open
+     */
+    @Throws(IOException::class)
+    private fun readTextFromUri(context: Context, uri: Uri): String {
+        val stringBuilder = StringBuilder()
+        context.contentResolver.openInputStream(uri)?.use { inputStream ->
+            BufferedReader(InputStreamReader(inputStream)).use { reader ->
+                var line: String? = reader.readLine()
+                while (line != null) {
+                    stringBuilder.append(line)
+                    line = reader.readLine()
+                }
+            }
+        }
+        return stringBuilder.toString()
     }
 }

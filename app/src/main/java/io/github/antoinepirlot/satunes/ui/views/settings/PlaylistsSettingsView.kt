@@ -37,9 +37,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.database.services.DataManager
-import io.github.antoinepirlot.satunes.database.services.DatabaseManager
 
 /**
  * @author Antoine Pirlot on 27/04/2024
@@ -53,17 +52,12 @@ fun PlaylistsSettingsView(
     Row(
         modifier = modifier,
     ) {
-        Button(onClick = {
-            DatabaseManager(context = context).exportAll(
-                context = context,
-                playlistWithMusics = DataManager.playlistWithMusicsMap.values.toTypedArray()
-            )
-        }) {
+        Button(onClick = { /* TODO */ }) {
             Text(text = stringResource(id = R.string.export_all))
         }
         Spacer(modifier = Modifier.size(16.dp))
         Button(onClick = {
-            DatabaseManager(context = context).importPlaylists(context = context)
+            MainActivity.instance.openFile(context = context)
         }) {
             Text(text = stringResource(id = R.string._import))
         }

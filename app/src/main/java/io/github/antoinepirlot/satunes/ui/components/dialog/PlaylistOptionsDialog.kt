@@ -86,7 +86,7 @@ fun PlaylistOptionsDialog(
                 DialogOption(
                     onClick = {
                         DatabaseManager(context = context)
-                            .exportAll(
+                            .exportPlaylists(
                                 context = context,
                                 playlistWithMusics = arrayOf(playlistWithMusics)
                             )

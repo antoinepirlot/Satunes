@@ -28,7 +28,6 @@ package io.github.antoinepirlot.satunes
 import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.Manifest.permission.READ_MEDIA_AUDIO
 import android.app.PendingIntent
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
@@ -42,14 +41,17 @@ import androidx.annotation.OptIn
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.media3.common.util.UnstableApi
+import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
 import io.github.antoinepirlot.satunes.database.services.DataCleanerManager
 import io.github.antoinepirlot.satunes.database.services.DatabaseManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.playback.services.PlaybackService
+import io.github.antoinepirlot.utils.showToastOnUiThread
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import io.github.antoinepirlot.satunes.database.R as RDb
 
 /**
  * @author Antoine Pirlot on 18/01/24
@@ -61,6 +63,7 @@ class MainActivity : ComponentActivity() {
         internal lateinit var instance: MainActivity
         private const val IMPORT_PLAYLIST_CODE = 1
         private const val EXPORT_PLAYLIST_CODE = 2
+        internal var playlistsToExport: Array<PlaylistWithMusics> = arrayOf()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -133,17 +136,23 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    fun createFile(context: Context) {
+    fun createFileToExportPlaylists(defaultFileName: String) {
+        if (playlistsToExport.isEmpty()) {
+            showToastOnUiThread(
+                context = this,
+                message = this.getString(RDb.string.no_playlist)
+            )
+            return
+        }
         val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
             addCategory(Intent.CATEGORY_OPENABLE)
             type = "application/json"
-            putExtra(Intent.EXTRA_TITLE, "Satunes.json")
+            putExtra(Intent.EXTRA_TITLE, defaultFileName)
         }
         startActivityForResult(intent, EXPORT_PLAYLIST_CODE)
     }
 
-    fun openFile(context: Context) {
-        startActivity(intent)
+    fun openFileToImportPlaylists() {
         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
             addCategory(Intent.CATEGORY_OPENABLE)
             type = "application/json"
@@ -156,7 +165,21 @@ class MainActivity : ComponentActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_OK) {
             if (requestCode == EXPORT_PLAYLIST_CODE) {
-                DatabaseManager(context = this).exportPlaylists(this)
+                data?.data?.also {
+                    if (it.path == null) {
+                        showToastOnUiThread(
+                            context = this,
+                            message = this.getString(R.string.no_file_created)
+                        )
+                    }
+                    DatabaseManager(context = this)
+                        .exportPlaylists(
+                            context = this,
+                            playlistWithMusics = playlistsToExport,
+                            uri = it
+                        )
+                    playlistsToExport = arrayOf()
+                }
             } else if (requestCode == IMPORT_PLAYLIST_CODE) {
                 data?.data?.also {
                     DatabaseManager(context = this).importPlaylists(context = this, uri = it)

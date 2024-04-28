@@ -34,10 +34,12 @@
     <string name="unknown_artist">Artiste Inconnu</string>
     <string name="unknown_album">Album Inconnu</string>
     <string name="unknown_genre">Genre Inconnu</string>
-    <string name="playlist_already_exist">Cette playlist a déjà été créée</string>
+    <string name="playlist_already_exist">" a déjà été créée"</string>
     <string name="exporting_failed">L\'exportation a échoué</string>
     <string name="importing">Importation en cours…</string>
     <string name="importing_failed">L\'importation a échouée</string>
     <string name="file_not_found">Aucun fichier trouvé</string>
     <string name="importing_success">Importation réussie</string>
+    <string name="no_playlist">Il n\'y a aucune playlist</string>
+    <string name="exporting_success">Exportation réussie</string>
 </resources>

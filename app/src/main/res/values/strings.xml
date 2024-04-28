@@ -64,4 +64,5 @@
     <string name="export">Exporter</string>
     <string name="export_all">Exporter tout</string>
     <string name="_import">Importer</string>
+    <string name="no_file_created">Le fichier n\'a pas été créé</string>
 </resources>

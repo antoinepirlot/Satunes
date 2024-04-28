@@ -39,6 +39,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.database.services.DataManager
 
 /**
  * @author Antoine Pirlot on 27/04/2024
@@ -52,13 +53,14 @@ fun PlaylistsSettingsView(
     Row(
         modifier = modifier,
     ) {
-        Button(onClick = { /* TODO */ }) {
+        Button(onClick = {
+            MainActivity.playlistsToExport = DataManager.playlistWithMusicsMap.values.toTypedArray()
+            MainActivity.instance.createFileToExportPlaylists(defaultFileName = "Satunes.json")
+        }) {
             Text(text = stringResource(id = R.string.export_all))
         }
         Spacer(modifier = Modifier.size(16.dp))
-        Button(onClick = {
-            MainActivity.instance.openFile(context = context)
-        }) {
+        Button(onClick = { MainActivity.instance.openFileToImportPlaylists() }) {
             Text(text = stringResource(id = R.string._import))
         }
     }

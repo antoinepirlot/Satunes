@@ -35,10 +35,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
 import io.github.antoinepirlot.satunes.database.models.tables.Playlist
-import io.github.antoinepirlot.satunes.database.services.DatabaseManager
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 
@@ -85,11 +85,8 @@ fun PlaylistOptionsDialog(
                 )
                 DialogOption(
                     onClick = {
-                        DatabaseManager(context = context)
-                            .exportPlaylists(
-                                context = context,
-                                playlistWithMusics = arrayOf(playlistWithMusics)
-                            )
+                        MainActivity.playlistsToExport = arrayOf(playlistWithMusics)
+                        MainActivity.instance.createFileToExportPlaylists(defaultFileName = playlistWithMusics.playlist.title + ".json")
                     },
                     icon = {
                         val exportIcon: SatunesIcons = SatunesIcons.EXPORT

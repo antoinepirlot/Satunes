@@ -31,10 +31,12 @@
     <string name="unknown_artist">Unknown Artist</string>
     <string name="unknown_album">Unknown Album</string>
     <string name="unknown_genre">Unknown Genre</string>
-    <string name="playlist_already_exist">This playlist already exists</string>
+    <string name="playlist_already_exist">" already exists"</string>
     <string name="exporting_failed">Export failed</string>
     <string name="importing">Importing…</string>
     <string name="importing_failed">Importing failed</string>
     <string name="file_not_found">File not found</string>
     <string name="importing_success">Importing Success</string>
+    <string name="no_playlist">There\'s no playlist</string>
+    <string name="exporting_success">Exporting Success</string>
 </resources>

@@ -33,8 +33,8 @@ import android.widget.Toast
  * @author Antoine Pirlot on 14/04/2024
  */
 
-fun showToastOnUiThread(context: Context, activity: Activity, message: String) {
-    activity.runOnUiThread {
+fun showToastOnUiThread(context: Context, message: String) {
+    (context as Activity).runOnUiThread {
         Toast.makeText(
             context.applicationContext,
             message,

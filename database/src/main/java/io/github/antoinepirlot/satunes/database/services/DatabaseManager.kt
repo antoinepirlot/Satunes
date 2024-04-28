@@ -25,10 +25,12 @@
 
 package io.github.antoinepirlot.satunes.database.services
 
-import android.app.Activity
 import android.content.Context
 import android.database.sqlite.SQLiteConstraintException
 import android.net.Uri
+import android.net.Uri.decode
+import android.os.Environment
+import android.os.ParcelFileDescriptor
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import io.github.antoinepirlot.satunes.database.R
@@ -50,6 +52,8 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.io.BufferedReader
 import java.io.File
+import java.io.FileNotFoundException
+import java.io.FileOutputStream
 import java.io.IOException
 import java.io.InputStreamReader
 
@@ -111,16 +115,14 @@ class DatabaseManager(context: Context) {
         context: Context,
         playlist: Playlist,
         musicList: MutableList<MusicDB>? = null,
-        activity: Activity? = null
     ) {
-        @Suppress("NAME_SHADOWING")
-        val activity = activity ?: Activity()
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 playlist.id = playlistDao.insertOne(playlist = playlist)
             } catch (_: SQLiteConstraintException) {
-                val message: String = context.getString(R.string.playlist_already_exist)
-                showToastOnUiThread(context = context, activity = activity, message = message)
+                val message: String =
+                    decode(playlist.title) + context.getString(R.string.playlist_already_exist)
+                showToastOnUiThread(context = context, message = message)
                 return@launch
             }
             val playlistWithMusics: PlaylistWithMusics =
@@ -170,29 +172,33 @@ class DatabaseManager(context: Context) {
         }
     }
 
-    fun exportPlaylists(context: Context, vararg playlistWithMusics: PlaylistWithMusics) {
+    fun exportPlaylists(context: Context, vararg playlistWithMusics: PlaylistWithMusics, uri: Uri) {
         CoroutineScope(Dispatchers.IO).launch {
-            var json = "{\"${Companion.PLAYLIST_JSON_OBJECT_NAME}\":["
+            var json = "{\"${PLAYLIST_JSON_OBJECT_NAME}\":["
             playlistWithMusics.forEach { playlistWithMusics: PlaylistWithMusics ->
                 json += Json.encodeToString(playlistWithMusics) + ','
             }
             json += "]}"
-            exportJson(context = context, json = json, filePath = "")
+            exportJson(context = context, json = json, uri = uri)
         }
     }
 
-    private fun exportJson(context: Context, json: String, filePath: String) {
+    private fun exportJson(context: Context, json: String, uri: Uri) {
         try {
             val file =
-                File(filePath)
+                File(Environment.getExternalStorageDirectory().path + '/' + uri.path!!.split(":")[1])
             if (file.exists()) {
                 file.delete()
             }
             file.createNewFile()
-            file.writeText(text = json, charset = Charsets.UTF_8)
+            writeToUri(context = context, uri = uri, string = json)
+            showToastOnUiThread(
+                context = context,
+                message = context.getString(R.string.exporting_success)
+            )
         } catch (e: Exception) {
             val message: String = context.getString(R.string.exporting_failed)
-            showToastOnUiThread(context = context, activity = Activity(), message = message)
+            showToastOnUiThread(context = context, message = message)
             e.printStackTrace()
         }
     }
@@ -202,14 +208,12 @@ class DatabaseManager(context: Context) {
         CoroutineScope(Dispatchers.IO).launch {
             showToastOnUiThread(
                 context = context,
-                activity = context as Activity,
                 message = context.getString(R.string.importing)
             )
             try {
                 if (uri.path == null) {
                     showToastOnUiThread(
                         context = context,
-                        activity = context,
                         message = context.getString(R.string.file_not_found)
                     )
                     return@launch
@@ -232,18 +236,15 @@ class DatabaseManager(context: Context) {
                         context = context,
                         playlist = playlistWithMusics.playlist,
                         musicList = playlistWithMusics.musics,
-                        activity = context as Activity
                     )
                 }
                 showToastOnUiThread(
                     context = context,
-                    activity = context,
                     message = context.getString(R.string.importing_success)
                 )
             } catch (e: Exception) {
                 showToastOnUiThread(
                     context = context,
-                    activity = context as Activity,
                     message = context.getString(R.string.importing_failed)
                 )
                 e.printStackTrace()
@@ -269,5 +270,23 @@ class DatabaseManager(context: Context) {
             }
         }
         return stringBuilder.toString()
+    }
+
+    /**
+     * Copied from https://developer.android.com/training/data-storage/shared/documents-files?hl=fr#edit
+     */
+    private fun writeToUri(context: Context, uri: Uri, string: String) {
+        try {
+            context.contentResolver.openFileDescriptor(uri, "w")
+                ?.use { parcelFileDescriptor: ParcelFileDescriptor ->
+                    FileOutputStream(parcelFileDescriptor.fileDescriptor).use { fileOutputStream: FileOutputStream ->
+                        fileOutputStream.write((string).toByteArray())
+                    }
+                }
+        } catch (e: FileNotFoundException) {
+            e.printStackTrace()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
     }
 }

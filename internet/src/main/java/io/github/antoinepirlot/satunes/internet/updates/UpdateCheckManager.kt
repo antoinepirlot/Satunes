@@ -25,7 +25,6 @@
 
 package io.github.antoinepirlot.satunes.internet.updates
 
-import android.app.Activity
 import android.content.Context
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -87,12 +86,10 @@ object UpdateCheckManager {
      */
     fun checkUpdate(context: Context) {
         //Check update
-        val activity = Activity()
         CoroutineScope(Dispatchers.IO).launch {
             isCheckingUpdate.value = true
             showToastOnUiThread(
                 context = context,
-                activity = activity,
                 message = context.getString(R.string.checking_update)
             )
             try {
@@ -116,14 +113,12 @@ object UpdateCheckManager {
                     updateAvailableStatus.value = UpdateAvailableStatus.UP_TO_DATE
                     showToastOnUiThread(
                         context = context,
-                        activity = activity,
                         message = context.getString(R.string.no_update)
                     )
                 } else {
                     updateAvailableStatus.value = UpdateAvailableStatus.AVAILABLE
                     showToastOnUiThread(
                         context = context,
-                        activity = activity,
                         message = context.getString(R.string.update_available)
                     )
                 }
@@ -133,7 +128,6 @@ object UpdateCheckManager {
                 updateAvailableStatus.value = UpdateAvailableStatus.CANNOT_CHECK
                 showToastOnUiThread(
                     context = context,
-                    activity = activity,
                     message = context.getString(R.string.cannot_check_update)
                 )
             } finally {

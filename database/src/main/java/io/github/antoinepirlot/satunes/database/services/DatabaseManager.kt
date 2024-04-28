@@ -29,7 +29,6 @@ import android.content.Context
 import android.database.sqlite.SQLiteConstraintException
 import android.net.Uri
 import android.net.Uri.decode
-import android.os.Environment
 import android.os.ParcelFileDescriptor
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -51,7 +50,6 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.io.BufferedReader
-import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.IOException
@@ -190,12 +188,6 @@ class DatabaseManager(context: Context) {
 
     private fun exportJson(context: Context, json: String, uri: Uri) {
         try {
-            val file =
-                File(Environment.getExternalStorageDirectory().path + '/' + uri.path!!.split(":")[1])
-            if (file.exists()) {
-                file.delete()
-            }
-            file.createNewFile()
             writeToUri(context = context, uri = uri, string = json)
             showToastOnUiThread(
                 context = context,

@@ -59,6 +59,7 @@ data class PlaylistWithMusics(
     @Ignore
     @Transient
     override var artwork: Bitmap? = null
+
     @Ignore
     @Transient
     override val id: Long = playlist.id // Not used
@@ -96,13 +97,10 @@ data class PlaylistWithMusics(
     }
 
     fun removeMusic(music: Music) {
-        val musicDb = MusicDB(id = music.id)
-        if (musicDb.music != null) {
-            musics.remove(musicDb)
-            if (musicMediaItemSortedMap.contains(music)) {
-                musicMediaItemSortedMap.remove(music)
-                musicMediaItemSortedMapUpdate.value = true
-            }
+        musics.remove(MusicDB(id = music.id))
+        if (musicMediaItemSortedMap.contains(music)) {
+            musicMediaItemSortedMap.remove(music)
+            musicMediaItemSortedMapUpdate.value = true
         }
     }
 }

@@ -29,7 +29,6 @@ import android.app.Activity
 import android.content.Context
 import android.database.sqlite.SQLiteConstraintException
 import android.net.Uri
-import android.os.ParcelFileDescriptor
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import io.github.antoinepirlot.satunes.database.R
@@ -51,7 +50,6 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.io.BufferedReader
 import java.io.File
-import java.io.FileDescriptor
 import java.io.IOException
 import java.io.InputStreamReader
 
@@ -88,10 +86,10 @@ class DatabaseManager(context: Context) {
 
     fun insertMusicToPlaylists(music: Music, playlists: MutableList<PlaylistWithMusics>) {
         CoroutineScope(Dispatchers.IO).launch {
-            var musicDb: MusicDB? = musicDao.get(music.id)
-            if (musicDb == null) {
-                musicDb = MusicDB(id = music.id)
-                musicDao.insert(musicDb)
+            try {
+                musicDao.insert(MusicDB(id = music.id))
+            } catch (_: SQLiteConstraintException) {
+                // Do nothing
             }
             playlists.forEach { playlistWithMusics: PlaylistWithMusics ->
                 val musicsPlaylistsRel =
@@ -103,7 +101,7 @@ class DatabaseManager(context: Context) {
                     musicsPlaylistsRelDAO.insert(musicsPlaylistsRel)
                     playlistWithMusics.addMusic(music = music)
                 } catch (_: SQLiteConstraintException) {
-                    return@launch
+                    // Do nothing
                 }
             }
         }
@@ -207,10 +205,8 @@ class DatabaseManager(context: Context) {
                 activity = context as Activity,
                 message = context.getString(R.string.importing)
             )
-            val parcelFileDescriptor: ParcelFileDescriptor? =
-                context.contentResolver.openFileDescriptor(uri, "r")
             try {
-                if (parcelFileDescriptor == null) {
+                if (uri.path == null) {
                     showToastOnUiThread(
                         context = context,
                         activity = context,
@@ -218,7 +214,6 @@ class DatabaseManager(context: Context) {
                     )
                     return@launch
                 }
-                val fileDescriptor: FileDescriptor = parcelFileDescriptor.fileDescriptor
                 var json: String = readTextFromUri(context = context, uri = uri)
                 if (!json.startsWith("{\"$PLAYLIST_JSON_OBJECT_NAME\":[") && !json.endsWith("]}")) {
                     throw IllegalArgumentException("It is not the correct file")
@@ -240,6 +235,11 @@ class DatabaseManager(context: Context) {
                         activity = context as Activity
                     )
                 }
+                showToastOnUiThread(
+                    context = context,
+                    activity = context,
+                    message = context.getString(R.string.importing_success)
+                )
             } catch (e: Exception) {
                 showToastOnUiThread(
                     context = context,
@@ -248,7 +248,6 @@ class DatabaseManager(context: Context) {
                 )
                 e.printStackTrace()
             } finally {
-                parcelFileDescriptor!!.close()
                 importingPlaylist.value = false
             }
         }

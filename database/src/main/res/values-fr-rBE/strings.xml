@@ -36,4 +36,5 @@
     <string name="importing">Importation en cours…</string>
     <string name="importing_failed">L\'importation a échouée</string>
     <string name="file_not_found">Aucun fichier trouvé</string>
+    <string name="importing_success">Importation réussie</string>
 </resources>

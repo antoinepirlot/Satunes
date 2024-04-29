@@ -85,14 +85,6 @@ class DatabaseManager(context: Context) {
 
     fun insertMusicToPlaylists(music: Music, playlists: MutableList<PlaylistWithMusics>) {
         CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val musicDB = MusicDB(id = music.id)
-                if (musicDB.music != null) {
-                    musicDao.insert()
-                }
-            } catch (_: SQLiteConstraintException) {
-                // Do nothing
-            }
             playlists.forEach { playlistWithMusics: PlaylistWithMusics ->
                 val musicsPlaylistsRel =
                     MusicsPlaylistsRel(
@@ -101,6 +93,7 @@ class DatabaseManager(context: Context) {
                     )
                 try {
                     musicsPlaylistsRelDAO.insert(musicsPlaylistsRel)
+                    musicDao.insert(MusicDB(id = music.id))
                     playlistWithMusics.addMusic(music = music)
                 } catch (_: SQLiteConstraintException) {
                     // Do nothing
@@ -153,7 +146,7 @@ class DatabaseManager(context: Context) {
             playlistDao.remove(playlistToRemove.playlist)
             playlistToRemove.musics.forEach { musicDb: MusicDB ->
                 musicsPlaylistsRelDAO.delete(
-                    musicId = musicDb.music!!.id,
+                    musicId = musicDb.id,
                     playlistId = playlistToRemove.playlist.id
                 )
                 if (!musicsPlaylistsRelDAO.isMusicInPlaylist(musicId = musicDb.id)) {
@@ -226,10 +219,9 @@ class DatabaseManager(context: Context) {
                 playlistList.forEach { s: String ->
                     json = "{\"playlist\":" + s.removeSuffix(",{")
                     val playlistWithMusics: PlaylistWithMusics = Json.decodeFromString(json)
-                    insertOne(
+                    importPlaylistToDatabase(
                         context = context,
-                        playlist = playlistWithMusics.playlist,
-                        musicList = playlistWithMusics.musics,
+                        playlistWithMusics = playlistWithMusics
                     )
                 }
                 showToastOnUiThread(
@@ -245,6 +237,18 @@ class DatabaseManager(context: Context) {
             } finally {
                 importingPlaylist.value = false
             }
+        }
+    }
+
+    private fun importPlaylistToDatabase(context: Context, playlistWithMusics: PlaylistWithMusics) {
+        try {
+            insertOne(
+                context = context,
+                playlist = playlistWithMusics.playlist,
+                musicList = playlistWithMusics.musics
+            )
+        } catch (_: Exception) {
+            // Do nothing
         }
     }
 

@@ -26,12 +26,15 @@
 package io.github.antoinepirlot.satunes.ui.components.bars
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
@@ -40,12 +43,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.ui.components.buttons.music.NextMusicButton
 import io.github.antoinepirlot.satunes.ui.components.buttons.music.PreviousMusicButton
 import io.github.antoinepirlot.satunes.ui.components.buttons.music.RepeatMusicButton
 import io.github.antoinepirlot.satunes.ui.components.buttons.music.ShuffleMusicButton
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
 
 /**
  * @author Antoine Pirlot on 25/01/24
@@ -67,8 +70,9 @@ fun MusicControlBar(
 
     Column {
         MusicPositionBar()
+        val scrollState: ScrollState = rememberScrollState()
         Row(
-            modifier = modifier,
+            modifier = modifier.horizontalScroll(scrollState),
             horizontalArrangement = horizontalArrangement,
             verticalAlignment = verticalAlignment
         ) {

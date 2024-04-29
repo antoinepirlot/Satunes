@@ -1,26 +1,26 @@
 /*
  * This file is part of Satunes.
  *
- *  Satunes is free software: you can redistribute it and/or modify it under
+ * Satunes is free software: you can redistribute it and/or modify it under
  *  the terms of the GNU General Public License as published by the Free Software Foundation,
- *  either version 3 of the License, or (at your option) any later version.
+ * either version 3 of the License, or (at your option) any later version.
  *
- *  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- *  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *  See the GNU General Public License for more details.
+ * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License along with Satunes.
- *  If not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along with Satunes.
+ * If not, see <https://www.gnu.org/licenses/>.
  *
- *  **** INFORMATIONS ABOUT THE AUTHOR *****
- *  The author of this file is Antoine Pirlot, the owner of this project.
- *  You find this original project on github.
+ * **** INFORMATIONS ABOUT THE AUTHOR *****
+ * The author of this file is Antoine Pirlot, the owner of this project.
+ * You find this original project on github.
  *
- *  My github link is: https://github.com/antoinepirlot
- *  This current project's link is: https://github.com/antoinepirlot/Satunes
+ * My github link is: https://github.com/antoinepirlot
+ * This current project's link is: https://github.com/antoinepirlot/MP3-Player
  *
- *  You can contact me via my email: pirlot.antoine@outlook.com
- *  PS: I don't answer quickly.
+ * You can contact me via my email: pirlot.antoine@outlook.com
+ * PS: I don't answer quickly.
  */
 
 package io.github.antoinepirlot.satunes.database.services
@@ -37,7 +37,6 @@ import io.github.antoinepirlot.satunes.database.SatunesDatabase
 import io.github.antoinepirlot.satunes.database.daos.MusicDAO
 import io.github.antoinepirlot.satunes.database.daos.MusicsPlaylistsRelDAO
 import io.github.antoinepirlot.satunes.database.daos.PlaylistDAO
-import io.github.antoinepirlot.satunes.database.exceptions.MusicNotFoundException
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
 import io.github.antoinepirlot.satunes.database.models.tables.MusicDB
@@ -73,29 +72,19 @@ class DatabaseManager(context: Context) {
     fun loadAllPlaylistsWithMusic() {
         CoroutineScope(Dispatchers.IO).launch {
             var playlistsWithMusicsList: List<PlaylistWithMusics>? = null
-            while (playlistsWithMusicsList == null) {
-                try {
-                    playlistsWithMusicsList = playlistDao.getPlaylistsWithMusics()
-                    playlistsWithMusicsList.forEach { playlistWithMusics: PlaylistWithMusics ->
-                        DataManager.addPlaylist(playlistWithMusics = playlistWithMusics)
-                    }
-                } catch (e: MusicNotFoundException) {
-                    musicDao.remove(musicId = e.musicId)
+            try {
+                playlistsWithMusicsList = playlistDao.getPlaylistsWithMusics()
+                playlistsWithMusicsList.forEach { playlistWithMusics: PlaylistWithMusics ->
+                    DataManager.addPlaylist(playlistWithMusics = playlistWithMusics)
                 }
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
     }
 
     fun insertMusicToPlaylists(music: Music, playlists: MutableList<PlaylistWithMusics>) {
         CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val musicDB = MusicDB(id = music.id)
-                if (musicDB.music != null) {
-                    musicDao.insert()
-                }
-            } catch (_: SQLiteConstraintException) {
-                // Do nothing
-            }
             playlists.forEach { playlistWithMusics: PlaylistWithMusics ->
                 val musicsPlaylistsRel =
                     MusicsPlaylistsRel(
@@ -104,6 +93,7 @@ class DatabaseManager(context: Context) {
                     )
                 try {
                     musicsPlaylistsRelDAO.insert(musicsPlaylistsRel)
+                    musicDao.insert(MusicDB(id = music.id))
                     playlistWithMusics.addMusic(music = music)
                 } catch (_: SQLiteConstraintException) {
                     // Do nothing
@@ -156,7 +146,7 @@ class DatabaseManager(context: Context) {
             playlistDao.remove(playlistToRemove.playlist)
             playlistToRemove.musics.forEach { musicDb: MusicDB ->
                 musicsPlaylistsRelDAO.delete(
-                    musicId = musicDb.music!!.id,
+                    musicId = musicDb.id,
                     playlistId = playlistToRemove.playlist.id
                 )
                 if (!musicsPlaylistsRelDAO.isMusicInPlaylist(musicId = musicDb.id)) {
@@ -229,10 +219,9 @@ class DatabaseManager(context: Context) {
                 playlistList.forEach { s: String ->
                     json = "{\"playlist\":" + s.removeSuffix(",{")
                     val playlistWithMusics: PlaylistWithMusics = Json.decodeFromString(json)
-                    insertOne(
+                    importPlaylistToDatabase(
                         context = context,
-                        playlist = playlistWithMusics.playlist,
-                        musicList = playlistWithMusics.musics,
+                        playlistWithMusics = playlistWithMusics
                     )
                 }
                 showToastOnUiThread(
@@ -248,6 +237,20 @@ class DatabaseManager(context: Context) {
             } finally {
                 importingPlaylist.value = false
             }
+        }
+    }
+
+    private fun importPlaylistToDatabase(context: Context, playlistWithMusics: PlaylistWithMusics) {
+        try {
+            playlistWithMusics.playlist.id = 0
+            playlistWithMusics.id = 0
+            insertOne(
+                context = context,
+                playlist = playlistWithMusics.playlist,
+                musicList = playlistWithMusics.musics
+            )
+        } catch (_: Exception) {
+            // Do nothing
         }
     }
 

@@ -64,4 +64,8 @@
     <string name="export_all">Export All</string>
     <string name="_import">Import</string>
     <string name="no_file_created">No file created</string>
+    <string name="read_audio_permission">Music and audio</string>
+    <string name="no_required_permissions_allowed">All needed permissions have not been granted.</string>
+    <string name="ask_permission">Allow</string>
+    <string name="read_external_storage_permission">Lire le stockage</string>
 </resources>

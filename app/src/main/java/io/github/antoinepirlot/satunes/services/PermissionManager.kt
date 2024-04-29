@@ -25,10 +25,61 @@
 
 package io.github.antoinepirlot.satunes.services
 
+import android.Manifest
+import android.app.Activity
+import android.content.pm.PackageManager
+import android.os.Build
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import io.github.antoinepirlot.satunes.MainActivity
+
 /**
  * @author Antoine Pirlot on 29/04/2024
  */
 internal object PermissionManager {
-    val isReadExternalStorageAllowed: Boolean = false
-    val isReadAudioAllowed: Boolean = false
+    val isReadExternalStorageAllowed: MutableState<Boolean> = mutableStateOf(false)
+    val isReadAudioAllowed: MutableState<Boolean> = mutableStateOf(false)
+
+    internal fun requestPermission(permission: Permissions) {
+        when {
+            !isAudioAllowed() -> {
+                requestPermissionLauncher().launch(permission.value)
+            }
+
+            ActivityCompat.shouldShowRequestPermissionRationale(
+                MainActivity.instance as Activity,
+                permission.value
+            ) -> {
+                // Additional rationale should be displayed
+            }
+
+            else -> {
+                // Permission has not been asked yet
+                requestPermissionLauncher().launch(permission.value)
+            }
+        }
+    }
+
+    private fun requestPermissionLauncher(): ActivityResultLauncher<String> {
+        return MainActivity.instance
+            .registerForActivityResult(ActivityResultContracts.RequestPermission()) {}
+    }
+
+    private fun isAudioAllowed(): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            ContextCompat.checkSelfPermission(
+                MainActivity.instance,
+                Manifest.permission.READ_MEDIA_AUDIO
+            ) == PackageManager.PERMISSION_GRANTED
+        } else {
+            ContextCompat.checkSelfPermission(
+                MainActivity.instance,
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            ) == PackageManager.PERMISSION_GRANTED
+        }
+    }
 }

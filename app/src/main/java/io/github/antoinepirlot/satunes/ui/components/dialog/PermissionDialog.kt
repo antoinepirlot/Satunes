@@ -23,26 +23,45 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.services
+package io.github.antoinepirlot.satunes.ui.components.dialog
 
-import android.Manifest.permission.READ_EXTERNAL_STORAGE
-import android.Manifest.permission.READ_MEDIA_AUDIO
-import android.annotation.SuppressLint
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.satunes.R
 
 /**
  * @author Antoine Pirlot on 29/04/2024
  */
-internal enum class Permissions(val stringId: Int, val value: String) {
-    @SuppressLint("InlinedApi")
-    READ_AUDIO_PERMISSION(R.string.read_audio_permission, value = READ_MEDIA_AUDIO),
-    READ_EXTERNAL_STORAGE_PERMISSION(
-        stringId = R.string.read_external_storage_permission,
-        value = READ_EXTERNAL_STORAGE
-    ),
+
+@Composable
+fun PermissionDialog(
+    modifier: Modifier = Modifier,
+    title: String,
+    onDismiss: () -> Unit,
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        confirmButton = {
+            TextButton(onClick = onDismiss) {
+                Text(text = stringResource(id = R.string.ok))
+            }
+        },
+        icon = {
+            Text(text = title)
+        },
+        text = {
+            Text(text = stringResource(id = R.string.permission_needed_text))
+        }
+    )
 }
 
-internal val permissionsList: List<Permissions> = listOf(
-    Permissions.READ_AUDIO_PERMISSION,
-    Permissions.READ_EXTERNAL_STORAGE_PERMISSION,
-)
+@Preview
+@Composable
+fun PermissionDialogPreview() {
+    PermissionDialog(title = "Title", onDismiss = {})
+}

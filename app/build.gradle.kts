@@ -96,6 +96,7 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics:$composeUiVersion")
     implementation("androidx.compose.ui:ui-tooling-preview:$composeUiVersion")
     implementation("androidx.compose.material3:material3:1.2.1")
+    implementation("com.google.accompanist:accompanist-permissions:0.31.0-alpha")
 
     //Test
     testImplementation("junit:junit:4.13.2")

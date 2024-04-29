@@ -40,17 +40,26 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
+import com.google.accompanist.permissions.shouldShowRationale
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.services.PermissionManager
 import io.github.antoinepirlot.satunes.services.Permissions
 import io.github.antoinepirlot.satunes.services.permissionsList
+import io.github.antoinepirlot.satunes.ui.components.dialog.PermissionDialog
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 import io.github.antoinepirlot.satunes.ui.components.texts.Title
 
@@ -58,11 +67,13 @@ import io.github.antoinepirlot.satunes.ui.components.texts.Title
  * @author Antoine Pirlot on 29/04/2024
  */
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun PermissionsView(
     modifier: Modifier = Modifier,
 ) {
     val spacerSize = 16.dp
+    var showDialog: Boolean by remember { mutableStateOf(false) }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -86,17 +97,29 @@ fun PermissionsView(
                 key = { it.stringId }
             ) { permission: Permissions ->
                 if (
-                    (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && permission != Permissions.READ_EXTERNAL_STORAGE)
+                    (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && permission != Permissions.READ_EXTERNAL_STORAGE_PERMISSION)
                     || (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU && permission != Permissions.READ_AUDIO_PERMISSION)
                 ) {
+                    val permissionState = rememberPermissionState(permission = permission.value)
+                    if (permissionState.status.isGranted) {
+                        when (permission) {
+                            Permissions.READ_AUDIO_PERMISSION -> PermissionManager.isReadAudioAllowed.value =
+                                true
+
+                            Permissions.READ_EXTERNAL_STORAGE_PERMISSION -> PermissionManager.isReadExternalStorageAllowed.value =
+                                true
+                        }
+                    }
                     Row(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         NormalText(text = stringResource(id = permission.stringId))
                         Spacer(modifier = Modifier.size(spacerSize))
-                        val permissionGranted = when (permission) {
-                            Permissions.READ_AUDIO_PERMISSION -> PermissionManager.isReadAudioAllowed
-                            Permissions.READ_EXTERNAL_STORAGE -> PermissionManager.isReadExternalStorageAllowed
+                        val permissionGranted: Boolean by remember {
+                            when (permission) {
+                                Permissions.READ_AUDIO_PERMISSION -> PermissionManager.isReadAudioAllowed
+                                Permissions.READ_EXTERNAL_STORAGE_PERMISSION -> PermissionManager.isReadExternalStorageAllowed
+                            }
                         }
 
                         if (permissionGranted) {
@@ -115,13 +138,19 @@ fun PermissionsView(
                             )
                             Spacer(modifier = Modifier.size(spacerSize))
                             Button(onClick = {
-                                when (permission) {
-                                    Permissions.READ_AUDIO_PERMISSION -> TODO()
-
-                                    Permissions.READ_EXTERNAL_STORAGE -> TODO()
+                                if (permissionState.status.shouldShowRationale) {
+                                    showDialog = true
+                                } else {
+                                    permissionState.launchPermissionRequest()
                                 }
                             }) {
                                 Text(text = stringResource(id = R.string.ask_permission))
+                            }
+                            if (showDialog) {
+                                PermissionDialog(
+                                    title = stringResource(id = R.string.read_audio_permission),
+                                    onDismiss = { showDialog = false }
+                                )
                             }
                         }
                     }

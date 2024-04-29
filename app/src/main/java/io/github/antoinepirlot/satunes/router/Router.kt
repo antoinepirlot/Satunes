@@ -25,16 +25,22 @@
 
 package io.github.antoinepirlot.satunes.router
 
+import android.content.Context
 import android.net.Uri.encode
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Folder
@@ -42,6 +48,7 @@ import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
 import io.github.antoinepirlot.satunes.database.services.DataLoader
 import io.github.antoinepirlot.satunes.database.services.DataManager
+import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.views.LoadingView
 import io.github.antoinepirlot.satunes.ui.views.PlayBackView
@@ -73,13 +80,26 @@ internal fun Router(
     modifier: Modifier = Modifier,
     navController: NavHostController,
 ) {
+    val context: Context = LocalContext.current
     val isLoading: MutableState<Boolean> = remember { DataLoader.isLoading }
     val isLoaded: Boolean by remember { DataLoader.isLoaded }
+    val showPermissionView: Boolean by
+    rememberSaveable { mutableStateOf(!MainActivity.instance.isAudioAllowed()) }
+    var startDestination: String by rememberSaveable { mutableStateOf(Destination.FOLDERS.link) }
+
+    startDestination = if (!showPermissionView) {
+        LaunchedEffect(key1 = Unit) {
+            PlaybackController.initInstance(context = context)
+        }
+        Destination.FOLDERS.link
+    } else {
+        Destination.PERMISSIONS_SETTINGS.link
+    }
 
     NavHost(
         modifier = modifier,
         navController = navController,
-        startDestination = Destination.FOLDERS.link
+        startDestination = startDestination
     ) {
 
         composable(Destination.FOLDERS.link) {

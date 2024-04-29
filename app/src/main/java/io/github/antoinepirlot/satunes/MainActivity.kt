@@ -25,22 +25,37 @@
 
 package io.github.antoinepirlot.satunes
 
+import android.Manifest
+import android.app.Activity
 import android.app.PendingIntent
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
+import android.os.Build.VERSION_CODES.TIRAMISU
 import android.os.Bundle
 import android.os.Environment
 import android.provider.DocumentsContract
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.OptIn
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.media3.common.util.UnstableApi
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
 import io.github.antoinepirlot.satunes.database.services.DataCleanerManager
 import io.github.antoinepirlot.satunes.database.services.DatabaseManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.playback.services.PlaybackService
+import io.github.antoinepirlot.satunes.services.Permissions
 import io.github.antoinepirlot.satunes.ui.views.permissions.PermissionsView
 import io.github.antoinepirlot.utils.showToastOnUiThread
 import kotlinx.coroutines.CoroutineScope
@@ -63,17 +78,69 @@ class MainActivity : ComponentActivity() {
             Uri.parse(Environment.getExternalStorageDirectory().path + '/' + Environment.DIRECTORY_DOCUMENTS)
     }
 
+    @kotlin.OptIn(ExperimentalPermissionsApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         instance = this
+        if (Build.VERSION.SDK_INT >= TIRAMISU) {
+            requestPermission(permission = Permissions.READ_AUDIO_PERMISSION)
+        } else {
+            requestPermission(permission = Permissions.READ_EXTERNAL_STORAGE_PERMISSION)
+        }
         setNotificationOnClick()
         SettingsManager.loadSettings(context = this@MainActivity)
         super.onCreate(savedInstanceState)
-        PlaybackController.initInstance(context = baseContext)
         setContent {
-//            Satunes()
-            PermissionsView()
+            val showPermissionView: MutableState<Boolean> =
+                rememberSaveable { mutableStateOf(!isAudioAllowed()) }
+            if (showPermissionView.value) {
+                PermissionsView(showPermissionView = showPermissionView)
+            } else {
+                LaunchedEffect(key1 = Unit) {
+                    PlaybackController.initInstance(context = baseContext)
+                }
+                Satunes()
+            }
         }
         DataCleanerManager.removeApkFiles(context = baseContext)
+    }
+
+    private fun requestPermission(permission: Permissions) {
+        when {
+            !isAudioAllowed() -> {
+                requestPermissionLauncher().launch(permission.value)
+            }
+
+            ActivityCompat.shouldShowRequestPermissionRationale(
+                instance as Activity,
+                permission.value
+            ) -> {
+                // Additional rationale should be displayed
+            }
+
+            else -> {
+                // Permission has not been asked yet
+                requestPermissionLauncher().launch(permission.value)
+            }
+        }
+    }
+
+    private fun requestPermissionLauncher(): ActivityResultLauncher<String> {
+        return instance
+            .registerForActivityResult(ActivityResultContracts.RequestPermission()) {}
+    }
+
+    private fun isAudioAllowed(): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            ContextCompat.checkSelfPermission(
+                instance,
+                Manifest.permission.READ_MEDIA_AUDIO
+            ) == PackageManager.PERMISSION_GRANTED
+        } else {
+            ContextCompat.checkSelfPermission(
+                instance,
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            ) == PackageManager.PERMISSION_GRANTED
+        }
     }
 
     /**

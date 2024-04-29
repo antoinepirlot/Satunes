@@ -40,6 +40,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -71,6 +72,7 @@ import io.github.antoinepirlot.satunes.ui.components.texts.Title
 @Composable
 fun PermissionsView(
     modifier: Modifier = Modifier,
+    showPermissionView: MutableState<Boolean>? = null,
 ) {
     val spacerSize = 16.dp
     var showDialog: Boolean by remember { mutableStateOf(false) }
@@ -109,6 +111,7 @@ fun PermissionsView(
                             Permissions.READ_EXTERNAL_STORAGE_PERMISSION -> PermissionManager.isReadExternalStorageAllowed.value =
                                 true
                         }
+                        showPermissionView?.value = false
                     }
                     Row(
                         verticalAlignment = Alignment.CenterVertically
@@ -169,6 +172,7 @@ fun PermissionsView(
     }
 }
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Preview
 @Composable
 fun PermissionsViewPreview() {

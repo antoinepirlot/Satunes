@@ -63,7 +63,7 @@ data class PlaylistWithMusics(
 
     @Ignore
     @Transient
-    override val id: Long = playlist.id // Not used
+    override var id: Long = playlist.id // Not used
 
     @Ignore
     @Transient

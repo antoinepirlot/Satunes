@@ -242,6 +242,8 @@ class DatabaseManager(context: Context) {
 
     private fun importPlaylistToDatabase(context: Context, playlistWithMusics: PlaylistWithMusics) {
         try {
+            playlistWithMusics.playlist.id = 0
+            playlistWithMusics.id = 0
             insertOne(
                 context = context,
                 playlist = playlistWithMusics.playlist,

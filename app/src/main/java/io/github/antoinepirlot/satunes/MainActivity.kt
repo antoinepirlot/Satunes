@@ -25,30 +25,25 @@
 
 package io.github.antoinepirlot.satunes
 
-import android.Manifest.permission.READ_EXTERNAL_STORAGE
-import android.Manifest.permission.READ_MEDIA_AUDIO
+import android.Manifest
 import android.app.PendingIntent
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
-import android.os.Build.VERSION_CODES.TIRAMISU
 import android.os.Bundle
 import android.os.Environment
 import android.provider.DocumentsContract
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.OptIn
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.media3.common.util.UnstableApi
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
 import io.github.antoinepirlot.satunes.database.services.DataCleanerManager
 import io.github.antoinepirlot.satunes.database.services.DatabaseManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
-import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.playback.services.PlaybackService
 import io.github.antoinepirlot.utils.showToastOnUiThread
 import kotlinx.coroutines.CoroutineScope
@@ -71,54 +66,28 @@ class MainActivity : ComponentActivity() {
             Uri.parse(Environment.getExternalStorageDirectory().path + '/' + Environment.DIRECTORY_DOCUMENTS)
     }
 
+    @kotlin.OptIn(ExperimentalPermissionsApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         instance = this
         setNotificationOnClick()
         SettingsManager.loadSettings(context = this@MainActivity)
         super.onCreate(savedInstanceState)
-        if (Build.VERSION.SDK_INT >= TIRAMISU) {
-            requestPermission(READ_MEDIA_AUDIO)
-        } else {
-            requestPermission(READ_EXTERNAL_STORAGE)
-        }
-        PlaybackController.initInstance(context = baseContext)
         setContent {
             Satunes()
         }
         DataCleanerManager.removeApkFiles(context = baseContext)
     }
 
-    private fun requestPermissionLauncher(): ActivityResultLauncher<String> {
-        return registerForActivityResult(ActivityResultContracts.RequestPermission()) {}
-    }
-
-    private fun requestPermission(permission: String) {
-        when {
-            !isAudioAllowed() -> {
-                requestPermissionLauncher().launch(permission)
-            }
-
-            ActivityCompat.shouldShowRequestPermissionRationale(this, permission) -> {
-                // Additional rationale should be displayed
-            }
-
-            else -> {
-                // Permission has not been asked yet
-                requestPermissionLauncher().launch(permission)
-            }
-        }
-    }
-
-    private fun isAudioAllowed(): Boolean {
-        return if (Build.VERSION.SDK_INT >= TIRAMISU) {
+    internal fun isAudioAllowed(): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             ContextCompat.checkSelfPermission(
-                this,
-                READ_MEDIA_AUDIO
+                instance,
+                Manifest.permission.READ_MEDIA_AUDIO
             ) == PackageManager.PERMISSION_GRANTED
         } else {
             ContextCompat.checkSelfPermission(
-                this,
-                READ_EXTERNAL_STORAGE
+                instance,
+                Manifest.permission.READ_EXTERNAL_STORAGE
             ) == PackageManager.PERMISSION_GRANTED
         }
     }

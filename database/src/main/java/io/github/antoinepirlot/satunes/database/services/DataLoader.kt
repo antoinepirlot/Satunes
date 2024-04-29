@@ -54,7 +54,7 @@ import kotlinx.coroutines.launch
 object DataLoader {
     private val URI: Uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
 
-    var isLoaded: Boolean = false
+    var isLoaded: MutableState<Boolean> = mutableStateOf(false)
     var isLoading: MutableState<Boolean> = mutableStateOf(false)
 
     // Music variables
@@ -134,7 +134,7 @@ object DataLoader {
             }
 
             DatabaseManager(context = context).loadAllPlaylistsWithMusic()
-            isLoaded = true
+            isLoaded.value = true
             isLoading.value = false
         }
     }

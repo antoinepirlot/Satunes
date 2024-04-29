@@ -23,25 +23,26 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.router
+package io.github.antoinepirlot.satunes.services
+
+import android.Manifest.permission.READ_EXTERNAL_STORAGE
+import android.Manifest.permission.READ_MEDIA_AUDIO
+import android.annotation.SuppressLint
+import io.github.antoinepirlot.satunes.R
 
 /**
- * @author Antoine Pirlot on 24-01-24
+ * @author Antoine Pirlot on 29/04/2024
  */
-
-internal enum class Destination(val link: String) {
-    ALBUMS(link = "/albums"),
-    ARTISTS(link = "/artists"),
-    BOTTOM_BAR_SETTING(link = "/navbar_settings"),
-    EXCLUSION(link = "/exclusion"),
-    FOLDERS(link = "/folders"),
-    GENRES(link = "/genres"),
-    MUSICS(link = "/musics"),
-    PERMISSIONS_SETTINGS(link = "/permissions_settings"),
-    PLAYBACK(link = "/playback"),
-    PLAYBACK_SETTINGS(link = "/playback_settings"),
-    PLAYLISTS(link = "/playlists"),
-    PLAYLISTS_SETTINGS(link = "/playlists_settings"),
-    SETTINGS(link = "/settings"),
-    UPDATES(link = "/updates"),
+internal enum class Permissions(val stringId: Int, val value: String) {
+    @SuppressLint("InlinedApi")
+    READ_AUDIO_PERMISSION(R.string.read_audio_permission, value = READ_MEDIA_AUDIO),
+    READ_EXTERNAL_STORAGE_PERMISSION(
+        stringId = R.string.read_external_storage_permission,
+        value = READ_EXTERNAL_STORAGE
+    ),
 }
+
+internal val permissionsList: List<Permissions> = listOf(
+    Permissions.READ_AUDIO_PERMISSION,
+    Permissions.READ_EXTERNAL_STORAGE_PERMISSION,
+)

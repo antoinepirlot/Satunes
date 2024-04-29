@@ -26,7 +26,10 @@
 package io.github.antoinepirlot.satunes.ui.views.playlist
 
 import android.content.Context
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -72,7 +75,8 @@ fun PlaylistView(
     var openAddMusicsDialog: Boolean by remember { mutableStateOf(false) }
     val playbackController: PlaybackController = PlaybackController.getInstance()
 
-    Column(modifier = modifier) {
+    val scrollState: ScrollState = rememberScrollState()
+    Column(modifier = modifier.verticalScroll(scrollState)) {
         Title(text = playlist.playlist.title)
         val musicMap: SortedMap<Music, MediaItem> = remember { playlist.musicMediaItemSortedMap }
 

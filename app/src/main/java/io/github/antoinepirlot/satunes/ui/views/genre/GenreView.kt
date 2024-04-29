@@ -25,7 +25,6 @@
 
 package io.github.antoinepirlot.satunes.ui.views.genre
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -70,65 +69,74 @@ fun GenreView(
     genre: Genre,
 ) {
     val playbackController: PlaybackController = PlaybackController.getInstance()
+    val musicMap: SortedMap<Music, MediaItem> = remember { genre.musicMediaItemSortedMap }
 
-    Column(modifier = modifier) {
-        Title(text = genre.title)
-        val musicMap: SortedMap<Music, MediaItem> = remember { genre.musicMediaItemSortedMap }
+    MediaListView(
+        mediaList = musicMap.keys.toList(),
 
-        //Recompose if data changed
-        var mapChanged: Boolean by remember { genre.musicMediaItemSortedMapUpdate }
-        if (mapChanged) {
-            mapChanged = false
-        }
-        //
+        openMedia = { clickedMedia: Media ->
+            playbackController.loadMusic(
+                musicMediaItemSortedMap = genre.musicMediaItemSortedMap
+            )
+            openMedia(navController = navController, media = clickedMedia)
+        },
+        onFABClick = { openCurrentMusic(navController = navController) },
+        header = {
+            Header(genre = genre, navController = navController, musicMap = musicMap)
+        },
+        extraButtons = {
+            if (genre.musicMediaItemSortedMap.isNotEmpty()) {
+                ExtraButton(icon = SatunesIcons.PLAY, onClick = {
+                    playbackController.loadMusic(musicMediaItemSortedMap = genre.musicMediaItemSortedMap)
+                    openMedia(navController = navController)
+                })
+                ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
+                    playbackController.loadMusic(
+                        musicMediaItemSortedMap = genre.musicMediaItemSortedMap,
+                        shuffleMode = true
+                    )
+                    openMedia(navController = navController)
+                })
+            }
+        },
+        emptyViewText = stringResource(id = R.string.no_music)
+    )
+}
 
-        val albumSet: SortedSet<Album> = sortedSetOf()
-        musicMap.forEach { (music: Music, _: MediaItem) ->
-            albumSet.add(music.album)
-        }
+@Composable
+private fun Header(
+    modifier: Modifier = Modifier,
+    genre: Genre,
+    navController: NavHostController,
+    musicMap: SortedMap<Music, MediaItem>
+) {
+    Title(text = genre.title)
 
-        AlbumGrid(
-            mediaList = albumSet.toList(),
-            onClick = { openMedia(navController = navController, media = it) }
-        )
-
-        Spacer(modifier = Modifier.size(30.dp))
-
-        Title(
-            modifier.padding(start = 16.dp),
-            text = stringResource(id = RDb.string.musics),
-            textAlign = TextAlign.Left,
-            fontSize = 20.sp
-        )
-
-        MediaListView(
-            mediaList = musicMap.keys.toList(),
-
-            openMedia = { clickedMedia: Media ->
-                playbackController.loadMusic(
-                    musicMediaItemSortedMap = genre.musicMediaItemSortedMap
-                )
-                openMedia(navController = navController, media = clickedMedia)
-            },
-            onFABClick = { openCurrentMusic(navController = navController) },
-            extraButtons = {
-                if (genre.musicMediaItemSortedMap.isNotEmpty()) {
-                    ExtraButton(icon = SatunesIcons.PLAY, onClick = {
-                        playbackController.loadMusic(musicMediaItemSortedMap = genre.musicMediaItemSortedMap)
-                        openMedia(navController = navController)
-                    })
-                    ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
-                        playbackController.loadMusic(
-                            musicMediaItemSortedMap = genre.musicMediaItemSortedMap,
-                            shuffleMode = true
-                        )
-                        openMedia(navController = navController)
-                    })
-                }
-            },
-            emptyViewText = stringResource(id = R.string.no_music)
-        )
+    //Recompose if data changed
+    var mapChanged: Boolean by remember { genre.musicMediaItemSortedMapUpdate }
+    if (mapChanged) {
+        mapChanged = false
     }
+    //
+
+    val albumSet: SortedSet<Album> = sortedSetOf()
+    musicMap.forEach { (music: Music, _: MediaItem) ->
+        albumSet.add(music.album)
+    }
+
+    AlbumGrid(
+        mediaList = albumSet.toList(),
+        onClick = { openMedia(navController = navController, media = it) }
+    )
+
+    Spacer(modifier = Modifier.size(30.dp))
+
+    Title(
+        modifier.padding(start = 16.dp),
+        text = stringResource(id = RDb.string.musics),
+        textAlign = TextAlign.Left,
+        fontSize = 20.sp
+    )
 }
 
 @Preview

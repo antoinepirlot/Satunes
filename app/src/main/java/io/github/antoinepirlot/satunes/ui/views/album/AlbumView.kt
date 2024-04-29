@@ -69,6 +69,49 @@ fun AlbumView(
 ) {
     val playbackController: PlaybackController = PlaybackController.getInstance()
 
+
+    val musicMap: SortedMap<Music, MediaItem> = remember { album.musicMediaItemSortedMap }
+
+    //Recompose if data changed
+    var mapChanged: Boolean by remember { album.musicMediaItemSortedMapUpdate }
+    if (mapChanged) {
+        mapChanged = false
+    }
+    //
+
+    MediaListView(
+        mediaList = musicMap.keys.toList(),
+        openMedia = { clickedMedia: Media ->
+            playbackController.loadMusic(
+                musicMediaItemSortedMap = album.musicMediaItemSortedMap
+            )
+            openMedia(navController = navController, media = clickedMedia)
+        },
+        onFABClick = { openCurrentMusic(navController = navController) },
+        header = {
+            Header(album = album, navController = navController)
+        },
+        extraButtons = {
+            if (album.musicMediaItemSortedMap.isNotEmpty()) {
+                ExtraButton(icon = SatunesIcons.PLAY, onClick = {
+                    playbackController.loadMusic(album.musicMediaItemSortedMap)
+                    openMedia(navController = navController)
+                })
+                ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
+                    playbackController.loadMusic(
+                        musicMediaItemSortedMap = album.musicMediaItemSortedMap,
+                        shuffleMode = true
+                    )
+                    openMedia(navController = navController)
+                })
+            }
+        },
+        emptyViewText = stringResource(id = R.string.no_music)
+    )
+}
+
+@Composable
+private fun Header(modifier: Modifier = Modifier, album: Album, navController: NavHostController) {
     Column(modifier = modifier.padding(top = 16.dp)) {
         AlbumArtwork(
             modifier = Modifier
@@ -89,42 +132,6 @@ fun AlbumView(
                     openMedia(navController = navController, media = album.artist)
                 },
             text = album.artist!!.title
-        )
-
-        val musicMap: SortedMap<Music, MediaItem> = remember { album.musicMediaItemSortedMap }
-
-        //Recompose if data changed
-        var mapChanged: Boolean by remember { album.musicMediaItemSortedMapUpdate }
-        if (mapChanged) {
-            mapChanged = false
-        }
-        //
-
-        MediaListView(
-            mediaList = musicMap.keys.toList(),
-            openMedia = { clickedMedia: Media ->
-                playbackController.loadMusic(
-                    musicMediaItemSortedMap = album.musicMediaItemSortedMap
-                )
-                openMedia(navController = navController, media = clickedMedia)
-            },
-            onFABClick = { openCurrentMusic(navController = navController) },
-            extraButtons = {
-                if (album.musicMediaItemSortedMap.isNotEmpty()) {
-                    ExtraButton(icon = SatunesIcons.PLAY, onClick = {
-                        playbackController.loadMusic(album.musicMediaItemSortedMap)
-                        openMedia(navController = navController)
-                    })
-                    ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
-                        playbackController.loadMusic(
-                            musicMediaItemSortedMap = album.musicMediaItemSortedMap,
-                            shuffleMode = true
-                        )
-                        openMedia(navController = navController)
-                    })
-                }
-            },
-            emptyViewText = stringResource(id = R.string.no_music)
         )
     }
 }

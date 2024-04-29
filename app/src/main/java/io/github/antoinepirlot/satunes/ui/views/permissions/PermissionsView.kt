@@ -113,6 +113,15 @@ fun PermissionsView(
                     Row(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
+                        val permissionIcon: SatunesIcons = when (permission) {
+                            Permissions.READ_AUDIO_PERMISSION -> SatunesIcons.MUSIC
+                            Permissions.READ_EXTERNAL_STORAGE_PERMISSION -> SatunesIcons.FOLDER
+                        }
+                        Icon(
+                            imageVector = permissionIcon.imageVector,
+                            contentDescription = permissionIcon.description
+                        )
+                        Spacer(modifier = Modifier.size(16.dp))
                         NormalText(text = stringResource(id = permission.stringId))
                         Spacer(modifier = Modifier.size(spacerSize))
                         val permissionGranted: Boolean by remember {

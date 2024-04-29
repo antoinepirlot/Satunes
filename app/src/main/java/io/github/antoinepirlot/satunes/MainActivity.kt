@@ -50,6 +50,7 @@ import io.github.antoinepirlot.satunes.database.services.DatabaseManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.playback.services.PlaybackService
+import io.github.antoinepirlot.satunes.ui.views.permissions.PermissionsView
 import io.github.antoinepirlot.utils.showToastOnUiThread
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -83,7 +84,8 @@ class MainActivity : ComponentActivity() {
         }
         PlaybackController.initInstance(context = baseContext)
         setContent {
-            Satunes()
+//            Satunes()
+            PermissionsView()
         }
         DataCleanerManager.removeApkFiles(context = baseContext)
     }

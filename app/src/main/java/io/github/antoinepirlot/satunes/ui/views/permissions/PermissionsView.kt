@@ -33,6 +33,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -74,48 +77,53 @@ fun PermissionsView(
             maxLines = 2
         )
         Spacer(modifier = Modifier.size(spacerSize))
-        for (i: Int in permissionsList.indices) {
-            val permission: Permissions = permissionsList[i]
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                if (permission == Permissions.READ_EXTERNAL_STORAGE) {
-                    continue
-                }
-            } else if (permission == Permissions.READ_AUDIO_PERMISSION) {
-                continue
-            }
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                NormalText(text = stringResource(id = permission.stringId))
-                Spacer(modifier = Modifier.size(spacerSize))
-                val permissionGranted = when (permission) {
-                    Permissions.READ_AUDIO_PERMISSION -> PermissionManager.isReadAudioAllowed
-                    Permissions.READ_EXTERNAL_STORAGE -> PermissionManager.isReadExternalStorageAllowed
-                }
-
-                if (permissionGranted) {
-                    val icon: SatunesIcons = SatunesIcons.PERMISSION_GRANTED
-                    Icon(
-                        imageVector = icon.imageVector,
-                        contentDescription = icon.description,
-                        tint = Color.Green
-                    )
-                } else {
-                    val icon: SatunesIcons = SatunesIcons.PERMISSION_NOT_GRANTED
-                    Icon(
-                        imageVector = icon.imageVector,
-                        contentDescription = icon.description,
-                        tint = Color.Red
-                    )
-                    Spacer(modifier = Modifier.size(spacerSize))
-                    Button(onClick = {
-                        when (permission) {
-                            Permissions.READ_AUDIO_PERMISSION -> TODO()
-
-                            Permissions.READ_EXTERNAL_STORAGE -> TODO()
+        val lazySate = rememberLazyListState()
+        LazyColumn(
+            state = lazySate,
+        ) {
+            items(
+                items = permissionsList,
+                key = { it.stringId }
+            ) { permission: Permissions ->
+                if (
+                    (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && permission != Permissions.READ_EXTERNAL_STORAGE)
+                    || (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU && permission != Permissions.READ_AUDIO_PERMISSION)
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        NormalText(text = stringResource(id = permission.stringId))
+                        Spacer(modifier = Modifier.size(spacerSize))
+                        val permissionGranted = when (permission) {
+                            Permissions.READ_AUDIO_PERMISSION -> PermissionManager.isReadAudioAllowed
+                            Permissions.READ_EXTERNAL_STORAGE -> PermissionManager.isReadExternalStorageAllowed
                         }
-                    }) {
-                        Text(text = stringResource(id = R.string.ask_permission))
+
+                        if (permissionGranted) {
+                            val icon: SatunesIcons = SatunesIcons.PERMISSION_GRANTED
+                            Icon(
+                                imageVector = icon.imageVector,
+                                contentDescription = icon.description,
+                                tint = Color.Green
+                            )
+                        } else {
+                            val icon: SatunesIcons = SatunesIcons.PERMISSION_NOT_GRANTED
+                            Icon(
+                                imageVector = icon.imageVector,
+                                contentDescription = icon.description,
+                                tint = Color.Red
+                            )
+                            Spacer(modifier = Modifier.size(spacerSize))
+                            Button(onClick = {
+                                when (permission) {
+                                    Permissions.READ_AUDIO_PERMISSION -> TODO()
+
+                                    Permissions.READ_EXTERNAL_STORAGE -> TODO()
+                                }
+                            }) {
+                                Text(text = stringResource(id = R.string.ask_permission))
+                            }
+                        }
                     }
                 }
             }

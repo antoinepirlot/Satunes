@@ -71,6 +71,10 @@ fun SettingsView(
                 navController.navigate(Destination.PLAYLISTS_SETTINGS.link)
             }
             HorizontalDivider()
+            ClickableListItem(text = stringResource(id = R.string.permissions)) {
+                navController.navigate(Destination.PERMISSIONS_SETTINGS.link)
+            }
+            HorizontalDivider()
             ClickableListItem(text = stringResource(id = R.string.version), onClick = {
                navController.navigate(Destination.UPDATES.link)
             })

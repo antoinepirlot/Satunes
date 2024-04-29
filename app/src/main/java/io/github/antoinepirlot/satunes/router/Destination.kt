@@ -37,6 +37,7 @@ internal enum class Destination(val link: String) {
     FOLDERS(link = "/folders"),
     GENRES(link = "/genres"),
     MUSICS(link = "/musics"),
+    PERMISSIONS_SETTINGS(link = "/permissions_settings"),
     PLAYBACK(link = "/playback"),
     PLAYBACK_SETTINGS(link = "/playback_settings"),
     PLAYLISTS(link = "/playlists"),

@@ -72,7 +72,7 @@ import io.github.antoinepirlot.satunes.ui.components.texts.Title
 @Composable
 fun PermissionsView(
     modifier: Modifier = Modifier,
-    showPermissionView: MutableState<Boolean>? = null,
+    isAudioAllowed: MutableState<Boolean>,
 ) {
     val spacerSize = 16.dp
     var showDialog: Boolean by remember { mutableStateOf(false) }
@@ -111,7 +111,7 @@ fun PermissionsView(
                             Permissions.READ_EXTERNAL_STORAGE_PERMISSION -> PermissionManager.isReadExternalStorageAllowed.value =
                                 true
                         }
-                        showPermissionView?.value = false
+                        isAudioAllowed.value = true
                     }
                     Row(
                         verticalAlignment = Alignment.CenterVertically
@@ -176,5 +176,5 @@ fun PermissionsView(
 @Preview
 @Composable
 fun PermissionsViewPreview() {
-    PermissionsView()
+    PermissionsView(isAudioAllowed = mutableStateOf(false))
 }

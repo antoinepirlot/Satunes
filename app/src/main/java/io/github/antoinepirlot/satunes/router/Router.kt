@@ -34,7 +34,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
@@ -83,17 +82,18 @@ internal fun Router(
     val context: Context = LocalContext.current
     val isLoading: MutableState<Boolean> = remember { DataLoader.isLoading }
     val isLoaded: Boolean by remember { DataLoader.isLoaded }
-    val showPermissionView: Boolean by
-    rememberSaveable { mutableStateOf(!MainActivity.instance.isAudioAllowed()) }
-    var startDestination: String by rememberSaveable { mutableStateOf(Destination.FOLDERS.link) }
-
-    startDestination = if (!showPermissionView) {
-        LaunchedEffect(key1 = Unit) {
-            PlaybackController.initInstance(context = context)
-        }
+    val isAudioAllowed: MutableState<Boolean> =
+        rememberSaveable { mutableStateOf(MainActivity.instance.isAudioAllowed()) }
+    val startDestination: String = if (isAudioAllowed.value) {
         Destination.FOLDERS.link
     } else {
         Destination.PERMISSIONS_SETTINGS.link
+    }
+
+    if (isAudioAllowed.value) {
+        LaunchedEffect(key1 = Unit) {
+            PlaybackController.initInstance(context = context)
+        }
     }
 
     NavHost(
@@ -245,7 +245,7 @@ internal fun Router(
         }
 
         composable(Destination.PERMISSIONS_SETTINGS.link) {
-            PermissionsView()
+            PermissionsView(isAudioAllowed = isAudioAllowed)
         }
     }
 }

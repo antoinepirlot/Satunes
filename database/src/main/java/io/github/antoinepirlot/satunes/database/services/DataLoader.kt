@@ -46,6 +46,7 @@ import io.github.antoinepirlot.satunes.database.services.settings.SettingsManage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.io.File
 
 /**
  * @author Antoine Pirlot on 22/02/24
@@ -77,6 +78,7 @@ object DataLoader {
     private const val UNKNOWN_ARTIST = "<unknown>"
     private const val UNKNOWN_ALBUM = "Unknown Album"
     private const val UNKNOWN_GENRE = "<unknown>"
+    private val EXTERNAL_STORAGE_PATH: File = Environment.getExternalStorageDirectory()
 
     val projection = mutableListOf(
         // AUDIO
@@ -98,6 +100,7 @@ object DataLoader {
 
     private val selection =
         if (SettingsManager.excludeRingtonesChecked.value) {
+            "${MediaStore.Audio.Media.DATA} NOT LIKE ? AND " +
             "${MediaStore.Audio.Media.DATA} NOT LIKE ?"
         } else {
             null
@@ -105,7 +108,10 @@ object DataLoader {
 
     private val selection_args: Array<String>? =
         if (SettingsManager.excludeRingtonesChecked.value) {
-            arrayOf("${Environment.getExternalStorageDirectory()}/Android/%")
+            arrayOf(
+                "${Environment.getExternalStorageDirectory()}/Android/%",
+                "${EXTERNAL_STORAGE_PATH}/Ringtones/%"
+            )
         } else {
             null
         }

@@ -101,7 +101,9 @@ object DataManager {
             musicMediaItemSortedMap[music] = music.mediaItem
             musicMediaItemSortedMapUpdated.value = true
         }
-        musicMapById.putIfAbsent(music.id, music)
+        if (!musicMapById.contains(music.id)) {
+            musicMapById[music.id] = music
+        }
     }
 
     fun getArtist(artist: Artist): Artist {
@@ -123,7 +125,9 @@ object DataManager {
         }
         //You can have multiple same artist's name but different id, but it's the same artist.
         val artistToReturn: Artist = artistMap[artist.title]!!
-        artistMapById.putIfAbsent(artistToReturn.id, artist)
+        if (artistMapById.contains(artistToReturn.id)) {
+            artistMapById[artistToReturn.id] = artist
+        }
         return artistToReturn
     }
 
@@ -149,7 +153,9 @@ object DataManager {
             throw DuplicatedAlbumException(existingAlbum = existingAlbum)
         }
         albumSet.add(album)
-        albumMapById.putIfAbsent(album.id, album)
+        if (!albumMapById.contains(album.id)) {
+            albumMapById[album.id] = album
+        }
     }
 
     fun removeAlbum(album: Album) {
@@ -195,7 +201,9 @@ object DataManager {
         }
         //You can have multiple same genre's name but different id, but it's the same genre.
         val genreToReturn: Genre = genreMap[genre.title]!!
-        genreMapById.putIfAbsent(genreToReturn.id, genre)
+        if (!genreMapById.contains(genreToReturn.id)) {
+            genreMapById[genreToReturn.id] = genre
+        }
         return genreToReturn
     }
 
@@ -217,7 +225,9 @@ object DataManager {
             playlistWithMusicsMap[playlist.title] = playlistWithMusics
             playlistWithMusicsMapUpdated.value = true
         }
-        playlistWithMusicsMapById.putIfAbsent(playlist.id, playlistWithMusics)
+        if (!playlistWithMusicsMapById.contains(playlist.id)) {
+            playlistWithMusicsMapById[playlist.id] = playlistWithMusics
+        }
     }
 
     fun removePlaylist(playlistWithMusics: PlaylistWithMusics) {

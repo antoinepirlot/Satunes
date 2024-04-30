@@ -84,11 +84,6 @@ internal fun Router(
     val isLoaded: Boolean by remember { DataLoader.isLoaded }
     val isAudioAllowed: MutableState<Boolean> =
         rememberSaveable { mutableStateOf(MainActivity.instance.isAudioAllowed()) }
-    val startDestination: String = if (isAudioAllowed.value) {
-        Destination.FOLDERS.link
-    } else {
-        Destination.PERMISSIONS_SETTINGS.link
-    }
 
     if (isAudioAllowed.value) {
         LaunchedEffect(key1 = Unit) {
@@ -99,11 +94,15 @@ internal fun Router(
     NavHost(
         modifier = modifier,
         navController = navController,
-        startDestination = startDestination
+        startDestination = Destination.FOLDERS.link
     ) {
 
         composable(Destination.FOLDERS.link) {
             // /!\ This route prevent back gesture to exit the app
+            if (!isAudioAllowed.value) {
+                navController.navigate(Destination.SETTINGS.link)
+                navController.navigate(Destination.PERMISSIONS_SETTINGS.link)
+            }
             if (isLoading.value || !isLoaded) {
                 LoadingView()
             } else {

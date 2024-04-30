@@ -65,7 +65,6 @@
     <string name="_import">Importer</string>
     <string name="no_file_created">Le fichier n\'a pas été créé</string>
     <string name="read_audio_permission">Musique et audio</string>
-    <string name="no_required_permissions_allowed">Toutes les permissions requises n\'ont pas été accordées.</string>
     <string name="ask_permission">Autoriser</string>
     <string name="read_external_storage_permission">Lire le stockage</string>
     <string name="permission_needed_text">Sans cette autorisation, l\'application ne peut pas fonctionner.\nMaintenant, vous devez l\'activer depuis les paramètre systèmes.</string>

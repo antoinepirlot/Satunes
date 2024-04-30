@@ -31,7 +31,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -83,14 +82,6 @@ fun PermissionsSettingsView(
             .padding(16.dp),
     ) {
         Title(text = stringResource(id = R.string.permissions))
-        NormalText(
-            modifier
-                .fillMaxWidth()
-                .align(Alignment.CenterHorizontally),
-            text = stringResource(id = R.string.no_required_permissions_allowed),
-            maxLines = 2
-        )
-        Spacer(modifier = Modifier.size(spacerSize))
         val lazySate = rememberLazyListState()
         LazyColumn(
             state = lazySate,

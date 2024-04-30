@@ -67,7 +67,6 @@
     <string name="no_file_created">Le fichier n\'a pas été créé</string>
     <string name="read_audio_permission">Musique et audio</string>
     <string name="permissions" translatable="false">Permissions</string>
-    <string name="no_required_permissions_allowed">Toutes les permissions requises n\'ont pas été accordées.</string>
     <string name="ask_permission">Autoriser</string>
     <string name="read_external_storage_permission">Lire le stockage</string>
     <string name="ok" translatable="false">OK</string>

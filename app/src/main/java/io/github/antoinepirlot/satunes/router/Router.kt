@@ -60,11 +60,11 @@ import io.github.antoinepirlot.satunes.ui.views.folder.RootFolderView
 import io.github.antoinepirlot.satunes.ui.views.genre.AllGenresListView
 import io.github.antoinepirlot.satunes.ui.views.genre.GenreView
 import io.github.antoinepirlot.satunes.ui.views.music.AllMusicsListView
-import io.github.antoinepirlot.satunes.ui.views.permissions.PermissionsView
 import io.github.antoinepirlot.satunes.ui.views.playlist.PlaylistListView
 import io.github.antoinepirlot.satunes.ui.views.playlist.PlaylistView
 import io.github.antoinepirlot.satunes.ui.views.settings.BottomNavigationBarSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.ExclusionSettingsView
+import io.github.antoinepirlot.satunes.ui.views.settings.PermissionsSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.PlaybackSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.PlaylistsSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.SettingsView
@@ -84,11 +84,6 @@ internal fun Router(
     val isLoaded: Boolean by remember { DataLoader.isLoaded }
     val isAudioAllowed: MutableState<Boolean> =
         rememberSaveable { mutableStateOf(MainActivity.instance.isAudioAllowed()) }
-    val startDestination: String = if (isAudioAllowed.value) {
-        Destination.FOLDERS.link
-    } else {
-        Destination.PERMISSIONS_SETTINGS.link
-    }
 
     if (isAudioAllowed.value) {
         LaunchedEffect(key1 = Unit) {
@@ -99,11 +94,15 @@ internal fun Router(
     NavHost(
         modifier = modifier,
         navController = navController,
-        startDestination = startDestination
+        startDestination = Destination.FOLDERS.link
     ) {
 
         composable(Destination.FOLDERS.link) {
             // /!\ This route prevent back gesture to exit the app
+            if (!isAudioAllowed.value) {
+                navController.navigate(Destination.SETTINGS.link)
+                navController.navigate(Destination.PERMISSIONS_SETTINGS.link)
+            }
             if (isLoading.value || !isLoaded) {
                 LoadingView()
             } else {
@@ -245,7 +244,7 @@ internal fun Router(
         }
 
         composable(Destination.PERMISSIONS_SETTINGS.link) {
-            PermissionsView(isAudioAllowed = isAudioAllowed)
+            PermissionsSettingsView(isAudioAllowed = isAudioAllowed)
         }
     }
 }

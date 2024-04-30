@@ -23,14 +23,14 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.views.permissions
+package io.github.antoinepirlot.satunes.ui.views.settings
 
+import android.annotation.SuppressLint
 import android.os.Build
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -70,7 +70,7 @@ import io.github.antoinepirlot.satunes.ui.components.texts.Title
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun PermissionsView(
+fun PermissionsSettingsView(
     modifier: Modifier = Modifier,
     isAudioAllowed: MutableState<Boolean>,
 ) {
@@ -82,14 +82,6 @@ fun PermissionsView(
             .padding(16.dp),
     ) {
         Title(text = stringResource(id = R.string.permissions))
-        NormalText(
-            modifier
-                .fillMaxWidth()
-                .align(Alignment.CenterHorizontally),
-            text = stringResource(id = R.string.no_required_permissions_allowed),
-            maxLines = 2
-        )
-        Spacer(modifier = Modifier.size(spacerSize))
         val lazySate = rememberLazyListState()
         LazyColumn(
             state = lazySate,
@@ -172,9 +164,10 @@ fun PermissionsView(
     }
 }
 
+@SuppressLint("UnrememberedMutableState")
 @OptIn(ExperimentalPermissionsApi::class)
 @Preview
 @Composable
-fun PermissionsViewPreview() {
-    PermissionsView(isAudioAllowed = mutableStateOf(false))
+fun PermissionsSettingsViewPreview() {
+    PermissionsSettingsView(isAudioAllowed = mutableStateOf(false))
 }

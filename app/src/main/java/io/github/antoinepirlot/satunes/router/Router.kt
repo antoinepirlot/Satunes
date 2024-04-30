@@ -64,7 +64,7 @@ import io.github.antoinepirlot.satunes.ui.views.playlist.PlaylistListView
 import io.github.antoinepirlot.satunes.ui.views.playlist.PlaylistView
 import io.github.antoinepirlot.satunes.ui.views.settings.BottomNavigationBarSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.ExclusionSettingsView
-import io.github.antoinepirlot.satunes.ui.views.settings.PermissionsView
+import io.github.antoinepirlot.satunes.ui.views.settings.PermissionsSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.PlaybackSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.PlaylistsSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.SettingsView
@@ -244,7 +244,7 @@ internal fun Router(
         }
 
         composable(Destination.PERMISSIONS_SETTINGS.link) {
-            PermissionsView(isAudioAllowed = isAudioAllowed)
+            PermissionsSettingsView(isAudioAllowed = isAudioAllowed)
         }
     }
 }

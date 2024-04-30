@@ -25,6 +25,7 @@
 
 package io.github.antoinepirlot.satunes.ui.views.settings
 
+import android.annotation.SuppressLint
 import android.os.Build
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -70,7 +71,7 @@ import io.github.antoinepirlot.satunes.ui.components.texts.Title
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun PermissionsView(
+fun PermissionsSettingsView(
     modifier: Modifier = Modifier,
     isAudioAllowed: MutableState<Boolean>,
 ) {
@@ -172,9 +173,10 @@ fun PermissionsView(
     }
 }
 
+@SuppressLint("UnrememberedMutableState")
 @OptIn(ExperimentalPermissionsApi::class)
 @Preview
 @Composable
-fun PermissionsViewPreview() {
-    PermissionsView(isAudioAllowed = mutableStateOf(false))
+fun PermissionsSettingsViewPreview() {
+    PermissionsSettingsView(isAudioAllowed = mutableStateOf(false))
 }

@@ -23,7 +23,7 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.views.permissions
+package io.github.antoinepirlot.satunes.ui.views.settings
 
 import android.os.Build
 import androidx.compose.foundation.layout.Column

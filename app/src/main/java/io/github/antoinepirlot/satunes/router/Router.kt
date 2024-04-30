@@ -60,11 +60,11 @@ import io.github.antoinepirlot.satunes.ui.views.folder.RootFolderView
 import io.github.antoinepirlot.satunes.ui.views.genre.AllGenresListView
 import io.github.antoinepirlot.satunes.ui.views.genre.GenreView
 import io.github.antoinepirlot.satunes.ui.views.music.AllMusicsListView
-import io.github.antoinepirlot.satunes.ui.views.permissions.PermissionsView
 import io.github.antoinepirlot.satunes.ui.views.playlist.PlaylistListView
 import io.github.antoinepirlot.satunes.ui.views.playlist.PlaylistView
 import io.github.antoinepirlot.satunes.ui.views.settings.BottomNavigationBarSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.ExclusionSettingsView
+import io.github.antoinepirlot.satunes.ui.views.settings.PermissionsView
 import io.github.antoinepirlot.satunes.ui.views.settings.PlaybackSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.PlaylistsSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.SettingsView

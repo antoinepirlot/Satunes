@@ -39,7 +39,6 @@ import java.util.SortedMap
 data class Artist(
     override val id: Long = nextId,
     override var title: String,
-    var musicList: MutableList<Music> = mutableListOf(),
     var albumSortedMap: SortedMap<String, Album> = sortedMapOf(),
 ) : Media {
     override var artwork: Bitmap? = null
@@ -60,12 +59,15 @@ data class Artist(
     }
 
     fun addAlbum(album: Album) {
-        this.albumSortedMap.putIfAbsent(album.title, album)
+        if (!albumSortedMap.contains(album.title)) {
+            albumSortedMap[album.title] = album
+        }
     }
 
     fun addMusic(music: Music) {
-        musicList.add(music)
-        musicMediaItemSortedMap.putIfAbsent(music, music.mediaItem)
+        if (!musicMediaItemSortedMap.contains(music)) {
+            musicMediaItemSortedMap[music] = music.mediaItem
+        }
     }
 
     override fun toString(): String {

@@ -1,6 +1,34 @@
 # Versions (🇫🇷)
 You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
+## 0.10 (Android 5.1.1 Lollipop et ultérieur)
+
+### 0.10.0-beta
+
+L'application est maintenant disponible pour les appareils Android Lollipop (5.1.1) et plus récents.
+Environ 99.2% d'entre vous peuvent l'installer 😜.
+
+Nouvelles Fonctionnalités:
+
+* Il est possible de changer la vitesse de rafraichissement de la barre de progression
+* Il est possible d'exporter et d'importer les playlists, au format json (des améliorations future
+  seront mises au point.)
+* Il est possible d'exclure les sonneries
+
+Améliorations, Optimisations et Résolutions de problèmes:
+
+* La façon dont les permissions sont gérée aa été amélioré et l'application ne plante plus lors du
+  premier démarrage
+* Le design a été amélioré:
+  * Afin d'éviter les blocage dans les petits écran, toutes les éléments sont scrollable en attente
+    de trouver une solution plus adéquate
+  * L'image de l'album est affichée à l'écran dans la page de l'album
+  * Les différentes vues sont dans leur entierté déroulable
+  * La vue des genres affiches, en plus des musiques, les albums comme dans la page d'un artiste
+  * Le nom de l'artiste est affiché dans la vue de l'album et permet une redirection vers celui-ci
+  * Les zones de textes ont été harmonisées et les long textes seront coupés si nécéssaire
+* Quelques optimisations légères ont été apportées
+
 ## 0.9 (Android 9 Pie et ultérieur)
 
 ### 0.9.2-beta

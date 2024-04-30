@@ -25,14 +25,10 @@
 
 package io.github.antoinepirlot.satunes.ui.components.cards.media
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.satunes.database.models.Media
@@ -46,6 +42,7 @@ import io.github.antoinepirlot.satunes.database.models.tables.MusicDB
 @Composable
 fun MediaCardList(
     modifier: Modifier = Modifier,
+    header: @Composable () -> Unit,
     mediaList: List<Media>,
     openMedia: (media: Media) -> Unit,
     openedPlaylistWithMusics: PlaylistWithMusics?
@@ -57,29 +54,29 @@ fun MediaCardList(
         return
     }
 
-    Column {
-        LazyColumn(
-            modifier = modifier,
-            state = lazyState
-        ) {
-            items(
-                items = mediaList,
-                key = {
-                    when (it) {
-                        is PlaylistWithMusics -> it.playlist.id
-                        is MusicDB -> it.music.id
-                        else -> it.id
-                    }
+    LazyColumn(
+        modifier = modifier,
+        state = lazyState
+    ) {
+        items(
+            items = mediaList,
+            key = {
+                when (it) {
+                    is PlaylistWithMusics -> it.playlist.id
+                    is MusicDB -> it.music!!.id
+                    else -> it.id
                 }
-            ) {
-                val media: Media by remember { mutableStateOf(it) }
-                MediaCard(
-                    modifier = modifier,
-                    media = media,
-                    onClick = { openMedia(media) },
-                    openedPlaylistWithMusics = openedPlaylistWithMusics
-                )
             }
+        ) { media: Media ->
+            if (media == mediaList.first()) {
+                header()
+            }
+            MediaCard(
+                modifier = modifier,
+                media = media,
+                onClick = { openMedia(media) },
+                openedPlaylistWithMusics = openedPlaylistWithMusics
+            )
         }
     }
 }
@@ -89,6 +86,7 @@ fun MediaCardList(
 fun CardListPreview() {
     MediaCardList(
         mediaList = listOf(),
+        header = {},
         openMedia = {},
         openedPlaylistWithMusics = null
     )

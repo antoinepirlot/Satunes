@@ -31,6 +31,7 @@ import android.net.Uri
 import android.net.Uri.decode
 import android.net.Uri.encode
 import android.os.Build
+import android.os.Environment
 import android.provider.MediaStore
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -41,9 +42,11 @@ import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.io.File
 
 /**
  * @author Antoine Pirlot on 22/02/24
@@ -52,7 +55,7 @@ import kotlinx.coroutines.launch
 object DataLoader {
     private val URI: Uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
 
-    var isLoaded: Boolean = false
+    var isLoaded: MutableState<Boolean> = mutableStateOf(false)
     var isLoading: MutableState<Boolean> = mutableStateOf(false)
 
     // Music variables
@@ -75,6 +78,43 @@ object DataLoader {
     private const val UNKNOWN_ARTIST = "<unknown>"
     private const val UNKNOWN_ALBUM = "Unknown Album"
     private const val UNKNOWN_GENRE = "<unknown>"
+    private val EXTERNAL_STORAGE_PATH: File = Environment.getExternalStorageDirectory()
+
+    val projection = mutableListOf(
+        // AUDIO
+        MediaStore.Audio.Media._ID,
+        MediaStore.Audio.Media.DISPLAY_NAME,
+        MediaStore.Audio.Media.TITLE,
+        MediaStore.Audio.Media.DURATION,
+        MediaStore.Audio.Media.SIZE,
+        MediaStore.Audio.Media.DATA,
+
+        //ALBUMS
+        MediaStore.Audio.Albums.ALBUM,
+
+        //ARTISTS
+        MediaStore.Audio.Artists.ARTIST,
+
+        //GENRES is added in loadAllData function if SDK >= Android Red Velvet Cake
+    )
+
+    private val selection =
+        if (SettingsManager.excludeRingtonesChecked.value) {
+            "${MediaStore.Audio.Media.DATA} NOT LIKE ? AND " +
+            "${MediaStore.Audio.Media.DATA} NOT LIKE ?"
+        } else {
+            null
+        }
+
+    private val selection_args: Array<String>? =
+        if (SettingsManager.excludeRingtonesChecked.value) {
+            arrayOf(
+                "${Environment.getExternalStorageDirectory()}/Android/%",
+                "${EXTERNAL_STORAGE_PATH}/Ringtones/%"
+            )
+        } else {
+            null
+        }
 
     /**
      * Load all Media data from device's storage.
@@ -82,28 +122,17 @@ object DataLoader {
     fun loadAllData(context: Context) {
         isLoading.value = true
         CoroutineScope(Dispatchers.IO).launch {
-            val projection = mutableListOf(
-                // AUDIO
-                MediaStore.Audio.Media._ID,
-                MediaStore.Audio.Media.DISPLAY_NAME,
-                MediaStore.Audio.Media.TITLE,
-                MediaStore.Audio.Media.DURATION,
-                MediaStore.Audio.Media.SIZE,
-                MediaStore.Audio.Media.DATA,
-
-                //ALBUMS
-                MediaStore.Audio.Albums.ALBUM,
-
-                //ARTISTS
-                MediaStore.Audio.Artists.ARTIST,
-            )
-
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 //Genre
                 projection.add(MediaStore.Audio.Media.GENRE)
             }
-
-            context.contentResolver.query(URI, projection.toTypedArray(), null, null)?.use {
+            context.contentResolver.query(
+                URI,
+                projection.toTypedArray(),
+                selection,
+                selection_args,
+                null
+            )?.use {
                 loadColumns(cursor = it)
                 while (it.moveToNext()) {
                     loadData(cursor = it, context = context)
@@ -111,7 +140,7 @@ object DataLoader {
             }
 
             DatabaseManager(context = context).loadAllPlaylistsWithMusic()
-            isLoaded = true
+            isLoaded.value = true
             isLoading.value = false
         }
     }
@@ -201,10 +230,10 @@ object DataLoader {
             if (album.musicSortedMap.isEmpty()) {
                 DataManager.removeAlbum(album = album)
             }
-            if (artist.musicList.isEmpty()) {
+            if (artist.musicMediaItemSortedMap.isEmpty()) {
                 DataManager.removeArtist(artist = artist)
             }
-            if (genre.musicMap.isEmpty()) {
+            if (genre.musicMediaItemSortedMap.isEmpty()) {
                 DataManager.removeGenre(genre = genre)
             }
             if (folder.musicMediaItemSortedMap.isEmpty()) {

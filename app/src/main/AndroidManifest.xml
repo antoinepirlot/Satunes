@@ -1,15 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<!--
+  ~ This file is part of Satunes.
+  ~
+  ~  Satunes is free software: you can redistribute it and/or modify it under
+  ~  the terms of the GNU General Public License as published by the Free Software Foundation,
+  ~  either version 3 of the License, or (at your option) any later version.
+  ~
+  ~  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+  ~  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+  ~  See the GNU General Public License for more details.
+  ~
+  ~  You should have received a copy of the GNU General Public License along with Satunes.
+  ~  If not, see <https://www.gnu.org/licenses/>.
+  ~
+  ~  **** INFORMATIONS ABOUT THE AUTHOR *****
+  ~  The author of this file is Antoine Pirlot, the owner of this project.
+  ~  You find this original project on github.
+  ~
+  ~  My github link is: https://github.com/antoinepirlot
+  ~  This current project's link is: https://github.com/antoinepirlot/Satunes
+  ~
+  ~  You can contact me via my email: pirlot.antoine@outlook.com
+  ~  PS: I don't answer quickly.
+  -->
+
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <application
         android:allowBackup="true"
+        android:enableOnBackInvokedCallback="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/satunes_logo"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/satunes_logo_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.MP3">
+        android:theme="@style/Theme.MP3"
+        tools:targetApi="TIRAMISU">
 
         <activity
             android:name=".MainActivity"

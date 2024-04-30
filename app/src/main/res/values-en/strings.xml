@@ -2,26 +2,26 @@
 <!--
   ~ This file is part of Satunes.
   ~
-  ~ Satunes is free software: you can redistribute it and/or modify it under
+  ~  Satunes is free software: you can redistribute it and/or modify it under
   ~  the terms of the GNU General Public License as published by the Free Software Foundation,
-  ~ either version 3 of the License, or (at your option) any later version.
+  ~  either version 3 of the License, or (at your option) any later version.
   ~
-  ~ Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
-  ~ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-  ~ See the GNU General Public License for more details.
+  ~  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+  ~  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+  ~  See the GNU General Public License for more details.
   ~
-  ~ You should have received a copy of the GNU General Public License along with Satunes.
-  ~ If not, see <https://www.gnu.org/licenses/>.
+  ~  You should have received a copy of the GNU General Public License along with Satunes.
+  ~  If not, see <https://www.gnu.org/licenses/>.
   ~
-  ~ ***** INFORMATIONS ABOUT THE AUTHOR *****
-  ~ The author of this file is Antoine Pirlot, the owner of this project.
-  ~ You find this original project on github.
+  ~  **** INFORMATIONS ABOUT THE AUTHOR *****
+  ~  The author of this file is Antoine Pirlot, the owner of this project.
+  ~  You find this original project on github.
   ~
-  ~ My github link is: https://github.com/antoinepirlot
-  ~ This current project's link is: https://github.com/antoinepirlot/MP3-Player
+  ~  My github link is: https://github.com/antoinepirlot
+  ~  This current project's link is: https://github.com/antoinepirlot/Satunes
   ~
-  ~ You can contact me via my email: pirlot.antoine@outlook.com
-  ~ PS: I don't answer quickly.
+  ~  You can contact me via my email: pirlot.antoine@outlook.com
+  ~  PS: I don't answer quickly.
   -->
 
 <resources>
@@ -56,4 +56,16 @@
     <string name="loading_data">Loading Data…</string>
     <string name="no_folder">No folder with musics found</string>
     <string name="add_to">"Add to "</string>
+    <string name="exclusion_setting">Excluding files</string>
+    <string name="exclude_ringtones">Exclude ringtones (restart needed)</string>
+    <string name="bar_speed">"Progress bar speed: "</string>
+    <string name="second">second</string>
+    <string name="export">Export</string>
+    <string name="export_all">Export All</string>
+    <string name="_import">Import</string>
+    <string name="no_file_created">No file created</string>
+    <string name="read_audio_permission">Music and audio</string>
+    <string name="ask_permission">Allow</string>
+    <string name="read_external_storage_permission">Lire le stockage</string>
+    <string name="permission_needed_text">Without this permission the app can\'t work.\nNow you need to allow it from system settings.</string>
 </resources>

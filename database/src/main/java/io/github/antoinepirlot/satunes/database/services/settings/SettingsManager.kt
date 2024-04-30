@@ -27,12 +27,14 @@ package io.github.antoinepirlot.satunes.database.services.settings
 
 import android.content.Context
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.MutablePreferences
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.floatPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import io.github.antoinepirlot.satunes.database.models.MenuTitle
 import kotlinx.coroutines.flow.first
@@ -52,6 +54,8 @@ object SettingsManager {
     private const val DEFAULT_PLAYLIST_CHECKED = true
     private const val DEFAULT_PLAYBACK_WHEN_CLOSED_CHECKED = false //App stop after removed app from multi-task if false
     private const val DEFAULT_PAUSE_IF_NOISY = true
+    private const val DEFAULT_EXCLUDE_RINGTONES = true
+    private const val DEFAULT_BAR_SPEED_VALUE = 1f
 
     private val PREFERENCES_DATA_STORE = preferencesDataStore("settings")
     private val FOLDERS_CHECKED_PREFERENCES_KEY = booleanPreferencesKey("folders_checked")
@@ -62,6 +66,8 @@ object SettingsManager {
     private val PLAYBACK_WHEN_CLOSED_CHECKED_PREFERENCES_KEY =
         booleanPreferencesKey("playback_when_closed_checked")
     private val PAUSE_IF_NOISY_PREFERENCES_KEY = booleanPreferencesKey("pause_if_noisy")
+    private val EXCLUDE_RINGTONES_KEY = booleanPreferencesKey("exclude_ringtones")
+    private val BAR_SPEED_KEY = floatPreferencesKey("bar_speed")
 
     private val Context.dataStore: DataStore<Preferences> by PREFERENCES_DATA_STORE
 
@@ -72,7 +78,9 @@ object SettingsManager {
     val playlistsChecked: MutableState<Boolean> = mutableStateOf(DEFAULT_PLAYLIST_CHECKED)
     val playbackWhenClosedChecked: MutableState<Boolean> =
         mutableStateOf(DEFAULT_PLAYBACK_WHEN_CLOSED_CHECKED)
-    val pauseIfNoisy: MutableState<Boolean> = mutableStateOf(DEFAULT_PAUSE_IF_NOISY)
+    val pauseIfNoisyChecked: MutableState<Boolean> = mutableStateOf(DEFAULT_PAUSE_IF_NOISY)
+    val excludeRingtonesChecked: MutableState<Boolean> = mutableStateOf(DEFAULT_EXCLUDE_RINGTONES)
+    val barSpeed: MutableState<Float> = mutableFloatStateOf(DEFAULT_BAR_SPEED_VALUE)
 
     val menuTitleCheckedMap: Map<MenuTitle, MutableState<Boolean>> = mapOf(
         Pair(MenuTitle.FOLDERS, foldersChecked),
@@ -82,88 +90,117 @@ object SettingsManager {
         Pair(MenuTitle.PLAYLISTS, playlistsChecked)
     )
 
-    suspend fun loadSettings(context: Context) {
-        // Using first() at the end and for nothing, prevent wrong UI data switch synchronisation
-        context.dataStore.data.map { preferences: Preferences ->
-            foldersChecked.value =
-                preferences[FOLDERS_CHECKED_PREFERENCES_KEY] ?: DEFAULT_FOLDERS_CHECKED
+    fun loadSettings(context: Context) {
+        runBlocking {
+            // Using first() at the end and for nothing, prevent wrong UI data switch synchronisation
+            context.dataStore.data.map { preferences: Preferences ->
+                foldersChecked.value =
+                    preferences[FOLDERS_CHECKED_PREFERENCES_KEY] ?: DEFAULT_FOLDERS_CHECKED
 
-            artistsChecked.value =
-                preferences[ARTISTS_CHECKED_PREFERENCES_KEY] ?: DEFAULT_ARTISTS_CHECKED
+                artistsChecked.value =
+                    preferences[ARTISTS_CHECKED_PREFERENCES_KEY] ?: DEFAULT_ARTISTS_CHECKED
 
-            albumsChecked.value =
-                preferences[ALBUMS_CHECKED_PREFERENCES_KEY] ?: DEFAULT_ALBUMS_CHECKED
+                albumsChecked.value =
+                    preferences[ALBUMS_CHECKED_PREFERENCES_KEY] ?: DEFAULT_ALBUMS_CHECKED
 
-            genresChecked.value =
-                preferences[GENRE_CHECKED_PREFERENCES_KEY] ?: DEFAULT_GENRE_CHECKED
+                genresChecked.value =
+                    preferences[GENRE_CHECKED_PREFERENCES_KEY] ?: DEFAULT_GENRE_CHECKED
 
-            playlistsChecked.value =
-                preferences[PLAYLISTS_CHECKED_PREFERENCES_KEY] ?: DEFAULT_PLAYLIST_CHECKED
+                playlistsChecked.value =
+                    preferences[PLAYLISTS_CHECKED_PREFERENCES_KEY] ?: DEFAULT_PLAYLIST_CHECKED
 
-            playbackWhenClosedChecked.value =
-                preferences[PLAYBACK_WHEN_CLOSED_CHECKED_PREFERENCES_KEY]
-                    ?: DEFAULT_PLAYBACK_WHEN_CLOSED_CHECKED
+                playbackWhenClosedChecked.value =
+                    preferences[PLAYBACK_WHEN_CLOSED_CHECKED_PREFERENCES_KEY]
+                        ?: DEFAULT_PLAYBACK_WHEN_CLOSED_CHECKED
 
-            pauseIfNoisy.value =
-                preferences[PAUSE_IF_NOISY_PREFERENCES_KEY] ?: DEFAULT_PAUSE_IF_NOISY
-        }.first()
+                pauseIfNoisyChecked.value =
+                    preferences[PAUSE_IF_NOISY_PREFERENCES_KEY] ?: DEFAULT_PAUSE_IF_NOISY
+
+                excludeRingtonesChecked.value =
+                    preferences[EXCLUDE_RINGTONES_KEY] ?: DEFAULT_EXCLUDE_RINGTONES
+
+                barSpeed.value = preferences[BAR_SPEED_KEY] ?: DEFAULT_BAR_SPEED_VALUE
+            }.first()
+        }
     }
 
-    suspend fun switchMenuTitle(context: Context, menuTitle: MenuTitle) {
-        when (menuTitle) {
-            MenuTitle.FOLDERS -> {
-                context.dataStore.edit { preferences: MutablePreferences ->
-                    foldersChecked.value = !foldersChecked.value
-                    preferences[FOLDERS_CHECKED_PREFERENCES_KEY] = foldersChecked.value
+    fun switchMenuTitle(context: Context, menuTitle: MenuTitle) {
+        runBlocking {
+            when (menuTitle) {
+                MenuTitle.FOLDERS -> {
+                    context.dataStore.edit { preferences: MutablePreferences ->
+                        foldersChecked.value = !foldersChecked.value
+                        preferences[FOLDERS_CHECKED_PREFERENCES_KEY] = foldersChecked.value
+                    }
                 }
-            }
 
-            MenuTitle.ARTISTS -> {
-                context.dataStore.edit { preferences: MutablePreferences ->
-                    artistsChecked.value = !artistsChecked.value
-                    preferences[ARTISTS_CHECKED_PREFERENCES_KEY] = artistsChecked.value
+                MenuTitle.ARTISTS -> {
+                    context.dataStore.edit { preferences: MutablePreferences ->
+                        artistsChecked.value = !artistsChecked.value
+                        preferences[ARTISTS_CHECKED_PREFERENCES_KEY] = artistsChecked.value
+                    }
                 }
-            }
 
-            MenuTitle.ALBUMS -> {
-                context.dataStore.edit { preferences: MutablePreferences ->
-                    albumsChecked.value = !albumsChecked.value
-                    preferences[ALBUMS_CHECKED_PREFERENCES_KEY] = albumsChecked.value
+                MenuTitle.ALBUMS -> {
+                    context.dataStore.edit { preferences: MutablePreferences ->
+                        albumsChecked.value = !albumsChecked.value
+                        preferences[ALBUMS_CHECKED_PREFERENCES_KEY] = albumsChecked.value
+                    }
                 }
-            }
 
-            MenuTitle.GENRES -> {
-                context.dataStore.edit { preferences: MutablePreferences ->
-                    genresChecked.value = !genresChecked.value
-                    preferences[GENRE_CHECKED_PREFERENCES_KEY] = genresChecked.value
+                MenuTitle.GENRES -> {
+                    context.dataStore.edit { preferences: MutablePreferences ->
+                        genresChecked.value = !genresChecked.value
+                        preferences[GENRE_CHECKED_PREFERENCES_KEY] = genresChecked.value
+                    }
                 }
-            }
 
-            MenuTitle.PLAYLISTS -> {
-                context.dataStore.edit { preferences: MutablePreferences ->
-                    playlistsChecked.value = !playlistsChecked.value
-                    preferences[PLAYLISTS_CHECKED_PREFERENCES_KEY] = playlistsChecked.value
+                MenuTitle.PLAYLISTS -> {
+                    context.dataStore.edit { preferences: MutablePreferences ->
+                        playlistsChecked.value = !playlistsChecked.value
+                        preferences[PLAYLISTS_CHECKED_PREFERENCES_KEY] = playlistsChecked.value
+                    }
                 }
-            }
 
-            MenuTitle.MUSICS -> { /*Do nothing*/
+                MenuTitle.MUSICS -> { /*Do nothing*/
+                }
             }
         }
     }
 
-    suspend fun switchPlaybackWhenClosedChecked(context: Context) {
-        context.dataStore.edit { preferences: MutablePreferences ->
-            playbackWhenClosedChecked.value = !playbackWhenClosedChecked.value
-            preferences[PLAYBACK_WHEN_CLOSED_CHECKED_PREFERENCES_KEY] =
-                playbackWhenClosedChecked.value
+    fun switchPlaybackWhenClosedChecked(context: Context) {
+        runBlocking {
+            context.dataStore.edit { preferences: MutablePreferences ->
+                playbackWhenClosedChecked.value = !playbackWhenClosedChecked.value
+                preferences[PLAYBACK_WHEN_CLOSED_CHECKED_PREFERENCES_KEY] =
+                    playbackWhenClosedChecked.value
+            }
         }
     }
 
     fun switchPauseIfNoisy(context: Context) {
         runBlocking {
             context.dataStore.edit { preferences: MutablePreferences ->
-                pauseIfNoisy.value = !pauseIfNoisy.value
-                preferences[PAUSE_IF_NOISY_PREFERENCES_KEY] = pauseIfNoisy.value
+                pauseIfNoisyChecked.value = !pauseIfNoisyChecked.value
+                preferences[PAUSE_IF_NOISY_PREFERENCES_KEY] = pauseIfNoisyChecked.value
+            }
+        }
+    }
+
+    fun switchExcludeRingtones(context: Context) {
+        runBlocking {
+            context.dataStore.edit { preferences: MutablePreferences ->
+                excludeRingtonesChecked.value = !excludeRingtonesChecked.value
+                preferences[EXCLUDE_RINGTONES_KEY] = excludeRingtonesChecked.value
+            }
+        }
+    }
+
+    fun updateBarSpeed(context: Context, newValue: Float) {
+        runBlocking {
+            context.dataStore.edit { preferences: MutablePreferences ->
+                barSpeed.value = newValue
+                preferences[BAR_SPEED_KEY] = barSpeed.value
             }
         }
     }

@@ -26,7 +26,6 @@
 package io.github.antoinepirlot.satunes.internet.updates
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.app.DownloadManager
 import android.content.Context
 import android.content.Intent
@@ -62,12 +61,10 @@ object UpdateDownloadManager {
         if (UpdateCheckManager.downloadStatus.value == APKDownloadStatus.CHECKING || UpdateCheckManager.downloadStatus.value == APKDownloadStatus.DOWNLOADING) {
             return
         }
-        val activity = Activity()
         CoroutineScope(Dispatchers.IO).launch {
             UpdateCheckManager.downloadStatus.value = APKDownloadStatus.CHECKING
             showToastOnUiThread(
                 context = context,
-                activity = activity,
                 message = context.getString(R.string.download_checking)
             )
             try {
@@ -76,13 +73,12 @@ object UpdateDownloadManager {
                     UpdateCheckManager.downloadStatus.value = APKDownloadStatus.NOT_FOUND
                     showToastOnUiThread(
                         context = context,
-                        activity = activity,
                         message = context.getString(R.string.download_not_found)
                     )
                     return@launch
                 }
                 val downloadUrl: String =
-                    getDownloadUrl(context = context, activity = activity) ?: return@launch
+                    getDownloadUrl(context = context) ?: return@launch
                 val appName: String = downloadUrl.split("/").last()
                 val downloadManager: DownloadManager = context.getSystemService()!!
                 val downloadUri: Uri = Uri.parse(downloadUrl)
@@ -100,14 +96,12 @@ object UpdateDownloadManager {
                 UpdateCheckManager.downloadStatus.value = APKDownloadStatus.DOWNLOADING
                 showToastOnUiThread(
                     context = context,
-                    activity = activity,
                     message = context.getString(R.string.downloading)
                 )
             } catch (_: Exception) {
                 UpdateCheckManager.downloadStatus.value = APKDownloadStatus.FAILED
                 showToastOnUiThread(
                     context = context,
-                    activity = activity,
                     message = context.getString(R.string.download_failed)
                 )
                 UpdateCheckManager.updateAvailableStatus.value = UpdateAvailableStatus.UNDEFINED
@@ -121,7 +115,7 @@ object UpdateDownloadManager {
      *
      * @return the download url or null if not found
      */
-    private fun getDownloadUrl(context: Context, activity: Activity): String? {
+    private fun getDownloadUrl(context: Context): String? {
         val regex: Regex =
             when (versionType) {
                 ALPHA -> ALPHA_APK_REGEX
@@ -138,7 +132,6 @@ object UpdateDownloadManager {
             UpdateCheckManager.downloadStatus.value = APKDownloadStatus.NOT_FOUND
             showToastOnUiThread(
                 context = context,
-                activity = activity,
                 message = context.getString(R.string.download_not_found)
             )
             return null
@@ -153,7 +146,6 @@ object UpdateDownloadManager {
             UpdateCheckManager.downloadStatus.value = APKDownloadStatus.NOT_FOUND
             showToastOnUiThread(
                 context = context,
-                activity = activity,
                 message = context.getString(R.string.download_not_found)
             )
             return null

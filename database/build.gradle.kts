@@ -28,6 +28,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("com.google.devtools.ksp")
     id("androidx.room") version ("2.6.1")
+    kotlin("plugin.serialization") version "1.9.22"
 }
 
 room {
@@ -39,7 +40,7 @@ android {
     compileSdk = 34
 
     defaultConfig {
-        minSdk = 28
+        minSdk = 22
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -71,6 +72,11 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+
+    /**
+     * Serialization to JSON
+     */
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
 
     /**
      * Mutable State

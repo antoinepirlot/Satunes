@@ -25,8 +25,10 @@
 
 package io.github.antoinepirlot.satunes.ui.views.settings
 
-import io.github.antoinepirlot.satunes.R.string.playback_when_paused
+import io.github.antoinepirlot.satunes.R.string.bar_speed
+import io.github.antoinepirlot.satunes.R.string.exclude_ringtones
 import io.github.antoinepirlot.satunes.R.string.pause_if_noisy
+import io.github.antoinepirlot.satunes.R.string.playback_when_paused
 import io.github.antoinepirlot.satunes.database.R.string.albums
 import io.github.antoinepirlot.satunes.database.R.string.artists
 import io.github.antoinepirlot.satunes.database.R.string.folders
@@ -37,11 +39,13 @@ import io.github.antoinepirlot.satunes.database.R.string.playlists
  *   @author Antoine Pirlot 06/03/2024
  */
 enum class Settings(val stringId: Int) {
-    PLAYBACK_WHEN_CLOSED(stringId = playback_when_paused),
-    FOLDERS_CHECKED(stringId = folders),
-    ARTISTS_CHECKED(stringId = artists),
     ALBUMS_CHECKED(stringId = albums),
+    ARTISTS_CHECKED(stringId = artists),
+    BAR_SPEED(stringId = bar_speed),
+    EXCLUDE_RINGTONES(stringId = exclude_ringtones),
+    FOLDERS_CHECKED(stringId = folders),
     GENRES_CHECKED(stringId = genres),
     PAUSE_IF_NOISY(stringId = pause_if_noisy),
+    PLAYBACK_WHEN_CLOSED(stringId = playback_when_paused),
     PLAYLISTS_CHECKED(stringId = playlists),
 }

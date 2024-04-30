@@ -1,26 +1,26 @@
 /*
  * This file is part of Satunes.
  *
- * Satunes is free software: you can redistribute it and/or modify it under
+ *  Satunes is free software: you can redistribute it and/or modify it under
  *  the terms of the GNU General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
+ *  either version 3 of the License, or (at your option) any later version.
  *
- * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
+ *  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ *  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *  See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License along with Satunes.
- * If not, see <https://www.gnu.org/licenses/>.
+ *  You should have received a copy of the GNU General Public License along with Satunes.
+ *  If not, see <https://www.gnu.org/licenses/>.
  *
- * **** INFORMATIONS ABOUT THE AUTHOR *****
- * The author of this file is Antoine Pirlot, the owner of this project.
- * You find this original project on github.
+ *  **** INFORMATIONS ABOUT THE AUTHOR *****
+ *  The author of this file is Antoine Pirlot, the owner of this project.
+ *  You find this original project on github.
  *
- * My github link is: https://github.com/antoinepirlot
- * This current project's link is: https://github.com/antoinepirlot/MP3-Player
+ *  My github link is: https://github.com/antoinepirlot
+ *  This current project's link is: https://github.com/antoinepirlot/Satunes
  *
- * You can contact me via my email: pirlot.antoine@outlook.com
- * PS: I don't answer quickly.
+ *  You can contact me via my email: pirlot.antoine@outlook.com
+ *  PS: I don't answer quickly.
  */
 
 plugins {
@@ -41,10 +41,10 @@ android {
 
     defaultConfig {
         applicationId = nameSpace
-        minSdk = 28
+        minSdk = 22
         targetSdk = 34
-        versionCode = 22
-        versionName = "0.9.2-beta"
+        versionCode = 23
+        versionName = "0.10.0-beta"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -86,15 +86,17 @@ dependencies {
     /**
      * Base
      */
+    val composeUiVersion = "1.6.6"
     implementation("androidx.core:core-ktx:1.13.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
     implementation("androidx.activity:activity-compose:1.9.0")
     implementation("androidx.fragment:fragment-ktx:1.6.2")
     implementation(platform("androidx.compose:compose-bom:2024.04.01"))
-    implementation("androidx.compose.ui:ui")
-    implementation("androidx.compose.ui:ui-graphics")
-    implementation("androidx.compose.ui:ui-tooling-preview")
+    implementation("androidx.compose.ui:ui:$composeUiVersion")
+    implementation("androidx.compose.ui:ui-graphics:$composeUiVersion")
+    implementation("androidx.compose.ui:ui-tooling-preview:$composeUiVersion")
     implementation("androidx.compose.material3:material3:1.2.1")
+    implementation("com.google.accompanist:accompanist-permissions:0.31.0-alpha")
 
     //Test
     testImplementation("junit:junit:4.13.2")

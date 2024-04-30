@@ -45,12 +45,15 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.res.ResourcesCompat
+import androidx.core.graphics.drawable.toBitmap
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Folder
@@ -60,6 +63,7 @@ import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
 import io.github.antoinepirlot.satunes.database.models.tables.MusicDB
 import io.github.antoinepirlot.satunes.database.services.DatabaseManager
+import io.github.antoinepirlot.satunes.icons.R
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.services.MediaSelectionManager
 import io.github.antoinepirlot.satunes.ui.components.dialog.MusicOptionsDialog
@@ -89,7 +93,7 @@ fun MediaCard(
         } else if (media is PlaylistWithMusics) {
             media.playlist.title
         } else if (media is MusicDB) {
-            media.music.title
+            media.music!!.title
         } else {
             media.title
         }
@@ -149,14 +153,24 @@ fun MediaCard(
                             contentDescription = "Media Artwork"
                         )
                     } else {
-                        val mediaIcon: SatunesIcons = getRightIconAndDescription(media = media)
-                        Icon(
-                            modifier = Modifier
-                                .size(30.dp)
-                                .align(Alignment.Center),
-                            imageVector = mediaIcon.imageVector,
-                            contentDescription = mediaIcon.description
-                        )
+                        if (media is Music || media is Album) {
+                            //Use it will prevent slow devices showing icon instead of artwork
+                            val emptyArtwork: ImageBitmap = ResourcesCompat.getDrawable(
+                                LocalContext.current.resources,
+                                R.mipmap.empty_album_artwork_foreground,
+                                null
+                            )?.toBitmap()!!.asImageBitmap()
+                            Image(bitmap = emptyArtwork, contentDescription = "Empty Album")
+                        } else {
+                            val mediaIcon: SatunesIcons = getRightIconAndDescription(media = media)
+                            Icon(
+                                modifier = Modifier
+                                    .size(30.dp)
+                                    .align(Alignment.Center),
+                                imageVector = mediaIcon.imageVector,
+                                contentDescription = mediaIcon.description
+                            )
+                        }
                     }
                 }
             }

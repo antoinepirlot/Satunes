@@ -25,16 +25,21 @@
 
 package io.github.antoinepirlot.satunes.router
 
+import android.content.Context
 import android.net.Uri.encode
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Folder
@@ -42,6 +47,7 @@ import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
 import io.github.antoinepirlot.satunes.database.services.DataLoader
 import io.github.antoinepirlot.satunes.database.services.DataManager
+import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.views.LoadingView
 import io.github.antoinepirlot.satunes.ui.views.PlayBackView
@@ -57,7 +63,10 @@ import io.github.antoinepirlot.satunes.ui.views.music.AllMusicsListView
 import io.github.antoinepirlot.satunes.ui.views.playlist.PlaylistListView
 import io.github.antoinepirlot.satunes.ui.views.playlist.PlaylistView
 import io.github.antoinepirlot.satunes.ui.views.settings.BottomNavigationBarSettingsView
+import io.github.antoinepirlot.satunes.ui.views.settings.ExclusionSettingsView
+import io.github.antoinepirlot.satunes.ui.views.settings.PermissionsSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.PlaybackSettingsView
+import io.github.antoinepirlot.satunes.ui.views.settings.PlaylistsSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.SettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.UpdatesView
 
@@ -70,7 +79,17 @@ internal fun Router(
     modifier: Modifier = Modifier,
     navController: NavHostController,
 ) {
+    val context: Context = LocalContext.current
     val isLoading: MutableState<Boolean> = remember { DataLoader.isLoading }
+    val isLoaded: Boolean by remember { DataLoader.isLoaded }
+    val isAudioAllowed: MutableState<Boolean> =
+        rememberSaveable { mutableStateOf(MainActivity.instance.isAudioAllowed()) }
+
+    if (isAudioAllowed.value) {
+        LaunchedEffect(key1 = Unit) {
+            PlaybackController.initInstance(context = context)
+        }
+    }
 
     NavHost(
         modifier = modifier,
@@ -80,7 +99,11 @@ internal fun Router(
 
         composable(Destination.FOLDERS.link) {
             // /!\ This route prevent back gesture to exit the app
-            if (isLoading.value) {
+            if (!isAudioAllowed.value) {
+                navController.navigate(Destination.SETTINGS.link)
+                navController.navigate(Destination.PERMISSIONS_SETTINGS.link)
+            }
+            if (isLoading.value || !isLoaded) {
                 LoadingView()
             } else {
                 RootFolderView(navController = navController)
@@ -88,7 +111,7 @@ internal fun Router(
         }
 
         composable("${Destination.FOLDERS.link}/{id}") {
-            if (isLoading.value) {
+            if (isLoading.value || !isLoaded) {
                 LoadingView()
             } else {
                 val folderId = it.arguments!!.getString("id")!!.toLong()
@@ -98,7 +121,7 @@ internal fun Router(
         }
 
         composable(Destination.ARTISTS.link) {
-            if (isLoading.value) {
+            if (isLoading.value || !isLoaded) {
                 LoadingView()
             } else {
                 AllArtistsListView(navController = navController)
@@ -106,7 +129,7 @@ internal fun Router(
         }
 
         composable("${Destination.ARTISTS.link}/{name}") {
-            if (isLoading.value) {
+            if (isLoading.value || !isLoaded) {
                 LoadingView()
             } else {
                 val artistName: String = encode(it.arguments!!.getString("name")!!)
@@ -116,7 +139,7 @@ internal fun Router(
         }
 
         composable(Destination.ALBUMS.link) {
-            if (isLoading.value) {
+            if (isLoading.value || !isLoaded) {
                 LoadingView()
             } else {
                 AllAlbumsListView(navController = navController)
@@ -124,7 +147,7 @@ internal fun Router(
         }
 
         composable("${Destination.ALBUMS.link}/{id}") {
-            if (isLoading.value) {
+            if (isLoading.value || !isLoaded) {
                 LoadingView()
             } else {
                 val albumId: Long = it.arguments!!.getString("id")!!.toLong()
@@ -134,7 +157,7 @@ internal fun Router(
         }
 
         composable(Destination.GENRES.link) {
-            if (isLoading.value) {
+            if (isLoading.value || !isLoaded) {
                 LoadingView()
             } else {
                 AllGenresListView(navController = navController)
@@ -142,7 +165,7 @@ internal fun Router(
         }
 
         composable("${Destination.GENRES.link}/{name}") {
-            if (isLoading.value) {
+            if (isLoading.value || !isLoaded) {
                 LoadingView()
             } else {
                 val genreName: String = encode(it.arguments!!.getString("name")!!)
@@ -152,7 +175,7 @@ internal fun Router(
         }
 
         composable(Destination.PLAYLISTS.link) {
-            if (isLoading.value) {
+            if (isLoading.value || !isLoaded) {
                 LoadingView()
             } else {
                 PlaylistListView(navController = navController)
@@ -160,7 +183,7 @@ internal fun Router(
         }
 
         composable("${Destination.PLAYLISTS.link}/{id}") {
-            if (isLoading.value) {
+            if (isLoading.value || !isLoaded) {
                 LoadingView()
             } else {
                 val playlistId: Long = it.arguments!!.getString("id")!!.toLong()
@@ -172,7 +195,7 @@ internal fun Router(
         }
 
         composable(Destination.MUSICS.link) {
-            if (isLoading.value) {
+            if (isLoading.value || !isLoaded) {
                 LoadingView()
             } else {
                 AllMusicsListView(navController = navController)
@@ -180,7 +203,7 @@ internal fun Router(
         }
 
         composable(Destination.PLAYBACK.link) {
-            if (isLoading.value) {
+            if (isLoading.value || !isLoaded) {
                 LoadingView()
             } else {
                 PlayBackView(
@@ -210,6 +233,18 @@ internal fun Router(
 
         composable(Destination.UPDATES.link) {
             UpdatesView()
+        }
+
+        composable(Destination.EXCLUSION.link) {
+            ExclusionSettingsView()
+        }
+
+        composable(Destination.PLAYLISTS_SETTINGS.link) {
+            PlaylistsSettingsView()
+        }
+
+        composable(Destination.PERMISSIONS_SETTINGS.link) {
+            PermissionsSettingsView(isAudioAllowed = isAudioAllowed)
         }
     }
 }

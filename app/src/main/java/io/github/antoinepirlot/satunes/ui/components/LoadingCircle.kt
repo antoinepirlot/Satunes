@@ -25,7 +25,7 @@
 
 package io.github.antoinepirlot.satunes.ui.components
 
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -42,7 +42,7 @@ fun LoadingCircle(
     modifier: Modifier = Modifier
 ) {
     CircularProgressIndicator(
-        modifier = modifier.width(64.dp),
+        modifier = modifier.size(64.dp),
         color = MaterialTheme.colorScheme.secondary,
         trackColor = MaterialTheme.colorScheme.surfaceVariant
     )

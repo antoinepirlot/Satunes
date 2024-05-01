@@ -32,6 +32,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -39,13 +40,22 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.lifecycleScope
+import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.ui.utils.getMillisToTimeText
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 /**
  * @author Antoine Pirlot on 23/02/24
  */
+
+private var isUpdatingCurrentPosition: Boolean = false
 
 @Composable
 fun MusicPositionBar(
@@ -83,6 +93,46 @@ fun MusicPositionBar(
         }
     }
 
+    val isPlaying: Boolean by rememberSaveable { playbackController.isPlaying }
+    if (isPlaying) {
+        val lifeCycleOwner: LifecycleOwner = LocalLifecycleOwner.current
+        LaunchedEffect(lifeCycleOwner) {
+            lifeCycleOwner.lifecycleScope.launch {
+                updateCurrentPosition(lifeCycleOwner)
+            }
+        }
+    }
+}
+
+/**
+ * Launch a coroutine where the currentPositionProgression is updated every 1 second.
+ * If this function is already running, just return by using isUpdatingPosition.
+ */
+private suspend fun updateCurrentPosition(lifecycleOwner: LifecycleOwner) {
+    val playbackController: PlaybackController = PlaybackController.getInstance()
+    var state: Lifecycle.State = lifecycleOwner.lifecycle.currentState
+    println(state)
+    while (playbackController.isPlaying.value && state != Lifecycle.State.DESTROYED && state != Lifecycle.State.CREATED) {
+        isUpdatingCurrentPosition = true
+        state = lifecycleOwner.lifecycle.currentState
+        println(state)
+        val maxPosition: Long = playbackController.musicPlaying.value!!.duration
+        val newPosition: Long = playbackController.getCurrentPosition()
+
+        playbackController.currentPositionProgression.floatValue =
+            newPosition.toFloat() / maxPosition.toFloat()
+        val timeMillis: Long = (SettingsManager.barSpeed.value * 1000f).toLong()
+        isUpdatingCurrentPosition = false
+        delay(timeMillis) // todo Wait one second to avoid refreshing all the time
+        if (isUpdatingCurrentPosition) {
+            // Be sure the play/pause button has not been activated between delay and this
+            return
+        }
+    }
+    if (playbackController.isEnded) {
+        // It means the music has reached the end of playlist and the music is finished
+        playbackController.currentPositionProgression.floatValue = 1f
+    }
 }
 
 @Composable

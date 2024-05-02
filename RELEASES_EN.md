@@ -3,6 +3,14 @@ Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
 ## 0.10.0 (Android 5.1.1 Lollipop and later)
 
+### 0.10.1-beta
+
+Improvements, Optimizations and Troubleshooting:
+
+* Songs are sorted alphabetically in folders, this avoids wrong playing order.
+* Optimization of performance and battery when playing. The progress bar is refreshed only when the
+  relevant view is open.
+
 ### 0.10.0-beta
 
 The app is now available for Android Lollipop (5.1.1) and newer devices.

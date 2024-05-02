@@ -1,26 +1,26 @@
 /*
  * This file is part of Satunes.
  *
- *  Satunes is free software: you can redistribute it and/or modify it under
+ * Satunes is free software: you can redistribute it and/or modify it under
  *  the terms of the GNU General Public License as published by the Free Software Foundation,
- *  either version 3 of the License, or (at your option) any later version.
+ * either version 3 of the License, or (at your option) any later version.
  *
- *  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- *  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *  See the GNU General Public License for more details.
+ * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License along with Satunes.
- *  If not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along with Satunes.
+ * If not, see <https://www.gnu.org/licenses/>.
  *
- *  **** INFORMATIONS ABOUT THE AUTHOR *****
- *  The author of this file is Antoine Pirlot, the owner of this project.
- *  You find this original project on github.
+ * **** INFORMATIONS ABOUT THE AUTHOR *****
+ * The author of this file is Antoine Pirlot, the owner of this project.
+ * You find this original project on github.
  *
- *  My github link is: https://github.com/antoinepirlot
- *  This current project's link is: https://github.com/antoinepirlot/Satunes
+ * My github link is: https://github.com/antoinepirlot
+ * This current project's link is: https://github.com/antoinepirlot/MP3-Player
  *
- *  You can contact me via my email: pirlot.antoine@outlook.com
- *  PS: I don't answer quickly.
+ * You can contact me via my email: pirlot.antoine@outlook.com
+ * PS: I don't answer quickly.
  */
 
 
@@ -31,11 +31,6 @@ import androidx.annotation.OptIn
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
-import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 /**
  * @author Antoine Pirlot on 23/03/2024
@@ -61,7 +56,6 @@ open class PlaybackListener : Player.Listener {
 
         playbackController.isPlaying.value = isPlaying
         playbackController.isEnded = PlaybackController.DEFAULT_IS_ENDED
-        updateCurrentPosition()
     }
 
     /**
@@ -123,37 +117,5 @@ open class PlaybackListener : Player.Listener {
         val playbackController: PlaybackController = PlaybackController.getInstance()
         playbackController.hasNext.value =
             playbackController.musicPlaying.value != playbackController.playlist.musicList.last()
-    }
-
-    /**
-     * Launch a coroutine where the currentPositionProgression is updated every 1 second.
-     * If this function is already running, just return by using isUpdatingPosition.
-     */
-    private fun updateCurrentPosition() {
-        val playbackController: PlaybackController = PlaybackController.getInstance()
-        if (playbackController.isUpdatingPosition || playbackController.musicPlaying.value == null) {
-            return
-        }
-
-        CoroutineScope(Dispatchers.Main).launch {
-            playbackController.isUpdatingPosition = !PlaybackController.DEFAULT_IS_UPDATING_POSITION
-
-            while (playbackController.isPlaying.value) {
-                val maxPosition: Long = playbackController.musicPlaying.value!!.duration
-                val newPosition: Long = playbackController.mediaController.currentPosition
-
-                playbackController.currentPositionProgression.floatValue =
-                    newPosition.toFloat() / maxPosition.toFloat()
-                val timeMillis: Long = (SettingsManager.barSpeed.value * 1000f).toLong()
-                delay(timeMillis) // Wait one second to avoid refreshing all the time
-            }
-
-            if (playbackController.isEnded) {
-                // It means the music has reached the end of playlist and the music is finished
-                playbackController.currentPositionProgression.floatValue = 1f
-            }
-
-            playbackController.isUpdatingPosition = PlaybackController.DEFAULT_IS_UPDATING_POSITION
-        }
     }
 }

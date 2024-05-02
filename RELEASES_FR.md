@@ -3,6 +3,15 @@ You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
 ## 0.10 (Android 5.1.1 Lollipop et ultérieur)
 
+### 0.10.1-beta
+
+Améliorations, Optimisations et Résolutions de problèmes:
+
+* Les morceaux sont triés par ordre alphabétique dans les dossiers, cela évite le mauvais ordre de
+  lecture.
+* Optimization des performances et de la batterie lors de la lecture. Le rafraichissement de la
+  barre de progression se fait uniquement lorsque la vue concernée est ouverte.
+
 ### 0.10.0-beta
 
 L'application est maintenant disponible pour les appareils Android Lollipop (5.1.1) et plus récents.

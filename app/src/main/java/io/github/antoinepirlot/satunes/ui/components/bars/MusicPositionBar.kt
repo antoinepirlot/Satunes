@@ -47,6 +47,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
+import io.github.antoinepirlot.satunes.services.ProgressBarLifecycleCallbacks
 import io.github.antoinepirlot.satunes.ui.utils.getMillisToTimeText
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -95,42 +96,7 @@ fun MusicPositionBar(
 
     val isPlaying: Boolean by rememberSaveable { playbackController.isPlaying }
     if (isPlaying) {
-        val lifeCycleOwner: LifecycleOwner = LocalLifecycleOwner.current
-        LaunchedEffect(lifeCycleOwner.lifecycle.currentState) {
-            val state = lifeCycleOwner.lifecycle.currentState
-            if (state != Lifecycle.State.DESTROYED && state != Lifecycle.State.CREATED) {
-                lifeCycleOwner.lifecycleScope.launch {
-                    updateCurrentPosition(lifeCycleOwner)
-                }
-            }
-        }
-    }
-}
-
-/**
- * Launch a coroutine where the currentPositionProgression is updated every 1 second.
- * If this function is already running, just return by using isUpdatingPosition.
- */
-private suspend fun updateCurrentPosition(lifecycleOwner: LifecycleOwner) {
-    val playbackController: PlaybackController = PlaybackController.getInstance()
-    while (playbackController.isPlaying.value) {
-        isUpdatingCurrentPosition = true
-        val maxPosition: Long = playbackController.musicPlaying.value!!.duration
-        val newPosition: Long = playbackController.getCurrentPosition()
-
-        playbackController.currentPositionProgression.floatValue =
-            newPosition.toFloat() / maxPosition.toFloat()
-        val timeMillis: Long = (SettingsManager.barSpeed.value * 1000f).toLong()
-        isUpdatingCurrentPosition = false
-        delay(timeMillis) // todo Wait one second to avoid refreshing all the time
-        if (isUpdatingCurrentPosition) {
-            // Be sure the play/pause button has not been activated between delay and this
-            return
-        }
-    }
-    if (playbackController.isEnded) {
-        // It means the music has reached the end of playlist and the music is finished
-        playbackController.currentPositionProgression.floatValue = 1f
+        LocalLifecycleOwner.current.lifecycle.addObserver(ProgressBarLifecycleCallbacks)
     }
 }
 

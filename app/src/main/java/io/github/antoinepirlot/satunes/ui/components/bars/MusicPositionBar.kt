@@ -96,9 +96,12 @@ fun MusicPositionBar(
     val isPlaying: Boolean by rememberSaveable { playbackController.isPlaying }
     if (isPlaying) {
         val lifeCycleOwner: LifecycleOwner = LocalLifecycleOwner.current
-        LaunchedEffect(lifeCycleOwner) {
-            lifeCycleOwner.lifecycleScope.launch {
-                updateCurrentPosition(lifeCycleOwner)
+        LaunchedEffect(lifeCycleOwner.lifecycle.currentState) {
+            val state = lifeCycleOwner.lifecycle.currentState
+            if (state != Lifecycle.State.DESTROYED && state != Lifecycle.State.CREATED) {
+                lifeCycleOwner.lifecycleScope.launch {
+                    updateCurrentPosition(lifeCycleOwner)
+                }
             }
         }
     }
@@ -110,12 +113,8 @@ fun MusicPositionBar(
  */
 private suspend fun updateCurrentPosition(lifecycleOwner: LifecycleOwner) {
     val playbackController: PlaybackController = PlaybackController.getInstance()
-    var state: Lifecycle.State = lifecycleOwner.lifecycle.currentState
-    println(state)
-    while (playbackController.isPlaying.value && state != Lifecycle.State.DESTROYED && state != Lifecycle.State.CREATED) {
+    while (playbackController.isPlaying.value) {
         isUpdatingCurrentPosition = true
-        state = lifecycleOwner.lifecycle.currentState
-        println(state)
         val maxPosition: Long = playbackController.musicPlaying.value!!.duration
         val newPosition: Long = playbackController.getCurrentPosition()
 

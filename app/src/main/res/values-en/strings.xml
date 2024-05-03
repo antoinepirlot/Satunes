@@ -67,5 +67,4 @@
     <string name="read_audio_permission">Music and audio</string>
     <string name="ask_permission">Allow</string>
     <string name="read_external_storage_permission">Lire le stockage</string>
-    <string name="permission_needed_text">Without this permission the app can\'t work.\nNow you need to allow it from system settings.</string>
 </resources>

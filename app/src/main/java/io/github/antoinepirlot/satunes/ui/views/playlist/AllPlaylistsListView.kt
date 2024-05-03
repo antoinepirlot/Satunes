@@ -26,7 +26,6 @@
 package io.github.antoinepirlot.satunes.ui.views.playlist
 
 import android.content.Context
-import android.net.Uri.encode
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -91,7 +90,7 @@ fun PlaylistListView(
             openAlertDialog -> {
                 PlaylistCreationForm(
                     onConfirm = { playlistTitle: String ->
-                        val playlist = Playlist(id = 0, title = encode(playlistTitle))
+                        val playlist = Playlist(id = 0, title = playlistTitle)
                         DatabaseManager(context = context).insertOne(
                             context = context,
                             playlist = playlist

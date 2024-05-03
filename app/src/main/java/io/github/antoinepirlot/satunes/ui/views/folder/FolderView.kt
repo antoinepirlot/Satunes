@@ -25,7 +25,6 @@
 
 package io.github.antoinepirlot.satunes.ui.views.folder
 
-import android.net.Uri.decode
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -91,7 +90,7 @@ fun FolderView(
             allPath[0] = getRootFolderName(title = allPath[0])
             var path = ""
             for (s: String in allPath) {
-                path += "/${decode(s)}"
+                path += "/${s}"
             }
             Title(text = path, fontSize = 20.sp, maxLines = 2)
         }

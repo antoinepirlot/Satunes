@@ -25,7 +25,6 @@
 
 package io.github.antoinepirlot.satunes.ui.components.buttons
 
-import android.net.Uri.decode
 import androidx.compose.foundation.clickable
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
@@ -48,7 +47,7 @@ fun ClickableListItem(
             onClick()
         },
         headlineContent = {
-            Text(text = decode(text))
+            Text(text = text)
         }
     )
 }

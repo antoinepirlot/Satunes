@@ -63,6 +63,7 @@ android {
 
         debug {
             applicationIdSuffix = ".debug"
+            resValue(type = "string", name = "app_name", value = "${rootProject.name} (debug)")
         }
     }
     compileOptions {

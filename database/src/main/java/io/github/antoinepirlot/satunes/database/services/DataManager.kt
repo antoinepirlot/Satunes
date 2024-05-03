@@ -125,7 +125,7 @@ object DataManager {
         }
         //You can have multiple same artist's name but different id, but it's the same artist.
         val artistToReturn: Artist = artistMap[artist.title]!!
-        if (artistMapById.contains(artistToReturn.id)) {
+        if (!artistMapById.containsKey(artistToReturn.id)) {
             artistMapById[artistToReturn.id] = artist
         }
         return artistToReturn

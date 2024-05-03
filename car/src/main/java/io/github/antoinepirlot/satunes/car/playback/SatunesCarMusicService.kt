@@ -115,46 +115,44 @@ class SatunesCarMusicService : MediaBrowserServiceCompat() {
         when (parentId) {
             ScreenPages.ROOT.id -> {
                 routeDeque.resetRouteDeque()
-                result.sendResult(getHomeScreenBars())
-                return
+                children.addAll(getHomeScreenBars())
             }
 
             ScreenPages.ALL_FOLDERS.id -> {
-                children.addAll(getAllMediaItem(mediaList = DataManager.folderMap.values))
                 routeDeque.resetRouteDeque()
                 routeDeque.addLast(parentId)
+                children.addAll(getAllMediaItem(mediaList = DataManager.folderMap.values))
             }
 
             ScreenPages.ALL_ARTISTS.id -> {
-                children.addAll(getAllMediaItem(mediaList = DataManager.artistMap.values))
                 routeDeque.resetRouteDeque()
                 routeDeque.addLast(parentId)
+                children.addAll(getAllMediaItem(mediaList = DataManager.artistMap.values))
             }
 
             ScreenPages.ALL_ALBUMS.id -> {
-                children.addAll(getAllMediaItem(mediaList = DataManager.albumSet))
                 routeDeque.resetRouteDeque()
                 routeDeque.addLast(parentId)
-
+                children.addAll(getAllMediaItem(mediaList = DataManager.albumSet))
             }
 
             ScreenPages.ALL_GENRES.id -> {
-                children.addAll(getAllMediaItem(mediaList = DataManager.genreMap.values))
                 routeDeque.resetRouteDeque()
                 routeDeque.addLast(parentId)
+                children.addAll(getAllMediaItem(mediaList = DataManager.genreMap.values))
             }
 
             ScreenPages.ALL_MUSICS.id -> {
-                children.add(getShuffleButton())
-                children.addAll(getAllMediaItem(mediaList = DataManager.musicMediaItemSortedMap.keys))
                 routeDeque.resetRouteDeque()
                 routeDeque.addLast(parentId)
+                children.add(getShuffleButton())
+                children.addAll(getAllMediaItem(mediaList = DataManager.musicMediaItemSortedMap.keys))
             }
 
             ScreenPages.ALL_PLAYLISTS.id -> {
-                children.addAll(getAllMediaItem(mediaList = DataManager.playlistWithMusicsMap.values))
                 routeDeque.resetRouteDeque()
                 routeDeque.addLast(parentId)
+                children.addAll(getAllMediaItem(mediaList = DataManager.playlistWithMusicsMap.values))
             }
 
             else -> {
@@ -163,8 +161,8 @@ class SatunesCarMusicService : MediaBrowserServiceCompat() {
                     result.sendResult(null)
                     return
                 }
-                children.addAll(getAllMediaItem(mediaId = parentId.toLong()))
                 routeDeque.addLast(parentId)
+                children.addAll(getAllMediaItem(mediaId = parentId.toLong()))
             }
         }
         result.sendResult(children)

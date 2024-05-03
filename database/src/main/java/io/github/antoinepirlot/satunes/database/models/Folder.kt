@@ -29,7 +29,6 @@ import android.graphics.Bitmap
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.media3.common.MediaItem
-import androidx.room.Ignore
 import io.github.antoinepirlot.satunes.database.services.DataManager
 import java.util.SortedMap
 
@@ -41,13 +40,14 @@ data class Folder(
     override var id: Long = nextId,
     override var title: String,
     var parentFolder: Folder? = null,
-    private var subFolderMap: SortedMap<Long, Folder> = sortedMapOf(),
-    override var musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf(),
 ) : Media {
     override var artwork: Bitmap? = null
 
-    @Ignore
     val musicMediaItemSortedMapUpdate: MutableState<Boolean> = mutableStateOf(false)
+    override val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
+
+    val subFolderMap: SortedMap<String, Folder> = sortedMapOf()
+
 
     val absolutePath: String = if (parentFolder == null) {
         "/$title"
@@ -68,7 +68,7 @@ data class Folder(
      *
      * @return a list of subfolder and each subfolder is a Folder object
      */
-    fun getSubFolderList(): SortedMap<Long, Folder> {
+    fun getSubFolderList(): SortedMap<String, Folder> {
         return this.subFolderMap
     }
 
@@ -109,7 +109,7 @@ data class Folder(
             if (subFolder == null) {
                 subFolder = Folder(title = folderName, parentFolder = parentFolder)
                 DataManager.addFolder(folder = subFolder)
-                parentFolder.subFolderMap[subFolder.id] = subFolder
+                parentFolder.subFolderMap[subFolder.title] = subFolder
             }
 
             parentFolder = subFolder

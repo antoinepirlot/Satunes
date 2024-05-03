@@ -309,7 +309,7 @@ object DataLoader {
 
         var rootFolder: Folder? = null
 
-        DataManager.rootFolderMap.values.forEach { folder: Folder ->
+        DataManager.rootFolderMapById.values.forEach { folder: Folder ->
             if (folder.title == splitPath[0]) {
                 rootFolder = folder
                 return@forEach

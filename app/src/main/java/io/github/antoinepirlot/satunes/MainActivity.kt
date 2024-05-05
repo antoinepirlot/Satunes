@@ -122,8 +122,9 @@ class MainActivity : ComponentActivity() {
             addCategory(Intent.CATEGORY_OPENABLE)
             type = "application/json"
             putExtra(Intent.EXTRA_TITLE, defaultFileName)
-            //TODO
-            putExtra(DocumentsContract.EXTRA_INITIAL_URI, DEFAULT_URI)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                putExtra(DocumentsContract.EXTRA_INITIAL_URI, DEFAULT_URI)
+            }
         }
         startActivityForResult(intent, EXPORT_PLAYLIST_CODE)
     }
@@ -132,8 +133,9 @@ class MainActivity : ComponentActivity() {
         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
             addCategory(Intent.CATEGORY_OPENABLE)
             type = "application/json"
-            //TODO
-            putExtra(DocumentsContract.EXTRA_INITIAL_URI, DEFAULT_URI)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                putExtra(DocumentsContract.EXTRA_INITIAL_URI, DEFAULT_URI)
+            }
         }
         startActivityForResult(intent, IMPORT_PLAYLIST_CODE)
     }

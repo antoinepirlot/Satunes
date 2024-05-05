@@ -28,13 +28,13 @@ package io.github.antoinepirlot.satunes.playback.services
 import android.content.Intent
 import androidx.annotation.OptIn
 import androidx.media3.common.AudioAttributes
-import androidx.media3.common.Player
 import androidx.media3.common.TrackSelectionParameters.AudioOffloadPreferences
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.session.MediaSession
 import androidx.media3.session.MediaSessionService
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
+import kotlin.system.exitProcess
 
 /**
  * @author Antoine Pirlot on 31/01/24
@@ -70,24 +70,27 @@ class PlaybackService : MediaSessionService() {
     }
 
     override fun onTaskRemoved(rootIntent: Intent?) {
+        super.onTaskRemoved(rootIntent)
         if (!SettingsManager.playbackWhenClosedChecked.value) {
-            val player: Player = mediaSession!!.player
-            player.stop()
-            player.release()
-            stopSelf()
-            super.onTaskRemoved(rootIntent)
+            onDestroy()
         }
     }
 
     override fun onDestroy() {
+        stopSelf()
         mediaSession?.run {
+            PlaybackController.getInstance().release()
             player.stop()
             player.release()
             release()
+            stopSelf()
             mediaSession = null
         }
-
         super.onDestroy()
+        //Use exit process as sometimes, when closing app from multi task with playback when closed
+        // is false, then the player is release but the UI is still in the old view, and causing issue
+        // with playback. Best way I found at this time
+        exitProcess(0)
     }
 
     override fun onGetSession(controllerInfo: MediaSession.ControllerInfo): MediaSession? {

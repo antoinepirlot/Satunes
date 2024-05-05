@@ -39,7 +39,6 @@ import androidx.activity.compose.setContent
 import androidx.annotation.OptIn
 import androidx.core.content.ContextCompat
 import androidx.media3.common.util.UnstableApi
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
 import io.github.antoinepirlot.satunes.database.services.DataCleanerManager
 import io.github.antoinepirlot.satunes.database.services.DatabaseManager
@@ -66,7 +65,6 @@ class MainActivity : ComponentActivity() {
             Uri.parse(Environment.getExternalStorageDirectory().path + '/' + Environment.DIRECTORY_DOCUMENTS)
     }
 
-    @kotlin.OptIn(ExperimentalPermissionsApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         instance = this
         setNotificationOnClick()

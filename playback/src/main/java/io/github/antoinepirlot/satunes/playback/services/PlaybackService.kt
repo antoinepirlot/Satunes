@@ -55,7 +55,7 @@ class PlaybackService : MediaSessionService() {
             .setAudioAttributes(AudioAttributes.DEFAULT, true)
             .build()
 
-        //TODO check if don't cause android auto issues
+        //TODO try by remove setIsGaplessSupportRequired and see if it also make issues on playback
         val audioOffloadPreferences = AudioOffloadPreferences.Builder()
             .setAudioOffloadMode(AudioOffloadPreferences.AUDIO_OFFLOAD_MODE_ENABLED)
             .setIsGaplessSupportRequired(true)

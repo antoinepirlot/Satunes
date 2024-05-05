@@ -28,6 +28,7 @@ package io.github.antoinepirlot.satunes.ui.views.folder
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -63,7 +64,7 @@ fun RootFolderView(
     val rootFolderMap: SortedMap<Folder, Folder> = remember { DataManager.rootFolderSortedMap }
 
     //Recompose if data changed
-    var mapChanged: Boolean by remember { DataManager.rootFolderMapUpdated }
+    var mapChanged: Boolean by rememberSaveable { DataManager.rootFolderMapUpdated }
     if (mapChanged) {
         mapChanged = false
     }

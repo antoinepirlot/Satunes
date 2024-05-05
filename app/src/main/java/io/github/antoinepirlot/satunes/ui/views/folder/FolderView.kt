@@ -29,6 +29,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -69,7 +70,7 @@ fun FolderView(
     }
 
     //Recompose if data changed
-    var mapChanged: Boolean by remember { folder.musicMediaItemSortedMapUpdate }
+    var mapChanged: Boolean by rememberSaveable { folder.musicMediaItemSortedMapUpdate }
     if (mapChanged) {
         mapChanged = false
     }

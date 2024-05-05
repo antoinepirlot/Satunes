@@ -35,7 +35,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -56,7 +55,7 @@ fun MusicPositionBar(
     modifier: Modifier = Modifier
 ) {
     val playbackController = PlaybackController.getInstance()
-    val musicPlaying by remember { playbackController.musicPlaying }
+    val musicPlaying by rememberSaveable { playbackController.musicPlaying }
     var newPositionPercentage by rememberSaveable { mutableFloatStateOf(0f) }
     var isUpdating by rememberSaveable { mutableStateOf(false) }
     val currentPositionPercentage by rememberSaveable { playbackController.currentPositionProgression }

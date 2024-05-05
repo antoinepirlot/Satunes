@@ -81,6 +81,7 @@ fun AlbumView(
     //
 
     MediaListView(
+        modifier = modifier,
         mediaList = musicMap.keys.toList(),
         openMedia = { clickedMedia: Media ->
             playbackController.loadMusic(

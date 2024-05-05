@@ -95,7 +95,7 @@ fun FolderView(
             }
             Title(text = path, fontSize = 20.sp, maxLines = 2)
         }
-        loadSubfolders(
+        loadSubFolders(
             subFolderMap = subFolderMap,
             folder = folder,
             folderMusicMediaItemSortedMap = folderMusicMediaItemSortedMap
@@ -127,7 +127,7 @@ fun FolderView(
     }
 }
 
-private fun loadSubfolders(
+private fun loadSubFolders(
     subFolderMap: SortedSet<Media>,
     folder: Folder,
     folderMusicMediaItemSortedMap: SortedMap<Music, MediaItem>

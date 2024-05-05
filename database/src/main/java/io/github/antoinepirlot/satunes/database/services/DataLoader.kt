@@ -78,7 +78,7 @@ object DataLoader {
     private const val UNKNOWN_GENRE = "<unknown>"
     private val EXTERNAL_STORAGE_PATH: File = Environment.getExternalStorageDirectory()
 
-    val projection = mutableListOf(
+    private val projection = mutableListOf(
         // AUDIO
         MediaStore.Audio.Media._ID,
         MediaStore.Audio.Media.DISPLAY_NAME,

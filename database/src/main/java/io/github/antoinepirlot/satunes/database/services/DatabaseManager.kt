@@ -70,9 +70,9 @@ class DatabaseManager(context: Context) {
 
     fun loadAllPlaylistsWithMusic() {
         CoroutineScope(Dispatchers.IO).launch {
-            var playlistsWithMusicsList: List<PlaylistWithMusics>? = null
             try {
-                playlistsWithMusicsList = playlistDao.getPlaylistsWithMusics()
+                val playlistsWithMusicsList: List<PlaylistWithMusics> =
+                    playlistDao.getPlaylistsWithMusics()
                 playlistsWithMusicsList.forEach { playlistWithMusics: PlaylistWithMusics ->
                     DataManager.addPlaylist(playlistWithMusics = playlistWithMusics)
                 }

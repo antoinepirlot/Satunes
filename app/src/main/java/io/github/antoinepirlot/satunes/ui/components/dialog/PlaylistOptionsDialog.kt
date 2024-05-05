@@ -25,16 +25,13 @@
 
 package io.github.antoinepirlot.satunes.ui.components.dialog
 
-import android.content.Context
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
@@ -46,8 +43,6 @@ import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
  * @author Antoine Pirlot on 01/04/2024
  */
 
-private val SPACER_SIZE = 10.dp
-
 @Composable
 fun PlaylistOptionsDialog(
     modifier: Modifier = Modifier,
@@ -55,7 +50,6 @@ fun PlaylistOptionsDialog(
     onRemovePlaylist: () -> Unit,
     onDismissRequest: () -> Unit,
 ) {
-    val context: Context = LocalContext.current
     AlertDialog(
         modifier = modifier,
         icon = {

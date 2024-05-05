@@ -81,6 +81,7 @@ fun GenreView(
     //
 
     MediaListView(
+        modifier = modifier,
         mediaList = musicMap.keys.toList(),
 
         openMedia = { clickedMedia: Media ->

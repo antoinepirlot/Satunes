@@ -89,14 +89,6 @@ private fun onClick(checked: MutableState<Boolean>, media: Media) {
     }
 }
 
-private fun checkPlaylist(checked: Boolean, playlist: PlaylistWithMusics) {
-
-}
-
-private fun checkMusic(checked: Boolean, music: Music) {
-
-}
-
 @Preview
 @Composable
 fun PlaylistSelectionCheckboxPreview() {

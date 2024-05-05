@@ -48,8 +48,6 @@ import io.github.antoinepirlot.satunes.ui.utils.getMillisToTimeText
  * @author Antoine Pirlot on 23/02/24
  */
 
-private var isUpdatingCurrentPosition: Boolean = false
-
 @Composable
 fun MusicPositionBar(
     modifier: Modifier = Modifier

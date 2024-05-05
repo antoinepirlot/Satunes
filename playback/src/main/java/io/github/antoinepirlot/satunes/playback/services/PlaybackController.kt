@@ -62,7 +62,6 @@ class PlaybackController private constructor(
 
     internal var musicPlayingIndex: Int = DEFAULT_MUSIC_PLAYING_INDEX
     var isEnded: Boolean = DEFAULT_IS_ENDED
-    internal var isUpdatingPosition: Boolean = DEFAULT_IS_UPDATING_POSITION
 
     // Mutable var are used in ui, it needs to be recomposed
     // I use mutable to avoid using function with multiples params like to add listener
@@ -90,7 +89,6 @@ class PlaybackController private constructor(
 
     companion object {
         internal const val DEFAULT_MUSIC_PLAYING_INDEX: Int = 0
-        internal const val DEFAULT_IS_UPDATING_POSITION: Boolean = false
         internal const val DEFAULT_IS_ENDED: Boolean = false
 
         const val DEFAULT_IS_PLAYING_VALUE: Boolean = false

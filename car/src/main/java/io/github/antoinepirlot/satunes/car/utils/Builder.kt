@@ -106,7 +106,7 @@ fun buildMediaItem(media: Media): MediaBrowserCompat.MediaItem {
     return buildMediaItem(
         id = if (media is PlaylistWithMusics) media.playlist.id.toString() else media.id.toString(),
         description = description,
-        subtitle = if (media is Music && media.artist != null) media.artist!!.title else null,
+        subtitle = if (media is Music) media.artist.title else null,
         title = if (media is PlaylistWithMusics) media.playlist.title else media.title,
         uri = if (media is Music) media.uri else null,
         icon = media.artwork,

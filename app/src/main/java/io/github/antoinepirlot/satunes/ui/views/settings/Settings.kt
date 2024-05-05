@@ -25,7 +25,6 @@
 
 package io.github.antoinepirlot.satunes.ui.views.settings
 
-import io.github.antoinepirlot.satunes.R.string.bar_speed
 import io.github.antoinepirlot.satunes.R.string.exclude_ringtones
 import io.github.antoinepirlot.satunes.R.string.pause_if_noisy
 import io.github.antoinepirlot.satunes.R.string.playback_when_paused
@@ -41,7 +40,6 @@ import io.github.antoinepirlot.satunes.database.R.string.playlists
 enum class Settings(val stringId: Int) {
     ALBUMS_CHECKED(stringId = albums),
     ARTISTS_CHECKED(stringId = artists),
-    BAR_SPEED(stringId = bar_speed),
     EXCLUDE_RINGTONES(stringId = exclude_ringtones),
     FOLDERS_CHECKED(stringId = folders),
     GENRES_CHECKED(stringId = genres),

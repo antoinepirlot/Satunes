@@ -35,6 +35,6 @@ import android.net.Uri
 
 fun openUrl(context: Context, url: String) {
     val uri: Uri = Uri.parse(url)
-    val intent: Intent = Intent(Intent.ACTION_VIEW, uri)
+    val intent = Intent(Intent.ACTION_VIEW, uri)
     context.startActivity(intent)
 }

@@ -60,6 +60,11 @@ android {
                 "proguard-rules.pro"
             )
         }
+
+        debug {
+            applicationIdSuffix = ".debug"
+            resValue(type = "string", name = "app_name", value = "${rootProject.name} (debug)")
+        }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8

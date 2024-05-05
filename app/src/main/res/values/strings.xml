@@ -70,5 +70,4 @@
     <string name="ask_permission">Autoriser</string>
     <string name="read_external_storage_permission">Lire le stockage</string>
     <string name="ok" translatable="false">OK</string>
-    <string name="permission_needed_text">Sans cette autorisation, l\'application ne peut pas fonctionner.\nMaintenant, vous devez l\'activer depuis les paramètre systèmes.</string>
 </resources>

@@ -89,7 +89,7 @@ fun MusicOptionsDialog(
                         remember { DataManager.playlistWithMusicsMap }
 
                     //Recompose if data changed
-                    var mapChanged: Boolean by remember { DataManager.playlistWithMusicsMapUpdated }
+                    var mapChanged: Boolean by rememberSaveable { DataManager.playlistWithMusicsMapUpdated }
                     if (mapChanged) {
                         mapChanged = false
                     }

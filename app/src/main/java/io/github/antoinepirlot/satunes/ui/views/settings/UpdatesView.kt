@@ -34,6 +34,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -63,7 +64,7 @@ fun UpdatesView(
 ) {
     val context: Context = LocalContext.current
     val currentVersion = getCurrentVersion(context = context)
-    val isCheckingUpdate: Boolean by remember { UpdateCheckManager.isCheckingUpdate }
+    val isCheckingUpdate: Boolean by rememberSaveable { UpdateCheckManager.isCheckingUpdate }
     val updateAvailable: UpdateAvailableStatus by remember { UpdateCheckManager.updateAvailableStatus }
     val scrollState: ScrollState = rememberScrollState()
 

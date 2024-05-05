@@ -39,7 +39,6 @@ import androidx.activity.compose.setContent
 import androidx.annotation.OptIn
 import androidx.core.content.ContextCompat
 import androidx.media3.common.util.UnstableApi
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
 import io.github.antoinepirlot.satunes.database.services.DataCleanerManager
 import io.github.antoinepirlot.satunes.database.services.DatabaseManager
@@ -66,7 +65,6 @@ class MainActivity : ComponentActivity() {
             Uri.parse(Environment.getExternalStorageDirectory().path + '/' + Environment.DIRECTORY_DOCUMENTS)
     }
 
-    @kotlin.OptIn(ExperimentalPermissionsApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         instance = this
         setNotificationOnClick()
@@ -124,7 +122,9 @@ class MainActivity : ComponentActivity() {
             addCategory(Intent.CATEGORY_OPENABLE)
             type = "application/json"
             putExtra(Intent.EXTRA_TITLE, defaultFileName)
-            putExtra(DocumentsContract.EXTRA_INITIAL_URI, DEFAULT_URI)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                putExtra(DocumentsContract.EXTRA_INITIAL_URI, DEFAULT_URI)
+            }
         }
         startActivityForResult(intent, EXPORT_PLAYLIST_CODE)
     }
@@ -133,7 +133,9 @@ class MainActivity : ComponentActivity() {
         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
             addCategory(Intent.CATEGORY_OPENABLE)
             type = "application/json"
-            putExtra(DocumentsContract.EXTRA_INITIAL_URI, DEFAULT_URI)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                putExtra(DocumentsContract.EXTRA_INITIAL_URI, DEFAULT_URI)
+            }
         }
         startActivityForResult(intent, IMPORT_PLAYLIST_CODE)
     }

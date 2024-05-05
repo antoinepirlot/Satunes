@@ -32,7 +32,7 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -71,17 +71,17 @@ fun SatunesBottomAppBar(
     val selectedMenuTitle: MutableState<MenuTitle> =
         // Update the tab by default if settings has changed
         if (SettingsManager.foldersChecked.value) {
-            rememberSaveable { mutableStateOf(MenuTitle.FOLDERS) }
+            remember { mutableStateOf(MenuTitle.FOLDERS) }
         } else if (SettingsManager.artistsChecked.value) {
-            rememberSaveable { mutableStateOf(MenuTitle.ARTISTS) }
+            remember { mutableStateOf(MenuTitle.ARTISTS) }
         } else if (SettingsManager.albumsChecked.value) {
-            rememberSaveable { mutableStateOf(MenuTitle.ALBUMS) }
+            remember { mutableStateOf(MenuTitle.ALBUMS) }
         } else if (SettingsManager.genresChecked.value) {
-            rememberSaveable { mutableStateOf(MenuTitle.GENRES) }
+            remember { mutableStateOf(MenuTitle.GENRES) }
         } else if (SettingsManager.playlistsChecked.value) {
-            rememberSaveable { mutableStateOf(MenuTitle.PLAYLISTS) }
+            remember { mutableStateOf(MenuTitle.PLAYLISTS) }
         } else {
-            rememberSaveable { mutableStateOf(MenuTitle.MUSICS) }
+            remember { mutableStateOf(MenuTitle.MUSICS) }
         }
     val hasMaxFiveItems: Boolean = menuTitleLists.size <= 5
 

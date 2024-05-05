@@ -25,14 +25,11 @@
 
 package io.github.antoinepirlot.satunes.ui.components.texts
 
-import android.net.Uri
-import android.net.Uri.decode
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 
 /**
@@ -49,7 +46,7 @@ fun Subtitle(
         modifier = modifier,
         color = Color.Gray,
         fontSize = 15.sp,
-        text = decode(text),
+        text = text,
         maxLines = maxLines,
         overflow = overflow
     )

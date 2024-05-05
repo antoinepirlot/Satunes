@@ -25,7 +25,6 @@
 
 package io.github.antoinepirlot.satunes.ui.views.settings
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -48,7 +47,6 @@ import io.github.antoinepirlot.satunes.ui.components.texts.Title
  * @author Antoine Pirlot on 10/04/2024
  */
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun AboutView(
     modifier: Modifier = Modifier

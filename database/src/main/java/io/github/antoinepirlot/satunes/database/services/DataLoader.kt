@@ -28,8 +28,6 @@ package io.github.antoinepirlot.satunes.database.services
 import android.content.Context
 import android.database.Cursor
 import android.net.Uri
-import android.net.Uri.decode
-import android.net.Uri.encode
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
@@ -80,7 +78,7 @@ object DataLoader {
     private const val UNKNOWN_GENRE = "<unknown>"
     private val EXTERNAL_STORAGE_PATH: File = Environment.getExternalStorageDirectory()
 
-    val projection = mutableListOf(
+    private val projection = mutableListOf(
         // AUDIO
         MediaStore.Audio.Media._ID,
         MediaStore.Audio.Media.DISPLAY_NAME,
@@ -206,7 +204,7 @@ object DataLoader {
             artist.addAlbum(album = album)
         }
 
-        val absolutePath: String = encode(cursor.getString(absolutePathColumnId!!))
+        val absolutePath: String = cursor.getString(absolutePathColumnId!!)
 
         //Load Genre
         val genre: Genre = loadGenre(context = context, cursor = cursor)
@@ -227,7 +225,7 @@ object DataLoader {
             )
         } catch (_: IllegalAccessError) {
             // No music found
-            if (album.musicSortedMap.isEmpty()) {
+            if (album.musicMediaItemSortedMap.isEmpty()) {
                 DataManager.removeAlbum(album = album)
             }
             if (artist.musicMediaItemSortedMap.isEmpty()) {
@@ -271,8 +269,8 @@ object DataLoader {
         if (duration < 0) {
             throw IllegalArgumentException("Duration is less than 0")
         }
-        val displayName: String = encode(cursor.getString(musicNameColumn!!))
-        var title: String = encode(cursor.getString(musicTitleColumn!!))
+        val displayName: String = cursor.getString(musicNameColumn!!)
+        var title: String = cursor.getString(musicTitleColumn!!)
         if (title.isBlank()) {
             title = displayName
         }
@@ -299,19 +297,19 @@ object DataLoader {
      */
     private fun loadFolder(absolutePath: String): Folder {
         val splitPath: MutableList<String> = mutableListOf()
-        val splitList: List<String> = decode(absolutePath).split("/")
+        val splitList: List<String> = absolutePath.split("/")
         for (index: Int in 0..<splitList.lastIndex) {
             //Don't create a folder for the file (no folder called music.mp3)
             //The last name is a file
             val folderName: String = splitList[index]
             if (folderName !in listOf("", "storage", "emulated")) {
-                splitPath.add(encode(folderName))
+                splitPath.add(folderName)
             }
         }
 
         var rootFolder: Folder? = null
 
-        DataManager.rootFolderMap.values.forEach { folder: Folder ->
+        DataManager.rootFolderMapById.values.forEach { folder: Folder ->
             if (folder.title == splitPath[0]) {
                 rootFolder = folder
                 return@forEach
@@ -332,26 +330,26 @@ object DataLoader {
     private fun loadArtist(context: Context, cursor: Cursor): Artist {
         // Get values of columns for a given artist.
         return try {
-            val name = encode(cursor.getString(artistNameColumn!!))
-            return if (decode(name) == UNKNOWN_ARTIST) {
+            val name = cursor.getString(artistNameColumn!!)
+            return if (name == UNKNOWN_ARTIST) {
                 // Assign the Unknown Artist
-                DataManager.getArtist(encode(context.getString(R.string.unknown_artist)))
+                DataManager.getArtist(context.getString(R.string.unknown_artist))
             } else {
                 DataManager.addArtist(artist = Artist(title = name))
             }
         } catch (_: NullPointerException) {
-            val newArtist = Artist(title = encode(context.getString(R.string.unknown_artist)))
+            val newArtist = Artist(title = context.getString(R.string.unknown_artist))
             DataManager.addArtist(artist = newArtist)
         }
     }
 
     private fun loadAlbum(context: Context, cursor: Cursor, artist: Artist?): Album {
         return try {
-            val name = encode(cursor.getString(albumNameColumn!!))
-            return if (decode(name) == UNKNOWN_ALBUM) {
+            val name = cursor.getString(albumNameColumn!!)
+            return if (name == UNKNOWN_ALBUM) {
                 // Assign the Unknown Album
                 val album: Album =
-                    DataManager.getAlbum(encode(context.getString(R.string.unknown_album)))
+                    DataManager.getAlbum(context.getString(R.string.unknown_album))
                 if (album.artist != artist) {
                     throw NoSuchElementException()
                 }
@@ -363,7 +361,7 @@ object DataLoader {
             }
         } catch (_: NoSuchElementException) {
             val newAlbum = Album(
-                title = encode(context.getString(R.string.unknown_album)),
+                title = context.getString(R.string.unknown_album),
                 artist = artist
             )
             DataManager.addAlbum(album = newAlbum)
@@ -375,19 +373,19 @@ object DataLoader {
     private fun loadGenre(context: Context, cursor: Cursor): Genre {
         return try {
             val name: String = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                encode(cursor.getString(genreNameColumn!!))
+                cursor.getString(genreNameColumn!!)
             } else {
                 getGenreNameForAndroidQAndLess(context = context, cursor = cursor)
             }
-            return if (decode(name) == UNKNOWN_GENRE) {
+            return if (name == UNKNOWN_GENRE) {
                 // Assign the Unknown Genre
-                DataManager.getGenre(encode(context.getString(R.string.unknown_genre)))
+                DataManager.getGenre(context.getString(R.string.unknown_genre))
 
             } else {
                 DataManager.addGenre(genre = Genre(title = name))
             }
         } catch (_: NullPointerException) {
-            val newGenre = Genre(title = encode(context.getString(R.string.unknown_genre)))
+            val newGenre = Genre(title = context.getString(R.string.unknown_genre))
             DataManager.addGenre(genre = newGenre)
         }
     }
@@ -407,6 +405,6 @@ object DataLoader {
                 UNKNOWN_GENRE
             }
         genreCursor.close()
-        return encode(genreName)
+        return genreName
     }
 }

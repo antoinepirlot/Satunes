@@ -130,7 +130,7 @@ fun MediaCard(
             headlineContent = {
                 Column {
                     NormalText(text = title)
-                    //Use two if for same thing because compilator doesn't like in one if for media.artist
+                    //Use these as for the same thing the builder doesn't like in one
                     if (media is Album) {
                         Subtitle(text = media.artist!!.title)
                     } else if (media is Music) {

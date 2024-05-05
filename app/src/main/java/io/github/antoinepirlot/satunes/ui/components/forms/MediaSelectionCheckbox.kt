@@ -25,7 +25,6 @@
 
 package io.github.antoinepirlot.satunes.ui.components.forms
 
-import android.net.Uri.decode
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -57,9 +56,9 @@ fun MediaSelectionCheckbox(
     modifier: Modifier = Modifier,
     media: Media
 ) {
-    var checked: MutableState<Boolean> = rememberSaveable { mutableStateOf(false) }
-    val text: String = if (media is PlaylistWithMusics) decode(media.playlist.title)
-    else decode(media.title)
+    val checked: MutableState<Boolean> = rememberSaveable { mutableStateOf(false) }
+    val text: String = if (media is PlaylistWithMusics) media.playlist.title
+    else media.title
 
     Box(modifier = modifier.clickable { onClick(checked, media) }) {
         Row(modifier = Modifier.fillMaxWidth()) {
@@ -88,14 +87,6 @@ private fun onClick(checked: MutableState<Boolean>, media: Media) {
             MediaSelectionManager.checkedMusics.remove(media)
         }
     }
-}
-
-private fun checkPlaylist(checked: Boolean, playlist: PlaylistWithMusics) {
-
-}
-
-private fun checkMusic(checked: Boolean, music: Music) {
-
 }
 
 @Preview

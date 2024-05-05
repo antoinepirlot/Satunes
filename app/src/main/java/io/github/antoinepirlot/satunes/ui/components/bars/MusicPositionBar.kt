@@ -41,6 +41,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.tooling.preview.Preview
+import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.services.ProgressBarLifecycleCallbacks
 import io.github.antoinepirlot.satunes.ui.utils.getMillisToTimeText
@@ -49,17 +50,15 @@ import io.github.antoinepirlot.satunes.ui.utils.getMillisToTimeText
  * @author Antoine Pirlot on 23/02/24
  */
 
-private var isUpdatingCurrentPosition: Boolean = false
-
 @Composable
 fun MusicPositionBar(
     modifier: Modifier = Modifier
 ) {
     val playbackController = PlaybackController.getInstance()
-    val musicPlaying by remember { playbackController.musicPlaying }
-    var newPositionPercentage by rememberSaveable { mutableFloatStateOf(0f) }
-    var isUpdating by rememberSaveable { mutableStateOf(false) }
-    val currentPositionPercentage by rememberSaveable { playbackController.currentPositionProgression }
+    val musicPlaying: Music? by remember { playbackController.musicPlaying }
+    var newPositionPercentage: Float by rememberSaveable { mutableFloatStateOf(0f) }
+    var isUpdating: Boolean by rememberSaveable { mutableStateOf(false) }
+    val currentPositionPercentage: Float by rememberSaveable { playbackController.currentPositionProgression }
 
     Column(modifier = modifier) {
         Slider(

@@ -1,26 +1,26 @@
 /*
  * This file is part of Satunes.
  *
- * Satunes is free software: you can redistribute it and/or modify it under
+ *  Satunes is free software: you can redistribute it and/or modify it under
  *  the terms of the GNU General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
+ *  either version 3 of the License, or (at your option) any later version.
  *
- * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
+ *  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ *  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *  See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License along with Satunes.
- * If not, see <https://www.gnu.org/licenses/>.
+ *  You should have received a copy of the GNU General Public License along with Satunes.
+ *  If not, see <https://www.gnu.org/licenses/>.
  *
- * **** INFORMATIONS ABOUT THE AUTHOR *****
- * The author of this file is Antoine Pirlot, the owner of this project.
- * You find this original project on github.
+ *  **** INFORMATIONS ABOUT THE AUTHOR *****
+ *  The author of this file is Antoine Pirlot, the owner of this project.
+ *  You find this original project on github.
  *
- * My github link is: https://github.com/antoinepirlot
- * This current project's link is: https://github.com/antoinepirlot/MP3-Player
+ *  My github link is: https://github.com/antoinepirlot
+ *  This current project's link is: https://github.com/antoinepirlot/Satunes
  *
- * You can contact me via my email: pirlot.antoine@outlook.com
- * PS: I don't answer quickly.
+ *  You can contact me via my email: pirlot.antoine@outlook.com
+ *  PS: I don't answer quickly.
  */
 
 package io.github.antoinepirlot.satunes.playback.services
@@ -62,7 +62,6 @@ class PlaybackController private constructor(
 
     internal var musicPlayingIndex: Int = DEFAULT_MUSIC_PLAYING_INDEX
     var isEnded: Boolean = DEFAULT_IS_ENDED
-    internal var isUpdatingPosition: Boolean = DEFAULT_IS_UPDATING_POSITION
 
     // Mutable var are used in ui, it needs to be recomposed
     // I use mutable to avoid using function with multiples params like to add listener
@@ -90,7 +89,6 @@ class PlaybackController private constructor(
 
     companion object {
         internal const val DEFAULT_MUSIC_PLAYING_INDEX: Int = 0
-        internal const val DEFAULT_IS_UPDATING_POSITION: Boolean = false
         internal const val DEFAULT_IS_ENDED: Boolean = false
 
         const val DEFAULT_IS_PLAYING_VALUE: Boolean = false
@@ -440,5 +438,14 @@ class PlaybackController private constructor(
         }
 
         this.mediaController.repeatMode = this.repeatMode.value
+    }
+
+    fun stop() {
+        this.mediaController.stop()
+    }
+
+    fun release() {
+        this.stop()
+        this.mediaController.release()
     }
 }

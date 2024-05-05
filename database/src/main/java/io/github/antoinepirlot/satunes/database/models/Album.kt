@@ -42,8 +42,6 @@ data class Album(
     var artist: Artist? = null,
     override val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf(),
 ) : Media {
-    val musicSortedMap: SortedMap<Long, Music> = sortedMapOf()
-
     @Ignore
     val musicMediaItemSortedMapUpdate: MutableState<Boolean> = mutableStateOf(false)
     override var artwork: Bitmap? = null
@@ -64,7 +62,6 @@ data class Album(
      */
     fun addMusic(music: Music) {
         this.musicMediaItemSortedMap[music] = music.mediaItem
-        this.musicSortedMap[music.id] = music
     }
 
     override fun equals(other: Any?): Boolean {

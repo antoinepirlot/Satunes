@@ -144,7 +144,7 @@ dependencies {
     /**
      * DataStore
      */
-    val dataStoreVersion = "1.1.0"
+    val dataStoreVersion = "1.1.1"
     implementation("androidx.datastore:datastore-preferences:$dataStoreVersion")
 
     /**

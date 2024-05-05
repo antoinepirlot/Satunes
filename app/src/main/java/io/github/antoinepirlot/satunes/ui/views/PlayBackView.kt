@@ -37,7 +37,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -60,7 +60,7 @@ fun PlayBackView(
     onAlbumClick: (album: Album?) -> Unit,
     onArtistClick: (artist: Artist) -> Unit,
 ) {
-    val musicPlaying = rememberSaveable { PlaybackController.getInstance().musicPlaying }
+    val musicPlaying = remember { PlaybackController.getInstance().musicPlaying }
     val albumArtworkSize = 350.dp
 
     val scrollState: ScrollState = rememberScrollState()

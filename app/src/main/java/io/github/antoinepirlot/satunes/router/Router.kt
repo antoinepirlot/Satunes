@@ -31,6 +31,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -111,7 +112,7 @@ internal fun Router(
                 LoadingView()
             } else {
                 val folderId = it.arguments!!.getString("id")!!.toLong()
-                val folder: Folder by rememberSaveable {
+                val folder: Folder by remember {
                     mutableStateOf(
                         DataManager.getFolder(
                             folderId = folderId
@@ -137,7 +138,7 @@ internal fun Router(
                 LoadingView()
             } else {
                 val artistName: String = it.arguments!!.getString("name")!!
-                val artist: Artist by rememberSaveable {
+                val artist: Artist by remember {
                     mutableStateOf(
                         DataManager.getArtist(
                             artistName
@@ -163,7 +164,7 @@ internal fun Router(
                 LoadingView()
             } else {
                 val albumId: Long = it.arguments!!.getString("id")!!.toLong()
-                val album: Album by rememberSaveable { mutableStateOf(DataManager.getAlbum(albumId)) }
+                val album: Album by remember { mutableStateOf(DataManager.getAlbum(albumId)) }
                 AlbumView(navController = navController, album = album)
             }
         }
@@ -183,7 +184,7 @@ internal fun Router(
                 LoadingView()
             } else {
                 val genreName: String = it.arguments!!.getString("name")!!
-                val genre: Genre by rememberSaveable { mutableStateOf(DataManager.getGenre(genreName = genreName)) }
+                val genre: Genre by remember { mutableStateOf(DataManager.getGenre(genreName = genreName)) }
                 GenreView(navController = navController, genre = genre)
             }
         }
@@ -203,7 +204,7 @@ internal fun Router(
                 LoadingView()
             } else {
                 val playlistId: Long = it.arguments!!.getString("id")!!.toLong()
-                val playlist: PlaylistWithMusics by rememberSaveable {
+                val playlist: PlaylistWithMusics by remember {
                     mutableStateOf(DataManager.getPlaylist(playlistId = playlistId))
                 }
                 PlaylistView(navController = navController, playlist = playlist)

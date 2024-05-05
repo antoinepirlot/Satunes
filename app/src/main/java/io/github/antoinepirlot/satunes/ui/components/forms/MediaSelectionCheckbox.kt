@@ -56,7 +56,7 @@ fun MediaSelectionCheckbox(
     modifier: Modifier = Modifier,
     media: Media
 ) {
-    var checked: MutableState<Boolean> = rememberSaveable { mutableStateOf(false) }
+    val checked: MutableState<Boolean> = rememberSaveable { mutableStateOf(false) }
     val text: String = if (media is PlaylistWithMusics) media.playlist.title
     else media.title
 

@@ -99,7 +99,8 @@ object DataLoader {
     private val selection =
         if (SettingsManager.excludeRingtonesChecked.value) {
             "${MediaStore.Audio.Media.DATA} NOT LIKE ? AND " +
-            "${MediaStore.Audio.Media.DATA} NOT LIKE ?"
+                    "${MediaStore.Audio.Media.DATA} NOT LIKE ? AND " +
+                    "${MediaStore.Audio.Media.DATA} NOT LIKE ?"
         } else {
             null
         }
@@ -107,8 +108,9 @@ object DataLoader {
     private val selection_args: Array<String>? =
         if (SettingsManager.excludeRingtonesChecked.value) {
             arrayOf(
-                "${Environment.getExternalStorageDirectory()}/Android/%",
-                "${EXTERNAL_STORAGE_PATH}/Ringtones/%"
+                "$EXTERNAL_STORAGE_PATH/Android/%",
+                "$EXTERNAL_STORAGE_PATH/Ringtones/%",
+                "$EXTERNAL_STORAGE_PATH/Notifications/%"
             )
         } else {
             null
@@ -136,7 +138,6 @@ object DataLoader {
                     loadData(cursor = it, context = context)
                 }
             }
-
             DatabaseManager(context = context).loadAllPlaylistsWithMusic()
             isLoaded.value = true
             isLoading.value = false

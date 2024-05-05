@@ -36,7 +36,7 @@ object DataCleanerManager {
     fun removeApkFiles(context: Context) {
         val downloadDirectory: File? =
             context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
-        downloadDirectory!!.listFiles()?.forEach { file: File ->
+        downloadDirectory?.listFiles()?.forEach { file: File ->
             file.deleteRecursively()
         }
     }

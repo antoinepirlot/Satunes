@@ -30,18 +30,18 @@ import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
@@ -61,31 +61,38 @@ fun PlayBackView(
     onArtistClick: (artist: Artist) -> Unit,
 ) {
     val musicPlaying = remember { PlaybackController.getInstance().musicPlaying }
-    val albumArtworkSize = 350.dp
 
     val scrollState: ScrollState = rememberScrollState()
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp)
-            .verticalScroll(scrollState),
-        verticalArrangement = Arrangement.Bottom,
-        horizontalAlignment = Alignment.CenterHorizontally
+        modifier = modifier.fillMaxSize(),
     ) {
-        MusicPlayingAlbumArtwork(
+        val screenWidthDp = LocalConfiguration.current.screenWidthDp
+        Column(
             modifier = Modifier
-                .size(albumArtworkSize)
-                .padding(40.dp),
-            onClick = onAlbumClick
-        )
-        NormalText(text = musicPlaying.value!!.title)
-        Subtitle(
-            modifier = Modifier.clickable { onArtistClick(musicPlaying.value!!.artist) },
-            text = musicPlaying.value!!.artist.title
-        )
-        MusicControlBar(
-            modifier = Modifier.fillMaxWidth(),
-        )
+                .fillMaxWidth()
+                .fillMaxHeight(if (screenWidthDp < 400) 0.5f else 0.65f)
+                .verticalScroll(scrollState),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            MusicPlayingAlbumArtwork(onClick = onAlbumClick)
+        }
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(scrollState),
+            verticalArrangement = Arrangement.Bottom,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            NormalText(text = musicPlaying.value!!.title, fontSize = 20.sp)
+            Subtitle(
+                modifier = Modifier.clickable { onArtistClick(musicPlaying.value!!.artist) },
+                text = musicPlaying.value!!.artist.title
+            )
+            MusicControlBar(
+                modifier = Modifier.fillMaxWidth(),
+            )
+        }
     }
 }
 

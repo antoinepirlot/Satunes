@@ -26,6 +26,7 @@
 package io.github.antoinepirlot.satunes.router
 
 import android.content.Context
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
@@ -35,6 +36,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -226,6 +228,7 @@ internal fun Router(
                 LoadingView()
             } else {
                 PlayBackView(
+                    modifier = Modifier.padding(horizontal = 16.dp),
                     onAlbumClick = { album: Album? ->
                         if (album != null) {
                             openMedia(navController = navController, media = album)

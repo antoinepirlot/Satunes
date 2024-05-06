@@ -55,7 +55,7 @@ class PlaybackService : MediaSessionService() {
             .setAudioAttributes(AudioAttributes.DEFAULT, true)
             .build()
 
-        //TODO try by remove setIsGaplessSupportRequired and see if it also make issues on playback
+        //TODO try by removing setIsGaplessSupportRequired and see if it also make issues on playback
         val audioOffloadPreferences = AudioOffloadPreferences.Builder()
             .setAudioOffloadMode(AudioOffloadPreferences.AUDIO_OFFLOAD_MODE_ENABLED)
             .setIsGaplessSupportRequired(true)
@@ -72,25 +72,28 @@ class PlaybackService : MediaSessionService() {
     override fun onTaskRemoved(rootIntent: Intent?) {
         super.onTaskRemoved(rootIntent)
         if (!SettingsManager.playbackWhenClosedChecked.value) {
+            PlaybackController.getInstance().pause()
             onDestroy()
         }
     }
 
     override fun onDestroy() {
-        stopSelf()
-        mediaSession?.run {
-            PlaybackController.getInstance().release()
-            player.stop()
-            player.release()
-            release()
-            stopSelf()
-            mediaSession = null
-        }
         super.onDestroy()
-        //Use exit process as sometimes, when closing app from multi task with playback when closed
-        // is false, then the player is release but the UI is still in the old view, and causing issue
-        // with playback. Best way I found at this time
-        exitProcess(0)
+        val playbackController: PlaybackController = PlaybackController.getInstance()
+        if (!playbackController.isPlaying.value) {
+            stopSelf()
+            mediaSession?.run {
+                playbackController.release()
+                player.stop()
+                player.release()
+                release()
+                stopSelf()
+            }
+            //Use exit process as sometimes, when closing app from multi task with playback when closed
+            // is false, then the player is release but the UI is still in the old view, and causing issue
+            // with playback. Best way I found at this time
+            exitProcess(0)
+        }
     }
 
     override fun onGetSession(controllerInfo: MediaSession.ControllerInfo): MediaSession? {

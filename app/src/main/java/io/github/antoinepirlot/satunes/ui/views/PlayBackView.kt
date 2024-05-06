@@ -89,9 +89,7 @@ fun PlayBackView(
                 modifier = Modifier.clickable { onArtistClick(musicPlaying.value!!.artist) },
                 text = musicPlaying.value!!.artist.title
             )
-            MusicControlBar(
-                modifier = Modifier.fillMaxWidth(),
-            )
+            MusicControlBar(modifier = Modifier.fillMaxWidth())
         }
     }
 }

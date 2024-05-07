@@ -145,7 +145,12 @@ object UpdateCheckManager {
      * @return the generated update url from page or null if the app is up to date.
      */
     private fun getUpdateUrl(page: String, currentVersion: String): String? {
-        val currentVersionType: String = currentVersion.split("-").last()
+        val split: List<String> = currentVersion.split("-")
+        val currentVersionType: String = if (split.size == 2) {
+            split.last()
+        } else {
+            split[1]
+        }
         val regex: Regex = when (currentVersionType) {
             ALPHA -> ALPHA_REGEX
             BETA -> BETA_REGEX

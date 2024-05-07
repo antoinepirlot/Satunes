@@ -25,7 +25,6 @@
 
 package io.github.antoinepirlot.satunes.car.playback
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat.MediaItem
 import android.support.v4.media.session.MediaSessionCompat
@@ -97,8 +96,8 @@ class SatunesCarMusicService : MediaBrowserServiceCompat() {
         }
     }
 
-    @SuppressLint("MissingSuperCall")
     override fun onDestroy() {
+        super.onDestroy()
         session.release()
     }
 
@@ -196,6 +195,8 @@ class SatunesCarMusicService : MediaBrowserServiceCompat() {
      *
      * It creates all MediaItem from all media, if it is a music then it is playable, otherwise
      * it is browsable.
+     *
+     * Also add these media items as queue item to prepare the queue (don't apply).
      *
      * @param mediaList the media list that contains all media to transform to MediaItem
      *

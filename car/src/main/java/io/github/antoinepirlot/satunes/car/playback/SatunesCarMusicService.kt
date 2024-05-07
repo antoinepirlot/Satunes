@@ -25,7 +25,6 @@
 
 package io.github.antoinepirlot.satunes.car.playback
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat.MediaItem
 import android.support.v4.media.session.MediaSessionCompat
@@ -97,8 +96,8 @@ class SatunesCarMusicService : MediaBrowserServiceCompat() {
         }
     }
 
-    @SuppressLint("MissingSuperCall")
     override fun onDestroy() {
+        super.onDestroy()
         session.release()
     }
 

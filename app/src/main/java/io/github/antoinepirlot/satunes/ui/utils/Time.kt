@@ -44,7 +44,7 @@ fun getMillisToTimeText(milliseconds: Long): String {
     }
     toReturn += "$minutes:"
     var seconds = TimeUnit.MILLISECONDS.toSeconds(milliseconds)
-    seconds -= minutes * 60
+    seconds -= hours * 60 * 60 + minutes * 60
     if (seconds < 10) {
         toReturn += "0"
     }

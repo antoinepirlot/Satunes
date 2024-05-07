@@ -88,7 +88,7 @@ fun MusicPositionBar(
 
     val isPlaying: Boolean by rememberSaveable { playbackController.isPlaying }
     LocalLifecycleOwner.current.lifecycle.addObserver(ProgressBarLifecycleCallbacks)
-    if (isPlaying) {
+    if (isPlaying && !ProgressBarLifecycleCallbacks.isUpdatingPosition) {
         ProgressBarLifecycleCallbacks.startUpdatingCurrentPosition()
     }
 }

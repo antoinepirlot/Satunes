@@ -28,7 +28,6 @@ package io.github.antoinepirlot.satunes.playback.services
 import android.content.Intent
 import androidx.annotation.OptIn
 import androidx.media3.common.AudioAttributes
-import androidx.media3.common.TrackSelectionParameters.AudioOffloadPreferences
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.session.MediaSession
@@ -55,16 +54,7 @@ class PlaybackService : MediaSessionService() {
             .setAudioAttributes(AudioAttributes.DEFAULT, true)
             .build()
 
-        //TODO try by removing setIsGaplessSupportRequired and see if it also make issues on playback
-        val audioOffloadPreferences = AudioOffloadPreferences.Builder()
-            .setAudioOffloadMode(AudioOffloadPreferences.AUDIO_OFFLOAD_MODE_ENABLED)
-            .setIsGaplessSupportRequired(true)
-            .build()
-
-        exoPlayer.trackSelectionParameters = exoPlayer.trackSelectionParameters
-            .buildUpon()
-            .setAudioOffloadPreferences(audioOffloadPreferences)
-            .build()
+        // Don't add audio offload, it causes issues while playing.
 
         mediaSession = MediaSession.Builder(this, exoPlayer).build()
     }

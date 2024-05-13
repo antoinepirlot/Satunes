@@ -56,7 +56,7 @@ enum class ScreenPages(
 internal val pages: List<ScreenPages> = listOf(
     ScreenPages.ALL_PLAYLISTS,
     ScreenPages.ALL_FOLDERS,
-    ScreenPages.ALL_MUSICS,
+//    ScreenPages.ALL_MUSICS,
     ScreenPages.ALL_ARTISTS,
     ScreenPages.ALL_ALBUMS,
     ScreenPages.ALL_GENRES,

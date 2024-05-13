@@ -88,7 +88,8 @@ fun PlaylistView(
             mediaList = musicMap.keys.toList(),
             openMedia = { clickedMedia: Media ->
                 playbackController.loadMusic(
-                    musicMediaItemSortedMap = playlist.musicMediaItemSortedMap
+                    musicMediaItemSortedMap = playlist.musicMediaItemSortedMap,
+                    musicToPlay = clickedMedia as Music
                 )
                 openMedia(navController = navController, media = clickedMedia)
             },

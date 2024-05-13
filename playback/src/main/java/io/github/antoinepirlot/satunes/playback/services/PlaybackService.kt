@@ -51,7 +51,10 @@ class PlaybackService : MediaSessionService() {
 
         val exoPlayer = ExoPlayer.Builder(this)
             .setHandleAudioBecomingNoisy(SettingsManager.pauseIfNoisyChecked.value) // Pause when bluetooth or headset disconnect
-            .setAudioAttributes(AudioAttributes.DEFAULT, true)
+            .setAudioAttributes(
+                AudioAttributes.DEFAULT,
+                SettingsManager.pauseIfAnotherPlayback.value
+            )
             .build()
 
         // Don't add audio offload, it causes issues while playing.

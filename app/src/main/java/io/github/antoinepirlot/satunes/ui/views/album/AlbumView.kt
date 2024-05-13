@@ -85,7 +85,8 @@ fun AlbumView(
         mediaList = musicMap.keys.toList(),
         openMedia = { clickedMedia: Media ->
             playbackController.loadMusic(
-                musicMediaItemSortedMap = album.musicMediaItemSortedMap
+                musicMediaItemSortedMap = album.musicMediaItemSortedMap,
+                musicToPlay = clickedMedia as Music
             )
             openMedia(navController = navController, media = clickedMedia)
         },

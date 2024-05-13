@@ -40,6 +40,7 @@ import androidx.media3.session.SessionToken
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.DataLoader
 import io.github.antoinepirlot.satunes.database.services.DataManager
+import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.playback.models.Playlist
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -185,7 +186,6 @@ class PlaybackController private constructor(
             else -> {
                 // The music to play has to be played
                 musicPlayingIndex = playlist.getMusicIndex(music = musicToPlay)
-
             }
         }
         musicPlaying.value = playlist.getMusic(musicIndex = musicPlayingIndex)
@@ -276,15 +276,26 @@ class PlaybackController private constructor(
      */
     fun loadMusic(
         musicMediaItemSortedMap: SortedMap<Music, MediaItem>,
-        shuffleMode: Boolean = false
+        shuffleMode: Boolean = SettingsManager.shuffleMode.value,
+        musicToPlay: Music? = null,
     ) {
         this.playlist = Playlist(musicMediaItemSortedMap = musicMediaItemSortedMap)
         if (shuffleMode) {
-            this.playlist.shuffle()
+            //TODO find a way to store playlist position in music when loading to make it faster
+            if (musicToPlay == null) {
+                this.playlist.shuffle()
+            } else {
+                this.playlist.shuffle(musicIndex = this.playlist.getMusicIndex(music = musicToPlay))
+            }
         }
         this.mediaController.clearMediaItems()
         this.mediaController.addMediaItems(this.playlist.mediaItemList)
         this.mediaController.addListener(listener)
+        this.mediaController.repeatMode = when (SettingsManager.repeatMode.intValue) {
+            1 -> Player.REPEAT_MODE_ALL
+            2 -> Player.REPEAT_MODE_ONE
+            else -> Player.REPEAT_MODE_OFF // For 0 and other incorrect numbers
+        }
         this.mediaController.prepare()
 
         this.isLoaded.value = true

@@ -125,6 +125,14 @@ private fun switchSetting(context: Context, setting: Settings) {
             SettingsManager.switchExcludeRingtones(context = context)
         }
 
+        Settings.SHUFFLE_MODE -> {
+            SettingsManager.switchShuffleMode(context = context)
+        }
+
+        Settings.PAUSE_IF_ANOTHER_PLAYBACK -> {
+            SettingsManager.switchPauseIfPlayback(context = context)
+        }
+
         else -> { /* Not a switch */
         }
     }

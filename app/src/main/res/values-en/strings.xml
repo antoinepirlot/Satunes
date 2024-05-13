@@ -67,4 +67,7 @@
     <string name="read_audio_permission">Music and audio</string>
     <string name="ask_permission">Allow</string>
     <string name="read_external_storage_permission">Lire le stockage</string>
+    <string name="repeat_mode">"Repeat Mode: "</string>
+    <string name="playback_mode_settings">Default Playback Modes</string>
+    <string name="pause_if_another_playback">Pause if another app is playing (restart needed)</string>
 </resources>

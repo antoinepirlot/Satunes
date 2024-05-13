@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.ui.components.settings.BarSpeedSetting
+import io.github.antoinepirlot.satunes.ui.components.settings.PlaybackModesSettings
 import io.github.antoinepirlot.satunes.ui.components.settings.SettingsSwitchList
 import io.github.antoinepirlot.satunes.ui.components.texts.Title
 
@@ -59,6 +60,10 @@ fun PlaybackSettingsView(
         Pair(
             first = Settings.PAUSE_IF_NOISY,
             second = SettingsManager.pauseIfNoisyChecked
+        ),
+        Pair(
+            first = Settings.PAUSE_IF_ANOTHER_PLAYBACK,
+            second = SettingsManager.pauseIfAnotherPlayback
         )
     )
 
@@ -68,6 +73,8 @@ fun PlaybackSettingsView(
         SettingsSwitchList(checkedMap = checkedMap)
         Spacer(modifier.size(16.dp))
         BarSpeedSetting()
+        Spacer(modifier.size(16.dp))
+        PlaybackModesSettings()
     }
 }
 

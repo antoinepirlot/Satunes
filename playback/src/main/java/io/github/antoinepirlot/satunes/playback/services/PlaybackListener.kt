@@ -50,6 +50,11 @@ open class PlaybackListener : Player.Listener {
         // Do nothing
     }
 
+    override fun onRepeatModeChanged(repeatMode: Int) {
+        super.onRepeatModeChanged(repeatMode)
+        PlaybackController.getInstance().repeatMode.value = repeatMode
+    }
+
     override fun onIsPlayingChanged(isPlaying: Boolean) {
         super.onIsPlayingChanged(isPlaying)
         val playbackController: PlaybackController = PlaybackController.getInstance()

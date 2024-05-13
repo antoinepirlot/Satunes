@@ -28,6 +28,8 @@ package io.github.antoinepirlot.satunes.ui.views.settings
 import io.github.antoinepirlot.satunes.R.string.exclude_ringtones
 import io.github.antoinepirlot.satunes.R.string.pause_if_noisy
 import io.github.antoinepirlot.satunes.R.string.playback_when_paused
+import io.github.antoinepirlot.satunes.R.string.repeat_mode
+import io.github.antoinepirlot.satunes.car.R.string.shuffle
 import io.github.antoinepirlot.satunes.database.R.string.albums
 import io.github.antoinepirlot.satunes.database.R.string.artists
 import io.github.antoinepirlot.satunes.database.R.string.folders
@@ -46,4 +48,6 @@ enum class Settings(val stringId: Int) {
     PAUSE_IF_NOISY(stringId = pause_if_noisy),
     PLAYBACK_WHEN_CLOSED(stringId = playback_when_paused),
     PLAYLISTS_CHECKED(stringId = playlists),
+    REPEAT_MODE(stringId = repeat_mode),
+    SHUFFLE_MODE(stringId = shuffle),
 }

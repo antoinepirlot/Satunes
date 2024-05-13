@@ -70,4 +70,5 @@
     <string name="ask_permission">Autoriser</string>
     <string name="read_external_storage_permission">Lire le stockage</string>
     <string name="ok" translatable="false">OK</string>
+    <string name="repeat_mode">Mode de relecture</string>
 </resources>

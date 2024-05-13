@@ -26,8 +26,10 @@
 package io.github.antoinepirlot.satunes.database.services.settings
 
 import android.content.Context
+import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.MutablePreferences
@@ -35,6 +37,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.floatPreferencesKey
+import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import io.github.antoinepirlot.satunes.database.models.MenuTitle
 import kotlinx.coroutines.flow.first
@@ -56,6 +59,8 @@ object SettingsManager {
     private const val DEFAULT_PAUSE_IF_NOISY = true
     private const val DEFAULT_EXCLUDE_RINGTONES = true
     private const val DEFAULT_BAR_SPEED_VALUE = 1f
+    private const val DEFAULT_REPEAT_MODE: Int = 0
+    private const val DEFAULT_SHUFFLE_MODE_CHECKED: Boolean = false
 
     private val PREFERENCES_DATA_STORE = preferencesDataStore("settings")
     private val FOLDERS_CHECKED_PREFERENCES_KEY = booleanPreferencesKey("folders_checked")
@@ -68,6 +73,8 @@ object SettingsManager {
     private val PAUSE_IF_NOISY_PREFERENCES_KEY = booleanPreferencesKey("pause_if_noisy")
     private val EXCLUDE_RINGTONES_KEY = booleanPreferencesKey("exclude_ringtones")
     private val BAR_SPEED_KEY = floatPreferencesKey("bar_speed")
+    private val REPEAT_MODE_KEY = intPreferencesKey("repeat_mode")
+    private val SHUFFLE_MODE_KEY = booleanPreferencesKey("shuffle_mode")
 
     private val Context.dataStore: DataStore<Preferences> by PREFERENCES_DATA_STORE
 
@@ -81,6 +88,8 @@ object SettingsManager {
     val pauseIfNoisyChecked: MutableState<Boolean> = mutableStateOf(DEFAULT_PAUSE_IF_NOISY)
     val excludeRingtonesChecked: MutableState<Boolean> = mutableStateOf(DEFAULT_EXCLUDE_RINGTONES)
     val barSpeed: MutableState<Float> = mutableFloatStateOf(DEFAULT_BAR_SPEED_VALUE)
+    val repeatMode: MutableIntState = mutableIntStateOf(DEFAULT_REPEAT_MODE)
+    val shuffleMode: MutableState<Boolean> = mutableStateOf(DEFAULT_SHUFFLE_MODE_CHECKED)
 
     val menuTitleCheckedMap: Map<MenuTitle, MutableState<Boolean>> = mapOf(
         Pair(MenuTitle.FOLDERS, foldersChecked),
@@ -120,6 +129,10 @@ object SettingsManager {
                     preferences[EXCLUDE_RINGTONES_KEY] ?: DEFAULT_EXCLUDE_RINGTONES
 
                 barSpeed.value = preferences[BAR_SPEED_KEY] ?: DEFAULT_BAR_SPEED_VALUE
+
+                repeatMode.intValue = preferences[REPEAT_MODE_KEY] ?: DEFAULT_REPEAT_MODE
+
+                shuffleMode.value = preferences[SHUFFLE_MODE_KEY] ?: DEFAULT_SHUFFLE_MODE_CHECKED
             }.first()
         }
     }
@@ -201,6 +214,24 @@ object SettingsManager {
             context.dataStore.edit { preferences: MutablePreferences ->
                 barSpeed.value = newValue
                 preferences[BAR_SPEED_KEY] = barSpeed.value
+            }
+        }
+    }
+
+    fun updateRepeatMode(context: Context, newValue: Int) {
+        runBlocking {
+            context.dataStore.edit { preferences: MutablePreferences ->
+                repeatMode.intValue = newValue
+                preferences[REPEAT_MODE_KEY] = repeatMode.intValue
+            }
+        }
+    }
+
+    fun switchShuffleMode(context: Context) {
+        runBlocking {
+            context.dataStore.edit { preferences: MutablePreferences ->
+                shuffleMode.value = !shuffleMode.value
+                preferences[SHUFFLE_MODE_KEY] = shuffleMode.value
             }
         }
     }

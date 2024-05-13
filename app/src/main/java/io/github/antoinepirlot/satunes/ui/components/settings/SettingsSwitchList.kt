@@ -125,6 +125,10 @@ private fun switchSetting(context: Context, setting: Settings) {
             SettingsManager.switchExcludeRingtones(context = context)
         }
 
+        Settings.SHUFFLE_MODE -> {
+            SettingsManager.switchShuffleMode(context = context)
+        }
+
         else -> { /* Not a switch */
         }
     }

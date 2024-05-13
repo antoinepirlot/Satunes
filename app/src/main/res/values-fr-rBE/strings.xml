@@ -67,5 +67,6 @@
     <string name="read_audio_permission">Musique et audio</string>
     <string name="ask_permission">Autoriser</string>
     <string name="read_external_storage_permission">Lire le stockage</string>
-    <string name="repeat_mode">Mode de relecture</string>
+    <string name="repeat_mode">"Mode de relecture: "</string>
+    <string name="playback_mode_settings">Mode de Lecture par Défaut</string>
 </resources>

@@ -40,6 +40,7 @@ import androidx.media3.session.SessionToken
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.DataLoader
 import io.github.antoinepirlot.satunes.database.services.DataManager
+import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.playback.models.Playlist
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -285,6 +286,11 @@ class PlaybackController private constructor(
         this.mediaController.clearMediaItems()
         this.mediaController.addMediaItems(this.playlist.mediaItemList)
         this.mediaController.addListener(listener)
+        this.mediaController.repeatMode = when (SettingsManager.repeatMode.intValue) {
+            1 -> Player.REPEAT_MODE_ALL
+            2 -> Player.REPEAT_MODE_ONE
+            else -> Player.REPEAT_MODE_OFF // For 0 and other incorrect numbers
+        }
         this.mediaController.prepare()
 
         this.isLoaded.value = true

@@ -40,25 +40,38 @@ import io.github.antoinepirlot.satunes.icons.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
 /**
  * @author Antoine Pirlot on 27/03/2024
  */
 
+@Serializable
 class Music private constructor(
     override val id: Long,
     override var title: String,
-    private var displayName: String,
-    val absolutePath: String,
+    @Transient
+    private var displayName: String = "displayName", //defined for transient
+    @Transient
+    val absolutePath: String = "absolutePath", //defined for transient
+    @Transient
     val duration: Long = 0,
+    @Transient
     val size: Int = 0,
-    var folder: Folder,
+    @Transient
+    var folder: Folder? = null, // Set null otherwise transient throws an error. Folder is never null
     var artist: Artist,
     var album: Album,
     var genre: Genre,
 ) : Media {
+    @Transient
     var uri: Uri = Uri.parse(encode(absolutePath)) // Must be init before media item
+
+    @Transient
     val mediaItem: MediaItem = getMediaMetadata()
+
+    @Transient
     override var artwork: Bitmap? = null
 
     constructor(
@@ -82,7 +95,7 @@ class Music private constructor(
         album.addMusic(music = this@Music)
         artist.addMusic(music = this@Music)
         genre.addMusic(music = this@Music)
-        folder.addMusic(music = this@Music)
+        folder!!.addMusic(music = this@Music)
     }
 
 

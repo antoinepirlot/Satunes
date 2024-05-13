@@ -30,20 +30,28 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.media3.common.MediaItem
 import androidx.room.Ignore
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 import java.util.SortedMap
 
 /**
  * @author Antoine Pirlot on 27/03/2024
  */
 
+@Serializable
 data class Album(
+    @Transient
     override val id: Long = nextId,
     override var title: String,
+    @Transient
     var artist: Artist? = null,
+    @Transient
     override val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf(),
 ) : Media {
     @Ignore
     val musicMediaItemSortedMapUpdate: MutableState<Boolean> = mutableStateOf(false)
+
+    @Transient
     override var artwork: Bitmap? = null
 
     companion object {

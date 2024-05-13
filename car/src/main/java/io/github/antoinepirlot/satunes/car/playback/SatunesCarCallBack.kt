@@ -160,6 +160,7 @@ object SatunesCarCallBack : MediaSessionCompat.Callback() {
     private fun loadMusicFromMedia(shuffleMode: Boolean, mediaId: Long) {
         val playbackController: PlaybackController = PlaybackController.getInstance()
         val routeDeque: RouteDeque = SatunesCarMusicService.routeDeque
+        var musicToPlay: Music? = null
         val musicMediaItemSortedMap: SortedMap<Music, MediaItem> =
             when (routeDeque.oneBeforeLast()) {
                 ScreenPages.ALL_FOLDERS.id -> {
@@ -189,12 +190,14 @@ object SatunesCarCallBack : MediaSessionCompat.Callback() {
                 }
 
                 else -> {
+                    musicToPlay = DataManager.getMusic(musicId = mediaId)
                     DataManager.musicMediaItemSortedMap
                 }
             }
         playbackController.loadMusic(
             musicMediaItemSortedMap = musicMediaItemSortedMap,
-            shuffleMode = shuffleMode
+            shuffleMode = shuffleMode,
+            musicToPlay = musicToPlay
         )
     }
 }

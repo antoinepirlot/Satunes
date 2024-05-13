@@ -86,7 +86,8 @@ fun GenreView(
 
         openMedia = { clickedMedia: Media ->
             playbackController.loadMusic(
-                musicMediaItemSortedMap = genre.musicMediaItemSortedMap
+                musicMediaItemSortedMap = genre.musicMediaItemSortedMap,
+                musicToPlay = clickedMedia as Music
             )
             openMedia(navController = navController, media = clickedMedia)
         },

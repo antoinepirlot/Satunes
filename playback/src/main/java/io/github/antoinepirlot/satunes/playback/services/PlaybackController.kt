@@ -186,7 +186,6 @@ class PlaybackController private constructor(
             else -> {
                 // The music to play has to be played
                 musicPlayingIndex = playlist.getMusicIndex(music = musicToPlay)
-
             }
         }
         musicPlaying.value = playlist.getMusic(musicIndex = musicPlayingIndex)
@@ -277,11 +276,17 @@ class PlaybackController private constructor(
      */
     fun loadMusic(
         musicMediaItemSortedMap: SortedMap<Music, MediaItem>,
-        shuffleMode: Boolean = false
+        shuffleMode: Boolean = SettingsManager.shuffleMode.value,
+        musicToPlay: Music? = null,
     ) {
         this.playlist = Playlist(musicMediaItemSortedMap = musicMediaItemSortedMap)
         if (shuffleMode) {
-            this.playlist.shuffle()
+            //TODO find a way to store playlist position in music when loading to make it faster
+            if (musicToPlay == null) {
+                this.playlist.shuffle()
+            } else {
+                this.playlist.shuffle(musicIndex = this.playlist.getMusicIndex(music = musicToPlay))
+            }
         }
         this.mediaController.clearMediaItems()
         this.mediaController.addMediaItems(this.playlist.mediaItemList)

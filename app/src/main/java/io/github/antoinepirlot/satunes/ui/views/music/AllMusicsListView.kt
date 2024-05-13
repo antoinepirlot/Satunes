@@ -75,7 +75,8 @@ fun AllMusicsListView(
 
         openMedia = { clickedMedia: Media ->
             playbackController.loadMusic(
-                musicMediaItemSortedMap = musicMediaItemMap
+                musicMediaItemSortedMap = musicMediaItemMap,
+                musicToPlay = clickedMedia as Music
             )
             openMedia(
                 navController,

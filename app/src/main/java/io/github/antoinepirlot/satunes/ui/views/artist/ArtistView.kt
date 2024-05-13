@@ -82,7 +82,10 @@ fun ArtistView(
         mediaList = musicMap.keys.toList(),
 
         openMedia = { clickedMedia: Media ->
-            playbackController.loadMusic(musicMediaItemSortedMap = artist.musicMediaItemSortedMap)
+            playbackController.loadMusic(
+                musicMediaItemSortedMap = artist.musicMediaItemSortedMap,
+                musicToPlay = clickedMedia as Music
+            )
             openMedia(navController, clickedMedia)
         },
         onFABClick = { openCurrentMusic(navController) },

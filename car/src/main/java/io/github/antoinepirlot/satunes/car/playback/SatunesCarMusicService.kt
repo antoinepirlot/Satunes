@@ -32,6 +32,7 @@ import android.support.v4.media.session.MediaSessionCompat.QueueItem
 import android.support.v4.media.session.PlaybackStateCompat.STATE_PAUSED
 import android.support.v4.media.session.PlaybackStateCompat.STATE_PLAYING
 import androidx.media.MediaBrowserServiceCompat
+import io.github.antoinepirlot.satunes.car.R
 import io.github.antoinepirlot.satunes.car.pages.ScreenPages
 import io.github.antoinepirlot.satunes.car.pages.pages
 import io.github.antoinepirlot.satunes.car.utils.buildMediaItem
@@ -171,7 +172,7 @@ class SatunesCarMusicService : MediaBrowserServiceCompat() {
         return buildMediaItem(
             id = "shuffle",
             description = "Shuffle Button",
-            title = "Shuffle",
+            title = this.getString(R.string.shuffle),
             flags = MediaItem.FLAG_PLAYABLE
         )
     }
@@ -182,7 +183,7 @@ class SatunesCarMusicService : MediaBrowserServiceCompat() {
             val mediaItem: MediaItem = buildMediaItem(
                 id = page.id,
                 description = page.description,
-                title = page.title,
+                title = if (page.titleId == null) ScreenPages.ROOT.id else this.getString(page.titleId),
                 flags = MediaItem.FLAG_BROWSABLE
             )
             children.add(mediaItem)

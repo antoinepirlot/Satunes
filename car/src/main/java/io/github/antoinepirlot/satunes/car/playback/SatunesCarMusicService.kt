@@ -148,7 +148,6 @@ class SatunesCarMusicService : MediaBrowserServiceCompat() {
             ScreenPages.ALL_MUSICS.id -> {
                 routeDeque.resetRouteDeque()
                 routeDeque.addLast(parentId)
-                children.add(getShuffleButton())
                 children.addAll(getAllMediaItem(mediaList = DataManager.musicMediaItemSortedMap.keys))
             }
 
@@ -212,6 +211,10 @@ class SatunesCarMusicService : MediaBrowserServiceCompat() {
     private fun getAllMediaItem(mediaList: Collection<Media>): MutableList<MediaItem> {
         val mediaItemList: MutableList<MediaItem> = mutableListOf()
         loadedQueueItemList.clear()
+        if (mediaList.isEmpty()) {
+            return mediaItemList
+        }
+        mediaItemList.add(getShuffleButton())
         for (media: Media in mediaList) {
             if (media !is Music && media.musicMediaItemSortedMap.isEmpty()) {
                 continue
@@ -250,7 +253,7 @@ class SatunesCarMusicService : MediaBrowserServiceCompat() {
             else -> null
         }
 
-        val listToReturn: MutableList<MediaItem> = mutableListOf(getShuffleButton())
+        val listToReturn: MutableList<MediaItem> = mutableListOf()
         listToReturn.addAll(
             this.getAllMediaItem(
                 mediaList = media?.musicMediaItemSortedMap?.keys?.toList() ?: mutableListOf()

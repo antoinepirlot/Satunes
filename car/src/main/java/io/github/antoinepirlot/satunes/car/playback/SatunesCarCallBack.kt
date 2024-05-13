@@ -83,7 +83,7 @@ object SatunesCarCallBack : MediaSessionCompat.Callback() {
 
     override fun onPlayFromMediaId(mediaId: String, extras: Bundle?) {
         val shuffleMode: Boolean = mediaId == "shuffle"
-        loadMusic(shuffleMode = shuffleMode)
+        loadMusicFromMedia(shuffleMode = shuffleMode)
         val playbackController: PlaybackController = PlaybackController.getInstance()
         var musicToPlay: Music? = null
         if (!shuffleMode) {
@@ -130,21 +130,26 @@ object SatunesCarCallBack : MediaSessionCompat.Callback() {
     /**
      * Load music from the last route deque route.
      */
-    private fun loadMusic(shuffleMode: Boolean = false) {
+    private fun loadMusicFromMedia(shuffleMode: Boolean = false) {
         SatunesCarMusicService.updateQueue()
-        val routeDeque: RouteDeque = SatunesCarMusicService.routeDeque
-
-        val lastRoute: String = routeDeque.last()
-
+        val lastRoute: String = SatunesCarMusicService.routeDeque.last()
         val playbackController: PlaybackController = PlaybackController.getInstance()
-
-        if (lastRoute == ScreenPages.ROOT.id || lastRoute == ScreenPages.ALL_MUSICS.id) {
-            playbackController.loadMusic(musicMediaItemSortedMap = DataManager.musicMediaItemSortedMap, shuffleMode = shuffleMode)
-            return
+        try {
+            loadMusicFromMedia(shuffleMode = shuffleMode, mediaId = lastRoute.toLong())
+        } catch (e: NumberFormatException) {
+            playbackController.loadMusic(
+                musicMediaItemSortedMap = DataManager.musicMediaItemSortedMap,
+                shuffleMode = shuffleMode
+            )
         }
+    }
 
-        val mediaId: Long = lastRoute.toLong()
-
+    /**
+     * Load musics from the media matching mediaId according to the last route deque route
+     */
+    private fun loadMusicFromMedia(shuffleMode: Boolean, mediaId: Long) {
+        val playbackController: PlaybackController = PlaybackController.getInstance()
+        val routeDeque: RouteDeque = SatunesCarMusicService.routeDeque
         val musicMediaItemSortedMap: SortedMap<Music, MediaItem> =
             when (routeDeque.oneBeforeLast()) {
                 ScreenPages.ALL_FOLDERS.id -> {
@@ -177,6 +182,9 @@ object SatunesCarCallBack : MediaSessionCompat.Callback() {
                     DataManager.musicMediaItemSortedMap
                 }
             }
-        playbackController.loadMusic(musicMediaItemSortedMap = musicMediaItemSortedMap, shuffleMode = shuffleMode)
+        playbackController.loadMusic(
+            musicMediaItemSortedMap = musicMediaItemSortedMap,
+            shuffleMode = shuffleMode
+        )
     }
 }

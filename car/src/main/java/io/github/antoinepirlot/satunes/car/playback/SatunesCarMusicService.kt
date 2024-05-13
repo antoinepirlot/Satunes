@@ -25,12 +25,14 @@
 
 package io.github.antoinepirlot.satunes.car.playback
 
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat.MediaItem
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.MediaSessionCompat.QueueItem
 import android.support.v4.media.session.PlaybackStateCompat.STATE_PAUSED
 import android.support.v4.media.session.PlaybackStateCompat.STATE_PLAYING
+import androidx.core.graphics.drawable.toBitmap
 import androidx.media.MediaBrowserServiceCompat
 import io.github.antoinepirlot.satunes.car.R
 import io.github.antoinepirlot.satunes.car.pages.ScreenPages
@@ -41,6 +43,7 @@ import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.DataLoader
 import io.github.antoinepirlot.satunes.database.services.DataManager
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
+import io.github.antoinepirlot.satunes.icons.R as RIcons
 
 /**
  * @author Antoine Pirlot on 16/03/2024
@@ -169,10 +172,13 @@ class SatunesCarMusicService : MediaBrowserServiceCompat() {
     }
 
     private fun getShuffleButton(): MediaItem {
+        val icon: Bitmap = this.getDrawable(RIcons.drawable.white_shuffle_off)!!.toBitmap()
+
         return buildMediaItem(
             id = "shuffle",
             description = "Shuffle Button",
             title = this.getString(R.string.shuffle),
+            icon = icon,
             flags = MediaItem.FLAG_PLAYABLE
         )
     }

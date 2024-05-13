@@ -45,7 +45,7 @@ import kotlinx.coroutines.launch
  * @author Antoine Pirlot on 27/03/2024
  */
 
-class Music(
+class Music private constructor(
     override val id: Long,
     override var title: String,
     private var displayName: String,
@@ -56,11 +56,26 @@ class Music(
     var artist: Artist,
     var album: Album,
     var genre: Genre,
-    context: Context,
 ) : Media {
     var uri: Uri = Uri.parse(encode(absolutePath)) // Must be init before media item
     val mediaItem: MediaItem = getMediaMetadata()
     override var artwork: Bitmap? = null
+
+    constructor(
+        id: Long,
+        title: String,
+        displayName: String,
+        absolutePath: String,
+        duration: Long = 0,
+        size: Int = 0,
+        folder: Folder,
+        artist: Artist,
+        album: Album,
+        genre: Genre,
+        context: Context,
+    ) : this(id, title, displayName, absolutePath, duration, size, folder, artist, album, genre) {
+        loadAlbumArtwork(context = context)
+    }
 
     init {
         DataManager.addMusic(music = this)
@@ -68,7 +83,6 @@ class Music(
         artist.addMusic(music = this@Music)
         genre.addMusic(music = this@Music)
         folder.addMusic(music = this@Music)
-        loadAlbumArtwork(context = context)
     }
 
 

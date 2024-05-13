@@ -44,6 +44,9 @@ import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
 import io.github.antoinepirlot.satunes.database.services.DataManager
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.util.SortedMap
 
 /**
@@ -137,10 +140,17 @@ object SatunesCarCallBack : MediaSessionCompat.Callback() {
         try {
             loadMusicFromMedia(shuffleMode = shuffleMode, mediaId = lastRoute.toLong())
         } catch (e: NumberFormatException) {
+            val mapToLoad: SortedMap<Music, MediaItem> = DataManager.musicMediaItemSortedMap
             playbackController.loadMusic(
-                musicMediaItemSortedMap = DataManager.musicMediaItemSortedMap,
+                musicMediaItemSortedMap = mapToLoad,
                 shuffleMode = shuffleMode
             )
+            CoroutineScope(Dispatchers.IO).launch {
+                mapToLoad.forEach { (music: Music, _: MediaItem) ->
+                    SatunesCarMusicService.addToQueue(media = music)
+                }
+                SatunesCarMusicService.updateQueue()
+            }
         }
     }
 

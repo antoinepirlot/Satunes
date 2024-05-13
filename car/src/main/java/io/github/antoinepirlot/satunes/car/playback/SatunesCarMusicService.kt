@@ -61,6 +61,20 @@ class SatunesCarMusicService : MediaBrowserServiceCompat() {
         fun updateQueue() {
             session.setQueue(loadedQueueItemList)
         }
+
+        /**
+         * Add the media to the queue by creating a media item.
+         *
+         * @return the newly created media item.
+         */
+        internal fun addToQueue(media: Media): MediaItem {
+            val mediaItem: MediaItem = buildMediaItem(media = media)
+            if (media is Music) {
+                val queueItem = QueueItem(mediaItem.description, media.id)
+                loadedQueueItemList.add(queueItem)
+            }
+            return mediaItem
+        }
     }
 
     override fun onCreate() {
@@ -219,12 +233,7 @@ class SatunesCarMusicService : MediaBrowserServiceCompat() {
             if (media !is Music && media.musicMediaItemSortedMap.isEmpty()) {
                 continue
             }
-
-            val mediaItem: MediaItem = buildMediaItem(media = media)
-            if (media is Music) {
-                val queueItem = QueueItem(mediaItem.description, media.id)
-                loadedQueueItemList.add(queueItem)
-            }
+            val mediaItem: MediaItem = addToQueue(media = media)
             mediaItemList.add(mediaItem)
         }
         return mediaItemList

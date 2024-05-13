@@ -26,7 +26,9 @@
 package io.github.antoinepirlot.satunes.ui.views.settings
 
 import android.content.Context
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material3.Icon
 import androidx.compose.material3.RadioButton
@@ -56,7 +58,10 @@ fun RepeatModeRadioButtons(
     )
     var state: Int by remember { SettingsManager.repeatMode }
     Row(
-        modifier = modifier.selectableGroup(),
+        modifier = modifier
+            .fillMaxWidth()
+            .selectableGroup(),
+        horizontalArrangement = Arrangement.SpaceBetween
     ) {
         for (i: Int in iconsList.indices) {
             Row(

@@ -32,7 +32,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.RadioButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -51,11 +50,11 @@ fun RepeatModeRadioButtons(
     modifier: Modifier = Modifier,
 ) {
     val iconsList: List<SatunesIcons> = listOf(
-        SatunesIcons.REPEAT,
-        SatunesIcons.REPEAT_ON,
-        SatunesIcons.REPEAT_ONE_ON
+        SatunesIcons.REPEAT, // i = 0
+        SatunesIcons.REPEAT_ON, // i = 1
+        SatunesIcons.REPEAT_ONE_ON // i = 2
     )
-    var state: SatunesIcons by remember { mutableStateOf(iconsList.first()) }
+    var state: Int by remember { SettingsManager.repeatMode }
     Row(
         modifier = modifier.selectableGroup(),
     ) {
@@ -69,9 +68,9 @@ fun RepeatModeRadioButtons(
                 )
                 val context: Context = LocalContext.current
                 RadioButton(
-                    selected = state == iconsList[i],
+                    selected = state == i,
                     onClick = {
-                        state = iconsList[i]
+                        state = i
                         SettingsManager.updateRepeatMode(context = context, newValue = i)
                     }
                 )

@@ -60,6 +60,10 @@ fun PlaybackSettingsView(
         Pair(
             first = Settings.PAUSE_IF_NOISY,
             second = SettingsManager.pauseIfNoisyChecked
+        ),
+        Pair(
+            first = Settings.PAUSE_IF_ANOTHER_PLAYBACK,
+            second = SettingsManager.pauseIfAnotherPlayback
         )
     )
 

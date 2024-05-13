@@ -55,12 +55,14 @@ object SettingsManager {
     private const val DEFAULT_ALBUMS_CHECKED = true
     private const val DEFAULT_GENRE_CHECKED = true
     private const val DEFAULT_PLAYLIST_CHECKED = true
-    private const val DEFAULT_PLAYBACK_WHEN_CLOSED_CHECKED = false //App stop after removed app from multi-task if false
+    private const val DEFAULT_PLAYBACK_WHEN_CLOSED_CHECKED =
+        false //App stop after removed app from multi-task if false
     private const val DEFAULT_PAUSE_IF_NOISY = true
     private const val DEFAULT_EXCLUDE_RINGTONES = true
     private const val DEFAULT_BAR_SPEED_VALUE = 1f
     private const val DEFAULT_REPEAT_MODE: Int = 0
     private const val DEFAULT_SHUFFLE_MODE_CHECKED: Boolean = false
+    private const val DEFAULT_PAUSE_IF_ANOTHER_PLAYBACK_CHECKED: Boolean = true
 
     private val PREFERENCES_DATA_STORE = preferencesDataStore("settings")
     private val FOLDERS_CHECKED_PREFERENCES_KEY = booleanPreferencesKey("folders_checked")
@@ -75,6 +77,7 @@ object SettingsManager {
     private val BAR_SPEED_KEY = floatPreferencesKey("bar_speed")
     private val REPEAT_MODE_KEY = intPreferencesKey("repeat_mode")
     private val SHUFFLE_MODE_KEY = booleanPreferencesKey("shuffle_mode")
+    private val PAUSE_IF_ANOTHER_PLAYBACK_KEY = booleanPreferencesKey("pause_if_another_playback")
 
     private val Context.dataStore: DataStore<Preferences> by PREFERENCES_DATA_STORE
 
@@ -90,6 +93,9 @@ object SettingsManager {
     val barSpeed: MutableState<Float> = mutableFloatStateOf(DEFAULT_BAR_SPEED_VALUE)
     val repeatMode: MutableIntState = mutableIntStateOf(DEFAULT_REPEAT_MODE)
     val shuffleMode: MutableState<Boolean> = mutableStateOf(DEFAULT_SHUFFLE_MODE_CHECKED)
+    val pauseIfAnotherPlayback: MutableState<Boolean> = mutableStateOf(
+        DEFAULT_PAUSE_IF_ANOTHER_PLAYBACK_CHECKED
+    )
 
     val menuTitleCheckedMap: Map<MenuTitle, MutableState<Boolean>> = mapOf(
         Pair(MenuTitle.FOLDERS, foldersChecked),
@@ -133,6 +139,9 @@ object SettingsManager {
                 repeatMode.intValue = preferences[REPEAT_MODE_KEY] ?: DEFAULT_REPEAT_MODE
 
                 shuffleMode.value = preferences[SHUFFLE_MODE_KEY] ?: DEFAULT_SHUFFLE_MODE_CHECKED
+
+                pauseIfAnotherPlayback.value = preferences[PAUSE_IF_ANOTHER_PLAYBACK_KEY]
+                    ?: DEFAULT_PAUSE_IF_ANOTHER_PLAYBACK_CHECKED
             }.first()
         }
     }
@@ -232,6 +241,15 @@ object SettingsManager {
             context.dataStore.edit { preferences: MutablePreferences ->
                 shuffleMode.value = !shuffleMode.value
                 preferences[SHUFFLE_MODE_KEY] = shuffleMode.value
+            }
+        }
+    }
+
+    fun switchPauseIfPlayback(context: Context) {
+        runBlocking {
+            context.dataStore.edit { preferences: MutablePreferences ->
+                pauseIfAnotherPlayback.value = !pauseIfAnotherPlayback.value
+                preferences[PAUSE_IF_ANOTHER_PLAYBACK_KEY] = pauseIfAnotherPlayback.value
             }
         }
     }

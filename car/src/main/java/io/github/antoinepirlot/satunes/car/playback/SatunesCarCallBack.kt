@@ -86,7 +86,7 @@ object SatunesCarCallBack : MediaSessionCompat.Callback() {
 
     override fun onPlayFromMediaId(mediaId: String, extras: Bundle?) {
         val shuffleMode: Boolean = mediaId == "shuffle"
-        loadMusicFromMedia(shuffleMode = shuffleMode)
+        loadMusic(shuffleMode = shuffleMode)
         val playbackController: PlaybackController = PlaybackController.getInstance()
         var musicToPlay: Music? = null
         if (!shuffleMode) {
@@ -133,7 +133,7 @@ object SatunesCarCallBack : MediaSessionCompat.Callback() {
     /**
      * Load music from the last route deque route.
      */
-    private fun loadMusicFromMedia(shuffleMode: Boolean = false) {
+    private fun loadMusic(shuffleMode: Boolean = false) {
         SatunesCarMusicService.updateQueue()
         val lastRoute: String = SatunesCarMusicService.routeDeque.last()
         val playbackController: PlaybackController = PlaybackController.getInstance()

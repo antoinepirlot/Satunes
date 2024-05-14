@@ -40,7 +40,7 @@ import io.github.antoinepirlot.satunes.ui.components.images.ImageWithLink
 fun GitHub(
     modifier: Modifier = Modifier,
 ) {
-    val gitHubUrl = "https://github.com/antoinepirlot/MP3-Player"
+    val gitHubUrl = "https://github.com/antoinepirlot/Satunes"
     ImageWithLink(
         modifier = modifier,
         url = gitHubUrl,

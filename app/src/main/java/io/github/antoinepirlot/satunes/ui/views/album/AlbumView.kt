@@ -37,6 +37,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -51,6 +52,7 @@ import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.router.utils.openMedia
+import io.github.antoinepirlot.satunes.ui.ScreenSizes
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
 import io.github.antoinepirlot.satunes.ui.components.images.AlbumArtwork
 import io.github.antoinepirlot.satunes.ui.components.texts.Subtitle
@@ -116,10 +118,11 @@ fun AlbumView(
 @Composable
 private fun Header(modifier: Modifier = Modifier, album: Album, navController: NavHostController) {
     Column(modifier = modifier.padding(top = 16.dp)) {
+        val screenWidthDp = LocalConfiguration.current.screenWidthDp
         AlbumArtwork(
             modifier = Modifier
                 .fillMaxWidth()
-                .size(250.dp),
+                .size(if (screenWidthDp <= ScreenSizes.VERY_SMALL) 100.dp else 250.dp),
             media = album
         )
 

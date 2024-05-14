@@ -23,38 +23,15 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.texts
-
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.TextUnit
-import androidx.compose.ui.unit.sp
-import io.github.antoinepirlot.satunes.ui.ScreenSizes
+package io.github.antoinepirlot.satunes.ui
 
 /**
- * @author Antoine Pirlot on 20/04/2024
+ * @author Antoine Pirlot on 14/05/2024
  */
 
-@Composable
-fun NormalText(
-    modifier: Modifier = Modifier,
-    text: String,
-    fontSize: TextUnit = TextUnit.Unspecified,
-    textAlign: TextAlign? = null,
-    maxLines: Int = 1,
-    overflow: TextOverflow = TextOverflow.Ellipsis
-) {
-    val screenWidthDp: Int = LocalConfiguration.current.screenWidthDp
-    Text(
-        modifier = modifier,
-        text = text,
-        fontSize = if (screenWidthDp <= ScreenSizes.VERY_SMALL) 10.sp else fontSize,
-        textAlign = textAlign,
-        maxLines = maxLines,
-        overflow = overflow,
-    )
+interface ScreenSizes {
+    companion object {
+        const val VERY_SMALL = 299 // < 300dp
+        const val SMALL = 399 // < 400dp
+    }
 }

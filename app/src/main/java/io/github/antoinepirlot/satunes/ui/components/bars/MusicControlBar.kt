@@ -44,10 +44,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
+import io.github.antoinepirlot.satunes.ui.ScreenSizes
 import io.github.antoinepirlot.satunes.ui.components.buttons.music.NextMusicButton
 import io.github.antoinepirlot.satunes.ui.components.buttons.music.PreviousMusicButton
 import io.github.antoinepirlot.satunes.ui.components.buttons.music.RepeatMusicButton
@@ -66,10 +68,18 @@ fun MusicControlBar(
     val playbackController = PlaybackController.getInstance()
 
     val isPlaying: Boolean by rememberSaveable { playbackController.isPlaying }
-
-    val spaceBetweenButtons = 20.dp
-    val playPauseButtonSize = 80.dp
-    val optionButtonSize = 30.dp
+    val screenWidthDp = LocalConfiguration.current.screenWidthDp
+    val ratio: Float =
+        if (screenWidthDp >= ScreenSizes.VERY_SMALL && screenWidthDp <= ScreenSizes.SMALL) {
+            0.8f
+        } else if (screenWidthDp <= ScreenSizes.VERY_SMALL) {
+            0.6f
+        } else { // Normal
+            1f
+        }
+    val spaceBetweenButtons = (20f * ratio).dp
+    val playPauseButtonSize = (80f * ratio).dp
+    val optionButtonSize = (30f * ratio).dp
 
     Column(modifier = modifier.padding(bottom = 16.dp)) {
         MusicPositionBar()

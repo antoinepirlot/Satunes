@@ -48,6 +48,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.tooling.preview.Preview
@@ -66,6 +67,7 @@ import io.github.antoinepirlot.satunes.database.services.DatabaseManager
 import io.github.antoinepirlot.satunes.icons.R
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.services.MediaSelectionManager
+import io.github.antoinepirlot.satunes.ui.ScreenSizes
 import io.github.antoinepirlot.satunes.ui.components.dialog.MusicOptionsDialog
 import io.github.antoinepirlot.satunes.ui.components.dialog.PlaylistOptionsDialog
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
@@ -97,7 +99,7 @@ fun MediaCard(
         } else {
             media.title
         }
-
+    val screenWidthDp: Int = LocalConfiguration.current.screenWidthDp
     Box(
         modifier = modifier.combinedClickable(
             onClick = {
@@ -126,7 +128,7 @@ fun MediaCard(
         ),
     ) {
         ListItem(
-            modifier = Modifier.height(70.dp),
+            modifier = Modifier.height(if (screenWidthDp <= ScreenSizes.VERY_SMALL) 40.dp else 70.dp),
             headlineContent = {
                 Column {
                     NormalText(text = title)

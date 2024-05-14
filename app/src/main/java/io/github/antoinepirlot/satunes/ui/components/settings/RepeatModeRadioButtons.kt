@@ -80,9 +80,12 @@ fun RepeatModeRadioButtons(
             ) {
                 val context: Context = LocalContext.current
                 val screenWidthDp: Int = LocalConfiguration.current.screenWidthDp
-                val radioButtonModifier: Modifier = if (screenWidthDp <= ScreenSizes.VERY_SMALL)
-                    Modifier.size(25.dp)
-                else Modifier
+                val radioButtonModifier: Modifier =
+                    if (screenWidthDp <= ScreenSizes.VERY_SMALL)
+                        Modifier.size(25.dp)
+                    else if (screenWidthDp <= ScreenSizes.SMALL)
+                        Modifier.size(30.dp)
+                    else Modifier
                 RadioButton(
                     modifier = radioButtonModifier,
                     selected = state == i,

@@ -23,7 +23,7 @@ Améliorations, Optimisations et Résolutions de problèmes:
 * La barre de progression ne bug plus lors de l'activation/désactivation du mode shuffle
 * La lecture en arrière plan fonctionne correctement en fonction du paramètre choisi
 * Les mises à jour prendront en compte les alpha, beta et preview 1,2,3, etc. par exemple "
-  1.0.0-preview1"
+  1.0.0-preview-1"
 * Le multilangage est maintenant prit en charge dans Android Auto
 * Le bouton shuffle dans Android Auto a un icone
 * Modification du lien pour github

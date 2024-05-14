@@ -73,21 +73,17 @@ fun SatunesBottomAppBar(
         }
     }
 
-    val selectedMenuTitle: MutableState<MenuTitle> =
+    val selectedMenuTitle: MutableState<MenuTitle> = remember {
+        mutableStateOf(
         // Update the tab by default if settings has changed
-        if (SettingsManager.foldersChecked.value) {
-            remember { mutableStateOf(MenuTitle.FOLDERS) }
-        } else if (SettingsManager.artistsChecked.value) {
-            remember { mutableStateOf(MenuTitle.ARTISTS) }
-        } else if (SettingsManager.albumsChecked.value) {
-            remember { mutableStateOf(MenuTitle.ALBUMS) }
-        } else if (SettingsManager.genresChecked.value) {
-            remember { mutableStateOf(MenuTitle.GENRES) }
-        } else if (SettingsManager.playlistsChecked.value) {
-            remember { mutableStateOf(MenuTitle.PLAYLISTS) }
-        } else {
-            remember { mutableStateOf(MenuTitle.MUSICS) }
-        }
+            if (SettingsManager.foldersChecked.value) MenuTitle.FOLDERS
+            else if (SettingsManager.artistsChecked.value) MenuTitle.ARTISTS
+            else if (SettingsManager.albumsChecked.value) MenuTitle.ALBUMS
+            else if (SettingsManager.genresChecked.value) MenuTitle.GENRES
+            else if (SettingsManager.playlistsChecked.value) MenuTitle.PLAYLISTS
+            else MenuTitle.MUSICS
+        )
+    }
     val hasMaxFiveItems: Boolean = menuTitleLists.size <= 5
 
     val screenWidthDp = LocalConfiguration.current.screenWidthDp

@@ -23,39 +23,51 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.buttons
+package io.github.antoinepirlot.satunes.ui.components.cards
 
-import androidx.compose.foundation.clickable
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.height
+import androidx.compose.material3.ListItemColors
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
-import io.github.antoinepirlot.satunes.ui.components.cards.ListItem
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+import io.github.antoinepirlot.satunes.ui.ScreenSizes
 
 /**
- * @author Antoine Pirlot on 20/04/2024
+ * @author Antoine Pirlot on 14/05/2024
  */
 
 @Composable
-fun ClickableListItem(
+fun ListItem(
     modifier: Modifier = Modifier,
-    text: String,
-    onClick: () -> Unit,
+    headlineContent: @Composable () -> Unit,
+    overlineContent: @Composable (() -> Unit)? = null,
+    supportingContent: @Composable (() -> Unit)? = null,
+    leadingContent: @Composable (() -> Unit)? = null,
+    trailingContent: @Composable (() -> Unit)? = null,
+    colors: ListItemColors = ListItemDefaults.colors(),
+    tonalElevation: Dp = ListItemDefaults.Elevation,
+    shadowElevation: Dp = ListItemDefaults.Elevation,
 ) {
     val screenWidthDp: Int = LocalConfiguration.current.screenWidthDp
-    ListItem(
-        modifier = modifier.clickable {
-            onClick()
-        },
-        headlineContent = {
-            Text(text = text)
-        }
+    androidx.compose.material3.ListItem(
+        modifier = modifier.height(if (screenWidthDp <= ScreenSizes.VERY_SMALL) 40.dp else 70.dp),
+        headlineContent = headlineContent,
+        overlineContent = overlineContent,
+        supportingContent = supportingContent,
+        leadingContent = leadingContent,
+        trailingContent = trailingContent,
+        colors = colors,
+        tonalElevation = tonalElevation,
+        shadowElevation = shadowElevation,
     )
 }
 
 @Preview
 @Composable
-fun ClickableListItemPreview() {
-    ClickableListItem(text = "Hello World!", onClick = {})
+fun ListItemPreview() {
+    ListItem(headlineContent = {})
 }

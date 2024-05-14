@@ -32,12 +32,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.ListItem
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -67,7 +65,7 @@ import io.github.antoinepirlot.satunes.database.services.DatabaseManager
 import io.github.antoinepirlot.satunes.icons.R
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.services.MediaSelectionManager
-import io.github.antoinepirlot.satunes.ui.ScreenSizes
+import io.github.antoinepirlot.satunes.ui.components.cards.ListItem
 import io.github.antoinepirlot.satunes.ui.components.dialog.MusicOptionsDialog
 import io.github.antoinepirlot.satunes.ui.components.dialog.PlaylistOptionsDialog
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
@@ -128,7 +126,6 @@ fun MediaCard(
         ),
     ) {
         ListItem(
-            modifier = Modifier.height(if (screenWidthDp <= ScreenSizes.VERY_SMALL) 40.dp else 70.dp),
             headlineContent = {
                 Column {
                     NormalText(text = title)

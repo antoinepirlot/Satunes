@@ -32,7 +32,6 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
-import androidx.compose.ui.unit.sp
 import io.github.antoinepirlot.satunes.ui.ScreenSizes
 
 /**
@@ -52,7 +51,11 @@ fun NormalText(
     Text(
         modifier = modifier,
         text = text,
-        fontSize = if (screenWidthDp <= ScreenSizes.VERY_SMALL) 10.sp else fontSize,
+        fontSize = if (fontSize != TextUnit.Unspecified && screenWidthDp <= ScreenSizes.VERY_SMALL)
+            fontSize / 2
+        else if (fontSize != TextUnit.Unspecified && screenWidthDp <= ScreenSizes.SMALL)
+            fontSize / 1.5
+        else fontSize,
         textAlign = textAlign,
         maxLines = maxLines,
         overflow = overflow,

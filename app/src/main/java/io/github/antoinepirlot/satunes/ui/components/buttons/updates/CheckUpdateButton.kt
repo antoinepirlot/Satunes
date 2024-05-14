@@ -27,7 +27,6 @@ package io.github.antoinepirlot.satunes.ui.components.buttons.updates
 
 import android.content.Context
 import androidx.compose.material3.Button
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedback
@@ -38,6 +37,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.internet.updates.UpdateCheckManager
+import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 
 /**
  * @author Antoine Pirlot on 11/04/2024
@@ -56,7 +56,7 @@ fun CheckUpdateButton(
             UpdateCheckManager.checkUpdate(context = context)
         }
     ) {
-        Text(text = stringResource(id = R.string.check_update))
+        NormalText(text = stringResource(id = R.string.check_update))
     }
 }
 

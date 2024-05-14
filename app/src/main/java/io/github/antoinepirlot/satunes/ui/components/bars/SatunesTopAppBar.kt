@@ -40,6 +40,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -72,7 +73,11 @@ fun SatunesTopAppBar(
             titleContentColor = MaterialTheme.colorScheme.primary,
         ),
         title = {
-            Text(text = stringResource(id = R.string.app_name), fontSize = 20.sp)
+            Text(
+                text = stringResource(id = R.string.app_name),
+                fontSize = 20.sp,
+                textAlign = TextAlign.Center
+            )
         },
         actions = {
             IconButton(

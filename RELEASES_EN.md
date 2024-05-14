@@ -1,6 +1,33 @@
 # Releases (🇬🇧)
 Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
+## 1.0 (Android 5.1.1 Lollipop and later)
+
+### 1.0.0-preview-1
+
+This version is planned to be deployed as a stable version if no bugs are detected during this
+phase.
+
+New features:
+
+* Added a shuffle button to all Android Auto views
+* Removed the "Musics" tab because there were too many elements in Android Auto.
+* New settings:
+  * Choice of repeat mode
+  * Choice of shuffle mode
+  * Ability to prevent other applications from pausing/playing playback
+
+Improvements, Optimizations and Troubleshooting:
+
+* Accents are sorted correctly
+* Progress bar no longer glitches when enabling/disabling shuffle mode
+* Background playback works correctly depending on the chosen setting
+* Updates will take into account alpha, beta and preview 1,2,3, etc. for example "1.0.0-preview1"
+* Multi-language is now supported in Android Auto
+* The shuffle button in Android Auto has an icon
+* Edited link for github
+* Improved design and support for different screen sizes.
+
 ## 0.10.0 (Android 5.1.1 Lollipop and later)
 
 ### 0.10.1-beta

@@ -41,6 +41,6 @@ fun getRootFolderName(title: String): String {
     return when (title) {
         "0" -> stringResource(id = R.string.this_device)
 
-        else -> "${stringResource(id = R.string.external_storage)}: ${title}"
+        else -> "${stringResource(id = R.string.external_storage)}: $title"
     }
 }

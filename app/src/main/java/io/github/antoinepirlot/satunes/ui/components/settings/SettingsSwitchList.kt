@@ -27,7 +27,6 @@ package io.github.antoinepirlot.satunes.ui.components.settings
 
 import android.content.Context
 import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.ListItem
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
@@ -36,6 +35,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.satunes.database.models.MenuTitle
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
+import io.github.antoinepirlot.satunes.ui.components.cards.ListItem
 import io.github.antoinepirlot.satunes.ui.views.settings.Settings
 
 /**
@@ -123,6 +123,14 @@ private fun switchSetting(context: Context, setting: Settings) {
 
         Settings.EXCLUDE_RINGTONES -> {
             SettingsManager.switchExcludeRingtones(context = context)
+        }
+
+        Settings.SHUFFLE_MODE -> {
+            SettingsManager.switchShuffleMode(context = context)
+        }
+
+        Settings.PAUSE_IF_ANOTHER_PLAYBACK -> {
+            SettingsManager.switchPauseIfPlayback(context = context)
         }
 
         else -> { /* Not a switch */

@@ -50,33 +50,36 @@ object DataManager {
     val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
     val musicMediaItemSortedMapUpdated: MutableState<Boolean> = mutableStateOf(false)
 
-    private val musicMapById: MutableMap<Long, Music> = mutableMapOf()
+    internal val musicMapById: MutableMap<Long, Music> = mutableMapOf()
 
-    val rootFolderMap: SortedMap<Long, Folder> = sortedMapOf()
+    internal val rootFolderMapById: MutableMap<Long, Folder> = mutableMapOf()
+
+    //Not <String, Folder> because multiple folders can have the same name
+    val rootFolderSortedMap: SortedMap<Folder, Folder> = sortedMapOf()
     val rootFolderMapUpdated: MutableState<Boolean> = mutableStateOf(false)
 
-    val folderMap: SortedMap<Long, Folder> = sortedMapOf()
+    internal val folderMapById: MutableMap<Long, Folder> = mutableMapOf()
+
+    //Not <String, Folder> because multiple folders can have the same name
+    val folderSortedMap: SortedMap<Folder, Folder> = sortedMapOf()
     val folderMapUpdated: MutableState<Boolean> = mutableStateOf(false)
 
+    internal val artistMapById: MutableMap<Long, Artist> = mutableMapOf()
     val artistMap: SortedMap<String, Artist> = sortedMapOf(comparator = StringComparator)
     val artistMapUpdated: MutableState<Boolean> = mutableStateOf(false)
 
-    private val artistMapById: MutableMap<Long, Artist> = mutableMapOf()
-
+    internal val albumMapById: MutableMap<Long, Album> = mutableMapOf()
     val albumSet: SortedSet<Album> = sortedSetOf()
 
-    private val albumMapById: MutableMap<Long, Album> = mutableMapOf()
-
+    internal val genreMapById: MutableMap<Long, Genre> = mutableMapOf()
     val genreMap: SortedMap<String, Genre> = sortedMapOf(comparator = StringComparator)
     val genreMapUpdated: MutableState<Boolean> = mutableStateOf(false)
 
-    private val genreMapById: MutableMap<Long, Genre> = mutableMapOf()
-
+    internal val playlistWithMusicsMapById: MutableMap<Long, PlaylistWithMusics> = mutableMapOf()
     val playlistWithMusicsMap: SortedMap<String, PlaylistWithMusics> =
         sortedMapOf(comparator = StringComparator)
     val playlistWithMusicsMapUpdated: MutableState<Boolean> = mutableStateOf(false)
 
-    private val playlistWithMusicsMapById: MutableMap<Long, PlaylistWithMusics> = mutableMapOf()
 
     fun getMusic(musicId: Long): Music {
         try {
@@ -97,12 +100,10 @@ object DataManager {
     }
 
     fun addMusic(music: Music) {
-        if (!musicMediaItemSortedMap.contains(music)) {
-            musicMediaItemSortedMap[music] = music.mediaItem
-            musicMediaItemSortedMapUpdated.value = true
-        }
         if (!musicMapById.contains(music.id)) {
+            musicMediaItemSortedMap[music] = music.mediaItem
             musicMapById[music.id] = music
+            musicMediaItemSortedMapUpdated.value = true
         }
     }
 
@@ -125,7 +126,7 @@ object DataManager {
         }
         //You can have multiple same artist's name but different id, but it's the same artist.
         val artistToReturn: Artist = artistMap[artist.title]!!
-        if (artistMapById.contains(artistToReturn.id)) {
+        if (!artistMapById.containsKey(artistToReturn.id)) {
             artistMapById[artistToReturn.id] = artist
         }
         return artistToReturn
@@ -164,26 +165,28 @@ object DataManager {
     }
 
     fun getFolder(folderId: Long): Folder {
-        return folderMap[folderId]!!
+        return folderMapById[folderId]!!
     }
 
     fun addFolder(folder: Folder) {
-        if (!folderMap.contains(folder.id)) {
-            folderMap[folder.id] = folder
+        if (!folderMapById.contains(folder.id)) {
+            folderMapById[folder.id] = folder
+            folderSortedMap[folder] = folder
             folderMapUpdated.value = true
         }
-        if (folder.parentFolder == null && !rootFolderMap.contains(folder.id)) {
-            rootFolderMap[folder.id] = folder
+        if (folder.parentFolder == null && !rootFolderMapById.contains(folder.id)) {
+            rootFolderMapById[folder.id] = folder
+            rootFolderSortedMap[folder] = folder
             rootFolderMapUpdated.value = true
         }
     }
 
     fun removeFolder(folder: Folder) {
-        if (folderMap.contains(folder.id)) {
-            folderMap.remove(folder.id)
+        if (folderMapById.contains(folder.id)) {
+            folderMapById.remove(folder.id)
             folderMapUpdated.value = true
         }
-        rootFolderMap.remove(folder.id)
+        rootFolderMapById.remove(folder.id)
     }
 
     fun getGenre(genreId: Long): Genre {

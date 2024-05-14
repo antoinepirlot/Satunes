@@ -1,26 +1,26 @@
 /*
  * This file is part of Satunes.
  *
- * Satunes is free software: you can redistribute it and/or modify it under
+ *  Satunes is free software: you can redistribute it and/or modify it under
  *  the terms of the GNU General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
+ *  either version 3 of the License, or (at your option) any later version.
  *
- * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
+ *  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ *  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *  See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License along with Satunes.
- * If not, see <https://www.gnu.org/licenses/>.
+ *  You should have received a copy of the GNU General Public License along with Satunes.
+ *  If not, see <https://www.gnu.org/licenses/>.
  *
- * **** INFORMATIONS ABOUT THE AUTHOR *****
- * The author of this file is Antoine Pirlot, the owner of this project.
- * You find this original project on github.
+ *  **** INFORMATIONS ABOUT THE AUTHOR *****
+ *  The author of this file is Antoine Pirlot, the owner of this project.
+ *  You find this original project on github.
  *
- * My github link is: https://github.com/antoinepirlot
- * This current project's link is: https://github.com/antoinepirlot/MP3-Player
+ *  My github link is: https://github.com/antoinepirlot
+ *  This current project's link is: https://github.com/antoinepirlot/Satunes
  *
- * You can contact me via my email: pirlot.antoine@outlook.com
- * PS: I don't answer quickly.
+ *  You can contact me via my email: pirlot.antoine@outlook.com
+ *  PS: I don't answer quickly.
  */
 
 package io.github.antoinepirlot.satunes.car.playback
@@ -44,6 +44,9 @@ import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
 import io.github.antoinepirlot.satunes.database.services.DataManager
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.util.SortedMap
 
 /**
@@ -105,7 +108,7 @@ object SatunesCarCallBack : MediaSessionCompat.Callback() {
     override fun onCustomAction(action: String?, extras: Bundle?) {
         super.onCustomAction(action, extras)
         when (action) {
-            ACTION_SHUFFLE -> switchShuffleMode(action = action)
+            ACTION_SHUFFLE -> switchShuffleMode()
             ACTION_REPEAT -> switchRepeatMode()
         }
         //Update playback state from here as no listener function is called for this action.
@@ -117,7 +120,7 @@ object SatunesCarCallBack : MediaSessionCompat.Callback() {
         SatunesPlaybackListener.updatePlaybackState(state = state, actions = actions)
     }
 
-    private fun switchShuffleMode(action: String?) {
+    private fun switchShuffleMode() {
         val playbackController: PlaybackController = PlaybackController.getInstance()
         playbackController.switchShuffleMode()
     }
@@ -132,19 +135,32 @@ object SatunesCarCallBack : MediaSessionCompat.Callback() {
      */
     private fun loadMusic(shuffleMode: Boolean = false) {
         SatunesCarMusicService.updateQueue()
-        val routeDeque: RouteDeque = SatunesCarMusicService.routeDeque
-
-        val lastRoute: String = routeDeque.last()
-
+        val lastRoute: String = SatunesCarMusicService.routeDeque.last()
         val playbackController: PlaybackController = PlaybackController.getInstance()
-
-        if (lastRoute == ScreenPages.ROOT.id || lastRoute == ScreenPages.ALL_MUSICS.id) {
-            playbackController.loadMusic(musicMediaItemSortedMap = DataManager.musicMediaItemSortedMap, shuffleMode = shuffleMode)
-            return
+        try {
+            loadMusicFromMedia(shuffleMode = shuffleMode, mediaId = lastRoute.toLong())
+        } catch (e: NumberFormatException) {
+            val mapToLoad: SortedMap<Music, MediaItem> = DataManager.musicMediaItemSortedMap
+            playbackController.loadMusic(
+                musicMediaItemSortedMap = mapToLoad,
+                shuffleMode = shuffleMode
+            )
+            CoroutineScope(Dispatchers.IO).launch {
+                mapToLoad.forEach { (music: Music, _: MediaItem) ->
+                    SatunesCarMusicService.addToQueue(media = music)
+                }
+                SatunesCarMusicService.updateQueue()
+            }
         }
+    }
 
-        val mediaId: Long = lastRoute.toLong()
-
+    /**
+     * Load musics from the media matching mediaId according to the last route deque route
+     */
+    private fun loadMusicFromMedia(shuffleMode: Boolean, mediaId: Long) {
+        val playbackController: PlaybackController = PlaybackController.getInstance()
+        val routeDeque: RouteDeque = SatunesCarMusicService.routeDeque
+        var musicToPlay: Music? = null
         val musicMediaItemSortedMap: SortedMap<Music, MediaItem> =
             when (routeDeque.oneBeforeLast()) {
                 ScreenPages.ALL_FOLDERS.id -> {
@@ -174,9 +190,14 @@ object SatunesCarCallBack : MediaSessionCompat.Callback() {
                 }
 
                 else -> {
+                    musicToPlay = DataManager.getMusic(musicId = mediaId)
                     DataManager.musicMediaItemSortedMap
                 }
             }
-        playbackController.loadMusic(musicMediaItemSortedMap = musicMediaItemSortedMap, shuffleMode = shuffleMode)
+        playbackController.loadMusic(
+            musicMediaItemSortedMap = musicMediaItemSortedMap,
+            shuffleMode = shuffleMode,
+            musicToPlay = musicToPlay
+        )
     }
 }

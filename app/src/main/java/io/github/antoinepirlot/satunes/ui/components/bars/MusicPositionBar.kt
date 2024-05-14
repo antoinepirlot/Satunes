@@ -30,7 +30,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Slider
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -41,25 +40,25 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.tooling.preview.Preview
+import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.services.ProgressBarLifecycleCallbacks
+import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 import io.github.antoinepirlot.satunes.ui.utils.getMillisToTimeText
 
 /**
  * @author Antoine Pirlot on 23/02/24
  */
 
-private var isUpdatingCurrentPosition: Boolean = false
-
 @Composable
 fun MusicPositionBar(
     modifier: Modifier = Modifier
 ) {
     val playbackController = PlaybackController.getInstance()
-    val musicPlaying by remember { playbackController.musicPlaying }
-    var newPositionPercentage by rememberSaveable { mutableFloatStateOf(0f) }
-    var isUpdating by rememberSaveable { mutableStateOf(false) }
-    val currentPositionPercentage by rememberSaveable { playbackController.currentPositionProgression }
+    val musicPlaying: Music? by remember { playbackController.musicPlaying }
+    var newPositionPercentage: Float by rememberSaveable { mutableFloatStateOf(0f) }
+    var isUpdating: Boolean by rememberSaveable { mutableStateOf(false) }
+    val currentPositionPercentage: Float by rememberSaveable { playbackController.currentPositionProgression }
 
     Column(modifier = modifier) {
         Slider(
@@ -82,14 +81,14 @@ fun MusicPositionBar(
                 if (isUpdating) getMillisToTimeText((newPositionPercentage * maxDuration).toLong())
                 else getMillisToTimeText((currentPositionPercentage * maxDuration).toLong())
 
-            Text(text = currentPositionTimeText)
-            Text(text = getMillisToTimeText(maxDuration))
+            NormalText(text = currentPositionTimeText)
+            NormalText(text = getMillisToTimeText(maxDuration))
         }
     }
 
     val isPlaying: Boolean by rememberSaveable { playbackController.isPlaying }
     LocalLifecycleOwner.current.lifecycle.addObserver(ProgressBarLifecycleCallbacks)
-    if (isPlaying) {
+    if (isPlaying && !ProgressBarLifecycleCallbacks.isUpdatingPosition) {
         ProgressBarLifecycleCallbacks.startUpdatingCurrentPosition()
     }
 }

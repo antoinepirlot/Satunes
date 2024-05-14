@@ -23,44 +23,51 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.texts
+package io.github.antoinepirlot.satunes.ui.components.cards
 
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.height
+import androidx.compose.material3.ListItemColors
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.TextUnit
-import androidx.compose.ui.unit.sp
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import io.github.antoinepirlot.satunes.ui.ScreenSizes
 
 /**
- * @author Antoine Pirlot on 20/04/2024
+ * @author Antoine Pirlot on 14/05/2024
  */
 
 @Composable
-fun NormalText(
+fun ListItem(
     modifier: Modifier = Modifier,
-    text: String,
-    fontSize: TextUnit = TextUnit.Unspecified,
-    textAlign: TextAlign? = null,
-    maxLines: Int = 1,
-    overflow: TextOverflow = TextOverflow.Ellipsis
+    headlineContent: @Composable () -> Unit,
+    overlineContent: @Composable (() -> Unit)? = null,
+    supportingContent: @Composable (() -> Unit)? = null,
+    leadingContent: @Composable (() -> Unit)? = null,
+    trailingContent: @Composable (() -> Unit)? = null,
+    colors: ListItemColors = ListItemDefaults.colors(),
+    tonalElevation: Dp = ListItemDefaults.Elevation,
+    shadowElevation: Dp = ListItemDefaults.Elevation,
 ) {
     val screenWidthDp: Int = LocalConfiguration.current.screenWidthDp
-    Text(
-        modifier = modifier,
-        text = text,
-        fontSize = if (fontSize != TextUnit.Unspecified && screenWidthDp <= ScreenSizes.VERY_SMALL)
-            fontSize / 2
-        else if (fontSize == TextUnit.Unspecified && screenWidthDp <= ScreenSizes.VERY_SMALL)
-            10.sp
-        else if (fontSize != TextUnit.Unspecified && screenWidthDp <= ScreenSizes.SMALL)
-            fontSize / 1.5
-        else fontSize,
-        textAlign = textAlign,
-        maxLines = maxLines,
-        overflow = overflow,
+    androidx.compose.material3.ListItem(
+        modifier = modifier.height(if (screenWidthDp <= ScreenSizes.VERY_SMALL) 40.dp else 70.dp),
+        headlineContent = headlineContent,
+        overlineContent = overlineContent,
+        supportingContent = supportingContent,
+        leadingContent = leadingContent,
+        trailingContent = trailingContent,
+        colors = colors,
+        tonalElevation = tonalElevation,
+        shadowElevation = shadowElevation,
     )
+}
+
+@Preview
+@Composable
+fun ListItemPreview() {
+    ListItem(headlineContent = {})
 }

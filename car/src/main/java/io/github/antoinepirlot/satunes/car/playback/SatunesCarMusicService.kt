@@ -25,14 +25,16 @@
 
 package io.github.antoinepirlot.satunes.car.playback
 
-import android.annotation.SuppressLint
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat.MediaItem
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.MediaSessionCompat.QueueItem
 import android.support.v4.media.session.PlaybackStateCompat.STATE_PAUSED
 import android.support.v4.media.session.PlaybackStateCompat.STATE_PLAYING
+import androidx.core.graphics.drawable.toBitmap
 import androidx.media.MediaBrowserServiceCompat
+import io.github.antoinepirlot.satunes.car.R
 import io.github.antoinepirlot.satunes.car.pages.ScreenPages
 import io.github.antoinepirlot.satunes.car.pages.pages
 import io.github.antoinepirlot.satunes.car.utils.buildMediaItem
@@ -41,6 +43,7 @@ import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.DataLoader
 import io.github.antoinepirlot.satunes.database.services.DataManager
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
+import io.github.antoinepirlot.satunes.icons.R as RIcons
 
 /**
  * @author Antoine Pirlot on 16/03/2024
@@ -57,6 +60,20 @@ class SatunesCarMusicService : MediaBrowserServiceCompat() {
 
         fun updateQueue() {
             session.setQueue(loadedQueueItemList)
+        }
+
+        /**
+         * Add the media to the queue by creating a media item.
+         *
+         * @return the newly created media item.
+         */
+        internal fun addToQueue(media: Media): MediaItem {
+            val mediaItem: MediaItem = buildMediaItem(media = media)
+            if (media is Music) {
+                val queueItem = QueueItem(mediaItem.description, media.id)
+                loadedQueueItemList.add(queueItem)
+            }
+            return mediaItem
         }
     }
 
@@ -97,8 +114,8 @@ class SatunesCarMusicService : MediaBrowserServiceCompat() {
         }
     }
 
-    @SuppressLint("MissingSuperCall")
     override fun onDestroy() {
+        super.onDestroy()
         session.release()
     }
 
@@ -115,46 +132,43 @@ class SatunesCarMusicService : MediaBrowserServiceCompat() {
         when (parentId) {
             ScreenPages.ROOT.id -> {
                 routeDeque.resetRouteDeque()
-                result.sendResult(getHomeScreenBars())
-                return
+                children.addAll(getHomeScreenBars())
             }
 
             ScreenPages.ALL_FOLDERS.id -> {
-                children.addAll(getAllMediaItem(mediaList = DataManager.folderMap.values))
                 routeDeque.resetRouteDeque()
                 routeDeque.addLast(parentId)
+                children.addAll(getAllMediaItem(mediaList = DataManager.folderSortedMap.keys))
             }
 
             ScreenPages.ALL_ARTISTS.id -> {
-                children.addAll(getAllMediaItem(mediaList = DataManager.artistMap.values))
                 routeDeque.resetRouteDeque()
                 routeDeque.addLast(parentId)
+                children.addAll(getAllMediaItem(mediaList = DataManager.artistMap.values))
             }
 
             ScreenPages.ALL_ALBUMS.id -> {
-                children.addAll(getAllMediaItem(mediaList = DataManager.albumSet))
                 routeDeque.resetRouteDeque()
                 routeDeque.addLast(parentId)
-
+                children.addAll(getAllMediaItem(mediaList = DataManager.albumSet))
             }
 
             ScreenPages.ALL_GENRES.id -> {
-                children.addAll(getAllMediaItem(mediaList = DataManager.genreMap.values))
                 routeDeque.resetRouteDeque()
                 routeDeque.addLast(parentId)
+                children.addAll(getAllMediaItem(mediaList = DataManager.genreMap.values))
             }
 
             ScreenPages.ALL_MUSICS.id -> {
-                children.add(getShuffleButton())
-                children.addAll(getAllMediaItem(mediaList = DataManager.musicMediaItemSortedMap.keys))
                 routeDeque.resetRouteDeque()
                 routeDeque.addLast(parentId)
+                children.addAll(getAllMediaItem(mediaList = DataManager.musicMediaItemSortedMap.keys))
             }
 
             ScreenPages.ALL_PLAYLISTS.id -> {
-                children.addAll(getAllMediaItem(mediaList = DataManager.playlistWithMusicsMap.values))
                 routeDeque.resetRouteDeque()
                 routeDeque.addLast(parentId)
+                children.addAll(getAllMediaItem(mediaList = DataManager.playlistWithMusicsMap.values))
             }
 
             else -> {
@@ -163,18 +177,21 @@ class SatunesCarMusicService : MediaBrowserServiceCompat() {
                     result.sendResult(null)
                     return
                 }
-                children.addAll(getAllMediaItem(mediaId = parentId.toLong()))
                 routeDeque.addLast(parentId)
+                children.addAll(getAllMediaItem(mediaId = parentId.toLong()))
             }
         }
         result.sendResult(children)
     }
 
     private fun getShuffleButton(): MediaItem {
+        val icon: Bitmap = this.getDrawable(RIcons.drawable.white_shuffle_off)!!.toBitmap()
+
         return buildMediaItem(
             id = "shuffle",
             description = "Shuffle Button",
-            title = "Shuffle",
+            title = this.getString(R.string.shuffle),
+            icon = icon,
             flags = MediaItem.FLAG_PLAYABLE
         )
     }
@@ -185,7 +202,7 @@ class SatunesCarMusicService : MediaBrowserServiceCompat() {
             val mediaItem: MediaItem = buildMediaItem(
                 id = page.id,
                 description = page.description,
-                title = page.title,
+                title = if (page.titleId == null) ScreenPages.ROOT.id else this.getString(page.titleId),
                 flags = MediaItem.FLAG_BROWSABLE
             )
             children.add(mediaItem)
@@ -199,6 +216,8 @@ class SatunesCarMusicService : MediaBrowserServiceCompat() {
      * It creates all MediaItem from all media, if it is a music then it is playable, otherwise
      * it is browsable.
      *
+     * Also add these media items as queue item to prepare the queue (don't apply).
+     *
      * @param mediaList the media list that contains all media to transform to MediaItem
      *
      * @return a mutable list of MediaItem
@@ -206,16 +225,15 @@ class SatunesCarMusicService : MediaBrowserServiceCompat() {
     private fun getAllMediaItem(mediaList: Collection<Media>): MutableList<MediaItem> {
         val mediaItemList: MutableList<MediaItem> = mutableListOf()
         loadedQueueItemList.clear()
+        if (mediaList.isEmpty()) {
+            return mediaItemList
+        }
+        mediaItemList.add(getShuffleButton())
         for (media: Media in mediaList) {
             if (media !is Music && media.musicMediaItemSortedMap.isEmpty()) {
                 continue
             }
-
-            val mediaItem: MediaItem = buildMediaItem(media = media)
-            if (media is Music) {
-                val queueItem = QueueItem(mediaItem.description, media.id)
-                loadedQueueItemList.add(queueItem)
-            }
+            val mediaItem: MediaItem = addToQueue(media = media)
             mediaItemList.add(mediaItem)
         }
         return mediaItemList
@@ -244,7 +262,7 @@ class SatunesCarMusicService : MediaBrowserServiceCompat() {
             else -> null
         }
 
-        val listToReturn: MutableList<MediaItem> = mutableListOf(getShuffleButton())
+        val listToReturn: MutableList<MediaItem> = mutableListOf()
         listToReturn.addAll(
             this.getAllMediaItem(
                 mediaList = media?.musicMediaItemSortedMap?.keys?.toList() ?: mutableListOf()

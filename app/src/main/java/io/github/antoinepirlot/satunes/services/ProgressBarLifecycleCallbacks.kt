@@ -38,7 +38,7 @@ import kotlinx.coroutines.launch
  * @author Antoine Pirlot on 02/05/2024
  */
 object ProgressBarLifecycleCallbacks: DefaultLifecycleObserver {
-    private var isUpdatingPosition: Boolean = false
+    var isUpdatingPosition: Boolean = false
     private var stopRefresh: Boolean = false
 
     override fun onResume(owner: LifecycleOwner) {
@@ -63,28 +63,23 @@ object ProgressBarLifecycleCallbacks: DefaultLifecycleObserver {
 
     fun startUpdatingCurrentPosition() {
         stopRefresh = false
-        updateCurrentPosition()
+        refreshCurrentPosition()
     }
 
     /**
      * Launch a coroutine where the currentPositionProgression is updated every 1 second.
      * If this function is already running, just return by using isUpdatingPosition.
      */
-    private fun updateCurrentPosition() {
+    private fun refreshCurrentPosition() {
         val playbackController: PlaybackController = PlaybackController.getInstance()
         if (isUpdatingPosition || playbackController.musicPlaying.value == null) {
             return
         }
-
+        isUpdatingPosition = true
         CoroutineScope(Dispatchers.Main).launch {
-            isUpdatingPosition = true
-
+            updateCurrentPosition()
             while (playbackController.isPlaying.value && !stopRefresh) {
-                val maxPosition: Long = playbackController.musicPlaying.value!!.duration
-                val newPosition: Long = playbackController.getCurrentPosition()
-
-                playbackController.currentPositionProgression.floatValue =
-                    newPosition.toFloat() / maxPosition.toFloat()
+                updateCurrentPosition()
                 val timeMillis: Long = (SettingsManager.barSpeed.value * 1000f).toLong()
                 delay(timeMillis) // Wait one second to avoid refreshing all the time
             }
@@ -96,5 +91,18 @@ object ProgressBarLifecycleCallbacks: DefaultLifecycleObserver {
 
             isUpdatingPosition = false
         }
+    }
+
+    private fun updateCurrentPosition() {
+        val playbackController: PlaybackController = PlaybackController.getInstance()
+        if (playbackController.isEnded) {
+            // It means the music has reached the end of playlist and the music is finished
+            return
+        }
+        val maxPosition: Long = playbackController.musicPlaying.value!!.duration
+        val newPosition: Long = playbackController.getCurrentPosition()
+
+        playbackController.currentPositionProgression.floatValue =
+            newPosition.toFloat() / maxPosition.toFloat()
     }
 }

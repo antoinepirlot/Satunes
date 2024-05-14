@@ -23,34 +23,15 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.settings
-
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
-import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.ui.components.images.ImageWithLink
+package io.github.antoinepirlot.satunes.ui
 
 /**
- * @author Antoine Pirlot on 11/04/2024
+ * @author Antoine Pirlot on 14/05/2024
  */
 
-@Composable
-fun GitHub(
-    modifier: Modifier = Modifier,
-) {
-    val gitHubUrl = "https://github.com/antoinepirlot/Satunes"
-    ImageWithLink(
-        modifier = modifier,
-        url = gitHubUrl,
-        painterId = R.drawable.github_logo,
-        imageBackgroundColor = Color.White
-    )
-}
-
-@Preview
-@Composable
-fun GitHubPreview() {
-    GitHub()
+interface ScreenSizes {
+    companion object {
+        const val VERY_SMALL = 299 // < 300dp
+        const val SMALL = 399 // < 400dp
+    }
 }

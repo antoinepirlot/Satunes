@@ -26,12 +26,12 @@
 package io.github.antoinepirlot.satunes.ui.views.playlist
 
 import android.content.Context
-import android.net.Uri.encode
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -69,7 +69,7 @@ fun PlaylistListView(
             remember { DataManager.playlistWithMusicsMap }
 
         //Recompose if data changed
-        var mapChanged: Boolean by remember { DataManager.playlistWithMusicsMapUpdated }
+        var mapChanged: Boolean by rememberSaveable { DataManager.playlistWithMusicsMapUpdated }
         if (mapChanged) {
             mapChanged = false
         }
@@ -91,7 +91,7 @@ fun PlaylistListView(
             openAlertDialog -> {
                 PlaylistCreationForm(
                     onConfirm = { playlistTitle: String ->
-                        val playlist = Playlist(id = 0, title = encode(playlistTitle))
+                        val playlist = Playlist(id = 0, title = playlistTitle)
                         DatabaseManager(context = context).insertOne(
                             context = context,
                             playlist = playlist

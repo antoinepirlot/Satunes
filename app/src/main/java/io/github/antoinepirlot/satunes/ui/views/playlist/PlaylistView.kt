@@ -32,6 +32,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -69,7 +70,7 @@ fun PlaylistView(
     playlist: PlaylistWithMusics,
 ) {
     //TODO try using nav controller instead try to remember it in an object if possible
-    var openAddMusicsDialog: Boolean by remember { mutableStateOf(false) }
+    var openAddMusicsDialog: Boolean by rememberSaveable { mutableStateOf(false) }
     val playbackController: PlaybackController = PlaybackController.getInstance()
 
     Column(modifier = modifier) {
@@ -77,7 +78,7 @@ fun PlaylistView(
         val musicMap: SortedMap<Music, MediaItem> = remember { playlist.musicMediaItemSortedMap }
 
         //Recompose if data changed
-        var mapChanged: Boolean by remember { playlist.musicMediaItemSortedMapUpdate }
+        var mapChanged: Boolean by rememberSaveable { playlist.musicMediaItemSortedMapUpdate }
         if (mapChanged) {
             mapChanged = false
         }
@@ -87,7 +88,8 @@ fun PlaylistView(
             mediaList = musicMap.keys.toList(),
             openMedia = { clickedMedia: Media ->
                 playbackController.loadMusic(
-                    musicMediaItemSortedMap = playlist.musicMediaItemSortedMap
+                    musicMediaItemSortedMap = playlist.musicMediaItemSortedMap,
+                    musicToPlay = clickedMedia as Music
                 )
                 openMedia(navController = navController, media = clickedMedia)
             },

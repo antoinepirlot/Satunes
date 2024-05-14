@@ -43,8 +43,8 @@ android {
         applicationId = nameSpace
         minSdk = 22
         targetSdk = 34
-        versionCode = 24
-        versionName = "0.10.1-beta"
+        versionCode = 25
+        versionName = "1.0.0-preview-1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -54,11 +54,17 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+        }
+
+        debug {
+            applicationIdSuffix = ".debug"
+            resValue(type = "string", name = "app_name", value = "${rootProject.name} (debug)")
         }
     }
     compileOptions {
@@ -139,7 +145,7 @@ dependencies {
     /**
      * DataStore
      */
-    val dataStoreVersion = "1.1.0"
+    val dataStoreVersion = "1.1.1"
     implementation("androidx.datastore:datastore-preferences:$dataStoreVersion")
 
     /**

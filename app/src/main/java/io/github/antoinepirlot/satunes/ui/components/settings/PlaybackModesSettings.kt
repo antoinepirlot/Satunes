@@ -23,45 +23,43 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.dialog
+package io.github.antoinepirlot.satunes.ui.components.settings
 
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.sp
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
+import io.github.antoinepirlot.satunes.ui.components.texts.Title
+import io.github.antoinepirlot.satunes.ui.views.settings.Settings
 
 /**
- * @author Antoine Pirlot on 29/04/2024
+ * @author Antoine Pirlot on 13/05/2024
  */
 
+
 @Composable
-fun PermissionDialog(
+fun PlaybackModesSettings(
     modifier: Modifier = Modifier,
-    title: String,
-    onDismiss: () -> Unit,
 ) {
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        confirmButton = {
-            TextButton(onClick = onDismiss) {
-                Text(text = stringResource(id = R.string.ok))
-            }
-        },
-        icon = {
-            Text(text = title)
-        },
-        text = {
-            Text(text = stringResource(id = R.string.permission_needed_text))
-        }
-    )
+    Column(
+        modifier = modifier,
+    ) {
+        val checkedMap: Map<Settings, MutableState<Boolean>> = mapOf(
+            Pair(Settings.SHUFFLE_MODE, SettingsManager.shuffleMode)
+        )
+        Title(text = stringResource(id = R.string.playback_mode_settings), fontSize = 25.sp)
+        SettingsSwitchList(checkedMap = checkedMap)
+        RepeatModeRadioButtons()
+    }
 }
 
 @Preview
 @Composable
-fun PermissionDialogPreview() {
-    PermissionDialog(title = "Title", onDismiss = {})
+private fun PlaybackModesSwitchesPreview() {
+    PlaybackModesSettings()
 }

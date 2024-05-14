@@ -55,29 +55,47 @@ fun SettingsView(
         Title(text = stringResource(id = R.string.settings))
         HorizontalDivider()
         Column(modifier = Modifier.verticalScroll(state = scrollState)) {
-            ClickableListItem(text = stringResource(id = R.string.bottom_bar), onClick = {
-                navController.navigate(Destination.BOTTOM_BAR_SETTING.link)
-            })
+            ClickableListItem(
+                text = stringResource(id = R.string.bottom_bar),
+                onClick = {
+                    navController.navigate(Destination.BOTTOM_BAR_SETTING.link)
+                }
+            )
             HorizontalDivider()
-            ClickableListItem(text = stringResource(id = R.string.playback_settings), onClick = {
-                navController.navigate(Destination.PLAYBACK_SETTINGS.link)
-            })
+            ClickableListItem(
+                text = stringResource(id = R.string.playback_settings),
+                onClick = {
+                    navController.navigate(Destination.PLAYBACK_SETTINGS.link)
+                }
+            )
             HorizontalDivider()
-            ClickableListItem(text = stringResource(id = R.string.exclusion_setting)) {
-                navController.navigate(Destination.EXCLUSION.link)
-            }
+            ClickableListItem(
+                text = stringResource(id = R.string.exclusion_setting),
+                onClick = {
+                    navController.navigate(Destination.EXCLUSION.link)
+                }
+            )
             HorizontalDivider()
-            ClickableListItem(text = stringResource(id = RDb.string.playlists)) {
-                navController.navigate(Destination.PLAYLISTS_SETTINGS.link)
-            }
+            ClickableListItem(
+                text = stringResource(id = RDb.string.playlists) + " (Beta)",
+                onClick = {
+                    navController.navigate(Destination.PLAYLISTS_SETTINGS.link)
+                }
+            )
             HorizontalDivider()
-            ClickableListItem(text = stringResource(id = R.string.permissions)) {
-                navController.navigate(Destination.PERMISSIONS_SETTINGS.link)
-            }
+            ClickableListItem(
+                text = stringResource(id = R.string.permissions),
+                onClick = {
+                    navController.navigate(Destination.PERMISSIONS_SETTINGS.link)
+                }
+            )
             HorizontalDivider()
-            ClickableListItem(text = stringResource(id = R.string.version), onClick = {
-               navController.navigate(Destination.UPDATES.link)
-            })
+            ClickableListItem(
+                text = stringResource(id = R.string.version),
+                onClick = {
+                    navController.navigate(Destination.UPDATES.link)
+                }
+            )
             HorizontalDivider()
             AboutView()
         }

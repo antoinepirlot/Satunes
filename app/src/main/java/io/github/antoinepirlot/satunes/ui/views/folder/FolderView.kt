@@ -25,11 +25,11 @@
 
 package io.github.antoinepirlot.satunes.ui.views.folder
 
-import android.net.Uri.decode
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -70,7 +70,7 @@ fun FolderView(
     }
 
     //Recompose if data changed
-    var mapChanged: Boolean by remember { folder.musicMediaItemSortedMapUpdate }
+    var mapChanged: Boolean by rememberSaveable { folder.musicMediaItemSortedMapUpdate }
     if (mapChanged) {
         mapChanged = false
     }
@@ -91,11 +91,11 @@ fun FolderView(
             allPath[0] = getRootFolderName(title = allPath[0])
             var path = ""
             for (s: String in allPath) {
-                path += "/${decode(s)}"
+                path += "/${s}"
             }
             Title(text = path, fontSize = 20.sp, maxLines = 2)
         }
-        loadSubfolders(
+        loadSubFolders(
             subFolderMap = subFolderMap,
             folder = folder,
             folderMusicMediaItemSortedMap = folderMusicMediaItemSortedMap
@@ -127,7 +127,7 @@ fun FolderView(
     }
 }
 
-private fun loadSubfolders(
+private fun loadSubFolders(
     subFolderMap: SortedSet<Media>,
     folder: Folder,
     folderMusicMediaItemSortedMap: SortedMap<Music, MediaItem>

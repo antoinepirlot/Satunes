@@ -26,7 +26,11 @@
 package io.github.antoinepirlot.satunes.ui.views.settings
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Build
+import android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -38,16 +42,15 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -60,7 +63,6 @@ import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.services.PermissionManager
 import io.github.antoinepirlot.satunes.services.Permissions
 import io.github.antoinepirlot.satunes.services.permissionsList
-import io.github.antoinepirlot.satunes.ui.components.dialog.PermissionDialog
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 import io.github.antoinepirlot.satunes.ui.components.texts.Title
 
@@ -75,9 +77,9 @@ fun PermissionsSettingsView(
     isAudioAllowed: MutableState<Boolean>,
 ) {
     val spacerSize = 16.dp
-    var showDialog: Boolean by remember { mutableStateOf(false) }
+    val context: Context = LocalContext.current
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .padding(16.dp),
     ) {
@@ -143,18 +145,15 @@ fun PermissionsSettingsView(
                             Spacer(modifier = Modifier.size(spacerSize))
                             Button(onClick = {
                                 if (permissionState.status.shouldShowRationale) {
-                                    showDialog = true
+                                    val intent = Intent(ACTION_APPLICATION_DETAILS_SETTINGS)
+                                    val uri = Uri.fromParts("package", context.packageName, null)
+                                    intent.data = uri
+                                    context.startActivity(intent)
                                 } else {
                                     permissionState.launchPermissionRequest()
                                 }
                             }) {
-                                Text(text = stringResource(id = R.string.ask_permission))
-                            }
-                            if (showDialog) {
-                                PermissionDialog(
-                                    title = stringResource(id = R.string.read_audio_permission),
-                                    onDismiss = { showDialog = false }
-                                )
+                                NormalText(text = stringResource(id = R.string.ask_permission))
                             }
                         }
                     }
@@ -165,7 +164,6 @@ fun PermissionsSettingsView(
 }
 
 @SuppressLint("UnrememberedMutableState")
-@OptIn(ExperimentalPermissionsApi::class)
 @Preview
 @Composable
 fun PermissionsSettingsViewPreview() {

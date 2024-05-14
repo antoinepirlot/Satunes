@@ -76,7 +76,10 @@ fun openMediaFromFolder(
     when (media) {
         is Music -> {
             val playbackController = PlaybackController.getInstance()
-            playbackController.loadMusic(musicMediaItemSortedMap = getMusicListFromFolder(media.folder))
+            playbackController.loadMusic(
+                musicMediaItemSortedMap = getMusicListFromFolder(media.folder),
+                musicToPlay = media
+            )
             openMedia(navController, media)
         }
 

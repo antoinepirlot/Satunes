@@ -1,31 +1,30 @@
 /*
  * This file is part of Satunes.
  *
- * Satunes is free software: you can redistribute it and/or modify it under
+ *  Satunes is free software: you can redistribute it and/or modify it under
  *  the terms of the GNU General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
+ *  either version 3 of the License, or (at your option) any later version.
  *
- * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
+ *  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ *  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *  See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License along with Satunes.
- * If not, see <https://www.gnu.org/licenses/>.
+ *  You should have received a copy of the GNU General Public License along with Satunes.
+ *  If not, see <https://www.gnu.org/licenses/>.
  *
- * **** INFORMATIONS ABOUT THE AUTHOR *****
- * The author of this file is Antoine Pirlot, the owner of this project.
- * You find this original project on github.
+ *  **** INFORMATIONS ABOUT THE AUTHOR *****
+ *  The author of this file is Antoine Pirlot, the owner of this project.
+ *  You find this original project on github.
  *
- * My github link is: https://github.com/antoinepirlot
- * This current project's link is: https://github.com/antoinepirlot/MP3-Player
+ *  My github link is: https://github.com/antoinepirlot
+ *  This current project's link is: https://github.com/antoinepirlot/Satunes
  *
- * You can contact me via my email: pirlot.antoine@outlook.com
- * PS: I don't answer quickly.
+ *  You can contact me via my email: pirlot.antoine@outlook.com
+ *  PS: I don't answer quickly.
  */
 
 package io.github.antoinepirlot.satunes.ui.components.texts
 
-import android.net.Uri.decode
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -33,6 +32,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -42,6 +42,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import io.github.antoinepirlot.satunes.ui.ScreenSizes
 
 /**
  * @author Antoine Pirlot on 10/04/2024
@@ -64,14 +65,20 @@ fun Title(
             TextAlign.Right -> Alignment.CenterEnd
             else -> Alignment.CenterStart
         }
+    val screenWidthDp = LocalConfiguration.current.screenWidthDp
+
     val textStyle = TextStyle(
         fontWeight = fontWeight,
         textAlign = textAlign,
-        fontSize = fontSize
+        fontSize = if (screenWidthDp <= ScreenSizes.VERY_SMALL)
+            fontSize / 2
+        else if (screenWidthDp <= ScreenSizes.SMALL)
+            fontSize / 1.5
+        else fontSize
     )
     Box(modifier = modifier.fillMaxWidth()) {
         Text(
-            text = decode(text),
+            text = text,
             modifier = Modifier
                 .align(align)
                 .padding(bottom = bottomPadding),

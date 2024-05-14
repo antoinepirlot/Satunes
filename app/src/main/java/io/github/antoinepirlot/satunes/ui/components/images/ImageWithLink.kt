@@ -40,12 +40,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.ui.ScreenSizes
 import io.github.antoinepirlot.satunes.ui.components.settings.utils.openUrl
 
 /**
@@ -62,10 +65,15 @@ fun ImageWithLink(
 ) {
     val haptics = LocalHapticFeedback.current
     val context: Context = LocalContext.current
+    val screenWidthDp: Int = LocalConfiguration.current.screenWidthDp
     Box(modifier = modifier) {
+        val imageSize: Dp = if (screenWidthDp <= ScreenSizes.VERY_SMALL)
+            40.dp
+        else
+            60.dp
         Image(
             modifier = Modifier
-                .size(60.dp)
+                .size(imageSize)
                 .clip(CircleShape)
                 .align(Alignment.Center)
                 .background(imageBackgroundColor ?: Color.Unspecified)

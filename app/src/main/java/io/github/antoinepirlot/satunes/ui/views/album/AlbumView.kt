@@ -40,6 +40,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.media3.common.MediaItem
 import androidx.navigation.NavHostController
@@ -119,10 +120,15 @@ fun AlbumView(
 private fun Header(modifier: Modifier = Modifier, album: Album, navController: NavHostController) {
     Column(modifier = modifier.padding(top = 16.dp)) {
         val screenWidthDp = LocalConfiguration.current.screenWidthDp
+        val albumSize: Dp = if (screenWidthDp <= ScreenSizes.VERY_SMALL)
+            100.dp
+        else if (screenWidthDp <= ScreenSizes.SMALL)
+            170.dp
+        else 250.dp
         AlbumArtwork(
             modifier = Modifier
                 .fillMaxWidth()
-                .size(if (screenWidthDp <= ScreenSizes.VERY_SMALL) 100.dp else 250.dp),
+                .size(albumSize),
             media = album
         )
 

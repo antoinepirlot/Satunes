@@ -41,7 +41,7 @@ android {
 
     defaultConfig {
         applicationId = nameSpace
-        minSdk = 22
+        minSdk = 21
         targetSdk = 34
         versionCode = 24
         versionName = "0.10.1-beta"

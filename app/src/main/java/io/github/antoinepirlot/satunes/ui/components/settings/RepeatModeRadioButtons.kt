@@ -75,10 +75,6 @@ fun RepeatModeRadioButtons(
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(
-                    imageVector = iconsList[i].imageVector,
-                    contentDescription = iconsList[i].description
-                )
                 val context: Context = LocalContext.current
                 RadioButton(
                     selected = state == i,
@@ -86,6 +82,10 @@ fun RepeatModeRadioButtons(
                         state = i
                         SettingsManager.updateRepeatMode(context = context, newValue = i)
                     }
+                )
+                Icon(
+                    imageVector = iconsList[i].imageVector,
+                    contentDescription = iconsList[i].description
                 )
             }
         }

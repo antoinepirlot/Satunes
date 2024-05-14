@@ -65,7 +65,7 @@ fun BarSpeedSetting(
         if (isUpdating) {
             Text(text = (floor(newBarSpeed * 100) / 100).toString() + ' ' + stringResource(id = R.string.second))
         } else {
-            Text(
+            NormalText(
                 text = (floor(currentBarSpeed * 100) / 100).toString() + ' ' + stringResource(
                     id = R.string.second
                 )

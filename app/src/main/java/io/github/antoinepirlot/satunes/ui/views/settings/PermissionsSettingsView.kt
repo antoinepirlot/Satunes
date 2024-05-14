@@ -42,7 +42,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
@@ -154,7 +153,7 @@ fun PermissionsSettingsView(
                                     permissionState.launchPermissionRequest()
                                 }
                             }) {
-                                Text(text = stringResource(id = R.string.ask_permission))
+                                NormalText(text = stringResource(id = R.string.ask_permission))
                             }
                         }
                     }

@@ -89,7 +89,7 @@ fun PlaylistOptionsDialog(
                             contentDescription = exportIcon.description
                         )
                     },
-                    text = stringResource(id = R.string.export)
+                    text = stringResource(id = R.string.export) + " (Beta)"
                 )
             }
         },

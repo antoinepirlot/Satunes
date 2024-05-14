@@ -64,7 +64,7 @@ fun PlaylistsSettingsView(
             .verticalScroll(scrollState),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Title(text = stringResource(id = RDb.string.playlists))
+        Title(text = stringResource(id = RDb.string.playlists) + " (Beta)")
         Row {
             Button(onClick = {
                 MainActivity.playlistsToExport =

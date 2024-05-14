@@ -23,13 +23,14 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.views.settings
+package io.github.antoinepirlot.satunes.ui.components.settings
 
 import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material3.Icon
 import androidx.compose.material3.RadioButton
@@ -39,6 +40,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -46,6 +48,7 @@ import androidx.compose.ui.unit.dp
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import io.github.antoinepirlot.satunes.ui.ScreenSizes
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 
 /**
@@ -75,17 +78,22 @@ fun RepeatModeRadioButtons(
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(
-                    imageVector = iconsList[i].imageVector,
-                    contentDescription = iconsList[i].description
-                )
                 val context: Context = LocalContext.current
+                val screenWidthDp: Int = LocalConfiguration.current.screenWidthDp
+                val radioButtonModifier: Modifier = if (screenWidthDp <= ScreenSizes.VERY_SMALL)
+                    Modifier.size(25.dp)
+                else Modifier
                 RadioButton(
+                    modifier = radioButtonModifier,
                     selected = state == i,
                     onClick = {
                         state = i
                         SettingsManager.updateRepeatMode(context = context, newValue = i)
                     }
+                )
+                Icon(
+                    imageVector = iconsList[i].imageVector,
+                    contentDescription = iconsList[i].description
                 )
             }
         }

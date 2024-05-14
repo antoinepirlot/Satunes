@@ -57,7 +57,7 @@
     <string name="no_folder">Aucun dossier contenant de la musique n\'a été trouvé</string>
     <string name="add_to">"Ajouter à "</string>
     <string name="exclusion_setting">Exclusion de fichiers</string>
-    <string name="exclude_ringtones">Exclure les sonneries (redémarrage nécéssaire)</string>
+    <string name="exclude_ringtones">Exclure les sonneries (redémarrage requis)</string>
     <string name="bar_speed">"Vitesse de la barre de progression: "</string>
     <string name="second">seconde</string>
     <string name="export">Exporter</string>
@@ -69,5 +69,5 @@
     <string name="read_external_storage_permission">Lire le stockage</string>
     <string name="repeat_mode">"Mode de relecture: "</string>
     <string name="playback_mode_settings">Mode de Lecture par Défaut</string>
-    <string name="pause_if_another_playback">Pause si un autre application est en cours de lecture (redémarrage nécéssaire)</string>
+    <string name="pause_if_another_playback">Pause si un autre application est en cours de lecture (redémarrage requis)</string>
 </resources>

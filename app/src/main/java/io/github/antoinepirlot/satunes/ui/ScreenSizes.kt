@@ -23,39 +23,15 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.buttons
-
-import androidx.compose.foundation.clickable
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.tooling.preview.Preview
-import io.github.antoinepirlot.satunes.ui.components.cards.ListItem
+package io.github.antoinepirlot.satunes.ui
 
 /**
- * @author Antoine Pirlot on 20/04/2024
+ * @author Antoine Pirlot on 14/05/2024
  */
 
-@Composable
-fun ClickableListItem(
-    modifier: Modifier = Modifier,
-    text: String,
-    onClick: () -> Unit,
-) {
-    val screenWidthDp: Int = LocalConfiguration.current.screenWidthDp
-    ListItem(
-        modifier = modifier.clickable {
-            onClick()
-        },
-        headlineContent = {
-            Text(text = text)
-        }
-    )
-}
-
-@Preview
-@Composable
-fun ClickableListItemPreview() {
-    ClickableListItem(text = "Hello World!", onClick = {})
+interface ScreenSizes {
+    companion object {
+        const val VERY_SMALL = 299 // < 300dp
+        const val SMALL = 399 // < 400dp
+    }
 }

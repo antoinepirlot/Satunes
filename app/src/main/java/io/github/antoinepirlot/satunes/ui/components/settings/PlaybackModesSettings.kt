@@ -35,7 +35,6 @@ import androidx.compose.ui.unit.sp
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.ui.components.texts.Title
-import io.github.antoinepirlot.satunes.ui.views.settings.RepeatModeRadioButtons
 import io.github.antoinepirlot.satunes.ui.views.settings.Settings
 
 /**
@@ -53,7 +52,7 @@ fun PlaybackModesSettings(
         val checkedMap: Map<Settings, MutableState<Boolean>> = mapOf(
             Pair(Settings.SHUFFLE_MODE, SettingsManager.shuffleMode)
         )
-        Title(text = stringResource(id = R.string.playback_mode_settings), fontSize = 18.sp)
+        Title(text = stringResource(id = R.string.playback_mode_settings), fontSize = 25.sp)
         SettingsSwitchList(checkedMap = checkedMap)
         RepeatModeRadioButtons()
     }

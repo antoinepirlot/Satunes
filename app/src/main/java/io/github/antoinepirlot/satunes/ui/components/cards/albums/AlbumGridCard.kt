@@ -34,11 +34,14 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.github.antoinepirlot.satunes.database.models.Album
+import io.github.antoinepirlot.satunes.ui.ScreenSizes
 import io.github.antoinepirlot.satunes.ui.components.images.AlbumArtwork
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 
@@ -52,8 +55,23 @@ fun AlbumGridCard(
     album: Album,
     onClick: (album: Album?) -> Unit,
 ) {
+    val screenWidthDp: Int = LocalConfiguration.current.screenWidthDp
+    val boxSize: Dp = if (screenWidthDp <= ScreenSizes.VERY_SMALL)
+        150.dp
+    else if (screenWidthDp <= ScreenSizes.SMALL)
+        200.dp
+    else
+        250.dp
+
+    val artworkSize: Dp = if (screenWidthDp <= ScreenSizes.VERY_SMALL)
+        125.dp
+    else if (screenWidthDp <= ScreenSizes.SMALL)
+        175.dp
+    else
+        225.dp
+
     Box(
-        modifier = modifier.size(250.dp),
+        modifier = modifier.size(boxSize),
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -61,7 +79,7 @@ fun AlbumGridCard(
         ) {
             AlbumArtwork(
                 modifier
-                    .size(225.dp)
+                    .size(artworkSize)
                     .align(Alignment.CenterHorizontally),
                 media = album,
                 onClick = onClick

@@ -31,7 +31,7 @@
     <string name="external_storage">External Storage</string>
     <string name="playback_settings">Playback</string>
     <string name="playback_when_paused">Playback if the app is closed</string>
-    <string name="pause_if_noisy">Pause if headset is unplugged (need restart)</string>
+    <string name="pause_if_noisy">Pause if headset is unplugged (restart needed)</string>
     <string name="playlist_form">Playlist Name</string>
     <string name="create_playlist">Create a new playlist</string>
     <string name="cancel">Cancel</string>

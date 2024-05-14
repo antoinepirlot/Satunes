@@ -30,9 +30,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.LargeFloatingActionButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import io.github.antoinepirlot.satunes.ui.ScreenSizes
 
 /**
  * @author Antoine Pirlot on 3/02/24
@@ -43,12 +46,17 @@ fun ShowCurrentMusicButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
+    val screenWidthDp: Int = LocalConfiguration.current.screenWidthDp
+    val buttonSize: Dp = if (screenWidthDp <= ScreenSizes.VERY_SMALL)
+        80.dp
+    else
+        100.dp
     LargeFloatingActionButton(
-        modifier = modifier,
+        modifier = modifier.size(buttonSize),
         onClick = onClick
     ) {
         Icon(
-            modifier = Modifier.size(60.dp),
+            modifier = Modifier.size(buttonSize / 1.5f),
             imageVector = SatunesIcons.MUSIC.imageVector,
             contentDescription = "Show Current Music Icon"
         )

@@ -52,7 +52,7 @@ fun AboutView(
     modifier: Modifier = Modifier
 ) {
     Column(modifier.padding(16.dp)) {
-        Title(text = stringResource(id = R.string.about), fontSize = 20.sp)
+        Title(text = stringResource(id = R.string.about), fontSize = 25.sp)
         NormalText(
             text = stringResource(id = R.string.about_text),
             maxLines = Int.MAX_VALUE

@@ -30,7 +30,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Slider
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -44,6 +43,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.services.ProgressBarLifecycleCallbacks
+import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 import io.github.antoinepirlot.satunes.ui.utils.getMillisToTimeText
 
 /**
@@ -81,8 +81,8 @@ fun MusicPositionBar(
                 if (isUpdating) getMillisToTimeText((newPositionPercentage * maxDuration).toLong())
                 else getMillisToTimeText((currentPositionPercentage * maxDuration).toLong())
 
-            Text(text = currentPositionTimeText)
-            Text(text = getMillisToTimeText(maxDuration))
+            NormalText(text = currentPositionTimeText)
+            NormalText(text = getMillisToTimeText(maxDuration))
         }
     }
 

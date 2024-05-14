@@ -32,12 +32,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.ListItem
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -48,9 +46,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.toBitmap
@@ -66,6 +66,8 @@ import io.github.antoinepirlot.satunes.database.services.DatabaseManager
 import io.github.antoinepirlot.satunes.icons.R
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.services.MediaSelectionManager
+import io.github.antoinepirlot.satunes.ui.ScreenSizes
+import io.github.antoinepirlot.satunes.ui.components.cards.ListItem
 import io.github.antoinepirlot.satunes.ui.components.dialog.MusicOptionsDialog
 import io.github.antoinepirlot.satunes.ui.components.dialog.PlaylistOptionsDialog
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
@@ -97,7 +99,7 @@ fun MediaCard(
         } else {
             media.title
         }
-
+    val screenWidthDp: Int = LocalConfiguration.current.screenWidthDp
     Box(
         modifier = modifier.combinedClickable(
             onClick = {
@@ -126,7 +128,6 @@ fun MediaCard(
         ),
     ) {
         ListItem(
-            modifier = Modifier.height(70.dp),
             headlineContent = {
                 Column {
                     NormalText(text = title)
@@ -139,10 +140,14 @@ fun MediaCard(
                 }
             },
             leadingContent = {
+                val boxSize: Dp = if (screenWidthDp <= ScreenSizes.VERY_SMALL)
+                    25.dp
+                else
+                    55.dp
                 Box(
                     modifier = modifier
                         .fillMaxHeight()
-                        .width(55.dp)
+                        .width(boxSize)
                 ) {
                     if (media.artwork != null) {
                         Image(

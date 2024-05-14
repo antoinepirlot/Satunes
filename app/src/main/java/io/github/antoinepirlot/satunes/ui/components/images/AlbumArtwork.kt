@@ -45,6 +45,7 @@ import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.icons.R
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
+import io.github.antoinepirlot.satunes.ui.ScreenSizes
 
 /**
  * @author Antoine Pirlot on 29/02/24
@@ -57,8 +58,14 @@ fun AlbumArtwork(
     onClick: (album: Album?) -> Unit = { /* Do nothing by default */ },
     contentAlignment: Alignment = Alignment.Center
 ) {
+    val screenWidthDp = LocalConfiguration.current.screenWidthDp
     Box(
         modifier = modifier
+            .size(
+                if (screenWidthDp >= ScreenSizes.VERY_SMALL && screenWidthDp <= ScreenSizes.SMALL) 150.dp
+                else if (screenWidthDp <= ScreenSizes.VERY_SMALL) 100.dp
+                else 300.dp // Normal
+            )
             .clickable {
                 onClick(
                     when (media) {
@@ -94,7 +101,7 @@ fun MusicPlayingAlbumArtwork(
     val musicPlaying: Music? by remember { PlaybackController.getInstance().musicPlaying }
     val screenWidthDp = LocalConfiguration.current.screenWidthDp
     AlbumArtwork(
-        modifier = modifier.size(if (screenWidthDp < 400) 150.dp else 300.dp),
+        modifier = modifier,
         media = musicPlaying!!,
         onClick = onClick
     )

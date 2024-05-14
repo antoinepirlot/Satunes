@@ -34,7 +34,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -45,6 +44,7 @@ import androidx.compose.ui.unit.sp
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
+import io.github.antoinepirlot.satunes.ui.ScreenSizes
 import io.github.antoinepirlot.satunes.ui.components.bars.MusicControlBar
 import io.github.antoinepirlot.satunes.ui.components.images.MusicPlayingAlbumArtwork
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
@@ -70,17 +70,20 @@ fun PlayBackView(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight(if (screenWidthDp < 400) 0.5f else 0.65f)
-                .verticalScroll(scrollState),
+                .fillMaxHeight(
+                    if (screenWidthDp >= ScreenSizes.VERY_SMALL && screenWidthDp <= ScreenSizes.SMALL)
+                        0.5f
+                    else if (screenWidthDp <= ScreenSizes.VERY_SMALL)
+                        0.45f
+                    else 0.65f
+                ),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             MusicPlayingAlbumArtwork(onClick = onAlbumClick)
         }
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(scrollState),
+            modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Bottom,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -89,7 +92,7 @@ fun PlayBackView(
                 modifier = Modifier.clickable { onArtistClick(musicPlaying.value!!.artist) },
                 text = musicPlaying.value!!.artist.title
             )
-            MusicControlBar(modifier = Modifier.fillMaxWidth())
+            MusicControlBar()
         }
     }
 }

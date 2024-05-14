@@ -77,7 +77,7 @@ fun SettingsView(
             )
             HorizontalDivider()
             ClickableListItem(
-                text = stringResource(id = RDb.string.playlists),
+                text = stringResource(id = RDb.string.playlists) + " (Beta)",
                 onClick = {
                     navController.navigate(Destination.PLAYLISTS_SETTINGS.link)
                 }

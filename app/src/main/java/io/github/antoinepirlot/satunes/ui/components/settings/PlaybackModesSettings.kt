@@ -52,7 +52,7 @@ fun PlaybackModesSettings(
         val checkedMap: Map<Settings, MutableState<Boolean>> = mapOf(
             Pair(Settings.SHUFFLE_MODE, SettingsManager.shuffleMode)
         )
-        Title(text = stringResource(id = R.string.playback_mode_settings), fontSize = 18.sp)
+        Title(text = stringResource(id = R.string.playback_mode_settings), fontSize = 25.sp)
         SettingsSwitchList(checkedMap = checkedMap)
         RepeatModeRadioButtons()
     }

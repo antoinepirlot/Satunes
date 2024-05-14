@@ -34,7 +34,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -70,8 +69,7 @@ fun PlayBackView(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight(if (screenWidthDp < 400) 0.5f else 0.65f)
-                .verticalScroll(scrollState),
+                .fillMaxHeight(if (screenWidthDp < 400) 0.5f else 0.65f),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
@@ -79,8 +77,7 @@ fun PlayBackView(
         }
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(scrollState),
+                .fillMaxSize(),
             verticalArrangement = Arrangement.Bottom,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {

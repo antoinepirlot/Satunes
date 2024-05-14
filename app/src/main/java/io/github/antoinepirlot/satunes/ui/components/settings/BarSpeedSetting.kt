@@ -71,20 +71,20 @@ fun BarSpeedSetting(
                 )
             )
         }
+        Slider(
+            value = if (isUpdating) newBarSpeed else currentBarSpeed,
+            onValueChange = {
+                isUpdating = true
+                newBarSpeed = it
+            },
+            onValueChangeFinished = {
+                SettingsManager.updateBarSpeed(context = context, newValue = newBarSpeed)
+                isUpdating = false
+            },
+            valueRange = 0.1f..1f,
+            steps = 20
+        )
     }
-    Slider(
-        value = if (isUpdating) newBarSpeed else currentBarSpeed,
-        onValueChange = {
-            isUpdating = true
-            newBarSpeed = it
-        },
-        onValueChangeFinished = {
-            SettingsManager.updateBarSpeed(context = context, newValue = newBarSpeed)
-            isUpdating = false
-        },
-        valueRange = 0.1f..1f,
-        steps = 20
-    )
 }
 
 @Preview

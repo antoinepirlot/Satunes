@@ -50,6 +50,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.toBitmap
@@ -65,6 +66,7 @@ import io.github.antoinepirlot.satunes.database.services.DatabaseManager
 import io.github.antoinepirlot.satunes.icons.R
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.services.MediaSelectionManager
+import io.github.antoinepirlot.satunes.ui.ScreenSizes
 import io.github.antoinepirlot.satunes.ui.components.cards.ListItem
 import io.github.antoinepirlot.satunes.ui.components.dialog.MusicOptionsDialog
 import io.github.antoinepirlot.satunes.ui.components.dialog.PlaylistOptionsDialog
@@ -138,10 +140,14 @@ fun MediaCard(
                 }
             },
             leadingContent = {
+                val boxSize: Dp = if (screenWidthDp <= ScreenSizes.VERY_SMALL)
+                    25.dp
+                else
+                    55.dp
                 Box(
                     modifier = modifier
                         .fillMaxHeight()
-                        .width(55.dp)
+                        .width(boxSize)
                 ) {
                     if (media.artwork != null) {
                         Image(

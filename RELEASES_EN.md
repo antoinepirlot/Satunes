@@ -3,7 +3,7 @@ Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
 ## 1.0 (Android 5.1.1 Lollipop and later)
 
-### 1.0.0-preview1
+### 1.0.0-preview-1
 
 This version is planned to be deployed as a stable version if no bugs are detected during this
 phase.

@@ -78,22 +78,6 @@ open class PlaybackListener : Player.Listener {
         }
     }
 
-    override fun onPositionDiscontinuity(
-        oldPosition: Player.PositionInfo,
-        newPosition: Player.PositionInfo,
-        reason: Int
-    ) {
-        super.onPositionDiscontinuity(oldPosition, newPosition, reason)
-        val playbackController: PlaybackController = PlaybackController.getInstance()
-
-        playbackController.currentPositionProgression.floatValue =
-            if (playbackController.musicPlaying.value == null || playbackController.musicPlaying.value!!.duration == 0L) {
-                0f
-            } else {
-                newPosition.positionMs.toFloat() / playbackController.musicPlaying.value!!.duration.toFloat()
-            }
-    }
-
     override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
         if (
             reason == Player.MEDIA_ITEM_TRANSITION_REASON_SEEK

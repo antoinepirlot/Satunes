@@ -70,7 +70,11 @@ fun Title(
     val textStyle = TextStyle(
         fontWeight = fontWeight,
         textAlign = textAlign,
-        fontSize = if (screenWidthDp <= ScreenSizes.VERY_SMALL) fontSize / 2 else fontSize
+        fontSize = if (screenWidthDp <= ScreenSizes.VERY_SMALL)
+            fontSize / 2
+        else if (screenWidthDp <= ScreenSizes.SMALL)
+            fontSize / 1.5
+        else fontSize
     )
     Box(modifier = modifier.fillMaxWidth()) {
         Text(

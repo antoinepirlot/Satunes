@@ -35,7 +35,6 @@ import androidx.compose.ui.unit.sp
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.ui.components.texts.Title
-import io.github.antoinepirlot.satunes.ui.views.settings.RepeatModeRadioButtons
 import io.github.antoinepirlot.satunes.ui.views.settings.Settings
 
 /**

@@ -23,7 +23,7 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.views.settings
+package io.github.antoinepirlot.satunes.ui.components.settings
 
 import android.content.Context
 import androidx.compose.foundation.layout.Arrangement

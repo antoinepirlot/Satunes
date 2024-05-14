@@ -32,6 +32,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
@@ -69,11 +71,13 @@ fun MusicControlBar(
     val playPauseButtonSize = 80.dp
     val optionButtonSize = 30.dp
 
-    Column {
+    Column(modifier = modifier.padding(bottom = 16.dp)) {
         MusicPositionBar()
         val scrollState: ScrollState = rememberScrollState()
         Row(
-            modifier = modifier.horizontalScroll(scrollState),
+            modifier = Modifier
+                .fillMaxWidth()
+                .horizontalScroll(scrollState),
             horizontalArrangement = horizontalArrangement,
             verticalAlignment = verticalAlignment
         ) {

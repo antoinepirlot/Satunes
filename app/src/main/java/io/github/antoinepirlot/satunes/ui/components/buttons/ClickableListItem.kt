@@ -26,11 +26,15 @@
 package io.github.antoinepirlot.satunes.ui.components.buttons
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.height
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import io.github.antoinepirlot.satunes.ui.ScreenSizes
 
 /**
  * @author Antoine Pirlot on 20/04/2024
@@ -42,10 +46,13 @@ fun ClickableListItem(
     text: String,
     onClick: () -> Unit,
 ) {
+    val screenWidthDp: Int = LocalConfiguration.current.screenWidthDp
     ListItem(
-        modifier = modifier.clickable {
-            onClick()
-        },
+        modifier = modifier
+            .height(if (screenWidthDp <= ScreenSizes.VERY_SMALL) 40.dp else 70.dp)
+            .clickable {
+                onClick()
+            },
         headlineContent = {
             Text(text = text)
         }

@@ -63,7 +63,7 @@ fun AlbumGrid(
                     modifier.padding(start = 16.dp),
                     text = stringResource(id = io.github.antoinepirlot.satunes.database.R.string.albums),
                     textAlign = TextAlign.Left,
-                    fontSize = 20.sp
+                    fontSize = 25.sp
                 )
                 val lazyState = rememberLazyListState()
                 LazyRow(

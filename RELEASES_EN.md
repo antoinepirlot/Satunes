@@ -22,7 +22,7 @@ Improvements, Optimizations and Troubleshooting:
 * Accents are sorted correctly
 * Progress bar no longer glitches when enabling/disabling shuffle mode
 * Background playback works correctly depending on the chosen setting
-* Updates will take into account alpha, beta and preview 1,2,3, etc. for example "1.0.0-preview1"
+* Updates will take into account alpha, beta and preview 1,2,3, etc. for example "1.0.0-preview-1"
 * Multi-language is now supported in Android Auto
 * The shuffle button in Android Auto has an icon
 * Edited link for github

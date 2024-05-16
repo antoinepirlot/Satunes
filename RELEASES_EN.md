@@ -16,6 +16,7 @@ Improvements, Optimizations and Troubleshooting:
   * Progress bar during repeat one mode that goes beyond the time limit
 * Added text explaining why exporting and exporting playlists is in beta
 * Attempted to fix crash when opening the app after a long time after pausing
+* Fix downloading update
 
 ### 1.0.0-preview-1
 

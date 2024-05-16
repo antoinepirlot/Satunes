@@ -39,4 +39,6 @@
     <string name="importing_success">Importation réussie</string>
     <string name="no_playlist">Il n\'y a aucune playlist</string>
     <string name="exporting_success">Exportation réussie</string>
+    <string name="update_success">Modification réussie</string>
+    <string name="update_failed">Modification échouée</string>
 </resources>

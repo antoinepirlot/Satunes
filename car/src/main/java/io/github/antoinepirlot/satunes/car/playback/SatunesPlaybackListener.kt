@@ -32,7 +32,6 @@ import android.support.v4.media.session.PlaybackStateCompat.CustomAction
 import android.support.v4.media.session.PlaybackStateCompat.STATE_PAUSED
 import android.support.v4.media.session.PlaybackStateCompat.STATE_PLAYING
 import androidx.media.utils.MediaConstants
-import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import io.github.antoinepirlot.satunes.car.playback.SatunesCarCallBack.ACTIONS_ON_PAUSE
 import io.github.antoinepirlot.satunes.car.playback.SatunesCarCallBack.ACTIONS_ON_PLAY
@@ -58,10 +57,7 @@ object SatunesPlaybackListener : PlaybackListener() {
         }
     }
 
-    override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
-        super.onMediaItemTransition(mediaItem, reason)
-        updatePlaybackState(state = STATE_PLAYING, actions = ACTIONS_ON_PLAY)
-    }
+    // Not use oonMediaItemTransition to update playack state as exo player pause/play in this case
 
     internal fun updateMediaPlaying() {
         val playbackController: PlaybackController = PlaybackController.getInstance()

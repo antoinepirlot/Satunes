@@ -145,13 +145,7 @@ object UpdateCheckManager {
      * @return the generated update url from page or null if the app is up to date.
      */
     private fun getUpdateUrl(page: String, currentVersion: String): String? {
-        val split: List<String> = currentVersion.split("-")
-        val currentVersionType: String = if (split.size == 2) {
-            split.last()
-        } else {
-            split[1]
-        }
-        val regex: Regex = when (currentVersionType) {
+        val regex: Regex = when (currentVersion.split("-")[1]) {
             ALPHA -> ALPHA_REGEX
             BETA -> BETA_REGEX
             PREVIEW -> PREVIEW_REGEX
@@ -165,7 +159,6 @@ object UpdateCheckManager {
         return if (latestVersion != null && latestVersion != currentVersion) {
             UpdateCheckManager.latestVersion.value = latestVersion
             "$RELEASES_URL/tag/$latestVersion"
-            //                UpdateAvailableStatus.AVAILABLE
         } else {
             null
         }
@@ -174,7 +167,7 @@ object UpdateCheckManager {
     fun getCurrentVersion(context: Context): String {
         val versionName: String =
             context.packageManager.getPackageInfo(context.packageName, 0).versionName
-        versionType = versionName.split("-").last()
+        versionType = versionName.split("-")[1]
         return versionName
     }
 }

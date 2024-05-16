@@ -452,11 +452,15 @@ class PlaybackController private constructor(
     }
 
     fun stop() {
-        this.mediaController.stop()
+        if (this::mediaController.isInitialized) {
+            this.mediaController.stop()
+        }
     }
 
     fun release() {
         this.stop()
-        this.mediaController.release()
+        if (this::mediaController.isInitialized) {
+            this.mediaController.release()
+        }
     }
 }

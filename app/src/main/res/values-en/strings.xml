@@ -72,4 +72,5 @@
     <string name="pause_if_another_playback">Pause if another app is playing (restart needed)</string>
     <string name="update_title">Update Name</string>
     <string name="title">Title</string>
+    <string name="playlist_beta_info">The export and import of playlists is in beta due to the fact that only the music identifiers are recorded.\nIf the music is deleted and then re-added on the device or if you change the device, the music will have a new identifier and therefore there will be bad music in the playlists.\nThis issue will be fixed in a future update.</string>
 </resources>

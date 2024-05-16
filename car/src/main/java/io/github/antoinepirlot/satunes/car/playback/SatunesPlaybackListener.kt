@@ -57,7 +57,19 @@ object SatunesPlaybackListener : PlaybackListener() {
         }
     }
 
-    // Not use oonMediaItemTransition to update playack state as exo player pause/play in this case
+    override fun onPositionDiscontinuity(
+        oldPosition: Player.PositionInfo,
+        newPosition: Player.PositionInfo,
+        reason: Int
+    ) {
+        // Called when repeat mode is only one and music start automatically from the beginning
+        super.onPositionDiscontinuity(oldPosition, newPosition, reason)
+        if (PlaybackController.getInstance().isPlaying.value) {
+            updatePlaybackState(state = STATE_PLAYING, actions = ACTIONS_ON_PLAY)
+        } else {
+            updatePlaybackState(state = STATE_PAUSED, actions = ACTIONS_ON_PAUSE)
+        }
+    }
 
     internal fun updateMediaPlaying() {
         val playbackController: PlaybackController = PlaybackController.getInstance()

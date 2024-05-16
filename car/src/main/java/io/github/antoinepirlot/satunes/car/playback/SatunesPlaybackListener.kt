@@ -32,7 +32,6 @@ import android.support.v4.media.session.PlaybackStateCompat.CustomAction
 import android.support.v4.media.session.PlaybackStateCompat.STATE_PAUSED
 import android.support.v4.media.session.PlaybackStateCompat.STATE_PLAYING
 import androidx.media.utils.MediaConstants
-import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import io.github.antoinepirlot.satunes.car.playback.SatunesCarCallBack.ACTIONS_ON_PAUSE
 import io.github.antoinepirlot.satunes.car.playback.SatunesCarCallBack.ACTIONS_ON_PLAY
@@ -49,7 +48,8 @@ import io.github.antoinepirlot.satunes.playback.services.PlaybackListener
 object SatunesPlaybackListener : PlaybackListener() {
     override fun onIsPlayingChanged(isPlaying: Boolean) {
         super.onIsPlayingChanged(isPlaying)
-
+        // Keep it here, without this one, if app is opened only from AA, then, no playback is shown
+        updateMediaPlaying()
         if (isPlaying) {
             updatePlaybackState(state = STATE_PLAYING, actions = ACTIONS_ON_PLAY)
         } else {
@@ -57,12 +57,7 @@ object SatunesPlaybackListener : PlaybackListener() {
         }
     }
 
-    override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
-        super.onMediaItemTransition(mediaItem, reason)
-
-        updateMediaPlaying()
-        updatePlaybackState(state = STATE_PLAYING, actions = ACTIONS_ON_PLAY)
-    }
+    // Not use oonMediaItemTransition to update playack state as exo player pause/play in this case
 
     internal fun updateMediaPlaying() {
         val playbackController: PlaybackController = PlaybackController.getInstance()

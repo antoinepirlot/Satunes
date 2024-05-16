@@ -42,6 +42,7 @@ import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.DataLoader
 import io.github.antoinepirlot.satunes.database.services.DataManager
+import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.icons.R as RIcons
 
@@ -79,7 +80,8 @@ class SatunesCarMusicService : MediaBrowserServiceCompat() {
 
     override fun onCreate() {
         super.onCreate()
-
+        //TODO make the init function for both app and android auto app
+        SettingsManager.loadSettings(context = this)
         val className: String = this.javaClass.name.split(".").last()
         session = MediaSessionCompat(this, className)
         sessionToken = session.sessionToken

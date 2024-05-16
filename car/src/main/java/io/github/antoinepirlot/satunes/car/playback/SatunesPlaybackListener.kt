@@ -49,7 +49,8 @@ import io.github.antoinepirlot.satunes.playback.services.PlaybackListener
 object SatunesPlaybackListener : PlaybackListener() {
     override fun onIsPlayingChanged(isPlaying: Boolean) {
         super.onIsPlayingChanged(isPlaying)
-
+        // Keep it here, without this one, if app is opened only from AA, then, no playback is shown
+        updateMediaPlaying()
         if (isPlaying) {
             updatePlaybackState(state = STATE_PLAYING, actions = ACTIONS_ON_PLAY)
         } else {
@@ -59,8 +60,6 @@ object SatunesPlaybackListener : PlaybackListener() {
 
     override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
         super.onMediaItemTransition(mediaItem, reason)
-
-        updateMediaPlaying()
         updatePlaybackState(state = STATE_PLAYING, actions = ACTIONS_ON_PLAY)
     }
 

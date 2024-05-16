@@ -75,4 +75,5 @@
     <string name="pause_if_another_playback">Pause si un autre application est en cours de lecture (redémarrage requis)</string>
     <string name="update_title">Changer de nom</string>
     <string name="title">Titre</string>
+    <string name="playlist_beta_info">L\'exportation et importation des playlists est en beta du fait que seuls les identifiants des musiques sont enregistrés. Si les musiques sont supprimées puis réajoutées sur l\'appareil ou si tu changes d\'appareil, les musiques auront un nouvel identifiant et donc iil y aura des mauvaises musiques dans les playlists. Ce soucis sera réglé dans une prochaine mises à jour.</string>
 </resources>

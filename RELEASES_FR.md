@@ -3,6 +3,21 @@ You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
 ## 1.0 (Android 5.1.1 Lollipop et ultérieur)
 
+### 1.0.0-preview-2
+
+Nouvelles Fonctionnalités:
+
+* Possibilité de changer le nom d'une playlist
+
+Améliorations, Optimisations et Résolutions de problèmes:
+
+* Les problèmes lié au playback dans Android Auto sont réglés:
+  * Pas d'affichage au lancement
+  * Barre de progression pendant le mode répéter un seul morceau qui va au delà de la limite de
+    temps
+* Ajout d'un texte expliquant pourquoi l'exportation et exportation des playlists est en bêta
+* Tentative de correction du crash lors de l'ouverture de l'app après un long moment après une pause
+
 ### 1.0.0-preview-1
 
 Cette version est prévue d'être déployée comme version stable si aucun bug n'est détecté pendant

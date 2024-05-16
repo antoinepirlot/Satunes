@@ -65,7 +65,11 @@ class PlaybackService : MediaSessionService() {
     override fun onTaskRemoved(rootIntent: Intent?) {
         super.onTaskRemoved(rootIntent)
         if (!SettingsManager.playbackWhenClosedChecked.value) {
-            PlaybackController.getInstance().pause()
+            try {
+                PlaybackController.getInstance().pause()
+            } catch (_: Exception) {
+                // Do nothing
+            }
             onDestroy()
         }
     }

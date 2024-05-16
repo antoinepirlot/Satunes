@@ -17,6 +17,7 @@ Améliorations, Optimisations et Résolutions de problèmes:
     temps
 * Ajout d'un texte expliquant pourquoi l'exportation et exportation des playlists est en bêta
 * Tentative de correction du crash lors de l'ouverture de l'app après un long moment après une pause
+* Résolution du problème de téléchargement d'une update
 
 ### 1.0.0-preview-1
 

@@ -42,7 +42,6 @@ import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
-import io.github.antoinepirlot.satunes.database.models.tables.MusicDB
 import io.github.antoinepirlot.satunes.database.services.DataManager
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import kotlinx.coroutines.CoroutineScope
@@ -141,24 +140,7 @@ object SatunesCarCallBack : MediaSessionCompat.Callback() {
         try {
             loadMusicFromMedia(shuffleMode = shuffleMode, mediaId = lastRoute.toLong())
         } catch (e: NumberFormatException) {
-            val mapToLoad: SortedMap<Music, MediaItem> = when (lastRoute) {
-                ScreenPages.ALL_MUSICS.id, ScreenPages.ALL_ALBUMS.id, ScreenPages.ALL_GENRES.id,
-                ScreenPages.ALL_ARTISTS.id, ScreenPages.ALL_FOLDERS.id -> {
-                    DataManager.musicMediaItemSortedMap
-                }
-
-                ScreenPages.ALL_PLAYLISTS.id -> {
-                    val sortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
-                    DataManager.playlistWithMusicsMap.values.forEach {
-                        for (musicDb: MusicDB in it.musics) {
-                            sortedMap[musicDb.music!!] = musicDb.music!!.mediaItem
-                        }
-                    }
-                    sortedMap
-                }
-
-                else -> sortedMapOf()
-            }
+            val mapToLoad: SortedMap<Music, MediaItem> = DataManager.musicMediaItemSortedMap
             playbackController.loadMusic(
                 musicMediaItemSortedMap = mapToLoad,
                 shuffleMode = shuffleMode

@@ -66,7 +66,6 @@ class MainActivity : ComponentActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        //TODO make the init function for both app and android auto app
         instance = this
         setNotificationOnClick()
         SettingsManager.loadSettings(context = this@MainActivity)

@@ -70,6 +70,4 @@
     <string name="repeat_mode">"Repeat Mode: "</string>
     <string name="playback_mode_settings">Default Playback Modes</string>
     <string name="pause_if_another_playback">Pause if another app is playing (restart needed)</string>
-    <string name="update_title">Update Name</string>
-    <string name="title">Title</string>
 </resources>

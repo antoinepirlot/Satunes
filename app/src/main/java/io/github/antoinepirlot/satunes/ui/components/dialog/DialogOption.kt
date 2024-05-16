@@ -48,7 +48,7 @@ private val SPACER_SIZE = 10.dp
 fun DialogOption(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
-    icon: @Composable () -> Unit, //TODO use satunes icons
+    icon: @Composable () -> Unit,
     text: String,
 ) {
     TextButton(

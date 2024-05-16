@@ -241,10 +241,4 @@ object DataManager {
         }
         playlistWithMusicsMapById.remove(playlist.id)
     }
-
-    fun updatePlaylist(oldTitle: String, playlistWithMusics: PlaylistWithMusics) {
-        playlistWithMusicsMap.remove(oldTitle)
-        playlistWithMusicsMap[playlistWithMusics.playlist.title] = playlistWithMusics
-        playlistWithMusicsMapUpdated.value = true
-    }
 }

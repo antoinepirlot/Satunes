@@ -73,6 +73,4 @@
     <string name="repeat_mode">"Mode de relecture: "</string>
     <string name="playback_mode_settings">Mode de Lecture par Défaut</string>
     <string name="pause_if_another_playback">Pause si un autre application est en cours de lecture (redémarrage requis)</string>
-    <string name="update_title">Changer de nom</string>
-    <string name="title">Titre</string>
 </resources>

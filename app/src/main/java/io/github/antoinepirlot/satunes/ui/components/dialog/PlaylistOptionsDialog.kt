@@ -25,17 +25,27 @@
 
 package io.github.antoinepirlot.satunes.ui.components.dialog
 
+import android.content.Context
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
 import io.github.antoinepirlot.satunes.database.models.tables.Playlist
+import io.github.antoinepirlot.satunes.database.services.DataManager
+import io.github.antoinepirlot.satunes.database.services.DatabaseManager
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 
@@ -50,6 +60,7 @@ fun PlaylistOptionsDialog(
     onRemovePlaylist: () -> Unit,
     onDismissRequest: () -> Unit,
 ) {
+    var playlistTitle: String by remember { mutableStateOf(playlistWithMusics.playlist.title) }
     AlertDialog(
         modifier = modifier,
         icon = {
@@ -59,7 +70,18 @@ fun PlaylistOptionsDialog(
             )
         },
         title = {
-            NormalText(text = playlistWithMusics.playlist.title)
+            OutlinedTextField(
+                value = playlistTitle,
+                onValueChange = {
+                    playlistTitle = it
+                },
+                label = {
+                    NormalText(text = stringResource(id = R.string.title))
+                },
+                placeholder = {
+                    NormalText(text = stringResource(id = R.string.title))
+                }
+            )
         },
         text = {
             Column {
@@ -96,7 +118,27 @@ fun PlaylistOptionsDialog(
         onDismissRequest = {
             onDismissRequest()
         },
-        confirmButton = { /* Nothing */ }
+        confirmButton = {
+            val context: Context = LocalContext.current
+            TextButton(onClick = {
+                onDismissRequest()
+                val oldTitle: String = playlistWithMusics.playlist.title
+                playlistWithMusics.playlist.title = playlistTitle
+                // TODO this case must be managed in database module
+                try {
+                    val db = DatabaseManager(context = context)
+                    db.updatePlaylists(playlistWithMusics.playlist)
+                    DataManager.updatePlaylist(
+                        oldTitle = oldTitle,
+                        playlistWithMusics = playlistWithMusics
+                    )
+                } catch (_: Exception) {
+                    playlistWithMusics.playlist.title = oldTitle
+                }
+            }) {
+                NormalText(text = stringResource(id = R.string.ok))
+            }
+        }
     )
 }
 

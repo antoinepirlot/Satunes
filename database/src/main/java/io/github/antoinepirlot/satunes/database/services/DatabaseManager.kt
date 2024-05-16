@@ -101,7 +101,7 @@ class DatabaseManager(context: Context) {
         }
     }
 
-    fun insertOne(
+    fun insertOnePlaylist(
         context: Context,
         playlist: Playlist,
         musicList: MutableList<MusicDB>? = null,
@@ -243,7 +243,7 @@ class DatabaseManager(context: Context) {
         try {
             playlistWithMusics.playlist.id = 0
             playlistWithMusics.id = 0
-            insertOne(
+            insertOnePlaylist(
                 context = context,
                 playlist = playlistWithMusics.playlist,
                 musicList = playlistWithMusics.musics

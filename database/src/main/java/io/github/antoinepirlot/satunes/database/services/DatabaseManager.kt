@@ -69,16 +69,14 @@ class DatabaseManager(context: Context) {
     }
 
     fun loadAllPlaylistsWithMusic() {
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val playlistsWithMusicsList: List<PlaylistWithMusics> =
-                    playlistDao.getPlaylistsWithMusics()
-                playlistsWithMusicsList.forEach { playlistWithMusics: PlaylistWithMusics ->
-                    DataManager.addPlaylist(playlistWithMusics = playlistWithMusics)
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
+        try {
+            val playlistsWithMusicsList: List<PlaylistWithMusics> =
+                playlistDao.getPlaylistsWithMusics()
+            playlistsWithMusicsList.forEach { playlistWithMusics: PlaylistWithMusics ->
+                DataManager.addPlaylist(playlistWithMusics = playlistWithMusics)
             }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 

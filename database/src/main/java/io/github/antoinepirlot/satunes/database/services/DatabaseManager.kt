@@ -69,16 +69,14 @@ class DatabaseManager(context: Context) {
     }
 
     fun loadAllPlaylistsWithMusic() {
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val playlistsWithMusicsList: List<PlaylistWithMusics> =
-                    playlistDao.getPlaylistsWithMusics()
-                playlistsWithMusicsList.forEach { playlistWithMusics: PlaylistWithMusics ->
-                    DataManager.addPlaylist(playlistWithMusics = playlistWithMusics)
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
+        try {
+            val playlistsWithMusicsList: List<PlaylistWithMusics> =
+                playlistDao.getPlaylistsWithMusics()
+            playlistsWithMusicsList.forEach { playlistWithMusics: PlaylistWithMusics ->
+                DataManager.addPlaylist(playlistWithMusics = playlistWithMusics)
             }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 
@@ -101,7 +99,7 @@ class DatabaseManager(context: Context) {
         }
     }
 
-    fun insertOne(
+    fun insertOnePlaylist(
         context: Context,
         playlist: Playlist,
         musicList: MutableList<MusicDB>? = null,
@@ -126,6 +124,17 @@ class DatabaseManager(context: Context) {
                         playlists = mutableListOf(playlistWithMusics)
                     )
                 }
+            }
+        }
+    }
+
+    fun updatePlaylists(vararg playlists: Playlist) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                playlistDao.update(*playlists)
+            } catch (e: SQLiteConstraintException) {
+                e.printStackTrace()
+                throw Exception()
             }
         }
     }
@@ -243,7 +252,7 @@ class DatabaseManager(context: Context) {
         try {
             playlistWithMusics.playlist.id = 0
             playlistWithMusics.id = 0
-            insertOne(
+            insertOnePlaylist(
                 context = context,
                 playlist = playlistWithMusics.playlist,
                 musicList = playlistWithMusics.musics

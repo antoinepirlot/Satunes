@@ -45,6 +45,7 @@ import androidx.compose.ui.unit.dp
 import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.services.DataManager
+import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 import io.github.antoinepirlot.satunes.ui.components.texts.Title
 import io.github.antoinepirlot.satunes.database.R as RDb
 
@@ -65,6 +66,10 @@ fun PlaylistsSettingsView(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Title(text = stringResource(id = RDb.string.playlists) + " (Beta)")
+        NormalText(
+            text = stringResource(id = R.string.playlist_beta_info),
+            maxLines = Int.MAX_VALUE
+        )
         Row {
             Button(onClick = {
                 MainActivity.playlistsToExport =

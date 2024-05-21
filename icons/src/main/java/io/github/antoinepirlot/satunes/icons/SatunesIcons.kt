@@ -34,6 +34,7 @@ import androidx.compose.material.icons.rounded.Album
 import androidx.compose.material.icons.rounded.Category
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Done
+import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.FileDownload
 import androidx.compose.material.icons.rounded.FileUpload
 import androidx.compose.material.icons.rounded.Folder
@@ -58,6 +59,7 @@ enum class SatunesIcons(val imageVector: ImageVector, val description: String) {
     ADD(imageVector = Icons.Rounded.Add, description = "Add Icon"),
     ALBUM(imageVector = Icons.Rounded.Album, description = "Album Icon"),
     ARTIST(imageVector = Icons.Rounded.AccountCircle, description = "Artist Icon"),
+    EDIT(imageVector = Icons.Rounded.Edit, description = "Edit Icon"),
     EXPORT(imageVector = Icons.Rounded.FileUpload, description = "Export Icon"),
     IMPORT(imageVector = Icons.Rounded.FileDownload, description = "Import Icon"),
     FOLDER(imageVector = Icons.Rounded.Folder, description = "Folder Icon"),

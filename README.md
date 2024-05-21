@@ -6,7 +6,7 @@ Satunes est un lecteur de musique pour Android.
 Tu peux l'utiliser pour écouter ta musique présente sur ton appareil Android. (Android Lollipop 5.1.1 et plus récent).
 Cette application est en cours de développement et peut contenir des bugs et problèmes d'optimisations.
 
-L'entierté du projet est sous la licence GNU/GPL v3 et s'applique à toutes les version de ce projet y compris le code ajouté avant l'introduction de la licence.
+L'entierté du projet est sous la licence GNU/GPL v3 et s'applique à toutes les versions de ce projet y compris le code ajouté avant l'introduction de la licence.
 
 Tu as le droit de réutiliser mon code pour créer une nouvelle application dérivée mais tu devras utiliser la même licence ou une licence compatible.
 

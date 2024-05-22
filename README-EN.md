@@ -30,6 +30,24 @@ If you decide to use my code to create new app, you can but you have to use the 
   <img src="metadata/images/playback_settings_view.png" width = "200">
 </p>
 
+# Features
+
+* Play music on phone
+* View artists and their albums and music
+* View genres and their albums and music
+* Custom playlists
+* Play music based on folders, albums, genres, artists and playlists
+* Export and import playlists (beta)
+* Personalization of the experience:
+    * Stop or continue playing music if the app is closed
+    * Pause or not if:
+      * another app plays another audio
+      * Headphones are unplugged (bluetooth and cable)
+    * Choice of progress bar refresh speed
+    * Choice of default playback modes
+* Exclude ringtones or not
+* Update the application without leaving it
+
 # Installation
 
 ## Application

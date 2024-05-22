@@ -1,4 +1,8 @@
-# MP3 Player (🇬🇧)
+<p align="center">
+  <img src="metadata/images/Satunes_Logo.png" width="200">
+</p>
+
+<h1 align="center">Satunes (🇬🇧)</h1>
 
 Vous pouvez retrouver ce fichier en [français 🇫🇷](README.md)
 
@@ -8,6 +12,23 @@ This application is still in development and contains bugs and bad ui.
 This entire project is under GNU/GPL v3 and it's applied on all version of this project (even the code pushed from the very first commit.).
 
 If you decide to use my code to create new app, you can but you have to use the same license :p
+
+# Screenshots
+
+<p>
+  <img src="metadata/images/all_albums_view.png" width = "200">
+  <img src="metadata/images/album_view.png" width = "200">
+
+  <img src="metadata/images/playback_view.png" width = "200">
+  
+  <img src="metadata/images/all_playlists_view.png" width = "200">
+  <img src="metadata/images/playlist_view.png" width = "200">
+  
+  <img src="metadata/images/artist_view.png" width = "200">
+  
+  <img src="metadata/images/all_settings_view.png" width = "200">
+  <img src="metadata/images/playback_settings_view.png" width = "200">
+</p>
 
 # Installation
 

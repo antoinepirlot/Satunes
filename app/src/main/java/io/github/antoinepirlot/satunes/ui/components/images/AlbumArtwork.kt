@@ -99,7 +99,6 @@ fun MusicPlayingAlbumArtwork(
     onClick: (album: Album?) -> Unit = { /* Do nothing by default */ }
 ) {
     val musicPlaying: Music? by remember { PlaybackController.getInstance().musicPlaying }
-    val screenWidthDp = LocalConfiguration.current.screenWidthDp
     AlbumArtwork(
         modifier = modifier,
         media = musicPlaying!!,

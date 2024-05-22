@@ -72,7 +72,7 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.MusicOptionsDialog
 import io.github.antoinepirlot.satunes.ui.components.dialog.PlaylistOptionsDialog
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 import io.github.antoinepirlot.satunes.ui.components.texts.Subtitle
-import io.github.antoinepirlot.satunes.ui.views.utils.getRootFolderName
+import io.github.antoinepirlot.satunes.ui.utils.getRootFolderName
 
 /**
  * @author Antoine Pirlot on 16/01/24

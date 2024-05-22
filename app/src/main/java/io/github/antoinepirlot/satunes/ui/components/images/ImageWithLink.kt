@@ -49,7 +49,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.ui.ScreenSizes
-import io.github.antoinepirlot.satunes.ui.components.settings.utils.openUrl
+import io.github.antoinepirlot.satunes.ui.utils.openUrl
 
 /**
  * @author Antoine Pirlot on 11/04/2024

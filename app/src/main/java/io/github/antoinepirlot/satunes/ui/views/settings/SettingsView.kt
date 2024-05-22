@@ -56,6 +56,13 @@ fun SettingsView(
         HorizontalDivider()
         Column(modifier = Modifier.verticalScroll(state = scrollState)) {
             ClickableListItem(
+                text = "Android Auto",
+                onClick = {
+                    navController.navigate(Destination.ANDROID_AUTO_SETTING.link)
+                }
+            )
+            HorizontalDivider()
+            ClickableListItem(
                 text = stringResource(id = R.string.bottom_bar),
                 onClick = {
                     navController.navigate(Destination.BOTTOM_BAR_SETTING.link)

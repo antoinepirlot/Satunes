@@ -26,6 +26,7 @@
 package io.github.antoinepirlot.satunes.router
 
 import android.content.Context
+import android.net.Uri.decode
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -63,6 +64,7 @@ import io.github.antoinepirlot.satunes.ui.views.genre.GenreView
 import io.github.antoinepirlot.satunes.ui.views.music.AllMusicsListView
 import io.github.antoinepirlot.satunes.ui.views.playlist.PlaylistListView
 import io.github.antoinepirlot.satunes.ui.views.playlist.PlaylistView
+import io.github.antoinepirlot.satunes.ui.views.settings.AndroidAutoSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.BottomNavigationBarSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.ExclusionSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.PermissionsSettingsView
@@ -139,7 +141,7 @@ internal fun Router(
             if (isLoading.value || !isLoaded) {
                 LoadingView()
             } else {
-                val artistName: String = it.arguments!!.getString("name")!!
+                val artistName: String = decode(it.arguments!!.getString("name")!!)
                 val artist: Artist by remember {
                     mutableStateOf(
                         DataManager.getArtist(
@@ -185,7 +187,7 @@ internal fun Router(
             if (isLoading.value || !isLoaded) {
                 LoadingView()
             } else {
-                val genreName: String = it.arguments!!.getString("name")!!
+                val genreName: String = decode(it.arguments!!.getString("name")!!)
                 val genre: Genre by remember { mutableStateOf(DataManager.getGenre(genreName = genreName)) }
                 GenreView(navController = navController, genre = genre)
             }
@@ -267,6 +269,10 @@ internal fun Router(
 
         composable(Destination.PERMISSIONS_SETTINGS.link) {
             PermissionsSettingsView(isAudioAllowed = isAudioAllowed)
+        }
+
+        composable(Destination.ANDROID_AUTO_SETTING.link) {
+            AndroidAutoSettingsView()
         }
     }
 }

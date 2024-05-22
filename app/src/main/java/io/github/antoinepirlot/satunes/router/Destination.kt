@@ -31,6 +31,7 @@ package io.github.antoinepirlot.satunes.router
 
 internal enum class Destination(val link: String) {
     ALBUMS(link = "/albums"),
+    ANDROID_AUTO_SETTING(link = "/android_auto_setting"),
     ARTISTS(link = "/artists"),
     BOTTOM_BAR_SETTING(link = "/navbar_settings"),
     EXCLUSION(link = "/exclusion"),

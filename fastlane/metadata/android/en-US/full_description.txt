@@ -1,0 +1,12 @@
+Satunes is a mp3 player for Android Lollipop 5.1.1+
+
+With this new mp3 player you can listen your local music with no ads.
+
+Satunes being compatible with Android Auto but not distributed on Google Play Store, to activate it, follow the following steps:
+
+1) Go to Android Auto settings.
+2) Multiple click on "Version" to activate dev mode.
+3) Go to Dev's settings and activate "Unknown sources" as this app is not published on Google Play Store.
+4) Click on the 3 buttons as in point 3, but click on "Exit developer mode" the setting you just activated will be saved.
+5) Add app in launcher.
+6) Enjoy

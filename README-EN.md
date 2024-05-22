@@ -1,4 +1,8 @@
-# MP3 Player (🇬🇧)
+<p align="center">
+  <img src="fastlane/metadata/android/en-US/images/Satunes_Logo.png" width="200">
+</p>
+
+<h1 align="center">Satunes (🇬🇧)</h1>
 
 Vous pouvez retrouver ce fichier en [français 🇫🇷](README.md)
 
@@ -8,6 +12,41 @@ This application is still in development and contains bugs and bad ui.
 This entire project is under GNU/GPL v3 and it's applied on all version of this project (even the code pushed from the very first commit.).
 
 If you decide to use my code to create new app, you can but you have to use the same license :p
+
+# Screenshots
+
+<p>
+  <img src="fastlane/metadata/android/en-US/images/all_albums_view.png" width = "200">
+  <img src="fastlane/metadata/android/en-US/images/album_view.png" width = "200">
+
+  <img src="fastlane/metadata/android/en-US/images/playback_view.png" width = "200">
+
+  <img src="fastlane/metadata/android/en-US/images/all_playlists_view.png" width = "200">
+  <img src="fastlane/metadata/android/en-US/images/playlist_view.png" width = "200">
+
+  <img src="fastlane/metadata/android/en-US/images/artist_view.png" width = "200">
+
+  <img src="fastlane/metadata/android/en-US/images/all_settings_view.png" width = "200">
+  <img src="fastlane/metadata/android/en-US/images/playback_settings_view.png" width = "200">
+</p>
+
+# Features
+
+* Play music on phone
+* View artists and their albums and music
+* View genres and their albums and music
+* Custom playlists
+* Play music based on folders, albums, genres, artists and playlists
+* Export and import playlists (beta)
+* Personalization of the experience:
+    * Stop or continue playing music if the app is closed
+    * Pause or not if:
+      * another app plays another audio
+      * Headphones are unplugged (bluetooth and cable)
+    * Choice of progress bar refresh speed
+    * Choice of default playback modes
+* Exclude ringtones or not
+* Update the application without leaving it
 
 # Installation
 

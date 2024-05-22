@@ -26,6 +26,7 @@
 package io.github.antoinepirlot.satunes.router
 
 import android.content.Context
+import android.net.Uri.decode
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -139,7 +140,7 @@ internal fun Router(
             if (isLoading.value || !isLoaded) {
                 LoadingView()
             } else {
-                val artistName: String = it.arguments!!.getString("name")!!
+                val artistName: String = decode(it.arguments!!.getString("name")!!)
                 val artist: Artist by remember {
                     mutableStateOf(
                         DataManager.getArtist(
@@ -185,7 +186,7 @@ internal fun Router(
             if (isLoading.value || !isLoaded) {
                 LoadingView()
             } else {
-                val genreName: String = it.arguments!!.getString("name")!!
+                val genreName: String = decode(it.arguments!!.getString("name")!!)
                 val genre: Genre by remember { mutableStateOf(DataManager.getGenre(genreName = genreName)) }
                 GenreView(navController = navController, genre = genre)
             }

@@ -62,7 +62,7 @@ fun RepeatModeRadioButtons(
     val iconsList: List<SatunesIcons> = listOf(
         SatunesIcons.REPEAT, // i = 0
         SatunesIcons.REPEAT_ON, // i = 1
-        SatunesIcons.REPEAT_ONE_ON // i = 2
+        SatunesIcons.REPEAT_ONE // i = 2
     )
     var state: Int by remember { SettingsManager.repeatMode }
     Row(

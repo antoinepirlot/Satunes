@@ -49,8 +49,8 @@ import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.router.utils.openMediaFromFolder
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
 import io.github.antoinepirlot.satunes.ui.components.texts.Title
+import io.github.antoinepirlot.satunes.ui.utils.getRootFolderName
 import io.github.antoinepirlot.satunes.ui.views.MediaListView
-import io.github.antoinepirlot.satunes.ui.views.utils.getRootFolderName
 import java.util.SortedMap
 import java.util.SortedSet
 

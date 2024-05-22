@@ -25,19 +25,22 @@
 
 package io.github.antoinepirlot.satunes.ui.utils
 
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.media3.common.MediaItem
+import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.database.models.MenuTitle
 import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.icons.SatunesIcons.ALBUM
 import io.github.antoinepirlot.satunes.icons.SatunesIcons.ARTIST
 import io.github.antoinepirlot.satunes.icons.SatunesIcons.FOLDER
 import io.github.antoinepirlot.satunes.icons.SatunesIcons.GENRES
 import io.github.antoinepirlot.satunes.icons.SatunesIcons.MUSIC
 import io.github.antoinepirlot.satunes.icons.SatunesIcons.PLAYLIST
+import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import java.util.SortedMap
 
 /**
@@ -92,5 +95,17 @@ fun getRightIconAndDescription(menuTitle: MenuTitle): Pair<ImageVector, String> 
         MenuTitle.PLAYLISTS -> PLAYLIST.imageVector to PLAYLIST.description
 
         else -> MUSIC.imageVector to MUSIC.description
+    }
+}
+
+/**
+ * Return the root folder name: 0 -> This device, else -> External Storage: name
+ */
+@Composable
+fun getRootFolderName(title: String): String {
+    return when (title) {
+        "0" -> stringResource(id = R.string.this_device)
+
+        else -> "${stringResource(id = R.string.external_storage)}: $title"
     }
 }

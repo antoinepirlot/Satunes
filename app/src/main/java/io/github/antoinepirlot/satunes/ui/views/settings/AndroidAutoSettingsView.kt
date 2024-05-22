@@ -23,26 +23,39 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.router
+package io.github.antoinepirlot.satunes.ui.views.settings
+
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
+import io.github.antoinepirlot.satunes.ui.components.texts.Title
 
 /**
- * @author Antoine Pirlot on 24-01-24
+ * @author Antoine Pirlot on 22/05/2024
  */
 
-internal enum class Destination(val link: String) {
-    ALBUMS(link = "/albums"),
-    ANDROID_AUTO_SETTING(link = "/android_auto_setting"),
-    ARTISTS(link = "/artists"),
-    BOTTOM_BAR_SETTING(link = "/navbar_settings"),
-    EXCLUSION(link = "/exclusion"),
-    FOLDERS(link = "/folders"),
-    GENRES(link = "/genres"),
-    MUSICS(link = "/musics"),
-    PERMISSIONS_SETTINGS(link = "/permissions_settings"),
-    PLAYBACK(link = "/playback"),
-    PLAYBACK_SETTINGS(link = "/playback_settings"),
-    PLAYLISTS(link = "/playlists"),
-    PLAYLISTS_SETTINGS(link = "/playlists_settings"),
-    SETTINGS(link = "/settings"),
-    UPDATES(link = "/updates"),
+@Composable
+fun AndroidAutoSettingsView(
+    modifier: Modifier = Modifier,
+) {
+    val scrollState = rememberScrollState()
+    Column(modifier = modifier.verticalScroll(scrollState)) {
+        Title(text = "Android Auto")
+        NormalText(
+            text = stringResource(id = R.string.android_auto_tuto),
+            maxLines = Int.MAX_VALUE
+        )
+    }
+}
+
+@Preview
+@Composable
+fun AndroidAutoSettingsViewPreview() {
+    AndroidAutoSettingsView()
 }

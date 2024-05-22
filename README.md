@@ -5,7 +5,7 @@
 <h1 align="center">Satunes (🇫🇷)</h1>
 <p align="center">
   <a href="https://github.com/antoinepirlot/Satunes/releases/latest">
-  <img src="https://img.shields.io/github/release/antoinepirlot/Satunes.svg?logo=github">
+    <img src="https://img.shields.io/github/release/antoinepirlot/Satunes.svg?logo=github">
   </a>
 </p>
 

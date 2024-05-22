@@ -3,6 +3,9 @@
 </p>
 
 <h1 align="center">Satunes (🇫🇷)</h1>
+<p align="center">
+  <img src="https://img.shields.io/github/release/antoinepirlot/Satunes.svg?logo=github">
+</p>
 
 You can find this file in [english 🇬🇧](README-EN.md).
 

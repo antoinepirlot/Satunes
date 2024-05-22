@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="metadata/images/Satunes_Logo.png" width="200">
+  <img src="fastlane/metadata/android/en-US/images/Satunes_Logo.png" width="200">
 </p>
 
 <h1 align="center">Satunes (🇫🇷)</h1>
@@ -17,18 +17,18 @@ Tu as le droit de réutiliser mon code pour créer une nouvelle application dér
 # Aperçu
 
 <p>
-  <img src="metadata/images/all_albums_view.png" width = "200">
-  <img src="metadata/images/album_view.png" width = "200">
+  <img src="fastlane/metadata/android/en-US/images/1.png" width = "200">
+  <img src="fastlane/metadata/android/en-US/images/2.png" width = "200">
 
-  <img src="metadata/images/playback_view.png" width = "200">
-  
-  <img src="metadata/images/all_playlists_view.png" width = "200">
-  <img src="metadata/images/playlist_view.png" width = "200">
-  
-  <img src="metadata/images/artist_view.png" width = "200">
-  
-  <img src="metadata/images/all_settings_view.png" width = "200">
-  <img src="metadata/images/playback_settings_view.png" width = "200">
+  <img src="fastlane/metadata/android/en-US/images/3.png" width = "200">
+
+  <img src="fastlane/metadata/android/en-US/images/4.png" width = "200">
+  <img src="fastlane/metadata/android/en-US/images/5.png" width = "200">
+
+  <img src="fastlane/metadata/android/en-US/images/6.png" width = "200">
+
+  <img src="fastlane/metadata/android/en-US/images/7.png" width = "200">
+  <img src="fastlane/metadata/android/en-US/images/8.png" width = "200">
 </p>
 
 # Fonctionnalités

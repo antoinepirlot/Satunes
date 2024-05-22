@@ -1,0 +1,1 @@
+Satunes is a mp3 player compatible with Android Auto for Android Lollipop 5.1.1+

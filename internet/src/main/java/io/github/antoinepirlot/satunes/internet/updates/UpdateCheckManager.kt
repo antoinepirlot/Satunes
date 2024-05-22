@@ -122,9 +122,10 @@ object UpdateCheckManager {
                         message = context.getString(R.string.update_available)
                     )
                 }
-            } catch (_: Exception) {
+            } catch (e: Exception) {
                 //Don't crash the app if an error occurred internet connection
                 //Don't care of internet
+                e.printStackTrace()
                 updateAvailableStatus.value = UpdateAvailableStatus.CANNOT_CHECK
                 showToastOnUiThread(
                     context = context,
@@ -145,7 +146,7 @@ object UpdateCheckManager {
      * @return the generated update url from page or null if the app is up to date.
      */
     private fun getUpdateUrl(page: String, currentVersion: String): String? {
-        val regex: Regex = when (currentVersion.split("-")[1]) {
+        val regex: Regex = when (versionType) {
             ALPHA -> ALPHA_REGEX
             BETA -> BETA_REGEX
             PREVIEW -> PREVIEW_REGEX
@@ -167,7 +168,11 @@ object UpdateCheckManager {
     fun getCurrentVersion(context: Context): String {
         val versionName: String =
             context.packageManager.getPackageInfo(context.packageName, 0).versionName
-        versionType = versionName.split("-")[1]
+        versionType = try {
+            versionName.split("-")[1]
+        } catch (_: IndexOutOfBoundsException) {
+            "" //blank for release
+        }
         return versionName
     }
 }

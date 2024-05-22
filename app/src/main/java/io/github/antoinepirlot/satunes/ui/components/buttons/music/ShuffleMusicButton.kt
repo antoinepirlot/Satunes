@@ -25,19 +25,17 @@
 
 package io.github.antoinepirlot.satunes.ui.components.buttons.music
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonColors
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
+import io.github.antoinepirlot.satunes.ui.utils.getRightIconColors
+import io.github.antoinepirlot.satunes.ui.utils.getRightIconTintColor
 
 /**
  * @author Antoine Pirlot on 29/01/24
@@ -50,38 +48,9 @@ fun ShuffleMusicButton(
     val playbackController: PlaybackController = PlaybackController.getInstance()
     val isShuffle: Boolean by rememberSaveable { playbackController.isShuffle }
 
-    val colors: IconButtonColors = IconButtonDefaults.iconButtonColors(
-        containerColor =
-        if (isShuffle) {
-            if (!isSystemInDarkTheme()) {
-                Color.Black
-            } else {
-                Color.White
-            }
-        } else if (!isSystemInDarkTheme()) {
-            Color.White
-        } else {
-            Color.Black
-        },
-    )
-    val tint: Color =
-        if (isShuffle) {
-            if (!isSystemInDarkTheme()) {
-                Color.White
-            } else {
-                Color.Black
-            }
-        } else {
-            if (!isSystemInDarkTheme()) {
-                Color.Black
-            } else {
-                Color.White
-            }
-        }
-
     IconButton(
         modifier = modifier,
-        colors = colors,
+        colors = getRightIconColors(isOn = isShuffle),
         onClick = { playbackController.switchShuffleMode() }
     ) {
         val icon = SatunesIcons.SHUFFLE
@@ -89,7 +58,7 @@ fun ShuffleMusicButton(
             modifier = modifier,
             imageVector = icon.imageVector,
             contentDescription = icon.description,
-            tint = tint
+            tint = getRightIconTintColor(isOn = isShuffle)
         )
     }
 }

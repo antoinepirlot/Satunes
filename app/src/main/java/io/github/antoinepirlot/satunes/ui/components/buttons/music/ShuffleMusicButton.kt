@@ -28,10 +28,14 @@ package io.github.antoinepirlot.satunes.ui.components.buttons.music
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import io.github.antoinepirlot.satunes.playback.services.PlaybackController
+import io.github.antoinepirlot.satunes.ui.utils.getRightIconColors
+import io.github.antoinepirlot.satunes.ui.utils.getRightIconTintColor
 
 /**
  * @author Antoine Pirlot on 29/01/24
@@ -42,16 +46,19 @@ fun ShuffleMusicButton(
     modifier: Modifier = Modifier
 ) {
     val playbackController: PlaybackController = PlaybackController.getInstance()
+    val isShuffle: Boolean by rememberSaveable { playbackController.isShuffle }
 
     IconButton(
         modifier = modifier,
+        colors = getRightIconColors(isOn = isShuffle),
         onClick = { playbackController.switchShuffleMode() }
     ) {
-        val icon = getRightShuffleIcon()
+        val icon = SatunesIcons.SHUFFLE
         Icon(
             modifier = modifier,
             imageVector = icon.imageVector,
-            contentDescription = icon.description
+            contentDescription = icon.description,
+            tint = getRightIconTintColor(isOn = isShuffle)
         )
     }
 }
@@ -60,12 +67,4 @@ fun ShuffleMusicButton(
 @Preview
 fun ShuffleMusicButtonPreview() {
     ShuffleMusicButton()
-}
-
-private fun getRightShuffleIcon(): SatunesIcons {
-    return if (PlaybackController.getInstance().isShuffle.value) {
-        SatunesIcons.SHUFFLE_ON
-    } else {
-        SatunesIcons.SHUFFLE
-    }
 }

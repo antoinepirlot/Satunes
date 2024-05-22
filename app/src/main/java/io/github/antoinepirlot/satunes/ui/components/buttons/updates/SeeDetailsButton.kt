@@ -35,7 +35,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.satunes.internet.R
 import io.github.antoinepirlot.satunes.internet.updates.UpdateAvailableStatus
-import io.github.antoinepirlot.satunes.ui.components.settings.utils.openUrl
+import io.github.antoinepirlot.satunes.ui.utils.openUrl
 
 /**
  * @author Antoine Pirlot on 14/04/2024

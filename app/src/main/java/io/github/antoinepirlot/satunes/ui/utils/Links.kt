@@ -23,24 +23,18 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.views.utils
+package io.github.antoinepirlot.satunes.ui.utils
 
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.res.stringResource
-import io.github.antoinepirlot.satunes.R
-
-/**
- * @author Antoine Pirlot on 11/04/2024
- */
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 
 /**
- * Return the root folder name: 0 -> This device, else -> External Storage: name
+ * @author Antoine Pirlot on 10/04/2024
  */
-@Composable
-fun getRootFolderName(title: String): String {
-    return when (title) {
-        "0" -> stringResource(id = R.string.this_device)
 
-        else -> "${stringResource(id = R.string.external_storage)}: $title"
-    }
+fun openUrl(context: Context, url: String) {
+    val uri: Uri = Uri.parse(url)
+    val intent = Intent(Intent.ACTION_VIEW, uri)
+    context.startActivity(intent)
 }

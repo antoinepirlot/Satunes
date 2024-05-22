@@ -79,7 +79,7 @@ fun MusicControlBar(
         }
     val spaceBetweenButtons = (20f * ratio).dp
     val playPauseButtonSize = (80f * ratio).dp
-    val optionButtonSize = (30f * ratio).dp
+    val optionButtonSize = (35f * ratio).dp
 
     Column(modifier = modifier.padding(bottom = 16.dp)) {
         MusicPositionBar()

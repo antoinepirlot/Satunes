@@ -44,7 +44,7 @@ import androidx.compose.material.icons.rounded.PlayCircle
 import androidx.compose.material.icons.rounded.PlaylistRemove
 import androidx.compose.material.icons.rounded.Repeat
 import androidx.compose.material.icons.rounded.RepeatOn
-import androidx.compose.material.icons.rounded.RepeatOneOn
+import androidx.compose.material.icons.rounded.RepeatOne
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material.icons.rounded.Shuffle
 import androidx.compose.material.icons.rounded.ShuffleOn
@@ -83,7 +83,7 @@ enum class SatunesIcons(val imageVector: ImageVector, val description: String) {
     ),
     REPEAT(imageVector = Icons.Rounded.Repeat, description = "Repeat Icon"),
     REPEAT_ON(imageVector = Icons.Rounded.RepeatOn, description = "Repeat On"),
-    REPEAT_ONE_ON(imageVector = Icons.Rounded.RepeatOneOn, description = "Repeat One On Icon"),
+    REPEAT_ONE(imageVector = Icons.Rounded.RepeatOne, description = "Repeat One On Icon"),
     SETTINGS(imageVector = Icons.Rounded.Settings, description = "Settings Icon"),
     SHUFFLE(imageVector = Icons.Rounded.Shuffle, description = "Shuffle Icon"),
     SHUFFLE_ON(imageVector = Icons.Rounded.ShuffleOn, description = "Shuffle on Icon"),

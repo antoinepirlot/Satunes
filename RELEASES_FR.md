@@ -3,6 +3,20 @@ You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
 ## 1.0 (Android 5.1.1 Lollipop et ultérieur)
 
+### 1.0.0
+
+Satunes est maintenant stable!
+
+Améliorations, Optimisations et Résolutions de problèmes:
+
+* Le problème lié à la navigation dans les genres ou albums avec un nom contenant le caractère '/'
+  peut maintenant fonctionner normalement
+* Le design a été amélioré:
+  * Les boutons shuffle et repeat dans la vue playback (uniquement dans l'application sur téléphone)
+    sont complètement rond
+  * La prise en charge des tailles d'écran à été améliorée
+* Ajout d'un menu dans les paramètres expliquant comment activer Android Auto
+
 ### 1.0.0-preview-2
 
 Nouvelles Fonctionnalités:

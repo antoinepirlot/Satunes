@@ -31,6 +31,24 @@ Tu as le droit de réutiliser mon code pour créer une nouvelle application dér
   <img src="metadata/images/playback_settings_view.png" width = "200">
 </p>
 
+# Fonctionnalités
+
+* Lire la musique sur le téléphone
+* Voir les artistes et leurs albums et musiques
+* Voir les genres et leurs albums et musiques
+* Lire la musique en fonction des dossiers, albums, genres et artists
+* Playlists personnalisées
+* Exportation et importation des playlists (beta)
+* Personnalisation de l'expérience:
+  * Arrrêter ou continuer la lecture si l'application est fermée
+  * Mettre sur pause ou non si:
+    * une autre application joue un autre audio
+    * Les écouteurs sont débranchés (bluetooth et câble)
+  * Choix de la vitesse du rafraichissement de la barre de progresssion
+  * Choix des modes de lectures par défaut
+* Exclure ou non les sonneries
+* Faire la mise à jour de l'application sans la quitter
+
 # Installation
 
 ## Application

@@ -32,6 +32,6 @@ package io.github.antoinepirlot.satunes.ui
 interface ScreenSizes {
     companion object {
         const val VERY_SMALL = 299 // < 300dp
-        const val SMALL = 399 // < 400dp
+        const val SMALL = 369 // < 370dp
     }
 }

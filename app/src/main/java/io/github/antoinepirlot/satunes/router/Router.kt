@@ -64,6 +64,7 @@ import io.github.antoinepirlot.satunes.ui.views.genre.GenreView
 import io.github.antoinepirlot.satunes.ui.views.music.AllMusicsListView
 import io.github.antoinepirlot.satunes.ui.views.playlist.PlaylistListView
 import io.github.antoinepirlot.satunes.ui.views.playlist.PlaylistView
+import io.github.antoinepirlot.satunes.ui.views.settings.AndroidAutoSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.BottomNavigationBarSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.ExclusionSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.PermissionsSettingsView
@@ -268,6 +269,10 @@ internal fun Router(
 
         composable(Destination.PERMISSIONS_SETTINGS.link) {
             PermissionsSettingsView(isAudioAllowed = isAudioAllowed)
+        }
+
+        composable(Destination.ANDROID_AUTO_SETTING.link) {
+            AndroidAutoSettingsView()
         }
     }
 }

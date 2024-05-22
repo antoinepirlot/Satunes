@@ -1,28 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ This file is part of Satunes.
-  ~
-  ~  Satunes is free software: you can redistribute it and/or modify it under
-  ~  the terms of the GNU General Public License as published by the Free Software Foundation,
-  ~  either version 3 of the License, or (at your option) any later version.
-  ~
-  ~  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
-  ~  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-  ~  See the GNU General Public License for more details.
-  ~
-  ~  You should have received a copy of the GNU General Public License along with Satunes.
-  ~  If not, see <https://www.gnu.org/licenses/>.
-  ~
-  ~  **** INFORMATIONS ABOUT THE AUTHOR *****
-  ~  The author of this file is Antoine Pirlot, the owner of this project.
-  ~  You find this original project on github.
-  ~
-  ~  My github link is: https://github.com/antoinepirlot
-  ~  This current project's link is: https://github.com/antoinepirlot/Satunes
-  ~
-  ~  You can contact me via my email: pirlot.antoine@outlook.com
-  ~  PS: I don't answer quickly.
-  -->
 
 <resources>
     <string name="play_all">Lire en mode aléatoire</string>
@@ -73,4 +49,5 @@
     <string name="update_title">Changer de nom</string>
     <string name="title">Titre</string>
     <string name="playlist_beta_info">L\'exportation et importation des playlists est en beta du fait que seuls les identifiants des musiques sont enregistrés.\nSi les musiques sont supprimées puis réajoutées sur l\'appareil ou si tu changes d\'appareil, les musiques auront un nouvel identifiant et donc il y aura des mauvaises musiques dans les playlists.\nCe soucis sera réglé dans une prochaine mises à jour.</string>
+    <string name="android_auto_tuto">Pour activer Android Auto tu dois réaliser les étapes suivantes:\n\n1) Va dans les paramètres de Android Auto.\n\n2) Cliques plusieurs fois sur le bouton \"Version\" pour activer les paramètres développeurs.\n\n3) Va dans les paramètres développeurs en cliquant sur les 3 boutons en haut à droite et active le paramètre \"Sources Inconnues\" car mon application n\'est pas publiée dans le Google Play Store.\n\n4) Clique sur les 3 boutons comme au point 3, mais clique sur \"Quitter le mode développeur\" le paramètre que tu viens d\'activer sera enregistré.\n\n5) Il n\'y a plus qu\'à ajouter l\'application au lanceur d\'application de Android Auto dans le menu \"Personnaliser le lanceur\"\n\n6) Bonne écoute et bon voyage ;)</string>
 </resources>

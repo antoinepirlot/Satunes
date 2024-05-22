@@ -25,6 +25,7 @@
 
 package io.github.antoinepirlot.satunes.router.utils
 
+import android.net.Uri.encode
 import androidx.navigation.NavHostController
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
@@ -100,11 +101,11 @@ private fun getDestinationOf(media: Media?): String {
     return when (media) {
         is Folder -> "${Destination.FOLDERS.link}/${media.id}"
 
-        is Artist -> "${Destination.ARTISTS.link}/${media.title}"
+        is Artist -> "${Destination.ARTISTS.link}/${encode(media.title)}"
 
         is Album -> "${Destination.ALBUMS.link}/${media.id}"
 
-        is Genre -> "${Destination.GENRES.link}/${media.title}"
+        is Genre -> "${Destination.GENRES.link}/${encode(media.title)}"
 
         is PlaylistWithMusics -> "${Destination.PLAYLISTS.link}/${media.playlist.id}"
 

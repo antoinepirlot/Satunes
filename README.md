@@ -1,4 +1,8 @@
-# Satunes (🇫🇷)
+<p align="center">
+  <img src="metadata/images/Satunes_Logo.png" width="200">
+</p>
+
+<h1 align="center">Satunes (🇫🇷)</h1>
 
 You can find this file in [english 🇬🇧](README-EN.md).
 
@@ -9,6 +13,23 @@ Cette application est en cours de développement et peut contenir des bugs et pr
 L'entierté du projet est sous la licence GNU/GPL v3 et s'applique à toutes les version de ce projet y compris le code ajouté avant l'introduction de la licence.
 
 Tu as le droit de réutiliser mon code pour créer une nouvelle application dérivée mais tu devras utiliser la même licence ou une licence compatible.
+
+# Aperçu
+
+<p>
+  <img src="metadata/images/all_albums_view.png" width = "200">
+  <img src="metadata/images/album_view.png" width = "200">
+
+  <img src="metadata/images/playback_view.png" width = "200">
+  
+  <img src="metadata/images/all_playlists_view.png" width = "200">
+  <img src="metadata/images/playlist_view.png" width = "200">
+  
+  <img src="metadata/images/artist_view.png" width = "200">
+  
+  <img src="metadata/images/all_settings_view.png" width = "200">
+  <img src="metadata/images/playback_settings_view.png" width = "200">
+</p>
 
 # Installation
 

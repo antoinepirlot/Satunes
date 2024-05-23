@@ -26,12 +26,14 @@
 package io.github.antoinepirlot.satunes.ui.components.settings
 
 import android.content.Context
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.RadioButton
 import androidx.compose.runtime.Composable
@@ -40,6 +42,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -50,6 +53,8 @@ import io.github.antoinepirlot.satunes.database.services.settings.SettingsManage
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.ScreenSizes
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
+import io.github.antoinepirlot.satunes.ui.utils.getRightIconColors
+import io.github.antoinepirlot.satunes.ui.utils.getRightIconTintColor
 
 /**
  * @author Antoine Pirlot on 13/05/2024
@@ -61,10 +66,11 @@ fun RepeatModeRadioButtons(
 ) {
     val iconsList: List<SatunesIcons> = listOf(
         SatunesIcons.REPEAT, // i = 0
-        SatunesIcons.REPEAT_ON, // i = 1
+        SatunesIcons.REPEAT, // i = 1
         SatunesIcons.REPEAT_ONE // i = 2
     )
     var state: Int by remember { SettingsManager.repeatMode }
+
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -79,6 +85,10 @@ fun RepeatModeRadioButtons(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 val context: Context = LocalContext.current
+                val onClick: () -> Unit = {
+                    state = i
+                    SettingsManager.updateRepeatMode(context = context, newValue = i)
+                }
                 val screenWidthDp: Int = LocalConfiguration.current.screenWidthDp
                 val radioButtonModifier: Modifier =
                     if (screenWidthDp <= ScreenSizes.VERY_SMALL)
@@ -86,17 +96,19 @@ fun RepeatModeRadioButtons(
                     else if (screenWidthDp <= ScreenSizes.SMALL)
                         Modifier.size(30.dp)
                     else Modifier
+
                 RadioButton(
                     modifier = radioButtonModifier,
                     selected = state == i,
-                    onClick = {
-                        state = i
-                        SettingsManager.updateRepeatMode(context = context, newValue = i)
-                    }
+                    onClick = onClick
                 )
                 Icon(
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .background(color = getRightIconColors(isOn = i > 0).containerColor),
                     imageVector = iconsList[i].imageVector,
-                    contentDescription = iconsList[i].description
+                    contentDescription = iconsList[i].description,
+                    tint = getRightIconTintColor(isOn = i > 0)
                 )
             }
         }

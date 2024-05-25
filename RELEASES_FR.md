@@ -11,6 +11,7 @@ Améliorations, Optimisations et Résolutions de problèmes:
   noir lorsque désactivé.
 * Harmonisation des icones dans les paramètre en les rendant rond.
 * Ajout d'une marge horizontale dans la vue du paramètre Android Auto
+* Problème résolu pour le téléchargement d'une mise à jour stable
 
 ### 1.0.0
 

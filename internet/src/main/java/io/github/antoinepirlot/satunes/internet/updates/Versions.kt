@@ -50,7 +50,7 @@ internal object Versions {
 
     internal val RELEASE_REGEX: Regex =
         Regex("\"/antoinepirlot/.+/releases/tag/v[0-9]+\\.[0-9]+\\.[0-9]+\"")
-    internal val RELEASE_APK_REGEX: Regex = Regex(">.*v[0-9]+\\.[0-9]+\\.[0-9]+.apk\"<")
+    internal val RELEASE_APK_REGEX: Regex = Regex(">.*v[0-9]+\\.[0-9]+\\.[0-9]+.apk<")
 
     internal const val RELEASES_URL = "https://github.com/antoinepirlot/Satunes/releases"
 

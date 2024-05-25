@@ -10,6 +10,7 @@ Improvements, Optimizations and Troubleshooting:
 * Fix icons on playback views no more showing full black or full white when deactivated
 * Harmonize shuffle and repeat icon by making the ones in settings with round border
 * Adding a horizontal padding to Android Auto setting view
+* Fix downloading release update
 
 ### 1.0.0
 

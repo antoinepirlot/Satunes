@@ -3,6 +3,14 @@ Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
 ## 1.0 (Android 5.1.1 Lollipop and later)
 
+### 1.0.1
+
+Improvements, Optimizations and Troubleshooting:
+
+* Fix icons on playback views no more showing full black or full white when deactivated
+* Harmonize shuffle and repeat icon by making the ones in settings with round border
+* Adding a horizontal padding to Android Auto setting view
+
 ### 1.0.0
 
 Satunes is now stable!
@@ -254,7 +262,7 @@ Fix issues:
 Features:
 
 * Android Auto support
-    * To activate Android Auto you can find instructions [here](#android-auto)
+  * To activate Android Auto you can find instructions [here](README-EN.md)
 
 Fix issues:
 

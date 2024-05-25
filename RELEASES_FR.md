@@ -3,6 +3,16 @@ You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
 ## 1.0 (Android 5.1.1 Lollipop et ultérieur)
 
+### 1.0.1
+
+Améliorations, Optimisations et Résolutions de problèmes:
+
+* Les icones dans la vue de la musique en cours de lecture n'est plus totalement blanc ni totalement
+  noir lorsque désactivé.
+* Harmonisation des icones dans les paramètre en les rendant rond.
+* Ajout d'une marge horizontale dans la vue du paramètre Android Auto
+* Problème résolu pour le téléchargement d'une mise à jour stable
+
 ### 1.0.0
 
 Satunes est maintenant stable!
@@ -268,7 +278,7 @@ Résolutions de problèmes:
 Fonctionnalités:
 
 * Support pour Android Auto
-    * Pour activer Android Auto clique [ici](#android-auto) pour savoir comment faire.
+  * Pour activer Android Auto clique [ici](README.md) pour savoir comment faire.
 
 Résolutions de problèmes:
 

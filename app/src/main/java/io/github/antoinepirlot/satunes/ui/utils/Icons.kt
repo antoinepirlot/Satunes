@@ -48,10 +48,8 @@ fun getRightIconColors(isOn: Boolean): IconButtonColors {
             } else {
                 Color.White
             }
-        } else if (!isSystemInDarkTheme()) {
-            Color.White
         } else {
-            Color.Black
+            Color.Unspecified // No color for background
         },
     )
 }

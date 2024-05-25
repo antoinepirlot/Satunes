@@ -26,12 +26,14 @@
 package io.github.antoinepirlot.satunes.ui.views.settings
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 import io.github.antoinepirlot.satunes.ui.components.texts.Title
@@ -45,7 +47,9 @@ fun AndroidAutoSettingsView(
     modifier: Modifier = Modifier,
 ) {
     val scrollState = rememberScrollState()
-    Column(modifier = modifier.verticalScroll(scrollState)) {
+    Column(modifier = modifier
+        .padding(horizontal = 16.dp)
+        .verticalScroll(scrollState)) {
         Title(text = "Android Auto")
         NormalText(
             text = stringResource(id = R.string.android_auto_tuto),

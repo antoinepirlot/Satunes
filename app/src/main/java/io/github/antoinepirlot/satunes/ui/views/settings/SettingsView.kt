@@ -37,7 +37,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.router.Destination
-import io.github.antoinepirlot.satunes.ui.components.buttons.ClickableListItem
+import io.github.antoinepirlot.satunes.ui.components.settings.SettingButton
 import io.github.antoinepirlot.satunes.ui.components.texts.Title
 import io.github.antoinepirlot.satunes.database.R as RDb
 
@@ -55,55 +55,45 @@ fun SettingsView(
         Title(text = stringResource(id = R.string.settings))
         HorizontalDivider()
         Column(modifier = Modifier.verticalScroll(state = scrollState)) {
-            ClickableListItem(
-                text = "Android Auto",
-                onClick = {
-                    navController.navigate(Destination.ANDROID_AUTO_SETTING.link)
-                }
-            )
-            HorizontalDivider()
-            ClickableListItem(
+            SettingButton(text = "Android Auto", onClick = {
+                navController.navigate(Destination.ANDROID_AUTO_SETTING.link)
+            })
+            SettingButton(
                 text = stringResource(id = R.string.bottom_bar),
                 onClick = {
                     navController.navigate(Destination.BOTTOM_BAR_SETTING.link)
                 }
             )
-            HorizontalDivider()
-            ClickableListItem(
+            SettingButton(
                 text = stringResource(id = R.string.playback_settings),
                 onClick = {
                     navController.navigate(Destination.PLAYBACK_SETTINGS.link)
                 }
             )
-            HorizontalDivider()
-            ClickableListItem(
+            SettingButton(
                 text = stringResource(id = R.string.exclusion_setting),
                 onClick = {
                     navController.navigate(Destination.EXCLUSION.link)
                 }
             )
-            HorizontalDivider()
-            ClickableListItem(
+            SettingButton(
                 text = stringResource(id = RDb.string.playlists) + " (Beta)",
                 onClick = {
                     navController.navigate(Destination.PLAYLISTS_SETTINGS.link)
                 }
             )
-            HorizontalDivider()
-            ClickableListItem(
+            SettingButton(
                 text = stringResource(id = R.string.permissions),
                 onClick = {
                     navController.navigate(Destination.PERMISSIONS_SETTINGS.link)
                 }
             )
-            HorizontalDivider()
-            ClickableListItem(
+            SettingButton(
                 text = stringResource(id = R.string.version),
                 onClick = {
                     navController.navigate(Destination.UPDATES.link)
                 }
             )
-            HorizontalDivider()
             AboutView()
         }
     }

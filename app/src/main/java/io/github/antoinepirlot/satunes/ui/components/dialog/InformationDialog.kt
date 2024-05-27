@@ -25,6 +25,8 @@
 
 package io.github.antoinepirlot.satunes.ui.components.dialog
 
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.TextButton
@@ -60,7 +62,12 @@ fun InformationDialog(
             Title(text = title, fontSize = 25.sp)
         },
         text = {
-            NormalText(text = text, maxLines = Int.MAX_VALUE)
+            val scrollState = rememberScrollState()
+            NormalText(
+                modifier = Modifier.verticalScroll(scrollState),
+                text = text,
+                maxLines = Int.MAX_VALUE
+            )
         },
         onDismissRequest = onDismissRequest,
         confirmButton = {

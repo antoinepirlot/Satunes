@@ -63,6 +63,7 @@ object SettingsManager {
     private const val DEFAULT_REPEAT_MODE: Int = 0
     private const val DEFAULT_SHUFFLE_MODE_CHECKED: Boolean = false
     private const val DEFAULT_PAUSE_IF_ANOTHER_PLAYBACK_CHECKED: Boolean = true
+    private const val DEFAULT_AUDIO_OFFLOAD_CHECKED: Boolean = false
 
     private val PREFERENCES_DATA_STORE = preferencesDataStore("settings")
     private val FOLDERS_CHECKED_PREFERENCES_KEY = booleanPreferencesKey("folders_checked")
@@ -78,6 +79,7 @@ object SettingsManager {
     private val REPEAT_MODE_KEY = intPreferencesKey("repeat_mode")
     private val SHUFFLE_MODE_KEY = booleanPreferencesKey("shuffle_mode")
     private val PAUSE_IF_ANOTHER_PLAYBACK_KEY = booleanPreferencesKey("pause_if_another_playback")
+    private val AUDIO_OFFLOAD_CHECKED_KEY = booleanPreferencesKey("audio_offload_checked")
 
     private val Context.dataStore: DataStore<Preferences> by PREFERENCES_DATA_STORE
 
@@ -96,6 +98,7 @@ object SettingsManager {
     val pauseIfAnotherPlayback: MutableState<Boolean> = mutableStateOf(
         DEFAULT_PAUSE_IF_ANOTHER_PLAYBACK_CHECKED
     )
+    val audioOffloadChecked: MutableState<Boolean> = mutableStateOf(DEFAULT_AUDIO_OFFLOAD_CHECKED)
 
     val menuTitleCheckedMap: Map<MenuTitle, MutableState<Boolean>> = mapOf(
         Pair(MenuTitle.FOLDERS, foldersChecked),
@@ -142,6 +145,9 @@ object SettingsManager {
 
                 pauseIfAnotherPlayback.value = preferences[PAUSE_IF_ANOTHER_PLAYBACK_KEY]
                     ?: DEFAULT_PAUSE_IF_ANOTHER_PLAYBACK_CHECKED
+
+                audioOffloadChecked.value =
+                    preferences[AUDIO_OFFLOAD_CHECKED_KEY] ?: DEFAULT_AUDIO_OFFLOAD_CHECKED
             }.first()
         }
     }
@@ -250,6 +256,15 @@ object SettingsManager {
             context.dataStore.edit { preferences: MutablePreferences ->
                 pauseIfAnotherPlayback.value = !pauseIfAnotherPlayback.value
                 preferences[PAUSE_IF_ANOTHER_PLAYBACK_KEY] = pauseIfAnotherPlayback.value
+            }
+        }
+    }
+
+    fun switchAudioOffload(context: Context) {
+        runBlocking {
+            context.dataStore.edit { preferences: MutablePreferences ->
+                audioOffloadChecked.value = !audioOffloadChecked.value
+                preferences[AUDIO_OFFLOAD_CHECKED_KEY] = audioOffloadChecked.value
             }
         }
     }

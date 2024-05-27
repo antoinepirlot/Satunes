@@ -32,7 +32,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -40,6 +42,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
+import io.github.antoinepirlot.satunes.ui.components.dialog.InformationDialog
 import io.github.antoinepirlot.satunes.ui.components.settings.SettingWithSwitch
 import io.github.antoinepirlot.satunes.ui.components.settings.SubSetting
 import io.github.antoinepirlot.satunes.ui.components.texts.Title
@@ -53,7 +56,9 @@ fun BatterySettingsView(
     modifier: Modifier = Modifier,
 ) {
     val audioOffloadChecked: Boolean by rememberSaveable { SettingsManager.audioOffloadChecked }
+    var showAudioOffloadDialog: Boolean by rememberSaveable { mutableStateOf(false) }
     val scrollState = rememberScrollState()
+    val context: Context = LocalContext.current
 
     Column(
         modifier = modifier
@@ -62,13 +67,30 @@ fun BatterySettingsView(
     ) {
         Title(text = stringResource(id = R.string.battery_settings))
         SubSetting(title = stringResource(id = R.string.playback_settings)) {
-            val context: Context = LocalContext.current
             SettingWithSwitch(
                 text = stringResource(id = RDb.string.audio_offload),
                 checked = audioOffloadChecked,
-                onCheckedChange = { SettingsManager.switchAudioOffload(context = context) }
+                onCheckedChange = {
+                    if (audioOffloadChecked) {
+                        SettingsManager.switchAudioOffload(context = context)
+                    } else {
+                        showAudioOffloadDialog = true
+                    }
+                }
             )
         }
+    }
+
+    if (showAudioOffloadDialog && !audioOffloadChecked) {
+        InformationDialog(
+            title = stringResource(id = RDb.string.audio_offload),
+            text = stringResource(id = RDb.string.audio_offload_info),
+            onDismissRequest = { showAudioOffloadDialog = false },
+            onConfirm = {
+                showAudioOffloadDialog = false
+                SettingsManager.switchAudioOffload(context = context)
+            }
+        )
     }
 }
 

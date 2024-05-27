@@ -39,5 +39,4 @@
     <string name="importing_success">Importing Success</string>
     <string name="no_playlist">There\'s no playlist</string>
     <string name="exporting_success">Exporting Success</string>
-    <string name="audio_offload_info">This parameter allows you to send audio treatment to a dedicated process.\nThis reduces energy consumption.\n\nHowever, in the Media 3 library used in Satunes, this can cause compatibility issues which results in audio cuts. A known issue is that the music is stopping during playback or after the end of a song.\n\nBy activating this parameter, you reduce energy consumption and increases the life of the battery but you are likely to meet audio cuts.\n\nI hope that in a nearby future, the problem can be resolved by Google which holds the Media3 and Exoplayer library. In the meantime, I try to find viable solutions to reduce energy consumption by Satunes.</string>
 </resources>

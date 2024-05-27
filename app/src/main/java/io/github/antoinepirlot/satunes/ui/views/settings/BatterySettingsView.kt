@@ -46,7 +46,6 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.InformationDialog
 import io.github.antoinepirlot.satunes.ui.components.settings.SettingWithSwitch
 import io.github.antoinepirlot.satunes.ui.components.settings.SubSetting
 import io.github.antoinepirlot.satunes.ui.components.texts.Title
-import io.github.antoinepirlot.satunes.database.R as RDb
 
 /**
  * @author Antoine Pirlot on 27/05/2024
@@ -68,7 +67,7 @@ fun BatterySettingsView(
         Title(text = stringResource(id = R.string.battery_settings))
         SubSetting(title = stringResource(id = R.string.playback_settings)) {
             SettingWithSwitch(
-                text = stringResource(id = RDb.string.audio_offload),
+                text = stringResource(id = R.string.audio_offload),
                 checked = audioOffloadChecked,
                 onCheckedChange = {
                     if (audioOffloadChecked) {
@@ -83,8 +82,8 @@ fun BatterySettingsView(
 
     if (showAudioOffloadDialog && !audioOffloadChecked) {
         InformationDialog(
-            title = stringResource(id = RDb.string.audio_offload),
-            text = stringResource(id = RDb.string.audio_offload_info),
+            title = stringResource(id = R.string.audio_offload),
+            text = stringResource(id = R.string.audio_offload_info),
             onDismissRequest = { showAudioOffloadDialog = false },
             onConfirm = {
                 showAudioOffloadDialog = false

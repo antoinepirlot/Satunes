@@ -28,6 +28,7 @@ package io.github.antoinepirlot.satunes.playback.services
 import android.content.Intent
 import androidx.annotation.OptIn
 import androidx.media3.common.AudioAttributes
+import androidx.media3.common.TrackSelectionParameters
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.session.MediaSession
@@ -57,7 +58,18 @@ class PlaybackService : MediaSessionService() {
             )
             .build()
 
-        // Don't add audio offload, it causes issues while playing.
+        // Add Audio Offload only if the user want it
+        val audioOffloadPreferences = TrackSelectionParameters.AudioOffloadPreferences.Builder()
+            .setAudioOffloadMode(TrackSelectionParameters.AudioOffloadPreferences.AUDIO_OFFLOAD_MODE_ENABLED)
+            .setIsGaplessSupportRequired(true)
+            .build()
+
+        if (SettingsManager.audioOffloadChecked.value) {
+            exoPlayer.trackSelectionParameters = exoPlayer.trackSelectionParameters
+                .buildUpon()
+                .setAudioOffloadPreferences(audioOffloadPreferences)
+                .build()
+        }
 
         mediaSession = MediaSession.Builder(this, exoPlayer).build()
     }

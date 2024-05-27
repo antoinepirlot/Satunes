@@ -25,16 +25,13 @@
 
 package io.github.antoinepirlot.satunes.ui.components.settings
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.sp
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
-import io.github.antoinepirlot.satunes.ui.components.texts.Title
 import io.github.antoinepirlot.satunes.ui.views.settings.Settings
 
 /**
@@ -43,16 +40,17 @@ import io.github.antoinepirlot.satunes.ui.views.settings.Settings
 
 
 @Composable
-fun PlaybackModesSettings(
+fun PlaybackModesSubSettings(
     modifier: Modifier = Modifier,
 ) {
-    Column(
+    val checkedMap: Map<Settings, MutableState<Boolean>> = mapOf(
+        Pair(Settings.SHUFFLE_MODE, SettingsManager.shuffleMode)
+    )
+
+    SubSetting(
         modifier = modifier,
+        title = stringResource(id = R.string.playback_mode_settings)
     ) {
-        val checkedMap: Map<Settings, MutableState<Boolean>> = mapOf(
-            Pair(Settings.SHUFFLE_MODE, SettingsManager.shuffleMode)
-        )
-        Title(text = stringResource(id = R.string.playback_mode_settings), fontSize = 25.sp)
         SettingsSwitchList(checkedMap = checkedMap)
         RepeatModeRadioButtons()
     }
@@ -61,5 +59,5 @@ fun PlaybackModesSettings(
 @Preview
 @Composable
 private fun PlaybackModesSwitchesPreview() {
-    PlaybackModesSettings()
+    PlaybackModesSubSettings()
 }

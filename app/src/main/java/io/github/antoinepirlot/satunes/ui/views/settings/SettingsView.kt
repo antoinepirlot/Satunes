@@ -71,6 +71,12 @@ fun SettingsView(
                 }
             )
             SettingButton(
+                text = stringResource(id = R.string.battery_settings),
+                onClick = {
+                    navController.navigate(Destination.BATTERY_SETTINGS.link)
+                }
+            )
+            SettingButton(
                 text = stringResource(id = R.string.exclusion_setting),
                 onClick = {
                     navController.navigate(Destination.EXCLUSION.link)

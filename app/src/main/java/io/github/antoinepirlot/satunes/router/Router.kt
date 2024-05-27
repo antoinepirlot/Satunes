@@ -65,6 +65,7 @@ import io.github.antoinepirlot.satunes.ui.views.music.AllMusicsListView
 import io.github.antoinepirlot.satunes.ui.views.playlist.PlaylistListView
 import io.github.antoinepirlot.satunes.ui.views.playlist.PlaylistView
 import io.github.antoinepirlot.satunes.ui.views.settings.AndroidAutoSettingsView
+import io.github.antoinepirlot.satunes.ui.views.settings.BatterySettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.BottomNavigationBarSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.ExclusionSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.PermissionsSettingsView
@@ -273,6 +274,10 @@ internal fun Router(
 
         composable(Destination.ANDROID_AUTO_SETTING.link) {
             AndroidAutoSettingsView()
+        }
+
+        composable(Destination.BATTERY_SETTINGS.link) {
+            BatterySettingsView()
         }
     }
 }

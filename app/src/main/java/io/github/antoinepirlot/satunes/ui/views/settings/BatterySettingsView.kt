@@ -23,27 +23,36 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.router
+package io.github.antoinepirlot.satunes.ui.views.settings
+
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.ui.components.texts.Title
 
 /**
- * @author Antoine Pirlot on 24-01-24
+ * @author Antoine Pirlot on 27/05/2024
  */
+@Composable
+fun BatterySettingsView(
+    modifier: Modifier = Modifier,
+) {
+    val scrollState = rememberScrollState()
 
-internal enum class Destination(val link: String) {
-    ALBUMS(link = "/albums"),
-    ANDROID_AUTO_SETTING(link = "/android_auto_setting"),
-    ARTISTS(link = "/artists"),
-    BATTERY_SETTINGS(link = "/battery_settings"),
-    BOTTOM_BAR_SETTING(link = "/navbar_settings"),
-    EXCLUSION(link = "/exclusion"),
-    FOLDERS(link = "/folders"),
-    GENRES(link = "/genres"),
-    MUSICS(link = "/musics"),
-    PERMISSIONS_SETTINGS(link = "/permissions_settings"),
-    PLAYBACK(link = "/playback"),
-    PLAYBACK_SETTINGS(link = "/playback_settings"),
-    PLAYLISTS(link = "/playlists"),
-    PLAYLISTS_SETTINGS(link = "/playlists_settings"),
-    SETTINGS(link = "/settings"),
-    UPDATES(link = "/updates"), ;
+    Column(
+        modifier = modifier.verticalScroll(scrollState)
+    ) {
+        Title(text = stringResource(id = R.string.battery_settings))
+    }
+}
+
+@Preview
+@Composable
+fun BatterySettingsViewPreview() {
+    BatterySettingsView()
 }

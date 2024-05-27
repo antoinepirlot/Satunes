@@ -27,8 +27,6 @@ package io.github.antoinepirlot.satunes.ui.views.settings
 
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
@@ -36,12 +34,12 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.ui.components.settings.BarSpeedSetting
-import io.github.antoinepirlot.satunes.ui.components.settings.PlaybackModesSettings
+import io.github.antoinepirlot.satunes.ui.components.settings.PlaybackModesSubSettings
 import io.github.antoinepirlot.satunes.ui.components.settings.SettingsSwitchList
+import io.github.antoinepirlot.satunes.ui.components.settings.SubSetting
 import io.github.antoinepirlot.satunes.ui.components.texts.Title
 
 /**
@@ -70,11 +68,11 @@ fun PlaybackSettingsView(
     val scrollState: ScrollState = rememberScrollState()
     Column(modifier = modifier.verticalScroll(scrollState)) {
         Title(text = stringResource(id = R.string.playback_settings))
-        SettingsSwitchList(checkedMap = checkedMap)
-        Spacer(modifier.size(16.dp))
-        BarSpeedSetting()
-        Spacer(modifier.size(16.dp))
-        PlaybackModesSettings()
+        SubSetting {
+            SettingsSwitchList(checkedMap = checkedMap)
+            BarSpeedSetting()
+        }
+        PlaybackModesSubSettings()
     }
 }
 

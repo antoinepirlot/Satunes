@@ -56,7 +56,7 @@ fun SettingWithSwitch(
             maxLines = Int.MAX_VALUE,
             modifier = Modifier
                 .align(Alignment.CenterVertically)
-                .fillMaxWidth(0.9f) // Fix the button to be outside the screen if text is long
+                .fillMaxWidth(0.86f) // Fix the button to be outside the screen if text is long
         )
         Switch(
             modifier = Modifier.align(Alignment.CenterVertically),

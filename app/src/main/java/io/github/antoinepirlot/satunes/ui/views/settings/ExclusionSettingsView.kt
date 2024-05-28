@@ -52,11 +52,9 @@ fun ExclusionSettingsView(
     )
 
     val scrollState: ScrollState = rememberScrollState()
-    Column(
-        modifier = modifier.verticalScroll(scrollState)
-    ) {
+    Column(modifier = modifier.verticalScroll(scrollState)) {
         Title(text = stringResource(id = R.string.exclusion_setting))
-        SettingsSwitchList(checkedMap = checkedMap)
+        SettingsSwitchList(checkedMap = checkedMap) //Contains list item so always padding horizontal 16.dp
     }
 }
 

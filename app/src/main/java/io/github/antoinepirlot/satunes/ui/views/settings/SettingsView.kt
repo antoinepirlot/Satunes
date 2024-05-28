@@ -26,6 +26,7 @@
 package io.github.antoinepirlot.satunes.ui.views.settings
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
@@ -33,6 +34,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
@@ -100,7 +102,7 @@ fun SettingsView(
                     navController.navigate(Destination.UPDATES.link)
                 }
             )
-            AboutView()
+            AboutView(modifier.padding(bottom = 16.dp)) // Bottom padding for a little space
         }
     }
 }

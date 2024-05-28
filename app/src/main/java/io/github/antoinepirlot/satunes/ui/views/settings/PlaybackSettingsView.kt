@@ -72,15 +72,15 @@ fun PlaybackSettingsView(
     Column(modifier = modifier.verticalScroll(scrollState)) {
         Title(text = stringResource(id = R.string.playback_settings))
         SubSetting {
-            SettingsSwitchList(checkedMap = checkedMap)
-            BarSpeedSetting()
+            SettingsSwitchList(checkedMap = checkedMap) //Contains list item so always padding horizontal 16.dp
+            BarSpeedSetting(modifier = Modifier.padding(horizontal = 16.dp))
         }
-        PlaybackModesSubSettings()
+        PlaybackModesSubSettings() //Contains list item so always padding horizontal 16.dp
         SubSetting(
-            modifier = Modifier.padding(horizontal = 16.dp), // TODO fix padding horizontal to make it more uniform
+            modifier = Modifier.padding(horizontal = 16.dp),
             title = stringResource(id = R.string.battery_settings)
         ) {
-            AudioOffloadSetting()
+            AudioOffloadSetting() //Contains list item so always padding horizontal 16.dp
         }
     }
 }

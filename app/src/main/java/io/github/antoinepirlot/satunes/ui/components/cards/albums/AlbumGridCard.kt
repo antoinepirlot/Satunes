@@ -30,6 +30,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -56,6 +57,7 @@ fun AlbumGridCard(
     onClick: (album: Album?) -> Unit,
 ) {
     val screenWidthDp: Int = LocalConfiguration.current.screenWidthDp
+
     val boxSize: Dp = if (screenWidthDp <= ScreenSizes.VERY_SMALL)
         150.dp
     else if (screenWidthDp <= ScreenSizes.SMALL)
@@ -70,17 +72,14 @@ fun AlbumGridCard(
     else
         225.dp
 
-    Box(
-        modifier = modifier.size(boxSize),
-    ) {
+    Box(modifier = modifier.padding(start = 16.dp)) {
         Column(
             modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.SpaceBetween
+            verticalArrangement = Arrangement.SpaceBetween,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             AlbumArtwork(
-                modifier
-                    .size(artworkSize)
-                    .align(Alignment.CenterHorizontally),
+                modifier.size(artworkSize),
                 media = album,
                 onClick = onClick
             )

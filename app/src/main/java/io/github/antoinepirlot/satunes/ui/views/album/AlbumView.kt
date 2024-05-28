@@ -118,7 +118,7 @@ fun AlbumView(
 
 @Composable
 private fun Header(modifier: Modifier = Modifier, album: Album, navController: NavHostController) {
-    Column(modifier = modifier.padding(top = 16.dp)) {
+    Column(modifier = modifier.padding(vertical = 16.dp)) {
         val screenWidthDp = LocalConfiguration.current.screenWidthDp
         val albumSize: Dp = if (screenWidthDp <= ScreenSizes.VERY_SMALL)
             100.dp
@@ -131,14 +131,12 @@ private fun Header(modifier: Modifier = Modifier, album: Album, navController: N
                 .size(albumSize),
             media = album
         )
-
         Title(
             bottomPadding = 0.dp,
             text = album.title
         )
         Subtitle(
             modifier = Modifier
-                .padding(bottom = 16.dp)
                 .align(Alignment.CenterHorizontally)
                 .clickable {
                     openMedia(navController = navController, media = album.artist)

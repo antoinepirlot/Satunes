@@ -50,6 +50,7 @@ import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.internet.updates.UpdateAvailableStatus
 import io.github.antoinepirlot.satunes.internet.updates.UpdateCheckManager
 import io.github.antoinepirlot.satunes.router.Destination
+import io.github.antoinepirlot.satunes.router.settingsDestinations
 import io.github.antoinepirlot.satunes.ui.ScreenSizes
 
 /**
@@ -86,9 +87,7 @@ fun SatunesTopAppBar(
                         UpdateCheckManager.updateAvailableStatus.value = UpdateAvailableStatus.UNDEFINED
                     }
                     when (navController.currentBackStackEntry!!.destination.route!!) {
-                        Destination.SETTINGS.link, Destination.BOTTOM_BAR_SETTING.link,
-                        Destination.PLAYBACK_SETTINGS.link, Destination.UPDATES.link
-                        -> navController.popBackStack()
+                        in settingsDestinations -> navController.popBackStack()
 
                         else -> navController.navigate(Destination.SETTINGS.link)
                     }

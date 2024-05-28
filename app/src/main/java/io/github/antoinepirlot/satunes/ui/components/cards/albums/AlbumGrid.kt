@@ -25,7 +25,6 @@
 
 package io.github.antoinepirlot.satunes.ui.components.cards.albums
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -56,11 +55,10 @@ fun AlbumGrid(
     mediaList: List<Album>,
     onClick: (album: Album?) -> Unit,
 ) {
-    Box(modifier = modifier) {
-        Column {
+    Column(modifier = modifier) {
             if (mediaList.isNotEmpty()) {
                 Title(
-                    modifier.padding(start = 16.dp),
+                    modifier = Modifier.padding(start = 16.dp),
                     text = stringResource(id = io.github.antoinepirlot.satunes.database.R.string.albums),
                     textAlign = TextAlign.Left,
                     fontSize = 25.sp
@@ -82,7 +80,6 @@ fun AlbumGrid(
                 EmptyView(text = stringResource(id = R.string.no_album))
             }
         }
-    }
 }
 
 @Preview

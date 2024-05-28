@@ -18,8 +18,8 @@ android {
         applicationId = nameSpace
         minSdk = 22
         targetSdk = 34
-        versionCode = 28
-        versionName = "1.0.1"
+        versionCode = 29
+        versionName = "1.0.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -109,9 +109,6 @@ dependencies {
     // Kotlin
     implementation("androidx.navigation:navigation-fragment-ktx:$navVersion")
     implementation("androidx.navigation:navigation-ui-ktx:$navVersion")
-
-    // Feature module Support
-    implementation("androidx.navigation:navigation-dynamic-features-fragment:$navVersion")
 
     // Jetpack Compose Integration
     implementation("androidx.navigation:navigation-compose:$navVersion")

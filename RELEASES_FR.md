@@ -3,6 +3,13 @@ You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
 ## 1.0 (Android 5.1.1 Lollipop et ultérieur)
 
+### 1.0.2
+
+Améliorations, Optimisations et Résolutions de problèmes:
+
+* La navigation dans les paramètres fonctionne de manière uniforme pour tous les menus.
+* Amélioration du design
+
 ### 1.0.1
 
 Améliorations, Optimisations et Résolutions de problèmes:

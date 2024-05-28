@@ -73,7 +73,6 @@ fun RootFolderView(
     MediaListView(
         modifier = modifier,
         mediaList = rootFolderMap.keys.toList(),
-
         openMedia = { clickedMedia: Media ->
             openMediaFromFolder(navController, clickedMedia)
         },

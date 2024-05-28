@@ -75,16 +75,26 @@ class PlaybackService : MediaSessionService() {
     }
 
     override fun onDestroy() {
-        super.onDestroy()
-        val playbackController: PlaybackController = PlaybackController.getInstance()
-        if (!playbackController.isPlaying.value) {
-            stopSelf()
+        try {
+            val playbackController: PlaybackController = PlaybackController.getInstance()
+            if (!playbackController.isPlaying.value) {
+                mediaSession?.run {
+                    playbackController.release()
+                    player.release()
+                    release()
+                    mediaSession = null
+                }
+                super.onDestroy()
+                //Use exit process as sometimes, when closing app from multi task with playback when closed
+                // is false, then the player is release but the UI is still in the old view, and causing issue
+                // with playback. Best way I found at this time
+                exitProcess(0)
+            }
+        } catch (_: Exception) {
             mediaSession?.run {
-                playbackController.release()
-                player.stop()
                 player.release()
                 release()
-                stopSelf()
+                mediaSession = null
             }
             //Use exit process as sometimes, when closing app from multi task with playback when closed
             // is false, then the player is release but the UI is still in the old view, and causing issue

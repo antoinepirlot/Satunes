@@ -42,7 +42,6 @@ import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.cards.albums.AlbumGrid
 import io.github.antoinepirlot.satunes.ui.components.texts.Title
-import java.util.SortedMap
 
 /**
  * @author Antoine Pirlot on 28/05/2024
@@ -52,13 +51,13 @@ import java.util.SortedMap
 fun MediaWithAlbumsView(
     modifier: Modifier = Modifier,
     media: Media,
-    albumMap: SortedMap<String, Album>,
+    albumList: List<Album>,
     navController: NavHostController
 ) {
     Column(modifier = modifier) {
         Title(text = media.title)
         AlbumGrid(
-            mediaList = albumMap.values.toList(),
+            mediaList = albumList,
             onClick = { openMedia(navController = navController, media = it) }
         )
         Spacer(modifier = Modifier.size(30.dp))

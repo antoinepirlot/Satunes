@@ -91,7 +91,11 @@ fun ArtistView(
             }
             //
 
-            MediaWithAlbumsView(media = artist, albumMap = albumMap, navController = navController)
+            MediaWithAlbumsView(
+                media = artist,
+                albumList = albumMap.values.toList(),
+                navController = navController
+            )
         },
         extraButtons = {
             if (artist.musicMediaItemSortedMap.isNotEmpty()) {

@@ -25,9 +25,6 @@
 
 package io.github.antoinepirlot.satunes.ui.views.genre
 
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -35,10 +32,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.media3.common.MediaItem
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -53,12 +47,10 @@ import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
-import io.github.antoinepirlot.satunes.ui.components.cards.albums.AlbumGrid
-import io.github.antoinepirlot.satunes.ui.components.texts.Title
 import io.github.antoinepirlot.satunes.ui.views.MediaListView
+import io.github.antoinepirlot.satunes.ui.views.MediaWithAlbumsView
 import java.util.SortedMap
 import java.util.SortedSet
-import io.github.antoinepirlot.satunes.database.R as RDb
 
 /**
  * @author Antoine Pirlot on 01/04/2024
@@ -93,7 +85,23 @@ fun GenreView(
         },
         onFABClick = { openCurrentMusic(navController = navController) },
         header = {
-            Header(genre = genre, navController = navController, musicMap = musicMap)
+            //Recompose if data changed
+            @Suppress("NAME_SHADOWING")
+            var mapChanged: Boolean by remember { genre.musicMediaItemSortedMapUpdate }
+            if (mapChanged) {
+                mapChanged = false
+            }
+            //
+
+            val albumSet: SortedSet<Album> = sortedSetOf()
+            musicMap.forEach { (music: Music, _: MediaItem) ->
+                albumSet.add(music.album)
+            }
+            MediaWithAlbumsView(
+                media = genre,
+                albumList = albumSet.toList(),
+                navController = navController
+            )
         },
         extraButtons = {
             if (genre.musicMediaItemSortedMap.isNotEmpty()) {
@@ -111,42 +119,6 @@ fun GenreView(
             }
         },
         emptyViewText = stringResource(id = R.string.no_music)
-    )
-}
-
-@Composable
-private fun Header(
-    modifier: Modifier = Modifier,
-    genre: Genre,
-    navController: NavHostController,
-    musicMap: SortedMap<Music, MediaItem>
-) {
-    Title(text = genre.title)
-
-    //Recompose if data changed
-    var mapChanged: Boolean by remember { genre.musicMediaItemSortedMapUpdate }
-    if (mapChanged) {
-        mapChanged = false
-    }
-    //
-
-    val albumSet: SortedSet<Album> = sortedSetOf()
-    musicMap.forEach { (music: Music, _: MediaItem) ->
-        albumSet.add(music.album)
-    }
-
-    AlbumGrid(
-        mediaList = albumSet.toList(),
-        onClick = { openMedia(navController = navController, media = it) }
-    )
-
-    Spacer(modifier = Modifier.size(30.dp))
-
-    Title(
-        modifier.padding(start = 16.dp),
-        text = stringResource(id = RDb.string.musics),
-        textAlign = TextAlign.Left,
-        fontSize = 20.sp
     )
 }
 

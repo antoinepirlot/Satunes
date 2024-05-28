@@ -84,7 +84,6 @@ class PlaybackController private constructor(
         controllerFuture.addListener({
             this.mediaController = controllerFuture.get()
         }, ContextCompat.getMainExecutor(context))
-
         this.playlist = Playlist(musicMediaItemSortedMap = musicMediaItemSortedMap)
     }
 
@@ -112,6 +111,7 @@ class PlaybackController private constructor(
          */
         fun getInstance(): PlaybackController {
             if (!Companion::instance.isInitialized) {
+                //TODO find a way to fix crashing app after resume after inactivity
                 throw IllegalStateException("The PlayBackController has not been initialized")
             }
 

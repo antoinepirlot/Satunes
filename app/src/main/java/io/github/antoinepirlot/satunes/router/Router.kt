@@ -230,7 +230,7 @@ internal fun Router(
                 LoadingView()
             } else {
                 PlayBackView(
-                    modifier = Modifier.padding(horizontal = 16.dp),
+                    modifier = Modifier.padding(16.dp),
                     onAlbumClick = { album: Album? ->
                         if (album != null) {
                             openMedia(navController = navController, media = album)

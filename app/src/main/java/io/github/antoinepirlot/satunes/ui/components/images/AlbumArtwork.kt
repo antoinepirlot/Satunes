@@ -55,12 +55,12 @@ import io.github.antoinepirlot.satunes.ui.ScreenSizes
 fun AlbumArtwork(
     modifier: Modifier = Modifier,
     media: Media,
-    onClick: (album: Album?) -> Unit = { /* Do nothing by default */ },
+    onClick: ((album: Album?) -> Unit)? = null,
     contentAlignment: Alignment = Alignment.Center
 ) {
     val screenWidthDp = LocalConfiguration.current.screenWidthDp
-    Box(
-        modifier = modifier
+    val clickableModifier: Modifier = if (onClick != null) {
+        modifier
             .size(
                 if (screenWidthDp >= ScreenSizes.VERY_SMALL && screenWidthDp <= ScreenSizes.SMALL) 150.dp
                 else if (screenWidthDp <= ScreenSizes.VERY_SMALL) 100.dp
@@ -74,7 +74,18 @@ fun AlbumArtwork(
                         else -> null
                     }
                 )
-            },
+            }
+    } else {
+        modifier
+            .size(
+                if (screenWidthDp >= ScreenSizes.VERY_SMALL && screenWidthDp <= ScreenSizes.SMALL) 150.dp
+                else if (screenWidthDp <= ScreenSizes.VERY_SMALL) 100.dp
+                else 300.dp // Normal
+            )
+    }
+
+    Box(
+        modifier = clickableModifier,
         contentAlignment = contentAlignment
     ) {
         if (media.artwork != null) {

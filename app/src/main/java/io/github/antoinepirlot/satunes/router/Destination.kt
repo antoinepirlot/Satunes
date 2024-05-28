@@ -31,10 +31,10 @@ package io.github.antoinepirlot.satunes.router
 
 internal enum class Destination(val link: String) {
     ALBUMS(link = "/albums"),
-    ANDROID_AUTO_SETTING(link = "/android_auto_setting"),
+    ANDROID_AUTO_SETTINGS(link = "/android_auto_setting"),
     ARTISTS(link = "/artists"),
-    BOTTOM_BAR_SETTING(link = "/navbar_settings"),
-    EXCLUSION(link = "/exclusion"),
+    BOTTOM_BAR_SETTINGS(link = "/navbar_settings"),
+    EXCLUSION_SETTINGS(link = "/exclusion"),
     FOLDERS(link = "/folders"),
     GENRES(link = "/genres"),
     MUSICS(link = "/musics"),
@@ -44,5 +44,12 @@ internal enum class Destination(val link: String) {
     PLAYLISTS(link = "/playlists"),
     PLAYLISTS_SETTINGS(link = "/playlists_settings"),
     SETTINGS(link = "/settings"),
-    UPDATES(link = "/updates"),
+    UPDATES_SETTINGS(link = "/updates"),
 }
+
+val settingsDestinations: List<String> = listOf(
+    Destination.SETTINGS.link, Destination.BOTTOM_BAR_SETTINGS.link,
+    Destination.ANDROID_AUTO_SETTINGS.link, Destination.PLAYBACK_SETTINGS.link,
+    Destination.EXCLUSION_SETTINGS.link, Destination.PLAYLISTS_SETTINGS.link,
+    Destination.PERMISSIONS_SETTINGS.link, Destination.UPDATES_SETTINGS.link,
+)

@@ -58,14 +58,14 @@ fun SettingsView(
             ClickableListItem(
                 text = "Android Auto",
                 onClick = {
-                    navController.navigate(Destination.ANDROID_AUTO_SETTING.link)
+                    navController.navigate(Destination.ANDROID_AUTO_SETTINGS.link)
                 }
             )
             HorizontalDivider()
             ClickableListItem(
                 text = stringResource(id = R.string.bottom_bar),
                 onClick = {
-                    navController.navigate(Destination.BOTTOM_BAR_SETTING.link)
+                    navController.navigate(Destination.BOTTOM_BAR_SETTINGS.link)
                 }
             )
             HorizontalDivider()
@@ -79,7 +79,7 @@ fun SettingsView(
             ClickableListItem(
                 text = stringResource(id = R.string.exclusion_setting),
                 onClick = {
-                    navController.navigate(Destination.EXCLUSION.link)
+                    navController.navigate(Destination.EXCLUSION_SETTINGS.link)
                 }
             )
             HorizontalDivider()
@@ -100,7 +100,7 @@ fun SettingsView(
             ClickableListItem(
                 text = stringResource(id = R.string.version),
                 onClick = {
-                    navController.navigate(Destination.UPDATES.link)
+                    navController.navigate(Destination.UPDATES_SETTINGS.link)
                 }
             )
             HorizontalDivider()

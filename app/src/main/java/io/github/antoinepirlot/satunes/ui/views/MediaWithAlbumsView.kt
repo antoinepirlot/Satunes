@@ -62,7 +62,7 @@ fun MediaWithAlbumsView(
         )
         Spacer(modifier = Modifier.size(30.dp))
         Title(
-            Modifier.padding(start = 16.dp),
+            modifier = Modifier.padding(start = 16.dp),
             text = stringResource(id = R.string.musics),
             textAlign = TextAlign.Left,
             fontSize = 20.sp

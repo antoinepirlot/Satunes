@@ -51,7 +51,7 @@ import io.github.antoinepirlot.satunes.ui.components.texts.Title
 fun AboutView(
     modifier: Modifier = Modifier
 ) {
-    Column(modifier.padding(16.dp)) {
+    Column(modifier.padding(horizontal = 16.dp)) {
         Title(text = stringResource(id = R.string.about), fontSize = 25.sp)
         NormalText(
             text = stringResource(id = R.string.about_text),

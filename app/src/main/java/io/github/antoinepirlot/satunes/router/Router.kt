@@ -72,7 +72,7 @@ import io.github.antoinepirlot.satunes.ui.views.settings.PermissionsSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.PlaybackSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.PlaylistsSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.SettingsView
-import io.github.antoinepirlot.satunes.ui.views.settings.UpdatesView
+import io.github.antoinepirlot.satunes.ui.views.settings.UpdatesSettingView
 
 /**
  * @author Antoine Pirlot on 23-01-24
@@ -257,7 +257,7 @@ internal fun Router(
         }
 
         composable(Destination.UPDATES.link) {
-            UpdatesView()
+            UpdatesSettingView()
         }
 
         composable(Destination.EXCLUSION.link) {

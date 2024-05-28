@@ -81,7 +81,7 @@ fun PermissionsSettingsView(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(horizontal = 16.dp),
     ) {
         Title(text = stringResource(id = R.string.permissions))
         val lazySate = rememberLazyListState()

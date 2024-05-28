@@ -46,3 +46,10 @@ internal enum class Destination(val link: String) {
     SETTINGS(link = "/settings"),
     UPDATES(link = "/updates"),
 }
+
+val settingsDestinations: List<String> = listOf(
+    Destination.SETTINGS.link, Destination.BOTTOM_BAR_SETTING.link,
+    Destination.ANDROID_AUTO_SETTING.link, Destination.PLAYBACK_SETTINGS.link,
+    Destination.EXCLUSION.link, Destination.PLAYLISTS_SETTINGS.link,
+    Destination.PERMISSIONS_SETTINGS.link, Destination.UPDATES.link,
+)

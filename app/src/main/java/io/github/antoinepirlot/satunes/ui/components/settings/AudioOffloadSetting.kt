@@ -38,6 +38,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.ui.components.dialog.InformationDialog
+import io.github.antoinepirlot.satunes.ui.views.settings.Settings
 
 /**
  * @author Antoine Pirlot on 27/05/2024
@@ -53,7 +54,7 @@ fun AudioOffloadSetting(
 
     SettingWithSwitch(
         modifier = modifier,
-        text = stringResource(id = R.string.audio_offload),
+        setting = Settings.AUDIO_OFFLOAD,
         checked = audioOffloadChecked,
         onCheckedChange = {
             if (audioOffloadChecked) {

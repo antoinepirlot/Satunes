@@ -29,20 +29,12 @@ import android.content.Context
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.MenuTitle
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.cards.ListItem
-import io.github.antoinepirlot.satunes.ui.components.dialog.InformationDialog
 import io.github.antoinepirlot.satunes.ui.views.settings.Settings
 
 /**
@@ -56,51 +48,23 @@ fun SettingsSwitchList(
 ) {
     val context: Context = LocalContext.current
 
-    //Used to show modal for restart needed setting
-    var clickedSetting: Settings? by rememberSaveable { mutableStateOf(null) }
-
     Column(modifier = modifier) {
         for (setting: Settings in checkedMap.keys.toList()) {
-            val isRestartNeeded: Boolean = when (setting) {
-                Settings.EXCLUDE_RINGTONES, Settings.PAUSE_IF_NOISY,
-                Settings.PAUSE_IF_ANOTHER_PLAYBACK -> true
-
-                else -> false
-            }
             ListItem( //Has always horizontal padding of 16.dp
                 headlineContent = {
                     SettingWithSwitch(
-                        text = stringResource(id = setting.stringId),
+                        setting = setting,
                         checked = checkedMap[setting]!!.value,
-                        icon = if (isRestartNeeded) SatunesIcons.INFO else null,
                         onCheckedChange = {
-                            if (isRestartNeeded) {
-                                clickedSetting = setting
-                            } else {
-                                switchSetting(
-                                    context = context,
-                                    setting = setting
-                                )
-                            }
+                            switchSetting(
+                                context = context,
+                                setting = setting
+                            )
                         }
                     )
                 }
             )
         }
-    }
-
-    if (clickedSetting != null) {
-        InformationDialog(
-            title = stringResource(id = R.string.restart_required),
-            onDismissRequest = { clickedSetting = null },
-            onConfirm = {
-                switchSetting(
-                    context = context,
-                    setting = clickedSetting!!
-                )
-                clickedSetting = null
-            }
-        )
     }
 }
 

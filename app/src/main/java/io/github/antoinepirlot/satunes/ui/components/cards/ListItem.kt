@@ -53,8 +53,15 @@ fun ListItem(
     shadowElevation: Dp = ListItemDefaults.Elevation,
 ) {
     val screenWidthDp: Int = LocalConfiguration.current.screenWidthDp
+    val fontScale: Float = LocalConfiguration.current.fontScale
     androidx.compose.material3.ListItem(
-        modifier = modifier.height(if (screenWidthDp <= ScreenSizes.VERY_SMALL) 40.dp else 70.dp),
+        modifier = modifier.height(
+            if (screenWidthDp <= ScreenSizes.VERY_SMALL) {
+                (fontScale * 40).dp
+            } else {
+                (fontScale * 70).dp
+            }
+        ),
         headlineContent = headlineContent,
         overlineContent = overlineContent,
         supportingContent = supportingContent,

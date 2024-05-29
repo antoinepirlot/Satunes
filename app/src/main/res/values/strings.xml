@@ -7,7 +7,7 @@
     <string name="external_storage">Stockage Externe</string>
     <string name="playback_settings">Lecture</string>
     <string name="playback_when_paused">Lecture si l\'application est fermée</string>
-    <string name="pause_if_noisy">Pause si le casque est débranché (redémarrage requis)</string>
+    <string name="pause_if_noisy">Pause si le casque est débranché</string>
     <string name="playlist_form">Nom de la playlist</string>
     <string name="create_playlist">Crée une nouvelle playlist</string>
     <string name="cancel">Annuler</string>
@@ -33,7 +33,7 @@
     <string name="no_folder">Aucun dossier contenant de la musique n\'a été trouvé</string>
     <string name="add_to">"Ajouter à "</string>
     <string name="exclusion_setting">Exclusion de fichiers</string>
-    <string name="exclude_ringtones">Exclure les sonneries (redémarrage requis)</string>
+    <string name="exclude_ringtones">Exclure les sonneries</string>
     <string name="bar_speed">"Vitesse de la barre de progression: "</string>
     <string name="second">seconde</string>
     <string name="export">Exporter</string>
@@ -47,7 +47,7 @@
     <string name="ok" translatable="false">OK</string>
     <string name="repeat_mode">"Mode de relecture: "</string>
     <string name="playback_mode_settings">Mode de Lecture par Défaut</string>
-    <string name="pause_if_another_playback">Pause si un autre application est en cours de lecture (redémarrage requis)</string>
+    <string name="pause_if_another_playback">Pause si un autre application est en cours de lecture</string>
     <string name="update_title">Changer de nom</string>
     <string name="title">Titre</string>
     <string name="playlist_beta_info">L\'exportation et importation des playlists est en beta du fait que seuls les identifiants des musiques sont enregistrés. Si les musiques sont supprimées puis réajoutées sur l\'appareil ou si tu changes d\'appareil, les musiques auront un nouvel identifiant et donc iil y aura des mauvaises musiques dans les playlists. Ce soucis sera réglé dans une prochaine mises à jour.</string>
@@ -55,4 +55,5 @@
     <string name="battery_settings">Batterie</string>
     <string name="audio_offload">Audio Offload (redémarrage requis)</string>
     <string name="audio_offload_info">Ce paramètre permet d\'envoyer le traitement audio vers un processus dédié. Cela permet de réduire la consommation d\'énergie.\n\nCependant, dans la librairie Media 3 utilisée dans Satunes, cela peut causer des problèmes de compatibilité ce qui se traduit par des coupures audio. Un problème connu à ce jour est que la musique s\'arrête en cours de lecture ou après la fin d\'un morceau.\n\nEn activant ce paramètre, tu réduis la consommation d\'énergie et augmente la durée de vie de la batterie mais tu es susceptible de rencontrer des coupures audio.\n\nJ\'espère que dans un future proche, le problème puisse être réglé par Google qui détient la librairie Media3 et ExoPlayer. En attendant, j\'essaie de trouver des solutions viables pour réduire la consommation d\'énergie par Satunes.</string>
+    <string name="restart_required">Redémarrage requis</string>
 </resources>

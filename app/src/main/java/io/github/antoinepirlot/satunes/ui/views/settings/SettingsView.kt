@@ -58,12 +58,12 @@ fun SettingsView(
         HorizontalDivider()
         Column(modifier = Modifier.verticalScroll(state = scrollState)) {
             SettingButton(text = "Android Auto", onClick = {
-                navController.navigate(Destination.ANDROID_AUTO_SETTING.link)
+                navController.navigate(Destination.ANDROID_AUTO_SETTINGS.link)
             })
             SettingButton(
                 text = stringResource(id = R.string.bottom_bar),
                 onClick = {
-                    navController.navigate(Destination.BOTTOM_BAR_SETTING.link)
+                    navController.navigate(Destination.BOTTOM_BAR_SETTINGS.link)
                 }
             )
             SettingButton(
@@ -81,7 +81,7 @@ fun SettingsView(
             SettingButton(
                 text = stringResource(id = R.string.exclusion_setting),
                 onClick = {
-                    navController.navigate(Destination.EXCLUSION.link)
+                    navController.navigate(Destination.EXCLUSION_SETTINGS.link)
                 }
             )
             SettingButton(
@@ -99,7 +99,7 @@ fun SettingsView(
             SettingButton(
                 text = stringResource(id = R.string.version),
                 onClick = {
-                    navController.navigate(Destination.UPDATES.link)
+                    navController.navigate(Destination.UPDATES_SETTINGS.link)
                 }
             )
             AboutView(modifier.padding(bottom = 16.dp)) // Bottom padding for a little space

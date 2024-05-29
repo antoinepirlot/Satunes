@@ -231,7 +231,7 @@ internal fun Router(
                 LoadingView()
             } else {
                 PlayBackView(
-                    modifier = Modifier.padding(horizontal = 16.dp),
+                    modifier = Modifier.padding(16.dp),
                     onAlbumClick = { album: Album? ->
                         if (album != null) {
                             openMedia(navController = navController, media = album)
@@ -248,7 +248,7 @@ internal fun Router(
             SettingsView(navController = navController)
         }
 
-        composable(Destination.BOTTOM_BAR_SETTING.link) {
+        composable(Destination.BOTTOM_BAR_SETTINGS.link) {
             BottomNavigationBarSettingsView()
         }
 
@@ -256,11 +256,11 @@ internal fun Router(
             PlaybackSettingsView()
         }
 
-        composable(Destination.UPDATES.link) {
+        composable(Destination.UPDATES_SETTINGS.link) {
             UpdatesSettingView()
         }
 
-        composable(Destination.EXCLUSION.link) {
+        composable(Destination.EXCLUSION_SETTINGS.link) {
             ExclusionSettingsView()
         }
 
@@ -272,7 +272,7 @@ internal fun Router(
             PermissionsSettingsView(isAudioAllowed = isAudioAllowed)
         }
 
-        composable(Destination.ANDROID_AUTO_SETTING.link) {
+        composable(Destination.ANDROID_AUTO_SETTINGS.link) {
             AndroidAutoSettingsView()
         }
 

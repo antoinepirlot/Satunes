@@ -3,6 +3,13 @@ Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
 ## 1.0 (Android 5.1.1 Lollipop and later)
 
+### 1.0.2
+
+Improvements, Optimizations and Troubleshooting:
+
+* Settings navigation works consistently for all menus.
+* Design improvement
+
 ### 1.0.1
 
 Improvements, Optimizations and Troubleshooting:

@@ -26,7 +26,6 @@
 package io.github.antoinepirlot.satunes.ui.views.playlist
 
 import android.content.Context
-import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -72,68 +71,66 @@ fun PlaylistView(
     //TODO try using nav controller instead try to remember it in an object if possible
     var openAddMusicsDialog: Boolean by rememberSaveable { mutableStateOf(false) }
     val playbackController: PlaybackController = PlaybackController.getInstance()
+    val musicMap: SortedMap<Music, MediaItem> = remember { playlist.musicMediaItemSortedMap }
 
-    Column(modifier = modifier) {
-        Title(text = playlist.playlist.title)
-        val musicMap: SortedMap<Music, MediaItem> = remember { playlist.musicMediaItemSortedMap }
+    //Recompose if data changed
+    var mapChanged: Boolean by rememberSaveable { playlist.musicMediaItemSortedMapUpdate }
+    if (mapChanged) {
+        mapChanged = false
+    }
+    //
 
-        //Recompose if data changed
-        var mapChanged: Boolean by rememberSaveable { playlist.musicMediaItemSortedMapUpdate }
-        if (mapChanged) {
-            mapChanged = false
-        }
-        //
-
-        MediaListView(
-            mediaList = musicMap.keys.toList(),
-            openMedia = { clickedMedia: Media ->
-                playbackController.loadMusic(
-                    musicMediaItemSortedMap = playlist.musicMediaItemSortedMap,
-                    musicToPlay = clickedMedia as Music
-                )
-                openMedia(navController = navController, media = clickedMedia)
-            },
-            openedPlaylistWithMusics = playlist,
-            onFABClick = { openCurrentMusic(navController = navController) },
-            extraButtons = {
-                ExtraButton(icon = SatunesIcons.ADD, onClick = { openAddMusicsDialog = true })
-                if (playlist.musicMediaItemSortedMap.isNotEmpty()) {
-                    ExtraButton(icon = SatunesIcons.PLAY, onClick = {
-                        playbackController.loadMusic(musicMediaItemSortedMap = playlist.musicMediaItemSortedMap)
-                        openMedia(navController = navController)
-                    })
-                    ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
-                        playbackController.loadMusic(
-                            musicMediaItemSortedMap = playlist.musicMediaItemSortedMap,
-                            shuffleMode = true
-                        )
-                        openMedia(navController = navController)
-                    })
-                }
-            },
-            emptyViewText = stringResource(id = R.string.no_music_in_playlist)
-        )
-        if (openAddMusicsDialog) {
-            val allMusic: List<Music> = DataManager.musicMediaItemSortedMap.keys.toList()
-            val context: Context = LocalContext.current
-            MediaSelectionDialog(
-                onDismissRequest = { openAddMusicsDialog = false },
-                onConfirm = {
-                    val db = DatabaseManager(context = context)
-                    db.insertMusicsToPlaylist(
-                        musics = MediaSelectionManager.checkedMusics,
-                        playlist = playlist
-                    )
-                    openAddMusicsDialog = false
-                },
-                mediaList = allMusic,
-                icon = {
-                    val icon = SatunesIcons.PLAYLIST_ADD
-                    Icon(imageVector = icon.imageVector, contentDescription = icon.description)
-                },
-                playlistTitle = playlist.playlist.title
+    MediaListView(
+        modifier = modifier,
+        mediaList = musicMap.keys.toList(),
+        openMedia = { clickedMedia: Media ->
+            playbackController.loadMusic(
+                musicMediaItemSortedMap = playlist.musicMediaItemSortedMap,
+                musicToPlay = clickedMedia as Music
             )
-        }
+            openMedia(navController = navController, media = clickedMedia)
+        },
+        openedPlaylistWithMusics = playlist,
+        onFABClick = { openCurrentMusic(navController = navController) },
+        header = { Title(text = playlist.playlist.title) },
+        extraButtons = {
+            ExtraButton(icon = SatunesIcons.ADD, onClick = { openAddMusicsDialog = true })
+            if (playlist.musicMediaItemSortedMap.isNotEmpty()) {
+                ExtraButton(icon = SatunesIcons.PLAY, onClick = {
+                    playbackController.loadMusic(musicMediaItemSortedMap = playlist.musicMediaItemSortedMap)
+                    openMedia(navController = navController)
+                })
+                ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
+                    playbackController.loadMusic(
+                        musicMediaItemSortedMap = playlist.musicMediaItemSortedMap,
+                        shuffleMode = true
+                    )
+                    openMedia(navController = navController)
+                })
+            }
+        },
+        emptyViewText = stringResource(id = R.string.no_music_in_playlist)
+    )
+    if (openAddMusicsDialog) {
+        val allMusic: List<Music> = DataManager.musicMediaItemSortedMap.keys.toList()
+        val context: Context = LocalContext.current
+        MediaSelectionDialog(
+            onDismissRequest = { openAddMusicsDialog = false },
+            onConfirm = {
+                val db = DatabaseManager(context = context)
+                db.insertMusicsToPlaylist(
+                    musics = MediaSelectionManager.checkedMusics,
+                    playlist = playlist
+                )
+                openAddMusicsDialog = false
+            },
+            mediaList = allMusic,
+            icon = {
+                val icon = SatunesIcons.PLAYLIST_ADD
+                Icon(imageVector = icon.imageVector, contentDescription = icon.description)
+            },
+            playlistTitle = playlist.playlist.title
+        )
     }
 }
 

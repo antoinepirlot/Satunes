@@ -7,7 +7,7 @@
     <string name="external_storage">External Storage</string>
     <string name="playback_settings">Playback</string>
     <string name="playback_when_paused">Playback if the app is closed</string>
-    <string name="pause_if_noisy">Pause if headset is unplugged (restart needed)</string>
+    <string name="pause_if_noisy">Pause if headset is unplugged</string>
     <string name="playlist_form">Playlist Name</string>
     <string name="create_playlist">Create a new playlist</string>
     <string name="cancel">Cancel</string>
@@ -33,7 +33,7 @@
     <string name="no_folder">No folder with musics found</string>
     <string name="add_to">"Add to "</string>
     <string name="exclusion_setting">Excluding files</string>
-    <string name="exclude_ringtones">Exclude ringtones (restart needed)</string>
+    <string name="exclude_ringtones">Exclude ringtones</string>
     <string name="bar_speed">"Progress bar speed: "</string>
     <string name="second">second</string>
     <string name="export">Export</string>
@@ -45,7 +45,7 @@
     <string name="read_external_storage_permission">Lire le stockage</string>
     <string name="repeat_mode">"Repeat Mode: "</string>
     <string name="playback_mode_settings">Default Playback Modes</string>
-    <string name="pause_if_another_playback">Pause if another app is playing (restart needed)</string>
+    <string name="pause_if_another_playback">Pause if another app is playing</string>
     <string name="update_title">Update Name</string>
     <string name="title">Title</string>
     <string name="playlist_beta_info">The export and import of playlists is in beta due to the fact that only the music identifiers are recorded.\nIf the music is deleted and then re-added on the device or if you change the device, the music will have a new identifier and therefore there will be bad music in the playlists.\nThis issue will be fixed in a future update.</string>
@@ -53,4 +53,5 @@
     <string name="battery_settings">Battery</string>
     <string name="audio_offload">Audio Offload (restart needed)</string>
     <string name="audio_offload_info">This parameter allows you to send audio treatment to a dedicated process.\nThis reduces energy consumption.\n\nHowever, in the Media 3 library used in Satunes, this can cause compatibility issues which results in audio cuts. A known issue is that the music is stopping during playback or after the end of a song.\n\nBy activating this parameter, you reduce energy consumption and increases the life of the battery but you are likely to meet audio cuts.\n\nI hope that in a nearby future, the problem can be resolved by Google which holds the Media3 and Exoplayer library. In the meantime, I try to find viable solutions to reduce energy consumption by Satunes.</string>
+    <string name="restart_required">Restart required</string>
 </resources>

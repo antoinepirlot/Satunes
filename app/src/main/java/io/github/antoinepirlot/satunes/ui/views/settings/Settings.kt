@@ -25,6 +25,7 @@
 
 package io.github.antoinepirlot.satunes.ui.views.settings
 
+import io.github.antoinepirlot.satunes.R.string.audio_offload
 import io.github.antoinepirlot.satunes.R.string.exclude_ringtones
 import io.github.antoinepirlot.satunes.R.string.pause_if_another_playback
 import io.github.antoinepirlot.satunes.R.string.pause_if_noisy
@@ -42,6 +43,7 @@ import io.github.antoinepirlot.satunes.database.R.string.playlists
 enum class Settings(val stringId: Int) {
     ALBUMS_CHECKED(stringId = albums),
     ARTISTS_CHECKED(stringId = artists),
+    AUDIO_OFFLOAD(stringId = audio_offload),
     EXCLUDE_RINGTONES(stringId = exclude_ringtones),
     FOLDERS_CHECKED(stringId = folders),
     GENRES_CHECKED(stringId = genres),
@@ -51,3 +53,10 @@ enum class Settings(val stringId: Int) {
     PAUSE_IF_ANOTHER_PLAYBACK(stringId = pause_if_another_playback),
     SHUFFLE_MODE(stringId = shuffle),
 }
+
+val settingsNeedRestart: List<Settings> = listOf(
+    Settings.AUDIO_OFFLOAD,
+    Settings.EXCLUDE_RINGTONES,
+    Settings.PAUSE_IF_ANOTHER_PLAYBACK,
+    Settings.PAUSE_IF_NOISY,
+)

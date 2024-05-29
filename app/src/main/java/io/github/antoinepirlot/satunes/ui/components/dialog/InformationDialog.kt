@@ -48,7 +48,7 @@ import io.github.antoinepirlot.satunes.ui.components.texts.Title
 fun InformationDialog(
     modifier: Modifier = Modifier,
     title: String,
-    text: String,
+    text: String? = null,
     onDismissRequest: () -> Unit,
     onConfirm: (() -> Unit)? = null,
 ) {
@@ -62,12 +62,14 @@ fun InformationDialog(
             Title(text = title, fontSize = 25.sp)
         },
         text = {
-            val scrollState = rememberScrollState()
-            NormalText(
-                modifier = Modifier.verticalScroll(scrollState),
-                text = text,
-                maxLines = Int.MAX_VALUE
-            )
+            if (text != null) {
+                val scrollState = rememberScrollState()
+                NormalText(
+                    modifier = Modifier.verticalScroll(scrollState),
+                    text = text,
+                    maxLines = Int.MAX_VALUE
+                )
+            }
         },
         onDismissRequest = onDismissRequest,
         confirmButton = {

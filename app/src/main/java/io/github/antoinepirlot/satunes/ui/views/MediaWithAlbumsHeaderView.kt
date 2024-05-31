@@ -65,7 +65,7 @@ fun MediaWithAlbumsHeaderView(
             modifier = Modifier.padding(start = 16.dp),
             text = stringResource(id = R.string.musics),
             textAlign = TextAlign.Left,
-            fontSize = 20.sp
+            fontSize = 25.sp
         )
     }
 }

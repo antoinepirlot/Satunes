@@ -43,7 +43,7 @@
     <string name="read_audio_permission">Music and audio</string>
     <string name="permissions" translatable="false">Permissions</string>
     <string name="ask_permission">Allow</string>
-    <string name="read_external_storage_permission">Lire le stockage</string>
+    <string name="read_external_storage_permission">Read Storage</string>
     <string name="ok" translatable="false">OK</string>
     <string name="repeat_mode">"Repeat Mode: "</string>
     <string name="playback_mode_settings">Default Playback Modes</string>

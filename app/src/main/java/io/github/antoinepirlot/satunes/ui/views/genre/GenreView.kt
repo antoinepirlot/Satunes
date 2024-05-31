@@ -48,7 +48,7 @@ import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
 import io.github.antoinepirlot.satunes.ui.views.MediaListView
-import io.github.antoinepirlot.satunes.ui.views.MediaWithAlbumsView
+import io.github.antoinepirlot.satunes.ui.views.MediaWithAlbumsHeaderView
 import java.util.SortedMap
 import java.util.SortedSet
 
@@ -97,7 +97,7 @@ fun GenreView(
             musicMap.forEach { (music: Music, _: MediaItem) ->
                 albumSet.add(music.album)
             }
-            MediaWithAlbumsView(
+            MediaWithAlbumsHeaderView(
                 media = genre,
                 albumList = albumSet.toList(),
                 navController = navController

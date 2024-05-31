@@ -45,6 +45,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.internet.updates.UpdateAvailableStatus
@@ -84,10 +85,26 @@ fun SatunesTopAppBar(
             IconButton(
                 onClick = {
                     if (UpdateCheckManager.updateAvailableStatus.value != UpdateAvailableStatus.AVAILABLE) {
-                        UpdateCheckManager.updateAvailableStatus.value = UpdateAvailableStatus.UNDEFINED
+                        UpdateCheckManager.updateAvailableStatus.value =
+                            UpdateAvailableStatus.UNDEFINED
                     }
-                    when (navController.currentBackStackEntry!!.destination.route!!) {
-                        in settingsDestinations -> navController.popBackStack()
+
+                    val currentDestination: String =
+                        navController.currentBackStackEntry!!.destination.route!!
+                    when (currentDestination) {
+                        in settingsDestinations -> {
+                            if (currentDestination == Destination.PERMISSIONS_SETTINGS.link
+                                && !MainActivity.instance.isAudioAllowed()
+                            ) {
+                                return@IconButton
+                            } else {
+                                navController.popBackStack()
+                                if (navController.currentBackStackEntry == null) {
+                                    navController.navigate(Destination.FOLDERS.link)
+                                    navController.navigate(Destination.SETTINGS.link)
+                                }
+                            }
+                        }
 
                         else -> navController.navigate(Destination.SETTINGS.link)
                     }

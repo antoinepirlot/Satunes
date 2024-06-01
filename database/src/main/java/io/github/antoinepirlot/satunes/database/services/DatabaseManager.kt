@@ -92,7 +92,11 @@ class DatabaseManager(context: Context) {
                     )
                 try {
                     musicsPlaylistsRelDAO.insert(musicsPlaylistsRel)
-                    musicDao.insert(MusicDB(id = music.id))
+                    try {
+                        musicDao.insert(MusicDB(id = music.id))
+                    } catch (_: SQLiteConstraintException) {
+                        // Do nothing
+                    }
                     playlistWithMusics.addMusic(music = music)
                 } catch (_: SQLiteConstraintException) {
                     // Do nothing
@@ -107,14 +111,14 @@ class DatabaseManager(context: Context) {
         musicList: MutableList<MusicDB>? = null,
     ) {
         CoroutineScope(Dispatchers.IO).launch {
-            try {
-                playlist.id = playlistDao.insertOne(playlist = playlist)
-            } catch (_: SQLiteConstraintException) {
+            if (playlistDao.playlistExist(title = playlist.title)) {
                 val message: String =
                     playlist.title + context.getString(R.string.playlist_already_exist)
                 showToastOnUiThread(context = context, message = message)
                 return@launch
             }
+
+            playlist.id = playlistDao.insertOne(playlist = playlist)
             val playlistWithMusics: PlaylistWithMusics =
                 playlistDao.getPlaylistWithMusics(playlistId = playlist.id)!!
             DataManager.addPlaylist(playlistWithMusics = playlistWithMusics)

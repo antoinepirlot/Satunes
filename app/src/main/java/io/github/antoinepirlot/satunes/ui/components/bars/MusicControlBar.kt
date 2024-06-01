@@ -43,11 +43,11 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.antoinepirlot.satunes.ui.ScreenSizes
-import io.github.antoinepirlot.satunes.ui.components.buttons.music.NextMusicButton
-import io.github.antoinepirlot.satunes.ui.components.buttons.music.PlayPauseMusicButton
-import io.github.antoinepirlot.satunes.ui.components.buttons.music.PreviousMusicButton
-import io.github.antoinepirlot.satunes.ui.components.buttons.music.RepeatMusicButton
-import io.github.antoinepirlot.satunes.ui.components.buttons.music.ShuffleMusicButton
+import io.github.antoinepirlot.satunes.ui.components.buttons.playback.NextMusicButton
+import io.github.antoinepirlot.satunes.ui.components.buttons.playback.PlayPauseMusicButton
+import io.github.antoinepirlot.satunes.ui.components.buttons.playback.PreviousMusicButton
+import io.github.antoinepirlot.satunes.ui.components.buttons.playback.RepeatMusicButton
+import io.github.antoinepirlot.satunes.ui.components.buttons.playback.ShuffleMusicButton
 
 /**
  * @author Antoine Pirlot on 25/01/24

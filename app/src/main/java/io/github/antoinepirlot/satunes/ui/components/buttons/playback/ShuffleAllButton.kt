@@ -23,7 +23,7 @@
  * PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.buttons.music
+package io.github.antoinepirlot.satunes.ui.components.buttons.playback
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.Icon

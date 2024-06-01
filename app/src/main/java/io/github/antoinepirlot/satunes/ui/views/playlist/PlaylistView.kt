@@ -26,7 +26,6 @@
 package io.github.antoinepirlot.satunes.ui.views.playlist
 
 import android.content.Context
-import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -125,10 +124,7 @@ fun PlaylistView(
                 openAddMusicsDialog = false
             },
             mediaList = allMusic,
-            icon = {
-                val icon = SatunesIcons.PLAYLIST_ADD
-                Icon(imageVector = icon.imageVector, contentDescription = icon.description)
-            },
+            icon = SatunesIcons.PLAYLIST_ADD,
             playlistTitle = playlist.playlist.title
         )
     }

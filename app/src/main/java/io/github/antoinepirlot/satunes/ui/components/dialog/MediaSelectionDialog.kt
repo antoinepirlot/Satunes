@@ -27,6 +27,7 @@ package io.github.antoinepirlot.satunes.ui.components.dialog
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Icon
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -35,6 +36,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.forms.MediaSelectionForm
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 
@@ -49,11 +51,13 @@ fun MediaSelectionDialog(
     onConfirm: () -> Unit,
     mediaList: List<Media>,
     playlistTitle: String? = null,
-    icon: @Composable () -> Unit,
+    icon: SatunesIcons,
 ) {
     AlertDialog(
         modifier = modifier,
-        icon = icon,
+        icon = {
+            Icon(imageVector = icon.imageVector, contentDescription = icon.description)
+        },
         title = {
             if (mediaList.isEmpty()) {
                 NormalText(text = stringResource(id = R.string.no_music))
@@ -91,7 +95,7 @@ fun MediaSelectionDialog(
 @Composable
 fun PlaylistSelectionDialogPreview() {
     MediaSelectionDialog(
-        icon = {},
+        icon = SatunesIcons.PLAYLIST_ADD,
         onDismissRequest = {},
         onConfirm = {},
         mediaList = listOf()

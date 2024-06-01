@@ -101,12 +101,7 @@ fun MusicOptionsDialog(
                         },
                         onConfirm = onAddToPlaylist,
                         mediaList = playlistList.values.toList(),
-                        icon = {
-                            Icon(
-                                imageVector = SatunesIcons.PLAYLIST_ADD.imageVector,
-                                contentDescription = "Playlist Selection Icon"
-                            )
-                        }
+                        icon = SatunesIcons.PLAYLIST_ADD,
                     )
                 }
                 if (openPlaylistWithMusics != null) {

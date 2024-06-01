@@ -44,6 +44,9 @@ internal interface PlaylistDAO {
     @Query("SELECT * FROM playlists WHERE playlist_id = :playlistId")
     fun getPlaylistWithMusics(playlistId: Long): PlaylistWithMusics?
 
+    @Query("SELECT playlist_id FROM playlists WHERE lower(title) = lower(:title)")
+    fun playlistExist(title: String): Boolean
+
     @Transaction
     @Query("SELECT * FROM  playlists")
     fun getPlaylistsWithMusics(): List<PlaylistWithMusics>

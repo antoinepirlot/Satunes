@@ -83,10 +83,8 @@ class DatabaseManager(context: Context) {
     }
 
     fun insertMusicToPlaylists(
-        context: Context,
         music: Music,
         playlists: List<PlaylistWithMusics>,
-        showToast: Boolean = true
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             playlists.forEach { playlistWithMusics: PlaylistWithMusics ->
@@ -106,10 +104,6 @@ class DatabaseManager(context: Context) {
                 } catch (_: SQLiteConstraintException) {
                     // Do nothing
                 }
-            }
-            if (showToast) {
-                // In case of adding multiple music to one playlist
-                showToastOnUiThread(context = context, message = context.getString(R.string.added))
             }
         }
     }
@@ -136,10 +130,8 @@ class DatabaseManager(context: Context) {
             musicList?.forEach { musicDB: MusicDB ->
                 if (musicDB.music != null) {
                     insertMusicToPlaylists(
-                        context = context,
                         music = musicDB.music!!,
                         playlists = listOf(playlistWithMusics),
-                        showToast = false
                     )
                 }
             }
@@ -179,20 +171,16 @@ class DatabaseManager(context: Context) {
     }
 
     fun insertMusicsToPlaylist(
-        context: Context,
         musics: List<Music>,
         playlist: PlaylistWithMusics
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             musics.forEach { music: Music ->
                 insertMusicToPlaylists(
-                    context = context,
                     music = music,
                     playlists = listOf(playlist),
-                    showToast = false
                 )
             }
-            showToastOnUiThread(context = context, message = context.getString(R.string.added))
         }
     }
 

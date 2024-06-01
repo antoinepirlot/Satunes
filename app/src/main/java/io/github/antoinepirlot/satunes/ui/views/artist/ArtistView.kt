@@ -34,8 +34,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.media3.common.MediaItem
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
@@ -57,7 +55,6 @@ import java.util.SortedMap
 @Composable
 fun ArtistView(
     modifier: Modifier = Modifier,
-    navController: NavHostController,
     artist: Artist,
 ) {
     val playbackController: PlaybackController = PlaybackController.getInstance()
@@ -78,9 +75,9 @@ fun ArtistView(
                 musicMediaItemSortedMap = artist.musicMediaItemSortedMap,
                 musicToPlay = clickedMedia as Music
             )
-            openMedia(navController, clickedMedia)
+            openMedia(clickedMedia)
         },
-        onFABClick = { openCurrentMusic(navController) },
+        onFABClick = { openCurrentMusic() },
         header = {
             val albumMap: SortedMap<String, Album> = remember { artist.albumSortedMap }
 
@@ -91,24 +88,20 @@ fun ArtistView(
             }
             //
 
-            MediaWithAlbumsHeaderView(
-                media = artist,
-                albumList = albumMap.values.toList(),
-                navController = navController
-            )
+            MediaWithAlbumsHeaderView(media = artist, albumList = albumMap.values.toList())
         },
         extraButtons = {
             if (artist.musicMediaItemSortedMap.isNotEmpty()) {
                 ExtraButton(icon = SatunesIcons.PLAY, onClick = {
                     playbackController.loadMusic(musicMediaItemSortedMap = artist.musicMediaItemSortedMap)
-                    openMedia(navController = navController)
+                    openMedia()
                 })
                 ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
                     playbackController.loadMusic(
                         musicMediaItemSortedMap = artist.musicMediaItemSortedMap,
                         shuffleMode = true
                     )
-                    openMedia(navController = navController)
+                    openMedia()
                 })
             }
         },
@@ -119,12 +112,5 @@ fun ArtistView(
 @Preview
 @Composable
 fun ArtistViewPreview() {
-    ArtistView(
-        navController = rememberNavController(),
-        artist = Artist(
-            id = 0,
-            title = "Artist title",
-            albumSortedMap = sortedMapOf()
-        )
-    )
+    ArtistView(artist = Artist(id = 0, title = "Artist title", albumSortedMap = sortedMapOf()))
 }

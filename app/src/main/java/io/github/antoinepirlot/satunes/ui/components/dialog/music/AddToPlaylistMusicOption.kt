@@ -23,74 +23,80 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.buttons.playback
+package io.github.antoinepirlot.satunes.ui.components.dialog.music
 
 import android.content.Context
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
 import io.github.antoinepirlot.satunes.database.services.DataManager
 import io.github.antoinepirlot.satunes.database.services.DatabaseManager
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.services.MediaSelectionManager
+import io.github.antoinepirlot.satunes.ui.components.dialog.DialogOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.MediaSelectionDialog
+import java.util.SortedMap
 
 /**
  * @author Antoine Pirlot on 01/06/2024
  */
 
 @Composable
-fun AddToPlaylistRowButton(
+fun AddToPlaylistOption(
     modifier: Modifier = Modifier,
+    music: Music,
+    onFinished: () -> Unit
 ) {
     val context: Context = LocalContext.current
-    var showForm: Boolean by rememberSaveable { mutableStateOf(false) }
+    var showDialog: Boolean by rememberSaveable { mutableStateOf(false) }
 
-    RowButton(
+    DialogOption(
         modifier = modifier,
-        icon = SatunesIcons.PLAYLIST_ADD,
-        text = stringResource(id = R.string.add_to_playlist),
-        onClick = { showForm = true }
+        onClick = { showDialog = true },
+        icon = {
+            val playlistIcon: SatunesIcons = SatunesIcons.PLAYLIST_ADD
+            Icon(
+                imageVector = playlistIcon.imageVector,
+                contentDescription = playlistIcon.description
+            )
+        },
+        text = stringResource(id = R.string.add_to_playlist)
     )
+    if (showDialog) {
+        val playlistList: SortedMap<String, PlaylistWithMusics> =
+            remember { DataManager.playlistWithMusicsMap }
 
-    if (showForm) {
+        //Recompose if data changed
+        var mapChanged: Boolean by rememberSaveable { DataManager.playlistWithMusicsMapUpdated }
+        if (mapChanged) {
+            mapChanged = false
+        }
+        //
+
         MediaSelectionDialog(
-            onDismissRequest = { showForm = false },
-            onConfirm = {
-                addMusicPlayingToPlaylist(
-                    context = context,
-                    checkedPlaylists = MediaSelectionManager.getCheckedPlaylistWithMusics()
-                )
-                showForm = false
+            onDismissRequest = {
+                showDialog = false
             },
-            mediaList = DataManager.playlistWithMusicsMap.values.toList(),
-            icon = SatunesIcons.PLAYLIST_ADD
+            onConfirm = {
+                val db = DatabaseManager(context = context)
+                db.insertMusicToPlaylists(
+                    music = music,
+                    playlists = MediaSelectionManager.getCheckedPlaylistWithMusics()
+                )
+                onFinished()
+            },
+            mediaList = playlistList.values.toList(),
+            icon = SatunesIcons.PLAYLIST_ADD,
         )
     }
-}
-
-private fun addMusicPlayingToPlaylist(
-    context: Context,
-    checkedPlaylists: List<PlaylistWithMusics>
-) {
-    val playbackController: PlaybackController = PlaybackController.getInstance()
-    val musicPlaying: Music = playbackController.musicPlaying.value!!
-    val db = DatabaseManager(context = context)
-    db.insertMusicToPlaylists(music = musicPlaying, playlists = checkedPlaylists)
-}
-
-@Preview
-@Composable
-fun AddToPlaylistRowButtonPreview() {
-    AddToPlaylistRowButton()
 }

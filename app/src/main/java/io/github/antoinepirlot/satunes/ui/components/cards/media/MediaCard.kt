@@ -62,14 +62,12 @@ import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
 import io.github.antoinepirlot.satunes.database.models.tables.MusicDB
-import io.github.antoinepirlot.satunes.database.services.DatabaseManager
 import io.github.antoinepirlot.satunes.icons.R
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.services.MediaSelectionManager
 import io.github.antoinepirlot.satunes.ui.ScreenSizes
 import io.github.antoinepirlot.satunes.ui.components.cards.ListItem
-import io.github.antoinepirlot.satunes.ui.components.dialog.MusicOptionsDialog
-import io.github.antoinepirlot.satunes.ui.components.dialog.PlaylistOptionsDialog
+import io.github.antoinepirlot.satunes.ui.components.dialog.music.MusicOptionsDialog
+import io.github.antoinepirlot.satunes.ui.components.dialog.playlist.PlaylistOptionsDialog
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 import io.github.antoinepirlot.satunes.ui.components.texts.Subtitle
 import io.github.antoinepirlot.satunes.ui.utils.getRootFolderName
@@ -84,7 +82,7 @@ fun MediaCard(
     modifier: Modifier = Modifier,
     media: Media,
     onClick: () -> Unit,
-    openedPlaylistWithMusics: PlaylistWithMusics?
+    openedPlaylistWithMusics: PlaylistWithMusics?,
 ) {
     val haptics = LocalHapticFeedback.current
     var showMusicOptions: Boolean by rememberSaveable { mutableStateOf(false) }
@@ -185,41 +183,17 @@ fun MediaCard(
 
     // Music options dialog
     if (showMusicOptions && media is Music) {
-        val context = LocalContext.current
         MusicOptionsDialog(
-            musicTitle = title,
-            openPlaylistWithMusics = openedPlaylistWithMusics,
-            onAddToPlaylist = {
-                val db = DatabaseManager(context = context)
-                db.insertMusicToPlaylists(
-                    context = context,
-                    music = media,
-                    playlists = MediaSelectionManager.getCheckedPlaylistWithMusics()
-                )
-                showMusicOptions = false
-            },
-            onRemoveFromPlaylist = {
-                val db = DatabaseManager(context = context)
-                db.removeMusicFromPlaylist(
-                    music = media,
-                    playlist = openedPlaylistWithMusics!!
-                )
-                showMusicOptions = false
-            },
-            onDismissRequest = { showMusicOptions = false }
+            music = media,
+            playlistWithMusics = openedPlaylistWithMusics,
+            onDismissRequest = { showMusicOptions = false },
         )
     }
 
     // Playlist option dialog
     if (showPlaylistOptions && media is PlaylistWithMusics) {
-        val context = LocalContext.current
         PlaylistOptionsDialog(
             playlistWithMusics = media,
-            onRemovePlaylist = {
-                val db = DatabaseManager(context = context)
-                db.removePlaylist(playlistToRemove = media)
-                showPlaylistOptions = false
-            },
             onDismissRequest = { showPlaylistOptions = false }
         )
     }

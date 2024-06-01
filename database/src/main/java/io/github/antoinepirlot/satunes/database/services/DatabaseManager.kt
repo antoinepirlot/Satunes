@@ -92,7 +92,11 @@ class DatabaseManager(context: Context) {
                     )
                 try {
                     musicsPlaylistsRelDAO.insert(musicsPlaylistsRel)
-                    musicDao.insert(MusicDB(id = music.id))
+                    try {
+                        musicDao.insert(MusicDB(id = music.id))
+                    } catch (_: SQLiteConstraintException) {
+                        // Do nothing
+                    }
                     playlistWithMusics.addMusic(music = music)
                 } catch (_: SQLiteConstraintException) {
                     // Do nothing

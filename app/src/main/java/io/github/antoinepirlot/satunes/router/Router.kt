@@ -244,7 +244,7 @@ internal fun Router(
         }
 
         composable(Destination.SETTINGS.link) {
-            SettingsView(navController = navController)
+            SettingsView()
         }
 
         composable(Destination.BOTTOM_BAR_SETTINGS.link) {

@@ -44,8 +44,7 @@ import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 fun MusicOptionsDialog(
     modifier: Modifier = Modifier,
     music: Music,
-    openPlaylistWithMusics: PlaylistWithMusics? = null,
-    onRemoveFromPlaylist: () -> Unit,
+    playlistWithMusics: PlaylistWithMusics? = null,
     onDismissRequest: () -> Unit
 ) {
 
@@ -64,11 +63,12 @@ fun MusicOptionsDialog(
             Column {
                 AddToPlaylistOption(music = music, onFinished = onDismissRequest)
 
-                if (openPlaylistWithMusics != null) {
-                    RemoveFromPlaylistMusicOption(onClick = {
-                        onRemoveFromPlaylist()
-                        onDismissRequest()
-                    })
+                if (playlistWithMusics != null) {
+                    RemoveFromPlaylistMusicOption(
+                        music = music,
+                        playlistWithMusics = playlistWithMusics,
+                        onFinished = onDismissRequest
+                    )
                 }
             }
         },

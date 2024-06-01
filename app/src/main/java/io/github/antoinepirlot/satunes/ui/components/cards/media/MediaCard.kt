@@ -184,18 +184,9 @@ fun MediaCard(
 
     // Music options dialog
     if (showMusicOptions && media is Music) {
-        val context = LocalContext.current
         MusicOptionsDialog(
             music = media,
-            openPlaylistWithMusics = openedPlaylistWithMusics,
-            onRemoveFromPlaylist = {
-                val db = DatabaseManager(context = context)
-                db.removeMusicFromPlaylist(
-                    music = media,
-                    playlist = openedPlaylistWithMusics!!
-                )
-                showMusicOptions = false
-            },
+            playlistWithMusics = openedPlaylistWithMusics,
             onDismissRequest = { showMusicOptions = false }
         )
     }

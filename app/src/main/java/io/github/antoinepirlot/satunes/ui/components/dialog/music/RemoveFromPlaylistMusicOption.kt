@@ -25,12 +25,16 @@
 
 package io.github.antoinepirlot.satunes.ui.components.dialog.music
 
+import android.content.Context
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
+import io.github.antoinepirlot.satunes.database.services.DatabaseManager
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.dialog.DialogOption
 
@@ -41,11 +45,22 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.DialogOption
 @Composable
 fun RemoveFromPlaylistMusicOption(
     modifier: Modifier = Modifier,
-    onClick: () -> Unit,
+    music: Music,
+    playlistWithMusics: PlaylistWithMusics,
+    onFinished: () -> Unit,
 ) {
+    val context: Context = LocalContext.current
+
     DialogOption(
         modifier = modifier,
-        onClick = onClick,
+        onClick = {
+            val db = DatabaseManager(context = context)
+            db.removeMusicFromPlaylist(
+                music = music,
+                playlist = playlistWithMusics
+            )
+            onFinished()
+        },
         icon = {
             val playlistRemoveIcon: SatunesIcons = SatunesIcons.PLAYLIST_REMOVE
             Icon(
@@ -55,10 +70,4 @@ fun RemoveFromPlaylistMusicOption(
         },
         text = stringResource(id = R.string.remove_from_playlist)
     )
-}
-
-@Preview
-@Composable
-fun RemoveFromPlaylistMusicOptionPreview() {
-    RemoveFromPlaylistMusicOption(onClick = {})
 }

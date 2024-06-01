@@ -69,9 +69,9 @@ fun PlayBackView(
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight(
-                    if (screenWidthDp <= ScreenSizes.VERY_SMALL) 0.45f
-                    else if (screenWidthDp <= ScreenSizes.SMALL) 0.5f
-                    else 0.65f
+                    if (screenWidthDp <= ScreenSizes.VERY_SMALL) 0.35f
+                    else if (screenWidthDp <= ScreenSizes.SMALL) 0.4f
+                    else 0.55f
                 ),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,

@@ -68,7 +68,7 @@ fun MusicControlBar(
         } else { // Normal
             1f
         }
-    val spaceBetweenButtons = (20f * ratio).dp
+    val spaceSize = (20f * ratio).dp
     val playPauseButtonSize = (80f * ratio).dp
     val optionButtonSize = (35f * ratio).dp
 
@@ -83,16 +83,16 @@ fun MusicControlBar(
             verticalAlignment = verticalAlignment
         ) {
             ShuffleMusicButton(modifier = Modifier.size(optionButtonSize))
-            Spacer(modifier = Modifier.width(spaceBetweenButtons))
+            Spacer(modifier = Modifier.width(spaceSize))
 
             PreviousMusicButton()
-            Spacer(modifier = Modifier.width(spaceBetweenButtons))
+            Spacer(modifier = Modifier.width(spaceSize))
 
             PlayPauseMusicButton(modifier = Modifier.size(playPauseButtonSize))
-            Spacer(modifier = Modifier.width(spaceBetweenButtons))
+            Spacer(modifier = Modifier.width(spaceSize))
 
             NextMusicButton()
-            Spacer(modifier = Modifier.width(spaceBetweenButtons))
+            Spacer(modifier = Modifier.width(spaceSize))
 
             RepeatMusicButton(modifier = Modifier.size(optionButtonSize))
         }

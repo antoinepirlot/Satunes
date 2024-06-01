@@ -44,7 +44,6 @@ import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 fun PlaylistOptionsDialog(
     modifier: Modifier = Modifier,
     playlistWithMusics: PlaylistWithMusics,
-    onRemovePlaylist: () -> Unit,
     onDismissRequest: () -> Unit,
 ) {
     AlertDialog(
@@ -60,19 +59,15 @@ fun PlaylistOptionsDialog(
         },
         text = {
             Column {
-                RemovePlaylistPlaylistOption(
-                    onClick = {
-                        onRemovePlaylist()
-                        onDismissRequest()
-                    }
+                RemovePlaylistOption(
+                    playlistToRemove = playlistWithMusics,
+                    onFinished = onDismissRequest
                 )
 
                 ExportPlaylistOption(playlistToExport = playlistWithMusics)
             }
         },
-        onDismissRequest = {
-            onDismissRequest()
-        },
+        onDismissRequest = onDismissRequest,
         confirmButton = { /* Nothing */ }
     )
 }
@@ -82,7 +77,6 @@ fun PlaylistOptionsDialog(
 fun PlaylistOptionsDialogPreview() {
     PlaylistOptionsDialog(
         playlistWithMusics = PlaylistWithMusics(Playlist(1, "Playlist Title"), mutableListOf()),
-        onRemovePlaylist = {},
         onDismissRequest = {},
     )
 }

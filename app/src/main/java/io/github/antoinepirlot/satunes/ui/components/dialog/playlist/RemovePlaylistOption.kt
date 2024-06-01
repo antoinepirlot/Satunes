@@ -25,11 +25,15 @@
 
 package io.github.antoinepirlot.satunes.ui.components.dialog.playlist
 
+import android.content.Context
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
+import io.github.antoinepirlot.satunes.database.services.DatabaseManager
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.dialog.DialogOption
 
@@ -38,13 +42,20 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.DialogOption
  */
 
 @Composable
-fun RemovePlaylistPlaylistOption(
+fun RemovePlaylistOption(
     modifier: Modifier = Modifier,
-    onClick: () -> Unit,
+    playlistToRemove: PlaylistWithMusics,
+    onFinished: () -> Unit,
 ) {
+    val context: Context = LocalContext.current
+
     DialogOption(
         modifier = modifier,
-        onClick = onClick,
+        onClick = {
+            val db = DatabaseManager(context = context)
+            db.removePlaylist(playlistToRemove = playlistToRemove)
+            onFinished()
+        },
         icon = {
             val playlistRemoveIcon: SatunesIcons = SatunesIcons.PLAYLIST_REMOVE
             Icon(

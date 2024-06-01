@@ -44,6 +44,7 @@ import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.ui.ScreenSizes
 import io.github.antoinepirlot.satunes.ui.components.bars.MusicControlBar
+import io.github.antoinepirlot.satunes.ui.components.buttons.playback.PlaybackButtonsRow
 import io.github.antoinepirlot.satunes.ui.components.images.MusicPlayingAlbumArtwork
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 import io.github.antoinepirlot.satunes.ui.components.texts.Subtitle
@@ -68,11 +69,9 @@ fun PlayBackView(
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight(
-                    if (screenWidthDp >= ScreenSizes.VERY_SMALL && screenWidthDp <= ScreenSizes.SMALL)
-                        0.5f
-                    else if (screenWidthDp <= ScreenSizes.VERY_SMALL)
-                        0.45f
-                    else 0.65f
+                    if (screenWidthDp <= ScreenSizes.VERY_SMALL) 0.35f
+                    else if (screenWidthDp <= ScreenSizes.SMALL) 0.4f
+                    else 0.55f
                 ),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -89,6 +88,7 @@ fun PlayBackView(
                 modifier = Modifier.clickable { onArtistClick(musicPlaying.value!!.artist) },
                 text = musicPlaying.value!!.artist.title
             )
+            PlaybackButtonsRow()
             MusicControlBar()
         }
     }

@@ -23,7 +23,7 @@
  * PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.buttons.music
+package io.github.antoinepirlot.satunes.ui.components.buttons.playback
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.size
@@ -33,8 +33,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 
 /**
  * @author Antoine Pirlot on 26/01/24

@@ -39,4 +39,6 @@
     <string name="importing_success">Importing Success</string>
     <string name="no_playlist">There\'s no playlist</string>
     <string name="exporting_success">Exporting Success</string>
+    <string name="added">Added</string>
+    <string name="created">Created Playlist</string>
 </resources>

@@ -34,8 +34,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.media3.common.MediaItem
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.database.models.Music
@@ -55,7 +53,6 @@ import java.util.SortedMap
 @Composable
 fun AllMusicsListView(
     modifier: Modifier = Modifier,
-    navController: NavHostController
 ) {
     val playbackController: PlaybackController = PlaybackController.getInstance()
     //Find a way to do something more aesthetic but it works
@@ -78,24 +75,21 @@ fun AllMusicsListView(
                 musicMediaItemSortedMap = musicMediaItemMap,
                 musicToPlay = clickedMedia as Music
             )
-            openMedia(
-                navController,
-                clickedMedia
-            )
+            openMedia(clickedMedia)
         },
-        onFABClick = { openCurrentMusic(navController) },
+        onFABClick = { openCurrentMusic() },
         extraButtons = {
             if (musicMediaItemMap.isNotEmpty()) {
                 ExtraButton(icon = SatunesIcons.PLAY, onClick = {
                     playbackController.loadMusic(musicMediaItemSortedMap = musicMediaItemMap)
-                    openMedia(navController = navController)
+                    openMedia()
                 })
                 ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
                     playbackController.loadMusic(
                         musicMediaItemSortedMap = musicMediaItemMap,
                         shuffleMode = true
                     )
-                    openMedia(navController = navController)
+                    openMedia()
                 })
             }
         },
@@ -106,5 +100,5 @@ fun AllMusicsListView(
 @Preview
 @Composable
 fun MusicsListViewPreview() {
-    AllMusicsListView(navController = rememberNavController())
+    AllMusicsListView()
 }

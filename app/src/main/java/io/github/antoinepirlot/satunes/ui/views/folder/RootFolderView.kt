@@ -34,8 +34,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.media3.common.MediaItem
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.Media
@@ -57,7 +55,6 @@ import java.util.SortedMap
 @Composable
 fun RootFolderView(
     modifier: Modifier = Modifier,
-    navController: NavHostController,
 ) {
     val playbackController: PlaybackController = PlaybackController.getInstance()
 
@@ -74,9 +71,9 @@ fun RootFolderView(
         modifier = modifier,
         mediaList = rootFolderMap.keys.toList(),
         openMedia = { clickedMedia: Media ->
-            openMediaFromFolder(navController, clickedMedia)
+            openMediaFromFolder(clickedMedia)
         },
-        onFABClick = { openCurrentMusic(navController) },
+        onFABClick = { openCurrentMusic() },
         extraButtons = {
             if (rootFolderMap.isNotEmpty()) {
                 ExtraButton(icon = SatunesIcons.PLAY, onClick = {
@@ -85,7 +82,7 @@ fun RootFolderView(
                             folderMap = rootFolderMap
                         )
                     )
-                    openMedia(navController = navController)
+                    openMedia()
                 })
                 ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
 
@@ -93,7 +90,7 @@ fun RootFolderView(
                         musicMediaItemSortedMap = getFolderMusicsMap(folderMap = rootFolderMap),
                         shuffleMode = true
                     )
-                    openMedia(navController = navController)
+                    openMedia()
                 })
             }
         },
@@ -112,5 +109,5 @@ private fun getFolderMusicsMap(folderMap: SortedMap<Folder, Folder>): SortedMap<
 @Preview
 @Composable
 fun RootFolderViewPreview() {
-    RootFolderView(navController = rememberNavController())
+    RootFolderView()
 }

@@ -66,10 +66,10 @@ fun Satunes(
             navController = rememberNavController()
             Scaffold(
                 modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-                topBar = { SatunesTopAppBar(scrollBehavior = scrollBehavior, navController = navController) },
-                bottomBar = { SatunesBottomAppBar(navController = navController) }
+                topBar = { SatunesTopAppBar(scrollBehavior = scrollBehavior) },
+                bottomBar = { SatunesBottomAppBar() }
             ) { innerPadding ->
-                Router(modifier = Modifier.padding(innerPadding), navController = navController)
+                Router(modifier = Modifier.padding(innerPadding))
             }
         }
     }

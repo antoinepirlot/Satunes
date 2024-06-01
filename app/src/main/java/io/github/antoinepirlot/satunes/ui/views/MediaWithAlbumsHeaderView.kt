@@ -35,7 +35,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
 import io.github.antoinepirlot.satunes.database.R
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Media
@@ -52,13 +51,12 @@ fun MediaWithAlbumsHeaderView(
     modifier: Modifier = Modifier,
     media: Media,
     albumList: List<Album>,
-    navController: NavHostController
 ) {
     Column(modifier = modifier) {
         Title(text = media.title)
         AlbumGrid(
             mediaList = albumList,
-            onClick = { openMedia(navController = navController, media = it) }
+            onClick = { openMedia(media = it) }
         )
         Spacer(modifier = Modifier.size(30.dp))
         Title(

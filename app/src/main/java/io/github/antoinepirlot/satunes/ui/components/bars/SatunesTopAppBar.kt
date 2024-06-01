@@ -43,13 +43,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.internet.updates.UpdateAvailableStatus
 import io.github.antoinepirlot.satunes.internet.updates.UpdateCheckManager
+import io.github.antoinepirlot.satunes.navController
 import io.github.antoinepirlot.satunes.router.Destination
 import io.github.antoinepirlot.satunes.router.settingsDestinations
 import io.github.antoinepirlot.satunes.ui.ScreenSizes
@@ -63,7 +62,6 @@ import io.github.antoinepirlot.satunes.ui.ScreenSizes
 fun SatunesTopAppBar(
     modifier: Modifier = Modifier,
     scrollBehavior: TopAppBarScrollBehavior,
-    navController: NavHostController,
 ) {
     val screenWidthDp = LocalConfiguration.current.screenWidthDp
     val barModifier: Modifier =
@@ -132,6 +130,5 @@ fun SatunesTopAppBarPreview() {
     SatunesTopAppBar(
         modifier = Modifier,
         scrollBehavior = scrollBehavior,
-        navController = rememberNavController(),
     )
 }

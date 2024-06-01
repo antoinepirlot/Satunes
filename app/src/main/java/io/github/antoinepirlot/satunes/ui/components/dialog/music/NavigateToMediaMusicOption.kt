@@ -32,7 +32,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.navController
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.dialog.DialogOption
 
@@ -47,7 +46,7 @@ fun NavigateToMediaMusicOption(
 ) {
     DialogOption(
         modifier = modifier,
-        onClick = { openMedia(media = media, navController = navController) },
+        onClick = { openMedia(media = media) },
         icon = {
             val icon: SatunesIcons = SatunesIcons.ALBUM
             Icon(imageVector = icon.imageVector, contentDescription = icon.description)

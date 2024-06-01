@@ -37,8 +37,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.media3.common.MediaItem
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.database.models.Music
@@ -64,7 +62,6 @@ import java.util.SortedMap
 @Composable
 fun PlaylistView(
     modifier: Modifier = Modifier,
-    navController: NavHostController,
     playlist: PlaylistWithMusics,
 ) {
     //TODO try using nav controller instead try to remember it in an object if possible
@@ -87,24 +84,24 @@ fun PlaylistView(
                 musicMediaItemSortedMap = playlist.musicMediaItemSortedMap,
                 musicToPlay = clickedMedia as Music
             )
-            openMedia(navController = navController, media = clickedMedia)
+            openMedia(media = clickedMedia)
         },
         openedPlaylistWithMusics = playlist,
-        onFABClick = { openCurrentMusic(navController = navController) },
+        onFABClick = { openCurrentMusic() },
         header = { Title(text = playlist.playlist.title) },
         extraButtons = {
             ExtraButton(icon = SatunesIcons.ADD, onClick = { openAddMusicsDialog = true })
             if (playlist.musicMediaItemSortedMap.isNotEmpty()) {
                 ExtraButton(icon = SatunesIcons.PLAY, onClick = {
                     playbackController.loadMusic(musicMediaItemSortedMap = playlist.musicMediaItemSortedMap)
-                    openMedia(navController = navController)
+                    openMedia()
                 })
                 ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
                     playbackController.loadMusic(
                         musicMediaItemSortedMap = playlist.musicMediaItemSortedMap,
                         shuffleMode = true
                     )
-                    openMedia(navController = navController)
+                    openMedia()
                 })
             }
         },
@@ -134,7 +131,6 @@ fun PlaylistView(
 @Composable
 fun PlaylistViewPreview() {
     PlaylistView(
-        navController = rememberNavController(),
         playlist = PlaylistWithMusics(
             playlist = Playlist(id = 0, title = "Playlist"),
             musics = mutableListOf()

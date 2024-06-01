@@ -36,8 +36,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.media3.common.MediaItem
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.Media
@@ -61,7 +59,6 @@ import java.util.SortedSet
 @Composable
 fun FolderView(
     modifier: Modifier = Modifier,
-    navController: NavHostController,
     folder: Folder,
 ) {
     val playbackController: PlaybackController = PlaybackController.getInstance()
@@ -103,22 +100,22 @@ fun FolderView(
         MediaListView(
             mediaList = subFolderMap.toList(),
             openMedia = { clickedMedia: Media ->
-                openMediaFromFolder(navController, clickedMedia)
+                openMediaFromFolder(clickedMedia)
             },
-            onFABClick = { openCurrentMusic(navController) },
+            onFABClick = { openCurrentMusic() },
             extraButtons = {
-                val folderMusics : SortedMap<Music, MediaItem> = folder.getAllMusic()
+                val folderMusics: SortedMap<Music, MediaItem> = folder.getAllMusic()
                 if (folderMusics.isNotEmpty()) {
                     ExtraButton(icon = SatunesIcons.PLAY, onClick = {
                         playbackController.loadMusic(musicMediaItemSortedMap = folderMusics)
-                        openMedia(navController = navController)
+                        openMedia()
                     })
                     ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
                         playbackController.loadMusic(
                             musicMediaItemSortedMap = folderMusics,
                             shuffleMode = true
                         )
-                        openMedia(navController = navController)
+                        openMedia()
                     })
                 }
             },
@@ -144,8 +141,5 @@ private fun loadSubFolders(
 @Preview
 @Composable
 fun FolderViewPreview() {
-    FolderView(
-        navController = rememberNavController(),
-        folder = Folder(id = 0, title = "Folder title")
-    )
+    FolderView(folder = Folder(id = 0, title = "Folder title"))
 }

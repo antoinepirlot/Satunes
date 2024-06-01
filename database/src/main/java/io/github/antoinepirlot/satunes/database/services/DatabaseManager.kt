@@ -82,7 +82,12 @@ class DatabaseManager(context: Context) {
         }
     }
 
-    fun insertMusicToPlaylists(music: Music, playlists: List<PlaylistWithMusics>) {
+    fun insertMusicToPlaylists(
+        context: Context,
+        music: Music,
+        playlists: List<PlaylistWithMusics>,
+        showToast: Boolean = true
+    ) {
         CoroutineScope(Dispatchers.IO).launch {
             playlists.forEach { playlistWithMusics: PlaylistWithMusics ->
                 val musicsPlaylistsRel =
@@ -102,6 +107,10 @@ class DatabaseManager(context: Context) {
                     // Do nothing
                 }
             }
+            if (showToast) {
+                // In case of adding multiple music to one playlist
+                showToastOnUiThread(context = context, message = context.getString(R.string.added))
+            }
         }
     }
 
@@ -109,6 +118,7 @@ class DatabaseManager(context: Context) {
         context: Context,
         playlist: Playlist,
         musicList: MutableList<MusicDB>? = null,
+        showToast: Boolean = true
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             if (playlistDao.playlistExist(title = playlist.title)) {
@@ -126,10 +136,18 @@ class DatabaseManager(context: Context) {
             musicList?.forEach { musicDB: MusicDB ->
                 if (musicDB.music != null) {
                     insertMusicToPlaylists(
+                        context = context,
                         music = musicDB.music!!,
-                        playlists = mutableListOf(playlistWithMusics)
+                        playlists = listOf(playlistWithMusics),
+                        showToast = false
                     )
                 }
+            }
+            if (showToast) {
+                showToastOnUiThread(
+                    context = context,
+                    message = context.getString(R.string.created)
+                )
             }
         }
     }
@@ -160,11 +178,21 @@ class DatabaseManager(context: Context) {
         }
     }
 
-    fun insertMusicsToPlaylist(musics: List<Music>, playlist: PlaylistWithMusics) {
+    fun insertMusicsToPlaylist(
+        context: Context,
+        musics: List<Music>,
+        playlist: PlaylistWithMusics
+    ) {
         CoroutineScope(Dispatchers.IO).launch {
             musics.forEach { music: Music ->
-                insertMusicToPlaylists(music = music, playlists = mutableListOf(playlist))
+                insertMusicToPlaylists(
+                    context = context,
+                    music = music,
+                    playlists = listOf(playlist),
+                    showToast = false
+                )
             }
+            showToastOnUiThread(context = context, message = context.getString(R.string.added))
         }
     }
 
@@ -250,7 +278,8 @@ class DatabaseManager(context: Context) {
             insertOne(
                 context = context,
                 playlist = playlistWithMusics.playlist,
-                musicList = playlistWithMusics.musics
+                musicList = playlistWithMusics.musics,
+                showToast = false
             )
         } catch (_: Exception) {
             // Do nothing

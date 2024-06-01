@@ -86,7 +86,7 @@ private fun addMusicPlayingToPlaylist(
     val playbackController: PlaybackController = PlaybackController.getInstance()
     val musicPlaying: Music = playbackController.musicPlaying.value!!
     val db = DatabaseManager(context = context)
-    db.insertMusicToPlaylists(music = musicPlaying, playlists = checkedPlaylists)
+    db.insertMusicToPlaylists(context = context, music = musicPlaying, playlists = checkedPlaylists)
 }
 
 @Preview

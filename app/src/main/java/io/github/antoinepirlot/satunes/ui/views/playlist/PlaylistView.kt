@@ -118,6 +118,7 @@ fun PlaylistView(
             onConfirm = {
                 val db = DatabaseManager(context = context)
                 db.insertMusicsToPlaylist(
+                    context = context,
                     musics = MediaSelectionManager.getCheckedMusics(),
                     playlist = playlist
                 )

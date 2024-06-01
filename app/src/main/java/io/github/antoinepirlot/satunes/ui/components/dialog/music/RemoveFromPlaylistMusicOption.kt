@@ -25,54 +25,40 @@
 
 package io.github.antoinepirlot.satunes.ui.components.dialog.music
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
+import io.github.antoinepirlot.satunes.ui.components.dialog.DialogOption
 
 /**
- * @author Antoine Pirlot on 30/03/2024
+ * @author Antoine Pirlot on 01/06/2024
  */
 
-
 @Composable
-fun MusicOptionsDialog(
+fun RemoveFromPlaylistMusicOption(
     modifier: Modifier = Modifier,
-    music: Music,
-    openPlaylistWithMusics: PlaylistWithMusics? = null,
-    onRemoveFromPlaylist: () -> Unit,
-    onDismissRequest: () -> Unit
+    onClick: () -> Unit,
 ) {
-
-    AlertDialog(
+    DialogOption(
         modifier = modifier,
+        onClick = onClick,
         icon = {
+            val playlistRemoveIcon: SatunesIcons = SatunesIcons.PLAYLIST_REMOVE
             Icon(
-                imageVector = SatunesIcons.MUSIC.imageVector,
-                contentDescription = "Music Options Icon"
+                imageVector = playlistRemoveIcon.imageVector,
+                contentDescription = playlistRemoveIcon.description
             )
         },
-        title = {
-            NormalText(text = music.title)
-        },
-        text = {
-            Column {
-                AddToPlaylistOption(music = music, onFinished = onDismissRequest)
-
-                if (openPlaylistWithMusics != null) {
-                    RemoveFromPlaylistMusicOption(onClick = {
-                        onRemoveFromPlaylist()
-                        onDismissRequest()
-                    })
-                }
-            }
-        },
-        onDismissRequest = { onDismissRequest() },
-        confirmButton = { /* Nothing */ }
+        text = stringResource(id = R.string.remove_from_playlist)
     )
+}
+
+@Preview
+@Composable
+fun RemoveFromPlaylistMusicOptionPreview() {
+    RemoveFromPlaylistMusicOption(onClick = {})
 }

@@ -23,7 +23,7 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.dialog
+package io.github.antoinepirlot.satunes.ui.components.dialog.playlist
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.AlertDialog
@@ -37,6 +37,7 @@ import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
 import io.github.antoinepirlot.satunes.database.models.tables.Playlist
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import io.github.antoinepirlot.satunes.ui.components.dialog.DialogOption
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 
 /**

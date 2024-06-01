@@ -67,8 +67,8 @@ import io.github.antoinepirlot.satunes.icons.R
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.ScreenSizes
 import io.github.antoinepirlot.satunes.ui.components.cards.ListItem
-import io.github.antoinepirlot.satunes.ui.components.dialog.PlaylistOptionsDialog
 import io.github.antoinepirlot.satunes.ui.components.dialog.music.MusicOptionsDialog
+import io.github.antoinepirlot.satunes.ui.components.dialog.playlist.PlaylistOptionsDialog
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 import io.github.antoinepirlot.satunes.ui.components.texts.Subtitle
 import io.github.antoinepirlot.satunes.ui.utils.getRootFolderName

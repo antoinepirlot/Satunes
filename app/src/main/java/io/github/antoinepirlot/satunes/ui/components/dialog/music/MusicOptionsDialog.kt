@@ -29,22 +29,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
-import io.github.antoinepirlot.satunes.database.services.DataManager
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.dialog.DialogOption
-import io.github.antoinepirlot.satunes.ui.components.dialog.MediaSelectionDialog
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
-import java.util.SortedMap
 
 /**
  * @author Antoine Pirlot on 30/03/2024
@@ -60,7 +52,6 @@ fun MusicOptionsDialog(
     onRemoveFromPlaylist: () -> Unit,
     onDismissRequest: () -> Unit
 ) {
-    var showPlaylistSelectionDialog: Boolean by rememberSaveable { mutableStateOf(false) }
 
     AlertDialog(
         modifier = modifier,
@@ -75,37 +66,8 @@ fun MusicOptionsDialog(
         },
         text = {
             Column {
-                DialogOption(
-                    onClick = { showPlaylistSelectionDialog = true },
-                    icon = {
-                        val playlistIcon: SatunesIcons = SatunesIcons.PLAYLIST_ADD
-                        Icon(
-                            imageVector = playlistIcon.imageVector,
-                            contentDescription = playlistIcon.description
-                        )
-                    },
-                    text = stringResource(id = R.string.add_to_playlist)
-                )
-                if (showPlaylistSelectionDialog) {
-                    val playlistList: SortedMap<String, PlaylistWithMusics> =
-                        remember { DataManager.playlistWithMusicsMap }
+                AddToPlaylistOption(onConfirm = onAddToPlaylist)
 
-                    //Recompose if data changed
-                    var mapChanged: Boolean by rememberSaveable { DataManager.playlistWithMusicsMapUpdated }
-                    if (mapChanged) {
-                        mapChanged = false
-                    }
-                    //
-
-                    MediaSelectionDialog(
-                        onDismissRequest = {
-                            showPlaylistSelectionDialog = false
-                        },
-                        onConfirm = onAddToPlaylist,
-                        mediaList = playlistList.values.toList(),
-                        icon = SatunesIcons.PLAYLIST_ADD,
-                    )
-                }
                 if (openPlaylistWithMusics != null) {
                     DialogOption(
                         onClick = {
@@ -124,10 +86,7 @@ fun MusicOptionsDialog(
                 }
             }
         },
-        onDismissRequest = {
-            onDismissRequest()
-            showPlaylistSelectionDialog = false
-        },
+        onDismissRequest = { onDismissRequest() },
         confirmButton = { /* Nothing */ }
     )
 }

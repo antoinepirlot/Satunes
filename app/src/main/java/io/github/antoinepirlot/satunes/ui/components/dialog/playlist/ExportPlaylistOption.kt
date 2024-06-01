@@ -25,64 +25,40 @@
 
 package io.github.antoinepirlot.satunes.ui.components.dialog.playlist
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.res.stringResource
+import io.github.antoinepirlot.satunes.MainActivity
+import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
-import io.github.antoinepirlot.satunes.database.models.tables.Playlist
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
+import io.github.antoinepirlot.satunes.ui.components.dialog.DialogOption
 
 /**
- * @author Antoine Pirlot on 01/04/2024
+ * @author Antoine Pirlot on 01/06/2024
  */
 
 @Composable
-fun PlaylistOptionsDialog(
+fun ExportPlaylistOption(
     modifier: Modifier = Modifier,
-    playlistWithMusics: PlaylistWithMusics,
-    onRemovePlaylist: () -> Unit,
-    onDismissRequest: () -> Unit,
+    playlistToExport: PlaylistWithMusics
 ) {
-    AlertDialog(
+    DialogOption(
         modifier = modifier,
-        icon = {
-            Icon(
-                imageVector = SatunesIcons.PLAYLIST.imageVector,
-                contentDescription = "Playlist Options Icon"
+        onClick = {
+            MainActivity.playlistsToExport = arrayOf(playlistToExport)
+            MainActivity.instance.createFileToExportPlaylists(
+                defaultFileName = playlistToExport.playlist.title + ".json"
             )
         },
-        title = {
-            NormalText(text = playlistWithMusics.playlist.title)
+        icon = {
+            val exportIcon: SatunesIcons = SatunesIcons.EXPORT
+            Icon(
+                imageVector = exportIcon.imageVector,
+                contentDescription = exportIcon.description
+            )
         },
-        text = {
-            Column {
-                RemovePlaylistPlaylistOption(
-                    onClick = {
-                        onRemovePlaylist()
-                        onDismissRequest()
-                    }
-                )
-
-                ExportPlaylistOption(playlistToExport = playlistWithMusics)
-            }
-        },
-        onDismissRequest = {
-            onDismissRequest()
-        },
-        confirmButton = { /* Nothing */ }
-    )
-}
-
-@Preview
-@Composable
-fun PlaylistOptionsDialogPreview() {
-    PlaylistOptionsDialog(
-        playlistWithMusics = PlaylistWithMusics(Playlist(1, "Playlist Title"), mutableListOf()),
-        onRemovePlaylist = {},
-        onDismissRequest = {},
+        text = stringResource(id = R.string.export) + " (Beta)"
     )
 }

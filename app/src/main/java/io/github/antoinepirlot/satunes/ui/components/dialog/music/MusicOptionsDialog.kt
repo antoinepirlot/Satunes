@@ -72,6 +72,9 @@ fun MusicOptionsDialog(
                 }
 
                 NavigateToMediaMusicOption(media = music.album)
+                NavigateToMediaMusicOption(media = music.artist)
+                NavigateToMediaMusicOption(media = music.genre)
+                NavigateToMediaMusicOption(media = music.folder)
             }
         },
         onDismissRequest = { onDismissRequest() },

@@ -30,6 +30,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.satunes.database.models.Album
+import io.github.antoinepirlot.satunes.database.models.Artist
+import io.github.antoinepirlot.satunes.database.models.Folder
+import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.router.utils.openMedia
@@ -48,7 +51,13 @@ fun NavigateToMediaMusicOption(
         modifier = modifier,
         onClick = { openMedia(media = media) },
         icon = {
-            val icon: SatunesIcons = SatunesIcons.ALBUM
+            val icon: SatunesIcons = when (media) {
+                is Album -> SatunesIcons.ALBUM
+                is Artist -> SatunesIcons.ARTIST
+                is Genre -> SatunesIcons.GENRES
+                is Folder -> SatunesIcons.FOLDER
+                else -> throw IllegalArgumentException("${media.javaClass} is not allowed")
+            }
             Icon(imageVector = icon.imageVector, contentDescription = icon.description)
         },
         text = media.title

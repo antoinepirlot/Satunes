@@ -64,20 +64,13 @@ fun PlaylistOptionsDialog(
         },
         text = {
             Column {
-                DialogOption(
+                RemovePlaylistPlaylistOption(
                     onClick = {
                         onRemovePlaylist()
                         onDismissRequest()
-                    },
-                    icon = {
-                        val playlistRemoveIcon: SatunesIcons = SatunesIcons.PLAYLIST_REMOVE
-                        Icon(
-                            imageVector = playlistRemoveIcon.imageVector,
-                            contentDescription = playlistRemoveIcon.description
-                        )
-                    },
-                    text = stringResource(id = R.string.remove_playlist)
+                    }
                 )
+
                 DialogOption(
                     onClick = {
                         MainActivity.playlistsToExport = arrayOf(playlistWithMusics)

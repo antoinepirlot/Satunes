@@ -35,7 +35,43 @@ internal object MediaSelectionManager {
     /**
      * Mutable list of checked playlists' ids to know where to add music from form
      */
-    val checkedPlaylistWithMusics: MutableList<PlaylistWithMusics> = mutableListOf()
+    private val checkedPlaylistWithMusics: MutableList<PlaylistWithMusics> = mutableListOf()
 
-    val checkedMusics: MutableList<Music> = mutableListOf()
+    private val checkedMusics: MutableList<Music> = mutableListOf()
+
+    internal fun getCheckedPlaylistWithMusics(): List<PlaylistWithMusics> {
+        val list: List<PlaylistWithMusics> = checkedPlaylistWithMusics.toList()
+        clearCheckedPlaylistWithMusics()
+        return list
+    }
+
+    internal fun addPlaylist(playlistWithMusics: PlaylistWithMusics) {
+        checkedPlaylistWithMusics.add(playlistWithMusics)
+    }
+
+    internal fun removePlaylist(playlistWithMusics: PlaylistWithMusics) {
+        checkedPlaylistWithMusics.remove(playlistWithMusics)
+    }
+
+    internal fun clearCheckedPlaylistWithMusics() {
+        checkedPlaylistWithMusics.clear()
+    }
+
+    internal fun getCheckedMusics(): List<Music> {
+        val list: List<Music> = checkedMusics.toList()
+        clearCheckedMusics()
+        return list
+    }
+
+    internal fun addMusic(music: Music) {
+        checkedMusics.add(music)
+    }
+
+    internal fun removeMusic(music: Music) {
+        checkedMusics.remove(music)
+    }
+
+    internal fun clearCheckedMusics() {
+        checkedMusics.clear()
+    }
 }

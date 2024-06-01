@@ -37,6 +37,7 @@ import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import io.github.antoinepirlot.satunes.services.MediaSelectionManager
 import io.github.antoinepirlot.satunes.ui.components.forms.MediaSelectionForm
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 
@@ -75,9 +76,17 @@ fun MediaSelectionDialog(
                 MediaSelectionForm(mediaList = mediaList)
             }
         },
-        onDismissRequest = onDismissRequest,
+        onDismissRequest = {
+            MediaSelectionManager.clearCheckedMusics()
+            MediaSelectionManager.clearCheckedPlaylistWithMusics()
+            onDismissRequest()
+        },
         confirmButton = {
-            TextButton(onClick = onConfirm) {
+            TextButton(onClick = {
+                onConfirm()
+                MediaSelectionManager.clearCheckedMusics()
+                MediaSelectionManager.clearCheckedPlaylistWithMusics()
+            }) {
                 if (mediaList.isNotEmpty()) {
                     NormalText(text = stringResource(id = R.string.add))
                 }

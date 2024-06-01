@@ -82,7 +82,7 @@ class DatabaseManager(context: Context) {
         }
     }
 
-    fun insertMusicToPlaylists(music: Music, playlists: MutableList<PlaylistWithMusics>) {
+    fun insertMusicToPlaylists(music: Music, playlists: List<PlaylistWithMusics>) {
         CoroutineScope(Dispatchers.IO).launch {
             playlists.forEach { playlistWithMusics: PlaylistWithMusics ->
                 val musicsPlaylistsRel =
@@ -156,7 +156,7 @@ class DatabaseManager(context: Context) {
         }
     }
 
-    fun insertMusicsToPlaylist(musics: MutableList<Music>, playlist: PlaylistWithMusics) {
+    fun insertMusicsToPlaylist(musics: List<Music>, playlist: PlaylistWithMusics) {
         CoroutineScope(Dispatchers.IO).launch {
             musics.forEach { music: Music ->
                 insertMusicToPlaylists(music = music, playlists = mutableListOf(playlist))

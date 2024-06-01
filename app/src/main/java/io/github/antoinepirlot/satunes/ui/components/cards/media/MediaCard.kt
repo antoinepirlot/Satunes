@@ -193,7 +193,7 @@ fun MediaCard(
                 val db = DatabaseManager(context = context)
                 db.insertMusicToPlaylists(
                     music = media,
-                    playlists = MediaSelectionManager.checkedPlaylistWithMusics
+                    playlists = MediaSelectionManager.getCheckedPlaylistWithMusics()
                 )
                 showMusicOptions = false
             },

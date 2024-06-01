@@ -76,15 +76,15 @@ private fun onClick(checked: MutableState<Boolean>, media: Media) {
     checked.value = !checked.value
     if(checked.value) {
         if (media is PlaylistWithMusics) {
-            MediaSelectionManager.checkedPlaylistWithMusics.add(media)
+            MediaSelectionManager.addPlaylist(playlistWithMusics = media)
         } else if (media is Music) {
-            MediaSelectionManager.checkedMusics.add(media)
+            MediaSelectionManager.addMusic(music = media)
         }
     } else {
         if (media is PlaylistWithMusics) {
-            MediaSelectionManager.checkedPlaylistWithMusics.remove(media)
+            MediaSelectionManager.removePlaylist(playlistWithMusics = media)
         } else if (media is Music) {
-            MediaSelectionManager.checkedMusics.remove(media)
+            MediaSelectionManager.removeMusic(music = media)
         }
     }
 }

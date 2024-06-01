@@ -90,7 +90,6 @@ fun AddToPlaylistOption(
             onConfirm = {
                 val db = DatabaseManager(context = context)
                 db.insertMusicToPlaylists(
-                    context = context,
                     music = music,
                     playlists = MediaSelectionManager.getCheckedPlaylistWithMusics()
                 )

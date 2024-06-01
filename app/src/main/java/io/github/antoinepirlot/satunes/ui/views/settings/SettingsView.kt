@@ -51,10 +51,10 @@ fun SettingsView(
     modifier: Modifier = Modifier,
 ) {
     val scrollState = rememberScrollState()
-    Column(modifier = modifier) {
+    Column(modifier = modifier.verticalScroll(state = scrollState)) {
         Title(text = stringResource(id = R.string.settings))
         HorizontalDivider()
-        Column(modifier = Modifier.verticalScroll(state = scrollState)) {
+        Column {
             SettingButton(text = "Android Auto", onClick = {
                 navController.navigate(Destination.ANDROID_AUTO_SETTINGS.link)
             })

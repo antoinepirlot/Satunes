@@ -31,8 +31,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.dialog.DialogOption
@@ -46,9 +46,8 @@ import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 @Composable
 fun MusicOptionsDialog(
     modifier: Modifier = Modifier,
-    musicTitle: String,
+    music: Music,
     openPlaylistWithMusics: PlaylistWithMusics? = null,
-    onAddToPlaylist: () -> Unit,
     onRemoveFromPlaylist: () -> Unit,
     onDismissRequest: () -> Unit
 ) {
@@ -62,11 +61,11 @@ fun MusicOptionsDialog(
             )
         },
         title = {
-            NormalText(text = musicTitle)
+            NormalText(text = music.title)
         },
         text = {
             Column {
-                AddToPlaylistOption(onConfirm = onAddToPlaylist)
+                AddToPlaylistOption(music = music, onFinished = onDismissRequest)
 
                 if (openPlaylistWithMusics != null) {
                     DialogOption(
@@ -88,16 +87,5 @@ fun MusicOptionsDialog(
         },
         onDismissRequest = { onDismissRequest() },
         confirmButton = { /* Nothing */ }
-    )
-}
-
-@Preview
-@Composable
-fun MusicOptionsDialogPreview() {
-    MusicOptionsDialog(
-        musicTitle = "Music Title",
-        onAddToPlaylist = {},
-        onRemoveFromPlaylist = {},
-        onDismissRequest = {},
     )
 }

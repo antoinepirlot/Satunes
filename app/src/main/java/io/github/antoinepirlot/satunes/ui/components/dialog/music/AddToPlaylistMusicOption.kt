@@ -25,6 +25,7 @@
 
 package io.github.antoinepirlot.satunes.ui.components.dialog.music
 
+import android.content.Context
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -33,11 +34,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
 import io.github.antoinepirlot.satunes.database.services.DataManager
+import io.github.antoinepirlot.satunes.database.services.DatabaseManager
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import io.github.antoinepirlot.satunes.services.MediaSelectionManager
 import io.github.antoinepirlot.satunes.ui.components.dialog.DialogOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.MediaSelectionDialog
 import java.util.SortedMap
@@ -49,8 +54,10 @@ import java.util.SortedMap
 @Composable
 fun AddToPlaylistOption(
     modifier: Modifier = Modifier,
-    onConfirm: () -> Unit,
+    music: Music,
+    onFinished: () -> Unit
 ) {
+    val context: Context = LocalContext.current
     var showDialog: Boolean by rememberSaveable { mutableStateOf(false) }
 
     DialogOption(
@@ -80,7 +87,15 @@ fun AddToPlaylistOption(
             onDismissRequest = {
                 showDialog = false
             },
-            onConfirm = onConfirm,
+            onConfirm = {
+                val db = DatabaseManager(context = context)
+                db.insertMusicToPlaylists(
+                    context = context,
+                    music = music,
+                    playlists = MediaSelectionManager.getCheckedPlaylistWithMusics()
+                )
+                onFinished()
+            },
             mediaList = playlistList.values.toList(),
             icon = SatunesIcons.PLAYLIST_ADD,
         )

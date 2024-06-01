@@ -65,7 +65,6 @@ import io.github.antoinepirlot.satunes.database.models.tables.MusicDB
 import io.github.antoinepirlot.satunes.database.services.DatabaseManager
 import io.github.antoinepirlot.satunes.icons.R
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.services.MediaSelectionManager
 import io.github.antoinepirlot.satunes.ui.ScreenSizes
 import io.github.antoinepirlot.satunes.ui.components.cards.ListItem
 import io.github.antoinepirlot.satunes.ui.components.dialog.PlaylistOptionsDialog
@@ -187,17 +186,8 @@ fun MediaCard(
     if (showMusicOptions && media is Music) {
         val context = LocalContext.current
         MusicOptionsDialog(
-            musicTitle = title,
+            music = media,
             openPlaylistWithMusics = openedPlaylistWithMusics,
-            onAddToPlaylist = {
-                val db = DatabaseManager(context = context)
-                db.insertMusicToPlaylists(
-                    context = context,
-                    music = media,
-                    playlists = MediaSelectionManager.getCheckedPlaylistWithMusics()
-                )
-                showMusicOptions = false
-            },
             onRemoveFromPlaylist = {
                 val db = DatabaseManager(context = context)
                 db.removeMusicFromPlaylist(

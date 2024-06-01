@@ -51,10 +51,10 @@ fun SettingsView(
     navController: NavHostController
 ) {
     val scrollState = rememberScrollState()
-    Column(modifier = modifier) {
+    Column(modifier = modifier.verticalScroll(state = scrollState)) {
         Title(text = stringResource(id = R.string.settings))
         HorizontalDivider()
-        Column(modifier = Modifier.verticalScroll(state = scrollState)) {
+        Column {
             ClickableListItem(
                 text = "Android Auto",
                 onClick = {

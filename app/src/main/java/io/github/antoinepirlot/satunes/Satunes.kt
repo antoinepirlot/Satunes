@@ -48,6 +48,9 @@ import io.github.antoinepirlot.satunes.ui.theme.SatunesTheme
  * @author Antoine Pirlot on 10/04/2024
  */
 
+internal lateinit var navController: NavHostController
+    private set
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Satunes(
@@ -60,7 +63,7 @@ fun Satunes(
         ) {
             val scrollBehavior =
                 TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
-            val navController: NavHostController = rememberNavController()
+            navController = rememberNavController()
             Scaffold(
                 modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
                 topBar = { SatunesTopAppBar(scrollBehavior = scrollBehavior, navController = navController) },

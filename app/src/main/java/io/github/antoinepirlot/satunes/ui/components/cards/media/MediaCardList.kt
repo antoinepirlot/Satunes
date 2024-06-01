@@ -75,7 +75,7 @@ fun MediaCardList(
                 modifier = modifier,
                 media = media,
                 onClick = { openMedia(media) },
-                openedPlaylistWithMusics = openedPlaylistWithMusics
+                openedPlaylistWithMusics = openedPlaylistWithMusics,
             )
         }
     }

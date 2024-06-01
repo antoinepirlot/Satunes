@@ -25,56 +25,39 @@
 
 package io.github.antoinepirlot.satunes.ui.components.dialog.music
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
+import androidx.compose.ui.tooling.preview.Preview
+import io.github.antoinepirlot.satunes.database.models.Album
+import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
+import io.github.antoinepirlot.satunes.navController
+import io.github.antoinepirlot.satunes.router.utils.openMedia
+import io.github.antoinepirlot.satunes.ui.components.dialog.DialogOption
 
 /**
- * @author Antoine Pirlot on 30/03/2024
+ * @author Antoine Pirlot on 01/06/2024
  */
 
-
 @Composable
-fun MusicOptionsDialog(
+fun NavigateToMediaMusicOption(
     modifier: Modifier = Modifier,
-    music: Music,
-    playlistWithMusics: PlaylistWithMusics? = null,
-    onDismissRequest: () -> Unit,
+    media: Media,
 ) {
-
-    AlertDialog(
+    DialogOption(
         modifier = modifier,
+        onClick = { openMedia(media = media, navController = navController) },
         icon = {
-            Icon(
-                imageVector = SatunesIcons.MUSIC.imageVector,
-                contentDescription = "Music Options Icon"
-            )
+            val icon: SatunesIcons = SatunesIcons.ALBUM
+            Icon(imageVector = icon.imageVector, contentDescription = icon.description)
         },
-        title = {
-            NormalText(text = music.title)
-        },
-        text = {
-            Column {
-                AddToPlaylistOption(music = music, onFinished = onDismissRequest)
-
-                if (playlistWithMusics != null) {
-                    RemoveFromPlaylistMusicOption(
-                        music = music,
-                        playlistWithMusics = playlistWithMusics,
-                        onFinished = onDismissRequest
-                    )
-                }
-
-                NavigateToMediaMusicOption(media = music.album)
-            }
-        },
-        onDismissRequest = { onDismissRequest() },
-        confirmButton = { /* Nothing */ }
+        text = media.title
     )
+}
+
+@Preview
+@Composable
+fun NavigateToMediaMusicOptionPreview() {
+    NavigateToMediaMusicOption(media = Album(title = "Album Title"))
 }

@@ -82,7 +82,7 @@ fun MediaCard(
     modifier: Modifier = Modifier,
     media: Media,
     onClick: () -> Unit,
-    openedPlaylistWithMusics: PlaylistWithMusics?
+    openedPlaylistWithMusics: PlaylistWithMusics?,
 ) {
     val haptics = LocalHapticFeedback.current
     var showMusicOptions: Boolean by rememberSaveable { mutableStateOf(false) }
@@ -186,7 +186,7 @@ fun MediaCard(
         MusicOptionsDialog(
             music = media,
             playlistWithMusics = openedPlaylistWithMusics,
-            onDismissRequest = { showMusicOptions = false }
+            onDismissRequest = { showMusicOptions = false },
         )
     }
 

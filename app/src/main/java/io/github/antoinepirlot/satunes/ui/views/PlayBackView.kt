@@ -26,6 +26,7 @@
 package io.github.antoinepirlot.satunes.ui.views
 
 import android.annotation.SuppressLint
+import android.content.res.Configuration
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -60,24 +61,28 @@ fun PlayBackView(
 ) {
     val musicPlaying = remember { PlaybackController.getInstance().musicPlaying }
 
+    //TODO use tablet mode if it is in portrait mode in future releases
     Column(
         modifier = modifier.fillMaxSize(),
     ) {
-        val screenWidthDp = LocalConfiguration.current.screenWidthDp
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight(
-                    if (screenWidthDp >= ScreenSizes.VERY_SMALL && screenWidthDp <= ScreenSizes.SMALL)
-                        0.5f
-                    else if (screenWidthDp <= ScreenSizes.VERY_SMALL)
-                        0.45f
-                    else 0.65f
-                ),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            MusicPlayingAlbumArtwork(onClick = onAlbumClick)
+        val screenHeightDp: Int = LocalConfiguration.current.screenHeightDp
+        if (!(LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE && screenHeightDp < 480)) {
+            val screenWidthDp = LocalConfiguration.current.screenWidthDp
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(
+                        if (screenWidthDp >= ScreenSizes.VERY_SMALL && screenWidthDp <= ScreenSizes.SMALL)
+                            0.5f
+                        else if (screenWidthDp <= ScreenSizes.VERY_SMALL)
+                            0.45f
+                        else 0.65f
+                    ),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                MusicPlayingAlbumArtwork(onClick = onAlbumClick)
+            }
         }
         Column(
             modifier = Modifier.fillMaxSize(),

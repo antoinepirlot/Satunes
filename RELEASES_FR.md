@@ -3,6 +3,24 @@ You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
 ## 1.0 (Android 5.1.1 Lollipop et ultérieur)
 
+### 1.0.3
+
+Améliorations, Optimisations et Résolutions de problèmes:
+
+* L'album n'est plus affiché dans le playback si la taille de la hauteur de l'écran est trop petite
+  en mode paysage
+* Résolution du crash lors du clique sur le bouton paramètre lorsque la permission audio n'est pas
+  accordée
+* La langue par défaut si la langue du système n'est pas prise en charge est maintenant l'anglais et
+  plus le français
+* Les titres des albums ne dépasseront plus la largeur de l'album
+* Corrections de la taille du texte de la section "Musique" dans les vues artiste et genre
+* L'ajout d'une musique dans plusieurs playlist est maintenant résolu
+* Résolution du problème lors de l'ajout de 2 playlists de même nom avec des majuscules et minuscule
+  sur des lettres différentes
+* Lors de l'ajout d'une musique à une playlist et qu'aucune playlist n'a été créée, l'application
+  lance la création d'une nouvelle playlist
+
 ### 1.0.2
 
 Améliorations, Optimisations et Résolutions de problèmes:

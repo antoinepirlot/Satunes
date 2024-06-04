@@ -25,12 +25,14 @@
 
 package io.github.antoinepirlot.satunes.ui.components.dialog
 
+import android.content.Context
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.satunes.R
@@ -38,7 +40,10 @@ import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.services.MediaSelectionManager
+import io.github.antoinepirlot.satunes.database.models.tables.Playlist
+import io.github.antoinepirlot.satunes.database.services.DatabaseManager
 import io.github.antoinepirlot.satunes.ui.components.forms.MediaSelectionForm
+import io.github.antoinepirlot.satunes.ui.components.forms.PlaylistCreationForm
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 
 /**
@@ -53,6 +58,49 @@ fun MediaSelectionDialog(
     mediaList: List<Media>,
     playlistTitle: String? = null,
     icon: SatunesIcons,
+) {
+    if (mediaList.isEmpty()) {
+        MediaSelectionDialogListEmpty(modifier = modifier, onDismissRequest)
+    } else {
+        MediaSelectionDialogListNotEmpty(
+            modifier = modifier,
+            onDismissRequest = onDismissRequest,
+            onConfirm = onConfirm,
+            mediaList = mediaList,
+            playlistTitle = playlistTitle,
+            icon = icon
+        )
+    }
+}
+
+@Composable
+private fun MediaSelectionDialogListEmpty(
+    modifier: Modifier,
+    onDismissRequest: () -> Unit
+) {
+    val context: Context = LocalContext.current
+
+    PlaylistCreationForm(
+        modifier = modifier,
+        onConfirm = { playlistTitle: String ->
+            val playlist = Playlist(id = 0, title = playlistTitle)
+            DatabaseManager(context = context).insertOne(
+                context = context,
+                playlist = playlist
+            )
+        },
+        onDismissRequest = onDismissRequest
+    )
+}
+
+@Composable
+private fun MediaSelectionDialogListNotEmpty(
+    modifier: Modifier,
+    onDismissRequest: () -> Unit,
+    onConfirm: () -> Unit,
+    mediaList: List<Media>,
+    playlistTitle: String? = null,
+    icon: @Composable () -> Unit,
 ) {
     AlertDialog(
         modifier = modifier,

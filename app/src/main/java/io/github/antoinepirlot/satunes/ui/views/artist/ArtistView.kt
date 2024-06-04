@@ -47,7 +47,7 @@ import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
 import io.github.antoinepirlot.satunes.ui.views.MediaListView
-import io.github.antoinepirlot.satunes.ui.views.MediaWithAlbumsView
+import io.github.antoinepirlot.satunes.ui.views.MediaWithAlbumsHeaderView
 import java.util.SortedMap
 
 /**
@@ -91,7 +91,7 @@ fun ArtistView(
             }
             //
 
-            MediaWithAlbumsView(
+            MediaWithAlbumsHeaderView(
                 media = artist,
                 albumList = albumMap.values.toList(),
                 navController = navController

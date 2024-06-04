@@ -48,7 +48,7 @@ import io.github.antoinepirlot.satunes.ui.components.texts.Title
  */
 
 @Composable
-fun MediaWithAlbumsView(
+fun MediaWithAlbumsHeaderView(
     modifier: Modifier = Modifier,
     media: Media,
     albumList: List<Album>,
@@ -65,7 +65,7 @@ fun MediaWithAlbumsView(
             modifier = Modifier.padding(start = 16.dp),
             text = stringResource(id = R.string.musics),
             textAlign = TextAlign.Left,
-            fontSize = 20.sp
+            fontSize = 25.sp
         )
     }
 }

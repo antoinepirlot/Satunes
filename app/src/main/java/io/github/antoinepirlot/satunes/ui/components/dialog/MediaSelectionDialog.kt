@@ -38,10 +38,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.services.MediaSelectionManager
 import io.github.antoinepirlot.satunes.database.models.tables.Playlist
 import io.github.antoinepirlot.satunes.database.services.DatabaseManager
+import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import io.github.antoinepirlot.satunes.services.MediaSelectionManager
 import io.github.antoinepirlot.satunes.ui.components.forms.MediaSelectionForm
 import io.github.antoinepirlot.satunes.ui.components.forms.PlaylistCreationForm
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
@@ -100,7 +100,7 @@ private fun MediaSelectionDialogListNotEmpty(
     onConfirm: () -> Unit,
     mediaList: List<Media>,
     playlistTitle: String? = null,
-    icon: @Composable () -> Unit,
+    icon: SatunesIcons,
 ) {
     AlertDialog(
         modifier = modifier,

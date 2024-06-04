@@ -29,6 +29,7 @@ import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -44,6 +45,7 @@ import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.services.MediaSelectionManager
 import io.github.antoinepirlot.satunes.ui.components.dialog.MediaSelectionDialog
+import java.util.SortedMap
 
 /**
  * @author Antoine Pirlot on 01/06/2024
@@ -64,6 +66,16 @@ fun AddToPlaylistRowButton(
     )
 
     if (showForm) {
+        val playlistMap: SortedMap<String, PlaylistWithMusics> =
+            remember { DataManager.playlistWithMusicsMap }
+
+        //Recompose if data changed
+        var mapChanged: Boolean by rememberSaveable { DataManager.playlistWithMusicsMapUpdated }
+        if (mapChanged) {
+            mapChanged = false
+        }
+        //
+
         MediaSelectionDialog(
             onDismissRequest = { showForm = false },
             onConfirm = {

@@ -38,7 +38,7 @@ import androidx.compose.ui.unit.dp
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.navController
 import io.github.antoinepirlot.satunes.router.Destination
-import io.github.antoinepirlot.satunes.ui.components.settings.SettingButton
+import io.github.antoinepirlot.satunes.ui.components.buttons.settings.SettingButton
 import io.github.antoinepirlot.satunes.ui.components.texts.Title
 import io.github.antoinepirlot.satunes.database.R as RDb
 

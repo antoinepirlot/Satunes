@@ -41,7 +41,7 @@ import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
  */
 
 @Composable
-fun PlaylistOptionsDialog(
+internal fun PlaylistOptionsDialog(
     modifier: Modifier = Modifier,
     playlistWithMusics: PlaylistWithMusics,
     onDismissRequest: () -> Unit,
@@ -74,7 +74,7 @@ fun PlaylistOptionsDialog(
 
 @Preview
 @Composable
-fun PlaylistOptionsDialogPreview() {
+private fun PlaylistOptionsDialogPreview() {
     PlaylistOptionsDialog(
         playlistWithMusics = PlaylistWithMusics(Playlist(1, "Playlist Title"), mutableListOf()),
         onDismissRequest = {},

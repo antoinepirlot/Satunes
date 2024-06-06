@@ -59,7 +59,7 @@ import io.github.antoinepirlot.satunes.ui.ScreenSizes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SatunesTopAppBar(
+internal fun SatunesTopAppBar(
     modifier: Modifier = Modifier,
     scrollBehavior: TopAppBarScrollBehavior,
 ) {
@@ -123,7 +123,7 @@ fun SatunesTopAppBar(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @Preview
-fun SatunesTopAppBarPreview() {
+private fun SatunesTopAppBarPreview() {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(
         rememberTopAppBarState()
     )

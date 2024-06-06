@@ -57,7 +57,7 @@ import io.github.antoinepirlot.satunes.ui.utils.openUrl
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ImageWithLink(
+internal fun ImageWithLink(
     modifier: Modifier = Modifier,
     url: String,
     painterId: Int,
@@ -94,7 +94,7 @@ fun ImageWithLink(
 
 @Preview
 @Composable
-fun ImageWithLinkPreview() {
+private fun ImageWithLinkPreview() {
     ImageWithLink(
         url = "",
         painterId = R.drawable.tipeee_logo

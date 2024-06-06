@@ -50,7 +50,7 @@ import io.github.antoinepirlot.satunes.ui.components.texts.Title
  */
 
 @Composable
-fun AlbumGrid(
+internal fun AlbumGrid(
     modifier: Modifier = Modifier,
     mediaList: List<Album>,
     onClick: (album: Album?) -> Unit,
@@ -84,7 +84,7 @@ fun AlbumGrid(
 
 @Preview
 @Composable
-fun AlbumGridPreview() {
+private fun AlbumGridPreview() {
     val albumList: MutableList<Album> = mutableListOf()
     for (i: Int in 0..10) {
         albumList.add(Album(id = i.toLong(), title = "Album #$i"))

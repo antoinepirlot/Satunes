@@ -41,7 +41,7 @@ import io.github.antoinepirlot.satunes.playback.services.PlaybackController
  */
 
 @Composable
-fun PreviousMusicButton(
+internal fun PreviousMusicButton(
     modifier: Modifier = Modifier
 ) {
     IconButton(
@@ -60,6 +60,6 @@ fun PreviousMusicButton(
 @SuppressLint("UnrememberedMutableState")
 @Composable
 @Preview
-fun PreviousMusicButtonPreview() {
+private fun PreviousMusicButtonPreview() {
     PreviousMusicButton()
 }

@@ -49,7 +49,7 @@ import io.github.antoinepirlot.satunes.ui.ScreenSizes
  */
 
 @Composable
-fun Title(
+internal fun Title(
     modifier: Modifier = Modifier,
     bottomPadding: Dp = 16.dp,
     text: String,
@@ -91,6 +91,6 @@ fun Title(
 
 @Preview
 @Composable
-fun TitlePreview() {
+private fun TitlePreview() {
     Title(text = "Hello World!")
 }

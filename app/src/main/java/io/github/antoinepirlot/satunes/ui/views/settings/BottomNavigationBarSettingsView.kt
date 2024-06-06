@@ -44,7 +44,7 @@ import io.github.antoinepirlot.satunes.ui.components.texts.Title
  */
 
 @Composable
-fun BottomNavigationBarSettingsView(
+internal fun BottomNavigationBarSettingsView(
     modifier: Modifier = Modifier,
 ) {
     val checkedMap: Map<Settings, MutableState<Boolean>> = mapOf(
@@ -64,6 +64,6 @@ fun BottomNavigationBarSettingsView(
 
 @Composable
 @Preview
-fun BottomNavigationBarSettingsViewPreview() {
+private fun BottomNavigationBarSettingsViewPreview() {
     BottomNavigationBarSettingsView()
 }

@@ -40,7 +40,7 @@ import androidx.compose.ui.unit.dp
  */
 
 @Composable
-fun EmptyView(
+internal fun EmptyView(
     modifier: Modifier = Modifier,
     text: String
 ) {
@@ -56,6 +56,6 @@ fun EmptyView(
 
 @Preview
 @Composable
-fun EmptyViewPreview() {
+private fun EmptyViewPreview() {
     EmptyView(text = "No data")
 }

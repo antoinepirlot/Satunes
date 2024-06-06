@@ -50,7 +50,7 @@ import io.github.antoinepirlot.satunes.ui.components.texts.Title
  */
 
 @Composable
-fun PlaybackSettingsView(
+internal fun PlaybackSettingsView(
     modifier: Modifier = Modifier
 ) {
     val checkedMap: Map<Settings, MutableState<Boolean>> = mapOf(
@@ -87,6 +87,6 @@ fun PlaybackSettingsView(
 
 @Composable
 @Preview
-fun PlaybackSettingsViewPreview() {
+private fun PlaybackSettingsViewPreview() {
     PlaybackSettingsView()
 }

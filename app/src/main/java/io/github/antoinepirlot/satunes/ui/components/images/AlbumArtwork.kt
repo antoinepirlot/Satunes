@@ -52,7 +52,7 @@ import io.github.antoinepirlot.satunes.ui.ScreenSizes
  */
 
 @Composable
-fun AlbumArtwork(
+internal fun AlbumArtwork(
     modifier: Modifier = Modifier,
     media: Media,
     onClick: ((album: Album?) -> Unit)? = null,
@@ -105,7 +105,7 @@ fun AlbumArtwork(
 }
 
 @Composable
-fun MusicPlayingAlbumArtwork(
+internal fun MusicPlayingAlbumArtwork(
     modifier: Modifier = Modifier,
     onClick: (album: Album?) -> Unit = { /* Do nothing by default */ }
 ) {
@@ -119,6 +119,6 @@ fun MusicPlayingAlbumArtwork(
 
 @Composable
 @Preview
-fun AlbumArtworkPreview() {
+private fun AlbumArtworkPreview() {
     AlbumArtwork(media = Album(title = ""))
 }

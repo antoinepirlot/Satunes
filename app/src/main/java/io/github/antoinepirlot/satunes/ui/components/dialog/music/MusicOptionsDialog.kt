@@ -41,7 +41,7 @@ import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 
 
 @Composable
-fun MusicOptionsDialog(
+internal fun MusicOptionsDialog(
     modifier: Modifier = Modifier,
     music: Music,
     playlistWithMusics: PlaylistWithMusics? = null,

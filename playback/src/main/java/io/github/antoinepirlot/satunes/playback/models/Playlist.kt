@@ -33,7 +33,7 @@ import java.util.SortedMap
  * @author Antoine Pirlot on 18/02/24
  */
 
-class Playlist(
+internal class Playlist(
     musicMediaItemSortedMap: SortedMap<Music, MediaItem>,
 ) {
     private val originalMusicMediaItemMap: SortedMap<Music, MediaItem>

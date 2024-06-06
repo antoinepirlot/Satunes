@@ -55,7 +55,7 @@ import io.github.antoinepirlot.satunes.ui.components.texts.Subtitle
  */
 
 @Composable
-fun PlayBackView(
+internal fun PlayBackView(
     modifier: Modifier = Modifier,
     onAlbumClick: (album: Album?) -> Unit,
     onArtistClick: (artist: Artist) -> Unit,
@@ -102,6 +102,6 @@ fun PlayBackView(
 @SuppressLint("UnrememberedMutableState")
 @Composable
 @Preview
-fun PlayBackViewPreview() {
+private fun PlayBackViewPreview() {
     PlayBackView(onAlbumClick = {}, onArtistClick = {})
 }

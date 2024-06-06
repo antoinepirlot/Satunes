@@ -44,7 +44,7 @@ import io.github.antoinepirlot.satunes.ui.components.texts.Title
  */
 
 @Composable
-fun ExclusionSettingsView(
+internal fun ExclusionSettingsView(
     modifier: Modifier = Modifier
 ) {
     val checkedMap: Map<Settings, MutableState<Boolean>> = mapOf(
@@ -60,6 +60,6 @@ fun ExclusionSettingsView(
 
 @Preview
 @Composable
-fun ExclusionSettingsViewPreview() {
+private fun ExclusionSettingsViewPreview() {
     ExclusionSettingsView()
 }

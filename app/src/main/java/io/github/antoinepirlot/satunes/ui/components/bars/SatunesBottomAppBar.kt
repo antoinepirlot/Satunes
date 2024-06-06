@@ -53,7 +53,7 @@ import io.github.antoinepirlot.satunes.ui.utils.getRightIconAndDescription
  */
 
 @Composable
-fun SatunesBottomAppBar(
+internal fun SatunesBottomAppBar(
     modifier: Modifier = Modifier,
 ) {
     val menuTitleLists: MutableList<MenuTitle> = mutableListOf(
@@ -152,6 +152,6 @@ private fun backToRoot(
 @SuppressLint("UnrememberedMutableState")
 @Preview
 @Composable
-fun SatunesBottomAppBarPreview() {
+private fun SatunesBottomAppBarPreview() {
     SatunesBottomAppBar()
 }

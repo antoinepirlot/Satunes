@@ -41,7 +41,7 @@ import io.github.antoinepirlot.satunes.ui.ScreenSizes
  */
 
 @Composable
-fun LoadingCircle(
+internal fun LoadingCircle(
     modifier: Modifier = Modifier
 ) {
     val screenWidthDp: Int = LocalConfiguration.current.screenWidthDp
@@ -60,6 +60,6 @@ fun LoadingCircle(
 
 @Preview
 @Composable
-fun LoadingCirclePreview() {
+private fun LoadingCirclePreview() {
     LoadingCircle()
 }

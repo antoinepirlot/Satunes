@@ -40,7 +40,7 @@ import io.github.antoinepirlot.satunes.ui.views.settings.Settings
 
 
 @Composable
-fun PlaybackModesSubSettings(
+internal fun PlaybackModesSubSettings(
     modifier: Modifier = Modifier,
 ) {
     val checkedMap: Map<Settings, MutableState<Boolean>> = mapOf(

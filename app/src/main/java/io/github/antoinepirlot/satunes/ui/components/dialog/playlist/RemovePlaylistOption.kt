@@ -42,7 +42,7 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.DialogOption
  */
 
 @Composable
-fun RemovePlaylistOption(
+internal fun RemovePlaylistOption(
     modifier: Modifier = Modifier,
     playlistToRemove: PlaylistWithMusics,
     onFinished: () -> Unit,

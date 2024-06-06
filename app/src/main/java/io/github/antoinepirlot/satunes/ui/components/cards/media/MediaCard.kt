@@ -78,7 +78,7 @@ import io.github.antoinepirlot.satunes.ui.utils.getRootFolderName
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun MediaCard(
+internal fun MediaCard(
     modifier: Modifier = Modifier,
     media: Media,
     onClick: () -> Unit,
@@ -212,7 +212,7 @@ private fun getRightIconAndDescription(media: Media): SatunesIcons {
 
 @Composable
 @Preview
-fun CardPreview() {
+private fun CardPreview() {
     val music = Music(
         id = 1,
         title = "",

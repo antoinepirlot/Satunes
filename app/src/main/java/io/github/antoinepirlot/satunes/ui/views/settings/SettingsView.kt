@@ -47,7 +47,7 @@ import io.github.antoinepirlot.satunes.database.R as RDb
  */
 
 @Composable
-fun SettingsView(
+internal fun SettingsView(
     modifier: Modifier = Modifier,
 ) {
     val scrollState = rememberScrollState()
@@ -107,6 +107,6 @@ fun SettingsView(
 
 @Composable
 @Preview
-fun SettingsViewPreview() {
+private fun SettingsViewPreview() {
     SettingsView()
 }

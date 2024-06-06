@@ -42,7 +42,7 @@ import io.github.antoinepirlot.satunes.ui.utils.getRightIconTintColor
  */
 
 @Composable
-fun ShuffleMusicButton(
+internal fun ShuffleMusicButton(
     modifier: Modifier = Modifier
 ) {
     val playbackController: PlaybackController = PlaybackController.getInstance()
@@ -65,6 +65,6 @@ fun ShuffleMusicButton(
 
 @Composable
 @Preview
-fun ShuffleMusicButtonPreview() {
+private fun ShuffleMusicButtonPreview() {
     ShuffleMusicButton()
 }

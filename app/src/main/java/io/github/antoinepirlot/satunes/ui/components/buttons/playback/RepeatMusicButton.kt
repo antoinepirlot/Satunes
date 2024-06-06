@@ -43,7 +43,7 @@ import io.github.antoinepirlot.satunes.ui.utils.getRightIconTintColor
  */
 
 @Composable
-fun RepeatMusicButton(
+internal fun RepeatMusicButton(
     modifier: Modifier = Modifier
 ) {
     val repeatMode: Int by rememberSaveable { PlaybackController.getInstance().repeatMode }
@@ -66,7 +66,7 @@ fun RepeatMusicButton(
 
 @Composable
 @Preview
-fun RepeatMusicButtonPreview() {
+private fun RepeatMusicButtonPreview() {
     RepeatMusicButton()
 }
 

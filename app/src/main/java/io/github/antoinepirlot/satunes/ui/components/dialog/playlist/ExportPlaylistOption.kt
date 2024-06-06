@@ -40,7 +40,7 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.DialogOption
  */
 
 @Composable
-fun ExportPlaylistOption(
+internal fun ExportPlaylistOption(
     modifier: Modifier = Modifier,
     playlistToExport: PlaylistWithMusics
 ) {

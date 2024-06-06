@@ -50,7 +50,7 @@ import java.util.SortedSet
  */
 
 @Composable
-fun AllAlbumsListView(
+internal fun AllAlbumsListView(
     modifier: Modifier = Modifier,
 ) {
     val playbackController: PlaybackController = PlaybackController.getInstance()
@@ -92,6 +92,6 @@ fun AllAlbumsListView(
 
 @Preview
 @Composable
-fun AllAlbumsListViewPreview() {
+private fun AllAlbumsListViewPreview() {
     AllAlbumsListView()
 }

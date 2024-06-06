@@ -42,7 +42,7 @@ import io.github.antoinepirlot.satunes.ui.ScreenSizes
  */
 
 @Composable
-fun ShowCurrentMusicButton(
+internal fun ShowCurrentMusicButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
@@ -65,6 +65,6 @@ fun ShowCurrentMusicButton(
 
 @Composable
 @Preview
-fun ShowCurrentMusicPreview() {
+private fun ShowCurrentMusicPreview() {
     ShowCurrentMusicButton(onClick = {})
 }

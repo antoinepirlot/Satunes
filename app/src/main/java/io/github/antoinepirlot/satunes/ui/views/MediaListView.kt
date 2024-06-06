@@ -51,7 +51,7 @@ import io.github.antoinepirlot.satunes.ui.components.cards.media.MediaCardList
  */
 
 @Composable
-fun MediaListView(
+internal fun MediaListView(
     modifier: Modifier = Modifier,
     mediaList: List<Media>,
     openMedia: (media: Media) -> Unit,
@@ -94,7 +94,7 @@ fun MediaListView(
 
 @Composable
 @Preview
-fun MediaListViewPreview() {
+private fun MediaListViewPreview() {
     val map = listOf(
         Music(
             1,

@@ -129,7 +129,6 @@ fun SatunesBottomAppBar(
  * For example, if the user click on Album button and he is in settings, then it redirects to albums.
  *
  * @param rootRoute the root route to go
- * @param navController this nav controller is redirected to the media route
  */
 private fun backToRoot(
     rootRoute: String,

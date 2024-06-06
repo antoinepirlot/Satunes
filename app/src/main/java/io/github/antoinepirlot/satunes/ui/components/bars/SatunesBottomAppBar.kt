@@ -73,7 +73,7 @@ fun SatunesBottomAppBar(
 
     val selectedMenuTitle: MutableState<MenuTitle> = remember {
         mutableStateOf(
-        // Update the tab by default if settings has changed
+            // Update the tab by default if settings has changed
             if (SettingsManager.foldersChecked.value) MenuTitle.FOLDERS
             else if (SettingsManager.artistsChecked.value) MenuTitle.ARTISTS
             else if (SettingsManager.albumsChecked.value) MenuTitle.ALBUMS
@@ -82,7 +82,6 @@ fun SatunesBottomAppBar(
             else MenuTitle.MUSICS
         )
     }
-    val hasMaxFiveItems: Boolean = menuTitleLists.size <= 5
 
     val screenWidthDp = LocalConfiguration.current.screenWidthDp
     val navigationModifier: Modifier =
@@ -96,9 +95,7 @@ fun SatunesBottomAppBar(
             NavigationBarItem(
                 modifier = navigationItemModifier,
                 label = {
-                    if (hasMaxFiveItems) {
-                        NormalText(text = stringResource(id = menuTitle.stringId))
-                    }
+                    NormalText(text = stringResource(id = menuTitle.stringId))
                 },
                 selected = selectedMenuTitle.value == menuTitle,
                 onClick = {

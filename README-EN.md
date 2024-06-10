@@ -8,6 +8,9 @@
     <img src="https://img.shields.io/github/release/antoinepirlot/Satunes.svg?logo=github">
   </a>
 </p>
+<p align="center">
+  <a href="https://f-droid.org/app/io.github.antoinepirlot.satunes"><img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" width="200"></a>
+</p>
 
 Vous pouvez retrouver ce fichier en [français 🇫🇷](README.md)
 
@@ -53,6 +56,12 @@ If you decide to use my code to create new app, you can but you have to use the 
 * Update the application without leaving it
 
 # Installation
+To install easily, you can download the application from Fdroid by clicking on the button below.
+<p align="center">
+  <a href="https://f-droid.org/app/io.github.antoinepirlot.satunes"><img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" width="150"></a>
+</p>
+
+Otherwise, you can also follow the following steps:
 
 ## Application
 

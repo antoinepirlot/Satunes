@@ -54,7 +54,7 @@ import io.github.antoinepirlot.satunes.ui.components.buttons.playback.ShuffleMus
  */
 
 @Composable
-fun MusicControlBar(
+internal fun MusicControlBar(
     modifier: Modifier = Modifier,
     horizontalArrangement: Arrangement.HorizontalOrVertical = Arrangement.Center,
     verticalAlignment: Alignment.Vertical = Alignment.CenterVertically
@@ -102,6 +102,6 @@ fun MusicControlBar(
 @SuppressLint("UnrememberedMutableState")
 @Composable
 @Preview
-fun MediaControlBarPreview() {
+private fun MediaControlBarPreview() {
     MusicControlBar()
 }

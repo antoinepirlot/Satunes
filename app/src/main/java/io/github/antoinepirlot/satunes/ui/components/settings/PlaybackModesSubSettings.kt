@@ -39,7 +39,7 @@ import io.github.antoinepirlot.satunes.ui.components.buttons.settings.ShuffleMod
 
 
 @Composable
-fun PlaybackModesSubSettings(
+internal fun PlaybackModesSubSettings(
     modifier: Modifier = Modifier,
 ) {
     SubSetting(

@@ -61,7 +61,7 @@ import io.github.antoinepirlot.satunes.ui.utils.getRightIconTintColor
  */
 
 @Composable
-fun RepeatModeRadioButtons(
+internal fun RepeatModeRadioButtons(
     modifier: Modifier = Modifier,
 ) {
     val iconsList: List<SatunesIcons> = listOf(

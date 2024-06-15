@@ -33,7 +33,7 @@ import java.util.SortedMap
  * @author Antoine Pirlot on 18/02/24
  */
 
-class Playlist(
+internal class Playlist(
     musicMediaItemSortedMap: SortedMap<Music, MediaItem>,
 ) {
     private val originalMusicMediaItemMap: SortedMap<Music, MediaItem>
@@ -107,25 +107,23 @@ class Playlist(
      * If toIndex is greater than the last index of the music list, then it's replaced by last index
      * If fromIndex is less than 0, then it's replaced by 0.
      *
+     * If no fromIndex is specified then fromIndex is 0
+     * If no toIndex is specified then it goes to the last index of the playlist.
+     *
      * @param fromIndex the first music index to get
-     * @param toIndex the last music index to get
+     * @param toIndex the last music index to get (included)
      *
      * @throws IllegalArgumentException if fromIndex is greater than toIndex
      *
      * @return a list of media items fromIndex toIndex included.
      */
     @Suppress("NAME_SHADOWING")
-    fun getMediaItems(fromIndex: Int, toIndex: Int): List<MediaItem> {
+    fun getMediaItems(fromIndex: Int = 0, toIndex: Int = lastIndex()): List<MediaItem> {
         val toIndex = if (toIndex > this.musicList.lastIndex) this.musicList.lastIndex else toIndex
         val fromIndex = if (fromIndex < 0) 0 else fromIndex
         if (fromIndex > toIndex) {
             throw IllegalArgumentException("The fromIndex has to be lower than toIndex")
         }
-
-        val toReturn: MutableList<MediaItem> = mutableListOf()
-        for (i: Int in fromIndex..toIndex) {
-            toReturn.add(this.mediaItemList[i])
-        }
-        return toReturn
+        return mediaItemList.subList(fromIndex = fromIndex, toIndex = toIndex + 1)
     }
 }

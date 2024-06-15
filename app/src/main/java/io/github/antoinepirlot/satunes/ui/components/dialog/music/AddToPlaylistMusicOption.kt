@@ -52,7 +52,7 @@ import java.util.SortedMap
  */
 
 @Composable
-fun AddToPlaylistOption(
+internal fun AddToPlaylistOption(
     modifier: Modifier = Modifier,
     music: Music,
     onFinished: () -> Unit

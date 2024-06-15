@@ -58,22 +58,21 @@ class PlaybackController private constructor(
 ) {
     internal lateinit var mediaController: MediaController
 
-    var playlist: Playlist
-        internal set
+    internal var playlist: Playlist
 
     internal var musicPlayingIndex: Int = DEFAULT_MUSIC_PLAYING_INDEX
     var isEnded: Boolean = DEFAULT_IS_ENDED
 
     // Mutable var are used in ui, it needs to be recomposed
     // I use mutable to avoid using function with multiples params like to add listener
-    var musicPlaying: MutableState<Music?> = mutableStateOf(DEFAULT_MUSIC_PLAYING)
-    var isPlaying: MutableState<Boolean> = mutableStateOf(DEFAULT_IS_PLAYING_VALUE)
-    var repeatMode: MutableState<Int> = mutableIntStateOf(DEFAULT_REPEAT_MODE)
+    val musicPlaying: MutableState<Music?> = mutableStateOf(DEFAULT_MUSIC_PLAYING)
+    val isPlaying: MutableState<Boolean> = mutableStateOf(DEFAULT_IS_PLAYING_VALUE)
+    val repeatMode: MutableState<Int> = mutableIntStateOf(DEFAULT_REPEAT_MODE)
     val isShuffle: MutableState<Boolean> = mutableStateOf(DEFAULT_IS_SHUFFLE)
-    var hasNext: MutableState<Boolean> = mutableStateOf(DEFAULT_HAS_NEXT)
-    var hasPrevious: MutableState<Boolean> = mutableStateOf(DEFAULT_HAS_PREVIOUS)
-    var isLoaded: MutableState<Boolean> = mutableStateOf(DEFAULT_IS_LOADED)
-    var currentPositionProgression: MutableFloatState =
+    val hasNext: MutableState<Boolean> = mutableStateOf(DEFAULT_HAS_NEXT)
+    val hasPrevious: MutableState<Boolean> = mutableStateOf(DEFAULT_HAS_PREVIOUS)
+    val isLoaded: MutableState<Boolean> = mutableStateOf(DEFAULT_IS_LOADED)
+    val currentPositionProgression: MutableFloatState =
         mutableFloatStateOf(DEFAULT_CURRENT_POSITION_PROGRESSION)
 
     private var listener: Player.Listener = PlaybackListener()

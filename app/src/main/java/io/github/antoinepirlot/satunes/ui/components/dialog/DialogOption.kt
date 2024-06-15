@@ -17,7 +17,7 @@
  * You find this original project on github.
  *
  * My github link is: https://github.com/antoinepirlot
- * This current project's link is: https://github.com/antoinepirlot/MP3-Player
+ * This current project's link is: https://github.com/antoinepirlot/Satunes
  *
  * You can contact me via my email: pirlot.antoine@outlook.com
  * PS: I don't answer quickly.
@@ -46,7 +46,7 @@ import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 private val SPACER_SIZE = 10.dp
 
 @Composable
-fun DialogOption(
+internal fun DialogOption(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
     icon: @Composable () -> Unit,
@@ -68,7 +68,7 @@ fun DialogOption(
 
 @Preview
 @Composable
-fun DialogOptionPreview() {
+private fun DialogOptionPreview() {
     DialogOption(
         onClick = {},
         icon = { Icon(imageVector = Icons.Rounded.Add, contentDescription = "")},

@@ -33,7 +33,7 @@ import android.net.Uri
  * @author Antoine Pirlot on 10/04/2024
  */
 
-fun openUrl(context: Context, url: String) {
+internal fun openUrl(context: Context, url: String) {
     val uri: Uri = Uri.parse(url)
     val intent = Intent(Intent.ACTION_VIEW, uri)
     context.startActivity(intent)

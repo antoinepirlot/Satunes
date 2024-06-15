@@ -64,7 +64,7 @@ import java.util.SortedMap
  */
 
 @Composable
-fun AlbumView(
+internal fun AlbumView(
     modifier: Modifier = Modifier,
     album: Album,
 ) {
@@ -145,7 +145,7 @@ private fun Header(modifier: Modifier = Modifier, album: Album) {
 
 @Preview
 @Composable
-fun AlbumViewPreview() {
+private fun AlbumViewPreview() {
     AlbumView(
         album = Album(
             id = 0,

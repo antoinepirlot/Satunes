@@ -48,7 +48,7 @@ import io.github.antoinepirlot.satunes.ui.components.texts.Title
  */
 
 @Composable
-fun AboutView(
+internal fun AboutView(
     modifier: Modifier = Modifier
 ) {
     Column(modifier.padding(horizontal = 16.dp)) {
@@ -70,6 +70,6 @@ fun AboutView(
 
 @Preview
 @Composable
-fun AboutViewPreview() {
+private fun AboutViewPreview() {
     AboutView()
 }

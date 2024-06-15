@@ -46,7 +46,7 @@ import io.github.antoinepirlot.satunes.playback.services.PlaybackListener
 /**
  * @author Antoine Pirlot on 23/03/2024
  */
-object SatunesPlaybackListener : PlaybackListener() {
+internal object SatunesPlaybackListener : PlaybackListener() {
     override fun onIsPlayingChanged(isPlaying: Boolean) {
         super.onIsPlayingChanged(isPlaying)
 

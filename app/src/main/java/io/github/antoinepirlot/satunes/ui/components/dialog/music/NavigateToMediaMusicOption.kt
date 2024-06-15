@@ -43,7 +43,7 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.DialogOption
  */
 
 @Composable
-fun NavigateToMediaMusicOption(
+internal fun NavigateToMediaMusicOption(
     modifier: Modifier = Modifier,
     media: Media,
 ) {
@@ -66,6 +66,6 @@ fun NavigateToMediaMusicOption(
 
 @Preview
 @Composable
-fun NavigateToMediaMusicOptionPreview() {
+private fun NavigateToMediaMusicOptionPreview() {
     NavigateToMediaMusicOption(media = Album(title = "Album Title"))
 }

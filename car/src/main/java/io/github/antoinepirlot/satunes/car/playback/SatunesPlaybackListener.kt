@@ -50,6 +50,7 @@ internal object SatunesPlaybackListener : PlaybackListener() {
     override fun onIsPlayingChanged(isPlaying: Boolean) {
         super.onIsPlayingChanged(isPlaying)
 
+        updateMediaPlaying() //Keep it prevent first media not showing when only opening via AA
         if (isPlaying) {
             updatePlaybackState(state = STATE_PLAYING, actions = ACTIONS_ON_PLAY)
         } else {

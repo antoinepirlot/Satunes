@@ -28,6 +28,7 @@ package io.github.antoinepirlot.satunes.ui.components.dialog
 import android.content.Context
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Icon
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -39,6 +40,8 @@ import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.tables.Playlist
 import io.github.antoinepirlot.satunes.database.services.DatabaseManager
+import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import io.github.antoinepirlot.satunes.services.MediaSelectionManager
 import io.github.antoinepirlot.satunes.ui.components.forms.MediaSelectionForm
 import io.github.antoinepirlot.satunes.ui.components.forms.PlaylistCreationForm
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
@@ -48,13 +51,13 @@ import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
  */
 
 @Composable
-fun MediaSelectionDialog(
+internal fun MediaSelectionDialog(
     modifier: Modifier = Modifier,
     onDismissRequest: () -> Unit,
     onConfirm: () -> Unit,
     mediaList: List<Media>,
     playlistTitle: String? = null,
-    icon: @Composable () -> Unit,
+    icon: SatunesIcons,
 ) {
     if (mediaList.isEmpty()) {
         MediaSelectionDialogListEmpty(modifier = modifier, onDismissRequest)
@@ -97,11 +100,13 @@ private fun MediaSelectionDialogListNotEmpty(
     onConfirm: () -> Unit,
     mediaList: List<Media>,
     playlistTitle: String? = null,
-    icon: @Composable () -> Unit,
+    icon: SatunesIcons,
 ) {
     AlertDialog(
         modifier = modifier,
-        icon = icon,
+        icon = {
+            Icon(imageVector = icon.imageVector, contentDescription = icon.description)
+        },
         title = {
             if (mediaList.isEmpty()) {
                 NormalText(text = stringResource(id = R.string.no_music))
@@ -119,9 +124,17 @@ private fun MediaSelectionDialogListNotEmpty(
                 MediaSelectionForm(mediaList = mediaList)
             }
         },
-        onDismissRequest = onDismissRequest,
+        onDismissRequest = {
+            MediaSelectionManager.clearCheckedMusics()
+            MediaSelectionManager.clearCheckedPlaylistWithMusics()
+            onDismissRequest()
+        },
         confirmButton = {
-            TextButton(onClick = onConfirm) {
+            TextButton(onClick = {
+                onConfirm()
+                MediaSelectionManager.clearCheckedMusics()
+                MediaSelectionManager.clearCheckedPlaylistWithMusics()
+            }) {
                 if (mediaList.isNotEmpty()) {
                     NormalText(text = stringResource(id = R.string.add))
                 }
@@ -137,9 +150,9 @@ private fun MediaSelectionDialogListNotEmpty(
 
 @Preview
 @Composable
-fun PlaylistSelectionDialogPreview() {
+private fun PlaylistSelectionDialogPreview() {
     MediaSelectionDialog(
-        icon = {},
+        icon = SatunesIcons.PLAYLIST_ADD,
         onDismissRequest = {},
         onConfirm = {},
         mediaList = listOf()

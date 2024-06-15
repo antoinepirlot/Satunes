@@ -65,7 +65,7 @@ Otherwise, you can also follow the following steps:
 
 ## Application
 
-1) Click on [Release](https://github.com/antoinepirlot/MP3-Player/releases)
+1) Click on [Release](https://github.com/antoinepirlot/Satunes/releases)
 2) Choose your version
 3) Click on "Assets" to deploy a menu that contains the installation file.
 4) Click on the file Satunes_vx.y.z.apk (A file will be downloaded on your device).

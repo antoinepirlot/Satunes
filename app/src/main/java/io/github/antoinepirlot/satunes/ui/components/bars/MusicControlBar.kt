@@ -36,37 +36,29 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.ui.ScreenSizes
-import io.github.antoinepirlot.satunes.ui.components.buttons.music.NextMusicButton
-import io.github.antoinepirlot.satunes.ui.components.buttons.music.PreviousMusicButton
-import io.github.antoinepirlot.satunes.ui.components.buttons.music.RepeatMusicButton
-import io.github.antoinepirlot.satunes.ui.components.buttons.music.ShuffleMusicButton
+import io.github.antoinepirlot.satunes.ui.components.buttons.playback.NextMusicButton
+import io.github.antoinepirlot.satunes.ui.components.buttons.playback.PlayPauseMusicButton
+import io.github.antoinepirlot.satunes.ui.components.buttons.playback.PreviousMusicButton
+import io.github.antoinepirlot.satunes.ui.components.buttons.playback.RepeatMusicButton
+import io.github.antoinepirlot.satunes.ui.components.buttons.playback.ShuffleMusicButton
 
 /**
  * @author Antoine Pirlot on 25/01/24
  */
 
 @Composable
-fun MusicControlBar(
+internal fun MusicControlBar(
     modifier: Modifier = Modifier,
     horizontalArrangement: Arrangement.HorizontalOrVertical = Arrangement.Center,
     verticalAlignment: Alignment.Vertical = Alignment.CenterVertically
 ) {
-    val playbackController = PlaybackController.getInstance()
-
-    val isPlaying: Boolean by rememberSaveable { playbackController.isPlaying }
     val screenWidthDp = LocalConfiguration.current.screenWidthDp
     val ratio: Float =
         if (screenWidthDp >= ScreenSizes.VERY_SMALL && screenWidthDp <= ScreenSizes.SMALL) {
@@ -76,7 +68,7 @@ fun MusicControlBar(
         } else { // Normal
             1f
         }
-    val spaceBetweenButtons = (20f * ratio).dp
+    val spaceSize = (20f * ratio).dp
     val playPauseButtonSize = (80f * ratio).dp
     val optionButtonSize = (35f * ratio).dp
 
@@ -91,29 +83,17 @@ fun MusicControlBar(
             verticalAlignment = verticalAlignment
         ) {
             ShuffleMusicButton(modifier = Modifier.size(optionButtonSize))
-            Spacer(modifier = Modifier.width(spaceBetweenButtons))
+            Spacer(modifier = Modifier.width(spaceSize))
 
             PreviousMusicButton()
-            Spacer(modifier = Modifier.width(spaceBetweenButtons))
+            Spacer(modifier = Modifier.width(spaceSize))
 
-            IconButton(
-                modifier = Modifier.size(playPauseButtonSize),
-                onClick = { playbackController.playPause() }
-            ) {
-                val icon: SatunesIcons =
-                    getPlayPauseIconWithDescription(isPlaying = isPlaying)
+            PlayPauseMusicButton(modifier = Modifier.size(playPauseButtonSize))
+            Spacer(modifier = Modifier.width(spaceSize))
 
-                Icon(
-                    modifier = Modifier.size(playPauseButtonSize),
-                    imageVector = icon.imageVector,
-                    contentDescription = icon.description,
-                )
-            }
-
-            Spacer(modifier = Modifier.width(spaceBetweenButtons))
             NextMusicButton()
+            Spacer(modifier = Modifier.width(spaceSize))
 
-            Spacer(modifier = Modifier.width(spaceBetweenButtons))
             RepeatMusicButton(modifier = Modifier.size(optionButtonSize))
         }
     }
@@ -122,14 +102,6 @@ fun MusicControlBar(
 @SuppressLint("UnrememberedMutableState")
 @Composable
 @Preview
-fun MediaControlBarPreview() {
+private fun MediaControlBarPreview() {
     MusicControlBar()
-}
-
-private fun getPlayPauseIconWithDescription(isPlaying: Boolean): SatunesIcons {
-    return if (isPlaying) {
-        SatunesIcons.PAUSE
-    } else {
-        SatunesIcons.PLAY
-    }
 }

@@ -33,8 +33,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Media
@@ -52,9 +50,8 @@ import java.util.SortedMap
  */
 
 @Composable
-fun AllArtistsListView(
+internal fun AllArtistsListView(
     modifier: Modifier = Modifier,
-    navController: NavHostController,
 ) {
     val playbackController: PlaybackController = PlaybackController.getInstance()
     val artistMap: SortedMap<String, Artist> = remember { DataManager.artistMap }
@@ -70,25 +67,20 @@ fun AllArtistsListView(
         modifier = modifier,
         mediaList = artistMap.values.toList(),
 
-        openMedia = { clickedMedia: Media ->
-            openMedia(
-                navController,
-                clickedMedia
-            )
-        },
-        onFABClick = { openCurrentMusic(navController) },
+        openMedia = { clickedMedia: Media -> openMedia(clickedMedia) },
+        onFABClick = { openCurrentMusic() },
         extraButtons = {
             if (DataManager.musicMediaItemSortedMap.isNotEmpty()) {
                 ExtraButton(icon = SatunesIcons.PLAY, onClick = {
                     playbackController.loadMusic(musicMediaItemSortedMap = DataManager.musicMediaItemSortedMap)
-                    openMedia(navController = navController)
+                    openMedia()
                 })
                 ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
                     playbackController.loadMusic(
                         musicMediaItemSortedMap = DataManager.musicMediaItemSortedMap,
                         shuffleMode = true
                     )
-                    openMedia(navController = navController)
+                    openMedia()
                 })
             }
         },
@@ -98,6 +90,6 @@ fun AllArtistsListView(
 
 @Preview
 @Composable
-fun AllArtistsListViewPreview() {
-    AllArtistsListView(navController = rememberNavController())
+private fun AllArtistsListViewPreview() {
+    AllArtistsListView()
 }

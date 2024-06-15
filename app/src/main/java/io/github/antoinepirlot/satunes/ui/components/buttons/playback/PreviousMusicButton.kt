@@ -17,13 +17,13 @@
  * You find this original project on github.
  *
  * My github link is: https://github.com/antoinepirlot
- * This current project's link is: https://github.com/antoinepirlot/MP3-Player
+ * This current project's link is: https://github.com/antoinepirlot/Satunes
  *
  * You can contact me via my email: pirlot.antoine@outlook.com
  * PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.buttons.music
+package io.github.antoinepirlot.satunes.ui.components.buttons.playback
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.size
@@ -33,15 +33,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 
 /**
  * @author Antoine Pirlot on 26/01/24
  */
 
 @Composable
-fun PreviousMusicButton(
+internal fun PreviousMusicButton(
     modifier: Modifier = Modifier
 ) {
     IconButton(
@@ -60,6 +60,6 @@ fun PreviousMusicButton(
 @SuppressLint("UnrememberedMutableState")
 @Composable
 @Preview
-fun PreviousMusicButtonPreview() {
+private fun PreviousMusicButtonPreview() {
     PreviousMusicButton()
 }

@@ -51,7 +51,7 @@ import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
  */
 
 @Composable
-fun AlbumGridCard(
+internal fun AlbumGridCard(
     modifier: Modifier = Modifier,
     album: Album,
     onClick: (album: Album?) -> Unit,
@@ -97,6 +97,6 @@ fun AlbumGridCard(
 
 @Preview
 @Composable
-fun AlbumGridCardPreview() {
+private fun AlbumGridCardPreview() {
     AlbumGridCard(album = Album(id = 1, title = "Album #1"), onClick = {})
 }

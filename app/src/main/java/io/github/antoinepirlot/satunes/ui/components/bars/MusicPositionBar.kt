@@ -51,7 +51,7 @@ import io.github.antoinepirlot.satunes.ui.utils.getMillisToTimeText
  */
 
 @Composable
-fun MusicPositionBar(
+internal fun MusicPositionBar(
     modifier: Modifier = Modifier
 ) {
     val playbackController = PlaybackController.getInstance()
@@ -95,6 +95,6 @@ fun MusicPositionBar(
 
 @Composable
 @Preview
-fun MusicPositionBarPreview() {
+private fun MusicPositionBarPreview() {
     MusicPositionBar()
 }

@@ -40,7 +40,7 @@ import io.github.antoinepirlot.satunes.database.models.tables.MusicDB
  */
 
 @Composable
-fun MediaCardList(
+internal fun MediaCardList(
     modifier: Modifier = Modifier,
     header: @Composable () -> Unit,
     mediaList: List<Media>,
@@ -75,7 +75,7 @@ fun MediaCardList(
                 modifier = modifier,
                 media = media,
                 onClick = { openMedia(media) },
-                openedPlaylistWithMusics = openedPlaylistWithMusics
+                openedPlaylistWithMusics = openedPlaylistWithMusics,
             )
         }
     }
@@ -83,7 +83,7 @@ fun MediaCardList(
 
 @Composable
 @Preview
-fun CardListPreview() {
+private fun CardListPreview() {
     MediaCardList(
         mediaList = listOf(),
         header = {},

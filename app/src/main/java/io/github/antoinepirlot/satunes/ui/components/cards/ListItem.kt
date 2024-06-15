@@ -41,7 +41,7 @@ import io.github.antoinepirlot.satunes.ui.ScreenSizes
  */
 
 @Composable
-fun ListItem(
+internal fun ListItem(
     modifier: Modifier = Modifier,
     headlineContent: @Composable () -> Unit,
     overlineContent: @Composable (() -> Unit)? = null,
@@ -75,6 +75,6 @@ fun ListItem(
 
 @Preview
 @Composable
-fun ListItemPreview() {
+private fun ListItemPreview() {
     ListItem(headlineContent = {})
 }

@@ -23,7 +23,7 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.settings
+package io.github.antoinepirlot.satunes.ui.components.buttons.settings
 
 import android.content.Context
 import androidx.compose.foundation.background
@@ -61,7 +61,7 @@ import io.github.antoinepirlot.satunes.ui.utils.getRightIconTintColor
  */
 
 @Composable
-fun RepeatModeRadioButtons(
+internal fun RepeatModeRadioButtons(
     modifier: Modifier = Modifier,
 ) {
     val iconsList: List<SatunesIcons> = listOf(

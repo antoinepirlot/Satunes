@@ -44,7 +44,7 @@ import io.github.antoinepirlot.satunes.ui.ScreenSizes
  */
 
 @Composable
-fun ExtraButton(
+internal fun ExtraButton(
     modifier: Modifier = Modifier,
     icon: SatunesIcons,
     description: String? = null,
@@ -78,7 +78,7 @@ fun ExtraButton(
 
 @Preview
 @Composable
-fun ExtraButtonPreview() {
+private fun ExtraButtonPreview() {
     ExtraButton(
         icon = SatunesIcons.PLAYLIST_ADD,
         onClick = {}

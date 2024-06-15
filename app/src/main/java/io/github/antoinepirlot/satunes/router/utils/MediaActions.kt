@@ -26,7 +26,6 @@
 package io.github.antoinepirlot.satunes.router.utils
 
 import android.net.Uri.encode
-import androidx.navigation.NavHostController
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Folder
@@ -34,6 +33,7 @@ import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
+import io.github.antoinepirlot.satunes.navController
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.router.Destination
 import io.github.antoinepirlot.satunes.ui.utils.getMusicListFromFolder
@@ -51,11 +51,9 @@ import io.github.antoinepirlot.satunes.ui.utils.startMusic
  *
  *      Artist: navigate to the media's destination
  *
- * @param navController the nav controller to redirect to the good path
  * @param media the media to open
  */
-fun openMedia(
-    navController: NavHostController,
+internal fun openMedia(
     media: Media? = null
 ) {
     if (media == null || media is Music) {
@@ -70,8 +68,7 @@ fun openMedia(
  *
  *      Folder: navigate to the folder's view
  */
-fun openMediaFromFolder(
-    navController: NavHostController,
+internal fun openMediaFromFolder(
     media: Media
 ) {
     when (media) {
@@ -81,7 +78,7 @@ fun openMediaFromFolder(
                 musicMediaItemSortedMap = getMusicListFromFolder(media.folder),
                 musicToPlay = media
             )
-            openMedia(navController, media)
+            openMedia(media)
         }
 
         is Folder -> navController.navigate(getDestinationOf(media))
@@ -118,7 +115,7 @@ private fun getDestinationOf(media: Media?): String {
  *
  * @throws IllegalStateException if there's no music playing
  */
-fun openCurrentMusic(navController: NavHostController) {
+internal fun openCurrentMusic() {
     val playbackController: PlaybackController = PlaybackController.getInstance()
     val musicPlaying = playbackController.musicPlaying.value
         ?: throw IllegalStateException("No music is currently playing, this button can be accessible")

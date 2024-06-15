@@ -38,7 +38,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import io.github.antoinepirlot.satunes.MainActivity
@@ -49,6 +48,7 @@ import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
 import io.github.antoinepirlot.satunes.database.services.DataLoader
 import io.github.antoinepirlot.satunes.database.services.DataManager
+import io.github.antoinepirlot.satunes.navController
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.views.LoadingView
@@ -65,13 +65,14 @@ import io.github.antoinepirlot.satunes.ui.views.music.AllMusicsListView
 import io.github.antoinepirlot.satunes.ui.views.playlist.PlaylistListView
 import io.github.antoinepirlot.satunes.ui.views.playlist.PlaylistView
 import io.github.antoinepirlot.satunes.ui.views.settings.AndroidAutoSettingsView
+import io.github.antoinepirlot.satunes.ui.views.settings.BatterySettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.BottomNavigationBarSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.ExclusionSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.PermissionsSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.PlaybackSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.PlaylistsSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.SettingsView
-import io.github.antoinepirlot.satunes.ui.views.settings.UpdatesView
+import io.github.antoinepirlot.satunes.ui.views.settings.UpdatesSettingView
 
 /**
  * @author Antoine Pirlot on 23-01-24
@@ -80,7 +81,6 @@ import io.github.antoinepirlot.satunes.ui.views.settings.UpdatesView
 @Composable
 internal fun Router(
     modifier: Modifier = Modifier,
-    navController: NavHostController,
 ) {
     val context: Context = LocalContext.current
     val isLoading: MutableState<Boolean> = rememberSaveable { DataLoader.isLoading }
@@ -102,16 +102,16 @@ internal fun Router(
 
         composable(Destination.FOLDERS.link) {
             // /!\ This route prevent back gesture to exit the app
-            permissionView(isAudioAllowed = isAudioAllowed.value, navController = navController)
+            permissionView(isAudioAllowed = isAudioAllowed.value)
             if (isLoading.value || !isLoaded) {
                 LoadingView()
             } else {
-                RootFolderView(navController = navController)
+                RootFolderView()
             }
         }
 
         composable("${Destination.FOLDERS.link}/{id}") {
-            permissionView(isAudioAllowed = isAudioAllowed.value, navController = navController)
+            permissionView(isAudioAllowed = isAudioAllowed.value)
             if (isLoading.value || !isLoaded) {
                 LoadingView()
             } else {
@@ -123,21 +123,21 @@ internal fun Router(
                         )
                     )
                 }
-                FolderView(navController = navController, folder = folder)
+                FolderView(folder = folder)
             }
         }
 
         composable(Destination.ARTISTS.link) {
-            permissionView(isAudioAllowed = isAudioAllowed.value, navController = navController)
+            permissionView(isAudioAllowed = isAudioAllowed.value)
             if (isLoading.value || !isLoaded) {
                 LoadingView()
             } else {
-                AllArtistsListView(navController = navController)
+                AllArtistsListView()
             }
         }
 
         composable("${Destination.ARTISTS.link}/{name}") {
-            permissionView(isAudioAllowed = isAudioAllowed.value, navController = navController)
+            permissionView(isAudioAllowed = isAudioAllowed.value)
             if (isLoading.value || !isLoaded) {
                 LoadingView()
             } else {
@@ -149,61 +149,61 @@ internal fun Router(
                         )
                     )
                 }
-                ArtistView(navController = navController, artist = artist)
+                ArtistView(artist = artist)
             }
         }
 
         composable(Destination.ALBUMS.link) {
-            permissionView(isAudioAllowed = isAudioAllowed.value, navController = navController)
+            permissionView(isAudioAllowed = isAudioAllowed.value)
             if (isLoading.value || !isLoaded) {
                 LoadingView()
             } else {
-                AllAlbumsListView(navController = navController)
+                AllAlbumsListView()
             }
         }
 
         composable("${Destination.ALBUMS.link}/{id}") {
-            permissionView(isAudioAllowed = isAudioAllowed.value, navController = navController)
+            permissionView(isAudioAllowed = isAudioAllowed.value)
             if (isLoading.value || !isLoaded) {
                 LoadingView()
             } else {
                 val albumId: Long = it.arguments!!.getString("id")!!.toLong()
                 val album: Album by remember { mutableStateOf(DataManager.getAlbum(albumId)) }
-                AlbumView(navController = navController, album = album)
+                AlbumView(album = album)
             }
         }
 
         composable(Destination.GENRES.link) {
-            permissionView(isAudioAllowed = isAudioAllowed.value, navController = navController)
+            permissionView(isAudioAllowed = isAudioAllowed.value)
             if (isLoading.value || !isLoaded) {
                 LoadingView()
             } else {
-                AllGenresListView(navController = navController)
+                AllGenresListView()
             }
         }
 
         composable("${Destination.GENRES.link}/{name}") {
-            permissionView(isAudioAllowed = isAudioAllowed.value, navController = navController)
+            permissionView(isAudioAllowed = isAudioAllowed.value)
             if (isLoading.value || !isLoaded) {
                 LoadingView()
             } else {
                 val genreName: String = decode(it.arguments!!.getString("name")!!)
                 val genre: Genre by remember { mutableStateOf(DataManager.getGenre(genreName = genreName)) }
-                GenreView(navController = navController, genre = genre)
+                GenreView(genre = genre)
             }
         }
 
         composable(Destination.PLAYLISTS.link) {
-            permissionView(isAudioAllowed = isAudioAllowed.value, navController = navController)
+            permissionView(isAudioAllowed = isAudioAllowed.value)
             if (isLoading.value || !isLoaded) {
                 LoadingView()
             } else {
-                PlaylistListView(navController = navController)
+                PlaylistListView()
             }
         }
 
         composable("${Destination.PLAYLISTS.link}/{id}") {
-            permissionView(isAudioAllowed = isAudioAllowed.value, navController = navController)
+            permissionView(isAudioAllowed = isAudioAllowed.value)
             if (isLoading.value || !isLoaded) {
                 LoadingView()
             } else {
@@ -211,21 +211,21 @@ internal fun Router(
                 val playlist: PlaylistWithMusics by remember {
                     mutableStateOf(DataManager.getPlaylist(playlistId = playlistId))
                 }
-                PlaylistView(navController = navController, playlist = playlist)
+                PlaylistView(playlist = playlist)
             }
         }
 
         composable(Destination.MUSICS.link) {
-            permissionView(isAudioAllowed = isAudioAllowed.value, navController = navController)
+            permissionView(isAudioAllowed = isAudioAllowed.value)
             if (isLoading.value || !isLoaded) {
                 LoadingView()
             } else {
-                AllMusicsListView(navController = navController)
+                AllMusicsListView()
             }
         }
 
         composable(Destination.PLAYBACK.link) {
-            permissionView(isAudioAllowed = isAudioAllowed.value, navController = navController)
+            permissionView(isAudioAllowed = isAudioAllowed.value)
             if (isLoading.value || !isLoaded) {
                 LoadingView()
             } else {
@@ -233,18 +233,18 @@ internal fun Router(
                     modifier = Modifier.padding(16.dp),
                     onAlbumClick = { album: Album? ->
                         if (album != null) {
-                            openMedia(navController = navController, media = album)
+                            openMedia(media = album)
                         }
                     },
                     onArtistClick = { artist: Artist ->
-                        openMedia(navController = navController, media = artist)
+                        openMedia(media = artist)
                     }
                 )
             }
         }
 
         composable(Destination.SETTINGS.link) {
-            SettingsView(navController = navController)
+            SettingsView()
         }
 
         composable(Destination.BOTTOM_BAR_SETTINGS.link) {
@@ -256,7 +256,7 @@ internal fun Router(
         }
 
         composable(Destination.UPDATES_SETTINGS.link) {
-            UpdatesView()
+            UpdatesSettingView()
         }
 
         composable(Destination.EXCLUSION_SETTINGS.link) {
@@ -274,6 +274,10 @@ internal fun Router(
         composable(Destination.ANDROID_AUTO_SETTINGS.link) {
             AndroidAutoSettingsView()
         }
+
+        composable(Destination.BATTERY_SETTINGS.link) {
+            BatterySettingsView()
+        }
     }
 }
 
@@ -284,9 +288,8 @@ internal fun Router(
  * If isAudioAllowed is false, then force the user to go to permission view
  *
  * @param isAudioAllowed true if the permission has been allowed, otherwise false
- * @param navController the nav controller
  */
-private fun permissionView(isAudioAllowed: Boolean, navController: NavHostController) {
+private fun permissionView(isAudioAllowed: Boolean) {
     if (!isAudioAllowed) {
         navController.popBackStack()
         navController.navigate(Destination.PERMISSIONS_SETTINGS.link)

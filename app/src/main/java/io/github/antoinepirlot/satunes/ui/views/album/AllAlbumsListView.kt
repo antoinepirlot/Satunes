@@ -17,7 +17,7 @@
  * You find this original project on github.
  *
  * My github link is: https://github.com/antoinepirlot
- * This current project's link is: https://github.com/antoinepirlot/MP3-Player
+ * This current project's link is: https://github.com/antoinepirlot/Satunes
  *
  * You can contact me via my email: pirlot.antoine@outlook.com
  * PS: I don't answer quickly.
@@ -31,8 +31,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.media3.common.MediaItem
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Media
@@ -52,9 +50,8 @@ import java.util.SortedSet
  */
 
 @Composable
-fun AllAlbumsListView(
+internal fun AllAlbumsListView(
     modifier: Modifier = Modifier,
-    navController: NavHostController,
 ) {
     val playbackController: PlaybackController = PlaybackController.getInstance()
 
@@ -65,9 +62,9 @@ fun AllAlbumsListView(
         mediaList = albumSet.toList(),
 
         openMedia = { clickedMedia: Media ->
-            openMedia(navController = navController, media = clickedMedia)
+            openMedia(media = clickedMedia)
         },
-        onFABClick = { openCurrentMusic(navController = navController) },
+        onFABClick = { openCurrentMusic() },
         extraButtons = {
             val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
             // TODO Move into object
@@ -77,7 +74,7 @@ fun AllAlbumsListView(
             if(musicMediaItemSortedMap.isNotEmpty()) {
                 ExtraButton(icon = SatunesIcons.PLAY, onClick = {
                     playbackController.loadMusic(musicMediaItemSortedMap = musicMediaItemSortedMap)
-                    openMedia(navController = navController)
+                    openMedia()
                 })
                 ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
 
@@ -85,7 +82,7 @@ fun AllAlbumsListView(
                         musicMediaItemSortedMap = musicMediaItemSortedMap,
                         shuffleMode = true
                     )
-                    openMedia(navController = navController)
+                    openMedia()
                 })
             }
         },
@@ -95,6 +92,6 @@ fun AllAlbumsListView(
 
 @Preview
 @Composable
-fun AllAlbumsListViewPreview() {
-    AllAlbumsListView(navController = rememberNavController())
+private fun AllAlbumsListViewPreview() {
+    AllAlbumsListView()
 }

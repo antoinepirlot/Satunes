@@ -36,7 +36,7 @@ import io.github.antoinepirlot.satunes.ui.components.images.ImageWithLink
  */
 
 @Composable
-fun Facebook(
+internal fun Facebook(
     modifier: Modifier = Modifier
 ) {
     val facebookUrl = "https://www.facebook.com/profile.php?id=61557929940182"
@@ -45,6 +45,6 @@ fun Facebook(
 
 @Preview
 @Composable
-fun FacebookPreview() {
+private fun FacebookPreview() {
     Facebook()
 }

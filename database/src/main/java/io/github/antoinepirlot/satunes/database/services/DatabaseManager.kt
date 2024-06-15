@@ -82,7 +82,10 @@ class DatabaseManager(context: Context) {
         }
     }
 
-    fun insertMusicToPlaylists(music: Music, playlists: MutableList<PlaylistWithMusics>) {
+    fun insertMusicToPlaylists(
+        music: Music,
+        playlists: List<PlaylistWithMusics>,
+    ) {
         CoroutineScope(Dispatchers.IO).launch {
             playlists.forEach { playlistWithMusics: PlaylistWithMusics ->
                 val musicsPlaylistsRel =
@@ -109,6 +112,7 @@ class DatabaseManager(context: Context) {
         context: Context,
         playlist: Playlist,
         musicList: MutableList<MusicDB>? = null,
+        showToast: Boolean = true
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             if (playlistDao.playlistExist(title = playlist.title)) {
@@ -127,9 +131,15 @@ class DatabaseManager(context: Context) {
                 if (musicDB.music != null) {
                     insertMusicToPlaylists(
                         music = musicDB.music!!,
-                        playlists = mutableListOf(playlistWithMusics)
+                        playlists = listOf(playlistWithMusics),
                     )
                 }
+            }
+            if (showToast) {
+                showToastOnUiThread(
+                    context = context,
+                    message = context.getString(R.string.created)
+                )
             }
         }
     }
@@ -160,10 +170,16 @@ class DatabaseManager(context: Context) {
         }
     }
 
-    fun insertMusicsToPlaylist(musics: MutableList<Music>, playlist: PlaylistWithMusics) {
+    fun insertMusicsToPlaylist(
+        musics: List<Music>,
+        playlist: PlaylistWithMusics
+    ) {
         CoroutineScope(Dispatchers.IO).launch {
             musics.forEach { music: Music ->
-                insertMusicToPlaylists(music = music, playlists = mutableListOf(playlist))
+                insertMusicToPlaylists(
+                    music = music,
+                    playlists = listOf(playlist),
+                )
             }
         }
     }
@@ -250,7 +266,8 @@ class DatabaseManager(context: Context) {
             insertOne(
                 context = context,
                 playlist = playlistWithMusics.playlist,
-                musicList = playlistWithMusics.musics
+                musicList = playlistWithMusics.musics,
+                showToast = false
             )
         } catch (_: Exception) {
             // Do nothing

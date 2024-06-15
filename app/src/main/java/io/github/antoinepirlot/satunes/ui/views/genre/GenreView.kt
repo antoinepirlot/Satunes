@@ -34,8 +34,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.media3.common.MediaItem
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Genre
@@ -57,9 +55,8 @@ import java.util.SortedSet
  */
 
 @Composable
-fun GenreView(
+internal fun GenreView(
     modifier: Modifier = Modifier,
-    navController: NavHostController,
     genre: Genre,
 ) {
     val playbackController: PlaybackController = PlaybackController.getInstance()
@@ -81,9 +78,9 @@ fun GenreView(
                 musicMediaItemSortedMap = genre.musicMediaItemSortedMap,
                 musicToPlay = clickedMedia as Music
             )
-            openMedia(navController = navController, media = clickedMedia)
+            openMedia(media = clickedMedia)
         },
-        onFABClick = { openCurrentMusic(navController = navController) },
+        onFABClick = { openCurrentMusic() },
         header = {
             //Recompose if data changed
             @Suppress("NAME_SHADOWING")
@@ -97,24 +94,20 @@ fun GenreView(
             musicMap.forEach { (music: Music, _: MediaItem) ->
                 albumSet.add(music.album)
             }
-            MediaWithAlbumsHeaderView(
-                media = genre,
-                albumList = albumSet.toList(),
-                navController = navController
-            )
+            MediaWithAlbumsHeaderView(media = genre, albumList = albumSet.toList())
         },
         extraButtons = {
             if (genre.musicMediaItemSortedMap.isNotEmpty()) {
                 ExtraButton(icon = SatunesIcons.PLAY, onClick = {
                     playbackController.loadMusic(musicMediaItemSortedMap = genre.musicMediaItemSortedMap)
-                    openMedia(navController = navController)
+                    openMedia()
                 })
                 ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
                     playbackController.loadMusic(
                         musicMediaItemSortedMap = genre.musicMediaItemSortedMap,
                         shuffleMode = true
                     )
-                    openMedia(navController = navController)
+                    openMedia()
                 })
             }
         },
@@ -124,10 +117,7 @@ fun GenreView(
 
 @Preview
 @Composable
-fun GenreViewPreview() {
-    GenreView(
-        navController = rememberNavController(),
-        genre = Genre(id = 0, "Genre")
-    )
+private fun GenreViewPreview() {
+    GenreView(genre = Genre(id = 0, "Genre"))
 }
 

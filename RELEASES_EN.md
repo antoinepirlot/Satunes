@@ -1,6 +1,23 @@
 # Releases (🇬🇧)
 Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
+## 1.1 (Android 5.1.1 Lollipop and later)
+
+### 1.1.0-beta-1
+
+New features:
+
+* Added a new setting allowing the use of Audio Offload (sends playback to a dedicated process).
+  This option allows you to optimize the battery
+* Ability to add currently playing music to playlists via quick actions
+* Navigation to albums, genres, artists, etc. from the menu with a long press on music
+
+Improvements, Optimizations and Troubleshooting:
+
+* Display issue when launching first music in Android Auto fixed
+* The default random mode selection is represented by buttons with icons and more using a switch
+* Displaying navigation bar button names
+
 ## 1.0 (Android 5.1.1 Lollipop and later)
 
 ### 1.0.3

@@ -59,7 +59,7 @@ import io.github.antoinepirlot.satunes.ui.components.texts.Title
  */
 
 @Composable
-fun UpdatesView(
+internal fun UpdatesSettingView(
     modifier: Modifier = Modifier,
 ) {
     val context: Context = LocalContext.current
@@ -69,8 +69,8 @@ fun UpdatesView(
     val scrollState: ScrollState = rememberScrollState()
 
     Column(modifier = modifier
-        .padding(16.dp)
-        .verticalScroll(scrollState)) {
+        .verticalScroll(scrollState)
+        .padding(horizontal = 16.dp)) {
         Title(text = stringResource(id = R.string.version))
         NormalText(text = stringResource(id = R.string.current_version) + currentVersion)
         //Check update is done when pressing setting button in top app bar
@@ -88,6 +88,6 @@ fun UpdatesView(
 
 @Preview
 @Composable
-fun VersionViewPreview() {
-    UpdatesView()
+private fun VersionViewPreview() {
+    UpdatesSettingView()
 }

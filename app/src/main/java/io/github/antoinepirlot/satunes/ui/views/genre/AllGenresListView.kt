@@ -34,8 +34,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.media3.common.MediaItem
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.Media
@@ -54,9 +52,8 @@ import java.util.SortedMap
  */
 
 @Composable
-fun AllGenresListView(
+internal fun AllGenresListView(
     modifier: Modifier = Modifier,
-    navController: NavHostController,
 ) {
     val playbackController: PlaybackController = PlaybackController.getInstance()
     val genreMap: SortedMap<String, Genre> = remember { DataManager.genreMap }
@@ -73,14 +70,14 @@ fun AllGenresListView(
         mediaList = genreMap.values.toList(),
 
         openMedia = { clickedMedia: Media ->
-            openMedia(navController = navController, media = clickedMedia)
+            openMedia(media = clickedMedia)
         },
-        onFABClick = { openCurrentMusic(navController = navController) },
+        onFABClick = { openCurrentMusic() },
         extraButtons = {
             if (genreMap.isNotEmpty()) {
                 ExtraButton(icon = SatunesIcons.PLAY, onClick = {
                     playbackController.loadMusic(musicMediaItemSortedMap = getMusics(genreMap = genreMap))
-                    openMedia(navController = navController)
+                    openMedia()
                 })
                 ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
 
@@ -88,7 +85,7 @@ fun AllGenresListView(
                         musicMediaItemSortedMap = getMusics(genreMap = genreMap),
                         shuffleMode = true
                     )
-                    openMedia(navController = navController)
+                    openMedia()
                 })
             }
         },
@@ -107,6 +104,6 @@ private fun getMusics(genreMap: SortedMap<String, Genre>): SortedMap<Music, Medi
 
 @Preview
 @Composable
-fun AllGenresListViewPreview() {
-    AllGenresListView(navController = rememberNavController())
+private fun AllGenresListViewPreview() {
+    AllGenresListView()
 }

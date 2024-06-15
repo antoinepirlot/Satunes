@@ -33,6 +33,7 @@ internal enum class Destination(val link: String) {
     ALBUMS(link = "/albums"),
     ANDROID_AUTO_SETTINGS(link = "/android_auto_setting"),
     ARTISTS(link = "/artists"),
+    BATTERY_SETTINGS(link = "/battery_settings"),
     BOTTOM_BAR_SETTINGS(link = "/navbar_settings"),
     EXCLUSION_SETTINGS(link = "/exclusion"),
     FOLDERS(link = "/folders"),
@@ -44,10 +45,10 @@ internal enum class Destination(val link: String) {
     PLAYLISTS(link = "/playlists"),
     PLAYLISTS_SETTINGS(link = "/playlists_settings"),
     SETTINGS(link = "/settings"),
-    UPDATES_SETTINGS(link = "/updates"),
+    UPDATES_SETTINGS(link = "/updates"), ;
 }
 
-val settingsDestinations: List<String> = listOf(
+internal val settingsDestinations: List<String> = listOf(
     Destination.SETTINGS.link, Destination.BOTTOM_BAR_SETTINGS.link,
     Destination.ANDROID_AUTO_SETTINGS.link, Destination.PLAYBACK_SETTINGS.link,
     Destination.EXCLUSION_SETTINGS.link, Destination.PLAYLISTS_SETTINGS.link,

@@ -17,67 +17,49 @@
  * You find this original project on github.
  *
  * My github link is: https://github.com/antoinepirlot
- * This current project's link is: https://github.com/antoinepirlot/MP3-Player
+ * This current project's link is: https://github.com/antoinepirlot/Satunes
  *
  * You can contact me via my email: pirlot.antoine@outlook.com
  * PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.buttons.music
+package io.github.antoinepirlot.satunes.ui.components.buttons.playback
 
+import android.annotation.SuppressLint
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.media3.common.Player.REPEAT_MODE_ONE
+import androidx.compose.ui.unit.dp
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
-import io.github.antoinepirlot.satunes.ui.utils.getRightIconColors
-import io.github.antoinepirlot.satunes.ui.utils.getRightIconTintColor
 
 /**
- * @author Antoine Pirlot on 29/01/24
+ * @author Antoine Pirlot on 26/01/24
  */
 
 @Composable
-fun RepeatMusicButton(
+internal fun NextMusicButton(
     modifier: Modifier = Modifier
 ) {
-    val repeatMode: Int by rememberSaveable { PlaybackController.getInstance().repeatMode }
-    val isOn: Boolean = repeatMode > 0 // When repeat mode is off, value is 0.
-
     IconButton(
-        modifier = modifier,
-        colors = getRightIconColors(isOn = isOn),
-        onClick = { PlaybackController.getInstance().switchRepeatMode() }
+        modifier = modifier.size(45.dp),
+        onClick = { PlaybackController.getInstance().playNext() }
     ) {
-        val icon: SatunesIcons = getRightRepeatIcon()
+        val icon: SatunesIcons = SatunesIcons.SKIP_NEXT
         Icon(
-            modifier = modifier,
+            modifier = modifier.size(45.dp),
             imageVector = icon.imageVector,
-            contentDescription = icon.description,
-            tint = getRightIconTintColor(isOn = isOn)
+            contentDescription = icon.description
         )
     }
 }
 
+@SuppressLint("UnrememberedMutableState")
 @Composable
 @Preview
-fun RepeatMusicButtonPreview() {
-    RepeatMusicButton()
-}
-
-private fun getRightRepeatIcon(): SatunesIcons {
-    return when (PlaybackController.getInstance().repeatMode.value) {
-        REPEAT_MODE_ONE -> {
-            SatunesIcons.REPEAT_ONE
-        }
-
-        else -> {
-            SatunesIcons.REPEAT
-        }
-    }
+private fun NextMusicButtonPreview() {
+    NextMusicButton()
 }

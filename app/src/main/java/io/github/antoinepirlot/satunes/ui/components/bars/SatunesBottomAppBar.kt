@@ -40,10 +40,9 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.database.models.MenuTitle
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
+import io.github.antoinepirlot.satunes.navController
 import io.github.antoinepirlot.satunes.router.Destination
 import io.github.antoinepirlot.satunes.ui.ScreenSizes
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
@@ -54,9 +53,8 @@ import io.github.antoinepirlot.satunes.ui.utils.getRightIconAndDescription
  */
 
 @Composable
-fun SatunesBottomAppBar(
+internal fun SatunesBottomAppBar(
     modifier: Modifier = Modifier,
-    navController: NavHostController,
 ) {
     val menuTitleLists: MutableList<MenuTitle> = mutableListOf(
         MenuTitle.FOLDERS,
@@ -75,7 +73,7 @@ fun SatunesBottomAppBar(
 
     val selectedMenuTitle: MutableState<MenuTitle> = remember {
         mutableStateOf(
-        // Update the tab by default if settings has changed
+            // Update the tab by default if settings has changed
             if (SettingsManager.foldersChecked.value) MenuTitle.FOLDERS
             else if (SettingsManager.artistsChecked.value) MenuTitle.ARTISTS
             else if (SettingsManager.albumsChecked.value) MenuTitle.ALBUMS
@@ -84,7 +82,6 @@ fun SatunesBottomAppBar(
             else MenuTitle.MUSICS
         )
     }
-    val hasMaxFiveItems: Boolean = menuTitleLists.size <= 5
 
     val screenWidthDp = LocalConfiguration.current.screenWidthDp
     val navigationModifier: Modifier =
@@ -98,9 +95,7 @@ fun SatunesBottomAppBar(
             NavigationBarItem(
                 modifier = navigationItemModifier,
                 label = {
-                    if (hasMaxFiveItems) {
-                        NormalText(text = stringResource(id = menuTitle.stringId))
-                    }
+                    NormalText(text = stringResource(id = menuTitle.stringId))
                 },
                 selected = selectedMenuTitle.value == menuTitle,
                 onClick = {
@@ -114,7 +109,7 @@ fun SatunesBottomAppBar(
                         MenuTitle.MUSICS -> Destination.MUSICS.link
 
                     }
-                    backToRoot(rootRoute = rootRoute, navController = navController)
+                    backToRoot(rootRoute = rootRoute)
                 },
                 icon = {
                     val pair = getRightIconAndDescription(menuTitle = menuTitle)
@@ -134,11 +129,9 @@ fun SatunesBottomAppBar(
  * For example, if the user click on Album button and he is in settings, then it redirects to albums.
  *
  * @param rootRoute the root route to go
- * @param navController this nav controller is redirected to the media route
  */
 private fun backToRoot(
     rootRoute: String,
-    navController: NavHostController
 ) {
     var currentRoute: String? = navController.currentBackStackEntry!!.destination.route!!
     if (currentRoute != rootRoute) {
@@ -155,6 +148,6 @@ private fun backToRoot(
 @SuppressLint("UnrememberedMutableState")
 @Preview
 @Composable
-fun SatunesBottomAppBarPreview() {
-    SatunesBottomAppBar(navController = rememberNavController())
+private fun SatunesBottomAppBarPreview() {
+    SatunesBottomAppBar()
 }

@@ -43,8 +43,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.media3.common.MediaItem
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Media
@@ -66,9 +64,8 @@ import java.util.SortedMap
  */
 
 @Composable
-fun AlbumView(
+internal fun AlbumView(
     modifier: Modifier = Modifier,
-    navController: NavHostController,
     album: Album,
 ) {
     val playbackController: PlaybackController = PlaybackController.getInstance()
@@ -91,24 +88,24 @@ fun AlbumView(
                 musicMediaItemSortedMap = album.musicMediaItemSortedMap,
                 musicToPlay = clickedMedia as Music
             )
-            openMedia(navController = navController, media = clickedMedia)
+            openMedia(media = clickedMedia)
         },
-        onFABClick = { openCurrentMusic(navController = navController) },
+        onFABClick = { openCurrentMusic() },
         header = {
-            Header(album = album, navController = navController)
+            Header(album = album)
         },
         extraButtons = {
             if (album.musicMediaItemSortedMap.isNotEmpty()) {
                 ExtraButton(icon = SatunesIcons.PLAY, onClick = {
                     playbackController.loadMusic(album.musicMediaItemSortedMap)
-                    openMedia(navController = navController)
+                    openMedia()
                 })
                 ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
                     playbackController.loadMusic(
                         musicMediaItemSortedMap = album.musicMediaItemSortedMap,
                         shuffleMode = true
                     )
-                    openMedia(navController = navController)
+                    openMedia()
                 })
             }
         },
@@ -117,7 +114,7 @@ fun AlbumView(
 }
 
 @Composable
-private fun Header(modifier: Modifier = Modifier, album: Album, navController: NavHostController) {
+private fun Header(modifier: Modifier = Modifier, album: Album) {
     Column(modifier = modifier.padding(vertical = 16.dp)) {
         val screenWidthDp = LocalConfiguration.current.screenWidthDp
         val albumSize: Dp = if (screenWidthDp <= ScreenSizes.VERY_SMALL)
@@ -139,7 +136,7 @@ private fun Header(modifier: Modifier = Modifier, album: Album, navController: N
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .clickable {
-                    openMedia(navController = navController, media = album.artist)
+                    openMedia(media = album.artist)
                 },
             text = album.artist!!.title
         )
@@ -148,9 +145,8 @@ private fun Header(modifier: Modifier = Modifier, album: Album, navController: N
 
 @Preview
 @Composable
-fun AlbumViewPreview() {
+private fun AlbumViewPreview() {
     AlbumView(
-        navController = rememberNavController(),
         album = Album(
             id = 0,
             title = "Album title",

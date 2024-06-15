@@ -23,7 +23,7 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.settings
+package io.github.antoinepirlot.satunes.ui.components.buttons.settings
 
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable

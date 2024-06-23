@@ -52,6 +52,7 @@ import io.github.antoinepirlot.satunes.navController
 import io.github.antoinepirlot.satunes.router.Destination
 import io.github.antoinepirlot.satunes.router.settingsDestinations
 import io.github.antoinepirlot.satunes.ui.ScreenSizes
+import io.github.antoinepirlot.satunes.ui.utils.getCurrentDestination
 
 /**
  * @author Antoine Pirlot on 16/01/24
@@ -72,6 +73,15 @@ internal fun SatunesTopAppBar(
             containerColor = MaterialTheme.colorScheme.primaryContainer,
             titleContentColor = MaterialTheme.colorScheme.primary,
         ),
+        navigationIcon = {
+            IconButton(onClick = { /*TODO*/ }) {
+                val playbackQueueIcon: SatunesIcons = SatunesIcons.PLAYLIST
+                Icon(
+                    imageVector = playbackQueueIcon.imageVector,
+                    contentDescription = playbackQueueIcon.description
+                )
+            }
+        },
         title = {
             Text(
                 text = stringResource(id = R.string.app_name),
@@ -104,9 +114,7 @@ private fun onSettingButtonClick() {
             UpdateAvailableStatus.UNDEFINED
     }
 
-    val currentDestination: String =
-        navController.currentBackStackEntry!!.destination.route!!
-    when (currentDestination) {
+    when (val currentDestination: String = getCurrentDestination(navController = navController)) {
         in settingsDestinations -> {
             if (currentDestination == Destination.PERMISSIONS_SETTINGS.link
                 && !MainActivity.instance.isAudioAllowed()

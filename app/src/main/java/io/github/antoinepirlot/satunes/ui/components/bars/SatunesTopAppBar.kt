@@ -37,12 +37,15 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
@@ -51,8 +54,8 @@ import io.github.antoinepirlot.satunes.internet.updates.UpdateCheckManager
 import io.github.antoinepirlot.satunes.navController
 import io.github.antoinepirlot.satunes.router.Destination
 import io.github.antoinepirlot.satunes.router.settingsDestinations
+import io.github.antoinepirlot.satunes.services.RoutesManager
 import io.github.antoinepirlot.satunes.ui.ScreenSizes
-import io.github.antoinepirlot.satunes.ui.utils.getCurrentDestination
 
 /**
  * @author Antoine Pirlot on 16/01/24
@@ -67,6 +70,8 @@ internal fun SatunesTopAppBar(
     val screenWidthDp = LocalConfiguration.current.screenWidthDp
     val barModifier: Modifier =
         if (screenWidthDp < ScreenSizes.VERY_VERY_SMALL) modifier.fillMaxHeight(0.11f) else modifier
+    val currentDestination: String? by rememberSaveable { RoutesManager.currentDestination }
+
     CenterAlignedTopAppBar(
         modifier = barModifier,
         colors = TopAppBarDefaults.topAppBarColors(
@@ -74,6 +79,11 @@ internal fun SatunesTopAppBar(
             titleContentColor = MaterialTheme.colorScheme.primary,
         ),
         navigationIcon = {
+            if (currentDestination != Destination.PLAYBACK.link) {
+                return@CenterAlignedTopAppBar
+            }
+
+            // Here, the user is in the playback view
             IconButton(onClick = { /*TODO*/ }) {
                 val playbackQueueIcon: SatunesIcons = SatunesIcons.PLAYLIST
                 Icon(
@@ -104,6 +114,10 @@ internal fun SatunesTopAppBar(
     )
 }
 
+private fun onPlaybackQueueButtonClick(navController: NavHostController): String {
+    return ""
+}
+
 /**
  * When currentDestination is the settings list, then return to app only if audio permission has been allowed.
  * Otherwise navigate to settings
@@ -114,7 +128,7 @@ private fun onSettingButtonClick() {
             UpdateAvailableStatus.UNDEFINED
     }
 
-    when (val currentDestination: String = getCurrentDestination(navController = navController)) {
+    when (val currentDestination: String = RoutesManager.currentDestination.value!!) {
         in settingsDestinations -> {
             if (currentDestination == Destination.PERMISSIONS_SETTINGS.link
                 && !MainActivity.instance.isAudioAllowed()

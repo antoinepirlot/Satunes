@@ -23,14 +23,14 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.utils
+package io.github.antoinepirlot.satunes.services
 
-import androidx.navigation.NavHostController
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 
 /**
  * @author Antoine Pirlot on 23/06/2024
  */
-
-internal fun getCurrentDestination(navController: NavHostController): String {
-    return navController.currentBackStackEntry!!.destination.route!!
+internal object RoutesManager {
+    val currentDestination: MutableState<String?> = mutableStateOf(null)
 }

@@ -259,6 +259,7 @@ internal fun Router(
 
         composable(Destination.PLAYBACK_QUEUE.link) {
             RoutesManager.currentDestination.value = it.destination.route
+            permissionView(isAudioAllowed = isAudioAllowed.value)
             PlaybackQueueView()
         }
 

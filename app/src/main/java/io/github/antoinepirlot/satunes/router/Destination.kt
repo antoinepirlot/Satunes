@@ -41,6 +41,7 @@ internal enum class Destination(val link: String) {
     MUSICS(link = "/musics"),
     PERMISSIONS_SETTINGS(link = "/permissions_settings"),
     PLAYBACK(link = "/playback"),
+    PLAYBACK_QUEUE(link = "/playback_queue"),
     PLAYBACK_SETTINGS(link = "/playback_settings"),
     PLAYLISTS(link = "/playlists"),
     PLAYLISTS_SETTINGS(link = "/playlists_settings"),

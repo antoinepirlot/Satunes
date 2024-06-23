@@ -63,6 +63,7 @@ import io.github.antoinepirlot.satunes.ui.views.genre.AllGenresListView
 import io.github.antoinepirlot.satunes.ui.views.genre.GenreView
 import io.github.antoinepirlot.satunes.ui.views.music.AllMusicsListView
 import io.github.antoinepirlot.satunes.ui.views.playback.PlayBackView
+import io.github.antoinepirlot.satunes.ui.views.playback.PlaybackQueueView
 import io.github.antoinepirlot.satunes.ui.views.playlist.PlaylistListView
 import io.github.antoinepirlot.satunes.ui.views.playlist.PlaylistView
 import io.github.antoinepirlot.satunes.ui.views.settings.AndroidAutoSettingsView
@@ -254,6 +255,11 @@ internal fun Router(
                     }
                 )
             }
+        }
+
+        composable(Destination.PLAYBACK_QUEUE.link) {
+            RoutesManager.currentDestination.value = it.destination.route
+            PlaybackQueueView()
         }
 
         composable(Destination.SETTINGS.link) {

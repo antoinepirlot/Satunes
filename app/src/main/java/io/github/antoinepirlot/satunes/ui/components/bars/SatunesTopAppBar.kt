@@ -45,7 +45,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
 import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
@@ -84,7 +83,7 @@ internal fun SatunesTopAppBar(
             }
 
             // Here, the user is in the playback view
-            IconButton(onClick = { /*TODO*/ }) {
+            IconButton(onClick = { navController.navigate(Destination.PLAYBACK_QUEUE.link) }) {
                 val playbackQueueIcon: SatunesIcons = SatunesIcons.PLAYLIST
                 Icon(
                     imageVector = playbackQueueIcon.imageVector,
@@ -112,10 +111,6 @@ internal fun SatunesTopAppBar(
         },
         scrollBehavior = scrollBehavior,
     )
-}
-
-private fun onPlaybackQueueButtonClick(navController: NavHostController): String {
-    return ""
 }
 
 /**

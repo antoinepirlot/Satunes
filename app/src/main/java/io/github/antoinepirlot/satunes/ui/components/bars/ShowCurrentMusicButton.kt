@@ -47,7 +47,7 @@ internal fun ShowCurrentMusicButton(
     onClick: () -> Unit
 ) {
     val screenWidthDp: Int = LocalConfiguration.current.screenWidthDp
-    val buttonSize: Dp = if (screenWidthDp <= ScreenSizes.VERY_SMALL)
+    val buttonSize: Dp = if (screenWidthDp <= ScreenSizes.VERY_VERY_SMALL)
         80.dp
     else
         100.dp

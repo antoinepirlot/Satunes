@@ -67,7 +67,7 @@ internal fun ImageWithLink(
     val context: Context = LocalContext.current
     val screenWidthDp: Int = LocalConfiguration.current.screenWidthDp
     Box(modifier = modifier) {
-        val imageSize: Dp = if (screenWidthDp <= ScreenSizes.VERY_SMALL)
+        val imageSize: Dp = if (screenWidthDp <= ScreenSizes.VERY_VERY_SMALL)
             40.dp
         else
             60.dp

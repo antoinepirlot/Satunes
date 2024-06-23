@@ -62,8 +62,8 @@ internal fun AlbumArtwork(
     val clickableModifier: Modifier = if (onClick != null) {
         modifier
             .size(
-                if (screenWidthDp >= ScreenSizes.VERY_SMALL && screenWidthDp <= ScreenSizes.SMALL) 150.dp
-                else if (screenWidthDp <= ScreenSizes.VERY_SMALL) 100.dp
+                if (screenWidthDp >= ScreenSizes.VERY_VERY_SMALL && screenWidthDp <= ScreenSizes.VERY_SMALL) 150.dp
+                else if (screenWidthDp <= ScreenSizes.VERY_VERY_SMALL) 100.dp
                 else 300.dp // Normal
             )
             .clickable {
@@ -78,8 +78,8 @@ internal fun AlbumArtwork(
     } else {
         modifier
             .size(
-                if (screenWidthDp >= ScreenSizes.VERY_SMALL && screenWidthDp <= ScreenSizes.SMALL) 150.dp
-                else if (screenWidthDp <= ScreenSizes.VERY_SMALL) 100.dp
+                if (screenWidthDp >= ScreenSizes.VERY_VERY_SMALL && screenWidthDp <= ScreenSizes.VERY_SMALL) 150.dp
+                else if (screenWidthDp <= ScreenSizes.VERY_VERY_SMALL) 100.dp
                 else 300.dp // Normal
             )
     }

@@ -61,9 +61,9 @@ internal fun MusicControlBar(
 ) {
     val screenWidthDp = LocalConfiguration.current.screenWidthDp
     val ratio: Float =
-        if (screenWidthDp >= ScreenSizes.VERY_SMALL && screenWidthDp <= ScreenSizes.SMALL) {
+        if (screenWidthDp >= ScreenSizes.VERY_VERY_SMALL && screenWidthDp <= ScreenSizes.VERY_SMALL) {
             0.8f
-        } else if (screenWidthDp <= ScreenSizes.VERY_SMALL) {
+        } else if (screenWidthDp <= ScreenSizes.VERY_VERY_SMALL) {
             0.6f
         } else { // Normal
             1f

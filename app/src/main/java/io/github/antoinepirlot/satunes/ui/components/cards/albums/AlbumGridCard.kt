@@ -58,16 +58,16 @@ internal fun AlbumGridCard(
 ) {
     val screenWidthDp: Int = LocalConfiguration.current.screenWidthDp
 
-    val boxSize: Dp = if (screenWidthDp <= ScreenSizes.VERY_SMALL)
+    val boxSize: Dp = if (screenWidthDp <= ScreenSizes.VERY_VERY_SMALL)
         150.dp
-    else if (screenWidthDp <= ScreenSizes.SMALL)
+    else if (screenWidthDp <= ScreenSizes.VERY_SMALL)
         200.dp
     else
         250.dp
 
-    val artworkSize: Dp = if (screenWidthDp <= ScreenSizes.VERY_SMALL)
+    val artworkSize: Dp = if (screenWidthDp <= ScreenSizes.VERY_VERY_SMALL)
         125.dp
-    else if (screenWidthDp <= ScreenSizes.SMALL)
+    else if (screenWidthDp <= ScreenSizes.VERY_SMALL)
         175.dp
     else
         225.dp

@@ -53,7 +53,7 @@ internal fun ExtraButton(
     if (icon == SatunesIcons.SHUFFLE && SettingsManager.shuffleMode.value)
         return //The shuffle mode is always activated by default and don't need to be shown
     val screenWidthDp: Int = LocalConfiguration.current.screenWidthDp
-    val buttonSize: Dp = if (screenWidthDp <= ScreenSizes.VERY_SMALL)
+    val buttonSize: Dp = if (screenWidthDp <= ScreenSizes.VERY_VERY_SMALL)
         50.dp
     else
         60.dp

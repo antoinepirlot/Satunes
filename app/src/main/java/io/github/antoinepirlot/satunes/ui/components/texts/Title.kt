@@ -70,9 +70,9 @@ internal fun Title(
     val textStyle = TextStyle(
         fontWeight = fontWeight,
         textAlign = textAlign,
-        fontSize = if (screenWidthDp <= ScreenSizes.VERY_SMALL)
+        fontSize = if (screenWidthDp <= ScreenSizes.VERY_VERY_SMALL)
             fontSize / 2
-        else if (screenWidthDp <= ScreenSizes.SMALL)
+        else if (screenWidthDp <= ScreenSizes.VERY_SMALL)
             fontSize / 1.5
         else fontSize
     )

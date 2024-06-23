@@ -56,7 +56,7 @@ internal fun ListItem(
     val fontScale: Float = LocalConfiguration.current.fontScale
     androidx.compose.material3.ListItem(
         modifier = modifier.height(
-            if (screenWidthDp <= ScreenSizes.VERY_SMALL) {
+            if (screenWidthDp <= ScreenSizes.VERY_VERY_SMALL) {
                 (fontScale * 40).dp
             } else {
                 (fontScale * 70).dp

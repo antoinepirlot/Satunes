@@ -45,9 +45,9 @@ internal fun LoadingCircle(
     modifier: Modifier = Modifier
 ) {
     val screenWidthDp: Int = LocalConfiguration.current.screenWidthDp
-    val size: Dp = if (screenWidthDp <= ScreenSizes.VERY_SMALL)
+    val size: Dp = if (screenWidthDp < ScreenSizes.VERY_VERY_SMALL)
         32.dp
-    else if (screenWidthDp <= ScreenSizes.SMALL)
+    else if (screenWidthDp < ScreenSizes.VERY_SMALL)
         43.dp
     else
         64.dp

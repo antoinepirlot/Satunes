@@ -65,7 +65,7 @@ internal fun SatunesTopAppBar(
 ) {
     val screenWidthDp = LocalConfiguration.current.screenWidthDp
     val barModifier: Modifier =
-        if (screenWidthDp <= ScreenSizes.VERY_SMALL) modifier.fillMaxHeight(0.11f) else modifier
+        if (screenWidthDp < ScreenSizes.VERY_VERY_SMALL) modifier.fillMaxHeight(0.11f) else modifier
     CenterAlignedTopAppBar(
         modifier = barModifier,
         colors = TopAppBarDefaults.topAppBarColors(

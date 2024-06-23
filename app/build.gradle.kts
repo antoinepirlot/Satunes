@@ -18,8 +18,8 @@ android {
         applicationId = nameSpace
         minSdk = 22
         targetSdk = 34
-        versionCode = 31
-        versionName = "1.1.0-beta-1"
+        versionCode = 32
+        versionName = "1.1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -67,12 +67,12 @@ dependencies {
     /**
      * Base
      */
-    val composeUiVersion = "1.6.7"
-    val composeBomVersion = "2024.05.00"
+    val composeUiVersion = "1.6.8"
+    val composeBomVersion = "2024.06.00"
     implementation("androidx.core:core-ktx:1.13.1")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.1")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.2")
     implementation("androidx.activity:activity-compose:1.9.0")
-    implementation("androidx.fragment:fragment-ktx:1.7.1")
+    implementation("androidx.fragment:fragment-ktx:1.8.0")
     implementation(platform("androidx.compose:compose-bom:$composeBomVersion"))
     implementation("androidx.compose.ui:ui:$composeUiVersion")
     implementation("androidx.compose.ui:ui-graphics:$composeUiVersion")

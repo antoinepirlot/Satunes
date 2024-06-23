@@ -3,6 +3,14 @@ Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
 ## 1.1 (Android 5.1.1 Lollipop and later)
 
+### 1.1.0
+
+Improvements, Optimizations and Troubleshooting:
+
+* The size of the repeat one mode icon in the default playback settings displays correctly on
+  different screen sizes
+* Updating libraries
+
 ### 1.1.0-beta-1
 
 New features:

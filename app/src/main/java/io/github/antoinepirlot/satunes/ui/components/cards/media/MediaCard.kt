@@ -64,6 +64,7 @@ import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMus
 import io.github.antoinepirlot.satunes.database.models.tables.MusicDB
 import io.github.antoinepirlot.satunes.icons.R
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.ui.ScreenSizes
 import io.github.antoinepirlot.satunes.ui.components.cards.ListItem
 import io.github.antoinepirlot.satunes.ui.components.dialog.music.MusicOptionsDialog
@@ -147,32 +148,44 @@ internal fun MediaCard(
                         .fillMaxHeight()
                         .width(boxSize)
                 ) {
-                    if (media.artwork != null) {
+                    val imageModifier: Modifier = Modifier
+                        .fillMaxSize()
+                        .align(Alignment.Center)
+                    val playbackController: PlaybackController = PlaybackController.getInstance()
+                    if (media == playbackController.musicPlaying.value) {
+                        val playingIcon: SatunesIcons = SatunesIcons.MUSIC_PLAYING
                         Image(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .align(Alignment.Center),
-                            bitmap = media.artwork!!.asImageBitmap(),
-                            contentDescription = "Media Artwork"
+                            modifier = imageModifier,
+                            imageVector = playingIcon.imageVector,
+                            contentDescription = playingIcon.description
                         )
                     } else {
-                        if (media is Music || media is Album) {
-                            //Use it will prevent slow devices showing icon instead of artwork
-                            val emptyArtwork: ImageBitmap = ResourcesCompat.getDrawable(
-                                LocalContext.current.resources,
-                                R.mipmap.empty_album_artwork_foreground,
-                                null
-                            )?.toBitmap()!!.asImageBitmap()
-                            Image(bitmap = emptyArtwork, contentDescription = "Empty Album")
-                        } else {
-                            val mediaIcon: SatunesIcons = getRightIconAndDescription(media = media)
-                            Icon(
-                                modifier = Modifier
-                                    .size(30.dp)
-                                    .align(Alignment.Center),
-                                imageVector = mediaIcon.imageVector,
-                                contentDescription = mediaIcon.description
+                        if (media.artwork != null) {
+                            Image(
+                                modifier = imageModifier,
+                                bitmap = media.artwork!!.asImageBitmap(),
+                                contentDescription = "Media Artwork"
                             )
+                        } else {
+                            if (media is Music || media is Album) {
+                                //Use it will prevent slow devices showing icon instead of artwork
+                                val emptyArtwork: ImageBitmap = ResourcesCompat.getDrawable(
+                                    LocalContext.current.resources,
+                                    R.mipmap.empty_album_artwork_foreground,
+                                    null
+                                )?.toBitmap()!!.asImageBitmap()
+                                Image(bitmap = emptyArtwork, contentDescription = "Empty Album")
+                            } else {
+                                val mediaIcon: SatunesIcons =
+                                    getRightIconAndDescription(media = media)
+                                Icon(
+                                    modifier = Modifier
+                                        .size(30.dp)
+                                        .align(Alignment.Center),
+                                    imageVector = mediaIcon.imageVector,
+                                    contentDescription = mediaIcon.description
+                                )
+                            }
                         }
                     }
                 }

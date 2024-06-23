@@ -42,10 +42,10 @@ import io.github.antoinepirlot.satunes.database.models.tables.MusicDB
 @Composable
 internal fun MediaCardList(
     modifier: Modifier = Modifier,
-    header: @Composable () -> Unit,
+    header: (@Composable () -> Unit)? = null,
     mediaList: List<Media>,
     openMedia: (media: Media) -> Unit,
-    openedPlaylistWithMusics: PlaylistWithMusics?
+    openedPlaylistWithMusics: PlaylistWithMusics? = null
 ) {
     val lazyState = rememberLazyListState()
 
@@ -69,7 +69,9 @@ internal fun MediaCardList(
             }
         ) { media: Media ->
             if (media == mediaList.first()) {
-                header()
+                if (header != null) {
+                    header()
+                }
             }
             MediaCard(
                 modifier = modifier,

@@ -462,4 +462,8 @@ class PlaybackController private constructor(
             this.mediaController.release()
         }
     }
+
+    fun getPlaylist(): List<Music> {
+        return this.playlist.musicList
+    }
 }

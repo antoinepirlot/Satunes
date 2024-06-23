@@ -23,7 +23,7 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.views
+package io.github.antoinepirlot.satunes.ui.views.playback
 
 import android.annotation.SuppressLint
 import android.content.res.Configuration

@@ -71,6 +71,14 @@ internal fun RepeatModeRadioButtons(
     )
     var state: Int by remember { SettingsManager.repeatMode }
 
+    val screenWidthDp: Int = LocalConfiguration.current.screenWidthDp
+    val radioButtonModifier: Modifier =
+        if (screenWidthDp <= ScreenSizes.VERY_SMALL)
+            Modifier.size(25.dp)
+        else if (screenWidthDp <= ScreenSizes.SMALL)
+            Modifier.size(30.dp)
+        else Modifier
+
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -89,13 +97,6 @@ internal fun RepeatModeRadioButtons(
                     state = i
                     SettingsManager.updateRepeatMode(context = context, newValue = i)
                 }
-                val screenWidthDp: Int = LocalConfiguration.current.screenWidthDp
-                val radioButtonModifier: Modifier =
-                    if (screenWidthDp <= ScreenSizes.VERY_SMALL)
-                        Modifier.size(25.dp)
-                    else if (screenWidthDp <= ScreenSizes.SMALL)
-                        Modifier.size(30.dp)
-                    else Modifier
 
                 RadioButton(
                     modifier = radioButtonModifier,

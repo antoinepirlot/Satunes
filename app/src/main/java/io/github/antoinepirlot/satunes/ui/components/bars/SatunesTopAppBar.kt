@@ -81,32 +81,7 @@ internal fun SatunesTopAppBar(
         },
         actions = {
             IconButton(
-                onClick = {
-                    if (UpdateCheckManager.updateAvailableStatus.value != UpdateAvailableStatus.AVAILABLE) {
-                        UpdateCheckManager.updateAvailableStatus.value =
-                            UpdateAvailableStatus.UNDEFINED
-                    }
-
-                    val currentDestination: String =
-                        navController.currentBackStackEntry!!.destination.route!!
-                    when (currentDestination) {
-                        in settingsDestinations -> {
-                            if (currentDestination == Destination.PERMISSIONS_SETTINGS.link
-                                && !MainActivity.instance.isAudioAllowed()
-                            ) {
-                                return@IconButton
-                            } else {
-                                navController.popBackStack()
-                                if (navController.currentBackStackEntry == null) {
-                                    navController.navigate(Destination.FOLDERS.link)
-                                    navController.navigate(Destination.SETTINGS.link)
-                                }
-                            }
-                        }
-
-                        else -> navController.navigate(Destination.SETTINGS.link)
-                    }
-                }
+                onClick = { onSettingButtonClick() }
             ) {
                 val settingsIcon: SatunesIcons = SatunesIcons.SETTINGS
                 Icon(
@@ -117,6 +92,37 @@ internal fun SatunesTopAppBar(
         },
         scrollBehavior = scrollBehavior,
     )
+}
+
+/**
+ * When currentDestination is the settings list, then return to app only if audio permission has been allowed.
+ * Otherwise navigate to settings
+ */
+private fun onSettingButtonClick() {
+    if (UpdateCheckManager.updateAvailableStatus.value != UpdateAvailableStatus.AVAILABLE) {
+        UpdateCheckManager.updateAvailableStatus.value =
+            UpdateAvailableStatus.UNDEFINED
+    }
+
+    val currentDestination: String =
+        navController.currentBackStackEntry!!.destination.route!!
+    when (currentDestination) {
+        in settingsDestinations -> {
+            if (currentDestination == Destination.PERMISSIONS_SETTINGS.link
+                && !MainActivity.instance.isAudioAllowed()
+            ) {
+                return
+            } else {
+                navController.popBackStack()
+                if (navController.currentBackStackEntry == null) {
+                    navController.navigate(Destination.FOLDERS.link)
+                    navController.navigate(Destination.SETTINGS.link)
+                }
+            }
+        }
+
+        else -> navController.navigate(Destination.SETTINGS.link)
+    }
 }
 
 @SuppressLint("UnrememberedMutableState")

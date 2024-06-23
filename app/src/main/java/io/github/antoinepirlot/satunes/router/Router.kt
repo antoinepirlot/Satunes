@@ -53,7 +53,6 @@ import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.services.RoutesManager
 import io.github.antoinepirlot.satunes.ui.views.LoadingView
-import io.github.antoinepirlot.satunes.ui.views.PlayBackView
 import io.github.antoinepirlot.satunes.ui.views.album.AlbumView
 import io.github.antoinepirlot.satunes.ui.views.album.AllAlbumsListView
 import io.github.antoinepirlot.satunes.ui.views.artist.AllArtistsListView
@@ -63,6 +62,7 @@ import io.github.antoinepirlot.satunes.ui.views.folder.RootFolderView
 import io.github.antoinepirlot.satunes.ui.views.genre.AllGenresListView
 import io.github.antoinepirlot.satunes.ui.views.genre.GenreView
 import io.github.antoinepirlot.satunes.ui.views.music.AllMusicsListView
+import io.github.antoinepirlot.satunes.ui.views.playback.PlayBackView
 import io.github.antoinepirlot.satunes.ui.views.playlist.PlaylistListView
 import io.github.antoinepirlot.satunes.ui.views.playlist.PlaylistView
 import io.github.antoinepirlot.satunes.ui.views.settings.AndroidAutoSettingsView

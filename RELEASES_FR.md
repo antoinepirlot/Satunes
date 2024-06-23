@@ -3,6 +3,14 @@ You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
 ## 1.1 (Android 5.1.1 Lollipop et ultérieur)
 
+### 1.1.0
+
+Améliorations, Optimisations et Résolutions de problèmes:
+
+* La taille de l'icône repeat one dans les paramètre de lecture par défaut s'affiche correctement
+  sur les différentes tailles d'écran
+* Mise à jour des librairies
+
 ### 1.1.0-beta-1
 
 Nouvelles Fonctionnalités:

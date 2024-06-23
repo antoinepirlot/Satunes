@@ -117,9 +117,9 @@ internal fun AlbumView(
 private fun Header(modifier: Modifier = Modifier, album: Album) {
     Column(modifier = modifier.padding(vertical = 16.dp)) {
         val screenWidthDp = LocalConfiguration.current.screenWidthDp
-        val albumSize: Dp = if (screenWidthDp <= ScreenSizes.VERY_VERY_SMALL)
+        val albumSize: Dp = if (screenWidthDp < ScreenSizes.VERY_VERY_SMALL)
             100.dp
-        else if (screenWidthDp <= ScreenSizes.VERY_SMALL)
+        else if (screenWidthDp < ScreenSizes.VERY_SMALL)
             170.dp
         else 250.dp
         AlbumArtwork(

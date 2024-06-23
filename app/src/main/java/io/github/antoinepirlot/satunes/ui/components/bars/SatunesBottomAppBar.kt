@@ -85,12 +85,12 @@ internal fun SatunesBottomAppBar(
 
     val screenWidthDp = LocalConfiguration.current.screenWidthDp
     val navigationModifier: Modifier =
-        if (screenWidthDp <= ScreenSizes.VERY_VERY_SMALL) modifier.fillMaxHeight(0.11f) else modifier
+        if (screenWidthDp < ScreenSizes.VERY_VERY_SMALL) modifier.fillMaxHeight(0.11f) else modifier
     NavigationBar(
         modifier = navigationModifier,
     ) {
         val navigationItemModifier: Modifier =
-            if (screenWidthDp <= ScreenSizes.VERY_VERY_SMALL) Modifier.size(16.dp) else Modifier
+            if (screenWidthDp < ScreenSizes.VERY_VERY_SMALL) Modifier.size(16.dp) else Modifier
         menuTitleLists.forEach { menuTitle: MenuTitle ->
             NavigationBarItem(
                 modifier = navigationItemModifier,

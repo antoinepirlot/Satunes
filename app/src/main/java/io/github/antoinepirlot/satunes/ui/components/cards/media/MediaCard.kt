@@ -138,7 +138,7 @@ internal fun MediaCard(
                 }
             },
             leadingContent = {
-                val boxSize: Dp = if (screenWidthDp <= ScreenSizes.VERY_VERY_SMALL)
+                val boxSize: Dp = if (screenWidthDp < ScreenSizes.VERY_VERY_SMALL)
                     25.dp
                 else
                     55.dp

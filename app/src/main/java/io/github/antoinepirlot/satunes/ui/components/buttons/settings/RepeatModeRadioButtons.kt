@@ -74,9 +74,9 @@ internal fun RepeatModeRadioButtons(
     val screenWidthDp: Int = LocalConfiguration.current.screenWidthDp
     val radioButtonModifier: Modifier =
         if (screenWidthDp < ScreenSizes.VERY_VERY_SMALL)
-            Modifier.size(25.dp)
+            Modifier.size(15.dp)
         else if (screenWidthDp < ScreenSizes.NORMAL)
-            Modifier.size(30.dp)
+            Modifier.size(20.dp)
         else Modifier
 
     Row(
@@ -90,7 +90,8 @@ internal fun RepeatModeRadioButtons(
         NormalText(text = stringResource(id = R.string.repeat_mode))
         for (i: Int in iconsList.indices) {
             Row(
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 val context: Context = LocalContext.current
                 val onClick: () -> Unit = {

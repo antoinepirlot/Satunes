@@ -52,6 +52,7 @@ import io.github.antoinepirlot.satunes.internet.updates.UpdateAvailableStatus
 import io.github.antoinepirlot.satunes.internet.updates.UpdateCheckManager
 import io.github.antoinepirlot.satunes.navController
 import io.github.antoinepirlot.satunes.router.Destination
+import io.github.antoinepirlot.satunes.router.playbackViews
 import io.github.antoinepirlot.satunes.router.settingsDestinations
 import io.github.antoinepirlot.satunes.services.RoutesManager
 import io.github.antoinepirlot.satunes.ui.ScreenSizes
@@ -78,12 +79,12 @@ internal fun SatunesTopAppBar(
             titleContentColor = MaterialTheme.colorScheme.primary,
         ),
         navigationIcon = {
-            if (currentDestination != Destination.PLAYBACK.link) {
+            if (currentDestination !in playbackViews) {
                 return@CenterAlignedTopAppBar
             }
 
             // Here, the user is in the playback view
-            IconButton(onClick = { navController.navigate(Destination.PLAYBACK_QUEUE.link) }) {
+            IconButton(onClick = { onPlaybackQueueButtonClick() }) {
                 val playbackQueueIcon: SatunesIcons = SatunesIcons.PLAYLIST
                 Icon(
                     imageVector = playbackQueueIcon.imageVector,
@@ -111,6 +112,14 @@ internal fun SatunesTopAppBar(
         },
         scrollBehavior = scrollBehavior,
     )
+}
+
+private fun onPlaybackQueueButtonClick() {
+    when (RoutesManager.currentDestination.value) {
+        Destination.PLAYBACK.link -> navController.navigate(Destination.PLAYBACK_QUEUE.link)
+        Destination.PLAYBACK_QUEUE.link -> navController.navigate(Destination.PLAYBACK.link)
+        else -> return
+    }
 }
 
 /**

@@ -55,3 +55,7 @@ internal val settingsDestinations: List<String> = listOf(
     Destination.EXCLUSION_SETTINGS.link, Destination.PLAYLISTS_SETTINGS.link,
     Destination.PERMISSIONS_SETTINGS.link, Destination.UPDATES_SETTINGS.link,
 )
+
+internal val playbackViews: List<String> = listOf(
+    Destination.PLAYBACK.link, Destination.PLAYBACK_QUEUE.link
+)

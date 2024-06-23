@@ -259,7 +259,8 @@ internal fun Router(
 
         composable(Destination.PLAYBACK_QUEUE.link) {
             RoutesManager.currentDestination.value = it.destination.route
-            permissionView(isAudioAllowed = isAudioAllowed.value)
+            // Here, I assume audio permission is allowed and data has been loaded
+            // Also this view will never been accessible if no music is playing
             PlaybackQueueView()
         }
 

@@ -126,4 +126,10 @@ internal class Playlist(
         }
         return mediaItemList.subList(fromIndex = fromIndex, toIndex = toIndex + 1)
     }
+
+    fun addToQueue(music: Music) {
+        this.musicList.add(music)
+        this.originalMusicMediaItemMap[music] = music.mediaItem
+        this.mediaItemList.add(music.mediaItem)
+    }
 }

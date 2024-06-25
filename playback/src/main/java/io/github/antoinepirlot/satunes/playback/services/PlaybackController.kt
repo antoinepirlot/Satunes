@@ -37,6 +37,7 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
+import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.DataLoader
 import io.github.antoinepirlot.satunes.database.services.DataManager
@@ -299,6 +300,26 @@ class PlaybackController private constructor(
 
         this.isLoaded.value = true
         this.isShuffle.value = shuffleMode
+    }
+
+    fun addToQueue(mediaList: Collection<Media>) {
+        CoroutineScope(Dispatchers.Main).launch {
+            mediaList.forEach { media: Media ->
+                addToQueue(media = media)
+            }
+        }
+    }
+
+    fun addToQueue(media: Media) {
+        when (media) {
+            is Music -> {
+                this.playlist.addToQueue(music = media)
+                this.mediaController.addMediaItem(media.mediaItem)
+            }
+
+            else -> addToQueue(mediaList = media.musicMediaItemSortedMap.keys)
+        }
+
     }
 
     /**

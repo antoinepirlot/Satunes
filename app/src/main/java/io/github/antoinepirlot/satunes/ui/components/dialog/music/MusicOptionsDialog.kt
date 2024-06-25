@@ -34,6 +34,7 @@ import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.dialog.music.options.AddToPlaylistOption
+import io.github.antoinepirlot.satunes.ui.components.dialog.music.options.AddToQueueDialogOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.music.options.NavigateToMediaMusicOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.music.options.RemoveFromPlaylistMusicOption
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
@@ -74,7 +75,7 @@ internal fun MusicOptionsDialog(
                     )
                 }
 
-
+                AddToQueueDialogOption(media = music)
 
                 NavigateToMediaMusicOption(media = music.album)
                 NavigateToMediaMusicOption(media = music.artist)

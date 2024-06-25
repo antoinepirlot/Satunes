@@ -23,7 +23,7 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.dialog.music.options
+package io.github.antoinepirlot.satunes.ui.components.dialog.media.options
 
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable

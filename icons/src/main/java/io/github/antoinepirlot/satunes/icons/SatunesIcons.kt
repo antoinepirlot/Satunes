@@ -44,6 +44,7 @@ import androidx.compose.material.icons.rounded.PauseCircle
 import androidx.compose.material.icons.rounded.PlayCircle
 import androidx.compose.material.icons.rounded.PlaylistAddCircle
 import androidx.compose.material.icons.rounded.PlaylistRemove
+import androidx.compose.material.icons.rounded.QueuePlayNext
 import androidx.compose.material.icons.rounded.Repeat
 import androidx.compose.material.icons.rounded.RepeatOne
 import androidx.compose.material.icons.rounded.Settings
@@ -77,6 +78,7 @@ enum class SatunesIcons(val imageVector: ImageVector, val description: String) {
         description = "Permission Not Granted Icon"
     ),
     PLAY(imageVector = Icons.Rounded.PlayCircle, description = "Play Icon"),
+    PLAY_NEXT(imageVector = Icons.Rounded.QueuePlayNext, description = "Play Next Icon"),
     PLAYLIST(imageVector = Icons.AutoMirrored.Rounded.QueueMusic, description = "Playlist Icon"),
     PLAYLIST_ADD(
         imageVector = Icons.AutoMirrored.Rounded.PlaylistAdd,
@@ -91,5 +93,5 @@ enum class SatunesIcons(val imageVector: ImageVector, val description: String) {
     SETTINGS(imageVector = Icons.Rounded.Settings, description = "Settings Icon"),
     SHUFFLE(imageVector = Icons.Rounded.Shuffle, description = "Shuffle Icon"),
     SKIP_NEXT(imageVector = Icons.Rounded.SkipNext, description = "Skip Next Icon"),
-    SKIP_PREVIOUS(imageVector = Icons.Rounded.SkipPrevious, description = "Skip Previous Icon"),
+    SKIP_PREVIOUS(imageVector = Icons.Rounded.SkipPrevious, description = "Skip Previous Icon"), ;
 }

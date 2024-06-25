@@ -315,11 +315,31 @@ class PlaybackController private constructor(
             is Music -> {
                 this.playlist.addToQueue(music = media)
                 this.mediaController.addMediaItem(media.mediaItem)
+                hasNext.value = true
             }
 
             else -> addToQueue(mediaList = media.musicMediaItemSortedMap.keys)
         }
+    }
 
+    fun addNext(mediaList: Collection<Media>) {
+        CoroutineScope(Dispatchers.Main).launch {
+            mediaList.forEach { media: Media ->
+                addNext(media = media)
+            }
+        }
+    }
+
+    fun addNext(media: Media) {
+        when (media) {
+            is Music -> {
+                this.playlist.addNext(index = this.musicPlayingIndex + 1, music = media)
+                this.mediaController.addMediaItem(this.musicPlayingIndex + 1, media.mediaItem)
+                hasNext.value = true
+            }
+
+            else -> addNext(mediaList = media.musicMediaItemSortedMap.keys)
+        }
     }
 
     /**

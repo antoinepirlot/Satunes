@@ -132,4 +132,10 @@ internal class Playlist(
         this.originalMusicMediaItemMap[music] = music.mediaItem
         this.mediaItemList.add(music.mediaItem)
     }
+
+    fun addNext(index: Int, music: Music) {
+        this.originalMusicMediaItemMap[music] = music.mediaItem
+        this.musicList.add(index = index, element = music)
+        this.mediaItemList.add(index = index, element = music.mediaItem)
+    }
 }

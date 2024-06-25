@@ -44,7 +44,8 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.options.DialogOption
 @Composable
 internal fun AddToQueueDialogOption(
     modifier: Modifier = Modifier,
-    media: Media
+    media: Media,
+    onFinished: () -> Unit,
 ) {
     DialogOption(
         modifier = modifier,
@@ -62,5 +63,5 @@ internal fun AddToQueueDialogOption(
 @Preview
 @Composable
 private fun AddToQueueDialogOptionPreview() {
-    AddToQueueDialogOption(media = Album(title = "Album"))
+    AddToQueueDialogOption(media = Album(title = "Album"), onFinished = {})
 }

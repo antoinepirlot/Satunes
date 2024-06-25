@@ -76,8 +76,8 @@ internal fun MusicOptionsDialog(
                     )
                 }
 
-                PlayNextMediaOption(media = music)
-                AddToQueueDialogOption(media = music)
+                PlayNextMediaOption(media = music, onFinished = onDismissRequest)
+                AddToQueueDialogOption(media = music, onFinished = onDismissRequest)
 
                 NavigateToMediaMusicOption(media = music.album)
                 NavigateToMediaMusicOption(media = music.artist)

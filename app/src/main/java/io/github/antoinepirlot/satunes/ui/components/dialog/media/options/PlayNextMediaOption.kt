@@ -45,11 +45,13 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.options.DialogOption
 fun PlayNextMediaOption(
     modifier: Modifier = Modifier,
     media: Media,
+    onFinished: () -> Unit,
 ) {
     DialogOption(
         modifier = modifier,
         onClick = {
             PlaybackController.getInstance().addNext(media = media)
+            onFinished()
         },
         icon = {
             val icon: SatunesIcons = SatunesIcons.PLAY_NEXT
@@ -62,5 +64,5 @@ fun PlayNextMediaOption(
 @Preview
 @Composable
 private fun PlayNextMediaOptionPreview() {
-    PlayNextMediaOption(media = Album(title = "Album Title"))
+    PlayNextMediaOption(media = Album(title = "Album Title"), onFinished = {})
 }

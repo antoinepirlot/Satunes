@@ -51,6 +51,7 @@ internal fun AddToQueueDialogOption(
         modifier = modifier,
         onClick = {
             PlaybackController.getInstance().addToQueue(media = media)
+            onFinished()
         },
         icon = {
             val icon: SatunesIcons = SatunesIcons.ADD_TO_PLAYBACK_QUEUE

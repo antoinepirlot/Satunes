@@ -27,6 +27,7 @@ package io.github.antoinepirlot.satunes.playback.models
 
 import androidx.media3.common.MediaItem
 import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.playback.exceptions.AlreadyInPlaybackException
 import java.util.SortedMap
 
 /**
@@ -128,14 +129,33 @@ internal class Playlist(
     }
 
     fun addToQueue(music: Music) {
-        this.musicList.add(music)
+        if (this.originalMusicMediaItemMap[music] != null) {
+            throw AlreadyInPlaybackException()
+        }
         this.originalMusicMediaItemMap[music] = music.mediaItem
+        this.musicList.add(music)
         this.mediaItemList.add(music.mediaItem)
     }
 
     fun addNext(index: Int, music: Music) {
+        if (this.originalMusicMediaItemMap[music] != null) {
+            throw AlreadyInPlaybackException()
+        }
         this.originalMusicMediaItemMap[music] = music.mediaItem
         this.musicList.add(index = index, element = music)
         this.mediaItemList.add(index = index, element = music.mediaItem)
     }
+
+    /**
+     * Move music to next to the current music
+     *
+     * @param music the music to move
+     */
+    fun moveMusic(music: Music, oldIndex: Int, newIndex: Int) {
+        this.musicList.removeAt(oldIndex)
+        this.musicList.add(index = newIndex, element = music)
+        this.mediaItemList.removeAt(oldIndex)
+        this.mediaItemList.add(index = newIndex, element = music.mediaItem)
+    }
+
 }

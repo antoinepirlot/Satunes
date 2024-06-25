@@ -42,6 +42,7 @@ import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.DataLoader
 import io.github.antoinepirlot.satunes.database.services.DataManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
+import io.github.antoinepirlot.satunes.playback.exceptions.AlreadyInPlaybackException
 import io.github.antoinepirlot.satunes.playback.models.Playlist
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -313,8 +314,12 @@ class PlaybackController private constructor(
     fun addToQueue(media: Media) {
         when (media) {
             is Music -> {
-                this.playlist.addToQueue(music = media)
-                this.mediaController.addMediaItem(media.mediaItem)
+                try {
+                    this.playlist.addToQueue(music = media)
+                    this.mediaController.addMediaItem(media.mediaItem)
+                } catch (e: AlreadyInPlaybackException) {
+                    return
+                }
                 hasNext.value = true
             }
 
@@ -333,12 +338,34 @@ class PlaybackController private constructor(
     fun addNext(media: Media) {
         when (media) {
             is Music -> {
-                this.playlist.addNext(index = this.musicPlayingIndex + 1, music = media)
-                this.mediaController.addMediaItem(this.musicPlayingIndex + 1, media.mediaItem)
+                try {
+                    this.playlist.addNext(index = this.musicPlayingIndex + 1, music = media)
+                    this.mediaController.addMediaItem(this.musicPlayingIndex + 1, media.mediaItem)
+                } catch (e: AlreadyInPlaybackException) {
+                    this.moveMusic(music = media, newIndex = this.musicPlayingIndex + 1)
+                }
                 hasNext.value = true
             }
 
             else -> addNext(mediaList = media.musicMediaItemSortedMap.keys)
+        }
+    }
+
+    fun moveMusic(music: Music, newIndex: Int) {
+        val oldIndex: Int = this.playlist.getMusicIndex(music = music)
+        if (oldIndex == -1) {
+            throw IllegalArgumentException("This music is not inside the playlist")
+        }
+
+        if (oldIndex < this.musicPlayingIndex) {
+            this.playlist.moveMusic(music = music, oldIndex = oldIndex, newIndex = newIndex - 1)
+            this.mediaController.moveMediaItem(oldIndex, newIndex)
+        } else {
+            this.playlist.moveMusic(music = music, oldIndex = oldIndex, newIndex = newIndex - 1)
+            this.mediaController.moveMediaItem(oldIndex, newIndex)
+        }
+        if (oldIndex < this.musicPlayingIndex) {
+            this.musicPlayingIndex -= 1
         }
     }
 

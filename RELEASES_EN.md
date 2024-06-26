@@ -3,6 +3,13 @@ Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
 ## 1.1 (Android 5.1.1 Lollipop and later)
 
+### 1.1.1
+
+Improvements, Optimizations and Troubleshooting:
+
+* When playing the next music when it is already the last one after shuffling.
+* Playlists load faster at starting
+
 ### 1.1.0
 
 Improvements, Optimizations and Troubleshooting:

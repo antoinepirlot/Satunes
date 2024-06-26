@@ -32,6 +32,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.core.content.ContextCompat
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
@@ -531,7 +532,7 @@ class PlaybackController private constructor(
         }
     }
 
-    fun getPlaylist(): List<Music> {
+    fun getPlaylist(): SnapshotStateList<Music> {
         return this.playlist.musicList
     }
 }

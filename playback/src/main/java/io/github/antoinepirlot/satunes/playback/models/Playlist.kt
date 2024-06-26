@@ -25,6 +25,9 @@
 
 package io.github.antoinepirlot.satunes.playback.models
 
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.runtime.toMutableStateList
 import androidx.media3.common.MediaItem
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.playback.exceptions.AlreadyInPlaybackException
@@ -38,12 +41,12 @@ internal class Playlist(
     musicMediaItemSortedMap: SortedMap<Music, MediaItem>,
 ) {
     private val originalMusicMediaItemMap: SortedMap<Music, MediaItem>
-    var musicList: MutableList<Music>
+    var musicList: SnapshotStateList<Music>
     var mediaItemList: MutableList<MediaItem>
 
 
     init {
-        this.musicList = musicMediaItemSortedMap.keys.toMutableList()
+        this.musicList = musicMediaItemSortedMap.keys.toMutableStateList()
         this.mediaItemList = musicMediaItemSortedMap.values.toMutableList()
         this.originalMusicMediaItemMap = musicMediaItemSortedMap.toSortedMap()
     }
@@ -62,12 +65,13 @@ internal class Playlist(
         }
 
         if (musicMoving != null) {
+            // Not cleared as the list is only shown in playback queue view
             val oldMusicList: MutableList<Music> = this.musicList
-            this.musicList = mutableListOf()
+            this.musicList = mutableStateListOf()
             this.musicList.add(musicMoving)
             this.musicList.addAll(oldMusicList.shuffled())
         } else {
-            this.musicList = this.musicList.shuffled().toMutableList()
+            this.musicList = this.musicList.shuffled().toMutableStateList()
         }
         this.mediaItemList = mutableListOf()
         this.musicList.forEach { music: Music ->
@@ -79,7 +83,7 @@ internal class Playlist(
      * Undo shuffle, set to the original playlist
      */
     fun undoShuffle() {
-        this.musicList = this.originalMusicMediaItemMap.keys.toMutableList()
+        this.musicList = this.originalMusicMediaItemMap.keys.toMutableStateList()
         this.mediaItemList = this.originalMusicMediaItemMap.values.toMutableList()
     }
 

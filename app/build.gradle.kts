@@ -18,8 +18,8 @@ android {
         applicationId = nameSpace
         minSdk = 22
         targetSdk = 34
-        versionCode = 32
-        versionName = "1.1.0"
+        versionCode = 33
+        versionName = "1.1.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -35,6 +35,15 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+        }
+
+        create("releaseTest") {
+            initWith(getByName("release"))
+            isMinifyEnabled = true
+            isShrinkResources = true
+            applicationIdSuffix = ".test"
+            versionNameSuffix = nameSpace
+            resValue(type = "string", name = "app_name", value = "${rootProject.name} (test)")
         }
 
         debug {

@@ -410,11 +410,11 @@ class PlaybackController private constructor(
         )
 
         val fromIndex: Int = DEFAULT_MUSIC_PLAYING_INDEX + 1
-        val toIndex: Int = this.playlist.musicCount() - 1
+        val toIndex: Int = this.playlist.lastIndex()
 
         this.mediaController.replaceMediaItems(
             fromIndex,
-            toIndex,
+            toIndex + 1, // +1 as it is a toIndex excluded
             this.playlist.getMediaItems(fromIndex = fromIndex, toIndex = toIndex)
         )
 

@@ -45,7 +45,11 @@ internal fun PlaybackQueueView(
 ) {
     val playbackPlaylist: List<Music> = remember { PlaybackController.getInstance().getPlaylist() }
 
-    MediaCardList(mediaList = playbackPlaylist, openMedia = { media: Media -> openMedia(media) })
+    MediaCardList(
+        modifier = modifier,
+        mediaList = playbackPlaylist,
+        openMedia = { media: Media -> openMedia(media) }
+    )
 }
 
 @Preview

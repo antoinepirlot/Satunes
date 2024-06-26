@@ -23,37 +23,49 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.views.playback
+package io.github.antoinepirlot.satunes.ui.components.dialog.music.options
 
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import io.github.antoinepirlot.satunes.database.models.Album
+import io.github.antoinepirlot.satunes.database.models.Artist
+import io.github.antoinepirlot.satunes.database.models.Folder
+import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.Media
-import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.playback.services.PlaybackController
+import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.router.utils.openMedia
-import io.github.antoinepirlot.satunes.ui.components.cards.media.MediaCardList
+import io.github.antoinepirlot.satunes.ui.components.dialog.options.DialogOption
 
 /**
- * @author Antoine Pirlot on 23/06/2024
+ * @author Antoine Pirlot on 01/06/2024
  */
 
 @Composable
-internal fun PlaybackQueueView(
+internal fun NavigateToMediaMusicOption(
     modifier: Modifier = Modifier,
+    media: Media,
 ) {
-    val playbackPlaylist: List<Music> = remember { PlaybackController.getInstance().getPlaylist() }
-
-    MediaCardList(
+    DialogOption(
         modifier = modifier,
-        mediaList = playbackPlaylist,
-        openMedia = { media: Media -> openMedia(media) }
+        onClick = { openMedia(media = media) },
+        icon = {
+            val icon: SatunesIcons = when (media) {
+                is Album -> SatunesIcons.ALBUM
+                is Artist -> SatunesIcons.ARTIST
+                is Genre -> SatunesIcons.GENRES
+                is Folder -> SatunesIcons.FOLDER
+                else -> throw IllegalArgumentException("${media.javaClass} is not allowed")
+            }
+            Icon(imageVector = icon.imageVector, contentDescription = icon.description)
+        },
+        text = media.title
     )
 }
 
 @Preview
 @Composable
-private fun PlaybackQueueViewPreview() {
-    PlaybackQueueView()
+private fun NavigateToMediaMusicOptionPreview() {
+    NavigateToMediaMusicOption(media = Album(title = "Album Title"))
 }

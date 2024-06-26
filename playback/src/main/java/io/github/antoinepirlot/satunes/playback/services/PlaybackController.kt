@@ -32,15 +32,18 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.core.content.ContextCompat
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
+import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.DataLoader
 import io.github.antoinepirlot.satunes.database.services.DataManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
+import io.github.antoinepirlot.satunes.playback.exceptions.AlreadyInPlaybackException
 import io.github.antoinepirlot.satunes.playback.models.Playlist
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -301,6 +304,74 @@ class PlaybackController private constructor(
         this.isShuffle.value = shuffleMode
     }
 
+    fun addToQueue(mediaList: Collection<Media>) {
+        CoroutineScope(Dispatchers.Main).launch {
+            mediaList.forEach { media: Media ->
+                addToQueue(media = media)
+            }
+        }
+    }
+
+    fun addToQueue(media: Media) {
+        when (media) {
+            is Music -> {
+                try {
+                    this.playlist.addToQueue(music = media)
+                    this.mediaController.addMediaItem(media.mediaItem)
+                } catch (e: AlreadyInPlaybackException) {
+                    return
+                }
+                hasNext.value = true
+            }
+
+            else -> addToQueue(mediaList = media.musicMediaItemSortedMap.keys)
+        }
+    }
+
+    private fun addNext(mediaList: Collection<Media>) {
+        CoroutineScope(Dispatchers.Main).launch {
+            mediaList.forEach { media: Media ->
+                addNext(media = media)
+            }
+        }
+    }
+
+    fun addNext(media: Media) {
+        when (media) {
+            is Music -> {
+                try {
+                    this.playlist.addNext(index = this.musicPlayingIndex + 1, music = media)
+                    this.mediaController.addMediaItem(this.musicPlayingIndex + 1, media.mediaItem)
+                } catch (e: AlreadyInPlaybackException) {
+                    this.moveMusic(music = media, newIndex = this.musicPlayingIndex + 1)
+                }
+                hasNext.value = true
+            }
+
+            else -> addNext(mediaList = media.musicMediaItemSortedMap.keys)
+        }
+    }
+
+    private fun moveMusic(music: Music, newIndex: Int) {
+        val musicToMoveIndex: Int = this.playlist.getMusicIndex(music = music)
+        if (musicToMoveIndex == -1) {
+            throw IllegalArgumentException("This music is not inside the playlist")
+        }
+
+        if (musicToMoveIndex < this.musicPlayingIndex) {
+            this.playlist.moveMusic(
+                music = music,
+                oldIndex = musicToMoveIndex,
+                newIndex = newIndex - 1
+            )
+            this.mediaController.moveMediaItem(musicToMoveIndex, newIndex)
+            this.musicPlayingIndex -= 1
+        } else {
+            this.playlist.moveMusic(music = music, oldIndex = musicToMoveIndex, newIndex = newIndex)
+            this.mediaController.moveMediaItem(musicToMoveIndex, newIndex)
+        }
+    }
+
     /**
      * Switch the shuffle mode.
      * If there's more than one music in the playlist, then:
@@ -463,7 +534,7 @@ class PlaybackController private constructor(
         }
     }
 
-    fun getPlaylist(): List<Music> {
+    fun getPlaylist(): SnapshotStateList<Music> {
         return this.playlist.musicList
     }
 }

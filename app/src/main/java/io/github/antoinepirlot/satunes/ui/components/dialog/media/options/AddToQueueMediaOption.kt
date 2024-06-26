@@ -23,42 +23,46 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.dialog.playlist
+package io.github.antoinepirlot.satunes.ui.components.dialog.media.options
 
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import io.github.antoinepirlot.satunes.MainActivity
+import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
+import io.github.antoinepirlot.satunes.database.models.Album
+import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.ui.components.dialog.DialogOption
+import io.github.antoinepirlot.satunes.playback.services.PlaybackController
+import io.github.antoinepirlot.satunes.ui.components.dialog.options.DialogOption
 
 /**
- * @author Antoine Pirlot on 01/06/2024
+ * @author Antoine Pirlot on 25/06/2024
  */
 
 @Composable
-internal fun ExportPlaylistOption(
+internal fun AddToQueueDialogOption(
     modifier: Modifier = Modifier,
-    playlistToExport: PlaylistWithMusics
+    media: Media,
+    onFinished: () -> Unit,
 ) {
     DialogOption(
         modifier = modifier,
         onClick = {
-            MainActivity.playlistsToExport = arrayOf(playlistToExport)
-            MainActivity.instance.createFileToExportPlaylists(
-                defaultFileName = playlistToExport.playlist.title + ".json"
-            )
+            PlaybackController.getInstance().addToQueue(media = media)
+            onFinished()
         },
         icon = {
-            val exportIcon: SatunesIcons = SatunesIcons.EXPORT
-            Icon(
-                imageVector = exportIcon.imageVector,
-                contentDescription = exportIcon.description
-            )
+            val icon: SatunesIcons = SatunesIcons.ADD_TO_PLAYBACK_QUEUE
+            Icon(imageVector = icon.imageVector, contentDescription = icon.description)
         },
-        text = stringResource(id = R.string.export) + " (Beta)"
+        text = stringResource(id = R.string.add_to_queue)
     )
+}
+
+@Preview
+@Composable
+private fun AddToQueueDialogOptionPreview() {
+    AddToQueueDialogOption(media = Album(title = "Album"), onFinished = {})
 }

@@ -23,49 +23,42 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.dialog.music
+package io.github.antoinepirlot.satunes.ui.components.dialog.playlist.options
 
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import io.github.antoinepirlot.satunes.database.models.Album
-import io.github.antoinepirlot.satunes.database.models.Artist
-import io.github.antoinepirlot.satunes.database.models.Folder
-import io.github.antoinepirlot.satunes.database.models.Genre
-import io.github.antoinepirlot.satunes.database.models.Media
+import androidx.compose.ui.res.stringResource
+import io.github.antoinepirlot.satunes.MainActivity
+import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.router.utils.openMedia
-import io.github.antoinepirlot.satunes.ui.components.dialog.DialogOption
+import io.github.antoinepirlot.satunes.ui.components.dialog.options.DialogOption
 
 /**
  * @author Antoine Pirlot on 01/06/2024
  */
 
 @Composable
-internal fun NavigateToMediaMusicOption(
+internal fun ExportPlaylistOption(
     modifier: Modifier = Modifier,
-    media: Media,
+    playlistToExport: PlaylistWithMusics
 ) {
     DialogOption(
         modifier = modifier,
-        onClick = { openMedia(media = media) },
-        icon = {
-            val icon: SatunesIcons = when (media) {
-                is Album -> SatunesIcons.ALBUM
-                is Artist -> SatunesIcons.ARTIST
-                is Genre -> SatunesIcons.GENRES
-                is Folder -> SatunesIcons.FOLDER
-                else -> throw IllegalArgumentException("${media.javaClass} is not allowed")
-            }
-            Icon(imageVector = icon.imageVector, contentDescription = icon.description)
+        onClick = {
+            MainActivity.playlistsToExport = arrayOf(playlistToExport)
+            MainActivity.instance.createFileToExportPlaylists(
+                defaultFileName = playlistToExport.playlist.title + ".json"
+            )
         },
-        text = media.title
+        icon = {
+            val exportIcon: SatunesIcons = SatunesIcons.EXPORT
+            Icon(
+                imageVector = exportIcon.imageVector,
+                contentDescription = exportIcon.description
+            )
+        },
+        text = stringResource(id = R.string.export) + " (Beta)"
     )
-}
-
-@Preview
-@Composable
-private fun NavigateToMediaMusicOptionPreview() {
-    NavigateToMediaMusicOption(media = Album(title = "Album Title"))
 }

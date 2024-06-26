@@ -34,6 +34,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
 import io.github.antoinepirlot.satunes.database.models.tables.Playlist
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import io.github.antoinepirlot.satunes.ui.components.dialog.playlist.options.ExportPlaylistOption
+import io.github.antoinepirlot.satunes.ui.components.dialog.playlist.options.RemovePlaylistOption
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 
 /**

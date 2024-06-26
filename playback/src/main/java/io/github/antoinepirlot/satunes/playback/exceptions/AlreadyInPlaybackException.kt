@@ -23,37 +23,9 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.views.playback
-
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import io.github.antoinepirlot.satunes.database.models.Media
-import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.playback.services.PlaybackController
-import io.github.antoinepirlot.satunes.router.utils.openMedia
-import io.github.antoinepirlot.satunes.ui.components.cards.media.MediaCardList
+package io.github.antoinepirlot.satunes.playback.exceptions
 
 /**
- * @author Antoine Pirlot on 23/06/2024
+ * @author Antoine Pirlot on 25/06/2024
  */
-
-@Composable
-internal fun PlaybackQueueView(
-    modifier: Modifier = Modifier,
-) {
-    val playbackPlaylist: List<Music> = remember { PlaybackController.getInstance().getPlaylist() }
-
-    MediaCardList(
-        modifier = modifier,
-        mediaList = playbackPlaylist,
-        openMedia = { media: Media -> openMedia(media) }
-    )
-}
-
-@Preview
-@Composable
-private fun PlaybackQueueViewPreview() {
-    PlaybackQueueView()
-}
+class AlreadyInPlaybackException : Exception()

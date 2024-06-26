@@ -23,46 +23,46 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.dialog.playlist
+package io.github.antoinepirlot.satunes.ui.components.dialog.media.options
 
-import android.content.Context
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
-import io.github.antoinepirlot.satunes.database.services.DatabaseManager
+import io.github.antoinepirlot.satunes.database.models.Album
+import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.ui.components.dialog.DialogOption
+import io.github.antoinepirlot.satunes.playback.services.PlaybackController
+import io.github.antoinepirlot.satunes.ui.components.dialog.options.DialogOption
 
 /**
- * @author Antoine Pirlot on 01/06/2024
+ * @author Antoine Pirlot on 25/06/2024
  */
 
 @Composable
-internal fun RemovePlaylistOption(
+fun PlayNextMediaOption(
     modifier: Modifier = Modifier,
-    playlistToRemove: PlaylistWithMusics,
+    media: Media,
     onFinished: () -> Unit,
 ) {
-    val context: Context = LocalContext.current
-
     DialogOption(
         modifier = modifier,
         onClick = {
-            val db = DatabaseManager(context = context)
-            db.removePlaylist(playlistToRemove = playlistToRemove)
+            PlaybackController.getInstance().addNext(media = media)
             onFinished()
         },
         icon = {
-            val playlistRemoveIcon: SatunesIcons = SatunesIcons.PLAYLIST_REMOVE
-            Icon(
-                imageVector = playlistRemoveIcon.imageVector,
-                contentDescription = playlistRemoveIcon.description
-            )
+            val icon: SatunesIcons = SatunesIcons.PLAY_NEXT
+            Icon(imageVector = icon.imageVector, contentDescription = icon.description)
         },
-        text = stringResource(id = R.string.remove_playlist)
+        text = stringResource(id = R.string.play_next)
     )
+}
+
+@Preview
+@Composable
+private fun PlayNextMediaOptionPreview() {
+    PlayNextMediaOption(media = Album(title = "Album Title"), onFinished = {})
 }

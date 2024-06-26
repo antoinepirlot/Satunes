@@ -75,19 +75,19 @@ internal fun MediaListView(
         },
         floatingActionButtonPosition = FabPosition.End
     ) { innerPadding ->
-        Column(
-            modifier = Modifier.padding(innerPadding)
-        ) {
-            if (mediaList.isNotEmpty()) {
-                MediaCardList(
-                    mediaList = mediaList,
-                    header = header,
-                    openMedia = openMedia,
-                    openedPlaylistWithMusics = openedPlaylistWithMusics
-                )
-            } else {
-                EmptyView(text = emptyViewText)
-            }
+        if (mediaList.isNotEmpty()) {
+            MediaCardList(
+                modifier = Modifier.padding(innerPadding),
+                mediaList = mediaList,
+                header = header,
+                openMedia = openMedia,
+                openedPlaylistWithMusics = openedPlaylistWithMusics
+            )
+        } else {
+            EmptyView(
+                modifier = Modifier.padding(innerPadding),
+                text = emptyViewText
+            )
         }
     }
 }

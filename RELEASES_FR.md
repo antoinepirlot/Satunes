@@ -3,6 +3,14 @@ You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
 ## 1.1 (Android 5.1.1 Lollipop et ultérieur)
 
+### 1.1.1
+
+Améliorations, Optimisations et Résolutions de problèmes:
+
+* La lecture de la musique suivante lorsque il s'agit de la dernière musique (après activation du
+  mode aléatoire) ne fait plus crasher l'application
+* Le chargement des playlists est plus rapide au démarrage de l'application
+
 ### 1.1.0
 
 Améliorations, Optimisations et Résolutions de problèmes:

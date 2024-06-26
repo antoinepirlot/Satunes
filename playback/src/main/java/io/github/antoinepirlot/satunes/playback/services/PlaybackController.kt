@@ -328,7 +328,7 @@ class PlaybackController private constructor(
         }
     }
 
-    fun addNext(mediaList: Collection<Media>) {
+    private fun addNext(mediaList: Collection<Media>) {
         CoroutineScope(Dispatchers.Main).launch {
             mediaList.forEach { media: Media ->
                 addNext(media = media)
@@ -352,21 +352,23 @@ class PlaybackController private constructor(
         }
     }
 
-    fun moveMusic(music: Music, newIndex: Int) {
-        val oldIndex: Int = this.playlist.getMusicIndex(music = music)
-        if (oldIndex == -1) {
+    private fun moveMusic(music: Music, newIndex: Int) {
+        val musicToMoveIndex: Int = this.playlist.getMusicIndex(music = music)
+        if (musicToMoveIndex == -1) {
             throw IllegalArgumentException("This music is not inside the playlist")
         }
 
-        if (oldIndex < this.musicPlayingIndex) {
-            this.playlist.moveMusic(music = music, oldIndex = oldIndex, newIndex = newIndex - 1)
-            this.mediaController.moveMediaItem(oldIndex, newIndex)
-        } else {
-            this.playlist.moveMusic(music = music, oldIndex = oldIndex, newIndex = newIndex - 1)
-            this.mediaController.moveMediaItem(oldIndex, newIndex)
-        }
-        if (oldIndex < this.musicPlayingIndex) {
+        if (musicToMoveIndex < this.musicPlayingIndex) {
+            this.playlist.moveMusic(
+                music = music,
+                oldIndex = musicToMoveIndex,
+                newIndex = newIndex - 1
+            )
+            this.mediaController.moveMediaItem(musicToMoveIndex, newIndex)
             this.musicPlayingIndex -= 1
+        } else {
+            this.playlist.moveMusic(music = music, oldIndex = musicToMoveIndex, newIndex = newIndex)
+            this.mediaController.moveMediaItem(musicToMoveIndex, newIndex)
         }
     }
 

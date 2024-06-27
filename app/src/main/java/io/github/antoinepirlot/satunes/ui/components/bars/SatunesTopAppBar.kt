@@ -101,9 +101,14 @@ internal fun SatunesTopAppBar(
             )
         },
         actions = {
-            IconButton(
-                onClick = { onSettingButtonClick() }
-            ) {
+            // Search Button
+            IconButton(onClick = { navController.navigate(Destination.SEARCH.link) }) {
+                val icon: SatunesIcons = SatunesIcons.SEARCH
+                Icon(imageVector = icon.imageVector, contentDescription = icon.description)
+            }
+
+            //Setting Button
+            IconButton(onClick = { onSettingButtonClick() }) {
                 val settingsIcon: SatunesIcons = SatunesIcons.SETTINGS
                 Icon(
                     imageVector = settingsIcon.imageVector,

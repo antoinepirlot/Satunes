@@ -23,7 +23,7 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.views.playback.mobile
+package io.github.antoinepirlot.satunes.ui.views.playback.common
 
 import android.annotation.SuppressLint
 import android.content.res.Configuration
@@ -33,12 +33,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
@@ -55,7 +57,7 @@ import io.github.antoinepirlot.satunes.ui.components.texts.Subtitle
  */
 
 @Composable
-internal fun PlayBackMobileView(
+internal fun MusicPlayingControlView(
     modifier: Modifier = Modifier,
     onAlbumClick: (album: Album?) -> Unit,
     onArtistClick: (artist: Artist) -> Unit,
@@ -64,7 +66,9 @@ internal fun PlayBackMobileView(
 
     //TODO use tablet mode if it is in portrait mode in future releases
     Column(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier
+            .fillMaxSize()
+            .padding(16.dp),
     ) {
         val screenHeightDp: Int = LocalConfiguration.current.screenHeightDp
         if (!(LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE && screenHeightDp < 480)) {
@@ -102,6 +106,6 @@ internal fun PlayBackMobileView(
 @SuppressLint("UnrememberedMutableState")
 @Composable
 @Preview
-private fun PlayBackMobileViewPreview() {
-    PlayBackMobileView(onAlbumClick = {}, onArtistClick = {})
+private fun MusicPlayingControlViewPreview() {
+    MusicPlayingControlView(onAlbumClick = {}, onArtistClick = {})
 }

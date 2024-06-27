@@ -27,7 +27,6 @@ package io.github.antoinepirlot.satunes.router
 
 import android.content.Context
 import android.net.Uri.decode
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
@@ -37,7 +36,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import io.github.antoinepirlot.satunes.MainActivity
@@ -62,8 +60,8 @@ import io.github.antoinepirlot.satunes.ui.views.folder.RootFolderView
 import io.github.antoinepirlot.satunes.ui.views.genre.AllGenresListView
 import io.github.antoinepirlot.satunes.ui.views.genre.GenreView
 import io.github.antoinepirlot.satunes.ui.views.music.AllMusicsListView
+import io.github.antoinepirlot.satunes.ui.views.playback.PlaybackView
 import io.github.antoinepirlot.satunes.ui.views.playback.common.PlaybackQueueView
-import io.github.antoinepirlot.satunes.ui.views.playback.mobile.PlayBackMobileView
 import io.github.antoinepirlot.satunes.ui.views.playlist.PlaylistListView
 import io.github.antoinepirlot.satunes.ui.views.playlist.PlaylistView
 import io.github.antoinepirlot.satunes.ui.views.settings.AndroidAutoSettingsView
@@ -243,8 +241,7 @@ internal fun Router(
             if (isLoading.value || !isLoaded) {
                 LoadingView()
             } else {
-                PlayBackMobileView(
-                    modifier = Modifier.padding(16.dp),
+                PlaybackView(
                     onAlbumClick = { album: Album? ->
                         if (album != null) {
                             openMedia(media = album)

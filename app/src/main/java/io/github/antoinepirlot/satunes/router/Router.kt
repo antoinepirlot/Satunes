@@ -256,6 +256,8 @@ internal fun Router(
         }
 
         composable(Destination.SEARCH.link) {
+            RoutesManager.currentDestination.value = it.destination.route
+            permissionView(isAudioAllowed = isAudioAllowed.value)
             SearchView()
         }
 

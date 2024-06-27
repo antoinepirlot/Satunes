@@ -64,6 +64,7 @@ import io.github.antoinepirlot.satunes.ui.views.playback.PlaybackView
 import io.github.antoinepirlot.satunes.ui.views.playback.common.PlaybackQueueView
 import io.github.antoinepirlot.satunes.ui.views.playlist.PlaylistListView
 import io.github.antoinepirlot.satunes.ui.views.playlist.PlaylistView
+import io.github.antoinepirlot.satunes.ui.views.search.SearchView
 import io.github.antoinepirlot.satunes.ui.views.settings.AndroidAutoSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.BatterySettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.BottomNavigationBarSettingsView
@@ -252,6 +253,12 @@ internal fun Router(
                     }
                 )
             }
+        }
+
+        composable(Destination.SEARCH.link) {
+            RoutesManager.currentDestination.value = it.destination.route
+            permissionView(isAudioAllowed = isAudioAllowed.value)
+            SearchView()
         }
 
         composable(Destination.PLAYBACK_QUEUE.link) {

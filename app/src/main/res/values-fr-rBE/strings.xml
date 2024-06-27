@@ -56,4 +56,6 @@
     <string name="add_to_queue">Ajouter à la file d\'attente</string>
     <string name="play_next">Lire après</string>
     <string name="playback_queue">File d\'attente</string>
+    <string name="search_placeholder">Recherche</string>
+    <string name="no_result">Aucun résultat trouvé</string>
 </resources>

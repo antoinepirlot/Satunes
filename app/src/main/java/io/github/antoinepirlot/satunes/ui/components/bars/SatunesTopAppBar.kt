@@ -101,9 +101,16 @@ internal fun SatunesTopAppBar(
             )
         },
         actions = {
-            IconButton(
-                onClick = { onSettingButtonClick() }
-            ) {
+            if (currentDestination !in settingsDestinations) {
+                // Search Button
+                IconButton(onClick = { onSearchButtonClick() }) {
+                    val icon: SatunesIcons = SatunesIcons.SEARCH
+                    Icon(imageVector = icon.imageVector, contentDescription = icon.description)
+                }
+            }
+
+            //Setting Button
+            IconButton(onClick = { onSettingButtonClick() }) {
                 val settingsIcon: SatunesIcons = SatunesIcons.SETTINGS
                 Icon(
                     imageVector = settingsIcon.imageVector,
@@ -113,6 +120,13 @@ internal fun SatunesTopAppBar(
         },
         scrollBehavior = scrollBehavior,
     )
+}
+
+private fun onSearchButtonClick() {
+    when (RoutesManager.currentDestination.value) {
+        Destination.SEARCH.link -> navController.popBackStack()
+        else -> navController.navigate(Destination.SEARCH.link)
+    }
 }
 
 private fun onPlaybackQueueButtonClick() {

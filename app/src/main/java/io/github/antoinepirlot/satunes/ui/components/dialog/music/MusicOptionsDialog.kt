@@ -29,10 +29,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToQueueDialogOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.PlayNextMediaOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.music.options.AddToPlaylistOption
@@ -76,8 +79,12 @@ internal fun MusicOptionsDialog(
                     )
                 }
 
-                PlayNextMediaOption(media = music, onFinished = onDismissRequest)
-                AddToQueueDialogOption(media = music, onFinished = onDismissRequest)
+                val isPlaybackLoaded: Boolean by rememberSaveable { PlaybackController.getInstance().isLoaded }
+
+                if (isPlaybackLoaded) {
+                    PlayNextMediaOption(media = music, onFinished = onDismissRequest)
+                    AddToQueueDialogOption(media = music, onFinished = onDismissRequest)
+                }
 
                 NavigateToMediaMusicOption(media = music.album)
                 NavigateToMediaMusicOption(media = music.artist)

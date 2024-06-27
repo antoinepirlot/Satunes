@@ -62,8 +62,8 @@ import io.github.antoinepirlot.satunes.ui.views.folder.RootFolderView
 import io.github.antoinepirlot.satunes.ui.views.genre.AllGenresListView
 import io.github.antoinepirlot.satunes.ui.views.genre.GenreView
 import io.github.antoinepirlot.satunes.ui.views.music.AllMusicsListView
-import io.github.antoinepirlot.satunes.ui.views.playback.PlayBackView
-import io.github.antoinepirlot.satunes.ui.views.playback.PlaybackQueueView
+import io.github.antoinepirlot.satunes.ui.views.playback.common.PlaybackQueueView
+import io.github.antoinepirlot.satunes.ui.views.playback.mobile.PlayBackMobileView
 import io.github.antoinepirlot.satunes.ui.views.playlist.PlaylistListView
 import io.github.antoinepirlot.satunes.ui.views.playlist.PlaylistView
 import io.github.antoinepirlot.satunes.ui.views.settings.AndroidAutoSettingsView
@@ -243,7 +243,7 @@ internal fun Router(
             if (isLoading.value || !isLoaded) {
                 LoadingView()
             } else {
-                PlayBackView(
+                PlayBackMobileView(
                     modifier = Modifier.padding(16.dp),
                     onAlbumClick = { album: Album? ->
                         if (album != null) {

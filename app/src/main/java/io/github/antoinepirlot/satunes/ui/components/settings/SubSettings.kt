@@ -23,40 +23,42 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.views.playback
+package io.github.antoinepirlot.satunes.ui.components.settings
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.database.models.Media
-import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.playback.services.PlaybackController
-import io.github.antoinepirlot.satunes.router.utils.openMedia
-import io.github.antoinepirlot.satunes.ui.components.cards.media.MediaCardList
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 import io.github.antoinepirlot.satunes.ui.components.texts.Title
 
 /**
- * @author Antoine Pirlot on 23/06/2024
+ * @author Antoine Pirlot on 27/05/2024
  */
 
 @Composable
-internal fun PlaybackQueueView(
+internal fun SubSettings(
     modifier: Modifier = Modifier,
+    title: String? = null,
+    content: @Composable () -> Unit,
 ) {
-    val playbackPlaylist: List<Music> = remember { PlaybackController.getInstance().getPlaylist() }
-    MediaCardList(
-        modifier = modifier,
-        header = { Title(text = stringResource(id = R.string.playback_queue)) },
-        mediaList = playbackPlaylist,
-        openMedia = { media: Media -> openMedia(media) }
-    )
+    Column(modifier = modifier) {
+        if (!title.isNullOrBlank()) {
+            Title(text = title, fontSize = 25.sp)
+        }
+        content()
+    }
+    Spacer(modifier = Modifier.size(16.dp))
 }
 
 @Preview
 @Composable
-private fun PlaybackQueueViewPreview() {
-    PlaybackQueueView()
+private fun SubSettingPreview() {
+    SubSettings(title = "Sub Setting") {
+        NormalText(text = "Content")
+    }
 }

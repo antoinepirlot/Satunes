@@ -23,45 +23,40 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.views.settings
+package io.github.antoinepirlot.satunes.ui.views.playback.common
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.ui.components.settings.AudioOffloadSetting
-import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
+import io.github.antoinepirlot.satunes.database.models.Media
+import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.playback.services.PlaybackController
+import io.github.antoinepirlot.satunes.router.utils.openMedia
+import io.github.antoinepirlot.satunes.ui.components.cards.media.MediaCardList
 import io.github.antoinepirlot.satunes.ui.components.texts.Title
 
 /**
- * @author Antoine Pirlot on 27/05/2024
+ * @author Antoine Pirlot on 23/06/2024
  */
+
 @Composable
-internal fun BatterySettingsView(
+internal fun PlaybackQueueView(
     modifier: Modifier = Modifier,
 ) {
-    val scrollState = rememberScrollState()
-
-    Column(
-        modifier = modifier
-            .verticalScroll(scrollState)
-            .padding(horizontal = 16.dp)
-    ) {
-        Title(text = stringResource(id = R.string.battery_settings))
-        SubSettings(title = stringResource(id = R.string.playback_settings)) {
-            AudioOffloadSetting()
-        }
-    }
+    val playbackPlaylist: List<Music> = remember { PlaybackController.getInstance().getPlaylist() }
+    MediaCardList(
+        modifier = modifier,
+        header = { Title(text = stringResource(id = R.string.playback_queue)) },
+        mediaList = playbackPlaylist,
+        openMedia = { media: Media -> openMedia(media) }
+    )
 }
 
 @Preview
 @Composable
-private fun BatterySettingsViewPreview() {
-    BatterySettingsView()
+private fun PlaybackQueueViewPreview() {
+    PlaybackQueueView()
 }

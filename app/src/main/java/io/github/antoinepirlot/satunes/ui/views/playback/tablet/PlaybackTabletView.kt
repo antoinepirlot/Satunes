@@ -23,45 +23,52 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.views.settings
+package io.github.antoinepirlot.satunes.ui.views.playback.tablet
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.ui.components.settings.AudioOffloadSetting
-import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
-import io.github.antoinepirlot.satunes.ui.components.texts.Title
+import io.github.antoinepirlot.satunes.database.models.Album
+import io.github.antoinepirlot.satunes.database.models.Artist
+import io.github.antoinepirlot.satunes.ui.views.playback.common.MusicPlayingControlView
+import io.github.antoinepirlot.satunes.ui.views.playback.common.PlaybackQueueView
 
 /**
- * @author Antoine Pirlot on 27/05/2024
+ * @author Antoine Pirlot on 27/06/2024
  */
-@Composable
-internal fun BatterySettingsView(
-    modifier: Modifier = Modifier,
-) {
-    val scrollState = rememberScrollState()
 
-    Column(
+@Composable
+internal fun PlaybackTabletView(
+    modifier: Modifier = Modifier,
+    onAlbumClick: (album: Album?) -> Unit,
+    onArtistClick: (artist: Artist) -> Unit,
+) {
+    Row(
         modifier = modifier
-            .verticalScroll(scrollState)
-            .padding(horizontal = 16.dp)
+            .fillMaxSize()
     ) {
-        Title(text = stringResource(id = R.string.battery_settings))
-        SubSettings(title = stringResource(id = R.string.playback_settings)) {
-            AudioOffloadSetting()
+        Box(
+            modifier = Modifier
+                .fillMaxHeight()
+                .fillMaxWidth(fraction = 0.5f)
+        ) {
+            MusicPlayingControlView(onAlbumClick = onAlbumClick, onArtistClick = onArtistClick)
+        }
+        VerticalDivider()
+        Box(modifier = Modifier.fillMaxHeight()) {
+            PlaybackQueueView()
         }
     }
 }
 
 @Preview
 @Composable
-private fun BatterySettingsViewPreview() {
-    BatterySettingsView()
+private fun PlaybackViewPreview() {
+    PlaybackTabletView(onAlbumClick = {}, onArtistClick = {})
 }

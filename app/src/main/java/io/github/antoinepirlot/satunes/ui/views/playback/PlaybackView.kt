@@ -23,42 +23,52 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.settings
+package io.github.antoinepirlot.satunes.ui.views.playback
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
-import io.github.antoinepirlot.satunes.ui.components.texts.Title
+import io.github.antoinepirlot.satunes.database.models.Album
+import io.github.antoinepirlot.satunes.database.models.Artist
+import io.github.antoinepirlot.satunes.ui.ScreenSizes
+import io.github.antoinepirlot.satunes.ui.views.playback.mobile.PlaybackMobileView
+import io.github.antoinepirlot.satunes.ui.views.playback.tablet.PlaybackTabletView
 
 /**
- * @author Antoine Pirlot on 27/05/2024
+ * @author Antoine Pirlot on 27/06/2024
  */
 
 @Composable
-internal fun SubSetting(
+fun PlaybackView(
     modifier: Modifier = Modifier,
-    title: String? = null,
-    content: @Composable () -> Unit,
+    onAlbumClick: (album: Album?) -> Unit,
+    onArtistClick: (artist: Artist) -> Unit,
 ) {
-    Column(modifier = modifier) {
-        if (!title.isNullOrBlank()) {
-            Title(text = title, fontSize = 25.sp)
-        }
-        content()
+    /**
+     * If tablet -> playbackTabletView
+     * else -> playbackMobileView
+     */
+    val screenWidthDp: Int = LocalConfiguration.current.screenWidthDp
+    if (screenWidthDp < ScreenSizes.LARGE) {
+        // Mobile
+        PlaybackMobileView(
+            modifier = modifier,
+            onAlbumClick = onAlbumClick,
+            onArtistClick = onArtistClick
+        )
+    } else {
+        // Tablet
+        PlaybackTabletView(
+            modifier = modifier,
+            onAlbumClick = onAlbumClick,
+            onArtistClick = onArtistClick
+        )
     }
-    Spacer(modifier = Modifier.size(16.dp))
 }
 
 @Preview
 @Composable
-private fun SubSettingPreview() {
-    SubSetting(title = "Sub Setting") {
-        NormalText(text = "Content")
-    }
+fun PlaybackViewPreview() {
+    PlaybackView(onAlbumClick = {}, onArtistClick = {})
 }

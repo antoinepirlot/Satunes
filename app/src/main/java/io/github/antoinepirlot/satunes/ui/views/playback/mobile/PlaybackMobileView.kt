@@ -23,18 +23,34 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui
+package io.github.antoinepirlot.satunes.ui.views.playback.mobile
+
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import io.github.antoinepirlot.satunes.database.models.Album
+import io.github.antoinepirlot.satunes.database.models.Artist
+import io.github.antoinepirlot.satunes.ui.views.playback.common.MusicPlayingControlView
 
 /**
- * @author Antoine Pirlot on 14/05/2024
+ * @author Antoine Pirlot on 27/06/2024
  */
 
-internal interface ScreenSizes {
-    // TODO Find a better way to declare sizes (width and height)
-    companion object {
-        const val VERY_VERY_SMALL = 300
-        const val VERY_SMALL = 370
-        const val NORMAL = 380
-        const val LARGE = 650
-    }
+@Composable
+fun PlaybackMobileView(
+    modifier: Modifier = Modifier,
+    onAlbumClick: (album: Album?) -> Unit,
+    onArtistClick: (artist: Artist) -> Unit,
+) {
+    MusicPlayingControlView(
+        modifier = modifier,
+        onAlbumClick = onAlbumClick,
+        onArtistClick = onArtistClick
+    )
+}
+
+@Preview
+@Composable
+private fun PlaybackMobileViewPreview() {
+    PlaybackMobileView(onAlbumClick = {}, onArtistClick = {})
 }

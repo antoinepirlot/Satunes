@@ -154,7 +154,7 @@ internal fun MediaCard(
                     val playbackController: PlaybackController = PlaybackController.getInstance()
                     if (media == playbackController.musicPlaying.value) {
                         val playingIcon: SatunesIcons = SatunesIcons.MUSIC_PLAYING
-                        Image(
+                        Icon(
                             modifier = imageModifier,
                             imageVector = playingIcon.imageVector,
                             contentDescription = playingIcon.description

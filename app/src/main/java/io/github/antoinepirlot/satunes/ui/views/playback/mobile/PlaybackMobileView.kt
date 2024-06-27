@@ -37,7 +37,7 @@ import io.github.antoinepirlot.satunes.ui.views.playback.common.MusicPlayingCont
  */
 
 @Composable
-fun PlaybackMobileView(
+internal fun PlaybackMobileView(
     modifier: Modifier = Modifier,
     onAlbumClick: (album: Album?) -> Unit,
     onArtistClick: (artist: Artist) -> Unit,

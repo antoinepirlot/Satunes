@@ -40,7 +40,7 @@ import io.github.antoinepirlot.satunes.ui.views.playback.tablet.PlaybackTabletVi
  */
 
 @Composable
-fun PlaybackView(
+internal fun PlaybackView(
     modifier: Modifier = Modifier,
     onAlbumClick: (album: Album?) -> Unit,
     onArtistClick: (artist: Artist) -> Unit,
@@ -69,6 +69,6 @@ fun PlaybackView(
 
 @Preview
 @Composable
-fun PlaybackViewPreview() {
+private fun PlaybackViewPreview() {
     PlaybackView(onAlbumClick = {}, onArtistClick = {})
 }

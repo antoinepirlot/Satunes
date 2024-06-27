@@ -45,19 +45,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.Genre
+import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.database.models.tables.Playlist
 import io.github.antoinepirlot.satunes.database.services.DataManager
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.router.utils.openMedia
+import io.github.antoinepirlot.satunes.services.search.ChipSelectionManager
 import io.github.antoinepirlot.satunes.ui.components.cards.media.MediaCardList
 import io.github.antoinepirlot.satunes.ui.components.chips.MediaChipList
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
+import io.github.antoinepirlot.satunes.ui.components.texts.Title
+import io.github.antoinepirlot.satunes.database.R as RDb
 
 /**
  * @author Antoine Pirlot on 27/06/2024
@@ -75,7 +79,14 @@ internal fun SearchView(
     val artistList: MutableList<Artist> = remember { SnapshotStateList() }
     val albumList: MutableList<Album> = remember { SnapshotStateList() }
     val genreList: MutableList<Genre> = remember { SnapshotStateList() }
-    val playlist: MutableList<Playlist> = remember { SnapshotStateList() }
+
+    fun clearAllLists() {
+        musicList.clear()
+        folderList.clear()
+        artistList.clear()
+        albumList.clear()
+        genreList.clear()
+    }
 
     LaunchedEffect(key1 = true) {
         musicList.addAll(DataManager.musicMediaItemSortedMap.keys)
@@ -89,12 +100,43 @@ internal fun SearchView(
             query = query,
             onQueryChange = {
                 query = it
-                musicList.clear()
-                musicList.addAll(
-                    DataManager.musicMediaItemSortedMap.keys.filter { music: Music ->
-                        music.title.lowercase().contains(query.lowercase())
+                clearAllLists()
+                // TODO make it more simple with each chip
+                DataManager.musicMediaItemSortedMap.keys.forEach { music: Music ->
+                    ChipSelectionManager.selectedChips.forEach { chipName: Int ->
+                        when (chipName) {
+                            RDb.string.musics -> {
+                                if (music.title.lowercase().contains(query.lowercase())) {
+                                    musicList.add(music)
+                                }
+                            }
+
+                            RDb.string.artists -> {
+                                if (music.artist.title.lowercase().contains(query.lowercase())) {
+                                    artistList.add(music.artist)
+                                }
+                            }
+
+                            RDb.string.albums -> {
+                                if (music.album.title.lowercase().contains(query.lowercase())) {
+                                    albumList.add(music.album)
+                                }
+                            }
+
+                            RDb.string.genres -> {
+                                if (music.genre.title.lowercase().contains(query.lowercase())) {
+                                    genreList.add(music.genre)
+                                }
+                            }
+
+                            RDb.string.folders -> {
+                                if (music.folder.title.lowercase().contains(query.lowercase())) {
+                                    folderList.add(music.folder)
+                                }
+                            }
+                        }
                     }
-                )
+                }
             },
             onSearch = {
                 query = it
@@ -104,24 +146,55 @@ internal fun SearchView(
             onActiveChange = { isSearchBarActive = it },
             placeholder = { NormalText(text = stringResource(id = R.string.search_placeholder)) }
         ) {
-            Content(musicList = musicList)
+            // TODO simplify
+            MediaChipList(modifier = Modifier.padding(horizontal = 16.dp))
+
+            Title(text = stringResource(id = RDb.string.musics), fontSize = 16.sp)
+            Content(mediaList = musicList)
+
+            Title(text = stringResource(id = RDb.string.folders), fontSize = 16.sp)
+            Content(mediaList = folderList)
+
+            Title(text = stringResource(id = RDb.string.artists), fontSize = 16.sp)
+            Content(mediaList = artistList)
+
+            Title(text = stringResource(id = RDb.string.albums), fontSize = 16.sp)
+            Content(mediaList = albumList)
+
+            Title(text = stringResource(id = RDb.string.genres), fontSize = 16.sp)
+            Content(mediaList = genreList)
         }
 
         if (!isSearchBarActive) {
             Spacer(modifier = Modifier.size(16.dp))
+            MediaChipList(modifier = Modifier.padding(horizontal = 16.dp))
+
             // Also show result when user leave search bar focus
-            Content(musicList = musicList)
+            // TODO simplify
+            Title(text = stringResource(id = RDb.string.musics), fontSize = 16.sp)
+            Content(mediaList = musicList)
+
+            Title(text = stringResource(id = RDb.string.folders), fontSize = 16.sp)
+            Content(mediaList = folderList)
+
+            Title(text = stringResource(id = RDb.string.artists), fontSize = 16.sp)
+            Content(mediaList = artistList)
+
+            Title(text = stringResource(id = RDb.string.albums), fontSize = 16.sp)
+            Content(mediaList = albumList)
+
+            Title(text = stringResource(id = RDb.string.genres), fontSize = 16.sp)
+            Content(mediaList = genreList)
         }
     }
 }
 
 @Composable
-private fun Content(musicList: List<Music>) {
-    MediaChipList(modifier = Modifier.padding(horizontal = 16.dp))
-    if (musicList.isEmpty()) {
+private fun Content(mediaList: List<Media>) {
+    if (mediaList.isEmpty()) {
         NormalText(text = stringResource(id = R.string.no_result))
     } else {
-        MediaCardList(mediaList = musicList, openMedia = {
+        MediaCardList(mediaList = mediaList, openMedia = {
             PlaybackController.getInstance()
                 .loadMusic(musicMediaItemSortedMap = DataManager.musicMediaItemSortedMap)
             openMedia(media = it)

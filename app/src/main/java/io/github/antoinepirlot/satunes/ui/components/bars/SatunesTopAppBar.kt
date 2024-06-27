@@ -79,7 +79,8 @@ internal fun SatunesTopAppBar(
             titleContentColor = MaterialTheme.colorScheme.primary,
         ),
         navigationIcon = {
-            if (currentDestination !in playbackViews) {
+            val screenWidth: Int = LocalConfiguration.current.screenWidthDp
+            if (currentDestination !in playbackViews || screenWidth >= ScreenSizes.LARGE) {
                 return@CenterAlignedTopAppBar
             }
 

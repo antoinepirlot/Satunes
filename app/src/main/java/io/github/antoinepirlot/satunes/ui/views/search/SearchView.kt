@@ -28,6 +28,7 @@ package io.github.antoinepirlot.satunes.ui.views.search
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SearchBar
@@ -45,11 +46,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.database.models.Album
+import io.github.antoinepirlot.satunes.database.models.Artist
+import io.github.antoinepirlot.satunes.database.models.Folder
+import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.database.models.tables.Playlist
 import io.github.antoinepirlot.satunes.database.services.DataManager
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.cards.media.MediaCardList
+import io.github.antoinepirlot.satunes.ui.components.chips.MediaChipList
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 
 /**
@@ -64,6 +71,11 @@ internal fun SearchView(
     var query: String by rememberSaveable { mutableStateOf("") }
     var isSearchBarActive: Boolean by rememberSaveable { mutableStateOf(false) }
     val musicList: MutableList<Music> = remember { SnapshotStateList() }
+    val folderList: MutableList<Folder> = remember { SnapshotStateList() }
+    val artistList: MutableList<Artist> = remember { SnapshotStateList() }
+    val albumList: MutableList<Album> = remember { SnapshotStateList() }
+    val genreList: MutableList<Genre> = remember { SnapshotStateList() }
+    val playlist: MutableList<Playlist> = remember { SnapshotStateList() }
 
     LaunchedEffect(key1 = true) {
         musicList.addAll(DataManager.musicMediaItemSortedMap.keys)
@@ -92,30 +104,28 @@ internal fun SearchView(
             onActiveChange = { isSearchBarActive = it },
             placeholder = { NormalText(text = stringResource(id = R.string.search_placeholder)) }
         ) {
-            if (musicList.isEmpty()) {
-                NormalText(text = stringResource(id = R.string.no_result))
-            } else {
-                MediaCardList(mediaList = musicList, openMedia = {
-                    PlaybackController.getInstance()
-                        .loadMusic(musicMediaItemSortedMap = DataManager.musicMediaItemSortedMap)
-                    openMedia(media = it)
-                })
-            }
+            Content(musicList = musicList)
         }
 
         if (!isSearchBarActive) {
             Spacer(modifier = Modifier.size(16.dp))
             // Also show result when user leave search bar focus
-            if (musicList.isEmpty()) {
-                NormalText(text = stringResource(id = R.string.no_result))
-            } else {
-                MediaCardList(mediaList = musicList, openMedia = {
-                    PlaybackController.getInstance()
-                        .loadMusic(musicMediaItemSortedMap = DataManager.musicMediaItemSortedMap)
-                    openMedia(media = it)
-                })
-            }
+            Content(musicList = musicList)
         }
+    }
+}
+
+@Composable
+private fun Content(musicList: List<Music>) {
+    MediaChipList(modifier = Modifier.padding(horizontal = 16.dp))
+    if (musicList.isEmpty()) {
+        NormalText(text = stringResource(id = R.string.no_result))
+    } else {
+        MediaCardList(mediaList = musicList, openMedia = {
+            PlaybackController.getInstance()
+                .loadMusic(musicMediaItemSortedMap = DataManager.musicMediaItemSortedMap)
+            openMedia(media = it)
+        })
     }
 }
 

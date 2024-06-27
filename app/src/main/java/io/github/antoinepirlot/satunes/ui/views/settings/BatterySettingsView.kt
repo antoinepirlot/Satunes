@@ -36,7 +36,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.ui.components.settings.AudioOffloadSetting
-import io.github.antoinepirlot.satunes.ui.components.settings.SubSetting
+import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
 import io.github.antoinepirlot.satunes.ui.components.texts.Title
 
 /**
@@ -54,7 +54,7 @@ internal fun BatterySettingsView(
             .padding(horizontal = 16.dp)
     ) {
         Title(text = stringResource(id = R.string.battery_settings))
-        SubSetting(title = stringResource(id = R.string.playback_settings)) {
+        SubSettings(title = stringResource(id = R.string.playback_settings)) {
             AudioOffloadSetting()
         }
     }

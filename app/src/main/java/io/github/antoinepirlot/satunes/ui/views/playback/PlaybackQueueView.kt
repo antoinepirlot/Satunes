@@ -28,12 +28,15 @@ package io.github.antoinepirlot.satunes.ui.views.playback
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.cards.media.MediaCardList
+import io.github.antoinepirlot.satunes.ui.components.texts.Title
 
 /**
  * @author Antoine Pirlot on 23/06/2024
@@ -44,9 +47,9 @@ internal fun PlaybackQueueView(
     modifier: Modifier = Modifier,
 ) {
     val playbackPlaylist: List<Music> = remember { PlaybackController.getInstance().getPlaylist() }
-
     MediaCardList(
         modifier = modifier,
+        header = { Title(text = stringResource(id = R.string.playback_queue)) },
         mediaList = playbackPlaylist,
         openMedia = { media: Media -> openMedia(media) }
     )

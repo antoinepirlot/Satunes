@@ -33,6 +33,6 @@ import androidx.sqlite.db.SupportSQLiteDatabase
  */
 internal object MigrationFrom1To2 : Migration(1, 2) {
     override fun migrate(db: SupportSQLiteDatabase) {
-        db.execSQL("ALTER TABLE musics ADD COLUMN liked BOOLEAN")
+        db.execSQL("ALTER TABLE musics ADD COLUMN liked INTEGER NOT NULL DEFAULT 0;")
     }
 }

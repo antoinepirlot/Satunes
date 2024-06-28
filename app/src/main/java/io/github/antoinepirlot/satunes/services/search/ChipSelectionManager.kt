@@ -43,4 +43,8 @@ internal object ChipSelectionManager {
     fun removeChip(chipName: Int) {
         selectedChips.remove(chipName)
     }
+
+    fun resetChips() {
+        this.selectedChips.clear()
+    }
 }

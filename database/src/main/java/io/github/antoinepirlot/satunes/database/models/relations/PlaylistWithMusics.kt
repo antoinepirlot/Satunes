@@ -59,6 +59,10 @@ data class PlaylistWithMusics(
 
     @Ignore
     @Transient
+    override val liked: MutableState<Boolean> = mutableStateOf(false)
+
+    @Ignore
+    @Transient
     override var artwork: Bitmap? = null
 
     @Ignore

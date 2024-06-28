@@ -40,6 +40,7 @@ data class Genre(
     override val id: Long = nextId,
     override var title: String,
 ) : Media {
+    override val liked: MutableState<Boolean> = mutableStateOf(false)
     override var artwork: Bitmap? = null
     override val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
 

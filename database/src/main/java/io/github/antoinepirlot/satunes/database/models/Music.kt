@@ -31,6 +31,8 @@ import android.graphics.BitmapFactory
 import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.net.Uri.encode
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.media3.common.MediaItem
@@ -58,6 +60,7 @@ class Music(
     var genre: Genre,
     context: Context,
 ) : Media {
+    override val liked: MutableState<Boolean> = mutableStateOf(false)
     var uri: Uri = Uri.parse(encode(absolutePath)) // Must be init before media item
     val mediaItem: MediaItem = getMediaMetadata()
     override var artwork: Bitmap? = null

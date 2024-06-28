@@ -26,6 +26,8 @@
 package io.github.antoinepirlot.satunes.database.models.tables
 
 import android.graphics.Bitmap
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Ignore
@@ -47,6 +49,9 @@ data class MusicDB(
     @PrimaryKey
     @ColumnInfo("music_id") override val id: Long
 ) : Media {
+    @Ignore
+    @Transient
+    override val liked: MutableState<Boolean> = mutableStateOf(false)
     @Ignore
     @Transient
     override var artwork: Bitmap? = null

@@ -50,11 +50,11 @@ import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.DataManager
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.router.utils.openMedia
-import io.github.antoinepirlot.satunes.services.search.ChipSelectionManager
+import io.github.antoinepirlot.satunes.services.search.SearchChips
+import io.github.antoinepirlot.satunes.services.search.SearchChipsManager
 import io.github.antoinepirlot.satunes.ui.components.cards.media.MediaCardList
 import io.github.antoinepirlot.satunes.ui.components.chips.MediaChipList
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
-import io.github.antoinepirlot.satunes.database.R as RDb
 
 /**
  * @author Antoine Pirlot on 27/06/2024
@@ -68,7 +68,6 @@ internal fun SearchView(
     var query: String by rememberSaveable { mutableStateOf("") }
     var isSearchBarActive: Boolean by rememberSaveable { mutableStateOf(false) }
     val mediaList: MutableList<Media> = remember { SnapshotStateList() }
-    val selectedChips: List<Int> = ChipSelectionManager.selectedChips
 
     Column(
         modifier = modifier.fillMaxSize(),
@@ -81,12 +80,12 @@ internal fun SearchView(
                 mediaList.clear()
                 // TODO make it more simple with each chip
                 DataManager.musicMediaItemSortedMap.keys.forEach { music: Music ->
-                    selectedChips.forEach { chipName: Int ->
+                    SearchChipsManager.searchChipsList.forEach { searchChip: SearchChips ->
                         addMatchingMusic(
                             mediaList = mediaList,
                             music = music,
                             query = query,
-                            chipName = chipName
+                            searchChip = searchChip
                         )
                     }
                 }
@@ -124,10 +123,10 @@ private fun addMatchingMusic(
     mediaList: MutableList<Media>,
     music: Music,
     query: String,
-    chipName: Int
+    searchChip: SearchChips
 ) {
-    when (chipName) {
-        RDb.string.musics -> {
+    when (searchChip) {
+        SearchChips.MUSICS -> {
             if (music.title.lowercase().contains(query.lowercase())) {
                 if (!mediaList.contains(music)) {
                     mediaList.add(element = music)
@@ -135,7 +134,7 @@ private fun addMatchingMusic(
             }
         }
 
-        RDb.string.artists -> {
+        SearchChips.ARTISTS -> {
             if (music.artist.title.lowercase().contains(query.lowercase())) {
                 if (!mediaList.contains(music.artist)) {
                     mediaList.add(element = music.artist)
@@ -143,7 +142,7 @@ private fun addMatchingMusic(
             }
         }
 
-        RDb.string.albums -> {
+        SearchChips.ALBUMS -> {
             if (music.album.title.lowercase().contains(query.lowercase())) {
                 if (!mediaList.contains(music.album)) {
                     mediaList.add(element = music.album)
@@ -151,7 +150,7 @@ private fun addMatchingMusic(
             }
         }
 
-        RDb.string.genres -> {
+        SearchChips.GENRES -> {
             if (music.genre.title.lowercase().contains(query.lowercase())) {
                 if (!mediaList.contains(music.genre)) {
                     mediaList.add(element = music.genre)
@@ -159,7 +158,7 @@ private fun addMatchingMusic(
             }
         }
 
-        RDb.string.folders -> {
+        SearchChips.FOLDERS -> {
             if (music.folder.title.lowercase().contains(query.lowercase())) {
                 if (!mediaList.contains(music.folder)) {
                     mediaList.add(element = music.folder)

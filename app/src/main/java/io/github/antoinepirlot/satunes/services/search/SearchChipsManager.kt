@@ -29,20 +29,18 @@ package io.github.antoinepirlot.satunes.services.search
  * @author Antoine Pirlot on 28/06/2024
  */
 
-internal object ChipSelectionManager {
-    val selectedChips: MutableList<Int> = mutableListOf()
-
-    fun addChip(chipName: Int) {
-        if (!selectedChips.contains(chipName)) {
-            selectedChips.add(chipName)
-        }
-    }
-
-    fun removeChip(chipName: Int) {
-        selectedChips.remove(chipName)
-    }
+internal object SearchChipsManager {
+    val searchChipsList: List<SearchChips> = listOf(
+        SearchChips.MUSICS,
+        SearchChips.ALBUMS,
+        SearchChips.ARTISTS,
+        SearchChips.GENRES,
+        SearchChips.FOLDERS
+    )
 
     fun resetChips() {
-        this.selectedChips.clear()
+        searchChipsList.forEach { searchChips: SearchChips ->
+            searchChips.enabled.value = false
+        }
     }
 }

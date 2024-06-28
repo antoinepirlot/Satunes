@@ -37,7 +37,7 @@ import androidx.compose.ui.tooling.preview.Preview
  */
 
 @Composable
-internal fun PlaybackButtonsRow(
+internal fun PlaybackCustomActionsBar(
     modifier: Modifier = Modifier
 ) {
     val scrollState = rememberScrollState()
@@ -51,5 +51,5 @@ internal fun PlaybackButtonsRow(
 @Preview
 @Composable
 private fun PlaybackButtonsRowPreview() {
-    PlaybackButtonsRow()
+    PlaybackCustomActionsBar()
 }

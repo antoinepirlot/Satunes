@@ -65,6 +65,7 @@ enum class SatunesIcons(val imageVector: ImageVector, val description: String) {
     ),
     ALBUM(imageVector = Icons.Rounded.Album, description = "Album Icon"),
     ARTIST(imageVector = Icons.Rounded.AccountCircle, description = "Artist Icon"),
+    CHIP_SELECTED(imageVector = Icons.Rounded.Done, description = "Chip Selected icon"),
     EXPORT(imageVector = Icons.Rounded.FileUpload, description = "Export Icon"),
     IMPORT(imageVector = Icons.Rounded.FileDownload, description = "Import Icon"),
     INFO(imageVector = Icons.Rounded.Info, description = "Info Icon"),

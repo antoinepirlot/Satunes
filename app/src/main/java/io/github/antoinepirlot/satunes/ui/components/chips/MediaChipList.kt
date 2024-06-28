@@ -32,6 +32,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -40,6 +41,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.services.search.SearchChips
 import io.github.antoinepirlot.satunes.services.search.SearchChipsManager
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
@@ -73,6 +75,13 @@ internal fun MediaChipList(
                 modifier = filterChipModifier,
                 selected = selected,
                 onClick = { selected = !selected },
+                leadingIcon = {
+                    val icon: SatunesIcons =
+                        if (selected) SatunesIcons.CHIP_SELECTED
+                        else SatunesIcons.ADD
+
+                    Icon(imageVector = icon.imageVector, contentDescription = icon.description)
+                },
                 label = { NormalText(text = stringResource(id = searchChip.stringId)) }
             )
         }

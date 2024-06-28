@@ -25,14 +25,12 @@
 
 package io.github.antoinepirlot.satunes.services.search
 
-import androidx.compose.runtime.snapshots.SnapshotStateList
-
 /**
  * @author Antoine Pirlot on 28/06/2024
  */
 
 internal object ChipSelectionManager {
-    val selectedChips: MutableList<Int> = SnapshotStateList()
+    val selectedChips: MutableList<Int> = mutableListOf()
 
     fun addChip(chipName: Int) {
         if (!selectedChips.contains(chipName)) {

@@ -68,7 +68,7 @@ internal fun SearchView(
     var query: String by rememberSaveable { mutableStateOf("") }
     var isSearchBarActive: Boolean by rememberSaveable { mutableStateOf(false) }
     val mediaList: MutableList<Media> = remember { SnapshotStateList() }
-    val selectedChips: List<Int> = remember { ChipSelectionManager.selectedChips }
+    val selectedChips: List<Int> = ChipSelectionManager.selectedChips
 
     Column(
         modifier = modifier.fillMaxSize(),
@@ -82,47 +82,12 @@ internal fun SearchView(
                 // TODO make it more simple with each chip
                 DataManager.musicMediaItemSortedMap.keys.forEach { music: Music ->
                     selectedChips.forEach { chipName: Int ->
-                        when (chipName) {
-                            RDb.string.musics -> {
-                                if (music.title.lowercase().contains(query.lowercase())) {
-                                    if (!mediaList.contains(music)) {
-                                        mediaList.add(element = music)
-                                    }
-                                }
-                            }
-
-                            RDb.string.artists -> {
-                                if (music.artist.title.lowercase().contains(query.lowercase())) {
-                                    if (!mediaList.contains(music.artist)) {
-                                        mediaList.add(element = music.artist)
-                                    }
-                                }
-                            }
-
-                            RDb.string.albums -> {
-                                if (music.album.title.lowercase().contains(query.lowercase())) {
-                                    if (!mediaList.contains(music.album)) {
-                                        mediaList.add(element = music.album)
-                                    }
-                                }
-                            }
-
-                            RDb.string.genres -> {
-                                if (music.genre.title.lowercase().contains(query.lowercase())) {
-                                    if (!mediaList.contains(music.genre)) {
-                                        mediaList.add(element = music.genre)
-                                    }
-                                }
-                            }
-
-                            RDb.string.folders -> {
-                                if (music.folder.title.lowercase().contains(query.lowercase())) {
-                                    if (!mediaList.contains(music.folder)) {
-                                        mediaList.add(element = music.folder)
-                                    }
-                                }
-                            }
-                        }
+                        addMatchingMusic(
+                            mediaList = mediaList,
+                            music = music,
+                            query = query,
+                            chipName = chipName
+                        )
                     }
                 }
                 mediaList.sort()
@@ -152,6 +117,55 @@ private fun Content(mediaList: List<Media>) {
                 .loadMusic(musicMediaItemSortedMap = DataManager.musicMediaItemSortedMap)
             openMedia(media = it)
         })
+    }
+}
+
+private fun addMatchingMusic(
+    mediaList: MutableList<Media>,
+    music: Music,
+    query: String,
+    chipName: Int
+) {
+    when (chipName) {
+        RDb.string.musics -> {
+            if (music.title.lowercase().contains(query.lowercase())) {
+                if (!mediaList.contains(music)) {
+                    mediaList.add(element = music)
+                }
+            }
+        }
+
+        RDb.string.artists -> {
+            if (music.artist.title.lowercase().contains(query.lowercase())) {
+                if (!mediaList.contains(music.artist)) {
+                    mediaList.add(element = music.artist)
+                }
+            }
+        }
+
+        RDb.string.albums -> {
+            if (music.album.title.lowercase().contains(query.lowercase())) {
+                if (!mediaList.contains(music.album)) {
+                    mediaList.add(element = music.album)
+                }
+            }
+        }
+
+        RDb.string.genres -> {
+            if (music.genre.title.lowercase().contains(query.lowercase())) {
+                if (!mediaList.contains(music.genre)) {
+                    mediaList.add(element = music.genre)
+                }
+            }
+        }
+
+        RDb.string.folders -> {
+            if (music.folder.title.lowercase().contains(query.lowercase())) {
+                if (!mediaList.contains(music.folder)) {
+                    mediaList.add(element = music.folder)
+                }
+            }
+        }
     }
 }
 

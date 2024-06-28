@@ -320,7 +320,8 @@ class DatabaseManager(context: Context) {
     fun like(context: Context, music: Music) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                var likesPlaylist: PlaylistWithMusics? = playlistDao.getLikesPlaylist()
+                var likesPlaylist: PlaylistWithMusics? =
+                    playlistDao.getPlaylistWithMusics(title = LIKES_PLAYLIST_TITLE)
                 if (likesPlaylist == null) {
                     insertPlaylistWithMusics(
                         context = context,
@@ -341,7 +342,7 @@ class DatabaseManager(context: Context) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val likesPlaylist: PlaylistWithMusics =
-                    playlistDao.getLikesPlaylist() ?: return@launch
+                    playlistDao.getPlaylistWithMusics(title = LIKES_PLAYLIST_TITLE) ?: return@launch
                 removeMusicFromPlaylist(
                     music = music,
                     playlist = DataManager.getPlaylist(playlistId = likesPlaylist.id)

@@ -37,7 +37,7 @@ import io.github.antoinepirlot.satunes.database.models.tables.Playlist
  * @author Antoine Pirlot on 27/03/2024
  */
 
-const val LIKES_PLAYLIST_TITLE: String = "Liked Musics"
+const val LIKES_PLAYLIST_TITLE: String = "_likes"
 
 @Dao
 internal interface PlaylistDAO {
@@ -48,7 +48,7 @@ internal interface PlaylistDAO {
 
     @Transaction
     @Query("SELECT * FROM playlists WHERE title = :title")
-    fun getLikesPlaylist(title: String = LIKES_PLAYLIST_TITLE): PlaylistWithMusics?
+    fun getPlaylistWithMusics(title: String): PlaylistWithMusics?
 
     @Query("SELECT playlist_id FROM playlists WHERE lower(title) = lower(:title)")
     fun playlistExist(title: String): Boolean

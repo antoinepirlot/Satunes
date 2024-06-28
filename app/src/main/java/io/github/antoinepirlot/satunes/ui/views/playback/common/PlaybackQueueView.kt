@@ -51,7 +51,7 @@ internal fun PlaybackQueueView(
         modifier = modifier,
         header = { Title(text = stringResource(id = R.string.playback_queue)) },
         mediaList = playbackPlaylist,
-        openMedia = { media: Media -> openMedia(media) }
+        openMedia = { media: Media -> openMedia(media, navigate = false) }
     )
 }
 

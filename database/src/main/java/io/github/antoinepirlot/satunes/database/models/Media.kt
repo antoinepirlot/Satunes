@@ -41,7 +41,7 @@ interface Media : Comparable<Media> {
     var artwork: Bitmap?
     var liked: Boolean
     val likedState: MutableState<Boolean>
-        get() = mutableStateOf(false)
+        get() = mutableStateOf(liked)
 
     fun switchLike(context: Context) {
         this.liked = !this.liked

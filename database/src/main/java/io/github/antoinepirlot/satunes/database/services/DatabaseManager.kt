@@ -332,6 +332,7 @@ class DatabaseManager(context: Context) {
                     likesPlaylist = DataManager.getPlaylist(playlistId = likesPlaylist.id)
                     insertMusicToPlaylists(music = music, playlists = listOf(likesPlaylist))
                 }
+                musicDao.like(musicId = music.id)
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -347,6 +348,7 @@ class DatabaseManager(context: Context) {
                     music = music,
                     playlist = DataManager.getPlaylist(playlistId = likesPlaylist.id)
                 )
+                musicDao.unlike(musicId = music.id)
             } catch (e: Exception) {
                 e.printStackTrace()
             }

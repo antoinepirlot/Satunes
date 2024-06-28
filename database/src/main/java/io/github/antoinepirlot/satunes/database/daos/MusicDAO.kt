@@ -50,6 +50,12 @@ internal interface MusicDAO {
     @Insert
     fun insert(vararg musics: MusicDB)
 
+    @Query("UPDATE musics SET liked = 1 WHERE music_id = :musicId")
+    fun like(musicId: Long)
+
+    @Query("UPDATE musics SET liked = 0 WHERE music_id = :musicId")
+    fun unlike(musicId: Long)
+
     @Delete
     fun delete(music: MusicDB)
 

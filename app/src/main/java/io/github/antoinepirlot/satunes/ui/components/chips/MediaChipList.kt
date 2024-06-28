@@ -69,7 +69,9 @@ internal fun MediaChipList(
             .horizontalScroll(state = scrollState),
     ) {
         chipsList.forEach { chipName: Int ->
-            var selected: Boolean by rememberSaveable { mutableStateOf(false) }
+            var selected: Boolean by rememberSaveable {
+                mutableStateOf(ChipSelectionManager.selectedChips.contains(chipName))
+            }
             FilterChip(
                 selected = selected,
                 onClick = {

@@ -25,6 +25,7 @@
 
 package io.github.antoinepirlot.satunes.database.models
 
+import android.content.Context
 import android.graphics.Bitmap
 import androidx.compose.runtime.MutableState
 import androidx.media3.common.MediaItem
@@ -39,7 +40,7 @@ interface Media : Comparable<Media> {
     var artwork: Bitmap?
     val liked: MutableState<Boolean>
 
-    fun switchLike() {
+    fun switchLike(context: Context) {
         this.liked.value = !this.liked.value
     }
 

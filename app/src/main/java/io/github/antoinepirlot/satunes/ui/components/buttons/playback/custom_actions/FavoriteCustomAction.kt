@@ -25,8 +25,10 @@
 
 package io.github.antoinepirlot.satunes.ui.components.buttons.playback.custom_actions
 
+import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.buttons.playback.RowButton
@@ -41,9 +43,10 @@ fun FavoriteCustomAction(
     media: Media
 ) {
     // Assume the media is remembered in parent composable
+    val context: Context = LocalContext.current
     RowButton(
         modifier = modifier,
         icon = if (media.liked.value) SatunesIcons.LIKED else SatunesIcons.UNLIKED,
-        onClick = { media.switchLike() }
+        onClick = { media.switchLike(context = context) }
     )
 }

@@ -38,6 +38,7 @@ import androidx.core.graphics.drawable.toBitmap
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import io.github.antoinepirlot.satunes.database.services.DataManager
+import io.github.antoinepirlot.satunes.database.services.DatabaseManager
 import io.github.antoinepirlot.satunes.icons.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -72,6 +73,16 @@ class Music(
         genre.addMusic(music = this@Music)
         folder.addMusic(music = this@Music)
         loadAlbumArtwork(context = context)
+    }
+
+    override fun switchLike(context: Context) {
+        super.switchLike(context)
+        val db = DatabaseManager(context = context)
+        if (this.liked.value) {
+            db.like(context = context, music = this)
+        } else {
+            db.unlike(music = this)
+        }
     }
 
 

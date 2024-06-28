@@ -37,12 +37,18 @@ import io.github.antoinepirlot.satunes.database.models.tables.Playlist
  * @author Antoine Pirlot on 27/03/2024
  */
 
+const val LIKES_PLAYLIST_TITLE: String = "Liked Musics"
+
 @Dao
 internal interface PlaylistDAO {
 
     @Transaction
     @Query("SELECT * FROM playlists WHERE playlist_id = :playlistId")
     fun getPlaylistWithMusics(playlistId: Long): PlaylistWithMusics?
+
+    @Transaction
+    @Query("SELECT * FROM playlists WHERE title = :title")
+    fun getLikesPlaylist(title: String = LIKES_PLAYLIST_TITLE): PlaylistWithMusics?
 
     @Query("SELECT playlist_id FROM playlists WHERE lower(title) = lower(:title)")
     fun playlistExist(title: String): Boolean

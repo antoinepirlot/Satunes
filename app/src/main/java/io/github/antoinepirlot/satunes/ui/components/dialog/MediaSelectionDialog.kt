@@ -31,6 +31,9 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -59,11 +62,19 @@ internal fun MediaSelectionDialog(
     playlistTitle: String? = null,
     icon: SatunesIcons,
 ) {
-    if (mediaList.isEmpty()) {
-        MediaSelectionDialogListEmpty(modifier = modifier, onDismissRequest)
+    val showPlaylistCreation: MutableState<Boolean> =
+        rememberSaveable { mutableStateOf(mediaList.isEmpty()) }
+
+    if (showPlaylistCreation.value) {
+        CreateNewPlaylistForm(
+            modifier = modifier,
+            showPlaylistCreation = showPlaylistCreation,
+            onDismissRequest = onDismissRequest
+        )
     } else {
         MediaSelectionDialogListNotEmpty(
             modifier = modifier,
+            showPlaylistCreation = showPlaylistCreation,
             onDismissRequest = onDismissRequest,
             onConfirm = onConfirm,
             mediaList = mediaList,
@@ -74,8 +85,9 @@ internal fun MediaSelectionDialog(
 }
 
 @Composable
-private fun MediaSelectionDialogListEmpty(
+private fun CreateNewPlaylistForm(
     modifier: Modifier,
+    showPlaylistCreation: MutableState<Boolean>,
     onDismissRequest: () -> Unit
 ) {
     val context: Context = LocalContext.current
@@ -88,6 +100,7 @@ private fun MediaSelectionDialogListEmpty(
                 context = context,
                 playlist = playlist
             )
+            showPlaylistCreation.value = false
         },
         onDismissRequest = onDismissRequest
     )
@@ -96,6 +109,7 @@ private fun MediaSelectionDialogListEmpty(
 @Composable
 private fun MediaSelectionDialogListNotEmpty(
     modifier: Modifier,
+    showPlaylistCreation: MutableState<Boolean>,
     onDismissRequest: () -> Unit,
     onConfirm: () -> Unit,
     mediaList: List<Media>,
@@ -121,6 +135,9 @@ private fun MediaSelectionDialogListNotEmpty(
         },
         text = {
             Column {
+                TextButton(onClick = { showPlaylistCreation.value = true }) {
+                    NormalText(text = stringResource(id = R.string.create_playlist))
+                }
                 MediaSelectionForm(mediaList = mediaList)
             }
         },

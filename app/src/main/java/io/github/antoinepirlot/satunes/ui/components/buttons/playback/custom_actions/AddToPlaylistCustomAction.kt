@@ -23,7 +23,7 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.buttons.playback
+package io.github.antoinepirlot.satunes.ui.components.buttons.playback.custom_actions
 
 import android.content.Context
 import androidx.compose.runtime.Composable
@@ -44,6 +44,7 @@ import io.github.antoinepirlot.satunes.database.services.DatabaseManager
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.services.MediaSelectionManager
+import io.github.antoinepirlot.satunes.ui.components.buttons.playback.RowButton
 import io.github.antoinepirlot.satunes.ui.components.dialog.MediaSelectionDialog
 import java.util.SortedMap
 

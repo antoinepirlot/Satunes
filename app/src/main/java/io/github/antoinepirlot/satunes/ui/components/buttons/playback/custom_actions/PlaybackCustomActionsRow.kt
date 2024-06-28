@@ -23,7 +23,7 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.buttons.playback
+package io.github.antoinepirlot.satunes.ui.components.buttons.playback.custom_actions
 
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Row
@@ -37,19 +37,19 @@ import androidx.compose.ui.tooling.preview.Preview
  */
 
 @Composable
-internal fun PlaybackButtonsRow(
+internal fun PlaybackCustomActionsRow(
     modifier: Modifier = Modifier
 ) {
     val scrollState = rememberScrollState()
     Row(
         modifier = modifier.horizontalScroll(state = scrollState),
     ) {
-        AddToPlaylistRowButton()
+        AddToPlaylistCustomAction()
     }
 }
 
 @Preview
 @Composable
 private fun PlaybackButtonsRowPreview() {
-    PlaybackButtonsRow()
+    PlaybackCustomActionsRow()
 }

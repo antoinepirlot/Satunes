@@ -28,9 +28,8 @@ package io.github.antoinepirlot.satunes.ui.components.chips
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.FilterChip
 import androidx.compose.runtime.Composable
@@ -62,14 +61,20 @@ internal fun MediaChipList(
     ) {
         searchChipsList.forEach { searchChip: SearchChips ->
             var selected: Boolean by rememberSaveable { searchChip.enabled }
+            val filterChipModifier: Modifier = if (searchChip == searchChipsList.first()) {
+                Modifier.padding(start = 16.dp, end = 4.dp)
+            } else if (searchChip == searchChipsList.last()) {
+                Modifier.padding(start = 4.dp, end = 16.dp)
+            } else {
+                Modifier.padding(horizontal = 4.dp)
+            }
+
             FilterChip(
+                modifier = filterChipModifier,
                 selected = selected,
                 onClick = { selected = !selected },
                 label = { NormalText(text = stringResource(id = searchChip.stringId)) }
             )
-            if (searchChip != searchChipsList.last()) {
-                Spacer(modifier = Modifier.size(8.dp))
-            }
         }
     }
 }

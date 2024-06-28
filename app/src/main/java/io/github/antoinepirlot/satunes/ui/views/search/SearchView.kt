@@ -28,7 +28,6 @@ package io.github.antoinepirlot.satunes.ui.views.search
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SearchBar
@@ -101,7 +100,7 @@ internal fun SearchView(
             content = { /* Content if active is true but never used */ }
         )
         Spacer(modifier = Modifier.size(16.dp))
-        MediaChipList(modifier = Modifier.padding(horizontal = 16.dp))
+        MediaChipList()
         Content(mediaList = mediaList)
     }
 }

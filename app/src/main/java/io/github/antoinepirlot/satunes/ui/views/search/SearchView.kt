@@ -67,6 +67,10 @@ internal fun SearchView(
     var query: String by rememberSaveable { mutableStateOf("") }
     val mediaList: MutableList<Media> = remember { SnapshotStateList() }
 
+    for (searchChip: SearchChips in SearchChipsManager.searchChipsList) {
+        search(mediaList, query)
+    }
+
     Column(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -75,15 +79,7 @@ internal fun SearchView(
             query = query,
             onQueryChange = {
                 query = it
-                mediaList.clear()
-                DataManager.musicMediaItemSortedMap.keys.forEach { music: Music ->
-                    addMatchingMusic(
-                        mediaList = mediaList,
-                        music = music,
-                        query = query,
-                    )
-                }
-                mediaList.sort()
+                search(mediaList = mediaList, query = query)
             },
             onSearch = { query = it },
             active = false,
@@ -110,54 +106,62 @@ private fun Content(mediaList: List<Media>) {
     }
 }
 
-private fun addMatchingMusic(mediaList: MutableList<Media>, music: Music, query: String) {
-    for (searchChip: SearchChips in SearchChipsManager.searchChipsList) {
-        if (!searchChip.enabled.value) {
-            continue
-        }
-
-        when (searchChip) {
-            SearchChips.MUSICS -> {
-                if (music.title.lowercase().contains(query.lowercase())) {
-                    if (!mediaList.contains(music)) {
-                        mediaList.add(element = music)
-                    }
-                }
+private fun search(mediaList: MutableList<Media>, query: String) {
+    mediaList.clear()
+    if (query.isBlank()) {
+        // Prevent loop if string is "" or " "
+        return
+    }
+    DataManager.musicMediaItemSortedMap.keys.forEach { music: Music ->
+        for (searchChip: SearchChips in SearchChipsManager.searchChipsList) {
+            if (!searchChip.enabled.value) {
+                continue
             }
 
-            SearchChips.ARTISTS -> {
-                if (music.artist.title.lowercase().contains(query.lowercase())) {
-                    if (!mediaList.contains(music.artist)) {
-                        mediaList.add(element = music.artist)
+            when (searchChip) {
+                SearchChips.MUSICS -> {
+                    if (music.title.lowercase().contains(query.lowercase())) {
+                        if (!mediaList.contains(music)) {
+                            mediaList.add(element = music)
+                        }
                     }
                 }
-            }
 
-            SearchChips.ALBUMS -> {
-                if (music.album.title.lowercase().contains(query.lowercase())) {
-                    if (!mediaList.contains(music.album)) {
-                        mediaList.add(element = music.album)
+                SearchChips.ARTISTS -> {
+                    if (music.artist.title.lowercase().contains(query.lowercase())) {
+                        if (!mediaList.contains(music.artist)) {
+                            mediaList.add(element = music.artist)
+                        }
                     }
                 }
-            }
 
-            SearchChips.GENRES -> {
-                if (music.genre.title.lowercase().contains(query.lowercase())) {
-                    if (!mediaList.contains(music.genre)) {
-                        mediaList.add(element = music.genre)
+                SearchChips.ALBUMS -> {
+                    if (music.album.title.lowercase().contains(query.lowercase())) {
+                        if (!mediaList.contains(music.album)) {
+                            mediaList.add(element = music.album)
+                        }
                     }
                 }
-            }
 
-            SearchChips.FOLDERS -> {
-                if (music.folder.title.lowercase().contains(query.lowercase())) {
-                    if (!mediaList.contains(music.folder)) {
-                        mediaList.add(element = music.folder)
+                SearchChips.GENRES -> {
+                    if (music.genre.title.lowercase().contains(query.lowercase())) {
+                        if (!mediaList.contains(music.genre)) {
+                            mediaList.add(element = music.genre)
+                        }
+                    }
+                }
+
+                SearchChips.FOLDERS -> {
+                    if (music.folder.title.lowercase().contains(query.lowercase())) {
+                        if (!mediaList.contains(music.folder)) {
+                            mediaList.add(element = music.folder)
+                        }
                     }
                 }
             }
         }
     }
+    mediaList.sort()
 }
 
 @Preview

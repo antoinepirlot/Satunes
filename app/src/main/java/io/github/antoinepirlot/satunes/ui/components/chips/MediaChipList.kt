@@ -55,7 +55,7 @@ val chipsList: List<Int> = listOf(
     R.string.albums,
     R.string.artists,
     R.string.genres,
-    R.string.playlists,
+    R.string.folders,
 )
 
 @Composable

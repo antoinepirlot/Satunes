@@ -25,33 +25,28 @@
 
 package io.github.antoinepirlot.satunes.ui.components.buttons.playback.custom_actions
 
-import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import io.github.antoinepirlot.satunes.playback.services.PlaybackController
+import io.github.antoinepirlot.satunes.database.models.Media
+import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import io.github.antoinepirlot.satunes.ui.components.buttons.playback.RowButton
 
 /**
- * @author Antoine Pirlot on 01/06/2024
+ * @author Antoine Pirlot on 28/06/2024
  */
 
 @Composable
-internal fun PlaybackCustomActionsRow(
+fun FavoriteCustomAction(
     modifier: Modifier = Modifier,
+    media: Media
 ) {
-    val scrollState = rememberScrollState()
-    Row(
-        modifier = modifier.horizontalScroll(state = scrollState),
-    ) {
-        FavoriteCustomAction(media = PlaybackController.getInstance().musicPlaying.value!!)
-        AddToPlaylistCustomAction()
-    }
-}
+    val liked: Boolean by rememberSaveable { media.liked }
 
-@Preview
-@Composable
-private fun PlaybackButtonsRowPreview() {
-    PlaybackCustomActionsRow()
+    RowButton(
+        modifier = modifier,
+        icon = if (liked) SatunesIcons.LIKED else SatunesIcons.UNLIKED,
+        onClick = { media.switchLike() }
+    )
 }

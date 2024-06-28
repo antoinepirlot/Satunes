@@ -131,20 +131,14 @@ internal fun SearchView(
                 query = it
                 isSearchBarActive = false
             },
-            active = isSearchBarActive,
-            onActiveChange = { isSearchBarActive = it },
-            placeholder = { NormalText(text = stringResource(id = R.string.search_placeholder)) }
-        ) {
-            // TODO simplify
-            MediaChipList(modifier = Modifier.padding(horizontal = 16.dp))
-            Content(mediaList = mediaList)
-        }
-
-        if (!isSearchBarActive) {
-            Spacer(modifier = Modifier.size(16.dp))
-            MediaChipList(modifier = Modifier.padding(horizontal = 16.dp))
-            Content(mediaList = mediaList)
-        }
+            active = false,
+            onActiveChange = { /* Do not use active mode */ },
+            placeholder = { NormalText(text = stringResource(id = R.string.search_placeholder)) },
+            content = { /* Content if active is true but never used */ }
+        )
+        Spacer(modifier = Modifier.size(16.dp))
+        MediaChipList(modifier = Modifier.padding(horizontal = 16.dp))
+        Content(mediaList = mediaList)
     }
 }
 

@@ -41,6 +41,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
 import io.github.antoinepirlot.satunes.database.models.tables.Playlist
 import io.github.antoinepirlot.satunes.database.services.DatabaseManager
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
@@ -135,8 +136,10 @@ private fun MediaSelectionDialogListNotEmpty(
         },
         text = {
             Column {
-                TextButton(onClick = { showPlaylistCreation.value = true }) {
-                    NormalText(text = stringResource(id = R.string.create_playlist))
+                if (mediaList[0] is Playlist || mediaList[0] is PlaylistWithMusics) {
+                    TextButton(onClick = { showPlaylistCreation.value = true }) {
+                        NormalText(text = stringResource(id = R.string.create_playlist))
+                    }
                 }
                 MediaSelectionForm(mediaList = mediaList)
             }

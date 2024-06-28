@@ -65,7 +65,6 @@ internal fun SearchView(
     modifier: Modifier = Modifier
 ) {
     var query: String by rememberSaveable { mutableStateOf("") }
-    var isSearchBarActive: Boolean by rememberSaveable { mutableStateOf(false) }
     val mediaList: MutableList<Media> = remember { SnapshotStateList() }
 
     Column(
@@ -77,23 +76,16 @@ internal fun SearchView(
             onQueryChange = {
                 query = it
                 mediaList.clear()
-                // TODO make it more simple with each chip
                 DataManager.musicMediaItemSortedMap.keys.forEach { music: Music ->
-                    SearchChipsManager.searchChipsList.forEach { searchChip: SearchChips ->
-                        addMatchingMusic(
-                            mediaList = mediaList,
-                            music = music,
-                            query = query,
-                            searchChip = searchChip
-                        )
-                    }
+                    addMatchingMusic(
+                        mediaList = mediaList,
+                        music = music,
+                        query = query,
+                    )
                 }
                 mediaList.sort()
             },
-            onSearch = {
-                query = it
-                isSearchBarActive = false
-            },
+            onSearch = { query = it },
             active = false,
             onActiveChange = { /* Do not use active mode */ },
             placeholder = { NormalText(text = stringResource(id = R.string.search_placeholder)) },
@@ -118,49 +110,50 @@ private fun Content(mediaList: List<Media>) {
     }
 }
 
-private fun addMatchingMusic(
-    mediaList: MutableList<Media>,
-    music: Music,
-    query: String,
-    searchChip: SearchChips
-) {
-    when (searchChip) {
-        SearchChips.MUSICS -> {
-            if (music.title.lowercase().contains(query.lowercase())) {
-                if (!mediaList.contains(music)) {
-                    mediaList.add(element = music)
-                }
-            }
+private fun addMatchingMusic(mediaList: MutableList<Media>, music: Music, query: String) {
+    for (searchChip: SearchChips in SearchChipsManager.searchChipsList) {
+        if (!searchChip.enabled.value) {
+            continue
         }
 
-        SearchChips.ARTISTS -> {
-            if (music.artist.title.lowercase().contains(query.lowercase())) {
-                if (!mediaList.contains(music.artist)) {
-                    mediaList.add(element = music.artist)
+        when (searchChip) {
+            SearchChips.MUSICS -> {
+                if (music.title.lowercase().contains(query.lowercase())) {
+                    if (!mediaList.contains(music)) {
+                        mediaList.add(element = music)
+                    }
                 }
             }
-        }
 
-        SearchChips.ALBUMS -> {
-            if (music.album.title.lowercase().contains(query.lowercase())) {
-                if (!mediaList.contains(music.album)) {
-                    mediaList.add(element = music.album)
+            SearchChips.ARTISTS -> {
+                if (music.artist.title.lowercase().contains(query.lowercase())) {
+                    if (!mediaList.contains(music.artist)) {
+                        mediaList.add(element = music.artist)
+                    }
                 }
             }
-        }
 
-        SearchChips.GENRES -> {
-            if (music.genre.title.lowercase().contains(query.lowercase())) {
-                if (!mediaList.contains(music.genre)) {
-                    mediaList.add(element = music.genre)
+            SearchChips.ALBUMS -> {
+                if (music.album.title.lowercase().contains(query.lowercase())) {
+                    if (!mediaList.contains(music.album)) {
+                        mediaList.add(element = music.album)
+                    }
                 }
             }
-        }
 
-        SearchChips.FOLDERS -> {
-            if (music.folder.title.lowercase().contains(query.lowercase())) {
-                if (!mediaList.contains(music.folder)) {
-                    mediaList.add(element = music.folder)
+            SearchChips.GENRES -> {
+                if (music.genre.title.lowercase().contains(query.lowercase())) {
+                    if (!mediaList.contains(music.genre)) {
+                        mediaList.add(element = music.genre)
+                    }
+                }
+            }
+
+            SearchChips.FOLDERS -> {
+                if (music.folder.title.lowercase().contains(query.lowercase())) {
+                    if (!mediaList.contains(music.folder)) {
+                        mediaList.add(element = music.folder)
+                    }
                 }
             }
         }

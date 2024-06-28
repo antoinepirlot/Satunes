@@ -32,9 +32,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 
 /**
@@ -45,13 +48,14 @@ import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 internal fun PlaybackCustomActionsRow(
     modifier: Modifier = Modifier,
 ) {
+    val musicPlaying: Music? by remember { PlaybackController.getInstance().musicPlaying }
     val scrollState = rememberScrollState()
     Row(
         modifier = modifier
             .fillMaxWidth()
             .horizontalScroll(state = scrollState),
     ) {
-        FavoriteCustomAction(media = PlaybackController.getInstance().musicPlaying.value!!)
+        FavoriteCustomAction(media = musicPlaying!!)
         Spacer(modifier = Modifier.size(8.dp))
         AddToPlaylistCustomAction()
     }

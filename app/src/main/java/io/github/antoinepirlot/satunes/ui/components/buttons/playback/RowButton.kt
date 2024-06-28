@@ -52,8 +52,8 @@ internal fun RowButton(
         onClick = onClick
     ) {
         Icon(imageVector = icon.imageVector, contentDescription = icon.description)
-        Spacer(modifier = Modifier.size(16.dp))
         if (!text.isNullOrBlank()) {
+            Spacer(modifier = Modifier.size(16.dp))
             Text(text = text)
         }
     }

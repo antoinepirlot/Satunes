@@ -27,10 +27,14 @@ package io.github.antoinepirlot.satunes.ui.components.buttons.playback.custom_ac
 
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 
 /**
@@ -43,9 +47,12 @@ internal fun PlaybackCustomActionsRow(
 ) {
     val scrollState = rememberScrollState()
     Row(
-        modifier = modifier.horizontalScroll(state = scrollState),
+        modifier = modifier
+            .fillMaxWidth()
+            .horizontalScroll(state = scrollState),
     ) {
         FavoriteCustomAction(media = PlaybackController.getInstance().musicPlaying.value!!)
+        Spacer(modifier = Modifier.size(8.dp))
         AddToPlaylistCustomAction()
     }
 }

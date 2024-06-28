@@ -47,8 +47,8 @@ data class MusicDB(
     @PrimaryKey
     @ColumnInfo("music_id") override val id: Long
 ) : Media {
-    @Ignore
-    @Transient
+
+    @ColumnInfo("liked")
     override var liked: Boolean = false
     @Ignore
     @Transient

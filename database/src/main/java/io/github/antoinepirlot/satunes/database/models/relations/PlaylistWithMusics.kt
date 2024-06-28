@@ -56,10 +56,9 @@ data class PlaylistWithMusics(
     )
     val musics: MutableList<MusicDB>
 ) : Media {
-
     @Ignore
     @Transient
-    override val liked: MutableState<Boolean> = mutableStateOf(false)
+    override var liked: Boolean = false
 
     @Ignore
     @Transient

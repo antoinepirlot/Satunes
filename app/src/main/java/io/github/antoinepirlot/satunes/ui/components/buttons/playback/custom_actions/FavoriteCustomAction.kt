@@ -46,7 +46,7 @@ fun FavoriteCustomAction(
     val context: Context = LocalContext.current
     RowButton(
         modifier = modifier,
-        icon = if (media.liked.value) SatunesIcons.LIKED else SatunesIcons.UNLIKED,
+        icon = if (media.likedState.value) SatunesIcons.LIKED else SatunesIcons.UNLIKED,
         onClick = { media.switchLike(context = context) }
     )
 }

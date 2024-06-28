@@ -44,7 +44,7 @@ internal fun PlaybackCustomActionsBar(
     Row(
         modifier = modifier.horizontalScroll(state = scrollState),
     ) {
-        AddToPlaylistRowButton()
+        AddToPlaylistCustomAction()
     }
 }
 

@@ -52,7 +52,7 @@ import java.util.SortedMap
  */
 
 @Composable
-internal fun AddToPlaylistRowButton(
+internal fun AddToPlaylistCustomAction(
     modifier: Modifier = Modifier,
 ) {
     val context: Context = LocalContext.current
@@ -104,5 +104,5 @@ private fun addMusicPlayingToPlaylist(
 @Preview
 @Composable
 private fun AddToPlaylistRowButtonPreview() {
-    AddToPlaylistRowButton()
+    AddToPlaylistCustomAction()
 }

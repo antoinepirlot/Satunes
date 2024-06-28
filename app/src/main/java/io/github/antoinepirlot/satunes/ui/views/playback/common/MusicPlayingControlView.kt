@@ -64,7 +64,6 @@ internal fun MusicPlayingControlView(
 ) {
     val musicPlaying = remember { PlaybackController.getInstance().musicPlaying }
 
-    //TODO use tablet mode if it is in portrait mode in future releases
     Column(
         modifier = modifier
             .fillMaxSize()

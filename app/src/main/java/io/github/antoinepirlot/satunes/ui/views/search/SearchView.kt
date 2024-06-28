@@ -32,7 +32,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SearchBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -45,11 +44,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.DataManager
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.router.utils.openMedia
+import io.github.antoinepirlot.satunes.services.search.SearchChips
+import io.github.antoinepirlot.satunes.services.search.SearchChipsManager
 import io.github.antoinepirlot.satunes.ui.components.cards.media.MediaCardList
+import io.github.antoinepirlot.satunes.ui.components.chips.MediaChipList
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 
 /**
@@ -62,11 +65,10 @@ internal fun SearchView(
     modifier: Modifier = Modifier
 ) {
     var query: String by rememberSaveable { mutableStateOf("") }
-    var isSearchBarActive: Boolean by rememberSaveable { mutableStateOf(false) }
-    val musicList: MutableList<Music> = remember { SnapshotStateList() }
+    val mediaList: MutableList<Media> = remember { SnapshotStateList() }
 
-    LaunchedEffect(key1 = true) {
-        musicList.addAll(DataManager.musicMediaItemSortedMap.keys)
+    for (searchChip: SearchChips in SearchChipsManager.searchChipsList) {
+        search(mediaList, query)
     }
 
     Column(
@@ -77,46 +79,89 @@ internal fun SearchView(
             query = query,
             onQueryChange = {
                 query = it
-                musicList.clear()
-                musicList.addAll(
-                    DataManager.musicMediaItemSortedMap.keys.filter { music: Music ->
-                        music.title.lowercase().contains(query.lowercase())
-                    }
-                )
+                search(mediaList = mediaList, query = query)
             },
-            onSearch = {
-                query = it
-                isSearchBarActive = false
-            },
-            active = isSearchBarActive,
-            onActiveChange = { isSearchBarActive = it },
-            placeholder = { NormalText(text = stringResource(id = R.string.search_placeholder)) }
-        ) {
-            if (musicList.isEmpty()) {
-                NormalText(text = stringResource(id = R.string.no_result))
-            } else {
-                MediaCardList(mediaList = musicList, openMedia = {
-                    PlaybackController.getInstance()
-                        .loadMusic(musicMediaItemSortedMap = DataManager.musicMediaItemSortedMap)
-                    openMedia(media = it)
-                })
-            }
-        }
+            onSearch = { query = it },
+            active = false,
+            onActiveChange = { /* Do not use active mode */ },
+            placeholder = { NormalText(text = stringResource(id = R.string.search_placeholder)) },
+            content = { /* Content if active is true but never used */ }
+        )
+        Spacer(modifier = Modifier.size(16.dp))
+        MediaChipList()
+        Content(mediaList = mediaList)
+    }
+}
 
-        if (!isSearchBarActive) {
-            Spacer(modifier = Modifier.size(16.dp))
-            // Also show result when user leave search bar focus
-            if (musicList.isEmpty()) {
-                NormalText(text = stringResource(id = R.string.no_result))
-            } else {
-                MediaCardList(mediaList = musicList, openMedia = {
-                    PlaybackController.getInstance()
-                        .loadMusic(musicMediaItemSortedMap = DataManager.musicMediaItemSortedMap)
-                    openMedia(media = it)
-                })
+@Composable
+private fun Content(mediaList: List<Media>) {
+    if (mediaList.isEmpty()) {
+        NormalText(text = stringResource(id = R.string.no_result))
+    } else {
+        MediaCardList(mediaList = mediaList, openMedia = {
+            PlaybackController.getInstance()
+                .loadMusic(musicMediaItemSortedMap = DataManager.musicMediaItemSortedMap)
+            openMedia(media = it)
+        })
+    }
+}
+
+private fun search(mediaList: MutableList<Media>, query: String) {
+    mediaList.clear()
+    if (query.isBlank()) {
+        // Prevent loop if string is "" or " "
+        return
+    }
+    DataManager.musicMediaItemSortedMap.keys.forEach { music: Music ->
+        for (searchChip: SearchChips in SearchChipsManager.searchChipsList) {
+            if (!searchChip.enabled.value) {
+                continue
+            }
+
+            when (searchChip) {
+                SearchChips.MUSICS -> {
+                    if (music.title.lowercase().contains(query.lowercase())) {
+                        if (!mediaList.contains(music)) {
+                            mediaList.add(element = music)
+                        }
+                    }
+                }
+
+                SearchChips.ARTISTS -> {
+                    if (music.artist.title.lowercase().contains(query.lowercase())) {
+                        if (!mediaList.contains(music.artist)) {
+                            mediaList.add(element = music.artist)
+                        }
+                    }
+                }
+
+                SearchChips.ALBUMS -> {
+                    if (music.album.title.lowercase().contains(query.lowercase())) {
+                        if (!mediaList.contains(music.album)) {
+                            mediaList.add(element = music.album)
+                        }
+                    }
+                }
+
+                SearchChips.GENRES -> {
+                    if (music.genre.title.lowercase().contains(query.lowercase())) {
+                        if (!mediaList.contains(music.genre)) {
+                            mediaList.add(element = music.genre)
+                        }
+                    }
+                }
+
+                SearchChips.FOLDERS -> {
+                    if (music.folder.title.lowercase().contains(query.lowercase())) {
+                        if (!mediaList.contains(music.folder)) {
+                            mediaList.add(element = music.folder)
+                        }
+                    }
+                }
             }
         }
     }
+    mediaList.sort()
 }
 
 @Preview

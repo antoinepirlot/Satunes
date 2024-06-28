@@ -62,9 +62,9 @@ internal fun MediaCardList(
             items = mediaList,
             key = {
                 when (it) {
-                    is PlaylistWithMusics -> it.playlist.id
-                    is MusicDB -> it.music!!.id
-                    else -> it.id
+                    is PlaylistWithMusics -> it.javaClass.name + '-' + it.playlist.id
+                    is MusicDB -> it.javaClass.name + '-' + it.music!!.id
+                    else -> it.javaClass.name + '-' + it.id
                 }
             }
         ) { media: Media ->

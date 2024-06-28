@@ -42,7 +42,6 @@ android {
             isMinifyEnabled = true
             isShrinkResources = true
             applicationIdSuffix = ".test"
-            versionNameSuffix = nameSpace
             resValue(type = "string", name = "app_name", value = "${rootProject.name} (test)")
         }
 

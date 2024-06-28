@@ -70,7 +70,7 @@ internal fun MediaSelectionDialog(
         CreateNewPlaylistForm(
             modifier = modifier,
             showPlaylistCreation = showPlaylistCreation,
-            onDismissRequest = onDismissRequest
+            onDismissRequest = { showPlaylistCreation.value = false }
         )
     } else {
         MediaSelectionDialogListNotEmpty(

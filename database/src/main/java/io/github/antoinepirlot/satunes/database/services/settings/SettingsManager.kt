@@ -64,6 +64,7 @@ object SettingsManager {
     private const val DEFAULT_SHUFFLE_MODE_CHECKED: Boolean = false
     private const val DEFAULT_PAUSE_IF_ANOTHER_PLAYBACK_CHECKED: Boolean = true
     private const val DEFAULT_AUDIO_OFFLOAD_CHECKED: Boolean = false
+    private const val DEFAULT_WHATS_NEW_SEEN: Boolean = false
 
     private val PREFERENCES_DATA_STORE = preferencesDataStore("settings")
     private val FOLDERS_CHECKED_PREFERENCES_KEY = booleanPreferencesKey("folders_checked")
@@ -80,6 +81,7 @@ object SettingsManager {
     private val SHUFFLE_MODE_KEY = booleanPreferencesKey("shuffle_mode")
     private val PAUSE_IF_ANOTHER_PLAYBACK_KEY = booleanPreferencesKey("pause_if_another_playback")
     private val AUDIO_OFFLOAD_CHECKED_KEY = booleanPreferencesKey("audio_offload_checked")
+    private val WHATS_NEW_SEEN_KEY = booleanPreferencesKey("whats_new_seen")
 
     private val Context.dataStore: DataStore<Preferences> by PREFERENCES_DATA_STORE
 
@@ -107,6 +109,8 @@ object SettingsManager {
         Pair(MenuTitle.GENRES, genresChecked),
         Pair(MenuTitle.PLAYLISTS, playlistsChecked)
     )
+
+    val whatsNewSeen: MutableState<Boolean> = mutableStateOf(false)
 
     fun loadSettings(context: Context) {
         runBlocking {
@@ -148,6 +152,9 @@ object SettingsManager {
 
                 audioOffloadChecked.value =
                     preferences[AUDIO_OFFLOAD_CHECKED_KEY] ?: DEFAULT_AUDIO_OFFLOAD_CHECKED
+
+                whatsNewSeen.value = preferences[WHATS_NEW_SEEN_KEY] ?: DEFAULT_WHATS_NEW_SEEN
+
             }.first()
         }
     }
@@ -265,6 +272,15 @@ object SettingsManager {
             context.dataStore.edit { preferences: MutablePreferences ->
                 audioOffloadChecked.value = !audioOffloadChecked.value
                 preferences[AUDIO_OFFLOAD_CHECKED_KEY] = audioOffloadChecked.value
+            }
+        }
+    }
+
+    fun whatsNewSeen(context: Context, seen: Boolean) {
+        runBlocking {
+            context.dataStore.edit { preferences: MutablePreferences ->
+                whatsNewSeen.value = seen
+                preferences[WHATS_NEW_SEEN_KEY] = whatsNewSeen.value
             }
         }
     }

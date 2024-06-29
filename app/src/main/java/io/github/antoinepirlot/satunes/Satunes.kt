@@ -25,6 +25,7 @@
 
 package io.github.antoinepirlot.satunes
 
+import android.content.Context
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -35,14 +36,15 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.router.Router
 import io.github.antoinepirlot.satunes.ui.components.bars.SatunesBottomAppBar
 import io.github.antoinepirlot.satunes.ui.components.bars.SatunesTopAppBar
@@ -77,9 +79,18 @@ internal fun Satunes(
                 Router(modifier = Modifier.padding(innerPadding))
 
                 // TODO don't set to true but use value stored on permanent storage like settings.
-                var showWhatsNewDialog: Boolean by rememberSaveable { mutableStateOf(true) }
-                if (showWhatsNewDialog) {
-                    WhatsNewDialog(onDismiss = { showWhatsNewDialog = false })
+                var whatsNewSeen: Boolean by rememberSaveable { SettingsManager.whatsNewSeen }
+                if (!whatsNewSeen) {
+                    val context: Context = LocalContext.current
+                    WhatsNewDialog(
+                        onConfirm = {
+                            SettingsManager.whatsNewSeen(
+                                context = context,
+                                seen = true
+                            )
+                        }, // When app relaunch, it's not shown again
+                        onDismiss = { whatsNewSeen = true } // When app relaunch, it's shown again
+                    )
                 }
             }
         }

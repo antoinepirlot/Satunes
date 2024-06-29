@@ -52,6 +52,7 @@ import io.github.antoinepirlot.satunes.internet.R as RInternet
 @Composable
 internal fun WhatsNewDialog(
     modifier: Modifier = Modifier,
+    onConfirm: () -> Unit,
     onDismiss: () -> Unit,
 ) {
     val context: Context = LocalContext.current
@@ -77,7 +78,7 @@ internal fun WhatsNewDialog(
         },
         onDismissRequest = onDismiss,
         dismissButton = {
-            TextButton(onClick = onDismiss) {
+            TextButton(onClick = onConfirm) {
                 NormalText(text = stringResource(id = R.string.ok))
             }
         },
@@ -97,5 +98,5 @@ internal fun WhatsNewDialog(
 @Preview
 @Composable
 private fun WhatsNewDialogPreview() {
-    WhatsNewDialog(onDismiss = {})
+    WhatsNewDialog(onConfirm = {}, onDismiss = {})
 }

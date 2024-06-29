@@ -103,6 +103,11 @@ class DatabaseManager(context: Context) {
                 } catch (_: SQLiteConstraintException) {
                     // Do nothing
                 }
+                if (playlistWithMusics.playlist.title == LIKES_PLAYLIST_TITLE) {
+                    musicDao.like(musicId = music.id)
+                    music.liked = true
+                    music.likedState.value = true
+                }
             }
         }
     }
@@ -348,7 +353,6 @@ class DatabaseManager(context: Context) {
                     likesPlaylist = DataManager.getPlaylist(playlistId = likesPlaylist.id)
                     insertMusicToPlaylists(music = music, playlists = listOf(likesPlaylist))
                 }
-                musicDao.like(musicId = music.id)
             } catch (e: Exception) {
                 e.printStackTrace()
             }

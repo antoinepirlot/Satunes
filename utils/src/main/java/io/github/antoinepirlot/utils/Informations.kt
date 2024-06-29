@@ -34,11 +34,15 @@ import android.widget.Toast
  */
 
 fun showToastOnUiThread(context: Context, message: String) {
-    (context as Activity).runOnUiThread {
-        Toast.makeText(
-            context.applicationContext,
-            message,
-            Toast.LENGTH_SHORT
-        ).show()
+    try {
+        (context as Activity).runOnUiThread {
+            Toast.makeText(
+                context.applicationContext,
+                message,
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    } catch (e: Exception) {
+        e.printStackTrace()
     }
 }

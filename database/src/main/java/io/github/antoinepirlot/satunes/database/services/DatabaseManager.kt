@@ -151,6 +151,17 @@ class DatabaseManager(context: Context) {
         }
     }
 
+    fun updatePlaylists(vararg playlists: Playlist) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                playlistDao.update(*playlists)
+            } catch (e: SQLiteConstraintException) {
+                e.printStackTrace()
+                throw Exception()
+            }
+        }
+    }
+
     fun removeMusicFromPlaylist(music: Music, playlist: PlaylistWithMusics) {
         CoroutineScope(Dispatchers.IO).launch {
             musicsPlaylistsRelDAO.delete(musicId = music.id, playlistId = playlist.playlist.id)

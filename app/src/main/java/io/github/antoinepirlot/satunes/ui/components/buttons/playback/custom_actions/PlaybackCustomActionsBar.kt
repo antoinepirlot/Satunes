@@ -45,8 +45,8 @@ import io.github.antoinepirlot.satunes.playback.services.PlaybackController
  */
 
 @Composable
-internal fun PlaybackCustomActionsRow(
-    modifier: Modifier = Modifier,
+internal fun PlaybackCustomActionsBar(
+    modifier: Modifier = Modifier
 ) {
     val musicPlaying: Music? by remember { PlaybackController.getInstance().musicPlaying }
     val scrollState = rememberScrollState()
@@ -64,5 +64,5 @@ internal fun PlaybackCustomActionsRow(
 @Preview
 @Composable
 private fun PlaybackButtonsRowPreview() {
-    PlaybackCustomActionsRow()
+    PlaybackCustomActionsBar()
 }

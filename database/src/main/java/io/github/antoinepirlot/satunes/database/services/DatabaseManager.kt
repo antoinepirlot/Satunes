@@ -164,6 +164,11 @@ class DatabaseManager(context: Context) {
 
     fun removeMusicFromPlaylist(music: Music, playlist: PlaylistWithMusics) {
         CoroutineScope(Dispatchers.IO).launch {
+            if (playlist.playlist.title == LIKES_PLAYLIST_TITLE) {
+                musicDao.unlike(musicId = music.id)
+                music.liked = false
+                music.likedState.value = false
+            }
             musicsPlaylistsRelDAO.delete(musicId = music.id, playlistId = playlist.playlist.id)
             playlist.removeMusic(music = music)
             if (!musicsPlaylistsRelDAO.isMusicInPlaylist(musicId = music.id)) {

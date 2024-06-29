@@ -43,6 +43,7 @@ import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
 import io.github.antoinepirlot.satunes.database.models.tables.Playlist
+import io.github.antoinepirlot.satunes.database.services.DataManager
 import io.github.antoinepirlot.satunes.database.services.DatabaseManager
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.services.MediaSelectionManager
@@ -136,7 +137,10 @@ private fun MediaSelectionDialogListNotEmpty(
         },
         text = {
             Column {
-                if (mediaList[0] is Playlist || mediaList[0] is PlaylistWithMusics) {
+                if (
+                    mediaList.isEmpty() && DataManager.playlistWithMusicsMap.isNotEmpty() || // Avoid having create new playlist when user has no music
+                    mediaList[0] is Playlist || mediaList[0] is PlaylistWithMusics
+                ) {
                     TextButton(onClick = { showPlaylistCreation.value = true }) {
                         NormalText(text = stringResource(id = R.string.create_playlist))
                     }

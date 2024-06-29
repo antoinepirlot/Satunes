@@ -23,44 +23,30 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.buttons.playback
+package io.github.antoinepirlot.satunes.ui.components.buttons.playback.custom_actions
 
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.FilledTonalButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
+import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.platform.LocalContext
+import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import io.github.antoinepirlot.satunes.ui.components.buttons.playback.RowButton
 
 /**
- * @author Antoine Pirlot on 01/06/2024
+ * @author Antoine Pirlot on 28/06/2024
  */
 
 @Composable
-internal fun RowButton(
+fun FavoriteCustomAction(
     modifier: Modifier = Modifier,
-    icon: SatunesIcons,
-    text: String? = null,
-    onClick: () -> Unit
+    media: Media
 ) {
-    FilledTonalButton(
+    // Assume the media is remembered in parent composable
+    val context: Context = LocalContext.current
+    RowButton(
         modifier = modifier,
-        onClick = onClick
-    ) {
-        Icon(imageVector = icon.imageVector, contentDescription = icon.description)
-        if (!text.isNullOrBlank()) {
-            Spacer(modifier = Modifier.size(16.dp))
-            Text(text = text)
-        }
-    }
-}
-
-@Preview
-@Composable
-private fun RowButtonPreview() {
-    RowButton(icon = SatunesIcons.PLAYLIST_ADD, text = "Add to Playlist", onClick = {})
+        icon = if (media.likedState.value) SatunesIcons.LIKED else SatunesIcons.UNLIKED,
+        onClick = { media.switchLike(context = context) }
+    )
 }

@@ -48,5 +48,8 @@ data class Playlist(
 ) : Media {
     @Ignore
     @Transient
+    override var liked: Boolean = false
+    @Ignore
+    @Transient
     override var artwork: Bitmap? = null
 }

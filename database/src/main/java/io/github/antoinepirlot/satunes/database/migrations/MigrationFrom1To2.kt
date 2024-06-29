@@ -23,42 +23,16 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.database.daos
+package io.github.antoinepirlot.satunes.database.migrations
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
-import io.github.antoinepirlot.satunes.database.models.tables.MusicDB
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 
 /**
- * @author Antoine Pirlot on 27/03/2024
+ * @author Antoine Pirlot on 28/06/2024
  */
-
-@Dao
-internal interface MusicDAO {
-
-    @Query("SELECT count(music_id) FROM musics")
-    fun count(): Long
-
-    @Query("SELECT * FROM musics WHERE music_id == :id")
-    fun get(id: Long): MusicDB?
-
-    @Query("SELECT * FROM musics")
-    fun getAll(): List<MusicDB>
-
-    @Insert
-    fun insert(vararg musics: MusicDB)
-
-    @Query("UPDATE musics SET liked = 1 WHERE music_id = :musicId")
-    fun like(musicId: Long)
-
-    @Query("UPDATE musics SET liked = 0 WHERE music_id = :musicId")
-    fun unlike(musicId: Long)
-
-    @Delete
-    fun delete(music: MusicDB)
-
-    @Query("DELETE from musics WHERE music_id = :musicId")
-    fun remove(musicId: Long)
+internal object MigrationFrom1To2 : Migration(1, 2) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("ALTER TABLE musics ADD COLUMN liked INTEGER NOT NULL DEFAULT 0;")
+    }
 }

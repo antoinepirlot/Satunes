@@ -33,6 +33,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import io.github.antoinepirlot.satunes.database.R
 import io.github.antoinepirlot.satunes.database.SatunesDatabase
+import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.daos.MusicDAO
 import io.github.antoinepirlot.satunes.database.daos.MusicsPlaylistsRelDAO
 import io.github.antoinepirlot.satunes.database.daos.PlaylistDAO
@@ -74,6 +75,13 @@ class DatabaseManager(context: Context) {
                 playlistDao.getPlaylistsWithMusics()
             playlistsWithMusicsList.forEach { playlistWithMusics: PlaylistWithMusics ->
                 DataManager.addPlaylist(playlistWithMusics = playlistWithMusics)
+                if (playlistWithMusics.playlist.title == LIKES_PLAYLIST_TITLE) {
+                    playlistWithMusics.musics.forEach { musicDB: MusicDB ->
+                        val music: Music = musicDB.music!!
+                        music.liked = true
+                        music.likedState.value = true
+                    }
+                }
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -102,11 +110,24 @@ class DatabaseManager(context: Context) {
                 } catch (_: SQLiteConstraintException) {
                     // Do nothing
                 }
+                if (playlistWithMusics.playlist.title == LIKES_PLAYLIST_TITLE) {
+                    musicDao.like(musicId = music.id)
+                    music.liked = true
+                    music.likedState.value = true
+                }
             }
         }
     }
 
-    fun insertOne(
+    /**
+     * Insert one playlist to db with its eventual music list
+     *
+     * @param context
+     * @param playlist the playlist to insert
+     * @param musicList the music contains all music as MusicDB
+     * @param showToast true if you want the app showing toast
+     */
+    fun insertPlaylistWithMusics(
         context: Context,
         playlist: Playlist,
         musicList: MutableList<MusicDB>? = null,
@@ -155,6 +176,11 @@ class DatabaseManager(context: Context) {
 
     fun removeMusicFromPlaylist(music: Music, playlist: PlaylistWithMusics) {
         CoroutineScope(Dispatchers.IO).launch {
+            if (playlist.playlist.title == LIKES_PLAYLIST_TITLE) {
+                musicDao.unlike(musicId = music.id)
+                music.liked = false
+                music.likedState.value = false
+            }
             musicsPlaylistsRelDAO.delete(musicId = music.id, playlistId = playlist.playlist.id)
             playlist.removeMusic(music = music)
             if (!musicsPlaylistsRelDAO.isMusicInPlaylist(musicId = music.id)) {
@@ -171,6 +197,11 @@ class DatabaseManager(context: Context) {
                     musicId = musicDb.id,
                     playlistId = playlistToRemove.playlist.id
                 )
+                if (playlistToRemove.playlist.title == LIKES_PLAYLIST_TITLE) {
+                    musicDao.unlike(musicId = musicDb.id)
+                    musicDb.music!!.liked = false
+                    musicDb.music!!.likedState.value = false
+                }
                 if (!musicsPlaylistsRelDAO.isMusicInPlaylist(musicId = musicDb.id)) {
                     musicDao.delete(musicDb)
                 }
@@ -272,7 +303,7 @@ class DatabaseManager(context: Context) {
         try {
             playlistWithMusics.playlist.id = 0
             playlistWithMusics.id = 0
-            insertOne(
+            insertPlaylistWithMusics(
                 context = context,
                 playlist = playlistWithMusics.playlist,
                 musicList = playlistWithMusics.musics,
@@ -316,6 +347,43 @@ class DatabaseManager(context: Context) {
             e.printStackTrace()
         } catch (e: IOException) {
             e.printStackTrace()
+        }
+    }
+
+    fun like(context: Context, music: Music) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                var likesPlaylist: PlaylistWithMusics? =
+                    playlistDao.getPlaylistWithMusics(title = LIKES_PLAYLIST_TITLE)
+                if (likesPlaylist == null) {
+                    insertPlaylistWithMusics(
+                        context = context,
+                        musicList = mutableListOf(MusicDB(id = music.id)),
+                        playlist = Playlist(id = 0, title = LIKES_PLAYLIST_TITLE)
+                    )
+                } else {
+                    likesPlaylist = DataManager.getPlaylist(playlistId = likesPlaylist.id)
+                    insertMusicToPlaylists(music = music, playlists = listOf(likesPlaylist))
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    fun unlike(music: Music) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val likesPlaylist: PlaylistWithMusics =
+                    playlistDao.getPlaylistWithMusics(title = LIKES_PLAYLIST_TITLE) ?: return@launch
+                removeMusicFromPlaylist(
+                    music = music,
+                    playlist = DataManager.getPlaylist(playlistId = likesPlaylist.id)
+                )
+                musicDao.unlike(musicId = music.id)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
     }
 }

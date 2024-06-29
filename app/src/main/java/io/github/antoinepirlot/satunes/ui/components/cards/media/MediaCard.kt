@@ -49,11 +49,13 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.toBitmap
+import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Folder
@@ -72,6 +74,7 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.playlist.PlaylistOpt
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 import io.github.antoinepirlot.satunes.ui.components.texts.Subtitle
 import io.github.antoinepirlot.satunes.ui.utils.getRootFolderName
+import io.github.antoinepirlot.satunes.database.R as RDb
 
 /**
  * @author Antoine Pirlot on 16/01/24
@@ -92,7 +95,11 @@ internal fun MediaCard(
         if (media is Folder && media.parentFolder == null) {
             getRootFolderName(title = media.title)
         } else if (media is PlaylistWithMusics) {
-            media.playlist.title
+            if (media.playlist.title == LIKES_PLAYLIST_TITLE) {
+                stringResource(id = RDb.string.likes_playlist_title)
+            } else {
+                media.playlist.title
+            }
         } else if (media is MusicDB) {
             media.music!!.title
         } else {

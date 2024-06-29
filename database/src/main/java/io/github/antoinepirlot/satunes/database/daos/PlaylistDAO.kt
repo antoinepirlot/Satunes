@@ -30,6 +30,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
+import androidx.room.Update
 import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
 import io.github.antoinepirlot.satunes.database.models.tables.Playlist
 
@@ -56,6 +57,9 @@ internal interface PlaylistDAO {
 
     @Insert
     fun insertOne(playlist: Playlist): Long
+
+    @Update
+    fun update(vararg playlists: Playlist)
 
     @Delete
     fun remove(playlist: Playlist)

@@ -39,6 +39,7 @@ import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToQueueDialogOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.PlayNextMediaOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.music.options.AddToPlaylistOption
+import io.github.antoinepirlot.satunes.ui.components.dialog.music.options.LikeUnlikeMusicOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.music.options.NavigateToMediaMusicOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.music.options.RemoveFromPlaylistMusicOption
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
@@ -69,6 +70,7 @@ internal fun MusicOptionsDialog(
         },
         text = {
             Column {
+                LikeUnlikeMusicOption(music = music)
                 AddToPlaylistOption(music = music, onFinished = onDismissRequest)
 
                 if (playlistWithMusics != null) {

@@ -26,7 +26,6 @@
 package io.github.antoinepirlot.satunes.ui.components.dialog.music.options
 
 import android.content.Context
-import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -63,13 +62,7 @@ internal fun AddToPlaylistOption(
     DialogOption(
         modifier = modifier,
         onClick = { showDialog = true },
-        icon = {
-            val playlistIcon: SatunesIcons = SatunesIcons.PLAYLIST_ADD
-            Icon(
-                imageVector = playlistIcon.imageVector,
-                contentDescription = playlistIcon.description
-            )
-        },
+        icon = SatunesIcons.PLAYLIST_ADD,
         text = stringResource(id = R.string.add_to_playlist)
     )
     if (showDialog) {

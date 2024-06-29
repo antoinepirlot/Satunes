@@ -25,7 +25,6 @@
 
 package io.github.antoinepirlot.satunes.ui.components.dialog.playlist.options
 
-import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -52,13 +51,7 @@ internal fun ExportPlaylistOption(
                 defaultFileName = playlistToExport.playlist.title + ".json"
             )
         },
-        icon = {
-            val exportIcon: SatunesIcons = SatunesIcons.EXPORT
-            Icon(
-                imageVector = exportIcon.imageVector,
-                contentDescription = exportIcon.description
-            )
-        },
+        icon = SatunesIcons.EXPORT,
         text = stringResource(id = R.string.export) + " (Beta)"
     )
 }

@@ -38,6 +38,7 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.floatPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import io.github.antoinepirlot.satunes.database.models.MenuTitle
 import kotlinx.coroutines.flow.first
@@ -64,6 +65,8 @@ object SettingsManager {
     private const val DEFAULT_SHUFFLE_MODE_CHECKED: Boolean = false
     private const val DEFAULT_PAUSE_IF_ANOTHER_PLAYBACK_CHECKED: Boolean = true
     private const val DEFAULT_AUDIO_OFFLOAD_CHECKED: Boolean = false
+    private const val DEFAULT_WHATS_NEW_SEEN: Boolean = false
+    private const val DEFAULT_WHATS_NEW_VERSION_SEEN: String = ""
 
     private val PREFERENCES_DATA_STORE = preferencesDataStore("settings")
     private val FOLDERS_CHECKED_PREFERENCES_KEY = booleanPreferencesKey("folders_checked")
@@ -80,6 +83,8 @@ object SettingsManager {
     private val SHUFFLE_MODE_KEY = booleanPreferencesKey("shuffle_mode")
     private val PAUSE_IF_ANOTHER_PLAYBACK_KEY = booleanPreferencesKey("pause_if_another_playback")
     private val AUDIO_OFFLOAD_CHECKED_KEY = booleanPreferencesKey("audio_offload_checked")
+    private val WHATS_NEW_SEEN_KEY = booleanPreferencesKey("whats_new_seen")
+    private val WHATS_NEW_VERSION_SEEN_KEY = stringPreferencesKey("whats_new_version_seen")
 
     private val Context.dataStore: DataStore<Preferences> by PREFERENCES_DATA_STORE
 
@@ -107,6 +112,9 @@ object SettingsManager {
         Pair(MenuTitle.GENRES, genresChecked),
         Pair(MenuTitle.PLAYLISTS, playlistsChecked)
     )
+
+    val whatsNewSeen: MutableState<Boolean> = mutableStateOf(DEFAULT_WHATS_NEW_SEEN)
+    private var whatsNewVersionSeen: String = DEFAULT_WHATS_NEW_VERSION_SEEN
 
     fun loadSettings(context: Context) {
         runBlocking {
@@ -148,10 +156,24 @@ object SettingsManager {
 
                 audioOffloadChecked.value =
                     preferences[AUDIO_OFFLOAD_CHECKED_KEY] ?: DEFAULT_AUDIO_OFFLOAD_CHECKED
+                loadWhatsNew(context = context, preferences = preferences)
             }.first()
         }
     }
 
+    private fun loadWhatsNew(context: Context, preferences: Preferences) {
+        whatsNewSeen.value = preferences[WHATS_NEW_SEEN_KEY] ?: DEFAULT_WHATS_NEW_SEEN
+        whatsNewVersionSeen =
+            preferences[WHATS_NEW_VERSION_SEEN_KEY] ?: DEFAULT_WHATS_NEW_VERSION_SEEN
+        if (whatsNewSeen.value) {
+            val packageManager = context.packageManager
+            val packageInfo = packageManager.getPackageInfo(context.packageName, 0)
+            val versionName = 'v' + packageInfo.versionName
+            if (whatsNewVersionSeen != versionName) {
+                this.whatsNewSeen(context = context, seen = false)
+            }
+        }
+    }
     fun switchMenuTitle(context: Context, menuTitle: MenuTitle) {
         runBlocking {
             when (menuTitle) {
@@ -265,6 +287,22 @@ object SettingsManager {
             context.dataStore.edit { preferences: MutablePreferences ->
                 audioOffloadChecked.value = !audioOffloadChecked.value
                 preferences[AUDIO_OFFLOAD_CHECKED_KEY] = audioOffloadChecked.value
+            }
+        }
+    }
+
+    fun whatsNewSeen(context: Context, seen: Boolean) {
+        runBlocking {
+            context.dataStore.edit { preferences: MutablePreferences ->
+                whatsNewSeen.value = seen
+                preferences[WHATS_NEW_SEEN_KEY] = whatsNewSeen.value
+                if (seen) {
+                    val packageManager = context.packageManager
+                    val packageInfo = packageManager.getPackageInfo(context.packageName, 0)
+                    val versionName = 'v' + packageInfo.versionName
+                    preferences[WHATS_NEW_VERSION_SEEN_KEY] = versionName
+                    whatsNewVersionSeen = versionName
+                }
             }
         }
     }

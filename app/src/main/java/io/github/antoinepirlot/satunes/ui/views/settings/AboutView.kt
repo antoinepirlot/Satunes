@@ -37,7 +37,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.ui.components.settings.Facebook
 import io.github.antoinepirlot.satunes.ui.components.settings.GitHub
 import io.github.antoinepirlot.satunes.ui.components.settings.Tipeee
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
@@ -59,10 +58,9 @@ internal fun AboutView(
         )
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             Tipeee()
-            Facebook()
             GitHub()
         }
     }

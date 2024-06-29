@@ -9,7 +9,7 @@
     <string name="playback_when_paused">Lecture si l\'application est fermée</string>
     <string name="pause_if_noisy">Pause si le casque est débranché</string>
     <string name="playlist_form">Nom de la playlist</string>
-    <string name="create_playlist">Crée une nouvelle playlist</string>
+    <string name="create_playlist">Créer une nouvelle playlist</string>
     <string name="cancel">Annuler</string>
     <string name="create">Créer</string>
     <string name="add_to_playlist">Ajouter à une playlist</string>
@@ -53,4 +53,13 @@
     <string name="battery_settings">Batterie</string>
     <string name="audio_offload_info">Ce paramètre permet d\'envoyer le traitement audio vers un processus dédié. Cela permet de réduire la consommation d\'énergie.\n\nCependant, dans la librairie Media 3 utilisée dans Satunes, cela peut causer des problèmes de compatibilité ce qui se traduit par des coupures audio. Un problème connu à ce jour est que la musique s\'arrête en cours de lecture ou après la fin d\'un morceau.\n\nEn activant ce paramètre, tu réduis la consommation d\'énergie et augmente la durée de vie de la batterie mais tu es susceptible de rencontrer des coupures audio.\n\nJ\'espère que dans un future proche, le problème puisse être réglé par Google qui détient les librairies Media3 et ExoPlayer. En attendant, j\'essaie de trouver des solutions viables pour réduire la consommation d\'énergie par Satunes.</string>
     <string name="restart_required">Redémarrage requis</string>
+    <string name="add_to_queue">Ajouter à la file d\'attente</string>
+    <string name="play_next">Lire après</string>
+    <string name="playback_queue">File d\'attente</string>
+    <string name="search_placeholder">Recherche</string>
+    <string name="no_result">Aucun résultat trouvé</string>
+    <string name="add_to_likes">J\'aime</string>
+    <string name="remove_from_likes">J\'aime plus</string>
+    <string name="whats_new_text">Génial! Tu viens d\'installer une nouvelle version de Satunes.\n\nJ\'espère que celle-ci te conviendra.\n\nSi jamais tu remarques des problèmes ou si tu veux faire des suggestions, tu peux m\'envoyer un mail à l\'adresse: pirlot.antoine@outlook.com.\n\nMerci de ton aide! 😊\n\nJe te souhaite une bonne écoute 🎧🎵</string>
+    <string name="click_here">clique ici</string>
 </resources>

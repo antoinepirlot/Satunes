@@ -23,42 +23,44 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.dialog.playlist
+package io.github.antoinepirlot.satunes.ui.components.dialog.music.options
 
-import androidx.compose.material3.Icon
+import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
+import io.github.antoinepirlot.satunes.database.services.DatabaseManager
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.ui.components.dialog.DialogOption
+import io.github.antoinepirlot.satunes.ui.components.dialog.options.DialogOption
 
 /**
  * @author Antoine Pirlot on 01/06/2024
  */
 
 @Composable
-internal fun ExportPlaylistOption(
+internal fun RemoveFromPlaylistMusicOption(
     modifier: Modifier = Modifier,
-    playlistToExport: PlaylistWithMusics
+    music: Music,
+    playlistWithMusics: PlaylistWithMusics,
+    onFinished: () -> Unit,
 ) {
+    val context: Context = LocalContext.current
+
     DialogOption(
         modifier = modifier,
         onClick = {
-            MainActivity.playlistsToExport = arrayOf(playlistToExport)
-            MainActivity.instance.createFileToExportPlaylists(
-                defaultFileName = playlistToExport.playlist.title + ".json"
+            val db = DatabaseManager(context = context)
+            db.removeMusicFromPlaylist(
+                music = music,
+                playlist = playlistWithMusics
             )
+            onFinished()
         },
-        icon = {
-            val exportIcon: SatunesIcons = SatunesIcons.EXPORT
-            Icon(
-                imageVector = exportIcon.imageVector,
-                contentDescription = exportIcon.description
-            )
-        },
-        text = stringResource(id = R.string.export) + " (Beta)"
+        icon = SatunesIcons.PLAYLIST_REMOVE,
+        text = stringResource(id = R.string.remove_from_playlist)
     )
 }

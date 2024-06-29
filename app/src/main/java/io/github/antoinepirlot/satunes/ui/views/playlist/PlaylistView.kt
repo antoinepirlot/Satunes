@@ -38,6 +38,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.media3.common.MediaItem
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
@@ -54,6 +55,7 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.MediaSelectionDialog
 import io.github.antoinepirlot.satunes.ui.components.texts.Title
 import io.github.antoinepirlot.satunes.ui.views.MediaListView
 import java.util.SortedMap
+import io.github.antoinepirlot.satunes.database.R as RDb
 
 /**
  * @author Antoine Pirlot on 01/04/2024
@@ -88,7 +90,14 @@ internal fun PlaylistView(
         },
         openedPlaylistWithMusics = playlist,
         onFABClick = { openCurrentMusic() },
-        header = { Title(text = playlist.playlist.title) },
+        header = {
+            val title: String = if (playlist.playlist.title == LIKES_PLAYLIST_TITLE) {
+                stringResource(id = RDb.string.likes_playlist_title)
+            } else {
+                playlist.playlist.title
+            }
+            Title(text = title)
+        },
         extraButtons = {
             ExtraButton(icon = SatunesIcons.ADD, onClick = { openAddMusicsDialog = true })
             if (playlist.musicMediaItemSortedMap.isNotEmpty()) {

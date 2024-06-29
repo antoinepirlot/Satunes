@@ -37,6 +37,8 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
@@ -50,7 +52,9 @@ import io.github.antoinepirlot.satunes.internet.updates.UpdateAvailableStatus
 import io.github.antoinepirlot.satunes.internet.updates.UpdateCheckManager
 import io.github.antoinepirlot.satunes.navController
 import io.github.antoinepirlot.satunes.router.Destination
+import io.github.antoinepirlot.satunes.router.playbackViews
 import io.github.antoinepirlot.satunes.router.settingsDestinations
+import io.github.antoinepirlot.satunes.services.RoutesManager
 import io.github.antoinepirlot.satunes.ui.ScreenSizes
 
 /**
@@ -66,12 +70,29 @@ internal fun SatunesTopAppBar(
     val screenWidthDp = LocalConfiguration.current.screenWidthDp
     val barModifier: Modifier =
         if (screenWidthDp < ScreenSizes.VERY_VERY_SMALL) modifier.fillMaxHeight(0.11f) else modifier
+    val currentDestination: String? by rememberSaveable { RoutesManager.currentDestination }
+
     CenterAlignedTopAppBar(
         modifier = barModifier,
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer,
             titleContentColor = MaterialTheme.colorScheme.primary,
         ),
+        navigationIcon = {
+            val screenWidth: Int = LocalConfiguration.current.screenWidthDp
+            if (currentDestination !in playbackViews || screenWidth >= ScreenSizes.LARGE) {
+                return@CenterAlignedTopAppBar
+            }
+
+            // Here, the user is in the playback view
+            IconButton(onClick = { onPlaybackQueueButtonClick() }) {
+                val playbackQueueIcon: SatunesIcons = SatunesIcons.PLAYLIST
+                Icon(
+                    imageVector = playbackQueueIcon.imageVector,
+                    contentDescription = playbackQueueIcon.description
+                )
+            }
+        },
         title = {
             Text(
                 text = stringResource(id = R.string.app_name),
@@ -80,34 +101,16 @@ internal fun SatunesTopAppBar(
             )
         },
         actions = {
-            IconButton(
-                onClick = {
-                    if (UpdateCheckManager.updateAvailableStatus.value != UpdateAvailableStatus.AVAILABLE) {
-                        UpdateCheckManager.updateAvailableStatus.value =
-                            UpdateAvailableStatus.UNDEFINED
-                    }
-
-                    val currentDestination: String =
-                        navController.currentBackStackEntry!!.destination.route!!
-                    when (currentDestination) {
-                        in settingsDestinations -> {
-                            if (currentDestination == Destination.PERMISSIONS_SETTINGS.link
-                                && !MainActivity.instance.isAudioAllowed()
-                            ) {
-                                return@IconButton
-                            } else {
-                                navController.popBackStack()
-                                if (navController.currentBackStackEntry == null) {
-                                    navController.navigate(Destination.FOLDERS.link)
-                                    navController.navigate(Destination.SETTINGS.link)
-                                }
-                            }
-                        }
-
-                        else -> navController.navigate(Destination.SETTINGS.link)
-                    }
+            if (currentDestination !in settingsDestinations) {
+                // Search Button
+                IconButton(onClick = { onSearchButtonClick() }) {
+                    val icon: SatunesIcons = SatunesIcons.SEARCH
+                    Icon(imageVector = icon.imageVector, contentDescription = icon.description)
                 }
-            ) {
+            }
+
+            //Setting Button
+            IconButton(onClick = { onSettingButtonClick() }) {
                 val settingsIcon: SatunesIcons = SatunesIcons.SETTINGS
                 Icon(
                     imageVector = settingsIcon.imageVector,
@@ -117,6 +120,50 @@ internal fun SatunesTopAppBar(
         },
         scrollBehavior = scrollBehavior,
     )
+}
+
+private fun onSearchButtonClick() {
+    when (RoutesManager.currentDestination.value) {
+        Destination.SEARCH.link -> navController.popBackStack()
+        else -> navController.navigate(Destination.SEARCH.link)
+    }
+}
+
+private fun onPlaybackQueueButtonClick() {
+    when (RoutesManager.currentDestination.value) {
+        Destination.PLAYBACK.link -> navController.navigate(Destination.PLAYBACK_QUEUE.link)
+        Destination.PLAYBACK_QUEUE.link -> navController.navigate(Destination.PLAYBACK.link)
+        else -> return
+    }
+}
+
+/**
+ * When currentDestination is the settings list, then return to app only if audio permission has been allowed.
+ * Otherwise navigate to settings
+ */
+private fun onSettingButtonClick() {
+    if (UpdateCheckManager.updateAvailableStatus.value != UpdateAvailableStatus.AVAILABLE) {
+        UpdateCheckManager.updateAvailableStatus.value =
+            UpdateAvailableStatus.UNDEFINED
+    }
+
+    when (val currentDestination: String = RoutesManager.currentDestination.value!!) {
+        in settingsDestinations -> {
+            if (currentDestination == Destination.PERMISSIONS_SETTINGS.link
+                && !MainActivity.instance.isAudioAllowed()
+            ) {
+                return
+            } else {
+                navController.popBackStack()
+                if (navController.currentBackStackEntry == null) {
+                    navController.navigate(Destination.FOLDERS.link)
+                    navController.navigate(Destination.SETTINGS.link)
+                }
+            }
+        }
+
+        else -> navController.navigate(Destination.SETTINGS.link)
+    }
 }
 
 @SuppressLint("UnrememberedMutableState")

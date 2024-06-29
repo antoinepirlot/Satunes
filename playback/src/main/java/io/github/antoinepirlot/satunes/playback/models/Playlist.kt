@@ -25,8 +25,12 @@
 
 package io.github.antoinepirlot.satunes.playback.models
 
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.runtime.toMutableStateList
 import androidx.media3.common.MediaItem
 import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.playback.exceptions.AlreadyInPlaybackException
 import java.util.SortedMap
 
 /**
@@ -37,12 +41,12 @@ internal class Playlist(
     musicMediaItemSortedMap: SortedMap<Music, MediaItem>,
 ) {
     private val originalMusicMediaItemMap: SortedMap<Music, MediaItem>
-    var musicList: MutableList<Music>
+    var musicList: SnapshotStateList<Music>
     var mediaItemList: MutableList<MediaItem>
 
 
     init {
-        this.musicList = musicMediaItemSortedMap.keys.toMutableList()
+        this.musicList = musicMediaItemSortedMap.keys.toMutableStateList()
         this.mediaItemList = musicMediaItemSortedMap.values.toMutableList()
         this.originalMusicMediaItemMap = musicMediaItemSortedMap.toSortedMap()
     }
@@ -61,12 +65,13 @@ internal class Playlist(
         }
 
         if (musicMoving != null) {
+            // Not cleared as the list is only shown in playback queue view
             val oldMusicList: MutableList<Music> = this.musicList
-            this.musicList = mutableListOf()
+            this.musicList = mutableStateListOf()
             this.musicList.add(musicMoving)
             this.musicList.addAll(oldMusicList.shuffled())
         } else {
-            this.musicList = this.musicList.shuffled().toMutableList()
+            this.musicList = this.musicList.shuffled().toMutableStateList()
         }
         this.mediaItemList = mutableListOf()
         this.musicList.forEach { music: Music ->
@@ -78,7 +83,7 @@ internal class Playlist(
      * Undo shuffle, set to the original playlist
      */
     fun undoShuffle() {
-        this.musicList = this.originalMusicMediaItemMap.keys.toMutableList()
+        this.musicList = this.originalMusicMediaItemMap.keys.toMutableStateList()
         this.mediaItemList = this.originalMusicMediaItemMap.values.toMutableList()
     }
 
@@ -126,4 +131,35 @@ internal class Playlist(
         }
         return mediaItemList.subList(fromIndex = fromIndex, toIndex = toIndex + 1)
     }
+
+    fun addToQueue(music: Music) {
+        if (this.originalMusicMediaItemMap[music] != null) {
+            throw AlreadyInPlaybackException()
+        }
+        this.originalMusicMediaItemMap[music] = music.mediaItem
+        this.musicList.add(music)
+        this.mediaItemList.add(music.mediaItem)
+    }
+
+    fun addNext(index: Int, music: Music) {
+        if (this.originalMusicMediaItemMap[music] != null) {
+            throw AlreadyInPlaybackException()
+        }
+        this.originalMusicMediaItemMap[music] = music.mediaItem
+        this.musicList.add(index = index, element = music)
+        this.mediaItemList.add(index = index, element = music.mediaItem)
+    }
+
+    /**
+     * Move music to next to the current music
+     *
+     * @param music the music to move
+     */
+    fun moveMusic(music: Music, oldIndex: Int, newIndex: Int) {
+        this.musicList.removeAt(oldIndex)
+        this.musicList.add(index = newIndex, element = music)
+        this.mediaItemList.removeAt(oldIndex)
+        this.mediaItemList.add(index = newIndex, element = music.mediaItem)
+    }
+
 }

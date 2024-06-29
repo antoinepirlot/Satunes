@@ -49,11 +49,13 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.toBitmap
+import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Folder
@@ -64,6 +66,7 @@ import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMus
 import io.github.antoinepirlot.satunes.database.models.tables.MusicDB
 import io.github.antoinepirlot.satunes.icons.R
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.ui.ScreenSizes
 import io.github.antoinepirlot.satunes.ui.components.cards.ListItem
 import io.github.antoinepirlot.satunes.ui.components.dialog.music.MusicOptionsDialog
@@ -71,6 +74,7 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.playlist.PlaylistOpt
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 import io.github.antoinepirlot.satunes.ui.components.texts.Subtitle
 import io.github.antoinepirlot.satunes.ui.utils.getRootFolderName
+import io.github.antoinepirlot.satunes.database.R as RDb
 
 /**
  * @author Antoine Pirlot on 16/01/24
@@ -91,7 +95,11 @@ internal fun MediaCard(
         if (media is Folder && media.parentFolder == null) {
             getRootFolderName(title = media.title)
         } else if (media is PlaylistWithMusics) {
-            media.playlist.title
+            if (media.playlist.title == LIKES_PLAYLIST_TITLE) {
+                stringResource(id = RDb.string.likes_playlist_title)
+            } else {
+                media.playlist.title
+            }
         } else if (media is MusicDB) {
             media.music!!.title
         } else {
@@ -147,32 +155,44 @@ internal fun MediaCard(
                         .fillMaxHeight()
                         .width(boxSize)
                 ) {
-                    if (media.artwork != null) {
-                        Image(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .align(Alignment.Center),
-                            bitmap = media.artwork!!.asImageBitmap(),
-                            contentDescription = "Media Artwork"
+                    val imageModifier: Modifier = Modifier
+                        .fillMaxSize()
+                        .align(Alignment.Center)
+                    val playbackController: PlaybackController = PlaybackController.getInstance()
+                    if (media == playbackController.musicPlaying.value) {
+                        val playingIcon: SatunesIcons = SatunesIcons.MUSIC_PLAYING
+                        Icon(
+                            modifier = imageModifier,
+                            imageVector = playingIcon.imageVector,
+                            contentDescription = playingIcon.description
                         )
                     } else {
-                        if (media is Music || media is Album) {
-                            //Use it will prevent slow devices showing icon instead of artwork
-                            val emptyArtwork: ImageBitmap = ResourcesCompat.getDrawable(
-                                LocalContext.current.resources,
-                                R.mipmap.empty_album_artwork_foreground,
-                                null
-                            )?.toBitmap()!!.asImageBitmap()
-                            Image(bitmap = emptyArtwork, contentDescription = "Empty Album")
-                        } else {
-                            val mediaIcon: SatunesIcons = getRightIconAndDescription(media = media)
-                            Icon(
-                                modifier = Modifier
-                                    .size(30.dp)
-                                    .align(Alignment.Center),
-                                imageVector = mediaIcon.imageVector,
-                                contentDescription = mediaIcon.description
+                        if (media.artwork != null) {
+                            Image(
+                                modifier = imageModifier,
+                                bitmap = media.artwork!!.asImageBitmap(),
+                                contentDescription = "Media Artwork"
                             )
+                        } else {
+                            if (media is Music || media is Album) {
+                                //Use it will prevent slow devices showing icon instead of artwork
+                                val emptyArtwork: ImageBitmap = ResourcesCompat.getDrawable(
+                                    LocalContext.current.resources,
+                                    R.mipmap.empty_album_artwork_foreground,
+                                    null
+                                )?.toBitmap()!!.asImageBitmap()
+                                Image(bitmap = emptyArtwork, contentDescription = "Empty Album")
+                            } else {
+                                val mediaIcon: SatunesIcons =
+                                    getRightIconAndDescription(media = media)
+                                Icon(
+                                    modifier = Modifier
+                                        .size(30.dp)
+                                        .align(Alignment.Center),
+                                    imageVector = mediaIcon.imageVector,
+                                    contentDescription = mediaIcon.description
+                                )
+                            }
                         }
                     }
                 }

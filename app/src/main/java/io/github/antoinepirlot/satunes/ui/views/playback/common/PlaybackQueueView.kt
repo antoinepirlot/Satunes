@@ -23,28 +23,40 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.settings
+package io.github.antoinepirlot.satunes.ui.views.playback.common
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.ui.components.images.ImageWithLink
+import io.github.antoinepirlot.satunes.database.models.Media
+import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.playback.services.PlaybackController
+import io.github.antoinepirlot.satunes.router.utils.openMedia
+import io.github.antoinepirlot.satunes.ui.components.cards.media.MediaCardList
+import io.github.antoinepirlot.satunes.ui.components.texts.Title
 
 /**
- * @author Antoine Pirlot on 11/04/2024
+ * @author Antoine Pirlot on 23/06/2024
  */
 
 @Composable
-internal fun Facebook(
-    modifier: Modifier = Modifier
+internal fun PlaybackQueueView(
+    modifier: Modifier = Modifier,
 ) {
-    val facebookUrl = "https://www.facebook.com/profile.php?id=61557929940182"
-    ImageWithLink(modifier = modifier, url = facebookUrl, painterId = R.drawable.facebook_logo)
+    val playbackPlaylist: List<Music> = remember { PlaybackController.getInstance().getPlaylist() }
+    MediaCardList(
+        modifier = modifier,
+        header = { Title(text = stringResource(id = R.string.playback_queue)) },
+        mediaList = playbackPlaylist,
+        openMedia = { media: Media -> openMedia(media, navigate = false) }
+    )
 }
 
 @Preview
 @Composable
-private fun FacebookPreview() {
-    Facebook()
+private fun PlaybackQueueViewPreview() {
+    PlaybackQueueView()
 }

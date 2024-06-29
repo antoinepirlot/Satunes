@@ -23,10 +23,9 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.dialog.music
+package io.github.antoinepirlot.satunes.ui.components.buttons.playback.custom_actions
 
 import android.content.Context
-import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -36,14 +35,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
 import io.github.antoinepirlot.satunes.database.services.DataManager
 import io.github.antoinepirlot.satunes.database.services.DatabaseManager
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.services.MediaSelectionManager
-import io.github.antoinepirlot.satunes.ui.components.dialog.DialogOption
+import io.github.antoinepirlot.satunes.ui.components.buttons.playback.RowButton
 import io.github.antoinepirlot.satunes.ui.components.dialog.MediaSelectionDialog
 import java.util.SortedMap
 
@@ -52,28 +53,21 @@ import java.util.SortedMap
  */
 
 @Composable
-internal fun AddToPlaylistOption(
+internal fun AddToPlaylistCustomAction(
     modifier: Modifier = Modifier,
-    music: Music,
-    onFinished: () -> Unit
 ) {
     val context: Context = LocalContext.current
-    var showDialog: Boolean by rememberSaveable { mutableStateOf(false) }
+    var showForm: Boolean by rememberSaveable { mutableStateOf(false) }
 
-    DialogOption(
+    RowButton(
         modifier = modifier,
-        onClick = { showDialog = true },
-        icon = {
-            val playlistIcon: SatunesIcons = SatunesIcons.PLAYLIST_ADD
-            Icon(
-                imageVector = playlistIcon.imageVector,
-                contentDescription = playlistIcon.description
-            )
-        },
-        text = stringResource(id = R.string.add_to_playlist)
+        icon = SatunesIcons.PLAYLIST_ADD,
+        text = stringResource(id = R.string.add_to_playlist),
+        onClick = { showForm = true }
     )
-    if (showDialog) {
-        val playlistList: SortedMap<String, PlaylistWithMusics> =
+
+    if (showForm) {
+        val playlistMap: SortedMap<String, PlaylistWithMusics> =
             remember { DataManager.playlistWithMusicsMap }
 
         //Recompose if data changed
@@ -84,19 +78,32 @@ internal fun AddToPlaylistOption(
         //
 
         MediaSelectionDialog(
-            onDismissRequest = {
-                showDialog = false
-            },
+            onDismissRequest = { showForm = false },
             onConfirm = {
-                val db = DatabaseManager(context = context)
-                db.insertMusicToPlaylists(
-                    music = music,
-                    playlists = MediaSelectionManager.getCheckedPlaylistWithMusics()
+                addMusicPlayingToPlaylist(
+                    context = context,
+                    checkedPlaylists = MediaSelectionManager.getCheckedPlaylistWithMusics()
                 )
-                onFinished()
+                showForm = false
             },
-            mediaList = playlistList.values.toList(),
-            icon = SatunesIcons.PLAYLIST_ADD,
+            mediaList = DataManager.playlistWithMusicsMap.values.toList(),
+            icon = SatunesIcons.PLAYLIST_ADD
         )
     }
+}
+
+private fun addMusicPlayingToPlaylist(
+    context: Context,
+    checkedPlaylists: List<PlaylistWithMusics>
+) {
+    val playbackController: PlaybackController = PlaybackController.getInstance()
+    val musicPlaying: Music = playbackController.musicPlaying.value!!
+    val db = DatabaseManager(context = context)
+    db.insertMusicToPlaylists(music = musicPlaying, playlists = checkedPlaylists)
+}
+
+@Preview
+@Composable
+private fun AddToPlaylistRowButtonPreview() {
+    AddToPlaylistCustomAction()
 }

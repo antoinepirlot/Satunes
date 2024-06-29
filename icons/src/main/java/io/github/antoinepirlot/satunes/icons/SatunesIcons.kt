@@ -34,16 +34,22 @@ import androidx.compose.material.icons.rounded.Album
 import androidx.compose.material.icons.rounded.Category
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Done
+import androidx.compose.material.icons.rounded.Favorite
+import androidx.compose.material.icons.rounded.FavoriteBorder
 import androidx.compose.material.icons.rounded.FileDownload
 import androidx.compose.material.icons.rounded.FileUpload
 import androidx.compose.material.icons.rounded.Folder
+import androidx.compose.material.icons.rounded.GraphicEq
 import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.MusicNote
 import androidx.compose.material.icons.rounded.PauseCircle
 import androidx.compose.material.icons.rounded.PlayCircle
+import androidx.compose.material.icons.rounded.PlaylistAddCircle
 import androidx.compose.material.icons.rounded.PlaylistRemove
+import androidx.compose.material.icons.rounded.QueuePlayNext
 import androidx.compose.material.icons.rounded.Repeat
 import androidx.compose.material.icons.rounded.RepeatOne
+import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material.icons.rounded.Shuffle
 import androidx.compose.material.icons.rounded.SkipNext
@@ -55,14 +61,21 @@ import androidx.compose.ui.graphics.vector.ImageVector
  */
 enum class SatunesIcons(val imageVector: ImageVector, val description: String) {
     ADD(imageVector = Icons.Rounded.Add, description = "Add Icon"),
+    ADD_TO_PLAYBACK_QUEUE(
+        imageVector = Icons.Rounded.PlaylistAddCircle,
+        description = "Add to queue Icon"
+    ),
     ALBUM(imageVector = Icons.Rounded.Album, description = "Album Icon"),
     ARTIST(imageVector = Icons.Rounded.AccountCircle, description = "Artist Icon"),
+    CHIP_SELECTED(imageVector = Icons.Rounded.Done, description = "Chip Selected icon"),
     EXPORT(imageVector = Icons.Rounded.FileUpload, description = "Export Icon"),
     IMPORT(imageVector = Icons.Rounded.FileDownload, description = "Import Icon"),
     INFO(imageVector = Icons.Rounded.Info, description = "Info Icon"),
+    LIKED(imageVector = Icons.Rounded.Favorite, description = "Liked Icon"),
     FOLDER(imageVector = Icons.Rounded.Folder, description = "Folder Icon"),
     GENRES(imageVector = Icons.Rounded.Category, description = "Genre Icon"),
     MUSIC(imageVector = Icons.Rounded.MusicNote, description = "Music Icon"),
+    MUSIC_PLAYING(imageVector = Icons.Rounded.GraphicEq, description = "Music Playing Icon"),
     PAUSE(imageVector = Icons.Rounded.PauseCircle, description = "Pause Icon"),
     PERMISSION_GRANTED(imageVector = Icons.Rounded.Done, description = "Permission Granted Icon"),
     PERMISSION_NOT_GRANTED(
@@ -70,6 +83,7 @@ enum class SatunesIcons(val imageVector: ImageVector, val description: String) {
         description = "Permission Not Granted Icon"
     ),
     PLAY(imageVector = Icons.Rounded.PlayCircle, description = "Play Icon"),
+    PLAY_NEXT(imageVector = Icons.Rounded.QueuePlayNext, description = "Play Next Icon"),
     PLAYLIST(imageVector = Icons.AutoMirrored.Rounded.QueueMusic, description = "Playlist Icon"),
     PLAYLIST_ADD(
         imageVector = Icons.AutoMirrored.Rounded.PlaylistAdd,
@@ -81,8 +95,10 @@ enum class SatunesIcons(val imageVector: ImageVector, val description: String) {
     ),
     REPEAT(imageVector = Icons.Rounded.Repeat, description = "Repeat Icon"),
     REPEAT_ONE(imageVector = Icons.Rounded.RepeatOne, description = "Repeat One On Icon"),
+    SEARCH(imageVector = Icons.Rounded.Search, description = "Search Icon"),
     SETTINGS(imageVector = Icons.Rounded.Settings, description = "Settings Icon"),
     SHUFFLE(imageVector = Icons.Rounded.Shuffle, description = "Shuffle Icon"),
     SKIP_NEXT(imageVector = Icons.Rounded.SkipNext, description = "Skip Next Icon"),
     SKIP_PREVIOUS(imageVector = Icons.Rounded.SkipPrevious, description = "Skip Previous Icon"),
+    UNLIKED(imageVector = Icons.Rounded.FavoriteBorder, description = "Unliked Icon"),
 }

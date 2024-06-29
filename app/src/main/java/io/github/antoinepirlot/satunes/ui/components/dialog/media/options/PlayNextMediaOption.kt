@@ -23,33 +23,42 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.buttons.playback
+package io.github.antoinepirlot.satunes.ui.components.dialog.media.options
 
-import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.database.models.Album
+import io.github.antoinepirlot.satunes.database.models.Media
+import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import io.github.antoinepirlot.satunes.playback.services.PlaybackController
+import io.github.antoinepirlot.satunes.ui.components.dialog.options.DialogOption
 
 /**
- * @author Antoine Pirlot on 01/06/2024
+ * @author Antoine Pirlot on 25/06/2024
  */
 
 @Composable
-internal fun PlaybackButtonsRow(
-    modifier: Modifier = Modifier
+fun PlayNextMediaOption(
+    modifier: Modifier = Modifier,
+    media: Media,
+    onFinished: () -> Unit,
 ) {
-    val scrollState = rememberScrollState()
-    Row(
-        modifier = modifier.horizontalScroll(state = scrollState),
-    ) {
-        AddToPlaylistRowButton()
-    }
+    DialogOption(
+        modifier = modifier,
+        onClick = {
+            PlaybackController.getInstance().addNext(media = media)
+            onFinished()
+        },
+        icon = SatunesIcons.PLAY_NEXT,
+        text = stringResource(id = R.string.play_next)
+    )
 }
 
 @Preview
 @Composable
-private fun PlaybackButtonsRowPreview() {
-    PlaybackButtonsRow()
+private fun PlayNextMediaOptionPreview() {
+    PlayNextMediaOption(media = Album(title = "Album Title"), onFinished = {})
 }

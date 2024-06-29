@@ -27,7 +27,6 @@ package io.github.antoinepirlot.satunes.router
 
 import android.content.Context
 import android.net.Uri.decode
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
@@ -37,7 +36,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import io.github.antoinepirlot.satunes.MainActivity
@@ -51,8 +49,9 @@ import io.github.antoinepirlot.satunes.database.services.DataManager
 import io.github.antoinepirlot.satunes.navController
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.router.utils.openMedia
+import io.github.antoinepirlot.satunes.services.RoutesManager
+import io.github.antoinepirlot.satunes.services.search.SearchChipsManager
 import io.github.antoinepirlot.satunes.ui.views.LoadingView
-import io.github.antoinepirlot.satunes.ui.views.PlayBackView
 import io.github.antoinepirlot.satunes.ui.views.album.AlbumView
 import io.github.antoinepirlot.satunes.ui.views.album.AllAlbumsListView
 import io.github.antoinepirlot.satunes.ui.views.artist.AllArtistsListView
@@ -62,8 +61,11 @@ import io.github.antoinepirlot.satunes.ui.views.folder.RootFolderView
 import io.github.antoinepirlot.satunes.ui.views.genre.AllGenresListView
 import io.github.antoinepirlot.satunes.ui.views.genre.GenreView
 import io.github.antoinepirlot.satunes.ui.views.music.AllMusicsListView
+import io.github.antoinepirlot.satunes.ui.views.playback.PlaybackView
+import io.github.antoinepirlot.satunes.ui.views.playback.common.PlaybackQueueView
 import io.github.antoinepirlot.satunes.ui.views.playlist.PlaylistListView
 import io.github.antoinepirlot.satunes.ui.views.playlist.PlaylistView
+import io.github.antoinepirlot.satunes.ui.views.search.SearchView
 import io.github.antoinepirlot.satunes.ui.views.settings.AndroidAutoSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.BatterySettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.BottomNavigationBarSettingsView
@@ -83,7 +85,7 @@ internal fun Router(
     modifier: Modifier = Modifier,
 ) {
     val context: Context = LocalContext.current
-    val isLoading: MutableState<Boolean> = rememberSaveable { DataLoader.isLoading }
+    val isLoading: Boolean by rememberSaveable { DataLoader.isLoading }
     val isLoaded: Boolean by rememberSaveable { DataLoader.isLoaded }
     val isAudioAllowed: MutableState<Boolean> =
         rememberSaveable { mutableStateOf(MainActivity.instance.isAudioAllowed()) }
@@ -102,8 +104,9 @@ internal fun Router(
 
         composable(Destination.FOLDERS.link) {
             // /!\ This route prevent back gesture to exit the app
+            RoutesManager.currentDestination.value = it.destination.route
             permissionView(isAudioAllowed = isAudioAllowed.value)
-            if (isLoading.value || !isLoaded) {
+            if (isLoading || !isLoaded) {
                 LoadingView()
             } else {
                 RootFolderView()
@@ -111,8 +114,9 @@ internal fun Router(
         }
 
         composable("${Destination.FOLDERS.link}/{id}") {
+            RoutesManager.currentDestination.value = it.destination.route
             permissionView(isAudioAllowed = isAudioAllowed.value)
-            if (isLoading.value || !isLoaded) {
+            if (isLoading || !isLoaded) {
                 LoadingView()
             } else {
                 val folderId = it.arguments!!.getString("id")!!.toLong()
@@ -128,8 +132,9 @@ internal fun Router(
         }
 
         composable(Destination.ARTISTS.link) {
+            RoutesManager.currentDestination.value = it.destination.route
             permissionView(isAudioAllowed = isAudioAllowed.value)
-            if (isLoading.value || !isLoaded) {
+            if (isLoading || !isLoaded) {
                 LoadingView()
             } else {
                 AllArtistsListView()
@@ -137,8 +142,9 @@ internal fun Router(
         }
 
         composable("${Destination.ARTISTS.link}/{name}") {
+            RoutesManager.currentDestination.value = it.destination.route
             permissionView(isAudioAllowed = isAudioAllowed.value)
-            if (isLoading.value || !isLoaded) {
+            if (isLoading || !isLoaded) {
                 LoadingView()
             } else {
                 val artistName: String = decode(it.arguments!!.getString("name")!!)
@@ -154,8 +160,9 @@ internal fun Router(
         }
 
         composable(Destination.ALBUMS.link) {
+            RoutesManager.currentDestination.value = it.destination.route
             permissionView(isAudioAllowed = isAudioAllowed.value)
-            if (isLoading.value || !isLoaded) {
+            if (isLoading || !isLoaded) {
                 LoadingView()
             } else {
                 AllAlbumsListView()
@@ -163,8 +170,9 @@ internal fun Router(
         }
 
         composable("${Destination.ALBUMS.link}/{id}") {
+            RoutesManager.currentDestination.value = it.destination.route
             permissionView(isAudioAllowed = isAudioAllowed.value)
-            if (isLoading.value || !isLoaded) {
+            if (isLoading || !isLoaded) {
                 LoadingView()
             } else {
                 val albumId: Long = it.arguments!!.getString("id")!!.toLong()
@@ -174,8 +182,9 @@ internal fun Router(
         }
 
         composable(Destination.GENRES.link) {
+            RoutesManager.currentDestination.value = it.destination.route
             permissionView(isAudioAllowed = isAudioAllowed.value)
-            if (isLoading.value || !isLoaded) {
+            if (isLoading || !isLoaded) {
                 LoadingView()
             } else {
                 AllGenresListView()
@@ -183,8 +192,9 @@ internal fun Router(
         }
 
         composable("${Destination.GENRES.link}/{name}") {
+            RoutesManager.currentDestination.value = it.destination.route
             permissionView(isAudioAllowed = isAudioAllowed.value)
-            if (isLoading.value || !isLoaded) {
+            if (isLoading || !isLoaded) {
                 LoadingView()
             } else {
                 val genreName: String = decode(it.arguments!!.getString("name")!!)
@@ -194,8 +204,9 @@ internal fun Router(
         }
 
         composable(Destination.PLAYLISTS.link) {
+            RoutesManager.currentDestination.value = it.destination.route
             permissionView(isAudioAllowed = isAudioAllowed.value)
-            if (isLoading.value || !isLoaded) {
+            if (isLoading || !isLoaded) {
                 LoadingView()
             } else {
                 PlaylistListView()
@@ -203,8 +214,9 @@ internal fun Router(
         }
 
         composable("${Destination.PLAYLISTS.link}/{id}") {
+            RoutesManager.currentDestination.value = it.destination.route
             permissionView(isAudioAllowed = isAudioAllowed.value)
-            if (isLoading.value || !isLoaded) {
+            if (isLoading || !isLoaded) {
                 LoadingView()
             } else {
                 val playlistId: Long = it.arguments!!.getString("id")!!.toLong()
@@ -216,8 +228,9 @@ internal fun Router(
         }
 
         composable(Destination.MUSICS.link) {
+            RoutesManager.currentDestination.value = it.destination.route
             permissionView(isAudioAllowed = isAudioAllowed.value)
-            if (isLoading.value || !isLoaded) {
+            if (isLoading || !isLoaded) {
                 LoadingView()
             } else {
                 AllMusicsListView()
@@ -225,12 +238,12 @@ internal fun Router(
         }
 
         composable(Destination.PLAYBACK.link) {
+            RoutesManager.currentDestination.value = it.destination.route
             permissionView(isAudioAllowed = isAudioAllowed.value)
-            if (isLoading.value || !isLoaded) {
+            if (isLoading || !isLoaded) {
                 LoadingView()
             } else {
-                PlayBackView(
-                    modifier = Modifier.padding(16.dp),
+                PlaybackView(
                     onAlbumClick = { album: Album? ->
                         if (album != null) {
                             openMedia(media = album)
@@ -243,39 +256,66 @@ internal fun Router(
             }
         }
 
+        composable(Destination.SEARCH.link) {
+            RoutesManager.currentDestination.value = it.destination.route
+            permissionView(isAudioAllowed = isAudioAllowed.value)
+            SearchChipsManager.resetChips()
+            if (isLoading || !isLoaded) {
+                LoadingView()
+            } else {
+                SearchView()
+            }
+        }
+
+        composable(Destination.PLAYBACK_QUEUE.link) {
+            RoutesManager.currentDestination.value = it.destination.route
+            // Here, I assume audio permission is allowed and data has been loaded
+            // Also this view will never been accessible if no music is playing
+            PlaybackQueueView()
+        }
+
         composable(Destination.SETTINGS.link) {
+            RoutesManager.currentDestination.value = it.destination.route
             SettingsView()
         }
 
         composable(Destination.BOTTOM_BAR_SETTINGS.link) {
+            RoutesManager.currentDestination.value = it.destination.route
             BottomNavigationBarSettingsView()
         }
 
         composable(Destination.PLAYBACK_SETTINGS.link) {
+            RoutesManager.currentDestination.value = it.destination.route
             PlaybackSettingsView()
         }
 
         composable(Destination.UPDATES_SETTINGS.link) {
+            RoutesManager.currentDestination.value = it.destination.route
             UpdatesSettingView()
         }
 
         composable(Destination.EXCLUSION_SETTINGS.link) {
+            RoutesManager.currentDestination.value = it.destination.route
             ExclusionSettingsView()
         }
 
         composable(Destination.PLAYLISTS_SETTINGS.link) {
+            RoutesManager.currentDestination.value = it.destination.route
             PlaylistsSettingsView()
         }
 
         composable(Destination.PERMISSIONS_SETTINGS.link) {
+            RoutesManager.currentDestination.value = it.destination.route
             PermissionsSettingsView(isAudioAllowed = isAudioAllowed)
         }
 
         composable(Destination.ANDROID_AUTO_SETTINGS.link) {
+            RoutesManager.currentDestination.value = it.destination.route
             AndroidAutoSettingsView()
         }
 
         composable(Destination.BATTERY_SETTINGS.link) {
+            RoutesManager.currentDestination.value = it.destination.route
             BatterySettingsView()
         }
     }

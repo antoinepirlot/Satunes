@@ -42,7 +42,7 @@ import io.github.antoinepirlot.satunes.ui.components.settings.AudioOffloadSettin
 import io.github.antoinepirlot.satunes.ui.components.settings.BarSpeedSetting
 import io.github.antoinepirlot.satunes.ui.components.settings.PlaybackModesSubSettings
 import io.github.antoinepirlot.satunes.ui.components.settings.SettingsSwitchList
-import io.github.antoinepirlot.satunes.ui.components.settings.SubSetting
+import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
 import io.github.antoinepirlot.satunes.ui.components.texts.Title
 
 /**
@@ -71,12 +71,12 @@ internal fun PlaybackSettingsView(
     val scrollState: ScrollState = rememberScrollState()
     Column(modifier = modifier.verticalScroll(scrollState)) {
         Title(text = stringResource(id = R.string.playback_settings))
-        SubSetting {
+        SubSettings {
             SettingsSwitchList(checkedMap = checkedMap) //Contains list item so always padding horizontal 16.dp
             BarSpeedSetting(modifier = Modifier.padding(horizontal = 16.dp))
         }
         PlaybackModesSubSettings() //Contains list item so always padding horizontal 16.dp
-        SubSetting(
+        SubSettings(
             modifier = Modifier.padding(horizontal = 16.dp),
             title = stringResource(id = R.string.battery_settings)
         ) {

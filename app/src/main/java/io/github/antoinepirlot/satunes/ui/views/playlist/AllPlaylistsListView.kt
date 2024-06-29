@@ -89,7 +89,7 @@ internal fun PlaylistListView(
                 PlaylistCreationForm(
                     onConfirm = { playlistTitle: String ->
                         val playlist = Playlist(id = 0, title = playlistTitle)
-                        DatabaseManager(context = context).insertOne(
+                        DatabaseManager(context = context).insertPlaylistWithMusics(
                             context = context,
                             playlist = playlist
                         )

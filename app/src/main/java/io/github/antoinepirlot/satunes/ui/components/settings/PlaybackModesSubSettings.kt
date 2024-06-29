@@ -42,7 +42,7 @@ import io.github.antoinepirlot.satunes.ui.components.buttons.settings.ShuffleMod
 internal fun PlaybackModesSubSettings(
     modifier: Modifier = Modifier,
 ) {
-    SubSetting(
+    SubSettings(
         modifier = modifier,
         title = stringResource(id = R.string.playback_mode_settings)
     ) {

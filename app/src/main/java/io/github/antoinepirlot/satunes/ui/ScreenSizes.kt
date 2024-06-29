@@ -35,5 +35,6 @@ internal interface ScreenSizes {
         const val VERY_VERY_SMALL = 300
         const val VERY_SMALL = 370
         const val NORMAL = 380
+        const val LARGE = 650
     }
 }

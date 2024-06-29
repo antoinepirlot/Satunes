@@ -23,30 +23,27 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.dialog.music
+package io.github.antoinepirlot.satunes.ui.components.dialog.playlist.options
 
 import android.content.Context
-import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
 import io.github.antoinepirlot.satunes.database.services.DatabaseManager
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.ui.components.dialog.DialogOption
+import io.github.antoinepirlot.satunes.ui.components.dialog.options.DialogOption
 
 /**
  * @author Antoine Pirlot on 01/06/2024
  */
 
 @Composable
-internal fun RemoveFromPlaylistMusicOption(
+internal fun RemovePlaylistOption(
     modifier: Modifier = Modifier,
-    music: Music,
-    playlistWithMusics: PlaylistWithMusics,
+    playlistToRemove: PlaylistWithMusics,
     onFinished: () -> Unit,
 ) {
     val context: Context = LocalContext.current
@@ -55,19 +52,10 @@ internal fun RemoveFromPlaylistMusicOption(
         modifier = modifier,
         onClick = {
             val db = DatabaseManager(context = context)
-            db.removeMusicFromPlaylist(
-                music = music,
-                playlist = playlistWithMusics
-            )
+            db.removePlaylist(playlistToRemove = playlistToRemove)
             onFinished()
         },
-        icon = {
-            val playlistRemoveIcon: SatunesIcons = SatunesIcons.PLAYLIST_REMOVE
-            Icon(
-                imageVector = playlistRemoveIcon.imageVector,
-                contentDescription = playlistRemoveIcon.description
-            )
-        },
-        text = stringResource(id = R.string.remove_from_playlist)
+        icon = SatunesIcons.PLAYLIST_REMOVE,
+        text = stringResource(id = R.string.remove_playlist)
     )
 }

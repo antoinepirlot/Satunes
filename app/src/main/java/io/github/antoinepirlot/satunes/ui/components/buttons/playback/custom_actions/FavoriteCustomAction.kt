@@ -23,49 +23,30 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.dialog.music
+package io.github.antoinepirlot.satunes.ui.components.buttons.playback.custom_actions
 
-import androidx.compose.material3.Icon
+import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import io.github.antoinepirlot.satunes.database.models.Album
-import io.github.antoinepirlot.satunes.database.models.Artist
-import io.github.antoinepirlot.satunes.database.models.Folder
-import io.github.antoinepirlot.satunes.database.models.Genre
+import androidx.compose.ui.platform.LocalContext
 import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.router.utils.openMedia
-import io.github.antoinepirlot.satunes.ui.components.dialog.DialogOption
+import io.github.antoinepirlot.satunes.ui.components.buttons.playback.RowButton
 
 /**
- * @author Antoine Pirlot on 01/06/2024
+ * @author Antoine Pirlot on 28/06/2024
  */
 
 @Composable
-internal fun NavigateToMediaMusicOption(
+fun FavoriteCustomAction(
     modifier: Modifier = Modifier,
-    media: Media,
+    media: Media
 ) {
-    DialogOption(
+    // Assume the media is remembered in parent composable
+    val context: Context = LocalContext.current
+    RowButton(
         modifier = modifier,
-        onClick = { openMedia(media = media) },
-        icon = {
-            val icon: SatunesIcons = when (media) {
-                is Album -> SatunesIcons.ALBUM
-                is Artist -> SatunesIcons.ARTIST
-                is Genre -> SatunesIcons.GENRES
-                is Folder -> SatunesIcons.FOLDER
-                else -> throw IllegalArgumentException("${media.javaClass} is not allowed")
-            }
-            Icon(imageVector = icon.imageVector, contentDescription = icon.description)
-        },
-        text = media.title
+        icon = if (media.likedState.value) SatunesIcons.LIKED else SatunesIcons.UNLIKED,
+        onClick = { media.switchLike(context = context) }
     )
-}
-
-@Preview
-@Composable
-private fun NavigateToMediaMusicOptionPreview() {
-    NavigateToMediaMusicOption(media = Album(title = "Album Title"))
 }

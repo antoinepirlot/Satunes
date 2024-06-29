@@ -23,42 +23,24 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.settings
-
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.size
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
-import io.github.antoinepirlot.satunes.ui.components.texts.Title
+package io.github.antoinepirlot.satunes.services.search
 
 /**
- * @author Antoine Pirlot on 27/05/2024
+ * @author Antoine Pirlot on 28/06/2024
  */
 
-@Composable
-internal fun SubSetting(
-    modifier: Modifier = Modifier,
-    title: String? = null,
-    content: @Composable () -> Unit,
-) {
-    Column(modifier = modifier) {
-        if (!title.isNullOrBlank()) {
-            Title(text = title, fontSize = 25.sp)
-        }
-        content()
-    }
-    Spacer(modifier = Modifier.size(16.dp))
-}
+internal object SearchChipsManager {
+    val searchChipsList: List<SearchChips> = listOf(
+        SearchChips.MUSICS,
+        SearchChips.ALBUMS,
+        SearchChips.ARTISTS,
+        SearchChips.GENRES,
+        SearchChips.FOLDERS
+    )
 
-@Preview
-@Composable
-private fun SubSettingPreview() {
-    SubSetting(title = "Sub Setting") {
-        NormalText(text = "Content")
+    fun resetChips() {
+        searchChipsList.forEach { searchChips: SearchChips ->
+            searchChips.enabled.value = false
+        }
     }
 }

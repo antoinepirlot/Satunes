@@ -58,4 +58,6 @@
     <string name="playback_queue">File d\'attente</string>
     <string name="search_placeholder">Recherche</string>
     <string name="no_result">Aucun résultat trouvé</string>
+    <string name="add_to_likes">J\'aime</string>
+    <string name="remove_from_likes">J\'aime plus</string>
 </resources>

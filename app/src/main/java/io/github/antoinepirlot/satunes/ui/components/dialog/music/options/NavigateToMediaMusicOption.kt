@@ -25,7 +25,6 @@
 
 package io.github.antoinepirlot.satunes.ui.components.dialog.music.options
 
-import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -50,15 +49,12 @@ internal fun NavigateToMediaMusicOption(
     DialogOption(
         modifier = modifier,
         onClick = { openMedia(media = media) },
-        icon = {
-            val icon: SatunesIcons = when (media) {
+        icon = when (media) {
                 is Album -> SatunesIcons.ALBUM
                 is Artist -> SatunesIcons.ARTIST
                 is Genre -> SatunesIcons.GENRES
                 is Folder -> SatunesIcons.FOLDER
                 else -> throw IllegalArgumentException("${media.javaClass} is not allowed")
-            }
-            Icon(imageVector = icon.imageVector, contentDescription = icon.description)
         },
         text = media.title
     )

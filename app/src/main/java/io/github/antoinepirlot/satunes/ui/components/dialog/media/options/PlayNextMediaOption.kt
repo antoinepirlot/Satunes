@@ -25,7 +25,6 @@
 
 package io.github.antoinepirlot.satunes.ui.components.dialog.media.options
 
-import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -53,10 +52,7 @@ fun PlayNextMediaOption(
             PlaybackController.getInstance().addNext(media = media)
             onFinished()
         },
-        icon = {
-            val icon: SatunesIcons = SatunesIcons.PLAY_NEXT
-            Icon(imageVector = icon.imageVector, contentDescription = icon.description)
-        },
+        icon = SatunesIcons.PLAY_NEXT,
         text = stringResource(id = R.string.play_next)
     )
 }

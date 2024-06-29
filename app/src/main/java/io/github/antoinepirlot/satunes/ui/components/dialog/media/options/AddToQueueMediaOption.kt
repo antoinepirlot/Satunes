@@ -25,7 +25,6 @@
 
 package io.github.antoinepirlot.satunes.ui.components.dialog.media.options
 
-import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -53,10 +52,7 @@ internal fun AddToQueueDialogOption(
             PlaybackController.getInstance().addToQueue(media = media)
             onFinished()
         },
-        icon = {
-            val icon: SatunesIcons = SatunesIcons.ADD_TO_PLAYBACK_QUEUE
-            Icon(imageVector = icon.imageVector, contentDescription = icon.description)
-        },
+        icon = SatunesIcons.ADD_TO_PLAYBACK_QUEUE,
         text = stringResource(id = R.string.add_to_queue)
     )
 }

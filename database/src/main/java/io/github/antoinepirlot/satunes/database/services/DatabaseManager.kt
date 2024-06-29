@@ -197,6 +197,11 @@ class DatabaseManager(context: Context) {
                     musicId = musicDb.id,
                     playlistId = playlistToRemove.playlist.id
                 )
+                if (playlistToRemove.playlist.title == LIKES_PLAYLIST_TITLE) {
+                    musicDao.unlike(musicId = musicDb.id)
+                    musicDb.music!!.liked = false
+                    musicDb.music!!.likedState.value = false
+                }
                 if (!musicsPlaylistsRelDAO.isMusicInPlaylist(musicId = musicDb.id)) {
                     musicDao.delete(musicDb)
                 }

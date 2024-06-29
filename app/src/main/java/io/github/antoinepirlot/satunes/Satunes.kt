@@ -78,7 +78,6 @@ internal fun Satunes(
             ) { innerPadding ->
                 Router(modifier = Modifier.padding(innerPadding))
 
-                // TODO don't set to true but use value stored on permanent storage like settings.
                 var whatsNewSeen: Boolean by rememberSaveable { SettingsManager.whatsNewSeen }
                 if (!whatsNewSeen) {
                     val context: Context = LocalContext.current

@@ -75,6 +75,13 @@ class DatabaseManager(context: Context) {
                 playlistDao.getPlaylistsWithMusics()
             playlistsWithMusicsList.forEach { playlistWithMusics: PlaylistWithMusics ->
                 DataManager.addPlaylist(playlistWithMusics = playlistWithMusics)
+                if (playlistWithMusics.playlist.title == LIKES_PLAYLIST_TITLE) {
+                    playlistWithMusics.musics.forEach { musicDB: MusicDB ->
+                        val music: Music = musicDB.music!!
+                        music.liked = true
+                        music.likedState.value = true
+                    }
+                }
             }
         } catch (e: Exception) {
             e.printStackTrace()

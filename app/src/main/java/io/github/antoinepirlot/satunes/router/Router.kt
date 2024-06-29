@@ -85,7 +85,7 @@ internal fun Router(
     modifier: Modifier = Modifier,
 ) {
     val context: Context = LocalContext.current
-    val isLoading: MutableState<Boolean> = rememberSaveable { DataLoader.isLoading }
+    val isLoading: Boolean by rememberSaveable { DataLoader.isLoading }
     val isLoaded: Boolean by rememberSaveable { DataLoader.isLoaded }
     val isAudioAllowed: MutableState<Boolean> =
         rememberSaveable { mutableStateOf(MainActivity.instance.isAudioAllowed()) }
@@ -106,7 +106,7 @@ internal fun Router(
             // /!\ This route prevent back gesture to exit the app
             RoutesManager.currentDestination.value = it.destination.route
             permissionView(isAudioAllowed = isAudioAllowed.value)
-            if (isLoading.value || !isLoaded) {
+            if (isLoading || !isLoaded) {
                 LoadingView()
             } else {
                 RootFolderView()
@@ -116,7 +116,7 @@ internal fun Router(
         composable("${Destination.FOLDERS.link}/{id}") {
             RoutesManager.currentDestination.value = it.destination.route
             permissionView(isAudioAllowed = isAudioAllowed.value)
-            if (isLoading.value || !isLoaded) {
+            if (isLoading || !isLoaded) {
                 LoadingView()
             } else {
                 val folderId = it.arguments!!.getString("id")!!.toLong()
@@ -134,7 +134,7 @@ internal fun Router(
         composable(Destination.ARTISTS.link) {
             RoutesManager.currentDestination.value = it.destination.route
             permissionView(isAudioAllowed = isAudioAllowed.value)
-            if (isLoading.value || !isLoaded) {
+            if (isLoading || !isLoaded) {
                 LoadingView()
             } else {
                 AllArtistsListView()
@@ -144,7 +144,7 @@ internal fun Router(
         composable("${Destination.ARTISTS.link}/{name}") {
             RoutesManager.currentDestination.value = it.destination.route
             permissionView(isAudioAllowed = isAudioAllowed.value)
-            if (isLoading.value || !isLoaded) {
+            if (isLoading || !isLoaded) {
                 LoadingView()
             } else {
                 val artistName: String = decode(it.arguments!!.getString("name")!!)
@@ -162,7 +162,7 @@ internal fun Router(
         composable(Destination.ALBUMS.link) {
             RoutesManager.currentDestination.value = it.destination.route
             permissionView(isAudioAllowed = isAudioAllowed.value)
-            if (isLoading.value || !isLoaded) {
+            if (isLoading || !isLoaded) {
                 LoadingView()
             } else {
                 AllAlbumsListView()
@@ -172,7 +172,7 @@ internal fun Router(
         composable("${Destination.ALBUMS.link}/{id}") {
             RoutesManager.currentDestination.value = it.destination.route
             permissionView(isAudioAllowed = isAudioAllowed.value)
-            if (isLoading.value || !isLoaded) {
+            if (isLoading || !isLoaded) {
                 LoadingView()
             } else {
                 val albumId: Long = it.arguments!!.getString("id")!!.toLong()
@@ -184,7 +184,7 @@ internal fun Router(
         composable(Destination.GENRES.link) {
             RoutesManager.currentDestination.value = it.destination.route
             permissionView(isAudioAllowed = isAudioAllowed.value)
-            if (isLoading.value || !isLoaded) {
+            if (isLoading || !isLoaded) {
                 LoadingView()
             } else {
                 AllGenresListView()
@@ -194,7 +194,7 @@ internal fun Router(
         composable("${Destination.GENRES.link}/{name}") {
             RoutesManager.currentDestination.value = it.destination.route
             permissionView(isAudioAllowed = isAudioAllowed.value)
-            if (isLoading.value || !isLoaded) {
+            if (isLoading || !isLoaded) {
                 LoadingView()
             } else {
                 val genreName: String = decode(it.arguments!!.getString("name")!!)
@@ -206,7 +206,7 @@ internal fun Router(
         composable(Destination.PLAYLISTS.link) {
             RoutesManager.currentDestination.value = it.destination.route
             permissionView(isAudioAllowed = isAudioAllowed.value)
-            if (isLoading.value || !isLoaded) {
+            if (isLoading || !isLoaded) {
                 LoadingView()
             } else {
                 PlaylistListView()
@@ -216,7 +216,7 @@ internal fun Router(
         composable("${Destination.PLAYLISTS.link}/{id}") {
             RoutesManager.currentDestination.value = it.destination.route
             permissionView(isAudioAllowed = isAudioAllowed.value)
-            if (isLoading.value || !isLoaded) {
+            if (isLoading || !isLoaded) {
                 LoadingView()
             } else {
                 val playlistId: Long = it.arguments!!.getString("id")!!.toLong()
@@ -230,7 +230,7 @@ internal fun Router(
         composable(Destination.MUSICS.link) {
             RoutesManager.currentDestination.value = it.destination.route
             permissionView(isAudioAllowed = isAudioAllowed.value)
-            if (isLoading.value || !isLoaded) {
+            if (isLoading || !isLoaded) {
                 LoadingView()
             } else {
                 AllMusicsListView()
@@ -240,7 +240,7 @@ internal fun Router(
         composable(Destination.PLAYBACK.link) {
             RoutesManager.currentDestination.value = it.destination.route
             permissionView(isAudioAllowed = isAudioAllowed.value)
-            if (isLoading.value || !isLoaded) {
+            if (isLoading || !isLoaded) {
                 LoadingView()
             } else {
                 PlaybackView(
@@ -260,7 +260,11 @@ internal fun Router(
             RoutesManager.currentDestination.value = it.destination.route
             permissionView(isAudioAllowed = isAudioAllowed.value)
             SearchChipsManager.resetChips()
-            SearchView()
+            if (isLoading || !isLoaded) {
+                LoadingView()
+            } else {
+                SearchView()
+            }
         }
 
         composable(Destination.PLAYBACK_QUEUE.link) {

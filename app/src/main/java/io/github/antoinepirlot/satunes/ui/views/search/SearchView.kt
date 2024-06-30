@@ -32,9 +32,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SearchBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
@@ -54,6 +56,9 @@ import io.github.antoinepirlot.satunes.services.search.SearchChipsManager
 import io.github.antoinepirlot.satunes.ui.components.cards.media.MediaCardList
 import io.github.antoinepirlot.satunes.ui.components.chips.MediaChipList
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 /**
  * @author Antoine Pirlot on 27/06/2024
@@ -67,8 +72,17 @@ internal fun SearchView(
     var query: String by rememberSaveable { mutableStateOf("") }
     val mediaList: MutableList<Media> = remember { SnapshotStateList() }
 
-    for (searchChip: SearchChips in SearchChipsManager.searchChipsList) {
-        search(mediaList, query)
+    val searchCoroutine: CoroutineScope = rememberCoroutineScope()
+    var searchJob: Job? = null
+    LaunchedEffect(key1 = query) {
+        if (searchJob != null && searchJob!!.isActive) {
+            searchJob!!.cancel()
+        }
+        searchJob = searchCoroutine.launch {
+            for (searchChip: SearchChips in SearchChipsManager.searchChipsList) {
+                search(mediaList, query)
+            }
+        }
     }
 
     Column(
@@ -77,10 +91,7 @@ internal fun SearchView(
     ) {
         SearchBar(
             query = query,
-            onQueryChange = {
-                query = it
-                search(mediaList = mediaList, query = query)
-            },
+            onQueryChange = { query = it },
             onSearch = { query = it },
             active = false,
             onActiveChange = { /* Do not use active mode */ },

@@ -162,4 +162,8 @@ internal class Playlist(
         this.mediaItemList.add(index = newIndex, element = music.mediaItem)
     }
 
+    fun isMusicInQueue(music: Music): Boolean {
+        return this.originalMusicMediaItemMap[music] != null
+    }
+
 }

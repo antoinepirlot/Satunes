@@ -108,10 +108,12 @@ private fun Content(mediaList: List<Media>) {
     if (mediaList.isEmpty()) {
         NormalText(text = stringResource(id = R.string.no_result))
     } else {
-        MediaCardList(mediaList = mediaList, openMedia = {
-            PlaybackController.getInstance()
-                .loadMusic(musicMediaItemSortedMap = DataManager.musicMediaItemSortedMap)
-            openMedia(media = it)
+        MediaCardList(mediaList = mediaList, openMedia = { media: Media ->
+            if (media is Music) {
+                PlaybackController.getInstance()
+                    .loadMusic(musicMediaItemSortedMap = DataManager.musicMediaItemSortedMap)
+            }
+            openMedia(media = media)
         })
     }
 }

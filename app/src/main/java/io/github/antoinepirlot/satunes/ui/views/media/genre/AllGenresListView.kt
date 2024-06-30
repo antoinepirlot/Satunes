@@ -23,7 +23,7 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.views.genre
+package io.github.antoinepirlot.satunes.ui.views.media.genre
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -35,7 +35,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.media3.common.MediaItem
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.database.models.Music
@@ -46,24 +45,21 @@ import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
 import io.github.antoinepirlot.satunes.ui.views.MediaListView
-import io.github.antoinepirlot.satunes.ui.views.MediaWithAlbumsHeaderView
 import java.util.SortedMap
-import java.util.SortedSet
 
 /**
  * @author Antoine Pirlot on 01/04/2024
  */
 
 @Composable
-internal fun GenreView(
+internal fun AllGenresListView(
     modifier: Modifier = Modifier,
-    genre: Genre,
 ) {
     val playbackController: PlaybackController = PlaybackController.getInstance()
-    val musicMap: SortedMap<Music, MediaItem> = remember { genre.musicMediaItemSortedMap }
+    val genreMap: SortedMap<String, Genre> = remember { DataManager.genreMap }
 
     //Recompose if data changed
-    var mapChanged: Boolean by rememberSaveable { DataManager.musicMediaItemSortedMapUpdated }
+    var mapChanged: Boolean by rememberSaveable { DataManager.genreMapUpdated }
     if (mapChanged) {
         mapChanged = false
     }
@@ -71,53 +67,43 @@ internal fun GenreView(
 
     MediaListView(
         modifier = modifier,
-        mediaList = musicMap.keys.toList(),
+        mediaList = genreMap.values.toList(),
 
         openMedia = { clickedMedia: Media ->
-            playbackController.loadMusic(
-                musicMediaItemSortedMap = genre.musicMediaItemSortedMap,
-                musicToPlay = clickedMedia as Music
-            )
             openMedia(media = clickedMedia)
         },
         onFABClick = { openCurrentMusic() },
-        header = {
-            //Recompose if data changed
-            @Suppress("NAME_SHADOWING")
-            var mapChanged: Boolean by remember { genre.musicMediaItemSortedMapUpdate }
-            if (mapChanged) {
-                mapChanged = false
-            }
-            //
-
-            val albumSet: SortedSet<Album> = sortedSetOf()
-            musicMap.forEach { (music: Music, _: MediaItem) ->
-                albumSet.add(music.album)
-            }
-            MediaWithAlbumsHeaderView(media = genre, albumList = albumSet.toList())
-        },
         extraButtons = {
-            if (genre.musicMediaItemSortedMap.isNotEmpty()) {
+            if (genreMap.isNotEmpty()) {
                 ExtraButton(icon = SatunesIcons.PLAY, onClick = {
-                    playbackController.loadMusic(musicMediaItemSortedMap = genre.musicMediaItemSortedMap)
+                    playbackController.loadMusic(musicMediaItemSortedMap = getMusics(genreMap = genreMap))
                     openMedia()
                 })
                 ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
+
                     playbackController.loadMusic(
-                        musicMediaItemSortedMap = genre.musicMediaItemSortedMap,
+                        musicMediaItemSortedMap = getMusics(genreMap = genreMap),
                         shuffleMode = true
                     )
                     openMedia()
                 })
             }
         },
-        emptyViewText = stringResource(id = R.string.no_music)
+        emptyViewText = stringResource(id = R.string.no_genre)
     )
+}
+
+private fun getMusics(genreMap: SortedMap<String, Genre>): SortedMap<Music, MediaItem> {
+    val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
+
+    genreMap.forEach { (_: String, genre: Genre) ->
+        musicMediaItemSortedMap.putAll(genre.musicMediaItemSortedMap)
+    }
+    return musicMediaItemSortedMap
 }
 
 @Preview
 @Composable
-private fun GenreViewPreview() {
-    GenreView(genre = Genre(id = 0, "Genre"))
+private fun AllGenresListViewPreview() {
+    AllGenresListView()
 }
-

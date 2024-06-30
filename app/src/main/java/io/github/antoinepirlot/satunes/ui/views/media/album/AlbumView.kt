@@ -23,7 +23,7 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.views.album
+package io.github.antoinepirlot.satunes.ui.views.media.album
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column

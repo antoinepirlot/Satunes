@@ -23,7 +23,7 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.views.folder
+package io.github.antoinepirlot.satunes.ui.views.media.genre
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -35,7 +35,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.media3.common.MediaItem
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.database.models.Folder
+import io.github.antoinepirlot.satunes.database.models.Album
+import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.DataManager
@@ -43,25 +44,26 @@ import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.router.utils.openMedia
-import io.github.antoinepirlot.satunes.router.utils.openMediaFromFolder
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
 import io.github.antoinepirlot.satunes.ui.views.MediaListView
+import io.github.antoinepirlot.satunes.ui.views.MediaWithAlbumsHeaderView
 import java.util.SortedMap
+import java.util.SortedSet
 
 /**
  * @author Antoine Pirlot on 01/04/2024
  */
 
 @Composable
-internal fun RootFolderView(
+internal fun GenreView(
     modifier: Modifier = Modifier,
+    genre: Genre,
 ) {
     val playbackController: PlaybackController = PlaybackController.getInstance()
-
-    val rootFolderMap: SortedMap<Folder, Folder> = remember { DataManager.rootFolderSortedMap }
+    val musicMap: SortedMap<Music, MediaItem> = remember { genre.musicMediaItemSortedMap }
 
     //Recompose if data changed
-    var mapChanged: Boolean by rememberSaveable { DataManager.rootFolderMapUpdated }
+    var mapChanged: Boolean by rememberSaveable { DataManager.musicMediaItemSortedMapUpdated }
     if (mapChanged) {
         mapChanged = false
     }
@@ -69,45 +71,53 @@ internal fun RootFolderView(
 
     MediaListView(
         modifier = modifier,
-        mediaList = rootFolderMap.keys.toList(),
+        mediaList = musicMap.keys.toList(),
+
         openMedia = { clickedMedia: Media ->
-            openMediaFromFolder(clickedMedia)
+            playbackController.loadMusic(
+                musicMediaItemSortedMap = genre.musicMediaItemSortedMap,
+                musicToPlay = clickedMedia as Music
+            )
+            openMedia(media = clickedMedia)
         },
         onFABClick = { openCurrentMusic() },
+        header = {
+            //Recompose if data changed
+            @Suppress("NAME_SHADOWING")
+            var mapChanged: Boolean by remember { genre.musicMediaItemSortedMapUpdate }
+            if (mapChanged) {
+                mapChanged = false
+            }
+            //
+
+            val albumSet: SortedSet<Album> = sortedSetOf()
+            musicMap.forEach { (music: Music, _: MediaItem) ->
+                albumSet.add(music.album)
+            }
+            MediaWithAlbumsHeaderView(media = genre, albumList = albumSet.toList())
+        },
         extraButtons = {
-            if (rootFolderMap.isNotEmpty()) {
+            if (genre.musicMediaItemSortedMap.isNotEmpty()) {
                 ExtraButton(icon = SatunesIcons.PLAY, onClick = {
-                    playbackController.loadMusic(
-                        musicMediaItemSortedMap = getFolderMusicsMap(
-                            folderMap = rootFolderMap
-                        )
-                    )
+                    playbackController.loadMusic(musicMediaItemSortedMap = genre.musicMediaItemSortedMap)
                     openMedia()
                 })
                 ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
-
                     playbackController.loadMusic(
-                        musicMediaItemSortedMap = getFolderMusicsMap(folderMap = rootFolderMap),
+                        musicMediaItemSortedMap = genre.musicMediaItemSortedMap,
                         shuffleMode = true
                     )
                     openMedia()
                 })
             }
         },
-        emptyViewText = stringResource(id = R.string.no_folder)
+        emptyViewText = stringResource(id = R.string.no_music)
     )
-}
-
-private fun getFolderMusicsMap(folderMap: SortedMap<Folder, Folder>): SortedMap<Music, MediaItem> {
-    val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
-    folderMap.forEach { (_, folder: Folder) ->
-        musicMediaItemSortedMap.putAll(folder.getAllMusic())
-    }
-    return musicMediaItemSortedMap
 }
 
 @Preview
 @Composable
-private fun RootFolderViewPreview() {
-    RootFolderView()
+private fun GenreViewPreview() {
+    GenreView(genre = Genre(id = 0, "Genre"))
 }
+

@@ -23,18 +23,16 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.views.music
+package io.github.antoinepirlot.satunes.ui.views.media.album
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.media3.common.MediaItem
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.DataManager
@@ -45,60 +43,55 @@ import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
 import io.github.antoinepirlot.satunes.ui.views.MediaListView
 import java.util.SortedMap
+import java.util.SortedSet
 
 /**
  * @author Antoine Pirlot on 01/04/2024
  */
 
 @Composable
-internal fun AllMusicsListView(
+internal fun AllAlbumsListView(
     modifier: Modifier = Modifier,
 ) {
     val playbackController: PlaybackController = PlaybackController.getInstance()
-    //Find a way to do something more aesthetic but it works
-    val musicMediaItemMap: SortedMap<Music, MediaItem> =
-        remember { DataManager.musicMediaItemSortedMap }
 
-    //Recompose if data changed
-    var mapChanged: Boolean by rememberSaveable { DataManager.musicMediaItemSortedMapUpdated }
-    if (mapChanged) {
-        mapChanged = false
-    }
-    //
+    val albumSet: SortedSet<Album> = remember { DataManager.albumSet }
 
     MediaListView(
         modifier = modifier,
-        mediaList = musicMediaItemMap.keys.toList(),
+        mediaList = albumSet.toList(),
 
         openMedia = { clickedMedia: Media ->
-            playbackController.loadMusic(
-                musicMediaItemSortedMap = musicMediaItemMap,
-                musicToPlay = clickedMedia as Music
-            )
-            openMedia(clickedMedia)
+            openMedia(media = clickedMedia)
         },
         onFABClick = { openCurrentMusic() },
         extraButtons = {
-            if (musicMediaItemMap.isNotEmpty()) {
+            val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
+            // TODO Move into object
+            albumSet.forEach { album: Album ->
+                musicMediaItemSortedMap.putAll(album.musicMediaItemSortedMap)
+            }
+            if(musicMediaItemSortedMap.isNotEmpty()) {
                 ExtraButton(icon = SatunesIcons.PLAY, onClick = {
-                    playbackController.loadMusic(musicMediaItemSortedMap = musicMediaItemMap)
+                    playbackController.loadMusic(musicMediaItemSortedMap = musicMediaItemSortedMap)
                     openMedia()
                 })
                 ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
+
                     playbackController.loadMusic(
-                        musicMediaItemSortedMap = musicMediaItemMap,
+                        musicMediaItemSortedMap = musicMediaItemSortedMap,
                         shuffleMode = true
                     )
                     openMedia()
                 })
             }
         },
-        emptyViewText = stringResource(id = R.string.no_music)
+        emptyViewText = stringResource(id = R.string.no_album)
     )
 }
 
 @Preview
 @Composable
-private fun MusicsListViewPreview() {
-    AllMusicsListView()
+private fun AllAlbumsListViewPreview() {
+    AllAlbumsListView()
 }

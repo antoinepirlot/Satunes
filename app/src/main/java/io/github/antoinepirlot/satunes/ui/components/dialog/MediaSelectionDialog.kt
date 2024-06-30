@@ -74,7 +74,7 @@ internal fun MediaSelectionDialog(
             onDismissRequest = { showPlaylistCreation.value = false }
         )
     } else {
-        MediaSelectionDialogListNotEmpty(
+        MediaSelectionDialogList(
             modifier = modifier,
             showPlaylistCreation = showPlaylistCreation,
             onDismissRequest = onDismissRequest,
@@ -109,7 +109,7 @@ private fun CreateNewPlaylistForm(
 }
 
 @Composable
-private fun MediaSelectionDialogListNotEmpty(
+private fun MediaSelectionDialogList(
     modifier: Modifier,
     showPlaylistCreation: MutableState<Boolean>,
     onDismissRequest: () -> Unit,

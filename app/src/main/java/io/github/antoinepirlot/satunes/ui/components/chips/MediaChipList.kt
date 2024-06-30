@@ -55,7 +55,7 @@ internal fun MediaChipList(
     modifier: Modifier = Modifier,
 ) {
     val scrollState: ScrollState = rememberScrollState()
-    val searchChipsList: List<SearchChips> = SearchChipsManager.searchChipsList
+    val searchChipsList: List<SearchChips> = SearchChipsManager.allSearchChips
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -74,7 +74,13 @@ internal fun MediaChipList(
             FilterChip(
                 modifier = filterChipModifier,
                 selected = selected,
-                onClick = { selected = !selected },
+                onClick = {
+                    if (selected) {
+                        SearchChipsManager.unselect(searchChip = searchChip)
+                    } else {
+                        SearchChipsManager.select(searchChip = searchChip)
+                    }
+                },
                 leadingIcon = {
                     val icon: SatunesIcons =
                         if (selected) SatunesIcons.CHIP_SELECTED

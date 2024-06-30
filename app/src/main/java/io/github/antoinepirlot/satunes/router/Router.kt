@@ -50,21 +50,20 @@ import io.github.antoinepirlot.satunes.navController
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.services.RoutesManager
-import io.github.antoinepirlot.satunes.services.search.SearchChipsManager
 import io.github.antoinepirlot.satunes.ui.views.LoadingView
-import io.github.antoinepirlot.satunes.ui.views.album.AlbumView
-import io.github.antoinepirlot.satunes.ui.views.album.AllAlbumsListView
-import io.github.antoinepirlot.satunes.ui.views.artist.AllArtistsListView
-import io.github.antoinepirlot.satunes.ui.views.artist.ArtistView
-import io.github.antoinepirlot.satunes.ui.views.folder.FolderView
-import io.github.antoinepirlot.satunes.ui.views.folder.RootFolderView
-import io.github.antoinepirlot.satunes.ui.views.genre.AllGenresListView
-import io.github.antoinepirlot.satunes.ui.views.genre.GenreView
-import io.github.antoinepirlot.satunes.ui.views.music.AllMusicsListView
+import io.github.antoinepirlot.satunes.ui.views.media.album.AlbumView
+import io.github.antoinepirlot.satunes.ui.views.media.album.AllAlbumsListView
+import io.github.antoinepirlot.satunes.ui.views.media.artist.AllArtistsListView
+import io.github.antoinepirlot.satunes.ui.views.media.artist.ArtistView
+import io.github.antoinepirlot.satunes.ui.views.media.folder.FolderView
+import io.github.antoinepirlot.satunes.ui.views.media.folder.RootFolderView
+import io.github.antoinepirlot.satunes.ui.views.media.genre.AllGenresListView
+import io.github.antoinepirlot.satunes.ui.views.media.genre.GenreView
+import io.github.antoinepirlot.satunes.ui.views.media.music.AllMusicsListView
+import io.github.antoinepirlot.satunes.ui.views.media.playlist.PlaylistListView
+import io.github.antoinepirlot.satunes.ui.views.media.playlist.PlaylistView
 import io.github.antoinepirlot.satunes.ui.views.playback.PlaybackView
 import io.github.antoinepirlot.satunes.ui.views.playback.common.PlaybackQueueView
-import io.github.antoinepirlot.satunes.ui.views.playlist.PlaylistListView
-import io.github.antoinepirlot.satunes.ui.views.playlist.PlaylistView
 import io.github.antoinepirlot.satunes.ui.views.search.SearchView
 import io.github.antoinepirlot.satunes.ui.views.settings.AndroidAutoSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.BatterySettingsView
@@ -259,7 +258,6 @@ internal fun Router(
         composable(Destination.SEARCH.link) {
             RoutesManager.currentDestination.value = it.destination.route
             permissionView(isAudioAllowed = isAudioAllowed.value)
-            SearchChipsManager.resetChips()
             if (isLoading || !isLoaded) {
                 LoadingView()
             } else {

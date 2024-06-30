@@ -19,6 +19,7 @@ Améliorations, Optimisations et Résolutions de problèmes:
 
 * Suppression du bouton Facebook suite à la future disparition de la page facebook de Satunes
 * Optimisations
+* Un bug faisant crasher l'application suite à la création de la première playlist a été corrigé
 
 ### 1.2.0-preview-1
 

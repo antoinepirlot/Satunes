@@ -10,3 +10,4 @@ New features:
 Improvements, Optimizations and Troubleshooting:
 * Removal of the Facebook button
 * Optimizations
+* Fix bugs

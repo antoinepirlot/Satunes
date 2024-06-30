@@ -1,0 +1,12 @@
+New features:
+* Search for different media
+* Favorite music system
+* Viewing the playlist and being able to:
+* Play music after current track
+* Add to queue
+* Added a tablet mode for displaying music currently playing
+* Popup after installing an update
+
+Improvements, Optimizations and Troubleshooting:
+* Removal of the Facebook button
+* Optimizations

@@ -537,4 +537,8 @@ class PlaybackController private constructor(
     fun getPlaylist(): SnapshotStateList<Music> {
         return this.playlist.musicList
     }
+
+    fun isMusicInQueue(music: Music): Boolean {
+        return this.playlist.isMusicInQueue(music = music)
+    }
 }

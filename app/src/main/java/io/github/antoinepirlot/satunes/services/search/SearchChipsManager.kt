@@ -41,13 +41,6 @@ internal object SearchChipsManager {
     )
     val selectedSearchChips: MutableList<SearchChips> = SnapshotStateList()
 
-    fun resetChips() {
-        selectedSearchChips.clear()
-        allSearchChips.forEach { searchChips: SearchChips ->
-            searchChips.enabled.value = false
-        }
-    }
-
     fun select(searchChip: SearchChips) {
         searchChip.enabled.value = true
         selectedSearchChips.add(searchChip)

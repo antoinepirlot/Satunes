@@ -50,7 +50,6 @@ import io.github.antoinepirlot.satunes.navController
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.services.RoutesManager
-import io.github.antoinepirlot.satunes.services.search.SearchChipsManager
 import io.github.antoinepirlot.satunes.ui.views.LoadingView
 import io.github.antoinepirlot.satunes.ui.views.media.album.AlbumView
 import io.github.antoinepirlot.satunes.ui.views.media.album.AllAlbumsListView
@@ -259,7 +258,6 @@ internal fun Router(
         composable(Destination.SEARCH.link) {
             RoutesManager.currentDestination.value = it.destination.route
             permissionView(isAudioAllowed = isAudioAllowed.value)
-            SearchChipsManager.resetChips()
             if (isLoading || !isLoaded) {
                 LoadingView()
             } else {

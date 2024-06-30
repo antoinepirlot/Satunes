@@ -39,8 +39,6 @@ android {
 
         create("releaseTest") {
             initWith(getByName("release"))
-            isMinifyEnabled = true
-            isShrinkResources = true
             applicationIdSuffix = ".test"
             resValue(type = "string", name = "app_name", value = "${rootProject.name} (test)")
         }

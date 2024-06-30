@@ -25,22 +25,29 @@
 
 package io.github.antoinepirlot.satunes.services.search
 
+import androidx.compose.runtime.snapshots.SnapshotStateList
+
 /**
  * @author Antoine Pirlot on 28/06/2024
  */
 
 internal object SearchChipsManager {
-    val searchChipsList: List<SearchChips> = listOf(
+    val allSearchChips: List<SearchChips> = listOf(
         SearchChips.MUSICS,
         SearchChips.ALBUMS,
         SearchChips.ARTISTS,
         SearchChips.GENRES,
         SearchChips.FOLDERS
     )
+    val selectedSearchChips: MutableList<SearchChips> = SnapshotStateList()
 
-    fun resetChips() {
-        searchChipsList.forEach { searchChips: SearchChips ->
-            searchChips.enabled.value = false
-        }
+    fun select(searchChip: SearchChips) {
+        searchChip.enabled.value = true
+        selectedSearchChips.add(searchChip)
+    }
+
+    fun unselect(searchChip: SearchChips) {
+        searchChip.enabled.value = false
+        selectedSearchChips.remove(searchChip)
     }
 }

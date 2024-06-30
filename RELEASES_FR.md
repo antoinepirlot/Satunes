@@ -3,6 +3,24 @@ You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
 ## 1.2 (Android 5.1.1 Lollipop et ultérieur)
 
+### 1.2.0
+
+Nouvelles Fonctionnalités:
+
+* Recherche des différents média
+* Système de musique favorites
+* Visualisation de la liste de lecture et possibilité de:
+  * Lire la musique après le morceaux actuel
+  * Ajouter à la file d'attente
+* Ajout d'un mode tablet pour l'affichage de la musique en cours de lecutre
+* Popup après installation d'une mise à jour
+
+Améliorations, Optimisations et Résolutions de problèmes:
+
+* Suppression du bouton Facebook suite à la future disparition de la page facebook de Satunes
+* Optimisations
+* Un bug faisant crasher l'application suite à la création de la première playlist a été corrigé
+
 ### 1.2.0-preview-1
 
 Nouvelles Fonctionnalités:

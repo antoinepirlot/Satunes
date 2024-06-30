@@ -38,8 +38,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import io.github.antoinepirlot.satunes.database.R
+import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
@@ -57,8 +60,15 @@ internal fun MediaSelectionCheckbox(
     media: Media
 ) {
     val checked: MutableState<Boolean> = rememberSaveable { mutableStateOf(false) }
-    val text: String = if (media is PlaylistWithMusics) media.playlist.title
-    else media.title
+    val text: String = if (media is PlaylistWithMusics) {
+        if (media.playlist.title == LIKES_PLAYLIST_TITLE) {
+            stringResource(id = R.string.likes_playlist_title)
+        } else {
+            media.playlist.title
+        }
+    } else {
+        media.title
+    }
 
     Box(modifier = modifier.clickable { onClick(checked, media) }) {
         Row(modifier = Modifier.fillMaxWidth()) {

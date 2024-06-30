@@ -32,9 +32,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SearchBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
@@ -54,6 +56,9 @@ import io.github.antoinepirlot.satunes.services.search.SearchChipsManager
 import io.github.antoinepirlot.satunes.ui.components.cards.media.MediaCardList
 import io.github.antoinepirlot.satunes.ui.components.chips.MediaChipList
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 /**
  * @author Antoine Pirlot on 27/06/2024
@@ -66,9 +71,17 @@ internal fun SearchView(
 ) {
     var query: String by rememberSaveable { mutableStateOf("") }
     val mediaList: MutableList<Media> = remember { SnapshotStateList() }
+    val selectedSearchChips: List<SearchChips> = remember { SearchChipsManager.selectedSearchChips }
 
-    for (searchChip: SearchChips in SearchChipsManager.searchChipsList) {
-        search(mediaList, query)
+    val searchCoroutine: CoroutineScope = rememberCoroutineScope()
+    var searchJob: Job? = null
+    LaunchedEffect(key1 = query, key2 = selectedSearchChips.size) {
+        if (searchJob != null && searchJob!!.isActive) {
+            searchJob!!.cancel()
+        }
+        searchJob = searchCoroutine.launch {
+            search(mediaList = mediaList, query = query)
+        }
     }
 
     Column(
@@ -77,10 +90,7 @@ internal fun SearchView(
     ) {
         SearchBar(
             query = query,
-            onQueryChange = {
-                query = it
-                search(mediaList = mediaList, query = query)
-            },
+            onQueryChange = { query = it },
             onSearch = { query = it },
             active = false,
             onActiveChange = { /* Do not use active mode */ },
@@ -98,10 +108,12 @@ private fun Content(mediaList: List<Media>) {
     if (mediaList.isEmpty()) {
         NormalText(text = stringResource(id = R.string.no_result))
     } else {
-        MediaCardList(mediaList = mediaList, openMedia = {
-            PlaybackController.getInstance()
-                .loadMusic(musicMediaItemSortedMap = DataManager.musicMediaItemSortedMap)
-            openMedia(media = it)
+        MediaCardList(mediaList = mediaList, openMedia = { media: Media ->
+            if (media is Music) {
+                PlaybackController.getInstance()
+                    .loadMusic(musicMediaItemSortedMap = DataManager.musicMediaItemSortedMap)
+            }
+            openMedia(media = media)
         })
     }
 }
@@ -112,12 +124,8 @@ private fun search(mediaList: MutableList<Media>, query: String) {
         // Prevent loop if string is "" or " "
         return
     }
-    DataManager.musicMediaItemSortedMap.keys.forEach { music: Music ->
-        for (searchChip: SearchChips in SearchChipsManager.searchChipsList) {
-            if (!searchChip.enabled.value) {
-                continue
-            }
-
+    for (searchChip: SearchChips in SearchChipsManager.selectedSearchChips) {
+        DataManager.musicMediaItemSortedMap.keys.forEach { music: Music ->
             when (searchChip) {
                 SearchChips.MUSICS -> {
                     if (music.title.lowercase().contains(query.lowercase())) {

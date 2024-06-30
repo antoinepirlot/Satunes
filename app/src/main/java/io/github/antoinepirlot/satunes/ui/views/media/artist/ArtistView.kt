@@ -23,7 +23,7 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.views.artist
+package io.github.antoinepirlot.satunes.ui.views.media.artist
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue

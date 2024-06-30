@@ -23,7 +23,7 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.views.playlist
+package io.github.antoinepirlot.satunes.ui.views.media.playlist
 
 import android.content.Context
 import androidx.compose.foundation.layout.Column

@@ -30,6 +30,7 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import io.github.antoinepirlot.satunes.database.models.Music
@@ -56,7 +57,6 @@ internal fun MusicOptionsDialog(
     playlistWithMusics: PlaylistWithMusics? = null,
     onDismissRequest: () -> Unit,
 ) {
-
     AlertDialog(
         modifier = modifier,
         icon = {
@@ -70,6 +70,8 @@ internal fun MusicOptionsDialog(
         },
         text = {
             Column {
+                val playbackController: PlaybackController = PlaybackController.getInstance()
+                val musicPlaying: Music? by remember { playbackController.musicPlaying }
                 LikeUnlikeMusicOption(music = music)
                 AddToPlaylistOption(music = music, onFinished = onDismissRequest)
 
@@ -84,8 +86,12 @@ internal fun MusicOptionsDialog(
                 val isPlaybackLoaded: Boolean by rememberSaveable { PlaybackController.getInstance().isLoaded }
 
                 if (isPlaybackLoaded) {
-                    PlayNextMediaOption(media = music, onFinished = onDismissRequest)
-                    AddToQueueDialogOption(media = music, onFinished = onDismissRequest)
+                    if (music != musicPlaying) {
+                        PlayNextMediaOption(media = music, onFinished = onDismissRequest)
+                        if (!playbackController.isMusicInQueue(music = music)) {
+                            AddToQueueDialogOption(media = music, onFinished = onDismissRequest)
+                        }
+                    }
                 }
 
                 NavigateToMediaMusicOption(media = music.album)

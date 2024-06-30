@@ -71,17 +71,16 @@ internal fun SearchView(
 ) {
     var query: String by rememberSaveable { mutableStateOf("") }
     val mediaList: MutableList<Media> = remember { SnapshotStateList() }
+    val selectedSearchChips: List<SearchChips> = remember { SearchChipsManager.selectedSearchChips }
 
     val searchCoroutine: CoroutineScope = rememberCoroutineScope()
     var searchJob: Job? = null
-    LaunchedEffect(key1 = query) {
+    LaunchedEffect(key1 = query, key2 = selectedSearchChips.size) {
         if (searchJob != null && searchJob!!.isActive) {
             searchJob!!.cancel()
         }
         searchJob = searchCoroutine.launch {
-            for (searchChip: SearchChips in SearchChipsManager.searchChipsList) {
-                search(mediaList, query)
-            }
+            search(mediaList = mediaList, query = query)
         }
     }
 
@@ -123,12 +122,8 @@ private fun search(mediaList: MutableList<Media>, query: String) {
         // Prevent loop if string is "" or " "
         return
     }
-    DataManager.musicMediaItemSortedMap.keys.forEach { music: Music ->
-        for (searchChip: SearchChips in SearchChipsManager.searchChipsList) {
-            if (!searchChip.enabled.value) {
-                continue
-            }
-
+    for (searchChip: SearchChips in SearchChipsManager.selectedSearchChips) {
+        DataManager.musicMediaItemSortedMap.keys.forEach { music: Music ->
             when (searchChip) {
                 SearchChips.MUSICS -> {
                     if (music.title.lowercase().contains(query.lowercase())) {

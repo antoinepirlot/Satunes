@@ -41,6 +41,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
 import io.github.antoinepirlot.satunes.database.models.tables.Playlist
 import io.github.antoinepirlot.satunes.database.services.DataManager
@@ -49,6 +50,7 @@ import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.dialog.playlist.options.ExportPlaylistOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.playlist.options.RemovePlaylistOption
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
+import io.github.antoinepirlot.satunes.database.R as RDb
 
 /**
  * @author Antoine Pirlot on 01/04/2024
@@ -70,18 +72,22 @@ internal fun PlaylistOptionsDialog(
             )
         },
         title = {
-            OutlinedTextField(
-                value = playlistTitle,
-                onValueChange = {
-                    playlistTitle = it
-                },
-                label = {
-                    NormalText(text = stringResource(id = R.string.title))
-                },
-                placeholder = {
-                    NormalText(text = stringResource(id = R.string.title))
-                }
-            )
+            if (playlistTitle == LIKES_PLAYLIST_TITLE) {
+                NormalText(text = stringResource(id = RDb.string.likes_playlist_title))
+            } else {
+                OutlinedTextField(
+                    value = playlistTitle,
+                    onValueChange = {
+                        playlistTitle = it
+                    },
+                    label = {
+                        NormalText(text = stringResource(id = R.string.title))
+                    },
+                    placeholder = {
+                        NormalText(text = stringResource(id = R.string.title))
+                    }
+                )
+            }
         },
         text = {
             Column {

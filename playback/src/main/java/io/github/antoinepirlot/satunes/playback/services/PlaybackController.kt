@@ -337,6 +337,9 @@ class PlaybackController private constructor(
     }
 
     fun addNext(media: Media) {
+        if (musicPlaying.value == media) {
+            return
+        }
         when (media) {
             is Music -> {
                 try {

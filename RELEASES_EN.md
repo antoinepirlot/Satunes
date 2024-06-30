@@ -3,6 +3,23 @@ Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
 ## 1.2 (Android 5.1.1 Lollipop and later)
 
+### 1.2.0
+
+New features:
+
+* Search for different media
+* Favorite music system
+* Viewing the playlist and being able to:
+* Play music after current track
+* Add to queue
+* Added a tablet mode for displaying music currently playing
+* Popup after installing an update
+
+Improvements, Optimizations and Troubleshooting:
+
+* Removal of the Facebook button following the future disappearance of the Satunes' Facebook page
+* Optimizations
+
 ### 1.2.0-preview-1
 
 New features:

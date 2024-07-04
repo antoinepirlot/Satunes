@@ -70,6 +70,10 @@ import kotlinx.coroutines.launch
 internal fun SearchView(
     modifier: Modifier = Modifier
 ) {
+    LaunchedEffect(key1 = true) {
+        SearchChipsManager.resetSelectedChips()
+    }
+
     var query: String by rememberSaveable { mutableStateOf("") }
     val mediaList: MutableList<Media> = remember { SnapshotStateList() }
     val selectedSearchChips: List<SearchChips> = remember { SearchChipsManager.selectedSearchChips }

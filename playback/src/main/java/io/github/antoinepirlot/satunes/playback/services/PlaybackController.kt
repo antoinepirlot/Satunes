@@ -229,6 +229,10 @@ class PlaybackController private constructor(
         return this.mediaController.currentPosition
     }
 
+    fun getMusicPlayingIndexPosition(): Int {
+        return this.mediaController.currentMediaItemIndex
+    }
+
     fun playNext() {
         if (playlist.musicCount() > 1) {
             this.mediaController.seekToNext()

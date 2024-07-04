@@ -27,6 +27,9 @@ package io.github.antoinepirlot.satunes.router
 
 import android.content.Context
 import android.net.Uri.decode
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
@@ -98,7 +101,9 @@ internal fun Router(
     NavHost(
         modifier = modifier,
         navController = navController,
-        startDestination = Destination.FOLDERS.link
+        startDestination = Destination.FOLDERS.link,
+        enterTransition = { fadeIn(animationSpec = tween(500)) },
+        exitTransition = { fadeOut(animationSpec = tween(0)) },
     ) {
 
         composable(Destination.FOLDERS.link) {

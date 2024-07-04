@@ -50,12 +50,13 @@ import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.DataManager
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
+import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.services.search.SearchChips
 import io.github.antoinepirlot.satunes.services.search.SearchChipsManager
-import io.github.antoinepirlot.satunes.ui.components.cards.media.MediaCardList
 import io.github.antoinepirlot.satunes.ui.components.chips.MediaChipList
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
+import io.github.antoinepirlot.satunes.ui.views.MediaListView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -99,22 +100,18 @@ internal fun SearchView(
         )
         Spacer(modifier = Modifier.size(16.dp))
         MediaChipList()
-        Content(mediaList = mediaList)
-    }
-}
-
-@Composable
-private fun Content(mediaList: List<Media>) {
-    if (mediaList.isEmpty()) {
-        NormalText(text = stringResource(id = R.string.no_result))
-    } else {
-        MediaCardList(mediaList = mediaList, openMedia = { media: Media ->
-            if (media is Music) {
-                PlaybackController.getInstance()
-                    .loadMusic(musicMediaItemSortedMap = DataManager.musicMediaItemSortedMap)
-            }
-            openMedia(media = media)
-        })
+        MediaListView(
+            mediaList = mediaList,
+            openMedia = { media: Media ->
+                if (media is Music) {
+                    PlaybackController.getInstance()
+                        .loadMusic(musicMediaItemSortedMap = DataManager.musicMediaItemSortedMap)
+                }
+                openMedia(media = media)
+            },
+            onFABClick = { openCurrentMusic() },
+            emptyViewText = stringResource(id = R.string.no_result)
+        )
     }
 }
 

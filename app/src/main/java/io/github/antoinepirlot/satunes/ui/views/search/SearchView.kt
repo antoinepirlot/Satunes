@@ -42,6 +42,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -50,12 +52,13 @@ import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.DataManager
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
+import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.services.search.SearchChips
 import io.github.antoinepirlot.satunes.services.search.SearchChipsManager
-import io.github.antoinepirlot.satunes.ui.components.cards.media.MediaCardList
 import io.github.antoinepirlot.satunes.ui.components.chips.MediaChipList
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
+import io.github.antoinepirlot.satunes.ui.views.MediaListView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -69,6 +72,10 @@ import kotlinx.coroutines.launch
 internal fun SearchView(
     modifier: Modifier = Modifier
 ) {
+    LaunchedEffect(key1 = true) {
+        SearchChipsManager.resetSelectedChips()
+    }
+
     var query: String by rememberSaveable { mutableStateOf("") }
     val mediaList: MutableList<Media> = remember { SnapshotStateList() }
     val selectedSearchChips: List<SearchChips> = remember { SearchChipsManager.selectedSearchChips }
@@ -84,11 +91,18 @@ internal fun SearchView(
         }
     }
 
+    val focusRequester: FocusRequester = remember { FocusRequester() }
+    LaunchedEffect(key1 = true) {
+        // Request focus after composable becomes visible
+        focusRequester.requestFocus()
+    }
+
     Column(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         SearchBar(
+            modifier = Modifier.focusRequester(focusRequester),
             query = query,
             onQueryChange = { query = it },
             onSearch = { query = it },
@@ -99,22 +113,18 @@ internal fun SearchView(
         )
         Spacer(modifier = Modifier.size(16.dp))
         MediaChipList()
-        Content(mediaList = mediaList)
-    }
-}
-
-@Composable
-private fun Content(mediaList: List<Media>) {
-    if (mediaList.isEmpty()) {
-        NormalText(text = stringResource(id = R.string.no_result))
-    } else {
-        MediaCardList(mediaList = mediaList, openMedia = { media: Media ->
-            if (media is Music) {
-                PlaybackController.getInstance()
-                    .loadMusic(musicMediaItemSortedMap = DataManager.musicMediaItemSortedMap)
-            }
-            openMedia(media = media)
-        })
+        MediaListView(
+            mediaList = mediaList,
+            openMedia = { media: Media ->
+                if (media is Music) {
+                    PlaybackController.getInstance()
+                        .loadMusic(musicMediaItemSortedMap = DataManager.musicMediaItemSortedMap)
+                }
+                openMedia(media = media)
+            },
+            onFABClick = { openCurrentMusic() },
+            emptyViewText = stringResource(id = R.string.no_result)
+        )
     }
 }
 

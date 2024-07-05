@@ -3,6 +3,19 @@ You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
 ## 1.2 (Android 5.1.1 Lollipop et ultérieur)
 
+### 1.2.1
+
+Améliorations, Optimisations et Résolutions de problèmes:
+
+* Correction du bug lors de l'ajout de la musique en cours de lecture à une playlist lorsqu'il n'y
+  en a aucune et que l'utilisateur annule sa création
+* Ajout d'un filtre de recherche pour les playlists
+* Les animations de navigations entre les pages est plus rapide et évite des cliques sur la page
+  précédente
+* La page de la liste des musique en attente s'ouvre avec en tête la musique en cours de lecture
+* Ajout d'un bouton permettant d'ouvrir la musique en cours de lecture depuis la page de recherche
+* Le filtre musiques dans la recherche est activé par défaut
+
 ### 1.2.0
 
 Nouvelles Fonctionnalités:

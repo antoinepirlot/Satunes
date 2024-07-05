@@ -25,6 +25,7 @@
 
 package io.github.antoinepirlot.satunes.ui.views.search
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -67,15 +68,12 @@ import kotlinx.coroutines.launch
  * @author Antoine Pirlot on 27/06/2024
  */
 
+@SuppressLint("RememberReturnType")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun SearchView(
     modifier: Modifier = Modifier
 ) {
-    LaunchedEffect(key1 = true) {
-        SearchChipsManager.resetSelectedChips()
-    }
-
     var query: String by rememberSaveable { mutableStateOf("") }
     val mediaList: MutableList<Media> = remember { SnapshotStateList() }
     val selectedSearchChips: List<SearchChips> = remember { SearchChipsManager.selectedSearchChips }
@@ -89,6 +87,14 @@ internal fun SearchView(
         searchJob = searchCoroutine.launch {
             search(mediaList = mediaList, query = query)
         }
+    }
+
+    var resetSelectedChips: Boolean by rememberSaveable { mutableStateOf(true) }
+    if (resetSelectedChips) {
+        LaunchedEffect(key1 = true) {
+            SearchChipsManager.resetSelectedChips()
+        }
+        resetSelectedChips = false
     }
 
     val focusRequester: FocusRequester = remember { FocusRequester() }

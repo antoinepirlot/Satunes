@@ -144,11 +144,15 @@ private fun search(context: Context, mediaList: MutableList<Media>, query: Strin
         // Prevent loop if string is "" or " "
         return
     }
+
+    @Suppress("NAME_SHADOWING")
+    val query: String = query.lowercase()
+
     for (searchChip: SearchChips in SearchChipsManager.selectedSearchChips) {
         DataManager.musicMediaItemSortedMap.keys.forEach { music: Music ->
             when (searchChip) {
                 SearchChips.MUSICS -> {
-                    if (music.title.lowercase().contains(query.lowercase())) {
+                    if (music.title.lowercase().contains(query)) {
                         if (!mediaList.contains(music)) {
                             mediaList.add(element = music)
                         }
@@ -156,7 +160,7 @@ private fun search(context: Context, mediaList: MutableList<Media>, query: Strin
                 }
 
                 SearchChips.ARTISTS -> {
-                    if (music.artist.title.lowercase().contains(query.lowercase())) {
+                    if (music.artist.title.lowercase().contains(query)) {
                         if (!mediaList.contains(music.artist)) {
                             mediaList.add(element = music.artist)
                         }
@@ -164,7 +168,7 @@ private fun search(context: Context, mediaList: MutableList<Media>, query: Strin
                 }
 
                 SearchChips.ALBUMS -> {
-                    if (music.album.title.lowercase().contains(query.lowercase())) {
+                    if (music.album.title.lowercase().contains(query)) {
                         if (!mediaList.contains(music.album)) {
                             mediaList.add(element = music.album)
                         }
@@ -172,7 +176,7 @@ private fun search(context: Context, mediaList: MutableList<Media>, query: Strin
                 }
 
                 SearchChips.GENRES -> {
-                    if (music.genre.title.lowercase().contains(query.lowercase())) {
+                    if (music.genre.title.lowercase().contains(query)) {
                         if (!mediaList.contains(music.genre)) {
                             mediaList.add(element = music.genre)
                         }
@@ -180,7 +184,7 @@ private fun search(context: Context, mediaList: MutableList<Media>, query: Strin
                 }
 
                 SearchChips.FOLDERS -> {
-                    if (music.folder.title.lowercase().contains(query.lowercase())) {
+                    if (music.folder.title.lowercase().contains(query)) {
                         if (!mediaList.contains(music.folder)) {
                             mediaList.add(element = music.folder)
                         }
@@ -199,7 +203,7 @@ private fun search(context: Context, mediaList: MutableList<Media>, query: Strin
                 if (playlistTitle == LIKES_PLAYLIST_TITLE) {
                     playlistTitle = context.getString(RDb.string.likes_playlist_title)
                 }
-                if (playlistTitle.contains(query)) {
+                if (playlistTitle.lowercase().contains(query)) {
                     mediaList.add(element = playlistWithMusics)
                 }
             }

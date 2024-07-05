@@ -37,7 +37,8 @@ internal object SearchChipsManager {
         SearchChips.ALBUMS,
         SearchChips.ARTISTS,
         SearchChips.GENRES,
-        SearchChips.FOLDERS
+        SearchChips.FOLDERS,
+        SearchChips.PLAYLISTS
     )
     val selectedSearchChips: MutableList<SearchChips> = SnapshotStateList()
 

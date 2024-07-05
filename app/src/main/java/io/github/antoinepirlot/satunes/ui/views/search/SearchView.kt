@@ -25,7 +25,6 @@
 
 package io.github.antoinepirlot.satunes.ui.views.search
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -51,6 +50,7 @@ import androidx.compose.ui.unit.dp
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
 import io.github.antoinepirlot.satunes.database.services.DataManager
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
@@ -68,7 +68,6 @@ import kotlinx.coroutines.launch
  * @author Antoine Pirlot on 27/06/2024
  */
 
-@SuppressLint("RememberReturnType")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun SearchView(
@@ -181,6 +180,16 @@ private fun search(mediaList: MutableList<Media>, query: String) {
                             mediaList.add(element = music.folder)
                         }
                     }
+                }
+
+                SearchChips.PLAYLISTS -> { /* Nothing at this stage, see below */
+                }
+            }
+        }
+        if (searchChip == SearchChips.PLAYLISTS) {
+            DataManager.playlistWithMusicsMap.forEach { (playlistTitle: String, playlistWithMusics: PlaylistWithMusics) ->
+                if (playlistTitle.contains(query)) {
+                    mediaList.add(element = playlistWithMusics)
                 }
             }
         }

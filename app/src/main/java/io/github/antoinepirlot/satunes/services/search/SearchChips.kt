@@ -40,5 +40,6 @@ enum class SearchChips(
     ARTISTS(stringId = R.string.artists),
     ALBUMS(stringId = R.string.albums),
     GENRES(stringId = R.string.genres),
-    FOLDERS(stringId = R.string.folders)
+    FOLDERS(stringId = R.string.folders),
+    PLAYLISTS(stringId = R.string.playlists)
 }

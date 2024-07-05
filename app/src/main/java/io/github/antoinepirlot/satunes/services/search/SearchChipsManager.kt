@@ -37,9 +37,19 @@ internal object SearchChipsManager {
         SearchChips.ALBUMS,
         SearchChips.ARTISTS,
         SearchChips.GENRES,
-        SearchChips.FOLDERS
+        SearchChips.FOLDERS,
+        SearchChips.PLAYLISTS
     )
     val selectedSearchChips: MutableList<SearchChips> = SnapshotStateList()
+
+    fun resetSelectedChips() {
+        selectedSearchChips.forEach { selectedSearchChip: SearchChips ->
+            selectedSearchChip.enabled.value = false
+        }
+        selectedSearchChips.clear()
+        selectedSearchChips.add(SearchChips.MUSICS)
+        SearchChips.MUSICS.enabled.value = true
+    }
 
     fun select(searchChip: SearchChips) {
         searchChip.enabled.value = true

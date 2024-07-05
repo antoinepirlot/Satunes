@@ -78,8 +78,8 @@ internal fun MediaListView(
         if (mediaList.isNotEmpty()) {
             MediaCardList(
                 modifier = Modifier.padding(innerPadding),
-                mediaList = mediaList,
                 header = header,
+                mediaList = mediaList,
                 openMedia = openMedia,
                 openedPlaylistWithMusics = openedPlaylistWithMusics
             )

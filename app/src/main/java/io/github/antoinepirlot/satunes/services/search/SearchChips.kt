@@ -36,9 +36,10 @@ enum class SearchChips(
     val stringId: Int,
     var enabled: MutableState<Boolean> = mutableStateOf(false)
 ) {
-    MUSICS(stringId = R.string.musics),
+    MUSICS(stringId = R.string.musics, enabled = mutableStateOf(true)),
     ARTISTS(stringId = R.string.artists),
     ALBUMS(stringId = R.string.albums),
     GENRES(stringId = R.string.genres),
-    FOLDERS(stringId = R.string.folders)
+    FOLDERS(stringId = R.string.folders),
+    PLAYLISTS(stringId = R.string.playlists)
 }

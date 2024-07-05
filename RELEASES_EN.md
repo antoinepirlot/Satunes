@@ -3,6 +3,18 @@ Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
 ## 1.2 (Android 5.1.1 Lollipop and later)
 
+### 1.2.1
+
+Improvements, Optimizations and Troubleshooting:
+
+* Fixed bug when adding currently playing music to a playlist when there is none and the user
+  cancels its creation
+* Added search filter for playlists
+* Navigation animations between pages are faster and avoid clicking on the previous page
+* The music queue list page opens with the currently playing music in mind
+* Added a button to open currently playing music from the search page
+* The music filter in the search is activated by default
+
 ### 1.2.0
 
 New features:

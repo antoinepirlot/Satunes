@@ -139,7 +139,7 @@ private fun MediaSelectionDialogList(
             Column {
                 if (
                     mediaList.isEmpty() && DataManager.playlistWithMusicsMap.isNotEmpty() || // Avoid having create new playlist when user has no music
-                    mediaList[0] is Playlist || mediaList[0] is PlaylistWithMusics
+                    mediaList.isEmpty() || mediaList[0] is Playlist || mediaList[0] is PlaylistWithMusics
                 ) {
                     TextButton(onClick = { showPlaylistCreation.value = true }) {
                         NormalText(text = stringResource(id = R.string.create_playlist))

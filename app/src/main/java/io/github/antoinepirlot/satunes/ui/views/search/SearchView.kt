@@ -25,6 +25,7 @@
 
 package io.github.antoinepirlot.satunes.ui.views.search
 
+import android.content.Context
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -44,10 +45,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
@@ -63,6 +66,7 @@ import io.github.antoinepirlot.satunes.ui.views.MediaListView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import io.github.antoinepirlot.satunes.database.R as RDb
 
 /**
  * @author Antoine Pirlot on 27/06/2024
@@ -73,6 +77,7 @@ import kotlinx.coroutines.launch
 internal fun SearchView(
     modifier: Modifier = Modifier
 ) {
+    val context: Context = LocalContext.current
     var query: String by rememberSaveable { mutableStateOf("") }
     val mediaList: MutableList<Media> = remember { SnapshotStateList() }
     val selectedSearchChips: List<SearchChips> = remember { SearchChipsManager.selectedSearchChips }
@@ -84,7 +89,7 @@ internal fun SearchView(
             searchJob!!.cancel()
         }
         searchJob = searchCoroutine.launch {
-            search(mediaList = mediaList, query = query)
+            search(context = context, mediaList = mediaList, query = query)
         }
     }
 
@@ -133,7 +138,7 @@ internal fun SearchView(
     }
 }
 
-private fun search(mediaList: MutableList<Media>, query: String) {
+private fun search(context: Context, mediaList: MutableList<Media>, query: String) {
     mediaList.clear()
     if (query.isBlank()) {
         // Prevent loop if string is "" or " "
@@ -188,6 +193,12 @@ private fun search(mediaList: MutableList<Media>, query: String) {
         }
         if (searchChip == SearchChips.PLAYLISTS) {
             DataManager.playlistWithMusicsMap.forEach { (playlistTitle: String, playlistWithMusics: PlaylistWithMusics) ->
+                @Suppress("NAME_SHADOWING")
+                var playlistTitle: String = playlistTitle
+
+                if (playlistTitle == LIKES_PLAYLIST_TITLE) {
+                    playlistTitle = context.getString(RDb.string.likes_playlist_title)
+                }
                 if (playlistTitle.contains(query)) {
                     mediaList.add(element = playlistWithMusics)
                 }

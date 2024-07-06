@@ -25,6 +25,7 @@
 
 package io.github.antoinepirlot.satunes.ui.views.media.forms
 
+import android.content.Context
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -47,6 +48,7 @@ import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.database.services.DataUpdater
 import io.github.antoinepirlot.satunes.ui.components.forms.AlbumForm
 import io.github.antoinepirlot.satunes.ui.components.forms.ArtistForm
 import io.github.antoinepirlot.satunes.ui.components.forms.GenreForm
@@ -63,6 +65,7 @@ internal fun MusicFormView(
     modifier: Modifier = Modifier,
     music: Music,
 ) {
+    val musicToUpdate: Music = music.clone() as Music
     val scrollState: ScrollState = rememberScrollState()
     Column(
         modifier = modifier
@@ -72,21 +75,24 @@ internal fun MusicFormView(
     ) {
         Title(text = stringResource(id = R.string.edit_dialog_option))
 
-        MusicForm(music = music)
+        MusicForm(music = musicToUpdate)
         Spacer(modifier = Modifier.size(16.dp))
 
-        ArtistForm(artist = music.artist)
+        ArtistForm(artist = musicToUpdate.artist)
         Spacer(modifier = Modifier.size(16.dp))
 
-        AlbumForm(album = music.album)
+        AlbumForm(album = musicToUpdate.album)
         Spacer(modifier = Modifier.size(16.dp))
 
-        GenreForm(genre = music.genre)
+        GenreForm(genre = musicToUpdate.genre)
         Spacer(modifier = Modifier.size(16.dp))
 
+        val context: Context = LocalContext.current
         Button(
             modifier = Modifier.align(alignment = Alignment.End),
-            onClick = { /*TODO*/ }
+            onClick = {
+                DataUpdater.update(context = context, music = musicToUpdate)
+            }
         ) {
             NormalText(text = stringResource(id = R.string.submit_edit_view))
         }

@@ -42,4 +42,7 @@
     <string name="added">Ajouté(s)</string>
     <string name="created">Playlist Créée</string>
     <string name="likes_playlist_title">Favoris</string>
+    <string name="update_success">Modifications réussie</string>
+    <string name="update_failed">Modifications ratée</string>
+    <string name="update_none">Rien n\'a été modifié</string>
 </resources>

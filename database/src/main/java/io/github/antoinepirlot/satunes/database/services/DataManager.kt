@@ -95,6 +95,12 @@ object DataManager {
         return getMusic(musicId = mediaItem.mediaId.toLong())
     }
 
+    fun updateMusic(music: Music) {
+        val musicToUpdate = this.musicMapById[music.id]!!
+        musicToUpdate.title = music.title
+
+    }
+
     fun getMediaItem(music: Music): MediaItem {
         return musicMediaItemSortedMap[music]!!
     }
@@ -117,6 +123,11 @@ object DataManager {
 
     fun getArtist(artistName: String): Artist {
         return artistMap[artistName]!!
+    }
+
+    fun updateArtist(artist: Artist) {
+        val artistToUpdate: Artist = this.artistMapById[artist.id]!!
+        artistToUpdate.title = artist.title
     }
 
     fun addArtist(artist: Artist): Artist {
@@ -146,6 +157,12 @@ object DataManager {
 
     fun getAlbum(albumName: String): Album {
         return albumSet.first { it.title == albumName }
+    }
+
+    fun updateAlbum(album: Album) {
+        val albumToUpdate: Album = this.albumMapById[album.id]!!
+        albumToUpdate.title = album.title
+        albumToUpdate.artwork = album.artwork
     }
 
     fun addAlbum(album: Album) {
@@ -195,6 +212,11 @@ object DataManager {
 
     fun getGenre(genreName: String): Genre {
         return genreMap[genreName]!!
+    }
+
+    fun updateGenre(genre: Genre) {
+        val genreToUpdate: Genre = this.genreMapById[genre.id]!!
+        genreToUpdate.title = genre.title
     }
 
     fun addGenre(genre: Genre): Genre {

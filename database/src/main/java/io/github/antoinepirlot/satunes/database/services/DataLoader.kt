@@ -51,7 +51,7 @@ import java.io.File
  */
 
 object DataLoader {
-    private val URI: Uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+    internal val URI: Uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
 
     var isLoaded: MutableState<Boolean> = mutableStateOf(false)
     var isLoading: MutableState<Boolean> = mutableStateOf(false)
@@ -147,8 +147,7 @@ object DataLoader {
     /**
      * Cache columns and columns indices for data to load
      */
-    private fun
-            loadColumns(cursor: Cursor) {
+    private fun loadColumns(cursor: Cursor) {
         // Cache music columns indices.
         musicIdColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID)
         musicNameColumn =

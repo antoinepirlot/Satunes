@@ -52,7 +52,7 @@ internal fun GenreForm(
     Column(
         modifier = modifier,
     ) {
-        Title(text = stringResource(id = R.string.genre))
+        Title(text = stringResource(id = R.string.genre_form_title))
 
         var genreTitle: String by rememberSaveable { mutableStateOf(genre.title) }
         OutlinedTextField(

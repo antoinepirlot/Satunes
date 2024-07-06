@@ -56,7 +56,7 @@ internal fun AlbumForm(
     Column(
         modifier = modifier,
     ) {
-        Title(text = stringResource(id = R.string.album))
+        Title(text = stringResource(id = R.string.album_form_title))
 
         var albumTitle: String by rememberSaveable { mutableStateOf(album.title) }
         OutlinedTextField(

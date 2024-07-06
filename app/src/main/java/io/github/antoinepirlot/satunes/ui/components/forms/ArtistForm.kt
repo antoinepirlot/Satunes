@@ -52,7 +52,7 @@ internal fun ArtistForm(
     Column(
         modifier = modifier,
     ) {
-        Title(text = stringResource(id = R.string.artistFormTitle))
+        Title(text = stringResource(id = R.string.artist_form_title))
 
         var artistTitle: String by rememberSaveable { mutableStateOf(artist.title) }
         OutlinedTextField(

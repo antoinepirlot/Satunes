@@ -61,6 +61,7 @@ object DataUpdater {
                 val rowUpdatedCount: Int = context.contentResolver.update(
                     DataLoader.URI,
                     values,
+                    "${MediaStore.Audio.Media._ID} = ${music.id}",
                     null
                 )
 

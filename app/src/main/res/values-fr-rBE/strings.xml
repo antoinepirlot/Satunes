@@ -62,4 +62,5 @@
     <string name="remove_from_likes">J\'aime plus</string>
     <string name="whats_new_text">Génial! Tu viens d\'installer une nouvelle version de Satunes.\n\nJ\'espère que celle-ci te conviendra.\n\nSi jamais tu remarques des problèmes ou si tu veux faire des suggestions, tu peux m\'envoyer un mail à l\'adresse: pirlot.antoine@outlook.com.\n\nMerci de ton aide! 😊\n\nJe te souhaite une bonne écoute 🎧🎵</string>
     <string name="click_here">clique ici</string>
+    <string name="artistFormTitle">Artiste</string>
 </resources>

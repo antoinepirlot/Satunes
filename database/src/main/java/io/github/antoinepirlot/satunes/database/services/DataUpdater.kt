@@ -29,6 +29,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.os.Build
 import android.provider.MediaStore
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import io.github.antoinepirlot.satunes.database.R
@@ -50,6 +51,7 @@ object DataUpdater {
      *
      * @param music to be updated
      */
+    @RequiresApi(Build.VERSION_CODES.R)
     fun update(context: Context, music: Music) {
         isUpdating.value = true
         CoroutineScope(Dispatchers.IO).launch {

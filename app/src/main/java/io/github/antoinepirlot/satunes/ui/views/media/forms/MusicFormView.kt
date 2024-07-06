@@ -26,6 +26,8 @@
 package io.github.antoinepirlot.satunes.ui.views.media.forms
 
 import android.content.Context
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -61,6 +63,7 @@ import io.github.antoinepirlot.satunes.ui.components.texts.Title
  */
 
 @Composable
+@RequiresApi(Build.VERSION_CODES.R)
 internal fun MusicFormView(
     modifier: Modifier = Modifier,
     music: Music,

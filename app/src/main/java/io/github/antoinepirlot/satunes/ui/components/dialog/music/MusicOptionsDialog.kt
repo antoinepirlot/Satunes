@@ -25,6 +25,7 @@
 
 package io.github.antoinepirlot.satunes.ui.components.dialog.music
 
+import android.os.Build
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
@@ -77,12 +78,14 @@ internal fun MusicOptionsDialog(
                 val musicPlaying: Music? by remember { playbackController.musicPlaying }
                 LikeUnlikeMusicOption(music = music)
 
-                EditMediaOption(
-                    media = music,
-                    onClick = {
-                        navController.navigate("${Destination.EDIT_MUSIC.link}/${music.id}")
-                    }
-                )
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    EditMediaOption(
+                        media = music,
+                        onClick = {
+                            navController.navigate("${Destination.EDIT_MUSIC.link}/${music.id}")
+                        }
+                    )
+                }
                 
                 AddToPlaylistOption(music = music, onFinished = onDismissRequest)
 

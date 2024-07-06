@@ -25,6 +25,8 @@
 
 package io.github.antoinepirlot.satunes.ui.components.dialog.media.options
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -40,6 +42,7 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.options.DialogOption
  */
 
 @Composable
+@RequiresApi(Build.VERSION_CODES.R)
 internal fun EditMediaOption(
     modifier: Modifier = Modifier,
     media: Media,

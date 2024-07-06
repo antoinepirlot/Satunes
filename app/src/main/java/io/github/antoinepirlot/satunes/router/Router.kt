@@ -27,6 +27,7 @@ package io.github.antoinepirlot.satunes.router
 
 import android.content.Context
 import android.net.Uri.decode
+import android.os.Build
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -283,6 +284,10 @@ internal fun Router(
          */
 
         composable("${Destination.EDIT_MUSIC.link}/{id}") {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+                navController.popBackStack()
+                return@composable
+            }
             RoutesManager.currentDestination.value = it.destination.route
             permissionView(isAudioAllowed = isAudioAllowed.value)
             val musicId: Long = it.arguments!!.getString("id")!!.toLong()

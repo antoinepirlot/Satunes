@@ -23,65 +23,51 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.views.media.forms
+package io.github.antoinepirlot.satunes.ui.components.forms
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Album
-import io.github.antoinepirlot.satunes.database.models.Artist
-import io.github.antoinepirlot.satunes.database.models.Folder
-import io.github.antoinepirlot.satunes.database.models.Genre
-import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.ui.components.forms.AlbumForm
-import io.github.antoinepirlot.satunes.ui.components.forms.ArtistForm
-import io.github.antoinepirlot.satunes.ui.components.forms.MusicForm
+import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
+import io.github.antoinepirlot.satunes.ui.components.texts.Title
 
 /**
  * @author Antoine Pirlot on 06/07/2024
  */
 
 @Composable
-internal fun MusicFormView(
+internal fun AlbumForm(
     modifier: Modifier = Modifier,
-    music: Music,
+    album: Album,
 ) {
     Column(
         modifier = modifier,
     ) {
-        MusicForm(music = music)
+        Title(text = stringResource(id = R.string.album))
 
-        ArtistForm(artist = music.artist)
-
-        AlbumForm(album = music.album)
-
-        /**
-         * Genre
-         */
+        var albumTitle: String by rememberSaveable { mutableStateOf(album.title) }
+        OutlinedTextField(
+            value = albumTitle,
+            onValueChange = { albumTitle = it },
+            label = {
+                NormalText(text = stringResource(id = R.string.title))
+            }
+        )
     }
 }
 
 @Preview
 @Composable
-private fun MusicFormViewPreview() {
+private fun AlbumFormPreview() {
     val album = Album(title = "Album title")
-    val artist = Artist(title = "Artist title")
-    val genre = Genre(title = "Genre title")
-    val folder = Folder(title = "Folder title")
-    val music = Music(
-        id = 0,
-        title = "Music title",
-        album = album,
-        artist = artist,
-        genre = genre,
-        absolutePath = "",
-        context = LocalContext.current,
-        folder = folder,
-        size = 0,
-        duration = 0,
-        displayName = "Display Name"
-    )
-    MusicFormView(music = music)
+    AlbumForm(album = album)
 }

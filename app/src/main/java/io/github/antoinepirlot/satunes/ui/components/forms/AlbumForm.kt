@@ -34,6 +34,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -58,6 +59,16 @@ internal fun AlbumForm(
     ) {
         Title(text = stringResource(id = R.string.album_form_title))
 
+        AlbumArtwork(
+            modifier = Modifier
+                .size(100.dp)
+                .align(alignment = Alignment.CenterHorizontally),
+            onClick = { /* TODO launch change picture process */ },
+            media = album
+        )
+
+        Spacer(modifier = Modifier.size(16.dp))
+
         var albumTitle: String by rememberSaveable { mutableStateOf(album.title) }
         OutlinedTextField(
             value = albumTitle,
@@ -65,12 +76,6 @@ internal fun AlbumForm(
             label = {
                 NormalText(text = stringResource(id = R.string.title))
             }
-        )
-        Spacer(modifier = Modifier.size(16.dp))
-        AlbumArtwork(
-            modifier = Modifier.size(100.dp),
-            onClick = { /* TODO launch change picture process */ },
-            media = album
         )
     }
 }

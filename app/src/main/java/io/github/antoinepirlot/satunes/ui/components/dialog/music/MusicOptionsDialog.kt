@@ -38,6 +38,7 @@ import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMus
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToQueueDialogOption
+import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.EditMediaOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.PlayNextMediaOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.music.options.AddToPlaylistOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.music.options.LikeUnlikeMusicOption
@@ -73,6 +74,9 @@ internal fun MusicOptionsDialog(
                 val playbackController: PlaybackController = PlaybackController.getInstance()
                 val musicPlaying: Music? by remember { playbackController.musicPlaying }
                 LikeUnlikeMusicOption(music = music)
+
+                EditMediaOption(media = music)
+                
                 AddToPlaylistOption(music = music, onFinished = onDismissRequest)
 
                 if (playlistWithMusics != null) {

@@ -25,11 +25,21 @@
 
 package io.github.antoinepirlot.satunes.ui.views.media.forms
 
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Folder
@@ -39,6 +49,7 @@ import io.github.antoinepirlot.satunes.ui.components.forms.AlbumForm
 import io.github.antoinepirlot.satunes.ui.components.forms.ArtistForm
 import io.github.antoinepirlot.satunes.ui.components.forms.GenreForm
 import io.github.antoinepirlot.satunes.ui.components.forms.MusicForm
+import io.github.antoinepirlot.satunes.ui.components.texts.Title
 
 /**
  * @author Antoine Pirlot on 06/07/2024
@@ -49,14 +60,23 @@ internal fun MusicFormView(
     modifier: Modifier = Modifier,
     music: Music,
 ) {
+    val scrollState: ScrollState = rememberScrollState()
     Column(
-        modifier = modifier,
+        modifier = modifier
+            .fillMaxSize()
+            .padding(horizontal = 16.dp)
+            .verticalScroll(state = scrollState),
     ) {
+        Title(text = stringResource(id = R.string.edit_dialog_option))
+
         MusicForm(music = music)
+        Spacer(modifier = Modifier.size(16.dp))
 
         ArtistForm(artist = music.artist)
+        Spacer(modifier = Modifier.size(16.dp))
 
         AlbumForm(album = music.album)
+        Spacer(modifier = Modifier.size(16.dp))
 
         GenreForm(genre = music.genre)
     }

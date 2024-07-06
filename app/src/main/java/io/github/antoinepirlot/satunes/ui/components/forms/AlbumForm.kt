@@ -39,6 +39,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.ui.components.images.AlbumArtwork
@@ -57,7 +58,7 @@ internal fun AlbumForm(
     Column(
         modifier = modifier,
     ) {
-        Title(text = stringResource(id = R.string.album_form_title))
+        Title(text = stringResource(id = R.string.album_form_title), fontSize = 30.sp)
 
         AlbumArtwork(
             modifier = Modifier

@@ -35,6 +35,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.sp
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
@@ -52,7 +53,7 @@ internal fun GenreForm(
     Column(
         modifier = modifier,
     ) {
-        Title(text = stringResource(id = R.string.genre_form_title))
+        Title(text = stringResource(id = R.string.genre_form_title), fontSize = 30.sp)
 
         var genreTitle: String by rememberSaveable { mutableStateOf(genre.title) }
         OutlinedTextField(

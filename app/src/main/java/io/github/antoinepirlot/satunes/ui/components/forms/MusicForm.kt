@@ -55,7 +55,10 @@ internal fun MusicForm(
     var musicTitle: String by rememberSaveable { mutableStateOf(music.title) }
     OutlinedTextField(
         value = musicTitle,
-        onValueChange = { musicTitle = it },
+        onValueChange = {
+            musicTitle = it
+            music.title = it
+        },
         singleLine = true,
         label = {
             NormalText(text = stringResource(id = R.string.title))

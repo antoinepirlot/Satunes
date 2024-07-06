@@ -58,7 +58,10 @@ internal fun ArtistForm(
         var artistTitle: String by rememberSaveable { mutableStateOf(artist.title) }
         OutlinedTextField(
             value = artistTitle,
-            onValueChange = { artistTitle = it },
+            onValueChange = {
+                artistTitle = it
+                artist.title = it
+            },
             label = {
                 NormalText(text = stringResource(id = R.string.title))
             }

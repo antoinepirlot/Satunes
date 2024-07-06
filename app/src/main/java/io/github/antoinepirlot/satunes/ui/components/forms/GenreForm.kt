@@ -58,7 +58,10 @@ internal fun GenreForm(
         var genreTitle: String by rememberSaveable { mutableStateOf(genre.title) }
         OutlinedTextField(
             value = genreTitle,
-            onValueChange = { genreTitle = it },
+            onValueChange = {
+                genreTitle = it
+                genre.title = it
+            },
             label = {
                 NormalText(text = stringResource(id = R.string.title))
             }

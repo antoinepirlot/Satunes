@@ -73,7 +73,10 @@ internal fun AlbumForm(
         var albumTitle: String by rememberSaveable { mutableStateOf(album.title) }
         OutlinedTextField(
             value = albumTitle,
-            onValueChange = { albumTitle = it },
+            onValueChange = {
+                albumTitle = it
+                album.title = it
+            },
             label = {
                 NormalText(text = stringResource(id = R.string.title))
             }

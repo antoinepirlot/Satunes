@@ -29,7 +29,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -52,7 +52,7 @@ internal fun MusicForm(
     modifier: Modifier = Modifier,
     music: Music
 ) {
-    var musicTitle: String by remember { mutableStateOf(music.title) }
+    var musicTitle: String by rememberSaveable { mutableStateOf(music.title) }
     OutlinedTextField(
         value = musicTitle,
         onValueChange = { musicTitle = it },

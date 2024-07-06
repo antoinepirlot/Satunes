@@ -64,4 +64,5 @@
     <string name="click_here">clique ici</string>
     <string name="artistFormTitle">Artiste</string>
     <string name="album">Album</string>
+    <string name="genre">Genre</string>
 </resources>

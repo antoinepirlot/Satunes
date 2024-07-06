@@ -35,7 +35,7 @@ import java.util.SortedMap
 /**
  * @author Antoine Pirlot on 29/03/2024
  */
-interface Media : Comparable<Media> {
+interface Media : Comparable<Media>, Cloneable {
     val id: Long
     val title: String
     var artwork: Bitmap?
@@ -53,5 +53,9 @@ interface Media : Comparable<Media> {
 
     override fun compareTo(other: Media): Int {
         return StringComparator.compare(o1 = this.title, o2 = other.title)
+    }
+
+    override fun clone(): Any {
+        return super.clone()
     }
 }

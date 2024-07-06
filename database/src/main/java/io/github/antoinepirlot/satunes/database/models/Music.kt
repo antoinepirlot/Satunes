@@ -61,7 +61,7 @@ class Music(
     context: Context,
 ) : Media {
     override var liked: Boolean = false
-    override val likedState: MutableState<Boolean> = super.likedState
+    override var likedState: MutableState<Boolean> = super.likedState
     var uri: Uri = Uri.parse(encode(absolutePath)) // Must be init before media item
     val mediaItem: MediaItem = getMediaMetadata()
     override var artwork: Bitmap? = null
@@ -155,5 +155,17 @@ class Music(
         result = 31 * result + (artist.hashCode())
         result = 31 * result + (album.hashCode())
         return result
+    }
+
+    public override fun clone(): Media {
+        val copiedMusic: Music = super.clone() as Music
+        copiedMusic.artist = copiedMusic.artist.copy()
+        copiedMusic.folder = copiedMusic.folder.copy()
+        copiedMusic.album = copiedMusic.album.copy()
+        if (copiedMusic.album.artwork == null) {
+            copiedMusic.album.artwork = copiedMusic.artwork
+        }
+        copiedMusic.genre = copiedMusic.genre.copy()
+        return copiedMusic
     }
 }

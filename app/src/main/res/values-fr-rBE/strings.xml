@@ -66,4 +66,5 @@
     <string name="album_form_title">Album</string>
     <string name="genre_form_title">Genre</string>
     <string name="edit_dialog_option">Modifier les informations</string>
+    <string name="submit_edit_view">Sauvegarder les modifications</string>
 </resources>

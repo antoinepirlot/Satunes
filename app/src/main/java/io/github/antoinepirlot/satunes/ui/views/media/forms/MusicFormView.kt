@@ -33,7 +33,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -49,6 +51,7 @@ import io.github.antoinepirlot.satunes.ui.components.forms.AlbumForm
 import io.github.antoinepirlot.satunes.ui.components.forms.ArtistForm
 import io.github.antoinepirlot.satunes.ui.components.forms.GenreForm
 import io.github.antoinepirlot.satunes.ui.components.forms.MusicForm
+import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 import io.github.antoinepirlot.satunes.ui.components.texts.Title
 
 /**
@@ -79,6 +82,14 @@ internal fun MusicFormView(
         Spacer(modifier = Modifier.size(16.dp))
 
         GenreForm(genre = music.genre)
+        Spacer(modifier = Modifier.size(16.dp))
+
+        Button(
+            modifier = Modifier.align(alignment = Alignment.End),
+            onClick = { /*TODO*/ }
+        ) {
+            NormalText(text = stringResource(id = R.string.submit_edit_view))
+        }
     }
 }
 

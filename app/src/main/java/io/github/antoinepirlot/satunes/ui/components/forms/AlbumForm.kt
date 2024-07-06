@@ -26,6 +26,8 @@
 package io.github.antoinepirlot.satunes.ui.components.forms
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -35,8 +37,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Album
+import io.github.antoinepirlot.satunes.ui.components.images.AlbumArtwork
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 import io.github.antoinepirlot.satunes.ui.components.texts.Title
 
@@ -61,6 +65,12 @@ internal fun AlbumForm(
             label = {
                 NormalText(text = stringResource(id = R.string.title))
             }
+        )
+        Spacer(modifier = Modifier.size(16.dp))
+        AlbumArtwork(
+            modifier = Modifier.size(100.dp),
+            onClick = { /* TODO launch change picture process */ },
+            media = album
         )
     }
 }

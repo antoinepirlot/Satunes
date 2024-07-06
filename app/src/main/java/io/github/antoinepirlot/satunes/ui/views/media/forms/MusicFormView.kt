@@ -23,26 +23,19 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.views.media
+package io.github.antoinepirlot.satunes.ui.views.media.forms
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
+import io.github.antoinepirlot.satunes.ui.components.forms.MusicForm
 
 /**
  * @author Antoine Pirlot on 06/07/2024
@@ -56,15 +49,19 @@ internal fun MusicFormView(
     Column(
         modifier = modifier,
     ) {
-        var musicTitle: String by remember { mutableStateOf(music.title) }
-        OutlinedTextField(
-            value = musicTitle,
-            onValueChange = { musicTitle = it },
-            singleLine = true,
-            label = {
-                NormalText(text = stringResource(id = R.string.title))
-            },
-        )
+        MusicForm(music = music)
+
+        /**
+         * Artist
+         */
+
+        /**
+         * Album
+         */
+
+        /**
+         * Genre
+         */
     }
 }
 

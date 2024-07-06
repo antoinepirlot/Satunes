@@ -60,6 +60,7 @@ import io.github.antoinepirlot.satunes.ui.views.media.artist.AllArtistsListView
 import io.github.antoinepirlot.satunes.ui.views.media.artist.ArtistView
 import io.github.antoinepirlot.satunes.ui.views.media.folder.FolderView
 import io.github.antoinepirlot.satunes.ui.views.media.folder.RootFolderView
+import io.github.antoinepirlot.satunes.ui.views.media.forms.MusicFormView
 import io.github.antoinepirlot.satunes.ui.views.media.genre.AllGenresListView
 import io.github.antoinepirlot.satunes.ui.views.media.genre.GenreView
 import io.github.antoinepirlot.satunes.ui.views.media.music.AllMusicsListView
@@ -276,6 +277,21 @@ internal fun Router(
             // Also this view will never been accessible if no music is playing
             PlaybackQueueView()
         }
+
+        /**
+         * EDIT
+         */
+
+        composable("${Destination.EDIT_MUSIC.link}/{id}") {
+            RoutesManager.currentDestination.value = it.destination.route
+            permissionView(isAudioAllowed = isAudioAllowed.value)
+            val musicId: Long = it.arguments!!.getString("id")!!.toLong()
+            MusicFormView(music = DataManager.getMusic(musicId = musicId))
+        }
+
+        /**
+         * Settings
+         */
 
         composable(Destination.SETTINGS.link) {
             RoutesManager.currentDestination.value = it.destination.route

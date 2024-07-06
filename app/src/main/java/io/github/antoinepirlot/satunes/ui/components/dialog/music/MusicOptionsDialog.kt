@@ -36,7 +36,9 @@ import androidx.compose.ui.Modifier
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import io.github.antoinepirlot.satunes.navController
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
+import io.github.antoinepirlot.satunes.router.Destination
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToQueueDialogOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.EditMediaOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.PlayNextMediaOption
@@ -75,7 +77,12 @@ internal fun MusicOptionsDialog(
                 val musicPlaying: Music? by remember { playbackController.musicPlaying }
                 LikeUnlikeMusicOption(music = music)
 
-                EditMediaOption(media = music)
+                EditMediaOption(
+                    media = music,
+                    onClick = {
+                        navController.navigate("${Destination.EDIT_MUSIC.link}/${music.id}")
+                    }
+                )
                 
                 AddToPlaylistOption(music = music, onFinished = onDismissRequest)
 

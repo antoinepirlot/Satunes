@@ -35,6 +35,7 @@ internal enum class Destination(val link: String) {
     ARTISTS(link = "/artists"),
     BATTERY_SETTINGS(link = "/battery_settings"),
     BOTTOM_BAR_SETTINGS(link = "/navbar_settings"),
+    EDIT_MUSIC(link = "/edit_music"),
     EXCLUSION_SETTINGS(link = "/exclusion"),
     FOLDERS(link = "/folders"),
     GENRES(link = "/genres"),

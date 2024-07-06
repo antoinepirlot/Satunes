@@ -43,10 +43,11 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.options.DialogOption
 internal fun EditMediaOption(
     modifier: Modifier = Modifier,
     media: Media,
+    onClick: () -> Unit,
 ) {
     DialogOption(
         modifier = modifier,
-        onClick = { /*TODO*/ },
+        onClick = onClick,
         icon = SatunesIcons.EDIT,
         text = stringResource(id = R.string.edit_dialog_option)
     )
@@ -55,5 +56,5 @@ internal fun EditMediaOption(
 @Preview
 @Composable
 private fun EditMediaOptionPreview() {
-    EditMediaOption(media = Artist(title = "Artist title"))
+    EditMediaOption(media = Artist(title = "Artist title"), onClick = {})
 }

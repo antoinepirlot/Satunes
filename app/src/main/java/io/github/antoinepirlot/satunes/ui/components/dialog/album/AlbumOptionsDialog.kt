@@ -23,87 +23,79 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.dialog.music
+package io.github.antoinepirlot.satunes.ui.components.dialog.album
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToPlaylistMediaOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToQueueDialogOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.PlayNextMediaOption
-import io.github.antoinepirlot.satunes.ui.components.dialog.music.options.LikeUnlikeMusicOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.music.options.NavigateToMediaMusicOption
-import io.github.antoinepirlot.satunes.ui.components.dialog.music.options.RemoveFromPlaylistMusicOption
+import io.github.antoinepirlot.satunes.ui.components.images.AlbumArtwork
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 
 /**
- * @author Antoine Pirlot on 30/03/2024
+ * @author Antoine Pirlot on 07/07/2024
  */
 
 
 @Composable
-internal fun MusicOptionsDialog(
+internal fun AlbumOptionsDialog(
     modifier: Modifier = Modifier,
-    music: Music,
-    playlistWithMusics: PlaylistWithMusics? = null,
+    album: Album,
     onDismissRequest: () -> Unit,
 ) {
     AlertDialog(
         modifier = modifier,
+        onDismissRequest = onDismissRequest,
+        confirmButton = { /* Nothing */ },
         icon = {
-            Icon(
-                imageVector = SatunesIcons.MUSIC.imageVector,
-                contentDescription = "Music Options Icon"
+            AlbumArtwork(
+                modifier = Modifier.size(100.dp),
+                media = album
             )
         },
         title = {
-            NormalText(text = music.title)
+            NormalText(text = album.title)
         },
         text = {
             Column {
                 val playbackController: PlaybackController = PlaybackController.getInstance()
-                val musicPlaying: Music? by remember { playbackController.musicPlaying }
-                LikeUnlikeMusicOption(music = music)
-                AddToPlaylistMediaOption(media = music, onFinished = onDismissRequest)
+                val isPlaybackLoaded: Boolean by rememberSaveable { playbackController.isLoaded }
 
-                if (playlistWithMusics != null) {
-                    RemoveFromPlaylistMusicOption(
-                        music = music,
-                        playlistWithMusics = playlistWithMusics,
-                        onFinished = onDismissRequest
-                    )
-                }
+                /**
+                 * Playlist
+                 */
+                AddToPlaylistMediaOption(media = album, onFinished = onDismissRequest)
 
-                val isPlaybackLoaded: Boolean by rememberSaveable { PlaybackController.getInstance().isLoaded }
-
+                /**
+                 * Queue
+                 */
                 if (isPlaybackLoaded) {
-                    if (music != musicPlaying) {
-                        PlayNextMediaOption(media = music, onFinished = onDismissRequest)
-                        if (!playbackController.isMusicInQueue(music = music)) {
-                            AddToQueueDialogOption(media = music, onFinished = onDismissRequest)
-                        }
-                    }
+                    PlayNextMediaOption(media = album, onFinished = onDismissRequest)
+                    AddToQueueDialogOption(media = album, onFinished = onDismissRequest)
                 }
 
                 /**
                  * Redirections
                  */
-                NavigateToMediaMusicOption(media = music.album)
-                NavigateToMediaMusicOption(media = music.artist)
-                NavigateToMediaMusicOption(media = music.genre)
-                NavigateToMediaMusicOption(media = music.folder)
+                NavigateToMediaMusicOption(media = album.artist!!)
             }
-        },
-        onDismissRequest = { onDismissRequest() },
-        confirmButton = { /* Nothing */ }
+        }
     )
+}
+
+@Preview
+@Composable
+private fun AlbumOptionsDialogPreview() {
+    AlbumOptionsDialog(album = Album(title = "Album title"), onDismissRequest = {})
 }

@@ -167,7 +167,7 @@ object UpdateCheckManager {
 
     fun getCurrentVersion(context: Context): String {
         val versionName: String =
-            context.packageManager.getPackageInfo(context.packageName, 0).versionName
+            context.packageManager.getPackageInfo(context.packageName, 0).versionName!!
         versionType = try {
             versionName.split("-")[1]
         } catch (_: IndexOutOfBoundsException) {

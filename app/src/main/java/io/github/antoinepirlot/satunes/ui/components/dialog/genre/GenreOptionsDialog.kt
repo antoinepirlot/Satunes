@@ -25,11 +25,13 @@
 
 package io.github.antoinepirlot.satunes.ui.components.dialog.genre
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.AlertDialog
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.satunes.database.models.Genre
+import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 
 /**
  * @author Antoine Pirlot on 07/07/2024
@@ -44,7 +46,15 @@ internal fun GenreOptionsDialog(
     AlertDialog(
         modifier = modifier,
         onDismissRequest = onDismissRequest,
-        confirmButton = { /* Nothing */ }
+        confirmButton = { /* Nothing */ },
+        title = {
+            NormalText(text = genre.title)
+        },
+        text = {
+            Column {
+
+            }
+        }
     )
 }
 

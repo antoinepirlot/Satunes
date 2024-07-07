@@ -37,9 +37,9 @@ import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
+import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToPlaylistMediaOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToQueueDialogOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.PlayNextMediaOption
-import io.github.antoinepirlot.satunes.ui.components.dialog.music.options.AddToPlaylistOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.music.options.LikeUnlikeMusicOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.music.options.NavigateToMediaMusicOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.music.options.RemoveFromPlaylistMusicOption
@@ -73,7 +73,7 @@ internal fun MusicOptionsDialog(
                 val playbackController: PlaybackController = PlaybackController.getInstance()
                 val musicPlaying: Music? by remember { playbackController.musicPlaying }
                 LikeUnlikeMusicOption(music = music)
-                AddToPlaylistOption(music = music, onFinished = onDismissRequest)
+                AddToPlaylistMediaOption(media = music, onFinished = onDismissRequest)
 
                 if (playlistWithMusics != null) {
                     RemoveFromPlaylistMusicOption(
@@ -94,6 +94,9 @@ internal fun MusicOptionsDialog(
                     }
                 }
 
+                /**
+                 * Redirections
+                 */
                 NavigateToMediaMusicOption(media = music.album)
                 NavigateToMediaMusicOption(media = music.artist)
                 NavigateToMediaMusicOption(media = music.genre)

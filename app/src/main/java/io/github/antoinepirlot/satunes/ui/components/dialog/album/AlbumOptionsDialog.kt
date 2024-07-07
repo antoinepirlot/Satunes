@@ -75,7 +75,7 @@ internal fun AlbumOptionsDialog(
                 /**
                  * Playlist
                  */
-                AddToPlaylistMediaOption(media = album, onFinished = { /*TODO*/ })
+                AddToPlaylistMediaOption(media = album, onFinished = onDismissRequest)
 
                 /**
                  * Queue

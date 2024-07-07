@@ -25,11 +25,21 @@
 
 package io.github.antoinepirlot.satunes.ui.components.dialog.artist
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.satunes.database.models.Artist
+import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import io.github.antoinepirlot.satunes.playback.services.PlaybackController
+import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToPlaylistMediaOption
+import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToQueueDialogOption
+import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.PlayNextMediaOption
+import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 
 /**
  * @author Antoine Pirlot on 07/07/2024
@@ -44,7 +54,33 @@ internal fun ArtistOptionsDialog(
     AlertDialog(
         modifier = modifier,
         onDismissRequest = onDismissRequest,
-        confirmButton = { /* Nothing */ }
+        confirmButton = { /* Nothing */ },
+        icon = {
+            val icon: SatunesIcons = SatunesIcons.ARTIST
+            Icon(imageVector = icon.imageVector, contentDescription = icon.description)
+        },
+        title = {
+            NormalText(text = artist.title)
+        },
+        text = {
+            Column {
+                val playbackController: PlaybackController = PlaybackController.getInstance()
+                val isPlaybackLoaded: Boolean by rememberSaveable { playbackController.isLoaded }
+
+                /**
+                 * Playlist
+                 */
+                AddToPlaylistMediaOption(media = artist, onFinished = onDismissRequest)
+
+                /**
+                 * Playback
+                 */
+                if (isPlaybackLoaded) {
+                    PlayNextMediaOption(media = artist, onFinished = onDismissRequest)
+                    AddToQueueDialogOption(media = artist, onFinished = onDismissRequest)
+                }
+            }
+        }
     )
 }
 

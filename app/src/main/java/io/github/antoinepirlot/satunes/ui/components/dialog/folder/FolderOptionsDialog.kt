@@ -25,11 +25,20 @@
 
 package io.github.antoinepirlot.satunes.ui.components.dialog.folder
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.AlertDialog
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.satunes.database.models.Folder
+import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import io.github.antoinepirlot.satunes.playback.services.PlaybackController
+import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToPlaylistMediaOption
+import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToQueueDialogOption
+import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.PlayNextMediaOption
+import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 
 /**
  * @author Antoine Pirlot on 07/07/2024
@@ -44,7 +53,33 @@ internal fun FolderOptionsDialog(
     AlertDialog(
         modifier = modifier,
         onDismissRequest = onDismissRequest,
-        confirmButton = { /* Nothing */ }
+        confirmButton = { /* Nothing */ },
+        icon = {
+            val icon: SatunesIcons = SatunesIcons.FOLDER
+        },
+        title = {
+            NormalText(text = folder.title)
+        },
+        text = {
+            Column {
+                val playbackController: PlaybackController = PlaybackController.getInstance()
+                val isPlaybackLoaded: Boolean by rememberSaveable { playbackController.isLoaded }
+
+                /**
+                 * Playlist
+                 */
+
+                AddToPlaylistMediaOption(media = folder, onFinished = onDismissRequest)
+
+                /**
+                 * Playback
+                 */
+                if (isPlaybackLoaded) {
+                    PlayNextMediaOption(media = folder, onFinished = onDismissRequest)
+                    AddToQueueDialogOption(media = folder, onFinished = onDismissRequest)
+                }
+            }
+        }
     )
 }
 

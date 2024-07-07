@@ -27,10 +27,18 @@ package io.github.antoinepirlot.satunes.ui.components.dialog.genre
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.satunes.database.models.Genre
+import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import io.github.antoinepirlot.satunes.playback.services.PlaybackController
+import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToPlaylistMediaOption
+import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToQueueDialogOption
+import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.PlayNextMediaOption
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 
 /**
@@ -47,12 +55,30 @@ internal fun GenreOptionsDialog(
         modifier = modifier,
         onDismissRequest = onDismissRequest,
         confirmButton = { /* Nothing */ },
+        icon = {
+            val icon: SatunesIcons = SatunesIcons.GENRES
+            Icon(imageVector = icon.imageVector, contentDescription = icon.description)
+        },
         title = {
             NormalText(text = genre.title)
         },
         text = {
             Column {
+                val playbackController: PlaybackController = PlaybackController.getInstance()
+                val isPlaybackLoaded: Boolean by rememberSaveable { playbackController.isLoaded }
 
+                /**
+                 * Playlist
+                 */
+                AddToPlaylistMediaOption(media = genre, onFinished = onDismissRequest)
+
+                /**
+                 * Playback
+                 */
+                if (isPlaybackLoaded) {
+                    PlayNextMediaOption(media = genre, onFinished = onDismissRequest)
+                    AddToQueueDialogOption(media = genre, onFinished = onDismissRequest)
+                }
             }
         }
     )

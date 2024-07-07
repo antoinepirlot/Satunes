@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "io.github.antoinepirlot.satunes.car"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 22
@@ -13,8 +13,13 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
     buildTypes {
         create("releaseTest") {

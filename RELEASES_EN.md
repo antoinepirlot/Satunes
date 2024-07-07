@@ -1,6 +1,55 @@
 # Releases (🇬🇧)
 Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
+## 1.2 (Android 5.1.1 Lollipop and later)
+
+### 1.2.1
+
+Improvements, Optimizations and Troubleshooting:
+
+* Fixed bug when adding currently playing music to a playlist when there is none and the user
+  cancels its creation
+* Added search filter for playlists
+* Navigation animations between pages are faster and avoid clicking on the previous page
+* The music queue list page opens with the currently playing music in mind
+* Added a button to open currently playing music from the search page
+* The music filter in the search is activated by default
+
+### 1.2.0
+
+New features:
+
+* Search for different media
+* Favorite music system
+* Viewing the playlist and being able to:
+* Play music after current track
+* Add to queue
+* Added a tablet mode for displaying music currently playing
+* Popup after installing an update
+
+Improvements, Optimizations and Troubleshooting:
+
+* Removal of the Facebook button following the future disappearance of the Satunes' Facebook page
+* Optimizations
+* A bug causing the application to crash following the creation of the first playlist has been fixed
+
+### 1.2.0-preview-1
+
+New features:
+
+* Search for different media
+* Favorite music system
+* Viewing the playlist and being able to:
+* Play music after current track
+* Add to queue
+* Added a tablet mode for displaying music currently playing
+* Popup after installing an update
+
+Improvements, Optimizations and Troubleshooting:
+
+* Removal of the Facebook button following the future disappearance of the Satunes' Facebook page
+* Optimizations
+
 ## 1.1 (Android 5.1.1 Lollipop and later)
 
 ### 1.1.1

@@ -28,8 +28,6 @@ package io.github.antoinepirlot.satunes.ui.components.dialog.options
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material3.Icon
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -37,6 +35,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 
 /**
@@ -49,7 +48,7 @@ private val SPACER_SIZE = 10.dp
 internal fun DialogOption(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
-    icon: @Composable () -> Unit,
+    icon: SatunesIcons,
     text: String,
 ) {
     TextButton(
@@ -59,7 +58,7 @@ internal fun DialogOption(
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            icon()
+            Icon(imageVector = icon.imageVector, contentDescription = icon.description)
             Spacer(modifier = Modifier.size(SPACER_SIZE))
             NormalText(text = text)
         }
@@ -71,7 +70,7 @@ internal fun DialogOption(
 private fun DialogOptionPreview() {
     DialogOption(
         onClick = {},
-        icon = { Icon(imageVector = Icons.Rounded.Add, contentDescription = "")},
+        icon = SatunesIcons.ADD,
         text = "Dialog Option"
     )
 }

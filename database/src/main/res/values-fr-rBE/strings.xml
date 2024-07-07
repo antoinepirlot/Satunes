@@ -41,4 +41,5 @@
     <string name="exporting_success">Exportation réussie</string>
     <string name="added">Ajouté(s)</string>
     <string name="created">Playlist Créée</string>
+    <string name="likes_playlist_title">Favoris</string>
 </resources>

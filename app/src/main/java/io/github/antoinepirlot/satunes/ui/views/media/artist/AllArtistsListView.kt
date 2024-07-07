@@ -23,7 +23,7 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.views.genre
+package io.github.antoinepirlot.satunes.ui.views.media.artist
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -33,11 +33,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.media3.common.MediaItem
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.database.models.Genre
+import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Media
-import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.DataManager
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
@@ -52,14 +50,14 @@ import java.util.SortedMap
  */
 
 @Composable
-internal fun AllGenresListView(
+internal fun AllArtistsListView(
     modifier: Modifier = Modifier,
 ) {
     val playbackController: PlaybackController = PlaybackController.getInstance()
-    val genreMap: SortedMap<String, Genre> = remember { DataManager.genreMap }
+    val artistMap: SortedMap<String, Artist> = remember { DataManager.artistMap }
 
     //Recompose if data changed
-    var mapChanged: Boolean by rememberSaveable { DataManager.genreMapUpdated }
+    var mapChanged: Boolean by rememberSaveable { DataManager.artistMapUpdated }
     if (mapChanged) {
         mapChanged = false
     }
@@ -67,43 +65,31 @@ internal fun AllGenresListView(
 
     MediaListView(
         modifier = modifier,
-        mediaList = genreMap.values.toList(),
+        mediaList = artistMap.values.toList(),
 
-        openMedia = { clickedMedia: Media ->
-            openMedia(media = clickedMedia)
-        },
+        openMedia = { clickedMedia: Media -> openMedia(clickedMedia) },
         onFABClick = { openCurrentMusic() },
         extraButtons = {
-            if (genreMap.isNotEmpty()) {
+            if (DataManager.musicMediaItemSortedMap.isNotEmpty()) {
                 ExtraButton(icon = SatunesIcons.PLAY, onClick = {
-                    playbackController.loadMusic(musicMediaItemSortedMap = getMusics(genreMap = genreMap))
+                    playbackController.loadMusic(musicMediaItemSortedMap = DataManager.musicMediaItemSortedMap)
                     openMedia()
                 })
                 ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
-
                     playbackController.loadMusic(
-                        musicMediaItemSortedMap = getMusics(genreMap = genreMap),
+                        musicMediaItemSortedMap = DataManager.musicMediaItemSortedMap,
                         shuffleMode = true
                     )
                     openMedia()
                 })
             }
         },
-        emptyViewText = stringResource(id = R.string.no_genre)
+        emptyViewText = stringResource(id = R.string.no_artist)
     )
-}
-
-private fun getMusics(genreMap: SortedMap<String, Genre>): SortedMap<Music, MediaItem> {
-    val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
-
-    genreMap.forEach { (_: String, genre: Genre) ->
-        musicMediaItemSortedMap.putAll(genre.musicMediaItemSortedMap)
-    }
-    return musicMediaItemSortedMap
 }
 
 @Preview
 @Composable
-private fun AllGenresListViewPreview() {
-    AllGenresListView()
+private fun AllArtistsListViewPreview() {
+    AllArtistsListView()
 }

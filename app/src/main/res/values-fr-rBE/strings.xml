@@ -9,7 +9,7 @@
     <string name="playback_when_paused">Lecture si l\'application est fermée</string>
     <string name="pause_if_noisy">Pause si le casque est débranché</string>
     <string name="playlist_form">Nom de la playlist</string>
-    <string name="create_playlist">Crée une nouvelle playlist</string>
+    <string name="create_playlist">Créer une nouvelle playlist</string>
     <string name="cancel">Annuler</string>
     <string name="create">Créer</string>
     <string name="add_to_playlist">Ajouter à une playlist</string>
@@ -58,4 +58,8 @@
     <string name="playback_queue">File d\'attente</string>
     <string name="search_placeholder">Recherche</string>
     <string name="no_result">Aucun résultat trouvé</string>
+    <string name="add_to_likes">J\'aime</string>
+    <string name="remove_from_likes">J\'aime plus</string>
+    <string name="whats_new_text">Génial! Tu viens d\'installer une nouvelle version de Satunes.\n\nJ\'espère que celle-ci te conviendra.\n\nSi jamais tu remarques des problèmes ou si tu veux faire des suggestions, tu peux m\'envoyer un mail à l\'adresse: pirlot.antoine@outlook.com.\n\nMerci de ton aide! 😊\n\nJe te souhaite une bonne écoute 🎧🎵</string>
+    <string name="click_here">clique ici</string>
 </resources>

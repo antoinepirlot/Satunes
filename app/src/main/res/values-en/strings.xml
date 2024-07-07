@@ -58,4 +58,8 @@
     <string name="playback_queue">Queue</string>
     <string name="search_placeholder">Search</string>
     <string name="no_result">No result found</string>
+    <string name="add_to_likes">Like</string>
+    <string name="remove_from_likes">Unlike</string>
+    <string name="whats_new_text">Yay! You have just installed a new version of Satunes.\n\nI hope this version is better than the older one.\n\nIf you ever notice any problems or want to make suggestions, you can send me an email at: pirlot.antoine@outlook.com.\n\nThank you for your help! 😊\n\nI wish you good listening 🎧🎵</string>
+    <string name="click_here">click here</string>
 </resources>

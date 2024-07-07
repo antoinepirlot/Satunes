@@ -18,8 +18,8 @@ android {
         applicationId = nameSpace
         minSdk = 22
         targetSdk = 34
-        versionCode = 33
-        versionName = "1.1.1"
+        versionCode = 36
+        versionName = "1.2.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -39,8 +39,6 @@ android {
 
         create("releaseTest") {
             initWith(getByName("release"))
-            isMinifyEnabled = true
-            isShrinkResources = true
             applicationIdSuffix = ".test"
             resValue(type = "string", name = "app_name", value = "${rootProject.name} (test)")
         }

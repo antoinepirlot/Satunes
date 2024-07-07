@@ -29,7 +29,6 @@ import android.graphics.Bitmap
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.media3.common.MediaItem
-import androidx.room.Ignore
 import java.util.SortedMap
 
 /**
@@ -42,7 +41,7 @@ data class Album(
     var artist: Artist? = null,
     override val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf(),
 ) : Media {
-    @Ignore
+    override var liked: Boolean = false
     val musicMediaItemSortedMapUpdate: MutableState<Boolean> = mutableStateOf(false)
     override var artwork: Bitmap? = null
 
@@ -83,12 +82,11 @@ data class Album(
     }
 
     override fun compareTo(other: Media): Int {
-        other as Album
         val titleCompared: Int = super.compareTo(other)
-        if (artist == null || other.artist == null) {
+        if (artist == null || other is Album && other.artist == null) {
             return titleCompared
         }
-        if (titleCompared == 0) {
+        if (titleCompared == 0 && other is Album) {
             return artist!!.compareTo(other.artist!!)
         }
         return titleCompared

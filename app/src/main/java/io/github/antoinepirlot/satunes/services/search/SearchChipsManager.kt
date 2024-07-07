@@ -23,33 +23,41 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.buttons.playback
+package io.github.antoinepirlot.satunes.services.search
 
-import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.runtime.snapshots.SnapshotStateList
 
 /**
- * @author Antoine Pirlot on 01/06/2024
+ * @author Antoine Pirlot on 28/06/2024
  */
 
-@Composable
-internal fun PlaybackButtonsRow(
-    modifier: Modifier = Modifier
-) {
-    val scrollState = rememberScrollState()
-    Row(
-        modifier = modifier.horizontalScroll(state = scrollState),
-    ) {
-        AddToPlaylistRowButton()
-    }
-}
+internal object SearchChipsManager {
+    val allSearchChips: List<SearchChips> = listOf(
+        SearchChips.MUSICS,
+        SearchChips.ALBUMS,
+        SearchChips.ARTISTS,
+        SearchChips.GENRES,
+        SearchChips.FOLDERS,
+        SearchChips.PLAYLISTS
+    )
+    val selectedSearchChips: MutableList<SearchChips> = SnapshotStateList()
 
-@Preview
-@Composable
-private fun PlaybackButtonsRowPreview() {
-    PlaybackButtonsRow()
+    fun resetSelectedChips() {
+        selectedSearchChips.forEach { selectedSearchChip: SearchChips ->
+            selectedSearchChip.enabled.value = false
+        }
+        selectedSearchChips.clear()
+        selectedSearchChips.add(SearchChips.MUSICS)
+        SearchChips.MUSICS.enabled.value = true
+    }
+
+    fun select(searchChip: SearchChips) {
+        searchChip.enabled.value = true
+        selectedSearchChips.add(searchChip)
+    }
+
+    fun unselect(searchChip: SearchChips) {
+        searchChip.enabled.value = false
+        selectedSearchChips.remove(searchChip)
+    }
 }

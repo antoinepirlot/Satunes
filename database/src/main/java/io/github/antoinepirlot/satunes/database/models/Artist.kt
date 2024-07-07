@@ -40,6 +40,7 @@ data class Artist(
     override var title: String,
     val albumSortedMap: SortedMap<String, Album> = sortedMapOf(),
 ) : Media {
+    override var liked: Boolean = false
     override var artwork: Bitmap? = null
 
     val albumSortedMapUpdate: MutableState<Boolean> = mutableStateOf(false)

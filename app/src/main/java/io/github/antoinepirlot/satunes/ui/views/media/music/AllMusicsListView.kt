@@ -23,7 +23,7 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.views.artist
+package io.github.antoinepirlot.satunes.ui.views.media.music
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -33,9 +33,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.media3.common.MediaItem
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Media
+import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.DataManager
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
@@ -50,14 +51,16 @@ import java.util.SortedMap
  */
 
 @Composable
-internal fun AllArtistsListView(
+internal fun AllMusicsListView(
     modifier: Modifier = Modifier,
 ) {
     val playbackController: PlaybackController = PlaybackController.getInstance()
-    val artistMap: SortedMap<String, Artist> = remember { DataManager.artistMap }
+    //Find a way to do something more aesthetic but it works
+    val musicMediaItemMap: SortedMap<Music, MediaItem> =
+        remember { DataManager.musicMediaItemSortedMap }
 
     //Recompose if data changed
-    var mapChanged: Boolean by rememberSaveable { DataManager.artistMapUpdated }
+    var mapChanged: Boolean by rememberSaveable { DataManager.musicMediaItemSortedMapUpdated }
     if (mapChanged) {
         mapChanged = false
     }
@@ -65,31 +68,37 @@ internal fun AllArtistsListView(
 
     MediaListView(
         modifier = modifier,
-        mediaList = artistMap.values.toList(),
+        mediaList = musicMediaItemMap.keys.toList(),
 
-        openMedia = { clickedMedia: Media -> openMedia(clickedMedia) },
+        openMedia = { clickedMedia: Media ->
+            playbackController.loadMusic(
+                musicMediaItemSortedMap = musicMediaItemMap,
+                musicToPlay = clickedMedia as Music
+            )
+            openMedia(clickedMedia)
+        },
         onFABClick = { openCurrentMusic() },
         extraButtons = {
-            if (DataManager.musicMediaItemSortedMap.isNotEmpty()) {
+            if (musicMediaItemMap.isNotEmpty()) {
                 ExtraButton(icon = SatunesIcons.PLAY, onClick = {
-                    playbackController.loadMusic(musicMediaItemSortedMap = DataManager.musicMediaItemSortedMap)
+                    playbackController.loadMusic(musicMediaItemSortedMap = musicMediaItemMap)
                     openMedia()
                 })
                 ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
                     playbackController.loadMusic(
-                        musicMediaItemSortedMap = DataManager.musicMediaItemSortedMap,
+                        musicMediaItemSortedMap = musicMediaItemMap,
                         shuffleMode = true
                     )
                     openMedia()
                 })
             }
         },
-        emptyViewText = stringResource(id = R.string.no_artist)
+        emptyViewText = stringResource(id = R.string.no_music)
     )
 }
 
 @Preview
 @Composable
-private fun AllArtistsListViewPreview() {
-    AllArtistsListView()
+private fun MusicsListViewPreview() {
+    AllMusicsListView()
 }

@@ -32,6 +32,7 @@ import androidx.room.RoomDatabase
 import io.github.antoinepirlot.satunes.database.daos.MusicDAO
 import io.github.antoinepirlot.satunes.database.daos.MusicsPlaylistsRelDAO
 import io.github.antoinepirlot.satunes.database.daos.PlaylistDAO
+import io.github.antoinepirlot.satunes.database.migrations.MigrationFrom1To2
 import io.github.antoinepirlot.satunes.database.models.tables.MusicDB
 import io.github.antoinepirlot.satunes.database.models.tables.MusicsPlaylistsRel
 import io.github.antoinepirlot.satunes.database.models.tables.Playlist
@@ -46,7 +47,7 @@ import io.github.antoinepirlot.satunes.database.models.tables.Playlist
         MusicsPlaylistsRel::class,
         Playlist::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = true,
 )
 internal abstract class SatunesDatabase : RoomDatabase() {
@@ -59,7 +60,9 @@ internal abstract class SatunesDatabase : RoomDatabase() {
                     context = context,
                     SatunesDatabase::class.java,
                     "Satunes-database"
-                ).build()
+                )
+                    .addMigrations(MigrationFrom1To2)
+                    .build()
             }
             return database!!
         }

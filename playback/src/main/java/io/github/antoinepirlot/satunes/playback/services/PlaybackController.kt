@@ -229,6 +229,10 @@ class PlaybackController private constructor(
         return this.mediaController.currentPosition
     }
 
+    fun getMusicPlayingIndexPosition(): Int {
+        return this.mediaController.currentMediaItemIndex
+    }
+
     fun playNext() {
         if (playlist.musicCount() > 1) {
             this.mediaController.seekToNext()
@@ -337,6 +341,9 @@ class PlaybackController private constructor(
     }
 
     fun addNext(media: Media) {
+        if (musicPlaying.value == media) {
+            return
+        }
         when (media) {
             is Music -> {
                 try {
@@ -536,5 +543,9 @@ class PlaybackController private constructor(
 
     fun getPlaylist(): SnapshotStateList<Music> {
         return this.playlist.musicList
+    }
+
+    fun isMusicInQueue(music: Music): Boolean {
+        return this.playlist.isMusicInQueue(music = music)
     }
 }

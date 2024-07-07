@@ -47,6 +47,9 @@ data class MusicDB(
     @PrimaryKey
     @ColumnInfo("music_id") override val id: Long
 ) : Media {
+
+    @ColumnInfo("liked")
+    override var liked: Boolean = false
     @Ignore
     @Transient
     override var artwork: Bitmap? = null

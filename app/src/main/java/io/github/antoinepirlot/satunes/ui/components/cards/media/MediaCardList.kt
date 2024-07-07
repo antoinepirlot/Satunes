@@ -29,11 +29,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
 import io.github.antoinepirlot.satunes.database.models.tables.MusicDB
+import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 
 /**
  * @author Antoine Pirlot on 16/01/24
@@ -42,12 +44,13 @@ import io.github.antoinepirlot.satunes.database.models.tables.MusicDB
 @Composable
 internal fun MediaCardList(
     modifier: Modifier = Modifier,
-    header: (@Composable () -> Unit)? = null,
+    header: @Composable() (() -> Unit)? = null,
     mediaList: List<Media>,
     openMedia: (media: Media) -> Unit,
-    openedPlaylistWithMusics: PlaylistWithMusics? = null
+    openedPlaylistWithMusics: PlaylistWithMusics? = null,
+    scrollToMusicPlaying: Boolean = false,
 ) {
-    val lazyState = rememberLazyListState()
+    val lazyListState = rememberLazyListState()
 
     if (mediaList.isEmpty()) {
         // It fixes issue while accessing last folder in chain
@@ -56,15 +59,15 @@ internal fun MediaCardList(
 
     LazyColumn(
         modifier = modifier,
-        state = lazyState
+        state = lazyListState
     ) {
         items(
             items = mediaList,
             key = {
                 when (it) {
-                    is PlaylistWithMusics -> it.playlist.id
-                    is MusicDB -> it.music!!.id
-                    else -> it.id
+                    is PlaylistWithMusics -> it.javaClass.name + '-' + it.playlist.id
+                    is MusicDB -> it.javaClass.name + '-' + it.music!!.id
+                    else -> it.javaClass.name + '-' + it.id
                 }
             }
         ) { media: Media ->
@@ -81,15 +84,24 @@ internal fun MediaCardList(
             )
         }
     }
+
+    if (scrollToMusicPlaying) {
+        LaunchedEffect(key1 = Unit) {
+            lazyListState.scrollToItem(
+                PlaybackController.getInstance().getMusicPlayingIndexPosition()
+            )
+        }
+    }
 }
 
 @Composable
 @Preview
 private fun CardListPreview() {
     MediaCardList(
-        mediaList = listOf(),
         header = {},
+        mediaList = listOf(),
         openMedia = {},
-        openedPlaylistWithMusics = null
+        openedPlaylistWithMusics = null,
+        scrollToMusicPlaying = false
     )
 }

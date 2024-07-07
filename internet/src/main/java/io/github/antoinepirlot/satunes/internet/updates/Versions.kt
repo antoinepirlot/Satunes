@@ -28,7 +28,7 @@ package io.github.antoinepirlot.satunes.internet.updates
 /**
  * @author Antoine Pirlot on 14/04/2024
  */
-internal object Versions {
+object Versions {
     internal const val ALPHA: String = "alpha"
     internal const val BETA: String = "beta"
     internal const val PREVIEW: String = "preview"
@@ -52,7 +52,7 @@ internal object Versions {
         Regex("\"/antoinepirlot/.+/releases/tag/v[0-9]+\\.[0-9]+\\.[0-9]+\"")
     internal val RELEASE_APK_REGEX: Regex = Regex(">.*v[0-9]+\\.[0-9]+\\.[0-9]+.apk<")
 
-    internal const val RELEASES_URL = "https://github.com/antoinepirlot/Satunes/releases"
+    const val RELEASES_URL = "https://github.com/antoinepirlot/Satunes/releases"
 
     internal var versionType: String = "" //Alpha, Beta, Preview or "" for Stable version
 }

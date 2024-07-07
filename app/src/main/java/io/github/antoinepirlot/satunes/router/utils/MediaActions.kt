@@ -54,12 +54,15 @@ import io.github.antoinepirlot.satunes.ui.utils.startMusic
  * @param media the media to open
  */
 internal fun openMedia(
-    media: Media? = null
+    media: Media? = null,
+    navigate: Boolean = true
 ) {
     if (media == null || media is Music) {
         startMusic(media)
     }
-    navController.navigate(getDestinationOf(media))
+    if (navigate) {
+        navController.navigate(getDestinationOf(media))
+    }
 }
 
 /**

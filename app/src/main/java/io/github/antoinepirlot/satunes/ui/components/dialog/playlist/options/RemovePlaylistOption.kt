@@ -26,7 +26,6 @@
 package io.github.antoinepirlot.satunes.ui.components.dialog.playlist.options
 
 import android.content.Context
-import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -56,13 +55,7 @@ internal fun RemovePlaylistOption(
             db.removePlaylist(playlistToRemove = playlistToRemove)
             onFinished()
         },
-        icon = {
-            val playlistRemoveIcon: SatunesIcons = SatunesIcons.PLAYLIST_REMOVE
-            Icon(
-                imageVector = playlistRemoveIcon.imageVector,
-                contentDescription = playlistRemoveIcon.description
-            )
-        },
+        icon = SatunesIcons.PLAYLIST_REMOVE,
         text = stringResource(id = R.string.remove_playlist)
     )
 }

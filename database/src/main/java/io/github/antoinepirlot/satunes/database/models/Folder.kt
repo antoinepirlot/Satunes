@@ -41,6 +41,7 @@ data class Folder(
     override var title: String,
     var parentFolder: Folder? = null,
 ) : Media {
+    override var liked: Boolean = false
     override var artwork: Bitmap? = null
 
     val musicMediaItemSortedMapUpdate: MutableState<Boolean> = mutableStateOf(false)

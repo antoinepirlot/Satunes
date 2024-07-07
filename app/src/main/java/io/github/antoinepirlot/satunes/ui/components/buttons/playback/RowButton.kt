@@ -44,7 +44,7 @@ import io.github.antoinepirlot.satunes.icons.SatunesIcons
 internal fun RowButton(
     modifier: Modifier = Modifier,
     icon: SatunesIcons,
-    text: String,
+    text: String? = null,
     onClick: () -> Unit
 ) {
     FilledTonalButton(
@@ -52,8 +52,10 @@ internal fun RowButton(
         onClick = onClick
     ) {
         Icon(imageVector = icon.imageVector, contentDescription = icon.description)
-        Spacer(modifier = Modifier.size(16.dp))
-        Text(text = text)
+        if (!text.isNullOrBlank()) {
+            Spacer(modifier = Modifier.size(16.dp))
+            Text(text = text)
+        }
     }
 }
 

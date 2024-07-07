@@ -69,6 +69,10 @@ import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.ui.ScreenSizes
 import io.github.antoinepirlot.satunes.ui.components.cards.ListItem
+import io.github.antoinepirlot.satunes.ui.components.dialog.album.AlbumOptionsDialog
+import io.github.antoinepirlot.satunes.ui.components.dialog.artist.ArtistOptionsDialog
+import io.github.antoinepirlot.satunes.ui.components.dialog.folder.FolderOptionsDialog
+import io.github.antoinepirlot.satunes.ui.components.dialog.genre.GenreOptionsDialog
 import io.github.antoinepirlot.satunes.ui.components.dialog.music.MusicOptionsDialog
 import io.github.antoinepirlot.satunes.ui.components.dialog.playlist.PlaylistOptionsDialog
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
@@ -91,6 +95,11 @@ internal fun MediaCard(
     val haptics = LocalHapticFeedback.current
     var showMusicOptions: Boolean by rememberSaveable { mutableStateOf(false) }
     var showPlaylistOptions: Boolean by rememberSaveable { mutableStateOf(false) }
+    var showArtistOptions: Boolean by rememberSaveable { mutableStateOf(false) }
+    var showAlbumOptions: Boolean by rememberSaveable { mutableStateOf(false) }
+    var showGenreOptions: Boolean by rememberSaveable { mutableStateOf(false) }
+    var showFolderOptions: Boolean by rememberSaveable { mutableStateOf(false) }
+
     val title: String =
         if (media is Folder && media.parentFolder == null) {
             getRootFolderName(title = media.title)
@@ -115,20 +124,14 @@ internal fun MediaCard(
                 showMusicOptions = false
             },
             onLongClick = {
+                haptics.performHapticFeedback(HapticFeedbackType.LongPress)
                 when (media) {
-                    is Music -> {
-                        if (!showMusicOptions) {
-                            haptics.performHapticFeedback(HapticFeedbackType.LongPress)
-                        }
-                        showMusicOptions = !showMusicOptions
-                    }
-
-                    is PlaylistWithMusics -> {
-                        if (!showMusicOptions) {
-                            haptics.performHapticFeedback(HapticFeedbackType.LongPress)
-                        }
-                        showPlaylistOptions = !showPlaylistOptions
-                    }
+                    is Music -> showMusicOptions = true
+                    is PlaylistWithMusics -> showPlaylistOptions = true
+                    is Artist -> showArtistOptions = true
+                    is Album -> showAlbumOptions = true
+                    is Genre -> showGenreOptions = true
+                    is Folder -> showFolderOptions = true
                 }
             }
         ),
@@ -215,6 +218,38 @@ internal fun MediaCard(
         PlaylistOptionsDialog(
             playlistWithMusics = media,
             onDismissRequest = { showPlaylistOptions = false }
+        )
+    }
+
+    // Artist option dialog
+    if (showArtistOptions && media is Artist) {
+        ArtistOptionsDialog(
+            artist = media,
+            onDismissRequest = { showArtistOptions = false }
+        )
+    }
+
+    // Album option dialog
+    if (showAlbumOptions && media is Album) {
+        AlbumOptionsDialog(
+            album = media,
+            onDismissRequest = { showAlbumOptions = false }
+        )
+    }
+
+    // Genre option dialog
+    if (showGenreOptions && media is Genre) {
+        GenreOptionsDialog(
+            genre = media,
+            onDismissRequest = { showGenreOptions = false }
+        )
+    }
+
+    // Folder option dialog
+    if (showFolderOptions && media is Folder) {
+        FolderOptionsDialog(
+            folder = media,
+            onDismissRequest = { showFolderOptions = false }
         )
     }
 }

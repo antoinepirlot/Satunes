@@ -39,6 +39,7 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToP
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToQueueDialogOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.PlayNextMediaOption
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
+import io.github.antoinepirlot.satunes.ui.utils.getRootFolderName
 
 /**
  * @author Antoine Pirlot on 07/07/2024
@@ -58,7 +59,12 @@ internal fun FolderOptionsDialog(
             val icon: SatunesIcons = SatunesIcons.FOLDER
         },
         title = {
-            NormalText(text = folder.title)
+            val title: String = if (folder.parentFolder == null) {
+                getRootFolderName(title = folder.title)
+            } else {
+                folder.title
+            }
+            NormalText(text = title)
         },
         text = {
             Column {

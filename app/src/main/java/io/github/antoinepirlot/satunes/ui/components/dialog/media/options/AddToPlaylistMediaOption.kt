@@ -36,6 +36,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
@@ -99,10 +100,16 @@ private fun insertMediaToPlaylist(context: Context, media: Media) {
             playlists = MediaSelectionManager.getCheckedPlaylistWithMusics()
         )
     } else {
+        val musicList: List<Music> = if (media is Folder) {
+            media.getAllMusic().keys.toList()
+        } else {
+            media.musicMediaItemSortedMap.keys.toList()
+        }
+
         MediaSelectionManager.getCheckedPlaylistWithMusics()
             .forEach { playlistWithMusics: PlaylistWithMusics ->
                 db.insertMusicsToPlaylist(
-                    musics = media.musicMediaItemSortedMap.keys.toList(),
+                    musics = musicList,
                     playlist = playlistWithMusics
                 )
             }

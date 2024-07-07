@@ -56,7 +56,7 @@ object DataUpdater {
         isUpdating.value = true
         CoroutineScope(Dispatchers.IO).launch {
             val values = ContentValues()
-
+            putValues(values = values, music = music)
             try {
                 val rowUpdatedCount: Int = context.contentResolver.update(
                     DataLoader.URI,

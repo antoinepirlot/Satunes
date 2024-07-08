@@ -36,7 +36,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -62,13 +61,19 @@ internal fun MediaChipList(
             .horizontalScroll(state = scrollState),
     ) {
         searchChipsList.forEach { searchChip: SearchChips ->
-            var selected: Boolean by rememberSaveable { searchChip.enabled }
-            val filterChipModifier: Modifier = if (searchChip == searchChipsList.first()) {
-                Modifier.padding(start = 16.dp, end = 4.dp)
-            } else if (searchChip == searchChipsList.last()) {
-                Modifier.padding(start = 4.dp, end = 16.dp)
-            } else {
-                Modifier.padding(horizontal = 4.dp)
+            val selected: Boolean by rememberSaveable { searchChip.enabled }
+            val filterChipModifier: Modifier = when (searchChip) {
+                searchChipsList.first() -> {
+                    Modifier.padding(start = 16.dp, end = 4.dp)
+                }
+
+                searchChipsList.last() -> {
+                    Modifier.padding(start = 4.dp, end = 16.dp)
+                }
+
+                else -> {
+                    Modifier.padding(horizontal = 4.dp)
+                }
             }
 
             FilterChip(

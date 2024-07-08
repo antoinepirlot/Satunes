@@ -189,13 +189,7 @@ object SettingsManager {
                     preferences[AUDIO_OFFLOAD_CHECKED_KEY] ?: DEFAULT_AUDIO_OFFLOAD_CHECKED
                 loadWhatsNew(context = context, preferences = preferences)
 
-                foldersFilter.value = preferences[FOLDERS_FILTER_KEY] ?: DEFAULT_FOLDERS_FILTER
-                artistsFilter.value = preferences[ARTISTS_FILTER_KEY] ?: DEFAULT_ARTISTS_FILTER
-                albumsFilter.value = preferences[ALBUMS_FILTER_KEY] ?: DEFAULT_ALBUMS_FILTER
-                genresFilter.value = preferences[GENRES_FILTER_KEY] ?: DEFAULT_GENRES_FILTER
-                playlistsFilter.value =
-                    preferences[PLAYLISTS_FILTER_KEY] ?: DEFAULT_PLAYLISTS_FILTER
-                musicsFilter.value = preferences[MUSICS_FILTER_KEY] ?: DEFAULT_MUSICS_FILTER
+                loadFilters(context = context)
             }.first()
         }
     }
@@ -213,6 +207,7 @@ object SettingsManager {
             }
         }
     }
+
     fun switchMenuTitle(context: Context, menuTitle: MenuTitle) {
         runBlocking {
             when (menuTitle) {
@@ -391,6 +386,18 @@ object SettingsManager {
                     }
                 }
             }
+        }
+    }
+
+    suspend fun loadFilters(context: Context) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            foldersFilter.value = preferences[FOLDERS_FILTER_KEY] ?: DEFAULT_FOLDERS_FILTER
+            artistsFilter.value = preferences[ARTISTS_FILTER_KEY] ?: DEFAULT_ARTISTS_FILTER
+            albumsFilter.value = preferences[ALBUMS_FILTER_KEY] ?: DEFAULT_ALBUMS_FILTER
+            genresFilter.value = preferences[GENRES_FILTER_KEY] ?: DEFAULT_GENRES_FILTER
+            playlistsFilter.value =
+                preferences[PLAYLISTS_FILTER_KEY] ?: DEFAULT_PLAYLISTS_FILTER
+            musicsFilter.value = preferences[MUSICS_FILTER_KEY] ?: DEFAULT_MUSICS_FILTER
         }
     }
 }

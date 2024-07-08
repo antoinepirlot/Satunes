@@ -96,7 +96,7 @@ internal fun SearchView(
     var resetSelectedChips: Boolean by rememberSaveable { mutableStateOf(true) }
     if (resetSelectedChips) {
         LaunchedEffect(key1 = true) {
-            SearchChipsManager.resetSelectedChips()
+            SearchChipsManager.resetSelectedChips(context = context)
         }
         resetSelectedChips = false
     }

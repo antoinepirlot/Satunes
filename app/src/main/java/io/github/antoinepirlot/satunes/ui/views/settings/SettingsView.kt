@@ -71,6 +71,12 @@ internal fun SettingsView(
                 }
             )
             SettingButton(
+                text = stringResource(id = R.string.search_setting_title),
+                onClick = {
+                    navController.navigate(Destination.SEARCH_SETTINGS.link)
+                }
+            )
+            SettingButton(
                 text = stringResource(id = R.string.battery_settings),
                 onClick = {
                     navController.navigate(Destination.BATTERY_SETTINGS.link)

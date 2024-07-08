@@ -35,18 +35,27 @@ import io.github.antoinepirlot.satunes.database.R.string.albums
 import io.github.antoinepirlot.satunes.database.R.string.artists
 import io.github.antoinepirlot.satunes.database.R.string.folders
 import io.github.antoinepirlot.satunes.database.R.string.genres
+import io.github.antoinepirlot.satunes.database.R.string.musics
 import io.github.antoinepirlot.satunes.database.R.string.playlists
 
 /**
  *   @author Antoine Pirlot 06/03/2024
  */
+
+// TODO rename for Switch Settings enum class
 internal enum class Settings(val stringId: Int) {
     ALBUMS_CHECKED(stringId = albums),
+    ALBUMS_FILTER(stringId = albums),
     ARTISTS_CHECKED(stringId = artists),
+    ARTISTS_FILTER(stringId = artists),
     AUDIO_OFFLOAD(stringId = audio_offload),
+    PLAYLISTS_FILTER(stringId = playlists),
     EXCLUDE_RINGTONES(stringId = exclude_ringtones),
     FOLDERS_CHECKED(stringId = folders),
+    FOLDERS_FILTER(stringId = folders),
     GENRES_CHECKED(stringId = genres),
+    GENRES_FILTER(stringId = genres),
+    MUSICS_FILTER(stringId = musics),
     PAUSE_IF_NOISY(stringId = pause_if_noisy),
     PLAYBACK_WHEN_CLOSED(stringId = playback_when_paused),
     PLAYLISTS_CHECKED(stringId = playlists),

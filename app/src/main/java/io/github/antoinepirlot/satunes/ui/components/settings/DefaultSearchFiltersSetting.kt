@@ -23,23 +23,43 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.services.search
+package io.github.antoinepirlot.satunes.ui.components.settings
 
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import io.github.antoinepirlot.satunes.database.R
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
+import io.github.antoinepirlot.satunes.ui.views.settings.Settings
 
 /**
- * @author Antoine Pirlot on 28/06/2024
+ * @author Antoine Pirlot on 08/07/2024
  */
-enum class SearchChips(
-    val stringId: Int,
-    var enabled: MutableState<Boolean>
+
+private val filtersMap: Map<Settings, MutableState<Boolean>> = mapOf(
+    Pair(Settings.MUSICS_FILTER, SettingsManager.musicsFilter),
+    Pair(Settings.ALBUMS_FILTER, SettingsManager.albumsFilter),
+    Pair(Settings.ARTISTS_FILTER, SettingsManager.artistsFilter),
+    Pair(Settings.GENRES_FILTER, SettingsManager.genresFilter),
+    Pair(Settings.FOLDERS_FILTER, SettingsManager.foldersFilter),
+    Pair(Settings.PLAYLISTS_FILTER, SettingsManager.playlistsFilter)
+)
+
+@Composable
+internal fun DefaultSearchFiltersSetting(
+    modifier: Modifier = Modifier,
 ) {
-    MUSICS(stringId = R.string.musics, enabled = SettingsManager.musicsFilter),
-    ARTISTS(stringId = R.string.artists, enabled = SettingsManager.artistsFilter),
-    ALBUMS(stringId = R.string.albums, enabled = SettingsManager.albumsFilter),
-    GENRES(stringId = R.string.genres, enabled = SettingsManager.genresFilter),
-    FOLDERS(stringId = R.string.folders, enabled = SettingsManager.foldersFilter),
-    PLAYLISTS(stringId = R.string.playlists, enabled = SettingsManager.playlistsFilter)
+    SubSettings(
+        title = stringResource(id = R.string.default_filter_setting_title)
+    ) {
+        SettingsSwitchList(checkedMap = filtersMap)
+    }
+}
+
+@Preview
+@Composable
+private fun DefaultSearchFiltersSettingPreview() {
+    DefaultSearchFiltersSetting()
 }

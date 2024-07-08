@@ -23,23 +23,36 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.services.search
+package io.github.antoinepirlot.satunes.ui.views.settings
 
-import androidx.compose.runtime.MutableState
-import io.github.antoinepirlot.satunes.database.R
-import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
+import androidx.compose.foundation.layout.Column
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.ui.components.settings.DefaultSearchFiltersSetting
+import io.github.antoinepirlot.satunes.ui.components.texts.Title
 
 /**
- * @author Antoine Pirlot on 28/06/2024
+ * @author Antoine Pirlot on 08/07/2024
  */
-enum class SearchChips(
-    val stringId: Int,
-    var enabled: MutableState<Boolean>
+
+@Composable
+internal fun SearchSettingsView(
+    modifier: Modifier = Modifier,
 ) {
-    MUSICS(stringId = R.string.musics, enabled = SettingsManager.musicsFilter),
-    ARTISTS(stringId = R.string.artists, enabled = SettingsManager.artistsFilter),
-    ALBUMS(stringId = R.string.albums, enabled = SettingsManager.albumsFilter),
-    GENRES(stringId = R.string.genres, enabled = SettingsManager.genresFilter),
-    FOLDERS(stringId = R.string.folders, enabled = SettingsManager.foldersFilter),
-    PLAYLISTS(stringId = R.string.playlists, enabled = SettingsManager.playlistsFilter)
+    Column(
+        modifier = modifier,
+    ) {
+        Title(text = stringResource(id = R.string.search_setting_title))
+
+        DefaultSearchFiltersSetting()
+    }
+}
+
+@Preview
+@Composable
+private fun SearchSettingsViewPreview() {
+    SearchSettingsView()
 }

@@ -46,6 +46,7 @@ internal enum class Destination(val link: String) {
     PLAYLISTS(link = "/playlists"),
     PLAYLISTS_SETTINGS(link = "/playlists_settings"),
     SEARCH(link = "/search"),
+    SEARCH_SETTINGS("/search_settings"),
     SETTINGS(link = "/settings"),
     UPDATES_SETTINGS(link = "/updates"), ;
 }

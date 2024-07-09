@@ -23,52 +23,57 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.dialog.playlist.options
+package io.github.antoinepirlot.satunes.ui.components.dialog
 
-import android.content.Context
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Icon
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
-import io.github.antoinepirlot.satunes.database.services.DatabaseManager
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.ui.components.dialog.RemoveConfirmationDialog
-import io.github.antoinepirlot.satunes.ui.components.dialog.options.DialogOption
+import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 
 /**
- * @author Antoine Pirlot on 01/06/2024
+ * @author Antoine Pirlot on 09/07/2024
  */
 
 @Composable
-internal fun RemovePlaylistOption(
+internal fun RemoveConfirmationDialog(
     modifier: Modifier = Modifier,
-    playlistToRemove: PlaylistWithMusics,
+    icon: SatunesIcons = SatunesIcons.REMOVE_ICON,
     onDismissRequest: () -> Unit,
+    onRemoveRequest: () -> Unit
 ) {
-    val context: Context = LocalContext.current
-    var showRemoveConfirmation: Boolean by rememberSaveable { mutableStateOf(false) }
-
-    DialogOption(
+    AlertDialog(
         modifier = modifier,
-        onClick = { showRemoveConfirmation = true },
-        icon = SatunesIcons.PLAYLIST_REMOVE,
-        text = stringResource(id = R.string.remove_playlist)
-    )
-
-    if (showRemoveConfirmation) {
-        RemoveConfirmationDialog(
-            onDismissRequest = { showRemoveConfirmation = false },
-            onRemoveRequest = {
-                val db = DatabaseManager(context = context)
-                db.removePlaylist(playlistToRemove = playlistToRemove)
-                onDismissRequest()
+        icon = {
+            Icon(imageVector = icon.imageVector, contentDescription = icon.description)
+        },
+        title = {
+            NormalText(text = stringResource(id = R.string.remove_dialog_title))
+        },
+        onDismissRequest = onDismissRequest,
+        dismissButton = {
+            TextButton(onClick = onDismissRequest) {
+                NormalText(text = stringResource(id = R.string.cancel))
             }
-        )
-    }
+        },
+        confirmButton = {
+            TextButton(onClick = {
+                onRemoveRequest()
+                onDismissRequest()
+            }) {
+                NormalText(text = stringResource(id = R.string.remove_submit))
+            }
+        }
+    )
+}
+
+@Preview
+@Composable
+private fun RemoveConfirmationDialogPreview() {
+    RemoveConfirmationDialog(onDismissRequest = {}, onRemoveRequest = {})
 }

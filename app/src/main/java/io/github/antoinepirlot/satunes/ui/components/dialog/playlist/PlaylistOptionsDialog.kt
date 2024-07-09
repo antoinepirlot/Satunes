@@ -93,7 +93,7 @@ internal fun PlaylistOptionsDialog(
             Column {
                 RemovePlaylistOption(
                     playlistToRemove = playlistWithMusics,
-                    onFinished = onDismissRequest
+                    onDismissRequest = onDismissRequest
                 )
 
                 ExportPlaylistOption(playlistToExport = playlistWithMusics)

@@ -67,4 +67,6 @@
     <string name="click_here">click here</string>
     <string name="search_setting_title">Search</string>
     <string name="default_filter_setting_title">Default filters</string>
+    <string name="remove_dialog_title">Removing Confirmation</string>
+    <string name="remove_submit">Delete</string>
 </resources>

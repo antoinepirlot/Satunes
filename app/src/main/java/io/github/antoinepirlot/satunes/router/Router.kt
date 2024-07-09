@@ -107,6 +107,10 @@ internal fun Router(
         exitTransition = { fadeOut(animationSpec = tween(0)) },
     ) {
 
+        /**
+         * Media routes
+         */
+
         composable(Destination.FOLDERS.link) {
             // /!\ This route prevent back gesture to exit the app
             RoutesManager.currentDestination.value = it.destination.route
@@ -242,6 +246,24 @@ internal fun Router(
             }
         }
 
+        /**
+         * Search
+         */
+
+        composable(Destination.SEARCH.link) {
+            RoutesManager.currentDestination.value = it.destination.route
+            permissionView(isAudioAllowed = isAudioAllowed.value)
+            if (isLoading || !isLoaded) {
+                LoadingView()
+            } else {
+                SearchView()
+            }
+        }
+
+        /**
+         * Playback
+         */
+
         composable(Destination.PLAYBACK.link) {
             RoutesManager.currentDestination.value = it.destination.route
             permissionView(isAudioAllowed = isAudioAllowed.value)
@@ -261,22 +283,16 @@ internal fun Router(
             }
         }
 
-        composable(Destination.SEARCH.link) {
-            RoutesManager.currentDestination.value = it.destination.route
-            permissionView(isAudioAllowed = isAudioAllowed.value)
-            if (isLoading || !isLoaded) {
-                LoadingView()
-            } else {
-                SearchView()
-            }
-        }
-
         composable(Destination.PLAYBACK_QUEUE.link) {
             RoutesManager.currentDestination.value = it.destination.route
             // Here, I assume audio permission is allowed and data has been loaded
             // Also this view will never been accessible if no music is playing
             PlaybackQueueView()
         }
+
+        /**
+         * Settings
+         */
 
         composable(Destination.SETTINGS.link) {
             RoutesManager.currentDestination.value = it.destination.route

@@ -24,7 +24,7 @@
   -->
 
 <resources>
-    <string name="folders">Fichiers</string>
+    <string name="folders">Dossiers</string>
     <string name="artists">Artistes</string>
     <string name="musics">Musiques</string>
     <string name="unknown">Inconnu</string>

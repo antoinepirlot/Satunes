@@ -38,6 +38,7 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
+import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.DataLoader
@@ -328,7 +329,9 @@ class PlaybackController private constructor(
                 hasNext.value = true
             }
 
-            else -> addToQueue(mediaList = media.musicMediaItemSortedMap.keys)
+            is Folder -> addToQueue(mediaList = media.getAllMusic().keys.reversed())
+
+            else -> addToQueue(mediaList = media.musicMediaItemSortedMap.keys.reversed())
         }
     }
 
@@ -355,7 +358,9 @@ class PlaybackController private constructor(
                 hasNext.value = true
             }
 
-            else -> addNext(mediaList = media.musicMediaItemSortedMap.keys)
+            is Folder -> addNext(mediaList = media.getAllMusic().keys.reversed())
+
+            else -> addNext(mediaList = media.musicMediaItemSortedMap.keys.reversed())
         }
     }
 

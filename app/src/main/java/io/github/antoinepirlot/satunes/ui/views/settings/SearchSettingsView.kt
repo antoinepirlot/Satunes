@@ -23,51 +23,36 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.buttons.updates
+package io.github.antoinepirlot.satunes.ui.views.settings
 
-import android.content.Context
-import androidx.compose.material3.Button
+import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import io.github.antoinepirlot.satunes.internet.R
-import io.github.antoinepirlot.satunes.internet.updates.UpdateAvailableStatus
-import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
-import io.github.antoinepirlot.satunes.ui.utils.openUrl
+import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.ui.components.settings.DefaultSearchFiltersSetting
+import io.github.antoinepirlot.satunes.ui.components.texts.Title
 
 /**
- * @author Antoine Pirlot on 14/04/2024
+ * @author Antoine Pirlot on 08/07/2024
  */
 
-private const val FDROID_SATUNES_URL: String =
-    "https://f-droid.org/fr/packages/io.github.antoinepirlot.satunes/"
-
 @Composable
-internal fun SeeDetailsButton(
+internal fun SearchSettingsView(
     modifier: Modifier = Modifier,
-    text: String = stringResource(id = R.string.see_on_github),
-    onFdroid: Boolean = false
 ) {
-    val context: Context = LocalContext.current
-    Button(
+    Column(
         modifier = modifier,
-        onClick = {
-            val url: String =
-                if (onFdroid) FDROID_SATUNES_URL else UpdateAvailableStatus.AVAILABLE.updateLink!!
-            openUrl(
-                context = context,
-                url = url
-            )
-        }
     ) {
-        NormalText(text = text)
+        Title(text = stringResource(id = R.string.search_setting_title))
+
+        DefaultSearchFiltersSetting()
     }
 }
 
 @Preview
 @Composable
-private fun SeeDetailsButtonPreview() {
-    SeeDetailsButton()
+private fun SearchSettingsViewPreview() {
+    SearchSettingsView()
 }

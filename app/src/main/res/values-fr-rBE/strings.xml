@@ -66,4 +66,5 @@
     <string name="default_filter_setting_title">Filtres par défaut</string>
     <string name="remove_dialog_title">Confirmation de Suppression</string>
     <string name="remove_submit">Supprimer</string>
+    <string name="see_on_fdroid">Ouvrir dans F-Droid</string>
 </resources>

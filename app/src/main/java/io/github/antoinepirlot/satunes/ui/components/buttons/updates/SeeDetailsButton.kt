@@ -41,21 +41,28 @@ import io.github.antoinepirlot.satunes.ui.utils.openUrl
  * @author Antoine Pirlot on 14/04/2024
  */
 
+private const val FDROID_SATUNES_URL: String =
+    "https://f-droid.org/fr/packages/io.github.antoinepirlot.satunes/"
+
 @Composable
 internal fun SeeDetailsButton(
     modifier: Modifier = Modifier,
+    text: String = stringResource(id = R.string.see_details),
+    onFdroid: Boolean = false
 ) {
     val context: Context = LocalContext.current
     Button(
         modifier = modifier,
         onClick = {
+            val url: String =
+                if (onFdroid) FDROID_SATUNES_URL else UpdateAvailableStatus.AVAILABLE.updateLink!!
             openUrl(
                 context = context,
-                url = UpdateAvailableStatus.AVAILABLE.updateLink!!
+                url = url
             )
         }
     ) {
-        Text(text = stringResource(id = R.string.see_details))
+        Text(text = text)
     }
 }
 

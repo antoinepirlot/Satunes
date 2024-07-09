@@ -4,7 +4,7 @@
     <string name="update_available">Une mise à jour est disponible</string>
     <string name="no_update">L\'application est à jour</string>
     <string name="download_update">Télécharger</string>
-    <string name="see_details">Voir les détails</string>
+    <string name="see_on_github">Ouvrir dans GitHub</string>
     <string name="install_request">Installer</string>
     <string name="download_not_found">Fichier non trouvé</string>
     <string name="download_failed">Echec lors du téléchargement</string>

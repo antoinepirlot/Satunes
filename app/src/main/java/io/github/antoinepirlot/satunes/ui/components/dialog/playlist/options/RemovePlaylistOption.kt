@@ -27,6 +27,10 @@ package io.github.antoinepirlot.satunes.ui.components.dialog.playlist.options
 
 import android.content.Context
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -34,6 +38,7 @@ import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
 import io.github.antoinepirlot.satunes.database.services.DatabaseManager
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import io.github.antoinepirlot.satunes.ui.components.dialog.RemoveConfirmationDialog
 import io.github.antoinepirlot.satunes.ui.components.dialog.options.DialogOption
 
 /**
@@ -44,18 +49,26 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.options.DialogOption
 internal fun RemovePlaylistOption(
     modifier: Modifier = Modifier,
     playlistToRemove: PlaylistWithMusics,
-    onFinished: () -> Unit,
+    onDismissRequest: () -> Unit,
 ) {
     val context: Context = LocalContext.current
+    var showRemoveConfirmation: Boolean by rememberSaveable { mutableStateOf(false) }
 
     DialogOption(
         modifier = modifier,
-        onClick = {
-            val db = DatabaseManager(context = context)
-            db.removePlaylist(playlistToRemove = playlistToRemove)
-            onFinished()
-        },
+        onClick = { showRemoveConfirmation = true },
         icon = SatunesIcons.PLAYLIST_REMOVE,
         text = stringResource(id = R.string.remove_playlist)
     )
+
+    if (showRemoveConfirmation) {
+        RemoveConfirmationDialog(
+            onDismissRequest = { showRemoveConfirmation = false },
+            onRemoveRequest = {
+                val db = DatabaseManager(context = context)
+                db.removePlaylist(playlistToRemove = playlistToRemove)
+                onDismissRequest()
+            }
+        )
+    }
 }

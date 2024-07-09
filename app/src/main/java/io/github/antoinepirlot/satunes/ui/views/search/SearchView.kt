@@ -132,7 +132,7 @@ internal fun SearchView(
             openMedia = { media: Media ->
                 if (media is Music) {
                     PlaybackController.getInstance()
-                        .loadMusic(musicMediaItemSortedMap = DataManager.musicMediaItemSortedMap)
+                        .loadMusic(musicMediaItemSortedMap = DataManager.musicMediaItemMap)
                 }
                 openMedia(media = media, navController = navController)
             },
@@ -153,7 +153,7 @@ private fun search(context: Context, mediaList: MutableList<Media>, query: Strin
     val query: String = query.lowercase()
 
     for (searchChip: SearchChips in SearchChipsManager.selectedSearchChips) {
-        DataManager.musicMediaItemSortedMap.keys.forEach { music: Music ->
+        DataManager.musicMediaItemMap.keys.forEach { music: Music ->
             when (searchChip) {
                 SearchChips.MUSICS -> {
                     if (music.title.lowercase().contains(query)) {

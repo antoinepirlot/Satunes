@@ -140,7 +140,7 @@ internal object SatunesCarCallBack : MediaSessionCompat.Callback() {
         try {
             loadMusicFromMedia(shuffleMode = shuffleMode, mediaId = lastRoute.toLong())
         } catch (e: NumberFormatException) {
-            val mapToLoad: SortedMap<Music, MediaItem> = DataManager.musicMediaItemSortedMap
+            val mapToLoad: SortedMap<Music, MediaItem> = DataManager.musicMediaItemMap
             playbackController.loadMusic(
                 musicMediaItemSortedMap = mapToLoad,
                 shuffleMode = shuffleMode
@@ -191,7 +191,7 @@ internal object SatunesCarCallBack : MediaSessionCompat.Callback() {
 
                 else -> {
                     musicToPlay = DataManager.getMusic(musicId = mediaId)
-                    DataManager.musicMediaItemSortedMap
+                    DataManager.musicMediaItemMap
                 }
             }
         playbackController.loadMusic(

@@ -48,29 +48,29 @@ import java.util.SortedSet
 
 object DataManager {
     // All public map and sortedmap has bool state to recompose as Map are not supported for recomposition
-    val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
-    val musicMapById: MutableMap<Long, Music> = SnapshotStateMap()
+    val musicMediaItemMap: SortedMap<Music, MediaItem> = sortedMapOf()
+    private val musicMapById: MutableMap<Long, Music> = SnapshotStateMap()
     val musicMediaItemSortedMapUpdated: MutableState<Boolean> = mutableStateOf(false)
 
     val rootFolderMap: MutableMap<Long, Folder> = mutableMapOf()
     val rootFolderSet: SortedSet<Folder> = sortedSetOf()
-    val folderMap: MutableMap<Long, Folder> = mutableMapOf()
+    private val folderMap: MutableMap<Long, Folder> = mutableMapOf()
     val folderSortedList: SortedSet<Folder> = sortedSetOf()
     val rootFolderMapUpdated: MutableState<Boolean> = mutableStateOf(false)
     val folderMapUpdated: MutableState<Boolean> = mutableStateOf(false)
 
-    internal val artistMapById: MutableMap<Long, Artist> = mutableMapOf()
+    private val artistMapById: MutableMap<Long, Artist> = mutableMapOf()
     val artistMap: SortedMap<String, Artist> = sortedMapOf(comparator = StringComparator)
     val artistMapUpdated: MutableState<Boolean> = mutableStateOf(false)
 
-    internal val albumMapById: MutableMap<Long, Album> = mutableMapOf()
+    private val albumMapById: MutableMap<Long, Album> = mutableMapOf()
     val albumSet: SortedSet<Album> = sortedSetOf()
 
-    internal val genreMapById: MutableMap<Long, Genre> = mutableMapOf()
+    private val genreMapById: MutableMap<Long, Genre> = mutableMapOf()
     val genreMap: SortedMap<String, Genre> = sortedMapOf(comparator = StringComparator)
     val genreMapUpdated: MutableState<Boolean> = mutableStateOf(false)
 
-    internal val playlistWithMusicsMapById: MutableMap<Long, PlaylistWithMusics> = mutableMapOf()
+    private val playlistWithMusicsMapById: MutableMap<Long, PlaylistWithMusics> = mutableMapOf()
     val playlistWithMusicsMap: SortedMap<String, PlaylistWithMusics> =
         sortedMapOf(comparator = StringComparator)
     val playlistWithMusicsMapUpdated: MutableState<Boolean> = mutableStateOf(false)
@@ -91,12 +91,12 @@ object DataManager {
     }
 
     fun getMediaItem(music: Music): MediaItem {
-        return musicMediaItemSortedMap[music]!!
+        return musicMediaItemMap[music]!!
     }
 
     fun addMusic(music: Music) {
         if (!musicMapById.contains(music.id)) {
-            musicMediaItemSortedMap[music] = music.mediaItem
+            musicMediaItemMap[music] = music.mediaItem
             musicMapById[music.id] = music
         }
     }

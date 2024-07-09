@@ -78,14 +78,14 @@ internal fun AllArtistsListView(
         },
         onFABClick = { openCurrentMusic(navController = navController) },
         extraButtons = {
-            if (DataManager.musicMediaItemSortedMap.isNotEmpty()) {
+            if (DataManager.musicMediaItemMap.isNotEmpty()) {
                 ExtraButton(icon = SatunesIcons.PLAY, onClick = {
-                    playbackController.loadMusic(musicMediaItemSortedMap = DataManager.musicMediaItemSortedMap)
+                    playbackController.loadMusic(musicMediaItemSortedMap = DataManager.musicMediaItemMap)
                     openMedia(navController = navController)
                 })
                 ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
                     playbackController.loadMusic(
-                        musicMediaItemSortedMap = DataManager.musicMediaItemSortedMap,
+                        musicMediaItemSortedMap = DataManager.musicMediaItemMap,
                         shuffleMode = true
                     )
                     openMedia(navController = navController)

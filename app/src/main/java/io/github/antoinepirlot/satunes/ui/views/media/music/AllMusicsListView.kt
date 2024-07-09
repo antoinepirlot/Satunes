@@ -60,7 +60,7 @@ internal fun AllMusicsListView(
     val playbackController: PlaybackController = PlaybackController.getInstance()
     //Find a way to do something more aesthetic but it works
     val musicMediaItemMap: SortedMap<Music, MediaItem> =
-        remember { DataManager.musicMediaItemSortedMap }
+        remember { DataManager.musicMediaItemMap }
 
     //Recompose if data changed
     var mapChanged: Boolean by rememberSaveable { DataManager.musicMediaItemSortedMapUpdated }

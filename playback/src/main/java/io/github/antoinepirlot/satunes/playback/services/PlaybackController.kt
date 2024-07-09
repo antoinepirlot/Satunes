@@ -132,7 +132,7 @@ class PlaybackController private constructor(
                 instance = PlaybackController(
                     context = context.applicationContext,
                     sessionToken = sessionToken,
-                    musicMediaItemSortedMap = DataManager.musicMediaItemSortedMap,
+                    musicMediaItemSortedMap = DataManager.musicMediaItemMap,
                 )
             } else if (listener != null) {
                 while (!instance::mediaController.isInitialized) {

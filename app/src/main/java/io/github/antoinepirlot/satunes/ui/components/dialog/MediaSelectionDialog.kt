@@ -41,8 +41,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
-import io.github.antoinepirlot.satunes.database.models.tables.Playlist
+import io.github.antoinepirlot.satunes.database.models.database.relations.PlaylistWithMusics
+import io.github.antoinepirlot.satunes.database.models.database.tables.PlaylistDB
 import io.github.antoinepirlot.satunes.database.services.DataManager
 import io.github.antoinepirlot.satunes.database.services.DatabaseManager
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
@@ -97,10 +97,10 @@ private fun CreateNewPlaylistForm(
     PlaylistCreationForm(
         modifier = modifier,
         onConfirm = { playlistTitle: String ->
-            val playlist = Playlist(id = 0, title = playlistTitle)
+            val playlistDB = PlaylistDB(id = 0, title = playlistTitle)
             DatabaseManager(context = context).insertPlaylistWithMusics(
                 context = context,
-                playlist = playlist
+                playlistDB = playlistDB
             )
             showPlaylistCreation.value = false
         },
@@ -128,7 +128,7 @@ private fun MediaSelectionDialogList(
                 NormalText(text = stringResource(id = R.string.no_music))
             } else if (mediaList[0] is Music) {
                 if (playlistTitle == null) {
-                    throw IllegalStateException("Playlist title is required when adding music to playlist")
+                    throw IllegalStateException("PlaylistDB title is required when adding music to playlistDB")
                 }
                 NormalText(text = stringResource(id = R.string.add_to) + playlistTitle)
             } else {
@@ -138,8 +138,8 @@ private fun MediaSelectionDialogList(
         text = {
             Column {
                 if (
-                    mediaList.isEmpty() && DataManager.playlistWithMusicsMap.isNotEmpty() || // Avoid having create new playlist when user has no music
-                    mediaList.isEmpty() || mediaList[0] is Playlist || mediaList[0] is PlaylistWithMusics
+                    mediaList.isEmpty() && DataManager.playlistWithMusicsMap.isNotEmpty() || // Avoid having create new playlistDB when user has no music
+                    mediaList.isEmpty() || mediaList[0] is PlaylistDB || mediaList[0] is PlaylistWithMusics
                 ) {
                     TextButton(onClick = { showPlaylistCreation.value = true }) {
                         NormalText(text = stringResource(id = R.string.create_playlist))

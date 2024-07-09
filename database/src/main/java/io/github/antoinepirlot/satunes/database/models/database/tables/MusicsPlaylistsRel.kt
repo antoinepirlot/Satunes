@@ -23,7 +23,7 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.database.models.tables
+package io.github.antoinepirlot.satunes.database.models.database.tables
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

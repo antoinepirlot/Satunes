@@ -30,6 +30,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.database.models.Music
@@ -45,19 +47,22 @@ import io.github.antoinepirlot.satunes.ui.components.texts.Title
 @Composable
 internal fun PlaybackQueueView(
     modifier: Modifier = Modifier,
+    navController: NavHostController,
 ) {
     val playbackPlaylist: List<Music> = remember { PlaybackController.getInstance().getPlaylist() }
     MediaCardList(
         modifier = modifier,
+        navController = navController,
         scrollToMusicPlaying = true,
         header = { Title(text = stringResource(id = R.string.playback_queue)) },
         mediaList = playbackPlaylist,
-        openMedia = { media: Media -> openMedia(media, navigate = false) }
+        openMedia = { media: Media -> openMedia(media, navigate = false, navController = null) }
     )
 }
 
 @Preview
 @Composable
 private fun PlaybackQueueViewPreview() {
-    PlaybackQueueView()
+    val navController: NavHostController = rememberNavController()
+    PlaybackQueueView(navController = navController)
 }

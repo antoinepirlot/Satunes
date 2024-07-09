@@ -34,6 +34,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToPlaylistMediaOption
@@ -51,8 +53,10 @@ import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 @Composable
 internal fun AlbumOptionsDialog(
     modifier: Modifier = Modifier,
+    navController: NavHostController,
     album: Album,
     onDismissRequest: () -> Unit,
+
 ) {
     AlertDialog(
         modifier = modifier,
@@ -73,7 +77,7 @@ internal fun AlbumOptionsDialog(
                 val isPlaybackLoaded: Boolean by rememberSaveable { playbackController.isLoaded }
 
                 /**
-                 * Playlist
+                 * PlaylistDB
                  */
                 AddToPlaylistMediaOption(media = album, onFinished = onDismissRequest)
 
@@ -88,7 +92,7 @@ internal fun AlbumOptionsDialog(
                 /**
                  * Redirections
                  */
-                NavigateToMediaMusicOption(media = album.artist!!)
+                NavigateToMediaMusicOption(media = album.artist!!, navController = navController)
             }
         }
     )
@@ -97,5 +101,10 @@ internal fun AlbumOptionsDialog(
 @Preview
 @Composable
 private fun AlbumOptionsDialogPreview() {
-    AlbumOptionsDialog(album = Album(title = "Album title"), onDismissRequest = {})
+    val navController: NavHostController = rememberNavController()
+    AlbumOptionsDialog(
+        navController = navController,
+        album = Album(title = "Album title"),
+        onDismissRequest = {}
+    )
 }

@@ -23,33 +23,67 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.database.models.tables
+package io.github.antoinepirlot.satunes.database.models.database.tables
 
 import android.graphics.Bitmap
+import androidx.compose.runtime.MutableState
+import androidx.media3.common.MediaItem
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Ignore
-import androidx.room.Index
 import androidx.room.PrimaryKey
+import io.github.antoinepirlot.satunes.database.exceptions.MusicNotFoundException
 import io.github.antoinepirlot.satunes.database.models.Media
+import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.database.services.DataManager
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
+import java.util.SortedMap
 
 /**
- * @author Antoine Pirlot on 27/03/2024
+ * @author Antoine Pirlot on 30/03/2024
  */
 
 @Serializable
-@Entity(tableName = "playlists", indices = [Index(value = ["title"], unique = true)])
-data class Playlist(
-    @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "playlist_id") override var id: Long,
-    @ColumnInfo(name = "title") override var title: String,
+@Entity("musics")
+data class MusicDB(
+    @PrimaryKey
+    @ColumnInfo("music_id") override val id: Long,
+
 ) : Media {
+    @ColumnInfo("liked")
+    var likedColumn: Boolean = false
+
     @Ignore
     @Transient
-    override var liked: Boolean = false
+    override val musicMediaItemSortedMapUpdate: MutableState<Boolean>? = null // Not used
+
+    @Ignore
+    @Transient
+    override val musicMediaItemSortedMap: SortedMap<Music, MediaItem>? = null // Not used
+
+    @Ignore
+    @Transient
+    override val liked: MutableState<Boolean>? = null
+
     @Ignore
     @Transient
     override var artwork: Bitmap? = null
+
+    @Ignore
+    @Transient
+    override val title: String = "Title is not used for MusicDB class." // Not used
+
+    @Ignore
+    @Transient
+    var music: Music? = try {
+        DataManager.getMusic(musicId = this.id)
+    } catch (_: MusicNotFoundException) {
+        // Happens when importing playlistDB
+        null
+    }
+
+    init {
+        println()
+    }
 }

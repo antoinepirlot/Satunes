@@ -42,8 +42,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
-import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
-import io.github.antoinepirlot.satunes.database.models.tables.Playlist
+import io.github.antoinepirlot.satunes.database.models.database.relations.PlaylistWithMusics
+import io.github.antoinepirlot.satunes.database.models.database.tables.PlaylistDB
 import io.github.antoinepirlot.satunes.database.services.DataManager
 import io.github.antoinepirlot.satunes.database.services.DatabaseManager
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
@@ -62,13 +62,13 @@ internal fun PlaylistOptionsDialog(
     playlistWithMusics: PlaylistWithMusics,
     onDismissRequest: () -> Unit,
 ) {
-    var playlistTitle: String by remember { mutableStateOf(playlistWithMusics.playlist.title) }
+    var playlistTitle: String by remember { mutableStateOf(playlistWithMusics.playlistDB.title) }
     AlertDialog(
         modifier = modifier,
         icon = {
             Icon(
                 imageVector = SatunesIcons.PLAYLIST.imageVector,
-                contentDescription = "Playlist Options Icon"
+                contentDescription = "PlaylistDB Options Icon"
             )
         },
         title = {
@@ -104,18 +104,18 @@ internal fun PlaylistOptionsDialog(
             val context: Context = LocalContext.current
             TextButton(onClick = {
                 onDismissRequest()
-                val oldTitle: String = playlistWithMusics.playlist.title
-                playlistWithMusics.playlist.title = playlistTitle
+                val oldTitle: String = playlistWithMusics.playlistDB.title
+                playlistWithMusics.playlistDB.title = playlistTitle
                 // TODO this case must be managed in database module
                 try {
                     val db = DatabaseManager(context = context)
-                    db.updatePlaylists(playlistWithMusics.playlist)
+                    db.updatePlaylists(playlistWithMusics.playlistDB)
                     DataManager.updatePlaylist(
                         oldTitle = oldTitle,
                         playlistWithMusics = playlistWithMusics
                     )
                 } catch (_: Exception) {
-                    playlistWithMusics.playlist.title = oldTitle
+                    playlistWithMusics.playlistDB.title = oldTitle
                 }
             }) {
                 NormalText(text = stringResource(id = R.string.ok))
@@ -128,7 +128,7 @@ internal fun PlaylistOptionsDialog(
 @Composable
 private fun PlaylistOptionsDialogPreview() {
     PlaylistOptionsDialog(
-        playlistWithMusics = PlaylistWithMusics(Playlist(1, "Playlist Title"), mutableListOf()),
+        playlistWithMusics = PlaylistWithMusics(PlaylistDB(1, "PlaylistDB Title"), mutableListOf()),
         onDismissRequest = {},
     )
 }

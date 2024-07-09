@@ -33,8 +33,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavHostController
 import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
+import io.github.antoinepirlot.satunes.database.models.database.relations.PlaylistWithMusics
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToPlaylistMediaOption
@@ -53,6 +54,7 @@ import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 @Composable
 internal fun MusicOptionsDialog(
     modifier: Modifier = Modifier,
+    navController: NavHostController,
     music: Music,
     playlistWithMusics: PlaylistWithMusics? = null,
     onDismissRequest: () -> Unit,
@@ -97,10 +99,10 @@ internal fun MusicOptionsDialog(
                 /**
                  * Redirections
                  */
-                NavigateToMediaMusicOption(media = music.album)
-                NavigateToMediaMusicOption(media = music.artist)
-                NavigateToMediaMusicOption(media = music.genre)
-                NavigateToMediaMusicOption(media = music.folder)
+                NavigateToMediaMusicOption(navController = navController, media = music.album)
+                NavigateToMediaMusicOption(navController = navController, media = music.artist)
+                NavigateToMediaMusicOption(navController = navController, media = music.genre)
+                NavigateToMediaMusicOption(navController = navController, media = music.folder)
             }
         },
         onDismissRequest = { onDismissRequest() },

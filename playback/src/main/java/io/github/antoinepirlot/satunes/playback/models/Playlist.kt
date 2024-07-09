@@ -52,7 +52,7 @@ internal class Playlist(
     }
 
     /**
-     * Shuffle the playlist
+     * Shuffle the playlistDB
      * @param musicIndex the music index of the music to place at the index 0
      */
     fun shuffle(musicIndex: Int = -1) {
@@ -80,7 +80,7 @@ internal class Playlist(
     }
 
     /**
-     * Undo shuffle, set to the original playlist
+     * Undo shuffle, set to the original playlistDB
      */
     fun undoShuffle() {
         this.musicList = this.originalMusicMediaItemMap.keys.toMutableStateList()
@@ -96,7 +96,7 @@ internal class Playlist(
     }
 
     /**
-     * Return the number of music into the playlist
+     * Return the number of music into the playlistDB
      */
     fun musicCount(): Int {
         return this.musicList.size
@@ -113,7 +113,7 @@ internal class Playlist(
      * If fromIndex is less than 0, then it's replaced by 0.
      *
      * If no fromIndex is specified then fromIndex is 0
-     * If no toIndex is specified then it goes to the last index of the playlist.
+     * If no toIndex is specified then it goes to the last index of the playlistDB.
      *
      * @param fromIndex the first music index to get
      * @param toIndex the last music index to get (included)

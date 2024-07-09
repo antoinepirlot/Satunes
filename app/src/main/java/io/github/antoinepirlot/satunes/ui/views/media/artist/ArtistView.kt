@@ -34,6 +34,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.media3.common.MediaItem
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
@@ -44,8 +46,8 @@ import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
-import io.github.antoinepirlot.satunes.ui.views.MediaListView
 import io.github.antoinepirlot.satunes.ui.views.MediaWithAlbumsHeaderView
+import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 import java.util.SortedMap
 
 /**
@@ -55,6 +57,7 @@ import java.util.SortedMap
 @Composable
 internal fun ArtistView(
     modifier: Modifier = Modifier,
+    navController: NavHostController,
     artist: Artist,
 ) {
     val playbackController: PlaybackController = PlaybackController.getInstance()
@@ -68,16 +71,16 @@ internal fun ArtistView(
 
     MediaListView(
         modifier = modifier,
+        navController = navController,
         mediaList = musicMap.keys.toList(),
-
         openMedia = { clickedMedia: Media ->
             playbackController.loadMusic(
                 musicMediaItemSortedMap = artist.musicMediaItemSortedMap,
                 musicToPlay = clickedMedia as Music
             )
-            openMedia(clickedMedia)
+            openMedia(clickedMedia, navController = navController)
         },
-        onFABClick = { openCurrentMusic() },
+        onFABClick = { openCurrentMusic(navController = navController) },
         header = {
             val albumMap: SortedMap<String, Album> = remember { artist.albumSortedMap }
 
@@ -88,20 +91,24 @@ internal fun ArtistView(
             }
             //
 
-            MediaWithAlbumsHeaderView(media = artist, albumList = albumMap.values.toList())
+            MediaWithAlbumsHeaderView(
+                media = artist,
+                albumList = albumMap.values.toList(),
+                navController = navController
+            )
         },
         extraButtons = {
             if (artist.musicMediaItemSortedMap.isNotEmpty()) {
                 ExtraButton(icon = SatunesIcons.PLAY, onClick = {
                     playbackController.loadMusic(musicMediaItemSortedMap = artist.musicMediaItemSortedMap)
-                    openMedia()
+                    openMedia(navController = navController)
                 })
                 ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
                     playbackController.loadMusic(
                         musicMediaItemSortedMap = artist.musicMediaItemSortedMap,
                         shuffleMode = true
                     )
-                    openMedia()
+                    openMedia(navController = navController)
                 })
             }
         },
@@ -112,5 +119,9 @@ internal fun ArtistView(
 @Preview
 @Composable
 private fun ArtistViewPreview() {
-    ArtistView(artist = Artist(id = 0, title = "Artist title", albumSortedMap = sortedMapOf()))
+    val navController: NavHostController = rememberNavController()
+    ArtistView(
+        navController = navController,
+        artist = Artist(id = 0, title = "Artist title", albumSortedMap = sortedMapOf())
+    )
 }

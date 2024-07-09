@@ -29,7 +29,7 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
-import io.github.antoinepirlot.satunes.database.models.tables.MusicDB
+import io.github.antoinepirlot.satunes.database.models.database.tables.MusicDB
 
 /**
  * @author Antoine Pirlot on 27/03/2024

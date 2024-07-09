@@ -41,10 +41,10 @@ data class Folder(
     override var title: String,
     var parentFolder: Folder? = null,
 ) : Media {
-    override var liked: Boolean = false
+    override val liked: MutableState<Boolean>? = null // Not used
     override var artwork: Bitmap? = null
 
-    val musicMediaItemSortedMapUpdate: MutableState<Boolean> = mutableStateOf(false)
+    override val musicMediaItemSortedMapUpdate: MutableState<Boolean> = mutableStateOf(false)
     override val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
 
     val subFolderMap: SortedMap<String, Folder> = sortedMapOf()
@@ -96,9 +96,7 @@ data class Folder(
      *                                 It's a path not all the subfolder of this folder
      *
      */
-    fun createSubFolders(
-        subFolderNameChainList: MutableList<String>,
-    ) {
+    fun createSubFolders(subFolderNameChainList: MutableList<String>) {
         var parentFolder = this
         subFolderNameChainList.forEach { folderName: String ->
             var subFolder: Folder? = null
@@ -154,27 +152,22 @@ data class Folder(
         return musicMediaSortedMap
     }
 
+
+
+    override fun toString(): String {
+        return this.title
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
         other as Folder
 
-        if (title != other.title) return false
-        if (parentFolder != other.parentFolder) return false
-        if (subFolderMap != other.subFolderMap) return false
-        return musicMediaItemSortedMap == other.musicMediaItemSortedMap
+        return absolutePath == other.absolutePath
     }
 
     override fun hashCode(): Int {
-        var result = title.hashCode()
-        result = 31 * result + (parentFolder?.hashCode() ?: 0)
-        result = 31 * result + subFolderMap.hashCode()
-        result = 31 * result + musicMediaItemSortedMap.hashCode()
-        return result
-    }
-
-    override fun toString(): String {
-        return this.title
+        return absolutePath.hashCode()
     }
 }

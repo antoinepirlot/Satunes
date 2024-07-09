@@ -23,65 +23,61 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.database.models
+package io.github.antoinepirlot.satunes.database.models.database.tables
 
 import android.graphics.Bitmap
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.media3.common.MediaItem
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.Ignore
+import androidx.room.Index
+import androidx.room.PrimaryKey
+import io.github.antoinepirlot.satunes.database.models.Media
+import io.github.antoinepirlot.satunes.database.models.Music
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 import java.util.SortedMap
 
 /**
  * @author Antoine Pirlot on 27/03/2024
  */
 
-data class Artist(
-    override val id: Long = nextId,
-    override var title: String,
-    val albumSortedMap: SortedMap<String, Album> = sortedMapOf(),
+@Serializable
+@Entity(tableName = "playlists", indices = [Index(value = ["title"], unique = true)])
+data class PlaylistDB(
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "playlist_id") override var id: Long,
+    @ColumnInfo(name = "title") override var title: String,
+
 ) : Media {
-    override val liked: MutableState<Boolean>? = null // Not used
+
+    @Ignore
+    @Transient
+    override val musicMediaItemSortedMapUpdate: MutableState<Boolean>? = null // Not used
+
+    @Ignore
+    @Transient
+    override val musicMediaItemSortedMap: SortedMap<Music, MediaItem>? = null // Not used
+
+    @Ignore
+    @Transient
+    override val liked: MutableState<Boolean> = mutableStateOf(false)
+
+    @Ignore
+    @Transient
     override var artwork: Bitmap? = null
-
-    val albumSortedMapUpdate: MutableState<Boolean> = mutableStateOf(false)
-
-    override val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
-    override val musicMediaItemSortedMapUpdate: MutableState<Boolean> = mutableStateOf(false)
-
-    companion object {
-        var nextId: Long = 1
-    }
-
-    init {
-        nextId++
-    }
-
-    fun addAlbum(album: Album) {
-        if (!albumSortedMap.contains(album.title)) {
-            albumSortedMap[album.title] = album
-        }
-    }
-
-    fun addMusic(music: Music) {
-        if (!musicMediaItemSortedMap.contains(music)) {
-            musicMediaItemSortedMap[music] = music.mediaItem
-        }
-    }
-
-    override fun toString(): String {
-        return this.title
-    }
-
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as Artist
+        other as PlaylistDB
 
-        return title == other.title
+        return title.lowercase() == other.title.lowercase()
     }
 
     override fun hashCode(): Int {
-        return title.hashCode()
+        return title.lowercase().hashCode()
     }
 }

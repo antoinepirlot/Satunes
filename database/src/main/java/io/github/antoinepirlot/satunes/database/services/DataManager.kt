@@ -27,6 +27,7 @@ package io.github.antoinepirlot.satunes.database.services
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.media3.common.MediaItem
 import io.github.antoinepirlot.satunes.database.exceptions.DuplicatedAlbumException
 import io.github.antoinepirlot.satunes.database.exceptions.MusicNotFoundException
@@ -36,8 +37,8 @@ import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.StringComparator
-import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
-import io.github.antoinepirlot.satunes.database.models.tables.Playlist
+import io.github.antoinepirlot.satunes.database.models.database.relations.PlaylistWithMusics
+import io.github.antoinepirlot.satunes.database.models.database.tables.PlaylistDB
 import java.util.SortedMap
 import java.util.SortedSet
 
@@ -47,35 +48,29 @@ import java.util.SortedSet
 
 object DataManager {
     // All public map and sortedmap has bool state to recompose as Map are not supported for recomposition
-    val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
+    val musicMediaItemMap: SortedMap<Music, MediaItem> = sortedMapOf()
+    private val musicMapById: MutableMap<Long, Music> = SnapshotStateMap()
     val musicMediaItemSortedMapUpdated: MutableState<Boolean> = mutableStateOf(false)
 
-    internal val musicMapById: MutableMap<Long, Music> = mutableMapOf()
-
-    internal val rootFolderMapById: MutableMap<Long, Folder> = mutableMapOf()
-
-    //Not <String, Folder> because multiple folders can have the same name
-    val rootFolderSortedMap: SortedMap<Folder, Folder> = sortedMapOf()
+    val rootFolderMap: MutableMap<Long, Folder> = mutableMapOf()
+    val rootFolderSet: SortedSet<Folder> = sortedSetOf()
+    private val folderMap: MutableMap<Long, Folder> = mutableMapOf()
+    val folderSortedList: SortedSet<Folder> = sortedSetOf()
     val rootFolderMapUpdated: MutableState<Boolean> = mutableStateOf(false)
-
-    internal val folderMapById: MutableMap<Long, Folder> = mutableMapOf()
-
-    //Not <String, Folder> because multiple folders can have the same name
-    val folderSortedMap: SortedMap<Folder, Folder> = sortedMapOf()
     val folderMapUpdated: MutableState<Boolean> = mutableStateOf(false)
 
-    internal val artistMapById: MutableMap<Long, Artist> = mutableMapOf()
+    private val artistMapById: MutableMap<Long, Artist> = mutableMapOf()
     val artistMap: SortedMap<String, Artist> = sortedMapOf(comparator = StringComparator)
     val artistMapUpdated: MutableState<Boolean> = mutableStateOf(false)
 
-    internal val albumMapById: MutableMap<Long, Album> = mutableMapOf()
+    private val albumMapById: MutableMap<Long, Album> = mutableMapOf()
     val albumSet: SortedSet<Album> = sortedSetOf()
 
-    internal val genreMapById: MutableMap<Long, Genre> = mutableMapOf()
+    private val genreMapById: MutableMap<Long, Genre> = mutableMapOf()
     val genreMap: SortedMap<String, Genre> = sortedMapOf(comparator = StringComparator)
     val genreMapUpdated: MutableState<Boolean> = mutableStateOf(false)
 
-    internal val playlistWithMusicsMapById: MutableMap<Long, PlaylistWithMusics> = mutableMapOf()
+    private val playlistWithMusicsMapById: MutableMap<Long, PlaylistWithMusics> = mutableMapOf()
     val playlistWithMusicsMap: SortedMap<String, PlaylistWithMusics> =
         sortedMapOf(comparator = StringComparator)
     val playlistWithMusicsMapUpdated: MutableState<Boolean> = mutableStateOf(false)
@@ -96,14 +91,13 @@ object DataManager {
     }
 
     fun getMediaItem(music: Music): MediaItem {
-        return musicMediaItemSortedMap[music]!!
+        return musicMediaItemMap[music]!!
     }
 
     fun addMusic(music: Music) {
         if (!musicMapById.contains(music.id)) {
-            musicMediaItemSortedMap[music] = music.mediaItem
+            musicMediaItemMap[music] = music.mediaItem
             musicMapById[music.id] = music
-            musicMediaItemSortedMapUpdated.value = true
         }
     }
 
@@ -165,28 +159,26 @@ object DataManager {
     }
 
     fun getFolder(folderId: Long): Folder {
-        return folderMapById[folderId]!!
+        return folderMap[folderId]!!
     }
 
     fun addFolder(folder: Folder) {
-        if (!folderMapById.contains(folder.id)) {
-            folderMapById[folder.id] = folder
-            folderSortedMap[folder] = folder
+        if (!folderMap.contains(folder.id)) {
+            folderMap[folder.id] = folder
             folderMapUpdated.value = true
         }
-        if (folder.parentFolder == null && !rootFolderMapById.contains(folder.id)) {
-            rootFolderMapById[folder.id] = folder
-            rootFolderSortedMap[folder] = folder
+        if (folder.parentFolder == null && !rootFolderMap.contains(folder.id)) {
+            rootFolderMap[folder.id] = folder
+            rootFolderSet.add(element = folder)
             rootFolderMapUpdated.value = true
         }
     }
 
     fun removeFolder(folder: Folder) {
-        if (folderMapById.contains(folder.id)) {
-            folderMapById.remove(folder.id)
+        if (folderMap.contains(folder.id)) {
+            folderMap.remove(folder.id)
             folderMapUpdated.value = true
         }
-        rootFolderMapById.remove(folder.id)
     }
 
     fun getGenre(genreId: Long): Genre {
@@ -223,28 +215,28 @@ object DataManager {
     }
 
     fun addPlaylist(playlistWithMusics: PlaylistWithMusics) {
-        val playlist: Playlist = playlistWithMusics.playlist
-        if (!playlistWithMusicsMap.contains(playlist.title)) {
-            playlistWithMusicsMap[playlist.title] = playlistWithMusics
+        val playlistDB: PlaylistDB = playlistWithMusics.playlistDB
+        if (!playlistWithMusicsMap.contains(playlistDB.title)) {
+            playlistWithMusicsMap[playlistDB.title] = playlistWithMusics
             playlistWithMusicsMapUpdated.value = true
         }
-        if (!playlistWithMusicsMapById.contains(playlist.id)) {
-            playlistWithMusicsMapById[playlist.id] = playlistWithMusics
+        if (!playlistWithMusicsMapById.contains(playlistDB.id)) {
+            playlistWithMusicsMapById[playlistDB.id] = playlistWithMusics
         }
     }
 
     fun removePlaylist(playlistWithMusics: PlaylistWithMusics) {
-        val playlist: Playlist = playlistWithMusics.playlist
-        if (playlistWithMusicsMap.contains(playlist.title)) {
-            playlistWithMusicsMap.remove(playlist.title)
+        val playlistDB: PlaylistDB = playlistWithMusics.playlistDB
+        if (playlistWithMusicsMap.contains(playlistDB.title)) {
+            playlistWithMusicsMap.remove(playlistDB.title)
             playlistWithMusicsMapUpdated.value = true
         }
-        playlistWithMusicsMapById.remove(playlist.id)
+        playlistWithMusicsMapById.remove(playlistDB.id)
     }
 
     fun updatePlaylist(oldTitle: String, playlistWithMusics: PlaylistWithMusics) {
         playlistWithMusicsMap.remove(oldTitle)
-        playlistWithMusicsMap[playlistWithMusics.playlist.title] = playlistWithMusics
+        playlistWithMusicsMap[playlistWithMusics.playlistDB.title] = playlistWithMusics
         playlistWithMusicsMapUpdated.value = true
     }
 }

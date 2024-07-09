@@ -32,9 +32,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.database.models.Media
-import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
-import io.github.antoinepirlot.satunes.database.models.tables.MusicDB
+import io.github.antoinepirlot.satunes.database.models.database.relations.PlaylistWithMusics
+import io.github.antoinepirlot.satunes.database.models.database.tables.MusicDB
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 
 /**
@@ -44,7 +46,8 @@ import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 @Composable
 internal fun MediaCardList(
     modifier: Modifier = Modifier,
-    header: @Composable() (() -> Unit)? = null,
+    navController: NavHostController,
+    header: @Composable (() -> Unit)? = null,
     mediaList: List<Media>,
     openMedia: (media: Media) -> Unit,
     openedPlaylistWithMusics: PlaylistWithMusics? = null,
@@ -65,7 +68,7 @@ internal fun MediaCardList(
             items = mediaList,
             key = {
                 when (it) {
-                    is PlaylistWithMusics -> it.javaClass.name + '-' + it.playlist.id
+                    is PlaylistWithMusics -> it.javaClass.name + '-' + it.playlistDB.id
                     is MusicDB -> it.javaClass.name + '-' + it.music!!.id
                     else -> it.javaClass.name + '-' + it.id
                 }
@@ -78,6 +81,7 @@ internal fun MediaCardList(
             }
             MediaCard(
                 modifier = modifier,
+                navController = navController,
                 media = media,
                 onClick = { openMedia(media) },
                 openedPlaylistWithMusics = openedPlaylistWithMusics,
@@ -97,7 +101,9 @@ internal fun MediaCardList(
 @Composable
 @Preview
 private fun CardListPreview() {
+    val navController: NavHostController = rememberNavController()
     MediaCardList(
+        navController = navController,
         header = {},
         mediaList = listOf(),
         openMedia = {},

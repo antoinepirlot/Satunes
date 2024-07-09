@@ -37,7 +37,7 @@ import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
+import io.github.antoinepirlot.satunes.database.models.database.relations.PlaylistWithMusics
 
 /**
  * @author Antoine Pirlot on 16/03/2024
@@ -88,7 +88,7 @@ internal fun buildMediaItem(media: Media): MediaBrowserCompat.MediaItem {
             is Artist -> "Artist"
             is Album -> "Album"
             is Genre -> "Genre"
-            is PlaylistWithMusics -> "Playlist"
+            is PlaylistWithMusics -> "PlaylistDB"
             else -> throw IllegalArgumentException("An issue occurred with Media interface")
         }
     val extras = Bundle()
@@ -104,10 +104,10 @@ internal fun buildMediaItem(media: Media): MediaBrowserCompat.MediaItem {
         extras.putDouble(MediaConstants.DESCRIPTION_EXTRAS_KEY_COMPLETION_PERCENTAGE, 0.0)
     }
     return buildMediaItem(
-        id = if (media is PlaylistWithMusics) media.playlist.id.toString() else media.id.toString(),
+        id = if (media is PlaylistWithMusics) media.playlistDB.id.toString() else media.id.toString(),
         description = description,
         subtitle = if (media is Music) media.artist.title else null,
-        title = if (media is PlaylistWithMusics) media.playlist.title else media.title,
+        title = if (media is PlaylistWithMusics) media.playlistDB.title else media.title,
         uri = if (media is Music) media.uri else null,
         icon = media.artwork,
         flags = flags

@@ -138,7 +138,7 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
             ScreenPages.ALL_FOLDERS.id -> {
                 routeDeque.resetRouteDeque()
                 routeDeque.addLast(parentId)
-                children.addAll(getAllMediaItem(mediaList = DataManager.folderSortedMap.keys))
+                children.addAll(getAllMediaItem(mediaList = DataManager.folderSortedList))
             }
 
             ScreenPages.ALL_ARTISTS.id -> {
@@ -162,7 +162,7 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
             ScreenPages.ALL_MUSICS.id -> {
                 routeDeque.resetRouteDeque()
                 routeDeque.addLast(parentId)
-                children.addAll(getAllMediaItem(mediaList = DataManager.musicMediaItemSortedMap.keys))
+                children.addAll(getAllMediaItem(mediaList = DataManager.musicMediaItemMap.keys))
             }
 
             ScreenPages.ALL_PLAYLISTS.id -> {
@@ -230,7 +230,7 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
         }
         mediaItemList.add(getShuffleButton())
         for (media: Media in mediaList) {
-            if (media !is Music && media.musicMediaItemSortedMap.isEmpty()) {
+            if (media !is Music && (media.musicMediaItemSortedMap == null || media.musicMediaItemSortedMap!!.isEmpty())) {
                 continue
             }
             val mediaItem: MediaItem = addToQueue(media = media)

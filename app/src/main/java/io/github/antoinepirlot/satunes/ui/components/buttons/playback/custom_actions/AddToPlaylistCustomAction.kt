@@ -38,13 +38,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
+import io.github.antoinepirlot.satunes.database.models.database.relations.PlaylistWithMusics
 import io.github.antoinepirlot.satunes.database.services.DataManager
 import io.github.antoinepirlot.satunes.database.services.DatabaseManager
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.services.MediaSelectionManager
-import io.github.antoinepirlot.satunes.ui.components.buttons.playback.RowButton
+import io.github.antoinepirlot.satunes.ui.components.buttons.playback.CustomActionButton
 import io.github.antoinepirlot.satunes.ui.components.dialog.MediaSelectionDialog
 import java.util.SortedMap
 
@@ -59,7 +59,7 @@ internal fun AddToPlaylistCustomAction(
     val context: Context = LocalContext.current
     var showForm: Boolean by rememberSaveable { mutableStateOf(false) }
 
-    RowButton(
+    CustomActionButton(
         modifier = modifier,
         icon = SatunesIcons.PLAYLIST_ADD,
         text = stringResource(id = R.string.add_to_playlist),

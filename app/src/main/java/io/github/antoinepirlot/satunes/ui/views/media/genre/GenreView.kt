@@ -34,19 +34,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.media3.common.MediaItem
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.database.services.DataManager
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
-import io.github.antoinepirlot.satunes.ui.views.MediaListView
 import io.github.antoinepirlot.satunes.ui.views.MediaWithAlbumsHeaderView
+import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 import java.util.SortedMap
 import java.util.SortedSet
 
@@ -57,13 +58,14 @@ import java.util.SortedSet
 @Composable
 internal fun GenreView(
     modifier: Modifier = Modifier,
+    navController: NavHostController,
     genre: Genre,
 ) {
     val playbackController: PlaybackController = PlaybackController.getInstance()
     val musicMap: SortedMap<Music, MediaItem> = remember { genre.musicMediaItemSortedMap }
 
     //Recompose if data changed
-    var mapChanged: Boolean by rememberSaveable { DataManager.musicMediaItemSortedMapUpdated }
+    var mapChanged: Boolean by rememberSaveable { genre.musicMediaItemSortedMapUpdate }
     if (mapChanged) {
         mapChanged = false
     }
@@ -71,16 +73,16 @@ internal fun GenreView(
 
     MediaListView(
         modifier = modifier,
+        navController = navController,
         mediaList = musicMap.keys.toList(),
-
         openMedia = { clickedMedia: Media ->
             playbackController.loadMusic(
                 musicMediaItemSortedMap = genre.musicMediaItemSortedMap,
                 musicToPlay = clickedMedia as Music
             )
-            openMedia(media = clickedMedia)
+            openMedia(media = clickedMedia, navController = navController)
         },
-        onFABClick = { openCurrentMusic() },
+        onFABClick = { openCurrentMusic(navController = navController) },
         header = {
             //Recompose if data changed
             @Suppress("NAME_SHADOWING")
@@ -94,20 +96,24 @@ internal fun GenreView(
             musicMap.forEach { (music: Music, _: MediaItem) ->
                 albumSet.add(music.album)
             }
-            MediaWithAlbumsHeaderView(media = genre, albumList = albumSet.toList())
+            MediaWithAlbumsHeaderView(
+                navController = navController,
+                media = genre,
+                albumList = albumSet.toList()
+            )
         },
         extraButtons = {
             if (genre.musicMediaItemSortedMap.isNotEmpty()) {
                 ExtraButton(icon = SatunesIcons.PLAY, onClick = {
                     playbackController.loadMusic(musicMediaItemSortedMap = genre.musicMediaItemSortedMap)
-                    openMedia()
+                    openMedia(navController = navController)
                 })
                 ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
                     playbackController.loadMusic(
                         musicMediaItemSortedMap = genre.musicMediaItemSortedMap,
                         shuffleMode = true
                     )
-                    openMedia()
+                    openMedia(navController = navController)
                 })
             }
         },
@@ -118,6 +124,7 @@ internal fun GenreView(
 @Preview
 @Composable
 private fun GenreViewPreview() {
-    GenreView(genre = Genre(id = 0, "Genre"))
+    val navController: NavHostController = rememberNavController()
+    GenreView(navController = navController, genre = Genre(id = 0, "Genre"))
 }
 

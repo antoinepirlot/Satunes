@@ -37,10 +37,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Media
-import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
-import io.github.antoinepirlot.satunes.database.models.tables.Playlist
+import io.github.antoinepirlot.satunes.database.models.database.relations.PlaylistWithMusics
+import io.github.antoinepirlot.satunes.database.models.database.tables.PlaylistDB
 import io.github.antoinepirlot.satunes.database.services.DataManager
 import io.github.antoinepirlot.satunes.database.services.DatabaseManager
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
@@ -48,7 +50,7 @@ import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
 import io.github.antoinepirlot.satunes.ui.components.forms.PlaylistCreationForm
-import io.github.antoinepirlot.satunes.ui.views.MediaListView
+import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 import java.util.SortedMap
 
 /**
@@ -58,6 +60,7 @@ import java.util.SortedMap
 @Composable
 internal fun PlaylistListView(
     modifier: Modifier = Modifier,
+    navController: NavHostController,
 ) {
     val context: Context = LocalContext.current
     var openAlertDialog by remember { mutableStateOf(false) }
@@ -74,10 +77,11 @@ internal fun PlaylistListView(
 
         MediaListView(
             mediaList = playlistMap.values.toList(),
+            navController = navController,
             openMedia = { clickedMedia: Media ->
-                openMedia(media = clickedMedia)
+                openMedia(media = clickedMedia, navController = navController)
             },
-            onFABClick = { openCurrentMusic() },
+            onFABClick = { openCurrentMusic(navController = navController) },
             extraButtons = {
                 ExtraButton(icon = SatunesIcons.PLAYLIST_ADD, onClick = { openAlertDialog = true })
             },
@@ -88,10 +92,10 @@ internal fun PlaylistListView(
             openAlertDialog -> {
                 PlaylistCreationForm(
                     onConfirm = { playlistTitle: String ->
-                        val playlist = Playlist(id = 0, title = playlistTitle)
+                        val playlistDB = PlaylistDB(id = 0, title = playlistTitle)
                         DatabaseManager(context = context).insertPlaylistWithMusics(
                             context = context,
-                            playlist = playlist
+                            playlistDB = playlistDB
                         )
                         openAlertDialog = false
                     },
@@ -105,5 +109,6 @@ internal fun PlaylistListView(
 @Preview
 @Composable
 private fun PlaylistListViewPreview() {
-    PlaylistListView()
+    val navController: NavHostController = rememberNavController()
+    PlaylistListView(navController = navController)
 }

@@ -48,7 +48,7 @@ internal fun LikeUnlikeMusicOption(
 
     DialogOption(
         onClick = { music.switchLike(context = context) },
-        icon = if (music.likedState.value) SatunesIcons.LIKED else SatunesIcons.UNLIKED,
-        text = stringResource(id = if (music.likedState.value) R.string.remove_from_likes else R.string.add_to_likes)
+        icon = if (music.liked.value) SatunesIcons.LIKED else SatunesIcons.UNLIKED,
+        text = stringResource(id = if (music.liked.value) R.string.remove_from_likes else R.string.add_to_likes)
     )
 }

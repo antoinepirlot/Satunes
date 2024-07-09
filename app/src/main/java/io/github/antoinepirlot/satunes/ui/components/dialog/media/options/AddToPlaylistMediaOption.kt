@@ -39,7 +39,7 @@ import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
+import io.github.antoinepirlot.satunes.database.models.database.relations.PlaylistWithMusics
 import io.github.antoinepirlot.satunes.database.services.DataManager
 import io.github.antoinepirlot.satunes.database.services.DatabaseManager
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
@@ -102,8 +102,10 @@ private fun insertMediaToPlaylist(context: Context, media: Media) {
     } else {
         val musicList: List<Music> = if (media is Folder) {
             media.getAllMusic().keys.toList()
+        } else if (media.musicMediaItemSortedMap != null) {
+            media.musicMediaItemSortedMap!!.keys.toList()
         } else {
-            media.musicMediaItemSortedMap.keys.toList()
+            listOf()
         }
 
         MediaSelectionManager.getCheckedPlaylistWithMusics()

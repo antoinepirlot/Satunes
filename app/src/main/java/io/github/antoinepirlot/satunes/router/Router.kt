@@ -39,6 +39,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import io.github.antoinepirlot.satunes.MainActivity
@@ -46,10 +47,9 @@ import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.Genre
-import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
+import io.github.antoinepirlot.satunes.database.models.database.relations.PlaylistWithMusics
 import io.github.antoinepirlot.satunes.database.services.DataLoader
 import io.github.antoinepirlot.satunes.database.services.DataManager
-import io.github.antoinepirlot.satunes.navController
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.services.RoutesManager
@@ -86,6 +86,7 @@ import io.github.antoinepirlot.satunes.ui.views.settings.UpdatesSettingView
 @Composable
 internal fun Router(
     modifier: Modifier = Modifier,
+    navController: NavHostController,
 ) {
     val context: Context = LocalContext.current
     val isLoading: Boolean by rememberSaveable { DataLoader.isLoading }
@@ -107,20 +108,24 @@ internal fun Router(
         exitTransition = { fadeOut(animationSpec = tween(0)) },
     ) {
 
+        /**
+         * Media routes
+         */
+
         composable(Destination.FOLDERS.link) {
             // /!\ This route prevent back gesture to exit the app
             RoutesManager.currentDestination.value = it.destination.route
-            permissionView(isAudioAllowed = isAudioAllowed.value)
+            permissionView(isAudioAllowed = isAudioAllowed.value, navController = navController)
             if (isLoading || !isLoaded) {
                 LoadingView()
             } else {
-                RootFolderView()
+                RootFolderView(navController = navController)
             }
         }
 
         composable("${Destination.FOLDERS.link}/{id}") {
             RoutesManager.currentDestination.value = it.destination.route
-            permissionView(isAudioAllowed = isAudioAllowed.value)
+            permissionView(isAudioAllowed = isAudioAllowed.value, navController = navController)
             if (isLoading || !isLoaded) {
                 LoadingView()
             } else {
@@ -132,23 +137,23 @@ internal fun Router(
                         )
                     )
                 }
-                FolderView(folder = folder)
+                FolderView(navController = navController, folder = folder)
             }
         }
 
         composable(Destination.ARTISTS.link) {
             RoutesManager.currentDestination.value = it.destination.route
-            permissionView(isAudioAllowed = isAudioAllowed.value)
+            permissionView(isAudioAllowed = isAudioAllowed.value, navController = navController)
             if (isLoading || !isLoaded) {
                 LoadingView()
             } else {
-                AllArtistsListView()
+                AllArtistsListView(navController = navController)
             }
         }
 
         composable("${Destination.ARTISTS.link}/{name}") {
             RoutesManager.currentDestination.value = it.destination.route
-            permissionView(isAudioAllowed = isAudioAllowed.value)
+            permissionView(isAudioAllowed = isAudioAllowed.value, navController = navController)
             if (isLoading || !isLoaded) {
                 LoadingView()
             } else {
@@ -160,67 +165,67 @@ internal fun Router(
                         )
                     )
                 }
-                ArtistView(artist = artist)
+                ArtistView(navController = navController, artist = artist)
             }
         }
 
         composable(Destination.ALBUMS.link) {
             RoutesManager.currentDestination.value = it.destination.route
-            permissionView(isAudioAllowed = isAudioAllowed.value)
+            permissionView(isAudioAllowed = isAudioAllowed.value, navController = navController)
             if (isLoading || !isLoaded) {
                 LoadingView()
             } else {
-                AllAlbumsListView()
+                AllAlbumsListView(navController = navController)
             }
         }
 
         composable("${Destination.ALBUMS.link}/{id}") {
             RoutesManager.currentDestination.value = it.destination.route
-            permissionView(isAudioAllowed = isAudioAllowed.value)
+            permissionView(isAudioAllowed = isAudioAllowed.value, navController = navController)
             if (isLoading || !isLoaded) {
                 LoadingView()
             } else {
                 val albumId: Long = it.arguments!!.getString("id")!!.toLong()
                 val album: Album by remember { mutableStateOf(DataManager.getAlbum(albumId)) }
-                AlbumView(album = album)
+                AlbumView(navController = navController, album = album)
             }
         }
 
         composable(Destination.GENRES.link) {
             RoutesManager.currentDestination.value = it.destination.route
-            permissionView(isAudioAllowed = isAudioAllowed.value)
+            permissionView(isAudioAllowed = isAudioAllowed.value, navController = navController)
             if (isLoading || !isLoaded) {
                 LoadingView()
             } else {
-                AllGenresListView()
+                AllGenresListView(navController = navController)
             }
         }
 
         composable("${Destination.GENRES.link}/{name}") {
             RoutesManager.currentDestination.value = it.destination.route
-            permissionView(isAudioAllowed = isAudioAllowed.value)
+            permissionView(isAudioAllowed = isAudioAllowed.value, navController = navController)
             if (isLoading || !isLoaded) {
                 LoadingView()
             } else {
                 val genreName: String = decode(it.arguments!!.getString("name")!!)
                 val genre: Genre by remember { mutableStateOf(DataManager.getGenre(genreName = genreName)) }
-                GenreView(genre = genre)
+                GenreView(navController = navController, genre = genre)
             }
         }
 
         composable(Destination.PLAYLISTS.link) {
             RoutesManager.currentDestination.value = it.destination.route
-            permissionView(isAudioAllowed = isAudioAllowed.value)
+            permissionView(isAudioAllowed = isAudioAllowed.value, navController = navController)
             if (isLoading || !isLoaded) {
                 LoadingView()
             } else {
-                PlaylistListView()
+                PlaylistListView(navController = navController)
             }
         }
 
         composable("${Destination.PLAYLISTS.link}/{id}") {
             RoutesManager.currentDestination.value = it.destination.route
-            permissionView(isAudioAllowed = isAudioAllowed.value)
+            permissionView(isAudioAllowed = isAudioAllowed.value, navController = navController)
             if (isLoading || !isLoaded) {
                 LoadingView()
             } else {
@@ -228,46 +233,55 @@ internal fun Router(
                 val playlist: PlaylistWithMusics by remember {
                     mutableStateOf(DataManager.getPlaylist(playlistId = playlistId))
                 }
-                PlaylistView(playlist = playlist)
+                PlaylistView(playlist = playlist, navController = navController)
             }
         }
 
         composable(Destination.MUSICS.link) {
             RoutesManager.currentDestination.value = it.destination.route
-            permissionView(isAudioAllowed = isAudioAllowed.value)
+            permissionView(isAudioAllowed = isAudioAllowed.value, navController = navController)
             if (isLoading || !isLoaded) {
                 LoadingView()
             } else {
-                AllMusicsListView()
+                AllMusicsListView(navController = navController)
             }
         }
 
+        /**
+         * Search
+         */
+
+        composable(Destination.SEARCH.link) {
+            RoutesManager.currentDestination.value = it.destination.route
+            permissionView(isAudioAllowed = isAudioAllowed.value, navController = navController)
+            if (isLoading || !isLoaded) {
+                LoadingView()
+            } else {
+                SearchView(navController = navController)
+            }
+        }
+
+        /**
+         * Playback
+         */
+
         composable(Destination.PLAYBACK.link) {
             RoutesManager.currentDestination.value = it.destination.route
-            permissionView(isAudioAllowed = isAudioAllowed.value)
+            permissionView(isAudioAllowed = isAudioAllowed.value, navController = navController)
             if (isLoading || !isLoaded) {
                 LoadingView()
             } else {
                 PlaybackView(
+                    navController = navController,
                     onAlbumClick = { album: Album? ->
                         if (album != null) {
-                            openMedia(media = album)
+                            openMedia(media = album, navController = navController)
                         }
                     },
                     onArtistClick = { artist: Artist ->
-                        openMedia(media = artist)
+                        openMedia(media = artist, navController = navController)
                     }
                 )
-            }
-        }
-
-        composable(Destination.SEARCH.link) {
-            RoutesManager.currentDestination.value = it.destination.route
-            permissionView(isAudioAllowed = isAudioAllowed.value)
-            if (isLoading || !isLoaded) {
-                LoadingView()
-            } else {
-                SearchView()
             }
         }
 
@@ -275,12 +289,16 @@ internal fun Router(
             RoutesManager.currentDestination.value = it.destination.route
             // Here, I assume audio permission is allowed and data has been loaded
             // Also this view will never been accessible if no music is playing
-            PlaybackQueueView()
+            PlaybackQueueView(navController = navController)
         }
+
+        /**
+         * Settings
+         */
 
         composable(Destination.SETTINGS.link) {
             RoutesManager.currentDestination.value = it.destination.route
-            SettingsView()
+            SettingsView(navController = navController)
         }
 
         composable(Destination.BOTTOM_BAR_SETTINGS.link) {
@@ -338,7 +356,7 @@ internal fun Router(
  *
  * @param isAudioAllowed true if the permission has been allowed, otherwise false
  */
-private fun permissionView(isAudioAllowed: Boolean) {
+private fun permissionView(isAudioAllowed: Boolean, navController: NavHostController) {
     if (!isAudioAllowed) {
         navController.popBackStack()
         navController.navigate(Destination.PERMISSIONS_SETTINGS.link)

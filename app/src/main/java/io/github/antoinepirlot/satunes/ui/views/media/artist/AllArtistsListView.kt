@@ -33,6 +33,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Media
@@ -42,7 +44,7 @@ import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
-import io.github.antoinepirlot.satunes.ui.views.MediaListView
+import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 import java.util.SortedMap
 
 /**
@@ -52,6 +54,7 @@ import java.util.SortedMap
 @Composable
 internal fun AllArtistsListView(
     modifier: Modifier = Modifier,
+    navController: NavHostController,
 ) {
     val playbackController: PlaybackController = PlaybackController.getInstance()
     val artistMap: SortedMap<String, Artist> = remember { DataManager.artistMap }
@@ -66,21 +69,26 @@ internal fun AllArtistsListView(
     MediaListView(
         modifier = modifier,
         mediaList = artistMap.values.toList(),
-
-        openMedia = { clickedMedia: Media -> openMedia(clickedMedia) },
-        onFABClick = { openCurrentMusic() },
+        navController = navController,
+        openMedia = { clickedMedia: Media ->
+            openMedia(
+                clickedMedia,
+                navController = navController
+            )
+        },
+        onFABClick = { openCurrentMusic(navController = navController) },
         extraButtons = {
-            if (DataManager.musicMediaItemSortedMap.isNotEmpty()) {
+            if (DataManager.musicMediaItemMap.isNotEmpty()) {
                 ExtraButton(icon = SatunesIcons.PLAY, onClick = {
-                    playbackController.loadMusic(musicMediaItemSortedMap = DataManager.musicMediaItemSortedMap)
-                    openMedia()
+                    playbackController.loadMusic(musicMediaItemSortedMap = DataManager.musicMediaItemMap)
+                    openMedia(navController = navController)
                 })
                 ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
                     playbackController.loadMusic(
-                        musicMediaItemSortedMap = DataManager.musicMediaItemSortedMap,
+                        musicMediaItemSortedMap = DataManager.musicMediaItemMap,
                         shuffleMode = true
                     )
-                    openMedia()
+                    openMedia(navController = navController)
                 })
             }
         },
@@ -91,5 +99,6 @@ internal fun AllArtistsListView(
 @Preview
 @Composable
 private fun AllArtistsListViewPreview() {
-    AllArtistsListView()
+    val navController: NavHostController = rememberNavController()
+    AllArtistsListView(navController = navController)
 }

@@ -41,8 +41,8 @@ data class Album(
     var artist: Artist? = null,
     override val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf(),
 ) : Media {
-    override var liked: Boolean = false
-    val musicMediaItemSortedMapUpdate: MutableState<Boolean> = mutableStateOf(false)
+    override val liked: MutableState<Boolean>? = null // Not used
+    override val musicMediaItemSortedMapUpdate: MutableState<Boolean> = mutableStateOf(false)
     override var artwork: Bitmap? = null
 
     companion object {

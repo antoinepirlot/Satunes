@@ -45,12 +45,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.internet.updates.UpdateAvailableStatus
 import io.github.antoinepirlot.satunes.internet.updates.UpdateCheckManager
-import io.github.antoinepirlot.satunes.navController
 import io.github.antoinepirlot.satunes.router.Destination
 import io.github.antoinepirlot.satunes.router.playbackViews
 import io.github.antoinepirlot.satunes.router.settingsDestinations
@@ -66,6 +67,7 @@ import io.github.antoinepirlot.satunes.ui.ScreenSizes
 internal fun SatunesTopAppBar(
     modifier: Modifier = Modifier,
     scrollBehavior: TopAppBarScrollBehavior,
+    navController: NavHostController
 ) {
     val screenWidthDp = LocalConfiguration.current.screenWidthDp
     val barModifier: Modifier =
@@ -85,7 +87,7 @@ internal fun SatunesTopAppBar(
             }
 
             // Here, the user is in the playback view
-            IconButton(onClick = { onPlaybackQueueButtonClick() }) {
+            IconButton(onClick = { onPlaybackQueueButtonClick(navController = navController) }) {
                 val playbackQueueIcon: SatunesIcons = SatunesIcons.PLAYLIST
                 Icon(
                     imageVector = playbackQueueIcon.imageVector,
@@ -103,14 +105,14 @@ internal fun SatunesTopAppBar(
         actions = {
             if (currentDestination !in settingsDestinations) {
                 // Search Button
-                IconButton(onClick = { onSearchButtonClick() }) {
+                IconButton(onClick = { onSearchButtonClick(navController = navController) }) {
                     val icon: SatunesIcons = SatunesIcons.SEARCH
                     Icon(imageVector = icon.imageVector, contentDescription = icon.description)
                 }
             }
 
             //Setting Button
-            IconButton(onClick = { onSettingButtonClick() }) {
+            IconButton(onClick = { onSettingButtonClick(navController = navController) }) {
                 val settingsIcon: SatunesIcons = SatunesIcons.SETTINGS
                 Icon(
                     imageVector = settingsIcon.imageVector,
@@ -122,14 +124,14 @@ internal fun SatunesTopAppBar(
     )
 }
 
-private fun onSearchButtonClick() {
+private fun onSearchButtonClick(navController: NavHostController) {
     when (RoutesManager.currentDestination.value) {
         Destination.SEARCH.link -> navController.popBackStack()
         else -> navController.navigate(Destination.SEARCH.link)
     }
 }
 
-private fun onPlaybackQueueButtonClick() {
+private fun onPlaybackQueueButtonClick(navController: NavHostController) {
     when (RoutesManager.currentDestination.value) {
         Destination.PLAYBACK.link -> navController.navigate(Destination.PLAYBACK_QUEUE.link)
         Destination.PLAYBACK_QUEUE.link -> navController.navigate(Destination.PLAYBACK.link)
@@ -141,7 +143,7 @@ private fun onPlaybackQueueButtonClick() {
  * When currentDestination is the settings list, then return to app only if audio permission has been allowed.
  * Otherwise navigate to settings
  */
-private fun onSettingButtonClick() {
+private fun onSettingButtonClick(navController: NavHostController) {
     if (UpdateCheckManager.updateAvailableStatus.value != UpdateAvailableStatus.AVAILABLE) {
         UpdateCheckManager.updateAvailableStatus.value =
             UpdateAvailableStatus.UNDEFINED
@@ -174,8 +176,10 @@ private fun SatunesTopAppBarPreview() {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(
         rememberTopAppBarState()
     )
+    val navController: NavHostController = rememberNavController()
     SatunesTopAppBar(
         modifier = Modifier,
         scrollBehavior = scrollBehavior,
+        navController = navController
     )
 }

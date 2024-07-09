@@ -26,7 +26,7 @@
 package io.github.antoinepirlot.satunes.services
 
 import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
+import io.github.antoinepirlot.satunes.database.models.database.relations.PlaylistWithMusics
 
 /**
  * @author Antoine Pirlot on 30/03/2024

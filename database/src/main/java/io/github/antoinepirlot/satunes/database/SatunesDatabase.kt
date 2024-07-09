@@ -33,9 +33,9 @@ import io.github.antoinepirlot.satunes.database.daos.MusicDAO
 import io.github.antoinepirlot.satunes.database.daos.MusicsPlaylistsRelDAO
 import io.github.antoinepirlot.satunes.database.daos.PlaylistDAO
 import io.github.antoinepirlot.satunes.database.migrations.MigrationFrom1To2
-import io.github.antoinepirlot.satunes.database.models.tables.MusicDB
-import io.github.antoinepirlot.satunes.database.models.tables.MusicsPlaylistsRel
-import io.github.antoinepirlot.satunes.database.models.tables.Playlist
+import io.github.antoinepirlot.satunes.database.models.database.tables.MusicDB
+import io.github.antoinepirlot.satunes.database.models.database.tables.MusicsPlaylistsRel
+import io.github.antoinepirlot.satunes.database.models.database.tables.PlaylistDB
 
 /**
  * @author Antoine Pirlot on 27/03/2024
@@ -45,7 +45,7 @@ import io.github.antoinepirlot.satunes.database.models.tables.Playlist
     entities = [
         MusicDB::class,
         MusicsPlaylistsRel::class,
-        Playlist::class
+        PlaylistDB::class
     ],
     version = 2,
     exportSchema = true,

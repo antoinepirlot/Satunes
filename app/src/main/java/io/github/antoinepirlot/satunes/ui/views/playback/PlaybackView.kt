@@ -29,6 +29,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.ui.ScreenSizes
@@ -42,6 +44,7 @@ import io.github.antoinepirlot.satunes.ui.views.playback.tablet.PlaybackTabletVi
 @Composable
 internal fun PlaybackView(
     modifier: Modifier = Modifier,
+    navController: NavHostController,
     onAlbumClick: (album: Album?) -> Unit,
     onArtistClick: (artist: Artist) -> Unit,
 ) {
@@ -61,6 +64,7 @@ internal fun PlaybackView(
         // Tablet
         PlaybackTabletView(
             modifier = modifier,
+            navController = navController,
             onAlbumClick = onAlbumClick,
             onArtistClick = onArtistClick
         )
@@ -70,5 +74,6 @@ internal fun PlaybackView(
 @Preview
 @Composable
 private fun PlaybackViewPreview() {
-    PlaybackView(onAlbumClick = {}, onArtistClick = {})
+    val navController: NavHostController = rememberNavController()
+    PlaybackView(navController = navController, onAlbumClick = {}, onArtistClick = {})
 }

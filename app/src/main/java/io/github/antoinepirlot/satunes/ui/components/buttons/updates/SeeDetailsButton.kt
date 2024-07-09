@@ -47,7 +47,7 @@ private const val FDROID_SATUNES_URL: String =
 @Composable
 internal fun SeeDetailsButton(
     modifier: Modifier = Modifier,
-    text: String = stringResource(id = R.string.see_details),
+    text: String = stringResource(id = R.string.see_on_github),
     onFdroid: Boolean = false
 ) {
     val context: Context = LocalContext.current

@@ -111,8 +111,9 @@ class Music(
      * @param context the context
      */
     private fun loadAlbumArtwork(context: Context) {
-        //Put it in Dispatchers.IO make the app not freezing while starting
-        CoroutineScope(Dispatchers.IO).launch {
+        // Set Dispatchers.Default instead of Dispatchers.IO unblock IO of too long loading
+        // Indirect impact is that it is faster to load settings
+        CoroutineScope(Dispatchers.Default).launch {
             try {
                 val mediaMetadataRetriever = MediaMetadataRetriever()
 

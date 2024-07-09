@@ -49,6 +49,7 @@ import io.github.antoinepirlot.satunes.router.utils.openMediaFromFolder
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 import java.util.SortedMap
+import java.util.SortedSet
 
 /**
  * @author Antoine Pirlot on 01/04/2024
@@ -61,7 +62,7 @@ internal fun RootFolderView(
 ) {
     val playbackController: PlaybackController = PlaybackController.getInstance()
 
-    val rootFolderMap: SortedMap<Folder, Folder> = remember { DataManager.rootFolderSortedMap }
+    val rootFolderSet: SortedSet<Folder> = remember { DataManager.rootFolderSet }
 
     //Recompose if data changed
     var mapChanged: Boolean by rememberSaveable { DataManager.rootFolderMapUpdated }
@@ -73,17 +74,17 @@ internal fun RootFolderView(
     MediaListView(
         modifier = modifier,
         navController = navController,
-        mediaList = rootFolderMap.keys.toList(),
+        mediaList = rootFolderSet.toList(),
         openMedia = { clickedMedia: Media ->
             openMediaFromFolder(clickedMedia, navController = navController)
         },
         onFABClick = { openCurrentMusic(navController = navController) },
         extraButtons = {
-            if (rootFolderMap.isNotEmpty()) {
+            if (rootFolderSet.isNotEmpty()) {
                 ExtraButton(icon = SatunesIcons.PLAY, onClick = {
                     playbackController.loadMusic(
                         musicMediaItemSortedMap = getFolderMusicsMap(
-                            folderMap = rootFolderMap
+                            folderSet = rootFolderSet
                         )
                     )
                     openMedia(navController = navController)
@@ -91,7 +92,7 @@ internal fun RootFolderView(
                 ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
 
                     playbackController.loadMusic(
-                        musicMediaItemSortedMap = getFolderMusicsMap(folderMap = rootFolderMap),
+                        musicMediaItemSortedMap = getFolderMusicsMap(folderSet = rootFolderSet),
                         shuffleMode = true
                     )
                     openMedia(navController = navController)
@@ -102,9 +103,9 @@ internal fun RootFolderView(
     )
 }
 
-private fun getFolderMusicsMap(folderMap: SortedMap<Folder, Folder>): SortedMap<Music, MediaItem> {
+private fun getFolderMusicsMap(folderSet: SortedSet<Folder>): SortedMap<Music, MediaItem> {
     val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
-    folderMap.forEach { (_, folder: Folder) ->
+    folderSet.forEach { folder: Folder ->
         musicMediaItemSortedMap.putAll(folder.getAllMusic())
     }
     return musicMediaItemSortedMap

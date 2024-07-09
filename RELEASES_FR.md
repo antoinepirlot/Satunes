@@ -1,6 +1,20 @@
 # Versions (🇫🇷)
 You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
+## 1.3 (Android 5.1.1 Lollipop et ultérieur)
+
+### 1.3.0
+
+Nouvelles Fonctionnalités:
+
+* Possiblité de choisir les filtres de recherches activés par défaut
+* Demande de confirmation lors d'une suppression dans les playlists
+* Tous les types de media (musiques, artistes, etc.) ont un menu d'option lors d'un appuis long
+
+Améliorations, Optimisations et Résolutions de problèmes:
+
+* Ajout d'un bouton pour ouvrir F-Droid lorsqu'une mise à jour est disponible
+
 ## 1.2 (Android 5.1.1 Lollipop et ultérieur)
 
 ### 1.2.1

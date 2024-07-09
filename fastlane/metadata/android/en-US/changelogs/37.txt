@@ -1,0 +1,9 @@
+New features:
+
+* Possibility of choosing the search filters activated by default
+* Request for confirmation when deleting from playlists
+* All types of media (music, artists, etc.) have an option menu during a long press
+
+Improvements, Optimizations and Troubleshooting:
+
+* Added a button to open F-Droid when an update is available

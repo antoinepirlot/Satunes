@@ -33,6 +33,7 @@ import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Album
 import androidx.compose.material.icons.rounded.Category
 import androidx.compose.material.icons.rounded.Close
+import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Done
 import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material.icons.rounded.FavoriteBorder
@@ -101,4 +102,5 @@ enum class SatunesIcons(val imageVector: ImageVector, val description: String) {
     SKIP_NEXT(imageVector = Icons.Rounded.SkipNext, description = "Skip Next Icon"),
     SKIP_PREVIOUS(imageVector = Icons.Rounded.SkipPrevious, description = "Skip Previous Icon"),
     UNLIKED(imageVector = Icons.Rounded.FavoriteBorder, description = "Unliked Icon"),
+    REMOVE_ICON(imageVector = Icons.Rounded.Delete, description = "Remove Icon"),
 }

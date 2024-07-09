@@ -28,7 +28,11 @@ package io.github.antoinepirlot.satunes.ui.views.settings
 import android.content.Context
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
@@ -58,6 +62,8 @@ import io.github.antoinepirlot.satunes.ui.components.texts.Title
  * @author Antoine Pirlot on 11/04/2024
  */
 
+private val PADDING = 16.dp
+
 @Composable
 internal fun UpdatesSettingView(
     modifier: Modifier = Modifier,
@@ -68,20 +74,33 @@ internal fun UpdatesSettingView(
     val updateAvailable: UpdateAvailableStatus by remember { UpdateCheckManager.updateAvailableStatus }
     val scrollState: ScrollState = rememberScrollState()
 
-    Column(modifier = modifier
-        .verticalScroll(scrollState)
-        .padding(horizontal = 16.dp)) {
-        Title(text = stringResource(id = R.string.version))
-        NormalText(text = stringResource(id = R.string.current_version) + currentVersion)
-        //Check update is done when pressing setting button in top app bar
-        if (isCheckingUpdate) {
-            LoadingCircle()
-            return
-        }
+    Column(
+        modifier = modifier.verticalScroll(scrollState)
+    ) {
+        Title(
+            modifier = Modifier.padding(horizontal = PADDING),
+            text = stringResource(id = R.string.version)
+        )
+        NormalText(
+            modifier = Modifier.padding(horizontal = PADDING),
+            text = stringResource(id = R.string.current_version) + currentVersion
+        )
+        Row(modifier = Modifier.fillMaxWidth()) {
 
-        when (updateAvailable) {
-            UNDEFINED, CANNOT_CHECK, UP_TO_DATE -> CheckUpdateButton()
-            AVAILABLE -> UpdateAvailable()
+            //Check update is done when pressing setting button in top app bar
+            if (isCheckingUpdate) {
+                Spacer(modifier = Modifier.size(PADDING)) // To align with text and not have a vertical cut
+                LoadingCircle()
+                return
+            }
+
+            when (updateAvailable) {
+                UNDEFINED, CANNOT_CHECK, UP_TO_DATE -> {
+                    Spacer(modifier = Modifier.size(PADDING)) // To align with text and not have a vertical cut
+                    CheckUpdateButton()
+                }
+                AVAILABLE -> UpdateAvailable()
+            }
         }
     }
 }

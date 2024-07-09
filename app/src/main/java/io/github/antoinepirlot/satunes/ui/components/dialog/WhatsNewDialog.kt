@@ -89,7 +89,7 @@ internal fun WhatsNewDialog(
                     url = Versions.RELEASES_URL + '/' + versionName
                 )
             }) {
-                NormalText(text = stringResource(id = RInternet.string.see_details))
+                NormalText(text = stringResource(id = RInternet.string.see_on_github))
             }
         },
     )

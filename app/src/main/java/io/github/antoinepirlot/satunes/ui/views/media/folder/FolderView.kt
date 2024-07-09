@@ -87,7 +87,7 @@ internal fun FolderView(
             )
         } else {
             val allPath: MutableList<String> = folder.absolutePath.split("/").toMutableList()
-            //TODO
+            // Wrong issue. Remove first is available before API 35, you can ignore error from Android Studio.
             allPath.removeFirst()
             allPath[0] = getRootFolderName(title = allPath[0])
             var path = ""

@@ -55,9 +55,6 @@ import io.github.antoinepirlot.satunes.ui.theme.SatunesTheme
  * @author Antoine Pirlot on 10/04/2024
  */
 
-internal lateinit var navController: NavHostController
-    private set
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun Satunes(
@@ -70,13 +67,21 @@ internal fun Satunes(
         ) {
             val scrollBehavior =
                 TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
-            navController = rememberNavController()
+            val navController: NavHostController = rememberNavController()
             Scaffold(
                 modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-                topBar = { SatunesTopAppBar(scrollBehavior = scrollBehavior) },
-                bottomBar = { SatunesBottomAppBar() }
+                topBar = {
+                    SatunesTopAppBar(
+                        scrollBehavior = scrollBehavior,
+                        navController = navController
+                    )
+                },
+                bottomBar = { SatunesBottomAppBar(navController = navController) }
             ) { innerPadding ->
-                Router(modifier = Modifier.padding(innerPadding))
+                Router(
+                    modifier = Modifier.padding(innerPadding),
+                    navController = navController
+                )
 
                 var whatsNewSeen: Boolean by rememberSaveable { SettingsManager.whatsNewSeen }
                 if (!whatsNewSeen) {

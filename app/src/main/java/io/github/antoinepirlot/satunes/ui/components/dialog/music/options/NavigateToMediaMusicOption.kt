@@ -28,6 +28,8 @@ package io.github.antoinepirlot.satunes.ui.components.dialog.music.options
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Folder
@@ -45,10 +47,11 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.options.DialogOption
 internal fun NavigateToMediaMusicOption(
     modifier: Modifier = Modifier,
     media: Media,
+    navController: NavHostController
 ) {
     DialogOption(
         modifier = modifier,
-        onClick = { openMedia(media = media) },
+        onClick = { openMedia(media = media, navController = navController) },
         icon = when (media) {
                 is Album -> SatunesIcons.ALBUM
                 is Artist -> SatunesIcons.ARTIST
@@ -63,5 +66,6 @@ internal fun NavigateToMediaMusicOption(
 @Preview
 @Composable
 private fun NavigateToMediaMusicOptionPreview() {
-    NavigateToMediaMusicOption(media = Album(title = "Album Title"))
+    val navController: NavHostController = rememberNavController()
+    NavigateToMediaMusicOption(media = Album(title = "Album Title"), navController = navController)
 }

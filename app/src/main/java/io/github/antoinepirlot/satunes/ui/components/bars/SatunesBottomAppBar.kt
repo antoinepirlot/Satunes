@@ -40,9 +40,10 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.database.models.MenuTitle
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
-import io.github.antoinepirlot.satunes.navController
 import io.github.antoinepirlot.satunes.router.Destination
 import io.github.antoinepirlot.satunes.ui.ScreenSizes
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
@@ -55,6 +56,7 @@ import io.github.antoinepirlot.satunes.ui.utils.getRightIconAndDescription
 @Composable
 internal fun SatunesBottomAppBar(
     modifier: Modifier = Modifier,
+    navController: NavHostController
 ) {
     val menuTitleLists: MutableList<MenuTitle> = mutableListOf(
         MenuTitle.FOLDERS,
@@ -109,7 +111,7 @@ internal fun SatunesBottomAppBar(
                         MenuTitle.MUSICS -> Destination.MUSICS.link
 
                     }
-                    backToRoot(rootRoute = rootRoute)
+                    backToRoot(rootRoute = rootRoute, navController = navController)
                 },
                 icon = {
                     val pair = getRightIconAndDescription(menuTitle = menuTitle)
@@ -132,6 +134,7 @@ internal fun SatunesBottomAppBar(
  */
 private fun backToRoot(
     rootRoute: String,
+    navController: NavHostController
 ) {
     var currentRoute: String? = navController.currentBackStackEntry!!.destination.route!!
     if (currentRoute != rootRoute) {
@@ -149,5 +152,6 @@ private fun backToRoot(
 @Preview
 @Composable
 private fun SatunesBottomAppBarPreview() {
-    SatunesBottomAppBar()
+    val navController: NavHostController = rememberNavController()
+    SatunesBottomAppBar(navController = navController)
 }

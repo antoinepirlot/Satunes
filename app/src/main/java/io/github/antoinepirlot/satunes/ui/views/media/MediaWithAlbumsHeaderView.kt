@@ -35,6 +35,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import io.github.antoinepirlot.satunes.database.R
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Media
@@ -49,6 +50,7 @@ import io.github.antoinepirlot.satunes.ui.components.texts.Title
 @Composable
 internal fun MediaWithAlbumsHeaderView(
     modifier: Modifier = Modifier,
+    navController: NavHostController,
     media: Media,
     albumList: List<Album>,
 ) {
@@ -56,7 +58,7 @@ internal fun MediaWithAlbumsHeaderView(
         Title(text = media.title)
         AlbumGrid(
             mediaList = albumList,
-            onClick = { openMedia(media = it) }
+            onClick = { openMedia(media = it, navController = navController) }
         )
         Spacer(modifier = Modifier.size(30.dp))
         Title(

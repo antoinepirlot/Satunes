@@ -34,6 +34,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.media3.common.MediaItem
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.Media
@@ -45,7 +47,7 @@ import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.router.utils.openMediaFromFolder
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
-import io.github.antoinepirlot.satunes.ui.views.MediaListView
+import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 import java.util.SortedMap
 
 /**
@@ -55,6 +57,7 @@ import java.util.SortedMap
 @Composable
 internal fun RootFolderView(
     modifier: Modifier = Modifier,
+    navController: NavHostController,
 ) {
     val playbackController: PlaybackController = PlaybackController.getInstance()
 
@@ -69,11 +72,12 @@ internal fun RootFolderView(
 
     MediaListView(
         modifier = modifier,
+        navController = navController,
         mediaList = rootFolderMap.keys.toList(),
         openMedia = { clickedMedia: Media ->
-            openMediaFromFolder(clickedMedia)
+            openMediaFromFolder(clickedMedia, navController = navController)
         },
-        onFABClick = { openCurrentMusic() },
+        onFABClick = { openCurrentMusic(navController = navController) },
         extraButtons = {
             if (rootFolderMap.isNotEmpty()) {
                 ExtraButton(icon = SatunesIcons.PLAY, onClick = {
@@ -82,7 +86,7 @@ internal fun RootFolderView(
                             folderMap = rootFolderMap
                         )
                     )
-                    openMedia()
+                    openMedia(navController = navController)
                 })
                 ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
 
@@ -90,7 +94,7 @@ internal fun RootFolderView(
                         musicMediaItemSortedMap = getFolderMusicsMap(folderMap = rootFolderMap),
                         shuffleMode = true
                     )
-                    openMedia()
+                    openMedia(navController = navController)
                 })
             }
         },
@@ -109,5 +113,6 @@ private fun getFolderMusicsMap(folderMap: SortedMap<Folder, Folder>): SortedMap<
 @Preview
 @Composable
 private fun RootFolderViewPreview() {
-    RootFolderView()
+    val navController: NavHostController = rememberNavController()
+    RootFolderView(navController = navController)
 }

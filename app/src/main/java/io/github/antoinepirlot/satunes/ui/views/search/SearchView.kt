@@ -49,6 +49,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.models.Media
@@ -62,7 +64,7 @@ import io.github.antoinepirlot.satunes.services.search.SearchChips
 import io.github.antoinepirlot.satunes.services.search.SearchChipsManager
 import io.github.antoinepirlot.satunes.ui.components.chips.MediaChipList
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
-import io.github.antoinepirlot.satunes.ui.views.MediaListView
+import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -75,7 +77,8 @@ import io.github.antoinepirlot.satunes.database.R as RDb
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun SearchView(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navController: NavHostController,
 ) {
     val context: Context = LocalContext.current
     var query: String by rememberSaveable { mutableStateOf("") }
@@ -124,15 +127,16 @@ internal fun SearchView(
         Spacer(modifier = Modifier.size(16.dp))
         MediaChipList()
         MediaListView(
+            navController = navController,
             mediaList = mediaList,
             openMedia = { media: Media ->
                 if (media is Music) {
                     PlaybackController.getInstance()
                         .loadMusic(musicMediaItemSortedMap = DataManager.musicMediaItemSortedMap)
                 }
-                openMedia(media = media)
+                openMedia(media = media, navController = navController)
             },
-            onFABClick = { openCurrentMusic() },
+            onFABClick = { openCurrentMusic(navController = navController) },
             emptyViewText = stringResource(id = R.string.no_result)
         )
     }
@@ -215,5 +219,6 @@ private fun search(context: Context, mediaList: MutableList<Media>, query: Strin
 @Preview
 @Composable
 private fun SearchViewPreview() {
-    SearchView()
+    val navController: NavHostController = rememberNavController()
+    SearchView(navController = navController)
 }

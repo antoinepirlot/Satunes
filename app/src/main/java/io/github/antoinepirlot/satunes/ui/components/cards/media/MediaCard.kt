@@ -55,6 +55,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.toBitmap
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
@@ -88,6 +90,7 @@ import io.github.antoinepirlot.satunes.database.R as RDb
 @Composable
 internal fun MediaCard(
     modifier: Modifier = Modifier,
+    navController: NavHostController,
     media: Media,
     onClick: () -> Unit,
     openedPlaylistWithMusics: PlaylistWithMusics?,
@@ -207,6 +210,7 @@ internal fun MediaCard(
     // Music options dialog
     if (showMusicOptions && media is Music) {
         MusicOptionsDialog(
+            navController = navController,
             music = media,
             playlistWithMusics = openedPlaylistWithMusics,
             onDismissRequest = { showMusicOptions = false },
@@ -232,6 +236,7 @@ internal fun MediaCard(
     // Album option dialog
     if (showAlbumOptions && media is Album) {
         AlbumOptionsDialog(
+            navController = navController,
             album = media,
             onDismissRequest = { showAlbumOptions = false }
         )
@@ -281,8 +286,10 @@ private fun CardPreview() {
         absolutePath = "absolute path",
         context = LocalContext.current
     )
+    val navController: NavHostController = rememberNavController()
     MediaCard(
         modifier = Modifier.fillMaxSize(),
+        navController = navController,
         media = music,
         onClick = {},
         openedPlaylistWithMusics = null

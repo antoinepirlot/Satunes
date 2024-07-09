@@ -23,7 +23,7 @@
  * PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.views
+package io.github.antoinepirlot.satunes.ui.views.media
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -34,6 +34,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Folder
@@ -53,6 +55,7 @@ import io.github.antoinepirlot.satunes.ui.components.cards.media.MediaCardList
 @Composable
 internal fun MediaListView(
     modifier: Modifier = Modifier,
+    navController: NavHostController,
     mediaList: List<Media>,
     openMedia: (media: Media) -> Unit,
     openedPlaylistWithMusics: PlaylistWithMusics? = null,
@@ -78,6 +81,7 @@ internal fun MediaListView(
         if (mediaList.isNotEmpty()) {
             MediaCardList(
                 modifier = Modifier.padding(innerPadding),
+                navController = navController,
                 header = header,
                 mediaList = mediaList,
                 openMedia = openMedia,
@@ -110,7 +114,9 @@ private fun MediaListViewPreview() {
             context = LocalContext.current
         )
     )
+    val navController: NavHostController = rememberNavController()
     MediaListView(
+        navController = navController,
         mediaList = map,
         openMedia = {},
         onFABClick = {},

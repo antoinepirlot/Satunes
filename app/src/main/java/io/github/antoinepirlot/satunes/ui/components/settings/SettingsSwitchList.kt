@@ -131,6 +131,31 @@ private fun switchSetting(context: Context, setting: Settings) {
             SettingsManager.switchPauseIfPlayback(context = context)
         }
 
+        Settings.MUSICS_FILTER -> {
+            SettingsManager.switchFilter(context = context, filterSetting = MenuTitle.MUSICS)
+
+        }
+
+        Settings.ARTISTS_FILTER -> {
+            SettingsManager.switchFilter(context = context, filterSetting = MenuTitle.ARTISTS)
+        }
+
+        Settings.ALBUMS_FILTER -> {
+            SettingsManager.switchFilter(context = context, filterSetting = MenuTitle.ALBUMS)
+        }
+
+        Settings.GENRES_FILTER -> {
+            SettingsManager.switchFilter(context = context, filterSetting = MenuTitle.GENRES)
+        }
+
+        Settings.FOLDERS_FILTER -> {
+            SettingsManager.switchFilter(context = context, filterSetting = MenuTitle.FOLDERS)
+        }
+
+        Settings.PLAYLISTS_FILTER -> {
+            SettingsManager.switchFilter(context = context, filterSetting = MenuTitle.PLAYLISTS)
+        }
+
         else -> { /* Not a switch */
         }
     }

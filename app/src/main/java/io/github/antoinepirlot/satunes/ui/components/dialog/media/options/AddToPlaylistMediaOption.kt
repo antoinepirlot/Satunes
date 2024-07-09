@@ -23,7 +23,7 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.dialog.music.options
+package io.github.antoinepirlot.satunes.ui.components.dialog.media.options
 
 import android.content.Context
 import androidx.compose.runtime.Composable
@@ -36,6 +36,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.database.models.Folder
+import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
 import io.github.antoinepirlot.satunes.database.services.DataManager
@@ -51,9 +53,9 @@ import java.util.SortedMap
  */
 
 @Composable
-internal fun AddToPlaylistOption(
+internal fun AddToPlaylistMediaOption(
     modifier: Modifier = Modifier,
-    music: Music,
+    media: Media,
     onFinished: () -> Unit
 ) {
     val context: Context = LocalContext.current
@@ -81,15 +83,35 @@ internal fun AddToPlaylistOption(
                 showDialog = false
             },
             onConfirm = {
-                val db = DatabaseManager(context = context)
-                db.insertMusicToPlaylists(
-                    music = music,
-                    playlists = MediaSelectionManager.getCheckedPlaylistWithMusics()
-                )
+                insertMediaToPlaylist(context = context, media = media)
                 onFinished()
             },
             mediaList = playlistList.values.toList(),
             icon = SatunesIcons.PLAYLIST_ADD,
         )
+    }
+}
+
+private fun insertMediaToPlaylist(context: Context, media: Media) {
+    val db = DatabaseManager(context = context)
+    if (media is Music) {
+        db.insertMusicToPlaylists(
+            music = media,
+            playlists = MediaSelectionManager.getCheckedPlaylistWithMusics()
+        )
+    } else {
+        val musicList: List<Music> = if (media is Folder) {
+            media.getAllMusic().keys.toList()
+        } else {
+            media.musicMediaItemSortedMap.keys.toList()
+        }
+
+        MediaSelectionManager.getCheckedPlaylistWithMusics()
+            .forEach { playlistWithMusics: PlaylistWithMusics ->
+                db.insertMusicsToPlaylist(
+                    musics = musicList,
+                    playlist = playlistWithMusics
+                )
+            }
     }
 }

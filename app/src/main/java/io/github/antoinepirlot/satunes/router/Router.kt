@@ -75,6 +75,7 @@ import io.github.antoinepirlot.satunes.ui.views.settings.ExclusionSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.PermissionsSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.PlaybackSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.PlaylistsSettingsView
+import io.github.antoinepirlot.satunes.ui.views.settings.SearchSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.SettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.UpdatesSettingView
 
@@ -320,6 +321,11 @@ internal fun Router(
         composable(Destination.BATTERY_SETTINGS.link) {
             RoutesManager.currentDestination.value = it.destination.route
             BatterySettingsView()
+        }
+
+        composable(Destination.SEARCH_SETTINGS.link) {
+            RoutesManager.currentDestination.value = it.destination.route
+            SearchSettingsView()
         }
     }
 }

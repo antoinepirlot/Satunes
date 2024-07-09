@@ -25,7 +25,10 @@
 
 package io.github.antoinepirlot.satunes.services.search
 
+import android.content.Context
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
+import kotlinx.coroutines.runBlocking
 
 /**
  * @author Antoine Pirlot on 28/06/2024
@@ -42,13 +45,16 @@ internal object SearchChipsManager {
     )
     val selectedSearchChips: MutableList<SearchChips> = SnapshotStateList()
 
-    fun resetSelectedChips() {
-        selectedSearchChips.forEach { selectedSearchChip: SearchChips ->
-            selectedSearchChip.enabled.value = false
+    fun resetSelectedChips(context: Context) {
+        runBlocking {
+            selectedSearchChips.clear()
+            SettingsManager.loadFilters(context = context)
+            allSearchChips.forEach { searchChip: SearchChips ->
+                if (searchChip.enabled.value) {
+                    selectedSearchChips.add(searchChip)
+                }
+            }
         }
-        selectedSearchChips.clear()
-        selectedSearchChips.add(SearchChips.MUSICS)
-        SearchChips.MUSICS.enabled.value = true
     }
 
     fun select(searchChip: SearchChips) {

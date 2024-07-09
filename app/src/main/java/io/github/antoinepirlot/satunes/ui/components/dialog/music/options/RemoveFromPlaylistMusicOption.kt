@@ -27,6 +27,10 @@ package io.github.antoinepirlot.satunes.ui.components.dialog.music.options
 
 import android.content.Context
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -35,6 +39,7 @@ import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
 import io.github.antoinepirlot.satunes.database.services.DatabaseManager
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import io.github.antoinepirlot.satunes.ui.components.dialog.RemoveConfirmationDialog
 import io.github.antoinepirlot.satunes.ui.components.dialog.options.DialogOption
 
 /**
@@ -49,18 +54,26 @@ internal fun RemoveFromPlaylistMusicOption(
     onFinished: () -> Unit,
 ) {
     val context: Context = LocalContext.current
+    var showRemoveConfirmation: Boolean by rememberSaveable { mutableStateOf(false) }
 
     DialogOption(
         modifier = modifier,
-        onClick = {
-            val db = DatabaseManager(context = context)
-            db.removeMusicFromPlaylist(
-                music = music,
-                playlist = playlistWithMusics
-            )
-            onFinished()
-        },
+        onClick = { showRemoveConfirmation = true },
         icon = SatunesIcons.PLAYLIST_REMOVE,
         text = stringResource(id = R.string.remove_from_playlist)
     )
+
+    if (showRemoveConfirmation) {
+        RemoveConfirmationDialog(
+            onDismissRequest = { showRemoveConfirmation = false },
+            onRemoveRequest = {
+                val db = DatabaseManager(context = context)
+                db.removeMusicFromPlaylist(
+                    music = music,
+                    playlist = playlistWithMusics
+                )
+                onFinished()
+            }
+        )
+    }
 }

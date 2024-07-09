@@ -23,51 +23,43 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.buttons.updates
+package io.github.antoinepirlot.satunes.ui.components.settings
 
-import android.content.Context
-import androidx.compose.material3.Button
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import io.github.antoinepirlot.satunes.internet.R
-import io.github.antoinepirlot.satunes.internet.updates.UpdateAvailableStatus
-import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
-import io.github.antoinepirlot.satunes.ui.utils.openUrl
+import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
+import io.github.antoinepirlot.satunes.ui.views.settings.Settings
 
 /**
- * @author Antoine Pirlot on 14/04/2024
+ * @author Antoine Pirlot on 08/07/2024
  */
 
-private const val FDROID_SATUNES_URL: String =
-    "https://f-droid.org/fr/packages/io.github.antoinepirlot.satunes/"
+private val filtersMap: Map<Settings, MutableState<Boolean>> = mapOf(
+    Pair(Settings.MUSICS_FILTER, SettingsManager.musicsFilter),
+    Pair(Settings.ALBUMS_FILTER, SettingsManager.albumsFilter),
+    Pair(Settings.ARTISTS_FILTER, SettingsManager.artistsFilter),
+    Pair(Settings.GENRES_FILTER, SettingsManager.genresFilter),
+    Pair(Settings.FOLDERS_FILTER, SettingsManager.foldersFilter),
+    Pair(Settings.PLAYLISTS_FILTER, SettingsManager.playlistsFilter)
+)
 
 @Composable
-internal fun SeeDetailsButton(
+internal fun DefaultSearchFiltersSetting(
     modifier: Modifier = Modifier,
-    text: String = stringResource(id = R.string.see_on_github),
-    onFdroid: Boolean = false
 ) {
-    val context: Context = LocalContext.current
-    Button(
-        modifier = modifier,
-        onClick = {
-            val url: String =
-                if (onFdroid) FDROID_SATUNES_URL else UpdateAvailableStatus.AVAILABLE.updateLink!!
-            openUrl(
-                context = context,
-                url = url
-            )
-        }
+    SubSettings(
+        title = stringResource(id = R.string.default_filter_setting_title)
     ) {
-        NormalText(text = text)
+        SettingsSwitchList(checkedMap = filtersMap)
     }
 }
 
 @Preview
 @Composable
-private fun SeeDetailsButtonPreview() {
-    SeeDetailsButton()
+private fun DefaultSearchFiltersSettingPreview() {
+    DefaultSearchFiltersSetting()
 }

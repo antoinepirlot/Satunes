@@ -90,6 +90,7 @@ internal fun UpdateAvailable(
                 APKDownloadStatus.NOT_STARTED -> DownloadButton()
                 else -> return
             }
+            Spacer(modifier = Modifier.size(16.dp)) // To align with text and not have a vertical cut
         }
     }
 }

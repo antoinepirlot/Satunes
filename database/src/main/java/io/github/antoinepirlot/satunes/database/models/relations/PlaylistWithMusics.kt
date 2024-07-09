@@ -58,7 +58,7 @@ data class PlaylistWithMusics(
 ) : Media {
     @Ignore
     @Transient
-    override var liked: Boolean = false
+    override val liked: MutableState<Boolean>? = null // Not used
 
     @Ignore
     @Transient
@@ -78,7 +78,7 @@ data class PlaylistWithMusics(
 
     @Ignore
     @Transient
-    val musicMediaItemSortedMapUpdate: MutableState<Boolean> = mutableStateOf(false)
+    override val musicMediaItemSortedMapUpdate: MutableState<Boolean> = mutableStateOf(false)
 
 
     init {

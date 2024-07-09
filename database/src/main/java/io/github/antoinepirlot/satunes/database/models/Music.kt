@@ -32,6 +32,7 @@ import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.net.Uri.encode
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.media3.common.MediaItem
@@ -42,6 +43,7 @@ import io.github.antoinepirlot.satunes.icons.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.SortedMap
 
 /**
  * @author Antoine Pirlot on 27/03/2024
@@ -60,11 +62,12 @@ class Music(
     var genre: Genre,
     context: Context,
 ) : Media {
-    override var liked: Boolean = false
-    override val likedState: MutableState<Boolean> = super.likedState
+    override val liked: MutableState<Boolean> = mutableStateOf(false)
     var uri: Uri = Uri.parse(encode(absolutePath)) // Must be init before media item
     val mediaItem: MediaItem = getMediaMetadata()
     override var artwork: Bitmap? = null
+    override val musicMediaItemSortedMapUpdate: MutableState<Boolean>? = null // Not used
+    override val musicMediaItemSortedMap: SortedMap<Music, MediaItem>? = null // Not used
 
     init {
         DataManager.addMusic(music = this)
@@ -78,7 +81,7 @@ class Music(
     override fun switchLike(context: Context) {
         super.switchLike(context)
         val db = DatabaseManager(context = context)
-        if (this.likedState.value) {
+        if (this.liked.value) {
             db.like(context = context, music = this)
         } else {
             db.unlike(music = this)

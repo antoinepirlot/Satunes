@@ -78,8 +78,7 @@ class DatabaseManager(context: Context) {
                 if (playlistWithMusics.playlist.title == LIKES_PLAYLIST_TITLE) {
                     playlistWithMusics.musics.forEach { musicDB: MusicDB ->
                         val music: Music = musicDB.music!!
-                        music.liked = true
-                        music.likedState.value = true
+                        music.liked.value = true
                     }
                 }
             }
@@ -112,8 +111,7 @@ class DatabaseManager(context: Context) {
                 }
                 if (playlistWithMusics.playlist.title == LIKES_PLAYLIST_TITLE) {
                     musicDao.like(musicId = music.id)
-                    music.liked = true
-                    music.likedState.value = true
+                    music.liked.value = true
                 }
             }
         }
@@ -178,8 +176,7 @@ class DatabaseManager(context: Context) {
         CoroutineScope(Dispatchers.IO).launch {
             if (playlist.playlist.title == LIKES_PLAYLIST_TITLE) {
                 musicDao.unlike(musicId = music.id)
-                music.liked = false
-                music.likedState.value = false
+                music.liked.value = false
             }
             musicsPlaylistsRelDAO.delete(musicId = music.id, playlistId = playlist.playlist.id)
             playlist.removeMusic(music = music)
@@ -199,8 +196,7 @@ class DatabaseManager(context: Context) {
                 )
                 if (playlistToRemove.playlist.title == LIKES_PLAYLIST_TITLE) {
                     musicDao.unlike(musicId = musicDb.id)
-                    musicDb.music!!.liked = false
-                    musicDb.music!!.likedState.value = false
+                    musicDb.music!!.liked.value = false
                 }
                 if (!musicsPlaylistsRelDAO.isMusicInPlaylist(musicId = musicDb.id)) {
                     musicDao.delete(musicDb)

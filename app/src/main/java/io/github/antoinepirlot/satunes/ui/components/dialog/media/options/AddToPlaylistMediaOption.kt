@@ -102,8 +102,10 @@ private fun insertMediaToPlaylist(context: Context, media: Media) {
     } else {
         val musicList: List<Music> = if (media is Folder) {
             media.getAllMusic().keys.toList()
+        } else if (media.musicMediaItemSortedMap != null) {
+            media.musicMediaItemSortedMap!!.keys.toList()
         } else {
-            media.musicMediaItemSortedMap.keys.toList()
+            listOf()
         }
 
         MediaSelectionManager.getCheckedPlaylistWithMusics()

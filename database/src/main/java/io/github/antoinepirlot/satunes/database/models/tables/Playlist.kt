@@ -26,14 +26,19 @@
 package io.github.antoinepirlot.satunes.database.models.tables
 
 import android.graphics.Bitmap
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.media3.common.MediaItem
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import io.github.antoinepirlot.satunes.database.models.Media
+import io.github.antoinepirlot.satunes.database.models.Music
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
+import java.util.SortedMap
 
 /**
  * @author Antoine Pirlot on 27/03/2024
@@ -45,10 +50,21 @@ data class Playlist(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "playlist_id") override var id: Long,
     @ColumnInfo(name = "title") override var title: String,
+
 ) : Media {
+
     @Ignore
     @Transient
-    override var liked: Boolean = false
+    override val musicMediaItemSortedMapUpdate: MutableState<Boolean>? = null // Not used
+
+    @Ignore
+    @Transient
+    override val musicMediaItemSortedMap: SortedMap<Music, MediaItem>? = null // Not used
+
+    @Ignore
+    @Transient
+    override val liked: MutableState<Boolean> = mutableStateOf(false)
+
     @Ignore
     @Transient
     override var artwork: Bitmap? = null

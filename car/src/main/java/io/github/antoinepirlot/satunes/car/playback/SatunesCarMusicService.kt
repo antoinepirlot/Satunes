@@ -230,7 +230,7 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
         }
         mediaItemList.add(getShuffleButton())
         for (media: Media in mediaList) {
-            if (media !is Music && media.musicMediaItemSortedMap.isEmpty()) {
+            if (media !is Music && (media.musicMediaItemSortedMap == null || media.musicMediaItemSortedMap!!.isEmpty())) {
                 continue
             }
             val mediaItem: MediaItem = addToQueue(media = media)

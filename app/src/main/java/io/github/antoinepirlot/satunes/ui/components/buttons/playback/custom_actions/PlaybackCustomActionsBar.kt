@@ -55,7 +55,7 @@ internal fun PlaybackCustomActionsBar(
             .fillMaxWidth()
             .horizontalScroll(state = scrollState),
     ) {
-        FavoriteCustomAction(media = musicPlaying!!)
+        FavoriteCustomAction(music = musicPlaying!!)
         Spacer(modifier = Modifier.size(8.dp))
         AddToPlaylistCustomAction()
     }

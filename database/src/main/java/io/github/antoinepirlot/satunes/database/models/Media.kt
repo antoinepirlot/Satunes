@@ -28,7 +28,6 @@ package io.github.antoinepirlot.satunes.database.models
 import android.content.Context
 import android.graphics.Bitmap
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import androidx.media3.common.MediaItem
 import java.util.SortedMap
 
@@ -39,17 +38,15 @@ interface Media : Comparable<Media> {
     val id: Long
     val title: String
     var artwork: Bitmap?
-    var liked: Boolean
-    val likedState: MutableState<Boolean>
-        get() = mutableStateOf(liked)
+    val liked: MutableState<Boolean>?
+    val musicMediaItemSortedMapUpdate: MutableState<Boolean>?
+    val musicMediaItemSortedMap: SortedMap<Music, MediaItem>?
 
     fun switchLike(context: Context) {
-        this.liked = !this.liked
-        this.likedState.value = this.liked
+        if (this.liked != null) {
+            this.liked!!.value = !this.liked!!.value
+        }
     }
-
-    val musicMediaItemSortedMap: SortedMap<Music, MediaItem>
-        get() = sortedMapOf()
 
     override fun compareTo(other: Media): Int {
         return StringComparator.compare(o1 = this.title, o2 = other.title)

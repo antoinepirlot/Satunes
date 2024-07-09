@@ -26,6 +26,8 @@
 package io.github.antoinepirlot.satunes.database.models.tables
 
 import android.graphics.Bitmap
+import androidx.compose.runtime.MutableState
+import androidx.media3.common.MediaItem
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Ignore
@@ -36,6 +38,7 @@ import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.DataManager
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
+import java.util.SortedMap
 
 /**
  * @author Antoine Pirlot on 30/03/2024
@@ -45,14 +48,28 @@ import kotlinx.serialization.Transient
 @Entity("musics")
 data class MusicDB(
     @PrimaryKey
-    @ColumnInfo("music_id") override val id: Long
-) : Media {
+    @ColumnInfo("music_id") override val id: Long,
 
+) : Media {
     @ColumnInfo("liked")
-    override var liked: Boolean = false
+    var likedColumn: Boolean = false
+
+    @Ignore
+    @Transient
+    override val musicMediaItemSortedMapUpdate: MutableState<Boolean>? = null // Not used
+
+    @Ignore
+    @Transient
+    override val musicMediaItemSortedMap: SortedMap<Music, MediaItem>? = null // Not used
+
+    @Ignore
+    @Transient
+    override val liked: MutableState<Boolean>? = null
+
     @Ignore
     @Transient
     override var artwork: Bitmap? = null
+
     @Ignore
     @Transient
     override val title: String = "Title is not used for MusicDB class." // Not used

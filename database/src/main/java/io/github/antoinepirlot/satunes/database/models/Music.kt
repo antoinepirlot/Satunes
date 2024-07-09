@@ -147,17 +147,12 @@ class Music(
 
         other as Music
 
-        if (displayName != other.displayName) return false
-        if (artist != other.artist) return false
-        if (album != other.album) return false
-
-        return true
+        return id == other.id
     }
 
     override fun hashCode(): Int {
-        var result = displayName.hashCode()
-        result = 31 * result + (artist.hashCode())
-        result = 31 * result + (album.hashCode())
-        return result
+        return id.hashCode()
     }
+
+
 }

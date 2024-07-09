@@ -86,16 +86,19 @@ internal fun UpdatesSettingView(
             text = stringResource(id = R.string.current_version) + currentVersion
         )
         Row(modifier = Modifier.fillMaxWidth()) {
-            Spacer(modifier = Modifier.size(PADDING)) // To align with text and not have a vertical cut
 
             //Check update is done when pressing setting button in top app bar
             if (isCheckingUpdate) {
+                Spacer(modifier = Modifier.size(PADDING)) // To align with text and not have a vertical cut
                 LoadingCircle()
                 return
             }
 
             when (updateAvailable) {
-                UNDEFINED, CANNOT_CHECK, UP_TO_DATE -> CheckUpdateButton()
+                UNDEFINED, CANNOT_CHECK, UP_TO_DATE -> {
+                    Spacer(modifier = Modifier.size(PADDING)) // To align with text and not have a vertical cut
+                    CheckUpdateButton()
+                }
                 AVAILABLE -> UpdateAvailable()
             }
         }

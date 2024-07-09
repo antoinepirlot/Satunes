@@ -32,6 +32,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
@@ -66,7 +67,10 @@ internal fun UpdateAvailable(
         modifier = modifier,
         verticalArrangement = Arrangement.Center
     ) {
-        NormalText(text = stringResource(id = RInternet.string.update_available))
+        NormalText(
+            modifier = Modifier.padding(horizontal = 16.dp),
+            text = stringResource(id = RInternet.string.update_available)
+        )
         val scrollState: ScrollState = rememberScrollState()
         Row(
             modifier = Modifier
@@ -74,6 +78,7 @@ internal fun UpdateAvailable(
                 .horizontalScroll(scrollState),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            Spacer(modifier = Modifier.size(16.dp)) // To align with text and not have a vertical cut
             SeeDetailsButton(text = stringResource(id = R.string.see_on_fdroid), onFdroid = true)
             Spacer(modifier = Modifier.size(SPACER_SIZE))
             SeeDetailsButton()

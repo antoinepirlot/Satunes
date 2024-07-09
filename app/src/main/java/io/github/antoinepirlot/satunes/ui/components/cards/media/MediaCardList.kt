@@ -33,8 +33,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.satunes.database.models.Media
-import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
-import io.github.antoinepirlot.satunes.database.models.tables.MusicDB
+import io.github.antoinepirlot.satunes.database.models.database.relations.PlaylistWithMusics
+import io.github.antoinepirlot.satunes.database.models.database.tables.MusicDB
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 
 /**
@@ -65,7 +65,7 @@ internal fun MediaCardList(
             items = mediaList,
             key = {
                 when (it) {
-                    is PlaylistWithMusics -> it.javaClass.name + '-' + it.playlist.id
+                    is PlaylistWithMusics -> it.javaClass.name + '-' + it.playlistDB.id
                     is MusicDB -> it.javaClass.name + '-' + it.music!!.id
                     else -> it.javaClass.name + '-' + it.id
                 }

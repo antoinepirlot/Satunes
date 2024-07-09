@@ -39,7 +39,7 @@ import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
+import io.github.antoinepirlot.satunes.database.models.database.relations.PlaylistWithMusics
 import io.github.antoinepirlot.satunes.database.services.DataManager
 import io.github.antoinepirlot.satunes.database.services.DatabaseManager
 import io.github.antoinepirlot.satunes.icons.SatunesIcons

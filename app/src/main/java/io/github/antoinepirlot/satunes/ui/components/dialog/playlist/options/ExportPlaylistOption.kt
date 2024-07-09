@@ -30,7 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
+import io.github.antoinepirlot.satunes.database.models.database.relations.PlaylistWithMusics
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.dialog.options.DialogOption
 
@@ -48,7 +48,7 @@ internal fun ExportPlaylistOption(
         onClick = {
             MainActivity.playlistsToExport = arrayOf(playlistToExport)
             MainActivity.instance.createFileToExportPlaylists(
-                defaultFileName = playlistToExport.playlist.title + ".json"
+                defaultFileName = playlistToExport.playlistDB.title + ".json"
             )
         },
         icon = SatunesIcons.EXPORT,

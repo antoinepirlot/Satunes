@@ -28,7 +28,7 @@ package io.github.antoinepirlot.satunes.database.daos
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import io.github.antoinepirlot.satunes.database.models.tables.MusicsPlaylistsRel
+import io.github.antoinepirlot.satunes.database.models.database.tables.MusicsPlaylistsRel
 
 /**
  * @author Antoine Pirlot on 30/03/2024

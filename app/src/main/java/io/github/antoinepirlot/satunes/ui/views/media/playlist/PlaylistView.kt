@@ -41,8 +41,8 @@ import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
-import io.github.antoinepirlot.satunes.database.models.tables.Playlist
+import io.github.antoinepirlot.satunes.database.models.database.relations.PlaylistWithMusics
+import io.github.antoinepirlot.satunes.database.models.database.tables.PlaylistDB
 import io.github.antoinepirlot.satunes.database.services.DataManager
 import io.github.antoinepirlot.satunes.database.services.DatabaseManager
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
@@ -91,10 +91,10 @@ internal fun PlaylistView(
         openedPlaylistWithMusics = playlist,
         onFABClick = { openCurrentMusic() },
         header = {
-            val title: String = if (playlist.playlist.title == LIKES_PLAYLIST_TITLE) {
+            val title: String = if (playlist.playlistDB.title == LIKES_PLAYLIST_TITLE) {
                 stringResource(id = RDb.string.likes_playlist_title)
             } else {
-                playlist.playlist.title
+                playlist.playlistDB.title
             }
             Title(text = title)
         },
@@ -131,7 +131,7 @@ internal fun PlaylistView(
             },
             mediaList = allMusic,
             icon = SatunesIcons.PLAYLIST_ADD,
-            playlistTitle = playlist.playlist.title
+            playlistTitle = playlist.playlistDB.title
         )
     }
 }
@@ -141,7 +141,7 @@ internal fun PlaylistView(
 private fun PlaylistViewPreview() {
     PlaylistView(
         playlist = PlaylistWithMusics(
-            playlist = Playlist(id = 0, title = "Playlist"),
+            playlistDB = PlaylistDB(id = 0, title = "PlaylistDB"),
             musics = mutableListOf()
         )
     )

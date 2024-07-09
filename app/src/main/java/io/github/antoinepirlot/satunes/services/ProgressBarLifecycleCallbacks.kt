@@ -85,7 +85,7 @@ internal object ProgressBarLifecycleCallbacks : DefaultLifecycleObserver {
             }
 
             if (playbackController.isEnded) {
-                // It means the music has reached the end of playlist and the music is finished
+                // It means the music has reached the end of playlistDB and the music is finished
                 playbackController.currentPositionProgression.floatValue = 1f
             }
 
@@ -96,7 +96,7 @@ internal object ProgressBarLifecycleCallbacks : DefaultLifecycleObserver {
     private fun updateCurrentPosition() {
         val playbackController: PlaybackController = PlaybackController.getInstance()
         if (playbackController.isEnded) {
-            // It means the music has reached the end of playlist and the music is finished
+            // It means the music has reached the end of playlistDB and the music is finished
             return
         }
         val maxPosition: Long = playbackController.musicPlaying.value!!.duration

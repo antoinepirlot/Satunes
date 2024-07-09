@@ -32,7 +32,7 @@ import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
+import io.github.antoinepirlot.satunes.database.models.database.relations.PlaylistWithMusics
 import io.github.antoinepirlot.satunes.navController
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.router.Destination
@@ -107,7 +107,7 @@ private fun getDestinationOf(media: Media?): String {
 
         is Genre -> "${Destination.GENRES.link}/${encode(media.title)}"
 
-        is PlaylistWithMusics -> "${Destination.PLAYLISTS.link}/${media.playlist.id}"
+        is PlaylistWithMusics -> "${Destination.PLAYLISTS.link}/${media.playlistDB.id}"
 
         else -> Destination.PLAYBACK.link
     }

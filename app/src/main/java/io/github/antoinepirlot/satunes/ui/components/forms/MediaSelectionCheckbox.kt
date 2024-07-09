@@ -45,8 +45,8 @@ import io.github.antoinepirlot.satunes.database.R
 import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
-import io.github.antoinepirlot.satunes.database.models.tables.Playlist
+import io.github.antoinepirlot.satunes.database.models.database.relations.PlaylistWithMusics
+import io.github.antoinepirlot.satunes.database.models.database.tables.PlaylistDB
 import io.github.antoinepirlot.satunes.services.MediaSelectionManager
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 
@@ -61,10 +61,10 @@ internal fun MediaSelectionCheckbox(
 ) {
     val checked: MutableState<Boolean> = rememberSaveable { mutableStateOf(false) }
     val text: String = if (media is PlaylistWithMusics) {
-        if (media.playlist.title == LIKES_PLAYLIST_TITLE) {
+        if (media.playlistDB.title == LIKES_PLAYLIST_TITLE) {
             stringResource(id = R.string.likes_playlist_title)
         } else {
-            media.playlist.title
+            media.playlistDB.title
         }
     } else {
         media.title
@@ -104,7 +104,7 @@ private fun onClick(checked: MutableState<Boolean>, media: Media) {
 private fun PlaylistSelectionCheckboxPreview() {
     MediaSelectionCheckbox(
         media = PlaylistWithMusics(
-            playlist = Playlist(id = 0, title = ""),
+            playlistDB = PlaylistDB(id = 0, title = ""),
             musics = mutableListOf()
         )
     )

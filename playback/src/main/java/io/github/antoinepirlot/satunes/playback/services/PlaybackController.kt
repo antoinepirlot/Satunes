@@ -163,7 +163,7 @@ class PlaybackController private constructor(
     /**
      * Start the playback.
      *
-     * If the music to play is null, then play the first music of the playlist, otherwise play the
+     * If the music to play is null, then play the first music of the playlistDB, otherwise play the
      * music to play.
      *
      * If music to play is the music playing, then do nothing.
@@ -172,7 +172,7 @@ class PlaybackController private constructor(
      */
     fun start(musicToPlay: Music? = null) {
         if (!isLoaded.value) {
-            throw IllegalStateException("The playlist has not been loaded, you can't play music")
+            throw IllegalStateException("The playlistDB has not been loaded, you can't play music")
         }
         when (musicToPlay) {
             null -> {
@@ -275,10 +275,10 @@ class PlaybackController private constructor(
 
     /**
      * Add all music from musicMap to the mediaController in the same order.
-     * If the shuffle mode is true then shuffle the playlist
+     * If the shuffle mode is true then shuffle the playlistDB
      *
      * @param musicMediaItemSortedMap the music map to load if null use the musicQueueToPlay instead
-     * @param shuffleMode indicate if the playlist has to be started in shuffle mode by default false
+     * @param shuffleMode indicate if the playlistDB has to be started in shuffle mode by default false
      *
      */
     fun loadMusic(
@@ -288,7 +288,7 @@ class PlaybackController private constructor(
     ) {
         this.playlist = Playlist(musicMediaItemSortedMap = musicMediaItemSortedMap)
         if (shuffleMode) {
-            //TODO find a way to store playlist position in music when loading to make it faster
+            //TODO find a way to store playlistDB position in music when loading to make it faster
             if (musicToPlay == null) {
                 this.playlist.shuffle()
             } else {
@@ -375,7 +375,7 @@ class PlaybackController private constructor(
     private fun moveMusic(music: Music, newIndex: Int) {
         val musicToMoveIndex: Int = this.playlist.getMusicIndex(music = music)
         if (musicToMoveIndex == -1) {
-            throw IllegalArgumentException("This music is not inside the playlist")
+            throw IllegalArgumentException("This music is not inside the playlistDB")
         }
 
         if (musicToMoveIndex < this.musicPlayingIndex) {
@@ -394,9 +394,9 @@ class PlaybackController private constructor(
 
     /**
      * Switch the shuffle mode.
-     * If there's more than one music in the playlist, then:
+     * If there's more than one music in the playlistDB, then:
      *      1) If the shuffle mode is disabling then undo shuffle.
-     *      2) If the shuffle mode is enabling shuffle the playlist
+     *      2) If the shuffle mode is enabling shuffle the playlistDB
      */
     fun switchShuffleMode() {
         isShuffle.value = !isShuffle.value
@@ -445,7 +445,7 @@ class PlaybackController private constructor(
     }
 
     /**
-     * Restore the original playlist.
+     * Restore the original playlistDB.
      *
      */
     private fun undoShuffle() {

@@ -68,7 +68,7 @@ internal fun GenreOptionsDialog(
                 val isPlaybackLoaded: Boolean by rememberSaveable { playbackController.isLoaded }
 
                 /**
-                 * Playlist
+                 * PlaylistDB
                  */
                 AddToPlaylistMediaOption(media = genre, onFinished = onDismissRequest)
 

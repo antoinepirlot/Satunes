@@ -62,5 +62,5 @@ internal fun CustomActionButton(
 @Preview
 @Composable
 private fun RowButtonPreview() {
-    CustomActionButton(icon = SatunesIcons.PLAYLIST_ADD, text = "Add to Playlist", onClick = {})
+    CustomActionButton(icon = SatunesIcons.PLAYLIST_ADD, text = "Add to PlaylistDB", onClick = {})
 }

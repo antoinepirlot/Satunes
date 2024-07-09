@@ -68,7 +68,7 @@ internal fun ArtistOptionsDialog(
                 val isPlaybackLoaded: Boolean by rememberSaveable { playbackController.isLoaded }
 
                 /**
-                 * Playlist
+                 * PlaylistDB
                  */
                 AddToPlaylistMediaOption(media = artist, onFinished = onDismissRequest)
 

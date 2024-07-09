@@ -72,7 +72,7 @@ internal fun FolderOptionsDialog(
                 val isPlaybackLoaded: Boolean by rememberSaveable { playbackController.isLoaded }
 
                 /**
-                 * Playlist
+                 * PlaylistDB
                  */
 
                 AddToPlaylistMediaOption(media = folder, onFinished = onDismissRequest)

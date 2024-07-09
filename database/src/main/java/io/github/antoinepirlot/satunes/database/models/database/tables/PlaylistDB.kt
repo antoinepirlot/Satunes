@@ -23,7 +23,7 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.database.models.tables
+package io.github.antoinepirlot.satunes.database.models.database.tables
 
 import android.graphics.Bitmap
 import androidx.compose.runtime.MutableState
@@ -46,7 +46,7 @@ import java.util.SortedMap
 
 @Serializable
 @Entity(tableName = "playlists", indices = [Index(value = ["title"], unique = true)])
-data class Playlist(
+data class PlaylistDB(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "playlist_id") override var id: Long,
     @ColumnInfo(name = "title") override var title: String,

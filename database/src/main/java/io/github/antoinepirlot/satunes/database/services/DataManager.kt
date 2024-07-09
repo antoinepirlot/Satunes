@@ -36,8 +36,8 @@ import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.StringComparator
-import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
-import io.github.antoinepirlot.satunes.database.models.tables.Playlist
+import io.github.antoinepirlot.satunes.database.models.database.relations.PlaylistWithMusics
+import io.github.antoinepirlot.satunes.database.models.database.tables.PlaylistDB
 import java.util.SortedMap
 import java.util.SortedSet
 
@@ -223,28 +223,28 @@ object DataManager {
     }
 
     fun addPlaylist(playlistWithMusics: PlaylistWithMusics) {
-        val playlist: Playlist = playlistWithMusics.playlist
-        if (!playlistWithMusicsMap.contains(playlist.title)) {
-            playlistWithMusicsMap[playlist.title] = playlistWithMusics
+        val playlistDB: PlaylistDB = playlistWithMusics.playlistDB
+        if (!playlistWithMusicsMap.contains(playlistDB.title)) {
+            playlistWithMusicsMap[playlistDB.title] = playlistWithMusics
             playlistWithMusicsMapUpdated.value = true
         }
-        if (!playlistWithMusicsMapById.contains(playlist.id)) {
-            playlistWithMusicsMapById[playlist.id] = playlistWithMusics
+        if (!playlistWithMusicsMapById.contains(playlistDB.id)) {
+            playlistWithMusicsMapById[playlistDB.id] = playlistWithMusics
         }
     }
 
     fun removePlaylist(playlistWithMusics: PlaylistWithMusics) {
-        val playlist: Playlist = playlistWithMusics.playlist
-        if (playlistWithMusicsMap.contains(playlist.title)) {
-            playlistWithMusicsMap.remove(playlist.title)
+        val playlistDB: PlaylistDB = playlistWithMusics.playlistDB
+        if (playlistWithMusicsMap.contains(playlistDB.title)) {
+            playlistWithMusicsMap.remove(playlistDB.title)
             playlistWithMusicsMapUpdated.value = true
         }
-        playlistWithMusicsMapById.remove(playlist.id)
+        playlistWithMusicsMapById.remove(playlistDB.id)
     }
 
     fun updatePlaylist(oldTitle: String, playlistWithMusics: PlaylistWithMusics) {
         playlistWithMusicsMap.remove(oldTitle)
-        playlistWithMusicsMap[playlistWithMusics.playlist.title] = playlistWithMusics
+        playlistWithMusicsMap[playlistWithMusics.playlistDB.title] = playlistWithMusics
         playlistWithMusicsMapUpdated.value = true
     }
 }

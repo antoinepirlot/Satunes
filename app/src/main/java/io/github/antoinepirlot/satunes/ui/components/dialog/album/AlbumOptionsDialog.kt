@@ -73,7 +73,7 @@ internal fun AlbumOptionsDialog(
                 val isPlaybackLoaded: Boolean by rememberSaveable { playbackController.isLoaded }
 
                 /**
-                 * Playlist
+                 * PlaylistDB
                  */
                 AddToPlaylistMediaOption(media = album, onFinished = onDismissRequest)
 

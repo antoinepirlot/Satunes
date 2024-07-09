@@ -62,8 +62,8 @@ import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
-import io.github.antoinepirlot.satunes.database.models.tables.MusicDB
+import io.github.antoinepirlot.satunes.database.models.database.relations.PlaylistWithMusics
+import io.github.antoinepirlot.satunes.database.models.database.tables.MusicDB
 import io.github.antoinepirlot.satunes.icons.R
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
@@ -104,10 +104,10 @@ internal fun MediaCard(
         if (media is Folder && media.parentFolder == null) {
             getRootFolderName(title = media.title)
         } else if (media is PlaylistWithMusics) {
-            if (media.playlist.title == LIKES_PLAYLIST_TITLE) {
+            if (media.playlistDB.title == LIKES_PLAYLIST_TITLE) {
                 stringResource(id = RDb.string.likes_playlist_title)
             } else {
-                media.playlist.title
+                media.playlistDB.title
             }
         } else if (media is MusicDB) {
             media.music!!.title
@@ -213,7 +213,7 @@ internal fun MediaCard(
         )
     }
 
-    // Playlist option dialog
+    // PlaylistDB option dialog
     if (showPlaylistOptions && media is PlaylistWithMusics) {
         PlaylistOptionsDialog(
             playlistWithMusics = media,

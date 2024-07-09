@@ -31,8 +31,8 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
-import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
-import io.github.antoinepirlot.satunes.database.models.tables.Playlist
+import io.github.antoinepirlot.satunes.database.models.database.relations.PlaylistWithMusics
+import io.github.antoinepirlot.satunes.database.models.database.tables.PlaylistDB
 
 /**
  * @author Antoine Pirlot on 27/03/2024
@@ -59,14 +59,14 @@ internal interface PlaylistDAO {
     fun getPlaylistsWithMusics(): List<PlaylistWithMusics>
 
     @Insert
-    fun insertAll(vararg playlists: Playlist)
+    fun insertAll(vararg playlistDBS: PlaylistDB)
 
     @Insert
-    fun insertOne(playlist: Playlist): Long
+    fun insertOne(playlistDB: PlaylistDB): Long
 
     @Update
-    fun update(vararg playlists: Playlist)
+    fun update(vararg playlistDBS: PlaylistDB)
 
     @Delete
-    fun remove(playlist: Playlist)
+    fun remove(playlistDB: PlaylistDB)
 }

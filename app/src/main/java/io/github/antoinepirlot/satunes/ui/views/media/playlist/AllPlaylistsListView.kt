@@ -39,8 +39,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Media
-import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
-import io.github.antoinepirlot.satunes.database.models.tables.Playlist
+import io.github.antoinepirlot.satunes.database.models.database.relations.PlaylistWithMusics
+import io.github.antoinepirlot.satunes.database.models.database.tables.PlaylistDB
 import io.github.antoinepirlot.satunes.database.services.DataManager
 import io.github.antoinepirlot.satunes.database.services.DatabaseManager
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
@@ -88,10 +88,10 @@ internal fun PlaylistListView(
             openAlertDialog -> {
                 PlaylistCreationForm(
                     onConfirm = { playlistTitle: String ->
-                        val playlist = Playlist(id = 0, title = playlistTitle)
+                        val playlistDB = PlaylistDB(id = 0, title = playlistTitle)
                         DatabaseManager(context = context).insertPlaylistWithMusics(
                             context = context,
-                            playlist = playlist
+                            playlistDB = playlistDB
                         )
                         openAlertDialog = false
                     },

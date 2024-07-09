@@ -41,7 +41,6 @@ import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.database.services.DataManager
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
@@ -66,7 +65,7 @@ internal fun GenreView(
     val musicMap: SortedMap<Music, MediaItem> = remember { genre.musicMediaItemSortedMap }
 
     //Recompose if data changed
-    var mapChanged: Boolean by rememberSaveable { DataManager.musicMediaItemSortedMapUpdated }
+    var mapChanged: Boolean by rememberSaveable { genre.musicMediaItemSortedMapUpdate }
     if (mapChanged) {
         mapChanged = false
     }

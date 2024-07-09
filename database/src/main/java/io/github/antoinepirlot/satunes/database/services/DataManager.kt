@@ -27,6 +27,7 @@ package io.github.antoinepirlot.satunes.database.services
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.media3.common.MediaItem
 import io.github.antoinepirlot.satunes.database.exceptions.DuplicatedAlbumException
 import io.github.antoinepirlot.satunes.database.exceptions.MusicNotFoundException
@@ -48,10 +49,8 @@ import java.util.SortedSet
 object DataManager {
     // All public map and sortedmap has bool state to recompose as Map are not supported for recomposition
     val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
+    val musicMapById: MutableMap<Long, Music> = SnapshotStateMap()
     val musicMediaItemSortedMapUpdated: MutableState<Boolean> = mutableStateOf(false)
-
-    internal val musicMapById: MutableMap<Long, Music> =
-        mutableMapOf() // Used in Android Auto & MusicDB to get right music
 
     val rootFolderMap: MutableMap<Long, Folder> = mutableMapOf()
     val rootFolderSet: SortedSet<Folder> = sortedSetOf()
@@ -99,7 +98,6 @@ object DataManager {
         if (!musicMapById.contains(music.id)) {
             musicMediaItemSortedMap[music] = music.mediaItem
             musicMapById[music.id] = music
-            musicMediaItemSortedMapUpdated.value = true
         }
     }
 

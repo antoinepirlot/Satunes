@@ -27,7 +27,6 @@ package io.github.antoinepirlot.satunes.ui.components.buttons.updates
 
 import android.content.Context
 import androidx.compose.material3.Button
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -35,6 +34,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.satunes.internet.R
 import io.github.antoinepirlot.satunes.internet.updates.UpdateAvailableStatus
+import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 import io.github.antoinepirlot.satunes.ui.utils.openUrl
 
 /**
@@ -62,7 +62,7 @@ internal fun SeeDetailsButton(
             )
         }
     ) {
-        Text(text = text)
+        NormalText(text = text)
     }
 }
 

@@ -75,7 +75,8 @@ internal fun startMusic(mediaToPlay: Media? = null) {
  * Create the list of all music in the folder and subfolder
  */
 fun getMusicListFromFolder(folder: Folder): SortedMap<Music, MediaItem> {
-    val mapOfMusic: SortedMap<Music, MediaItem> = folder.musicMediaItemSortedMap
+    val mapOfMusic: SortedMap<Music, MediaItem> =
+        folder.musicMediaItemSortedMap.toSortedMap() // Copy needed
     for (subfolder in folder.getSubFolderList().values) {
         mapOfMusic.putAll(subfolder.musicMediaItemSortedMap)
     }

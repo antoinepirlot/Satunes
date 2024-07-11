@@ -56,6 +56,7 @@ internal val settingsDestinations: List<String> = listOf(
     Destination.ANDROID_AUTO_SETTINGS.link, Destination.PLAYBACK_SETTINGS.link,
     Destination.EXCLUSION_SETTINGS.link, Destination.PLAYLISTS_SETTINGS.link,
     Destination.PERMISSIONS_SETTINGS.link, Destination.UPDATES_SETTINGS.link,
+    Destination.SEARCH_SETTINGS.link
 )
 
 internal val playbackViews: List<String> = listOf(

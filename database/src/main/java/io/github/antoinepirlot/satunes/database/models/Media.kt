@@ -42,8 +42,8 @@ internal interface Media {
         if (musicMediaItemMap == null) return
         if (musicMediaItemMap!![music] == null) {
             musicMediaItemMap!![music] = music.mediaItem
+            musicMediaItemMapUpdate!!.value = true
         }
-        musicMediaItemMapUpdate!!.value = true
     }
 
     fun removeMusic(music: Music) {

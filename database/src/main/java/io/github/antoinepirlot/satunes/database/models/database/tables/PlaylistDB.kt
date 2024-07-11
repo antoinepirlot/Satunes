@@ -55,11 +55,11 @@ data class PlaylistDB(
 
     @Ignore
     @Transient
-    override val musicMediaItemSortedMapUpdate: MutableState<Boolean>? = null // Not used
+    override val musicMediaItemMapUpdate: MutableState<Boolean>? = null // Not used
 
     @Ignore
     @Transient
-    override val musicMediaItemSortedMap: SortedMap<Music, MediaItem>? = null // Not used
+    override val musicMediaItemMap: SortedMap<Music, MediaItem>? = null // Not used
 
     @Ignore
     @Transient

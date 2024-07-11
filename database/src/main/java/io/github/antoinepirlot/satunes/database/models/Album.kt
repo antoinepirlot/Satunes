@@ -39,10 +39,10 @@ data class Album(
     override val id: Long = nextId,
     override var title: String,
     var artist: Artist? = null,
-    override val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf(),
+    override val musicMediaItemMap: SortedMap<Music, MediaItem> = sortedMapOf(),
 ) : Media {
     override val liked: MutableState<Boolean>? = null // Not used
-    override val musicMediaItemSortedMapUpdate: MutableState<Boolean> = mutableStateOf(false)
+    override val musicMediaItemMapUpdate: MutableState<Boolean> = mutableStateOf(false)
     override var artwork: Bitmap? = null
 
     companion object {
@@ -60,7 +60,7 @@ data class Album(
      * @param music the music to add
      */
     fun addMusic(music: Music) {
-        this.musicMediaItemSortedMap[music] = music.mediaItem
+        this.musicMediaItemMap[music] = music.mediaItem
     }
 
     override fun equals(other: Any?): Boolean {

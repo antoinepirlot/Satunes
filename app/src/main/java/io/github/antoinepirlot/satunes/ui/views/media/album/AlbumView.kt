@@ -74,10 +74,10 @@ internal fun AlbumView(
     val playbackController: PlaybackController = PlaybackController.getInstance()
 
 
-    val musicMap: SortedMap<Music, MediaItem> = remember { album.musicMediaItemSortedMap }
+    val musicMap: SortedMap<Music, MediaItem> = remember { album.musicMediaItemMap }
 
     //Recompose if data changed
-    var mapChanged: Boolean by rememberSaveable { album.musicMediaItemSortedMapUpdate }
+    var mapChanged: Boolean by rememberSaveable { album.musicMediaItemMapUpdate }
     if (mapChanged) {
         mapChanged = false
     }
@@ -89,7 +89,7 @@ internal fun AlbumView(
         mediaList = musicMap.keys.toList(),
         openMedia = { clickedMedia: Media ->
             playbackController.loadMusic(
-                musicMediaItemSortedMap = album.musicMediaItemSortedMap,
+                musicMediaItemSortedMap = album.musicMediaItemMap,
                 musicToPlay = clickedMedia as Music
             )
             openMedia(media = clickedMedia, navController = navController)
@@ -99,14 +99,14 @@ internal fun AlbumView(
             Header(navController = navController, album = album)
         },
         extraButtons = {
-            if (album.musicMediaItemSortedMap.isNotEmpty()) {
+            if (album.musicMediaItemMap.isNotEmpty()) {
                 ExtraButton(icon = SatunesIcons.PLAY, onClick = {
-                    playbackController.loadMusic(album.musicMediaItemSortedMap)
+                    playbackController.loadMusic(album.musicMediaItemMap)
                     openMedia(navController = navController)
                 })
                 ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
                     playbackController.loadMusic(
-                        musicMediaItemSortedMap = album.musicMediaItemSortedMap,
+                        musicMediaItemSortedMap = album.musicMediaItemMap,
                         shuffleMode = true
                     )
                     openMedia(navController = navController)
@@ -161,7 +161,7 @@ private fun AlbumViewPreview() {
             id = 0,
             title = "Album title",
             artist = null,
-            musicMediaItemSortedMap = sortedMapOf()
+            musicMediaItemMap = sortedMapOf()
         )
     )
 }

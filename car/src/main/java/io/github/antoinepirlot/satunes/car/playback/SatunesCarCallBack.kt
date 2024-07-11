@@ -166,27 +166,27 @@ internal object SatunesCarCallBack : MediaSessionCompat.Callback() {
                 ScreenPages.ALL_FOLDERS.id -> {
                     //Current folder has to be loaded (music)
                     val folder: Folder = DataManager.getFolder(folderId = mediaId)
-                    folder.musicMediaItemSortedMap
+                    folder.musicMediaItemMap
                 }
 
                 ScreenPages.ALL_ALBUMS.id -> {
                     val album: Album = DataManager.getAlbum(albumId = mediaId)
-                    album.musicMediaItemSortedMap
+                    album.musicMediaItemMap
                 }
 
                 ScreenPages.ALL_ARTISTS.id -> {
                     val artist: Artist = DataManager.getArtist(artistId = mediaId)
-                    artist.musicMediaItemSortedMap
+                    artist.musicMediaItemMap
                 }
 
                 ScreenPages.ALL_GENRES.id -> {
                     val genre: Genre = DataManager.getGenre(genreId = mediaId)
-                    genre.musicMediaItemSortedMap
+                    genre.musicMediaItemMap
                 }
 
                 ScreenPages.ALL_PLAYLISTS.id -> {
                     val playlistWithMusics: PlaylistWithMusics = DataManager.getPlaylist(mediaId)
-                    playlistWithMusics.musicMediaItemSortedMap
+                    playlistWithMusics.musicMediaItemMap
                 }
 
                 else -> {

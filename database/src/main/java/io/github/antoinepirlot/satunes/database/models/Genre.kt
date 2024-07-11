@@ -41,9 +41,9 @@ data class Genre(
 ) : Media {
     override val liked: MutableState<Boolean>? = null // Not used
     override var artwork: Bitmap? = null
-    override val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
+    override val musicMediaItemMap: SortedMap<Music, MediaItem> = sortedMapOf()
 
-    override val musicMediaItemSortedMapUpdate: MutableState<Boolean> = mutableStateOf(false)
+    override val musicMediaItemMapUpdate: MutableState<Boolean> = mutableStateOf(false)
 
     companion object {
         var nextId: Long = 1
@@ -54,9 +54,9 @@ data class Genre(
     }
 
     fun addMusic(music: Music) {
-        if (!musicMediaItemSortedMap.contains(music)) {
-            musicMediaItemSortedMap[music] = music.mediaItem
-            musicMediaItemSortedMapUpdate.value = true
+        if (!musicMediaItemMap.contains(music)) {
+            musicMediaItemMap[music] = music.mediaItem
+            musicMediaItemMapUpdate.value = true
         }
     }
 

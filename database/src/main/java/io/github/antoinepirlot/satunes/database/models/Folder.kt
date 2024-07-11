@@ -44,8 +44,8 @@ data class Folder(
     override val liked: MutableState<Boolean>? = null // Not used
     override var artwork: Bitmap? = null
 
-    override val musicMediaItemSortedMapUpdate: MutableState<Boolean> = mutableStateOf(false)
-    override val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
+    override val musicMediaItemMapUpdate: MutableState<Boolean> = mutableStateOf(false)
+    override val musicMediaItemMap: SortedMap<Music, MediaItem> = sortedMapOf()
 
     val subFolderMap: SortedMap<String, Folder> = sortedMapOf()
 
@@ -85,7 +85,7 @@ data class Folder(
 
     fun addMusic(music: Music) {
         music.folder = this
-        this.musicMediaItemSortedMap[music] = music.mediaItem
+        this.musicMediaItemMap[music] = music.mediaItem
     }
 
     /**
@@ -141,7 +141,7 @@ data class Folder(
     fun getAllMusic(): SortedMap<Music, MediaItem> {
         val musicMediaSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
 
-        musicMediaSortedMap.putAll(this.musicMediaItemSortedMap)
+        musicMediaSortedMap.putAll(this.musicMediaItemMap)
 
         if (this.subFolderMap.isNotEmpty()) {
             this.subFolderMap.forEach { (_, folder: Folder) ->

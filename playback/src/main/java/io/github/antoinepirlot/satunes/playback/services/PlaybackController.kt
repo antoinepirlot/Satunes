@@ -332,8 +332,8 @@ class PlaybackController private constructor(
             is Folder -> addToQueue(mediaList = media.getAllMusic().keys.reversed())
 
             else -> {
-                if (media.musicMediaItemSortedMap != null) {
-                    addToQueue(mediaList = media.musicMediaItemSortedMap!!.keys.reversed())
+                if (media.musicMediaItemMap != null) {
+                    addToQueue(mediaList = media.musicMediaItemMap!!.keys.reversed())
                 }
             }
         }
@@ -365,8 +365,8 @@ class PlaybackController private constructor(
             is Folder -> addNext(mediaList = media.getAllMusic().keys.reversed())
 
             else -> {
-                if (media.musicMediaItemSortedMap != null) {
-                    addNext(mediaList = media.musicMediaItemSortedMap!!.keys.reversed())
+                if (media.musicMediaItemMap != null) {
+                    addNext(mediaList = media.musicMediaItemMap!!.keys.reversed())
                 }
             }
         }

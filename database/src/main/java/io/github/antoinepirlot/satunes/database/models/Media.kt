@@ -39,8 +39,8 @@ interface Media : Comparable<Media> {
     val title: String
     var artwork: Bitmap?
     val liked: MutableState<Boolean>?
-    val musicMediaItemSortedMapUpdate: MutableState<Boolean>?
-    val musicMediaItemSortedMap: SortedMap<Music, MediaItem>?
+    val musicMediaItemMapUpdate: MutableState<Boolean>?
+    val musicMediaItemMap: SortedMap<Music, MediaItem>?
 
     fun switchLike(context: Context) {
         if (this.liked != null) {

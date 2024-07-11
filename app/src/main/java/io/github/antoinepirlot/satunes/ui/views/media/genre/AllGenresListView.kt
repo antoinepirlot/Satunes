@@ -101,7 +101,7 @@ private fun getMusics(genreMap: SortedMap<String, Genre>): SortedMap<Music, Medi
     val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
 
     genreMap.forEach { (_: String, genre: Genre) ->
-        musicMediaItemSortedMap.putAll(genre.musicMediaItemSortedMap)
+        musicMediaItemSortedMap.putAll(genre.musicMediaItemMap)
     }
     return musicMediaItemSortedMap
 }

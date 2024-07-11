@@ -74,17 +74,17 @@ data class PlaylistWithMusics(
 
     @Ignore
     @Transient
-    override val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
+    override val musicMediaItemMap: SortedMap<Music, MediaItem> = sortedMapOf()
 
     @Ignore
     @Transient
-    override val musicMediaItemSortedMapUpdate: MutableState<Boolean> = mutableStateOf(false)
+    override val musicMediaItemMapUpdate: MutableState<Boolean> = mutableStateOf(false)
 
 
     init {
         musics.forEach { musicDB: MusicDB ->
             if (musicDB.music != null) {
-                musicMediaItemSortedMap[musicDB.music] = musicDB.music!!.mediaItem
+                musicMediaItemMap[musicDB.music] = musicDB.music!!.mediaItem
             }
         }
     }
@@ -93,18 +93,18 @@ data class PlaylistWithMusics(
         val musicDb = MusicDB(id = music.id)
         if (musicDb.music != null) {
             musics.add(musicDb)
-            if (!musicMediaItemSortedMap.contains(music)) {
-                musicMediaItemSortedMap[music] = music.mediaItem
-                musicMediaItemSortedMapUpdate.value = true
+            if (!musicMediaItemMap.contains(music)) {
+                musicMediaItemMap[music] = music.mediaItem
+                musicMediaItemMapUpdate.value = true
             }
         }
     }
 
     fun removeMusic(music: Music) {
         musics.remove(MusicDB(id = music.id))
-        if (musicMediaItemSortedMap.contains(music)) {
-            musicMediaItemSortedMap.remove(music)
-            musicMediaItemSortedMapUpdate.value = true
+        if (musicMediaItemMap.contains(music)) {
+            musicMediaItemMap.remove(music)
+            musicMediaItemMapUpdate.value = true
         }
     }
 }

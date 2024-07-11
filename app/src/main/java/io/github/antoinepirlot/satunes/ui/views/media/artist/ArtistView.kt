@@ -61,9 +61,9 @@ internal fun ArtistView(
     artist: Artist,
 ) {
     val playbackController: PlaybackController = PlaybackController.getInstance()
-    val musicMap: SortedMap<Music, MediaItem> = remember { artist.musicMediaItemSortedMap }
+    val musicMap: SortedMap<Music, MediaItem> = remember { artist.musicMediaItemMap }
     //Recompose if data changed
-    var musicMapChanged: Boolean by rememberSaveable { artist.musicMediaItemSortedMapUpdate }
+    var musicMapChanged: Boolean by rememberSaveable { artist.musicMediaItemMapUpdate }
     if (musicMapChanged) {
         musicMapChanged = false
     }
@@ -75,7 +75,7 @@ internal fun ArtistView(
         mediaList = musicMap.keys.toList(),
         openMedia = { clickedMedia: Media ->
             playbackController.loadMusic(
-                musicMediaItemSortedMap = artist.musicMediaItemSortedMap,
+                musicMediaItemSortedMap = artist.musicMediaItemMap,
                 musicToPlay = clickedMedia as Music
             )
             openMedia(clickedMedia, navController = navController)
@@ -98,14 +98,14 @@ internal fun ArtistView(
             )
         },
         extraButtons = {
-            if (artist.musicMediaItemSortedMap.isNotEmpty()) {
+            if (artist.musicMediaItemMap.isNotEmpty()) {
                 ExtraButton(icon = SatunesIcons.PLAY, onClick = {
-                    playbackController.loadMusic(musicMediaItemSortedMap = artist.musicMediaItemSortedMap)
+                    playbackController.loadMusic(musicMediaItemSortedMap = artist.musicMediaItemMap)
                     openMedia(navController = navController)
                 })
                 ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
                     playbackController.loadMusic(
-                        musicMediaItemSortedMap = artist.musicMediaItemSortedMap,
+                        musicMediaItemSortedMap = artist.musicMediaItemMap,
                         shuffleMode = true
                     )
                     openMedia(navController = navController)

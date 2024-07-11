@@ -66,8 +66,8 @@ class Music(
     var uri: Uri = Uri.parse(encode(absolutePath)) // Must be init before media item
     val mediaItem: MediaItem = getMediaMetadata()
     override var artwork: Bitmap? = null
-    override val musicMediaItemSortedMapUpdate: MutableState<Boolean>? = null // Not used
-    override val musicMediaItemSortedMap: SortedMap<Music, MediaItem>? = null // Not used
+    override val musicMediaItemMapUpdate: MutableState<Boolean>? = null // Not used
+    override val musicMediaItemMap: SortedMap<Music, MediaItem>? = null // Not used
 
     init {
         DataManager.addMusic(music = this)

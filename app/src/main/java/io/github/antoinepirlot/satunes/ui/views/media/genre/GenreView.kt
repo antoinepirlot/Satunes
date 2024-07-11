@@ -62,10 +62,10 @@ internal fun GenreView(
     genre: Genre,
 ) {
     val playbackController: PlaybackController = PlaybackController.getInstance()
-    val musicMap: SortedMap<Music, MediaItem> = remember { genre.musicMediaItemSortedMap }
+    val musicMap: SortedMap<Music, MediaItem> = remember { genre.musicMediaItemMap }
 
     //Recompose if data changed
-    var mapChanged: Boolean by rememberSaveable { genre.musicMediaItemSortedMapUpdate }
+    var mapChanged: Boolean by rememberSaveable { genre.musicMediaItemMapUpdate }
     if (mapChanged) {
         mapChanged = false
     }
@@ -77,7 +77,7 @@ internal fun GenreView(
         mediaList = musicMap.keys.toList(),
         openMedia = { clickedMedia: Media ->
             playbackController.loadMusic(
-                musicMediaItemSortedMap = genre.musicMediaItemSortedMap,
+                musicMediaItemSortedMap = genre.musicMediaItemMap,
                 musicToPlay = clickedMedia as Music
             )
             openMedia(media = clickedMedia, navController = navController)
@@ -86,7 +86,7 @@ internal fun GenreView(
         header = {
             //Recompose if data changed
             @Suppress("NAME_SHADOWING")
-            var mapChanged: Boolean by remember { genre.musicMediaItemSortedMapUpdate }
+            var mapChanged: Boolean by remember { genre.musicMediaItemMapUpdate }
             if (mapChanged) {
                 mapChanged = false
             }
@@ -103,14 +103,14 @@ internal fun GenreView(
             )
         },
         extraButtons = {
-            if (genre.musicMediaItemSortedMap.isNotEmpty()) {
+            if (genre.musicMediaItemMap.isNotEmpty()) {
                 ExtraButton(icon = SatunesIcons.PLAY, onClick = {
-                    playbackController.loadMusic(musicMediaItemSortedMap = genre.musicMediaItemSortedMap)
+                    playbackController.loadMusic(musicMediaItemSortedMap = genre.musicMediaItemMap)
                     openMedia(navController = navController)
                 })
                 ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
                     playbackController.loadMusic(
-                        musicMediaItemSortedMap = genre.musicMediaItemSortedMap,
+                        musicMediaItemSortedMap = genre.musicMediaItemMap,
                         shuffleMode = true
                     )
                     openMedia(navController = navController)

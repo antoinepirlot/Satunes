@@ -66,11 +66,11 @@ internal fun FolderView(
 ) {
     val playbackController: PlaybackController = PlaybackController.getInstance()
     val folderMusicMediaItemSortedMap: SortedMap<Music, MediaItem> = remember {
-        folder.musicMediaItemSortedMap
+        folder.musicMediaItemMap
     }
 
     //Recompose if data changed
-    var mapChanged: Boolean by rememberSaveable { folder.musicMediaItemSortedMapUpdate }
+    var mapChanged: Boolean by rememberSaveable { folder.musicMediaItemMapUpdate }
     if (mapChanged) {
         mapChanged = false
     }

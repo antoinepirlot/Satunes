@@ -73,7 +73,7 @@ internal fun AllAlbumsListView(
             val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
             // TODO Move into object
             albumSet.forEach { album: Album ->
-                musicMediaItemSortedMap.putAll(album.musicMediaItemSortedMap)
+                musicMediaItemSortedMap.putAll(album.musicMediaItemMap)
             }
             if(musicMediaItemSortedMap.isNotEmpty()) {
                 ExtraButton(icon = SatunesIcons.PLAY, onClick = {

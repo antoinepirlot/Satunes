@@ -72,10 +72,10 @@ internal fun PlaylistView(
     //TODO try using nav controller instead try to remember it in an object if possible
     var openAddMusicsDialog: Boolean by rememberSaveable { mutableStateOf(false) }
     val playbackController: PlaybackController = PlaybackController.getInstance()
-    val musicMap: SortedMap<Music, MediaItem> = remember { playlist.musicMediaItemSortedMap }
+    val musicMap: SortedMap<Music, MediaItem> = remember { playlist.musicMediaItemMap }
 
     //Recompose if data changed
-    var mapChanged: Boolean by rememberSaveable { playlist.musicMediaItemSortedMapUpdate }
+    var mapChanged: Boolean by rememberSaveable { playlist.musicMediaItemMapUpdate }
     if (mapChanged) {
         mapChanged = false
     }
@@ -87,7 +87,7 @@ internal fun PlaylistView(
         mediaList = musicMap.keys.toList(),
         openMedia = { clickedMedia: Media ->
             playbackController.loadMusic(
-                musicMediaItemSortedMap = playlist.musicMediaItemSortedMap,
+                musicMediaItemSortedMap = playlist.musicMediaItemMap,
                 musicToPlay = clickedMedia as Music
             )
             openMedia(media = clickedMedia, navController = navController)
@@ -104,14 +104,14 @@ internal fun PlaylistView(
         },
         extraButtons = {
             ExtraButton(icon = SatunesIcons.ADD, onClick = { openAddMusicsDialog = true })
-            if (playlist.musicMediaItemSortedMap.isNotEmpty()) {
+            if (playlist.musicMediaItemMap.isNotEmpty()) {
                 ExtraButton(icon = SatunesIcons.PLAY, onClick = {
-                    playbackController.loadMusic(musicMediaItemSortedMap = playlist.musicMediaItemSortedMap)
+                    playbackController.loadMusic(musicMediaItemSortedMap = playlist.musicMediaItemMap)
                     openMedia(navController = navController)
                 })
                 ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
                     playbackController.loadMusic(
-                        musicMediaItemSortedMap = playlist.musicMediaItemSortedMap,
+                        musicMediaItemSortedMap = playlist.musicMediaItemMap,
                         shuffleMode = true
                     )
                     openMedia(navController = navController)

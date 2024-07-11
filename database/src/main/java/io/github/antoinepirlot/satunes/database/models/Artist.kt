@@ -45,8 +45,8 @@ data class Artist(
 
     val albumSortedMapUpdate: MutableState<Boolean> = mutableStateOf(false)
 
-    override val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
-    override val musicMediaItemSortedMapUpdate: MutableState<Boolean> = mutableStateOf(false)
+    override val musicMediaItemMap: SortedMap<Music, MediaItem> = sortedMapOf()
+    override val musicMediaItemMapUpdate: MutableState<Boolean> = mutableStateOf(false)
 
     companion object {
         var nextId: Long = 1
@@ -63,8 +63,8 @@ data class Artist(
     }
 
     fun addMusic(music: Music) {
-        if (!musicMediaItemSortedMap.contains(music)) {
-            musicMediaItemSortedMap[music] = music.mediaItem
+        if (!musicMediaItemMap.contains(music)) {
+            musicMediaItemMap[music] = music.mediaItem
         }
     }
 

@@ -135,7 +135,7 @@ private fun loadSubFolders(
     folderMusicMediaItemSortedMap: SortedMap<Music, MediaItem>
 ) {
     //Load sub-folders
-    subFolderMap.addAll(folder.getSubFolderMapAsMedia().values)
+    subFolderMap.addAll(folder.getSubFolderMapAsMediaImpl().values)
 
     //Load sub-folder's musics
     folderMusicMediaItemSortedMap.forEach { (music: Music, _) ->

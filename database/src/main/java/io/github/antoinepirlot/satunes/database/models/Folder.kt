@@ -37,14 +37,7 @@ class Folder(
     title: String,
     var parentFolder: Folder? = null,
 ) : MediaImpl(id = nextId, title = title) {
-    val subFolderMap: SortedMap<String, Folder> = sortedMapOf()
-        get(): SortedMap<String, Folder> {
-            return if (!this::class.java.name.startsWith(Folder::javaClass.name)) {
-                field.toSortedMap()
-            } else {
-                field
-            }
-        }
+    private val subFolderMap: SortedMap<String, Folder> = sortedMapOf()
 
     val absolutePath: String = if (parentFolder == null) {
         "/$title"
@@ -65,8 +58,8 @@ class Folder(
      *
      * @return a list of subfolder and each subfolder is a Folder object
      */
-    fun getSubFolderList(): SortedMap<String, Folder> {
-        return this.subFolderMap
+    fun getSubFolderMap(): SortedMap<String, Folder> {
+        return this.subFolderMap.toSortedMap()
     }
 
     /**
@@ -74,9 +67,9 @@ class Folder(
      *
      * @return a list of subfolder and each subfolder is cast to Media object
      */
-    fun getSubFolderMapAsMedia(): SortedMap<Long, MediaImpl> {
+    fun getSubFolderMapAsMediaImpl(): SortedMap<Long, MediaImpl> {
         @Suppress("UNCHECKED_CAST")
-        return this.subFolderMap as SortedMap<Long, MediaImpl>
+        return this.subFolderMap.toSortedMap() as SortedMap<Long, MediaImpl>
     }
 
     /**
@@ -97,6 +90,7 @@ class Folder(
                 }
             }
             if (subFolder == null) {
+                // No subfolder matching folder name, create new one
                 subFolder = Folder(title = folderName, parentFolder = parentFolder)
                 DataManager.addFolder(folder = subFolder)
                 parentFolder.subFolderMap[subFolder.title] = subFolder
@@ -114,9 +108,7 @@ class Folder(
      * @return the right Folder matching the last subFolderName of the list
      */
     fun getSubFolder(splitPath: MutableList<String>): Folder? {
-        if (splitPath.isEmpty()
-            || (splitPath.size == 1 && this.title == splitPath[0])
-        ) {
+        if (splitPath.isEmpty() || splitPath.size == 1 && this.title == splitPath[0]) {
             return this
         }
         this.subFolderMap.values.forEach { subFolder: Folder ->

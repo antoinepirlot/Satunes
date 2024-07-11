@@ -3,6 +3,13 @@ Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
 ## 1.3 (Android 5.1.1 Lollipop and later)
 
+### 1.3.1
+
+Improvements, Optimizations and Troubleshooting:
+
+* Musics in folder are no more modified when the user click on music to play it
+* Search icon has been remove from the search setting view
+
 ### 1.3.0
 
 New features:

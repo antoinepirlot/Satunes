@@ -3,6 +3,14 @@ You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
 ## 1.3 (Android 5.1.1 Lollipop et ultérieur)
 
+### 1.3.1
+
+Améliorations, Optimisations et Résolutions de problèmes:
+
+* La liste des musiques d'un dossier n'est plus modifiée lorsque l'utilisateur clique sur une
+  musique
+* L'icône de recherche a été supprimée de la page des paramètres de recherche
+
 ### 1.3.0
 
 Nouvelles Fonctionnalités:

@@ -37,7 +37,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Artist
-import io.github.antoinepirlot.satunes.database.models.Media
+import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.services.DataManager
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
@@ -68,11 +68,11 @@ internal fun AllArtistsListView(
 
     MediaListView(
         modifier = modifier,
-        mediaList = artistMap.values.toList(),
+        mediaImplList = artistMap.values.toList(),
         navController = navController,
-        openMedia = { clickedMedia: Media ->
+        openMedia = { clickedMediaImpl: MediaImpl ->
             openMedia(
-                clickedMedia,
+                clickedMediaImpl,
                 navController = navController
             )
         },

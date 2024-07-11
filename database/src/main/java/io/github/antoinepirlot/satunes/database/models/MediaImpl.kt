@@ -25,31 +25,40 @@
 
 package io.github.antoinepirlot.satunes.database.models
 
+import android.graphics.Bitmap
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.media3.common.MediaItem
 import java.util.SortedMap
 
 /**
- * @author Antoine Pirlot on 11/07/2024
+ * @author Antoine Pirlot on 29/03/2024
  */
-internal interface Media {
-    val id: Long
-    var title: String
-    val musicMediaItemMap: SortedMap<Music, MediaItem>?
-    val musicMediaItemMapUpdate: MutableState<Boolean>?
-
-    fun addMusic(music: Music) {
-        if (musicMediaItemMap == null) return
-        if (musicMediaItemMap!![music] == null) {
-            musicMediaItemMap!![music] = music.mediaItem
+abstract class MediaImpl(
+    id: Long,
+    title: String
+) : Media, Comparable<MediaImpl> {
+    override var id: Long = id
+        internal set
+    override var title: String = title
+        set(title) {
+            if (title.isNotBlank()) {
+                field = title
+            }
         }
-        musicMediaItemMapUpdate!!.value = true
-    }
 
-    fun removeMusic(music: Music) {
-        if (musicMediaItemMap == null) return
-        if (musicMediaItemMap!![music] == null) return
-        musicMediaItemMap!!.remove(music)
-        musicMediaItemMapUpdate!!.value = true
+    var artwork: Bitmap? = null
+        get(): Bitmap? = field?.copy(field!!.config, false)
+        set(artwork) {
+            field = artwork?.copy(artwork.config, false)
+        }
+
+    override val musicMediaItemMap: SortedMap<Music, MediaItem> = sortedMapOf()
+        get() = field.toSortedMap()
+
+    override val musicMediaItemMapUpdate: MutableState<Boolean> = mutableStateOf(false)
+
+    override fun compareTo(other: MediaImpl): Int {
+        return StringComparator.compare(o1 = this.title, o2 = other.title)
     }
 }

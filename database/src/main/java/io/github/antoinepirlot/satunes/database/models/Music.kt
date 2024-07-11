@@ -43,31 +43,35 @@ import io.github.antoinepirlot.satunes.icons.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.SortedMap
 
 /**
  * @author Antoine Pirlot on 27/03/2024
  */
 
 class Music(
-    override val id: Long,
-    override var title: String,
-    private var displayName: String,
+    id: Long,
+    title: String,
+    displayName: String,
     val absolutePath: String,
     val duration: Long = 0,
     val size: Int = 0,
     var folder: Folder,
-    var artist: Artist,
-    var album: Album,
-    var genre: Genre,
+    val artist: Artist,
+    val album: Album,
+    val genre: Genre,
     context: Context,
-) : Media {
-    override val liked: MutableState<Boolean> = mutableStateOf(false)
+) : MediaImpl(id = id, title = title) {
+    private var displayName: String = displayName
+        set(displayName) {
+            if (displayName.isNotBlank()) {
+                field = displayName
+            }
+        }
+    var liked: MutableState<Boolean> = mutableStateOf(false)
+        private set
     var uri: Uri = Uri.parse(encode(absolutePath)) // Must be init before media item
+        private set
     val mediaItem: MediaItem = getMediaMetadata()
-    override var artwork: Bitmap? = null
-    override val musicMediaItemMapUpdate: MutableState<Boolean>? = null // Not used
-    override val musicMediaItemMap: SortedMap<Music, MediaItem>? = null // Not used
 
     init {
         DataManager.addMusic(music = this)
@@ -78,8 +82,8 @@ class Music(
         loadAlbumArtwork(context = context)
     }
 
-    override fun switchLike(context: Context) {
-        super.switchLike(context)
+    fun switchLike(context: Context) {
+        this.liked.value = !this.liked.value
         val db = DatabaseManager(context = context)
         if (this.liked.value) {
             db.like(context = context, music = this)
@@ -147,12 +151,10 @@ class Music(
 
         other as Music
 
-        return id == other.id
+        return this.id == other.id
     }
 
     override fun hashCode(): Int {
-        return id.hashCode()
+        return this.id.hashCode()
     }
-
-
 }

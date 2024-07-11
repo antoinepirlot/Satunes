@@ -25,9 +25,6 @@
 
 package io.github.antoinepirlot.satunes.database.models
 
-import android.graphics.Bitmap
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import androidx.media3.common.MediaItem
 import io.github.antoinepirlot.satunes.database.services.DataManager
 import java.util.SortedMap
@@ -36,19 +33,18 @@ import java.util.SortedMap
  * @author Antoine Pirlot on 27/03/2024
  */
 
-data class Folder(
-    override var id: Long = nextId,
-    override var title: String,
+class Folder(
+    title: String,
     var parentFolder: Folder? = null,
-) : Media {
-    override val liked: MutableState<Boolean>? = null // Not used
-    override var artwork: Bitmap? = null
-
-    override val musicMediaItemMapUpdate: MutableState<Boolean> = mutableStateOf(false)
-    override val musicMediaItemMap: SortedMap<Music, MediaItem> = sortedMapOf()
-
+) : MediaImpl(id = nextId, title = title) {
     val subFolderMap: SortedMap<String, Folder> = sortedMapOf()
-
+        get(): SortedMap<String, Folder> {
+            return if (!this::class.java.name.startsWith(Folder::javaClass.name)) {
+                field.toSortedMap()
+            } else {
+                field
+            }
+        }
 
     val absolutePath: String = if (parentFolder == null) {
         "/$title"
@@ -78,14 +74,9 @@ data class Folder(
      *
      * @return a list of subfolder and each subfolder is cast to Media object
      */
-    fun getSubFolderMapAsMedia(): SortedMap<Long, Media> {
+    fun getSubFolderMapAsMedia(): SortedMap<Long, MediaImpl> {
         @Suppress("UNCHECKED_CAST")
-        return this.subFolderMap as SortedMap<Long, Media>
-    }
-
-    fun addMusic(music: Music) {
-        music.folder = this
-        this.musicMediaItemMap[music] = music.mediaItem
+        return this.subFolderMap as SortedMap<Long, MediaImpl>
     }
 
     /**
@@ -151,7 +142,6 @@ data class Folder(
 
         return musicMediaSortedMap
     }
-
 
 
     override fun toString(): String {

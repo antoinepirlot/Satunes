@@ -34,9 +34,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import io.github.antoinepirlot.satunes.database.models.Media
-import io.github.antoinepirlot.satunes.database.models.database.relations.PlaylistWithMusics
-import io.github.antoinepirlot.satunes.database.models.database.tables.MusicDB
+import io.github.antoinepirlot.satunes.database.models.MediaImpl
+import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 
 /**
@@ -48,14 +47,14 @@ internal fun MediaCardList(
     modifier: Modifier = Modifier,
     navController: NavHostController,
     header: @Composable (() -> Unit)? = null,
-    mediaList: List<Media>,
-    openMedia: (media: Media) -> Unit,
-    openedPlaylistWithMusics: PlaylistWithMusics? = null,
+    mediaImplList: List<MediaImpl>,
+    openMedia: (mediaImpl: MediaImpl) -> Unit,
+    openedPlaylist: Playlist? = null,
     scrollToMusicPlaying: Boolean = false,
 ) {
     val lazyListState = rememberLazyListState()
 
-    if (mediaList.isEmpty()) {
+    if (mediaImplList.isEmpty()) {
         // It fixes issue while accessing last folder in chain
         return
     }
@@ -65,16 +64,10 @@ internal fun MediaCardList(
         state = lazyListState
     ) {
         items(
-            items = mediaList,
-            key = {
-                when (it) {
-                    is PlaylistWithMusics -> it.javaClass.name + '-' + it.playlistDB.id
-                    is MusicDB -> it.javaClass.name + '-' + it.music!!.id
-                    else -> it.javaClass.name + '-' + it.id
-                }
-            }
-        ) { media: Media ->
-            if (media == mediaList.first()) {
+            items = mediaImplList,
+            key = { it.javaClass.name + '-' + it.id }
+        ) { media: MediaImpl ->
+            if (media == mediaImplList.first()) {
                 if (header != null) {
                     header()
                 }
@@ -84,7 +77,7 @@ internal fun MediaCardList(
                 navController = navController,
                 media = media,
                 onClick = { openMedia(media) },
-                openedPlaylistWithMusics = openedPlaylistWithMusics,
+                openedPlaylist = openedPlaylist,
             )
         }
     }
@@ -105,9 +98,9 @@ private fun CardListPreview() {
     MediaCardList(
         navController = navController,
         header = {},
-        mediaList = listOf(),
+        mediaImplList = listOf(),
         openMedia = {},
-        openedPlaylistWithMusics = null,
+        openedPlaylist = null,
         scrollToMusicPlaying = false
     )
 }

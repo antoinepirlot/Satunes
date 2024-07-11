@@ -40,9 +40,9 @@ import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.Genre
-import io.github.antoinepirlot.satunes.database.models.Media
+import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.database.models.database.relations.PlaylistWithMusics
+import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.ui.components.EmptyView
 import io.github.antoinepirlot.satunes.ui.components.bars.ShowCurrentMusicButton
@@ -56,9 +56,9 @@ import io.github.antoinepirlot.satunes.ui.components.cards.media.MediaCardList
 internal fun MediaListView(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    mediaList: List<Media>,
-    openMedia: (media: Media) -> Unit,
-    openedPlaylistWithMusics: PlaylistWithMusics? = null,
+    mediaImplList: List<MediaImpl>,
+    openMedia: (mediaImpl: MediaImpl) -> Unit,
+    openedPlaylistWithMusics: Playlist? = null,
     onFABClick: () -> Unit,
     header: @Composable () -> Unit = {},
     extraButtons: @Composable () -> Unit = { /*By default there's no extra buttons*/ },
@@ -78,14 +78,14 @@ internal fun MediaListView(
         },
         floatingActionButtonPosition = FabPosition.End
     ) { innerPadding ->
-        if (mediaList.isNotEmpty()) {
+        if (mediaImplList.isNotEmpty()) {
             MediaCardList(
                 modifier = Modifier.padding(innerPadding),
                 navController = navController,
                 header = header,
-                mediaList = mediaList,
+                mediaImplList = mediaImplList,
                 openMedia = openMedia,
-                openedPlaylistWithMusics = openedPlaylistWithMusics
+                openedPlaylist = openedPlaylistWithMusics
             )
         } else {
             EmptyView(
@@ -117,7 +117,7 @@ private fun MediaListViewPreview() {
     val navController: NavHostController = rememberNavController()
     MediaListView(
         navController = navController,
-        mediaList = map,
+        mediaImplList = map,
         openMedia = {},
         onFABClick = {},
         openedPlaylistWithMusics = null,

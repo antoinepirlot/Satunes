@@ -25,17 +25,18 @@
 
 package io.github.antoinepirlot.satunes.database.models.database.tables
 
-import android.graphics.Bitmap
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import androidx.media3.common.MediaItem
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import io.github.antoinepirlot.satunes.database.exceptions.PlaylistNotFoundException
 import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.database.models.Playlist
+import io.github.antoinepirlot.satunes.database.services.DataManager
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import java.util.SortedMap
@@ -46,12 +47,14 @@ import java.util.SortedMap
 
 @Serializable
 @Entity(tableName = "playlists", indices = [Index(value = ["title"], unique = true)])
-data class PlaylistDB(
+internal data class PlaylistDB(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "playlist_id") override var id: Long,
     @ColumnInfo(name = "title") override var title: String,
-
 ) : Media {
+    @Ignore
+    @Transient
+    override val musicMediaItemMap: SortedMap<Music, MediaItem>? = null // Not used
 
     @Ignore
     @Transient
@@ -59,15 +62,13 @@ data class PlaylistDB(
 
     @Ignore
     @Transient
-    override val musicMediaItemMap: SortedMap<Music, MediaItem>? = null // Not used
+    var playlist: Playlist? = try {
+        DataManager.getPlaylist(id = this.id)
+    } catch (_: PlaylistNotFoundException) {
+        // Happens when importing playlistDB
+        null
+    }
 
-    @Ignore
-    @Transient
-    override val liked: MutableState<Boolean> = mutableStateOf(false)
-
-    @Ignore
-    @Transient
-    override var artwork: Bitmap? = null
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

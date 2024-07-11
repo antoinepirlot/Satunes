@@ -70,14 +70,14 @@ internal fun GenreOptionsDialog(
                 /**
                  * PlaylistDB
                  */
-                AddToPlaylistMediaOption(media = genre, onFinished = onDismissRequest)
+                AddToPlaylistMediaOption(mediaImpl = genre, onFinished = onDismissRequest)
 
                 /**
                  * Playback
                  */
                 if (isPlaybackLoaded) {
-                    PlayNextMediaOption(media = genre, onFinished = onDismissRequest)
-                    AddToQueueDialogOption(media = genre, onFinished = onDismissRequest)
+                    PlayNextMediaOption(mediaImpl = genre, onFinished = onDismissRequest)
+                    AddToQueueDialogOption(mediaImpl = genre, onFinished = onDismissRequest)
                 }
             }
         }

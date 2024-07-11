@@ -23,9 +23,27 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.database.exceptions
+package io.github.antoinepirlot.satunes.database.models
+
+import io.github.antoinepirlot.satunes.database.models.database.tables.PlaylistDB
 
 /**
- * @author Antoine Pirlot on 13/04/2024
+ * @author Antoine Pirlot on 11/07/2024
  */
-internal class MusicNotFoundException(id: Long) : MediaNotFoundException(id = id)
+class Playlist(
+    id: Long, // Managed by Database
+    title: String
+) : MediaImpl(id = id, title = title) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as PlaylistDB
+
+        return title.lowercase() == other.title.lowercase()
+    }
+
+    override fun hashCode(): Int {
+        return title.lowercase().hashCode()
+    }
+}

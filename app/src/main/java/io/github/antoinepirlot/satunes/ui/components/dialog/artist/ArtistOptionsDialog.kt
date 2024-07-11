@@ -70,14 +70,14 @@ internal fun ArtistOptionsDialog(
                 /**
                  * PlaylistDB
                  */
-                AddToPlaylistMediaOption(media = artist, onFinished = onDismissRequest)
+                AddToPlaylistMediaOption(mediaImpl = artist, onFinished = onDismissRequest)
 
                 /**
                  * Playback
                  */
                 if (isPlaybackLoaded) {
-                    PlayNextMediaOption(media = artist, onFinished = onDismissRequest)
-                    AddToQueueDialogOption(media = artist, onFinished = onDismissRequest)
+                    PlayNextMediaOption(mediaImpl = artist, onFinished = onDismissRequest)
+                    AddToQueueDialogOption(mediaImpl = artist, onFinished = onDismissRequest)
                 }
             }
         }

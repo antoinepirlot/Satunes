@@ -65,8 +65,11 @@ internal interface PlaylistDAO {
     fun insertOne(playlistDB: PlaylistDB): Long
 
     @Update
-    fun update(vararg playlistDBS: PlaylistDB)
+    fun update(vararg playlistDBs: PlaylistDB)
 
     @Delete
     fun remove(playlistDB: PlaylistDB)
+
+    @Query("DELETE FROM playlists WHERE playlist_id = :id")
+    fun remove(id: Long)
 }

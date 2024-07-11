@@ -75,14 +75,14 @@ internal fun FolderOptionsDialog(
                  * PlaylistDB
                  */
 
-                AddToPlaylistMediaOption(media = folder, onFinished = onDismissRequest)
+                AddToPlaylistMediaOption(mediaImpl = folder, onFinished = onDismissRequest)
 
                 /**
                  * Playback
                  */
                 if (isPlaybackLoaded) {
-                    PlayNextMediaOption(media = folder, onFinished = onDismissRequest)
-                    AddToQueueDialogOption(media = folder, onFinished = onDismissRequest)
+                    PlayNextMediaOption(mediaImpl = folder, onFinished = onDismissRequest)
+                    AddToQueueDialogOption(mediaImpl = folder, onFinished = onDismissRequest)
                 }
             }
         }

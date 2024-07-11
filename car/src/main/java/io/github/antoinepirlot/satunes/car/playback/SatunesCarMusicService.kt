@@ -38,7 +38,7 @@ import io.github.antoinepirlot.satunes.car.R
 import io.github.antoinepirlot.satunes.car.pages.ScreenPages
 import io.github.antoinepirlot.satunes.car.pages.pages
 import io.github.antoinepirlot.satunes.car.utils.buildMediaItem
-import io.github.antoinepirlot.satunes.database.models.Media
+import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.DataLoader
 import io.github.antoinepirlot.satunes.database.services.DataManager
@@ -63,11 +63,11 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
         }
 
         /**
-         * Add the media to the queue by creating a media item.
+         * Add the mediaImpl to the queue by creating a mediaImpl item.
          *
-         * @return the newly created media item.
+         * @return the newly created mediaImpl item.
          */
-        internal fun addToQueue(media: Media): MediaItem {
+        internal fun addToQueue(media: MediaImpl): MediaItem {
             val mediaItem: MediaItem = buildMediaItem(media = media)
             if (media is Music) {
                 val queueItem = QueueItem(mediaItem.description, media.id)
@@ -168,7 +168,7 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
             ScreenPages.ALL_PLAYLISTS.id -> {
                 routeDeque.resetRouteDeque()
                 routeDeque.addLast(parentId)
-                children.addAll(getAllMediaItem(mediaList = DataManager.playlistWithMusicsMap.values))
+                children.addAll(getAllMediaItem(mediaList = DataManager.playlistsMap.values))
             }
 
             else -> {
@@ -222,15 +222,15 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
      *
      * @return a mutable list of MediaItem
      */
-    private fun getAllMediaItem(mediaList: Collection<Media>): MutableList<MediaItem> {
+    private fun getAllMediaItem(mediaList: Collection<MediaImpl>): MutableList<MediaItem> {
         val mediaItemList: MutableList<MediaItem> = mutableListOf()
         loadedQueueItemList.clear()
         if (mediaList.isEmpty()) {
             return mediaItemList
         }
         mediaItemList.add(getShuffleButton())
-        for (media: Media in mediaList) {
-            if (media !is Music && (media.musicMediaItemMap == null || media.musicMediaItemMap!!.isEmpty())) {
+        for (media: MediaImpl in mediaList) {
+            if (media !is Music && (media.musicMediaItemMap.isEmpty())) {
                 continue
             }
             val mediaItem: MediaItem = addToQueue(media = media)
@@ -253,19 +253,19 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
             throw IllegalStateException("An error occurred in the route processing")
         }
 
-        val media: Media? = when (oneBeforeLastRoute) {
+        val mediaImpl: MediaImpl? = when (oneBeforeLastRoute) {
             ScreenPages.ALL_FOLDERS.id -> DataManager.getFolder(folderId = mediaId)
             ScreenPages.ALL_ARTISTS.id -> DataManager.getArtist(artistId = mediaId)
             ScreenPages.ALL_ALBUMS.id -> DataManager.getAlbum(albumId = mediaId)
             ScreenPages.ALL_GENRES.id -> DataManager.getGenre(genreId = mediaId)
-            ScreenPages.ALL_PLAYLISTS.id -> DataManager.getPlaylist(playlistId = mediaId)
+            ScreenPages.ALL_PLAYLISTS.id -> DataManager.getPlaylist(id = mediaId)
             else -> null
         }
 
         val listToReturn: MutableList<MediaItem> = mutableListOf()
         listToReturn.addAll(
             this.getAllMediaItem(
-                mediaList = media?.musicMediaItemMap?.keys?.toList() ?: mutableListOf()
+                mediaList = mediaImpl?.musicMediaItemMap?.keys?.toList() ?: mutableListOf()
             )
         )
         return listToReturn

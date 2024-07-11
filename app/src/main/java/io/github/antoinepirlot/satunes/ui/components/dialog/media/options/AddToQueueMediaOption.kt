@@ -31,7 +31,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Album
-import io.github.antoinepirlot.satunes.database.models.Media
+import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.ui.components.dialog.options.DialogOption
@@ -43,13 +43,13 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.options.DialogOption
 @Composable
 internal fun AddToQueueDialogOption(
     modifier: Modifier = Modifier,
-    media: Media,
+    mediaImpl: MediaImpl,
     onFinished: () -> Unit,
 ) {
     DialogOption(
         modifier = modifier,
         onClick = {
-            PlaybackController.getInstance().addToQueue(media = media)
+            PlaybackController.getInstance().addToQueue(mediaImpl = mediaImpl)
             onFinished()
         },
         icon = SatunesIcons.ADD_TO_PLAYBACK_QUEUE,
@@ -60,5 +60,5 @@ internal fun AddToQueueDialogOption(
 @Preview
 @Composable
 private fun AddToQueueDialogOptionPreview() {
-    AddToQueueDialogOption(media = Album(title = "Album"), onFinished = {})
+    AddToQueueDialogOption(mediaImpl = Album(title = "Album"), onFinished = {})
 }

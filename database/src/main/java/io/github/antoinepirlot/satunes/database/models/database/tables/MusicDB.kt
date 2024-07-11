@@ -25,7 +25,6 @@
 
 package io.github.antoinepirlot.satunes.database.models.database.tables
 
-import android.graphics.Bitmap
 import androidx.compose.runtime.MutableState
 import androidx.media3.common.MediaItem
 import androidx.room.ColumnInfo
@@ -46,33 +45,23 @@ import java.util.SortedMap
 
 @Serializable
 @Entity("musics")
-data class MusicDB(
+internal data class MusicDB(
     @PrimaryKey
     @ColumnInfo("music_id") override val id: Long,
-
 ) : Media {
-    @ColumnInfo("liked")
-    var likedColumn: Boolean = false
+    @Ignore
+    @Transient
+    override lateinit var title: String
+
+    var liked: Boolean = false
 
     @Ignore
     @Transient
-    override val musicMediaItemMapUpdate: MutableState<Boolean>? = null // Not used
+    override val musicMediaItemMap: SortedMap<Music, MediaItem>? = null
 
     @Ignore
     @Transient
-    override val musicMediaItemMap: SortedMap<Music, MediaItem>? = null // Not used
-
-    @Ignore
-    @Transient
-    override val liked: MutableState<Boolean>? = null
-
-    @Ignore
-    @Transient
-    override var artwork: Bitmap? = null
-
-    @Ignore
-    @Transient
-    override val title: String = "Title is not used for MusicDB class." // Not used
+    override val musicMediaItemMapUpdate: MutableState<Boolean>? = null
 
     @Ignore
     @Transient
@@ -81,9 +70,5 @@ data class MusicDB(
     } catch (_: MusicNotFoundException) {
         // Happens when importing playlistDB
         null
-    }
-
-    init {
-        println()
     }
 }

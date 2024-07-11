@@ -35,7 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.database.models.database.relations.PlaylistWithMusics
+import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.database.services.DatabaseManager
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.dialog.RemoveConfirmationDialog
@@ -48,7 +48,7 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.options.DialogOption
 @Composable
 internal fun RemovePlaylistOption(
     modifier: Modifier = Modifier,
-    playlistToRemove: PlaylistWithMusics,
+    playlistToRemove: Playlist,
     onDismissRequest: () -> Unit,
 ) {
     val context: Context = LocalContext.current
@@ -66,7 +66,7 @@ internal fun RemovePlaylistOption(
             onDismissRequest = { showRemoveConfirmation = false },
             onRemoveRequest = {
                 val db = DatabaseManager(context = context)
-                db.removePlaylist(playlistToRemove = playlistToRemove)
+                db.removePlaylist(playlist = playlistToRemove)
                 onDismissRequest()
             }
         )

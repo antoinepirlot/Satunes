@@ -47,7 +47,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Album
-import io.github.antoinepirlot.satunes.database.models.Media
+import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
@@ -86,13 +86,13 @@ internal fun AlbumView(
     MediaListView(
         modifier = modifier,
         navController = navController,
-        mediaList = musicMap.keys.toList(),
-        openMedia = { clickedMedia: Media ->
+        mediaImplList = musicMap.keys.toList(),
+        openMedia = { clickedMediaImpl: MediaImpl ->
             playbackController.loadMusic(
                 musicMediaItemSortedMap = album.musicMediaItemMap,
-                musicToPlay = clickedMedia as Music
+                musicToPlay = clickedMediaImpl as Music
             )
-            openMedia(media = clickedMedia, navController = navController)
+            openMedia(mediaImpl = clickedMediaImpl, navController = navController)
         },
         onFABClick = { openCurrentMusic(navController = navController) },
         header = {
@@ -134,7 +134,7 @@ private fun Header(
             modifier = Modifier
                 .fillMaxWidth()
                 .size(albumSize),
-            media = album
+            mediaImpl = album
         )
         Title(
             bottomPadding = 0.dp,
@@ -144,7 +144,7 @@ private fun Header(
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .clickable {
-                    openMedia(media = album.artist, navController = navController)
+                    openMedia(mediaImpl = album.artist, navController = navController)
                 },
             text = album.artist!!.title
         )
@@ -158,10 +158,8 @@ private fun AlbumViewPreview() {
     AlbumView(
         navController = navController,
         album = Album(
-            id = 0,
             title = "Album title",
             artist = null,
-            musicMediaItemMap = sortedMapOf()
         )
     )
 }

@@ -41,7 +41,7 @@ import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.database.models.database.relations.PlaylistWithMusics
+import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.database.services.DataManager
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import kotlinx.coroutines.CoroutineScope
@@ -185,8 +185,8 @@ internal object SatunesCarCallBack : MediaSessionCompat.Callback() {
                 }
 
                 ScreenPages.ALL_PLAYLISTS.id -> {
-                    val playlistWithMusics: PlaylistWithMusics = DataManager.getPlaylist(mediaId)
-                    playlistWithMusics.musicMediaItemMap
+                    val playlist: Playlist = DataManager.getPlaylist(mediaId)
+                    playlist.musicMediaItemMap
                 }
 
                 else -> {

@@ -25,7 +25,6 @@
 
 package io.github.antoinepirlot.satunes.database.models.database.relations
 
-import android.graphics.Bitmap
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.media3.common.MediaItem
@@ -46,8 +45,10 @@ import java.util.SortedMap
  * @author Antoine Pirlot on 27/03/2024
  */
 
+// TODO choose which one to use
+
 @Serializable
-data class PlaylistWithMusics(
+internal data class PlaylistWithMusics(
     @Embedded val playlistDB: PlaylistDB,
     @Relation(
         parentColumn = "playlist_id",
@@ -58,23 +59,15 @@ data class PlaylistWithMusics(
 ) : Media {
     @Ignore
     @Transient
-    override val liked: MutableState<Boolean>? = null // Not used
-
-    @Ignore
-    @Transient
-    override var artwork: Bitmap? = null
-
-    @Ignore
-    @Transient
-    override var id: Long = playlistDB.id // Not used
-
-    @Ignore
-    @Transient
-    override val title: String = "Title is not used for PlaylistWithMusics class." // Not used
+    override lateinit var title: String // Not used
 
     @Ignore
     @Transient
     override val musicMediaItemMap: SortedMap<Music, MediaItem> = sortedMapOf()
+
+    @Ignore
+    @Transient
+    override var id: Long = playlistDB.id
 
     @Ignore
     @Transient
@@ -89,7 +82,7 @@ data class PlaylistWithMusics(
         }
     }
 
-    fun addMusic(music: Music) {
+    override fun addMusic(music: Music) {
         val musicDb = MusicDB(id = music.id)
         if (musicDb.music != null) {
             musics.add(musicDb)
@@ -100,7 +93,7 @@ data class PlaylistWithMusics(
         }
     }
 
-    fun removeMusic(music: Music) {
+    override fun removeMusic(music: Music) {
         musics.remove(MusicDB(id = music.id))
         if (musicMediaItemMap.contains(music)) {
             musicMediaItemMap.remove(music)

@@ -53,9 +53,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
-import io.github.antoinepirlot.satunes.database.models.Media
+import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.database.models.database.relations.PlaylistWithMusics
+import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.database.services.DataManager
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
@@ -82,7 +82,7 @@ internal fun SearchView(
 ) {
     val context: Context = LocalContext.current
     var query: String by rememberSaveable { mutableStateOf("") }
-    val mediaList: MutableList<Media> = remember { SnapshotStateList() }
+    val mediaImplList: MutableList<MediaImpl> = remember { SnapshotStateList() }
     val selectedSearchChips: List<SearchChips> = remember { SearchChipsManager.selectedSearchChips }
 
     val searchCoroutine: CoroutineScope = rememberCoroutineScope()
@@ -92,7 +92,7 @@ internal fun SearchView(
             searchJob!!.cancel()
         }
         searchJob = searchCoroutine.launch {
-            search(context = context, mediaList = mediaList, query = query)
+            search(context = context, mediaImplList = mediaImplList, query = query)
         }
     }
 
@@ -128,13 +128,13 @@ internal fun SearchView(
         MediaChipList()
         MediaListView(
             navController = navController,
-            mediaList = mediaList,
-            openMedia = { media: Media ->
-                if (media is Music) {
+            mediaImplList = mediaImplList,
+            openMedia = { mediaImpl: MediaImpl ->
+                if (mediaImpl is Music) {
                     PlaybackController.getInstance()
                         .loadMusic(musicMediaItemSortedMap = DataManager.musicMediaItemMap)
                 }
-                openMedia(media = media, navController = navController)
+                openMedia(mediaImpl = mediaImpl, navController = navController)
             },
             onFABClick = { openCurrentMusic(navController = navController) },
             emptyViewText = stringResource(id = R.string.no_result)
@@ -142,8 +142,8 @@ internal fun SearchView(
     }
 }
 
-private fun search(context: Context, mediaList: MutableList<Media>, query: String) {
-    mediaList.clear()
+private fun search(context: Context, mediaImplList: MutableList<MediaImpl>, query: String) {
+    mediaImplList.clear()
     if (query.isBlank()) {
         // Prevent loop if string is "" or " "
         return
@@ -157,40 +157,40 @@ private fun search(context: Context, mediaList: MutableList<Media>, query: Strin
             when (searchChip) {
                 SearchChips.MUSICS -> {
                     if (music.title.lowercase().contains(query)) {
-                        if (!mediaList.contains(music)) {
-                            mediaList.add(element = music)
+                        if (!mediaImplList.contains(music)) {
+                            mediaImplList.add(element = music)
                         }
                     }
                 }
 
                 SearchChips.ARTISTS -> {
                     if (music.artist.title.lowercase().contains(query)) {
-                        if (!mediaList.contains(music.artist)) {
-                            mediaList.add(element = music.artist)
+                        if (!mediaImplList.contains(music.artist)) {
+                            mediaImplList.add(element = music.artist)
                         }
                     }
                 }
 
                 SearchChips.ALBUMS -> {
                     if (music.album.title.lowercase().contains(query)) {
-                        if (!mediaList.contains(music.album)) {
-                            mediaList.add(element = music.album)
+                        if (!mediaImplList.contains(music.album)) {
+                            mediaImplList.add(element = music.album)
                         }
                     }
                 }
 
                 SearchChips.GENRES -> {
                     if (music.genre.title.lowercase().contains(query)) {
-                        if (!mediaList.contains(music.genre)) {
-                            mediaList.add(element = music.genre)
+                        if (!mediaImplList.contains(music.genre)) {
+                            mediaImplList.add(element = music.genre)
                         }
                     }
                 }
 
                 SearchChips.FOLDERS -> {
                     if (music.folder.title.lowercase().contains(query)) {
-                        if (!mediaList.contains(music.folder)) {
-                            mediaList.add(element = music.folder)
+                        if (!mediaImplList.contains(music.folder)) {
+                            mediaImplList.add(element = music.folder)
                         }
                     }
                 }
@@ -200,7 +200,7 @@ private fun search(context: Context, mediaList: MutableList<Media>, query: Strin
             }
         }
         if (searchChip == SearchChips.PLAYLISTS) {
-            DataManager.playlistWithMusicsMap.forEach { (playlistTitle: String, playlistWithMusics: PlaylistWithMusics) ->
+            DataManager.playlistsMap.forEach { (playlistTitle: String, playlist: Playlist) ->
                 @Suppress("NAME_SHADOWING")
                 var playlistTitle: String = playlistTitle
 
@@ -208,12 +208,12 @@ private fun search(context: Context, mediaList: MutableList<Media>, query: Strin
                     playlistTitle = context.getString(RDb.string.likes_playlist_title)
                 }
                 if (playlistTitle.lowercase().contains(query)) {
-                    mediaList.add(element = playlistWithMusics)
+                    mediaImplList.add(element = playlist)
                 }
             }
         }
     }
-    mediaList.sort()
+    mediaImplList.sort()
 }
 
 @Preview

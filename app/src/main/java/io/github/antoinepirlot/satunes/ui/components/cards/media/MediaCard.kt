@@ -62,10 +62,9 @@ import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.Genre
-import io.github.antoinepirlot.satunes.database.models.Media
+import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.database.models.database.relations.PlaylistWithMusics
-import io.github.antoinepirlot.satunes.database.models.database.tables.MusicDB
+import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.icons.R
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
@@ -91,9 +90,9 @@ import io.github.antoinepirlot.satunes.database.R as RDb
 internal fun MediaCard(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    media: Media,
+    media: MediaImpl,
     onClick: () -> Unit,
-    openedPlaylistWithMusics: PlaylistWithMusics?,
+    openedPlaylist: Playlist?,
 ) {
     val haptics = LocalHapticFeedback.current
     var showMusicOptions: Boolean by rememberSaveable { mutableStateOf(false) }
@@ -106,14 +105,8 @@ internal fun MediaCard(
     val title: String =
         if (media is Folder && media.parentFolder == null) {
             getRootFolderName(title = media.title)
-        } else if (media is PlaylistWithMusics) {
-            if (media.playlistDB.title == LIKES_PLAYLIST_TITLE) {
-                stringResource(id = RDb.string.likes_playlist_title)
-            } else {
-                media.playlistDB.title
-            }
-        } else if (media is MusicDB) {
-            media.music!!.title
+        } else if (media is Playlist && media.title == LIKES_PLAYLIST_TITLE) {
+            stringResource(id = RDb.string.likes_playlist_title)
         } else {
             media.title
         }
@@ -130,7 +123,7 @@ internal fun MediaCard(
                 haptics.performHapticFeedback(HapticFeedbackType.LongPress)
                 when (media) {
                     is Music -> showMusicOptions = true
-                    is PlaylistWithMusics -> showPlaylistOptions = true
+                    is Playlist -> showPlaylistOptions = true
                     is Artist -> showArtistOptions = true
                     is Album -> showAlbumOptions = true
                     is Genre -> showGenreOptions = true
@@ -212,15 +205,15 @@ internal fun MediaCard(
         MusicOptionsDialog(
             navController = navController,
             music = media,
-            playlistWithMusics = openedPlaylistWithMusics,
+            playlist = openedPlaylist,
             onDismissRequest = { showMusicOptions = false },
         )
     }
 
     // PlaylistDB option dialog
-    if (showPlaylistOptions && media is PlaylistWithMusics) {
+    if (showPlaylistOptions && media is Playlist) {
         PlaylistOptionsDialog(
-            playlistWithMusics = media,
+            playlist = media,
             onDismissRequest = { showPlaylistOptions = false }
         )
     }
@@ -259,14 +252,14 @@ internal fun MediaCard(
     }
 }
 
-private fun getRightIconAndDescription(media: Media): SatunesIcons {
+private fun getRightIconAndDescription(media: MediaImpl): SatunesIcons {
     return when (media) {
         is Folder -> SatunesIcons.FOLDER
         is Artist -> SatunesIcons.ARTIST
         is Album -> SatunesIcons.ALBUM
         is Genre -> SatunesIcons.GENRES
-        is PlaylistWithMusics -> SatunesIcons.PLAYLIST
-        else -> SatunesIcons.MUSIC // In that case, media is Music
+        is Playlist -> SatunesIcons.PLAYLIST
+        else -> SatunesIcons.MUSIC // In that case, mediaImpl is Music
     }
 }
 
@@ -292,6 +285,6 @@ private fun CardPreview() {
         navController = navController,
         media = music,
         onClick = {},
-        openedPlaylistWithMusics = null
+        openedPlaylist = null
     )
 }

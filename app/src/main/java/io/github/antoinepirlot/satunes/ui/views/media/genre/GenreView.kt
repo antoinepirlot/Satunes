@@ -39,7 +39,7 @@ import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Genre
-import io.github.antoinepirlot.satunes.database.models.Media
+import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
@@ -74,13 +74,13 @@ internal fun GenreView(
     MediaListView(
         modifier = modifier,
         navController = navController,
-        mediaList = musicMap.keys.toList(),
-        openMedia = { clickedMedia: Media ->
+        mediaImplList = musicMap.keys.toList(),
+        openMedia = { clickedMediaImpl: MediaImpl ->
             playbackController.loadMusic(
                 musicMediaItemSortedMap = genre.musicMediaItemMap,
-                musicToPlay = clickedMedia as Music
+                musicToPlay = clickedMediaImpl as Music
             )
-            openMedia(media = clickedMedia, navController = navController)
+            openMedia(mediaImpl = clickedMediaImpl, navController = navController)
         },
         onFABClick = { openCurrentMusic(navController = navController) },
         header = {
@@ -98,7 +98,7 @@ internal fun GenreView(
             }
             MediaWithAlbumsHeaderView(
                 navController = navController,
-                media = genre,
+                mediaImpl = genre,
                 albumList = albumSet.toList()
             )
         },
@@ -125,6 +125,6 @@ internal fun GenreView(
 @Composable
 private fun GenreViewPreview() {
     val navController: NavHostController = rememberNavController()
-    GenreView(navController = navController, genre = Genre(id = 0, "Genre"))
+    GenreView(navController = navController, genre = Genre("Genre"))
 }
 

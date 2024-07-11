@@ -31,7 +31,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.media3.common.MediaItem
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Folder
-import io.github.antoinepirlot.satunes.database.models.Media
+import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.MenuTitle
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.icons.SatunesIcons.ALBUM
@@ -50,15 +50,15 @@ import java.util.SortedMap
 /**
  * Start the music
  *
- * @param mediaToPlay the music to play from the music list
+ * @param mediaImplToPlay the music to play from the music list
  */
 
-internal fun startMusic(mediaToPlay: Media? = null) {
+internal fun startMusic(mediaImplToPlay: MediaImpl? = null) {
     val playbackController = PlaybackController.getInstance()
 
-    when (mediaToPlay) {
+    when (mediaImplToPlay) {
         is Music -> {
-            playbackController.start(mediaToPlay)
+            playbackController.start(mediaImplToPlay)
         }
 
         is Folder -> {

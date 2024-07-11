@@ -30,7 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.database.models.database.relations.PlaylistWithMusics
+import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.dialog.options.DialogOption
 
@@ -41,14 +41,14 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.options.DialogOption
 @Composable
 internal fun ExportPlaylistOption(
     modifier: Modifier = Modifier,
-    playlistToExport: PlaylistWithMusics
+    playlistToExport: Playlist
 ) {
     DialogOption(
         modifier = modifier,
         onClick = {
             MainActivity.playlistsToExport = arrayOf(playlistToExport)
             MainActivity.instance.createFileToExportPlaylists(
-                defaultFileName = playlistToExport.playlistDB.title + ".json"
+                defaultFileName = playlistToExport.title + ".json"
             )
         },
         icon = SatunesIcons.EXPORT,

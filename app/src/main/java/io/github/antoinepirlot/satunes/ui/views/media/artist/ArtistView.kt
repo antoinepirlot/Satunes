@@ -39,7 +39,7 @@ import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
-import io.github.antoinepirlot.satunes.database.models.Media
+import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
@@ -72,13 +72,13 @@ internal fun ArtistView(
     MediaListView(
         modifier = modifier,
         navController = navController,
-        mediaList = musicMap.keys.toList(),
-        openMedia = { clickedMedia: Media ->
+        mediaImplList = musicMap.keys.toList(),
+        openMedia = { clickedMediaImpl: MediaImpl ->
             playbackController.loadMusic(
                 musicMediaItemSortedMap = artist.musicMediaItemMap,
-                musicToPlay = clickedMedia as Music
+                musicToPlay = clickedMediaImpl as Music
             )
-            openMedia(clickedMedia, navController = navController)
+            openMedia(clickedMediaImpl, navController = navController)
         },
         onFABClick = { openCurrentMusic(navController = navController) },
         header = {
@@ -92,7 +92,7 @@ internal fun ArtistView(
             //
 
             MediaWithAlbumsHeaderView(
-                media = artist,
+                mediaImpl = artist,
                 albumList = albumMap.values.toList(),
                 navController = navController
             )
@@ -122,6 +122,6 @@ private fun ArtistViewPreview() {
     val navController: NavHostController = rememberNavController()
     ArtistView(
         navController = navController,
-        artist = Artist(id = 0, title = "Artist title", albumSortedMap = sortedMapOf())
+        artist = Artist(title = "Artist title")
     )
 }

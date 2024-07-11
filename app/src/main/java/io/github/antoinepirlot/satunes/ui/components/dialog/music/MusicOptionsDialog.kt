@@ -35,7 +35,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.database.models.database.relations.PlaylistWithMusics
+import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToPlaylistMediaOption
@@ -56,7 +56,7 @@ internal fun MusicOptionsDialog(
     modifier: Modifier = Modifier,
     navController: NavHostController,
     music: Music,
-    playlistWithMusics: PlaylistWithMusics? = null,
+    playlist: Playlist? = null,
     onDismissRequest: () -> Unit,
 ) {
     AlertDialog(
@@ -75,12 +75,12 @@ internal fun MusicOptionsDialog(
                 val playbackController: PlaybackController = PlaybackController.getInstance()
                 val musicPlaying: Music? by remember { playbackController.musicPlaying }
                 LikeUnlikeMusicOption(music = music)
-                AddToPlaylistMediaOption(media = music, onFinished = onDismissRequest)
+                AddToPlaylistMediaOption(mediaImpl = music, onFinished = onDismissRequest)
 
-                if (playlistWithMusics != null) {
+                if (playlist != null) {
                     RemoveFromPlaylistMusicOption(
                         music = music,
-                        playlistWithMusics = playlistWithMusics,
+                        playlist = playlist,
                         onFinished = onDismissRequest
                     )
                 }
@@ -89,9 +89,9 @@ internal fun MusicOptionsDialog(
 
                 if (isPlaybackLoaded) {
                     if (music != musicPlaying) {
-                        PlayNextMediaOption(media = music, onFinished = onDismissRequest)
+                        PlayNextMediaOption(mediaImpl = music, onFinished = onDismissRequest)
                         if (!playbackController.isMusicInQueue(music = music)) {
-                            AddToQueueDialogOption(media = music, onFinished = onDismissRequest)
+                            AddToQueueDialogOption(mediaImpl = music, onFinished = onDismissRequest)
                         }
                     }
                 }
@@ -99,10 +99,10 @@ internal fun MusicOptionsDialog(
                 /**
                  * Redirections
                  */
-                NavigateToMediaMusicOption(navController = navController, media = music.album)
-                NavigateToMediaMusicOption(navController = navController, media = music.artist)
-                NavigateToMediaMusicOption(navController = navController, media = music.genre)
-                NavigateToMediaMusicOption(navController = navController, media = music.folder)
+                NavigateToMediaMusicOption(navController = navController, mediaImpl = music.album)
+                NavigateToMediaMusicOption(navController = navController, mediaImpl = music.artist)
+                NavigateToMediaMusicOption(navController = navController, mediaImpl = music.genre)
+                NavigateToMediaMusicOption(navController = navController, mediaImpl = music.folder)
             }
         },
         onDismissRequest = { onDismissRequest() },

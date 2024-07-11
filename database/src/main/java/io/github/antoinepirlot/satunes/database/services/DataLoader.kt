@@ -271,10 +271,7 @@ object DataLoader {
             throw IllegalArgumentException("Duration is less than 0")
         }
         val displayName: String = cursor.getString(musicNameColumn!!)
-        var title: String = cursor.getString(musicTitleColumn!!)
-        if (title.isBlank()) {
-            title = displayName
-        }
+        val title: String = cursor.getString(musicTitleColumn!!)
 
         return Music(
             id = id,

@@ -60,7 +60,7 @@ class Music(
     val album: Album,
     val genre: Genre,
     context: Context,
-) : MediaImpl(id = id, title = title) {
+) : MediaImpl(id = id, title = title.ifBlank { displayName }) {
     private var displayName: String = displayName
         set(displayName) {
             if (displayName.isNotBlank()) {

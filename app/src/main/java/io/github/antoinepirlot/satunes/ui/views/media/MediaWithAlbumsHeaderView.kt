@@ -23,7 +23,7 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.views
+package io.github.antoinepirlot.satunes.ui.views.media
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -58,7 +58,7 @@ internal fun MediaWithAlbumsHeaderView(
         Title(text = mediaImpl.title)
         AlbumGrid(
             mediaList = albumList,
-            onClick = { openMedia(mediaImpl = it, navController = navController) }
+            onClick = { openMedia(media = it, navController = navController) }
         )
         Spacer(modifier = Modifier.size(30.dp))
         Title(

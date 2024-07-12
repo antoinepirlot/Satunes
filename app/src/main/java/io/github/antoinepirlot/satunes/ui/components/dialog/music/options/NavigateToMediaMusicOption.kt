@@ -51,7 +51,7 @@ internal fun NavigateToMediaMusicOption(
 ) {
     DialogOption(
         modifier = modifier,
-        onClick = { openMedia(mediaImpl = mediaImpl, navController = navController) },
+        onClick = { openMedia(media = mediaImpl, navController = navController) },
         icon = when (mediaImpl) {
                 is Album -> SatunesIcons.ALBUM
                 is Artist -> SatunesIcons.ARTIST

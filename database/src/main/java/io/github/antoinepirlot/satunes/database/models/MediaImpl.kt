@@ -50,7 +50,14 @@ abstract class MediaImpl(
     var artwork: Bitmap? = null
         get(): Bitmap? = field?.copy(field!!.config, false)
         set(artwork) {
+            //TODO ask the user to show music's album or album's artwork for all music
+            // It could cause visual issues as a music has not the same artwork and the user won't know it
             field = artwork?.copy(artwork.config, false)
+//            if (this is Album) {
+//                this.musicMediaItemMap.keys.forEach { music: Music ->
+//                    music.artwork = field
+//                }
+//            }
         }
 
     val musicMediaItemMap: SortedMap<Music, MediaItem> = sortedMapOf()

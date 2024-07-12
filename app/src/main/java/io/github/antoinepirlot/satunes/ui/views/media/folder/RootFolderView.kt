@@ -26,10 +26,6 @@
 package io.github.antoinepirlot.satunes.ui.views.media.folder
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -62,14 +58,7 @@ internal fun RootFolderView(
 ) {
     val playbackController: PlaybackController = PlaybackController.getInstance()
 
-    val rootFolderSet: SortedSet<Folder> = remember { DataManager.rootFolderSet }
-
-    //Recompose if data changed
-    var mapChanged: Boolean by rememberSaveable { DataManager.rootFolderMapUpdated }
-    if (mapChanged) {
-        mapChanged = false
-    }
-    //
+    val rootFolderSet: SortedSet<Folder> = DataManager.rootFolderSet
 
     MediaListView(
         modifier = modifier,

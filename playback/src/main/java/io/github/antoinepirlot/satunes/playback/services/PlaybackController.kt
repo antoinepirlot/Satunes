@@ -50,6 +50,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.SortedMap
+import java.util.SortedSet
 
 /**
  * @author Antoine Pirlot on 31/01/24
@@ -274,21 +275,68 @@ class PlaybackController private constructor(
     }
 
     /**
+     * Add all music from medias to the mediaController in the same order.
+     * If the shuffle mode is true then shuffle the playlist
+     *
+     * @param medias the medias to load if null use the musicQueueToPlay instead
+     * @param shuffleMode indicate if the playlistDB has to be started in shuffle mode by default false
+     *
+     */
+    fun loadMusicFromMedia(
+        medias: SortedSet<MediaImpl>,
+        shuffleMode: Boolean = SettingsManager.shuffleMode.value,
+        musicToPlay: Music? = null,
+    ) {
+        val musicMediaItemSortedMap: MutableMap<Music, MediaItem> = mutableMapOf()
+        medias.forEach { media: MediaImpl ->
+            musicMediaItemSortedMap.putAll(media.musicMediaItemMap)
+        }
+        loadMusic(
+            musicMediaItemSortedMap = musicMediaItemSortedMap,
+            shuffleMode = shuffleMode,
+            musicToPlay = musicToPlay
+        )
+    }
+
+    /**
+     * Add all music from medias to the mediaController in the same order.
+     * If the shuffle mode is true then shuffle the playlist
+     *
+     * @param medias the medias to load if null use the musicQueueToPlay instead
+     * @param shuffleMode indicate if the playlistDB has to be started in shuffle mode by default false
+     *
+     */
+    fun loadMusicFromMedia(
+        medias: MutableMap<String, MediaImpl>,
+        shuffleMode: Boolean = SettingsManager.shuffleMode.value,
+        musicToPlay: Music? = null,
+    ) {
+        val musicMediaItemSortedMap: MutableMap<Music, MediaItem> = mutableMapOf()
+        medias.values.forEach { media: MediaImpl ->
+            musicMediaItemSortedMap.putAll(media.musicMediaItemMap)
+        }
+        loadMusic(
+            musicMediaItemSortedMap = musicMediaItemSortedMap,
+            shuffleMode = shuffleMode,
+            musicToPlay = musicToPlay
+        )
+    }
+
+    /**
      * Add all music from musicMap to the mediaController in the same order.
-     * If the shuffle mode is true then shuffle the playlistDB
+     * If the shuffle mode is true then shuffle the playlist
      *
      * @param musicMediaItemSortedMap the music map to load if null use the musicQueueToPlay instead
      * @param shuffleMode indicate if the playlistDB has to be started in shuffle mode by default false
      *
      */
     fun loadMusic(
-        musicMediaItemSortedMap: SortedMap<Music, MediaItem>,
+        musicMediaItemSortedMap: MutableMap<Music, MediaItem>,
         shuffleMode: Boolean = SettingsManager.shuffleMode.value,
         musicToPlay: Music? = null,
     ) {
         this.playlist = Playlist(musicMediaItemSortedMap = musicMediaItemSortedMap)
         if (shuffleMode) {
-            //TODO find a way to store playlistDB position in music when loading to make it faster
             if (musicToPlay == null) {
                 this.playlist.shuffle()
             } else {
@@ -332,9 +380,7 @@ class PlaybackController private constructor(
             is Folder -> addToQueue(mediaImplList = mediaImpl.getAllMusic().keys.reversed())
 
             else -> {
-                if (mediaImpl.musicMediaItemMap != null) {
-                    addToQueue(mediaImplList = mediaImpl.musicMediaItemMap!!.keys.reversed())
-                }
+                addToQueue(mediaImplList = mediaImpl.musicMediaItemMap.keys.reversed())
             }
         }
     }
@@ -368,9 +414,7 @@ class PlaybackController private constructor(
             is Folder -> addNext(mediaImplList = mediaImpl.getAllMusic().keys.reversed())
 
             else -> {
-                if (mediaImpl.musicMediaItemMap != null) {
-                    addNext(mediaImplList = mediaImpl.musicMediaItemMap!!.keys.reversed())
-                }
+                addNext(mediaImplList = mediaImpl.musicMediaItemMap.keys.reversed())
             }
         }
     }

@@ -47,6 +47,7 @@ internal fun LikeUnlikeMusicOption(
     val context: Context = LocalContext.current
 
     DialogOption(
+        modifier = modifier,
         onClick = { music.switchLike(context = context) },
         icon = if (music.liked.value) SatunesIcons.LIKED else SatunesIcons.UNLIKED,
         text = stringResource(id = if (music.liked.value) R.string.remove_from_likes else R.string.add_to_likes)

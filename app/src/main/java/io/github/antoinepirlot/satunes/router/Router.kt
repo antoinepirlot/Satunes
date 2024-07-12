@@ -276,11 +276,11 @@ internal fun Router(
                     navController = navController,
                     onAlbumClick = { album: Album? ->
                         if (album != null) {
-                            openMedia(mediaImpl = album, navController = navController)
+                            openMedia(media = album, navController = navController)
                         }
                     },
                     onArtistClick = { artist: Artist ->
-                        openMedia(mediaImpl = artist, navController = navController)
+                        openMedia(media = artist, navController = navController)
                     }
                 )
             }

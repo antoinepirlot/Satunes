@@ -45,27 +45,27 @@ import io.github.antoinepirlot.satunes.ui.utils.startMusic
 
 /**
  * Open the mediaImpl, when it is:
- *      Music: navigate to the mediaImpl's destination and start music with exoplayer
+ *      Music: navigate to the media's destination and start music with exoplayer
  *
- *      Folder: navigate to the mediaImpl's destination
+ *      Folder: navigate to the media's destination
  *
- *      Artist: navigate to the mediaImpl's destination
+ *      Artist: navigate to the media's destination
  *
- * @param mediaImpl the mediaImpl to open
+ * @param media the mediaImpl to open
  */
 internal fun openMedia(
-    mediaImpl: MediaImpl? = null,
+    media: MediaImpl? = null,
     navigate: Boolean = true,
     navController: NavHostController?,
 ) {
-    if (mediaImpl == null || mediaImpl is Music) {
-        startMusic(mediaImpl)
+    if (media == null || media is Music) {
+        startMusic(media)
     }
     if (navigate) {
         if (navController == null) {
             throw IllegalArgumentException("navController can't be null if you navigate")
         }
-        navController.navigate(getDestinationOf(mediaImpl))
+        navController.navigate(getDestinationOf(media))
     }
 }
 
@@ -76,20 +76,20 @@ internal fun openMedia(
  *      Folder: navigate to the folder's view
  */
 internal fun openMediaFromFolder(
-    mediaImpl: MediaImpl,
+    media: MediaImpl,
     navController: NavHostController
 ) {
-    when (mediaImpl) {
+    when (media) {
         is Music -> {
             val playbackController = PlaybackController.getInstance()
             playbackController.loadMusic(
-                musicMediaItemSortedMap = getMusicListFromFolder(mediaImpl.folder),
-                musicToPlay = mediaImpl
+                musicMediaItemSortedMap = getMusicListFromFolder(media.folder),
+                musicToPlay = media
             )
-            openMedia(mediaImpl, navController = navController)
+            openMedia(media, navController = navController)
         }
 
-        is Folder -> navController.navigate(getDestinationOf(mediaImpl))
+        is Folder -> navController.navigate(getDestinationOf(media))
     }
 
 }
@@ -98,21 +98,21 @@ internal fun openMediaFromFolder(
  * Return the destination link of mediaImpl (folder, artists or music) with its id.
  * For example if mediaImpl is folder, it returns: /folders/5
  *
- * @param mediaImpl the mediaImpl to get the destination link
+ * @param media the mediaImpl to get the destination link
  *
  * @return the mediaImpl destination link with the mediaImpl's id
  */
-private fun getDestinationOf(mediaImpl: MediaImpl?): String {
-    return when (mediaImpl) {
-        is Folder -> "${Destination.FOLDERS.link}/${mediaImpl.id}"
+private fun getDestinationOf(media: MediaImpl?): String {
+    return when (media) {
+        is Folder -> "${Destination.FOLDERS.link}/${media.id}"
 
-        is Artist -> "${Destination.ARTISTS.link}/${encode(mediaImpl.title)}"
+        is Artist -> "${Destination.ARTISTS.link}/${encode(media.title)}"
 
-        is Album -> "${Destination.ALBUMS.link}/${mediaImpl.id}"
+        is Album -> "${Destination.ALBUMS.link}/${media.id}"
 
-        is Genre -> "${Destination.GENRES.link}/${encode(mediaImpl.title)}"
+        is Genre -> "${Destination.GENRES.link}/${encode(media.title)}"
 
-        is Playlist -> "${Destination.PLAYLISTS.link}/${mediaImpl.id}"
+        is Playlist -> "${Destination.PLAYLISTS.link}/${media.id}"
 
         else -> Destination.PLAYBACK.link
     }

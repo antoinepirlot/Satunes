@@ -134,7 +134,7 @@ internal fun SearchView(
                     PlaybackController.getInstance()
                         .loadMusic(musicMediaItemSortedMap = DataManager.musicMediaItemMap)
                 }
-                openMedia(mediaImpl = mediaImpl, navController = navController)
+                openMedia(media = mediaImpl, navController = navController)
             },
             onFABClick = { openCurrentMusic(navController = navController) },
             emptyViewText = stringResource(id = R.string.no_result)

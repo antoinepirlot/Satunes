@@ -56,8 +56,6 @@ object DataManager {
     val rootFolderSet: SortedSet<Folder> = sortedSetOf()
     private val folderMap: MutableMap<Long, Folder> = mutableMapOf()
     val folderSortedList: SortedSet<Folder> = sortedSetOf()
-    val rootFolderMapUpdated: MutableState<Boolean> = mutableStateOf(false)
-    val folderMapUpdated: MutableState<Boolean> = mutableStateOf(false)
 
     private val artistMapById: MutableMap<Long, Artist> = mutableMapOf()
     val artistMap: SortedMap<String, Artist> = sortedMapOf(comparator = StringComparator)
@@ -65,6 +63,7 @@ object DataManager {
 
     private val albumMapById: MutableMap<Long, Album> = mutableMapOf()
     val albumSet: SortedSet<Album> = sortedSetOf()
+    val albumSetUpdated: MutableState<Boolean> = mutableStateOf(false)
 
     private val genreMapById: MutableMap<Long, Genre> = mutableMapOf()
     val genreMap: SortedMap<String, Genre> = sortedMapOf(comparator = StringComparator)
@@ -147,15 +146,17 @@ object DataManager {
             val existingAlbum: Album = albumMapById.values.first { it == album }
             throw DuplicatedAlbumException(existingAlbum = existingAlbum)
         }
-        albumSet.add(album)
         if (!albumMapById.contains(album.id)) {
+            albumSet.add(album)
             albumMapById[album.id] = album
+            albumSetUpdated.value = true
         }
     }
 
     fun removeAlbum(album: Album) {
         albumSet.remove(album)
         albumMapById.remove(album.id)
+        albumSetUpdated.value = true
     }
 
     fun getFolder(folderId: Long): Folder {
@@ -165,19 +166,16 @@ object DataManager {
     fun addFolder(folder: Folder) {
         if (!folderMap.contains(folder.id)) {
             folderMap[folder.id] = folder
-            folderMapUpdated.value = true
         }
         if (folder.parentFolder == null && !rootFolderMap.contains(folder.id)) {
             rootFolderMap[folder.id] = folder
             rootFolderSet.add(element = folder)
-            rootFolderMapUpdated.value = true
         }
     }
 
     fun removeFolder(folder: Folder) {
         if (folderMap.contains(folder.id)) {
             folderMap.remove(folder.id)
-            folderMapUpdated.value = true
         }
     }
 

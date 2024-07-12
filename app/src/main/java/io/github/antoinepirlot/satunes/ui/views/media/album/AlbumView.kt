@@ -92,7 +92,7 @@ internal fun AlbumView(
                 musicMediaItemSortedMap = album.musicMediaItemMap,
                 musicToPlay = clickedMediaImpl as Music
             )
-            openMedia(mediaImpl = clickedMediaImpl, navController = navController)
+            openMedia(media = clickedMediaImpl, navController = navController)
         },
         onFABClick = { openCurrentMusic(navController = navController) },
         header = {
@@ -144,7 +144,7 @@ private fun Header(
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .clickable {
-                    openMedia(mediaImpl = album.artist, navController = navController)
+                    openMedia(media = album.artist, navController = navController)
                 },
             text = album.artist!!.title
         )

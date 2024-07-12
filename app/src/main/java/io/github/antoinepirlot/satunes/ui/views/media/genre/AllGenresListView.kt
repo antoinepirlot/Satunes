@@ -33,13 +33,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.media3.common.MediaItem
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
-import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.DataManager
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
@@ -74,19 +72,21 @@ internal fun AllGenresListView(
         mediaImplList = genreMap.values.toList(),
 
         openMedia = { clickedMediaImpl: MediaImpl ->
-            openMedia(mediaImpl = clickedMediaImpl, navController = navController)
+            openMedia(media = clickedMediaImpl, navController = navController)
         },
         onFABClick = { openCurrentMusic(navController = navController) },
         extraButtons = {
             if (genreMap.isNotEmpty()) {
+                @Suppress("UNCHECKED_CAST")
+                genreMap as SortedMap<String, MediaImpl>
                 ExtraButton(icon = SatunesIcons.PLAY, onClick = {
-                    playbackController.loadMusic(musicMediaItemSortedMap = getMusics(genreMap = genreMap))
+                    playbackController.loadMusicFromMedia(medias = genreMap)
                     openMedia(navController = navController)
                 })
                 ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
 
-                    playbackController.loadMusic(
-                        musicMediaItemSortedMap = getMusics(genreMap = genreMap),
+                    playbackController.loadMusicFromMedia(
+                        medias = genreMap,
                         shuffleMode = true
                     )
                     openMedia(navController = navController)
@@ -95,15 +95,6 @@ internal fun AllGenresListView(
         },
         emptyViewText = stringResource(id = R.string.no_genre)
     )
-}
-
-private fun getMusics(genreMap: SortedMap<String, Genre>): SortedMap<Music, MediaItem> {
-    val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
-
-    genreMap.forEach { (_: String, genre: Genre) ->
-        musicMediaItemSortedMap.putAll(genre.musicMediaItemMap)
-    }
-    return musicMediaItemSortedMap
 }
 
 @Preview

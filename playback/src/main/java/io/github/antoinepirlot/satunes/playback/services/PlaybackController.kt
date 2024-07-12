@@ -278,17 +278,41 @@ class PlaybackController private constructor(
      * Add all music from medias to the mediaController in the same order.
      * If the shuffle mode is true then shuffle the playlist
      *
-     * @param medias the media sortedSet to load if null use the musicQueueToPlay instead
+     * @param medias the medias to load if null use the musicQueueToPlay instead
      * @param shuffleMode indicate if the playlistDB has to be started in shuffle mode by default false
      *
      */
-    fun loadMusic(
+    fun loadMusicFromMedia(
         medias: SortedSet<MediaImpl>,
         shuffleMode: Boolean = SettingsManager.shuffleMode.value,
         musicToPlay: Music? = null,
     ) {
         val musicMediaItemSortedMap: MutableMap<Music, MediaItem> = mutableMapOf()
         medias.forEach { media: MediaImpl ->
+            musicMediaItemSortedMap.putAll(media.musicMediaItemMap)
+        }
+        loadMusic(
+            musicMediaItemSortedMap = musicMediaItemSortedMap,
+            shuffleMode = shuffleMode,
+            musicToPlay = musicToPlay
+        )
+    }
+
+    /**
+     * Add all music from medias to the mediaController in the same order.
+     * If the shuffle mode is true then shuffle the playlist
+     *
+     * @param medias the medias to load if null use the musicQueueToPlay instead
+     * @param shuffleMode indicate if the playlistDB has to be started in shuffle mode by default false
+     *
+     */
+    fun loadMusicFromMedia(
+        medias: MutableMap<String, MediaImpl>,
+        shuffleMode: Boolean = SettingsManager.shuffleMode.value,
+        musicToPlay: Music? = null,
+    ) {
+        val musicMediaItemSortedMap: MutableMap<Music, MediaItem> = mutableMapOf()
+        medias.values.forEach { media: MediaImpl ->
             musicMediaItemSortedMap.putAll(media.musicMediaItemMap)
         }
         loadMusic(

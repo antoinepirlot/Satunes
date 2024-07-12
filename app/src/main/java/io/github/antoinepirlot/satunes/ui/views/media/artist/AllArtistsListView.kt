@@ -79,13 +79,16 @@ internal fun AllArtistsListView(
         onFABClick = { openCurrentMusic(navController = navController) },
         extraButtons = {
             if (DataManager.musicMediaItemMap.isNotEmpty()) {
+                @Suppress("UNCHECKED_CAST")
+                artistMap as SortedMap<String, MediaImpl>
+
                 ExtraButton(icon = SatunesIcons.PLAY, onClick = {
-                    playbackController.loadMusic(musicMediaItemSortedMap = DataManager.musicMediaItemMap)
+                    playbackController.loadMusicFromMedia(medias = artistMap)
                     openMedia(navController = navController)
                 })
                 ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
-                    playbackController.loadMusic(
-                        musicMediaItemSortedMap = DataManager.musicMediaItemMap,
+                    playbackController.loadMusicFromMedia(
+                        medias = artistMap,
                         shuffleMode = true
                     )
                     openMedia(navController = navController)

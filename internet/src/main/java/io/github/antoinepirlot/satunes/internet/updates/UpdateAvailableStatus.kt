@@ -25,9 +25,14 @@
 
 package io.github.antoinepirlot.satunes.internet.updates
 
+import android.os.Build
+import androidx.annotation.RequiresApi
+
 /**
  * @author Antoine Pirlot on 11/04/2024
  */
+
+@RequiresApi(Build.VERSION_CODES.M)
 enum class UpdateAvailableStatus(var updateLink: String? = null) {
     AVAILABLE,
     CANNOT_CHECK,

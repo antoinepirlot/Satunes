@@ -63,9 +63,10 @@ class Music(
 ) : MediaImpl(id = id, title = title.ifBlank { displayName }) {
     private var displayName: String = displayName
         set(displayName) {
-            if (displayName.isNotBlank()) {
-                field = displayName
+            if (displayName.isBlank()) {
+                throw IllegalArgumentException("Display name must not be blank")
             }
+            field = displayName
         }
     var liked: MutableState<Boolean> = mutableStateOf(false)
         private set

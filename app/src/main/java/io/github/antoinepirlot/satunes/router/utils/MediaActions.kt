@@ -31,9 +31,9 @@ import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.Genre
-import io.github.antoinepirlot.satunes.database.models.Media
+import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
+import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.router.Destination
 import io.github.antoinepirlot.satunes.ui.utils.getMusicListFromFolder
@@ -44,35 +44,40 @@ import io.github.antoinepirlot.satunes.ui.utils.startMusic
  */
 
 /**
- * Open the media, when it is:
+ * Open the mediaImpl, when it is:
  *      Music: navigate to the media's destination and start music with exoplayer
  *
  *      Folder: navigate to the media's destination
  *
  *      Artist: navigate to the media's destination
  *
- * @param navController the nav controller to redirect to the good path
- * @param media the media to open
+ * @param media the mediaImpl to open
  */
-fun openMedia(
-    navController: NavHostController,
-    media: Media? = null
+internal fun openMedia(
+    media: MediaImpl? = null,
+    navigate: Boolean = true,
+    navController: NavHostController?,
 ) {
     if (media == null || media is Music) {
         startMusic(media)
     }
-    navController.navigate(getDestinationOf(media))
+    if (navigate) {
+        if (navController == null) {
+            throw IllegalArgumentException("navController can't be null if you navigate")
+        }
+        navController.navigate(getDestinationOf(media))
+    }
 }
 
 /**
- * Open media from folders' views if the media is:
- *      Music: It loads folder's musics data to playback and open the media that is music.
+ * Open mediaImpl from folders' views if the mediaImpl is:
+ *      Music: It loads folder's musics data to playback and open the mediaImpl that is music.
  *
  *      Folder: navigate to the folder's view
  */
-fun openMediaFromFolder(
-    navController: NavHostController,
-    media: Media
+internal fun openMediaFromFolder(
+    media: MediaImpl,
+    navController: NavHostController
 ) {
     when (media) {
         is Music -> {
@@ -81,7 +86,7 @@ fun openMediaFromFolder(
                 musicMediaItemSortedMap = getMusicListFromFolder(media.folder),
                 musicToPlay = media
             )
-            openMedia(navController, media)
+            openMedia(media, navController = navController)
         }
 
         is Folder -> navController.navigate(getDestinationOf(media))
@@ -90,14 +95,14 @@ fun openMediaFromFolder(
 }
 
 /**
- * Return the destination link of media (folder, artists or music) with its id.
- * For example if media is folder, it returns: /folders/5
+ * Return the destination link of mediaImpl (folder, artists or music) with its id.
+ * For example if mediaImpl is folder, it returns: /folders/5
  *
- * @param media the media to get the destination link
+ * @param media the mediaImpl to get the destination link
  *
- * @return the media destination link with the media's id
+ * @return the mediaImpl destination link with the mediaImpl's id
  */
-private fun getDestinationOf(media: Media?): String {
+private fun getDestinationOf(media: MediaImpl?): String {
     return when (media) {
         is Folder -> "${Destination.FOLDERS.link}/${media.id}"
 
@@ -107,7 +112,7 @@ private fun getDestinationOf(media: Media?): String {
 
         is Genre -> "${Destination.GENRES.link}/${encode(media.title)}"
 
-        is PlaylistWithMusics -> "${Destination.PLAYLISTS.link}/${media.playlist.id}"
+        is Playlist -> "${Destination.PLAYLISTS.link}/${media.id}"
 
         else -> Destination.PLAYBACK.link
     }
@@ -118,7 +123,7 @@ private fun getDestinationOf(media: Media?): String {
  *
  * @throws IllegalStateException if there's no music playing
  */
-fun openCurrentMusic(navController: NavHostController) {
+internal fun openCurrentMusic(navController: NavHostController) {
     val playbackController: PlaybackController = PlaybackController.getInstance()
     val musicPlaying = playbackController.musicPlaying.value
         ?: throw IllegalStateException("No music is currently playing, this button can be accessible")

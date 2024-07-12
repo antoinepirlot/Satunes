@@ -1,7 +1,132 @@
 # Releases (🇬🇧)
 Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
+## 1.3 (Android 5.1.1 Lollipop and later)
+
+### 1.3.1
+
+Improvements, Optimizations and Troubleshooting:
+
+* Musics in folder are no more modified when the user click on music to play it
+* Search icon has been remove from the search setting view
+
+### 1.3.0
+
+New features:
+
+* Possibility of choosing the search filters activated by default
+* Request for confirmation when deleting from playlists
+* All types of media (music, artists, etc.) have an option menu during a long press
+
+Improvements, Optimizations and Troubleshooting:
+
+* Added a button to open F-Droid when an update is available
+
+## 1.2 (Android 5.1.1 Lollipop and later)
+
+### 1.2.1
+
+Improvements, Optimizations and Troubleshooting:
+
+* Fixed bug when adding currently playing music to a playlist when there is none and the user
+  cancels its creation
+* Added search filter for playlists
+* Navigation animations between pages are faster and avoid clicking on the previous page
+* The music queue list page opens with the currently playing music in mind
+* Added a button to open currently playing music from the search page
+* The music filter in the search is activated by default
+
+### 1.2.0
+
+New features:
+
+* Search for different media
+* Favorite music system
+* Viewing the playlist and being able to:
+* Play music after current track
+* Add to queue
+* Added a tablet mode for displaying music currently playing
+* Popup after installing an update
+
+Improvements, Optimizations and Troubleshooting:
+
+* Removal of the Facebook button following the future disappearance of the Satunes' Facebook page
+* Optimizations
+* A bug causing the application to crash following the creation of the first playlist has been fixed
+
+### 1.2.0-preview-1
+
+New features:
+
+* Search for different media
+* Favorite music system
+* Viewing the playlist and being able to:
+* Play music after current track
+* Add to queue
+* Added a tablet mode for displaying music currently playing
+* Popup after installing an update
+
+Improvements, Optimizations and Troubleshooting:
+
+* Removal of the Facebook button following the future disappearance of the Satunes' Facebook page
+* Optimizations
+
+## 1.1 (Android 5.1.1 Lollipop and later)
+
+### 1.1.1
+
+Improvements, Optimizations and Troubleshooting:
+
+* When playing the next music when it is already the last one after shuffling.
+* Playlists load faster at starting
+
+### 1.1.0
+
+Improvements, Optimizations and Troubleshooting:
+
+* The size of the repeat one mode icon in the default playback settings displays correctly on
+  different screen sizes
+* Updating libraries
+
+### 1.1.0-beta-1
+
+New features:
+
+* Added a new setting allowing the use of Audio Offload (sends playback to a dedicated process).
+  This option allows you to optimize the battery
+* Ability to add currently playing music to playlists via quick actions
+* Navigation to albums, genres, artists, etc. from the menu with a long press on music
+
+Improvements, Optimizations and Troubleshooting:
+
+* Display issue when launching first music in Android Auto fixed
+* The default random mode selection is represented by buttons with icons and more using a switch
+* Displaying navigation bar button names
+
 ## 1.0 (Android 5.1.1 Lollipop and later)
+
+### 1.0.3
+
+Improvements, Optimizations and Troubleshooting:
+
+* The album is no longer displayed in playback if the screen height size is too small in landscape
+  mode
+* Fixed crash when clicking the parameter button when audio permission is not granted
+* Default language if system language is not supported is now English and no longer French
+* Album titles will no longer exceed the width of the album
+* Fixes to the text size of the "Music" section in the artist and genre views
+* Adding music to several playlists is now resolved
+* Fixed issue when adding 2 playlists with the same name with upper and lower case on different
+  letters
+* When adding music to a playlist and no playlist has been created, the application starts creating
+  a new playlist
+
+### 1.0.2
+
+Improvements, Optimizations and Troubleshooting:
+
+* Settings navigation works consistently for all menus.
+* Design improvement
 
 ### 1.0.1
 

@@ -25,6 +25,7 @@
 
 package io.github.antoinepirlot.satunes
 
+import android.content.Context
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -34,14 +35,20 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.router.Router
 import io.github.antoinepirlot.satunes.ui.components.bars.SatunesBottomAppBar
 import io.github.antoinepirlot.satunes.ui.components.bars.SatunesTopAppBar
+import io.github.antoinepirlot.satunes.ui.components.dialog.WhatsNewDialog
 import io.github.antoinepirlot.satunes.ui.theme.SatunesTheme
 
 /**
@@ -50,7 +57,7 @@ import io.github.antoinepirlot.satunes.ui.theme.SatunesTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Satunes(
+internal fun Satunes(
     modifier: Modifier = Modifier,
 ) {
     SatunesTheme {
@@ -63,10 +70,32 @@ fun Satunes(
             val navController: NavHostController = rememberNavController()
             Scaffold(
                 modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-                topBar = { SatunesTopAppBar(scrollBehavior = scrollBehavior, navController = navController) },
+                topBar = {
+                    SatunesTopAppBar(
+                        scrollBehavior = scrollBehavior,
+                        navController = navController
+                    )
+                },
                 bottomBar = { SatunesBottomAppBar(navController = navController) }
             ) { innerPadding ->
-                Router(modifier = Modifier.padding(innerPadding), navController = navController)
+                Router(
+                    modifier = Modifier.padding(innerPadding),
+                    navController = navController
+                )
+
+                var whatsNewSeen: Boolean by rememberSaveable { SettingsManager.whatsNewSeen }
+                if (!whatsNewSeen) {
+                    val context: Context = LocalContext.current
+                    WhatsNewDialog(
+                        onConfirm = {
+                            SettingsManager.whatsNewSeen(
+                                context = context,
+                                seen = true
+                            )
+                        }, // When app relaunch, it's not shown again
+                        onDismiss = { whatsNewSeen = true } // When app relaunch, it's shown again
+                    )
+                }
             }
         }
     }
@@ -75,6 +104,6 @@ fun Satunes(
 
 @Preview
 @Composable
-fun ApplicationPreview() {
+private fun ApplicationPreview() {
     Satunes()
 }

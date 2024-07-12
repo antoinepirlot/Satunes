@@ -25,24 +25,57 @@
 
 package io.github.antoinepirlot.satunes.router
 
+import android.os.Build
+import androidx.annotation.RequiresApi
+
 /**
  * @author Antoine Pirlot on 24-01-24
  */
 
 internal enum class Destination(val link: String) {
     ALBUMS(link = "/albums"),
-    ANDROID_AUTO_SETTING(link = "/android_auto_setting"),
+    ANDROID_AUTO_SETTINGS(link = "/android_auto_setting"),
     ARTISTS(link = "/artists"),
-    BOTTOM_BAR_SETTING(link = "/navbar_settings"),
-    EXCLUSION(link = "/exclusion"),
+    BATTERY_SETTINGS(link = "/battery_settings"),
+    BOTTOM_BAR_SETTINGS(link = "/navbar_settings"),
+    EXCLUSION_SETTINGS(link = "/exclusion"),
     FOLDERS(link = "/folders"),
     GENRES(link = "/genres"),
     MUSICS(link = "/musics"),
     PERMISSIONS_SETTINGS(link = "/permissions_settings"),
     PLAYBACK(link = "/playback"),
+    PLAYBACK_QUEUE(link = "/playback_queue"),
     PLAYBACK_SETTINGS(link = "/playback_settings"),
     PLAYLISTS(link = "/playlists"),
     PLAYLISTS_SETTINGS(link = "/playlists_settings"),
+    SEARCH(link = "/search"),
+    SEARCH_SETTINGS("/search_settings"),
     SETTINGS(link = "/settings"),
-    UPDATES(link = "/updates"),
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    UPDATES_SETTINGS(link = "/updates"), ;
 }
+
+internal val settingsDestinations: List<String> =
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        listOf(
+            Destination.SETTINGS.link, Destination.BOTTOM_BAR_SETTINGS.link,
+            Destination.ANDROID_AUTO_SETTINGS.link, Destination.PLAYBACK_SETTINGS.link,
+            Destination.EXCLUSION_SETTINGS.link, Destination.PLAYLISTS_SETTINGS.link,
+            Destination.PERMISSIONS_SETTINGS.link, Destination.UPDATES_SETTINGS.link,
+            Destination.SEARCH_SETTINGS.link
+        )
+    } else {
+        // Without UPDATES_SETTINGS
+        listOf(
+            Destination.SETTINGS.link, Destination.BOTTOM_BAR_SETTINGS.link,
+            Destination.ANDROID_AUTO_SETTINGS.link, Destination.PLAYBACK_SETTINGS.link,
+            Destination.EXCLUSION_SETTINGS.link, Destination.PLAYLISTS_SETTINGS.link,
+            Destination.PERMISSIONS_SETTINGS.link,
+            Destination.SEARCH_SETTINGS.link
+        )
+    }
+
+internal val playbackViews: List<String> = listOf(
+    Destination.PLAYBACK.link, Destination.PLAYBACK_QUEUE.link
+)

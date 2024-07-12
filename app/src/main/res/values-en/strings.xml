@@ -12,7 +12,7 @@
     <string name="create_playlist">Create a new playlist</string>
     <string name="cancel">Cancel</string>
     <string name="create">Create</string>
-    <string name="add_to_playlist">Add to a playlist</string>
+    <string name="add_to_playlist">Add to playlist</string>
     <string name="add">Add</string>
     <string name="remove_from_playlist">Remove from playlist</string>
     <string name="remove_playlist">Remove playlist</string>
@@ -42,7 +42,7 @@
     <string name="no_file_created">No file created</string>
     <string name="read_audio_permission">Music and audio</string>
     <string name="ask_permission">Allow</string>
-    <string name="read_external_storage_permission">Lire le stockage</string>
+    <string name="read_external_storage_permission">Read Storage</string>
     <string name="repeat_mode">"Repeat Mode: "</string>
     <string name="playback_mode_settings">Default Playback Modes</string>
     <string name="pause_if_another_playback">Pause if another app is playing</string>
@@ -50,5 +50,21 @@
     <string name="title">Title</string>
     <string name="playlist_beta_info">The export and import of playlists is in beta due to the fact that only the music identifiers are recorded.\nIf the music is deleted and then re-added on the device or if you change the device, the music will have a new identifier and therefore there will be bad music in the playlists.\nThis issue will be fixed in a future update.</string>
     <string name="android_auto_tuto">To activate Android Auto you must carry out the following steps:\n\n1) Go to Android Auto settings.\n\n2) Multiple click on \"Version\" to activate dev mode.\n\n3) Go to Dev\'s settings and activate \"Unknown sources\" as this app is not published on Google Play Store.\n\n4) Click on the 3 buttons as in point 3, but click on \"Exit developer mode\" the setting you just activated will be saved.\n\n5) Add app in launcher.\n\n6) Enjoy</string>
+    <string name="battery_settings">Battery</string>
+    <string name="audio_offload_info">This parameter allows you to send audio treatment to a dedicated process.\nThis reduces energy consumption.\n\nHowever, in the Media 3 library used in Satunes, this can cause compatibility issues which results in audio cuts. A known issue is that the music is stopping during playback or after the end of a song.\n\nBy activating this parameter, you reduce energy consumption and increase the  battery life but you are likely to meet audio cuts.\n\nI hope that in a nearby future, the problem will be resolved by Google which holds the Media3 and Exoplayer libraries. In the meantime, I try to find viable solutions to reduce energy consumption by Satunes.</string>
     <string name="restart_required">Restart required</string>
+    <string name="add_to_queue">Add to queue</string>
+    <string name="play_next">Play next</string>
+    <string name="playback_queue">Queue</string>
+    <string name="search_placeholder">Search</string>
+    <string name="no_result">No result found</string>
+    <string name="add_to_likes">Like</string>
+    <string name="remove_from_likes">Unlike</string>
+    <string name="whats_new_text">Yay! You have just installed a new version of Satunes.\n\nI hope this version is better than the older one.\n\nIf you ever notice any problems or want to make suggestions, you can send me an email at: pirlot.antoine@outlook.com.\n\nThank you for your help! 😊\n\nI wish you good listening 🎧🎵</string>
+    <string name="click_here">click here</string>
+    <string name="search_setting_title">Search</string>
+    <string name="default_filter_setting_title">Default filters</string>
+    <string name="remove_dialog_title">Removing Confirmation</string>
+    <string name="remove_submit">Delete</string>
+    <string name="see_on_fdroid">Open in F-Droid</string>
 </resources>

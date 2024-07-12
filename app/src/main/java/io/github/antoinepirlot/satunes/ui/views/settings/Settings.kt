@@ -25,6 +25,7 @@
 
 package io.github.antoinepirlot.satunes.ui.views.settings
 
+import io.github.antoinepirlot.satunes.R.string.audio_offload
 import io.github.antoinepirlot.satunes.R.string.exclude_ringtones
 import io.github.antoinepirlot.satunes.R.string.pause_if_another_playback
 import io.github.antoinepirlot.satunes.R.string.pause_if_noisy
@@ -34,20 +35,37 @@ import io.github.antoinepirlot.satunes.database.R.string.albums
 import io.github.antoinepirlot.satunes.database.R.string.artists
 import io.github.antoinepirlot.satunes.database.R.string.folders
 import io.github.antoinepirlot.satunes.database.R.string.genres
+import io.github.antoinepirlot.satunes.database.R.string.musics
 import io.github.antoinepirlot.satunes.database.R.string.playlists
 
 /**
  *   @author Antoine Pirlot 06/03/2024
  */
-enum class Settings(val stringId: Int) {
+
+// TODO rename for Switch Settings enum class
+internal enum class Settings(val stringId: Int) {
     ALBUMS_CHECKED(stringId = albums),
+    ALBUMS_FILTER(stringId = albums),
     ARTISTS_CHECKED(stringId = artists),
+    ARTISTS_FILTER(stringId = artists),
+    AUDIO_OFFLOAD(stringId = audio_offload),
+    PLAYLISTS_FILTER(stringId = playlists),
     EXCLUDE_RINGTONES(stringId = exclude_ringtones),
     FOLDERS_CHECKED(stringId = folders),
+    FOLDERS_FILTER(stringId = folders),
     GENRES_CHECKED(stringId = genres),
+    GENRES_FILTER(stringId = genres),
+    MUSICS_FILTER(stringId = musics),
     PAUSE_IF_NOISY(stringId = pause_if_noisy),
     PLAYBACK_WHEN_CLOSED(stringId = playback_when_paused),
     PLAYLISTS_CHECKED(stringId = playlists),
     PAUSE_IF_ANOTHER_PLAYBACK(stringId = pause_if_another_playback),
     SHUFFLE_MODE(stringId = shuffle),
 }
+
+internal val settingsNeedRestart: List<Settings> = listOf(
+    Settings.AUDIO_OFFLOAD,
+    Settings.EXCLUDE_RINGTONES,
+    Settings.PAUSE_IF_ANOTHER_PLAYBACK,
+    Settings.PAUSE_IF_NOISY,
+)

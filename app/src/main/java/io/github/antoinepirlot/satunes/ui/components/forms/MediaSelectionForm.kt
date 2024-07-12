@@ -31,16 +31,16 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import io.github.antoinepirlot.satunes.database.models.Media
+import io.github.antoinepirlot.satunes.database.models.MediaImpl
 
 /**
  * @author Antoine Pirlot on 30/03/2024
  */
 
 @Composable
-fun MediaSelectionForm(
+internal fun MediaSelectionForm(
     modifier: Modifier = Modifier,
-    mediaList: List<Media>
+    mediaImplList: List<MediaImpl>
 ) {
     val lazyState = rememberLazyListState()
     LazyColumn(
@@ -48,16 +48,16 @@ fun MediaSelectionForm(
         state = lazyState
     ) {
         items(
-            items = mediaList,
+            items = mediaImplList,
             key = { it.id }
-        ) { media: Media ->
-            MediaSelectionCheckbox(media = media)
+        ) { mediaImpl: MediaImpl ->
+            MediaSelectionCheckbox(mediaImpl = mediaImpl)
         }
     }
 }
 
 @Preview
 @Composable
-fun PlaylistSelectionFormPreview() {
-    MediaSelectionForm(mediaList = listOf())
+private fun PlaylistSelectionFormPreview() {
+    MediaSelectionForm(mediaImplList = listOf())
 }

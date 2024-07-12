@@ -38,12 +38,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import io.github.antoinepirlot.satunes.database.models.Media
+import io.github.antoinepirlot.satunes.database.R
+import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
+import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
-import io.github.antoinepirlot.satunes.database.models.tables.Playlist
+import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.services.MediaSelectionManager
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 
@@ -52,17 +54,24 @@ import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
  */
 
 @Composable
-fun MediaSelectionCheckbox(
+internal fun MediaSelectionCheckbox(
     modifier: Modifier = Modifier,
-    media: Media
+    mediaImpl: MediaImpl
 ) {
     val checked: MutableState<Boolean> = rememberSaveable { mutableStateOf(false) }
-    val text: String = if (media is PlaylistWithMusics) media.playlist.title
-    else media.title
+    val text: String = if (mediaImpl is Playlist) {
+        if (mediaImpl.title == LIKES_PLAYLIST_TITLE) {
+            stringResource(id = R.string.likes_playlist_title)
+        } else {
+            mediaImpl.title
+        }
+    } else {
+        mediaImpl.title
+    }
 
-    Box(modifier = modifier.clickable { onClick(checked, media) }) {
+    Box(modifier = modifier.clickable { onClick(checked, mediaImpl) }) {
         Row(modifier = Modifier.fillMaxWidth()) {
-            Checkbox(checked = checked.value, onCheckedChange = { onClick(checked, media) })
+            Checkbox(checked = checked.value, onCheckedChange = { onClick(checked, mediaImpl) })
             Spacer(modifier = modifier.size(10.dp))
             NormalText(
                 modifier = Modifier.align(Alignment.CenterVertically),
@@ -72,30 +81,25 @@ fun MediaSelectionCheckbox(
     }
 }
 
-private fun onClick(checked: MutableState<Boolean>, media: Media) {
+private fun onClick(checked: MutableState<Boolean>, mediaImpl: MediaImpl) {
     checked.value = !checked.value
     if(checked.value) {
-        if (media is PlaylistWithMusics) {
-            MediaSelectionManager.checkedPlaylistWithMusics.add(media)
-        } else if (media is Music) {
-            MediaSelectionManager.checkedMusics.add(media)
+        if (mediaImpl is Playlist) {
+            MediaSelectionManager.addPlaylist(playlist = mediaImpl)
+        } else if (mediaImpl is Music) {
+            MediaSelectionManager.addMusic(music = mediaImpl)
         }
     } else {
-        if (media is PlaylistWithMusics) {
-            MediaSelectionManager.checkedPlaylistWithMusics.remove(media)
-        } else if (media is Music) {
-            MediaSelectionManager.checkedMusics.remove(media)
+        if (mediaImpl is Playlist) {
+            MediaSelectionManager.removePlaylist(playlist = mediaImpl)
+        } else if (mediaImpl is Music) {
+            MediaSelectionManager.removeMusic(music = mediaImpl)
         }
     }
 }
 
 @Preview
 @Composable
-fun PlaylistSelectionCheckboxPreview() {
-    MediaSelectionCheckbox(
-        media = PlaylistWithMusics(
-            playlist = Playlist(id = 0, title = ""),
-            musics = mutableListOf()
-        )
-    )
+private fun PlaylistSelectionCheckboxPreview() {
+    MediaSelectionCheckbox(mediaImpl = Playlist(id = 0, title = ""))
 }

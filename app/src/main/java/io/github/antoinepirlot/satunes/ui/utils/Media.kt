@@ -31,7 +31,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.media3.common.MediaItem
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Folder
-import io.github.antoinepirlot.satunes.database.models.Media
+import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.MenuTitle
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.icons.SatunesIcons.ALBUM
@@ -53,7 +53,7 @@ import java.util.SortedMap
  * @param mediaToPlay the music to play from the music list
  */
 
-fun startMusic(mediaToPlay: Media? = null) {
+internal fun startMusic(mediaToPlay: MediaImpl? = null) {
     val playbackController = PlaybackController.getInstance()
 
     when (mediaToPlay) {
@@ -75,9 +75,10 @@ fun startMusic(mediaToPlay: Media? = null) {
  * Create the list of all music in the folder and subfolder
  */
 fun getMusicListFromFolder(folder: Folder): SortedMap<Music, MediaItem> {
-    val mapOfMusic: SortedMap<Music, MediaItem> = folder.musicMediaItemSortedMap
-    for (subfolder in folder.getSubFolderList().values) {
-        mapOfMusic.putAll(subfolder.musicMediaItemSortedMap)
+    val mapOfMusic: SortedMap<Music, MediaItem> =
+        folder.musicMediaItemMap.toSortedMap() // Copy needed
+    for (subfolder in folder.getSubFolderMap().values) {
+        mapOfMusic.putAll(subfolder.musicMediaItemMap)
     }
     return mapOfMusic
 }

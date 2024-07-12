@@ -25,17 +25,29 @@
 
 package io.github.antoinepirlot.satunes.ui.components.dialog
 
+import android.content.Context
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Icon
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.database.models.Media
+import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.database.models.Playlist
+import io.github.antoinepirlot.satunes.database.services.DataManager
+import io.github.antoinepirlot.satunes.database.services.DatabaseManager
+import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import io.github.antoinepirlot.satunes.services.MediaSelectionManager
 import io.github.antoinepirlot.satunes.ui.components.forms.MediaSelectionForm
+import io.github.antoinepirlot.satunes.ui.components.forms.PlaylistCreationForm
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 
 /**
@@ -43,23 +55,78 @@ import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
  */
 
 @Composable
-fun MediaSelectionDialog(
+internal fun MediaSelectionDialog(
     modifier: Modifier = Modifier,
     onDismissRequest: () -> Unit,
     onConfirm: () -> Unit,
-    mediaList: List<Media>,
+    mediaList: List<MediaImpl>,
     playlistTitle: String? = null,
-    icon: @Composable () -> Unit,
+    icon: SatunesIcons,
+) {
+    val showPlaylistCreation: MutableState<Boolean> =
+        rememberSaveable { mutableStateOf(mediaList.isEmpty()) }
+
+    if (showPlaylistCreation.value) {
+        CreateNewPlaylistForm(
+            modifier = modifier,
+            showPlaylistCreation = showPlaylistCreation,
+            onDismissRequest = { showPlaylistCreation.value = false }
+        )
+    } else {
+        MediaSelectionDialogList(
+            modifier = modifier,
+            showPlaylistCreation = showPlaylistCreation,
+            onDismissRequest = onDismissRequest,
+            onConfirm = onConfirm,
+            mediaImplList = mediaList,
+            playlistTitle = playlistTitle,
+            icon = icon
+        )
+    }
+}
+
+@Composable
+private fun CreateNewPlaylistForm(
+    modifier: Modifier,
+    showPlaylistCreation: MutableState<Boolean>,
+    onDismissRequest: () -> Unit
+) {
+    val context: Context = LocalContext.current
+
+    PlaylistCreationForm(
+        modifier = modifier,
+        onConfirm = { playlistTitle: String ->
+            DatabaseManager(context = context).insertPlaylistWithMusics(
+                context = context,
+                playlist = DataManager.getPlaylist(title = playlistTitle)
+            )
+            showPlaylistCreation.value = false
+        },
+        onDismissRequest = onDismissRequest
+    )
+}
+
+@Composable
+private fun MediaSelectionDialogList(
+    modifier: Modifier,
+    showPlaylistCreation: MutableState<Boolean>,
+    onDismissRequest: () -> Unit,
+    onConfirm: () -> Unit,
+    mediaImplList: List<MediaImpl>,
+    playlistTitle: String? = null,
+    icon: SatunesIcons,
 ) {
     AlertDialog(
         modifier = modifier,
-        icon = icon,
+        icon = {
+            Icon(imageVector = icon.imageVector, contentDescription = icon.description)
+        },
         title = {
-            if (mediaList.isEmpty()) {
+            if (mediaImplList.isEmpty()) {
                 NormalText(text = stringResource(id = R.string.no_music))
-            } else if (mediaList[0] is Music) {
+            } else if (mediaImplList[0] is Music) {
                 if (playlistTitle == null) {
-                    throw IllegalStateException("Playlist title is required when adding music to playlist")
+                    throw IllegalStateException("PlaylistDB title is required when adding music to playlistDB")
                 }
                 NormalText(text = stringResource(id = R.string.add_to) + playlistTitle)
             } else {
@@ -68,13 +135,29 @@ fun MediaSelectionDialog(
         },
         text = {
             Column {
-                MediaSelectionForm(mediaList = mediaList)
+                if (
+                    mediaImplList.isEmpty() && DataManager.playlistsMap.isNotEmpty() || // Avoid having create new playlistDB when user has no music
+                    mediaImplList.isEmpty() || mediaImplList[0] is Playlist
+                ) {
+                    TextButton(onClick = { showPlaylistCreation.value = true }) {
+                        NormalText(text = stringResource(id = R.string.create_playlist))
+                    }
+                }
+                MediaSelectionForm(mediaImplList = mediaImplList)
             }
         },
-        onDismissRequest = onDismissRequest,
+        onDismissRequest = {
+            MediaSelectionManager.clearCheckedMusics()
+            MediaSelectionManager.clearCheckedPlaylistWithMusics()
+            onDismissRequest()
+        },
         confirmButton = {
-            TextButton(onClick = onConfirm) {
-                if (mediaList.isNotEmpty()) {
+            TextButton(onClick = {
+                onConfirm()
+                MediaSelectionManager.clearCheckedMusics()
+                MediaSelectionManager.clearCheckedPlaylistWithMusics()
+            }) {
+                if (mediaImplList.isNotEmpty()) {
                     NormalText(text = stringResource(id = R.string.add))
                 }
             }
@@ -89,9 +172,9 @@ fun MediaSelectionDialog(
 
 @Preview
 @Composable
-fun PlaylistSelectionDialogPreview() {
+private fun PlaylistSelectionDialogPreview() {
     MediaSelectionDialog(
-        icon = {},
+        icon = SatunesIcons.PLAYLIST_ADD,
         onDismissRequest = {},
         onConfirm = {},
         mediaList = listOf()

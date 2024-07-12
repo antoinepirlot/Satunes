@@ -26,7 +26,7 @@
 package io.github.antoinepirlot.satunes.services
 
 import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
+import io.github.antoinepirlot.satunes.database.models.Playlist
 
 /**
  * @author Antoine Pirlot on 30/03/2024
@@ -35,7 +35,43 @@ internal object MediaSelectionManager {
     /**
      * Mutable list of checked playlists' ids to know where to add music from form
      */
-    val checkedPlaylistWithMusics: MutableList<PlaylistWithMusics> = mutableListOf()
+    private val checkedPlaylistWithMusics: MutableList<Playlist> = mutableListOf()
 
-    val checkedMusics: MutableList<Music> = mutableListOf()
+    private val checkedMusics: MutableList<Music> = mutableListOf()
+
+    internal fun getCheckedPlaylistWithMusics(): List<Playlist> {
+        val list: List<Playlist> = checkedPlaylistWithMusics.toList()
+        clearCheckedPlaylistWithMusics()
+        return list
+    }
+
+    internal fun addPlaylist(playlist: Playlist) {
+        checkedPlaylistWithMusics.add(playlist)
+    }
+
+    internal fun removePlaylist(playlist: Playlist) {
+        checkedPlaylistWithMusics.remove(playlist)
+    }
+
+    internal fun clearCheckedPlaylistWithMusics() {
+        checkedPlaylistWithMusics.clear()
+    }
+
+    internal fun getCheckedMusics(): List<Music> {
+        val list: List<Music> = checkedMusics.toList()
+        clearCheckedMusics()
+        return list
+    }
+
+    internal fun addMusic(music: Music) {
+        checkedMusics.add(music)
+    }
+
+    internal fun removeMusic(music: Music) {
+        checkedMusics.remove(music)
+    }
+
+    internal fun clearCheckedMusics() {
+        checkedMusics.clear()
+    }
 }

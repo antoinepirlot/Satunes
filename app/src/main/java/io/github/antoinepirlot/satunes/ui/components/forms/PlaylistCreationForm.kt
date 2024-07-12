@@ -39,15 +39,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 
 /**
  * @author Antoine Pirlot on 30/03/2024
  */
 
 @Composable
-fun PlaylistCreationForm(
+internal fun PlaylistCreationForm(
     modifier: Modifier = Modifier,
     onConfirm: (playlistTitle: String) -> Unit,
     onDismissRequest: () -> Unit,
@@ -59,7 +59,7 @@ fun PlaylistCreationForm(
             val icon: SatunesIcons = SatunesIcons.PLAYLIST_ADD
             Icon(
                 imageVector = icon.imageVector,
-                contentDescription = "Playlist Creation Button Icon"
+                contentDescription = "PlaylistDB Creation Button Icon"
             )
         },
         title = {
@@ -93,6 +93,6 @@ fun PlaylistCreationForm(
 
 @Preview
 @Composable
-fun PlaylistCreationFormPreview() {
+private fun PlaylistCreationFormPreview() {
     PlaylistCreationForm(onConfirm = {}, onDismissRequest = {})
 }

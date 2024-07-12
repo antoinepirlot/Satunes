@@ -26,6 +26,8 @@
 package io.github.antoinepirlot.satunes.internet.updates
 
 import android.content.Context
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import io.github.antoinepirlot.satunes.internet.InternetManager
@@ -51,6 +53,8 @@ import okhttp3.Response
 /**
  * @author Antoine Pirlot on 11/04/2024
  */
+
+@RequiresApi(Build.VERSION_CODES.M)
 object UpdateCheckManager {
     val updateAvailableStatus: MutableState<UpdateAvailableStatus> =
         mutableStateOf(UpdateAvailableStatus.UNDEFINED)
@@ -167,7 +171,7 @@ object UpdateCheckManager {
 
     fun getCurrentVersion(context: Context): String {
         val versionName: String =
-            context.packageManager.getPackageInfo(context.packageName, 0).versionName
+            context.packageManager.getPackageInfo(context.packageName, 0).versionName!!
         versionType = try {
             versionName.split("-")[1]
         } catch (_: IndexOutOfBoundsException) {

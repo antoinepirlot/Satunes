@@ -25,30 +25,31 @@
 
 package io.github.antoinepirlot.satunes.playback.models
 
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.runtime.toMutableStateList
 import androidx.media3.common.MediaItem
 import io.github.antoinepirlot.satunes.database.models.Music
-import java.util.SortedMap
+import io.github.antoinepirlot.satunes.playback.exceptions.AlreadyInPlaybackException
 
 /**
  * @author Antoine Pirlot on 18/02/24
  */
 
-class Playlist(
-    musicMediaItemSortedMap: SortedMap<Music, MediaItem>,
-) {
-    private val originalMusicMediaItemMap: SortedMap<Music, MediaItem>
-    var musicList: MutableList<Music>
+internal class Playlist(musicMediaItemSortedMap: MutableMap<Music, MediaItem>) {
+    private val originalMusicMediaItemMap: MutableMap<Music, MediaItem>
+    var musicList: SnapshotStateList<Music>
     var mediaItemList: MutableList<MediaItem>
 
 
     init {
-        this.musicList = musicMediaItemSortedMap.keys.toMutableList()
+        this.musicList = musicMediaItemSortedMap.keys.toMutableStateList()
         this.mediaItemList = musicMediaItemSortedMap.values.toMutableList()
-        this.originalMusicMediaItemMap = musicMediaItemSortedMap.toSortedMap()
+        this.originalMusicMediaItemMap = musicMediaItemSortedMap.toMutableMap()
     }
 
     /**
-     * Shuffle the playlist
+     * Shuffle the playlistDB
      * @param musicIndex the music index of the music to place at the index 0
      */
     fun shuffle(musicIndex: Int = -1) {
@@ -61,12 +62,13 @@ class Playlist(
         }
 
         if (musicMoving != null) {
+            // Not cleared as the list is only shown in playback queue view
             val oldMusicList: MutableList<Music> = this.musicList
-            this.musicList = mutableListOf()
+            this.musicList = mutableStateListOf()
             this.musicList.add(musicMoving)
             this.musicList.addAll(oldMusicList.shuffled())
         } else {
-            this.musicList = this.musicList.shuffled().toMutableList()
+            this.musicList = this.musicList.shuffled().toMutableStateList()
         }
         this.mediaItemList = mutableListOf()
         this.musicList.forEach { music: Music ->
@@ -75,10 +77,10 @@ class Playlist(
     }
 
     /**
-     * Undo shuffle, set to the original playlist
+     * Undo shuffle, set to the original playlistDB
      */
     fun undoShuffle() {
-        this.musicList = this.originalMusicMediaItemMap.keys.toMutableList()
+        this.musicList = this.originalMusicMediaItemMap.keys.toMutableStateList()
         this.mediaItemList = this.originalMusicMediaItemMap.values.toMutableList()
     }
 
@@ -91,7 +93,7 @@ class Playlist(
     }
 
     /**
-     * Return the number of music into the playlist
+     * Return the number of music into the playlistDB
      */
     fun musicCount(): Int {
         return this.musicList.size
@@ -107,25 +109,58 @@ class Playlist(
      * If toIndex is greater than the last index of the music list, then it's replaced by last index
      * If fromIndex is less than 0, then it's replaced by 0.
      *
+     * If no fromIndex is specified then fromIndex is 0
+     * If no toIndex is specified then it goes to the last index of the playlistDB.
+     *
      * @param fromIndex the first music index to get
-     * @param toIndex the last music index to get
+     * @param toIndex the last music index to get (included)
      *
      * @throws IllegalArgumentException if fromIndex is greater than toIndex
      *
      * @return a list of media items fromIndex toIndex included.
      */
     @Suppress("NAME_SHADOWING")
-    fun getMediaItems(fromIndex: Int, toIndex: Int): List<MediaItem> {
+    fun getMediaItems(fromIndex: Int = 0, toIndex: Int = lastIndex()): List<MediaItem> {
         val toIndex = if (toIndex > this.musicList.lastIndex) this.musicList.lastIndex else toIndex
         val fromIndex = if (fromIndex < 0) 0 else fromIndex
         if (fromIndex > toIndex) {
             throw IllegalArgumentException("The fromIndex has to be lower than toIndex")
         }
-
-        val toReturn: MutableList<MediaItem> = mutableListOf()
-        for (i: Int in fromIndex..toIndex) {
-            toReturn.add(this.mediaItemList[i])
-        }
-        return toReturn
+        return mediaItemList.subList(fromIndex = fromIndex, toIndex = toIndex + 1)
     }
+
+    fun addToQueue(music: Music) {
+        if (this.originalMusicMediaItemMap[music] != null) {
+            throw AlreadyInPlaybackException()
+        }
+        this.originalMusicMediaItemMap[music] = music.mediaItem
+        this.musicList.add(music)
+        this.mediaItemList.add(music.mediaItem)
+    }
+
+    fun addNext(index: Int, music: Music) {
+        if (this.originalMusicMediaItemMap[music] != null) {
+            throw AlreadyInPlaybackException()
+        }
+        this.originalMusicMediaItemMap[music] = music.mediaItem
+        this.musicList.add(index = index, element = music)
+        this.mediaItemList.add(index = index, element = music.mediaItem)
+    }
+
+    /**
+     * Move music to next to the current music
+     *
+     * @param music the music to move
+     */
+    fun moveMusic(music: Music, oldIndex: Int, newIndex: Int) {
+        this.musicList.removeAt(oldIndex)
+        this.musicList.add(index = newIndex, element = music)
+        this.mediaItemList.removeAt(oldIndex)
+        this.mediaItemList.add(index = newIndex, element = music.mediaItem)
+    }
+
+    fun isMusicInQueue(music: Music): Boolean {
+        return this.originalMusicMediaItemMap[music] != null
+    }
+
 }

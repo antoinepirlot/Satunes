@@ -1,0 +1,4 @@
+Améliorations, Optimisations et Résolutions de problèmes:
+
+* La liste des musiques d'un dossier n'est plus modifiée lorsque l'utilisateur clique sur une musique
+* L'icône de recherche a été supprimée de la page des paramètres de recherche

@@ -29,53 +29,63 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import io.github.antoinepirlot.satunes.database.models.Media
-import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
-import io.github.antoinepirlot.satunes.database.models.tables.MusicDB
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import io.github.antoinepirlot.satunes.database.models.MediaImpl
+import io.github.antoinepirlot.satunes.database.models.Playlist
+import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 
 /**
  * @author Antoine Pirlot on 16/01/24
  */
 
 @Composable
-fun MediaCardList(
+internal fun MediaCardList(
     modifier: Modifier = Modifier,
-    header: @Composable () -> Unit,
-    mediaList: List<Media>,
-    openMedia: (media: Media) -> Unit,
-    openedPlaylistWithMusics: PlaylistWithMusics?
+    navController: NavHostController,
+    header: @Composable (() -> Unit)? = null,
+    mediaImplList: List<MediaImpl>,
+    openMedia: (mediaImpl: MediaImpl) -> Unit,
+    openedPlaylist: Playlist? = null,
+    scrollToMusicPlaying: Boolean = false,
 ) {
-    val lazyState = rememberLazyListState()
+    val lazyListState = rememberLazyListState()
 
-    if (mediaList.isEmpty()) {
+    if (mediaImplList.isEmpty()) {
         // It fixes issue while accessing last folder in chain
         return
     }
 
     LazyColumn(
         modifier = modifier,
-        state = lazyState
+        state = lazyListState
     ) {
         items(
-            items = mediaList,
-            key = {
-                when (it) {
-                    is PlaylistWithMusics -> it.playlist.id
-                    is MusicDB -> it.music!!.id
-                    else -> it.id
+            items = mediaImplList,
+            key = { it.javaClass.name + '-' + it.id }
+        ) { media: MediaImpl ->
+            if (media == mediaImplList.first()) {
+                if (header != null) {
+                    header()
                 }
-            }
-        ) { media: Media ->
-            if (media == mediaList.first()) {
-                header()
             }
             MediaCard(
                 modifier = modifier,
+                navController = navController,
                 media = media,
                 onClick = { openMedia(media) },
-                openedPlaylistWithMusics = openedPlaylistWithMusics
+                openedPlaylist = openedPlaylist,
+            )
+        }
+    }
+
+    if (scrollToMusicPlaying) {
+        LaunchedEffect(key1 = Unit) {
+            lazyListState.scrollToItem(
+                PlaybackController.getInstance().getMusicPlayingIndexPosition()
             )
         }
     }
@@ -83,11 +93,14 @@ fun MediaCardList(
 
 @Composable
 @Preview
-fun CardListPreview() {
+private fun CardListPreview() {
+    val navController: NavHostController = rememberNavController()
     MediaCardList(
-        mediaList = listOf(),
+        navController = navController,
         header = {},
+        mediaImplList = listOf(),
         openMedia = {},
-        openedPlaylistWithMusics = null
+        openedPlaylist = null,
+        scrollToMusicPlaying = false
     )
 }

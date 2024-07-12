@@ -30,12 +30,15 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
-import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
-import io.github.antoinepirlot.satunes.database.models.tables.Playlist
+import androidx.room.Update
+import io.github.antoinepirlot.satunes.database.models.database.relations.PlaylistWithMusics
+import io.github.antoinepirlot.satunes.database.models.database.tables.PlaylistDB
 
 /**
  * @author Antoine Pirlot on 27/03/2024
  */
+
+const val LIKES_PLAYLIST_TITLE: String = "_likes"
 
 @Dao
 internal interface PlaylistDAO {
@@ -45,15 +48,28 @@ internal interface PlaylistDAO {
     fun getPlaylistWithMusics(playlistId: Long): PlaylistWithMusics?
 
     @Transaction
+    @Query("SELECT * FROM playlists WHERE title = :title")
+    fun getPlaylistWithMusics(title: String): PlaylistWithMusics?
+
+    @Query("SELECT playlist_id FROM playlists WHERE lower(title) = lower(:title)")
+    fun playlistExist(title: String): Boolean
+
+    @Transaction
     @Query("SELECT * FROM  playlists")
     fun getPlaylistsWithMusics(): List<PlaylistWithMusics>
 
     @Insert
-    fun insertAll(vararg playlists: Playlist)
+    fun insertAll(vararg playlistDBS: PlaylistDB)
 
     @Insert
-    fun insertOne(playlist: Playlist): Long
+    fun insertOne(playlistDB: PlaylistDB): Long
+
+    @Update
+    fun update(vararg playlistDBs: PlaylistDB)
 
     @Delete
-    fun remove(playlist: Playlist)
+    fun remove(playlistDB: PlaylistDB)
+
+    @Query("DELETE FROM playlists WHERE playlist_id = :id")
+    fun remove(id: Long)
 }

@@ -1,0 +1,8 @@
+Améliorations, Optimisations et Résolutions de problèmes:
+
+* Correction du bug lors de l'ajout de la musique en cours de lecture à une playlist
+* Ajout d'un filtre de recherche pour les playlists
+* Animations de navigation plus rapide
+* La page de la liste des musique en attente s'ouvre avec en tête la musique en cours de lecture
+* Ajout d'un bouton permettant d'ouvrir la musique en cours de lecture depuis la page de recherche
+* Le filtre musiques dans la recherche est activé par défaut

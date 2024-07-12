@@ -37,7 +37,7 @@ import kotlinx.coroutines.launch
 /**
  * @author Antoine Pirlot on 02/05/2024
  */
-object ProgressBarLifecycleCallbacks: DefaultLifecycleObserver {
+internal object ProgressBarLifecycleCallbacks : DefaultLifecycleObserver {
     var isUpdatingPosition: Boolean = false
     private var stopRefresh: Boolean = false
 
@@ -85,7 +85,7 @@ object ProgressBarLifecycleCallbacks: DefaultLifecycleObserver {
             }
 
             if (playbackController.isEnded) {
-                // It means the music has reached the end of playlist and the music is finished
+                // It means the music has reached the end of playlistDB and the music is finished
                 playbackController.currentPositionProgression.floatValue = 1f
             }
 
@@ -96,7 +96,7 @@ object ProgressBarLifecycleCallbacks: DefaultLifecycleObserver {
     private fun updateCurrentPosition() {
         val playbackController: PlaybackController = PlaybackController.getInstance()
         if (playbackController.isEnded) {
-            // It means the music has reached the end of playlist and the music is finished
+            // It means the music has reached the end of playlistDB and the music is finished
             return
         }
         val maxPosition: Long = playbackController.musicPlaying.value!!.duration

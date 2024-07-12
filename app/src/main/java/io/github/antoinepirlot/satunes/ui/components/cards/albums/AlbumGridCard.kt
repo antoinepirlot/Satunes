@@ -51,28 +51,30 @@ import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
  */
 
 @Composable
-fun AlbumGridCard(
+internal fun AlbumGridCard(
     modifier: Modifier = Modifier,
     album: Album,
     onClick: (album: Album?) -> Unit,
 ) {
     val screenWidthDp: Int = LocalConfiguration.current.screenWidthDp
 
-    val boxSize: Dp = if (screenWidthDp <= ScreenSizes.VERY_SMALL)
+    val boxSize: Dp = if (screenWidthDp < ScreenSizes.VERY_VERY_SMALL)
         150.dp
-    else if (screenWidthDp <= ScreenSizes.SMALL)
+    else if (screenWidthDp < ScreenSizes.VERY_SMALL)
         200.dp
     else
         250.dp
 
-    val artworkSize: Dp = if (screenWidthDp <= ScreenSizes.VERY_SMALL)
+    val artworkSize: Dp = if (screenWidthDp < ScreenSizes.VERY_VERY_SMALL)
         125.dp
-    else if (screenWidthDp <= ScreenSizes.SMALL)
+    else if (screenWidthDp < ScreenSizes.VERY_SMALL)
         175.dp
     else
         225.dp
 
-    Box(modifier = modifier.padding(start = 16.dp)) {
+    Box(modifier = modifier
+        .padding(start = 16.dp)
+        .size(boxSize)) {
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.SpaceBetween,
@@ -80,7 +82,7 @@ fun AlbumGridCard(
         ) {
             AlbumArtwork(
                 modifier.size(artworkSize),
-                media = album,
+                mediaImpl = album,
                 onClick = onClick
             )
             NormalText(
@@ -95,6 +97,6 @@ fun AlbumGridCard(
 
 @Preview
 @Composable
-fun AlbumGridCardPreview() {
-    AlbumGridCard(album = Album(id = 1, title = "Album #1"), onClick = {})
+private fun AlbumGridCardPreview() {
+    AlbumGridCard(album = Album(title = "Album #1"), onClick = {})
 }

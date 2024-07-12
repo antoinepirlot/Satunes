@@ -25,7 +25,9 @@
 
 package io.github.antoinepirlot.satunes.ui.views.settings
 
+import android.os.Build
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
@@ -33,11 +35,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.router.Destination
-import io.github.antoinepirlot.satunes.ui.components.buttons.ClickableListItem
+import io.github.antoinepirlot.satunes.ui.components.buttons.settings.SettingButton
 import io.github.antoinepirlot.satunes.ui.components.texts.Title
 import io.github.antoinepirlot.satunes.database.R as RDb
 
@@ -46,71 +49,77 @@ import io.github.antoinepirlot.satunes.database.R as RDb
  */
 
 @Composable
-fun SettingsView(
+internal fun SettingsView(
     modifier: Modifier = Modifier,
-    navController: NavHostController
+    navController: NavHostController,
 ) {
     val scrollState = rememberScrollState()
-    Column(modifier = modifier) {
+    Column(modifier = modifier.verticalScroll(state = scrollState)) {
         Title(text = stringResource(id = R.string.settings))
         HorizontalDivider()
-        Column(modifier = Modifier.verticalScroll(state = scrollState)) {
-            ClickableListItem(
-                text = "Android Auto",
-                onClick = {
-                    navController.navigate(Destination.ANDROID_AUTO_SETTING.link)
-                }
-            )
-            HorizontalDivider()
-            ClickableListItem(
+        Column {
+            SettingButton(text = "Android Auto", onClick = {
+                navController.navigate(Destination.ANDROID_AUTO_SETTINGS.link)
+            })
+            SettingButton(
                 text = stringResource(id = R.string.bottom_bar),
                 onClick = {
-                    navController.navigate(Destination.BOTTOM_BAR_SETTING.link)
+                    navController.navigate(Destination.BOTTOM_BAR_SETTINGS.link)
                 }
             )
-            HorizontalDivider()
-            ClickableListItem(
+            SettingButton(
                 text = stringResource(id = R.string.playback_settings),
                 onClick = {
                     navController.navigate(Destination.PLAYBACK_SETTINGS.link)
                 }
             )
-            HorizontalDivider()
-            ClickableListItem(
-                text = stringResource(id = R.string.exclusion_setting),
+            SettingButton(
+                text = stringResource(id = R.string.search_setting_title),
                 onClick = {
-                    navController.navigate(Destination.EXCLUSION.link)
+                    navController.navigate(Destination.SEARCH_SETTINGS.link)
                 }
             )
-            HorizontalDivider()
-            ClickableListItem(
+            SettingButton(
+                text = stringResource(id = R.string.battery_settings),
+                onClick = {
+                    navController.navigate(Destination.BATTERY_SETTINGS.link)
+                }
+            )
+            SettingButton(
+                text = stringResource(id = R.string.exclusion_setting),
+                onClick = {
+                    navController.navigate(Destination.EXCLUSION_SETTINGS.link)
+                }
+            )
+            SettingButton(
                 text = stringResource(id = RDb.string.playlists) + " (Beta)",
                 onClick = {
                     navController.navigate(Destination.PLAYLISTS_SETTINGS.link)
                 }
             )
-            HorizontalDivider()
-            ClickableListItem(
+            SettingButton(
                 text = stringResource(id = R.string.permissions),
                 onClick = {
                     navController.navigate(Destination.PERMISSIONS_SETTINGS.link)
                 }
             )
-            HorizontalDivider()
-            ClickableListItem(
-                text = stringResource(id = R.string.version),
-                onClick = {
-                    navController.navigate(Destination.UPDATES.link)
-                }
-            )
-            HorizontalDivider()
-            AboutView()
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                SettingButton(
+                    text = stringResource(id = R.string.version),
+                    onClick = {
+                        navController.navigate(Destination.UPDATES_SETTINGS.link)
+                    }
+                )
+            }
+            AboutView(modifier.padding(bottom = 16.dp)) // Bottom padding for a little space
         }
     }
 }
 
 @Composable
 @Preview
-fun SettingsViewPreview() {
-    SettingsView(navController = rememberNavController())
+private fun SettingsViewPreview() {
+    val navController: NavHostController = rememberNavController()
+    SettingsView(navController = navController)
 }

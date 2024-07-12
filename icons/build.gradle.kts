@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "io.github.antoinepirlot.satunes.icons"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 22
@@ -22,13 +22,16 @@ android {
                 "proguard-rules.pro"
             )
         }
+        create("releaseTest") {
+            initWith(getByName("release"))
+        }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
 }
 
@@ -37,7 +40,7 @@ dependencies {
     /**
      * Icons
      */
-    val materialIconsVersion = "1.6.7"
+    val materialIconsVersion = "1.6.8"
     implementation("androidx.compose.material:material-icons-core:$materialIconsVersion")
     implementation("androidx.compose.material:material-icons-extended:$materialIconsVersion")
 

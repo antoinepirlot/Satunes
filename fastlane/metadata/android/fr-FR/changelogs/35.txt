@@ -1,0 +1,13 @@
+Nouvelles Fonctionnalités:
+* Recherche des différents média
+* Système de musique favorites
+* Visualisation de la liste de lecture et possibilité de:
+  * Lire la musique après le morceaux actuel
+  * Ajouter à la file d'attente
+* Ajout d'un mode tablet pour l'affichage de la musique en cours de lecutre
+* Popup après installation d'une mise à jour
+
+Améliorations, Optimisations et Résolutions de problèmes:
+* Suppression du bouton Facebook
+* Optimisations
+* Correction de bugs

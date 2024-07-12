@@ -29,7 +29,7 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
-import io.github.antoinepirlot.satunes.database.models.tables.MusicDB
+import io.github.antoinepirlot.satunes.database.models.database.tables.MusicDB
 
 /**
  * @author Antoine Pirlot on 27/03/2024
@@ -50,9 +50,15 @@ internal interface MusicDAO {
     @Insert
     fun insert(vararg musics: MusicDB)
 
+    @Query("UPDATE musics SET liked = 1 WHERE music_id = :musicId")
+    fun like(musicId: Long)
+
+    @Query("UPDATE musics SET liked = 0 WHERE music_id = :musicId")
+    fun unlike(musicId: Long)
+
     @Delete
     fun delete(music: MusicDB)
 
     @Query("DELETE from musics WHERE music_id = :musicId")
-    fun remove(musicId: Long)
+    fun delete(musicId: Long)
 }

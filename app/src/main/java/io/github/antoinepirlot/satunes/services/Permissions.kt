@@ -27,14 +27,15 @@ package io.github.antoinepirlot.satunes.services
 
 import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.Manifest.permission.READ_MEDIA_AUDIO
-import android.annotation.SuppressLint
+import android.os.Build
+import androidx.annotation.RequiresApi
 import io.github.antoinepirlot.satunes.R
 
 /**
  * @author Antoine Pirlot on 29/04/2024
  */
 internal enum class Permissions(val stringId: Int, val value: String) {
-    @SuppressLint("InlinedApi")
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     READ_AUDIO_PERMISSION(R.string.read_audio_permission, value = READ_MEDIA_AUDIO),
     READ_EXTERNAL_STORAGE_PERMISSION(
         stringId = R.string.read_external_storage_permission,
@@ -42,7 +43,14 @@ internal enum class Permissions(val stringId: Int, val value: String) {
     ),
 }
 
-internal val permissionsList: List<Permissions> = listOf(
-    Permissions.READ_AUDIO_PERMISSION,
-    Permissions.READ_EXTERNAL_STORAGE_PERMISSION,
-)
+internal val permissionsList: List<Permissions> =
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        listOf(
+            Permissions.READ_AUDIO_PERMISSION,
+            Permissions.READ_EXTERNAL_STORAGE_PERMISSION,
+        )
+    } else {
+        listOf(
+            Permissions.READ_EXTERNAL_STORAGE_PERMISSION,
+        )
+    }

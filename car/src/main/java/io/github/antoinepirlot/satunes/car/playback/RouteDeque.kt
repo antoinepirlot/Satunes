@@ -26,12 +26,13 @@
 package io.github.antoinepirlot.satunes.car.playback
 
 import io.github.antoinepirlot.satunes.car.pages.ScreenPages
+import java.util.ArrayDeque
 
 /**
  * @author Antoine Pirlot on 17/03/2024
  */
-class RouteDeque {
-    private val routeDeque: ArrayDeque<String> = ArrayDeque(initialCapacity = 4)
+internal class RouteDeque {
+    private val routeDeque: ArrayDeque<String> = ArrayDeque(4)
 
     init {
         this.routeDeque.addFirst(ScreenPages.ROOT.id)
@@ -57,7 +58,7 @@ class RouteDeque {
     }
 
     fun oneBeforeLast(): String {
-        return this.get(index = this.routeDeque.lastIndex - 1)
+        return this.get(index = this.routeDeque.size - 2)
     }
 
 
@@ -65,6 +66,6 @@ class RouteDeque {
         if (index !in this.routeDeque.indices) {
             throw ArrayIndexOutOfBoundsException("The index is $index and is out of bound")
         }
-        return this.routeDeque[index]
+        return this.routeDeque.elementAt(index = index)
     }
 }

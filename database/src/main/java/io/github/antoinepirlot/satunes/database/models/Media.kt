@@ -25,22 +25,10 @@
 
 package io.github.antoinepirlot.satunes.database.models
 
-import android.graphics.Bitmap
-import androidx.media3.common.MediaItem
-import java.util.SortedMap
-
 /**
- * @author Antoine Pirlot on 29/03/2024
+ * @author Antoine Pirlot on 11/07/2024
  */
-interface Media : Comparable<Media> {
+internal interface Media {
     val id: Long
-    val title: String
-    var artwork: Bitmap?
-
-    val musicMediaItemSortedMap: SortedMap<Music, MediaItem>
-        get() = sortedMapOf()
-
-    override fun compareTo(other: Media): Int {
-        return StringComparator.compare(o1 = this.title, o2 = other.title)
-    }
+    var title: String
 }

@@ -27,7 +27,6 @@ package io.github.antoinepirlot.satunes.ui.components.settings
 
 import android.content.Context
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -40,7 +39,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
@@ -51,16 +49,14 @@ import kotlin.math.floor
  */
 
 @Composable
-fun BarSpeedSetting(
+internal fun BarSpeedSetting(
     modifier: Modifier = Modifier,
 ) {
     val context: Context = LocalContext.current
     val currentBarSpeed: Float by rememberSaveable { SettingsManager.barSpeed }
     var isUpdating: Boolean by rememberSaveable { mutableStateOf(false) }
     var newBarSpeed: Float by rememberSaveable { mutableFloatStateOf(currentBarSpeed) }
-    Column(
-        modifier = modifier.padding(horizontal = 16.dp),
-    ) {
+    Column(modifier = modifier) {
         NormalText(text = stringResource(id = R.string.bar_speed))
         if (isUpdating) {
             Text(text = (floor(newBarSpeed * 100) / 100).toString() + ' ' + stringResource(id = R.string.second))
@@ -89,6 +85,6 @@ fun BarSpeedSetting(
 
 @Preview
 @Composable
-fun BarSpeedSettingPreview() {
+private fun BarSpeedSettingPreview() {
     BarSpeedSetting()
 }

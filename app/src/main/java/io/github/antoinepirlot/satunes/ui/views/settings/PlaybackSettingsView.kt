@@ -17,7 +17,7 @@
  * You find this original project on github.
  *
  * My github link is: https://github.com/antoinepirlot
- * This current project's link is: https://github.com/antoinepirlot/MP3-Player
+ * This current project's link is: https://github.com/antoinepirlot/Satunes
  *
  * You can contact me via my email: pirlot.antoine@outlook.com
  * PS: I don't answer quickly.
@@ -27,8 +27,7 @@ package io.github.antoinepirlot.satunes.ui.views.settings
 
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
@@ -39,9 +38,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
+import io.github.antoinepirlot.satunes.ui.components.settings.AudioOffloadSetting
 import io.github.antoinepirlot.satunes.ui.components.settings.BarSpeedSetting
-import io.github.antoinepirlot.satunes.ui.components.settings.PlaybackModesSettings
+import io.github.antoinepirlot.satunes.ui.components.settings.PlaybackModesSubSettings
 import io.github.antoinepirlot.satunes.ui.components.settings.SettingsSwitchList
+import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
 import io.github.antoinepirlot.satunes.ui.components.texts.Title
 
 /**
@@ -49,7 +50,7 @@ import io.github.antoinepirlot.satunes.ui.components.texts.Title
  */
 
 @Composable
-fun PlaybackSettingsView(
+internal fun PlaybackSettingsView(
     modifier: Modifier = Modifier
 ) {
     val checkedMap: Map<Settings, MutableState<Boolean>> = mapOf(
@@ -70,16 +71,22 @@ fun PlaybackSettingsView(
     val scrollState: ScrollState = rememberScrollState()
     Column(modifier = modifier.verticalScroll(scrollState)) {
         Title(text = stringResource(id = R.string.playback_settings))
-        SettingsSwitchList(checkedMap = checkedMap)
-        Spacer(modifier.size(16.dp))
-        BarSpeedSetting()
-        Spacer(modifier.size(16.dp))
-        PlaybackModesSettings()
+        SubSettings {
+            SettingsSwitchList(checkedMap = checkedMap) //Contains list item so always padding horizontal 16.dp
+            BarSpeedSetting(modifier = Modifier.padding(horizontal = 16.dp))
+        }
+        PlaybackModesSubSettings() //Contains list item so always padding horizontal 16.dp
+        SubSettings(
+            modifier = Modifier.padding(horizontal = 16.dp),
+            title = stringResource(id = R.string.battery_settings)
+        ) {
+            AudioOffloadSetting() //Contains list item so always padding horizontal 16.dp
+        }
     }
 }
 
 @Composable
 @Preview
-fun PlaybackSettingsViewPreview() {
+private fun PlaybackSettingsViewPreview() {
     PlaybackSettingsView()
 }

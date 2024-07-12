@@ -38,6 +38,7 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.floatPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import io.github.antoinepirlot.satunes.database.models.MenuTitle
 import kotlinx.coroutines.flow.first
@@ -50,6 +51,9 @@ import kotlinx.coroutines.runBlocking
 
 object SettingsManager {
 
+    /**
+     * DEFAULT VALUES
+     */
     private const val DEFAULT_FOLDERS_CHECKED = true
     private const val DEFAULT_ARTISTS_CHECKED = true
     private const val DEFAULT_ALBUMS_CHECKED = true
@@ -63,7 +67,19 @@ object SettingsManager {
     private const val DEFAULT_REPEAT_MODE: Int = 0
     private const val DEFAULT_SHUFFLE_MODE_CHECKED: Boolean = false
     private const val DEFAULT_PAUSE_IF_ANOTHER_PLAYBACK_CHECKED: Boolean = true
+    private const val DEFAULT_AUDIO_OFFLOAD_CHECKED: Boolean = false
+    private const val DEFAULT_WHATS_NEW_SEEN: Boolean = false
+    private const val DEFAULT_WHATS_NEW_VERSION_SEEN: String = ""
+    private const val DEFAULT_MUSICS_FILTER: Boolean = true
+    private const val DEFAULT_ARTISTS_FILTER: Boolean = false
+    private const val DEFAULT_ALBUMS_FILTER: Boolean = false
+    private const val DEFAULT_GENRES_FILTER: Boolean = false
+    private const val DEFAULT_FOLDERS_FILTER: Boolean = false
+    private const val DEFAULT_PLAYLISTS_FILTER: Boolean = false
 
+    /**
+     * KEYS
+     */
     private val PREFERENCES_DATA_STORE = preferencesDataStore("settings")
     private val FOLDERS_CHECKED_PREFERENCES_KEY = booleanPreferencesKey("folders_checked")
     private val ARTISTS_CHECKED_PREFERENCES_KEY = booleanPreferencesKey("artist_checked")
@@ -78,7 +94,22 @@ object SettingsManager {
     private val REPEAT_MODE_KEY = intPreferencesKey("repeat_mode")
     private val SHUFFLE_MODE_KEY = booleanPreferencesKey("shuffle_mode")
     private val PAUSE_IF_ANOTHER_PLAYBACK_KEY = booleanPreferencesKey("pause_if_another_playback")
+    private val AUDIO_OFFLOAD_CHECKED_KEY = booleanPreferencesKey("audio_offload_checked")
+    private val WHATS_NEW_SEEN_KEY = booleanPreferencesKey("whats_new_seen")
+    private val WHATS_NEW_VERSION_SEEN_KEY = stringPreferencesKey("whats_new_version_seen")
+    private val MUSICS_FILTER_KEY: Preferences.Key<Boolean> = booleanPreferencesKey("musics_filter")
+    private val ARTISTS_FILTER_KEY: Preferences.Key<Boolean> =
+        booleanPreferencesKey("artists_filter")
+    private val ALBUMS_FILTER_KEY: Preferences.Key<Boolean> = booleanPreferencesKey("albums_filter")
+    private val GENRES_FILTER_KEY: Preferences.Key<Boolean> = booleanPreferencesKey("genres_filter")
+    private val FOLDERS_FILTER_KEY: Preferences.Key<Boolean> =
+        booleanPreferencesKey("folders_filter")
+    private val PLAYLISTS_FILTER_KEY: Preferences.Key<Boolean> =
+        booleanPreferencesKey("playlists_filter")
 
+    /**
+     * VARIABLES
+     */
     private val Context.dataStore: DataStore<Preferences> by PREFERENCES_DATA_STORE
 
     val foldersChecked: MutableState<Boolean> = mutableStateOf(DEFAULT_FOLDERS_CHECKED)
@@ -96,6 +127,7 @@ object SettingsManager {
     val pauseIfAnotherPlayback: MutableState<Boolean> = mutableStateOf(
         DEFAULT_PAUSE_IF_ANOTHER_PLAYBACK_CHECKED
     )
+    val audioOffloadChecked: MutableState<Boolean> = mutableStateOf(DEFAULT_AUDIO_OFFLOAD_CHECKED)
 
     val menuTitleCheckedMap: Map<MenuTitle, MutableState<Boolean>> = mapOf(
         Pair(MenuTitle.FOLDERS, foldersChecked),
@@ -104,6 +136,16 @@ object SettingsManager {
         Pair(MenuTitle.GENRES, genresChecked),
         Pair(MenuTitle.PLAYLISTS, playlistsChecked)
     )
+
+    val whatsNewSeen: MutableState<Boolean> = mutableStateOf(DEFAULT_WHATS_NEW_SEEN)
+    private var whatsNewVersionSeen: String = DEFAULT_WHATS_NEW_VERSION_SEEN
+
+    val foldersFilter: MutableState<Boolean> = mutableStateOf(DEFAULT_FOLDERS_FILTER)
+    val artistsFilter: MutableState<Boolean> = mutableStateOf(DEFAULT_ARTISTS_FILTER)
+    val albumsFilter: MutableState<Boolean> = mutableStateOf(DEFAULT_ALBUMS_FILTER)
+    val genresFilter: MutableState<Boolean> = mutableStateOf(DEFAULT_GENRES_FILTER)
+    val playlistsFilter: MutableState<Boolean> = mutableStateOf(DEFAULT_PLAYLISTS_FILTER)
+    val musicsFilter: MutableState<Boolean> = mutableStateOf(DEFAULT_MUSICS_FILTER)
 
     fun loadSettings(context: Context) {
         runBlocking {
@@ -142,7 +184,27 @@ object SettingsManager {
 
                 pauseIfAnotherPlayback.value = preferences[PAUSE_IF_ANOTHER_PLAYBACK_KEY]
                     ?: DEFAULT_PAUSE_IF_ANOTHER_PLAYBACK_CHECKED
+
+                audioOffloadChecked.value =
+                    preferences[AUDIO_OFFLOAD_CHECKED_KEY] ?: DEFAULT_AUDIO_OFFLOAD_CHECKED
+                loadWhatsNew(context = context, preferences = preferences)
+
+                loadFilters(context = context)
             }.first()
+        }
+    }
+
+    private fun loadWhatsNew(context: Context, preferences: Preferences) {
+        whatsNewSeen.value = preferences[WHATS_NEW_SEEN_KEY] ?: DEFAULT_WHATS_NEW_SEEN
+        whatsNewVersionSeen =
+            preferences[WHATS_NEW_VERSION_SEEN_KEY] ?: DEFAULT_WHATS_NEW_VERSION_SEEN
+        if (whatsNewSeen.value) {
+            val packageManager = context.packageManager
+            val packageInfo = packageManager.getPackageInfo(context.packageName, 0)
+            val versionName = 'v' + packageInfo.versionName
+            if (whatsNewVersionSeen != versionName) {
+                this.whatsNewSeen(context = context, seen = false)
+            }
         }
     }
 
@@ -251,6 +313,91 @@ object SettingsManager {
                 pauseIfAnotherPlayback.value = !pauseIfAnotherPlayback.value
                 preferences[PAUSE_IF_ANOTHER_PLAYBACK_KEY] = pauseIfAnotherPlayback.value
             }
+        }
+    }
+
+    fun switchAudioOffload(context: Context) {
+        runBlocking {
+            context.dataStore.edit { preferences: MutablePreferences ->
+                audioOffloadChecked.value = !audioOffloadChecked.value
+                preferences[AUDIO_OFFLOAD_CHECKED_KEY] = audioOffloadChecked.value
+            }
+        }
+    }
+
+    fun whatsNewSeen(context: Context, seen: Boolean) {
+        runBlocking {
+            context.dataStore.edit { preferences: MutablePreferences ->
+                whatsNewSeen.value = seen
+                preferences[WHATS_NEW_SEEN_KEY] = whatsNewSeen.value
+                if (seen) {
+                    val packageManager = context.packageManager
+                    val packageInfo = packageManager.getPackageInfo(context.packageName, 0)
+                    val versionName = 'v' + packageInfo.versionName
+                    preferences[WHATS_NEW_VERSION_SEEN_KEY] = versionName
+                    whatsNewVersionSeen = versionName
+                }
+            }
+        }
+    }
+
+    fun switchFilter(context: Context, filterSetting: MenuTitle) {
+        runBlocking {
+            when (filterSetting) {
+                MenuTitle.MUSICS -> {
+                    context.dataStore.edit { preferences: MutablePreferences ->
+                        musicsFilter.value = !musicsFilter.value
+                        preferences[MUSICS_FILTER_KEY] = musicsFilter.value
+                    }
+                }
+
+                MenuTitle.ARTISTS -> {
+                    context.dataStore.edit { preferences: MutablePreferences ->
+                        artistsFilter.value = !artistsFilter.value
+                        preferences[ARTISTS_FILTER_KEY] = artistsFilter.value
+                    }
+                }
+
+                MenuTitle.ALBUMS -> {
+                    context.dataStore.edit { preferences: MutablePreferences ->
+                        albumsFilter.value = !albumsFilter.value
+                        preferences[ALBUMS_FILTER_KEY] = albumsFilter.value
+                    }
+                }
+
+                MenuTitle.GENRES -> {
+                    context.dataStore.edit { preferences: MutablePreferences ->
+                        genresFilter.value = !genresFilter.value
+                        preferences[GENRES_FILTER_KEY] = genresFilter.value
+                    }
+                }
+
+                MenuTitle.FOLDERS -> {
+                    context.dataStore.edit { preferences: MutablePreferences ->
+                        foldersFilter.value = !foldersFilter.value
+                        preferences[FOLDERS_FILTER_KEY] = foldersFilter.value
+                    }
+                }
+
+                MenuTitle.PLAYLISTS -> {
+                    context.dataStore.edit { preferences: MutablePreferences ->
+                        playlistsFilter.value = !playlistsFilter.value
+                        preferences[PLAYLISTS_FILTER_KEY] = playlistsFilter.value
+                    }
+                }
+            }
+        }
+    }
+
+    suspend fun loadFilters(context: Context) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            foldersFilter.value = preferences[FOLDERS_FILTER_KEY] ?: DEFAULT_FOLDERS_FILTER
+            artistsFilter.value = preferences[ARTISTS_FILTER_KEY] ?: DEFAULT_ARTISTS_FILTER
+            albumsFilter.value = preferences[ALBUMS_FILTER_KEY] ?: DEFAULT_ALBUMS_FILTER
+            genresFilter.value = preferences[GENRES_FILTER_KEY] ?: DEFAULT_GENRES_FILTER
+            playlistsFilter.value =
+                preferences[PLAYLISTS_FILTER_KEY] ?: DEFAULT_PLAYLISTS_FILTER
+            musicsFilter.value = preferences[MUSICS_FILTER_KEY] ?: DEFAULT_MUSICS_FILTER
         }
     }
 }

@@ -1,7 +1,138 @@
 # Versions (🇫🇷)
 You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
+## 1.3 (Android 5.1.1 Lollipop et ultérieur)
+
+### 1.3.1
+
+Améliorations, Optimisations et Résolutions de problèmes:
+
+* La liste des musiques d'un dossier n'est plus modifiée lorsque l'utilisateur clique sur une
+  musique
+* L'icône de recherche a été supprimée de la page des paramètres de recherche
+
+### 1.3.0
+
+Nouvelles Fonctionnalités:
+
+* Possiblité de choisir les filtres de recherches activés par défaut
+* Demande de confirmation lors d'une suppression dans les playlists
+* Tous les types de media (musiques, artistes, etc.) ont un menu d'option lors d'un appuis long
+
+Améliorations, Optimisations et Résolutions de problèmes:
+
+* Ajout d'un bouton pour ouvrir F-Droid lorsqu'une mise à jour est disponible
+
+## 1.2 (Android 5.1.1 Lollipop et ultérieur)
+
+### 1.2.1
+
+Améliorations, Optimisations et Résolutions de problèmes:
+
+* Correction du bug lors de l'ajout de la musique en cours de lecture à une playlist lorsqu'il n'y
+  en a aucune et que l'utilisateur annule sa création
+* Ajout d'un filtre de recherche pour les playlists
+* Les animations de navigations entre les pages est plus rapide et évite des cliques sur la page
+  précédente
+* La page de la liste des musique en attente s'ouvre avec en tête la musique en cours de lecture
+* Ajout d'un bouton permettant d'ouvrir la musique en cours de lecture depuis la page de recherche
+* Le filtre musiques dans la recherche est activé par défaut
+
+### 1.2.0
+
+Nouvelles Fonctionnalités:
+
+* Recherche des différents média
+* Système de musique favorites
+* Visualisation de la liste de lecture et possibilité de:
+  * Lire la musique après le morceaux actuel
+  * Ajouter à la file d'attente
+* Ajout d'un mode tablet pour l'affichage de la musique en cours de lecutre
+* Popup après installation d'une mise à jour
+
+Améliorations, Optimisations et Résolutions de problèmes:
+
+* Suppression du bouton Facebook suite à la future disparition de la page facebook de Satunes
+* Optimisations
+* Un bug faisant crasher l'application suite à la création de la première playlist a été corrigé
+
+### 1.2.0-preview-1
+
+Nouvelles Fonctionnalités:
+
+* Recherche des différents média
+* Système de musique favorites
+* Visualisation de la liste de lecture et possibilité de:
+  * Lire la musique après le morceaux actuel
+  * Ajouter à la file d'attente
+* Ajout d'un mode tablet pour l'affichage de la musique en cours de lecutre
+* Popup après installation d'une mise à jour
+
+Améliorations, Optimisations et Résolutions de problèmes:
+
+* Suppression du bouton Facebook suite à la future disparition de la page facebook de Satunes
+* Optimisations
+
+## 1.1 (Android 5.1.1 Lollipop et ultérieur)
+
+### 1.1.1
+
+Améliorations, Optimisations et Résolutions de problèmes:
+
+* La lecture de la musique suivante lorsque il s'agit de la dernière musique (après activation du
+  mode aléatoire) ne fait plus crasher l'application
+* Le chargement des playlists est plus rapide au démarrage de l'application
+
+### 1.1.0
+
+Améliorations, Optimisations et Résolutions de problèmes:
+
+* La taille de l'icône repeat one dans les paramètre de lecture par défaut s'affiche correctement
+  sur les différentes tailles d'écran
+* Mise à jour des librairies
+
+### 1.1.0-beta-1
+
+Nouvelles Fonctionnalités:
+
+* Ajout d'un nouveau paramètre permettant d'utiliser l'Audio Offload (envoie de la lecture dans un
+  processus dédié). Cette option permet d'optimiser la batterie
+* Possiblité d'ajouter la musique en cours de lecture dans des playlists via les actions rapides
+* Navigation vers les albums, genres, artistes, etc. depuis le menu d'un appui long sur une musique
+
+Améliorations, Optimisations et Résolutions de problèmes:
+
+* Problème d'affichage lors du lancement de la première musique dans Android Auto réglé
+* La séléction du mode aléatoire par défaut est représenté par des boutons avec icônes et plus à
+  l'aide d'un switch
+* Affichage du nom des boutons de la barre de navigation
+
 ## 1.0 (Android 5.1.1 Lollipop et ultérieur)
+
+### 1.0.3
+
+Améliorations, Optimisations et Résolutions de problèmes:
+
+* L'album n'est plus affiché dans le playback si la taille de la hauteur de l'écran est trop petite
+  en mode paysage
+* Résolution du crash lors du clique sur le bouton paramètre lorsque la permission audio n'est pas
+  accordée
+* La langue par défaut si la langue du système n'est pas prise en charge est maintenant l'anglais et
+  plus le français
+* Les titres des albums ne dépasseront plus la largeur de l'album
+* Corrections de la taille du texte de la section "Musique" dans les vues artiste et genre
+* L'ajout d'une musique dans plusieurs playlist est maintenant résolu
+* Résolution du problème lors de l'ajout de 2 playlists de même nom avec des majuscules et minuscule
+  sur des lettres différentes
+* Lors de l'ajout d'une musique à une playlist et qu'aucune playlist n'a été créée, l'application
+  lance la création d'une nouvelle playlist
+
+### 1.0.2
+
+Améliorations, Optimisations et Résolutions de problèmes:
+
+* La navigation dans les paramètres fonctionne de manière uniforme pour tous les menus.
+* Amélioration du design
 
 ### 1.0.1
 

@@ -25,9 +25,6 @@
 
 package io.github.antoinepirlot.satunes.database.models
 
-import android.graphics.Bitmap
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import androidx.media3.common.MediaItem
 import io.github.antoinepirlot.satunes.database.services.DataManager
 import java.util.SortedMap
@@ -36,18 +33,11 @@ import java.util.SortedMap
  * @author Antoine Pirlot on 27/03/2024
  */
 
-data class Folder(
-    override var id: Long = nextId,
-    override var title: String,
+class Folder(
+    title: String,
     var parentFolder: Folder? = null,
-) : Media {
-    override var artwork: Bitmap? = null
-
-    val musicMediaItemSortedMapUpdate: MutableState<Boolean> = mutableStateOf(false)
-    override val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
-
-    val subFolderMap: SortedMap<String, Folder> = sortedMapOf()
-
+) : MediaImpl(id = nextId, title = title) {
+    private val subFolderMap: SortedMap<String, Folder> = sortedMapOf()
 
     val absolutePath: String = if (parentFolder == null) {
         "/$title"
@@ -68,8 +58,8 @@ data class Folder(
      *
      * @return a list of subfolder and each subfolder is a Folder object
      */
-    fun getSubFolderList(): SortedMap<String, Folder> {
-        return this.subFolderMap
+    fun getSubFolderMap(): SortedMap<String, Folder> {
+        return this.subFolderMap.toSortedMap()
     }
 
     /**
@@ -77,14 +67,9 @@ data class Folder(
      *
      * @return a list of subfolder and each subfolder is cast to Media object
      */
-    fun getSubFolderMapAsMedia(): SortedMap<Long, Media> {
+    fun getSubFolderMapAsMediaImpl(): SortedMap<Long, MediaImpl> {
         @Suppress("UNCHECKED_CAST")
-        return this.subFolderMap as SortedMap<Long, Media>
-    }
-
-    fun addMusic(music: Music) {
-        music.folder = this
-        this.musicMediaItemSortedMap[music] = music.mediaItem
+        return this.subFolderMap.toSortedMap() as SortedMap<Long, MediaImpl>
     }
 
     /**
@@ -95,9 +80,7 @@ data class Folder(
      *                                 It's a path not all the subfolder of this folder
      *
      */
-    fun createSubFolders(
-        subFolderNameChainList: MutableList<String>,
-    ) {
+    fun createSubFolders(subFolderNameChainList: MutableList<String>) {
         var parentFolder = this
         subFolderNameChainList.forEach { folderName: String ->
             var subFolder: Folder? = null
@@ -107,6 +90,7 @@ data class Folder(
                 }
             }
             if (subFolder == null) {
+                // No subfolder matching folder name, create new one
                 subFolder = Folder(title = folderName, parentFolder = parentFolder)
                 DataManager.addFolder(folder = subFolder)
                 parentFolder.subFolderMap[subFolder.title] = subFolder
@@ -124,9 +108,7 @@ data class Folder(
      * @return the right Folder matching the last subFolderName of the list
      */
     fun getSubFolder(splitPath: MutableList<String>): Folder? {
-        if (splitPath.isEmpty()
-            || (splitPath.size == 1 && this.title == splitPath[0])
-        ) {
+        if (splitPath.isEmpty() || splitPath.size == 1 && this.title == splitPath[0]) {
             return this
         }
         this.subFolderMap.values.forEach { subFolder: Folder ->
@@ -142,7 +124,7 @@ data class Folder(
     fun getAllMusic(): SortedMap<Music, MediaItem> {
         val musicMediaSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
 
-        musicMediaSortedMap.putAll(this.musicMediaItemSortedMap)
+        musicMediaSortedMap.putAll(this.musicMediaItemMap)
 
         if (this.subFolderMap.isNotEmpty()) {
             this.subFolderMap.forEach { (_, folder: Folder) ->
@@ -159,21 +141,10 @@ data class Folder(
 
         other as Folder
 
-        if (title != other.title) return false
-        if (parentFolder != other.parentFolder) return false
-        if (subFolderMap != other.subFolderMap) return false
-        return musicMediaItemSortedMap == other.musicMediaItemSortedMap
+        return absolutePath == other.absolutePath
     }
 
     override fun hashCode(): Int {
-        var result = title.hashCode()
-        result = 31 * result + (parentFolder?.hashCode() ?: 0)
-        result = 31 * result + subFolderMap.hashCode()
-        result = 31 * result + musicMediaItemSortedMap.hashCode()
-        return result
-    }
-
-    override fun toString(): String {
-        return this.title
+        return absolutePath.hashCode()
     }
 }

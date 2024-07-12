@@ -8,6 +8,9 @@
     <img src="https://img.shields.io/github/release/antoinepirlot/Satunes.svg?logo=github">
   </a>
 </p>
+<p align="center">
+  <a href="https://f-droid.org/app/io.github.antoinepirlot.satunes"><img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" width="200"></a>
+</p>
 
 You can find this file in [english 🇬🇧](README-EN.md).
 
@@ -21,18 +24,18 @@ Tu as le droit de réutiliser mon code pour créer une nouvelle application dér
 # Aperçu
 
 <p>
-  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/1.png" width = "200">
-  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/2.png" width = "200">
-
-  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/3.png" width = "200">
-
-  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/4.png" width = "200">
-  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/5.png" width = "200">
-
-  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/6.png" width = "200">
-
-  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/7.png" width = "200">
-  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/8.png" width = "200">
+    <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/1.png" width = "200">
+    <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/2.png" width = "200">
+    <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/3.png" width = "200">
+    <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/4.png" width = "200">
+    <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/5.png" width = "200">
+    <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/6.png" width = "200">
+    <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/7.png" width = "200">
+    <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/8.png" width = "200">
+    <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/9.png" width = "200">
+    <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/10.png" width = "200">
+    <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/11.png" width = "200">
+    <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/12.png" width = "200">
 </p>
 
 # Fonctionnalités
@@ -54,10 +57,16 @@ Tu as le droit de réutiliser mon code pour créer une nouvelle application dér
 * Faire la mise à jour de l'application sans la quitter
 
 # Installation
+Pour installer facilement, tu peux télécharger l'application sur Fdroid en cliquant sur le bouton ci-dessous.
+<p align="center">
+  <a href="https://f-droid.org/app/io.github.antoinepirlot.satunes"><img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" width="150"></a>
+</p>
+
+Sinon, tu peux également suivre les étapes suivantes:
 
 ## Application
 
-1) Clique sur [Release](https://github.com/antoinepirlot/MP3-Player/releases)
+1) Clique sur [Release](https://github.com/antoinepirlot/Satunes/releases)
 2) Choisi ta version
 3) Clique sur "Assets" pour dérouler un menu qui contient le fichier d'installation
 4) Clique sur le fichier Satunes_vx.y.z.apk (Un fichier va se télécharger sur ton appareil)

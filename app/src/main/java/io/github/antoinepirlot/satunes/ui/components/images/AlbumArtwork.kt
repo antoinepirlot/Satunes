@@ -41,7 +41,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.antoinepirlot.satunes.database.models.Album
-import io.github.antoinepirlot.satunes.database.models.Media
+import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.icons.R
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
@@ -52,9 +52,9 @@ import io.github.antoinepirlot.satunes.ui.ScreenSizes
  */
 
 @Composable
-fun AlbumArtwork(
+internal fun AlbumArtwork(
     modifier: Modifier = Modifier,
-    media: Media,
+    mediaImpl: MediaImpl,
     onClick: ((album: Album?) -> Unit)? = null,
     contentAlignment: Alignment = Alignment.Center
 ) {
@@ -62,15 +62,15 @@ fun AlbumArtwork(
     val clickableModifier: Modifier = if (onClick != null) {
         modifier
             .size(
-                if (screenWidthDp >= ScreenSizes.VERY_SMALL && screenWidthDp <= ScreenSizes.SMALL) 150.dp
-                else if (screenWidthDp <= ScreenSizes.VERY_SMALL) 100.dp
+                if (screenWidthDp >= (ScreenSizes.VERY_VERY_SMALL - 1) && screenWidthDp < ScreenSizes.VERY_SMALL) 150.dp
+                else if (screenWidthDp < ScreenSizes.VERY_VERY_SMALL) 100.dp
                 else 300.dp // Normal
             )
             .clickable {
                 onClick(
-                    when (media) {
-                        is Music -> media.album
-                        is Album -> media
+                    when (mediaImpl) {
+                        is Music -> mediaImpl.album
+                        is Album -> mediaImpl
                         else -> null
                     }
                 )
@@ -78,8 +78,8 @@ fun AlbumArtwork(
     } else {
         modifier
             .size(
-                if (screenWidthDp >= ScreenSizes.VERY_SMALL && screenWidthDp <= ScreenSizes.SMALL) 150.dp
-                else if (screenWidthDp <= ScreenSizes.VERY_SMALL) 100.dp
+                if (screenWidthDp >= (ScreenSizes.VERY_VERY_SMALL - 1) && screenWidthDp < ScreenSizes.VERY_SMALL) 150.dp
+                else if (screenWidthDp < ScreenSizes.VERY_VERY_SMALL) 100.dp
                 else 300.dp // Normal
             )
     }
@@ -88,10 +88,10 @@ fun AlbumArtwork(
         modifier = clickableModifier,
         contentAlignment = contentAlignment
     ) {
-        if (media.artwork != null) {
+        if (mediaImpl.artwork != null) {
             Image(
                 modifier = Modifier.fillMaxSize(),
-                bitmap = media.artwork!!.asImageBitmap(),
+                bitmap = mediaImpl.artwork!!.asImageBitmap(),
                 contentDescription = "Music Playing Album Artwork"
             )
         } else {
@@ -105,20 +105,20 @@ fun AlbumArtwork(
 }
 
 @Composable
-fun MusicPlayingAlbumArtwork(
+internal fun MusicPlayingAlbumArtwork(
     modifier: Modifier = Modifier,
     onClick: (album: Album?) -> Unit = { /* Do nothing by default */ }
 ) {
     val musicPlaying: Music? by remember { PlaybackController.getInstance().musicPlaying }
     AlbumArtwork(
         modifier = modifier,
-        media = musicPlaying!!,
+        mediaImpl = musicPlaying!!,
         onClick = onClick
     )
 }
 
 @Composable
 @Preview
-fun AlbumArtworkPreview() {
-    AlbumArtwork(media = Album(title = ""))
+private fun AlbumArtworkPreview() {
+    AlbumArtwork(mediaImpl = Album(title = ""))
 }

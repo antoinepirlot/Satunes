@@ -17,7 +17,7 @@
  * You find this original project on github.
  *
  * My github link is: https://github.com/antoinepirlot
- * This current project's link is: https://github.com/antoinepirlot/MP3-Player
+ * This current project's link is: https://github.com/antoinepirlot/Satunes
  *
  * You can contact me via my email: pirlot.antoine@outlook.com
  * PS: I don't answer quickly.
@@ -44,7 +44,7 @@ import io.github.antoinepirlot.satunes.ui.components.texts.Title
  */
 
 @Composable
-fun ExclusionSettingsView(
+internal fun ExclusionSettingsView(
     modifier: Modifier = Modifier
 ) {
     val checkedMap: Map<Settings, MutableState<Boolean>> = mapOf(
@@ -52,16 +52,14 @@ fun ExclusionSettingsView(
     )
 
     val scrollState: ScrollState = rememberScrollState()
-    Column(
-        modifier = modifier.verticalScroll(scrollState)
-    ) {
+    Column(modifier = modifier.verticalScroll(scrollState)) {
         Title(text = stringResource(id = R.string.exclusion_setting))
-        SettingsSwitchList(checkedMap = checkedMap)
+        SettingsSwitchList(checkedMap = checkedMap) //Contains list item so always padding horizontal 16.dp
     }
 }
 
 @Preview
 @Composable
-fun ExclusionSettingsViewPreview() {
+private fun ExclusionSettingsViewPreview() {
     ExclusionSettingsView()
 }

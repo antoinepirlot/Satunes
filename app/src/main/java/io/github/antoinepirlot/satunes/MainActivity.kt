@@ -39,7 +39,7 @@ import androidx.activity.compose.setContent
 import androidx.annotation.OptIn
 import androidx.core.content.ContextCompat
 import androidx.media3.common.util.UnstableApi
-import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
+import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.database.services.DataCleanerManager
 import io.github.antoinepirlot.satunes.database.services.DatabaseManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
@@ -54,13 +54,13 @@ import io.github.antoinepirlot.satunes.database.R as RDb
  * @author Antoine Pirlot on 18/01/24
  */
 
-class MainActivity : ComponentActivity() {
+internal class MainActivity : ComponentActivity() {
 
     companion object {
         internal lateinit var instance: MainActivity
         private const val IMPORT_PLAYLIST_CODE = 1
         private const val EXPORT_PLAYLIST_CODE = 2
-        internal var playlistsToExport: Array<PlaylistWithMusics> = arrayOf()
+        internal var playlistsToExport: Array<Playlist> = arrayOf()
         private val DEFAULT_URI =
             Uri.parse(Environment.getExternalStorageDirectory().path + '/' + Environment.DIRECTORY_DOCUMENTS)
     }
@@ -73,7 +73,9 @@ class MainActivity : ComponentActivity() {
         setContent {
             Satunes()
         }
-        DataCleanerManager.removeApkFiles(context = baseContext)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            DataCleanerManager.removeApkFiles(context = baseContext)
+        }
     }
 
     internal fun isAudioAllowed(): Boolean {
@@ -156,7 +158,7 @@ class MainActivity : ComponentActivity() {
                     DatabaseManager(context = this)
                         .exportPlaylists(
                             context = this,
-                            playlistWithMusics = playlistsToExport,
+                            playlists = playlistsToExport,
                             uri = it
                         )
                     playlistsToExport = arrayOf()

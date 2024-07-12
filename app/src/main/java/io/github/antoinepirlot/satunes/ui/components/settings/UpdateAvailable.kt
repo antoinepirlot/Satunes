@@ -25,11 +25,16 @@
 
 package io.github.antoinepirlot.satunes.ui.components.settings
 
+import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -38,7 +43,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import io.github.antoinepirlot.satunes.internet.R
+import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.internet.updates.APKDownloadStatus
 import io.github.antoinepirlot.satunes.internet.updates.UpdateCheckManager
 import io.github.antoinepirlot.satunes.ui.components.LoadingCircle
@@ -46,6 +51,7 @@ import io.github.antoinepirlot.satunes.ui.components.buttons.updates.DownloadBut
 import io.github.antoinepirlot.satunes.ui.components.buttons.updates.InstallRequestButton
 import io.github.antoinepirlot.satunes.ui.components.buttons.updates.SeeDetailsButton
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
+import io.github.antoinepirlot.satunes.internet.R as RInternet
 
 /**
  * @author Antoine Pirlot on 14/04/2024
@@ -54,15 +60,27 @@ import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 private val SPACER_SIZE = 10.dp
 
 @Composable
-fun UpdateAvailable(
+internal fun UpdateAvailable(
     modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.Center
     ) {
-        NormalText(text = stringResource(id = R.string.update_available))
-        Row(verticalAlignment = Alignment.CenterVertically) {
+        NormalText(
+            modifier = Modifier.padding(horizontal = 16.dp),
+            text = stringResource(id = RInternet.string.update_available)
+        )
+        val scrollState: ScrollState = rememberScrollState()
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .horizontalScroll(scrollState),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Spacer(modifier = Modifier.size(16.dp)) // To align with text and not have a vertical cut
+            SeeDetailsButton(text = stringResource(id = R.string.see_on_fdroid), onFdroid = true)
+            Spacer(modifier = Modifier.size(SPACER_SIZE))
             SeeDetailsButton()
             Spacer(modifier = Modifier.size(SPACER_SIZE))
             val downloadStatus: APKDownloadStatus by remember { UpdateCheckManager.downloadStatus }
@@ -72,12 +90,13 @@ fun UpdateAvailable(
                 APKDownloadStatus.NOT_STARTED -> DownloadButton()
                 else -> return
             }
+            Spacer(modifier = Modifier.size(16.dp)) // To align with text and not have a vertical cut
         }
     }
 }
 
 @Preview
 @Composable
-fun UpdateAvailablePreview() {
+private fun UpdateAvailablePreview() {
     UpdateAvailable()
 }

@@ -49,30 +49,37 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.toBitmap
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.Genre
-import io.github.antoinepirlot.satunes.database.models.Media
+import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
-import io.github.antoinepirlot.satunes.database.models.tables.MusicDB
-import io.github.antoinepirlot.satunes.database.services.DatabaseManager
+import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.icons.R
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.services.MediaSelectionManager
+import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.ui.ScreenSizes
 import io.github.antoinepirlot.satunes.ui.components.cards.ListItem
-import io.github.antoinepirlot.satunes.ui.components.dialog.MusicOptionsDialog
-import io.github.antoinepirlot.satunes.ui.components.dialog.PlaylistOptionsDialog
+import io.github.antoinepirlot.satunes.ui.components.dialog.album.AlbumOptionsDialog
+import io.github.antoinepirlot.satunes.ui.components.dialog.artist.ArtistOptionsDialog
+import io.github.antoinepirlot.satunes.ui.components.dialog.folder.FolderOptionsDialog
+import io.github.antoinepirlot.satunes.ui.components.dialog.genre.GenreOptionsDialog
+import io.github.antoinepirlot.satunes.ui.components.dialog.music.MusicOptionsDialog
+import io.github.antoinepirlot.satunes.ui.components.dialog.playlist.PlaylistOptionsDialog
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 import io.github.antoinepirlot.satunes.ui.components.texts.Subtitle
 import io.github.antoinepirlot.satunes.ui.utils.getRootFolderName
+import io.github.antoinepirlot.satunes.database.R as RDb
 
 /**
  * @author Antoine Pirlot on 16/01/24
@@ -80,22 +87,26 @@ import io.github.antoinepirlot.satunes.ui.utils.getRootFolderName
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun MediaCard(
+internal fun MediaCard(
     modifier: Modifier = Modifier,
-    media: Media,
+    navController: NavHostController,
+    media: MediaImpl,
     onClick: () -> Unit,
-    openedPlaylistWithMusics: PlaylistWithMusics?
+    openedPlaylist: Playlist?,
 ) {
     val haptics = LocalHapticFeedback.current
     var showMusicOptions: Boolean by rememberSaveable { mutableStateOf(false) }
     var showPlaylistOptions: Boolean by rememberSaveable { mutableStateOf(false) }
+    var showArtistOptions: Boolean by rememberSaveable { mutableStateOf(false) }
+    var showAlbumOptions: Boolean by rememberSaveable { mutableStateOf(false) }
+    var showGenreOptions: Boolean by rememberSaveable { mutableStateOf(false) }
+    var showFolderOptions: Boolean by rememberSaveable { mutableStateOf(false) }
+
     val title: String =
         if (media is Folder && media.parentFolder == null) {
             getRootFolderName(title = media.title)
-        } else if (media is PlaylistWithMusics) {
-            media.playlist.title
-        } else if (media is MusicDB) {
-            media.music!!.title
+        } else if (media is Playlist && media.title == LIKES_PLAYLIST_TITLE) {
+            stringResource(id = RDb.string.likes_playlist_title)
         } else {
             media.title
         }
@@ -109,20 +120,14 @@ fun MediaCard(
                 showMusicOptions = false
             },
             onLongClick = {
+                haptics.performHapticFeedback(HapticFeedbackType.LongPress)
                 when (media) {
-                    is Music -> {
-                        if (!showMusicOptions) {
-                            haptics.performHapticFeedback(HapticFeedbackType.LongPress)
-                        }
-                        showMusicOptions = !showMusicOptions
-                    }
-
-                    is PlaylistWithMusics -> {
-                        if (!showMusicOptions) {
-                            haptics.performHapticFeedback(HapticFeedbackType.LongPress)
-                        }
-                        showPlaylistOptions = !showPlaylistOptions
-                    }
+                    is Music -> showMusicOptions = true
+                    is Playlist -> showPlaylistOptions = true
+                    is Artist -> showArtistOptions = true
+                    is Album -> showAlbumOptions = true
+                    is Genre -> showGenreOptions = true
+                    is Folder -> showFolderOptions = true
                 }
             }
         ),
@@ -140,7 +145,7 @@ fun MediaCard(
                 }
             },
             leadingContent = {
-                val boxSize: Dp = if (screenWidthDp <= ScreenSizes.VERY_SMALL)
+                val boxSize: Dp = if (screenWidthDp < ScreenSizes.VERY_VERY_SMALL)
                     25.dp
                 else
                     55.dp
@@ -149,32 +154,44 @@ fun MediaCard(
                         .fillMaxHeight()
                         .width(boxSize)
                 ) {
-                    if (media.artwork != null) {
-                        Image(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .align(Alignment.Center),
-                            bitmap = media.artwork!!.asImageBitmap(),
-                            contentDescription = "Media Artwork"
+                    val imageModifier: Modifier = Modifier
+                        .fillMaxSize()
+                        .align(Alignment.Center)
+                    val playbackController: PlaybackController = PlaybackController.getInstance()
+                    if (media == playbackController.musicPlaying.value) {
+                        val playingIcon: SatunesIcons = SatunesIcons.MUSIC_PLAYING
+                        Icon(
+                            modifier = imageModifier,
+                            imageVector = playingIcon.imageVector,
+                            contentDescription = playingIcon.description
                         )
                     } else {
-                        if (media is Music || media is Album) {
-                            //Use it will prevent slow devices showing icon instead of artwork
-                            val emptyArtwork: ImageBitmap = ResourcesCompat.getDrawable(
-                                LocalContext.current.resources,
-                                R.mipmap.empty_album_artwork_foreground,
-                                null
-                            )?.toBitmap()!!.asImageBitmap()
-                            Image(bitmap = emptyArtwork, contentDescription = "Empty Album")
-                        } else {
-                            val mediaIcon: SatunesIcons = getRightIconAndDescription(media = media)
-                            Icon(
-                                modifier = Modifier
-                                    .size(30.dp)
-                                    .align(Alignment.Center),
-                                imageVector = mediaIcon.imageVector,
-                                contentDescription = mediaIcon.description
+                        if (media.artwork != null) {
+                            Image(
+                                modifier = imageModifier,
+                                bitmap = media.artwork!!.asImageBitmap(),
+                                contentDescription = "Media Artwork"
                             )
+                        } else {
+                            if (media is Music || media is Album) {
+                                //Use it will prevent slow devices showing icon instead of artwork
+                                val emptyArtwork: ImageBitmap = ResourcesCompat.getDrawable(
+                                    LocalContext.current.resources,
+                                    R.mipmap.empty_album_artwork_foreground,
+                                    null
+                                )?.toBitmap()!!.asImageBitmap()
+                                Image(bitmap = emptyArtwork, contentDescription = "Empty Album")
+                            } else {
+                                val mediaIcon: SatunesIcons =
+                                    getRightIconAndDescription(media = media)
+                                Icon(
+                                    modifier = Modifier
+                                        .size(30.dp)
+                                        .align(Alignment.Center),
+                                    imageVector = mediaIcon.imageVector,
+                                    contentDescription = mediaIcon.description
+                                )
+                            }
                         }
                     }
                 }
@@ -185,59 +202,70 @@ fun MediaCard(
 
     // Music options dialog
     if (showMusicOptions && media is Music) {
-        val context = LocalContext.current
         MusicOptionsDialog(
-            musicTitle = title,
-            openPlaylistWithMusics = openedPlaylistWithMusics,
-            onAddToPlaylist = {
-                val db = DatabaseManager(context = context)
-                db.insertMusicToPlaylists(
-                    music = media,
-                    playlists = MediaSelectionManager.checkedPlaylistWithMusics
-                )
-                showMusicOptions = false
-            },
-            onRemoveFromPlaylist = {
-                val db = DatabaseManager(context = context)
-                db.removeMusicFromPlaylist(
-                    music = media,
-                    playlist = openedPlaylistWithMusics!!
-                )
-                showMusicOptions = false
-            },
-            onDismissRequest = { showMusicOptions = false }
+            navController = navController,
+            music = media,
+            playlist = openedPlaylist,
+            onDismissRequest = { showMusicOptions = false },
         )
     }
 
-    // Playlist option dialog
-    if (showPlaylistOptions && media is PlaylistWithMusics) {
-        val context = LocalContext.current
+    // PlaylistDB option dialog
+    if (showPlaylistOptions && media is Playlist) {
         PlaylistOptionsDialog(
-            playlistWithMusics = media,
-            onRemovePlaylist = {
-                val db = DatabaseManager(context = context)
-                db.removePlaylist(playlistToRemove = media)
-                showPlaylistOptions = false
-            },
+            playlist = media,
             onDismissRequest = { showPlaylistOptions = false }
+        )
+    }
+
+    // Artist option dialog
+    if (showArtistOptions && media is Artist) {
+        ArtistOptionsDialog(
+            artist = media,
+            onDismissRequest = { showArtistOptions = false }
+        )
+    }
+
+    // Album option dialog
+    if (showAlbumOptions && media is Album) {
+        AlbumOptionsDialog(
+            navController = navController,
+            album = media,
+            onDismissRequest = { showAlbumOptions = false }
+        )
+    }
+
+    // Genre option dialog
+    if (showGenreOptions && media is Genre) {
+        GenreOptionsDialog(
+            genre = media,
+            onDismissRequest = { showGenreOptions = false }
+        )
+    }
+
+    // Folder option dialog
+    if (showFolderOptions && media is Folder) {
+        FolderOptionsDialog(
+            folder = media,
+            onDismissRequest = { showFolderOptions = false }
         )
     }
 }
 
-private fun getRightIconAndDescription(media: Media): SatunesIcons {
+private fun getRightIconAndDescription(media: MediaImpl): SatunesIcons {
     return when (media) {
         is Folder -> SatunesIcons.FOLDER
         is Artist -> SatunesIcons.ARTIST
         is Album -> SatunesIcons.ALBUM
         is Genre -> SatunesIcons.GENRES
-        is PlaylistWithMusics -> SatunesIcons.PLAYLIST
-        else -> SatunesIcons.MUSIC // In that case, media is Music
+        is Playlist -> SatunesIcons.PLAYLIST
+        else -> SatunesIcons.MUSIC // In that case, mediaImpl is Music
     }
 }
 
 @Composable
 @Preview
-fun CardPreview() {
+private fun CardPreview() {
     val music = Music(
         id = 1,
         title = "",
@@ -251,10 +279,12 @@ fun CardPreview() {
         absolutePath = "absolute path",
         context = LocalContext.current
     )
+    val navController: NavHostController = rememberNavController()
     MediaCard(
         modifier = Modifier.fillMaxSize(),
+        navController = navController,
         media = music,
         onClick = {},
-        openedPlaylistWithMusics = null
+        openedPlaylist = null
     )
 }

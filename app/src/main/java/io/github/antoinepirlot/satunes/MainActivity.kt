@@ -73,7 +73,9 @@ internal class MainActivity : ComponentActivity() {
         setContent {
             Satunes()
         }
-        DataCleanerManager.removeApkFiles(context = baseContext)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            DataCleanerManager.removeApkFiles(context = baseContext)
+        }
     }
 
     internal fun isAudioAllowed(): Boolean {

@@ -25,9 +25,14 @@
 
 package io.github.antoinepirlot.satunes.internet.updates
 
+import android.os.Build
+import androidx.annotation.RequiresApi
+
 /**
  * @author Antoine Pirlot on 14/04/2024
  */
+
+@RequiresApi(Build.VERSION_CODES.M)
 object Versions {
     internal const val ALPHA: String = "alpha"
     internal const val BETA: String = "beta"

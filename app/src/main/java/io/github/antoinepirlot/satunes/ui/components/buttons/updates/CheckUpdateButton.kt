@@ -26,6 +26,8 @@
 package io.github.antoinepirlot.satunes.ui.components.buttons.updates
 
 import android.content.Context
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.material3.Button
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -43,6 +45,7 @@ import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
  * @author Antoine Pirlot on 11/04/2024
  */
 
+@RequiresApi(Build.VERSION_CODES.M)
 @Composable
 internal fun CheckUpdateButton(
     modifier: Modifier = Modifier,
@@ -60,6 +63,7 @@ internal fun CheckUpdateButton(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.M)
 @Preview
 @Composable
 private fun CheckUpdateButtonPreview() {

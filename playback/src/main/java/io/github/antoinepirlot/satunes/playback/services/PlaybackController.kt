@@ -332,9 +332,7 @@ class PlaybackController private constructor(
             is Folder -> addToQueue(mediaImplList = mediaImpl.getAllMusic().keys.reversed())
 
             else -> {
-                if (mediaImpl.musicMediaItemMap != null) {
-                    addToQueue(mediaImplList = mediaImpl.musicMediaItemMap!!.keys.reversed())
-                }
+                addToQueue(mediaImplList = mediaImpl.musicMediaItemMap.keys.reversed())
             }
         }
     }
@@ -368,9 +366,7 @@ class PlaybackController private constructor(
             is Folder -> addNext(mediaImplList = mediaImpl.getAllMusic().keys.reversed())
 
             else -> {
-                if (mediaImpl.musicMediaItemMap != null) {
-                    addNext(mediaImplList = mediaImpl.musicMediaItemMap!!.keys.reversed())
-                }
+                addNext(mediaImplList = mediaImpl.musicMediaItemMap.keys.reversed())
             }
         }
     }

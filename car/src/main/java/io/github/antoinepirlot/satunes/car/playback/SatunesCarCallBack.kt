@@ -95,6 +95,10 @@ internal object SatunesCarCallBack : MediaSessionCompat.Callback() {
         playbackController.start(musicToPlay = musicToPlay)
     }
 
+    override fun onPlayFromSearch(query: String?, extras: Bundle?) {
+        super.onPlayFromSearch(query, extras)
+    }
+
     override fun onSkipToNext() {
         val playbackController: PlaybackController = PlaybackController.getInstance()
         playbackController.playNext()

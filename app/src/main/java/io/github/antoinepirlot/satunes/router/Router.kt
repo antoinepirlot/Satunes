@@ -311,6 +311,7 @@ internal fun Router(
             PlaybackSettingsView()
         }
 
+
         composable(Destination.UPDATES_SETTINGS.link) {
             RoutesManager.currentDestination.value = it.destination.route
             UpdatesSettingView()

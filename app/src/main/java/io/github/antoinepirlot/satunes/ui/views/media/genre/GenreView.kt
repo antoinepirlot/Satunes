@@ -46,8 +46,8 @@ import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
-import io.github.antoinepirlot.satunes.ui.views.MediaWithAlbumsHeaderView
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
+import io.github.antoinepirlot.satunes.ui.views.media.MediaWithAlbumsHeaderView
 import java.util.SortedMap
 import java.util.SortedSet
 

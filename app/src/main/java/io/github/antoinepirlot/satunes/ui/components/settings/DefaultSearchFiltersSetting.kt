@@ -52,6 +52,7 @@ internal fun DefaultSearchFiltersSetting(
     modifier: Modifier = Modifier,
 ) {
     SubSettings(
+        modifier = modifier,
         title = stringResource(id = R.string.default_filter_setting_title)
     ) {
         SettingsSwitchList(checkedMap = filtersMap)

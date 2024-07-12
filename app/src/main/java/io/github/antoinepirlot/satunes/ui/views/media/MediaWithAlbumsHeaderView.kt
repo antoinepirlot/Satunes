@@ -23,7 +23,7 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.views
+package io.github.antoinepirlot.satunes.ui.views.media
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer

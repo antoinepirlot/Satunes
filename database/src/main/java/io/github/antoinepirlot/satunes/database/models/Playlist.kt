@@ -25,8 +25,6 @@
 
 package io.github.antoinepirlot.satunes.database.models
 
-import io.github.antoinepirlot.satunes.database.models.database.tables.PlaylistDB
-
 /**
  * @author Antoine Pirlot on 11/07/2024
  */
@@ -38,7 +36,7 @@ class Playlist(
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as PlaylistDB
+        other as Playlist
 
         return title.lowercase() == other.title.lowercase()
     }

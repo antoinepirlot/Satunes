@@ -53,10 +53,21 @@ abstract class MediaImpl(
             field = artwork?.copy(artwork.config, false)
         }
 
-    override val musicMediaItemMap: SortedMap<Music, MediaItem> = sortedMapOf()
-        get() = field.toSortedMap()
+    val musicMediaItemMap: SortedMap<Music, MediaItem> = sortedMapOf()
+    val musicMediaItemMapUpdate: MutableState<Boolean> = mutableStateOf(false)
 
-    override val musicMediaItemMapUpdate: MutableState<Boolean> = mutableStateOf(false)
+    fun addMusic(music: Music) {
+        if (this.musicMediaItemMap[music] == null) {
+            this.musicMediaItemMap[music] = music.mediaItem
+            this.musicMediaItemMapUpdate.value = true
+        }
+    }
+
+    fun removeMusic(music: Music) {
+        if (this.musicMediaItemMap[music] == null) return
+        this.musicMediaItemMap.remove(music)
+        this.musicMediaItemMapUpdate.value = true
+    }
 
     override fun compareTo(other: MediaImpl): Int {
         return StringComparator.compare(o1 = this.title, o2 = other.title)

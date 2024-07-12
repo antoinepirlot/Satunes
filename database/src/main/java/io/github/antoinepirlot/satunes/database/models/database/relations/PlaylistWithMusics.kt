@@ -25,21 +25,16 @@
 
 package io.github.antoinepirlot.satunes.database.models.database.relations
 
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.media3.common.MediaItem
 import androidx.room.Embedded
 import androidx.room.Ignore
 import androidx.room.Junction
 import androidx.room.Relation
 import io.github.antoinepirlot.satunes.database.models.Media
-import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.database.tables.MusicDB
 import io.github.antoinepirlot.satunes.database.models.database.tables.MusicsPlaylistsRel
 import io.github.antoinepirlot.satunes.database.models.database.tables.PlaylistDB
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
-import java.util.SortedMap
 
 /**
  * @author Antoine Pirlot on 27/03/2024
@@ -63,41 +58,5 @@ internal data class PlaylistWithMusics(
 
     @Ignore
     @Transient
-    override val musicMediaItemMap: SortedMap<Music, MediaItem> = sortedMapOf()
-
-    @Ignore
-    @Transient
     override var id: Long = playlistDB.id
-
-    @Ignore
-    @Transient
-    override val musicMediaItemMapUpdate: MutableState<Boolean> = mutableStateOf(false)
-
-
-    init {
-        musics.forEach { musicDB: MusicDB ->
-            if (musicDB.music != null) {
-                musicMediaItemMap[musicDB.music] = musicDB.music!!.mediaItem
-            }
-        }
-    }
-
-    override fun addMusic(music: Music) {
-        val musicDb = MusicDB(id = music.id)
-        if (musicDb.music != null) {
-            musics.add(musicDb)
-            if (!musicMediaItemMap.contains(music)) {
-                musicMediaItemMap[music] = music.mediaItem
-                musicMediaItemMapUpdate.value = true
-            }
-        }
-    }
-
-    override fun removeMusic(music: Music) {
-        musics.remove(MusicDB(id = music.id))
-        if (musicMediaItemMap.contains(music)) {
-            musicMediaItemMap.remove(music)
-            musicMediaItemMapUpdate.value = true
-        }
-    }
 }

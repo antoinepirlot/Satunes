@@ -25,8 +25,6 @@
 
 package io.github.antoinepirlot.satunes.database.models.database.tables
 
-import androidx.compose.runtime.MutableState
-import androidx.media3.common.MediaItem
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Ignore
@@ -34,12 +32,10 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import io.github.antoinepirlot.satunes.database.exceptions.PlaylistNotFoundException
 import io.github.antoinepirlot.satunes.database.models.Media
-import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.database.services.DataManager
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
-import java.util.SortedMap
 
 /**
  * @author Antoine Pirlot on 27/03/2024
@@ -52,14 +48,6 @@ internal data class PlaylistDB(
     @ColumnInfo(name = "playlist_id") override var id: Long,
     @ColumnInfo(name = "title") override var title: String,
 ) : Media {
-    @Ignore
-    @Transient
-    override val musicMediaItemMap: SortedMap<Music, MediaItem>? = null // Not used
-
-    @Ignore
-    @Transient
-    override val musicMediaItemMapUpdate: MutableState<Boolean>? = null // Not used
-
     @Ignore
     @Transient
     var playlist: Playlist? = try {

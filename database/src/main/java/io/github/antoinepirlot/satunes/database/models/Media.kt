@@ -25,31 +25,10 @@
 
 package io.github.antoinepirlot.satunes.database.models
 
-import androidx.compose.runtime.MutableState
-import androidx.media3.common.MediaItem
-import java.util.SortedMap
-
 /**
  * @author Antoine Pirlot on 11/07/2024
  */
 internal interface Media {
     val id: Long
     var title: String
-    val musicMediaItemMap: SortedMap<Music, MediaItem>?
-    val musicMediaItemMapUpdate: MutableState<Boolean>?
-
-    fun addMusic(music: Music) {
-        if (musicMediaItemMap == null) return
-        if (musicMediaItemMap!![music] == null) {
-            musicMediaItemMap!![music] = music.mediaItem
-            musicMediaItemMapUpdate!!.value = true
-        }
-    }
-
-    fun removeMusic(music: Music) {
-        if (musicMediaItemMap == null) return
-        if (musicMediaItemMap!![music] == null) return
-        musicMediaItemMap!!.remove(music)
-        musicMediaItemMapUpdate!!.value = true
-    }
 }

@@ -25,8 +25,6 @@
 
 package io.github.antoinepirlot.satunes.database.models.database.tables
 
-import androidx.compose.runtime.MutableState
-import androidx.media3.common.MediaItem
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Ignore
@@ -37,7 +35,6 @@ import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.DataManager
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
-import java.util.SortedMap
 
 /**
  * @author Antoine Pirlot on 30/03/2024
@@ -54,14 +51,6 @@ internal data class MusicDB(
     override lateinit var title: String
 
     var liked: Boolean = false
-
-    @Ignore
-    @Transient
-    override val musicMediaItemMap: SortedMap<Music, MediaItem>? = null
-
-    @Ignore
-    @Transient
-    override val musicMediaItemMapUpdate: MutableState<Boolean>? = null
 
     @Ignore
     @Transient

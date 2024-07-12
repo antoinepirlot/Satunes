@@ -75,10 +75,10 @@ class Music(
 
     init {
         DataManager.addMusic(music = this)
-        album.addMusic(music = this@Music)
-        artist.addMusic(music = this@Music)
-        genre.addMusic(music = this@Music)
-        folder.addMusic(music = this@Music)
+        album.addMusic(music = this)
+        artist.addMusic(music = this)
+        genre.addMusic(music = this)
+        folder.addMusic(music = this)
         loadAlbumArtwork(context = context)
     }
 

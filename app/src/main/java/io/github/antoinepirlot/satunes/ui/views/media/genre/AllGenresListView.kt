@@ -38,7 +38,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Genre
-import io.github.antoinepirlot.satunes.database.models.Media
+import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.DataManager
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
@@ -71,10 +71,10 @@ internal fun AllGenresListView(
     MediaListView(
         modifier = modifier,
         navController = navController,
-        mediaList = genreMap.values.toList(),
+        mediaImplList = genreMap.values.toList(),
 
-        openMedia = { clickedMedia: Media ->
-            openMedia(media = clickedMedia, navController = navController)
+        openMedia = { clickedMediaImpl: MediaImpl ->
+            openMedia(mediaImpl = clickedMediaImpl, navController = navController)
         },
         onFABClick = { openCurrentMusic(navController = navController) },
         extraButtons = {
@@ -101,7 +101,7 @@ private fun getMusics(genreMap: SortedMap<String, Genre>): SortedMap<Music, Medi
     val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
 
     genreMap.forEach { (_: String, genre: Genre) ->
-        musicMediaItemSortedMap.putAll(genre.musicMediaItemSortedMap)
+        musicMediaItemSortedMap.putAll(genre.musicMediaItemMap)
     }
     return musicMediaItemSortedMap
 }

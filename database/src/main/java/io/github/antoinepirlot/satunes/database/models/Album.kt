@@ -25,25 +25,14 @@
 
 package io.github.antoinepirlot.satunes.database.models
 
-import android.graphics.Bitmap
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.media3.common.MediaItem
-import java.util.SortedMap
-
 /**
  * @author Antoine Pirlot on 27/03/2024
  */
 
-data class Album(
-    override val id: Long = nextId,
-    override var title: String,
+class Album(
+    title: String,
     var artist: Artist? = null,
-    override val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf(),
-) : Media {
-    override val liked: MutableState<Boolean>? = null // Not used
-    override val musicMediaItemSortedMapUpdate: MutableState<Boolean> = mutableStateOf(false)
-    override var artwork: Bitmap? = null
+) : MediaImpl(id = nextId, title = title) {
 
     companion object {
         var nextId: Long = 1
@@ -51,16 +40,6 @@ data class Album(
 
     init {
         nextId++
-    }
-
-    /**
-     * Add music to this album by adding music in musicMediaItemSortedMap
-     * and in musicSortedMap.
-     *
-     * @param music the music to add
-     */
-    fun addMusic(music: Music) {
-        this.musicMediaItemSortedMap[music] = music.mediaItem
     }
 
     override fun equals(other: Any?): Boolean {
@@ -81,7 +60,7 @@ data class Album(
         return result
     }
 
-    override fun compareTo(other: Media): Int {
+    override fun compareTo(other: MediaImpl): Int {
         val titleCompared: Int = super.compareTo(other)
         if (artist == null || other is Album && other.artist == null) {
             return titleCompared

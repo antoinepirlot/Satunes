@@ -47,7 +47,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Album
-import io.github.antoinepirlot.satunes.database.models.Media
+import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
@@ -74,10 +74,10 @@ internal fun AlbumView(
     val playbackController: PlaybackController = PlaybackController.getInstance()
 
 
-    val musicMap: SortedMap<Music, MediaItem> = remember { album.musicMediaItemSortedMap }
+    val musicMap: SortedMap<Music, MediaItem> = remember { album.musicMediaItemMap }
 
     //Recompose if data changed
-    var mapChanged: Boolean by rememberSaveable { album.musicMediaItemSortedMapUpdate }
+    var mapChanged: Boolean by rememberSaveable { album.musicMediaItemMapUpdate }
     if (mapChanged) {
         mapChanged = false
     }
@@ -86,27 +86,27 @@ internal fun AlbumView(
     MediaListView(
         modifier = modifier,
         navController = navController,
-        mediaList = musicMap.keys.toList(),
-        openMedia = { clickedMedia: Media ->
+        mediaImplList = musicMap.keys.toList(),
+        openMedia = { clickedMediaImpl: MediaImpl ->
             playbackController.loadMusic(
-                musicMediaItemSortedMap = album.musicMediaItemSortedMap,
-                musicToPlay = clickedMedia as Music
+                musicMediaItemSortedMap = album.musicMediaItemMap,
+                musicToPlay = clickedMediaImpl as Music
             )
-            openMedia(media = clickedMedia, navController = navController)
+            openMedia(mediaImpl = clickedMediaImpl, navController = navController)
         },
         onFABClick = { openCurrentMusic(navController = navController) },
         header = {
             Header(navController = navController, album = album)
         },
         extraButtons = {
-            if (album.musicMediaItemSortedMap.isNotEmpty()) {
+            if (album.musicMediaItemMap.isNotEmpty()) {
                 ExtraButton(icon = SatunesIcons.PLAY, onClick = {
-                    playbackController.loadMusic(album.musicMediaItemSortedMap)
+                    playbackController.loadMusic(album.musicMediaItemMap)
                     openMedia(navController = navController)
                 })
                 ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
                     playbackController.loadMusic(
-                        musicMediaItemSortedMap = album.musicMediaItemSortedMap,
+                        musicMediaItemSortedMap = album.musicMediaItemMap,
                         shuffleMode = true
                     )
                     openMedia(navController = navController)
@@ -134,7 +134,7 @@ private fun Header(
             modifier = Modifier
                 .fillMaxWidth()
                 .size(albumSize),
-            media = album
+            mediaImpl = album
         )
         Title(
             bottomPadding = 0.dp,
@@ -144,7 +144,7 @@ private fun Header(
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .clickable {
-                    openMedia(media = album.artist, navController = navController)
+                    openMedia(mediaImpl = album.artist, navController = navController)
                 },
             text = album.artist!!.title
         )
@@ -158,10 +158,8 @@ private fun AlbumViewPreview() {
     AlbumView(
         navController = navController,
         album = Album(
-            id = 0,
             title = "Album title",
             artist = null,
-            musicMediaItemSortedMap = sortedMapOf()
         )
     )
 }

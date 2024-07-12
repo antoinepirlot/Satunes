@@ -31,14 +31,14 @@ import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.media3.common.MediaItem
 import io.github.antoinepirlot.satunes.database.exceptions.DuplicatedAlbumException
 import io.github.antoinepirlot.satunes.database.exceptions.MusicNotFoundException
+import io.github.antoinepirlot.satunes.database.exceptions.PlaylistNotFoundException
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.database.models.StringComparator
-import io.github.antoinepirlot.satunes.database.models.database.relations.PlaylistWithMusics
-import io.github.antoinepirlot.satunes.database.models.database.tables.PlaylistDB
 import java.util.SortedMap
 import java.util.SortedSet
 
@@ -70,10 +70,10 @@ object DataManager {
     val genreMap: SortedMap<String, Genre> = sortedMapOf(comparator = StringComparator)
     val genreMapUpdated: MutableState<Boolean> = mutableStateOf(false)
 
-    private val playlistWithMusicsMapById: MutableMap<Long, PlaylistWithMusics> = mutableMapOf()
-    val playlistWithMusicsMap: SortedMap<String, PlaylistWithMusics> =
+    private val playlistsMapById: MutableMap<Long, Playlist> = mutableMapOf()
+    val playlistsMap: SortedMap<String, Playlist> =
         sortedMapOf(comparator = StringComparator)
-    val playlistWithMusicsMapUpdated: MutableState<Boolean> = mutableStateOf(false)
+    val playlistsMapUpdated: MutableState<Boolean> = mutableStateOf(false)
 
 
     fun getMusic(musicId: Long): Music {
@@ -82,7 +82,7 @@ object DataManager {
         } catch (_: NullPointerException) {
             //That means the music is not more present in the phone storage
             //Happens when the database is loaded with old informations.
-            throw MusicNotFoundException(musicId = musicId)
+            throw MusicNotFoundException(id = musicId)
         }
     }
 
@@ -210,33 +210,41 @@ object DataManager {
         genreMapById.remove(genre.id)
     }
 
-    fun getPlaylist(playlistId: Long): PlaylistWithMusics {
-        return playlistWithMusicsMapById[playlistId]!!
+    fun getPlaylist(id: Long): Playlist {
+        try {
+            return playlistsMapById[id]!!
+        } catch (_: NullPointerException) {
+            throw PlaylistNotFoundException(id = id)
+        }
+
     }
 
-    fun addPlaylist(playlistWithMusics: PlaylistWithMusics) {
-        val playlistDB: PlaylistDB = playlistWithMusics.playlistDB
-        if (!playlistWithMusicsMap.contains(playlistDB.title)) {
-            playlistWithMusicsMap[playlistDB.title] = playlistWithMusics
-            playlistWithMusicsMapUpdated.value = true
+    fun getPlaylist(title: String): Playlist {
+        return playlistsMap[title]!!
+    }
+
+    fun addPlaylist(playlist: Playlist) {
+        val playlistDB: Playlist = playlist
+        if (!playlistsMap.contains(playlistDB.title)) {
+            playlistsMap[playlistDB.title] = playlist
+            playlistsMapUpdated.value = true
         }
-        if (!playlistWithMusicsMapById.contains(playlistDB.id)) {
-            playlistWithMusicsMapById[playlistDB.id] = playlistWithMusics
+        if (!playlistsMapById.contains(playlistDB.id)) {
+            playlistsMapById[playlistDB.id] = playlist
         }
     }
 
-    fun removePlaylist(playlistWithMusics: PlaylistWithMusics) {
-        val playlistDB: PlaylistDB = playlistWithMusics.playlistDB
-        if (playlistWithMusicsMap.contains(playlistDB.title)) {
-            playlistWithMusicsMap.remove(playlistDB.title)
-            playlistWithMusicsMapUpdated.value = true
+    fun removePlaylist(playlist: Playlist) {
+        if (playlistsMap.contains(playlist.title)) {
+            playlistsMap.remove(playlist.title)
+            playlistsMapUpdated.value = true
         }
-        playlistWithMusicsMapById.remove(playlistDB.id)
+        playlistsMapById.remove(playlist.id)
     }
 
-    fun updatePlaylist(oldTitle: String, playlistWithMusics: PlaylistWithMusics) {
-        playlistWithMusicsMap.remove(oldTitle)
-        playlistWithMusicsMap[playlistWithMusics.playlistDB.title] = playlistWithMusics
-        playlistWithMusicsMapUpdated.value = true
+    fun updatePlaylist(oldTitle: String, playlist: Playlist) {
+        playlistsMap.remove(oldTitle)
+        playlistsMap[playlist.title] = playlist
+        playlistsMapUpdated.value = true
     }
 }

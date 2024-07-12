@@ -25,50 +25,51 @@
 
 package io.github.antoinepirlot.satunes.database.models
 
+import android.graphics.Bitmap
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.media3.common.MediaItem
 import java.util.SortedMap
 
 /**
- * @author Antoine Pirlot on 27/03/2024
+ * @author Antoine Pirlot on 29/03/2024
  */
+abstract class MediaImpl(
+    id: Long,
+    title: String
+) : Media, Comparable<MediaImpl> {
+    override var id: Long = id
+        internal set
+    override var title: String = title
+        set(title) {
+            if (title.isNotBlank()) {
+                field = title
+            }
+        }
 
-class Artist(
-    title: String,
-) : MediaImpl(id = nextId, title = title) {
-    val albumSortedMap: SortedMap<String, Album> = sortedMapOf()
-        get() = field.toSortedMap()
+    var artwork: Bitmap? = null
+        get(): Bitmap? = field?.copy(field!!.config, false)
+        set(artwork) {
+            field = artwork?.copy(artwork.config, false)
+        }
 
-    val albumSortedMapUpdate: MutableState<Boolean> = mutableStateOf(false)
+    val musicMediaItemMap: SortedMap<Music, MediaItem> = sortedMapOf()
+    val musicMediaItemMapUpdate: MutableState<Boolean> = mutableStateOf(false)
 
-    companion object {
-        var nextId: Long = 1
-    }
-
-    init {
-        nextId++
-    }
-
-    fun addAlbum(album: Album) {
-        if (!albumSortedMap.contains(album.title)) {
-            albumSortedMap[album.title] = album
+    fun addMusic(music: Music) {
+        if (this.musicMediaItemMap[music] == null) {
+            this.musicMediaItemMap[music] = music.mediaItem
+            this.musicMediaItemMapUpdate.value = true
         }
     }
 
-    override fun toString(): String {
-        return this.title
+    fun removeMusic(music: Music) {
+        if (this.musicMediaItemMap[music] == null) return
+        this.musicMediaItemMap.remove(music)
+        this.musicMediaItemMapUpdate.value = true
     }
 
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as Artist
-
-        return title == other.title
-    }
-
-    override fun hashCode(): Int {
-        return title.hashCode()
+    override fun compareTo(other: MediaImpl): Int {
+        return StringComparator.compare(o1 = this.title, o2 = other.title)
     }
 }

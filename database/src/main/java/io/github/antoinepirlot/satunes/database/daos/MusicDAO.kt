@@ -60,5 +60,5 @@ internal interface MusicDAO {
     fun delete(music: MusicDB)
 
     @Query("DELETE from musics WHERE music_id = :musicId")
-    fun remove(musicId: Long)
+    fun delete(musicId: Long)
 }

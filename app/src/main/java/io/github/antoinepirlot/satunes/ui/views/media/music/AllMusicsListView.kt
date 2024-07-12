@@ -37,7 +37,7 @@ import androidx.media3.common.MediaItem
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.database.models.Media
+import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.DataManager
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
@@ -72,13 +72,13 @@ internal fun AllMusicsListView(
     MediaListView(
         modifier = modifier,
         navController = navController,
-        mediaList = musicMediaItemMap.keys.toList(),
-        openMedia = { clickedMedia: Media ->
+        mediaImplList = musicMediaItemMap.keys.toList(),
+        openMedia = { clickedMediaImpl: MediaImpl ->
             playbackController.loadMusic(
                 musicMediaItemSortedMap = musicMediaItemMap,
-                musicToPlay = clickedMedia as Music
+                musicToPlay = clickedMediaImpl as Music
             )
-            openMedia(clickedMedia, navController = navController)
+            openMedia(clickedMediaImpl, navController = navController)
         },
         onFABClick = { openCurrentMusic(navController = navController) },
         extraButtons = {

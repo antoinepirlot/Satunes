@@ -37,9 +37,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Folder
-import io.github.antoinepirlot.satunes.database.models.Media
+import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.database.models.database.relations.PlaylistWithMusics
+import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.database.services.DataManager
 import io.github.antoinepirlot.satunes.database.services.DatabaseManager
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
@@ -55,7 +55,7 @@ import java.util.SortedMap
 @Composable
 internal fun AddToPlaylistMediaOption(
     modifier: Modifier = Modifier,
-    media: Media,
+    mediaImpl: MediaImpl,
     onFinished: () -> Unit
 ) {
     val context: Context = LocalContext.current
@@ -68,11 +68,11 @@ internal fun AddToPlaylistMediaOption(
         text = stringResource(id = R.string.add_to_playlist)
     )
     if (showDialog) {
-        val playlistList: SortedMap<String, PlaylistWithMusics> =
-            remember { DataManager.playlistWithMusicsMap }
+        val playlistList: SortedMap<String, Playlist> =
+            remember { DataManager.playlistsMap }
 
         //Recompose if data changed
-        var mapChanged: Boolean by rememberSaveable { DataManager.playlistWithMusicsMapUpdated }
+        var mapChanged: Boolean by rememberSaveable { DataManager.playlistsMapUpdated }
         if (mapChanged) {
             mapChanged = false
         }
@@ -83,7 +83,7 @@ internal fun AddToPlaylistMediaOption(
                 showDialog = false
             },
             onConfirm = {
-                insertMediaToPlaylist(context = context, media = media)
+                insertMediaToPlaylist(context = context, mediaImpl = mediaImpl)
                 onFinished()
             },
             mediaList = playlistList.values.toList(),
@@ -92,27 +92,25 @@ internal fun AddToPlaylistMediaOption(
     }
 }
 
-private fun insertMediaToPlaylist(context: Context, media: Media) {
+private fun insertMediaToPlaylist(context: Context, mediaImpl: MediaImpl) {
     val db = DatabaseManager(context = context)
-    if (media is Music) {
+    if (mediaImpl is Music) {
         db.insertMusicToPlaylists(
-            music = media,
+            music = mediaImpl,
             playlists = MediaSelectionManager.getCheckedPlaylistWithMusics()
         )
     } else {
-        val musicList: List<Music> = if (media is Folder) {
-            media.getAllMusic().keys.toList()
-        } else if (media.musicMediaItemSortedMap != null) {
-            media.musicMediaItemSortedMap!!.keys.toList()
+        val musicList: List<Music> = if (mediaImpl is Folder) {
+            mediaImpl.getAllMusic().keys.toList()
         } else {
-            listOf()
+            mediaImpl.musicMediaItemMap.keys.toList()
         }
 
         MediaSelectionManager.getCheckedPlaylistWithMusics()
-            .forEach { playlistWithMusics: PlaylistWithMusics ->
+            .forEach { playlist: Playlist ->
                 db.insertMusicsToPlaylist(
                     musics = musicList,
-                    playlist = playlistWithMusics
+                    playlist = playlist
                 )
             }
     }

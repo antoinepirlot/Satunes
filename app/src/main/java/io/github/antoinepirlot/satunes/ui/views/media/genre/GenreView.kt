@@ -39,7 +39,7 @@ import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Genre
-import io.github.antoinepirlot.satunes.database.models.Media
+import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
@@ -62,10 +62,10 @@ internal fun GenreView(
     genre: Genre,
 ) {
     val playbackController: PlaybackController = PlaybackController.getInstance()
-    val musicMap: SortedMap<Music, MediaItem> = remember { genre.musicMediaItemSortedMap }
+    val musicMap: SortedMap<Music, MediaItem> = remember { genre.musicMediaItemMap }
 
     //Recompose if data changed
-    var mapChanged: Boolean by rememberSaveable { genre.musicMediaItemSortedMapUpdate }
+    var mapChanged: Boolean by rememberSaveable { genre.musicMediaItemMapUpdate }
     if (mapChanged) {
         mapChanged = false
     }
@@ -74,19 +74,19 @@ internal fun GenreView(
     MediaListView(
         modifier = modifier,
         navController = navController,
-        mediaList = musicMap.keys.toList(),
-        openMedia = { clickedMedia: Media ->
+        mediaImplList = musicMap.keys.toList(),
+        openMedia = { clickedMediaImpl: MediaImpl ->
             playbackController.loadMusic(
-                musicMediaItemSortedMap = genre.musicMediaItemSortedMap,
-                musicToPlay = clickedMedia as Music
+                musicMediaItemSortedMap = genre.musicMediaItemMap,
+                musicToPlay = clickedMediaImpl as Music
             )
-            openMedia(media = clickedMedia, navController = navController)
+            openMedia(mediaImpl = clickedMediaImpl, navController = navController)
         },
         onFABClick = { openCurrentMusic(navController = navController) },
         header = {
             //Recompose if data changed
             @Suppress("NAME_SHADOWING")
-            var mapChanged: Boolean by remember { genre.musicMediaItemSortedMapUpdate }
+            var mapChanged: Boolean by remember { genre.musicMediaItemMapUpdate }
             if (mapChanged) {
                 mapChanged = false
             }
@@ -98,19 +98,19 @@ internal fun GenreView(
             }
             MediaWithAlbumsHeaderView(
                 navController = navController,
-                media = genre,
+                mediaImpl = genre,
                 albumList = albumSet.toList()
             )
         },
         extraButtons = {
-            if (genre.musicMediaItemSortedMap.isNotEmpty()) {
+            if (genre.musicMediaItemMap.isNotEmpty()) {
                 ExtraButton(icon = SatunesIcons.PLAY, onClick = {
-                    playbackController.loadMusic(musicMediaItemSortedMap = genre.musicMediaItemSortedMap)
+                    playbackController.loadMusic(musicMediaItemSortedMap = genre.musicMediaItemMap)
                     openMedia(navController = navController)
                 })
                 ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
                     playbackController.loadMusic(
-                        musicMediaItemSortedMap = genre.musicMediaItemSortedMap,
+                        musicMediaItemSortedMap = genre.musicMediaItemMap,
                         shuffleMode = true
                     )
                     openMedia(navController = navController)
@@ -125,6 +125,6 @@ internal fun GenreView(
 @Composable
 private fun GenreViewPreview() {
     val navController: NavHostController = rememberNavController()
-    GenreView(navController = navController, genre = Genre(id = 0, "Genre"))
+    GenreView(navController = navController, genre = Genre("Genre"))
 }
 

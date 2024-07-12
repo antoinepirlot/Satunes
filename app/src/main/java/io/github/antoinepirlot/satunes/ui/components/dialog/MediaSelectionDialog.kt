@@ -39,10 +39,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.database.models.Media
+import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.database.models.database.relations.PlaylistWithMusics
-import io.github.antoinepirlot.satunes.database.models.database.tables.PlaylistDB
+import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.database.services.DataManager
 import io.github.antoinepirlot.satunes.database.services.DatabaseManager
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
@@ -60,7 +59,7 @@ internal fun MediaSelectionDialog(
     modifier: Modifier = Modifier,
     onDismissRequest: () -> Unit,
     onConfirm: () -> Unit,
-    mediaList: List<Media>,
+    mediaList: List<MediaImpl>,
     playlistTitle: String? = null,
     icon: SatunesIcons,
 ) {
@@ -79,7 +78,7 @@ internal fun MediaSelectionDialog(
             showPlaylistCreation = showPlaylistCreation,
             onDismissRequest = onDismissRequest,
             onConfirm = onConfirm,
-            mediaList = mediaList,
+            mediaImplList = mediaList,
             playlistTitle = playlistTitle,
             icon = icon
         )
@@ -97,10 +96,9 @@ private fun CreateNewPlaylistForm(
     PlaylistCreationForm(
         modifier = modifier,
         onConfirm = { playlistTitle: String ->
-            val playlistDB = PlaylistDB(id = 0, title = playlistTitle)
             DatabaseManager(context = context).insertPlaylistWithMusics(
                 context = context,
-                playlistDB = playlistDB
+                playlist = DataManager.getPlaylist(title = playlistTitle)
             )
             showPlaylistCreation.value = false
         },
@@ -114,7 +112,7 @@ private fun MediaSelectionDialogList(
     showPlaylistCreation: MutableState<Boolean>,
     onDismissRequest: () -> Unit,
     onConfirm: () -> Unit,
-    mediaList: List<Media>,
+    mediaImplList: List<MediaImpl>,
     playlistTitle: String? = null,
     icon: SatunesIcons,
 ) {
@@ -124,9 +122,9 @@ private fun MediaSelectionDialogList(
             Icon(imageVector = icon.imageVector, contentDescription = icon.description)
         },
         title = {
-            if (mediaList.isEmpty()) {
+            if (mediaImplList.isEmpty()) {
                 NormalText(text = stringResource(id = R.string.no_music))
-            } else if (mediaList[0] is Music) {
+            } else if (mediaImplList[0] is Music) {
                 if (playlistTitle == null) {
                     throw IllegalStateException("PlaylistDB title is required when adding music to playlistDB")
                 }
@@ -138,14 +136,14 @@ private fun MediaSelectionDialogList(
         text = {
             Column {
                 if (
-                    mediaList.isEmpty() && DataManager.playlistWithMusicsMap.isNotEmpty() || // Avoid having create new playlistDB when user has no music
-                    mediaList.isEmpty() || mediaList[0] is PlaylistDB || mediaList[0] is PlaylistWithMusics
+                    mediaImplList.isEmpty() && DataManager.playlistsMap.isNotEmpty() || // Avoid having create new playlistDB when user has no music
+                    mediaImplList.isEmpty() || mediaImplList[0] is Playlist
                 ) {
                     TextButton(onClick = { showPlaylistCreation.value = true }) {
                         NormalText(text = stringResource(id = R.string.create_playlist))
                     }
                 }
-                MediaSelectionForm(mediaList = mediaList)
+                MediaSelectionForm(mediaImplList = mediaImplList)
             }
         },
         onDismissRequest = {
@@ -159,7 +157,7 @@ private fun MediaSelectionDialogList(
                 MediaSelectionManager.clearCheckedMusics()
                 MediaSelectionManager.clearCheckedPlaylistWithMusics()
             }) {
-                if (mediaList.isNotEmpty()) {
+                if (mediaImplList.isNotEmpty()) {
                     NormalText(text = stringResource(id = R.string.add))
                 }
             }

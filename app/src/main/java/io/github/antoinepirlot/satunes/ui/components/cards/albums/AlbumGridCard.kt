@@ -82,7 +82,7 @@ internal fun AlbumGridCard(
         ) {
             AlbumArtwork(
                 modifier.size(artworkSize),
-                media = album,
+                mediaImpl = album,
                 onClick = onClick
             )
             NormalText(
@@ -98,5 +98,5 @@ internal fun AlbumGridCard(
 @Preview
 @Composable
 private fun AlbumGridCardPreview() {
-    AlbumGridCard(album = Album(id = 1, title = "Album #1"), onClick = {})
+    AlbumGridCard(album = Album(title = "Album #1"), onClick = {})
 }

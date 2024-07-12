@@ -65,7 +65,7 @@ internal fun AlbumOptionsDialog(
         icon = {
             AlbumArtwork(
                 modifier = Modifier.size(100.dp),
-                media = album
+                mediaImpl = album
             )
         },
         title = {
@@ -79,20 +79,23 @@ internal fun AlbumOptionsDialog(
                 /**
                  * PlaylistDB
                  */
-                AddToPlaylistMediaOption(media = album, onFinished = onDismissRequest)
+                AddToPlaylistMediaOption(mediaImpl = album, onFinished = onDismissRequest)
 
                 /**
                  * Queue
                  */
                 if (isPlaybackLoaded) {
-                    PlayNextMediaOption(media = album, onFinished = onDismissRequest)
-                    AddToQueueDialogOption(media = album, onFinished = onDismissRequest)
+                    PlayNextMediaOption(mediaImpl = album, onFinished = onDismissRequest)
+                    AddToQueueDialogOption(mediaImpl = album, onFinished = onDismissRequest)
                 }
 
                 /**
                  * Redirections
                  */
-                NavigateToMediaMusicOption(media = album.artist!!, navController = navController)
+                NavigateToMediaMusicOption(
+                    mediaImpl = album.artist!!,
+                    navController = navController
+                )
             }
         }
     )

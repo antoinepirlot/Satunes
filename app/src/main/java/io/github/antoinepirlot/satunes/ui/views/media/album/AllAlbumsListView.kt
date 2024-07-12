@@ -35,7 +35,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Album
-import io.github.antoinepirlot.satunes.database.models.Media
+import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.DataManager
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
@@ -63,17 +63,17 @@ internal fun AllAlbumsListView(
     MediaListView(
         modifier = modifier,
         navController = navController,
-        mediaList = albumSet.toList(),
+        mediaImplList = albumSet.toList(),
 
-        openMedia = { clickedMedia: Media ->
-            openMedia(navController = navController, media = clickedMedia)
+        openMedia = { clickedMediaImpl: MediaImpl ->
+            openMedia(navController = navController, mediaImpl = clickedMediaImpl)
         },
         onFABClick = { openCurrentMusic(navController = navController) },
         extraButtons = {
             val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
             // TODO Move into object
             albumSet.forEach { album: Album ->
-                musicMediaItemSortedMap.putAll(album.musicMediaItemSortedMap)
+                musicMediaItemSortedMap.putAll(album.musicMediaItemMap)
             }
             if(musicMediaItemSortedMap.isNotEmpty()) {
                 ExtraButton(icon = SatunesIcons.PLAY, onClick = {

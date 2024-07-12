@@ -226,16 +226,16 @@ object DataLoader {
             )
         } catch (_: IllegalAccessError) {
             // No music found
-            if (album.musicMediaItemSortedMap.isEmpty()) {
+            if (album.musicMediaItemMap.isEmpty()) {
                 DataManager.removeAlbum(album = album)
             }
-            if (artist.musicMediaItemSortedMap.isEmpty()) {
+            if (artist.musicMediaItemMap.isEmpty()) {
                 DataManager.removeArtist(artist = artist)
             }
-            if (genre.musicMediaItemSortedMap.isEmpty()) {
+            if (genre.musicMediaItemMap.isEmpty()) {
                 DataManager.removeGenre(genre = genre)
             }
-            if (folder.musicMediaItemSortedMap.isEmpty()) {
+            if (folder.musicMediaItemMap.isEmpty()) {
                 DataManager.removeFolder(folder = folder)
             }
         }
@@ -271,10 +271,7 @@ object DataLoader {
             throw IllegalArgumentException("Duration is less than 0")
         }
         val displayName: String = cursor.getString(musicNameColumn!!)
-        var title: String = cursor.getString(musicTitleColumn!!)
-        if (title.isBlank()) {
-            title = displayName
-        }
+        val title: String = cursor.getString(musicTitleColumn!!)
 
         return Music(
             id = id,

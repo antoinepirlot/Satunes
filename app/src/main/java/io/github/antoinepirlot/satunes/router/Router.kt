@@ -47,7 +47,7 @@ import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.Genre
-import io.github.antoinepirlot.satunes.database.models.database.relations.PlaylistWithMusics
+import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.database.services.DataLoader
 import io.github.antoinepirlot.satunes.database.services.DataManager
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
@@ -230,8 +230,8 @@ internal fun Router(
                 LoadingView()
             } else {
                 val playlistId: Long = it.arguments!!.getString("id")!!.toLong()
-                val playlist: PlaylistWithMusics by remember {
-                    mutableStateOf(DataManager.getPlaylist(playlistId = playlistId))
+                val playlist: Playlist by remember {
+                    mutableStateOf(DataManager.getPlaylist(id = playlistId))
                 }
                 PlaylistView(playlist = playlist, navController = navController)
             }
@@ -275,11 +275,11 @@ internal fun Router(
                     navController = navController,
                     onAlbumClick = { album: Album? ->
                         if (album != null) {
-                            openMedia(media = album, navController = navController)
+                            openMedia(mediaImpl = album, navController = navController)
                         }
                     },
                     onArtistClick = { artist: Artist ->
-                        openMedia(media = artist, navController = navController)
+                        openMedia(mediaImpl = artist, navController = navController)
                     }
                 )
             }

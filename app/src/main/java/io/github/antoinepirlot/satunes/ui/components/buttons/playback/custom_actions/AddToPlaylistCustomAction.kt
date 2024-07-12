@@ -38,7 +38,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.database.models.database.relations.PlaylistWithMusics
+import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.database.services.DataManager
 import io.github.antoinepirlot.satunes.database.services.DatabaseManager
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
@@ -67,11 +67,12 @@ internal fun AddToPlaylistCustomAction(
     )
 
     if (showForm) {
-        val playlistMap: SortedMap<String, PlaylistWithMusics> =
-            remember { DataManager.playlistWithMusicsMap }
+        //TODO
+        val playlistMap: SortedMap<String, Playlist> =
+            remember { DataManager.playlistsMap }
 
         //Recompose if data changed
-        var mapChanged: Boolean by rememberSaveable { DataManager.playlistWithMusicsMapUpdated }
+        var mapChanged: Boolean by rememberSaveable { DataManager.playlistsMapUpdated }
         if (mapChanged) {
             mapChanged = false
         }
@@ -86,7 +87,7 @@ internal fun AddToPlaylistCustomAction(
                 )
                 showForm = false
             },
-            mediaList = DataManager.playlistWithMusicsMap.values.toList(),
+            mediaList = DataManager.playlistsMap.values.toList(),
             icon = SatunesIcons.PLAYLIST_ADD
         )
     }
@@ -94,7 +95,7 @@ internal fun AddToPlaylistCustomAction(
 
 private fun addMusicPlayingToPlaylist(
     context: Context,
-    checkedPlaylists: List<PlaylistWithMusics>
+    checkedPlaylists: List<Playlist>
 ) {
     val playbackController: PlaybackController = PlaybackController.getInstance()
     val musicPlaying: Music = playbackController.musicPlaying.value!!

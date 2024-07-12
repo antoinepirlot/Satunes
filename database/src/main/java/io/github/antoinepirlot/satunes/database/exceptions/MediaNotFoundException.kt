@@ -26,6 +26,8 @@
 package io.github.antoinepirlot.satunes.database.exceptions
 
 /**
- * @author Antoine Pirlot on 13/04/2024
+ * @author Antoine Pirlot on 11/07/2024
  */
-internal class MusicNotFoundException(id: Long) : MediaNotFoundException(id = id)
+internal open class MediaNotFoundException(
+    val id: Long,
+) : NullPointerException()

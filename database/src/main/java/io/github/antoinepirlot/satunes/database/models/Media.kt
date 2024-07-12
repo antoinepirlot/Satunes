@@ -25,30 +25,10 @@
 
 package io.github.antoinepirlot.satunes.database.models
 
-import android.content.Context
-import android.graphics.Bitmap
-import androidx.compose.runtime.MutableState
-import androidx.media3.common.MediaItem
-import java.util.SortedMap
-
 /**
- * @author Antoine Pirlot on 29/03/2024
+ * @author Antoine Pirlot on 11/07/2024
  */
-interface Media : Comparable<Media> {
+internal interface Media {
     val id: Long
-    val title: String
-    var artwork: Bitmap?
-    val liked: MutableState<Boolean>?
-    val musicMediaItemSortedMapUpdate: MutableState<Boolean>?
-    val musicMediaItemSortedMap: SortedMap<Music, MediaItem>?
-
-    fun switchLike(context: Context) {
-        if (this.liked != null) {
-            this.liked!!.value = !this.liked!!.value
-        }
-    }
-
-    override fun compareTo(other: Media): Int {
-        return StringComparator.compare(o1 = this.title, o2 = other.title)
-    }
+    var title: String
 }

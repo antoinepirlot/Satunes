@@ -38,7 +38,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Folder
-import io.github.antoinepirlot.satunes.database.models.Media
+import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.DataManager
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
@@ -74,9 +74,9 @@ internal fun RootFolderView(
     MediaListView(
         modifier = modifier,
         navController = navController,
-        mediaList = rootFolderSet.toList(),
-        openMedia = { clickedMedia: Media ->
-            openMediaFromFolder(clickedMedia, navController = navController)
+        mediaImplList = rootFolderSet.toList(),
+        openMedia = { clickedMediaImpl: MediaImpl ->
+            openMediaFromFolder(clickedMediaImpl, navController = navController)
         },
         onFABClick = { openCurrentMusic(navController = navController) },
         extraButtons = {

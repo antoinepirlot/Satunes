@@ -23,45 +23,20 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.database.models.database.tables
-
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.Ignore
-import androidx.room.Index
-import androidx.room.PrimaryKey
-import io.github.antoinepirlot.satunes.database.exceptions.PlaylistNotFoundException
-import io.github.antoinepirlot.satunes.database.models.Media
-import io.github.antoinepirlot.satunes.database.models.Playlist
-import io.github.antoinepirlot.satunes.database.services.DataManager
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.Transient
+package io.github.antoinepirlot.satunes.database.models
 
 /**
- * @author Antoine Pirlot on 27/03/2024
+ * @author Antoine Pirlot on 11/07/2024
  */
-
-@Serializable
-@Entity(tableName = "playlists", indices = [Index(value = ["title"], unique = true)])
-internal data class PlaylistDB(
-    @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "playlist_id") override var id: Long,
-    @ColumnInfo(name = "title") override var title: String,
-) : Media {
-    @Ignore
-    @Transient
-    var playlist: Playlist? = try {
-        DataManager.getPlaylist(id = this.id)
-    } catch (_: PlaylistNotFoundException) {
-        // Happens when importing playlistDB
-        null
-    }
-
+class Playlist(
+    id: Long, // Managed by Database
+    title: String
+) : MediaImpl(id = id, title = title) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as PlaylistDB
+        other as Playlist
 
         return title.lowercase() == other.title.lowercase()
     }

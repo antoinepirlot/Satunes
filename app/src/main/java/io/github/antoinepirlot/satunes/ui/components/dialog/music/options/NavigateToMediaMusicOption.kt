@@ -34,7 +34,7 @@ import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.Genre
-import io.github.antoinepirlot.satunes.database.models.Media
+import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.dialog.options.DialogOption
@@ -46,20 +46,20 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.options.DialogOption
 @Composable
 internal fun NavigateToMediaMusicOption(
     modifier: Modifier = Modifier,
-    media: Media,
+    mediaImpl: MediaImpl,
     navController: NavHostController
 ) {
     DialogOption(
         modifier = modifier,
-        onClick = { openMedia(media = media, navController = navController) },
-        icon = when (media) {
+        onClick = { openMedia(mediaImpl = mediaImpl, navController = navController) },
+        icon = when (mediaImpl) {
                 is Album -> SatunesIcons.ALBUM
                 is Artist -> SatunesIcons.ARTIST
                 is Genre -> SatunesIcons.GENRES
                 is Folder -> SatunesIcons.FOLDER
-                else -> throw IllegalArgumentException("${media.javaClass} is not allowed")
+            else -> throw IllegalArgumentException("${mediaImpl.javaClass} is not allowed")
         },
-        text = media.title
+        text = mediaImpl.title
     )
 }
 
@@ -67,5 +67,8 @@ internal fun NavigateToMediaMusicOption(
 @Composable
 private fun NavigateToMediaMusicOptionPreview() {
     val navController: NavHostController = rememberNavController()
-    NavigateToMediaMusicOption(media = Album(title = "Album Title"), navController = navController)
+    NavigateToMediaMusicOption(
+        mediaImpl = Album(title = "Album Title"),
+        navController = navController
+    )
 }

@@ -33,7 +33,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.database.models.Media
+import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.router.utils.openMedia
@@ -55,8 +55,14 @@ internal fun PlaybackQueueView(
         navController = navController,
         scrollToMusicPlaying = true,
         header = { Title(text = stringResource(id = R.string.playback_queue)) },
-        mediaList = playbackPlaylist,
-        openMedia = { media: Media -> openMedia(media, navigate = false, navController = null) }
+        mediaImplList = playbackPlaylist,
+        openMedia = { mediaImpl: MediaImpl ->
+            openMedia(
+                mediaImpl,
+                navigate = false,
+                navController = null
+            )
+        }
     )
 }
 

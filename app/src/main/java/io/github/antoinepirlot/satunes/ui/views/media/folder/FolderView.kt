@@ -40,7 +40,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Folder
-import io.github.antoinepirlot.satunes.database.models.Media
+import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
@@ -66,17 +66,17 @@ internal fun FolderView(
 ) {
     val playbackController: PlaybackController = PlaybackController.getInstance()
     val folderMusicMediaItemSortedMap: SortedMap<Music, MediaItem> = remember {
-        folder.musicMediaItemSortedMap
+        folder.musicMediaItemMap
     }
 
     //Recompose if data changed
-    var mapChanged: Boolean by rememberSaveable { folder.musicMediaItemSortedMapUpdate }
+    var mapChanged: Boolean by rememberSaveable { folder.musicMediaItemMapUpdate }
     if (mapChanged) {
         mapChanged = false
     }
     //
 
-    val subFolderMap: SortedSet<Media> = sortedSetOf()
+    val subFolderMap: SortedSet<MediaImpl> = sortedSetOf()
 
     Column(modifier = modifier) {
         if (folder.parentFolder == null) {
@@ -103,9 +103,9 @@ internal fun FolderView(
         )
         MediaListView(
             navController = navController,
-            mediaList = subFolderMap.toList(),
-            openMedia = { clickedMedia: Media ->
-                openMediaFromFolder(clickedMedia, navController = navController)
+            mediaImplList = subFolderMap.toList(),
+            openMedia = { clickedMediaImpl: MediaImpl ->
+                openMediaFromFolder(clickedMediaImpl, navController = navController)
             },
             onFABClick = { openCurrentMusic(navController = navController) },
             extraButtons = {
@@ -130,12 +130,12 @@ internal fun FolderView(
 }
 
 private fun loadSubFolders(
-    subFolderMap: SortedSet<Media>,
+    subFolderMap: SortedSet<MediaImpl>,
     folder: Folder,
     folderMusicMediaItemSortedMap: SortedMap<Music, MediaItem>
 ) {
     //Load sub-folders
-    subFolderMap.addAll(folder.getSubFolderMapAsMedia().values)
+    subFolderMap.addAll(folder.getSubFolderMapAsMediaImpl().values)
 
     //Load sub-folder's musics
     folderMusicMediaItemSortedMap.forEach { (music: Music, _) ->
@@ -147,5 +147,5 @@ private fun loadSubFolders(
 @Composable
 private fun FolderViewPreview() {
     val navController: NavHostController = rememberNavController()
-    FolderView(navController = navController, folder = Folder(id = 0, title = "Folder title"))
+    FolderView(navController = navController, folder = Folder(title = "Folder title"))
 }

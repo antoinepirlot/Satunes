@@ -40,9 +40,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.database.models.Media
-import io.github.antoinepirlot.satunes.database.models.database.relations.PlaylistWithMusics
-import io.github.antoinepirlot.satunes.database.models.database.tables.PlaylistDB
+import io.github.antoinepirlot.satunes.database.models.MediaImpl
+import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.database.services.DataManager
 import io.github.antoinepirlot.satunes.database.services.DatabaseManager
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
@@ -65,21 +64,21 @@ internal fun PlaylistListView(
     val context: Context = LocalContext.current
     var openAlertDialog by remember { mutableStateOf(false) }
     Column(modifier = modifier) {
-        val playlistMap: SortedMap<String, PlaylistWithMusics> =
-            remember { DataManager.playlistWithMusicsMap }
+        val playlistMap: SortedMap<String, Playlist> =
+            remember { DataManager.playlistsMap }
 
         //Recompose if data changed
-        var mapChanged: Boolean by rememberSaveable { DataManager.playlistWithMusicsMapUpdated }
+        var mapChanged: Boolean by rememberSaveable { DataManager.playlistsMapUpdated }
         if (mapChanged) {
             mapChanged = false
         }
         //
 
         MediaListView(
-            mediaList = playlistMap.values.toList(),
+            mediaImplList = playlistMap.values.toList(),
             navController = navController,
-            openMedia = { clickedMedia: Media ->
-                openMedia(media = clickedMedia, navController = navController)
+            openMedia = { clickedMediaImpl: MediaImpl ->
+                openMedia(mediaImpl = clickedMediaImpl, navController = navController)
             },
             onFABClick = { openCurrentMusic(navController = navController) },
             extraButtons = {
@@ -92,10 +91,9 @@ internal fun PlaylistListView(
             openAlertDialog -> {
                 PlaylistCreationForm(
                     onConfirm = { playlistTitle: String ->
-                        val playlistDB = PlaylistDB(id = 0, title = playlistTitle)
                         DatabaseManager(context = context).insertPlaylistWithMusics(
                             context = context,
-                            playlistDB = playlistDB
+                            playlist = DataManager.getPlaylist(title = playlistTitle)
                         )
                         openAlertDialog = false
                     },

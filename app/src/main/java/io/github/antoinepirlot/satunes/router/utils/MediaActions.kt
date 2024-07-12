@@ -31,9 +31,9 @@ import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.Genre
-import io.github.antoinepirlot.satunes.database.models.Media
+import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.database.models.database.relations.PlaylistWithMusics
+import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.router.Destination
 import io.github.antoinepirlot.satunes.ui.utils.getMusicListFromFolder
@@ -44,75 +44,75 @@ import io.github.antoinepirlot.satunes.ui.utils.startMusic
  */
 
 /**
- * Open the media, when it is:
- *      Music: navigate to the media's destination and start music with exoplayer
+ * Open the mediaImpl, when it is:
+ *      Music: navigate to the mediaImpl's destination and start music with exoplayer
  *
- *      Folder: navigate to the media's destination
+ *      Folder: navigate to the mediaImpl's destination
  *
- *      Artist: navigate to the media's destination
+ *      Artist: navigate to the mediaImpl's destination
  *
- * @param media the media to open
+ * @param mediaImpl the mediaImpl to open
  */
 internal fun openMedia(
-    media: Media? = null,
+    mediaImpl: MediaImpl? = null,
     navigate: Boolean = true,
     navController: NavHostController?,
 ) {
-    if (media == null || media is Music) {
-        startMusic(media)
+    if (mediaImpl == null || mediaImpl is Music) {
+        startMusic(mediaImpl)
     }
     if (navigate) {
         if (navController == null) {
             throw IllegalArgumentException("navController can't be null if you navigate")
         }
-        navController.navigate(getDestinationOf(media))
+        navController.navigate(getDestinationOf(mediaImpl))
     }
 }
 
 /**
- * Open media from folders' views if the media is:
- *      Music: It loads folder's musics data to playback and open the media that is music.
+ * Open mediaImpl from folders' views if the mediaImpl is:
+ *      Music: It loads folder's musics data to playback and open the mediaImpl that is music.
  *
  *      Folder: navigate to the folder's view
  */
 internal fun openMediaFromFolder(
-    media: Media,
+    mediaImpl: MediaImpl,
     navController: NavHostController
 ) {
-    when (media) {
+    when (mediaImpl) {
         is Music -> {
             val playbackController = PlaybackController.getInstance()
             playbackController.loadMusic(
-                musicMediaItemSortedMap = getMusicListFromFolder(media.folder),
-                musicToPlay = media
+                musicMediaItemSortedMap = getMusicListFromFolder(mediaImpl.folder),
+                musicToPlay = mediaImpl
             )
-            openMedia(media, navController = navController)
+            openMedia(mediaImpl, navController = navController)
         }
 
-        is Folder -> navController.navigate(getDestinationOf(media))
+        is Folder -> navController.navigate(getDestinationOf(mediaImpl))
     }
 
 }
 
 /**
- * Return the destination link of media (folder, artists or music) with its id.
- * For example if media is folder, it returns: /folders/5
+ * Return the destination link of mediaImpl (folder, artists or music) with its id.
+ * For example if mediaImpl is folder, it returns: /folders/5
  *
- * @param media the media to get the destination link
+ * @param mediaImpl the mediaImpl to get the destination link
  *
- * @return the media destination link with the media's id
+ * @return the mediaImpl destination link with the mediaImpl's id
  */
-private fun getDestinationOf(media: Media?): String {
-    return when (media) {
-        is Folder -> "${Destination.FOLDERS.link}/${media.id}"
+private fun getDestinationOf(mediaImpl: MediaImpl?): String {
+    return when (mediaImpl) {
+        is Folder -> "${Destination.FOLDERS.link}/${mediaImpl.id}"
 
-        is Artist -> "${Destination.ARTISTS.link}/${encode(media.title)}"
+        is Artist -> "${Destination.ARTISTS.link}/${encode(mediaImpl.title)}"
 
-        is Album -> "${Destination.ALBUMS.link}/${media.id}"
+        is Album -> "${Destination.ALBUMS.link}/${mediaImpl.id}"
 
-        is Genre -> "${Destination.GENRES.link}/${encode(media.title)}"
+        is Genre -> "${Destination.GENRES.link}/${encode(mediaImpl.title)}"
 
-        is PlaylistWithMusics -> "${Destination.PLAYLISTS.link}/${media.playlistDB.id}"
+        is Playlist -> "${Destination.PLAYLISTS.link}/${mediaImpl.id}"
 
         else -> Destination.PLAYBACK.link
     }

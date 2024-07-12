@@ -38,7 +38,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import io.github.antoinepirlot.satunes.database.R
 import io.github.antoinepirlot.satunes.database.models.Album
-import io.github.antoinepirlot.satunes.database.models.Media
+import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.cards.albums.AlbumGrid
 import io.github.antoinepirlot.satunes.ui.components.texts.Title
@@ -51,14 +51,14 @@ import io.github.antoinepirlot.satunes.ui.components.texts.Title
 internal fun MediaWithAlbumsHeaderView(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    media: Media,
+    mediaImpl: MediaImpl,
     albumList: List<Album>,
 ) {
     Column(modifier = modifier) {
-        Title(text = media.title)
+        Title(text = mediaImpl.title)
         AlbumGrid(
             mediaList = albumList,
-            onClick = { openMedia(media = it, navController = navController) }
+            onClick = { openMedia(mediaImpl = it, navController = navController) }
         )
         Spacer(modifier = Modifier.size(30.dp))
         Title(

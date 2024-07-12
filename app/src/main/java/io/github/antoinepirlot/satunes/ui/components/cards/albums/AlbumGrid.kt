@@ -87,7 +87,7 @@ internal fun AlbumGrid(
 private fun AlbumGridPreview() {
     val albumList: MutableList<Album> = mutableListOf()
     for (i: Int in 0..10) {
-        albumList.add(Album(id = i.toLong(), title = "Album #$i"))
+        albumList.add(Album(title = "Album #$i"))
     }
     AlbumGrid(mediaList = albumList, onClick = {})
 }

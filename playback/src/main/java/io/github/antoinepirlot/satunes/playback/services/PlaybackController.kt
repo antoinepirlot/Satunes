@@ -39,7 +39,7 @@ import androidx.media3.common.Player
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
 import io.github.antoinepirlot.satunes.database.models.Folder
-import io.github.antoinepirlot.satunes.database.models.Media
+import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.DataLoader
 import io.github.antoinepirlot.satunes.database.services.DataManager
@@ -309,64 +309,67 @@ class PlaybackController private constructor(
         this.isShuffle.value = shuffleMode
     }
 
-    fun addToQueue(mediaList: Collection<Media>) {
+    fun addToQueue(mediaImplList: Collection<MediaImpl>) {
         CoroutineScope(Dispatchers.Main).launch {
-            mediaList.forEach { media: Media ->
-                addToQueue(media = media)
+            mediaImplList.forEach { mediaImpl: MediaImpl ->
+                addToQueue(mediaImpl = mediaImpl)
             }
         }
     }
 
-    fun addToQueue(media: Media) {
-        when (media) {
+    fun addToQueue(mediaImpl: MediaImpl) {
+        when (mediaImpl) {
             is Music -> {
                 try {
-                    this.playlist.addToQueue(music = media)
-                    this.mediaController.addMediaItem(media.mediaItem)
+                    this.playlist.addToQueue(music = mediaImpl)
+                    this.mediaController.addMediaItem(mediaImpl.mediaItem)
                 } catch (e: AlreadyInPlaybackException) {
                     return
                 }
                 hasNext.value = true
             }
 
-            is Folder -> addToQueue(mediaList = media.getAllMusic().keys.reversed())
+            is Folder -> addToQueue(mediaImplList = mediaImpl.getAllMusic().keys.reversed())
 
             else -> {
-                if (media.musicMediaItemSortedMap != null) {
-                    addToQueue(mediaList = media.musicMediaItemSortedMap!!.keys.reversed())
+                if (mediaImpl.musicMediaItemMap != null) {
+                    addToQueue(mediaImplList = mediaImpl.musicMediaItemMap!!.keys.reversed())
                 }
             }
         }
     }
 
-    private fun addNext(mediaList: Collection<Media>) {
+    private fun addNext(mediaImplList: Collection<MediaImpl>) {
         CoroutineScope(Dispatchers.Main).launch {
-            mediaList.forEach { media: Media ->
-                addNext(media = media)
+            mediaImplList.forEach { mediaImpl: MediaImpl ->
+                addNext(mediaImpl = mediaImpl)
             }
         }
     }
 
-    fun addNext(media: Media) {
-        if (musicPlaying.value == media) {
+    fun addNext(mediaImpl: MediaImpl) {
+        if (musicPlaying.value == mediaImpl) {
             return
         }
-        when (media) {
+        when (mediaImpl) {
             is Music -> {
                 try {
-                    this.playlist.addNext(index = this.musicPlayingIndex + 1, music = media)
-                    this.mediaController.addMediaItem(this.musicPlayingIndex + 1, media.mediaItem)
+                    this.playlist.addNext(index = this.musicPlayingIndex + 1, music = mediaImpl)
+                    this.mediaController.addMediaItem(
+                        this.musicPlayingIndex + 1,
+                        mediaImpl.mediaItem
+                    )
                 } catch (e: AlreadyInPlaybackException) {
-                    this.moveMusic(music = media, newIndex = this.musicPlayingIndex + 1)
+                    this.moveMusic(music = mediaImpl, newIndex = this.musicPlayingIndex + 1)
                 }
                 hasNext.value = true
             }
 
-            is Folder -> addNext(mediaList = media.getAllMusic().keys.reversed())
+            is Folder -> addNext(mediaImplList = mediaImpl.getAllMusic().keys.reversed())
 
             else -> {
-                if (media.musicMediaItemSortedMap != null) {
-                    addNext(mediaList = media.musicMediaItemSortedMap!!.keys.reversed())
+                if (mediaImpl.musicMediaItemMap != null) {
+                    addNext(mediaImplList = mediaImpl.musicMediaItemMap!!.keys.reversed())
                 }
             }
         }

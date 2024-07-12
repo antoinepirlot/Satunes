@@ -67,10 +67,10 @@ internal class MainActivity : ComponentActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         instance = this
         setNotificationOnClick()
         SettingsManager.loadSettings(context = this@MainActivity)
-        super.onCreate(savedInstanceState)
         setContent {
             Satunes()
         }

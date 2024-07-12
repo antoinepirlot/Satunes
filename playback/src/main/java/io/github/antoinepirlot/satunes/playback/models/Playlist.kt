@@ -31,14 +31,13 @@ import androidx.compose.runtime.toMutableStateList
 import androidx.media3.common.MediaItem
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.playback.exceptions.AlreadyInPlaybackException
-import java.util.SortedMap
 
 /**
  * @author Antoine Pirlot on 18/02/24
  */
 
-internal class Playlist(musicMediaItemSortedMap: SortedMap<Music, MediaItem>) {
-    private val originalMusicMediaItemMap: SortedMap<Music, MediaItem>
+internal class Playlist(musicMediaItemSortedMap: MutableMap<Music, MediaItem>) {
+    private val originalMusicMediaItemMap: MutableMap<Music, MediaItem>
     var musicList: SnapshotStateList<Music>
     var mediaItemList: MutableList<MediaItem>
 
@@ -46,7 +45,7 @@ internal class Playlist(musicMediaItemSortedMap: SortedMap<Music, MediaItem>) {
     init {
         this.musicList = musicMediaItemSortedMap.keys.toMutableStateList()
         this.mediaItemList = musicMediaItemSortedMap.values.toMutableList()
-        this.originalMusicMediaItemMap = musicMediaItemSortedMap.toSortedMap()
+        this.originalMusicMediaItemMap = musicMediaItemSortedMap.toMutableMap()
     }
 
     /**

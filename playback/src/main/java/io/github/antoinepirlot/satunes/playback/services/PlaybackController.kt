@@ -287,7 +287,7 @@ class PlaybackController private constructor(
         shuffleMode: Boolean = SettingsManager.shuffleMode.value,
         musicToPlay: Music? = null,
     ) {
-        val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
+        val musicMediaItemSortedMap: MutableMap<Music, MediaItem> = mutableMapOf()
         medias.forEach { media: MediaImpl ->
             musicMediaItemSortedMap.putAll(media.musicMediaItemMap)
         }
@@ -307,7 +307,7 @@ class PlaybackController private constructor(
      *
      */
     fun loadMusic(
-        musicMediaItemSortedMap: SortedMap<Music, MediaItem>,
+        musicMediaItemSortedMap: MutableMap<Music, MediaItem>,
         shuffleMode: Boolean = SettingsManager.shuffleMode.value,
         musicToPlay: Music? = null,
     ) {

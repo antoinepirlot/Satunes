@@ -89,7 +89,7 @@ internal fun PlaylistView(
                 musicMediaItemSortedMap = playlist.musicMediaItemMap,
                 musicToPlay = clickedMediaImpl as Music
             )
-            openMedia(mediaImpl = clickedMediaImpl, navController = navController)
+            openMedia(media = clickedMediaImpl, navController = navController)
         },
         openedPlaylistWithMusics = playlist,
         onFABClick = { openCurrentMusic(navController = navController) },

@@ -58,7 +58,7 @@ internal fun MediaWithAlbumsHeaderView(
         Title(text = mediaImpl.title)
         AlbumGrid(
             mediaList = albumList,
-            onClick = { openMedia(mediaImpl = it, navController = navController) }
+            onClick = { openMedia(media = it, navController = navController) }
         )
         Spacer(modifier = Modifier.size(30.dp))
         Title(

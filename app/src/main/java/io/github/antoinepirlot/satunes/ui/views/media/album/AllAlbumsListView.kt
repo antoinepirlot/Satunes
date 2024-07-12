@@ -26,17 +26,14 @@
 package io.github.antoinepirlot.satunes.ui.views.media.album
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.media3.common.MediaItem
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
-import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.DataManager
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
@@ -44,7 +41,6 @@ import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
-import java.util.SortedMap
 import java.util.SortedSet
 
 /**
@@ -58,7 +54,7 @@ internal fun AllAlbumsListView(
 ) {
     val playbackController: PlaybackController = PlaybackController.getInstance()
 
-    val albumSet: SortedSet<Album> = remember { DataManager.albumSet }
+    val albumSet: SortedSet<Album> = DataManager.albumSet
 
     MediaListView(
         modifier = modifier,
@@ -66,24 +62,21 @@ internal fun AllAlbumsListView(
         mediaImplList = albumSet.toList(),
 
         openMedia = { clickedMediaImpl: MediaImpl ->
-            openMedia(navController = navController, mediaImpl = clickedMediaImpl)
+            openMedia(navController = navController, media = clickedMediaImpl)
         },
         onFABClick = { openCurrentMusic(navController = navController) },
         extraButtons = {
-            val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
-            // TODO Move into object
-            albumSet.forEach { album: Album ->
-                musicMediaItemSortedMap.putAll(album.musicMediaItemMap)
-            }
-            if(musicMediaItemSortedMap.isNotEmpty()) {
+            if (albumSet.isNotEmpty()) {
+                @Suppress("UNCHECKED_CAST")
+                albumSet as SortedSet<MediaImpl>
                 ExtraButton(icon = SatunesIcons.PLAY, onClick = {
-                    playbackController.loadMusic(musicMediaItemSortedMap = musicMediaItemSortedMap)
+                    playbackController.loadMusic(medias = albumSet)
                     openMedia(navController = navController)
                 })
                 ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
 
                     playbackController.loadMusic(
-                        musicMediaItemSortedMap = musicMediaItemSortedMap,
+                        medias = albumSet,
                         shuffleMode = true
                     )
                     openMedia(navController = navController)

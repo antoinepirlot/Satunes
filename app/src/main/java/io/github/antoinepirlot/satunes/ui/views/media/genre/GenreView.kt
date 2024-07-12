@@ -80,7 +80,7 @@ internal fun GenreView(
                 musicMediaItemSortedMap = genre.musicMediaItemMap,
                 musicToPlay = clickedMediaImpl as Music
             )
-            openMedia(mediaImpl = clickedMediaImpl, navController = navController)
+            openMedia(media = clickedMediaImpl, navController = navController)
         },
         onFABClick = { openCurrentMusic(navController = navController) },
         header = {

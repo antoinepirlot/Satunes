@@ -50,6 +50,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.SortedMap
+import java.util.SortedSet
 
 /**
  * @author Antoine Pirlot on 31/01/24
@@ -274,8 +275,32 @@ class PlaybackController private constructor(
     }
 
     /**
+     * Add all music from medias to the mediaController in the same order.
+     * If the shuffle mode is true then shuffle the playlist
+     *
+     * @param medias the media sortedSet to load if null use the musicQueueToPlay instead
+     * @param shuffleMode indicate if the playlistDB has to be started in shuffle mode by default false
+     *
+     */
+    fun loadMusic(
+        medias: SortedSet<MediaImpl>,
+        shuffleMode: Boolean = SettingsManager.shuffleMode.value,
+        musicToPlay: Music? = null,
+    ) {
+        val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
+        medias.forEach { media: MediaImpl ->
+            musicMediaItemSortedMap.putAll(media.musicMediaItemMap)
+        }
+        loadMusic(
+            musicMediaItemSortedMap = musicMediaItemSortedMap,
+            shuffleMode = shuffleMode,
+            musicToPlay = musicToPlay
+        )
+    }
+
+    /**
      * Add all music from musicMap to the mediaController in the same order.
-     * If the shuffle mode is true then shuffle the playlistDB
+     * If the shuffle mode is true then shuffle the playlist
      *
      * @param musicMediaItemSortedMap the music map to load if null use the musicQueueToPlay instead
      * @param shuffleMode indicate if the playlistDB has to be started in shuffle mode by default false
@@ -288,7 +313,6 @@ class PlaybackController private constructor(
     ) {
         this.playlist = Playlist(musicMediaItemSortedMap = musicMediaItemSortedMap)
         if (shuffleMode) {
-            //TODO find a way to store playlistDB position in music when loading to make it faster
             if (musicToPlay == null) {
                 this.playlist.shuffle()
             } else {

@@ -50,15 +50,15 @@ import java.util.SortedMap
 /**
  * Start the music
  *
- * @param mediaImplToPlay the music to play from the music list
+ * @param mediaToPlay the music to play from the music list
  */
 
-internal fun startMusic(mediaImplToPlay: MediaImpl? = null) {
+internal fun startMusic(mediaToPlay: MediaImpl? = null) {
     val playbackController = PlaybackController.getInstance()
 
-    when (mediaImplToPlay) {
+    when (mediaToPlay) {
         is Music -> {
-            playbackController.start(mediaImplToPlay)
+            playbackController.start(mediaToPlay)
         }
 
         is Folder -> {

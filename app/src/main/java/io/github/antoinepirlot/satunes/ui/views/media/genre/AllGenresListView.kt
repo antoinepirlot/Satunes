@@ -74,7 +74,7 @@ internal fun AllGenresListView(
         mediaImplList = genreMap.values.toList(),
 
         openMedia = { clickedMediaImpl: MediaImpl ->
-            openMedia(mediaImpl = clickedMediaImpl, navController = navController)
+            openMedia(media = clickedMediaImpl, navController = navController)
         },
         onFABClick = { openCurrentMusic(navController = navController) },
         extraButtons = {

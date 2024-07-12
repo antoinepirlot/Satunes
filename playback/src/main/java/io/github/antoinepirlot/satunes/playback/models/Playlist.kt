@@ -37,9 +37,7 @@ import java.util.SortedMap
  * @author Antoine Pirlot on 18/02/24
  */
 
-internal class Playlist(
-    musicMediaItemSortedMap: SortedMap<Music, MediaItem>,
-) {
+internal class Playlist(musicMediaItemSortedMap: SortedMap<Music, MediaItem>) {
     private val originalMusicMediaItemMap: SortedMap<Music, MediaItem>
     var musicList: SnapshotStateList<Music>
     var mediaItemList: MutableList<MediaItem>

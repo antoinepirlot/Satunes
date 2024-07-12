@@ -56,8 +56,6 @@ object DataManager {
     val rootFolderSet: SortedSet<Folder> = sortedSetOf()
     private val folderMap: MutableMap<Long, Folder> = mutableMapOf()
     val folderSortedList: SortedSet<Folder> = sortedSetOf()
-    val rootFolderMapUpdated: MutableState<Boolean> = mutableStateOf(false)
-    val folderMapUpdated: MutableState<Boolean> = mutableStateOf(false)
 
     private val artistMapById: MutableMap<Long, Artist> = mutableMapOf()
     val artistMap: SortedMap<String, Artist> = sortedMapOf(comparator = StringComparator)
@@ -165,19 +163,16 @@ object DataManager {
     fun addFolder(folder: Folder) {
         if (!folderMap.contains(folder.id)) {
             folderMap[folder.id] = folder
-            folderMapUpdated.value = true
         }
         if (folder.parentFolder == null && !rootFolderMap.contains(folder.id)) {
             rootFolderMap[folder.id] = folder
             rootFolderSet.add(element = folder)
-            rootFolderMapUpdated.value = true
         }
     }
 
     fun removeFolder(folder: Folder) {
         if (folderMap.contains(folder.id)) {
             folderMap.remove(folder.id)
-            folderMapUpdated.value = true
         }
     }
 

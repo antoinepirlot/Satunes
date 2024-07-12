@@ -120,6 +120,12 @@ class Music(
         // Indirect impact is that it is faster to load settings
         CoroutineScope(Dispatchers.Default).launch {
             try {
+                //TODO ask the user to show music's album or album's artwork for all music
+                // It could cause visual issues as a music has not the same artwork and the user won't know it
+//                if (album.artwork != null) {
+//                    this@Music.artwork = album.artwork
+//                    return@launch
+//                }
                 val mediaMetadataRetriever = MediaMetadataRetriever()
 
                 mediaMetadataRetriever.setDataSource(context, uri)

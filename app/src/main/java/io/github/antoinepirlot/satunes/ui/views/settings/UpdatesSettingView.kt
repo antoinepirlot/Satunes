@@ -26,6 +26,8 @@
 package io.github.antoinepirlot.satunes.ui.views.settings
 
 import android.content.Context
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -64,6 +66,7 @@ import io.github.antoinepirlot.satunes.ui.components.texts.Title
 
 private val PADDING = 16.dp
 
+@RequiresApi(Build.VERSION_CODES.M)
 @Composable
 internal fun UpdatesSettingView(
     modifier: Modifier = Modifier,
@@ -105,6 +108,7 @@ internal fun UpdatesSettingView(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.M)
 @Preview
 @Composable
 private fun VersionViewPreview() {

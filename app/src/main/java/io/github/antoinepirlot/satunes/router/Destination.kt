@@ -25,6 +25,9 @@
 
 package io.github.antoinepirlot.satunes.router
 
+import android.os.Build
+import androidx.annotation.RequiresApi
+
 /**
  * @author Antoine Pirlot on 24-01-24
  */
@@ -48,16 +51,30 @@ internal enum class Destination(val link: String) {
     SEARCH(link = "/search"),
     SEARCH_SETTINGS("/search_settings"),
     SETTINGS(link = "/settings"),
+
+    @RequiresApi(Build.VERSION_CODES.M)
     UPDATES_SETTINGS(link = "/updates"), ;
 }
 
-internal val settingsDestinations: List<String> = listOf(
-    Destination.SETTINGS.link, Destination.BOTTOM_BAR_SETTINGS.link,
-    Destination.ANDROID_AUTO_SETTINGS.link, Destination.PLAYBACK_SETTINGS.link,
-    Destination.EXCLUSION_SETTINGS.link, Destination.PLAYLISTS_SETTINGS.link,
-    Destination.PERMISSIONS_SETTINGS.link, Destination.UPDATES_SETTINGS.link,
-    Destination.SEARCH_SETTINGS.link
-)
+internal val settingsDestinations: List<String> =
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        listOf(
+            Destination.SETTINGS.link, Destination.BOTTOM_BAR_SETTINGS.link,
+            Destination.ANDROID_AUTO_SETTINGS.link, Destination.PLAYBACK_SETTINGS.link,
+            Destination.EXCLUSION_SETTINGS.link, Destination.PLAYLISTS_SETTINGS.link,
+            Destination.PERMISSIONS_SETTINGS.link, Destination.UPDATES_SETTINGS.link,
+            Destination.SEARCH_SETTINGS.link
+        )
+    } else {
+        // Without UPDATES_SETTINGS
+        listOf(
+            Destination.SETTINGS.link, Destination.BOTTOM_BAR_SETTINGS.link,
+            Destination.ANDROID_AUTO_SETTINGS.link, Destination.PLAYBACK_SETTINGS.link,
+            Destination.EXCLUSION_SETTINGS.link, Destination.PLAYLISTS_SETTINGS.link,
+            Destination.PERMISSIONS_SETTINGS.link,
+            Destination.SEARCH_SETTINGS.link
+        )
+    }
 
 internal val playbackViews: List<String> = listOf(
     Destination.PLAYBACK.link, Destination.PLAYBACK_QUEUE.link

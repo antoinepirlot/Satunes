@@ -25,6 +25,7 @@
 
 package io.github.antoinepirlot.satunes.ui.views.settings
 
+import android.os.Build
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -102,12 +103,15 @@ internal fun SettingsView(
                     navController.navigate(Destination.PERMISSIONS_SETTINGS.link)
                 }
             )
-            SettingButton(
-                text = stringResource(id = R.string.version),
-                onClick = {
-                    navController.navigate(Destination.UPDATES_SETTINGS.link)
-                }
-            )
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                SettingButton(
+                    text = stringResource(id = R.string.version),
+                    onClick = {
+                        navController.navigate(Destination.UPDATES_SETTINGS.link)
+                    }
+                )
+            }
             AboutView(modifier.padding(bottom = 16.dp)) // Bottom padding for a little space
         }
     }

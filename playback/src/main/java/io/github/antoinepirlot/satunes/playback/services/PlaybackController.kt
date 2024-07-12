@@ -114,6 +114,7 @@ class PlaybackController private constructor(
          * @return the instance of MediaController
          */
         fun getInstance(): PlaybackController {
+            // TODO issues relaunch app happens here
             if (!Companion::instance.isInitialized) {
                 //TODO find a way to fix crashing app after resume after inactivity
                 throw IllegalStateException("The PlayBackController has not been initialized")

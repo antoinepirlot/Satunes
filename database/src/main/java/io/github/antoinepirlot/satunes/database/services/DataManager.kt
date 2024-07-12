@@ -63,6 +63,7 @@ object DataManager {
 
     private val albumMapById: MutableMap<Long, Album> = mutableMapOf()
     val albumSet: SortedSet<Album> = sortedSetOf()
+    val albumSetUpdated: MutableState<Boolean> = mutableStateOf(false)
 
     private val genreMapById: MutableMap<Long, Genre> = mutableMapOf()
     val genreMap: SortedMap<String, Genre> = sortedMapOf(comparator = StringComparator)
@@ -145,15 +146,17 @@ object DataManager {
             val existingAlbum: Album = albumMapById.values.first { it == album }
             throw DuplicatedAlbumException(existingAlbum = existingAlbum)
         }
-        albumSet.add(album)
         if (!albumMapById.contains(album.id)) {
+            albumSet.add(album)
             albumMapById[album.id] = album
+            albumSetUpdated.value = true
         }
     }
 
     fun removeAlbum(album: Album) {
         albumSet.remove(album)
         albumMapById.remove(album.id)
+        albumSetUpdated.value = true
     }
 
     fun getFolder(folderId: Long): Folder {

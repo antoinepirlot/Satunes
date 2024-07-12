@@ -26,6 +26,10 @@
 package io.github.antoinepirlot.satunes.ui.views.media.album
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -54,7 +58,14 @@ internal fun AllAlbumsListView(
 ) {
     val playbackController: PlaybackController = PlaybackController.getInstance()
 
-    val albumSet: SortedSet<Album> = DataManager.albumSet
+    val albumSet: SortedSet<Album> = remember { DataManager.albumSet }
+
+    //Recompose if data changed
+    var sortedSetChanged: Boolean by rememberSaveable { DataManager.albumSetUpdated }
+    if (sortedSetChanged) {
+        sortedSetChanged = false
+    }
+    //
 
     MediaListView(
         modifier = modifier,

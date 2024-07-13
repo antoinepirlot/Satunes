@@ -34,7 +34,6 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.session.MediaSession
 import androidx.media3.session.MediaSessionService
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
-import kotlin.system.exitProcess
 
 /**
  * @author Antoine Pirlot on 31/01/24
@@ -44,6 +43,10 @@ class PlaybackService : MediaSessionService() {
 
     companion object {
         var mediaSession: MediaSession? = null
+        var destroying: Boolean = false
+            private set
+        var destroyed: Boolean = false
+            private set
     }
 
     @OptIn(UnstableApi::class)
@@ -82,22 +85,30 @@ class PlaybackService : MediaSessionService() {
     }
 
     override fun onDestroy() {
-        val playbackController: PlaybackController = PlaybackController.getInstance()
-        if (!SettingsManager.playbackWhenClosedChecked.value || !playbackController.isPlaying.value) {
-            mediaSession?.run {
+        destroying = true
+        try {
+            val playbackController: PlaybackController = PlaybackController.getInstance()
+            if (!SettingsManager.playbackWhenClosedChecked.value || !playbackController.isPlaying.value) {
                 playbackController.release()
-                player.release()
-                release()
-                mediaSession = null
+                releaseMediaSession()
+                super.onDestroy()
+                destroyed = true
             }
+        } catch (_: Exception) {
+            releaseMediaSession()
             super.onDestroy()
-            exitProcess(0)
+            destroyed = true
+        } finally {
+            destroying = false
         }
-        super.onDestroy()
-        //Use exit process as sometimes, when closing app from multi task with playback when closed
-        // is false, then the player is release but the UI is still in the old view, and causing issue
-        // with playback. Best way I found at this time
-        exitProcess(0)
+    }
+
+    private fun releaseMediaSession() {
+        mediaSession?.run {
+            player.release()
+            release()
+            mediaSession = null
+        }
     }
 
     override fun onGetSession(controllerInfo: MediaSession.ControllerInfo): MediaSession? {

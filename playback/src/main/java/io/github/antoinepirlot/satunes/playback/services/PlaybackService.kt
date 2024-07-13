@@ -25,7 +25,6 @@
 
 package io.github.antoinepirlot.satunes.playback.services
 
-import android.content.Intent
 import androidx.annotation.OptIn
 import androidx.media3.common.AudioAttributes
 import androidx.media3.common.TrackSelectionParameters
@@ -43,10 +42,6 @@ class PlaybackService : MediaSessionService() {
 
     companion object {
         var mediaSession: MediaSession? = null
-        var destroying: Boolean = false
-            private set
-        var destroyed: Boolean = false
-            private set
     }
 
     @OptIn(UnstableApi::class)
@@ -77,38 +72,13 @@ class PlaybackService : MediaSessionService() {
         mediaSession = MediaSession.Builder(this, exoPlayer).build()
     }
 
-    override fun onTaskRemoved(rootIntent: Intent?) {
-        super.onTaskRemoved(rootIntent)
-        if (!SettingsManager.playbackWhenClosedChecked.value) {
-            onDestroy()
-        }
-    }
-
     override fun onDestroy() {
-        destroying = true
-        try {
-            val playbackController: PlaybackController = PlaybackController.getInstance()
-            if (!SettingsManager.playbackWhenClosedChecked.value || !playbackController.isPlaying.value) {
-                playbackController.release()
-                releaseMediaSession()
-                super.onDestroy()
-                destroyed = true
-            }
-        } catch (_: Exception) {
-            releaseMediaSession()
-            super.onDestroy()
-            destroyed = true
-        } finally {
-            destroying = false
-        }
-    }
-
-    private fun releaseMediaSession() {
         mediaSession?.run {
             player.release()
             release()
             mediaSession = null
         }
+        super.onDestroy()
     }
 
     override fun onGetSession(controllerInfo: MediaSession.ControllerInfo): MediaSession? {

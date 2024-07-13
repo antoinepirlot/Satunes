@@ -173,24 +173,14 @@ internal class MainActivity : ComponentActivity() {
     }
 
     override fun onDestroy() {
+        super.onDestroy()
         try {
-            val playbackController: PlaybackController = PlaybackController.getInstance()
-            if (!SettingsManager.playbackWhenClosedChecked.value || !playbackController.isPlaying.value) {
-                destroy()
+            if (!SettingsManager.playbackWhenClosedChecked.value) {
+                val playbackController: PlaybackController = PlaybackController.getInstance()
+                playbackController.release()
             }
         } catch (_: Exception) {
-            destroy()
-        } finally {
-            super.onDestroy()
+            /* Do nothing */
         }
-    }
-
-    private fun destroy() {
-        while (!PlaybackService.destroyed || PlaybackService.destroying) {
-            //Wait destroying is finished
-            println("Destroyed: " + PlaybackService.destroyed)
-            println("Destroying: " + PlaybackService.destroying)
-        }
-        finishAndRemoveTask()
     }
 }

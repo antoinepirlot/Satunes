@@ -77,32 +77,21 @@ class PlaybackService : MediaSessionService() {
     override fun onTaskRemoved(rootIntent: Intent?) {
         super.onTaskRemoved(rootIntent)
         if (!SettingsManager.playbackWhenClosedChecked.value) {
-            try {
-                PlaybackController.getInstance().pause()
-            } catch (_: Exception) {
-                // Do nothing
-            }
-            onDestroy()
+            stopSelf()
         }
     }
 
     override fun onDestroy() {
-        super.onDestroy()
-        val playbackController: PlaybackController = PlaybackController.getInstance()
-        if (!playbackController.isPlaying.value) {
-            stopSelf()
-            mediaSession?.run {
-                playbackController.release()
-                player.stop()
-                player.release()
-                release()
-                stopSelf()
-            }
-            //Use exit process as sometimes, when closing app from multi task with playback when closed
-            // is false, then the player is release but the UI is still in the old view, and causing issue
-            // with playback. Best way I found at this time
-            exitProcess(0)
+        mediaSession?.run {
+            player.release()
+            release()
+            mediaSession = null
         }
+        super.onDestroy()
+        //Use exit process as sometimes, when closing app from multi task with playback when closed
+        // is false, then the player is release but the UI is still in the old view, and causing issue
+        // with playback. Best way I found at this time
+        exitProcess(0)
     }
 
     override fun onGetSession(controllerInfo: MediaSession.ControllerInfo): MediaSession? {

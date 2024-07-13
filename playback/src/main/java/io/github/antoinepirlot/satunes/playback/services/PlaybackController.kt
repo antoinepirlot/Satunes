@@ -88,7 +88,6 @@ class PlaybackController private constructor(
         controllerFuture.addListener({
             this.mediaController = controllerFuture.get()
         }, ContextCompat.getMainExecutor(context))
-
         this.playlist = Playlist(musicMediaItemSortedMap = musicMediaItemSortedMap)
     }
 

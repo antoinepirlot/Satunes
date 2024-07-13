@@ -25,6 +25,7 @@
 
 package io.github.antoinepirlot.satunes.car.playback
 
+import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat.MediaItem
@@ -269,5 +270,9 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
             )
         )
         return listToReturn
+    }
+
+    override fun onTaskRemoved(rootIntent: Intent?) {
+        super.onTaskRemoved(rootIntent)
     }
 }

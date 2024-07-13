@@ -82,16 +82,18 @@ class PlaybackService : MediaSessionService() {
     }
 
     override fun onDestroy() {
-        mediaSession?.run {
-            player.release()
-            release()
-            mediaSession = null
+        if (!SettingsManager.playbackWhenClosedChecked.value) {
+            mediaSession?.run {
+                player.release()
+                release()
+                mediaSession = null
+            }
+            super.onDestroy()
+            //Use exit process as sometimes, when closing app from multi task with playback when closed
+            // is false, then the player is release but the UI is still in the old view, and causing issue
+            // with playback. Best way I found at this time
+            exitProcess(0)
         }
-        super.onDestroy()
-        //Use exit process as sometimes, when closing app from multi task with playback when closed
-        // is false, then the player is release but the UI is still in the old view, and causing issue
-        // with playback. Best way I found at this time
-        exitProcess(0)
     }
 
     override fun onGetSession(controllerInfo: MediaSession.ControllerInfo): MediaSession? {

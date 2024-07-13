@@ -173,7 +173,6 @@ internal class MainActivity : ComponentActivity() {
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         try {
             if (!SettingsManager.playbackWhenClosedChecked.value) {
                 val playbackController: PlaybackController = PlaybackController.getInstance()
@@ -181,6 +180,8 @@ internal class MainActivity : ComponentActivity() {
             }
         } catch (_: Exception) {
             /* Do nothing */
+        } finally {
+            super.onDestroy()
         }
     }
 }

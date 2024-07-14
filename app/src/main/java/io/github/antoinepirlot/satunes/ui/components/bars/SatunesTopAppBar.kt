@@ -26,6 +26,7 @@
 package io.github.antoinepirlot.satunes.ui.components.bars
 
 import android.annotation.SuppressLint
+import android.os.Build
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -144,9 +145,11 @@ private fun onPlaybackQueueButtonClick(navController: NavHostController) {
  * Otherwise navigate to settings
  */
 private fun onSettingButtonClick(navController: NavHostController) {
-    if (UpdateCheckManager.updateAvailableStatus.value != UpdateAvailableStatus.AVAILABLE) {
-        UpdateCheckManager.updateAvailableStatus.value =
-            UpdateAvailableStatus.UNDEFINED
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        if (UpdateCheckManager.updateAvailableStatus.value != UpdateAvailableStatus.AVAILABLE) {
+            UpdateCheckManager.updateAvailableStatus.value =
+                UpdateAvailableStatus.UNDEFINED
+        }
     }
 
     when (val currentDestination: String = RoutesManager.currentDestination.value!!) {

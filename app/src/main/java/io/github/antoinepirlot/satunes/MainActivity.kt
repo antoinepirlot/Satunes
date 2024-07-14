@@ -70,7 +70,7 @@ internal class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         instance = this
         setNotificationOnClick()
-        SettingsManager.loadSettings(context = this@MainActivity)
+        SettingsManager.loadSettings(context = this)
         setContent {
             Satunes()
         }
@@ -172,16 +172,9 @@ internal class MainActivity : ComponentActivity() {
         }
     }
 
-    override fun onDestroy() {
-        try {
-            if (!SettingsManager.playbackWhenClosedChecked.value) {
-                val playbackController: PlaybackController = PlaybackController.getInstance()
-                playbackController.release()
-            }
-        } catch (_: Exception) {
-            /* Do nothing */
-        } finally {
-            super.onDestroy()
-        }
+    override fun onRestart() {
+        // It avoids crashing app after android system killed playback controller
+        PlaybackController.initInstance(context = applicationContext)
+        super.onRestart()
     }
 }

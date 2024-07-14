@@ -34,7 +34,6 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.session.MediaSession
 import androidx.media3.session.MediaSessionService
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
-import kotlin.system.exitProcess
 
 /**
  * @author Antoine Pirlot on 31/01/24
@@ -44,6 +43,7 @@ class PlaybackService : MediaSessionService() {
 
     companion object {
         var mediaSession: MediaSession? = null
+        var playbackController: PlaybackController? = null
     }
 
     @OptIn(UnstableApi::class)
@@ -72,27 +72,38 @@ class PlaybackService : MediaSessionService() {
         }
 
         mediaSession = MediaSession.Builder(this, exoPlayer).build()
+        try {
+            playbackController =
+                PlaybackController.getInstance() // Called from init instance (session)
+        } catch (_: Exception) {
+            stopSelf()
+        }
     }
 
     override fun onTaskRemoved(rootIntent: Intent?) {
         super.onTaskRemoved(rootIntent)
-        if (!SettingsManager.playbackWhenClosedChecked.value) {
+        if (
+            !SettingsManager.playbackWhenClosedChecked.value ||
+            playbackController == null ||
+            !playbackController!!.isPlaying.value
+        ) {
+            playbackController?.release()
             stopSelf()
         }
     }
 
     override fun onDestroy() {
-        if (!SettingsManager.playbackWhenClosedChecked.value) {
+        if (
+            !SettingsManager.playbackWhenClosedChecked.value ||
+            playbackController == null ||
+            !playbackController!!.isPlaying.value
+        ) {
             mediaSession?.run {
                 player.release()
                 release()
                 mediaSession = null
             }
             super.onDestroy()
-            //Use exit process as sometimes, when closing app from multi task with playback when closed
-            // is false, then the player is release but the UI is still in the old view, and causing issue
-            // with playback. Best way I found at this time
-            exitProcess(0)
         }
     }
 

@@ -83,6 +83,7 @@ class PlaybackController private constructor(
     private var listener: Player.Listener = PlaybackListener()
 
     init {
+        //TODO
         val controllerFuture = MediaController.Builder(context, sessionToken).buildAsync()
 
         controllerFuture.addListener({
@@ -114,7 +115,9 @@ class PlaybackController private constructor(
          * @return the instance of MediaController
          */
         fun getInstance(): PlaybackController {
+            // TODO issues relaunch app happens here
             if (!Companion::instance.isInitialized) {
+                //TODO find a way to fix crashing app after resume after inactivity
                 throw IllegalStateException("The PlayBackController has not been initialized")
             }
 
@@ -123,6 +126,7 @@ class PlaybackController private constructor(
 
         fun initInstance(context: Context, listener: Player.Listener? = null): PlaybackController {
             if (!Companion::instance.isInitialized) {
+                //TODO
                 val sessionToken =
                     SessionToken(
                         context.applicationContext,

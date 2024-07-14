@@ -43,7 +43,9 @@ import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.DataLoader
 import io.github.antoinepirlot.satunes.database.services.DataManager
+import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
+import io.github.antoinepirlot.satunes.playback.services.PlaybackService
 import io.github.antoinepirlot.satunes.icons.R as RIcons
 
 /**
@@ -113,11 +115,6 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
                 actions = SatunesCarCallBack.ACTIONS_ON_PAUSE
             )
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        session.release()
     }
 
     override fun onGetRoot(
@@ -274,5 +271,24 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
 
     override fun onTaskRemoved(rootIntent: Intent?) {
         super.onTaskRemoved(rootIntent)
+        if (
+            !SettingsManager.playbackWhenClosedChecked.value ||
+            PlaybackService.playbackController == null ||
+            !PlaybackService.playbackController!!.isPlaying.value
+        ) {
+            stopSelf()
+        }
+    }
+
+    override fun onDestroy() {
+        if (
+            !SettingsManager.playbackWhenClosedChecked.value ||
+            PlaybackService.playbackController == null ||
+            !PlaybackService.playbackController!!.isPlaying.value
+        ) {
+            session.release()
+            super.onDestroy()
+        }
+
     }
 }

@@ -33,6 +33,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
+import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.ui.ScreenSizes
 import io.github.antoinepirlot.satunes.ui.views.playback.mobile.PlaybackMobileView
 import io.github.antoinepirlot.satunes.ui.views.playback.tablet.PlaybackTabletView
@@ -48,6 +49,15 @@ internal fun PlaybackView(
     onAlbumClick: (album: Album?) -> Unit,
     onArtistClick: (artist: Artist) -> Unit,
 ) {
+    try {
+        if (PlaybackController.getInstance().musicPlaying.value == null) {
+            navController.popBackStack()
+            return
+        }
+    } catch (_: Exception) {
+        navController.popBackStack()
+        return
+    }
     /**
      * If tablet -> playbackTabletView
      * else -> playbackMobileView

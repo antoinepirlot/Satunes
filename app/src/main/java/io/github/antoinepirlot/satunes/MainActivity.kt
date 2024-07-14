@@ -43,7 +43,6 @@ import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.database.services.DataCleanerManager
 import io.github.antoinepirlot.satunes.database.services.DatabaseManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
-import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.playback.services.PlaybackService
 import io.github.antoinepirlot.utils.showToastOnUiThread
 import kotlinx.coroutines.CoroutineScope
@@ -70,7 +69,7 @@ internal class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         instance = this
         setNotificationOnClick()
-        SettingsManager.loadSettings(context = this@MainActivity)
+        SettingsManager.loadSettings(context = this)
         setContent {
             Satunes()
         }
@@ -169,19 +168,6 @@ internal class MainActivity : ComponentActivity() {
                     DatabaseManager(context = this).importPlaylists(context = this, uri = it)
                 }
             }
-        }
-    }
-
-    override fun onDestroy() {
-        try {
-            if (!SettingsManager.playbackWhenClosedChecked.value) {
-                val playbackController: PlaybackController = PlaybackController.getInstance()
-                playbackController.release()
-            }
-        } catch (_: Exception) {
-            /* Do nothing */
-        } finally {
-            super.onDestroy()
         }
     }
 }

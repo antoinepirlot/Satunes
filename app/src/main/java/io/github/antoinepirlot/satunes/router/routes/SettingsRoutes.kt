@@ -43,6 +43,7 @@ import io.github.antoinepirlot.satunes.ui.views.settings.PlaylistsSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.SearchSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.SettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.UpdatesSettingView
+import io.github.antoinepirlot.satunes.ui.views.settings.logs.LogsSettingsView
 
 /**
  * @author Antoine Pirlot on 15/07/2024
@@ -103,5 +104,10 @@ internal fun NavGraphBuilder.settingsRoutes(
     composable(Destination.SEARCH_SETTINGS.link) {
         onStart(it)
         SearchSettingsView()
+    }
+
+    composable(Destination.LOGS_SETTINGS.link) {
+        onStart(it)
+        LogsSettingsView()
     }
 }

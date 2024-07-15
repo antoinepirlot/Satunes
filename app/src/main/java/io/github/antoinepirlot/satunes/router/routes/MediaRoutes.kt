@@ -23,7 +23,7 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.router
+package io.github.antoinepirlot.satunes.router.routes
 
 import android.net.Uri.decode
 import androidx.compose.animation.AnimatedContentScope
@@ -42,6 +42,7 @@ import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.database.services.DataLoader
 import io.github.antoinepirlot.satunes.database.services.DataManager
+import io.github.antoinepirlot.satunes.router.Destination
 import io.github.antoinepirlot.satunes.ui.views.LoadingView
 import io.github.antoinepirlot.satunes.ui.views.media.album.AlbumView
 import io.github.antoinepirlot.satunes.ui.views.media.album.AllAlbumsListView

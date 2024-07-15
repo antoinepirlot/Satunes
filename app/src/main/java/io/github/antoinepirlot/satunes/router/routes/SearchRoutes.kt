@@ -23,7 +23,7 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.router
+package io.github.antoinepirlot.satunes.router.routes
 
 import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.runtime.getValue
@@ -33,6 +33,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import io.github.antoinepirlot.satunes.database.services.DataLoader
+import io.github.antoinepirlot.satunes.router.Destination
 import io.github.antoinepirlot.satunes.ui.views.LoadingView
 import io.github.antoinepirlot.satunes.ui.views.search.SearchView
 

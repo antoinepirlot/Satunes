@@ -36,9 +36,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
@@ -83,76 +80,68 @@ internal fun PermissionsSettingsView(
             .padding(horizontal = 16.dp),
     ) {
         Title(text = stringResource(id = R.string.permissions))
-        val lazySate = rememberLazyListState()
-        LazyColumn(
-            state = lazySate,
-        ) {
-            items(
-                items = permissionsList,
-                key = { it.stringId }
-            ) { permission: Permissions ->
-                val permissionState = rememberPermissionState(permission = permission.value)
-                if (permissionState.status.isGranted) {
+        for (permission: Permissions in permissionsList) {
+            val permissionState = rememberPermissionState(permission = permission.value)
+            if (permissionState.status.isGranted) {
+                @SuppressLint("NewApi")
+                when (permission) {
+                    Permissions.READ_AUDIO_PERMISSION -> PermissionManager.isReadAudioAllowed.value =
+                        true
+
+                    Permissions.READ_EXTERNAL_STORAGE_PERMISSION -> PermissionManager.isReadExternalStorageAllowed.value =
+                        true
+                }
+                isAudioAllowed.value = true
+            }
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                @SuppressLint("NewApi")
+                val permissionIcon: SatunesIcons = when (permission) {
+                    Permissions.READ_AUDIO_PERMISSION -> SatunesIcons.MUSIC
+                    Permissions.READ_EXTERNAL_STORAGE_PERMISSION -> SatunesIcons.FOLDER
+                }
+                Icon(
+                    imageVector = permissionIcon.imageVector,
+                    contentDescription = permissionIcon.description
+                )
+                Spacer(modifier = Modifier.size(16.dp))
+                NormalText(text = stringResource(id = permission.stringId))
+                Spacer(modifier = Modifier.size(spacerSize))
+                val permissionGranted: Boolean by remember {
                     @SuppressLint("NewApi")
                     when (permission) {
-                        Permissions.READ_AUDIO_PERMISSION -> PermissionManager.isReadAudioAllowed.value =
-                            true
-
-                        Permissions.READ_EXTERNAL_STORAGE_PERMISSION -> PermissionManager.isReadExternalStorageAllowed.value =
-                            true
+                        Permissions.READ_AUDIO_PERMISSION -> PermissionManager.isReadAudioAllowed
+                        Permissions.READ_EXTERNAL_STORAGE_PERMISSION -> PermissionManager.isReadExternalStorageAllowed
                     }
-                    isAudioAllowed.value = true
                 }
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    @SuppressLint("NewApi")
-                    val permissionIcon: SatunesIcons = when (permission) {
-                        Permissions.READ_AUDIO_PERMISSION -> SatunesIcons.MUSIC
-                        Permissions.READ_EXTERNAL_STORAGE_PERMISSION -> SatunesIcons.FOLDER
-                    }
-                    Icon(
-                        imageVector = permissionIcon.imageVector,
-                        contentDescription = permissionIcon.description
-                    )
-                    Spacer(modifier = Modifier.size(16.dp))
-                    NormalText(text = stringResource(id = permission.stringId))
-                    Spacer(modifier = Modifier.size(spacerSize))
-                    val permissionGranted: Boolean by remember {
-                        @SuppressLint("NewApi")
-                        when (permission) {
-                            Permissions.READ_AUDIO_PERMISSION -> PermissionManager.isReadAudioAllowed
-                            Permissions.READ_EXTERNAL_STORAGE_PERMISSION -> PermissionManager.isReadExternalStorageAllowed
-                        }
-                    }
 
-                    if (permissionGranted) {
-                        val icon: SatunesIcons = SatunesIcons.PERMISSION_GRANTED
-                        Icon(
-                            imageVector = icon.imageVector,
-                            contentDescription = icon.description,
-                            tint = Color.Green
-                        )
-                    } else {
-                        val icon: SatunesIcons = SatunesIcons.PERMISSION_NOT_GRANTED
-                        Icon(
-                            imageVector = icon.imageVector,
-                            contentDescription = icon.description,
-                            tint = Color.Red
-                        )
-                        Spacer(modifier = Modifier.size(spacerSize))
-                        Button(onClick = {
-                            if (permissionState.status.shouldShowRationale) {
-                                val intent = Intent(ACTION_APPLICATION_DETAILS_SETTINGS)
-                                val uri = Uri.fromParts("package", context.packageName, null)
-                                intent.data = uri
-                                context.startActivity(intent)
-                            } else {
-                                permissionState.launchPermissionRequest()
-                            }
-                        }) {
-                            NormalText(text = stringResource(id = R.string.ask_permission))
+                if (permissionGranted) {
+                    val icon: SatunesIcons = SatunesIcons.PERMISSION_GRANTED
+                    Icon(
+                        imageVector = icon.imageVector,
+                        contentDescription = icon.description,
+                        tint = Color.Green
+                    )
+                } else {
+                    val icon: SatunesIcons = SatunesIcons.PERMISSION_NOT_GRANTED
+                    Icon(
+                        imageVector = icon.imageVector,
+                        contentDescription = icon.description,
+                        tint = Color.Red
+                    )
+                    Spacer(modifier = Modifier.size(spacerSize))
+                    Button(onClick = {
+                        if (permissionState.status.shouldShowRationale) {
+                            val intent = Intent(ACTION_APPLICATION_DETAILS_SETTINGS)
+                            val uri = Uri.fromParts("package", context.packageName, null)
+                            intent.data = uri
+                            context.startActivity(intent)
+                        } else {
+                            permissionState.launchPermissionRequest()
                         }
+                    }) {
+                        NormalText(text = stringResource(id = R.string.ask_permission))
                     }
                 }
             }

@@ -47,7 +47,6 @@ internal val permissionsList: List<Permissions> =
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         listOf(
             Permissions.READ_AUDIO_PERMISSION,
-            Permissions.READ_EXTERNAL_STORAGE_PERMISSION,
         )
     } else {
         listOf(

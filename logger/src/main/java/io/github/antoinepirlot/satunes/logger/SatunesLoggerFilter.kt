@@ -40,6 +40,7 @@ internal class SatunesLoggerFilter : Filter {
         return when (record.level) {
             Level.WARNING -> true
             Level.SEVERE -> true
+            Level.INFO -> true
             else -> false
         }
     }

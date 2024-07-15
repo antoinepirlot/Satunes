@@ -69,6 +69,7 @@ internal class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         logger = SatunesLogger(context = this, name = MainActivity::class.java.name)
+        logger.info("Satunes started on API: ${Build.VERSION.SDK_INT}")
         super.onCreate(savedInstanceState)
         instance = this
         setNotificationOnClick()

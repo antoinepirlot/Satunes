@@ -59,6 +59,7 @@ internal fun LogsSettingsView(
             text = stringResource(id = R.string.logs_settings_content),
             maxLines = Int.MAX_VALUE
         )
+        //TODO add button to export logs
     }
 }
 

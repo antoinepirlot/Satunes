@@ -35,7 +35,9 @@ import java.util.logging.LogRecord
 internal class SatunesLoggerFilter : Filter {
 
     override fun isLoggable(record: LogRecord?): Boolean {
-        return when (record) {
+        if (record == null) return false
+
+        return when (record.level) {
             Level.WARNING -> true
             Level.SEVERE -> true
             else -> false

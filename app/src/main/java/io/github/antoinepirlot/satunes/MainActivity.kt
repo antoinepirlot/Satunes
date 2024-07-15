@@ -64,13 +64,16 @@ internal class MainActivity : ComponentActivity() {
         internal var playlistsToExport: Array<Playlist> = arrayOf()
         private val DEFAULT_URI =
             Uri.parse(Environment.getExternalStorageDirectory().path + '/' + Environment.DIRECTORY_DOCUMENTS)
-        internal lateinit var logger: SatunesLogger
     }
 
+    private lateinit var logger: SatunesLogger
+
     override fun onCreate(savedInstanceState: Bundle?) {
-        logger = SatunesLogger(context = this, name = MainActivity::class.java.name)
-        logger.info("Satunes started on API: ${Build.VERSION.SDK_INT}")
         super.onCreate(savedInstanceState)
+        SatunesLogger.DOCUMENTS_PATH =
+            applicationContext.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)!!.path
+        logger = SatunesLogger(name = MainActivity::class.java.name)
+        logger.info("Satunes started on API: ${Build.VERSION.SDK_INT}")
         instance = this
         setNotificationOnClick()
         SettingsManager.loadSettings(context = this)

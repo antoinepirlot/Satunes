@@ -31,11 +31,14 @@ import androidx.annotation.OptIn
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
+import io.github.antoinepirlot.satunes.logger.SatunesLogger
 
 /**
  * @author Antoine Pirlot on 23/03/2024
  */
 open class PlaybackListener : Player.Listener {
+
+    private val logger = SatunesLogger(name = this::class.java.name)
 
     override fun onPlaybackStateChanged(playbackState: Int) {
         super.onPlaybackStateChanged(playbackState)
@@ -75,6 +78,16 @@ open class PlaybackListener : Player.Listener {
             //Shuffle is managed by PlaybackController not by media controller.
             //This line avoid mismatch with song on screen and the one playing
             player.shuffleModeEnabled = false
+        }
+
+        if (events.contains(Player.EVENT_PLAYER_ERROR)) {
+            val playbackController: PlaybackController = PlaybackController.getInstance()
+            val message = """
+                An error happens with the player. 
+                Here's the status of playback Controller:
+                $playbackController
+            """.trimIndent()
+            logger.warning(message)
         }
     }
 

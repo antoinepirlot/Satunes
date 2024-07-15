@@ -34,6 +34,7 @@ import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
+import io.github.antoinepirlot.satunes.logger.SatunesLogger
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.router.Destination
 import io.github.antoinepirlot.satunes.ui.utils.getMusicListFromFolder
@@ -63,7 +64,10 @@ internal fun openMedia(
     }
     if (navigate) {
         if (navController == null) {
-            throw IllegalArgumentException("navController can't be null if you navigate")
+            val message = "navController can't be null if you navigate"
+            val logger = SatunesLogger(name = null)
+            logger.severe(message)
+            throw IllegalArgumentException(message)
         }
         navController.navigate(getDestinationOf(media))
     }
@@ -125,8 +129,13 @@ private fun getDestinationOf(media: MediaImpl?): String {
  */
 internal fun openCurrentMusic(navController: NavHostController) {
     val playbackController: PlaybackController = PlaybackController.getInstance()
-    val musicPlaying = playbackController.musicPlaying.value
-        ?: throw IllegalStateException("No music is currently playing, this button can be accessible")
+    val musicPlaying: Music? = playbackController.musicPlaying.value
+    if (musicPlaying == null) {
+        val message = "No music is currently playing, this button can be accessible"
+        val logger = SatunesLogger(name = null)
+        logger.severe(message)
+        throw IllegalStateException(message)
+    }
 
     navController.navigate(getDestinationOf(musicPlaying))
 }

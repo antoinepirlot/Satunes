@@ -32,6 +32,7 @@ import android.net.Network
 import android.net.NetworkCapabilities
 import android.os.Build
 import androidx.annotation.RequiresApi
+import io.github.antoinepirlot.satunes.logger.SatunesLogger
 
 /**
  * @author Antoine Pirlot on 11/04/2024
@@ -42,11 +43,13 @@ internal class InternetManager(context: Context) : Application() {
         context.getSystemService(ConnectivityManager::class.java)
 
     private val currentNetwork: Network? = connectivityManager.activeNetwork
+    private val logger = SatunesLogger(name = this::class.java.name)
 
     internal fun isConnected(): Boolean {
         return if (currentNetwork != null) {
             isConnected(capabilities = connectivityManager.getNetworkCapabilities(currentNetwork))
         } else {
+            logger.warning("Current network is null")
             false
         }
     }

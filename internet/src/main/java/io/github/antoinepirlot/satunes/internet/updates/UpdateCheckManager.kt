@@ -26,6 +26,7 @@
 package io.github.antoinepirlot.satunes.internet.updates
 
 import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.MutableState
@@ -41,6 +42,7 @@ import io.github.antoinepirlot.satunes.internet.updates.Versions.PREVIEW_REGEX
 import io.github.antoinepirlot.satunes.internet.updates.Versions.RELEASES_URL
 import io.github.antoinepirlot.satunes.internet.updates.Versions.RELEASE_REGEX
 import io.github.antoinepirlot.satunes.internet.updates.Versions.versionType
+import io.github.antoinepirlot.satunes.logger.SatunesLogger
 import io.github.antoinepirlot.satunes.utils.showToastOnUiThread
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -62,6 +64,7 @@ object UpdateCheckManager {
     val latestVersion: MutableState<String?> = mutableStateOf(null)
     val downloadStatus: MutableState<APKDownloadStatus> =
         mutableStateOf(APKDownloadStatus.NOT_STARTED)
+    private val logger = SatunesLogger(name = this::class.java.name)
 
     /**
      * Create a httpclient and get the response matching url.
@@ -70,18 +73,23 @@ object UpdateCheckManager {
      * @param url the url to get the response
      */
     fun getUrlResponse(context: Context, url: String): Response? {
-        val internetManager = InternetManager(context = context)
-        if (!internetManager.isConnected()) {
-            UpdateAvailableStatus.CANNOT_CHECK.updateLink = null
-            updateAvailableStatus.value = UpdateAvailableStatus.CANNOT_CHECK
-            isCheckingUpdate.value = false
-            return null
+        return try {
+            val internetManager = InternetManager(context = context)
+            if (!internetManager.isConnected()) {
+                UpdateAvailableStatus.CANNOT_CHECK.updateLink = null
+                updateAvailableStatus.value = UpdateAvailableStatus.CANNOT_CHECK
+                isCheckingUpdate.value = false
+                return null
+            }
+            val httpClient = OkHttpClient()
+            val req: Request = Request.Builder()
+                .url(url)
+                .build()
+            httpClient.newCall(req).execute()
+        } catch (e: Throwable) {
+            logger.warning(e.message)
+            null
         }
-        val httpClient = OkHttpClient()
-        val req: Request = Request.Builder()
-            .url(url)
-            .build()
-        return httpClient.newCall(req).execute()
     }
 
     /**
@@ -129,12 +137,13 @@ object UpdateCheckManager {
             } catch (e: Exception) {
                 //Don't crash the app if an error occurred internet connection
                 //Don't care of internet
-                e.printStackTrace()
                 updateAvailableStatus.value = UpdateAvailableStatus.CANNOT_CHECK
                 showToastOnUiThread(
                     context = context,
                     message = context.getString(R.string.cannot_check_update)
                 )
+                logger.warning(e.message)
+                e.printStackTrace()
             } finally {
                 isCheckingUpdate.value = false
             }
@@ -165,13 +174,21 @@ object UpdateCheckManager {
             UpdateCheckManager.latestVersion.value = latestVersion
             "$RELEASES_URL/tag/$latestVersion"
         } else {
+            val message =
+                "No update url found. Latest version is $latestVersion & currentVersion is $currentVersion"
+            logger.warning(message)
             null
         }
     }
 
     fun getCurrentVersion(context: Context): String {
-        val versionName: String =
+        val versionName: String = try {
             context.packageManager.getPackageInfo(context.packageName, 0).versionName!!
+        } catch (e: PackageManager.NameNotFoundException) {
+            logger.severe(e.message)
+            throw e
+        }
+
         versionType = try {
             versionName.split("-")[1]
         } catch (_: IndexOutOfBoundsException) {

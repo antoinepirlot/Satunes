@@ -41,6 +41,7 @@ import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
+import io.github.antoinepirlot.satunes.logger.SatunesLogger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -115,6 +116,8 @@ object DataLoader {
         } else {
             null
         }
+
+    private val logger = SatunesLogger(name = this::class.java.name)
 
     /**
      * Load all Media data from device's storage.
@@ -260,15 +263,21 @@ object DataLoader {
         // Get values of columns for a given music.
         val id: Long = cursor.getLong(musicIdColumn!!)
         if (id < 1) {
-            throw IllegalArgumentException("The id is less than 1")
+            val message = "The id is less than 1"
+            logger.severe(message)
+            throw IllegalArgumentException(message)
         }
         val size = cursor.getInt(musicSizeColumn!!)
         if (size < 0) {
-            throw IllegalArgumentException("Size is less than 0")
+            val message = "Size is less than 0"
+            logger.severe(message)
+            throw IllegalArgumentException(message)
         }
         val duration: Long = cursor.getLong(musicDurationColumn!!)
         if (duration < 0) {
-            throw IllegalArgumentException("Duration is less than 0")
+            val message = "Duration is less than 0"
+            logger.severe(message)
+            throw IllegalArgumentException(message)
         }
         val displayName: String = cursor.getString(musicNameColumn!!)
         val title: String = cursor.getString(musicTitleColumn!!)

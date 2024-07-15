@@ -25,8 +25,6 @@
 
 package io.github.antoinepirlot.satunes.logger
 
-import android.content.Context
-import android.os.Environment
 import java.io.IOException
 import java.util.logging.ConsoleHandler
 import java.util.logging.FileHandler
@@ -36,7 +34,6 @@ import java.util.logging.Logger
  * @author Antoine Pirlot on 15/07/2024
  */
 class SatunesLogger(
-    context: Context,
     name: String?,
     resourceBundleName: String? = null
 ) : Logger(name, resourceBundleName) {
@@ -44,6 +41,7 @@ class SatunesLogger(
     companion object {
         private const val MAX_LINES = 1000
         private const val MAX_FILES = 5
+        lateinit var DOCUMENTS_PATH: String
     }
 
     init {
@@ -51,7 +49,7 @@ class SatunesLogger(
         addHandler(SatunesLoggerHandler())
         try {
             val fileHandler = FileHandler(
-                context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)!!.path + "/logs",
+                "$DOCUMENTS_PATH/logs",
                 MAX_LINES,
                 MAX_FILES
             )

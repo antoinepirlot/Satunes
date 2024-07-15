@@ -40,6 +40,7 @@ import androidx.media3.common.MediaMetadata
 import io.github.antoinepirlot.satunes.database.services.DataManager
 import io.github.antoinepirlot.satunes.database.services.DatabaseManager
 import io.github.antoinepirlot.satunes.icons.R
+import io.github.antoinepirlot.satunes.logger.SatunesLogger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -61,10 +62,13 @@ class Music(
     val genre: Genre,
     context: Context,
 ) : MediaImpl(id = id, title = title.ifBlank { displayName }) {
+    private val logger = SatunesLogger(name = this::class.java.name)
     private var displayName: String = displayName
         set(displayName) {
             if (displayName.isBlank()) {
-                throw IllegalArgumentException("Display name must not be blank")
+                val message = "Display name must not be blank"
+                logger.warning(message)
+                throw IllegalArgumentException(message)
             }
             field = displayName
         }

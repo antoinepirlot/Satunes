@@ -28,13 +28,20 @@ package io.github.antoinepirlot.satunes.ui.utils
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import io.github.antoinepirlot.satunes.logger.SatunesLogger
 
 /**
  * @author Antoine Pirlot on 10/04/2024
  */
 
 internal fun openUrl(context: Context, url: String) {
-    val uri: Uri = Uri.parse(url)
-    val intent = Intent(Intent.ACTION_VIEW, uri)
-    context.startActivity(intent)
+    try {
+        val uri: Uri = Uri.parse(url)
+        val intent = Intent(Intent.ACTION_VIEW, uri)
+        context.startActivity(intent)
+    } catch (e: Throwable) {
+        val logger = SatunesLogger(name = null)
+        logger.severe(e.message)
+        throw e
+    }
 }

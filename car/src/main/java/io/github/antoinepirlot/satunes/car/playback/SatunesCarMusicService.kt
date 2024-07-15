@@ -28,6 +28,7 @@ package io.github.antoinepirlot.satunes.car.playback
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
+import android.os.Environment
 import android.support.v4.media.MediaBrowserCompat.MediaItem
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.MediaSessionCompat.QueueItem
@@ -44,6 +45,7 @@ import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.DataLoader
 import io.github.antoinepirlot.satunes.database.services.DataManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
+import io.github.antoinepirlot.satunes.logger.SatunesLogger
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.playback.services.PlaybackService
 import io.github.antoinepirlot.satunes.icons.R as RIcons
@@ -82,7 +84,8 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
 
     override fun onCreate() {
         super.onCreate()
-
+        SatunesLogger.DOCUMENTS_PATH =
+            applicationContext.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)!!.path
         val className: String = this.javaClass.name.split(".").last()
         session = MediaSessionCompat(this, className)
         sessionToken = session.sessionToken

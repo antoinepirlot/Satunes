@@ -27,12 +27,21 @@ package io.github.antoinepirlot.satunes.database.migrations
 
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
+import io.github.antoinepirlot.satunes.logger.SatunesLogger
+import java.sql.SQLException
 
 /**
  * @author Antoine Pirlot on 28/06/2024
  */
 internal object MigrationFrom1To2 : Migration(1, 2) {
+    private val logger = SatunesLogger(name = this::class.java.name)
+
     override fun migrate(db: SupportSQLiteDatabase) {
-        db.execSQL("ALTER TABLE musics ADD COLUMN liked INTEGER NOT NULL DEFAULT 0;")
+        try {
+            db.execSQL("ALTER TABLE musics ADD COLUMN liked INTEGER NOT NULL DEFAULT 0;")
+        } catch (e: SQLException) {
+            logger.severe(e.message)
+            throw e
+        }
     }
 }

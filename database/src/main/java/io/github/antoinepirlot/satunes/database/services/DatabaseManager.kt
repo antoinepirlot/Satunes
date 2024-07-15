@@ -44,6 +44,7 @@ import io.github.antoinepirlot.satunes.database.models.database.relations.Playli
 import io.github.antoinepirlot.satunes.database.models.database.tables.MusicDB
 import io.github.antoinepirlot.satunes.database.models.database.tables.MusicsPlaylistsRel
 import io.github.antoinepirlot.satunes.database.models.database.tables.PlaylistDB
+import io.github.antoinepirlot.satunes.logger.SatunesLogger
 import io.github.antoinepirlot.satunes.utils.showToastOnUiThread
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -65,6 +66,7 @@ class DatabaseManager(context: Context) {
     private val musicDao: MusicDAO = database.musicDao()
     private val playlistDao: PlaylistDAO = database.playlistDao()
     private val musicsPlaylistsRelDAO: MusicsPlaylistsRelDAO = database.musicsPlaylistsRelDao()
+    private val logger = SatunesLogger(name = this::class.java.name)
 
     companion object {
         private const val PLAYLIST_JSON_OBJECT_NAME = "all_playlists"
@@ -90,6 +92,7 @@ class DatabaseManager(context: Context) {
                 }
             }
         } catch (e: Exception) {
+            logger.warning(e.message)
             e.printStackTrace()
         }
     }
@@ -139,7 +142,9 @@ class DatabaseManager(context: Context) {
         showToast: Boolean = true
     ) {
         if (playlist !is Playlist) {
-            throw IllegalArgumentException("Playlist is not the right type")
+            val message: String = "Playlist is not the right type"
+            logger.severe(message)
+            throw IllegalArgumentException()
         }
 
         CoroutineScope(Dispatchers.IO).launch {
@@ -179,8 +184,8 @@ class DatabaseManager(context: Context) {
             try {
                 playlistDao.update(*playlistDBs.toTypedArray())
             } catch (e: SQLiteConstraintException) {
-                e.printStackTrace()
-                throw Exception()
+                logger.severe(e.message)
+                throw e
             }
         }
     }
@@ -370,8 +375,10 @@ class DatabaseManager(context: Context) {
                     }
                 }
         } catch (e: FileNotFoundException) {
+            logger.warning(e.message)
             e.printStackTrace()
         } catch (e: IOException) {
+            logger.warning(e.message)
             e.printStackTrace()
         }
     }
@@ -394,6 +401,7 @@ class DatabaseManager(context: Context) {
                     )
                 }
             } catch (e: Exception) {
+                logger.warning(e.message)
                 e.printStackTrace()
             }
         }
@@ -411,6 +419,7 @@ class DatabaseManager(context: Context) {
                 )
                 musicDao.unlike(musicId = music.id)
             } catch (e: Exception) {
+                logger.warning(e.message)
                 e.printStackTrace()
             }
         }

@@ -611,4 +611,17 @@ class PlaybackController private constructor(
     fun isMusicInQueue(music: Music): Boolean {
         return this.playlist.isMusicInQueue(music = music)
     }
+
+    override fun toString(): String {
+        return """
+            musicPlaying != null: ${musicPlaying.value != null}
+            isPlaying: ${isPlaying.value}
+            repeatMode: ${repeatMode.value}
+            isShuffle: ${isShuffle.value}
+            hasNext: ${hasNext.value}
+            hasPrevious: ${hasPrevious.value}
+            isLoaded: ${isLoaded.value}
+            currentPositionProgression: ${currentPositionProgression.floatValue}
+        """.trimIndent()
+    }
 }

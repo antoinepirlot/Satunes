@@ -30,6 +30,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.toMutableStateList
 import androidx.media3.common.MediaItem
 import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.logger.SatunesLogger
 import io.github.antoinepirlot.satunes.playback.exceptions.AlreadyInPlaybackException
 
 /**
@@ -40,6 +41,7 @@ internal class Playlist(musicMediaItemSortedMap: MutableMap<Music, MediaItem>) {
     private val originalMusicMediaItemMap: MutableMap<Music, MediaItem>
     var musicList: SnapshotStateList<Music>
     var mediaItemList: MutableList<MediaItem>
+    private val logger = SatunesLogger(name = this::class.java.name)
 
 
     init {
@@ -54,7 +56,9 @@ internal class Playlist(musicMediaItemSortedMap: MutableMap<Music, MediaItem>) {
      */
     fun shuffle(musicIndex: Int = -1) {
         if (musicIndex > this.musicList.lastIndex) {
-            throw IllegalArgumentException("The music index is greater than last index of the list")
+            val message = "The music index is greater than last index of the list"
+            logger.severe(message)
+            throw IllegalArgumentException(message)
         }
         var musicMoving: Music? = null
         if (musicIndex >= 0) {
@@ -124,27 +128,32 @@ internal class Playlist(musicMediaItemSortedMap: MutableMap<Music, MediaItem>) {
         val toIndex = if (toIndex > this.musicList.lastIndex) this.musicList.lastIndex else toIndex
         val fromIndex = if (fromIndex < 0) 0 else fromIndex
         if (fromIndex > toIndex) {
-            throw IllegalArgumentException("The fromIndex has to be lower than toIndex")
+            val message = "The fromIndex has to be lower than toIndex"
+            logger.severe(message)
+            throw IllegalArgumentException(message)
         }
         return mediaItemList.subList(fromIndex = fromIndex, toIndex = toIndex + 1)
     }
 
     fun addToQueue(music: Music) {
-        if (this.originalMusicMediaItemMap[music] != null) {
-            throw AlreadyInPlaybackException()
-        }
+        checkMusicIsInPlaylist(music = music)
         this.originalMusicMediaItemMap[music] = music.mediaItem
         this.musicList.add(music)
         this.mediaItemList.add(music.mediaItem)
     }
 
     fun addNext(index: Int, music: Music) {
-        if (this.originalMusicMediaItemMap[music] != null) {
-            throw AlreadyInPlaybackException()
-        }
+        checkMusicIsInPlaylist(music = music)
         this.originalMusicMediaItemMap[music] = music.mediaItem
         this.musicList.add(index = index, element = music)
         this.mediaItemList.add(index = index, element = music.mediaItem)
+    }
+
+    private fun checkMusicIsInPlaylist(music: Music) {
+        if (isMusicInQueue(music = music)) {
+            logger.severe("this.originalMusicMediaItemMap[music] != null")
+            throw AlreadyInPlaybackException()
+        }
     }
 
     /**

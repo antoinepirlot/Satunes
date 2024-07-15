@@ -28,6 +28,7 @@ package io.github.antoinepirlot.satunes.utils
 import android.app.Activity
 import android.content.Context
 import android.widget.Toast
+import io.github.antoinepirlot.satunes.logger.SatunesLogger
 
 /**
  * @author Antoine Pirlot on 14/04/2024
@@ -43,6 +44,7 @@ fun showToastOnUiThread(context: Context, message: String) {
             ).show()
         }
     } catch (e: Exception) {
+        SatunesLogger(name = null).warning(e.message)
         e.printStackTrace()
     }
 }

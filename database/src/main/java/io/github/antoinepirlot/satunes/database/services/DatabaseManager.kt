@@ -44,7 +44,7 @@ import io.github.antoinepirlot.satunes.database.models.database.relations.Playli
 import io.github.antoinepirlot.satunes.database.models.database.tables.MusicDB
 import io.github.antoinepirlot.satunes.database.models.database.tables.MusicsPlaylistsRel
 import io.github.antoinepirlot.satunes.database.models.database.tables.PlaylistDB
-import io.github.antoinepirlot.utils.showToastOnUiThread
+import io.github.antoinepirlot.satunes.utils.showToastOnUiThread
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

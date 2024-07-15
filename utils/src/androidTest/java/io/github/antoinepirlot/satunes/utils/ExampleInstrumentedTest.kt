@@ -23,27 +23,25 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.internet.updates
+package io.github.antoinepirlot.satunes.utils
 
-import android.app.DownloadManager
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.os.Build
-import androidx.annotation.RequiresApi
-import io.github.antoinepirlot.satunes.internet.R
-import io.github.antoinepirlot.satunes.utils.showToastOnUiThread
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
+import org.junit.Assert
+import org.junit.Test
+import org.junit.runner.RunWith
 
 /**
- * @author Antoine Pirlot on 14/04/2024
+ * Instrumented test, which will execute on an Android device.
+ *
+ * See [testing documentation](http://d.android.com/tools/testing).
  */
-
-@RequiresApi(Build.VERSION_CODES.M)
-internal object DownloadReceiver : BroadcastReceiver() {
-    override fun onReceive(context: Context, intent: Intent) {
-        if (intent.action == DownloadManager.ACTION_DOWNLOAD_COMPLETE) {
-            UpdateCheckManager.downloadStatus.value = APKDownloadStatus.DOWNLOADED
-            showToastOnUiThread(context = context, context.getString(R.string.downloaded))
-        }
+@RunWith(AndroidJUnit4::class)
+class ExampleInstrumentedTest {
+    @Test
+    fun useAppContext() {
+        // Context of the app under test.
+        val appContext = InstrumentationRegistry.getInstrumentation().targetContext
+        Assert.assertEquals("io.github.antoinepirlot.utils.test", appContext.packageName)
     }
 }

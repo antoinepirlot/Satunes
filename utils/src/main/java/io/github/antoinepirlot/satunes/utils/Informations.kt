@@ -23,7 +23,7 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.utils
+package io.github.antoinepirlot.satunes.utils
 
 import android.app.Activity
 import android.content.Context

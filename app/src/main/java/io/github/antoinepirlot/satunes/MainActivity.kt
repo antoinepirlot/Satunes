@@ -44,7 +44,7 @@ import io.github.antoinepirlot.satunes.database.services.DataCleanerManager
 import io.github.antoinepirlot.satunes.database.services.DatabaseManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.playback.services.PlaybackService
-import io.github.antoinepirlot.utils.showToastOnUiThread
+import io.github.antoinepirlot.satunes.utils.showToastOnUiThread
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

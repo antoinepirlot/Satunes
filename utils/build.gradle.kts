@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "io.github.antoinepirlot.utils"
+    namespace = "io.github.antoinepirlot.satunes.utils"
     compileSdk = 35
 
     defaultConfig {

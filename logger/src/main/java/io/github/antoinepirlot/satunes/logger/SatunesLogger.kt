@@ -37,7 +37,7 @@ import java.util.logging.Logger
  */
 class SatunesLogger(
     context: Context,
-    name: String,
+    name: String?,
     resourceBundleName: String? = null
 ) : Logger(name, resourceBundleName) {
 

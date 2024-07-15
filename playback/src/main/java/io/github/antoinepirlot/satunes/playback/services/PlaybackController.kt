@@ -44,6 +44,7 @@ import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.DataLoader
 import io.github.antoinepirlot.satunes.database.services.DataManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
+import io.github.antoinepirlot.satunes.logger.SatunesLogger
 import io.github.antoinepirlot.satunes.playback.exceptions.AlreadyInPlaybackException
 import io.github.antoinepirlot.satunes.playback.models.Playlist
 import kotlinx.coroutines.CoroutineScope
@@ -82,16 +83,6 @@ class PlaybackController private constructor(
 
     private var listener: Player.Listener = PlaybackListener()
 
-    init {
-        //TODO
-        val controllerFuture = MediaController.Builder(context, sessionToken).buildAsync()
-
-        controllerFuture.addListener({
-            this.mediaController = controllerFuture.get()
-        }, ContextCompat.getMainExecutor(context))
-        this.playlist = Playlist(musicMediaItemSortedMap = musicMediaItemSortedMap)
-    }
-
     companion object {
         internal const val DEFAULT_MUSIC_PLAYING_INDEX: Int = 0
         internal const val DEFAULT_IS_ENDED: Boolean = false
@@ -107,6 +98,7 @@ class PlaybackController private constructor(
         val DEFAULT_MUSIC_PLAYING = null
 
         private lateinit var instance: PlaybackController
+        private val logger = SatunesLogger(name = this::class.java.name)
 
         /**
          * Return only one instance of MediaController. If there's no instance already created
@@ -118,9 +110,10 @@ class PlaybackController private constructor(
             // TODO issues relaunch app happens here
             if (!Companion::instance.isInitialized) {
                 //TODO find a way to fix crashing app after resume after inactivity
-                throw IllegalStateException("The PlayBackController has not been initialized")
+                val message = "The PlayBackController has not been initialized"
+                logger.severe(message)
+                throw IllegalStateException(message)
             }
-
             return instance
         }
 
@@ -158,9 +151,29 @@ class PlaybackController private constructor(
 
             if (!DataLoader.isLoaded.value && !DataLoader.isLoading.value) {
                 DataLoader.loadAllData(context.applicationContext)
+            } else {
+                logger.warning(
+                    """isLoaded: ${DataLoader.isLoaded.value},
+                        | isLoading: ${DataLoader.isLoading.value}""".trimMargin()
+                )
             }
 
             return getInstance()
+        }
+    }
+
+    init {
+        //TODO
+        try {
+            val controllerFuture = MediaController.Builder(context, sessionToken).buildAsync()
+
+            controllerFuture.addListener({
+                this.mediaController = controllerFuture.get()
+            }, ContextCompat.getMainExecutor(context))
+            this.playlist = Playlist(musicMediaItemSortedMap = musicMediaItemSortedMap)
+        } catch (e: Throwable) {
+            logger.severe(e.message)
+            throw e
         }
     }
 
@@ -254,7 +267,11 @@ class PlaybackController private constructor(
 
     fun seekTo(positionPercentage: Float) {
         if (this.musicPlaying.value == null || this.isEnded) {
-            throw IllegalStateException("Impossible to seek while no music is playing")
+            val message = """"
+                |Impossible to seek while no music is playing 
+                |$this"""".trimMargin()
+            logger.severe(message)
+            throw IllegalStateException(message)
         }
 
         val maxPosition: Long = this.musicPlaying.value!!.duration
@@ -598,10 +615,12 @@ class PlaybackController private constructor(
     }
 
     fun release() {
+        logger.info("Releasing $this")
         this.stop()
         if (this::mediaController.isInitialized) {
             this.mediaController.release()
         }
+        logger.info("PlaybackController released")
     }
 
     fun getPlaylist(): SnapshotStateList<Music> {
@@ -613,7 +632,12 @@ class PlaybackController private constructor(
     }
 
     override fun toString(): String {
+        val mediaControllerInit: Boolean = this::mediaController.isInitialized
         return """
+            PlaybackController:
+            musicPlayingIndex: $musicPlayingIndex
+            mediaController initialized: $mediaControllerInit
+            musicPlayingIndex in MediaController: ${if (mediaControllerInit) mediaController.currentMediaItemIndex else "/"}
             musicPlaying != null: ${musicPlaying.value != null}
             isPlaying: ${isPlaying.value}
             repeatMode: ${repeatMode.value}
@@ -622,6 +646,7 @@ class PlaybackController private constructor(
             hasPrevious: ${hasPrevious.value}
             isLoaded: ${isLoaded.value}
             currentPositionProgression: ${currentPositionProgression.floatValue}
+            isEnded: $isEnded
         """.trimIndent()
     }
 }

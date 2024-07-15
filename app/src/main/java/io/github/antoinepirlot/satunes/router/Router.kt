@@ -72,11 +72,6 @@ internal fun Router(
         enterTransition = { fadeIn(animationSpec = tween(500)) },
         exitTransition = { fadeOut(animationSpec = tween(0)) },
     ) {
-
-        /**
-         * Media routes
-         */
-
         mediaRoutes(
             navController = navController,
             onStart = {
@@ -84,7 +79,6 @@ internal fun Router(
                 RoutesManager.currentDestination.value = it.destination.route
             }
         )
-
         searchRoutes(
             navController = navController,
             onStart = {

@@ -43,6 +43,7 @@ import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.database.services.DataCleanerManager
 import io.github.antoinepirlot.satunes.database.services.DatabaseManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
+import io.github.antoinepirlot.satunes.logger.SatunesLogger
 import io.github.antoinepirlot.satunes.playback.services.PlaybackService
 import io.github.antoinepirlot.satunes.utils.showToastOnUiThread
 import kotlinx.coroutines.CoroutineScope
@@ -63,9 +64,11 @@ internal class MainActivity : ComponentActivity() {
         internal var playlistsToExport: Array<Playlist> = arrayOf()
         private val DEFAULT_URI =
             Uri.parse(Environment.getExternalStorageDirectory().path + '/' + Environment.DIRECTORY_DOCUMENTS)
+        internal lateinit var logger: SatunesLogger
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        logger = SatunesLogger(context = this, name = MainActivity::class.java.name)
         super.onCreate(savedInstanceState)
         instance = this
         setNotificationOnClick()
@@ -75,6 +78,8 @@ internal class MainActivity : ComponentActivity() {
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             DataCleanerManager.removeApkFiles(context = baseContext)
+        } else {
+            logger.warning("Can't remove apk files with API: ${Build.VERSION.SDK_INT}")
         }
     }
 

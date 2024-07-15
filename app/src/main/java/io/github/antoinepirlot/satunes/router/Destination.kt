@@ -41,6 +41,7 @@ internal enum class Destination(val link: String) {
     EXCLUSION_SETTINGS(link = "/exclusion"),
     FOLDERS(link = "/folders"),
     GENRES(link = "/genres"),
+    LOGS_SETTINGS(link = "/logs_settings"),
     MUSICS(link = "/musics"),
     PERMISSIONS_SETTINGS(link = "/permissions_settings"),
     PLAYBACK(link = "/playback"),
@@ -53,7 +54,7 @@ internal enum class Destination(val link: String) {
     SETTINGS(link = "/settings"),
 
     @RequiresApi(Build.VERSION_CODES.M)
-    UPDATES_SETTINGS(link = "/updates"), ;
+    UPDATES_SETTINGS(link = "/updates"),
 }
 
 internal val settingsDestinations: List<String> =
@@ -63,7 +64,7 @@ internal val settingsDestinations: List<String> =
             Destination.ANDROID_AUTO_SETTINGS.link, Destination.PLAYBACK_SETTINGS.link,
             Destination.EXCLUSION_SETTINGS.link, Destination.PLAYLISTS_SETTINGS.link,
             Destination.PERMISSIONS_SETTINGS.link, Destination.UPDATES_SETTINGS.link,
-            Destination.SEARCH_SETTINGS.link
+            Destination.SEARCH_SETTINGS.link, Destination.LOGS_SETTINGS.link
         )
     } else {
         // Without UPDATES_SETTINGS
@@ -71,8 +72,8 @@ internal val settingsDestinations: List<String> =
             Destination.SETTINGS.link, Destination.BOTTOM_BAR_SETTINGS.link,
             Destination.ANDROID_AUTO_SETTINGS.link, Destination.PLAYBACK_SETTINGS.link,
             Destination.EXCLUSION_SETTINGS.link, Destination.PLAYLISTS_SETTINGS.link,
-            Destination.PERMISSIONS_SETTINGS.link,
-            Destination.SEARCH_SETTINGS.link
+            Destination.PERMISSIONS_SETTINGS.link, Destination.SEARCH_SETTINGS.link,
+            Destination.LOGS_SETTINGS.link
         )
     }
 

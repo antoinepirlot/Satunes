@@ -67,4 +67,6 @@
     <string name="remove_dialog_title">Confirmation de Suppression</string>
     <string name="remove_submit">Supprimer</string>
     <string name="see_on_fdroid">Ouvrir dans F-Droid</string>
+    <string name="logs_settings">Logs</string>
+    <string name="logs_settings_content">Tu peux exporter les logs pour me les envoyer par e-mail.\n\nGrâce à ces logs, je peux mieux comprendre ce qui ne va pas avec l\'application.\n\nLes fichiers logs contiennent des informations sur ce que fait l\'application et son état.\nCes informations incluent : \n- Dates\n- Processus\n- Etat de l\'application\n\nDans ces logs, il n\'y a pas d\'informations confidentielles comme des informations musicales ou des données permettant de vous identifier.\n\nSi tu n\'es pas convaincu, tu peux choisir de me décrire le problème mais il sera plus difficile pour moi de le résoudre</string>
 </resources>

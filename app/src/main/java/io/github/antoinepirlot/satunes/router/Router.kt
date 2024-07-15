@@ -79,6 +79,7 @@ import io.github.antoinepirlot.satunes.ui.views.settings.PlaylistsSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.SearchSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.SettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.UpdatesSettingView
+import io.github.antoinepirlot.satunes.ui.views.settings.logs.LogsSettingsView
 
 /**
  * @author Antoine Pirlot on 23-01-24
@@ -347,6 +348,11 @@ internal fun Router(
         composable(Destination.SEARCH_SETTINGS.link) {
             RoutesManager.currentDestination.value = it.destination.route
             SearchSettingsView()
+        }
+
+        composable(Destination.LOGS_SETTINGS.link) {
+            RoutesManager.currentDestination.value = it.destination.route
+            LogsSettingsView()
         }
     }
 }

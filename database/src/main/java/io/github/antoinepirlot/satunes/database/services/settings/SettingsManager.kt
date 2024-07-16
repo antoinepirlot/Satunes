@@ -42,9 +42,11 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import io.github.antoinepirlot.satunes.database.models.MenuTitle
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.launch
 
 /**
  * @author Antoine Pirlot on 02-03-24
@@ -151,7 +153,7 @@ object SettingsManager {
     private val logger = SatunesLogger(name = this::class.java.name)
 
     fun loadSettings(context: Context) {
-        runBlocking {
+        CoroutineScope(Dispatchers.IO).launch {
             // Using first() at the end and for nothing, prevent wrong UI data switch synchronisation
             try {
                 context.dataStore.data.map { preferences: Preferences ->
@@ -218,7 +220,7 @@ object SettingsManager {
     }
 
     fun switchMenuTitle(context: Context, menuTitle: MenuTitle) {
-        runBlocking {
+        CoroutineScope(Dispatchers.IO).launch {
             try {
                 when (menuTitle) {
                     MenuTitle.FOLDERS -> {
@@ -267,7 +269,7 @@ object SettingsManager {
     }
 
     fun switchPlaybackWhenClosedChecked(context: Context) {
-        runBlocking {
+        CoroutineScope(Dispatchers.IO).launch {
             try {
                 context.dataStore.edit { preferences: MutablePreferences ->
                     playbackWhenClosedChecked.value = !playbackWhenClosedChecked.value
@@ -282,7 +284,7 @@ object SettingsManager {
     }
 
     fun switchPauseIfNoisy(context: Context) {
-        runBlocking {
+        CoroutineScope(Dispatchers.IO).launch {
             try {
                 context.dataStore.edit { preferences: MutablePreferences ->
                     pauseIfNoisyChecked.value = !pauseIfNoisyChecked.value
@@ -296,7 +298,7 @@ object SettingsManager {
     }
 
     fun switchExcludeRingtones(context: Context) {
-        runBlocking {
+        CoroutineScope(Dispatchers.IO).launch {
             try {
                 context.dataStore.edit { preferences: MutablePreferences ->
                     excludeRingtonesChecked.value = !excludeRingtonesChecked.value
@@ -310,7 +312,7 @@ object SettingsManager {
     }
 
     fun updateBarSpeed(context: Context, newValue: Float) {
-        runBlocking {
+        CoroutineScope(Dispatchers.IO).launch {
             try {
                 context.dataStore.edit { preferences: MutablePreferences ->
                     barSpeed.value = newValue
@@ -324,7 +326,7 @@ object SettingsManager {
     }
 
     fun updateRepeatMode(context: Context, newValue: Int) {
-        runBlocking {
+        CoroutineScope(Dispatchers.IO).launch {
             try {
                 context.dataStore.edit { preferences: MutablePreferences ->
                     repeatMode.intValue = newValue
@@ -338,7 +340,7 @@ object SettingsManager {
     }
 
     fun switchShuffleMode(context: Context) {
-        runBlocking {
+        CoroutineScope(Dispatchers.IO).launch {
             try {
                 context.dataStore.edit { preferences: MutablePreferences ->
                     shuffleMode.value = !shuffleMode.value
@@ -352,7 +354,7 @@ object SettingsManager {
     }
 
     fun switchPauseIfPlayback(context: Context) {
-        runBlocking {
+        CoroutineScope(Dispatchers.IO).launch {
             try {
                 context.dataStore.edit { preferences: MutablePreferences ->
                     pauseIfAnotherPlayback.value = !pauseIfAnotherPlayback.value
@@ -366,7 +368,7 @@ object SettingsManager {
     }
 
     fun switchAudioOffload(context: Context) {
-        runBlocking {
+        CoroutineScope(Dispatchers.IO).launch {
             try {
                 context.dataStore.edit { preferences: MutablePreferences ->
                     audioOffloadChecked.value = !audioOffloadChecked.value
@@ -380,7 +382,7 @@ object SettingsManager {
     }
 
     fun whatsNewSeen(context: Context, seen: Boolean) {
-        runBlocking {
+        CoroutineScope(Dispatchers.IO).launch {
             try {
                 context.dataStore.edit { preferences: MutablePreferences ->
                     whatsNewSeen.value = seen
@@ -401,7 +403,7 @@ object SettingsManager {
     }
 
     fun switchFilter(context: Context, filterSetting: MenuTitle) {
-        runBlocking {
+        CoroutineScope(Dispatchers.IO).launch {
             try {
                 when (filterSetting) {
                     MenuTitle.MUSICS -> {

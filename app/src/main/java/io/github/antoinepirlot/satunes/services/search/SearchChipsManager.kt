@@ -59,7 +59,9 @@ internal object SearchChipsManager {
 
     fun select(searchChip: SearchChips) {
         searchChip.enabled.value = true
-        selectedSearchChips.add(searchChip)
+        if (!selectedSearchChips.contains(element = searchChip)) {
+            selectedSearchChips.add(searchChip)
+        }
     }
 
     fun unselect(searchChip: SearchChips) {

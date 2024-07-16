@@ -23,27 +23,25 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.internet.updates
+package io.github.antoinepirlot.satunes.utils.logger
 
-import android.app.DownloadManager
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.os.Build
-import androidx.annotation.RequiresApi
-import io.github.antoinepirlot.satunes.internet.R
-import io.github.antoinepirlot.satunes.utils.utils.showToastOnUiThread
+import java.util.logging.Filter
+import java.util.logging.Level
+import java.util.logging.LogRecord
 
 /**
- * @author Antoine Pirlot on 14/04/2024
+ * @author Antoine Pirlot on 15/07/2024
  */
+internal class SatunesLoggerFilter : Filter {
 
-@RequiresApi(Build.VERSION_CODES.M)
-internal object DownloadReceiver : BroadcastReceiver() {
-    override fun onReceive(context: Context, intent: Intent) {
-        if (intent.action == DownloadManager.ACTION_DOWNLOAD_COMPLETE) {
-            UpdateCheckManager.downloadStatus.value = APKDownloadStatus.DOWNLOADED
-            showToastOnUiThread(context = context, context.getString(R.string.downloaded))
+    override fun isLoggable(record: LogRecord?): Boolean {
+        if (record == null) return false
+
+        return when (record.level) {
+            Level.WARNING -> true
+            Level.SEVERE -> true
+            Level.INFO -> true
+            else -> false
         }
     }
 }

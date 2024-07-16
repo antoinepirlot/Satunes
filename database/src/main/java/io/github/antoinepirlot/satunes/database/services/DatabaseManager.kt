@@ -28,7 +28,6 @@ package io.github.antoinepirlot.satunes.database.services
 import android.content.Context
 import android.database.sqlite.SQLiteConstraintException
 import android.net.Uri
-import android.os.ParcelFileDescriptor
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import io.github.antoinepirlot.satunes.database.R
@@ -44,17 +43,15 @@ import io.github.antoinepirlot.satunes.database.models.database.relations.Playli
 import io.github.antoinepirlot.satunes.database.models.database.tables.MusicDB
 import io.github.antoinepirlot.satunes.database.models.database.tables.MusicsPlaylistsRel
 import io.github.antoinepirlot.satunes.database.models.database.tables.PlaylistDB
-import io.github.antoinepirlot.utils.showToastOnUiThread
+import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
+import io.github.antoinepirlot.satunes.utils.utils.readTextFromUri
+import io.github.antoinepirlot.satunes.utils.utils.showToastOnUiThread
+import io.github.antoinepirlot.satunes.utils.utils.writeToUri
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import java.io.BufferedReader
-import java.io.FileNotFoundException
-import java.io.FileOutputStream
-import java.io.IOException
-import java.io.InputStreamReader
 
 /**
  * @author Antoine Pirlot on 27/03/2024
@@ -65,6 +62,7 @@ class DatabaseManager(context: Context) {
     private val musicDao: MusicDAO = database.musicDao()
     private val playlistDao: PlaylistDAO = database.playlistDao()
     private val musicsPlaylistsRelDAO: MusicsPlaylistsRelDAO = database.musicsPlaylistsRelDao()
+    private val logger = SatunesLogger(name = this::class.java.name)
 
     companion object {
         private const val PLAYLIST_JSON_OBJECT_NAME = "all_playlists"
@@ -90,6 +88,7 @@ class DatabaseManager(context: Context) {
                 }
             }
         } catch (e: Exception) {
+            logger.warning(e.message)
             e.printStackTrace()
         }
     }
@@ -139,7 +138,9 @@ class DatabaseManager(context: Context) {
         showToast: Boolean = true
     ) {
         if (playlist !is Playlist) {
-            throw IllegalArgumentException("Playlist is not the right type")
+            val message: String = "Playlist is not the right type"
+            logger.severe(message)
+            throw IllegalArgumentException()
         }
 
         CoroutineScope(Dispatchers.IO).launch {
@@ -179,8 +180,8 @@ class DatabaseManager(context: Context) {
             try {
                 playlistDao.update(*playlistDBs.toTypedArray())
             } catch (e: SQLiteConstraintException) {
-                e.printStackTrace()
-                throw Exception()
+                logger.severe(e.message)
+                throw e
             }
         }
     }
@@ -255,20 +256,28 @@ class DatabaseManager(context: Context) {
 
     private fun exportJson(context: Context, json: String, uri: Uri) {
         try {
-            writeToUri(context = context, uri = uri, string = json)
-            showToastOnUiThread(
-                context = context,
-                message = context.getString(R.string.exporting_success)
-            )
-        } catch (e: Exception) {
-            val message: String = context.getString(R.string.exporting_failed)
-            showToastOnUiThread(context = context, message = message)
+            if (writeToUri(context = context, uri = uri, string = json)) {
+                showToastOnUiThread(
+                    context = context,
+                    message = context.getString(R.string.exporting_success)
+                )
+            } else {
+                showToastOnUiThread(
+                    context = context,
+                    message = context.getString(R.string.exporting_failed)
+                )
+            }
+        } catch (e: Throwable) {
+            logger.severe(e.message)
             e.printStackTrace()
+            throw e
         }
     }
 
     fun importPlaylists(context: Context, uri: Uri) {
         importingPlaylist.value = true
+        val logger = SatunesLogger(this::class.java.name)
+
         CoroutineScope(Dispatchers.IO).launch {
             showToastOnUiThread(
                 context = context,
@@ -282,14 +291,16 @@ class DatabaseManager(context: Context) {
                     )
                     return@launch
                 }
-                var json: String = readTextFromUri(context = context, uri = uri)
+                var json: String =
+                    readTextFromUri(context = context, uri = uri, showToast = true)
+                        ?: throw Exception()
                 if (!json.startsWith("{\"$PLAYLIST_JSON_OBJECT_NAME\":[") && !json.endsWith("]}")) {
                     throw IllegalArgumentException("It is not the correct file")
                 }
                 json = json.split("{\"all_playlists\":[")[1]
                 json = json.removeSuffix(",]}")
                 if (json.isBlank()) {
-                    return@launch
+                    throw IllegalArgumentException("JSON file is blank")
                 }
                 var playlistList: List<String> = json.split("\"playlistDB\":")
                 playlistList = playlistList.subList(fromIndex = 1, toIndex = playlistList.size)
@@ -305,12 +316,16 @@ class DatabaseManager(context: Context) {
                     context = context,
                     message = context.getString(R.string.importing_success)
                 )
-            } catch (e: Exception) {
+            } catch (e: IllegalArgumentException) {
                 showToastOnUiThread(
                     context = context,
                     message = context.getString(R.string.importing_failed)
                 )
+                logger.warning(e.message)
                 e.printStackTrace()
+            } catch (e: Throwable) {
+                logger.severe(e.message)
+                throw e
             } finally {
                 importingPlaylist.value = false
             }
@@ -340,42 +355,6 @@ class DatabaseManager(context: Context) {
         }
     }
 
-    /**
-     * Copied from https://developer.android.com/training/data-storage/shared/documents-files?hl=fr#open
-     */
-    @Throws(IOException::class)
-    private fun readTextFromUri(context: Context, uri: Uri): String {
-        val stringBuilder = StringBuilder()
-        context.contentResolver.openInputStream(uri)?.use { inputStream ->
-            BufferedReader(InputStreamReader(inputStream)).use { reader ->
-                var line: String? = reader.readLine()
-                while (line != null) {
-                    stringBuilder.append(line)
-                    line = reader.readLine()
-                }
-            }
-        }
-        return stringBuilder.toString()
-    }
-
-    /**
-     * Copied from https://developer.android.com/training/data-storage/shared/documents-files?hl=fr#edit
-     */
-    private fun writeToUri(context: Context, uri: Uri, string: String) {
-        try {
-            context.contentResolver.openFileDescriptor(uri, "w")
-                ?.use { parcelFileDescriptor: ParcelFileDescriptor ->
-                    FileOutputStream(parcelFileDescriptor.fileDescriptor).use { fileOutputStream: FileOutputStream ->
-                        fileOutputStream.write((string).toByteArray())
-                    }
-                }
-        } catch (e: FileNotFoundException) {
-            e.printStackTrace()
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-    }
-
     fun like(context: Context, music: Music) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -394,6 +373,7 @@ class DatabaseManager(context: Context) {
                     )
                 }
             } catch (e: Exception) {
+                logger.warning(e.message)
                 e.printStackTrace()
             }
         }
@@ -411,6 +391,7 @@ class DatabaseManager(context: Context) {
                 )
                 musicDao.unlike(musicId = music.id)
             } catch (e: Exception) {
+                logger.warning(e.message)
                 e.printStackTrace()
             }
         }

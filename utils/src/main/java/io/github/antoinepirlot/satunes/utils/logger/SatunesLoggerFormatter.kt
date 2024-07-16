@@ -23,27 +23,25 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.internet.updates
+package io.github.antoinepirlot.satunes.utils.logger
 
-import android.app.DownloadManager
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.os.Build
-import androidx.annotation.RequiresApi
-import io.github.antoinepirlot.satunes.internet.R
-import io.github.antoinepirlot.satunes.utils.utils.showToastOnUiThread
+import java.util.Date
+import java.util.logging.Formatter
+import java.util.logging.LogRecord
 
 /**
- * @author Antoine Pirlot on 14/04/2024
+ * @author Antoine Pirlot on 15/07/2024
  */
+internal class SatunesLoggerFormatter : Formatter() {
 
-@RequiresApi(Build.VERSION_CODES.M)
-internal object DownloadReceiver : BroadcastReceiver() {
-    override fun onReceive(context: Context, intent: Intent) {
-        if (intent.action == DownloadManager.ACTION_DOWNLOAD_COMPLETE) {
-            UpdateCheckManager.downloadStatus.value = APKDownloadStatus.DOWNLOADED
-            showToastOnUiThread(context = context, context.getString(R.string.downloaded))
-        }
+    override fun format(record: LogRecord?): String {
+        record ?: return "Log record is null"
+        val threadId: Int = record.threadID
+        val sourceClassName: String = record.sourceClassName
+        val sourceMethodName: String? = record.sourceMethodName
+        val date = Date(record.millis)
+        val message: String = record.message
+
+        return "$threadId::$sourceClassName::$sourceMethodName::$date::$message\n"
     }
 }

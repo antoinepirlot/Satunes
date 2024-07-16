@@ -26,6 +26,7 @@
 package io.github.antoinepirlot.satunes.car.playback
 
 import io.github.antoinepirlot.satunes.car.pages.ScreenPages
+import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import java.util.ArrayDeque
 
 /**
@@ -64,7 +65,10 @@ internal class RouteDeque {
 
     fun get(index: Int): String {
         if (index !in this.routeDeque.indices) {
-            throw ArrayIndexOutOfBoundsException("The index is $index and is out of bound")
+            val message = "The index is $index and is out of bound"
+            val logger = SatunesLogger(name = this::class.java.name)
+            logger.severe(message)
+            throw ArrayIndexOutOfBoundsException(message)
         }
         return this.routeDeque.elementAt(index = index)
     }

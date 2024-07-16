@@ -23,26 +23,11 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.utils
+package io.github.antoinepirlot.satunes.utils.logger
 
-import android.app.Activity
-import android.content.Context
-import android.widget.Toast
+import java.util.logging.StreamHandler
 
 /**
- * @author Antoine Pirlot on 14/04/2024
+ * @author Antoine Pirlot on 15/07/2024
  */
-
-fun showToastOnUiThread(context: Context, message: String) {
-    try {
-        (context as Activity).runOnUiThread {
-            Toast.makeText(
-                context.applicationContext,
-                message,
-                Toast.LENGTH_SHORT
-            ).show()
-        }
-    } catch (e: Exception) {
-        e.printStackTrace()
-    }
-}
+internal class SatunesLoggerHandler : StreamHandler()

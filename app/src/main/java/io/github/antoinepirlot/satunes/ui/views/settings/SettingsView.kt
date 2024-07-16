@@ -107,11 +107,15 @@ internal fun SettingsView(
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 SettingButton(
                     text = stringResource(id = R.string.version),
-                    onClick = {
-                        navController.navigate(Destination.UPDATES_SETTINGS.link)
-                    }
+                    onClick = { navController.navigate(Destination.UPDATES_SETTINGS.link) }
                 )
             }
+
+            SettingButton(
+                text = stringResource(id = R.string.logs_settings),
+                onClick = { navController.navigate(Destination.LOGS_SETTINGS.link) }
+            )
+
             AboutView(modifier.padding(bottom = 16.dp)) // Bottom padding for a little space
         }
     }

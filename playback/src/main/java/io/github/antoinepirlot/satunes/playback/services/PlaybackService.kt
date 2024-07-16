@@ -26,6 +26,7 @@
 package io.github.antoinepirlot.satunes.playback.services
 
 import android.content.Intent
+import android.os.Environment
 import androidx.annotation.OptIn
 import androidx.media3.common.AudioAttributes
 import androidx.media3.common.TrackSelectionParameters
@@ -34,6 +35,7 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.session.MediaSession
 import androidx.media3.session.MediaSessionService
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
+import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 
 /**
  * @author Antoine Pirlot on 31/01/24
@@ -46,9 +48,14 @@ class PlaybackService : MediaSessionService() {
         var playbackController: PlaybackController? = null
     }
 
+    private lateinit var logger: SatunesLogger
+
     @OptIn(UnstableApi::class)
     override fun onCreate() {
         super.onCreate()
+        SatunesLogger.DOCUMENTS_PATH =
+            applicationContext.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)!!.path
+        logger = SatunesLogger(name = this::class.java.name)
 
         val exoPlayer = ExoPlayer.Builder(this)
             .setHandleAudioBecomingNoisy(SettingsManager.pauseIfNoisyChecked.value) // Pause when bluetooth or headset disconnect
@@ -75,7 +82,8 @@ class PlaybackService : MediaSessionService() {
         try {
             playbackController =
                 PlaybackController.getInstance() // Called from init instance (session)
-        } catch (_: Exception) {
+        } catch (e: Throwable) {
+            logger.warning("Error while getting playback controller. Shutting down $this")
             stopSelf()
         }
     }
@@ -88,11 +96,13 @@ class PlaybackService : MediaSessionService() {
             !playbackController!!.isPlaying.value
         ) {
             playbackController?.release()
+            logger.info("Shutting down $this")
             stopSelf()
         }
     }
 
     override fun onDestroy() {
+        logger.info("Destroying $this")
         if (
             !SettingsManager.playbackWhenClosedChecked.value ||
             playbackController == null ||
@@ -104,10 +114,15 @@ class PlaybackService : MediaSessionService() {
                 mediaSession = null
             }
             super.onDestroy()
+            logger.info("$this is technically destroyed")
         }
     }
 
     override fun onGetSession(controllerInfo: MediaSession.ControllerInfo): MediaSession? {
         return mediaSession
+    }
+
+    override fun toString(): String {
+        return "PlaybackService with ref \"${super.toString()}\""
     }
 }

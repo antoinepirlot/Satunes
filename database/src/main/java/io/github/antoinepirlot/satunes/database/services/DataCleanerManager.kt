@@ -27,17 +27,25 @@ package io.github.antoinepirlot.satunes.database.services
 
 import android.content.Context
 import android.os.Environment
+import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import java.io.File
 
 /**
  * @author Antoine Pirlot on 14/04/2024
  */
 object DataCleanerManager {
+    private val logger = SatunesLogger(name = this::class.java.name)
+
     fun removeApkFiles(context: Context) {
-        val downloadDirectory: File? =
-            context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
-        downloadDirectory?.listFiles()?.forEach { file: File ->
-            file.deleteRecursively()
+        try {
+            val downloadDirectory: File? =
+                context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
+            downloadDirectory?.listFiles()?.forEach { file: File ->
+                file.deleteRecursively()
+            }
+        } catch (e: Throwable) {
+            logger.warning(e.message)
+            e.printStackTrace()
         }
     }
 }

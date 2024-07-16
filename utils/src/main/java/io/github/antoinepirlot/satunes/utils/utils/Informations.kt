@@ -23,27 +23,28 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.internet.updates
+package io.github.antoinepirlot.satunes.utils.utils
 
-import android.app.DownloadManager
-import android.content.BroadcastReceiver
+import android.app.Activity
 import android.content.Context
-import android.content.Intent
-import android.os.Build
-import androidx.annotation.RequiresApi
-import io.github.antoinepirlot.satunes.internet.R
-import io.github.antoinepirlot.satunes.utils.utils.showToastOnUiThread
+import android.widget.Toast
+import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 
 /**
  * @author Antoine Pirlot on 14/04/2024
  */
 
-@RequiresApi(Build.VERSION_CODES.M)
-internal object DownloadReceiver : BroadcastReceiver() {
-    override fun onReceive(context: Context, intent: Intent) {
-        if (intent.action == DownloadManager.ACTION_DOWNLOAD_COMPLETE) {
-            UpdateCheckManager.downloadStatus.value = APKDownloadStatus.DOWNLOADED
-            showToastOnUiThread(context = context, context.getString(R.string.downloaded))
+fun showToastOnUiThread(context: Context, message: String) {
+    try {
+        (context as Activity).runOnUiThread {
+            Toast.makeText(
+                context.applicationContext,
+                message,
+                Toast.LENGTH_SHORT
+            ).show()
         }
+    } catch (e: Exception) {
+        SatunesLogger(name = null).warning(e.message)
+        e.printStackTrace()
     }
 }

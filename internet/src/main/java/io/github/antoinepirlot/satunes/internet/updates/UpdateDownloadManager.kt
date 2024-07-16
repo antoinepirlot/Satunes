@@ -45,7 +45,8 @@ import io.github.antoinepirlot.satunes.internet.updates.Versions.PREVIEW_APK_REG
 import io.github.antoinepirlot.satunes.internet.updates.Versions.RELEASES_URL
 import io.github.antoinepirlot.satunes.internet.updates.Versions.RELEASE_APK_REGEX
 import io.github.antoinepirlot.satunes.internet.updates.Versions.versionType
-import io.github.antoinepirlot.utils.showToastOnUiThread
+import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
+import io.github.antoinepirlot.satunes.utils.utils.showToastOnUiThread
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -59,6 +60,7 @@ import okhttp3.Response
 object UpdateDownloadManager {
     private var downloadId: Long = -1
     private const val MIME_TYPE = "application/vnd.android.package-archive"
+    private val logger = SatunesLogger(name = this::class.java.name)
 
     fun downloadUpdateApk(context: Context) {
         if (UpdateCheckManager.downloadStatus.value == APKDownloadStatus.CHECKING || UpdateCheckManager.downloadStatus.value == APKDownloadStatus.DOWNLOADING) {
@@ -78,6 +80,7 @@ object UpdateDownloadManager {
                         context = context,
                         message = context.getString(R.string.download_not_found)
                     )
+                    logger.warning("UpdateCheckManager.updateAvailableStatus.value != UpdateAvailableStatus.AVAILABLE")
                     return@launch
                 }
                 val downloadUrl: String =
@@ -101,12 +104,13 @@ object UpdateDownloadManager {
                     context = context,
                     message = context.getString(R.string.downloading)
                 )
-            } catch (_: Exception) {
+            } catch (e: Throwable) {
                 UpdateCheckManager.downloadStatus.value = APKDownloadStatus.FAILED
                 showToastOnUiThread(
                     context = context,
                     message = context.getString(R.string.download_failed)
                 )
+                logger.warning(e.message)
                 UpdateCheckManager.updateAvailableStatus.value = UpdateAvailableStatus.UNDEFINED
             }
         }
@@ -137,6 +141,7 @@ object UpdateDownloadManager {
                 context = context,
                 message = context.getString(R.string.download_not_found)
             )
+            logger.warning("HTTP code: ${res.code}")
             return null
         }
         val page: String = res.body!!.string()
@@ -151,6 +156,7 @@ object UpdateDownloadManager {
                 context = context,
                 message = context.getString(R.string.download_not_found)
             )
+            logger.warning("apkFileName is null")
             return null
         }
 
@@ -176,14 +182,19 @@ object UpdateDownloadManager {
      * Launch the installation procedure by request the user to install the app.
      */
     fun installUpdate(context: Context) {
-        val downloadManager: DownloadManager =
-            context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-        val contentUri: Uri = downloadManager.getUriForDownloadedFile(downloadId)
-        val install = Intent(Intent.ACTION_VIEW)
-        install.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-        install.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        install.putExtra(Intent.EXTRA_NOT_UNKNOWN_SOURCE, true)
-        install.data = contentUri
-        context.startActivity(install)
+        try {
+            val downloadManager: DownloadManager =
+                context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+            val contentUri: Uri = downloadManager.getUriForDownloadedFile(downloadId)
+            val install = Intent(Intent.ACTION_VIEW)
+            install.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            install.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            install.putExtra(Intent.EXTRA_NOT_UNKNOWN_SOURCE, true)
+            install.data = contentUri
+            context.startActivity(install)
+        } catch (e: Throwable) {
+            logger.severe(e.message)
+            throw e
+        }
     }
 }

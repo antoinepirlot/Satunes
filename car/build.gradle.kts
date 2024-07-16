@@ -61,9 +61,4 @@ dependencies {
      * Utils
      */
     implementation(project(":utils"))
-
-    /**
-     * Logger
-     */
-    implementation(project(":logger"))
 }

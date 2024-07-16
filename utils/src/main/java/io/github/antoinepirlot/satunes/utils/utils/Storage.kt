@@ -23,12 +23,13 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.utils
+package io.github.antoinepirlot.satunes.utils.utils
 
 import android.content.Context
 import android.net.Uri
 import android.os.ParcelFileDescriptor
-import io.github.antoinepirlot.satunes.logger.SatunesLogger
+import io.github.antoinepirlot.satunes.utils.R
+import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import java.io.BufferedReader
 import java.io.FileNotFoundException
 import java.io.FileOutputStream

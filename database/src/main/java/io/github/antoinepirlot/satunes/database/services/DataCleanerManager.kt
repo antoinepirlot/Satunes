@@ -27,7 +27,7 @@ package io.github.antoinepirlot.satunes.database.services
 
 import android.content.Context
 import android.os.Environment
-import io.github.antoinepirlot.satunes.logger.SatunesLogger
+import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import java.io.File
 
 /**

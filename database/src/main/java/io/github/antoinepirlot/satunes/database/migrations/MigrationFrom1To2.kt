@@ -27,7 +27,7 @@ package io.github.antoinepirlot.satunes.database.migrations
 
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
-import io.github.antoinepirlot.satunes.logger.SatunesLogger
+import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import java.sql.SQLException
 
 /**

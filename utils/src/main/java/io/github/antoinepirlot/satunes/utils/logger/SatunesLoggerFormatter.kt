@@ -23,11 +23,25 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.logger
+package io.github.antoinepirlot.satunes.utils.logger
 
-import java.util.logging.StreamHandler
+import java.util.Date
+import java.util.logging.Formatter
+import java.util.logging.LogRecord
 
 /**
  * @author Antoine Pirlot on 15/07/2024
  */
-internal class SatunesLoggerHandler : StreamHandler()
+internal class SatunesLoggerFormatter : Formatter() {
+
+    override fun format(record: LogRecord?): String {
+        record ?: return "Log record is null"
+        val threadId: Int = record.threadID
+        val sourceClassName: String = record.sourceClassName
+        val sourceMethodName: String? = record.sourceMethodName
+        val date = Date(record.millis)
+        val message: String = record.message
+
+        return "$threadId::$sourceClassName::$sourceMethodName::$date::$message\n"
+    }
+}

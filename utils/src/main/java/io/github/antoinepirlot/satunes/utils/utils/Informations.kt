@@ -23,12 +23,12 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.utils
+package io.github.antoinepirlot.satunes.utils.utils
 
 import android.app.Activity
 import android.content.Context
 import android.widget.Toast
-import io.github.antoinepirlot.satunes.logger.SatunesLogger
+import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 
 /**
  * @author Antoine Pirlot on 14/04/2024

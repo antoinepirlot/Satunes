@@ -23,25 +23,43 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.logger
+package io.github.antoinepirlot.satunes.utils.logger
 
-import java.util.Date
-import java.util.logging.Formatter
-import java.util.logging.LogRecord
+import java.io.IOException
+import java.util.logging.ConsoleHandler
+import java.util.logging.FileHandler
+import java.util.logging.Logger
 
 /**
  * @author Antoine Pirlot on 15/07/2024
  */
-internal class SatunesLoggerFormatter : Formatter() {
+class SatunesLogger(
+    name: String?,
+    resourceBundleName: String? = null
+) : Logger(name, resourceBundleName) {
 
-    override fun format(record: LogRecord?): String {
-        record ?: return "Log record is null"
-        val threadId: Int = record.threadID
-        val sourceClassName: String = record.sourceClassName
-        val sourceMethodName: String? = record.sourceMethodName
-        val date = Date(record.millis)
-        val message: String = record.message
+    companion object {
+        private const val MAX_LINES = 1000
+        private const val MAX_FILES = 5
+        lateinit var DOCUMENTS_PATH: String
+    }
 
-        return "$threadId::$sourceClassName::$sourceMethodName::$date::$message\n"
+    init {
+        addHandler(ConsoleHandler())
+        addHandler(SatunesLoggerHandler())
+        try {
+            val fileHandler = FileHandler(
+                "$DOCUMENTS_PATH/logs",
+                MAX_LINES,
+                MAX_FILES
+            )
+            fileHandler.formatter = SatunesLoggerFormatter()
+            fileHandler.filter = SatunesLoggerFilter()
+            addHandler(fileHandler)
+        } catch (e: SecurityException) {
+            e.printStackTrace()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
     }
 }

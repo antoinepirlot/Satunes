@@ -23,43 +23,25 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.logger
+package io.github.antoinepirlot.satunes.utils.logger
 
-import java.io.IOException
-import java.util.logging.ConsoleHandler
-import java.util.logging.FileHandler
-import java.util.logging.Logger
+import java.util.logging.Filter
+import java.util.logging.Level
+import java.util.logging.LogRecord
 
 /**
  * @author Antoine Pirlot on 15/07/2024
  */
-class SatunesLogger(
-    name: String?,
-    resourceBundleName: String? = null
-) : Logger(name, resourceBundleName) {
+internal class SatunesLoggerFilter : Filter {
 
-    companion object {
-        private const val MAX_LINES = 1000
-        private const val MAX_FILES = 5
-        lateinit var DOCUMENTS_PATH: String
-    }
+    override fun isLoggable(record: LogRecord?): Boolean {
+        if (record == null) return false
 
-    init {
-        addHandler(ConsoleHandler())
-        addHandler(SatunesLoggerHandler())
-        try {
-            val fileHandler = FileHandler(
-                "$DOCUMENTS_PATH/logs",
-                MAX_LINES,
-                MAX_FILES
-            )
-            fileHandler.formatter = SatunesLoggerFormatter()
-            fileHandler.filter = SatunesLoggerFilter()
-            addHandler(fileHandler)
-        } catch (e: SecurityException) {
-            e.printStackTrace()
-        } catch (e: IOException) {
-            e.printStackTrace()
+        return when (record.level) {
+            Level.WARNING -> true
+            Level.SEVERE -> true
+            Level.INFO -> true
+            else -> false
         }
     }
 }

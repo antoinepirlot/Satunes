@@ -26,7 +26,7 @@
 package io.github.antoinepirlot.satunes.car.playback
 
 import io.github.antoinepirlot.satunes.car.pages.ScreenPages
-import io.github.antoinepirlot.satunes.logger.SatunesLogger
+import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import java.util.ArrayDeque
 
 /**

@@ -43,10 +43,10 @@ import io.github.antoinepirlot.satunes.database.models.database.relations.Playli
 import io.github.antoinepirlot.satunes.database.models.database.tables.MusicDB
 import io.github.antoinepirlot.satunes.database.models.database.tables.MusicsPlaylistsRel
 import io.github.antoinepirlot.satunes.database.models.database.tables.PlaylistDB
-import io.github.antoinepirlot.satunes.logger.SatunesLogger
-import io.github.antoinepirlot.satunes.utils.readTextFromUri
-import io.github.antoinepirlot.satunes.utils.showToastOnUiThread
-import io.github.antoinepirlot.satunes.utils.writeToUri
+import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
+import io.github.antoinepirlot.satunes.utils.utils.readTextFromUri
+import io.github.antoinepirlot.satunes.utils.utils.showToastOnUiThread
+import io.github.antoinepirlot.satunes.utils.utils.writeToUri
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

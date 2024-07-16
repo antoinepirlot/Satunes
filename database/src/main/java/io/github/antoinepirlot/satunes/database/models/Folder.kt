@@ -26,7 +26,7 @@
 package io.github.antoinepirlot.satunes.database.models
 
 import androidx.media3.common.MediaItem
-import io.github.antoinepirlot.satunes.database.services.DataManager
+import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import java.util.SortedMap
 
 /**

@@ -40,8 +40,8 @@ import androidx.annotation.OptIn
 import androidx.core.content.ContextCompat
 import androidx.media3.common.util.UnstableApi
 import io.github.antoinepirlot.satunes.database.models.Playlist
-import io.github.antoinepirlot.satunes.database.services.DataCleanerManager
-import io.github.antoinepirlot.satunes.database.services.DatabaseManager
+import io.github.antoinepirlot.satunes.database.services.data.DataCleanerManager
+import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.playback.services.PlaybackService
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger

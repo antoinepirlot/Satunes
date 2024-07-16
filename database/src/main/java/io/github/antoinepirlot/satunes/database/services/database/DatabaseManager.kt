@@ -23,7 +23,7 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.database.services
+package io.github.antoinepirlot.satunes.database.services.database
 
 import android.content.Context
 import android.database.sqlite.SQLiteConstraintException
@@ -31,7 +31,7 @@ import android.net.Uri
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import io.github.antoinepirlot.satunes.database.R
-import io.github.antoinepirlot.satunes.database.SatunesDatabase
+import io.github.antoinepirlot.satunes.database.models.SatunesDatabase
 import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.daos.MusicDAO
 import io.github.antoinepirlot.satunes.database.daos.MusicsPlaylistsRelDAO
@@ -43,6 +43,7 @@ import io.github.antoinepirlot.satunes.database.models.database.relations.Playli
 import io.github.antoinepirlot.satunes.database.models.database.tables.MusicDB
 import io.github.antoinepirlot.satunes.database.models.database.tables.MusicsPlaylistsRel
 import io.github.antoinepirlot.satunes.database.models.database.tables.PlaylistDB
+import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import io.github.antoinepirlot.satunes.utils.utils.readTextFromUri
 import io.github.antoinepirlot.satunes.utils.utils.showToastOnUiThread
@@ -245,7 +246,7 @@ class DatabaseManager(context: Context) {
                 playlistsDBs.add(element = PlaylistDB(id = playlist.id, title = playlist.title))
             }
 
-            var json = "{\"${PLAYLIST_JSON_OBJECT_NAME}\":["
+            var json = "{\"$PLAYLIST_JSON_OBJECT_NAME\":["
             playlistsDBs.forEach { playlistDB: PlaylistDB ->
                 json += Json.encodeToString(playlistDB) + ','
             }

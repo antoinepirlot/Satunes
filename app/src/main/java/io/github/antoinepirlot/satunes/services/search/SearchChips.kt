@@ -26,6 +26,7 @@
 package io.github.antoinepirlot.satunes.services.search
 
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import io.github.antoinepirlot.satunes.database.R
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 
@@ -36,10 +37,28 @@ enum class SearchChips(
     val stringId: Int,
     var enabled: MutableState<Boolean>
 ) {
-    MUSICS(stringId = R.string.musics, enabled = SettingsManager.musicsFilter),
-    ARTISTS(stringId = R.string.artists, enabled = SettingsManager.artistsFilter),
-    ALBUMS(stringId = R.string.albums, enabled = SettingsManager.albumsFilter),
-    GENRES(stringId = R.string.genres, enabled = SettingsManager.genresFilter),
-    FOLDERS(stringId = R.string.folders, enabled = SettingsManager.foldersFilter),
-    PLAYLISTS(stringId = R.string.playlists, enabled = SettingsManager.playlistsFilter)
+    MUSICS(
+        stringId = R.string.musics,
+        enabled = mutableStateOf(SettingsManager.musicsFilter.value)
+    ),
+    ARTISTS(
+        stringId = R.string.artists,
+        enabled = mutableStateOf(SettingsManager.artistsFilter.value)
+    ),
+    ALBUMS(
+        stringId = R.string.albums,
+        enabled = mutableStateOf(SettingsManager.albumsFilter.value)
+    ),
+    GENRES(
+        stringId = R.string.genres,
+        enabled = mutableStateOf(SettingsManager.genresFilter.value)
+    ),
+    FOLDERS(
+        stringId = R.string.folders,
+        enabled = mutableStateOf(SettingsManager.foldersFilter.value)
+    ),
+    PLAYLISTS(
+        stringId = R.string.playlists,
+        enabled = mutableStateOf(SettingsManager.playlistsFilter.value)
+    )
 }

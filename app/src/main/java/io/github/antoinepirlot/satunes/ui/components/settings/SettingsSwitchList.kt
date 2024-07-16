@@ -34,6 +34,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.satunes.database.models.MenuTitle
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
+import io.github.antoinepirlot.satunes.services.search.SearchChips
+import io.github.antoinepirlot.satunes.services.search.SearchChipsManager
 import io.github.antoinepirlot.satunes.ui.components.cards.ListItem
 import io.github.antoinepirlot.satunes.ui.views.settings.Settings
 
@@ -133,30 +135,61 @@ private fun switchSetting(context: Context, setting: Settings) {
 
         Settings.MUSICS_FILTER -> {
             SettingsManager.switchFilter(context = context, filterSetting = MenuTitle.MUSICS)
-
+            val searchChip: SearchChips = SearchChips.MUSICS
+            if (SettingsManager.musicsFilter.value != searchChip.enabled.value) {
+                switchSearchChip(searchChip = searchChip)
+            }
         }
 
         Settings.ARTISTS_FILTER -> {
             SettingsManager.switchFilter(context = context, filterSetting = MenuTitle.ARTISTS)
+            val searchChip: SearchChips = SearchChips.ARTISTS
+            if (SettingsManager.artistsFilter.value != searchChip.enabled.value) {
+                switchSearchChip(searchChip = searchChip)
+            }
         }
 
         Settings.ALBUMS_FILTER -> {
             SettingsManager.switchFilter(context = context, filterSetting = MenuTitle.ALBUMS)
+            val searchChip: SearchChips = SearchChips.ALBUMS
+            if (SettingsManager.albumsFilter.value != searchChip.enabled.value) {
+                switchSearchChip(searchChip = searchChip)
+            }
         }
 
         Settings.GENRES_FILTER -> {
             SettingsManager.switchFilter(context = context, filterSetting = MenuTitle.GENRES)
+            val searchChip: SearchChips = SearchChips.GENRES
+            if (SettingsManager.genresFilter.value != searchChip.enabled.value) {
+                switchSearchChip(searchChip = searchChip)
+            }
         }
 
         Settings.FOLDERS_FILTER -> {
             SettingsManager.switchFilter(context = context, filterSetting = MenuTitle.FOLDERS)
+            val searchChip: SearchChips = SearchChips.FOLDERS
+            if (SettingsManager.foldersFilter.value != searchChip.enabled.value) {
+                switchSearchChip(searchChip = searchChip)
+            }
         }
 
         Settings.PLAYLISTS_FILTER -> {
             SettingsManager.switchFilter(context = context, filterSetting = MenuTitle.PLAYLISTS)
+            val searchChip: SearchChips = SearchChips.PLAYLISTS
+            if (SettingsManager.playlistsFilter.value != searchChip.enabled.value) {
+                switchSearchChip(searchChip = searchChip)
+            }
         }
 
         else -> { /* Not a switch */
         }
+    }
+}
+
+private fun switchSearchChip(searchChip: SearchChips) {
+    if (searchChip.enabled.value) {
+        SearchChipsManager.unselect(searchChip = searchChip)
+    } else {
+        SearchChipsManager.select(searchChip = searchChip)
     }
 }

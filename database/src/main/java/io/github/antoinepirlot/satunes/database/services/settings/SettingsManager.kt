@@ -47,6 +47,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 /**
  * @author Antoine Pirlot on 02-03-24
@@ -403,7 +404,7 @@ object SettingsManager {
     }
 
     fun switchFilter(context: Context, filterSetting: MenuTitle) {
-        CoroutineScope(Dispatchers.IO).launch {
+        runBlocking {
             try {
                 when (filterSetting) {
                     MenuTitle.MUSICS -> {

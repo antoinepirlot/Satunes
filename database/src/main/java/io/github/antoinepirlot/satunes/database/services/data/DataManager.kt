@@ -23,7 +23,7 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.database.services
+package io.github.antoinepirlot.satunes.database.services.data
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf

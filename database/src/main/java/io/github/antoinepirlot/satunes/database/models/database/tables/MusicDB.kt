@@ -32,7 +32,7 @@ import androidx.room.PrimaryKey
 import io.github.antoinepirlot.satunes.database.exceptions.MusicNotFoundException
 import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.database.services.DataManager
+import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 

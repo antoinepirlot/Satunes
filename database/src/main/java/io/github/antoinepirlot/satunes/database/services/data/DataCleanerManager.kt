@@ -23,7 +23,7 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.database.services
+package io.github.antoinepirlot.satunes.database.services.data
 
 import android.content.Context
 import android.os.Environment

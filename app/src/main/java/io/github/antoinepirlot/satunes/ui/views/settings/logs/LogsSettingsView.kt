@@ -30,6 +30,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -59,7 +60,10 @@ internal fun LogsSettingsView(
             text = stringResource(id = R.string.logs_settings_content),
             maxLines = Int.MAX_VALUE
         )
-        //TODO add button to export logs
+
+        Button(onClick = { /*TODO*/ }) {
+            NormalText(text = stringResource(id = R.string.export))
+        }
     }
 }
 

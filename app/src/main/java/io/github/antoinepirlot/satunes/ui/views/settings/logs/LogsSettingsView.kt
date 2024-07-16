@@ -25,6 +25,7 @@
 
 package io.github.antoinepirlot.satunes.ui.views.settings.logs
 
+import android.content.Context
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -33,12 +34,14 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 import io.github.antoinepirlot.satunes.ui.components.texts.Title
+import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 
 /**
  * @author Antoine Pirlot on 15/07/2024
@@ -61,8 +64,17 @@ internal fun LogsSettingsView(
             maxLines = Int.MAX_VALUE
         )
 
-        Button(onClick = { /*TODO*/ }) {
-            NormalText(text = stringResource(id = R.string.export))
+        val context: Context = LocalContext.current
+        Button(onClick = {
+            val logger = SatunesLogger(name = null)
+            try {
+                logger.exportLogs(context = context)
+            } catch (e: Throwable) {
+                logger.severe(e.message)
+                throw e
+            }
+        }) {
+            NormalText(text = stringResource(id = R.string.export) + ' ' + stringResource(id = R.string.logs_settings))
         }
     }
 }

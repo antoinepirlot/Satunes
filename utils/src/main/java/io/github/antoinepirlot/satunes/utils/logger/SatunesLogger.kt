@@ -25,7 +25,8 @@
 
 package io.github.antoinepirlot.satunes.utils.logger
 
-import java.io.IOException
+import android.content.Context
+import java.io.File
 import java.util.logging.ConsoleHandler
 import java.util.logging.FileHandler
 import java.util.logging.Logger
@@ -39,26 +40,28 @@ class SatunesLogger(
 ) : Logger(name, resourceBundleName) {
 
     companion object {
-        private const val MAX_LINES = 1000
-        private const val MAX_FILES = 5
+        private const val MAX_BYTES = 5242880 // 5MB
+        private const val MAX_FILES = 5 // It will be max 25MB of logs
         lateinit var DOCUMENTS_PATH: String
+        private lateinit var LOGS_PATH: String
     }
 
     init {
+        LOGS_PATH = "$DOCUMENTS_PATH/logs"
         addHandler(ConsoleHandler())
         addHandler(SatunesLoggerHandler())
         try {
+            File(LOGS_PATH).mkdir()
             val fileHandler = FileHandler(
-                "$DOCUMENTS_PATH/logs",
-                MAX_LINES,
-                MAX_FILES
+                "$LOGS_PATH/log",
+                MAX_BYTES,
+                MAX_FILES,
+                true
             )
             fileHandler.formatter = SatunesLoggerFormatter()
             fileHandler.filter = SatunesLoggerFilter()
             addHandler(fileHandler)
-        } catch (e: SecurityException) {
-            e.printStackTrace()
-        } catch (e: IOException) {
+        } catch (e: Throwable) {
             e.printStackTrace()
         }
     }

@@ -61,9 +61,17 @@ internal class MainActivity : ComponentActivity() {
         internal lateinit var instance: MainActivity
         private const val IMPORT_PLAYLIST_CODE = 1
         private const val EXPORT_PLAYLIST_CODE = 2
+        private const val EXPORT_LOGS_CODE = 3
         internal var playlistsToExport: Array<Playlist> = arrayOf()
         private val DEFAULT_URI =
             Uri.parse(Environment.getExternalStorageDirectory().path + '/' + Environment.DIRECTORY_DOCUMENTS)
+
+        private val createFileIntent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                putExtra(DocumentsContract.EXTRA_INITIAL_URI, DEFAULT_URI)
+            }
+        }
     }
 
     private lateinit var logger: SatunesLogger
@@ -129,15 +137,9 @@ internal class MainActivity : ComponentActivity() {
             )
             return
         }
-        val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
-            addCategory(Intent.CATEGORY_OPENABLE)
-            type = "application/json"
-            putExtra(Intent.EXTRA_TITLE, defaultFileName)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                putExtra(DocumentsContract.EXTRA_INITIAL_URI, DEFAULT_URI)
-            }
-        }
-        startActivityForResult(intent, EXPORT_PLAYLIST_CODE)
+        createFileIntent.putExtra(Intent.EXTRA_TITLE, defaultFileName)
+        createFileIntent.type = "application/json"
+        startActivityForResult(createFileIntent, EXPORT_PLAYLIST_CODE)
     }
 
     fun openFileToImportPlaylists() {
@@ -151,30 +153,45 @@ internal class MainActivity : ComponentActivity() {
         startActivityForResult(intent, IMPORT_PLAYLIST_CODE)
     }
 
+    fun exportLogs(defaultFileName: String) {
+        createFileIntent.putExtra(Intent.EXTRA_TITLE, defaultFileName)
+        createFileIntent.type = "application/text"
+        startActivityForResult(createFileIntent, EXPORT_LOGS_CODE)
+    }
+
 
     @Deprecated("This method has been deprecated in favor of using the Activity Result API\n      which brings increased type safety via an {@link ActivityResultContract} and the prebuilt\n      contracts for common intents available in\n      {@link androidx.activity.result.contract.ActivityResultContracts}, provides hooks for\n      testing, and allow receiving results in separate, testable classes independent from your\n      activity. Use\n      {@link #registerForActivityResult(ActivityResultContract, ActivityResultCallback)}\n      with the appropriate {@link ActivityResultContract} and handling the result in the\n      {@link ActivityResultCallback#onActivityResult(Object) callback}.")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_OK) {
-            if (requestCode == EXPORT_PLAYLIST_CODE) {
-                data?.data?.also {
-                    if (it.path == null) {
-                        showToastOnUiThread(
-                            context = this,
-                            message = this.getString(R.string.no_file_created)
-                        )
+            when (requestCode) {
+                EXPORT_PLAYLIST_CODE, EXPORT_LOGS_CODE -> {
+                    data?.data?.also {
+                        if (it.path == null) {
+                            showToastOnUiThread(
+                                context = this,
+                                message = this.getString(R.string.no_file_created)
+                            )
+                        }
+
+                        if (requestCode == EXPORT_PLAYLIST_CODE) {
+                            DatabaseManager(context = this)
+                                .exportPlaylists(
+                                    context = this,
+                                    playlists = playlistsToExport,
+                                    uri = it
+                                )
+                            playlistsToExport = arrayOf()
+                        } else {
+                            logger.exportLogs(context = this, uri = it)
+                        }
                     }
-                    DatabaseManager(context = this)
-                        .exportPlaylists(
-                            context = this,
-                            playlists = playlistsToExport,
-                            uri = it
-                        )
-                    playlistsToExport = arrayOf()
                 }
-            } else if (requestCode == IMPORT_PLAYLIST_CODE) {
-                data?.data?.also {
-                    DatabaseManager(context = this).importPlaylists(context = this, uri = it)
+
+                IMPORT_PLAYLIST_CODE -> {
+                    data?.data?.also {
+                        DatabaseManager(context = this).importPlaylists(context = this, uri = it)
+                    }
                 }
             }
         }

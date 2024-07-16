@@ -292,7 +292,8 @@ class DatabaseManager(context: Context) {
                     return@launch
                 }
                 var json: String =
-                    readTextFromUri(context = context, uri = uri) ?: throw Exception()
+                    readTextFromUri(context = context, uri = uri, showToast = true)
+                        ?: throw Exception()
                 if (!json.startsWith("{\"$PLAYLIST_JSON_OBJECT_NAME\":[") && !json.endsWith("]}")) {
                     throw IllegalArgumentException("It is not the correct file")
                 }

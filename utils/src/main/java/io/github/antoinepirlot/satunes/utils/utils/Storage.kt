@@ -44,7 +44,7 @@ import java.io.InputStreamReader
  * Copied from https://developer.android.com/training/data-storage/shared/documents-files?hl=fr#open
  */
 @Throws(IOException::class)
-fun readTextFromUri(context: Context, uri: Uri): String? {
+fun readTextFromUri(context: Context, uri: Uri, showToast: Boolean = false): String? {
     val logger = SatunesLogger(name = null)
     return try {
         val stringBuilder = StringBuilder()

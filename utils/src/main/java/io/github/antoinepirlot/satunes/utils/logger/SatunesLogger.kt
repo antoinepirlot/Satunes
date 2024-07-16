@@ -26,6 +26,10 @@
 package io.github.antoinepirlot.satunes.utils.logger
 
 import android.content.Context
+import android.net.Uri
+import androidx.core.net.toUri
+import io.github.antoinepirlot.satunes.utils.utils.readTextFromUri
+import io.github.antoinepirlot.satunes.utils.utils.writeToUri
 import java.io.File
 import java.util.logging.ConsoleHandler
 import java.util.logging.FileHandler
@@ -40,8 +44,8 @@ class SatunesLogger(
 ) : Logger(name, resourceBundleName) {
 
     companion object {
-        private const val MAX_BYTES = 5242880 // 5MB
-        private const val MAX_FILES = 5 // It will be max 25MB of logs
+        private const val MAX_BYTES = 26214400 // 25MB
+        private const val MAX_FILES = 1
         lateinit var DOCUMENTS_PATH: String
         private lateinit var LOGS_PATH: String
     }
@@ -64,5 +68,24 @@ class SatunesLogger(
         } catch (e: Throwable) {
             e.printStackTrace()
         }
+    }
+
+    @Throws(
+        NullPointerException::class,
+        SecurityException::class,
+        IllegalStateException::class
+    )
+    fun exportLogs(context: Context, uri: Uri) {
+        info("exporting")
+        val file = File("$LOGS_PATH/log")
+        if (!file.isFile) {
+            val message = "$LOGS_PATH is not a file or doesn't exists"
+            severe(message)
+            throw IllegalStateException(message)
+        }
+        var text: String = ""
+        text +=
+            readTextFromUri(context = context, uri = file.toUri()) ?: return
+        writeToUri(context = context, uri = uri, string = text)
     }
 }

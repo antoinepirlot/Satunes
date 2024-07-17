@@ -45,7 +45,7 @@ import kotlinx.serialization.Transient
 @Entity(tableName = "playlists", indices = [Index(value = ["title"], unique = true)])
 internal data class PlaylistDB(
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "playlist_id") override var id: Long,
+    @ColumnInfo(name = "playlist_id") override var id: Long = 0,
     @ColumnInfo(name = "title") override var title: String,
 ) : Media {
     @Ignore
@@ -54,7 +54,12 @@ internal data class PlaylistDB(
         DataManager.getPlaylist(id = this.id)
     } catch (_: PlaylistNotFoundException) {
         // Happens when importing playlistDB
-        null
+        if (this.id != 0L) {
+            //It means, the playlist is get from database while creating
+            Playlist(id = id, title = title)
+        } else {
+            null
+        }
     }
 
     override fun equals(other: Any?): Boolean {

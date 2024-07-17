@@ -91,9 +91,9 @@ internal fun PlaylistListView(
             openAlertDialog -> {
                 PlaylistCreationForm(
                     onConfirm = { playlistTitle: String ->
-                        DatabaseManager(context = context).insertPlaylistWithMusics(
+                        DatabaseManager(context = context).addOnePlaylist(
                             context = context,
-                            playlist = DataManager.getPlaylist(title = playlistTitle)
+                            playlistTitle = playlistTitle
                         )
                         openAlertDialog = false
                     },

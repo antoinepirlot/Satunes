@@ -127,33 +127,34 @@ class DatabaseManager(context: Context) {
      * Insert one playlistDB to db with its eventual music list
      *
      * @param context
-     * @param playlist the playlistDB to insert
+     * @param playlistTitle the playlist title
      * @param musicList the music contains all music as MusicDB
      * @param showToast true if you want the app showing toast
      */
-    fun insertPlaylistWithMusics(
+    fun addOnePlaylist(
         context: Context,
-        playlist: Playlist,
+        playlistTitle: String,
         musicList: MutableList<Music>? = null,
         showToast: Boolean = true
     ) {
         CoroutineScope(Dispatchers.IO).launch {
-            if (playlistDao.playlistExist(title = playlist.title)) {
+            if (playlistDao.playlistExist(title = playlistTitle)) {
                 val message: String =
-                    playlist.title + context.getString(R.string.playlist_already_exist)
+                    playlistTitle + context.getString(R.string.playlist_already_exist)
                 showToastOnUiThread(context = context, message = message)
                 return@launch
             }
-            val playlistDB = PlaylistDB(id = playlist.id, title = playlist.title)
-            playlist.id = playlistDao.insertOne(playlistDB = playlistDB)
+            val playlistId: Long =
+                playlistDao.insertOne(playlistDB = PlaylistDB(title = playlistTitle))
             val playlistWithMusics: PlaylistWithMusics =
-                playlistDao.getPlaylistWithMusics(playlistId = playlist.id)!!
+                playlistDao.getPlaylistWithMusics(playlistId = playlistId)!!
+
             DataManager.addPlaylist(playlist = playlistWithMusics.playlistDB.playlist!!)
 
             musicList?.forEach { music: Music ->
                 insertMusicToPlaylists(
                     music = music,
-                    playlists = listOf(playlist),
+                    playlists = listOf(playlistWithMusics.playlistDB.playlist!!),
                 )
             }
             if (showToast) {
@@ -326,27 +327,24 @@ class DatabaseManager(context: Context) {
         }
     }
 
+    @Throws(NullPointerException::class)
     private fun importPlaylistToDatabase(
         context: Context,
         playlistWithMusics: PlaylistWithMusics
     ) {
-        try {
-            playlistWithMusics.playlistDB.id = 0
-            playlistWithMusics.id = 0
+        playlistWithMusics.playlistDB.id = 0
+        playlistWithMusics.id = 0
 
-            val musicList: MutableList<Music> = mutableListOf()
-            playlistWithMusics.musics.forEach { musicDB: MusicDB ->
-                musicList.add(musicDB.music!!)
-            }
-            insertPlaylistWithMusics(
-                context = context,
-                playlist = playlistWithMusics.playlistDB.playlist!!, // TODO issue
-                musicList = musicList,
-                showToast = false
-            )
-        } catch (_: Exception) {
-            // Do nothing
+        val musicList: MutableList<Music> = mutableListOf()
+        playlistWithMusics.musics.forEach { musicDB: MusicDB ->
+            musicList.add(musicDB.music!!)
         }
+        addOnePlaylist(
+            context = context,
+            playlistTitle = playlistWithMusics.playlistDB.playlist!!.title, // TODO issue
+            musicList = musicList,
+            showToast = false
+        )
     }
 
     fun like(context: Context, music: Music) {
@@ -355,10 +353,10 @@ class DatabaseManager(context: Context) {
                 val likesPlaylist: PlaylistWithMusics? =
                     playlistDao.getPlaylistWithMusics(title = LIKES_PLAYLIST_TITLE)
                 if (likesPlaylist == null) {
-                    insertPlaylistWithMusics(
+                    addOnePlaylist(
                         context = context,
                         musicList = mutableListOf(MusicDB(id = music.id).music!!),
-                        playlist = PlaylistDB(id = 0, title = LIKES_PLAYLIST_TITLE).playlist!!
+                        playlistTitle = LIKES_PLAYLIST_TITLE
                     )
                 } else {
                     insertMusicToPlaylists(

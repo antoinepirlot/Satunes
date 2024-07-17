@@ -39,6 +39,7 @@ import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.database.models.StringComparator
+import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import java.util.SortedMap
 import java.util.SortedSet
 
@@ -73,6 +74,8 @@ object DataManager {
     val playlistsMap: SortedMap<String, Playlist> =
         sortedMapOf(comparator = StringComparator)
     val playlistsMapUpdated: MutableState<Boolean> = mutableStateOf(false)
+
+    private val logger = SatunesLogger(name = this::class.java.name)
 
 
     fun getMusic(musicId: Long): Music {
@@ -208,15 +211,16 @@ object DataManager {
         genreMapById.remove(genre.id)
     }
 
+    @Throws(PlaylistNotFoundException::class)
     fun getPlaylist(id: Long): Playlist {
         try {
             return playlistsMapById[id]!!
         } catch (_: NullPointerException) {
             throw PlaylistNotFoundException(id = id)
         }
-
     }
 
+    @Throws(NullPointerException::class)
     fun getPlaylist(title: String): Playlist {
         return playlistsMap[title]!!
     }

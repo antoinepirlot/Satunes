@@ -48,7 +48,7 @@ internal fun ExclusionSettingsView(
     modifier: Modifier = Modifier
 ) {
     val checkedMap: Map<Settings, MutableState<Boolean>> = mapOf(
-        Pair(first = Settings.EXCLUDE_RINGTONES, second = SettingsManager.excludeRingtonesChecked)
+        Pair(first = Settings.INCLUDE_RINGTONES, second = SettingsManager.includeRingtonesChecked)
     )
 
     val scrollState: ScrollState = rememberScrollState()

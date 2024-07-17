@@ -99,7 +99,7 @@ object DataLoader {
     )
 
     private val selection =
-        if (SettingsManager.excludeRingtonesChecked.value) {
+        if (SettingsManager.includeRingtonesChecked.value) {
             "${MediaStore.Audio.Media.DATA} NOT LIKE ? AND " +
                     "${MediaStore.Audio.Media.DATA} NOT LIKE ? AND " +
                     "${MediaStore.Audio.Media.DATA} NOT LIKE ?"
@@ -108,7 +108,7 @@ object DataLoader {
         }
 
     private val selection_args: Array<String>? =
-        if (SettingsManager.excludeRingtonesChecked.value) {
+        if (SettingsManager.includeRingtonesChecked.value) {
             arrayOf(
                 "$EXTERNAL_STORAGE_PATH/Android/%",
                 "$EXTERNAL_STORAGE_PATH/Ringtones/%",

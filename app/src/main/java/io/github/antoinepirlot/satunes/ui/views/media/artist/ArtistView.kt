@@ -61,7 +61,7 @@ internal fun ArtistView(
     artist: Artist,
 ) {
     val playbackController: PlaybackController = PlaybackController.getInstance()
-    val musicMap: SortedMap<Music, MediaItem> = remember { artist.musicMediaItemMap }
+    val musicMap: SortedMap<Music, MediaItem> = artist.musicMediaItemMap
     //Recompose if data changed
     var musicMapChanged: Boolean by rememberSaveable { artist.musicMediaItemMapUpdate }
     if (musicMapChanged) {

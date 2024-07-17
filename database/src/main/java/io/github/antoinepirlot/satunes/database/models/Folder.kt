@@ -53,6 +53,24 @@ class Folder(
         nextId++
     }
 
+    override fun isEmpty(): Boolean {
+        return super.isEmpty() || try {
+            this.subFolderMap.values.first { it.isNotEmpty() }
+            false
+        } catch (_: NoSuchElementException) {
+            true
+        }
+    }
+
+    override fun isNotEmpty(): Boolean {
+        return super.isNotEmpty() || try {
+            this.subFolderMap.values.first { it.isNotEmpty() }
+            true
+        } catch (_: NoSuchElementException) {
+            false
+        }
+    }
+
     /**
      * Get the list of subfolder
      *
@@ -121,18 +139,23 @@ class Folder(
         return null
     }
 
-    fun getAllMusic(): SortedMap<Music, MediaItem> {
-        val musicMediaSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
+    /**
+     * Create a mutable map that contains all folder's music and subfolders' musics in this order:
+     * #1 musics from this current folder sorted by name
+     * #2 musics from each subfolder sorted by name and by folder
+     */
+    fun getAllMusic(): MutableMap<Music, MediaItem> {
+        val musicMediaMap: MutableMap<Music, MediaItem> = mutableMapOf()
 
-        musicMediaSortedMap.putAll(this.musicMediaItemMap)
+        musicMediaMap.putAll(this.musicMediaItemMap)
 
         if (this.subFolderMap.isNotEmpty()) {
-            this.subFolderMap.forEach { (_, folder: Folder) ->
-                musicMediaSortedMap.putAll(folder.getAllMusic())
+            this.subFolderMap.values.forEach { folder: Folder ->
+                musicMediaMap.putAll(folder.getAllMusic())
             }
         }
 
-        return musicMediaSortedMap
+        return musicMediaMap
     }
 
     override fun equals(other: Any?): Boolean {

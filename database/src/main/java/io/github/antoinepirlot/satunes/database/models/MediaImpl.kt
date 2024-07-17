@@ -63,6 +63,14 @@ abstract class MediaImpl(
     val musicMediaItemMap: SortedMap<Music, MediaItem> = sortedMapOf()
     val musicMediaItemMapUpdate: MutableState<Boolean> = mutableStateOf(false)
 
+    open fun isEmpty(): Boolean {
+        return this.musicMediaItemMap.isEmpty()
+    }
+
+    open fun isNotEmpty(): Boolean {
+        return this.musicMediaItemMap.isNotEmpty()
+    }
+
     fun addMusic(music: Music) {
         if (this.musicMediaItemMap[music] == null) {
             this.musicMediaItemMap[music] = music.mediaItem

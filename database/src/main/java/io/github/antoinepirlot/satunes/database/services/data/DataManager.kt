@@ -27,7 +27,6 @@ package io.github.antoinepirlot.satunes.database.services.data
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.media3.common.MediaItem
 import io.github.antoinepirlot.satunes.database.exceptions.DuplicatedAlbumException
 import io.github.antoinepirlot.satunes.database.exceptions.MusicNotFoundException
@@ -50,7 +49,7 @@ import java.util.SortedSet
 object DataManager {
     // All public map and sortedmap has bool state to recompose as Map are not supported for recomposition
     val musicMediaItemMap: SortedMap<Music, MediaItem> = sortedMapOf()
-    private val musicMapById: MutableMap<Long, Music> = SnapshotStateMap()
+    private val musicMapById: MutableMap<Long, Music> = mutableMapOf()
     val musicMediaItemSortedMapUpdated: MutableState<Boolean> = mutableStateOf(false)
 
     val rootFolderMap: MutableMap<Long, Folder> = mutableMapOf()

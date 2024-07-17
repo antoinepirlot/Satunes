@@ -116,9 +116,8 @@ private fun loadPlaybackFromFolder(
     folder: Folder,
     shuffleMode: Boolean
 ) {
-    val folderMusics: MutableMap<Music, MediaItem> = folder.getAllMusic()
     val playbackController: PlaybackController = PlaybackController.getInstance()
-    playbackController.loadMusic(musicMediaItemSortedMap = folderMusics, shuffleMode = shuffleMode)
+    playbackController.loadMusicFromMedia(media = folder, shuffleMode = shuffleMode)
     openMedia(navController = navController)
 }
 

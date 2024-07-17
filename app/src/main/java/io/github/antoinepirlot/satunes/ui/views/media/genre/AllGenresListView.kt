@@ -80,12 +80,12 @@ internal fun AllGenresListView(
                 @Suppress("UNCHECKED_CAST")
                 genreMap as SortedMap<String, MediaImpl>
                 ExtraButton(icon = SatunesIcons.PLAY, onClick = {
-                    playbackController.loadMusicFromMedia(medias = genreMap)
+                    playbackController.loadMusicFromMedias(medias = genreMap)
                     openMedia(navController = navController)
                 })
                 ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
 
-                    playbackController.loadMusicFromMedia(
+                    playbackController.loadMusicFromMedias(
                         medias = genreMap,
                         shuffleMode = true
                     )

@@ -28,7 +28,6 @@ package io.github.antoinepirlot.satunes.ui.views.media.folder
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -58,6 +57,7 @@ import java.util.SortedSet
  * @author Antoine Pirlot on 01/04/2024
  */
 
+
 @Composable
 internal fun FolderView(
     modifier: Modifier = Modifier,
@@ -65,9 +65,7 @@ internal fun FolderView(
     folder: Folder,
 ) {
     val playbackController: PlaybackController = PlaybackController.getInstance()
-    val folderMusicMediaItemSortedMap: SortedMap<Music, MediaItem> = remember {
-        folder.musicMediaItemMap
-    }
+    val folderMusicMediaItemSortedMap: SortedMap<Music, MediaItem> = folder.musicMediaItemMap
 
     //Recompose if data changed
     var mapChanged: Boolean by rememberSaveable { folder.musicMediaItemMapUpdate }

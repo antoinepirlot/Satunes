@@ -121,8 +121,8 @@ private fun switchSetting(context: Context, setting: Settings) {
             SettingsManager.switchPauseIfNoisy(context = context)
         }
 
-        Settings.EXCLUDE_RINGTONES -> {
-            SettingsManager.switchExcludeRingtones(context = context)
+        Settings.INCLUDE_RINGTONES -> {
+            SettingsManager.switchIncludeRingtones(context = context)
         }
 
         Settings.SHUFFLE_MODE -> {

@@ -66,7 +66,7 @@ object SettingsManager {
     private const val DEFAULT_PLAYBACK_WHEN_CLOSED_CHECKED =
         false //App stop after removed app from multi-task if false
     private const val DEFAULT_PAUSE_IF_NOISY = true
-    private const val DEFAULT_EXCLUDE_RINGTONES = true
+    private const val DEFAULT_INCLUDE_RINGTONES = false
     private const val DEFAULT_BAR_SPEED_VALUE = 1f
     private const val DEFAULT_REPEAT_MODE: Int = 0
     private const val DEFAULT_SHUFFLE_MODE_CHECKED: Boolean = false
@@ -93,7 +93,7 @@ object SettingsManager {
     private val PLAYBACK_WHEN_CLOSED_CHECKED_PREFERENCES_KEY =
         booleanPreferencesKey("playback_when_closed_checked")
     private val PAUSE_IF_NOISY_PREFERENCES_KEY = booleanPreferencesKey("pause_if_noisy")
-    private val EXCLUDE_RINGTONES_KEY = booleanPreferencesKey("exclude_ringtones")
+    private val INCLUDE_RINGTONES_KEY = booleanPreferencesKey("include_ringtones")
     private val BAR_SPEED_KEY = floatPreferencesKey("bar_speed")
     private val REPEAT_MODE_KEY = intPreferencesKey("repeat_mode")
     private val SHUFFLE_MODE_KEY = booleanPreferencesKey("shuffle_mode")
@@ -124,7 +124,7 @@ object SettingsManager {
     val playbackWhenClosedChecked: MutableState<Boolean> =
         mutableStateOf(DEFAULT_PLAYBACK_WHEN_CLOSED_CHECKED)
     val pauseIfNoisyChecked: MutableState<Boolean> = mutableStateOf(DEFAULT_PAUSE_IF_NOISY)
-    val excludeRingtonesChecked: MutableState<Boolean> = mutableStateOf(DEFAULT_EXCLUDE_RINGTONES)
+    val includeRingtonesChecked: MutableState<Boolean> = mutableStateOf(DEFAULT_INCLUDE_RINGTONES)
     val barSpeed: MutableState<Float> = mutableFloatStateOf(DEFAULT_BAR_SPEED_VALUE)
     val repeatMode: MutableIntState = mutableIntStateOf(DEFAULT_REPEAT_MODE)
     val shuffleMode: MutableState<Boolean> = mutableStateOf(DEFAULT_SHUFFLE_MODE_CHECKED)
@@ -180,8 +180,8 @@ object SettingsManager {
                     pauseIfNoisyChecked.value =
                         preferences[PAUSE_IF_NOISY_PREFERENCES_KEY] ?: DEFAULT_PAUSE_IF_NOISY
 
-                    excludeRingtonesChecked.value =
-                        preferences[EXCLUDE_RINGTONES_KEY] ?: DEFAULT_EXCLUDE_RINGTONES
+                    includeRingtonesChecked.value =
+                        preferences[INCLUDE_RINGTONES_KEY] ?: DEFAULT_INCLUDE_RINGTONES
 
                     barSpeed.value = preferences[BAR_SPEED_KEY] ?: DEFAULT_BAR_SPEED_VALUE
 
@@ -298,12 +298,12 @@ object SettingsManager {
         }
     }
 
-    fun switchExcludeRingtones(context: Context) {
+    fun switchIncludeRingtones(context: Context) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 context.dataStore.edit { preferences: MutablePreferences ->
-                    excludeRingtonesChecked.value = !excludeRingtonesChecked.value
-                    preferences[EXCLUDE_RINGTONES_KEY] = excludeRingtonesChecked.value
+                    includeRingtonesChecked.value = !includeRingtonesChecked.value
+                    preferences[INCLUDE_RINGTONES_KEY] = includeRingtonesChecked.value
                 }
             } catch (e: Throwable) {
                 logger.severe(e.message)

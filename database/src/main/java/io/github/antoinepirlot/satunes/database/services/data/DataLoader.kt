@@ -98,24 +98,26 @@ object DataLoader {
         //GENRES is added in loadAllData function if SDK >= Android Red Velvet Cake
     )
 
-    private val selection =
-        if (SettingsManager.includeRingtonesChecked.value) {
-            "${MediaStore.Audio.Media.DATA} NOT LIKE ? AND " +
-                    "${MediaStore.Audio.Media.DATA} NOT LIKE ? AND " +
-                    "${MediaStore.Audio.Media.DATA} NOT LIKE ?"
-        } else {
-            null
-        }
+    private var selection: String? = "${MediaStore.Audio.Media.DATA} LIKE ?" +
+            if (SettingsManager.includeRingtonesChecked.value) {
+                " OR ${MediaStore.Audio.Media.DATA} LIKE ?" +
+                        " OR ${MediaStore.Audio.Media.DATA} LIKE ?" +
+                        " OR ${MediaStore.Audio.Media.DATA} LIKE ?"
+            } else {
+                ""
+            }
 
-    private val selection_args: Array<String>? =
-        if (SettingsManager.includeRingtonesChecked.value) {
-            arrayOf(
-                "$EXTERNAL_STORAGE_PATH/Android/%",
-                "$EXTERNAL_STORAGE_PATH/Ringtones/%",
-                "$EXTERNAL_STORAGE_PATH/Notifications/%"
-            )
-        } else {
-            null
+    private val selection_args: MutableList<String> =
+        mutableListOf("$EXTERNAL_STORAGE_PATH/Music/%").also {
+            if (SettingsManager.includeRingtonesChecked.value) {
+                it.addAll(
+                    listOf(
+                        "$EXTERNAL_STORAGE_PATH/Android/%",
+                        "$EXTERNAL_STORAGE_PATH/Ringtones/%",
+                        "$EXTERNAL_STORAGE_PATH/Notifications/%"
+                    )
+                )
+            }
         }
 
     private val logger = SatunesLogger(name = this::class.java.name)
@@ -134,7 +136,7 @@ object DataLoader {
                 URI,
                 projection.toTypedArray(),
                 selection,
-                selection_args,
+                selection_args.toTypedArray(),
                 null
             )?.use {
                 loadColumns(cursor = it)

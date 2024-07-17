@@ -81,12 +81,12 @@ internal fun AllAlbumsListView(
                 @Suppress("UNCHECKED_CAST")
                 albumSet as SortedSet<MediaImpl>
                 ExtraButton(icon = SatunesIcons.PLAY, onClick = {
-                    playbackController.loadMusicFromMedia(medias = albumSet)
+                    playbackController.loadMusicFromMedias(medias = albumSet)
                     openMedia(navController = navController)
                 })
                 ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
 
-                    playbackController.loadMusicFromMedia(
+                    playbackController.loadMusicFromMedias(
                         medias = albumSet,
                         shuffleMode = true
                     )

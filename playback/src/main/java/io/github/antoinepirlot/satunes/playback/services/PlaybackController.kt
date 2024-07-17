@@ -298,11 +298,11 @@ class PlaybackController private constructor(
      * Add all music from medias to the mediaController in the same order.
      * If the shuffle mode is true then shuffle the playlist
      *
-     * @param medias the medias to load if null use the musicQueueToPlay instead
+     * @param medias the medias to load
      * @param shuffleMode indicate if the playlistDB has to be started in shuffle mode by default false
-     *
+     * @param musicToPlay the music to play
      */
-    fun loadMusicFromMedia(
+    fun loadMusicFromMedias(
         medias: SortedSet<MediaImpl>,
         shuffleMode: Boolean = SettingsManager.shuffleMode.value,
         musicToPlay: Music? = null,
@@ -322,11 +322,11 @@ class PlaybackController private constructor(
      * Add all music from medias to the mediaController in the same order.
      * If the shuffle mode is true then shuffle the playlist
      *
-     * @param medias the medias to load if null use the musicQueueToPlay instead
+     * @param medias the medias to load
      * @param shuffleMode indicate if the playlistDB has to be started in shuffle mode by default false
-     *
+     * @param musicToPlay the music to play
      */
-    fun loadMusicFromMedia(
+    fun loadMusicFromMedias(
         medias: MutableMap<String, MediaImpl>,
         shuffleMode: Boolean = SettingsManager.shuffleMode.value,
         musicToPlay: Music? = null,
@@ -343,11 +343,45 @@ class PlaybackController private constructor(
     }
 
     /**
+     * Add all music from medias to the mediaController in the same order.
+     * If the shuffle mode is true then shuffle the playlist
+     *
+     * @param media the media to load
+     * @param shuffleMode indicate if the playlistDB has to be started in shuffle mode by default false
+     * @param musicToPlay the music to play
+     */
+    fun loadMusicFromMedia(
+        media: MediaImpl,
+        shuffleMode: Boolean = SettingsManager.shuffleMode.value,
+        musicToPlay: Music? = null,
+    ) {
+        var musicMediaItemSortedMap: MutableMap<Music, MediaItem> = mutableMapOf()
+        when (media) {
+            is Folder -> {
+                musicMediaItemSortedMap = media.getAllMusic()
+            }
+
+            else -> {
+                media.musicMediaItemMap.keys.forEach { music: Music ->
+                    musicMediaItemSortedMap.putAll(music.musicMediaItemMap)
+                }
+            }
+        }
+
+        loadMusic(
+            musicMediaItemSortedMap = musicMediaItemSortedMap,
+            shuffleMode = shuffleMode,
+            musicToPlay = musicToPlay
+        )
+    }
+
+    /**
      * Add all music from musicMap to the mediaController in the same order.
      * If the shuffle mode is true then shuffle the playlist
      *
-     * @param musicMediaItemSortedMap the music map to load if null use the musicQueueToPlay instead
+     * @param musicMediaItemSortedMap the music map to load
      * @param shuffleMode indicate if the playlistDB has to be started in shuffle mode by default false
+     * @param musicToPlay the music to play
      *
      */
     fun loadMusic(

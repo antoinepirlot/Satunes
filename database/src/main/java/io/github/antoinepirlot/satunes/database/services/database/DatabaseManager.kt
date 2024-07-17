@@ -124,7 +124,7 @@ class DatabaseManager(context: Context) {
     }
 
     /**
-     * Insert one playlistDB to db with its eventual music list
+     * Create new Playlist if doesn't exist in DB otherwise advertise the user that it already exists.
      *
      * @param context
      * @param playlistTitle the playlist title

@@ -27,7 +27,6 @@ package io.github.antoinepirlot.satunes.ui.views.media.genre
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -57,7 +56,7 @@ internal fun AllGenresListView(
     navController: NavHostController,
 ) {
     val playbackController: PlaybackController = PlaybackController.getInstance()
-    val genreMap: SortedMap<String, Genre> = remember { DataManager.genreMap }
+    val genreMap: SortedMap<String, Genre> = DataManager.genreMap
 
     //Recompose if data changed
     var mapChanged: Boolean by rememberSaveable { DataManager.genreMapUpdated }

@@ -62,7 +62,7 @@ internal fun GenreView(
     genre: Genre,
 ) {
     val playbackController: PlaybackController = PlaybackController.getInstance()
-    val musicMap: SortedMap<Music, MediaItem> = remember { genre.musicMediaItemMap }
+    val musicMap: SortedMap<Music, MediaItem> = genre.musicMediaItemMap
 
     //Recompose if data changed
     var mapChanged: Boolean by rememberSaveable { genre.musicMediaItemMapUpdate }

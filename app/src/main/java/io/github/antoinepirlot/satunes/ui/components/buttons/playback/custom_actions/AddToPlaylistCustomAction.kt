@@ -29,7 +29,6 @@ import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -68,8 +67,7 @@ internal fun AddToPlaylistCustomAction(
 
     if (showForm) {
         //TODO
-        val playlistMap: SortedMap<String, Playlist> =
-            remember { DataManager.playlistsMap }
+        val playlistMap: SortedMap<String, Playlist> = DataManager.playlistsMap
 
         //Recompose if data changed
         var mapChanged: Boolean by rememberSaveable { DataManager.playlistsMapUpdated }

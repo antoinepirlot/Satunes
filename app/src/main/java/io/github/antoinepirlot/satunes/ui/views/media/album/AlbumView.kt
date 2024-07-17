@@ -32,7 +32,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -74,7 +73,7 @@ internal fun AlbumView(
     val playbackController: PlaybackController = PlaybackController.getInstance()
 
 
-    val musicMap: SortedMap<Music, MediaItem> = remember { album.musicMediaItemMap }
+    val musicMap: SortedMap<Music, MediaItem> = album.musicMediaItemMap
 
     //Recompose if data changed
     var mapChanged: Boolean by rememberSaveable { album.musicMediaItemMapUpdate }

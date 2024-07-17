@@ -82,7 +82,7 @@ internal fun ArtistView(
         },
         onFABClick = { openCurrentMusic(navController = navController) },
         header = {
-            val albumMap: SortedMap<String, Album> = remember { artist.albumSortedMap }
+            val albumMap: SortedMap<String, Album> = artist.albumSortedMap
 
             //Recompose if data changed
             var albumMapChanged: Boolean by remember { artist.albumSortedMapUpdate }

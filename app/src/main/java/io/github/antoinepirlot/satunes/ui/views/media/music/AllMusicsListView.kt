@@ -27,7 +27,6 @@ package io.github.antoinepirlot.satunes.ui.views.media.music
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -59,8 +58,7 @@ internal fun AllMusicsListView(
 ) {
     val playbackController: PlaybackController = PlaybackController.getInstance()
     //Find a way to do something more aesthetic but it works
-    val musicMediaItemMap: SortedMap<Music, MediaItem> =
-        remember { DataManager.musicMediaItemMap }
+    val musicMediaItemMap: SortedMap<Music, MediaItem> = DataManager.musicMediaItemMap
 
     //Recompose if data changed
     var mapChanged: Boolean by rememberSaveable { DataManager.musicMediaItemSortedMapUpdated }

@@ -44,7 +44,6 @@ import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.router.utils.openMediaFromFolder
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
-import java.util.SortedMap
 import java.util.SortedSet
 
 /**
@@ -92,8 +91,8 @@ internal fun RootFolderView(
     )
 }
 
-private fun getFolderMusicsMap(folderSet: SortedSet<Folder>): SortedMap<Music, MediaItem> {
-    val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
+private fun getFolderMusicsMap(folderSet: SortedSet<Folder>): MutableMap<Music, MediaItem> {
+    val musicMediaItemSortedMap: MutableMap<Music, MediaItem> = mutableMapOf()
     folderSet.forEach { folder: Folder ->
         musicMediaItemSortedMap.putAll(folder.getAllMusic())
     }

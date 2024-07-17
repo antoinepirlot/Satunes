@@ -37,7 +37,6 @@ class Artist(
     title: String,
 ) : MediaImpl(id = nextId, title = title) {
     val albumSortedMap: SortedMap<String, Album> = sortedMapOf()
-        get() = field.toSortedMap()
 
     val albumSortedMapUpdate: MutableState<Boolean> = mutableStateOf(false)
 

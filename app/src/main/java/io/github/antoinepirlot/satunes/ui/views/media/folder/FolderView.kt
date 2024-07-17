@@ -72,18 +72,18 @@ internal fun FolderView(
     }
     //
 
-    val subFolderMap: SortedSet<MediaImpl> = sortedSetOf()
+    val subMediaImplMap: SortedSet<MediaImpl> = sortedSetOf()
 
     Column(modifier = modifier) {
         FolderPath(folder)
         loadSubFolders(
-            subFolderMap = subFolderMap,
+            subMediaImplMap = subMediaImplMap,
             folder = folder,
             folderMusicMediaItemSortedMap = folderMusicMediaItemSortedMap
         )
         MediaListView(
             navController = navController,
-            mediaImplList = subFolderMap.toList(),
+            mediaImplList = subMediaImplMap.toList(),
             openMedia = { clickedMediaImpl: MediaImpl ->
                 openMediaFromFolder(clickedMediaImpl, navController = navController)
             },
@@ -110,16 +110,16 @@ internal fun FolderView(
 }
 
 private fun loadSubFolders(
-    subFolderMap: SortedSet<MediaImpl>,
+    subMediaImplMap: SortedSet<MediaImpl>,
     folder: Folder,
     folderMusicMediaItemSortedMap: SortedMap<Music, MediaItem>
 ) {
     //Load sub-folders
-    subFolderMap.addAll(folder.getSubFolderMapAsMediaImpl().values)
+    subMediaImplMap.addAll(folder.getSubFolderMapAsMediaImpl().values)
 
     //Load sub-folder's musics
     folderMusicMediaItemSortedMap.forEach { (music: Music, _) ->
-        subFolderMap.add(music)
+        subMediaImplMap.add(music)
     }
 }
 

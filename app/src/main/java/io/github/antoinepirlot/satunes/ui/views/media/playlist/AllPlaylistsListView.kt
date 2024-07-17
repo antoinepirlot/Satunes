@@ -64,8 +64,7 @@ internal fun PlaylistListView(
     val context: Context = LocalContext.current
     var openAlertDialog by remember { mutableStateOf(false) }
     Column(modifier = modifier) {
-        val playlistMap: SortedMap<String, Playlist> =
-            remember { DataManager.playlistsMap }
+        val playlistMap: SortedMap<String, Playlist> = DataManager.playlistsMap
 
         //Recompose if data changed
         var mapChanged: Boolean by rememberSaveable { DataManager.playlistsMapUpdated }

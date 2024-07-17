@@ -28,7 +28,6 @@ package io.github.antoinepirlot.satunes.ui.utils
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
-import androidx.media3.common.MediaItem
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
@@ -41,7 +40,6 @@ import io.github.antoinepirlot.satunes.icons.SatunesIcons.GENRES
 import io.github.antoinepirlot.satunes.icons.SatunesIcons.MUSIC
 import io.github.antoinepirlot.satunes.icons.SatunesIcons.PLAYLIST
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
-import java.util.SortedMap
 
 /**
  * @author Antoine Pirlot on 27/01/24
@@ -69,18 +67,6 @@ internal fun startMusic(mediaToPlay: MediaImpl? = null) {
             playbackController.start()
         }
     }
-}
-
-/**
- * Create the list of all music in the folder and subfolder
- */
-fun getMusicListFromFolder(folder: Folder): SortedMap<Music, MediaItem> {
-    val mapOfMusic: SortedMap<Music, MediaItem> =
-        folder.musicMediaItemMap.toSortedMap() // Copy needed
-    for (subfolder in folder.getSubFolderMap().values) {
-        mapOfMusic.putAll(subfolder.musicMediaItemMap)
-    }
-    return mapOfMusic
 }
 
 fun getRightIconAndDescription(menuTitle: MenuTitle): Pair<ImageVector, String> {

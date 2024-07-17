@@ -33,7 +33,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.sp
 import androidx.media3.common.MediaItem
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -46,9 +45,8 @@ import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.router.utils.openMediaFromFolder
+import io.github.antoinepirlot.satunes.ui.components.bars.FolderPath
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
-import io.github.antoinepirlot.satunes.ui.components.texts.Title
-import io.github.antoinepirlot.satunes.ui.utils.getRootFolderName
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 import java.util.SortedMap
 import java.util.SortedSet
@@ -77,23 +75,7 @@ internal fun FolderView(
     val subFolderMap: SortedSet<MediaImpl> = sortedSetOf()
 
     Column(modifier = modifier) {
-        if (folder.parentFolder == null) {
-            Title(
-                text = '/' + getRootFolderName(title = folder.title),
-                fontSize = 20.sp,
-                maxLines = 2
-            )
-        } else {
-            val allPath: MutableList<String> = folder.absolutePath.split("/").toMutableList()
-            // Wrong issue. Remove first is available before API 35, you can ignore error from Android Studio.
-            allPath.removeFirst()
-            allPath[0] = getRootFolderName(title = allPath[0])
-            var path = ""
-            for (s: String in allPath) {
-                path += "/${s}"
-            }
-            Title(text = path, fontSize = 20.sp, maxLines = 2)
-        }
+        FolderPath(folder)
         loadSubFolders(
             subFolderMap = subFolderMap,
             folder = folder,

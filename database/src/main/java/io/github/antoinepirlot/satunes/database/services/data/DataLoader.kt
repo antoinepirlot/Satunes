@@ -80,7 +80,7 @@ object DataLoader {
     private const val UNKNOWN_GENRE = "<unknown>"
     private val EXTERNAL_STORAGE_PATH: File = Environment.getExternalStorageDirectory()
 
-    private val projection = mutableListOf(
+    private var projection: Array<String> = arrayOf(
         // AUDIO
         MediaStore.Audio.Media._ID,
         MediaStore.Audio.Media.DISPLAY_NAME,
@@ -95,10 +95,10 @@ object DataLoader {
         //ARTISTS
         MediaStore.Audio.Artists.ARTIST,
 
-        //GENRES is added in loadAllData function if SDK >= Android Red Velvet Cake
+        //GENRES is added in init function if SDK >= Android Red Velvet Cake
     )
 
-    private var selection: String? = "${MediaStore.Audio.Media.DATA} LIKE ?" +
+    private val selection: String = "${MediaStore.Audio.Media.DATA} LIKE ?" +
             if (SettingsManager.includeRingtonesChecked.value) {
                 " OR ${MediaStore.Audio.Media.DATA} LIKE ?" +
                         " OR ${MediaStore.Audio.Media.DATA} LIKE ?" +
@@ -107,20 +107,22 @@ object DataLoader {
                 ""
             }
 
-    private val selection_args: MutableList<String> =
-        mutableListOf("$EXTERNAL_STORAGE_PATH/Music/%").also {
-            if (SettingsManager.includeRingtonesChecked.value) {
-                it.addAll(
-                    listOf(
-                        "$EXTERNAL_STORAGE_PATH/Android/%",
-                        "$EXTERNAL_STORAGE_PATH/Ringtones/%",
-                        "$EXTERNAL_STORAGE_PATH/Notifications/%"
-                    )
-                )
-            }
-        }
+    private var selection_args: Array<String> = arrayOf("$EXTERNAL_STORAGE_PATH/Music/%")
 
     private val logger = SatunesLogger(name = this::class.java.name)
+
+    init {
+        if (SettingsManager.includeRingtonesChecked.value) {
+            selection_args += "$EXTERNAL_STORAGE_PATH/Android/%"
+            selection_args += "$EXTERNAL_STORAGE_PATH/Ringtones/%"
+            selection_args += "$EXTERNAL_STORAGE_PATH/Notifications/%"
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            //Genre
+            projection += MediaStore.Audio.Media.GENRE
+        }
+    }
 
     /**
      * Load all Media data from device's storage.
@@ -128,15 +130,11 @@ object DataLoader {
     fun loadAllData(context: Context) {
         isLoading.value = true
         CoroutineScope(Dispatchers.IO).launch {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                //Genre
-                projection.add(MediaStore.Audio.Media.GENRE)
-            }
             context.contentResolver.query(
                 URI,
-                projection.toTypedArray(),
+                projection,
                 selection,
-                selection_args.toTypedArray(),
+                selection_args,
                 null
             )?.use {
                 loadColumns(cursor = it)

@@ -31,14 +31,13 @@ import android.net.Uri
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import io.github.antoinepirlot.satunes.database.R
-import io.github.antoinepirlot.satunes.database.models.SatunesDatabase
 import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.daos.MusicDAO
 import io.github.antoinepirlot.satunes.database.daos.MusicsPlaylistsRelDAO
 import io.github.antoinepirlot.satunes.database.daos.PlaylistDAO
-import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
+import io.github.antoinepirlot.satunes.database.models.SatunesDatabase
 import io.github.antoinepirlot.satunes.database.models.database.relations.PlaylistWithMusics
 import io.github.antoinepirlot.satunes.database.models.database.tables.MusicDB
 import io.github.antoinepirlot.satunes.database.models.database.tables.MusicsPlaylistsRel
@@ -134,16 +133,10 @@ class DatabaseManager(context: Context) {
      */
     fun insertPlaylistWithMusics(
         context: Context,
-        playlist: MediaImpl,
+        playlist: Playlist,
         musicList: MutableList<Music>? = null,
         showToast: Boolean = true
     ) {
-        if (playlist !is Playlist) {
-            val message: String = "Playlist is not the right type"
-            logger.severe(message)
-            throw IllegalArgumentException()
-        }
-
         CoroutineScope(Dispatchers.IO).launch {
             if (playlistDao.playlistExist(title = playlist.title)) {
                 val message: String =

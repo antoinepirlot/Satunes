@@ -68,7 +68,7 @@ object DataManager {
     val albumMapUpdated: MutableState<Boolean> = mutableStateOf(false)
 
     private val genreMapById: MutableMap<Long, Genre> = mutableMapOf()
-    val genreMap: SortedMap<Genre, Genre> = sortedMapOf()
+    val genreMap: SortedMap<String, Genre> = sortedMapOf(comparator = StringComparator)
     val genreMapUpdated: MutableState<Boolean> = mutableStateOf(false)
 
     private val playlistsMapById: MutableMap<Long, Playlist> = mutableMapOf()
@@ -189,22 +189,22 @@ object DataManager {
     }
 
     fun getGenre(genreName: String): Genre {
-        return genreMap.keys.first { it.title == genreName }
+        return genreMap[genreName]!!
     }
 
     fun addGenre(genre: Genre): Genre {
-        if (!genreMap.contains(key = genre)) {
-            genreMap[genre] = genre
+        if (!genreMap.contains(key = genre.title)) {
+            genreMap[genre.title] = genre
             genreMapById[genre.id] = genre
             genreMapUpdated.value = true
             return genre
         }
         //You can have multiple same genre's name but different id, but it's the same genre.
-        return genreMap[genre]!!
+        return genreMap[genre.title]!!
     }
 
     fun removeGenre(genre: Genre) {
-        genreMap.remove(genre)
+        genreMap.remove(genre.title)
         genreMapById.remove(genre.id)
         genreMapUpdated.value = true
     }

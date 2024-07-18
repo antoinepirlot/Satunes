@@ -157,7 +157,7 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
             ScreenPages.ALL_GENRES.id -> {
                 routeDeque.resetRouteDeque()
                 routeDeque.addLast(parentId)
-                children.addAll(getAllMediaItem(mediaList = DataManager.genreMap.keys))
+                children.addAll(getAllMediaItem(mediaList = DataManager.genreMap.values))
             }
 
             ScreenPages.ALL_MUSICS.id -> {

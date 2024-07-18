@@ -26,11 +26,13 @@
 package io.github.antoinepirlot.satunes.ui.components.buttons
 
 import androidx.compose.foundation.clickable
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
+import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.cards.ListItem
 
 /**
@@ -41,12 +43,16 @@ import io.github.antoinepirlot.satunes.ui.components.cards.ListItem
 internal fun ClickableListItem(
     modifier: Modifier = Modifier,
     text: String,
+    icon: SatunesIcons,
     onClick: () -> Unit,
 ) {
     val screenWidthDp: Int = LocalConfiguration.current.screenWidthDp
     ListItem(
         modifier = modifier.clickable {
             onClick()
+        },
+        leadingContent = {
+            Icon(imageVector = icon.imageVector, contentDescription = icon.description)
         },
         headlineContent = {
             Text(text = text)
@@ -57,5 +63,5 @@ internal fun ClickableListItem(
 @Preview
 @Composable
 private fun ClickableListItemPreview() {
-    ClickableListItem(text = "Hello World!", onClick = {})
+    ClickableListItem(text = "Hello World!", icon = SatunesIcons.SETTINGS, onClick = {})
 }

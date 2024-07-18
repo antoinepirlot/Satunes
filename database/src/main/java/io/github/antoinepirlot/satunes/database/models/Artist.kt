@@ -48,10 +48,16 @@ class Artist(
         nextId++
     }
 
-    fun addAlbum(album: Album) {
-        if (!albumSortedMap.contains(album.title)) {
+    fun addAlbum(album: Album): Boolean {
+        if (!contains(album = album)) {
             albumSortedMap[album.title] = album
+            return true
         }
+        return false
+    }
+
+    fun contains(album: Album): Boolean {
+        return this.albumSortedMap.contains(key = album.title)
     }
 
     override fun toString(): String {

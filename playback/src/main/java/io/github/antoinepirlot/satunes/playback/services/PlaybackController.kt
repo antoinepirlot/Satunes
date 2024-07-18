@@ -51,7 +51,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.SortedMap
-import java.util.SortedSet
 
 /**
  * @author Antoine Pirlot on 31/01/24
@@ -303,12 +302,12 @@ class PlaybackController private constructor(
      * @param musicToPlay the music to play
      */
     fun loadMusicFromMedias(
-        medias: SortedSet<MediaImpl>,
+        medias: SortedMap<MediaImpl, Any>,
         shuffleMode: Boolean = SettingsManager.shuffleMode.value,
         musicToPlay: Music? = null,
     ) {
         val musicMediaItemSortedMap: MutableMap<Music, MediaItem> = mutableMapOf()
-        medias.forEach { media: MediaImpl ->
+        medias.keys.forEach { media: MediaImpl ->
             musicMediaItemSortedMap.putAll(media.musicMediaItemMap)
         }
         loadMusic(

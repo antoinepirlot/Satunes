@@ -205,9 +205,7 @@ object DataLoader {
         }
 
         //Link album to artist if the album doesn't already have the album
-        if (!artist.albumSortedMap.containsValue(value = album)) {
-            artist.addAlbum(album = album)
-        }
+        artist.addAlbum(album = album)
 
         val absolutePath: String = cursor.getString(absolutePathColumnId!!)
 
@@ -341,13 +339,12 @@ object DataLoader {
             val name = cursor.getString(artistNameColumn!!)
             return if (name == UNKNOWN_ARTIST) {
                 // Assign the Unknown Artist
-                DataManager.getArtist(context.getString(R.string.unknown_artist))
+                DataManager.getArtist(artistName = context.getString(R.string.unknown_artist))
             } else {
                 DataManager.addArtist(artist = Artist(title = name))
             }
         } catch (_: NullPointerException) {
-            val newArtist = Artist(title = context.getString(R.string.unknown_artist))
-            DataManager.addArtist(artist = newArtist)
+            DataManager.addArtist(artist = Artist(title = context.getString(R.string.unknown_artist)))
         }
     }
 
@@ -357,7 +354,7 @@ object DataLoader {
             return if (name == UNKNOWN_ALBUM) {
                 // Assign the Unknown Album
                 val album: Album =
-                    DataManager.getAlbum(context.getString(R.string.unknown_album))
+                    DataManager.getAlbum(albumName = context.getString(R.string.unknown_album))
                 if (album.artist != artist) {
                     throw NoSuchElementException()
                 }

@@ -62,8 +62,10 @@ object DataManager {
     val artistMapUpdated: MutableState<Boolean> = mutableStateOf(false)
 
     private val albumMapById: MutableMap<Long, Album> = mutableMapOf()
-    val albumSet: SortedSet<Album> = sortedSetOf()
-    val albumSetUpdated: MutableState<Boolean> = mutableStateOf(false)
+
+    // Used to know if Album is already in set. This avoid Log(N) process
+    val albumsSortedMap: SortedMap<Album, Album> = sortedMapOf()
+    val albumMapUpdated: MutableState<Boolean> = mutableStateOf(false)
 
     private val genreMapById: MutableMap<Long, Genre> = mutableMapOf()
     val genreMap: SortedMap<String, Genre> = sortedMapOf(comparator = StringComparator)
@@ -140,25 +142,26 @@ object DataManager {
     }
 
     fun getAlbum(albumName: String): Album {
-        return albumSet.first { it.title == albumName }
+        return albumsSortedMap.keys.first { it.title == albumName }
     }
 
     fun addAlbum(album: Album) {
-        if (albumSet.contains(album)) {
+        if (albumsSortedMap.contains(key = album)) {
             val existingAlbum: Album = albumMapById.values.first { it == album }
             throw DuplicatedAlbumException(existingAlbum = existingAlbum)
         }
+
         if (!albumMapById.contains(album.id)) {
-            albumSet.add(album)
+            albumsSortedMap[album] = album
             albumMapById[album.id] = album
-            albumSetUpdated.value = true
+            albumMapUpdated.value = true
         }
     }
 
     fun removeAlbum(album: Album) {
-        albumSet.remove(album)
+        albumsSortedMap.remove(key = album)
         albumMapById.remove(album.id)
-        albumSetUpdated.value = true
+        albumMapUpdated.value = true
     }
 
     fun getFolder(folderId: Long): Folder {

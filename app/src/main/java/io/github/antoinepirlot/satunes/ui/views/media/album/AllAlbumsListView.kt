@@ -44,7 +44,7 @@ import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
-import java.util.SortedSet
+import java.util.SortedMap
 
 /**
  * @author Antoine Pirlot on 01/04/2024
@@ -57,10 +57,10 @@ internal fun AllAlbumsListView(
 ) {
     val playbackController: PlaybackController = PlaybackController.getInstance()
 
-    val albumSet: SortedSet<Album> = DataManager.albumSet
+    val albumMap: SortedMap<Album, Album> = DataManager.albumsSortedMap
 
     //Recompose if data changed
-    var sortedSetChanged: Boolean by rememberSaveable { DataManager.albumSetUpdated }
+    var sortedSetChanged: Boolean by rememberSaveable { DataManager.albumMapUpdated }
     if (sortedSetChanged) {
         sortedSetChanged = false
     }
@@ -69,24 +69,24 @@ internal fun AllAlbumsListView(
     MediaListView(
         modifier = modifier,
         navController = navController,
-        mediaImplList = albumSet.toList(),
+        mediaImplList = albumMap.keys.toList(),
 
         openMedia = { clickedMediaImpl: MediaImpl ->
             openMedia(navController = navController, media = clickedMediaImpl)
         },
         onFABClick = { openCurrentMusic(navController = navController) },
         extraButtons = {
-            if (albumSet.isNotEmpty()) {
+            if (albumMap.isNotEmpty()) {
                 @Suppress("UNCHECKED_CAST")
-                albumSet as SortedSet<MediaImpl>
+                albumMap as SortedMap<MediaImpl, Any>
                 ExtraButton(icon = SatunesIcons.PLAY, onClick = {
-                    playbackController.loadMusicFromMedias(medias = albumSet)
+                    playbackController.loadMusicFromMedias(medias = albumMap)
                     openMedia(navController = navController)
                 })
                 ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
 
                     playbackController.loadMusicFromMedias(
-                        medias = albumSet,
+                        medias = albumMap,
                         shuffleMode = true
                     )
                     openMedia(navController = navController)

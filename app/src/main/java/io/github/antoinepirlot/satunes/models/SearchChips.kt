@@ -23,7 +23,7 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.services.search
+package io.github.antoinepirlot.satunes.models
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf

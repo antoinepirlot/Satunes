@@ -41,8 +41,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.models.ProgressBarLifecycleCallbacks
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
-import io.github.antoinepirlot.satunes.services.ProgressBarLifecycleCallbacks
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 import io.github.antoinepirlot.satunes.ui.utils.getMillisToTimeText
 

@@ -39,6 +39,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import io.github.antoinepirlot.satunes.MainActivity
+import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.router.routes.mediaRoutes
 import io.github.antoinepirlot.satunes.router.routes.playbackRoutes

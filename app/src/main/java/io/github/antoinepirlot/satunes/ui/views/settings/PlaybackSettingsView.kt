@@ -38,6 +38,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
+import io.github.antoinepirlot.satunes.models.Settings
 import io.github.antoinepirlot.satunes.ui.components.settings.AudioOffloadSetting
 import io.github.antoinepirlot.satunes.ui.components.settings.BarSpeedSetting
 import io.github.antoinepirlot.satunes.ui.components.settings.PlaybackModesSubSettings

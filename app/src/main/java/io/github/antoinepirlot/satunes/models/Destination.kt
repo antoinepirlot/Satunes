@@ -23,7 +23,7 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.router
+package io.github.antoinepirlot.satunes.models
 
 import android.os.Build
 import androidx.annotation.RequiresApi

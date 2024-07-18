@@ -52,7 +52,7 @@ object DataManager {
     private val musicMapById: MutableMap<Long, Music> = mutableMapOf()
     val musicMediaItemSortedMapUpdated: MutableState<Boolean> = mutableStateOf(false)
 
-    val rootFolderMap: MutableMap<Long, Folder> = mutableMapOf()
+    private val rootFolderMap: MutableMap<Long, Folder> = mutableMapOf()
     val rootFolderSet: SortedSet<Folder> = sortedSetOf()
     private val folderMap: MutableMap<Long, Folder> = mutableMapOf()
     val folderSortedList: SortedSet<Folder> = sortedSetOf()

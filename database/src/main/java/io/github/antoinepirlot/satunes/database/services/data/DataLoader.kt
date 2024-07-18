@@ -228,16 +228,16 @@ object DataLoader {
             )
         } catch (_: IllegalAccessError) {
             // No music found
-            if (album.musicMediaItemMap.isEmpty()) {
+            if (album.isEmpty()) {
                 DataManager.removeAlbum(album = album)
             }
-            if (artist.musicMediaItemMap.isEmpty()) {
+            if (artist.isEmpty()) {
                 DataManager.removeArtist(artist = artist)
             }
-            if (genre.musicMediaItemMap.isEmpty()) {
+            if (genre.isEmpty()) {
                 DataManager.removeGenre(genre = genre)
             }
-            if (folder.musicMediaItemMap.isEmpty()) {
+            if (folder.isEmpty()) {
                 DataManager.removeFolder(folder = folder)
             }
         }

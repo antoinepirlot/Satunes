@@ -54,7 +54,6 @@ import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
 import io.github.antoinepirlot.satunes.ui.components.dialog.MediaSelectionDialog
 import io.github.antoinepirlot.satunes.ui.components.texts.Title
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
-import java.util.SortedMap
 import io.github.antoinepirlot.satunes.database.R as RDb
 
 /**
@@ -70,7 +69,7 @@ internal fun PlaylistView(
     //TODO try using nav controller instead try to remember it in an object if possible
     var openAddMusicsDialog: Boolean by rememberSaveable { mutableStateOf(false) }
     val playbackController: PlaybackController = PlaybackController.getInstance()
-    val musicMap: SortedMap<Music, MediaItem> = playlist.musicMediaItemMap
+    val musicMap: Map<Music, MediaItem> = playlist.getMusicMap()
 
     //Recompose if data changed
     var mapChanged: Boolean by rememberSaveable { playlist.musicMediaItemMapUpdate }
@@ -85,7 +84,7 @@ internal fun PlaylistView(
         mediaImplList = musicMap.keys.toList(),
         openMedia = { clickedMediaImpl: MediaImpl ->
             playbackController.loadMusic(
-                musicMediaItemSortedMap = playlist.musicMediaItemMap,
+                musicMediaItemSortedMap = playlist.getMusicMap(),
                 musicToPlay = clickedMediaImpl as Music
             )
             openMedia(media = clickedMediaImpl, navController = navController)
@@ -102,14 +101,14 @@ internal fun PlaylistView(
         },
         extraButtons = {
             ExtraButton(icon = SatunesIcons.ADD, onClick = { openAddMusicsDialog = true })
-            if (playlist.musicMediaItemMap.isNotEmpty()) {
+            if (playlist.getMusicMap().isNotEmpty()) {
                 ExtraButton(icon = SatunesIcons.PLAY, onClick = {
-                    playbackController.loadMusic(musicMediaItemSortedMap = playlist.musicMediaItemMap)
+                    playbackController.loadMusic(musicMediaItemSortedMap = playlist.getMusicMap())
                     openMedia(navController = navController)
                 })
                 ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
                     playbackController.loadMusic(
-                        musicMediaItemSortedMap = playlist.musicMediaItemMap,
+                        musicMediaItemSortedMap = playlist.getMusicMap(),
                         shuffleMode = true
                     )
                     openMedia(navController = navController)

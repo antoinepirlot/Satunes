@@ -60,7 +60,7 @@ abstract class MediaImpl(
 //            }
         }
 
-    val musicMediaItemMap: SortedMap<Music, MediaItem> = sortedMapOf()
+    protected val musicMediaItemMap: SortedMap<Music, MediaItem> = sortedMapOf()
     val musicMediaItemMapUpdate: MutableState<Boolean> = mutableStateOf(false)
 
     open fun isEmpty(): Boolean {
@@ -69,6 +69,10 @@ abstract class MediaImpl(
 
     open fun isNotEmpty(): Boolean {
         return this.musicMediaItemMap.isNotEmpty()
+    }
+
+    fun getMusicMap(): Map<Music, MediaItem> {
+        return this.musicMediaItemMap
     }
 
     fun addMusic(music: Music) {

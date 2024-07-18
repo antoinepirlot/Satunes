@@ -61,7 +61,7 @@ internal fun ArtistView(
     artist: Artist,
 ) {
     val playbackController: PlaybackController = PlaybackController.getInstance()
-    val musicMap: SortedMap<Music, MediaItem> = artist.musicMediaItemMap
+    val musicMap: Map<Music, MediaItem> = artist.getMusicMap()
     //Recompose if data changed
     var musicMapChanged: Boolean by rememberSaveable { artist.musicMediaItemMapUpdate }
     if (musicMapChanged) {
@@ -75,7 +75,7 @@ internal fun ArtistView(
         mediaImplList = musicMap.keys.toList(),
         openMedia = { clickedMediaImpl: MediaImpl ->
             playbackController.loadMusic(
-                musicMediaItemSortedMap = artist.musicMediaItemMap,
+                musicMediaItemSortedMap = artist.getMusicMap(),
                 musicToPlay = clickedMediaImpl as Music
             )
             openMedia(clickedMediaImpl, navController = navController)
@@ -98,14 +98,14 @@ internal fun ArtistView(
             )
         },
         extraButtons = {
-            if (artist.musicMediaItemMap.isNotEmpty()) {
+            if (artist.getMusicMap().isNotEmpty()) {
                 ExtraButton(icon = SatunesIcons.PLAY, onClick = {
-                    playbackController.loadMusic(musicMediaItemSortedMap = artist.musicMediaItemMap)
+                    playbackController.loadMusic(musicMediaItemSortedMap = artist.getMusicMap())
                     openMedia(navController = navController)
                 })
                 ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
                     playbackController.loadMusic(
-                        musicMediaItemSortedMap = artist.musicMediaItemMap,
+                        musicMediaItemSortedMap = artist.getMusicMap(),
                         shuffleMode = true
                     )
                     openMedia(navController = navController)

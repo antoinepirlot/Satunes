@@ -307,7 +307,7 @@ class PlaybackController private constructor(
     ) {
         val musicMediaItemSortedMap: MutableMap<Music, MediaItem> = mutableMapOf()
         medias.keys.forEach { media: MediaImpl ->
-            musicMediaItemSortedMap.putAll(media.musicMediaItemMap)
+            musicMediaItemSortedMap.putAll(media.getMusicMap())
         }
         loadMusic(
             musicMediaItemSortedMap = musicMediaItemSortedMap,
@@ -331,7 +331,7 @@ class PlaybackController private constructor(
     ) {
         val musicMediaItemSortedMap: MutableMap<Music, MediaItem> = mutableMapOf()
         medias.values.forEach { media: MediaImpl ->
-            musicMediaItemSortedMap.putAll(media.musicMediaItemMap)
+            musicMediaItemSortedMap.putAll(media.getMusicMap())
         }
         loadMusic(
             musicMediaItemSortedMap = musicMediaItemSortedMap,
@@ -360,8 +360,8 @@ class PlaybackController private constructor(
             }
 
             else -> {
-                media.musicMediaItemMap.keys.forEach { music: Music ->
-                    musicMediaItemSortedMap.putAll(music.musicMediaItemMap)
+                media.getMusicMap().keys.forEach { music: Music ->
+                    musicMediaItemSortedMap.putAll(music.getMusicMap())
                 }
             }
         }
@@ -432,7 +432,7 @@ class PlaybackController private constructor(
             is Folder -> addToQueue(mediaImplList = mediaImpl.getAllMusic().keys.reversed())
 
             else -> {
-                addToQueue(mediaImplList = mediaImpl.musicMediaItemMap.keys.reversed())
+                addToQueue(mediaImplList = mediaImpl.getMusicMap().keys.reversed())
             }
         }
     }
@@ -466,7 +466,7 @@ class PlaybackController private constructor(
             is Folder -> addNext(mediaImplList = mediaImpl.getAllMusic().keys.reversed())
 
             else -> {
-                addNext(mediaImplList = mediaImpl.musicMediaItemMap.keys.reversed())
+                addNext(mediaImplList = mediaImpl.getMusicMap().keys.reversed())
             }
         }
     }

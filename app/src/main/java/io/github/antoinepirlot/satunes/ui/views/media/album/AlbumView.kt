@@ -58,7 +58,6 @@ import io.github.antoinepirlot.satunes.ui.components.images.AlbumArtwork
 import io.github.antoinepirlot.satunes.ui.components.texts.Subtitle
 import io.github.antoinepirlot.satunes.ui.components.texts.Title
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
-import java.util.SortedMap
 
 /**
  * @author Antoine Pirlot on 01/04/2024
@@ -73,7 +72,7 @@ internal fun AlbumView(
     val playbackController: PlaybackController = PlaybackController.getInstance()
 
 
-    val musicMap: SortedMap<Music, MediaItem> = album.musicMediaItemMap
+    val musicMap: Map<Music, MediaItem> = album.getMusicMap()
 
     //Recompose if data changed
     var mapChanged: Boolean by rememberSaveable { album.musicMediaItemMapUpdate }
@@ -88,7 +87,7 @@ internal fun AlbumView(
         mediaImplList = musicMap.keys.toList(),
         openMedia = { clickedMediaImpl: MediaImpl ->
             playbackController.loadMusic(
-                musicMediaItemSortedMap = album.musicMediaItemMap,
+                musicMediaItemSortedMap = album.getMusicMap(),
                 musicToPlay = clickedMediaImpl as Music
             )
             openMedia(media = clickedMediaImpl, navController = navController)
@@ -98,14 +97,14 @@ internal fun AlbumView(
             Header(navController = navController, album = album)
         },
         extraButtons = {
-            if (album.musicMediaItemMap.isNotEmpty()) {
+            if (album.getMusicMap().isNotEmpty()) {
                 ExtraButton(icon = SatunesIcons.PLAY, onClick = {
-                    playbackController.loadMusic(album.musicMediaItemMap)
+                    playbackController.loadMusic(album.getMusicMap())
                     openMedia(navController = navController)
                 })
                 ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
                     playbackController.loadMusic(
-                        musicMediaItemSortedMap = album.musicMediaItemMap,
+                        musicMediaItemSortedMap = album.getMusicMap(),
                         shuffleMode = true
                     )
                     openMedia(navController = navController)

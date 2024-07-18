@@ -389,9 +389,18 @@ object DataLoader {
             } else {
                 DataManager.addGenre(genre = Genre(title = name))
             }
-        } catch (_: NullPointerException) {
-            val newGenre = Genre(title = context.getString(R.string.unknown_genre))
-            DataManager.addGenre(genre = newGenre)
+        } catch (e: Exception) {
+            when (e) {
+                is NullPointerException, is NoSuchElementException -> {
+                    val newGenre = Genre(title = context.getString(R.string.unknown_genre))
+                    DataManager.addGenre(genre = newGenre)
+                }
+
+                else -> {
+                    logger.severe(e.message)
+                    throw e
+                }
+            }
         }
     }
 

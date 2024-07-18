@@ -45,7 +45,6 @@ import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.services.MediaSelectionManager
 import io.github.antoinepirlot.satunes.ui.components.dialog.MediaSelectionDialog
 import io.github.antoinepirlot.satunes.ui.components.dialog.options.DialogOption
-import java.util.SortedMap
 
 /**
  * @author Antoine Pirlot on 01/06/2024
@@ -67,7 +66,7 @@ internal fun AddToPlaylistMediaOption(
         text = stringResource(id = R.string.add_to_playlist)
     )
     if (showDialog) {
-        val playlistList: SortedMap<String, Playlist> = DataManager.playlistsMap
+        val playlistList: Map<String, Playlist> = DataManager.getPlaylistMap()
         //Recompose if data changed
         var mapChanged: Boolean by rememberSaveable { DataManager.playlistsMapUpdated }
         if (mapChanged) {

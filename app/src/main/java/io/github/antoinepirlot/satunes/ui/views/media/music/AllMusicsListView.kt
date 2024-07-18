@@ -45,7 +45,6 @@ import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
-import java.util.SortedMap
 
 /**
  * @author Antoine Pirlot on 01/04/2024
@@ -58,7 +57,7 @@ internal fun AllMusicsListView(
 ) {
     val playbackController: PlaybackController = PlaybackController.getInstance()
     //Find a way to do something more aesthetic but it works
-    val musicMediaItemMap: SortedMap<Music, MediaItem> = DataManager.musicMediaItemMap
+    val musicMediaItemMap: Map<Music, MediaItem> = DataManager.getMusicMap()
 
     //Recompose if data changed
     var mapChanged: Boolean by rememberSaveable { DataManager.musicMediaItemSortedMapUpdated }

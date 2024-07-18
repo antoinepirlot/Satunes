@@ -315,7 +315,7 @@ object DataLoader {
 
         var rootFolder: Folder? = null
 
-        DataManager.rootFolderSet.forEach { folder: Folder ->
+        DataManager.getRootFolderSet().forEach { folder: Folder ->
             if (folder.title == splitPath[0]) {
                 rootFolder = folder
                 return@forEach

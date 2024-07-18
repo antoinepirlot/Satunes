@@ -48,31 +48,31 @@ import java.util.SortedSet
 
 object DataManager {
     // All public map and sortedmap has bool state to recompose as Map are not supported for recomposition
-    val musicMediaItemMap: SortedMap<Music, MediaItem> = sortedMapOf()
+    private val musicMediaItemMap: SortedMap<Music, MediaItem> = sortedMapOf()
     private val musicMapById: MutableMap<Long, Music> = mutableMapOf()
     val musicMediaItemSortedMapUpdated: MutableState<Boolean> = mutableStateOf(false)
 
     private val rootFolderMap: MutableMap<Long, Folder> = mutableMapOf()
-    val rootFolderSet: SortedSet<Folder> = sortedSetOf()
+    private val rootFolderSortedSet: SortedSet<Folder> = sortedSetOf()
     private val folderMap: MutableMap<Long, Folder> = mutableMapOf()
-    val folderSortedList: SortedSet<Folder> = sortedSetOf()
+    private val folderSortedSet: SortedSet<Folder> = sortedSetOf()
 
     private val artistMapById: MutableMap<Long, Artist> = mutableMapOf()
-    val artistMap: SortedMap<String, Artist> = sortedMapOf(comparator = StringComparator)
+    private val artistMap: SortedMap<String, Artist> = sortedMapOf(comparator = StringComparator)
     val artistMapUpdated: MutableState<Boolean> = mutableStateOf(false)
 
     private val albumMapById: MutableMap<Long, Album> = mutableMapOf()
 
     // Used to know if Album is already in set. This avoid Log(N) process
-    val albumsSortedMap: SortedMap<Album, Album> = sortedMapOf()
+    private val albumsSortedMap: SortedMap<Album, Album> = sortedMapOf()
     val albumMapUpdated: MutableState<Boolean> = mutableStateOf(false)
 
     private val genreMapById: MutableMap<Long, Genre> = mutableMapOf()
-    val genreMap: SortedMap<String, Genre> = sortedMapOf(comparator = StringComparator)
+    private val genreMap: SortedMap<String, Genre> = sortedMapOf(comparator = StringComparator)
     val genreMapUpdated: MutableState<Boolean> = mutableStateOf(false)
 
     private val playlistsMapById: MutableMap<Long, Playlist> = mutableMapOf()
-    val playlistsMap: SortedMap<String, Playlist> =
+    private val playlistsSortedMap: SortedMap<String, Playlist> =
         sortedMapOf(comparator = StringComparator)
     val playlistsMapUpdated: MutableState<Boolean> = mutableStateOf(false)
 
@@ -97,11 +97,23 @@ object DataManager {
         return musicMediaItemMap[music]!!
     }
 
+    fun getMusicMap(): Map<Music, MediaItem> {
+        return this.musicMediaItemMap
+    }
+
     fun addMusic(music: Music) {
         if (!musicMapById.contains(music.id)) {
             musicMediaItemMap[music] = music.mediaItem
             musicMapById[music.id] = music
         }
+    }
+
+    fun getRootFolderSet(): Set<Folder> {
+        return this.rootFolderSortedSet
+    }
+
+    fun getFolderSet(): Set<Folder> {
+        return this.folderSortedSet
     }
 
     fun getArtist(artist: Artist): Artist {
@@ -114,6 +126,10 @@ object DataManager {
 
     fun getArtist(artistName: String): Artist {
         return artistMap[artistName]!!
+    }
+
+    fun getArtistMap(): Map<String, Artist> {
+        return this.artistMap
     }
 
     fun addArtist(artist: Artist): Artist {
@@ -145,6 +161,10 @@ object DataManager {
         return albumsSortedMap.keys.first { it.title == albumName }
     }
 
+    fun getAlbumMap(): Map<Album, Album> {
+        return this.albumsSortedMap
+    }
+
     fun addAlbum(album: Album) {
         if (albumsSortedMap.contains(key = album)) {
             val existingAlbum: Album = albumMapById.values.first { it == album }
@@ -174,7 +194,7 @@ object DataManager {
         }
         if (folder.parentFolder == null && !rootFolderMap.contains(folder.id)) {
             rootFolderMap[folder.id] = folder
-            rootFolderSet.add(element = folder)
+            rootFolderSortedSet.add(element = folder)
         }
     }
 
@@ -190,6 +210,10 @@ object DataManager {
 
     fun getGenre(genreName: String): Genre {
         return genreMap[genreName]!!
+    }
+
+    fun getGenreMap(): Map<String, Genre> {
+        return this.genreMap
     }
 
     fun addGenre(genre: Genre): Genre {
@@ -218,15 +242,19 @@ object DataManager {
         }
     }
 
+    fun getPlaylistMap(): Map<String, Playlist> {
+        return this.playlistsSortedMap
+    }
+
     @Throws(NullPointerException::class)
     fun getPlaylist(title: String): Playlist {
-        return playlistsMap[title]!!
+        return playlistsSortedMap[title]!!
     }
 
     fun addPlaylist(playlist: Playlist) {
         val playlistDB: Playlist = playlist
-        if (!playlistsMap.contains(playlistDB.title)) {
-            playlistsMap[playlistDB.title] = playlist
+        if (!playlistsSortedMap.contains(playlistDB.title)) {
+            playlistsSortedMap[playlistDB.title] = playlist
             playlistsMapUpdated.value = true
         }
         if (!playlistsMapById.contains(playlistDB.id)) {
@@ -235,16 +263,16 @@ object DataManager {
     }
 
     fun removePlaylist(playlist: Playlist) {
-        if (playlistsMap.contains(playlist.title)) {
-            playlistsMap.remove(playlist.title)
+        if (playlistsSortedMap.contains(playlist.title)) {
+            playlistsSortedMap.remove(playlist.title)
             playlistsMapUpdated.value = true
         }
         playlistsMapById.remove(playlist.id)
     }
 
     fun updatePlaylist(oldTitle: String, playlist: Playlist) {
-        playlistsMap.remove(oldTitle)
-        playlistsMap[playlist.title] = playlist
+        playlistsSortedMap.remove(oldTitle)
+        playlistsSortedMap[playlist.title] = playlist
         playlistsMapUpdated.value = true
     }
 }

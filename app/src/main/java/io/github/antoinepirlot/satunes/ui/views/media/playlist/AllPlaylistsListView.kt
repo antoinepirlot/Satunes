@@ -50,7 +50,6 @@ import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
 import io.github.antoinepirlot.satunes.ui.components.forms.PlaylistCreationForm
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
-import java.util.SortedMap
 
 /**
  * @author Antoine Pirlot on 30/03/2024
@@ -64,7 +63,7 @@ internal fun PlaylistListView(
     val context: Context = LocalContext.current
     var openAlertDialog by remember { mutableStateOf(false) }
     Column(modifier = modifier) {
-        val playlistMap: SortedMap<String, Playlist> = DataManager.playlistsMap
+        val playlistMap: Map<String, Playlist> = DataManager.getPlaylistMap()
 
         //Recompose if data changed
         var mapChanged: Boolean by rememberSaveable { DataManager.playlistsMapUpdated }

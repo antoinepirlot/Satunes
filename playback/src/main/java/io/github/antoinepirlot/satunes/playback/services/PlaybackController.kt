@@ -50,7 +50,6 @@ import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.SortedMap
 
 /**
  * @author Antoine Pirlot on 31/01/24
@@ -59,7 +58,7 @@ import java.util.SortedMap
 class PlaybackController private constructor(
     context: Context,
     sessionToken: SessionToken,
-    musicMediaItemSortedMap: SortedMap<Music, MediaItem>,
+    musicMediaItemSortedMap: Map<Music, MediaItem>,
 ) {
     internal lateinit var mediaController: MediaController
 
@@ -128,7 +127,7 @@ class PlaybackController private constructor(
                 instance = PlaybackController(
                     context = context.applicationContext,
                     sessionToken = sessionToken,
-                    musicMediaItemSortedMap = DataManager.musicMediaItemMap,
+                    musicMediaItemSortedMap = DataManager.getMusicMap(),
                 )
             } else if (listener != null) {
                 while (!instance::mediaController.isInitialized) {
@@ -302,7 +301,7 @@ class PlaybackController private constructor(
      * @param musicToPlay the music to play
      */
     fun loadMusicFromMedias(
-        medias: SortedMap<MediaImpl, Any>,
+        medias: Map<MediaImpl, Any>,
         shuffleMode: Boolean = SettingsManager.shuffleMode.value,
         musicToPlay: Music? = null,
     ) {
@@ -325,8 +324,8 @@ class PlaybackController private constructor(
      * @param shuffleMode indicate if the playlistDB has to be started in shuffle mode by default false
      * @param musicToPlay the music to play
      */
-    fun loadMusicFromMedias(
-        medias: MutableMap<String, MediaImpl>,
+    fun loadMusicFromStringMediasMedia(
+        medias: Map<String, MediaImpl>,
         shuffleMode: Boolean = SettingsManager.shuffleMode.value,
         musicToPlay: Music? = null,
     ) {
@@ -384,7 +383,7 @@ class PlaybackController private constructor(
      *
      */
     fun loadMusic(
-        musicMediaItemSortedMap: MutableMap<Music, MediaItem>,
+        musicMediaItemSortedMap: Map<Music, MediaItem>,
         shuffleMode: Boolean = SettingsManager.shuffleMode.value,
         musicToPlay: Music? = null,
     ) {

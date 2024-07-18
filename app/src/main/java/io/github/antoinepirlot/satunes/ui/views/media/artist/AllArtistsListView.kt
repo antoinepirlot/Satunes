@@ -56,7 +56,7 @@ internal fun AllArtistsListView(
     navController: NavHostController,
 ) {
     val playbackController: PlaybackController = PlaybackController.getInstance()
-    val artistMap: SortedMap<String, Artist> = DataManager.artistMap
+    val artistMap: Map<String, Artist> = DataManager.getArtistMap()
 
     //Recompose if data changed
     var mapChanged: Boolean by rememberSaveable { DataManager.artistMapUpdated }
@@ -77,16 +77,16 @@ internal fun AllArtistsListView(
         },
         onFABClick = { openCurrentMusic(navController = navController) },
         extraButtons = {
-            if (DataManager.musicMediaItemMap.isNotEmpty()) {
+            if (DataManager.getMusicMap().isNotEmpty()) {
                 @Suppress("UNCHECKED_CAST")
                 artistMap as SortedMap<String, MediaImpl>
 
                 ExtraButton(icon = SatunesIcons.PLAY, onClick = {
-                    playbackController.loadMusicFromMedias(medias = artistMap)
+                    playbackController.loadMusicFromStringMediasMedia(medias = artistMap)
                     openMedia(navController = navController)
                 })
                 ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
-                    playbackController.loadMusicFromMedias(
+                    playbackController.loadMusicFromStringMediasMedia(
                         medias = artistMap,
                         shuffleMode = true
                     )

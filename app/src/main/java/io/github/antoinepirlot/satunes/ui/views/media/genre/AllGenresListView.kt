@@ -56,7 +56,7 @@ internal fun AllGenresListView(
     navController: NavHostController,
 ) {
     val playbackController: PlaybackController = PlaybackController.getInstance()
-    val genreMap: SortedMap<String, Genre> = DataManager.genreMap
+    val genreMap: Map<String, Genre> = DataManager.getGenreMap()
 
     //Recompose if data changed
     var mapChanged: Boolean by rememberSaveable { DataManager.genreMapUpdated }
@@ -79,12 +79,12 @@ internal fun AllGenresListView(
                 @Suppress("UNCHECKED_CAST")
                 genreMap as SortedMap<String, MediaImpl>
                 ExtraButton(icon = SatunesIcons.PLAY, onClick = {
-                    playbackController.loadMusicFromMedias(medias = genreMap)
+                    playbackController.loadMusicFromStringMediasMedia(medias = genreMap)
                     openMedia(navController = navController)
                 })
                 ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
 
-                    playbackController.loadMusicFromMedias(
+                    playbackController.loadMusicFromStringMediasMedia(
                         medias = genreMap,
                         shuffleMode = true
                     )

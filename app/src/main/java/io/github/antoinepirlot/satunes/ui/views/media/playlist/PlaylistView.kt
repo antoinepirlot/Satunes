@@ -119,7 +119,7 @@ internal fun PlaylistView(
         emptyViewText = stringResource(id = R.string.no_music_in_playlist)
     )
     if (openAddMusicsDialog) {
-        val allMusic: List<Music> = DataManager.musicMediaItemMap.keys.toList()
+        val allMusic: List<Music> = DataManager.getMusicMap().keys.toList()
         val context: Context = LocalContext.current
         MediaSelectionDialog(
             onDismissRequest = { openAddMusicsDialog = false },

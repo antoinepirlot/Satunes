@@ -57,7 +57,7 @@ internal fun AllAlbumsListView(
 ) {
     val playbackController: PlaybackController = PlaybackController.getInstance()
 
-    val albumMap: SortedMap<Album, Album> = DataManager.albumsSortedMap
+    val albumMap: Map<Album, Album> = DataManager.getAlbumMap()
 
     //Recompose if data changed
     var sortedSetChanged: Boolean by rememberSaveable { DataManager.albumMapUpdated }

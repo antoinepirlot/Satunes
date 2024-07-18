@@ -132,7 +132,7 @@ internal fun SearchView(
             openMedia = { mediaImpl: MediaImpl ->
                 if (mediaImpl is Music) {
                     PlaybackController.getInstance()
-                        .loadMusic(musicMediaItemSortedMap = DataManager.musicMediaItemMap)
+                        .loadMusic(musicMediaItemSortedMap = DataManager.getMusicMap())
                 }
                 openMedia(media = mediaImpl, navController = navController)
             },
@@ -153,7 +153,7 @@ private fun search(context: Context, mediaImplList: MutableList<MediaImpl>, quer
     val query: String = query.lowercase()
 
     for (searchChip: SearchChips in SearchChipsManager.selectedSearchChips) {
-        DataManager.musicMediaItemMap.keys.forEach { music: Music ->
+        DataManager.getMusicMap().keys.forEach { music: Music ->
             when (searchChip) {
                 SearchChips.MUSICS -> {
                     if (music.title.lowercase().contains(query)) {
@@ -200,7 +200,7 @@ private fun search(context: Context, mediaImplList: MutableList<MediaImpl>, quer
             }
         }
         if (searchChip == SearchChips.PLAYLISTS) {
-            DataManager.playlistsMap.forEach { (playlistTitle: String, playlist: Playlist) ->
+            DataManager.getPlaylistMap().forEach { (playlistTitle: String, playlist: Playlist) ->
                 @Suppress("NAME_SHADOWING")
                 var playlistTitle: String = playlistTitle
 

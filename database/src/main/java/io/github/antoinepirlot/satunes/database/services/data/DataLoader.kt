@@ -34,7 +34,6 @@ import android.provider.MediaStore
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import io.github.antoinepirlot.satunes.database.R
-import io.github.antoinepirlot.satunes.database.exceptions.DuplicatedAlbumException
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Folder
@@ -197,12 +196,7 @@ object DataLoader {
         val artist: Artist = loadArtist(context = context, cursor = cursor)
 
         //Load album
-        val album: Album = try {
-            loadAlbum(cursor = cursor, artist = artist, context = context)
-        } catch (e: DuplicatedAlbumException) {
-            // The album already exist
-            e.existingAlbum
-        }
+        val album: Album = loadAlbum(cursor = cursor, artist = artist, context = context)
 
         //Link album to artist if the album doesn't already have the album
         artist.addAlbum(album = album)
@@ -335,73 +329,47 @@ object DataLoader {
 
     private fun loadArtist(context: Context, cursor: Cursor): Artist {
         // Get values of columns for a given artist.
-        return try {
-            val name = cursor.getString(artistNameColumn!!)
-            return if (name == UNKNOWN_ARTIST) {
-                // Assign the Unknown Artist
-                DataManager.getArtist(artistName = context.getString(R.string.unknown_artist))
-            } else {
-                DataManager.addArtist(artist = Artist(title = name))
-            }
-        } catch (_: NullPointerException) {
-            DataManager.addArtist(artist = Artist(title = context.getString(R.string.unknown_artist)))
+        var name = try {
+            cursor.getString(artistNameColumn!!)
+        } catch (e: NullPointerException) {
+            UNKNOWN_ARTIST
         }
+
+        if (name == UNKNOWN_ARTIST) {
+            name = context.getString(R.string.unknown_artist)
+        }
+        return DataManager.addArtist(artist = Artist(title = name))
     }
 
     private fun loadAlbum(context: Context, cursor: Cursor, artist: Artist?): Album {
-        return try {
-            val name = cursor.getString(albumNameColumn!!)
-            return if (name == UNKNOWN_ALBUM) {
-                // Assign the Unknown Album
-                val album: Album =
-                    DataManager.getAlbum(albumName = context.getString(R.string.unknown_album))
-                if (album.artist != artist) {
-                    throw NoSuchElementException()
-                }
-                album
-            } else {
-                val newAlbum = Album(title = name, artist = artist)
-                DataManager.addAlbum(album = newAlbum)
-                newAlbum
-            }
-        } catch (_: NoSuchElementException) {
-            val newAlbum = Album(
-                title = context.getString(R.string.unknown_album),
-                artist = artist
-            )
-            DataManager.addAlbum(album = newAlbum)
-            newAlbum
+        var name = try {
+            cursor.getString(albumNameColumn!!)
+        } catch (e: NullPointerException) {
+            UNKNOWN_ALBUM
         }
+
+        if (name == UNKNOWN_ALBUM) {
+            name = context.getString(R.string.unknown_album)
+        }
+        return DataManager.addAlbum(album = Album(title = name, artist = artist))
     }
 
 
     private fun loadGenre(context: Context, cursor: Cursor): Genre {
-        return try {
-            val name: String = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        var name: String = try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 cursor.getString(genreNameColumn!!)
             } else {
                 getGenreNameForAndroidQAndLess(context = context, cursor = cursor)
             }
-            return if (name == UNKNOWN_GENRE) {
-                // Assign the Unknown Genre
-                DataManager.getGenre(context.getString(R.string.unknown_genre))
-
-            } else {
-                DataManager.addGenre(genre = Genre(title = name))
-            }
-        } catch (e: Exception) {
-            when (e) {
-                is NullPointerException, is NoSuchElementException -> {
-                    val newGenre = Genre(title = context.getString(R.string.unknown_genre))
-                    DataManager.addGenre(genre = newGenre)
-                }
-
-                else -> {
-                    logger.severe(e.message)
-                    throw e
-                }
-            }
+        } catch (e: NullPointerException) {
+            UNKNOWN_GENRE
         }
+
+        if (name == UNKNOWN_GENRE) {
+            name = context.getString(R.string.unknown_genre)
+        }
+        return DataManager.addGenre(genre = Genre(title = name))
     }
 
     private fun getGenreNameForAndroidQAndLess(context: Context, cursor: Cursor): String {

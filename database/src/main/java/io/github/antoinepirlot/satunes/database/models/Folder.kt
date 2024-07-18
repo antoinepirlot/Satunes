@@ -37,7 +37,7 @@ class Folder(
     title: String,
     var parentFolder: Folder? = null,
 ) : MediaImpl(id = nextId, title = title) {
-    private val subFolderMap: SortedMap<String, Folder> = sortedMapOf()
+    private val subFolderMapByTitle: SortedMap<String, Folder> = sortedMapOf()
 
     val absolutePath: String = if (parentFolder == null) {
         "/$title"
@@ -55,7 +55,7 @@ class Folder(
 
     override fun isEmpty(): Boolean {
         return super.isEmpty() || try {
-            this.subFolderMap.values.first { it.isNotEmpty() }
+            this.subFolderMapByTitle.values.first { it.isNotEmpty() }
             false
         } catch (_: NoSuchElementException) {
             true
@@ -64,7 +64,7 @@ class Folder(
 
     override fun isNotEmpty(): Boolean {
         return super.isNotEmpty() || try {
-            this.subFolderMap.values.first { it.isNotEmpty() }
+            this.subFolderMapByTitle.values.first { it.isNotEmpty() }
             true
         } catch (_: NoSuchElementException) {
             false
@@ -77,7 +77,7 @@ class Folder(
      * @return a list of subfolder and each subfolder is a Folder object
      */
     fun getSubFolderMap(): SortedMap<String, Folder> {
-        return this.subFolderMap.toSortedMap()
+        return this.subFolderMapByTitle.toSortedMap()
     }
 
     /**
@@ -87,7 +87,7 @@ class Folder(
      */
     fun getSubFolderMapAsMediaImpl(): SortedMap<Long, MediaImpl> {
         @Suppress("UNCHECKED_CAST")
-        return this.subFolderMap.toSortedMap() as SortedMap<Long, MediaImpl>
+        return this.subFolderMapByTitle.toSortedMap() as SortedMap<Long, MediaImpl>
     }
 
     /**
@@ -102,7 +102,7 @@ class Folder(
         var parentFolder = this
         subFolderNameChainList.forEach { folderName: String ->
             var subFolder: Folder? = null
-            for (folder in parentFolder.subFolderMap.values) {
+            for (folder in parentFolder.subFolderMapByTitle.values) {
                 if (folder.title == folderName) {
                     subFolder = folder
                 }
@@ -111,7 +111,7 @@ class Folder(
                 // No subfolder matching folder name, create new one
                 subFolder = Folder(title = folderName, parentFolder = parentFolder)
                 DataManager.addFolder(folder = subFolder)
-                parentFolder.subFolderMap[subFolder.title] = subFolder
+                parentFolder.subFolderMapByTitle[subFolder.title] = subFolder
             }
 
             parentFolder = subFolder
@@ -129,7 +129,7 @@ class Folder(
         if (splitPath.isEmpty() || splitPath.size == 1 && this.title == splitPath[0]) {
             return this
         }
-        this.subFolderMap.values.forEach { subFolder: Folder ->
+        this.subFolderMapByTitle.values.forEach { subFolder: Folder ->
             if (subFolder.title == splitPath[0]) {
                 splitPath.remove(splitPath[0])
                 return subFolder.getSubFolder(splitPath)
@@ -149,8 +149,8 @@ class Folder(
 
         musicMediaMap.putAll(this.musicMediaItemMap)
 
-        if (this.subFolderMap.isNotEmpty()) {
-            this.subFolderMap.values.forEach { folder: Folder ->
+        if (this.subFolderMapByTitle.isNotEmpty()) {
+            this.subFolderMapByTitle.values.forEach { folder: Folder ->
                 musicMediaMap.putAll(folder.getAllMusic())
             }
         }

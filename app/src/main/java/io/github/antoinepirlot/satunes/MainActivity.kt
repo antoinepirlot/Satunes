@@ -140,7 +140,7 @@ internal class MainActivity : ComponentActivity() {
             return
         }
         createFileIntent.putExtra(Intent.EXTRA_TITLE, defaultFileName)
-        createFileIntent.type = "application/json"
+        createFileIntent.type = MIME_JSON
         startActivityForResult(createFileIntent, EXPORT_PLAYLIST_CODE)
     }
 

@@ -63,7 +63,7 @@ internal fun LogsSettingsView(
         )
 
         Button(onClick = {
-            MainActivity.instance.exportLogs(defaultFileName = "Satunes_logs.log")
+            MainActivity.instance.exportLogs()
         }) {
             NormalText(text = stringResource(id = R.string.export) + ' ' + stringResource(id = R.string.logs_settings))
         }

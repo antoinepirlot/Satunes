@@ -62,6 +62,8 @@ internal class MainActivity : ComponentActivity() {
         private const val IMPORT_PLAYLIST_CODE = 1
         private const val EXPORT_PLAYLIST_CODE = 2
         private const val EXPORT_LOGS_CODE = 3
+        private const val MIME_JSON = "application/json"
+        private const val MIME_TEXT = "application/text"
         internal var playlistsToExport: Array<Playlist> = arrayOf()
         private val DEFAULT_URI =
             Uri.parse(Environment.getExternalStorageDirectory().path + '/' + Environment.DIRECTORY_DOCUMENTS)
@@ -138,14 +140,14 @@ internal class MainActivity : ComponentActivity() {
             return
         }
         createFileIntent.putExtra(Intent.EXTRA_TITLE, defaultFileName)
-        createFileIntent.type = "application/json"
+        createFileIntent.type = MIME_JSON
         startActivityForResult(createFileIntent, EXPORT_PLAYLIST_CODE)
     }
 
     fun openFileToImportPlaylists() {
         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
             addCategory(Intent.CATEGORY_OPENABLE)
-            type = "application/json"
+            type = MIME_JSON
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 putExtra(DocumentsContract.EXTRA_INITIAL_URI, DEFAULT_URI)
             }
@@ -153,9 +155,9 @@ internal class MainActivity : ComponentActivity() {
         startActivityForResult(intent, IMPORT_PLAYLIST_CODE)
     }
 
-    fun exportLogs(defaultFileName: String) {
-        createFileIntent.putExtra(Intent.EXTRA_TITLE, defaultFileName)
-        createFileIntent.type = "application/text"
+    fun exportLogs() {
+        createFileIntent.putExtra(Intent.EXTRA_TITLE, "Satunes_logs")
+        createFileIntent.type = MIME_TEXT
         startActivityForResult(createFileIntent, EXPORT_LOGS_CODE)
     }
 

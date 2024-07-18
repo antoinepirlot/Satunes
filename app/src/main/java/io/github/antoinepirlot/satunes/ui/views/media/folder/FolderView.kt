@@ -48,7 +48,6 @@ import io.github.antoinepirlot.satunes.router.utils.openMediaFromFolder
 import io.github.antoinepirlot.satunes.ui.components.bars.FolderPath
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
-import java.util.SortedMap
 import java.util.SortedSet
 
 /**
@@ -63,7 +62,7 @@ internal fun FolderView(
     folder: Folder,
 ) {
     val playbackController: PlaybackController = PlaybackController.getInstance()
-    val folderMusicMediaItemSortedMap: SortedMap<Music, MediaItem> = folder.musicMediaItemMap
+    val folderMusicMediaItemSortedMap: Map<Music, MediaItem> = folder.getMusicMap()
 
     //Recompose if data changed
     var mapChanged: Boolean by rememberSaveable { folder.musicMediaItemMapUpdate }
@@ -124,7 +123,7 @@ private fun loadPlaybackFromFolder(
 private fun loadSubFolders(
     subMediaImplMap: SortedSet<MediaImpl>,
     folder: Folder,
-    folderMusicMediaItemSortedMap: SortedMap<Music, MediaItem>
+    folderMusicMediaItemSortedMap: Map<Music, MediaItem>
 ) {
     //Load sub-folders
     subMediaImplMap.addAll(folder.getSubFolderMapAsMediaImpl().values)

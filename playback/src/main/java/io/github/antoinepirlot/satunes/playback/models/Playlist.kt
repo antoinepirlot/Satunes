@@ -37,7 +37,7 @@ import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
  * @author Antoine Pirlot on 18/02/24
  */
 
-internal class Playlist(musicMediaItemSortedMap: MutableMap<Music, MediaItem>) {
+internal class Playlist(musicMediaItemSortedMap: Map<Music, MediaItem>) {
     private val originalMusicMediaItemMap: MutableMap<Music, MediaItem>
     var musicList: SnapshotStateList<Music>
     var mediaItemList: MutableList<MediaItem>

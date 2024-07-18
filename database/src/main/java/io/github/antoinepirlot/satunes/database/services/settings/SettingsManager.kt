@@ -154,8 +154,7 @@ object SettingsManager {
     private val logger = SatunesLogger(name = this::class.java.name)
 
     fun loadSettings(context: Context) {
-        CoroutineScope(Dispatchers.IO).launch {
-            // Using first() at the end and for nothing, prevent wrong UI data switch synchronisation
+        runBlocking {
             try {
                 context.dataStore.data.map { preferences: Preferences ->
                     foldersChecked.value =

@@ -47,7 +47,6 @@ import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.SortedMap
 
 /**
  * @author Antoine Pirlot on 16/03/2024
@@ -144,7 +143,7 @@ internal object SatunesCarCallBack : MediaSessionCompat.Callback() {
         try {
             loadMusicFromMedia(shuffleMode = shuffleMode, mediaId = lastRoute.toLong())
         } catch (e: NumberFormatException) {
-            val mapToLoad: SortedMap<Music, MediaItem> = DataManager.musicMediaItemMap
+            val mapToLoad: Map<Music, MediaItem> = DataManager.getMusicMap()
             playbackController.loadMusic(
                 musicMediaItemSortedMap = mapToLoad,
                 shuffleMode = shuffleMode
@@ -165,37 +164,37 @@ internal object SatunesCarCallBack : MediaSessionCompat.Callback() {
         val playbackController: PlaybackController = PlaybackController.getInstance()
         val routeDeque: RouteDeque = SatunesCarMusicService.routeDeque
         var musicToPlay: Music? = null
-        val musicMediaItemSortedMap: SortedMap<Music, MediaItem> =
+        val musicMediaItemSortedMap: Map<Music, MediaItem> =
             when (routeDeque.oneBeforeLast()) {
                 ScreenPages.ALL_FOLDERS.id -> {
                     //Current folder has to be loaded (music)
                     val folder: Folder = DataManager.getFolder(folderId = mediaId)
-                    folder.musicMediaItemMap
+                    folder.getMusicMap()
                 }
 
                 ScreenPages.ALL_ALBUMS.id -> {
                     val album: Album = DataManager.getAlbum(albumId = mediaId)
-                    album.musicMediaItemMap
+                    album.getMusicMap()
                 }
 
                 ScreenPages.ALL_ARTISTS.id -> {
                     val artist: Artist = DataManager.getArtist(artistId = mediaId)
-                    artist.musicMediaItemMap
+                    artist.getMusicMap()
                 }
 
                 ScreenPages.ALL_GENRES.id -> {
                     val genre: Genre = DataManager.getGenre(genreId = mediaId)
-                    genre.musicMediaItemMap
+                    genre.getMusicMap()
                 }
 
                 ScreenPages.ALL_PLAYLISTS.id -> {
                     val playlist: Playlist = DataManager.getPlaylist(mediaId)
-                    playlist.musicMediaItemMap
+                    playlist.getMusicMap()
                 }
 
                 else -> {
                     musicToPlay = DataManager.getMusic(musicId = mediaId)
-                    DataManager.musicMediaItemMap
+                    DataManager.getMusicMap()
                 }
             }
         playbackController.loadMusic(

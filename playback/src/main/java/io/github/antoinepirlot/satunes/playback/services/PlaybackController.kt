@@ -50,8 +50,6 @@ import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.SortedMap
-import java.util.SortedSet
 
 /**
  * @author Antoine Pirlot on 31/01/24
@@ -60,7 +58,7 @@ import java.util.SortedSet
 class PlaybackController private constructor(
     context: Context,
     sessionToken: SessionToken,
-    musicMediaItemSortedMap: SortedMap<Music, MediaItem>,
+    musicMediaItemSortedMap: Map<Music, MediaItem>,
 ) {
     internal lateinit var mediaController: MediaController
 
@@ -129,7 +127,7 @@ class PlaybackController private constructor(
                 instance = PlaybackController(
                     context = context.applicationContext,
                     sessionToken = sessionToken,
-                    musicMediaItemSortedMap = DataManager.musicMediaItemMap,
+                    musicMediaItemSortedMap = DataManager.getMusicMap(),
                 )
             } else if (listener != null) {
                 while (!instance::mediaController.isInitialized) {
@@ -303,13 +301,13 @@ class PlaybackController private constructor(
      * @param musicToPlay the music to play
      */
     fun loadMusicFromMedias(
-        medias: SortedSet<MediaImpl>,
+        medias: Map<MediaImpl, Any>,
         shuffleMode: Boolean = SettingsManager.shuffleMode.value,
         musicToPlay: Music? = null,
     ) {
         val musicMediaItemSortedMap: MutableMap<Music, MediaItem> = mutableMapOf()
-        medias.forEach { media: MediaImpl ->
-            musicMediaItemSortedMap.putAll(media.musicMediaItemMap)
+        medias.keys.forEach { media: MediaImpl ->
+            musicMediaItemSortedMap.putAll(media.getMusicMap())
         }
         loadMusic(
             musicMediaItemSortedMap = musicMediaItemSortedMap,
@@ -326,14 +324,14 @@ class PlaybackController private constructor(
      * @param shuffleMode indicate if the playlistDB has to be started in shuffle mode by default false
      * @param musicToPlay the music to play
      */
-    fun loadMusicFromMedias(
-        medias: MutableMap<String, MediaImpl>,
+    fun loadMusicFromStringMediasMedia(
+        medias: Map<String, MediaImpl>,
         shuffleMode: Boolean = SettingsManager.shuffleMode.value,
         musicToPlay: Music? = null,
     ) {
         val musicMediaItemSortedMap: MutableMap<Music, MediaItem> = mutableMapOf()
         medias.values.forEach { media: MediaImpl ->
-            musicMediaItemSortedMap.putAll(media.musicMediaItemMap)
+            musicMediaItemSortedMap.putAll(media.getMusicMap())
         }
         loadMusic(
             musicMediaItemSortedMap = musicMediaItemSortedMap,
@@ -362,8 +360,8 @@ class PlaybackController private constructor(
             }
 
             else -> {
-                media.musicMediaItemMap.keys.forEach { music: Music ->
-                    musicMediaItemSortedMap.putAll(music.musicMediaItemMap)
+                media.getMusicMap().keys.forEach { music: Music ->
+                    musicMediaItemSortedMap.putAll(music.getMusicMap())
                 }
             }
         }
@@ -385,7 +383,7 @@ class PlaybackController private constructor(
      *
      */
     fun loadMusic(
-        musicMediaItemSortedMap: MutableMap<Music, MediaItem>,
+        musicMediaItemSortedMap: Map<Music, MediaItem>,
         shuffleMode: Boolean = SettingsManager.shuffleMode.value,
         musicToPlay: Music? = null,
     ) {
@@ -434,7 +432,7 @@ class PlaybackController private constructor(
             is Folder -> addToQueue(mediaImplList = mediaImpl.getAllMusic().keys.reversed())
 
             else -> {
-                addToQueue(mediaImplList = mediaImpl.musicMediaItemMap.keys.reversed())
+                addToQueue(mediaImplList = mediaImpl.getMusicMap().keys.reversed())
             }
         }
     }
@@ -468,7 +466,7 @@ class PlaybackController private constructor(
             is Folder -> addNext(mediaImplList = mediaImpl.getAllMusic().keys.reversed())
 
             else -> {
-                addNext(mediaImplList = mediaImpl.musicMediaItemMap.keys.reversed())
+                addNext(mediaImplList = mediaImpl.getMusicMap().keys.reversed())
             }
         }
     }

@@ -48,7 +48,6 @@ import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 import io.github.antoinepirlot.satunes.ui.views.media.MediaWithAlbumsHeaderView
-import java.util.SortedMap
 import java.util.SortedSet
 
 /**
@@ -62,7 +61,7 @@ internal fun GenreView(
     genre: Genre,
 ) {
     val playbackController: PlaybackController = PlaybackController.getInstance()
-    val musicMap: SortedMap<Music, MediaItem> = genre.musicMediaItemMap
+    val musicMap: Map<Music, MediaItem> = genre.getMusicMap()
 
     //Recompose if data changed
     var mapChanged: Boolean by rememberSaveable { genre.musicMediaItemMapUpdate }
@@ -77,7 +76,7 @@ internal fun GenreView(
         mediaImplList = musicMap.keys.toList(),
         openMedia = { clickedMediaImpl: MediaImpl ->
             playbackController.loadMusic(
-                musicMediaItemSortedMap = genre.musicMediaItemMap,
+                musicMediaItemSortedMap = genre.getMusicMap(),
                 musicToPlay = clickedMediaImpl as Music
             )
             openMedia(media = clickedMediaImpl, navController = navController)
@@ -103,14 +102,14 @@ internal fun GenreView(
             )
         },
         extraButtons = {
-            if (genre.musicMediaItemMap.isNotEmpty()) {
+            if (genre.getMusicMap().isNotEmpty()) {
                 ExtraButton(icon = SatunesIcons.PLAY, onClick = {
-                    playbackController.loadMusic(musicMediaItemSortedMap = genre.musicMediaItemMap)
+                    playbackController.loadMusic(musicMediaItemSortedMap = genre.getMusicMap())
                     openMedia(navController = navController)
                 })
                 ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
                     playbackController.loadMusic(
-                        musicMediaItemSortedMap = genre.musicMediaItemMap,
+                        musicMediaItemSortedMap = genre.getMusicMap(),
                         shuffleMode = true
                     )
                     openMedia(navController = navController)

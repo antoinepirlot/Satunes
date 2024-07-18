@@ -73,7 +73,7 @@ internal fun PlaylistsSettingsView(
         Row {
             Button(onClick = {
                 MainActivity.playlistsToExport =
-                    DataManager.playlistsMap.values.toTypedArray()
+                    DataManager.getPlaylistMap().values.toTypedArray()
                 MainActivity.instance.createFileToExportPlaylists(defaultFileName = "Satunes")
             }) {
                 Text(text = stringResource(id = R.string.export_all))

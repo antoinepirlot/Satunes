@@ -45,7 +45,6 @@ import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.services.MediaSelectionManager
 import io.github.antoinepirlot.satunes.ui.components.buttons.playback.CustomActionButton
 import io.github.antoinepirlot.satunes.ui.components.dialog.MediaSelectionDialog
-import java.util.SortedMap
 
 /**
  * @author Antoine Pirlot on 01/06/2024
@@ -67,7 +66,7 @@ internal fun AddToPlaylistCustomAction(
 
     if (showForm) {
         //TODO
-        val playlistMap: SortedMap<String, Playlist> = DataManager.playlistsMap
+        val playlistMap: Map<String, Playlist> = DataManager.getPlaylistMap()
 
         //Recompose if data changed
         var mapChanged: Boolean by rememberSaveable { DataManager.playlistsMapUpdated }
@@ -85,7 +84,7 @@ internal fun AddToPlaylistCustomAction(
                 )
                 showForm = false
             },
-            mediaList = DataManager.playlistsMap.values.toList(),
+            mediaList = DataManager.getPlaylistMap().values.toList(),
             icon = SatunesIcons.PLAYLIST_ADD
         )
     }

@@ -53,9 +53,9 @@ import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.internet.updates.UpdateAvailableStatus
 import io.github.antoinepirlot.satunes.internet.updates.UpdateCheckManager
-import io.github.antoinepirlot.satunes.router.Destination
-import io.github.antoinepirlot.satunes.router.playbackViews
-import io.github.antoinepirlot.satunes.router.settingsDestinations
+import io.github.antoinepirlot.satunes.models.Destination
+import io.github.antoinepirlot.satunes.models.playbackViews
+import io.github.antoinepirlot.satunes.models.settingsDestinations
 import io.github.antoinepirlot.satunes.services.RoutesManager
 import io.github.antoinepirlot.satunes.ui.ScreenSizes
 

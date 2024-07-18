@@ -41,7 +41,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.services.search.SearchChips
+import io.github.antoinepirlot.satunes.models.SearchChips
 import io.github.antoinepirlot.satunes.services.search.SearchChipsManager
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 

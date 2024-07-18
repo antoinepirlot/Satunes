@@ -23,7 +23,7 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.views.settings
+package io.github.antoinepirlot.satunes.models
 
 import io.github.antoinepirlot.satunes.R.string.audio_offload
 import io.github.antoinepirlot.satunes.R.string.include_ringtones

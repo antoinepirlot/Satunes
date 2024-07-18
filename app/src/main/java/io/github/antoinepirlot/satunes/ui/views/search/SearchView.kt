@@ -57,10 +57,10 @@ import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
+import io.github.antoinepirlot.satunes.models.SearchChips
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.router.utils.openMedia
-import io.github.antoinepirlot.satunes.services.search.SearchChips
 import io.github.antoinepirlot.satunes.services.search.SearchChipsManager
 import io.github.antoinepirlot.satunes.ui.components.chips.MediaChipList
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText

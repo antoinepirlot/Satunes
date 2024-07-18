@@ -35,7 +35,7 @@ import androidx.navigation.compose.composable
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.services.data.DataLoader
-import io.github.antoinepirlot.satunes.router.Destination
+import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.views.LoadingView
 import io.github.antoinepirlot.satunes.ui.views.playback.PlaybackView

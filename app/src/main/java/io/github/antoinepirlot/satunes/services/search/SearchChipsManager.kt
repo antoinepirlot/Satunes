@@ -28,6 +28,7 @@ package io.github.antoinepirlot.satunes.services.search
 import android.content.Context
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
+import io.github.antoinepirlot.satunes.models.SearchChips
 import kotlinx.coroutines.runBlocking
 
 /**

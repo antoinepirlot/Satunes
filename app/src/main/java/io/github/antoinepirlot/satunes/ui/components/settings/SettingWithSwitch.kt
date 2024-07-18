@@ -42,10 +42,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import io.github.antoinepirlot.satunes.models.Settings
+import io.github.antoinepirlot.satunes.models.settingsNeedRestart
 import io.github.antoinepirlot.satunes.ui.components.dialog.InformationDialog
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
-import io.github.antoinepirlot.satunes.ui.views.settings.Settings
-import io.github.antoinepirlot.satunes.ui.views.settings.settingsNeedRestart
 
 /**
  *   @author Antoine Pirlot 06/03/2024

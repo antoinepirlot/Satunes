@@ -34,10 +34,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.satunes.database.models.MenuTitle
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
-import io.github.antoinepirlot.satunes.services.search.SearchChips
+import io.github.antoinepirlot.satunes.models.SearchChips
+import io.github.antoinepirlot.satunes.models.Settings
 import io.github.antoinepirlot.satunes.services.search.SearchChipsManager
 import io.github.antoinepirlot.satunes.ui.components.cards.ListItem
-import io.github.antoinepirlot.satunes.ui.views.settings.Settings
 
 /**
  *   @author Antoine Pirlot 06/03/2024

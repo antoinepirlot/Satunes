@@ -56,9 +56,9 @@ import com.google.accompanist.permissions.rememberPermissionState
 import com.google.accompanist.permissions.shouldShowRationale
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import io.github.antoinepirlot.satunes.models.Permissions
+import io.github.antoinepirlot.satunes.models.permissionsList
 import io.github.antoinepirlot.satunes.services.PermissionManager
-import io.github.antoinepirlot.satunes.services.Permissions
-import io.github.antoinepirlot.satunes.services.permissionsList
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 import io.github.antoinepirlot.satunes.ui.components.texts.Title
 

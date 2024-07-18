@@ -37,8 +37,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
+import io.github.antoinepirlot.satunes.models.Settings
 import io.github.antoinepirlot.satunes.ui.components.dialog.InformationDialog
-import io.github.antoinepirlot.satunes.ui.views.settings.Settings
 
 /**
  * @author Antoine Pirlot on 27/05/2024

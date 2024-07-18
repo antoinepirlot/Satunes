@@ -48,7 +48,7 @@ internal fun ExportPlaylistOption(
         onClick = {
             MainActivity.playlistsToExport = arrayOf(playlistToExport)
             MainActivity.instance.createFileToExportPlaylists(
-                defaultFileName = playlistToExport.title + ".json"
+                defaultFileName = playlistToExport.title
             )
         },
         icon = SatunesIcons.EXPORT,

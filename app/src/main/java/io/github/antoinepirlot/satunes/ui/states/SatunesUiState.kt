@@ -25,6 +25,7 @@
 
 package io.github.antoinepirlot.satunes.ui.states
 
+import io.github.antoinepirlot.satunes.database.models.MenuTitle
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.models.DEFAULT_DESTINATION
 
@@ -33,5 +34,14 @@ import io.github.antoinepirlot.satunes.models.DEFAULT_DESTINATION
  */
 internal data class SatunesUiState(
     val whatsNewSeen: Boolean = SettingsManager.whatsNewSeen,
-    val currentDestination: String = DEFAULT_DESTINATION
+    val currentDestination: String = DEFAULT_DESTINATION,
+    val selectedMenuTitle: MenuTitle =
+    // Selected the default menu title in this priority order
+        if (SettingsManager.foldersChecked.value) MenuTitle.FOLDERS
+        else if (SettingsManager.artistsChecked.value) MenuTitle.ARTISTS
+        else if (SettingsManager.albumsChecked.value) MenuTitle.ALBUMS
+        else if (SettingsManager.genresChecked.value) MenuTitle.GENRES
+        else if (SettingsManager.playlistsChecked.value) MenuTitle.PLAYLISTS
+        else MenuTitle.MUSICS
+
 )

@@ -29,6 +29,7 @@ import android.content.Context
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.ViewModel
+import io.github.antoinepirlot.satunes.database.models.MenuTitle
 import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.ui.states.SatunesUiState
@@ -45,6 +46,7 @@ internal class SatunesViewModel : ViewModel() {
     private val _uiState: MutableStateFlow<SatunesUiState> = MutableStateFlow(SatunesUiState())
     private val _isLoadingData: MutableState<Boolean> = DataLoader.isLoading
     private val _isDataLoaded: MutableState<Boolean> = DataLoader.isLoaded
+    private var _selectedMenuTitle: MenuTitle = _uiState.value.selectedMenuTitle
     private val _logger: SatunesLogger = SatunesLogger(this::class.java.name)
 
     val uiState: StateFlow<SatunesUiState> = _uiState.asStateFlow()
@@ -62,9 +64,15 @@ internal class SatunesViewModel : ViewModel() {
     }
 
     fun setCurrentDestination(destination: String) {
-
         _uiState.update { currentState: SatunesUiState ->
             currentState.copy(currentDestination = destination)
+        }
+    }
+
+    fun selectMenuTitle(menuTitle: MenuTitle) {
+        this._selectedMenuTitle = menuTitle
+        this._uiState.update { currentState: SatunesUiState ->
+            currentState.copy(selectedMenuTitle = menuTitle)
         }
     }
 

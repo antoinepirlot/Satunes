@@ -33,13 +33,14 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.data.menuTitleLists
@@ -48,7 +49,9 @@ import io.github.antoinepirlot.satunes.database.services.settings.SettingsManage
 import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.ui.ScreenSizes
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
+import io.github.antoinepirlot.satunes.ui.states.SatunesUiState
 import io.github.antoinepirlot.satunes.ui.utils.getRightIconAndDescription
+import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
 
 /**
  * @author Antoine Pirlot on 03/02/24
@@ -57,25 +60,18 @@ import io.github.antoinepirlot.satunes.ui.utils.getRightIconAndDescription
 @Composable
 internal fun SatunesBottomAppBar(
     modifier: Modifier = Modifier,
-    navController: NavHostController
+    navController: NavHostController,
+    viewModel: SatunesViewModel = viewModel()
 ) {
+    val uiState: SatunesUiState by viewModel.uiState.collectAsState()
+
     SettingsManager.menuTitleCheckedMap.forEach { (menuTitle: MenuTitle, checked: MutableState<Boolean>) ->
         if (!checked.value) {
             menuTitleLists.remove(menuTitle)
         }
     }
 
-    val selectedMenuTitle: MutableState<MenuTitle> = remember {
-        mutableStateOf(
-            // Update the tab by default if settings has changed
-            if (SettingsManager.foldersChecked.value) MenuTitle.FOLDERS
-            else if (SettingsManager.artistsChecked.value) MenuTitle.ARTISTS
-            else if (SettingsManager.albumsChecked.value) MenuTitle.ALBUMS
-            else if (SettingsManager.genresChecked.value) MenuTitle.GENRES
-            else if (SettingsManager.playlistsChecked.value) MenuTitle.PLAYLISTS
-            else MenuTitle.MUSICS
-        )
-    }
+    val selectedMenuTitle: MenuTitle = uiState.selectedMenuTitle
 
     val screenWidthDp = LocalConfiguration.current.screenWidthDp
     val navigationModifier: Modifier =
@@ -91,9 +87,9 @@ internal fun SatunesBottomAppBar(
                 label = {
                     NormalText(text = stringResource(id = menuTitle.stringId))
                 },
-                selected = selectedMenuTitle.value == menuTitle,
+                selected = selectedMenuTitle == menuTitle,
                 onClick = {
-                    selectedMenuTitle.value = menuTitle
+                    viewModel.selectMenuTitle(menuTitle = menuTitle)
                     val rootRoute: String = when (menuTitle) {
                         MenuTitle.FOLDERS -> Destination.FOLDERS.link
                         MenuTitle.ARTISTS -> Destination.ARTISTS.link
@@ -128,7 +124,7 @@ private fun backToRoot(
     rootRoute: String,
     navController: NavHostController
 ) {
-    var currentRoute: String? = navController.currentBackStackEntry!!.destination.route!!
+    var currentRoute: String? = navController.currentBackStackEntry!!.destination.route!!//TODO
     if (currentRoute != rootRoute) {
         while (currentRoute != null && currentRoute != rootRoute) {
             navController.popBackStack()

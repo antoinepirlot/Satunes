@@ -49,7 +49,7 @@ import io.github.antoinepirlot.satunes.ui.components.bars.SatunesBottomAppBar
 import io.github.antoinepirlot.satunes.ui.components.bars.SatunesTopAppBar
 import io.github.antoinepirlot.satunes.ui.components.dialog.WhatsNewDialog
 import io.github.antoinepirlot.satunes.ui.theme.SatunesTheme
-import io.github.antoinepirlot.satunes.ui.viewmodels.UpdatesViewModel
+import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
 
 /**
  * @author Antoine Pirlot on 10/04/2024
@@ -59,9 +59,9 @@ import io.github.antoinepirlot.satunes.ui.viewmodels.UpdatesViewModel
 @Composable
 internal fun Satunes(
     modifier: Modifier = Modifier,
-    updatesViewModel: UpdatesViewModel = viewModel()
+    satunesViewModel: SatunesViewModel = viewModel()
 ) {
-    val updatesUiState by updatesViewModel.uiState.collectAsState()
+    val uiState by satunesViewModel.uiState.collectAsState()
 
     SatunesTheme {
         Surface(
@@ -86,16 +86,16 @@ internal fun Satunes(
                     navController = navController
                 )
 
-                if (!updatesUiState.whatsNewSeen) {
+                if (!uiState.whatsNewSeen) {
                     val context: Context = LocalContext.current
                     WhatsNewDialog(
                         onConfirm = {
                             // When app relaunch, it's not shown again
-                            updatesViewModel.seeWhatsNew(context = context, permanently = true)
+                            satunesViewModel.seeWhatsNew(context = context, permanently = true)
                         },
                         onDismiss = {
                             // When app relaunch, it's shown again
-                            updatesViewModel.seeWhatsNew(context = context)
+                            satunesViewModel.seeWhatsNew(context = context)
                         }
                     )
                 }

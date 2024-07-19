@@ -31,7 +31,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
-import io.github.antoinepirlot.satunes.ui.state.UpdatesUiState
+import io.github.antoinepirlot.satunes.ui.state.SatunesUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -40,10 +40,10 @@ import kotlinx.coroutines.flow.update
 /**
  * @author Antoine Pirlot on 19/07/2024
  */
-class UpdatesViewModel : ViewModel() {
-    private val _uiState: MutableStateFlow<UpdatesUiState> = MutableStateFlow(UpdatesUiState())
+class SatunesViewModel : ViewModel() {
+    private val _uiState: MutableStateFlow<SatunesUiState> = MutableStateFlow(SatunesUiState())
 
-    val uiState: StateFlow<UpdatesUiState> = _uiState.asStateFlow()
+    val uiState: StateFlow<SatunesUiState> = _uiState.asStateFlow()
     var whatsNewSeen: Boolean by mutableStateOf(SettingsManager.whatsNewSeen)
         private set
 

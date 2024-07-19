@@ -141,7 +141,9 @@ object SettingsManager {
         Pair(MenuTitle.PLAYLISTS, playlistsChecked)
     )
 
-    val whatsNewSeen: MutableState<Boolean> = mutableStateOf(DEFAULT_WHATS_NEW_SEEN)
+    var whatsNewSeen: Boolean = DEFAULT_WHATS_NEW_SEEN
+        private set
+
     private var whatsNewVersionSeen: String = DEFAULT_WHATS_NEW_VERSION_SEEN
 
     val foldersFilter: MutableState<Boolean> = mutableStateOf(DEFAULT_FOLDERS_FILTER)
@@ -206,15 +208,15 @@ object SettingsManager {
     }
 
     private fun loadWhatsNew(context: Context, preferences: Preferences) {
-        whatsNewSeen.value = preferences[WHATS_NEW_SEEN_KEY] ?: DEFAULT_WHATS_NEW_SEEN
+        whatsNewSeen = preferences[WHATS_NEW_SEEN_KEY] ?: DEFAULT_WHATS_NEW_SEEN
         whatsNewVersionSeen =
             preferences[WHATS_NEW_VERSION_SEEN_KEY] ?: DEFAULT_WHATS_NEW_VERSION_SEEN
-        if (whatsNewSeen.value) {
+        if (whatsNewSeen) {
             val packageManager = context.packageManager
             val packageInfo = packageManager.getPackageInfo(context.packageName, 0)
             val versionName = 'v' + packageInfo.versionName
             if (whatsNewVersionSeen != versionName) {
-                this.whatsNewSeen(context = context, seen = false)
+                this.unSeeWhatsNew(context = context)
             }
         }
     }
@@ -381,19 +383,31 @@ object SettingsManager {
         }
     }
 
-    fun whatsNewSeen(context: Context, seen: Boolean) {
+    fun seeWhatsNew(context: Context) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 context.dataStore.edit { preferences: MutablePreferences ->
-                    whatsNewSeen.value = seen
-                    preferences[WHATS_NEW_SEEN_KEY] = whatsNewSeen.value
-                    if (seen) {
-                        val packageManager = context.packageManager
-                        val packageInfo = packageManager.getPackageInfo(context.packageName, 0)
-                        val versionName = 'v' + packageInfo.versionName
-                        preferences[WHATS_NEW_VERSION_SEEN_KEY] = versionName
-                        whatsNewVersionSeen = versionName
-                    }
+                    whatsNewSeen = true
+                    preferences[WHATS_NEW_SEEN_KEY] = whatsNewSeen
+                    val packageManager = context.packageManager
+                    val packageInfo = packageManager.getPackageInfo(context.packageName, 0)
+                    val versionName = 'v' + packageInfo.versionName
+                    preferences[WHATS_NEW_VERSION_SEEN_KEY] = versionName
+                    whatsNewVersionSeen = versionName
+                }
+            } catch (e: Throwable) {
+                logger.severe(e.message)
+                throw e
+            }
+        }
+    }
+
+    private fun unSeeWhatsNew(context: Context) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                context.dataStore.edit { preferences: MutablePreferences ->
+                    whatsNewSeen = false
+                    preferences[WHATS_NEW_SEEN_KEY] = whatsNewSeen
                 }
             } catch (e: Throwable) {
                 logger.severe(e.message)

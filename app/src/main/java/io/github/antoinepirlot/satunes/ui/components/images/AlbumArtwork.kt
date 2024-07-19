@@ -31,12 +31,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -44,8 +43,8 @@ import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.icons.R
-import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.ui.ScreenSizes
+import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
 
 /**
  * @author Antoine Pirlot on 29/02/24
@@ -107,12 +106,12 @@ internal fun AlbumArtwork(
 @Composable
 internal fun MusicPlayingAlbumArtwork(
     modifier: Modifier = Modifier,
+    playbackViewModel: PlaybackViewModel = PlaybackViewModel(context = LocalContext.current),
     onClick: (album: Album?) -> Unit = { /* Do nothing by default */ }
 ) {
-    val musicPlaying: Music? by remember { PlaybackController.getInstance().musicPlaying }
     AlbumArtwork(
         modifier = modifier,
-        mediaImpl = musicPlaying!!,
+        mediaImpl = playbackViewModel.musicPlaying!!,
         onClick = onClick
     )
 }

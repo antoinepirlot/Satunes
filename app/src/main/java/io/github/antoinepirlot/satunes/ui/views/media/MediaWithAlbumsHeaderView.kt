@@ -31,6 +31,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -42,6 +43,7 @@ import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.cards.albums.AlbumGrid
 import io.github.antoinepirlot.satunes.ui.components.texts.Title
+import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
 
 /**
  * @author Antoine Pirlot on 28/05/2024
@@ -50,6 +52,7 @@ import io.github.antoinepirlot.satunes.ui.components.texts.Title
 @Composable
 internal fun MediaWithAlbumsHeaderView(
     modifier: Modifier = Modifier,
+    playbackViewModel: PlaybackViewModel = PlaybackViewModel(context = LocalContext.current),
     navController: NavHostController,
     mediaImpl: MediaImpl,
     albumList: List<Album>,
@@ -58,7 +61,13 @@ internal fun MediaWithAlbumsHeaderView(
         Title(text = mediaImpl.title)
         AlbumGrid(
             mediaList = albumList,
-            onClick = { openMedia(media = it, navController = navController) }
+            onClick = {
+                openMedia(
+                    playbackViewModel = playbackViewModel,
+                    media = mediaImpl,
+                    navController = navController
+                )
+            },
         )
         Spacer(modifier = Modifier.size(30.dp))
         Title(

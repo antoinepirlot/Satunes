@@ -28,6 +28,7 @@ package io.github.antoinepirlot.satunes.playback.services
 import android.content.ComponentName
 import android.content.Context
 import androidx.compose.runtime.MutableFloatState
+import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
@@ -65,13 +66,13 @@ class PlaybackController private constructor(
     internal var playlist: Playlist
 
     internal var musicPlayingIndex: Int = DEFAULT_MUSIC_PLAYING_INDEX
-    var isEnded: Boolean = DEFAULT_IS_ENDED
+    var isEnded: MutableState<Boolean> = mutableStateOf(DEFAULT_IS_ENDED)
 
     // Mutable var are used in ui, it needs to be recomposed
     // I use mutable to avoid using function with multiples params like to add listener
     val musicPlaying: MutableState<Music?> = mutableStateOf(DEFAULT_MUSIC_PLAYING)
     val isPlaying: MutableState<Boolean> = mutableStateOf(DEFAULT_IS_PLAYING_VALUE)
-    val repeatMode: MutableState<Int> = mutableIntStateOf(DEFAULT_REPEAT_MODE)
+    val repeatMode: MutableIntState = mutableIntStateOf(DEFAULT_REPEAT_MODE)
     val isShuffle: MutableState<Boolean> = mutableStateOf(DEFAULT_IS_SHUFFLE)
     val hasNext: MutableState<Boolean> = mutableStateOf(DEFAULT_HAS_NEXT)
     val hasPrevious: MutableState<Boolean> = mutableStateOf(DEFAULT_HAS_PREVIOUS)
@@ -220,9 +221,9 @@ class PlaybackController private constructor(
 
             return
         } else {
-            if (this.isEnded) {
+            if (this.isEnded.value) {
                 this.start()
-                this.isEnded = false
+                this.isEnded.value = false
             } else {
                 this.mediaController.play()
             }
@@ -264,7 +265,7 @@ class PlaybackController private constructor(
     }
 
     fun seekTo(positionPercentage: Float) {
-        if (this.musicPlaying.value == null || this.isEnded) {
+        if (this.musicPlaying.value == null || this.isEnded.value) {
             val message = """"
                 |Impossible to seek while no music is playing 
                 |$this"""".trimMargin()
@@ -642,21 +643,21 @@ class PlaybackController private constructor(
     }
 
     fun switchRepeatMode() {
-        when (this.repeatMode.value) {
+        when (this.repeatMode.intValue) {
             Player.REPEAT_MODE_OFF -> {
-                this.repeatMode.value = Player.REPEAT_MODE_ALL
+                this.repeatMode.intValue = Player.REPEAT_MODE_ALL
             }
 
             Player.REPEAT_MODE_ALL -> {
-                this.repeatMode.value = Player.REPEAT_MODE_ONE
+                this.repeatMode.intValue = Player.REPEAT_MODE_ONE
             }
 
             Player.REPEAT_MODE_ONE -> {
-                this.repeatMode.value = Player.REPEAT_MODE_OFF
+                this.repeatMode.intValue = Player.REPEAT_MODE_OFF
             }
         }
 
-        this.mediaController.repeatMode = this.repeatMode.value
+        this.mediaController.repeatMode = this.repeatMode.intValue
     }
 
     fun stop() {
@@ -691,7 +692,7 @@ class PlaybackController private constructor(
             musicPlayingIndex in MediaController: ${if (mediaControllerInit) mediaController.currentMediaItemIndex else "/"}
             musicPlaying != null: ${musicPlaying.value != null}
             isPlaying: ${isPlaying.value}
-            repeatMode: ${repeatMode.value}
+            repeatMode: ${repeatMode.intValue}
             isShuffle: ${isShuffle.value}
             hasNext: ${hasNext.value}
             hasPrevious: ${hasPrevious.value}
@@ -699,5 +700,12 @@ class PlaybackController private constructor(
             currentPositionProgression: ${currentPositionProgression.floatValue}
             isEnded: $isEnded
         """.trimIndent()
+    }
+
+    fun updateCurrentPosition() {
+        val maxPosition: Long = this.musicPlaying.value!!.duration
+        val newPosition: Long = this.getCurrentPosition()
+        this.currentPositionProgression.floatValue =
+            newPosition.toFloat() / maxPosition.toFloat()
     }
 }

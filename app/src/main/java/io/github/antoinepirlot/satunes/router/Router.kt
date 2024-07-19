@@ -25,31 +25,24 @@
 
 package io.github.antoinepirlot.satunes.router
 
-import android.content.Context
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.models.DEFAULT_DESTINATION
 import io.github.antoinepirlot.satunes.models.Destination
-import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.router.routes.mediaRoutes
 import io.github.antoinepirlot.satunes.router.routes.playbackRoutes
 import io.github.antoinepirlot.satunes.router.routes.searchRoutes
 import io.github.antoinepirlot.satunes.router.routes.settingsRoutes
-import io.github.antoinepirlot.satunes.ui.states.SatunesUiState
 import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
 
 /**
@@ -62,17 +55,8 @@ internal fun Router(
     navController: NavHostController,
     viewModel: SatunesViewModel = viewModel()
 ) {
-    val uiState: SatunesUiState by viewModel.uiState.collectAsState()
-
-    val context: Context = LocalContext.current
     val isAudioAllowed: MutableState<Boolean> =
         rememberSaveable { mutableStateOf(MainActivity.instance.isAudioAllowed()) }
-
-    if (isAudioAllowed.value) {
-        LaunchedEffect(key1 = Unit) {
-            PlaybackController.initInstance(context = context)
-        }
-    }
 
     NavHost(
         modifier = modifier,

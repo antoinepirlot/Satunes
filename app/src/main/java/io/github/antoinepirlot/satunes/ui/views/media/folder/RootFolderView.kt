@@ -29,22 +29,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.router.utils.openMediaFromFolder
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
 import io.github.antoinepirlot.satunes.ui.states.FoldersUiState
 import io.github.antoinepirlot.satunes.ui.viewmodels.FoldersViewModels
+import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 
 /**
@@ -55,11 +55,10 @@ import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 internal fun RootFolderView(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    viewModel: FoldersViewModels = viewModel()
+    viewModel: FoldersViewModels = FoldersViewModels(),
+    playbackViewModel: PlaybackViewModel = PlaybackViewModel(context = LocalContext.current)
 ) {
     val uiState: FoldersUiState by viewModel.uiState.collectAsState()
-    val playbackController: PlaybackController = PlaybackController.getInstance()
-
     val rootFolderSet: Set<Folder> = uiState.rootFolderSet
 
     MediaListView(
@@ -67,22 +66,30 @@ internal fun RootFolderView(
         navController = navController,
         mediaImplList = rootFolderSet.toList(),
         openMedia = { clickedMediaImpl: MediaImpl ->
-            openMediaFromFolder(clickedMediaImpl, navController = navController)
+            openMediaFromFolder(
+                media = clickedMediaImpl,
+                playbackViewModel = playbackViewModel,
+                navController = navController
+            )
         },
-        onFABClick = { openCurrentMusic(navController = navController) },
+        onFABClick = {
+            openCurrentMusic(
+                playbackViewModel = playbackViewModel,
+                navController = navController
+            )
+        },
         extraButtons = {
             if (rootFolderSet.isNotEmpty()) {
                 ExtraButton(icon = SatunesIcons.PLAY, onClick = {
-                    playbackController.loadMusicFromFolders(folders = rootFolderSet)
-                    openMedia(navController = navController)
+                    playbackViewModel.loadMusicFromFolders(folders = rootFolderSet)
+                    openMedia(playbackViewModel = playbackViewModel, navController = navController)
                 })
                 ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
-
-                    playbackController.loadMusicFromFolders(
+                    playbackViewModel.loadMusicFromFolders(
                         folders = rootFolderSet,
                         shuffleMode = true
                     )
-                    openMedia(navController = navController)
+                    openMedia(playbackViewModel = playbackViewModel, navController = navController)
                 })
             }
         },

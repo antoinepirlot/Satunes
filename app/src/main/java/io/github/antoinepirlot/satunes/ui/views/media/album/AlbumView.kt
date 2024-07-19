@@ -37,6 +37,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -49,7 +50,6 @@ import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.ScreenSizes
@@ -57,6 +57,7 @@ import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
 import io.github.antoinepirlot.satunes.ui.components.images.AlbumArtwork
 import io.github.antoinepirlot.satunes.ui.components.texts.Subtitle
 import io.github.antoinepirlot.satunes.ui.components.texts.Title
+import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 
 /**
@@ -67,11 +68,9 @@ import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 internal fun AlbumView(
     modifier: Modifier = Modifier,
     navController: NavHostController,
+    playbackViewModel: PlaybackViewModel = PlaybackViewModel(context = LocalContext.current),
     album: Album,
 ) {
-    val playbackController: PlaybackController = PlaybackController.getInstance()
-
-
     val musicMap: Map<Music, MediaItem> = album.getMusicMap()
 
     //Recompose if data changed
@@ -86,28 +85,43 @@ internal fun AlbumView(
         navController = navController,
         mediaImplList = musicMap.keys.toList(),
         openMedia = { clickedMediaImpl: MediaImpl ->
-            playbackController.loadMusic(
+            playbackViewModel.loadMusic(
                 musicMediaItemSortedMap = album.getMusicMap(),
                 musicToPlay = clickedMediaImpl as Music
             )
-            openMedia(media = clickedMediaImpl, navController = navController)
+            openMedia(
+                playbackViewModel = playbackViewModel,
+                media = clickedMediaImpl,
+                navController = navController
+            )
         },
-        onFABClick = { openCurrentMusic(navController = navController) },
+        onFABClick = {
+            openCurrentMusic(
+                playbackViewModel = playbackViewModel,
+                navController = navController
+            )
+        },
         header = {
             Header(navController = navController, album = album)
         },
         extraButtons = {
             if (album.getMusicMap().isNotEmpty()) {
                 ExtraButton(icon = SatunesIcons.PLAY, onClick = {
-                    playbackController.loadMusic(album.getMusicMap())
-                    openMedia(navController = navController)
+                    playbackViewModel.loadMusic(album.getMusicMap())
+                    openMedia(
+                        playbackViewModel = playbackViewModel,
+                        navController = navController
+                    )
                 })
                 ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
-                    playbackController.loadMusic(
+                    playbackViewModel.loadMusic(
                         musicMediaItemSortedMap = album.getMusicMap(),
                         shuffleMode = true
                     )
-                    openMedia(navController = navController)
+                    openMedia(
+                        playbackViewModel = playbackViewModel,
+                        navController = navController
+                    )
                 })
             }
         },
@@ -118,6 +132,7 @@ internal fun AlbumView(
 @Composable
 private fun Header(
     modifier: Modifier = Modifier,
+    playbackViewModel: PlaybackViewModel = PlaybackViewModel(context = LocalContext.current),
     navController: NavHostController,
     album: Album
 ) {
@@ -142,7 +157,11 @@ private fun Header(
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .clickable {
-                    openMedia(media = album.artist, navController = navController)
+                    openMedia(
+                        playbackViewModel = playbackViewModel,
+                        media = album.artist,
+                        navController = navController
+                    )
                 },
             text = album.artist!!.title
         )

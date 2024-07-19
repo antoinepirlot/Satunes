@@ -34,14 +34,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.services.MediaSelectionManager
 import io.github.antoinepirlot.satunes.ui.components.buttons.playback.CustomActionButton
 import io.github.antoinepirlot.satunes.ui.components.dialog.MediaSelectionDialog
@@ -53,6 +51,7 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.MediaSelectionDialog
 @Composable
 internal fun AddToPlaylistCustomAction(
     modifier: Modifier = Modifier,
+    music: Music,
 ) {
     val context: Context = LocalContext.current
     var showForm: Boolean by rememberSaveable { mutableStateOf(false) }
@@ -65,7 +64,6 @@ internal fun AddToPlaylistCustomAction(
     )
 
     if (showForm) {
-        //TODO
         val playlistMap: Map<String, Playlist> = DataManager.getPlaylistMap()
 
         //Recompose if data changed
@@ -80,11 +78,12 @@ internal fun AddToPlaylistCustomAction(
             onConfirm = {
                 addMusicPlayingToPlaylist(
                     context = context,
-                    checkedPlaylists = MediaSelectionManager.getCheckedPlaylistWithMusics()
+                    checkedPlaylists = MediaSelectionManager.getCheckedPlaylistWithMusics(),
+                    music = music
                 )
                 showForm = false
             },
-            mediaList = DataManager.getPlaylistMap().values.toList(),
+            mediaList = playlistMap.values.toList(),
             icon = SatunesIcons.PLAYLIST_ADD
         )
     }
@@ -92,16 +91,9 @@ internal fun AddToPlaylistCustomAction(
 
 private fun addMusicPlayingToPlaylist(
     context: Context,
-    checkedPlaylists: List<Playlist>
+    checkedPlaylists: List<Playlist>,
+    music: Music,
 ) {
-    val playbackController: PlaybackController = PlaybackController.getInstance()
-    val musicPlaying: Music = playbackController.musicPlaying.value!!
     val db = DatabaseManager(context = context)
-    db.insertMusicToPlaylists(music = musicPlaying, playlists = checkedPlaylists)
-}
-
-@Preview
-@Composable
-private fun AddToPlaylistRowButtonPreview() {
-    AddToPlaylistCustomAction()
+    db.insertMusicToPlaylists(music = music, playlists = checkedPlaylists)
 }

@@ -58,12 +58,12 @@ import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.models.SearchChips
-import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.services.search.SearchChipsManager
 import io.github.antoinepirlot.satunes.ui.components.chips.MediaChipList
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
+import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -79,6 +79,7 @@ import io.github.antoinepirlot.satunes.database.R as RDb
 internal fun SearchView(
     modifier: Modifier = Modifier,
     navController: NavHostController,
+    playbackViewModel: PlaybackViewModel = PlaybackViewModel(context = LocalContext.current),
 ) {
     val context: Context = LocalContext.current
     var query: String by rememberSaveable { mutableStateOf("") }
@@ -131,12 +132,20 @@ internal fun SearchView(
             mediaImplList = mediaImplList,
             openMedia = { mediaImpl: MediaImpl ->
                 if (mediaImpl is Music) {
-                    PlaybackController.getInstance()
-                        .loadMusic(musicMediaItemSortedMap = DataManager.getMusicMap())
+                    playbackViewModel.loadMusic(musicMediaItemSortedMap = DataManager.getMusicMap())
                 }
-                openMedia(media = mediaImpl, navController = navController)
+                openMedia(
+                    playbackViewModel = playbackViewModel,
+                    media = mediaImpl,
+                    navController = navController
+                )
             },
-            onFABClick = { openCurrentMusic(navController = navController) },
+            onFABClick = {
+                openCurrentMusic(
+                    playbackViewModel = playbackViewModel,
+                    navController = navController
+                )
+            },
             emptyViewText = stringResource(id = R.string.no_result)
         )
     }

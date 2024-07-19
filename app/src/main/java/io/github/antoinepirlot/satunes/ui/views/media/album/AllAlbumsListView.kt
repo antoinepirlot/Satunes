@@ -30,6 +30,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
@@ -39,10 +40,10 @@ import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
+import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 import java.util.SortedMap
 
@@ -54,9 +55,8 @@ import java.util.SortedMap
 internal fun AllAlbumsListView(
     modifier: Modifier = Modifier,
     navController: NavHostController,
+    playbackViewModel: PlaybackViewModel = PlaybackViewModel(context = LocalContext.current)
 ) {
-    val playbackController: PlaybackController = PlaybackController.getInstance()
-
     val albumMap: Map<Album, Album> = DataManager.getAlbumMap()
 
     //Recompose if data changed
@@ -72,24 +72,33 @@ internal fun AllAlbumsListView(
         mediaImplList = albumMap.keys.toList(),
 
         openMedia = { clickedMediaImpl: MediaImpl ->
-            openMedia(navController = navController, media = clickedMediaImpl)
+            openMedia(
+                playbackViewModel = playbackViewModel,
+                navController = navController,
+                media = clickedMediaImpl
+            )
         },
-        onFABClick = { openCurrentMusic(navController = navController) },
+        onFABClick = {
+            openCurrentMusic(
+                playbackViewModel = playbackViewModel,
+                navController = navController
+            )
+        },
         extraButtons = {
             if (albumMap.isNotEmpty()) {
                 @Suppress("UNCHECKED_CAST")
                 albumMap as SortedMap<MediaImpl, Any>
                 ExtraButton(icon = SatunesIcons.PLAY, onClick = {
-                    playbackController.loadMusicFromMedias(medias = albumMap)
-                    openMedia(navController = navController)
+                    playbackViewModel.loadMusicFromMedias(medias = albumMap)
+                    openMedia(playbackViewModel = playbackViewModel, navController = navController)
                 })
                 ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
 
-                    playbackController.loadMusicFromMedias(
+                    playbackViewModel.loadMusicFromMedias(
                         medias = albumMap,
                         shuffleMode = true
                     )
-                    openMedia(navController = navController)
+                    openMedia(playbackViewModel = playbackViewModel, navController = navController)
                 })
             }
         },

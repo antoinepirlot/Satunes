@@ -28,6 +28,7 @@ package io.github.antoinepirlot.satunes.ui.views.media.folder
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
@@ -36,12 +37,12 @@ import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.router.utils.openMediaFromFolder
 import io.github.antoinepirlot.satunes.ui.components.bars.FolderPath
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
+import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 
 /**
@@ -53,6 +54,7 @@ import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 internal fun FolderView(
     modifier: Modifier = Modifier,
     navController: NavHostController,
+    playbackViewModel: PlaybackViewModel = PlaybackViewModel(context = LocalContext.current),
     folder: Folder,
 ) {
     Column(modifier = modifier) {
@@ -61,23 +63,32 @@ internal fun FolderView(
             navController = navController,
             mediaImplList = folder.getSubFolderListWithMusics(),
             openMedia = { clickedMediaImpl: MediaImpl ->
-                openMediaFromFolder(clickedMediaImpl, navController = navController)
+                openMediaFromFolder(
+                    media = clickedMediaImpl,
+                    playbackViewModel = playbackViewModel,
+                    navController = navController
+                )
             },
-            onFABClick = { openCurrentMusic(navController = navController) },
+            onFABClick = {
+                openCurrentMusic(
+                    playbackViewModel = playbackViewModel,
+                    navController = navController
+                )
+            },
             extraButtons = {
                 if (folder.isNotEmpty()) {
                     ExtraButton(icon = SatunesIcons.PLAY, onClick = {
-                        loadPlaybackFromFolder(
-                            navController = navController,
-                            folder = folder,
-                            shuffleMode = false
+                        playbackViewModel.loadMusicFromMedia(media = folder)
+                        openMedia(
+                            playbackViewModel = playbackViewModel,
+                            navController = navController
                         )
                     })
                     ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
-                        loadPlaybackFromFolder(
-                            navController = navController,
-                            folder = folder,
-                            shuffleMode = true
+                        playbackViewModel.loadMusicFromMedia(media = folder, shuffleMode = true)
+                        openMedia(
+                            playbackViewModel = playbackViewModel,
+                            navController = navController
                         )
                     })
                 }
@@ -85,16 +96,6 @@ internal fun FolderView(
             emptyViewText = stringResource(id = R.string.no_music)
         )
     }
-}
-
-private fun loadPlaybackFromFolder(
-    navController: NavHostController,
-    folder: Folder,
-    shuffleMode: Boolean
-) {
-    val playbackController: PlaybackController = PlaybackController.getInstance()
-    playbackController.loadMusicFromMedia(media = folder, shuffleMode = shuffleMode)
-    openMedia(navController = navController)
 }
 
 @Preview

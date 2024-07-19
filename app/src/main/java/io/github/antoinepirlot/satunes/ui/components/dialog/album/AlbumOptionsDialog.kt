@@ -29,21 +29,20 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.AlertDialog
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.database.models.Album
-import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToPlaylistMediaOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToQueueDialogOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.PlayNextMediaOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.music.options.NavigateToMediaMusicOption
 import io.github.antoinepirlot.satunes.ui.components.images.AlbumArtwork
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
+import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
 
 /**
  * @author Antoine Pirlot on 07/07/2024
@@ -54,10 +53,11 @@ import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 internal fun AlbumOptionsDialog(
     modifier: Modifier = Modifier,
     navController: NavHostController,
+    playbackViewModel: PlaybackViewModel = PlaybackViewModel(context = LocalContext.current),
     album: Album,
     onDismissRequest: () -> Unit,
 
-) {
+    ) {
     AlertDialog(
         modifier = modifier,
         onDismissRequest = onDismissRequest,
@@ -73,9 +73,6 @@ internal fun AlbumOptionsDialog(
         },
         text = {
             Column {
-                val playbackController: PlaybackController = PlaybackController.getInstance()
-                val isPlaybackLoaded: Boolean by rememberSaveable { playbackController.isLoaded }
-
                 /**
                  * PlaylistDB
                  */
@@ -84,7 +81,7 @@ internal fun AlbumOptionsDialog(
                 /**
                  * Queue
                  */
-                if (isPlaybackLoaded) {
+                if (playbackViewModel.isLoaded) {
                     PlayNextMediaOption(mediaImpl = album, onFinished = onDismissRequest)
                     AddToQueueDialogOption(mediaImpl = album, onFinished = onDismissRequest)
                 }

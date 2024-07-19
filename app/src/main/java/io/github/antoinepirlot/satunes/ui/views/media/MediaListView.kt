@@ -43,10 +43,10 @@ import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
-import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.ui.components.EmptyView
 import io.github.antoinepirlot.satunes.ui.components.bars.ShowCurrentMusicButton
 import io.github.antoinepirlot.satunes.ui.components.cards.media.MediaCardList
+import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
 
 /**
  * @author Antoine Pirlot on 01/02/24
@@ -56,6 +56,7 @@ import io.github.antoinepirlot.satunes.ui.components.cards.media.MediaCardList
 internal fun MediaListView(
     modifier: Modifier = Modifier,
     navController: NavHostController,
+    playbackViewModel: PlaybackViewModel = PlaybackViewModel(context = LocalContext.current),
     mediaImplList: List<MediaImpl>,
     openMedia: (mediaImpl: MediaImpl) -> Unit,
     openedPlaylistWithMusics: Playlist? = null,
@@ -71,7 +72,7 @@ internal fun MediaListView(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 extraButtons()
-                if (PlaybackController.getInstance().musicPlaying.value != null) {
+                if (playbackViewModel.musicPlaying != null) {
                     ShowCurrentMusicButton(onClick = onFABClick)
                 }
             }

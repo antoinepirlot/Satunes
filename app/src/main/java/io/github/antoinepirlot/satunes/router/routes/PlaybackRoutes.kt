@@ -26,7 +26,7 @@
 package io.github.antoinepirlot.satunes.router.routes
 
 import androidx.compose.animation.AnimatedContentScope
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -35,6 +35,7 @@ import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.router.utils.openMedia
+import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.ui.views.LoadingView
 import io.github.antoinepirlot.satunes.ui.views.playback.PlaybackView
@@ -50,7 +51,8 @@ fun NavGraphBuilder.playbackRoutes(
 ) {
     composable(Destination.PLAYBACK.link) {
         onStart(it)
-        val viewModel: SatunesViewModel = viewModel()
+        val viewModel = SatunesViewModel()
+        val playbackViewModel = PlaybackViewModel(context = LocalContext.current)
 
         if (viewModel.isLoadingData || !viewModel.isDataLoaded) {
             LoadingView()
@@ -59,11 +61,19 @@ fun NavGraphBuilder.playbackRoutes(
                 navController = navController,
                 onAlbumClick = { album: Album? ->
                     if (album != null) {
-                        openMedia(media = album, navController = navController)
+                        openMedia(
+                            playbackViewModel = playbackViewModel,
+                            media = album,
+                            navController = navController
+                        )
                     }
                 },
                 onArtistClick = { artist: Artist ->
-                    openMedia(media = artist, navController = navController)
+                    openMedia(
+                        playbackViewModel = playbackViewModel,
+                        media = artist,
+                        navController = navController
+                    )
                 }
             )
         }

@@ -46,13 +46,13 @@ import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.services.MediaSelectionManager
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
 import io.github.antoinepirlot.satunes.ui.components.dialog.MediaSelectionDialog
 import io.github.antoinepirlot.satunes.ui.components.texts.Title
+import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 import io.github.antoinepirlot.satunes.database.R as RDb
 
@@ -64,11 +64,11 @@ import io.github.antoinepirlot.satunes.database.R as RDb
 internal fun PlaylistView(
     modifier: Modifier = Modifier,
     navController: NavHostController,
+    playbackViewModel: PlaybackViewModel = PlaybackViewModel(context = LocalContext.current),
     playlist: Playlist,
 ) {
     //TODO try using nav controller instead try to remember it in an object if possible
     var openAddMusicsDialog: Boolean by rememberSaveable { mutableStateOf(false) }
-    val playbackController: PlaybackController = PlaybackController.getInstance()
     val musicMap: Map<Music, MediaItem> = playlist.getMusicMap()
 
     //Recompose if data changed
@@ -83,14 +83,23 @@ internal fun PlaylistView(
         navController = navController,
         mediaImplList = musicMap.keys.toList(),
         openMedia = { clickedMediaImpl: MediaImpl ->
-            playbackController.loadMusic(
+            playbackViewModel.loadMusic(
                 musicMediaItemSortedMap = playlist.getMusicMap(),
                 musicToPlay = clickedMediaImpl as Music
             )
-            openMedia(media = clickedMediaImpl, navController = navController)
+            openMedia(
+                playbackViewModel = playbackViewModel,
+                media = clickedMediaImpl,
+                navController = navController
+            )
         },
         openedPlaylistWithMusics = playlist,
-        onFABClick = { openCurrentMusic(navController = navController) },
+        onFABClick = {
+            openCurrentMusic(
+                playbackViewModel = playbackViewModel,
+                navController = navController
+            )
+        },
         header = {
             val title: String = if (playlist.title == LIKES_PLAYLIST_TITLE) {
                 stringResource(id = RDb.string.likes_playlist_title)
@@ -103,15 +112,15 @@ internal fun PlaylistView(
             ExtraButton(icon = SatunesIcons.ADD, onClick = { openAddMusicsDialog = true })
             if (playlist.getMusicMap().isNotEmpty()) {
                 ExtraButton(icon = SatunesIcons.PLAY, onClick = {
-                    playbackController.loadMusic(musicMediaItemSortedMap = playlist.getMusicMap())
-                    openMedia(navController = navController)
+                    playbackViewModel.loadMusic(musicMediaItemSortedMap = playlist.getMusicMap())
+                    openMedia(playbackViewModel = playbackViewModel, navController = navController)
                 })
                 ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
-                    playbackController.loadMusic(
+                    playbackViewModel.loadMusic(
                         musicMediaItemSortedMap = playlist.getMusicMap(),
                         shuffleMode = true
                     )
-                    openMedia(navController = navController)
+                    openMedia(playbackViewModel = playbackViewModel, navController = navController)
                 })
             }
         },

@@ -26,8 +26,8 @@
 package io.github.antoinepirlot.satunes.ui.views.playback.common
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
@@ -35,10 +35,10 @@ import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.cards.media.MediaCardList
 import io.github.antoinepirlot.satunes.ui.components.texts.Title
+import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
 
 /**
  * @author Antoine Pirlot on 23/06/2024
@@ -48,8 +48,10 @@ import io.github.antoinepirlot.satunes.ui.components.texts.Title
 internal fun PlaybackQueueView(
     modifier: Modifier = Modifier,
     navController: NavHostController,
+    playbackViewModel: PlaybackViewModel = PlaybackViewModel(context = LocalContext.current),
 ) {
-    val playbackPlaylist: List<Music> = remember { PlaybackController.getInstance().getPlaylist() }
+    val playbackPlaylist: List<Music> = playbackViewModel.getPlaylist()
+
     MediaCardList(
         modifier = modifier,
         navController = navController,
@@ -58,6 +60,7 @@ internal fun PlaybackQueueView(
         mediaImplList = playbackPlaylist,
         openMedia = { mediaImpl: MediaImpl ->
             openMedia(
+                playbackViewModel = playbackViewModel,
                 mediaImpl,
                 navigate = false,
                 navController = null

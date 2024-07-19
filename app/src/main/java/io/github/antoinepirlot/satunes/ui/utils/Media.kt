@@ -39,7 +39,7 @@ import io.github.antoinepirlot.satunes.icons.SatunesIcons.FOLDER
 import io.github.antoinepirlot.satunes.icons.SatunesIcons.GENRES
 import io.github.antoinepirlot.satunes.icons.SatunesIcons.MUSIC
 import io.github.antoinepirlot.satunes.icons.SatunesIcons.PLAYLIST
-import io.github.antoinepirlot.satunes.playback.services.PlaybackController
+import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
 
 /**
  * @author Antoine Pirlot on 27/01/24
@@ -51,20 +51,21 @@ import io.github.antoinepirlot.satunes.playback.services.PlaybackController
  * @param mediaToPlay the music to play from the music list
  */
 
-internal fun startMusic(mediaToPlay: MediaImpl? = null) {
-    val playbackController = PlaybackController.getInstance()
-
+internal fun startMusic(
+    playbackViewModel: PlaybackViewModel,
+    mediaToPlay: MediaImpl? = null
+) {
     when (mediaToPlay) {
         is Music -> {
-            playbackController.start(mediaToPlay)
+            playbackViewModel.start(mediaToPlay)
         }
 
         is Folder -> {
-            playbackController.start()
+            playbackViewModel.start()
         }
 
         null -> {
-            playbackController.start()
+            playbackViewModel.start()
         }
     }
 }

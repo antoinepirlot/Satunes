@@ -31,12 +31,13 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Playlist
-import io.github.antoinepirlot.satunes.playback.services.PlaybackController
+import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
 
 /**
  * @author Antoine Pirlot on 16/01/24
@@ -46,6 +47,7 @@ import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 internal fun MediaCardList(
     modifier: Modifier = Modifier,
     navController: NavHostController,
+    playbackViewModel: PlaybackViewModel = PlaybackViewModel(context = LocalContext.current),
     header: @Composable (() -> Unit)? = null,
     mediaImplList: List<MediaImpl>,
     openMedia: (mediaImpl: MediaImpl) -> Unit,
@@ -85,7 +87,7 @@ internal fun MediaCardList(
     if (scrollToMusicPlaying) {
         LaunchedEffect(key1 = Unit) {
             lazyListState.scrollToItem(
-                PlaybackController.getInstance().getMusicPlayingIndexPosition()
+                playbackViewModel.getMusicPlayingIndexPosition()
             )
         }
     }

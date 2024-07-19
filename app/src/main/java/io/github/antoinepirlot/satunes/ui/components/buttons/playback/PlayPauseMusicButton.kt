@@ -28,12 +28,11 @@ package io.github.antoinepirlot.satunes.ui.components.buttons.playback
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.playback.services.PlaybackController
+import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
 
 /**
  * @author Antoine Pirlot on 01/06/2024
@@ -41,14 +40,14 @@ import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 
 @Composable
 internal fun PlayPauseMusicButton(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    playbackViewModel: PlaybackViewModel = PlaybackViewModel(context = LocalContext.current),
 ) {
-    val playbackController: PlaybackController = PlaybackController.getInstance()
-    val isPlaying: Boolean by rememberSaveable { playbackController.isPlaying }
+    val isPlaying: Boolean = playbackViewModel.isPlaying
 
     IconButton(
         modifier = modifier,
-        onClick = { playbackController.playPause() }
+        onClick = { playbackViewModel.playPause() }
     ) {
         val icon: SatunesIcons =
             getPlayPauseIconWithDescription(isPlaying = isPlaying)

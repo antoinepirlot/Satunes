@@ -309,6 +309,11 @@ class PlaybackController private constructor(
         folders.forEach { folder: Folder ->
             musicMediaItemSortedMap.putAll(folder.getAllMusic())
         }
+        loadMusic(
+            musicMediaItemSortedMap = musicMediaItemSortedMap,
+            shuffleMode = shuffleMode,
+            musicToPlay = musicToPlay
+        )
     }
 
     /**

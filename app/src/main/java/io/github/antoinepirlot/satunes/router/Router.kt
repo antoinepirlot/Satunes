@@ -25,14 +25,17 @@
 
 package io.github.antoinepirlot.satunes.router
 
+import android.content.Context
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -53,10 +56,18 @@ import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
 internal fun Router(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    viewModel: SatunesViewModel = viewModel()
+    satunesViewModel: SatunesViewModel = viewModel(),
 ) {
+    val context: Context = LocalContext.current
     val isAudioAllowed: MutableState<Boolean> =
         rememberSaveable { mutableStateOf(MainActivity.instance.isAudioAllowed()) }
+
+    if (isAudioAllowed.value) {
+        LaunchedEffect(key1 = Unit) {
+            satunesViewModel.loadAllData(context = context)
+        }
+    }
+
 
     NavHost(
         modifier = modifier,
@@ -69,28 +80,28 @@ internal fun Router(
             navController = navController,
             onStart = {
                 checkIfAllowed(isAudioAllowed = isAudioAllowed.value, navController = navController)
-                viewModel.setCurrentDestination(destination = it.destination.route!!)
+                satunesViewModel.setCurrentDestination(destination = it.destination.route!!)
             }
         )
         searchRoutes(
             navController = navController,
             onStart = {
                 checkIfAllowed(isAudioAllowed = isAudioAllowed.value, navController = navController)
-                viewModel.setCurrentDestination(destination = it.destination.route!!)
+                satunesViewModel.setCurrentDestination(destination = it.destination.route!!)
             }
         )
         playbackRoutes(
             navController = navController,
             onStart = {
                 checkIfAllowed(isAudioAllowed = isAudioAllowed.value, navController = navController)
-                viewModel.setCurrentDestination(destination = it.destination.route!!)
+                satunesViewModel.setCurrentDestination(destination = it.destination.route!!)
             }
         )
         settingsRoutes(
             navController = navController,
             isAudioAllowed = isAudioAllowed,
             onStart = {
-                viewModel.setCurrentDestination(destination = it.destination.route!!)
+                satunesViewModel.setCurrentDestination(destination = it.destination.route!!)
             }
         )
     }

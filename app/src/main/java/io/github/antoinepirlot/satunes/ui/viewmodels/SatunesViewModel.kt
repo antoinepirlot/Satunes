@@ -74,4 +74,7 @@ internal class SatunesViewModel : ViewModel() {
         }
     }
 
+    fun loadAllData(context: Context) {
+        DataLoader.loadAllData(context = context)
+    }
 }

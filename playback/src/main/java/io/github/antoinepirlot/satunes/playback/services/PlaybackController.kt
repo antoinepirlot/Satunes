@@ -42,7 +42,6 @@ import androidx.media3.session.SessionToken
 import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.playback.exceptions.AlreadyInPlaybackException
@@ -147,15 +146,6 @@ class PlaybackController private constructor(
             }
 
             instance.listener = listener ?: instance.listener
-
-            if (!DataLoader.isLoaded.value && !DataLoader.isLoading.value) {
-                DataLoader.loadAllData(context.applicationContext)
-            } else {
-                logger.warning(
-                    """isLoaded: ${DataLoader.isLoaded.value},
-                        | isLoading: ${DataLoader.isLoading.value}""".trimMargin()
-                )
-            }
 
             return getInstance()
         }

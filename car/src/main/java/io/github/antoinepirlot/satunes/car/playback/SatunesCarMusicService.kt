@@ -94,6 +94,7 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
         routeDeque.resetRouteDeque()
 
         //Init playback
+        DataLoader.loadAllData(context = baseContext)
         playbackController =
             PlaybackController.initInstance(baseContext, listener = SatunesPlaybackListener)
         while (DataLoader.isLoading.value) {

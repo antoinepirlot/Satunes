@@ -37,13 +37,17 @@ import android.provider.DocumentsContract
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.OptIn
+import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.media3.common.util.UnstableApi
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.database.services.data.DataCleanerManager
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.playback.services.PlaybackService
+import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
+import io.github.antoinepirlot.satunes.ui.viewmodels.factories.PlaybackViewModelFactory
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import io.github.antoinepirlot.satunes.utils.utils.showToastOnUiThread
 import kotlinx.coroutines.CoroutineScope
@@ -88,6 +92,8 @@ internal class MainActivity : ComponentActivity() {
         setNotificationOnClick()
         SettingsManager.loadSettings(context = this)
         setContent {
+            //Init viewModel that needs context
+            viewModel<PlaybackViewModel>(factory = PlaybackViewModelFactory(context = LocalContext.current))
             Satunes()
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

@@ -27,6 +27,7 @@ package io.github.antoinepirlot.satunes.ui.components.dialog.folder
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -57,6 +58,7 @@ internal fun FolderOptionsDialog(
         confirmButton = { /* Nothing */ },
         icon = {
             val icon: SatunesIcons = SatunesIcons.FOLDER
+            Icon(imageVector = icon.imageVector, contentDescription = icon.description)
         },
         title = {
             val title: String = if (folder.parentFolder == null) {

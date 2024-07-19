@@ -26,7 +26,7 @@
 package io.github.antoinepirlot.satunes.ui.viewmodels
 
 import androidx.lifecycle.ViewModel
-import io.github.antoinepirlot.satunes.ui.states.MediasUiState
+import io.github.antoinepirlot.satunes.ui.states.FoldersUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -34,8 +34,8 @@ import kotlinx.coroutines.flow.asStateFlow
 /**
  * @author Antoine Pirlot on 19/07/2024
  */
-internal class MediasViewModels : ViewModel() {
-    private val _uiState: MutableStateFlow<MediasUiState> = MutableStateFlow(MediasUiState())
+internal class FoldersViewModels : ViewModel() {
+    private val _uiState: MutableStateFlow<FoldersUiState> = MutableStateFlow(FoldersUiState())
 
-    val uiState: StateFlow<MediasUiState> = _uiState.asStateFlow()
+    val uiState: StateFlow<FoldersUiState> = _uiState.asStateFlow()
 }

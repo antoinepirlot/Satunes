@@ -27,13 +27,9 @@ package io.github.antoinepirlot.satunes.ui.views.media.folder
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.media3.common.MediaItem
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
@@ -61,25 +57,11 @@ internal fun FolderView(
     navController: NavHostController,
     folder: Folder,
 ) {
-    val playbackController: PlaybackController = PlaybackController.getInstance()
-    val folderMusicMediaItemSortedMap: Map<Music, MediaItem> = folder.getMusicMap()
-
-    //Recompose if data changed
-    var mapChanged: Boolean by rememberSaveable { folder.musicMediaItemMapUpdate }
-    if (mapChanged) {
-        mapChanged = false
-    }
-    //
-
     val subMediaImplMap: SortedSet<MediaImpl> = sortedSetOf()
 
     Column(modifier = modifier) {
         FolderPath(folder)
-        loadSubFolders(
-            subMediaImplMap = subMediaImplMap,
-            folder = folder,
-            folderMusicMediaItemSortedMap = folderMusicMediaItemSortedMap
-        )
+        loadSubFolders(subMediaImplMap = subMediaImplMap, folder = folder)
         MediaListView(
             navController = navController,
             mediaImplList = subMediaImplMap.toList(),
@@ -120,16 +102,12 @@ private fun loadPlaybackFromFolder(
     openMedia(navController = navController)
 }
 
-private fun loadSubFolders(
-    subMediaImplMap: SortedSet<MediaImpl>,
-    folder: Folder,
-    folderMusicMediaItemSortedMap: Map<Music, MediaItem>
-) {
+private fun loadSubFolders(subMediaImplMap: SortedSet<MediaImpl>, folder: Folder) {
     //Load sub-folders
     subMediaImplMap.addAll(folder.getSubFolderMapAsMediaImpl().values)
 
     //Load sub-folder's musics
-    folderMusicMediaItemSortedMap.forEach { (music: Music, _) ->
+    folder.getAllMusic().forEach { (music: Music, _) ->
         subMediaImplMap.add(music)
     }
 }

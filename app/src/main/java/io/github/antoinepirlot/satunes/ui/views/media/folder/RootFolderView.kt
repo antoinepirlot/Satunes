@@ -45,8 +45,8 @@ import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.router.utils.openMediaFromFolder
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
-import io.github.antoinepirlot.satunes.ui.states.MediasUiState
-import io.github.antoinepirlot.satunes.ui.viewmodels.MediasViewModels
+import io.github.antoinepirlot.satunes.ui.states.FoldersUiState
+import io.github.antoinepirlot.satunes.ui.viewmodels.FoldersViewModels
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 
 /**
@@ -57,9 +57,9 @@ import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 internal fun RootFolderView(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    viewModel: MediasViewModels = viewModel()
+    viewModel: FoldersViewModels = viewModel()
 ) {
-    val uiState: MediasUiState by viewModel.uiState.collectAsState()
+    val uiState: FoldersUiState by viewModel.uiState.collectAsState()
     val playbackController: PlaybackController = PlaybackController.getInstance()
 
     val rootFolderSet: Set<Folder> = uiState.rootFolderSet

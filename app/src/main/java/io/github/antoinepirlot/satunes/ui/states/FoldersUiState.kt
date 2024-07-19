@@ -31,6 +31,6 @@ import io.github.antoinepirlot.satunes.database.services.data.DataManager
 /**
  * @author Antoine Pirlot on 19/07/2024
  */
-internal data class MediasUiState(
+internal data class FoldersUiState(
     val rootFolderSet: Set<Folder> = DataManager.getRootFolderSet(),
 )

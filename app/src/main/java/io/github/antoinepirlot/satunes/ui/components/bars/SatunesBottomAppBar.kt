@@ -42,6 +42,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import io.github.antoinepirlot.satunes.data.menuTitleLists
 import io.github.antoinepirlot.satunes.database.models.MenuTitle
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.models.Destination
@@ -58,15 +59,6 @@ internal fun SatunesBottomAppBar(
     modifier: Modifier = Modifier,
     navController: NavHostController
 ) {
-    val menuTitleLists: MutableList<MenuTitle> = mutableListOf(
-        MenuTitle.FOLDERS,
-        MenuTitle.ARTISTS,
-        MenuTitle.ALBUMS,
-        MenuTitle.GENRES,
-        MenuTitle.MUSICS,
-        MenuTitle.PLAYLISTS
-    )
-
     SettingsManager.menuTitleCheckedMap.forEach { (menuTitle: MenuTitle, checked: MutableState<Boolean>) ->
         if (!checked.value) {
             menuTitleLists.remove(menuTitle)

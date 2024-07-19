@@ -54,8 +54,8 @@ import java.io.File
 object DataLoader {
     private val URI: Uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
 
-    var isLoaded: MutableState<Boolean> = mutableStateOf(false)
-    var isLoading: MutableState<Boolean> = mutableStateOf(false)
+    val isLoaded: MutableState<Boolean> = mutableStateOf(false)
+    val isLoading: MutableState<Boolean> = mutableStateOf(false)
 
     // Music variables
     private var musicIdColumn: Int? = null

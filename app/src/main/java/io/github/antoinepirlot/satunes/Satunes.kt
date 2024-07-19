@@ -48,6 +48,7 @@ import io.github.antoinepirlot.satunes.router.Router
 import io.github.antoinepirlot.satunes.ui.components.bars.SatunesBottomAppBar
 import io.github.antoinepirlot.satunes.ui.components.bars.SatunesTopAppBar
 import io.github.antoinepirlot.satunes.ui.components.dialog.WhatsNewDialog
+import io.github.antoinepirlot.satunes.ui.state.SatunesUiState
 import io.github.antoinepirlot.satunes.ui.theme.SatunesTheme
 import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
 
@@ -61,7 +62,7 @@ internal fun Satunes(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel()
 ) {
-    val uiState by satunesViewModel.uiState.collectAsState()
+    val uiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
 
     SatunesTheme {
         Surface(

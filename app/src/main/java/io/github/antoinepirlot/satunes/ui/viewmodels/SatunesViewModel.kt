@@ -26,10 +26,10 @@
 package io.github.antoinepirlot.satunes.ui.viewmodels
 
 import android.content.Context
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.ui.state.SatunesUiState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -42,10 +42,13 @@ import kotlinx.coroutines.flow.update
  */
 class SatunesViewModel : ViewModel() {
     private val _uiState: MutableStateFlow<SatunesUiState> = MutableStateFlow(SatunesUiState())
+    private val _isLoadingData: MutableState<Boolean> = DataLoader.isLoading
+    private val _isDataLoaded: MutableState<Boolean> = DataLoader.isLoaded
 
     val uiState: StateFlow<SatunesUiState> = _uiState.asStateFlow()
-    var whatsNewSeen: Boolean by mutableStateOf(SettingsManager.whatsNewSeen)
-        private set
+
+    val isLoadingData: Boolean by _isLoadingData
+    val isDataLoaded: Boolean by _isDataLoaded
 
     fun seeWhatsNew(context: Context, permanently: Boolean = false) {
         if (permanently) {

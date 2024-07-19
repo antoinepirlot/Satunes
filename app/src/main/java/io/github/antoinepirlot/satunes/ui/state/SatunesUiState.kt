@@ -31,5 +31,5 @@ import io.github.antoinepirlot.satunes.database.services.settings.SettingsManage
  * @author Antoine Pirlot on 19/07/2024
  */
 data class SatunesUiState(
-    val whatsNewSeen: Boolean = SettingsManager.whatsNewSeen
+    val whatsNewSeen: Boolean = SettingsManager.whatsNewSeen,
 )

@@ -30,7 +30,7 @@ import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -40,9 +40,9 @@ import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.Playlist
-import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.models.Destination
+import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.ui.views.LoadingView
 import io.github.antoinepirlot.satunes.ui.views.media.album.AlbumView
 import io.github.antoinepirlot.satunes.ui.views.media.album.AllAlbumsListView
@@ -67,9 +67,9 @@ internal fun NavGraphBuilder.mediaRoutes(
     composable(Destination.FOLDERS.link) {
         // /!\ This route prevent back gesture to exit the app
         onStart(it)
-        val isLoading: Boolean by rememberSaveable { DataLoader.isLoading }
-        val isLoaded: Boolean by rememberSaveable { DataLoader.isLoaded }
-        if (isLoading || !isLoaded) {
+        val viewModel: SatunesViewModel = viewModel()
+
+        if (viewModel.isLoadingData || !viewModel.isDataLoaded) {
             LoadingView()
         } else {
             RootFolderView(navController = navController)
@@ -78,9 +78,9 @@ internal fun NavGraphBuilder.mediaRoutes(
 
     composable("${Destination.FOLDERS.link}/{id}") {
         onStart(it)
-        val isLoading: Boolean by rememberSaveable { DataLoader.isLoading }
-        val isLoaded: Boolean by rememberSaveable { DataLoader.isLoaded }
-        if (isLoading || !isLoaded) {
+        val viewModel: SatunesViewModel = viewModel()
+
+        if (viewModel.isLoadingData || !viewModel.isDataLoaded) {
             LoadingView()
         } else {
             val folderId = it.arguments!!.getString("id")!!.toLong()
@@ -97,9 +97,9 @@ internal fun NavGraphBuilder.mediaRoutes(
 
     composable(Destination.ARTISTS.link) {
         onStart(it)
-        val isLoading: Boolean by rememberSaveable { DataLoader.isLoading }
-        val isLoaded: Boolean by rememberSaveable { DataLoader.isLoaded }
-        if (isLoading || !isLoaded) {
+        val viewModel: SatunesViewModel = viewModel()
+
+        if (viewModel.isLoadingData || !viewModel.isDataLoaded) {
             LoadingView()
         } else {
             AllArtistsListView(navController = navController)
@@ -108,9 +108,9 @@ internal fun NavGraphBuilder.mediaRoutes(
 
     composable("${Destination.ARTISTS.link}/{name}") {
         onStart(it)
-        val isLoading: Boolean by rememberSaveable { DataLoader.isLoading }
-        val isLoaded: Boolean by rememberSaveable { DataLoader.isLoaded }
-        if (isLoading || !isLoaded) {
+        val viewModel: SatunesViewModel = viewModel()
+
+        if (viewModel.isLoadingData || !viewModel.isDataLoaded) {
             LoadingView()
         } else {
             val artistName: String = decode(it.arguments!!.getString("name")!!)
@@ -127,9 +127,9 @@ internal fun NavGraphBuilder.mediaRoutes(
 
     composable(Destination.ALBUMS.link) {
         onStart(it)
-        val isLoading: Boolean by rememberSaveable { DataLoader.isLoading }
-        val isLoaded: Boolean by rememberSaveable { DataLoader.isLoaded }
-        if (isLoading || !isLoaded) {
+        val viewModel: SatunesViewModel = viewModel()
+
+        if (viewModel.isLoadingData || !viewModel.isDataLoaded) {
             LoadingView()
         } else {
             AllAlbumsListView(navController = navController)
@@ -138,9 +138,9 @@ internal fun NavGraphBuilder.mediaRoutes(
 
     composable("${Destination.ALBUMS.link}/{id}") {
         onStart(it)
-        val isLoading: Boolean by rememberSaveable { DataLoader.isLoading }
-        val isLoaded: Boolean by rememberSaveable { DataLoader.isLoaded }
-        if (isLoading || !isLoaded) {
+        val viewModel: SatunesViewModel = viewModel()
+
+        if (viewModel.isLoadingData || !viewModel.isDataLoaded) {
             LoadingView()
         } else {
             val albumId: Long = it.arguments!!.getString("id")!!.toLong()
@@ -151,9 +151,9 @@ internal fun NavGraphBuilder.mediaRoutes(
 
     composable(Destination.GENRES.link) {
         onStart(it)
-        val isLoading: Boolean by rememberSaveable { DataLoader.isLoading }
-        val isLoaded: Boolean by rememberSaveable { DataLoader.isLoaded }
-        if (isLoading || !isLoaded) {
+        val viewModel: SatunesViewModel = viewModel()
+
+        if (viewModel.isLoadingData || !viewModel.isDataLoaded) {
             LoadingView()
         } else {
             AllGenresListView(navController = navController)
@@ -162,9 +162,9 @@ internal fun NavGraphBuilder.mediaRoutes(
 
     composable("${Destination.GENRES.link}/{name}") {
         onStart(it)
-        val isLoading: Boolean by rememberSaveable { DataLoader.isLoading }
-        val isLoaded: Boolean by rememberSaveable { DataLoader.isLoaded }
-        if (isLoading || !isLoaded) {
+        val viewModel: SatunesViewModel = viewModel()
+
+        if (viewModel.isLoadingData || !viewModel.isDataLoaded) {
             LoadingView()
         } else {
             val genreName: String = decode(it.arguments!!.getString("name")!!)
@@ -175,9 +175,9 @@ internal fun NavGraphBuilder.mediaRoutes(
 
     composable(Destination.PLAYLISTS.link) {
         onStart(it)
-        val isLoading: Boolean by rememberSaveable { DataLoader.isLoading }
-        val isLoaded: Boolean by rememberSaveable { DataLoader.isLoaded }
-        if (isLoading || !isLoaded) {
+        val viewModel: SatunesViewModel = viewModel()
+
+        if (viewModel.isLoadingData || !viewModel.isDataLoaded) {
             LoadingView()
         } else {
             PlaylistListView(navController = navController)
@@ -186,9 +186,9 @@ internal fun NavGraphBuilder.mediaRoutes(
 
     composable("${Destination.PLAYLISTS.link}/{id}") {
         onStart(it)
-        val isLoading: Boolean by rememberSaveable { DataLoader.isLoading }
-        val isLoaded: Boolean by rememberSaveable { DataLoader.isLoaded }
-        if (isLoading || !isLoaded) {
+        val viewModel: SatunesViewModel = viewModel()
+
+        if (viewModel.isLoadingData || !viewModel.isDataLoaded) {
             LoadingView()
         } else {
             val playlistId: Long = it.arguments!!.getString("id")!!.toLong()
@@ -201,9 +201,9 @@ internal fun NavGraphBuilder.mediaRoutes(
 
     composable(Destination.MUSICS.link) {
         onStart(it)
-        val isLoading: Boolean by rememberSaveable { DataLoader.isLoading }
-        val isLoaded: Boolean by rememberSaveable { DataLoader.isLoaded }
-        if (isLoading || !isLoaded) {
+        val viewModel: SatunesViewModel = viewModel()
+
+        if (viewModel.isLoadingData || !viewModel.isDataLoaded) {
             LoadingView()
         } else {
             AllMusicsListView(navController = navController)

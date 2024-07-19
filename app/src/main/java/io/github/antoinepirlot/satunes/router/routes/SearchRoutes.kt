@@ -26,14 +26,13 @@
 package io.github.antoinepirlot.satunes.router.routes
 
 import androidx.compose.animation.AnimatedContentScope
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
-import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.models.Destination
+import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.ui.views.LoadingView
 import io.github.antoinepirlot.satunes.ui.views.search.SearchView
 
@@ -47,9 +46,9 @@ internal fun NavGraphBuilder.searchRoutes(
 ) {
     composable(Destination.SEARCH.link) {
         onStart(it)
-        val isLoading: Boolean by rememberSaveable { DataLoader.isLoading }
-        val isLoaded: Boolean by rememberSaveable { DataLoader.isLoaded }
-        if (isLoading || !isLoaded) {
+        val viewModel: SatunesViewModel = viewModel()
+
+        if (viewModel.isLoadingData || !viewModel.isDataLoaded) {
             LoadingView()
         } else {
             SearchView(navController = navController)

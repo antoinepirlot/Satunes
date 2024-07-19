@@ -26,10 +26,12 @@
 package io.github.antoinepirlot.satunes.ui.state
 
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
+import io.github.antoinepirlot.satunes.models.DEFAULT_DESTINATION
 
 /**
  * @author Antoine Pirlot on 19/07/2024
  */
-data class SatunesUiState(
+internal data class SatunesUiState(
     val whatsNewSeen: Boolean = SettingsManager.whatsNewSeen,
+    val currentDestination: String = DEFAULT_DESTINATION
 )

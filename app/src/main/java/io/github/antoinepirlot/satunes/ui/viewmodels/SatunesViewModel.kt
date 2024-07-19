@@ -32,6 +32,7 @@ import androidx.lifecycle.ViewModel
 import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.ui.state.SatunesUiState
+import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -40,10 +41,11 @@ import kotlinx.coroutines.flow.update
 /**
  * @author Antoine Pirlot on 19/07/2024
  */
-class SatunesViewModel : ViewModel() {
+internal class SatunesViewModel : ViewModel() {
     private val _uiState: MutableStateFlow<SatunesUiState> = MutableStateFlow(SatunesUiState())
     private val _isLoadingData: MutableState<Boolean> = DataLoader.isLoading
     private val _isDataLoaded: MutableState<Boolean> = DataLoader.isLoaded
+    private val _logger: SatunesLogger = SatunesLogger(this::class.java.name)
 
     val uiState: StateFlow<SatunesUiState> = _uiState.asStateFlow()
 
@@ -54,8 +56,16 @@ class SatunesViewModel : ViewModel() {
         if (permanently) {
             SettingsManager.seeWhatsNew(context = context)
         }
-        _uiState.update { currentState ->
+        _uiState.update { currentState: SatunesUiState ->
             currentState.copy(whatsNewSeen = true)
         }
     }
+
+    fun setCurrentDestination(destination: String) {
+
+        _uiState.update { currentState: SatunesUiState ->
+            currentState.copy(currentDestination = destination)
+        }
+    }
+
 }

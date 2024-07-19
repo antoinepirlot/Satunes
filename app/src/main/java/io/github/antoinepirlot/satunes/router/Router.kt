@@ -32,20 +32,25 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import io.github.antoinepirlot.satunes.MainActivity
+import io.github.antoinepirlot.satunes.models.DEFAULT_DESTINATION
 import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.router.routes.mediaRoutes
 import io.github.antoinepirlot.satunes.router.routes.playbackRoutes
 import io.github.antoinepirlot.satunes.router.routes.searchRoutes
 import io.github.antoinepirlot.satunes.router.routes.settingsRoutes
-import io.github.antoinepirlot.satunes.services.RoutesManager
+import io.github.antoinepirlot.satunes.ui.state.SatunesUiState
+import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
 
 /**
  * @author Antoine Pirlot on 23-01-24
@@ -55,7 +60,10 @@ import io.github.antoinepirlot.satunes.services.RoutesManager
 internal fun Router(
     modifier: Modifier = Modifier,
     navController: NavHostController,
+    viewModel: SatunesViewModel = viewModel()
 ) {
+    val uiState: SatunesUiState by viewModel.uiState.collectAsState()
+
     val context: Context = LocalContext.current
     val isAudioAllowed: MutableState<Boolean> =
         rememberSaveable { mutableStateOf(MainActivity.instance.isAudioAllowed()) }
@@ -69,7 +77,7 @@ internal fun Router(
     NavHost(
         modifier = modifier,
         navController = navController,
-        startDestination = Destination.FOLDERS.link,
+        startDestination = DEFAULT_DESTINATION,
         enterTransition = { fadeIn(animationSpec = tween(500)) },
         exitTransition = { fadeOut(animationSpec = tween(0)) },
     ) {
@@ -77,28 +85,28 @@ internal fun Router(
             navController = navController,
             onStart = {
                 checkIfAllowed(isAudioAllowed = isAudioAllowed.value, navController = navController)
-                RoutesManager.currentDestination.value = it.destination.route
+                viewModel.setCurrentDestination(destination = it.destination.route!!)
             }
         )
         searchRoutes(
             navController = navController,
             onStart = {
                 checkIfAllowed(isAudioAllowed = isAudioAllowed.value, navController = navController)
-                RoutesManager.currentDestination.value = it.destination.route
+                viewModel.setCurrentDestination(destination = it.destination.route!!)
             }
         )
         playbackRoutes(
             navController = navController,
             onStart = {
                 checkIfAllowed(isAudioAllowed = isAudioAllowed.value, navController = navController)
-                RoutesManager.currentDestination.value = it.destination.route
+                viewModel.setCurrentDestination(destination = it.destination.route!!)
             }
         )
         settingsRoutes(
             navController = navController,
             isAudioAllowed = isAudioAllowed,
             onStart = {
-                RoutesManager.currentDestination.value = it.destination.route
+                viewModel.setCurrentDestination(destination = it.destination.route!!)
             }
         )
     }

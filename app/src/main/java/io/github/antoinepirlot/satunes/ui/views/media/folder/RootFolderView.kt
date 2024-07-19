@@ -26,9 +26,12 @@
 package io.github.antoinepirlot.satunes.ui.views.media.folder
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.media3.common.MediaItem
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -36,13 +39,14 @@ import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.router.utils.openMediaFromFolder
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
+import io.github.antoinepirlot.satunes.ui.states.MediasUiState
+import io.github.antoinepirlot.satunes.ui.viewmodels.MediasViewModels
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 
 /**
@@ -53,10 +57,12 @@ import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 internal fun RootFolderView(
     modifier: Modifier = Modifier,
     navController: NavHostController,
+    viewModel: MediasViewModels = viewModel()
 ) {
+    val uiState: MediasUiState by viewModel.uiState.collectAsState()
     val playbackController: PlaybackController = PlaybackController.getInstance()
 
-    val rootFolderSet: Set<Folder> = DataManager.getRootFolderSet()
+    val rootFolderSet: Set<Folder> = uiState.rootFolderSet
 
     MediaListView(
         modifier = modifier,
@@ -70,9 +76,7 @@ internal fun RootFolderView(
             if (rootFolderSet.isNotEmpty()) {
                 ExtraButton(icon = SatunesIcons.PLAY, onClick = {
                     playbackController.loadMusic(
-                        musicMediaItemSortedMap = getFolderMusicsMap(
-                            folderSet = rootFolderSet
-                        )
+                        musicMediaItemSortedMap = getFolderMusicsMap(folderSet = rootFolderSet)
                     )
                     openMedia(navController = navController)
                 })

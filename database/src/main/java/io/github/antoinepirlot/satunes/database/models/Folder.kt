@@ -144,7 +144,7 @@ class Folder(
      * #1 musics from this current folder sorted by name
      * #2 musics from each subfolder sorted by name and by folder
      */
-    fun getAllMusic(): MutableMap<Music, MediaItem> {
+    fun getAllMusic(): Map<Music, MediaItem> {
         val musicMediaMap: MutableMap<Music, MediaItem> = mutableMapOf()
 
         musicMediaMap.putAll(this.musicMediaItemMap)

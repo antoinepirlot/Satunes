@@ -293,13 +293,44 @@ class PlaybackController private constructor(
     }
 
     /**
-     * Add all music from medias to the mediaController in the same order.
+     * Add all music from folders to the mediaController in the same order.
      * If the shuffle mode is true then shuffle the playlist
      *
-     * @param medias the medias to load
+     * @param folders Set to load
      * @param shuffleMode indicate if the playlistDB has to be started in shuffle mode by default false
      * @param musicToPlay the music to play
      */
+    fun loadMusicFromFolders(
+        folders: Set<Folder>,
+        shuffleMode: Boolean = SettingsManager.shuffleMode.value,
+        musicToPlay: Music? = null
+    ) {
+        val musicMediaItemSortedMap: MutableMap<Music, MediaItem> = mutableMapOf()
+        folders.forEach { folder: Folder ->
+            musicMediaItemSortedMap.putAll(folder.getAllMusic())
+        }
+    }
+
+    /**
+     * Add all music from folder to the mediaController.
+     * If the shuffle mode is true then shuffle the playlist
+     *
+     * @param folder the folder to load
+     * @param shuffleMode indicate if the playlistDB has to be started in shuffle mode by default false
+     * @param musicToPlay the music to play
+     */
+    fun loadMusicFromFolder(
+        folder: Folder,
+        shuffleMode: Boolean = SettingsManager.shuffleMode.value,
+        musicToPlay: Music? = null
+    ) {
+        loadMusic(
+            musicMediaItemSortedMap = folder.getAllMusic(),
+            shuffleMode = shuffleMode,
+            musicToPlay = musicToPlay
+        )
+    }
+
     fun loadMusicFromMedias(
         medias: Map<MediaImpl, Any>,
         shuffleMode: Boolean = SettingsManager.shuffleMode.value,
@@ -353,24 +384,27 @@ class PlaybackController private constructor(
         shuffleMode: Boolean = SettingsManager.shuffleMode.value,
         musicToPlay: Music? = null,
     ) {
-        var musicMediaItemSortedMap: MutableMap<Music, MediaItem> = mutableMapOf()
         when (media) {
             is Folder -> {
-                musicMediaItemSortedMap = media.getAllMusic()
+                loadMusic(
+                    musicMediaItemSortedMap = media.getAllMusic(),
+                    shuffleMode = shuffleMode,
+                    musicToPlay = musicToPlay
+                )
             }
 
             else -> {
+                val musicMediaItemSortedMap: MutableMap<Music, MediaItem> = mutableMapOf()
                 media.getMusicMap().keys.forEach { music: Music ->
                     musicMediaItemSortedMap.putAll(music.getMusicMap())
                 }
+                loadMusic(
+                    musicMediaItemSortedMap = musicMediaItemSortedMap,
+                    shuffleMode = shuffleMode,
+                    musicToPlay = musicToPlay
+                )
             }
         }
-
-        loadMusic(
-            musicMediaItemSortedMap = musicMediaItemSortedMap,
-            shuffleMode = shuffleMode,
-            musicToPlay = musicToPlay
-        )
     }
 
     /**

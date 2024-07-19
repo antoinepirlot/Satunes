@@ -32,13 +32,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.media3.common.MediaItem
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
-import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
@@ -75,15 +73,13 @@ internal fun RootFolderView(
         extraButtons = {
             if (rootFolderSet.isNotEmpty()) {
                 ExtraButton(icon = SatunesIcons.PLAY, onClick = {
-                    playbackController.loadMusic(
-                        musicMediaItemSortedMap = getFolderMusicsMap(folderSet = rootFolderSet)
-                    )
+                    playbackController.loadMusicFromFolders(folders = rootFolderSet)
                     openMedia(navController = navController)
                 })
                 ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
 
-                    playbackController.loadMusic(
-                        musicMediaItemSortedMap = getFolderMusicsMap(folderSet = rootFolderSet),
+                    playbackController.loadMusicFromFolders(
+                        folders = rootFolderSet,
                         shuffleMode = true
                     )
                     openMedia(navController = navController)
@@ -92,14 +88,6 @@ internal fun RootFolderView(
         },
         emptyViewText = stringResource(id = R.string.no_folder)
     )
-}
-
-private fun getFolderMusicsMap(folderSet: Set<Folder>): MutableMap<Music, MediaItem> {
-    val musicMediaItemSortedMap: MutableMap<Music, MediaItem> = mutableMapOf()
-    folderSet.forEach { folder: Folder ->
-        musicMediaItemSortedMap.putAll(folder.getAllMusic())
-    }
-    return musicMediaItemSortedMap
 }
 
 @Preview

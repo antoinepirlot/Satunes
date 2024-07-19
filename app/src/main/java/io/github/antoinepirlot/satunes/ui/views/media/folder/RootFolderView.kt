@@ -43,7 +43,7 @@ import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.router.utils.openMediaFromFolder
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
 import io.github.antoinepirlot.satunes.ui.states.FoldersUiState
-import io.github.antoinepirlot.satunes.ui.viewmodels.FoldersViewModels
+import io.github.antoinepirlot.satunes.ui.viewmodels.FoldersViewModel
 import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 
@@ -55,7 +55,7 @@ import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 internal fun RootFolderView(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    viewModel: FoldersViewModels = FoldersViewModels(),
+    viewModel: FoldersViewModel = FoldersViewModel(),
     playbackViewModel: PlaybackViewModel = PlaybackViewModel(context = LocalContext.current)
 ) {
     val uiState: FoldersUiState by viewModel.uiState.collectAsState()

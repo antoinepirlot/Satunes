@@ -34,7 +34,7 @@ import kotlinx.coroutines.flow.asStateFlow
 /**
  * @author Antoine Pirlot on 19/07/2024
  */
-internal class FoldersViewModels : ViewModel() {
+internal class FoldersViewModel : ViewModel() {
     private val _uiState: MutableStateFlow<FoldersUiState> = MutableStateFlow(FoldersUiState())
 
     val uiState: StateFlow<FoldersUiState> = _uiState.asStateFlow()

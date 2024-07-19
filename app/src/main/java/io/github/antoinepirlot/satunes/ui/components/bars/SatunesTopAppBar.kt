@@ -33,7 +33,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.rememberTopAppBarState
@@ -58,6 +57,7 @@ import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.models.playbackViews
 import io.github.antoinepirlot.satunes.models.settingsDestinations
 import io.github.antoinepirlot.satunes.ui.ScreenSizes
+import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 import io.github.antoinepirlot.satunes.ui.state.SatunesUiState
 import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
 
@@ -107,7 +107,7 @@ internal fun SatunesTopAppBar(
             }
         },
         title = {
-            Text(
+            NormalText(
                 text = stringResource(id = R.string.app_name),
                 fontSize = 20.sp,
                 textAlign = TextAlign.Center

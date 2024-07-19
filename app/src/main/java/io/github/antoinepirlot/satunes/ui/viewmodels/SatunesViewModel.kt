@@ -33,7 +33,6 @@ import io.github.antoinepirlot.satunes.database.models.MenuTitle
 import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.ui.states.SatunesUiState
-import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -47,7 +46,6 @@ internal class SatunesViewModel : ViewModel() {
     private val _isLoadingData: MutableState<Boolean> = DataLoader.isLoading
     private val _isDataLoaded: MutableState<Boolean> = DataLoader.isLoaded
     private var _selectedMenuTitle: MenuTitle = _uiState.value.selectedMenuTitle
-    private val _logger: SatunesLogger = SatunesLogger(this::class.java.name)
 
     val uiState: StateFlow<SatunesUiState> = _uiState.asStateFlow()
 

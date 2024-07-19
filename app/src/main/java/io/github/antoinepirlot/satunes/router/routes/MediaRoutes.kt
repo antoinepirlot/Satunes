@@ -27,9 +27,6 @@ package io.github.antoinepirlot.satunes.router.routes
 
 import android.net.Uri.decode
 import androidx.compose.animation.AnimatedContentScope
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
@@ -84,13 +81,7 @@ internal fun NavGraphBuilder.mediaRoutes(
             LoadingView()
         } else {
             val folderId = it.arguments!!.getString("id")!!.toLong()
-            val folder: Folder by remember {
-                mutableStateOf(
-                    DataManager.getFolder(
-                        folderId = folderId
-                    )
-                )
-            }
+            val folder: Folder = DataManager.getFolder(folderId = folderId)
             FolderView(navController = navController, folder = folder)
         }
     }
@@ -114,13 +105,7 @@ internal fun NavGraphBuilder.mediaRoutes(
             LoadingView()
         } else {
             val artistName: String = decode(it.arguments!!.getString("name")!!)
-            val artist: Artist by remember {
-                mutableStateOf(
-                    DataManager.getArtist(
-                        artistName
-                    )
-                )
-            }
+            val artist: Artist = DataManager.getArtist(artistName)
             ArtistView(navController = navController, artist = artist)
         }
     }
@@ -144,7 +129,7 @@ internal fun NavGraphBuilder.mediaRoutes(
             LoadingView()
         } else {
             val albumId: Long = it.arguments!!.getString("id")!!.toLong()
-            val album: Album by remember { mutableStateOf(DataManager.getAlbum(albumId)) }
+            val album: Album = DataManager.getAlbum(albumId)
             AlbumView(navController = navController, album = album)
         }
     }
@@ -168,7 +153,7 @@ internal fun NavGraphBuilder.mediaRoutes(
             LoadingView()
         } else {
             val genreName: String = decode(it.arguments!!.getString("name")!!)
-            val genre: Genre by remember { mutableStateOf(DataManager.getGenre(genreName = genreName)) }
+            val genre: Genre = DataManager.getGenre(genreName = genreName)
             GenreView(navController = navController, genre = genre)
         }
     }
@@ -192,9 +177,7 @@ internal fun NavGraphBuilder.mediaRoutes(
             LoadingView()
         } else {
             val playlistId: Long = it.arguments!!.getString("id")!!.toLong()
-            val playlist: Playlist by remember {
-                mutableStateOf(DataManager.getPlaylist(id = playlistId))
-            }
+            val playlist: Playlist = DataManager.getPlaylist(id = playlistId)
             PlaylistView(playlist = playlist, navController = navController)
         }
     }

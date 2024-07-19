@@ -76,18 +76,21 @@ class Folder(
      *
      * @return a list of subfolder and each subfolder is a Folder object
      */
-    fun getSubFolderMap(): SortedMap<String, Folder> {
-        return this.subFolderMapByTitle.toSortedMap()
+    fun getSubFolderMap(): Map<String, Folder> {
+        return this.subFolderMapByTitle
     }
 
     /**
-     * Get the list of sub-folders as media
+     * Create a list containing sub folders then this folder musics.
+     * This list starts with all sub folders sorted by title, then this folder's musics sorted by title.
      *
-     * @return a list of subfolder and each subfolder is cast to Media object
+     * @return a list of this subfolders and then this musics
      */
-    fun getSubFolderMapAsMediaImpl(): SortedMap<Long, MediaImpl> {
-        @Suppress("UNCHECKED_CAST")
-        return this.subFolderMapByTitle.toSortedMap() as SortedMap<Long, MediaImpl>
+    fun getSubFolderListWithMusics(): List<MediaImpl> {
+        val list: MutableList<MediaImpl> = mutableListOf()
+        list.addAll(getSubFolderMap().values)
+        list.addAll(this.musicMediaItemMap.keys)
+        return list
     }
 
     /**

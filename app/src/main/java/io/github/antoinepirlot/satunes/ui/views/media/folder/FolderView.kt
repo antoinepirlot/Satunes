@@ -35,7 +35,6 @@ import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
-import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
@@ -44,7 +43,6 @@ import io.github.antoinepirlot.satunes.router.utils.openMediaFromFolder
 import io.github.antoinepirlot.satunes.ui.components.bars.FolderPath
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
-import java.util.SortedSet
 
 /**
  * @author Antoine Pirlot on 01/04/2024
@@ -57,14 +55,11 @@ internal fun FolderView(
     navController: NavHostController,
     folder: Folder,
 ) {
-    val subMediaImplMap: SortedSet<MediaImpl> = sortedSetOf()
-
     Column(modifier = modifier) {
         FolderPath(folder)
-        loadSubFolders(subMediaImplMap = subMediaImplMap, folder = folder)
         MediaListView(
             navController = navController,
-            mediaImplList = subMediaImplMap.toList(),
+            mediaImplList = folder.getSubFolderListWithMusics(),
             openMedia = { clickedMediaImpl: MediaImpl ->
                 openMediaFromFolder(clickedMediaImpl, navController = navController)
             },
@@ -100,16 +95,6 @@ private fun loadPlaybackFromFolder(
     val playbackController: PlaybackController = PlaybackController.getInstance()
     playbackController.loadMusicFromMedia(media = folder, shuffleMode = shuffleMode)
     openMedia(navController = navController)
-}
-
-private fun loadSubFolders(subMediaImplMap: SortedSet<MediaImpl>, folder: Folder) {
-    //Load sub-folders
-    subMediaImplMap.addAll(folder.getSubFolderMapAsMediaImpl().values)
-
-    //Load sub-folder's musics
-    folder.getAllMusic().forEach { (music: Music, _) ->
-        subMediaImplMap.add(music)
-    }
 }
 
 @Preview

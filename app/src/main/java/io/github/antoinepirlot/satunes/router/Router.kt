@@ -76,21 +76,21 @@ internal fun Router(
         mediaRoutes(
             navController = navController,
             onStart = {
-                permissionView(isAudioAllowed = isAudioAllowed.value, navController = navController)
+                checkIfAllowed(isAudioAllowed = isAudioAllowed.value, navController = navController)
                 RoutesManager.currentDestination.value = it.destination.route
             }
         )
         searchRoutes(
             navController = navController,
             onStart = {
-                permissionView(isAudioAllowed = isAudioAllowed.value, navController = navController)
+                checkIfAllowed(isAudioAllowed = isAudioAllowed.value, navController = navController)
                 RoutesManager.currentDestination.value = it.destination.route
             }
         )
         playbackRoutes(
             navController = navController,
             onStart = {
-                permissionView(isAudioAllowed = isAudioAllowed.value, navController = navController)
+                checkIfAllowed(isAudioAllowed = isAudioAllowed.value, navController = navController)
                 RoutesManager.currentDestination.value = it.destination.route
             }
         )
@@ -112,7 +112,7 @@ internal fun Router(
  *
  * @param isAudioAllowed true if the permission has been allowed, otherwise false
  */
-private fun permissionView(isAudioAllowed: Boolean, navController: NavHostController) {
+private fun checkIfAllowed(isAudioAllowed: Boolean, navController: NavHostController) {
     if (!isAudioAllowed) {
         navController.popBackStack()
         navController.navigate(Destination.PERMISSIONS_SETTINGS.link)

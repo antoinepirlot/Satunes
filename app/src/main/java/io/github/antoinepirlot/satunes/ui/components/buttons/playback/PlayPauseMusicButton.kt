@@ -29,8 +29,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
 
@@ -41,7 +41,7 @@ import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
 @Composable
 internal fun PlayPauseMusicButton(
     modifier: Modifier = Modifier,
-    playbackViewModel: PlaybackViewModel = PlaybackViewModel(context = LocalContext.current),
+    playbackViewModel: PlaybackViewModel = viewModel(),
 ) {
     val isPlaying: Boolean = playbackViewModel.isPlaying
 

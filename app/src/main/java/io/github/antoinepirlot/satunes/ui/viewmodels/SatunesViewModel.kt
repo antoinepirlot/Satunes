@@ -41,7 +41,7 @@ import kotlinx.coroutines.flow.update
 /**
  * @author Antoine Pirlot on 19/07/2024
  */
-internal class SatunesViewModel : ViewModel() {
+class SatunesViewModel : ViewModel() {
     private val _uiState: MutableStateFlow<SatunesUiState> = MutableStateFlow(SatunesUiState())
     private val _isLoadingData: MutableState<Boolean> = DataLoader.isLoading
     private val _isDataLoaded: MutableState<Boolean> = DataLoader.isLoaded

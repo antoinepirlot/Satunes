@@ -35,6 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.media3.common.MediaItem
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -64,7 +65,7 @@ import io.github.antoinepirlot.satunes.database.R as RDb
 internal fun PlaylistView(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    playbackViewModel: PlaybackViewModel = PlaybackViewModel(context = LocalContext.current),
+    playbackViewModel: PlaybackViewModel = viewModel(),
     playlist: Playlist,
 ) {
     //TODO try using nav controller instead try to remember it in an object if possible

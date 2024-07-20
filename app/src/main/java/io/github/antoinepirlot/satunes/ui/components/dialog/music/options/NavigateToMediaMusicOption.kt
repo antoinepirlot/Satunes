@@ -27,8 +27,8 @@ package io.github.antoinepirlot.satunes.ui.components.dialog.music.options
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.database.models.Album
@@ -48,7 +48,7 @@ import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
 @Composable
 internal fun NavigateToMediaMusicOption(
     modifier: Modifier = Modifier,
-    playbackViewModel: PlaybackViewModel = PlaybackViewModel(context = LocalContext.current),
+    playbackViewModel: PlaybackViewModel = viewModel(),
     mediaImpl: MediaImpl,
     navController: NavHostController
 ) {

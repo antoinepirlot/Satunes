@@ -26,7 +26,7 @@
 package io.github.antoinepirlot.satunes.router.routes
 
 import androidx.compose.animation.AnimatedContentScope
-import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -52,7 +52,7 @@ fun NavGraphBuilder.playbackRoutes(
     composable(Destination.PLAYBACK.link) {
         onStart(it)
         val viewModel = SatunesViewModel()
-        val playbackViewModel = PlaybackViewModel(context = LocalContext.current)
+        val playbackViewModel: PlaybackViewModel = viewModel()
 
         if (viewModel.isLoadingData || !viewModel.isDataLoaded) {
             LoadingView()

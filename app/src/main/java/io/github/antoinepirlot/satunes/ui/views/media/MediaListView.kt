@@ -34,6 +34,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.database.models.Album
@@ -56,7 +57,7 @@ import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
 internal fun MediaListView(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    playbackViewModel: PlaybackViewModel = PlaybackViewModel(context = LocalContext.current),
+    playbackViewModel: PlaybackViewModel = viewModel(),
     mediaImplList: List<MediaImpl>,
     openMedia: (mediaImpl: MediaImpl) -> Unit,
     openedPlaylistWithMusics: Playlist? = null,

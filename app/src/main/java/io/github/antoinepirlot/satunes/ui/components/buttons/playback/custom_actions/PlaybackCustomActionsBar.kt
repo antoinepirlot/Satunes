@@ -33,9 +33,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
 
@@ -46,7 +46,7 @@ import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
 @Composable
 internal fun PlaybackCustomActionsBar(
     modifier: Modifier = Modifier,
-    playbackViewModel: PlaybackViewModel = PlaybackViewModel(context = LocalContext.current),
+    playbackViewModel: PlaybackViewModel = viewModel(),
 ) {
     val musicPlaying: Music = playbackViewModel.musicPlaying!!
     val scrollState = rememberScrollState()

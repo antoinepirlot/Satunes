@@ -29,9 +29,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
@@ -55,10 +55,10 @@ import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 internal fun RootFolderView(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    viewModel: FoldersViewModel = FoldersViewModel(),
-    playbackViewModel: PlaybackViewModel = PlaybackViewModel(context = LocalContext.current)
+    foldersViewModel: FoldersViewModel = viewModel(),
+    playbackViewModel: PlaybackViewModel = viewModel(),
 ) {
-    val uiState: FoldersUiState by viewModel.uiState.collectAsState()
+    val uiState: FoldersUiState by foldersViewModel.uiState.collectAsState()
     val rootFolderSet: Set<Folder> = uiState.rootFolderSet
 
     MediaListView(

@@ -31,9 +31,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
 
@@ -44,7 +44,7 @@ import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
 @Composable
 internal fun PreviousMusicButton(
     modifier: Modifier = Modifier,
-    playbackViewModel: PlaybackViewModel = PlaybackViewModel(context = LocalContext.current)
+    playbackViewModel: PlaybackViewModel = viewModel(),
 ) {
     IconButton(
         modifier = modifier.size(45.dp),

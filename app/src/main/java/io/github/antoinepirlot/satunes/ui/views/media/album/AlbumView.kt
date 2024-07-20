@@ -37,11 +37,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.media3.common.MediaItem
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -68,7 +68,7 @@ import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 internal fun AlbumView(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    playbackViewModel: PlaybackViewModel = PlaybackViewModel(context = LocalContext.current),
+    playbackViewModel: PlaybackViewModel = viewModel(),
     album: Album,
 ) {
     val musicMap: Map<Music, MediaItem> = album.getMusicMap()
@@ -132,7 +132,7 @@ internal fun AlbumView(
 @Composable
 private fun Header(
     modifier: Modifier = Modifier,
-    playbackViewModel: PlaybackViewModel = PlaybackViewModel(context = LocalContext.current),
+    playbackViewModel: PlaybackViewModel = viewModel(),
     navController: NavHostController,
     album: Album
 ) {

@@ -30,9 +30,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.media3.common.MediaItem
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -55,7 +55,7 @@ import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 internal fun AllMusicsListView(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    playbackViewModel: PlaybackViewModel = PlaybackViewModel(context = LocalContext.current),
+    playbackViewModel: PlaybackViewModel = viewModel(),
 ) {
     //Find a way to do something more aesthetic but it works
     val musicMediaItemMap: Map<Music, MediaItem> = DataManager.getMusicMap()

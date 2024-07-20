@@ -30,9 +30,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
@@ -55,7 +55,7 @@ import java.util.SortedMap
 internal fun AllGenresListView(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    playbackViewModel: PlaybackViewModel = PlaybackViewModel(context = LocalContext.current)
+    playbackViewModel: PlaybackViewModel = viewModel(),
 ) {
     val genreMap: Map<String, Genre> = DataManager.getGenreMap()
 

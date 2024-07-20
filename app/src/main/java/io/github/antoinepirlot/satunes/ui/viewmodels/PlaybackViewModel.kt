@@ -25,7 +25,6 @@
 
 package io.github.antoinepirlot.satunes.ui.viewmodels
 
-import android.content.Context
 import androidx.compose.runtime.MutableFloatState
 import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.MutableState
@@ -36,17 +35,15 @@ import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
+import io.github.antoinepirlot.satunes.models.ProgressBarLifecycleCallbacks
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import java.util.SortedMap
 
 /**
  * @author Antoine Pirlot on 19/07/2024
  */
-internal class PlaybackViewModel(
-    context: Context,
-) : ViewModel() {
-    private val _playbackController: PlaybackController =
-        PlaybackController.initInstance(context = context)
+class PlaybackViewModel : ViewModel() {
+    private val _playbackController: PlaybackController = PlaybackController.getInstance()
     private val _isPlaying: MutableState<Boolean> = _playbackController.isPlaying
     private val _musicPlaying: MutableState<Music?> = _playbackController.musicPlaying
     private val _currentPositionProgression: MutableFloatState =
@@ -63,6 +60,11 @@ internal class PlaybackViewModel(
     val isShuffle: Boolean by _isShuffle
     val isLoaded: Boolean by _isLoaded
     val isEnded: Boolean by _isEnded
+
+    init {
+        // Needed to refresh progress bar
+        ProgressBarLifecycleCallbacks.playbackViewModel = this
+    }
 
     fun loadMusicFromFolders(
         folders: Set<Folder>,

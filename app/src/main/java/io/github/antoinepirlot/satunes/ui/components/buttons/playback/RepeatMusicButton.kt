@@ -29,8 +29,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.media3.common.Player.REPEAT_MODE_ONE
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.utils.getRightIconColors
@@ -44,7 +44,7 @@ import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
 @Composable
 internal fun RepeatMusicButton(
     modifier: Modifier = Modifier,
-    playbackViewModel: PlaybackViewModel = PlaybackViewModel(context = LocalContext.current),
+    playbackViewModel: PlaybackViewModel = viewModel(),
 ) {
     val repeatMode: Int = playbackViewModel.repeatMode
     val isOn: Boolean = repeatMode > 0 // When repeat mode is off, value is 0.

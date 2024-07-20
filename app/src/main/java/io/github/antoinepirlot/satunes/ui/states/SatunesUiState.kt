@@ -32,7 +32,7 @@ import io.github.antoinepirlot.satunes.models.DEFAULT_DESTINATION
 /**
  * @author Antoine Pirlot on 19/07/2024
  */
-internal data class SatunesUiState(
+data class SatunesUiState(
     val whatsNewSeen: Boolean = SettingsManager.whatsNewSeen,
     val currentDestination: String = DEFAULT_DESTINATION,
     val selectedMenuTitle: MenuTitle =

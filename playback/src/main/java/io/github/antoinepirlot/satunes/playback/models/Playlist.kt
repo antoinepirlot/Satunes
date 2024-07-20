@@ -65,15 +65,12 @@ internal class Playlist(musicSet: Set<Music>) {
             musicMoving = this.musicList.removeAt(musicIndex)
         }
 
+        val shuffledMusicList: List<Music> = this.musicList.shuffled()
+        this.musicList.clear()
         if (musicMoving != null) {
-            // Not cleared as the list is only shown in playback queue view
-            val oldMusicList: List<Music> = this.musicList.shuffled()
-            this.musicList.clear()
             this.musicList.add(musicMoving)
-            this.musicList.addAll(oldMusicList)
-        } else {
-            this.musicList.addAll(this.musicList.shuffled())
         }
+        this.musicList.addAll(shuffledMusicList)
         this.mediaItemList.clear()
         this.musicList.forEach { music: Music ->
             this.mediaItemList.add(music.mediaItem)
@@ -97,7 +94,12 @@ internal class Playlist(musicSet: Set<Music>) {
     }
 
     fun getMusic(musicIndex: Int): Music {
-        return this.musicList[musicIndex]
+        try {
+            return this.musicList[musicIndex]
+        } catch (e: Throwable) {
+            logger.severe(e.message)
+            throw e
+        }
     }
 
     /**

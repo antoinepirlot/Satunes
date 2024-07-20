@@ -44,7 +44,6 @@ import io.github.antoinepirlot.satunes.database.services.database.DatabaseManage
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.playback.services.PlaybackService
 import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
-import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.ui.viewmodels.factories.PlaybackViewModelFactory
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import io.github.antoinepirlot.satunes.utils.utils.showToastOnUiThread
@@ -92,7 +91,6 @@ internal class MainActivity : ComponentActivity() {
         setContent {
             //Init viewModel that needs context
             viewModel<PlaybackViewModel>(factory = PlaybackViewModelFactory(context = LocalContext.current))
-            println("REF1 = ${viewModel<SatunesViewModel>().isAudioAllowed} AND REF2 = ${viewModel<SatunesViewModel>().isAudioAllowed}")
             Satunes()
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

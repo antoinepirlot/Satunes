@@ -2,7 +2,7 @@ Nouvelles Fonctionnalités:
 
 * Possiblité de choisir les filtres de recherches activés par défaut
 * Demande de confirmation lors d'une suppression dans les playlists
-* Tous les types de media (musiques, artistes, etc.) ont un menu d'option lors d'un appuis long
+* Tous les types de media (musiques, artistes, etc.) ont un navBarSection d'option lors d'un appuis long
 
 Améliorations, Optimisations et Résolutions de problèmes:
 

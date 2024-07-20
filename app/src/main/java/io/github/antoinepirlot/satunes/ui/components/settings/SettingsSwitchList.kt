@@ -32,7 +32,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
-import io.github.antoinepirlot.satunes.database.models.MenuTitle
+import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.models.SearchChips
 import io.github.antoinepirlot.satunes.models.SwitchSettings
 import io.github.antoinepirlot.satunes.services.search.SearchChipsManager
@@ -86,32 +86,32 @@ private fun switchSetting(
 ) {
     when (setting) {
         SwitchSettings.FOLDERS_CHECKED -> {
-            satunesViewModel.switchMenuTitle(
-                menuTitle = MenuTitle.FOLDERS
+            satunesViewModel.switchNavBarSection(
+                navBarSection = NavBarSection.FOLDERS
             )
         }
 
         SwitchSettings.ARTISTS_CHECKED -> {
-            satunesViewModel.switchMenuTitle(
-                menuTitle = MenuTitle.ARTISTS
+            satunesViewModel.switchNavBarSection(
+                navBarSection = NavBarSection.ARTISTS
             )
         }
 
         SwitchSettings.ALBUMS_CHECKED -> {
-            satunesViewModel.switchMenuTitle(
-                menuTitle = MenuTitle.ALBUMS
+            satunesViewModel.switchNavBarSection(
+                navBarSection = NavBarSection.ALBUMS
             )
         }
 
         SwitchSettings.GENRES_CHECKED -> {
-            satunesViewModel.switchMenuTitle(
-                menuTitle = MenuTitle.GENRES
+            satunesViewModel.switchNavBarSection(
+                navBarSection = NavBarSection.GENRES
             )
         }
 
         SwitchSettings.PLAYLISTS_CHECKED -> {
-            satunesViewModel.switchMenuTitle(
-                menuTitle = MenuTitle.PLAYLISTS
+            satunesViewModel.switchNavBarSection(
+                navBarSection = NavBarSection.PLAYLISTS
             )
         }
 
@@ -136,7 +136,7 @@ private fun switchSetting(
         }
 
         SwitchSettings.MUSICS_FILTER -> {
-            satunesViewModel.switchFilter(filterSetting = MenuTitle.MUSICS)
+            satunesViewModel.switchFilter(filterSetting = NavBarSection.MUSICS)
             val searchChip: SearchChips = SearchChips.MUSICS
             if (uiState.musicsFilter != searchChip.enabled.value) {
                 switchSearchChip(searchChip = searchChip)
@@ -144,7 +144,7 @@ private fun switchSetting(
         }
 
         SwitchSettings.ARTISTS_FILTER -> {
-            satunesViewModel.switchFilter(filterSetting = MenuTitle.ARTISTS)
+            satunesViewModel.switchFilter(filterSetting = NavBarSection.ARTISTS)
             val searchChip: SearchChips = SearchChips.ARTISTS
             if (uiState.artistsFilter != searchChip.enabled.value) {
                 switchSearchChip(searchChip = searchChip)
@@ -152,7 +152,7 @@ private fun switchSetting(
         }
 
         SwitchSettings.ALBUMS_FILTER -> {
-            satunesViewModel.switchFilter(filterSetting = MenuTitle.ALBUMS)
+            satunesViewModel.switchFilter(filterSetting = NavBarSection.ALBUMS)
             val searchChip: SearchChips = SearchChips.ALBUMS
             if (uiState.albumsFilter != searchChip.enabled.value) {
                 switchSearchChip(searchChip = searchChip)
@@ -160,7 +160,7 @@ private fun switchSetting(
         }
 
         SwitchSettings.GENRES_FILTER -> {
-            satunesViewModel.switchFilter(filterSetting = MenuTitle.GENRES)
+            satunesViewModel.switchFilter(filterSetting = NavBarSection.GENRES)
             val searchChip: SearchChips = SearchChips.GENRES
             if (uiState.genresFilter != searchChip.enabled.value) {
                 switchSearchChip(searchChip = searchChip)
@@ -168,7 +168,7 @@ private fun switchSetting(
         }
 
         SwitchSettings.FOLDERS_FILTER -> {
-            satunesViewModel.switchFilter(filterSetting = MenuTitle.FOLDERS)
+            satunesViewModel.switchFilter(filterSetting = NavBarSection.FOLDERS)
             val searchChip: SearchChips = SearchChips.FOLDERS
             if (uiState.foldersFilter != searchChip.enabled.value) {
                 switchSearchChip(searchChip = searchChip)
@@ -176,7 +176,7 @@ private fun switchSetting(
         }
 
         SwitchSettings.PLAYLISTS_FILTER -> {
-            satunesViewModel.switchFilter(filterSetting = MenuTitle.PLAYLISTS)
+            satunesViewModel.switchFilter(filterSetting = NavBarSection.PLAYLISTS)
             val searchChip: SearchChips = SearchChips.PLAYLISTS
             if (uiState.playlistsFilter != searchChip.enabled.value) {
                 switchSearchChip(searchChip = searchChip)

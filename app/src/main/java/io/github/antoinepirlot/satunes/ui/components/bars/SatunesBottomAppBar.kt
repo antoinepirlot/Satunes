@@ -42,9 +42,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import io.github.antoinepirlot.satunes.data.menuTitleLists
-import io.github.antoinepirlot.satunes.database.models.MenuTitle
-import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
+import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.ui.ScreenSizes
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
@@ -62,15 +60,9 @@ internal fun SatunesBottomAppBar(
     navController: NavHostController,
     satunesViewModel: SatunesViewModel = viewModel()
 ) {
-    val uiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
 
-    SettingsManager.menuTitleCheckedMap.forEach { (menuTitle: MenuTitle, checked: Boolean) ->
-        if (!checked) {
-            menuTitleLists.remove(menuTitle)
-        }
-    }
-
-    val selectedMenuTitle: MenuTitle = uiState.selectedMenuTitle
+    val selectedNavBarSection: NavBarSection = satunesUiState.selectedNavBarSection
 
     val screenWidthDp = LocalConfiguration.current.screenWidthDp
     val navigationModifier: Modifier =
@@ -80,28 +72,28 @@ internal fun SatunesBottomAppBar(
     ) {
         val navigationItemModifier: Modifier =
             if (screenWidthDp < ScreenSizes.VERY_VERY_SMALL) Modifier.size(16.dp) else Modifier
-        menuTitleLists.forEach { menuTitle: MenuTitle ->
+        satunesViewModel.availableNavBarSections.forEach { navBarSection: NavBarSection ->
             NavigationBarItem(
                 modifier = navigationItemModifier,
                 label = {
-                    NormalText(text = stringResource(id = menuTitle.stringId))
+                    NormalText(text = stringResource(id = navBarSection.stringId))
                 },
-                selected = selectedMenuTitle == menuTitle,
+                selected = selectedNavBarSection == navBarSection,
                 onClick = {
-                    satunesViewModel.selectMenuTitle(menuTitle = menuTitle)
-                    val rootRoute: String = when (menuTitle) {
-                        MenuTitle.FOLDERS -> Destination.FOLDERS.link
-                        MenuTitle.ARTISTS -> Destination.ARTISTS.link
-                        MenuTitle.ALBUMS -> Destination.ALBUMS.link
-                        MenuTitle.GENRES -> Destination.GENRES.link
-                        MenuTitle.PLAYLISTS -> Destination.PLAYLISTS.link
-                        MenuTitle.MUSICS -> Destination.MUSICS.link
+                    satunesViewModel.selectMenuTitle(navBarSection = navBarSection)
+                    val rootRoute: String = when (navBarSection) {
+                        NavBarSection.FOLDERS -> Destination.FOLDERS.link
+                        NavBarSection.ARTISTS -> Destination.ARTISTS.link
+                        NavBarSection.ALBUMS -> Destination.ALBUMS.link
+                        NavBarSection.GENRES -> Destination.GENRES.link
+                        NavBarSection.PLAYLISTS -> Destination.PLAYLISTS.link
+                        NavBarSection.MUSICS -> Destination.MUSICS.link
 
                     }
                     backToRoot(rootRoute = rootRoute, navController = navController)
                 },
                 icon = {
-                    val pair = getRightIconAndDescription(menuTitle = menuTitle)
+                    val pair = getRightIconAndDescription(navBarSection = navBarSection)
 
                     Icon(
                         imageVector = pair.first,

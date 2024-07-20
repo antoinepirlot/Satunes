@@ -25,7 +25,7 @@
 
 package io.github.antoinepirlot.satunes.ui.states
 
-import io.github.antoinepirlot.satunes.database.models.MenuTitle
+import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.models.DEFAULT_DESTINATION
 import io.github.antoinepirlot.satunes.models.SwitchSettings
@@ -45,15 +45,15 @@ internal data class SatunesUiState(
     val albumsChecked: Boolean = SettingsManager.albumsFilter,
     val genresChecked: Boolean = SettingsManager.genresChecked,
     val playlistsChecked: Boolean = SettingsManager.playlistsChecked,
-    val selectedMenuTitle: MenuTitle =
+    val selectedNavBarSection: NavBarSection =
     // Selected the default menu title in this priority order
-        if (foldersChecked) MenuTitle.FOLDERS
-        else if (artistsChecked) MenuTitle.ARTISTS
-        else if (albumsChecked) MenuTitle.ALBUMS
-        else if (genresChecked) MenuTitle.GENRES
-        else if (playlistsChecked) MenuTitle.PLAYLISTS
-        else MenuTitle.MUSICS,
-    val navBarItemSettingsChecked: Map<SwitchSettings, Boolean> = mapOf(
+        if (foldersChecked) NavBarSection.FOLDERS
+        else if (artistsChecked) NavBarSection.ARTISTS
+        else if (albumsChecked) NavBarSection.ALBUMS
+        else if (genresChecked) NavBarSection.GENRES
+        else if (playlistsChecked) NavBarSection.PLAYLISTS
+        else NavBarSection.MUSICS,
+    val navBarSectionSettingsChecked: Map<SwitchSettings, Boolean> = mapOf(
         Pair(first = SwitchSettings.FOLDERS_CHECKED, second = foldersChecked),
         Pair(first = SwitchSettings.ARTISTS_CHECKED, second = artistsChecked),
         Pair(first = SwitchSettings.ALBUMS_CHECKED, second = albumsChecked),
@@ -94,4 +94,8 @@ internal data class SatunesUiState(
     val repeatMode: Int = SettingsManager.repeatMode,
     val audioOffloadChecked: Boolean = SettingsManager.audioOffloadChecked,
     val barSpeed: Float = SettingsManager.barSpeed,
-)
+) {
+    init {
+
+    }
+}

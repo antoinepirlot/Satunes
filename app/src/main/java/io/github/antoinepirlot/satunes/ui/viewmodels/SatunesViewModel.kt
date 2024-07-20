@@ -31,7 +31,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import io.github.antoinepirlot.satunes.MainActivity
-import io.github.antoinepirlot.satunes.database.models.MenuTitle
+import io.github.antoinepirlot.satunes.data.navBarSections
+import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.ui.states.SatunesUiState
@@ -52,7 +53,7 @@ internal class SatunesViewModel : ViewModel() {
     private val _uiState: MutableStateFlow<SatunesUiState> = MutableStateFlow(SatunesUiState())
     private val _isLoadingData: MutableState<Boolean> = DataLoader.isLoading
     private val _isDataLoaded: MutableState<Boolean> = DataLoader.isLoaded
-    private var _selectedMenuTitle: MenuTitle = _uiState.value.selectedMenuTitle
+    private val _availableNavBarSections: MutableSet<NavBarSection> = navBarSections.toMutableSet()
 
     val uiState: StateFlow<SatunesUiState> = _uiState.asStateFlow()
 
@@ -63,10 +64,44 @@ internal class SatunesViewModel : ViewModel() {
     var isAudioAllowed: Boolean by mutableStateOf(_uiState.value.isAudioAllowed)
         private set
 
+    lateinit var availableNavBarSections: Set<NavBarSection>
+        private set
+
+    private fun updateAvailableNavBarSections() {
+        //TODO change it to use list structure in SettingsManager
+        if (_uiState.value.foldersChecked) {
+            this._availableNavBarSections.add(element = NavBarSection.FOLDERS)
+        } else {
+            this._availableNavBarSections.remove(element = NavBarSection.FOLDERS)
+        }
+        if (_uiState.value.artistsChecked) {
+            this._availableNavBarSections.add(element = NavBarSection.ARTISTS)
+        } else {
+            this._availableNavBarSections.remove(element = NavBarSection.ARTISTS)
+        }
+        if (_uiState.value.albumsChecked) {
+            this._availableNavBarSections.add(element = NavBarSection.ALBUMS)
+        } else {
+            this._availableNavBarSections.remove(element = NavBarSection.ALBUMS)
+        }
+        if (_uiState.value.genresChecked) {
+            this._availableNavBarSections.add(element = NavBarSection.GENRES)
+        } else {
+            this._availableNavBarSections.remove(element = NavBarSection.GENRES)
+        }
+        if (_uiState.value.playlistsChecked) {
+            this._availableNavBarSections.add(element = NavBarSection.PLAYLISTS)
+        } else {
+            this._availableNavBarSections.remove(element = NavBarSection.PLAYLISTS)
+        }
+        this.availableNavBarSections = this._availableNavBarSections.toSet()
+    }
+
     fun loadSettings() {
         runBlocking {
             SettingsManager.loadSettings(context = MainActivity.instance.applicationContext)
             _uiState.update { SatunesUiState() }
+            updateAvailableNavBarSections()
         }
     }
 
@@ -87,10 +122,11 @@ internal class SatunesViewModel : ViewModel() {
         }
     }
 
-    fun selectMenuTitle(menuTitle: MenuTitle) {
-        this._selectedMenuTitle = menuTitle
-        this._uiState.update { currentState: SatunesUiState ->
-            currentState.copy(selectedMenuTitle = menuTitle)
+    fun selectMenuTitle(navBarSection: NavBarSection) {
+        _uiState.update { currentState: SatunesUiState ->
+            currentState.copy(
+                selectedNavBarSection = navBarSection
+            )
         }
     }
 
@@ -107,11 +143,11 @@ internal class SatunesViewModel : ViewModel() {
         }
     }
 
-    fun switchMenuTitle(menuTitle: MenuTitle) {
+    fun switchNavBarSection(navBarSection: NavBarSection) {
         runBlocking {
-            SettingsManager.switchMenuTitle(
+            SettingsManager.switchNavBarSection(
                 context = MainActivity.instance.applicationContext,
-                menuTitle = menuTitle
+                navBarSection = navBarSection
             )
             _uiState.update { currentState: SatunesUiState ->
                 currentState.copy(
@@ -122,6 +158,7 @@ internal class SatunesViewModel : ViewModel() {
                     playlistsChecked = SettingsManager.playlistsChecked,
                 )
             }
+            updateAvailableNavBarSections()
         }
     }
 
@@ -180,7 +217,7 @@ internal class SatunesViewModel : ViewModel() {
         }
     }
 
-    fun switchFilter(filterSetting: MenuTitle) {
+    fun switchFilter(filterSetting: NavBarSection) {
         runBlocking {
             SettingsManager.switchFilter(
                 context = MainActivity.instance.applicationContext,

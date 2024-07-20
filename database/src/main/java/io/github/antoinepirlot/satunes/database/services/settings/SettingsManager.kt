@@ -35,7 +35,7 @@ import androidx.datastore.preferences.core.floatPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
-import io.github.antoinepirlot.satunes.database.models.MenuTitle
+import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -134,12 +134,12 @@ object SettingsManager {
     var audioOffloadChecked: Boolean = DEFAULT_AUDIO_OFFLOAD_CHECKED
         private set
 
-    val menuTitleCheckedMap: Map<MenuTitle, Boolean> = mapOf(
-        Pair(MenuTitle.FOLDERS, foldersChecked),
-        Pair(MenuTitle.ARTISTS, artistsChecked),
-        Pair(MenuTitle.ALBUMS, albumsChecked),
-        Pair(MenuTitle.GENRES, genresChecked),
-        Pair(MenuTitle.PLAYLISTS, playlistsChecked)
+    val navBarSectionCheckedMap: Map<NavBarSection, Boolean> = mapOf(
+        Pair(NavBarSection.FOLDERS, foldersChecked),
+        Pair(NavBarSection.ARTISTS, artistsChecked),
+        Pair(NavBarSection.ALBUMS, albumsChecked),
+        Pair(NavBarSection.GENRES, genresChecked),
+        Pair(NavBarSection.PLAYLISTS, playlistsChecked)
     )
 
     var whatsNewSeen: Boolean = DEFAULT_WHATS_NEW_SEEN
@@ -226,45 +226,45 @@ object SettingsManager {
         }
     }
 
-    suspend fun switchMenuTitle(context: Context, menuTitle: MenuTitle) {
+    suspend fun switchNavBarSection(context: Context, navBarSection: NavBarSection) {
         try {
-            when (menuTitle) {
-                MenuTitle.FOLDERS -> {
+            when (navBarSection) {
+                NavBarSection.FOLDERS -> {
                     context.dataStore.edit { preferences: MutablePreferences ->
                         foldersChecked = !foldersChecked
                         preferences[FOLDERS_CHECKED_PREFERENCES_KEY] = foldersChecked
                     }
                 }
 
-                MenuTitle.ARTISTS -> {
+                NavBarSection.ARTISTS -> {
                     context.dataStore.edit { preferences: MutablePreferences ->
                         artistsChecked = !artistsChecked
                         preferences[ARTISTS_CHECKED_PREFERENCES_KEY] = artistsChecked
                     }
                 }
 
-                MenuTitle.ALBUMS -> {
+                NavBarSection.ALBUMS -> {
                     context.dataStore.edit { preferences: MutablePreferences ->
                         albumsChecked = !albumsChecked
                         preferences[ALBUMS_CHECKED_PREFERENCES_KEY] = albumsChecked
                     }
                 }
 
-                MenuTitle.GENRES -> {
+                NavBarSection.GENRES -> {
                     context.dataStore.edit { preferences: MutablePreferences ->
                         genresChecked = !genresChecked
                         preferences[GENRE_CHECKED_PREFERENCES_KEY] = genresChecked
                     }
                 }
 
-                MenuTitle.PLAYLISTS -> {
+                NavBarSection.PLAYLISTS -> {
                     context.dataStore.edit { preferences: MutablePreferences ->
                         playlistsChecked = !playlistsChecked
                         preferences[PLAYLISTS_CHECKED_PREFERENCES_KEY] = playlistsChecked
                     }
                 }
 
-                MenuTitle.MUSICS -> { /*Do nothing*/
+                NavBarSection.MUSICS -> { /*Do nothing*/
                 }
             }
         } catch (e: Throwable) {
@@ -399,45 +399,45 @@ object SettingsManager {
         }
     }
 
-    suspend fun switchFilter(context: Context, filterSetting: MenuTitle) {
+    suspend fun switchFilter(context: Context, filterSetting: NavBarSection) {
         try {
             when (filterSetting) {
-                MenuTitle.MUSICS -> {
+                NavBarSection.MUSICS -> {
                     context.dataStore.edit { preferences: MutablePreferences ->
                         musicsFilter = !musicsFilter
                         preferences[MUSICS_FILTER_KEY] = musicsFilter
                     }
                 }
 
-                MenuTitle.ARTISTS -> {
+                NavBarSection.ARTISTS -> {
                     context.dataStore.edit { preferences: MutablePreferences ->
                         artistsFilter = !artistsFilter
                         preferences[ARTISTS_FILTER_KEY] = artistsFilter
                     }
                 }
 
-                MenuTitle.ALBUMS -> {
+                NavBarSection.ALBUMS -> {
                     context.dataStore.edit { preferences: MutablePreferences ->
                         albumsFilter = !albumsFilter
                         preferences[ALBUMS_FILTER_KEY] = albumsFilter
                     }
                 }
 
-                MenuTitle.GENRES -> {
+                NavBarSection.GENRES -> {
                     context.dataStore.edit { preferences: MutablePreferences ->
                         genresFilter = !genresFilter
                         preferences[GENRES_FILTER_KEY] = genresFilter
                     }
                 }
 
-                MenuTitle.FOLDERS -> {
+                NavBarSection.FOLDERS -> {
                     context.dataStore.edit { preferences: MutablePreferences ->
                         foldersFilter = !foldersFilter
                         preferences[FOLDERS_FILTER_KEY] = foldersFilter
                     }
                 }
 
-                MenuTitle.PLAYLISTS -> {
+                NavBarSection.PLAYLISTS -> {
                     context.dataStore.edit { preferences: MutablePreferences ->
                         playlistsFilter = !playlistsFilter
                         preferences[PLAYLISTS_FILTER_KEY] = playlistsFilter

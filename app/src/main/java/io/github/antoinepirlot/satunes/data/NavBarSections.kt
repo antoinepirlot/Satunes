@@ -25,17 +25,17 @@
 
 package io.github.antoinepirlot.satunes.data
 
-import io.github.antoinepirlot.satunes.database.models.MenuTitle
+import io.github.antoinepirlot.satunes.database.models.NavBarSection
 
 /**
- * @author Antoine Pirlot on 19/07/2024
+ * @author Antoine Pirlot on 20/07/2024
  */
 
-internal val menuTitleLists: MutableList<MenuTitle> = mutableListOf(
-    MenuTitle.FOLDERS,
-    MenuTitle.ARTISTS,
-    MenuTitle.ALBUMS,
-    MenuTitle.GENRES,
-    MenuTitle.MUSICS,
-    MenuTitle.PLAYLISTS
+internal val navBarSections: Set<NavBarSection> = setOf(
+    NavBarSection.FOLDERS,
+    NavBarSection.ARTISTS,
+    NavBarSection.ALBUMS,
+    NavBarSection.GENRES,
+    NavBarSection.MUSICS,
+    NavBarSection.PLAYLISTS
 )

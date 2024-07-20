@@ -68,7 +68,7 @@ Sinon, tu peux également suivre les étapes suivantes:
 
 1) Clique sur [Release](https://github.com/antoinepirlot/Satunes/releases)
 2) Choisi ta version
-3) Clique sur "Assets" pour dérouler un menu qui contient le fichier d'installation
+3) Clique sur "Assets" pour dérouler un navBarSection qui contient le fichier d'installation
 4) Clique sur le fichier Satunes_vx.y.z.apk (Un fichier va se télécharger sur ton appareil)
 5) Une fois le téléchargement terminé, ouvre le fichier
 6) Autorise l'installation d'application inconnue. (C'est nécéssaire car l'application n'est dépployée sur le Play Store).
@@ -82,7 +82,8 @@ Sinon, tu peux également suivre les étapes suivantes:
 2) Cliques plusieurs fois sur le bouton "Version" pour activer les paramètres développeurs.
 3) Va dans les paramètres développeurs en cliquant sur les 3 boutons en haut à droite et active le paramètre "Sources Inconnues" car mon application n'est pas publiée dans le Google Play Store.
 4) Clique sur les 3 boutons comme au point 3, mais clique sur "Quitter le mode développeur" le paramètre que tu viens d'activer sera enregistré.
-5) Il n'y a plus qu'à ajouter l'application au lanceur d'application de Android Auto dans le menu "Personnaliser le lanceur"
+5) Il n'y a plus qu'à ajouter l'application au lanceur d'application de Android Auto dans le
+   navBarSection "Personnaliser le lanceur"
 6) Bonne écoute et bon voyage ;)
 
 ##

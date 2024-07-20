@@ -56,7 +56,7 @@ internal fun BottomNavigationBarSettingsView(
     val scrollState: ScrollState = rememberScrollState()
     Column(modifier = modifier.verticalScroll(scrollState)) {
         Title(text = stringResource(id = R.string.bottom_bar))
-        SettingsSwitchList(checkedMap = satunesUiState.navBarItemSettingsChecked)
+        SettingsSwitchList(checkedMap = satunesUiState.navBarSectionSettingsChecked)
     }
 }
 

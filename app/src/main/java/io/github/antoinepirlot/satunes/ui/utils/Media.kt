@@ -31,8 +31,8 @@ import androidx.compose.ui.res.stringResource
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
-import io.github.antoinepirlot.satunes.database.models.MenuTitle
 import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.icons.SatunesIcons.ALBUM
 import io.github.antoinepirlot.satunes.icons.SatunesIcons.ARTIST
 import io.github.antoinepirlot.satunes.icons.SatunesIcons.FOLDER
@@ -70,17 +70,17 @@ internal fun startMusic(
     }
 }
 
-fun getRightIconAndDescription(menuTitle: MenuTitle): Pair<ImageVector, String> {
-    return when (menuTitle) {
-        MenuTitle.FOLDERS -> FOLDER.imageVector to FOLDER.description
+fun getRightIconAndDescription(navBarSection: NavBarSection): Pair<ImageVector, String> {
+    return when (navBarSection) {
+        NavBarSection.FOLDERS -> FOLDER.imageVector to FOLDER.description
 
-        MenuTitle.ARTISTS -> ARTIST.imageVector to ARTIST.description
+        NavBarSection.ARTISTS -> ARTIST.imageVector to ARTIST.description
 
-        MenuTitle.ALBUMS -> ALBUM.imageVector to ALBUM.description
+        NavBarSection.ALBUMS -> ALBUM.imageVector to ALBUM.description
 
-        MenuTitle.GENRES -> GENRES.imageVector to GENRES.description
+        NavBarSection.GENRES -> GENRES.imageVector to GENRES.description
 
-        MenuTitle.PLAYLISTS -> PLAYLIST.imageVector to PLAYLIST.description
+        NavBarSection.PLAYLISTS -> PLAYLIST.imageVector to PLAYLIST.description
 
         else -> MUSIC.imageVector to MUSIC.description
     }

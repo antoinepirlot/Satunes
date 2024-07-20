@@ -31,7 +31,7 @@ import io.github.antoinepirlot.satunes.database.R
  * @author Antoine Pirlot on 03/02/24
  */
 
-enum class MenuTitle(open val stringId: Int) {
+enum class NavBarSection(open val stringId: Int) {
     FOLDERS(stringId = R.string.folders),
     ARTISTS(stringId = R.string.artists),
     MUSICS(stringId = R.string.musics),

@@ -127,6 +127,9 @@ object DataLoader {
      * Load all Media data from device's storage.
      */
     fun loadAllData(context: Context) {
+        if (isLoading.value) {
+            return
+        }
         isLoading.value = true
         CoroutineScope(Dispatchers.IO).launch {
             context.contentResolver.query(

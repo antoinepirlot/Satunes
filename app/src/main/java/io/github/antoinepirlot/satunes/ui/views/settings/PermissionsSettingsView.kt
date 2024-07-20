@@ -85,12 +85,10 @@ internal fun PermissionsSettingsView(
         Title(text = stringResource(id = R.string.permissions))
         for (permission: Permissions in permissionsList) {
             val permissionState: PermissionState =
-                rememberPermissionState(
-                    permission = permission.value,
-                    onPermissionResult = {
-                        satunesViewModel.updateIsAudioAllowed()
-                    }
-                )
+                rememberPermissionState(permission = permission.value)
+            if (permissionState.status.isGranted) {
+                satunesViewModel.updateIsAudioAllowed()
+            }
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {

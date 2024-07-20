@@ -189,14 +189,4 @@ internal class MainActivity : ComponentActivity() {
             }
         }
     }
-
-    override fun onDestroy() {
-        logger.info("Destroying Main Activity")
-        super.onDestroy()
-        logger.info("Main Activity destroyed")
-    }
-
-    override fun onRestart() {
-        super.onRestart()
-    }
 }

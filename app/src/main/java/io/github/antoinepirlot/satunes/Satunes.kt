@@ -78,7 +78,12 @@ internal fun Satunes(
                         navController = navController
                     )
                 },
-                bottomBar = { SatunesBottomAppBar(navController = navController) }
+                bottomBar = {
+                    SatunesBottomAppBar(
+                        navController = navController,
+                        satunesUiState = satunesUiState
+                    )
+                }
             ) { innerPadding ->
                 Router(
                     modifier = Modifier.padding(innerPadding),

@@ -40,11 +40,11 @@ internal data class SatunesUiState(
     //Use this in UiSate and ViewModel as it is a particular value. It could change but most of the time it won't change
     val isAudioAllowed: Boolean = isAudioAllowed(),
 
-    val foldersChecked: Boolean = SettingsManager.foldersChecked,
-    val artistsChecked: Boolean = SettingsManager.artistsChecked,
-    val albumsChecked: Boolean = SettingsManager.albumsFilter,
-    val genresChecked: Boolean = SettingsManager.genresChecked,
-    val playlistsChecked: Boolean = SettingsManager.playlistsChecked,
+    val foldersChecked: Boolean = SettingsManager.foldersChecked.value,
+    val artistsChecked: Boolean = SettingsManager.artistsChecked.value,
+    val albumsChecked: Boolean = SettingsManager.albumsChecked.value,
+    val genresChecked: Boolean = SettingsManager.genresChecked.value,
+    val playlistsChecked: Boolean = SettingsManager.playlistsChecked.value,
     val selectedNavBarSection: NavBarSection =
     // Selected the default menu title in this priority order
         if (foldersChecked) NavBarSection.FOLDERS

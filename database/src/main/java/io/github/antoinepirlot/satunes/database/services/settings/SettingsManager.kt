@@ -26,6 +26,8 @@
 package io.github.antoinepirlot.satunes.database.services.settings
 
 import android.content.Context
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.MutablePreferences
 import androidx.datastore.preferences.core.Preferences
@@ -107,15 +109,15 @@ object SettingsManager {
      */
     private val Context.dataStore: DataStore<Preferences> by PREFERENCES_DATA_STORE
 
-    var foldersChecked: Boolean = DEFAULT_FOLDERS_CHECKED
+    var foldersChecked: MutableState<Boolean> = mutableStateOf(DEFAULT_FOLDERS_CHECKED)
         private set
-    var artistsChecked: Boolean = DEFAULT_ARTISTS_CHECKED
+    var artistsChecked: MutableState<Boolean> = mutableStateOf(DEFAULT_ARTISTS_CHECKED)
         private set
-    var albumsChecked: Boolean = DEFAULT_ALBUMS_CHECKED
+    var albumsChecked: MutableState<Boolean> = mutableStateOf(DEFAULT_ALBUMS_CHECKED)
         private set
-    var genresChecked: Boolean = DEFAULT_GENRE_CHECKED
+    var genresChecked: MutableState<Boolean> = mutableStateOf(DEFAULT_GENRE_CHECKED)
         private set
-    var playlistsChecked: Boolean = DEFAULT_PLAYLIST_CHECKED
+    var playlistsChecked: MutableState<Boolean> = mutableStateOf(DEFAULT_PLAYLIST_CHECKED)
         private set
     var playbackWhenClosedChecked: Boolean = DEFAULT_PLAYBACK_WHEN_CLOSED_CHECKED
         private set
@@ -135,11 +137,11 @@ object SettingsManager {
         private set
 
     val navBarSectionCheckedMap: Map<NavBarSection, Boolean> = mapOf(
-        Pair(NavBarSection.FOLDERS, foldersChecked),
-        Pair(NavBarSection.ARTISTS, artistsChecked),
-        Pair(NavBarSection.ALBUMS, albumsChecked),
-        Pair(NavBarSection.GENRES, genresChecked),
-        Pair(NavBarSection.PLAYLISTS, playlistsChecked)
+        Pair(NavBarSection.FOLDERS, foldersChecked.value),
+        Pair(NavBarSection.ARTISTS, artistsChecked.value),
+        Pair(NavBarSection.ALBUMS, albumsChecked.value),
+        Pair(NavBarSection.GENRES, genresChecked.value),
+        Pair(NavBarSection.PLAYLISTS, playlistsChecked.value)
     )
 
     var whatsNewSeen: Boolean = DEFAULT_WHATS_NEW_SEEN
@@ -165,19 +167,19 @@ object SettingsManager {
     suspend fun loadSettings(context: Context) {
         try {
             context.dataStore.data.map { preferences: Preferences ->
-                foldersChecked =
+                foldersChecked.value =
                     preferences[FOLDERS_CHECKED_PREFERENCES_KEY] ?: DEFAULT_FOLDERS_CHECKED
 
-                artistsChecked =
+                artistsChecked.value =
                     preferences[ARTISTS_CHECKED_PREFERENCES_KEY] ?: DEFAULT_ARTISTS_CHECKED
 
-                albumsChecked =
+                albumsChecked.value =
                     preferences[ALBUMS_CHECKED_PREFERENCES_KEY] ?: DEFAULT_ALBUMS_CHECKED
 
-                genresChecked =
+                genresChecked.value =
                     preferences[GENRE_CHECKED_PREFERENCES_KEY] ?: DEFAULT_GENRE_CHECKED
 
-                playlistsChecked =
+                playlistsChecked.value =
                     preferences[PLAYLISTS_CHECKED_PREFERENCES_KEY] ?: DEFAULT_PLAYLIST_CHECKED
 
                 playbackWhenClosedChecked =
@@ -231,36 +233,36 @@ object SettingsManager {
             when (navBarSection) {
                 NavBarSection.FOLDERS -> {
                     context.dataStore.edit { preferences: MutablePreferences ->
-                        foldersChecked = !foldersChecked
-                        preferences[FOLDERS_CHECKED_PREFERENCES_KEY] = foldersChecked
+                        foldersChecked.value = !foldersChecked.value
+                        preferences[FOLDERS_CHECKED_PREFERENCES_KEY] = foldersChecked.value
                     }
                 }
 
                 NavBarSection.ARTISTS -> {
                     context.dataStore.edit { preferences: MutablePreferences ->
-                        artistsChecked = !artistsChecked
-                        preferences[ARTISTS_CHECKED_PREFERENCES_KEY] = artistsChecked
+                        artistsChecked.value = !artistsChecked.value
+                        preferences[ARTISTS_CHECKED_PREFERENCES_KEY] = artistsChecked.value
                     }
                 }
 
                 NavBarSection.ALBUMS -> {
                     context.dataStore.edit { preferences: MutablePreferences ->
-                        albumsChecked = !albumsChecked
-                        preferences[ALBUMS_CHECKED_PREFERENCES_KEY] = albumsChecked
+                        albumsChecked.value = !albumsChecked.value
+                        preferences[ALBUMS_CHECKED_PREFERENCES_KEY] = albumsChecked.value
                     }
                 }
 
                 NavBarSection.GENRES -> {
                     context.dataStore.edit { preferences: MutablePreferences ->
-                        genresChecked = !genresChecked
-                        preferences[GENRE_CHECKED_PREFERENCES_KEY] = genresChecked
+                        genresChecked.value = !genresChecked.value
+                        preferences[GENRE_CHECKED_PREFERENCES_KEY] = genresChecked.value
                     }
                 }
 
                 NavBarSection.PLAYLISTS -> {
                     context.dataStore.edit { preferences: MutablePreferences ->
-                        playlistsChecked = !playlistsChecked
-                        preferences[PLAYLISTS_CHECKED_PREFERENCES_KEY] = playlistsChecked
+                        playlistsChecked.value = !playlistsChecked.value
+                        preferences[PLAYLISTS_CHECKED_PREFERENCES_KEY] = playlistsChecked.value
                     }
                 }
 

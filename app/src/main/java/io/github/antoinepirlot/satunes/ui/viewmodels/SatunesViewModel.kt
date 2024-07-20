@@ -31,7 +31,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import io.github.antoinepirlot.satunes.MainActivity
-import io.github.antoinepirlot.satunes.data.navBarSections
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
@@ -54,55 +53,30 @@ internal class SatunesViewModel : ViewModel() {
     private val _uiState: MutableStateFlow<SatunesUiState> = MutableStateFlow(SatunesUiState())
     private val _isLoadingData: MutableState<Boolean> = DataLoader.isLoading
     private val _isDataLoaded: MutableState<Boolean> = DataLoader.isLoaded
-    private val _availableNavBarSections: MutableSet<NavBarSection> = navBarSections.toMutableSet()
+    val _foldersChecked: MutableState<Boolean> = SettingsManager.foldersChecked
+    val _artistsChecked: MutableState<Boolean> = SettingsManager.artistsChecked
+    val _albumsChecked: MutableState<Boolean> = SettingsManager.albumsChecked
+    val _genresChecked: MutableState<Boolean> = SettingsManager.genresChecked
+    val _playlistsChecked: MutableState<Boolean> = SettingsManager.playlistsChecked
 
     val uiState: StateFlow<SatunesUiState> = _uiState.asStateFlow()
 
     val isLoadingData: Boolean by _isLoadingData
     val isDataLoaded: Boolean by _isDataLoaded
+    val foldersChecked: Boolean by SettingsManager.foldersChecked
+    val artistsChecked: Boolean by SettingsManager.artistsChecked
+    val albumsChecked: Boolean by SettingsManager.albumsChecked
+    val genresChecked: Boolean by SettingsManager.genresChecked
+    val playlistsChecked: Boolean by SettingsManager.playlistsChecked
 
     //Use this in UiSate and ViewModel as it is a particular value. It could change but most of the time it won't change
     var isAudioAllowed: Boolean by mutableStateOf(_uiState.value.isAudioAllowed)
         private set
 
-    lateinit var availableNavBarSections: Set<NavBarSection>
-        private set
-
-    private fun updateAvailableNavBarSections() {
-        //TODO change it to use list structure in SettingsManager
-        if (_uiState.value.foldersChecked) {
-            this._availableNavBarSections.add(element = NavBarSection.FOLDERS)
-        } else {
-            this._availableNavBarSections.remove(element = NavBarSection.FOLDERS)
-        }
-        if (_uiState.value.artistsChecked) {
-            this._availableNavBarSections.add(element = NavBarSection.ARTISTS)
-        } else {
-            this._availableNavBarSections.remove(element = NavBarSection.ARTISTS)
-        }
-        if (_uiState.value.albumsChecked) {
-            this._availableNavBarSections.add(element = NavBarSection.ALBUMS)
-        } else {
-            this._availableNavBarSections.remove(element = NavBarSection.ALBUMS)
-        }
-        if (_uiState.value.genresChecked) {
-            this._availableNavBarSections.add(element = NavBarSection.GENRES)
-        } else {
-            this._availableNavBarSections.remove(element = NavBarSection.GENRES)
-        }
-        if (_uiState.value.playlistsChecked) {
-            this._availableNavBarSections.add(element = NavBarSection.PLAYLISTS)
-        } else {
-            this._availableNavBarSections.remove(element = NavBarSection.PLAYLISTS)
-        }
-        this.availableNavBarSections = this._availableNavBarSections.toSet()
-    }
-
     fun loadSettings() {
         runBlocking {
             SettingsManager.loadSettings(context = MainActivity.instance.applicationContext)
             _uiState.update { SatunesUiState() }
-            updateAvailableNavBarSections()
         }
     }
 
@@ -150,38 +124,37 @@ internal class SatunesViewModel : ViewModel() {
                 context = MainActivity.instance.applicationContext,
                 navBarSection = navBarSection
             )
-            _uiState.update { currentState: SatunesUiState ->
-                currentState.copy(
-                    foldersChecked = SettingsManager.foldersChecked,
-                    artistsChecked = SettingsManager.artistsChecked,
-                    albumsChecked = SettingsManager.albumsChecked,
-                    genresChecked = SettingsManager.genresChecked,
-                    playlistsChecked = SettingsManager.playlistsChecked,
-                    navBarSectionSettingsChecked = mapOf(
-                        Pair(
-                            first = SwitchSettings.FOLDERS_CHECKED,
-                            second = SettingsManager.foldersChecked
-                        ),
-                        Pair(
-                            first = SwitchSettings.ARTISTS_CHECKED,
-                            second = SettingsManager.artistsChecked
-                        ),
-                        Pair(
-                            first = SwitchSettings.ALBUMS_CHECKED,
-                            second = SettingsManager.albumsChecked
-                        ),
-                        Pair(
-                            first = SwitchSettings.GENRES_CHECKED,
-                            second = SettingsManager.genresChecked
-                        ),
-                        Pair(
-                            first = SwitchSettings.PLAYLISTS_CHECKED,
-                            second = SettingsManager.playlistsChecked
-                        ),
-                    )
+        }
+        _uiState.update { currentState: SatunesUiState ->
+            currentState.copy(
+                foldersChecked = SettingsManager.foldersChecked.value,
+                artistsChecked = SettingsManager.artistsChecked.value,
+                albumsChecked = SettingsManager.albumsChecked.value,
+                genresChecked = SettingsManager.genresChecked.value,
+                playlistsChecked = SettingsManager.playlistsChecked.value,
+                navBarSectionSettingsChecked = mapOf(
+                    Pair(
+                        first = SwitchSettings.FOLDERS_CHECKED,
+                        second = SettingsManager.foldersChecked.value
+                    ),
+                    Pair(
+                        first = SwitchSettings.ARTISTS_CHECKED,
+                        second = SettingsManager.artistsChecked.value
+                    ),
+                    Pair(
+                        first = SwitchSettings.ALBUMS_CHECKED,
+                        second = SettingsManager.albumsChecked.value
+                    ),
+                    Pair(
+                        first = SwitchSettings.GENRES_CHECKED,
+                        second = SettingsManager.genresChecked.value
+                    ),
+                    Pair(
+                        first = SwitchSettings.PLAYLISTS_CHECKED,
+                        second = SettingsManager.playlistsChecked.value
+                    ),
                 )
-            }
-            updateAvailableNavBarSections()
+            )
         }
     }
 

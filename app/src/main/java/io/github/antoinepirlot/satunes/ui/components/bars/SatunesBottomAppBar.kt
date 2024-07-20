@@ -30,8 +30,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.NavigationBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
@@ -52,9 +50,10 @@ import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
 internal fun SatunesBottomAppBar(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    satunesViewModel: SatunesViewModel = viewModel()
+    satunesViewModel: SatunesViewModel = viewModel(),
+    satunesUiState: SatunesUiState
 ) {
-    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+//    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
 
     val screenWidthDp = LocalConfiguration.current.screenWidthDp
     val navigationModifier: Modifier =
@@ -62,7 +61,7 @@ internal fun SatunesBottomAppBar(
     val navigationItemModifier: Modifier =
         if (screenWidthDp < ScreenSizes.VERY_VERY_SMALL) Modifier.size(16.dp) else Modifier
     NavigationBar(modifier = navigationModifier) {
-        if (satunesUiState.foldersChecked) {
+        if (satunesViewModel.foldersChecked) {
             MediaNavBarSelection(
                 modifier = navigationItemModifier,
                 navController = navController,
@@ -70,7 +69,7 @@ internal fun SatunesBottomAppBar(
             )
         }
 
-        if (satunesUiState.artistsChecked) {
+        if (satunesViewModel.artistsChecked) {
             MediaNavBarSelection(
                 modifier = navigationItemModifier,
                 navController = navController,
@@ -78,14 +77,14 @@ internal fun SatunesBottomAppBar(
             )
         }
 
-        if (satunesUiState.albumsChecked) {
+        if (satunesViewModel.albumsChecked) {
             MediaNavBarSelection(
                 modifier = navigationItemModifier,
                 navController = navController,
                 navBarSection = NavBarSection.ALBUMS
             )
         }
-        if (satunesUiState.genresChecked) {
+        if (satunesViewModel.genresChecked) {
             MediaNavBarSelection(
                 modifier = navigationItemModifier,
                 navController = navController,
@@ -99,7 +98,7 @@ internal fun SatunesBottomAppBar(
             navBarSection = NavBarSection.MUSICS
         )
 
-        if (satunesUiState.playlistsChecked) {
+        if (satunesViewModel.playlistsChecked) {
             MediaNavBarSelection(
                 modifier = navigationItemModifier,
                 navController = navController,
@@ -114,5 +113,5 @@ internal fun SatunesBottomAppBar(
 @Composable
 private fun SatunesBottomAppBarPreview() {
     val navController: NavHostController = rememberNavController()
-    SatunesBottomAppBar(navController = navController)
+//    SatunesBottomAppBar(navController = navController)
 }

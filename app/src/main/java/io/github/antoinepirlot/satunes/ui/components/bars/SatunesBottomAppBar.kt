@@ -61,9 +61,9 @@ import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
 internal fun SatunesBottomAppBar(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    viewModel: SatunesViewModel = viewModel()
+    satunesViewModel: SatunesViewModel = viewModel()
 ) {
-    val uiState: SatunesUiState by viewModel.uiState.collectAsState()
+    val uiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
 
     SettingsManager.menuTitleCheckedMap.forEach { (menuTitle: MenuTitle, checked: MutableState<Boolean>) ->
         if (!checked.value) {
@@ -89,7 +89,7 @@ internal fun SatunesBottomAppBar(
                 },
                 selected = selectedMenuTitle == menuTitle,
                 onClick = {
-                    viewModel.selectMenuTitle(menuTitle = menuTitle)
+                    satunesViewModel.selectMenuTitle(menuTitle = menuTitle)
                     val rootRoute: String = when (menuTitle) {
                         MenuTitle.FOLDERS -> Destination.FOLDERS.link
                         MenuTitle.ARTISTS -> Destination.ARTISTS.link

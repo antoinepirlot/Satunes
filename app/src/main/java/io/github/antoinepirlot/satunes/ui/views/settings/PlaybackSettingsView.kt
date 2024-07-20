@@ -31,20 +31,19 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
-import io.github.antoinepirlot.satunes.models.Settings
 import io.github.antoinepirlot.satunes.ui.components.settings.AudioOffloadSetting
 import io.github.antoinepirlot.satunes.ui.components.settings.BarSpeedSetting
 import io.github.antoinepirlot.satunes.ui.components.settings.PlaybackModesSubSettings
 import io.github.antoinepirlot.satunes.ui.components.settings.SettingsSwitchList
 import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
 import io.github.antoinepirlot.satunes.ui.components.texts.Title
+import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
 
 /**
  *   @author Antoine Pirlot 06/03/2024
@@ -52,28 +51,14 @@ import io.github.antoinepirlot.satunes.ui.components.texts.Title
 
 @Composable
 internal fun PlaybackSettingsView(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    satunesViewModel: SatunesViewModel = viewModel()
 ) {
-    val checkedMap: Map<Settings, MutableState<Boolean>> = mapOf(
-        Pair(
-            first = Settings.PLAYBACK_WHEN_CLOSED,
-            second = SettingsManager.playbackWhenClosedChecked
-        ),
-        Pair(
-            first = Settings.PAUSE_IF_NOISY,
-            second = SettingsManager.pauseIfNoisyChecked
-        ),
-        Pair(
-            first = Settings.PAUSE_IF_ANOTHER_PLAYBACK,
-            second = SettingsManager.pauseIfAnotherPlayback
-        )
-    )
-
     val scrollState: ScrollState = rememberScrollState()
     Column(modifier = modifier.verticalScroll(scrollState)) {
         Title(text = stringResource(id = R.string.playback_settings))
         SubSettings {
-            SettingsSwitchList(checkedMap = checkedMap) //Contains list item so always padding horizontal 16.dp
+            SettingsSwitchList(checkedMap = satunesViewModel.playbackSettingsChecked) //Contains list item so always padding horizontal 16.dp
             BarSpeedSetting(modifier = Modifier.padding(horizontal = 16.dp))
         }
         PlaybackModesSubSettings() //Contains list item so always padding horizontal 16.dp

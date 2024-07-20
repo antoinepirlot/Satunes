@@ -30,15 +30,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
-import io.github.antoinepirlot.satunes.models.Settings
 import io.github.antoinepirlot.satunes.ui.components.settings.SettingsSwitchList
 import io.github.antoinepirlot.satunes.ui.components.texts.Title
+import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
 
 /**
  *   @author Antoine Pirlot 06/03/2024
@@ -47,19 +46,12 @@ import io.github.antoinepirlot.satunes.ui.components.texts.Title
 @Composable
 internal fun BottomNavigationBarSettingsView(
     modifier: Modifier = Modifier,
+    satunesViewModel: SatunesViewModel = viewModel(),
 ) {
-    val checkedMap: Map<Settings, MutableState<Boolean>> = mapOf(
-        Pair(first = Settings.FOLDERS_CHECKED, second = SettingsManager.foldersChecked),
-        Pair(first = Settings.ARTISTS_CHECKED, second = SettingsManager.artistsChecked),
-        Pair(first = Settings.ALBUMS_CHECKED, second = SettingsManager.albumsChecked),
-        Pair(first = Settings.GENRES_CHECKED, second = SettingsManager.genresChecked),
-        Pair(first = Settings.PLAYLISTS_CHECKED, second = SettingsManager.playlistsChecked),
-    )
-
     val scrollState: ScrollState = rememberScrollState()
     Column(modifier = modifier.verticalScroll(scrollState)) {
         Title(text = stringResource(id = R.string.bottom_bar))
-        SettingsSwitchList(checkedMap = checkedMap)
+        SettingsSwitchList(checkedMap = satunesViewModel.navBarItemSettingsChecked)
     }
 }
 

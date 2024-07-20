@@ -30,15 +30,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
-import io.github.antoinepirlot.satunes.models.Settings
 import io.github.antoinepirlot.satunes.ui.components.settings.SettingsSwitchList
 import io.github.antoinepirlot.satunes.ui.components.texts.Title
+import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
 
 /**
  * @author Antoine Pirlot on 27/04/2024
@@ -46,16 +45,15 @@ import io.github.antoinepirlot.satunes.ui.components.texts.Title
 
 @Composable
 internal fun ExclusionSettingsView(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    satunesViewModel: SatunesViewModel = viewModel(),
 ) {
-    val checkedMap: Map<Settings, MutableState<Boolean>> = mapOf(
-        Pair(first = Settings.INCLUDE_RINGTONES, second = SettingsManager.includeRingtonesChecked)
-    )
+
 
     val scrollState: ScrollState = rememberScrollState()
     Column(modifier = modifier.verticalScroll(scrollState)) {
         Title(text = stringResource(id = R.string.exclusion_setting))
-        SettingsSwitchList(checkedMap = checkedMap) //Contains list item so always padding horizontal 16.dp
+        SettingsSwitchList(checkedMap = satunesViewModel.exclusionSettingsChecked) //Contains list item so always padding horizontal 16.dp
     }
 }
 

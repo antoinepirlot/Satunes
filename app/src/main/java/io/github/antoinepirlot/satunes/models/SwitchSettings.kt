@@ -42,8 +42,8 @@ import io.github.antoinepirlot.satunes.database.R.string.playlists
  *   @author Antoine Pirlot 06/03/2024
  */
 
-// TODO rename for Switch Settings enum class
-internal enum class Settings(val stringId: Int) {
+// TODO rename for Switch SwitchSettings enum class
+internal enum class SwitchSettings(val stringId: Int) {
     ALBUMS_CHECKED(stringId = albums),
     ALBUMS_FILTER(stringId = albums),
     ARTISTS_CHECKED(stringId = artists),
@@ -63,9 +63,9 @@ internal enum class Settings(val stringId: Int) {
     SHUFFLE_MODE(stringId = shuffle),
 }
 
-internal val settingsNeedRestart: List<Settings> = listOf(
-    Settings.AUDIO_OFFLOAD,
-    Settings.INCLUDE_RINGTONES,
-    Settings.PAUSE_IF_ANOTHER_PLAYBACK,
-    Settings.PAUSE_IF_NOISY,
+internal val switchSettingsNeedRestarts: List<SwitchSettings> = listOf(
+    SwitchSettings.AUDIO_OFFLOAD,
+    SwitchSettings.INCLUDE_RINGTONES,
+    SwitchSettings.PAUSE_IF_ANOTHER_PLAYBACK,
+    SwitchSettings.PAUSE_IF_NOISY,
 )

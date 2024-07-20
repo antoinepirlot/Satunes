@@ -28,14 +28,13 @@ package io.github.antoinepirlot.satunes.ui.components.settings
 import android.content.Context
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.satunes.database.models.MenuTitle
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.models.SearchChips
-import io.github.antoinepirlot.satunes.models.Settings
+import io.github.antoinepirlot.satunes.models.SwitchSettings
 import io.github.antoinepirlot.satunes.services.search.SearchChipsManager
 import io.github.antoinepirlot.satunes.ui.components.cards.ListItem
 
@@ -46,17 +45,17 @@ import io.github.antoinepirlot.satunes.ui.components.cards.ListItem
 @Composable
 internal fun SettingsSwitchList(
     modifier: Modifier = Modifier,
-    checkedMap: Map<Settings, MutableState<Boolean>>,
+    checkedMap: Map<SwitchSettings, Boolean>,
 ) {
     val context: Context = LocalContext.current
 
     Column(modifier = modifier) {
-        for (setting: Settings in checkedMap.keys) {
+        for (setting: SwitchSettings in checkedMap.keys) {
             ListItem( //Has always horizontal padding of 16.dp
                 headlineContent = {
                     SettingWithSwitch(
                         setting = setting,
-                        checked = checkedMap[setting]!!.value,
+                        checked = checkedMap[setting]!!,
                         onCheckedChange = {
                             switchSetting(
                                 context = context,
@@ -76,64 +75,64 @@ private fun SettingsSwitchListPreview() {
     SettingsSwitchList(checkedMap = mapOf())
 }
 
-private fun switchSetting(context: Context, setting: Settings) {
+private fun switchSetting(context: Context, setting: SwitchSettings) {
     when (setting) {
-        Settings.FOLDERS_CHECKED -> {
+        SwitchSettings.FOLDERS_CHECKED -> {
             SettingsManager.switchMenuTitle(
                 context = context,
                 menuTitle = MenuTitle.FOLDERS
             )
         }
 
-        Settings.ARTISTS_CHECKED -> {
+        SwitchSettings.ARTISTS_CHECKED -> {
             SettingsManager.switchMenuTitle(
                 context = context,
                 menuTitle = MenuTitle.ARTISTS
             )
         }
 
-        Settings.ALBUMS_CHECKED -> {
+        SwitchSettings.ALBUMS_CHECKED -> {
             SettingsManager.switchMenuTitle(
                 context = context,
                 menuTitle = MenuTitle.ALBUMS
             )
         }
 
-        Settings.GENRES_CHECKED -> {
+        SwitchSettings.GENRES_CHECKED -> {
             SettingsManager.switchMenuTitle(
                 context = context,
                 menuTitle = MenuTitle.GENRES
             )
         }
 
-        Settings.PLAYLISTS_CHECKED -> {
+        SwitchSettings.PLAYLISTS_CHECKED -> {
             SettingsManager.switchMenuTitle(
                 context = context,
                 menuTitle = MenuTitle.PLAYLISTS
             )
         }
 
-        Settings.PLAYBACK_WHEN_CLOSED -> {
+        SwitchSettings.PLAYBACK_WHEN_CLOSED -> {
             SettingsManager.switchPlaybackWhenClosedChecked(context = context)
         }
 
-        Settings.PAUSE_IF_NOISY -> {
+        SwitchSettings.PAUSE_IF_NOISY -> {
             SettingsManager.switchPauseIfNoisy(context = context)
         }
 
-        Settings.INCLUDE_RINGTONES -> {
+        SwitchSettings.INCLUDE_RINGTONES -> {
             SettingsManager.switchIncludeRingtones(context = context)
         }
 
-        Settings.SHUFFLE_MODE -> {
+        SwitchSettings.SHUFFLE_MODE -> {
             SettingsManager.switchShuffleMode(context = context)
         }
 
-        Settings.PAUSE_IF_ANOTHER_PLAYBACK -> {
+        SwitchSettings.PAUSE_IF_ANOTHER_PLAYBACK -> {
             SettingsManager.switchPauseIfPlayback(context = context)
         }
 
-        Settings.MUSICS_FILTER -> {
+        SwitchSettings.MUSICS_FILTER -> {
             SettingsManager.switchFilter(context = context, filterSetting = MenuTitle.MUSICS)
             val searchChip: SearchChips = SearchChips.MUSICS
             if (SettingsManager.musicsFilter.value != searchChip.enabled.value) {
@@ -141,7 +140,7 @@ private fun switchSetting(context: Context, setting: Settings) {
             }
         }
 
-        Settings.ARTISTS_FILTER -> {
+        SwitchSettings.ARTISTS_FILTER -> {
             SettingsManager.switchFilter(context = context, filterSetting = MenuTitle.ARTISTS)
             val searchChip: SearchChips = SearchChips.ARTISTS
             if (SettingsManager.artistsFilter.value != searchChip.enabled.value) {
@@ -149,7 +148,7 @@ private fun switchSetting(context: Context, setting: Settings) {
             }
         }
 
-        Settings.ALBUMS_FILTER -> {
+        SwitchSettings.ALBUMS_FILTER -> {
             SettingsManager.switchFilter(context = context, filterSetting = MenuTitle.ALBUMS)
             val searchChip: SearchChips = SearchChips.ALBUMS
             if (SettingsManager.albumsFilter.value != searchChip.enabled.value) {
@@ -157,7 +156,7 @@ private fun switchSetting(context: Context, setting: Settings) {
             }
         }
 
-        Settings.GENRES_FILTER -> {
+        SwitchSettings.GENRES_FILTER -> {
             SettingsManager.switchFilter(context = context, filterSetting = MenuTitle.GENRES)
             val searchChip: SearchChips = SearchChips.GENRES
             if (SettingsManager.genresFilter.value != searchChip.enabled.value) {
@@ -165,7 +164,7 @@ private fun switchSetting(context: Context, setting: Settings) {
             }
         }
 
-        Settings.FOLDERS_FILTER -> {
+        SwitchSettings.FOLDERS_FILTER -> {
             SettingsManager.switchFilter(context = context, filterSetting = MenuTitle.FOLDERS)
             val searchChip: SearchChips = SearchChips.FOLDERS
             if (SettingsManager.foldersFilter.value != searchChip.enabled.value) {
@@ -173,7 +172,7 @@ private fun switchSetting(context: Context, setting: Settings) {
             }
         }
 
-        Settings.PLAYLISTS_FILTER -> {
+        SwitchSettings.PLAYLISTS_FILTER -> {
             SettingsManager.switchFilter(context = context, filterSetting = MenuTitle.PLAYLISTS)
             val searchChip: SearchChips = SearchChips.PLAYLISTS
             if (SettingsManager.playlistsFilter.value != searchChip.enabled.value) {

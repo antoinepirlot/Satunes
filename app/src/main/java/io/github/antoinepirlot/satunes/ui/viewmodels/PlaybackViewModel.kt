@@ -69,8 +69,12 @@ class PlaybackViewModel : ViewModel() {
         shuffleMode: Boolean = SettingsManager.shuffleMode.value,
         musicToPlay: Music? = null
     ) {
-        this._playbackController.loadMusicFromFolders(
-            folders = folders,
+        val musicSet: MutableSet<Music> = mutableSetOf()
+        folders.forEach { folder: Folder ->
+            musicSet.addAll(elements = folder.getAllMusic())
+        }
+        this.loadMusic(
+            musicSet = musicSet,
             shuffleMode = shuffleMode,
             musicToPlay = musicToPlay
         )
@@ -81,8 +85,34 @@ class PlaybackViewModel : ViewModel() {
         shuffleMode: Boolean = SettingsManager.shuffleMode.value,
         musicToPlay: Music? = null
     ) {
-        this._playbackController.loadMusicFromMedia(
-            media = media,
+        val musicSet: Set<Music> =
+            if (media is Folder) {
+                media.getAllMusic()
+            } else {
+                val musicSet: MutableSet<Music> = mutableSetOf()
+                media.getMusicSet().forEach { music: Music ->
+                    musicSet.addAll(elements = music.getMusicSet())
+                }
+                musicSet
+            }
+        this.loadMusic(
+            musicSet = musicSet,
+            shuffleMode = shuffleMode,
+            musicToPlay = musicToPlay
+        )
+    }
+
+    fun loadMusicFromMedias(
+        medias: Set<MediaImpl>,
+        shuffleMode: Boolean = SettingsManager.shuffleMode.value,
+        musicToPlay: Music? = null,
+    ) {
+        val musicSet: MutableSet<Music> = mutableSetOf()
+        medias.forEach { mediaImpl: MediaImpl ->
+            musicSet.addAll(mediaImpl.getMusicSet())
+        }
+        this.loadMusic(
+            musicSet = musicSet,
             shuffleMode = shuffleMode,
             musicToPlay = musicToPlay
         )
@@ -95,18 +125,6 @@ class PlaybackViewModel : ViewModel() {
     ) {
         this._playbackController.loadMusic(
             musicSet = musicSet,
-            shuffleMode = shuffleMode,
-            musicToPlay = musicToPlay
-        )
-    }
-
-    fun loadMusicFromMedias(
-        medias: Set<MediaImpl>,
-        shuffleMode: Boolean = SettingsManager.shuffleMode.value,
-        musicToPlay: Music? = null,
-    ) {
-        this._playbackController.loadMusicFromMedias(
-            medias = medias,
             shuffleMode = shuffleMode,
             musicToPlay = musicToPlay
         )

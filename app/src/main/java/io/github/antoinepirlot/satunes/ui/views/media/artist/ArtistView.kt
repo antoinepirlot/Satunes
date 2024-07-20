@@ -46,7 +46,7 @@ import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
 import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
-import io.github.antoinepirlot.satunes.ui.views.media.MediaCollectionView
+import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 import io.github.antoinepirlot.satunes.ui.views.media.MediaWithAlbumsHeaderView
 
 /**
@@ -69,7 +69,7 @@ internal fun ArtistView(
     }
     //
 
-    MediaCollectionView(
+    MediaListView(
         modifier = modifier,
         navController = navController,
         mediaImplCollection = musicMap,

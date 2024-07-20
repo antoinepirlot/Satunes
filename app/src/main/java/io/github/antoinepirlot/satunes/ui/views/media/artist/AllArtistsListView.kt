@@ -41,7 +41,7 @@ import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
 import io.github.antoinepirlot.satunes.ui.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
-import io.github.antoinepirlot.satunes.ui.views.media.MediaCollectionView
+import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 
 /**
  * @author Antoine Pirlot on 01/04/2024
@@ -56,7 +56,7 @@ internal fun AllArtistsListView(
 ) {
     val artistSet: Set<Artist> = dataViewModel.artistSet
 
-    MediaCollectionView(
+    MediaListView(
         modifier = modifier,
         mediaImplCollection = artistSet,
         navController = navController,

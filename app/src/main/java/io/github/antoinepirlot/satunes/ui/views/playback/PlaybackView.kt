@@ -51,12 +51,7 @@ internal fun PlaybackView(
     onAlbumClick: (album: Album?) -> Unit,
     onArtistClick: (artist: Artist) -> Unit,
 ) {
-    try {
-        if (playbackViewModel.musicPlaying == null) {
-            navController.popBackStack()
-            return
-        }
-    } catch (_: Exception) {
+    if (playbackViewModel.musicPlaying == null) {
         navController.popBackStack()
         return
     }

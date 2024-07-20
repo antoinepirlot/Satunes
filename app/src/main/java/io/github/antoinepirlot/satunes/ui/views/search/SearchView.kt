@@ -65,7 +65,7 @@ import io.github.antoinepirlot.satunes.services.search.SearchChipsManager
 import io.github.antoinepirlot.satunes.ui.components.chips.MediaChipList
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
-import io.github.antoinepirlot.satunes.ui.views.media.MediaCollectionView
+import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -128,7 +128,7 @@ internal fun SearchView(
         )
         Spacer(modifier = Modifier.size(16.dp))
         MediaChipList()
-        MediaCollectionView(
+        MediaListView(
             navController = navController,
             mediaImplCollection = mediaImplList,
             openMedia = { mediaImpl: MediaImpl ->

@@ -50,7 +50,7 @@ import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
 import io.github.antoinepirlot.satunes.ui.components.forms.PlaylistCreationForm
 import io.github.antoinepirlot.satunes.ui.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
-import io.github.antoinepirlot.satunes.ui.views.media.MediaCollectionView
+import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 
 /**
  * @author Antoine Pirlot on 30/03/2024
@@ -75,7 +75,7 @@ internal fun PlaylistListView(
         }
         //
 
-        MediaCollectionView(
+        MediaListView(
             mediaImplCollection = playlistSet,
             navController = navController,
             openMedia = { clickedMediaImpl: MediaImpl ->

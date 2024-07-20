@@ -53,7 +53,7 @@ import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
 import io.github.antoinepirlot.satunes.ui.components.dialog.MediaSelectionDialog
 import io.github.antoinepirlot.satunes.ui.components.texts.Title
 import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
-import io.github.antoinepirlot.satunes.ui.views.media.MediaCollectionView
+import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 import io.github.antoinepirlot.satunes.database.R as RDb
 
 /**
@@ -78,7 +78,7 @@ internal fun PlaylistView(
     }
     //
 
-    MediaCollectionView(
+    MediaListView(
         modifier = modifier,
         navController = navController,
         mediaImplCollection = musicSet,

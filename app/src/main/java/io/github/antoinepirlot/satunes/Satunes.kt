@@ -62,8 +62,7 @@ internal fun Satunes(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel()
 ) {
-    val uiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
-
+    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     SatunesTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
@@ -87,7 +86,7 @@ internal fun Satunes(
                     navController = navController
                 )
 
-                if (!uiState.whatsNewSeen) {
+                if (!satunesUiState.whatsNewSeen) {
                     val context: Context = LocalContext.current
                     WhatsNewDialog(
                         onConfirm = {

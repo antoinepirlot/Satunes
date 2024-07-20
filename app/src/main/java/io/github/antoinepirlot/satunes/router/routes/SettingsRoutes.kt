@@ -27,7 +27,6 @@ package io.github.antoinepirlot.satunes.router.routes
 
 import android.os.Build
 import androidx.compose.animation.AnimatedContentScope
-import androidx.compose.runtime.MutableState
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -51,7 +50,6 @@ import io.github.antoinepirlot.satunes.ui.views.settings.logs.LogsSettingsView
 
 internal fun NavGraphBuilder.settingsRoutes(
     navController: NavHostController,
-    isAudioAllowed: MutableState<Boolean>,
     onStart: AnimatedContentScope.(NavBackStackEntry) -> Unit
 ) {
     composable(Destination.SETTINGS.link) {
@@ -88,7 +86,7 @@ internal fun NavGraphBuilder.settingsRoutes(
 
     composable(Destination.PERMISSIONS_SETTINGS.link) {
         onStart(it)
-        PermissionsSettingsView(isAudioAllowed = isAudioAllowed)
+        PermissionsSettingsView()
     }
 
     composable(Destination.ANDROID_AUTO_SETTINGS.link) {

@@ -28,6 +28,7 @@ package io.github.antoinepirlot.satunes.ui.states
 import io.github.antoinepirlot.satunes.database.models.MenuTitle
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.models.DEFAULT_DESTINATION
+import io.github.antoinepirlot.satunes.ui.viewmodels.utils.isAudioAllowed
 
 /**
  * @author Antoine Pirlot on 19/07/2024
@@ -35,6 +36,7 @@ import io.github.antoinepirlot.satunes.models.DEFAULT_DESTINATION
 data class SatunesUiState(
     val whatsNewSeen: Boolean = SettingsManager.whatsNewSeen,
     val currentDestination: String = DEFAULT_DESTINATION,
+    val isAudioAllowed: Boolean = isAudioAllowed(),
     val selectedMenuTitle: MenuTitle =
     // Selected the default menu title in this priority order
         if (SettingsManager.foldersChecked.value) MenuTitle.FOLDERS

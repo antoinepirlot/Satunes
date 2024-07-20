@@ -48,7 +48,6 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.internet.updates.UpdateAvailableStatus
@@ -174,9 +173,7 @@ private fun onSettingButtonClick(uiState: SatunesUiState, navController: NavHost
 
     when (val currentDestination: String = uiState.currentDestination) {
         in settingsDestinations -> {
-            if (currentDestination == Destination.PERMISSIONS_SETTINGS.link
-                && !MainActivity.instance.isAudioAllowed()
-            ) {
+            if (currentDestination == Destination.PERMISSIONS_SETTINGS.link && uiState.isAudioAllowed) {
                 return
             } else {
                 navController.popBackStack()

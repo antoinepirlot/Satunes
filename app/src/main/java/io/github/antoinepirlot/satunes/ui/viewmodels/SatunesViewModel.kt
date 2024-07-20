@@ -28,11 +28,13 @@ package io.github.antoinepirlot.satunes.ui.viewmodels
 import android.content.Context
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import io.github.antoinepirlot.satunes.database.models.MenuTitle
 import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.ui.states.SatunesUiState
+import io.github.antoinepirlot.satunes.ui.viewmodels.utils.isAudioAllowed
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -46,11 +48,14 @@ class SatunesViewModel : ViewModel() {
     private val _isLoadingData: MutableState<Boolean> = DataLoader.isLoading
     private val _isDataLoaded: MutableState<Boolean> = DataLoader.isLoaded
     private var _selectedMenuTitle: MenuTitle = _uiState.value.selectedMenuTitle
+    private val _isAudioAllowed: MutableState<Boolean> =
+        mutableStateOf(_uiState.value.isAudioAllowed)
 
     val uiState: StateFlow<SatunesUiState> = _uiState.asStateFlow()
 
     val isLoadingData: Boolean by _isLoadingData
     val isDataLoaded: Boolean by _isDataLoaded
+    val isAudioAllowed: Boolean by _isAudioAllowed
 
     fun seeWhatsNew(context: Context, permanently: Boolean = false) {
         if (permanently) {
@@ -76,5 +81,14 @@ class SatunesViewModel : ViewModel() {
 
     fun loadAllData(context: Context) {
         DataLoader.loadAllData(context = context)
+    }
+
+    internal fun updateIsAudioAllowed() {
+        this._isAudioAllowed.value = isAudioAllowed()
+        if (this._isAudioAllowed.value != this._uiState.value.isAudioAllowed) {
+            this._uiState.update { currentState: SatunesUiState ->
+                currentState.copy(isAudioAllowed = this._isAudioAllowed.value)
+            }
+        }
     }
 }

@@ -25,10 +25,8 @@
 
 package io.github.antoinepirlot.satunes
 
-import android.Manifest
 import android.app.PendingIntent
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -38,7 +36,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.OptIn
 import androidx.compose.ui.platform.LocalContext
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.media3.common.util.UnstableApi
 import io.github.antoinepirlot.satunes.database.models.Playlist
@@ -63,16 +60,16 @@ internal class MainActivity : ComponentActivity() {
 
     companion object {
         internal lateinit var instance: MainActivity
-        private const val IMPORT_PLAYLIST_CODE = 1
-        private const val EXPORT_PLAYLIST_CODE = 2
-        private const val EXPORT_LOGS_CODE = 3
-        private const val MIME_JSON = "application/json"
-        private const val MIME_TEXT = "application/text"
+        private const val IMPORT_PLAYLIST_CODE: Int = 1
+        private const val EXPORT_PLAYLIST_CODE: Int = 2
+        private const val EXPORT_LOGS_CODE: Int = 3
+        private const val MIME_JSON: String = "application/json"
+        private const val MIME_TEXT: String = "application/text"
         internal var playlistsToExport: Array<Playlist> = arrayOf()
-        private val DEFAULT_URI =
+        private val DEFAULT_URI: Uri =
             Uri.parse(Environment.getExternalStorageDirectory().path + '/' + Environment.DIRECTORY_DOCUMENTS)
 
-        private val createFileIntent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+        private val createFileIntent: Intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
             addCategory(Intent.CATEGORY_OPENABLE)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 putExtra(DocumentsContract.EXTRA_INITIAL_URI, DEFAULT_URI)
@@ -100,20 +97,6 @@ internal class MainActivity : ComponentActivity() {
             DataCleanerManager.removeApkFiles(context = baseContext)
         } else {
             logger.warning("Can't remove apk files with API: ${Build.VERSION.SDK_INT}")
-        }
-    }
-
-    internal fun isAudioAllowed(): Boolean {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            ContextCompat.checkSelfPermission(
-                instance,
-                Manifest.permission.READ_MEDIA_AUDIO
-            ) == PackageManager.PERMISSION_GRANTED
-        } else {
-            ContextCompat.checkSelfPermission(
-                instance,
-                Manifest.permission.READ_EXTERNAL_STORAGE
-            ) == PackageManager.PERMISSION_GRANTED
         }
     }
 
@@ -212,8 +195,6 @@ internal class MainActivity : ComponentActivity() {
     }
 
     override fun onRestart() {
-        logger.info("Restarting MainActivity")
         super.onRestart()
-        logger.info("Restarted MainActivity")
     }
 }

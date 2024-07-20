@@ -23,15 +23,26 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.services
+package io.github.antoinepirlot.satunes.ui.viewmodels.utils
 
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
+import androidx.core.content.ContextCompat
+import io.github.antoinepirlot.satunes.MainActivity
 
 /**
- * @author Antoine Pirlot on 29/04/2024
+ * @author Antoine Pirlot on 20/07/2024
  */
-internal object PermissionManager {
-    val isReadExternalStorageAllowed: MutableState<Boolean> = mutableStateOf(false)
-    val isReadAudioAllowed: MutableState<Boolean> = mutableStateOf(false)
+
+internal fun isAudioAllowed(): Boolean {
+    // Permission Granted
+    return ContextCompat.checkSelfPermission(
+        MainActivity.instance.applicationContext,
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            Manifest.permission.READ_MEDIA_AUDIO
+        } else {
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        }
+    ) == PackageManager.PERMISSION_GRANTED
 }

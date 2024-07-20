@@ -42,7 +42,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.media3.common.MediaItem
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
@@ -58,7 +57,7 @@ import io.github.antoinepirlot.satunes.ui.components.images.AlbumArtwork
 import io.github.antoinepirlot.satunes.ui.components.texts.Subtitle
 import io.github.antoinepirlot.satunes.ui.components.texts.Title
 import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
-import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
+import io.github.antoinepirlot.satunes.ui.views.media.MediaCollectionView
 
 /**
  * @author Antoine Pirlot on 01/04/2024
@@ -71,7 +70,7 @@ internal fun AlbumView(
     playbackViewModel: PlaybackViewModel = viewModel(),
     album: Album,
 ) {
-    val musicMap: Map<Music, MediaItem> = album.getMusicMap()
+    val musicSet: Set<Music> = album.getMusicSet()
 
     //Recompose if data changed
     var mapChanged: Boolean by rememberSaveable { album.musicMediaItemMapUpdate }
@@ -80,13 +79,13 @@ internal fun AlbumView(
     }
     //
 
-    MediaListView(
+    MediaCollectionView(
         modifier = modifier,
         navController = navController,
-        mediaImplList = musicMap.keys.toList(),
+        mediaImplCollection = musicSet,
         openMedia = { clickedMediaImpl: MediaImpl ->
             playbackViewModel.loadMusic(
-                musicMediaItemSortedMap = album.getMusicMap(),
+                musicSet = album.getMusicSet(),
                 musicToPlay = clickedMediaImpl as Music
             )
             openMedia(
@@ -107,7 +106,7 @@ internal fun AlbumView(
         extraButtons = {
             if (album.getMusicMap().isNotEmpty()) {
                 ExtraButton(icon = SatunesIcons.PLAY, onClick = {
-                    playbackViewModel.loadMusic(album.getMusicMap())
+                    playbackViewModel.loadMusic(album.getMusicSet())
                     openMedia(
                         playbackViewModel = playbackViewModel,
                         navController = navController
@@ -115,7 +114,7 @@ internal fun AlbumView(
                 })
                 ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
                     playbackViewModel.loadMusic(
-                        musicMediaItemSortedMap = album.getMusicMap(),
+                        musicSet = album.getMusicSet(),
                         shuffleMode = true
                     )
                     openMedia(

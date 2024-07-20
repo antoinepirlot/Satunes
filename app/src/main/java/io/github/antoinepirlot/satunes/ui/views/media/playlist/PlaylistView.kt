@@ -36,7 +36,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.media3.common.MediaItem
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
@@ -54,7 +53,7 @@ import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
 import io.github.antoinepirlot.satunes.ui.components.dialog.MediaSelectionDialog
 import io.github.antoinepirlot.satunes.ui.components.texts.Title
 import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
-import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
+import io.github.antoinepirlot.satunes.ui.views.media.MediaCollectionView
 import io.github.antoinepirlot.satunes.database.R as RDb
 
 /**
@@ -70,7 +69,7 @@ internal fun PlaylistView(
 ) {
     //TODO try using nav controller instead try to remember it in an object if possible
     var openAddMusicsDialog: Boolean by rememberSaveable { mutableStateOf(false) }
-    val musicMap: Map<Music, MediaItem> = playlist.getMusicMap()
+    val musicSet: Set<Music> = playlist.getMusicSet()
 
     //Recompose if data changed
     var mapChanged: Boolean by rememberSaveable { playlist.musicMediaItemMapUpdate }
@@ -79,13 +78,13 @@ internal fun PlaylistView(
     }
     //
 
-    MediaListView(
+    MediaCollectionView(
         modifier = modifier,
         navController = navController,
-        mediaImplList = musicMap.keys.toList(),
+        mediaImplCollection = musicSet,
         openMedia = { clickedMediaImpl: MediaImpl ->
             playbackViewModel.loadMusic(
-                musicMediaItemSortedMap = playlist.getMusicMap(),
+                musicSet = playlist.getMusicSet(),
                 musicToPlay = clickedMediaImpl as Music
             )
             openMedia(
@@ -113,12 +112,12 @@ internal fun PlaylistView(
             ExtraButton(icon = SatunesIcons.ADD, onClick = { openAddMusicsDialog = true })
             if (playlist.getMusicMap().isNotEmpty()) {
                 ExtraButton(icon = SatunesIcons.PLAY, onClick = {
-                    playbackViewModel.loadMusic(musicMediaItemSortedMap = playlist.getMusicMap())
+                    playbackViewModel.loadMusic(musicSet = musicSet)
                     openMedia(playbackViewModel = playbackViewModel, navController = navController)
                 })
                 ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
                     playbackViewModel.loadMusic(
-                        musicMediaItemSortedMap = playlist.getMusicMap(),
+                        musicSet = musicSet,
                         shuffleMode = true
                     )
                     openMedia(playbackViewModel = playbackViewModel, navController = navController)
@@ -128,7 +127,7 @@ internal fun PlaylistView(
         emptyViewText = stringResource(id = R.string.no_music_in_playlist)
     )
     if (openAddMusicsDialog) {
-        val allMusic: List<Music> = DataManager.getMusicMap().keys.toList()
+        val allMusic: Set<Music> = DataManager.getMusicSet()
         val context: Context = LocalContext.current
         MediaSelectionDialog(
             onDismissRequest = { openAddMusicsDialog = false },
@@ -140,7 +139,7 @@ internal fun PlaylistView(
                 )
                 openAddMusicsDialog = false
             },
-            mediaList = allMusic,
+            mediaImplCollection = allMusic,
             icon = SatunesIcons.PLAYLIST_ADD,
             playlistTitle = playlist.title
         )

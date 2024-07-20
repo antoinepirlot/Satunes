@@ -65,7 +65,7 @@ import io.github.antoinepirlot.satunes.services.search.SearchChipsManager
 import io.github.antoinepirlot.satunes.ui.components.chips.MediaChipList
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
-import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
+import io.github.antoinepirlot.satunes.ui.views.media.MediaCollectionView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -128,12 +128,12 @@ internal fun SearchView(
         )
         Spacer(modifier = Modifier.size(16.dp))
         MediaChipList()
-        MediaListView(
+        MediaCollectionView(
             navController = navController,
-            mediaImplList = mediaImplList,
+            mediaImplCollection = mediaImplList,
             openMedia = { mediaImpl: MediaImpl ->
                 if (mediaImpl is Music) {
-                    playbackViewModel.loadMusic(musicMediaItemSortedMap = DataManager.getMusicMap())
+                    playbackViewModel.loadMusic(musicSet = DataManager.getMusicSet())
                 }
                 openMedia(
                     playbackViewModel = playbackViewModel,
@@ -163,7 +163,7 @@ private fun search(context: Context, mediaImplList: MutableList<MediaImpl>, quer
     val query: String = query.lowercase()
 
     for (searchChip: SearchChips in SearchChipsManager.selectedSearchChips) {
-        DataManager.getMusicMap().keys.forEach { music: Music ->
+        DataManager.getMusicSet().forEach { music: Music ->
             when (searchChip) {
                 SearchChips.MUSICS -> {
                     if (music.title.lowercase().contains(query)) {
@@ -210,14 +210,11 @@ private fun search(context: Context, mediaImplList: MutableList<MediaImpl>, quer
             }
         }
         if (searchChip == SearchChips.PLAYLISTS) {
-            DataManager.getPlaylistMap().forEach { (playlistTitle: String, playlist: Playlist) ->
-                @Suppress("NAME_SHADOWING")
-                var playlistTitle: String = playlistTitle
-
-                if (playlistTitle == LIKES_PLAYLIST_TITLE) {
-                    playlistTitle = context.getString(RDb.string.likes_playlist_title)
+            DataManager.getPlaylistSet().forEach { playlist: Playlist ->
+                if (playlist.title == LIKES_PLAYLIST_TITLE) {
+                    playlist.title = context.getString(RDb.string.likes_playlist_title)
                 }
-                if (playlistTitle.lowercase().contains(query)) {
+                if (playlist.title.lowercase().contains(query)) {
                     mediaImplList.add(element = playlist)
                 }
             }

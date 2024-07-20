@@ -59,12 +59,12 @@ internal fun MediaSelectionDialog(
     modifier: Modifier = Modifier,
     onDismissRequest: () -> Unit,
     onConfirm: () -> Unit,
-    mediaList: List<MediaImpl>,
+    mediaImplCollection: Collection<MediaImpl>,
     playlistTitle: String? = null,
     icon: SatunesIcons,
 ) {
     val showPlaylistCreation: MutableState<Boolean> =
-        rememberSaveable { mutableStateOf(mediaList.isEmpty()) }
+        rememberSaveable { mutableStateOf(mediaImplCollection.isEmpty()) }
 
     if (showPlaylistCreation.value) {
         CreateNewPlaylistForm(
@@ -78,7 +78,7 @@ internal fun MediaSelectionDialog(
             showPlaylistCreation = showPlaylistCreation,
             onDismissRequest = onDismissRequest,
             onConfirm = onConfirm,
-            mediaImplList = mediaList,
+            mediaImplCollection = mediaImplCollection,
             playlistTitle = playlistTitle,
             icon = icon
         )
@@ -112,7 +112,7 @@ private fun MediaSelectionDialogList(
     showPlaylistCreation: MutableState<Boolean>,
     onDismissRequest: () -> Unit,
     onConfirm: () -> Unit,
-    mediaImplList: List<MediaImpl>,
+    mediaImplCollection: Collection<MediaImpl>,
     playlistTitle: String? = null,
     icon: SatunesIcons,
 ) {
@@ -122,9 +122,9 @@ private fun MediaSelectionDialogList(
             Icon(imageVector = icon.imageVector, contentDescription = icon.description)
         },
         title = {
-            if (mediaImplList.isEmpty()) {
+            if (mediaImplCollection.isEmpty()) {
                 NormalText(text = stringResource(id = R.string.no_music))
-            } else if (mediaImplList[0] is Music) {
+            } else if (mediaImplCollection.first() is Music) {
                 if (playlistTitle == null) {
                     throw IllegalStateException("PlaylistDB title is required when adding music to playlistDB")
                 }
@@ -136,15 +136,15 @@ private fun MediaSelectionDialogList(
         text = {
             Column {
                 if (
-                    mediaImplList.isEmpty() && DataManager.getPlaylistMap()
+                    mediaImplCollection.isEmpty() && DataManager.getPlaylistSet()
                         .isNotEmpty() || // Avoid having create new playlistDB when user has no music
-                    mediaImplList.isEmpty() || mediaImplList[0] is Playlist
+                    mediaImplCollection.isEmpty() || mediaImplCollection.first() is Playlist
                 ) {
                     TextButton(onClick = { showPlaylistCreation.value = true }) {
                         NormalText(text = stringResource(id = R.string.create_playlist))
                     }
                 }
-                MediaSelectionForm(mediaImplList = mediaImplList)
+                MediaSelectionForm(mediaImplCollection = mediaImplCollection)
             }
         },
         onDismissRequest = {
@@ -158,7 +158,7 @@ private fun MediaSelectionDialogList(
                 MediaSelectionManager.clearCheckedMusics()
                 MediaSelectionManager.clearCheckedPlaylistWithMusics()
             }) {
-                if (mediaImplList.isNotEmpty()) {
+                if (mediaImplCollection.isNotEmpty()) {
                     NormalText(text = stringResource(id = R.string.add))
                 }
             }
@@ -178,6 +178,6 @@ private fun PlaylistSelectionDialogPreview() {
         icon = SatunesIcons.PLAYLIST_ADD,
         onDismissRequest = {},
         onConfirm = {},
-        mediaList = listOf()
+        mediaImplCollection = listOf()
     )
 }

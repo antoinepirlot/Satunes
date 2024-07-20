@@ -46,7 +46,7 @@ import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.ui.components.EmptyView
 import io.github.antoinepirlot.satunes.ui.components.bars.ShowCurrentMusicButton
-import io.github.antoinepirlot.satunes.ui.components.cards.media.MediaCardList
+import io.github.antoinepirlot.satunes.ui.components.cards.media.MediaCardCollection
 import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
 
 /**
@@ -54,11 +54,11 @@ import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
  */
 
 @Composable
-internal fun MediaListView(
+internal fun MediaCollectionView(
     modifier: Modifier = Modifier,
     navController: NavHostController,
     playbackViewModel: PlaybackViewModel = viewModel(),
-    mediaImplList: List<MediaImpl>,
+    mediaImplCollection: Collection<MediaImpl>,
     openMedia: (mediaImpl: MediaImpl) -> Unit,
     openedPlaylistWithMusics: Playlist? = null,
     onFABClick: () -> Unit,
@@ -80,12 +80,12 @@ internal fun MediaListView(
         },
         floatingActionButtonPosition = FabPosition.End
     ) { innerPadding ->
-        if (mediaImplList.isNotEmpty()) {
-            MediaCardList(
+        if (mediaImplCollection.isNotEmpty()) {
+            MediaCardCollection(
                 modifier = Modifier.padding(innerPadding),
                 navController = navController,
                 header = header,
-                mediaImplList = mediaImplList,
+                mediaImplCollection = mediaImplCollection,
                 openMedia = openMedia,
                 openedPlaylist = openedPlaylistWithMusics
             )
@@ -117,9 +117,9 @@ private fun MediaListViewPreview() {
         )
     )
     val navController: NavHostController = rememberNavController()
-    MediaListView(
+    MediaCollectionView(
         navController = navController,
-        mediaImplList = map,
+        mediaImplCollection = map,
         openMedia = {},
         onFABClick = {},
         openedPlaylistWithMusics = null,

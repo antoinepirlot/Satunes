@@ -41,8 +41,7 @@ import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
 import io.github.antoinepirlot.satunes.ui.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
-import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
-import java.util.SortedMap
+import io.github.antoinepirlot.satunes.ui.views.media.MediaCollectionView
 
 /**
  * @author Antoine Pirlot on 01/04/2024
@@ -55,12 +54,12 @@ internal fun AllGenresListView(
     dataViewModel: DataViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
 ) {
-    val genreMap: Map<String, Genre> = dataViewModel.genreMap
+    val genreSet: Set<Genre> = dataViewModel.genreSet
 
-    MediaListView(
+    MediaCollectionView(
         modifier = modifier,
         navController = navController,
-        mediaImplList = genreMap.values.toList(),
+        mediaImplCollection = genreSet,
 
         openMedia = { clickedMediaImpl: MediaImpl ->
             openMedia(
@@ -76,17 +75,15 @@ internal fun AllGenresListView(
             )
         },
         extraButtons = {
-            if (genreMap.isNotEmpty()) {
-                @Suppress("UNCHECKED_CAST")
-                genreMap as SortedMap<String, MediaImpl>
+            if (genreSet.isNotEmpty()) {
                 ExtraButton(icon = SatunesIcons.PLAY, onClick = {
-                    playbackViewModel.loadMusicFromStringMediasMedia(medias = genreMap)
+                    playbackViewModel.loadMusicFromMedias(medias = genreSet)
                     openMedia(playbackViewModel = playbackViewModel, navController = navController)
                 })
                 ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
 
-                    playbackViewModel.loadMusicFromStringMediasMedia(
-                        medias = genreMap,
+                    playbackViewModel.loadMusicFromMedias(
+                        medias = genreSet,
                         shuffleMode = true
                     )
                     openMedia(playbackViewModel = playbackViewModel, navController = navController)

@@ -64,7 +64,7 @@ internal fun AddToPlaylistCustomAction(
     )
 
     if (showForm) {
-        val playlistMap: Map<String, Playlist> = DataManager.getPlaylistMap()
+        val playlistMap: Set<Playlist> = DataManager.getPlaylistSet()
 
         //Recompose if data changed
         var mapChanged: Boolean by rememberSaveable { DataManager.playlistsMapUpdated }
@@ -83,7 +83,7 @@ internal fun AddToPlaylistCustomAction(
                 )
                 showForm = false
             },
-            mediaList = playlistMap.values.toList(),
+            mediaImplCollection = playlistMap,
             icon = SatunesIcons.PLAYLIST_ADD
         )
     }

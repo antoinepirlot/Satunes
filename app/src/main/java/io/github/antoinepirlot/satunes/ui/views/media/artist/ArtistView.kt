@@ -47,7 +47,7 @@ import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
 import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
-import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
+import io.github.antoinepirlot.satunes.ui.views.media.MediaCollectionView
 import io.github.antoinepirlot.satunes.ui.views.media.MediaWithAlbumsHeaderView
 import java.util.SortedMap
 
@@ -71,13 +71,13 @@ internal fun ArtistView(
     }
     //
 
-    MediaListView(
+    MediaCollectionView(
         modifier = modifier,
         navController = navController,
-        mediaImplList = musicMap.keys.toList(),
+        mediaImplCollection = musicMap.keys.toList(),
         openMedia = { clickedMediaImpl: MediaImpl ->
             playbackViewModel.loadMusic(
-                musicMediaItemSortedMap = artist.getMusicMap(),
+                musicSet = artist.getMusicSet(),
                 musicToPlay = clickedMediaImpl as Music
             )
             openMedia(
@@ -111,12 +111,12 @@ internal fun ArtistView(
         extraButtons = {
             if (artist.getMusicMap().isNotEmpty()) {
                 ExtraButton(icon = SatunesIcons.PLAY, onClick = {
-                    playbackViewModel.loadMusic(musicMediaItemSortedMap = artist.getMusicMap())
+                    playbackViewModel.loadMusic(musicSet = artist.getMusicSet())
                     openMedia(playbackViewModel = playbackViewModel, navController = navController)
                 })
                 ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
                     playbackViewModel.loadMusic(
-                        musicMediaItemSortedMap = artist.getMusicMap(),
+                        musicSet = artist.getMusicSet(),
                         shuffleMode = true
                     )
                     openMedia(playbackViewModel = playbackViewModel, navController = navController)

@@ -146,31 +146,31 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
             ScreenPages.ALL_ARTISTS.id -> {
                 routeDeque.resetRouteDeque()
                 routeDeque.addLast(parentId)
-                children.addAll(getAllMediaItem(mediaList = DataManager.getArtistMap().values))
+                children.addAll(getAllMediaItem(mediaList = DataManager.getArtistSet()))
             }
 
             ScreenPages.ALL_ALBUMS.id -> {
                 routeDeque.resetRouteDeque()
                 routeDeque.addLast(parentId)
-                children.addAll(getAllMediaItem(mediaList = DataManager.getAlbumMap().keys))
+                children.addAll(getAllMediaItem(mediaList = DataManager.getAlbumSet()))
             }
 
             ScreenPages.ALL_GENRES.id -> {
                 routeDeque.resetRouteDeque()
                 routeDeque.addLast(parentId)
-                children.addAll(getAllMediaItem(mediaList = DataManager.getGenreMap().values))
+                children.addAll(getAllMediaItem(mediaList = DataManager.getGenreSet()))
             }
 
             ScreenPages.ALL_MUSICS.id -> {
                 routeDeque.resetRouteDeque()
                 routeDeque.addLast(parentId)
-                children.addAll(getAllMediaItem(mediaList = DataManager.getMusicMap().keys))
+                children.addAll(getAllMediaItem(mediaList = DataManager.getMusicSet()))
             }
 
             ScreenPages.ALL_PLAYLISTS.id -> {
                 routeDeque.resetRouteDeque()
                 routeDeque.addLast(parentId)
-                children.addAll(getAllMediaItem(mediaList = DataManager.getPlaylistMap().values))
+                children.addAll(getAllMediaItem(mediaList = DataManager.getPlaylistSet()))
             }
 
             else -> {

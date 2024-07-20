@@ -35,15 +35,13 @@ import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
-import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
 import io.github.antoinepirlot.satunes.ui.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
-import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
-import java.util.SortedMap
+import io.github.antoinepirlot.satunes.ui.views.media.MediaCollectionView
 
 /**
  * @author Antoine Pirlot on 01/04/2024
@@ -56,11 +54,12 @@ internal fun AllArtistsListView(
     dataViewModel: DataViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
 ) {
-    val artistMap: Map<String, Artist> = dataViewModel.artistMap
+    //TODO use view model
+    val artistSet: Set<Artist> = dataViewModel.artistSet
 
-    MediaListView(
+    MediaCollectionView(
         modifier = modifier,
-        mediaImplList = artistMap.values.toList(),
+        mediaImplCollection = artistSet,
         navController = navController,
         openMedia = { clickedMediaImpl: MediaImpl ->
             openMedia(
@@ -76,17 +75,14 @@ internal fun AllArtistsListView(
             )
         },
         extraButtons = {
-            if (DataManager.getMusicMap().isNotEmpty()) {
-                @Suppress("UNCHECKED_CAST")
-                artistMap as SortedMap<String, MediaImpl>
-
+            if (artistSet.isNotEmpty()) {
                 ExtraButton(icon = SatunesIcons.PLAY, onClick = {
-                    playbackViewModel.loadMusicFromStringMediasMedia(medias = artistMap)
+                    playbackViewModel.loadMusicFromMedias(medias = artistSet)
                     openMedia(playbackViewModel = playbackViewModel, navController = navController)
                 })
                 ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
-                    playbackViewModel.loadMusicFromStringMediasMedia(
-                        medias = artistMap,
+                    playbackViewModel.loadMusicFromMedias(
+                        medias = artistSet,
                         shuffleMode = true
                     )
                     openMedia(playbackViewModel = playbackViewModel, navController = navController)

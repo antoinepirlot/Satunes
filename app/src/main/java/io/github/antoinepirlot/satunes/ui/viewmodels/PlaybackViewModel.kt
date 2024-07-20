@@ -30,7 +30,6 @@ import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.ViewModel
-import androidx.media3.common.MediaItem
 import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
@@ -91,12 +90,24 @@ class PlaybackViewModel : ViewModel() {
     }
 
     fun loadMusic(
-        musicMediaItemSortedMap: Map<Music, MediaItem>,
+        musicSet: Set<Music>,
         shuffleMode: Boolean = SettingsManager.shuffleMode.value,
         musicToPlay: Music? = null,
     ) {
         this._playbackController.loadMusic(
-            musicMediaItemSortedMap = musicMediaItemSortedMap,
+            musicSet = musicSet,
+            shuffleMode = shuffleMode,
+            musicToPlay = musicToPlay
+        )
+    }
+
+    fun loadMusicFromMedias(
+        medias: Set<MediaImpl>,
+        shuffleMode: Boolean = SettingsManager.shuffleMode.value,
+        musicToPlay: Music? = null,
+    ) {
+        this._playbackController.loadMusicFromMedias(
+            medias = medias,
             shuffleMode = shuffleMode,
             musicToPlay = musicToPlay
         )

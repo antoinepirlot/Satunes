@@ -42,7 +42,7 @@ import io.github.antoinepirlot.satunes.router.utils.openMediaFromFolder
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
 import io.github.antoinepirlot.satunes.ui.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
-import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
+import io.github.antoinepirlot.satunes.ui.views.media.MediaCollectionView
 
 /**
  * @author Antoine Pirlot on 01/04/2024
@@ -57,10 +57,10 @@ internal fun RootFolderView(
 ) {
     val rootFolderSet: Set<Folder> = dataViewModel.rootFolderSet
 
-    MediaListView(
+    MediaCollectionView(
         modifier = modifier,
         navController = navController,
-        mediaImplList = rootFolderSet.toList(),
+        mediaImplCollection = rootFolderSet.toList(),
         openMedia = { clickedMediaImpl: MediaImpl ->
             openMediaFromFolder(
                 media = clickedMediaImpl,

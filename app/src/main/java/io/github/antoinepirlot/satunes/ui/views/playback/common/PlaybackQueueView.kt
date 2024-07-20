@@ -36,7 +36,7 @@ import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.router.utils.openMedia
-import io.github.antoinepirlot.satunes.ui.components.cards.media.MediaCardList
+import io.github.antoinepirlot.satunes.ui.components.cards.media.MediaCardCollection
 import io.github.antoinepirlot.satunes.ui.components.texts.Title
 import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
 
@@ -52,12 +52,12 @@ internal fun PlaybackQueueView(
 ) {
     val playbackPlaylist: List<Music> = playbackViewModel.getPlaylist()
 
-    MediaCardList(
+    MediaCardCollection(
         modifier = modifier,
         navController = navController,
         scrollToMusicPlaying = true,
         header = { Title(text = stringResource(id = R.string.playback_queue)) },
-        mediaImplList = playbackPlaylist,
+        mediaImplCollection = playbackPlaylist,
         openMedia = { mediaImpl: MediaImpl ->
             openMedia(
                 playbackViewModel = playbackViewModel,

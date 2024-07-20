@@ -44,19 +44,25 @@ import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
  */
 
 @Composable
-internal fun MediaCardList(
+internal fun MediaCardCollection(
     modifier: Modifier = Modifier,
     navController: NavHostController,
     playbackViewModel: PlaybackViewModel = viewModel(),
     header: @Composable (() -> Unit)? = null,
-    mediaImplList: List<MediaImpl>,
+    mediaImplCollection: Collection<MediaImpl>,
     openMedia: (mediaImpl: MediaImpl) -> Unit,
     openedPlaylist: Playlist? = null,
     scrollToMusicPlaying: Boolean = false,
 ) {
     val lazyListState = rememberLazyListState()
+    val mediaListToLoad: List<MediaImpl> =
+        try {
+            mediaImplCollection as List<MediaImpl>
+        } catch (_: ClassCastException) {
+            mediaImplCollection.toList()
+        }
 
-    if (mediaImplList.isEmpty()) {
+    if (mediaImplCollection.isEmpty()) {
         // It fixes issue while accessing last folder in chain
         return
     }
@@ -66,10 +72,10 @@ internal fun MediaCardList(
         state = lazyListState
     ) {
         items(
-            items = mediaImplList,
+            items = mediaListToLoad,
             key = { it.javaClass.name + '-' + it.id }
         ) { media: MediaImpl ->
-            if (media == mediaImplList.first()) {
+            if (media == mediaImplCollection.first()) {
                 if (header != null) {
                     header()
                 }
@@ -97,10 +103,10 @@ internal fun MediaCardList(
 @Preview
 private fun CardListPreview() {
     val navController: NavHostController = rememberNavController()
-    MediaCardList(
+    MediaCardCollection(
         navController = navController,
         header = {},
-        mediaImplList = listOf(),
+        mediaImplCollection = listOf(),
         openMedia = {},
         openedPlaylist = null,
         scrollToMusicPlaying = false

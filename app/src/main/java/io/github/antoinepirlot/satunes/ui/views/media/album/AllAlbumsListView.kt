@@ -41,8 +41,7 @@ import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
 import io.github.antoinepirlot.satunes.ui.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
-import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
-import java.util.SortedMap
+import io.github.antoinepirlot.satunes.ui.views.media.MediaCollectionView
 
 /**
  * @author Antoine Pirlot on 01/04/2024
@@ -55,12 +54,12 @@ internal fun AllAlbumsListView(
     dataViewModel: DataViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
 ) {
-    val albumMap: Map<Album, Album> = dataViewModel.albumMap
+    val albumSet: Set<Album> = dataViewModel.albumSet
 
-    MediaListView(
+    MediaCollectionView(
         modifier = modifier,
         navController = navController,
-        mediaImplList = albumMap.keys.toList(),
+        mediaImplCollection = albumSet,
 
         openMedia = { clickedMediaImpl: MediaImpl ->
             openMedia(
@@ -76,17 +75,15 @@ internal fun AllAlbumsListView(
             )
         },
         extraButtons = {
-            if (albumMap.isNotEmpty()) {
-                @Suppress("UNCHECKED_CAST")
-                albumMap as SortedMap<MediaImpl, Any>
+            if (albumSet.isNotEmpty()) {
                 ExtraButton(icon = SatunesIcons.PLAY, onClick = {
-                    playbackViewModel.loadMusicFromMedias(medias = albumMap)
+                    playbackViewModel.loadMusicFromMedias(medias = albumSet)
                     openMedia(playbackViewModel = playbackViewModel, navController = navController)
                 })
                 ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
 
                     playbackViewModel.loadMusicFromMedias(
-                        medias = albumMap,
+                        medias = albumSet,
                         shuffleMode = true
                     )
                     openMedia(playbackViewModel = playbackViewModel, navController = navController)

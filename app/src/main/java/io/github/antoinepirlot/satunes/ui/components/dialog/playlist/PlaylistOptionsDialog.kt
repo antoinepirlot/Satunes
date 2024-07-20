@@ -43,7 +43,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.models.Playlist
-import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.dialog.playlist.options.ExportPlaylistOption
@@ -109,10 +108,6 @@ internal fun PlaylistOptionsDialog(
                 try {
                     val db = DatabaseManager(context = context)
                     db.updatePlaylists(playlist)
-                    DataManager.updatePlaylist(
-                        oldTitle = oldTitle,
-                        playlist = playlist
-                    )
                 } catch (_: Exception) {
                     playlist.title = oldTitle
                 }

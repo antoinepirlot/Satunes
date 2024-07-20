@@ -66,7 +66,7 @@ internal fun AddToPlaylistMediaOption(
         text = stringResource(id = R.string.add_to_playlist)
     )
     if (showDialog) {
-        val playlistList: Map<String, Playlist> = DataManager.getPlaylistMap()
+        val playlistSet: Set<Playlist> = DataManager.getPlaylistSet()
         //Recompose if data changed
         var mapChanged: Boolean by rememberSaveable { DataManager.playlistsMapUpdated }
         if (mapChanged) {
@@ -82,7 +82,7 @@ internal fun AddToPlaylistMediaOption(
                 insertMediaToPlaylist(context = context, mediaImpl = mediaImpl)
                 onFinished()
             },
-            mediaList = playlistList.values.toList(),
+            mediaImplCollection = playlistSet,
             icon = SatunesIcons.PLAYLIST_ADD,
         )
     }

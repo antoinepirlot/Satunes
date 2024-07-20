@@ -58,11 +58,10 @@ import kotlinx.coroutines.launch
 class PlaybackController private constructor(
     context: Context,
     sessionToken: SessionToken,
-    musicMediaItemSortedMap: Map<Music, MediaItem>,
 ) {
     internal lateinit var mediaController: MediaController
 
-    internal var playlist: Playlist
+    internal lateinit var playlist: Playlist
 
     internal var musicPlayingIndex: Int = DEFAULT_MUSIC_PLAYING_INDEX
     var isEnded: MutableState<Boolean> = mutableStateOf(DEFAULT_IS_ENDED)
@@ -127,7 +126,6 @@ class PlaybackController private constructor(
                 instance = PlaybackController(
                     context = context.applicationContext,
                     sessionToken = sessionToken,
-                    musicMediaItemSortedMap = DataManager.getMusicMap(),
                 )
             } else if (listener != null) {
                 while (!instance::mediaController.isInitialized) {
@@ -159,7 +157,6 @@ class PlaybackController private constructor(
             controllerFuture.addListener({
                 this.mediaController = controllerFuture.get()
             }, ContextCompat.getMainExecutor(context))
-            this.playlist = Playlist(musicMediaItemSortedMap = musicMediaItemSortedMap)
         } catch (e: Throwable) {
             logger.severe(e.message)
             throw e
@@ -301,7 +298,7 @@ class PlaybackController private constructor(
             musicMediaItemSortedMap.putAll(folder.getAllMusic())
         }
         loadMusic(
-            musicMediaItemSortedMap = musicMediaItemSortedMap,
+            musicSet = musicMediaItemSortedMap.keys,
             shuffleMode = shuffleMode,
             musicToPlay = musicToPlay
         )
@@ -317,7 +314,23 @@ class PlaybackController private constructor(
             musicMediaItemSortedMap.putAll(media.getMusicMap())
         }
         loadMusic(
-            musicMediaItemSortedMap = musicMediaItemSortedMap,
+            musicSet = musicMediaItemSortedMap.keys,
+            shuffleMode = shuffleMode,
+            musicToPlay = musicToPlay
+        )
+    }
+
+    fun loadMusicFromMedias(
+        medias: Set<MediaImpl>,
+        shuffleMode: Boolean = SettingsManager.shuffleMode.value,
+        musicToPlay: Music? = null,
+    ) {
+        val musicSet: MutableSet<Music> = mutableSetOf()
+        medias.forEach { mediaImpl: MediaImpl ->
+            musicSet.addAll(mediaImpl.getMusicSet())
+        }
+        this.loadMusic(
+            musicSet = musicSet,
             shuffleMode = shuffleMode,
             musicToPlay = musicToPlay
         )
@@ -341,7 +354,7 @@ class PlaybackController private constructor(
             musicMediaItemSortedMap.putAll(media.getMusicMap())
         }
         loadMusic(
-            musicMediaItemSortedMap = musicMediaItemSortedMap,
+            musicSet = musicMediaItemSortedMap.keys,
             shuffleMode = shuffleMode,
             musicToPlay = musicToPlay
         )
@@ -363,7 +376,7 @@ class PlaybackController private constructor(
         when (media) {
             is Folder -> {
                 loadMusic(
-                    musicMediaItemSortedMap = media.getAllMusic(),
+                    musicSet = media.getAllMusic().keys,
                     shuffleMode = shuffleMode,
                     musicToPlay = musicToPlay
                 )
@@ -375,7 +388,7 @@ class PlaybackController private constructor(
                     musicMediaItemSortedMap.putAll(music.getMusicMap())
                 }
                 loadMusic(
-                    musicMediaItemSortedMap = musicMediaItemSortedMap,
+                    musicSet = musicMediaItemSortedMap.keys,
                     shuffleMode = shuffleMode,
                     musicToPlay = musicToPlay
                 )
@@ -387,17 +400,17 @@ class PlaybackController private constructor(
      * Add all music from musicMap to the mediaController in the same order.
      * If the shuffle mode is true then shuffle the playlist
      *
-     * @param musicMediaItemSortedMap the music map to load
+     * @param musicSet the music Set to load
      * @param shuffleMode indicate if the playlistDB has to be started in shuffle mode by default false
      * @param musicToPlay the music to play
      *
      */
     fun loadMusic(
-        musicMediaItemSortedMap: Map<Music, MediaItem>,
+        musicSet: Set<Music>,
         shuffleMode: Boolean = SettingsManager.shuffleMode.value,
         musicToPlay: Music? = null,
     ) {
-        this.playlist = Playlist(musicMediaItemSortedMap = musicMediaItemSortedMap)
+        this.playlist = Playlist(musicSet = musicSet)
         if (shuffleMode) {
             if (musicToPlay == null) {
                 this.playlist.shuffle()
@@ -484,7 +497,7 @@ class PlaybackController private constructor(
     private fun moveMusic(music: Music, newIndex: Int) {
         val musicToMoveIndex: Int = this.playlist.getMusicIndex(music = music)
         if (musicToMoveIndex == -1) {
-            throw IllegalArgumentException("This music is not inside the playlistDB")
+            throw IllegalArgumentException("This music is not inside the playlist")
         }
 
         if (musicToMoveIndex < this.musicPlayingIndex) {

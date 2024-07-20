@@ -64,7 +64,9 @@ abstract class MediaImpl(
         return this.musicMediaItemMap
     }
 
-    //TODO add function to get list of musics to avoid calling .toList() in Composable
+    fun getMusicSet(): Set<Music> {
+        return this.musicMediaItemMap.keys
+    }
 
     fun addMusic(music: Music) {
         if (this.musicMediaItemMap[music] == null) {

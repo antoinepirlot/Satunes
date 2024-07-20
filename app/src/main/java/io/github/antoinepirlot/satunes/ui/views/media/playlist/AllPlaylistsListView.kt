@@ -50,7 +50,7 @@ import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
 import io.github.antoinepirlot.satunes.ui.components.forms.PlaylistCreationForm
 import io.github.antoinepirlot.satunes.ui.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
-import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
+import io.github.antoinepirlot.satunes.ui.views.media.MediaCollectionView
 
 /**
  * @author Antoine Pirlot on 30/03/2024
@@ -66,17 +66,17 @@ internal fun PlaylistListView(
     val context: Context = LocalContext.current
     var openAlertDialog by remember { mutableStateOf(false) }
     Column(modifier = modifier) {
-        val playlistMap: Map<String, Playlist> = dataViewModel.playlistMap
+        val playlistSet: Set<Playlist> = dataViewModel.playlistSet
 
         //Recompose if data changed
-        var mapChanged: Boolean = dataViewModel.playlistMapUpdated
+        var mapChanged: Boolean = dataViewModel.playlistSetUpdated
         if (mapChanged) {
             dataViewModel.playlistMapUpdated()
         }
         //
 
-        MediaListView(
-            mediaImplList = playlistMap.values.toList(),
+        MediaCollectionView(
+            mediaImplCollection = playlistSet,
             navController = navController,
             openMedia = { clickedMediaImpl: MediaImpl ->
                 openMedia(

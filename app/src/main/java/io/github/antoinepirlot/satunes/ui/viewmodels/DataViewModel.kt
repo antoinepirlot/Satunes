@@ -28,7 +28,6 @@ package io.github.antoinepirlot.satunes.ui.viewmodels
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.ViewModel
-import androidx.media3.common.MediaItem
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Folder
@@ -41,17 +40,17 @@ import io.github.antoinepirlot.satunes.database.services.data.DataManager
  * @author Antoine Pirlot on 19/07/2024
  */
 class DataViewModel : ViewModel() {
-    private val _playlistMapUpdated: MutableState<Boolean> = DataManager.playlistsMapUpdated
+    private val _playlistSetUpdated: MutableState<Boolean> = DataManager.playlistsMapUpdated
 
     val rootFolderSet: Set<Folder> = DataManager.getRootFolderSet()
-    val artistMap: Map<String, Artist> = DataManager.getArtistMap()
-    val albumMap: Map<Album, Album> = DataManager.getAlbumMap()
-    val genreMap: Map<String, Genre> = DataManager.getGenreMap()
-    val musicMap: Map<Music, MediaItem> = DataManager.getMusicMap()
-    val playlistMap: Map<String, Playlist> = DataManager.getPlaylistMap()
-    val playlistMapUpdated: Boolean by _playlistMapUpdated
+    val artistSet: Set<Artist> = DataManager.getArtistSet()
+    val albumSet: Set<Album> = DataManager.getAlbumSet()
+    val genreSet: Set<Genre> = DataManager.getGenreSet()
+    val musicSet: Set<Music> = DataManager.getMusicSet()
+    val playlistSet: Set<Playlist> = DataManager.getPlaylistSet()
+    val playlistSetUpdated: Boolean by _playlistSetUpdated
 
     fun playlistMapUpdated() {
-        this._playlistMapUpdated.value = false
+        this._playlistSetUpdated.value = false
     }
 }

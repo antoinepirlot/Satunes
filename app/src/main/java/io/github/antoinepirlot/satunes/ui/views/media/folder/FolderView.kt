@@ -43,7 +43,7 @@ import io.github.antoinepirlot.satunes.router.utils.openMediaFromFolder
 import io.github.antoinepirlot.satunes.ui.components.bars.FolderPath
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
 import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
-import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
+import io.github.antoinepirlot.satunes.ui.views.media.MediaCollectionView
 
 /**
  * @author Antoine Pirlot on 01/04/2024
@@ -59,9 +59,9 @@ internal fun FolderView(
 ) {
     Column(modifier = modifier) {
         FolderPath(folder)
-        MediaListView(
+        MediaCollectionView(
             navController = navController,
-            mediaImplList = folder.getSubFolderListWithMusics(),
+            mediaImplCollection = folder.getSubFolderListWithMusics(),
             openMedia = { clickedMediaImpl: MediaImpl ->
                 openMediaFromFolder(
                     media = clickedMediaImpl,

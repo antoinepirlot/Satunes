@@ -25,7 +25,6 @@
 
 package io.github.antoinepirlot.satunes.router.routes
 
-import android.net.Uri.decode
 import androidx.compose.animation.AnimatedContentScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavBackStackEntry
@@ -97,15 +96,15 @@ internal fun NavGraphBuilder.mediaRoutes(
         }
     }
 
-    composable("${Destination.ARTISTS.link}/{name}") {
+    composable("${Destination.ARTISTS.link}/{id}") {
         onStart(it)
         val viewModel: SatunesViewModel = viewModel()
 
         if (viewModel.isLoadingData || !viewModel.isDataLoaded) {
             LoadingView()
         } else {
-            val artistName: String = decode(it.arguments!!.getString("name")!!)
-            val artist: Artist = DataManager.getArtist(artistName)
+            val artistId: Long = it.arguments!!.getString("id")!!.toLong()
+            val artist: Artist = DataManager.getArtist(artistId = artistId)
             ArtistView(navController = navController, artist = artist)
         }
     }
@@ -145,15 +144,15 @@ internal fun NavGraphBuilder.mediaRoutes(
         }
     }
 
-    composable("${Destination.GENRES.link}/{name}") {
+    composable("${Destination.GENRES.link}/{id}") {
         onStart(it)
         val viewModel: SatunesViewModel = viewModel()
 
         if (viewModel.isLoadingData || !viewModel.isDataLoaded) {
             LoadingView()
         } else {
-            val genreName: String = decode(it.arguments!!.getString("name")!!)
-            val genre: Genre = DataManager.getGenre(genreName = genreName)
+            val genreId: Long = it.arguments!!.getString("id")!!.toLong()
+            val genre: Genre = DataManager.getGenre(genreId = genreId)
             GenreView(navController = navController, genre = genre)
         }
     }

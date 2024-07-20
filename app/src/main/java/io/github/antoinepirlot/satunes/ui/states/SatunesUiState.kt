@@ -36,6 +36,7 @@ import io.github.antoinepirlot.satunes.ui.viewmodels.utils.isAudioAllowed
 data class SatunesUiState(
     val whatsNewSeen: Boolean = SettingsManager.whatsNewSeen,
     val currentDestination: String = DEFAULT_DESTINATION,
+    //Use this in UiSate and ViewModel as it is a particular value. It could change but most of the time it won't change
     val isAudioAllowed: Boolean = isAudioAllowed(),
     val selectedMenuTitle: MenuTitle =
     // Selected the default menu title in this priority order

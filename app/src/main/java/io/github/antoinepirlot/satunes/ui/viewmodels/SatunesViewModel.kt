@@ -54,6 +54,8 @@ class SatunesViewModel : ViewModel() {
 
     val isLoadingData: Boolean by _isLoadingData
     val isDataLoaded: Boolean by _isDataLoaded
+
+    //Use this in UiSate and ViewModel as it is a particular value. It could change but most of the time it won't change
     var isAudioAllowed: Boolean by mutableStateOf(_uiState.value.isAudioAllowed)
         private set
 

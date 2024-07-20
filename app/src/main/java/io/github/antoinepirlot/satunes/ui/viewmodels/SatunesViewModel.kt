@@ -160,7 +160,7 @@ internal class SatunesViewModel : ViewModel() {
 
     fun switchShuffleMode() {
         runBlocking {
-            SettingsManager.switchPauseIfNoisy(context = MainActivity.instance.applicationContext)
+            SettingsManager.switchShuffleMode(context = MainActivity.instance.applicationContext)
             _uiState.update { currentState: SatunesUiState ->
                 currentState.copy(
                     shuffleMode = SettingsManager.shuffleMode
@@ -171,7 +171,7 @@ internal class SatunesViewModel : ViewModel() {
 
     fun switchPauseIfAnotherPlayback() {
         runBlocking {
-            SettingsManager.switchPauseIfPlayback(context = MainActivity.instance.applicationContext)
+            SettingsManager.switchPauseIfAnotherPlayback(context = MainActivity.instance.applicationContext)
             _uiState.update { currentState: SatunesUiState ->
                 currentState.copy(
                     pauseIfAnotherPlayback = SettingsManager.pauseIfAnotherPlayback

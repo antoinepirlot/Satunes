@@ -346,7 +346,7 @@ object SettingsManager {
         }
     }
 
-    suspend fun switchPauseIfPlayback(context: Context) {
+    suspend fun switchPauseIfAnotherPlayback(context: Context) {
         try {
             context.dataStore.edit { preferences: MutablePreferences ->
                 pauseIfAnotherPlayback = !pauseIfAnotherPlayback

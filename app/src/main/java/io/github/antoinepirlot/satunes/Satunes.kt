@@ -60,7 +60,7 @@ internal fun Satunes(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel()
 ) {
-    satunesViewModel.loadAllData()
+    satunesViewModel.loadSettings()
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     SatunesTheme {
         Surface(

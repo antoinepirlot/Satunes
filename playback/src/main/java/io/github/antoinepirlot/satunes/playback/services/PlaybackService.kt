@@ -35,6 +35,7 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.session.MediaSession
 import androidx.media3.session.MediaSessionService
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
+import io.github.antoinepirlot.satunes.playback.models.PlaybackSessionCallback
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 
 /**
@@ -78,7 +79,10 @@ class PlaybackService : MediaSessionService() {
                 .build()
         }
 
-        mediaSession = MediaSession.Builder(this, exoPlayer).build()
+        mediaSession = MediaSession.Builder(this, exoPlayer)
+            .setCallback(PlaybackSessionCallback)
+            .build()
+
         try {
             playbackController =
                 PlaybackController.getInstance() // Called from init instance (session)

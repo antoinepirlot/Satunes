@@ -62,12 +62,11 @@ class Music(
     val genre: Genre,
     context: Context,
 ) : MediaImpl(id = id, title = title.ifBlank { displayName }) {
-    private val logger = SatunesLogger(name = this::class.java.name)
     private var displayName: String = displayName
         set(displayName) {
             if (displayName.isBlank()) {
                 val message = "Display name must not be blank"
-                logger.warning(message)
+                SatunesLogger(name = this::class.java.name).warning(message)
                 throw IllegalArgumentException(message)
             }
             field = displayName

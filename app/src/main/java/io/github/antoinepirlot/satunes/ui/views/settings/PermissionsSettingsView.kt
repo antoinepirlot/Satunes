@@ -89,7 +89,6 @@ internal fun PermissionsSettingsView(
                     permission = permission.value,
                     onPermissionResult = {
                         satunesViewModel.updateIsAudioAllowed()
-
                     }
                 )
             Row(
@@ -108,7 +107,7 @@ internal fun PermissionsSettingsView(
                 NormalText(text = stringResource(id = permission.stringId))
                 Spacer(modifier = Modifier.size(spacerSize))
                 val icon: SatunesIcons =
-                    if (satunesUiState.isAudioAllowed) SatunesIcons.PERMISSION_GRANTED
+                    if (permissionState.status.isGranted) SatunesIcons.PERMISSION_GRANTED
                     else SatunesIcons.PERMISSION_NOT_GRANTED
 
                 Icon(
@@ -116,7 +115,7 @@ internal fun PermissionsSettingsView(
                     contentDescription = icon.description,
                     tint = if (permissionState.status.isGranted) Color.Green else Color.Red
                 )
-                if (!satunesUiState.isAudioAllowed) {
+                if (!permissionState.status.isGranted) {
                     Spacer(modifier = Modifier.size(spacerSize))
                     Button(onClick = {
                         askPermission(

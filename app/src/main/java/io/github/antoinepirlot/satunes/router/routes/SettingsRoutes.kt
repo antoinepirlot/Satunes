@@ -32,6 +32,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import io.github.antoinepirlot.satunes.models.Destination
+import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.ui.views.settings.AndroidAutoSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.BatterySettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.BottomNavigationBarSettingsView
@@ -50,6 +51,7 @@ import io.github.antoinepirlot.satunes.ui.views.settings.logs.LogsSettingsView
 
 internal fun NavGraphBuilder.settingsRoutes(
     navController: NavHostController,
+    satunesViewModel: SatunesViewModel, // Pass it as param to fix no recomposition when permission granted
     onStart: AnimatedContentScope.(NavBackStackEntry) -> Unit
 ) {
     composable(Destination.SETTINGS.link) {
@@ -86,7 +88,8 @@ internal fun NavGraphBuilder.settingsRoutes(
 
     composable(Destination.PERMISSIONS_SETTINGS.link) {
         onStart(it)
-        PermissionsSettingsView()
+        // Pass it as param to fix no recomposition when permission granted
+        PermissionsSettingsView(satunesViewModel = satunesViewModel)
     }
 
     composable(Destination.ANDROID_AUTO_SETTINGS.link) {

@@ -98,6 +98,7 @@ internal fun Router(
         )
         settingsRoutes(
             navController = navController,
+            satunesViewModel = satunesViewModel, // Pass it as param to fix no recomposition when permission granted
             onStart = {
                 satunesViewModel.setCurrentDestination(destination = it.destination.route!!)
             }

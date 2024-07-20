@@ -80,6 +80,7 @@ internal object ProgressBarLifecycleCallbacks : DefaultLifecycleObserver {
             updateCurrentPosition()
             while (playbackViewModel.isPlaying && !stopRefresh) {
                 updateCurrentPosition()
+//TODO do it outside function
                 val timeMillis: Long = (SettingsManager.barSpeed.value * 1000f).toLong()
                 delay(timeMillis) // Wait one second to avoid refreshing all the time
             }

@@ -67,10 +67,10 @@ internal class Playlist(musicSet: Set<Music>) {
 
         if (musicMoving != null) {
             // Not cleared as the list is only shown in playback queue view
-            val oldMusicList: MutableList<Music> = this.musicList
+            val oldMusicList: List<Music> = this.musicList.shuffled()
             this.musicList.clear()
             this.musicList.add(musicMoving)
-            this.musicList.addAll(oldMusicList.shuffled())
+            this.musicList.addAll(oldMusicList)
         } else {
             this.musicList.addAll(this.musicList.shuffled())
         }

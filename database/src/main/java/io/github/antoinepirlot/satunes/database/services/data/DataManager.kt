@@ -49,9 +49,7 @@ object DataManager {
     private val musicMediaItemMap: SortedMap<Music, MediaItem> = sortedMapOf()
     private val musicMapById: MutableMap<Long, Music> = mutableMapOf()
 
-    private val rootFolderMap: MutableMap<String, Folder> = mutableMapOf()
     private val rootFolderSortedSet: SortedSet<Folder> = sortedSetOf()
-    private val folderMap: MutableMap<String, Folder> = mutableMapOf()
     private val folderMapById: MutableMap<Long, Folder> = mutableMapOf()
     private val folderSortedSet: SortedSet<Folder> = sortedSetOf()
 
@@ -161,28 +159,24 @@ object DataManager {
         return folderMapById[folderId]!!
     }
 
-    fun addFolder(folder: Folder): Folder {
-        if (folderMap[folder.absolutePath] == null) {
-            this.folderMap[folder.absolutePath] = folder
+    fun addFolder(folder: Folder) {
+        if (!folderSortedSet.contains(folder)) {
             this.folderMapById[folder.id] = folder
             this.folderSortedSet.add(element = folder)
             if (folder.parentFolder == null) {
-                this.rootFolderMap[folder.absolutePath] = folder
                 this.rootFolderSortedSet.add(element = folder)
             }
         }
-        return this.folderMap[folder.absolutePath]!!
     }
 
     /**
      * Remove folder and its subfolder from data
      */
     fun removeFolder(folder: Folder) {
-        this.folderMap.remove(key = folder.absolutePath)
         folder.getSubFolderMap().values.forEach {
             this.removeFolder(folder = it)
         }
-        rootFolderMap.remove(key = folder.absolutePath)
+        rootFolderSortedSet.remove(folder)
     }
 
     fun getGenre(genreId: Long): Genre {

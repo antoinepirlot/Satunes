@@ -34,7 +34,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.media3.common.MediaItem
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
@@ -62,10 +61,10 @@ internal fun GenreView(
     playbackViewModel: PlaybackViewModel = viewModel(),
     genre: Genre,
 ) {
-    val musicMap: Map<Music, MediaItem> = genre.getMusicMap()
+    val musicMap: Set<Music> = genre.getMusicSet()
 
     //Recompose if data changed
-    var mapChanged: Boolean by rememberSaveable { genre.musicMediaItemMapUpdate }
+    var mapChanged: Boolean by rememberSaveable { genre.musicSetUpdated }
     if (mapChanged) {
         mapChanged = false
     }
@@ -74,7 +73,7 @@ internal fun GenreView(
     MediaCollectionView(
         modifier = modifier,
         navController = navController,
-        mediaImplCollection = musicMap.keys.toList(),
+        mediaImplCollection = musicMap,
         openMedia = { clickedMediaImpl: MediaImpl ->
             playbackViewModel.loadMusic(
                 musicSet = genre.getMusicSet(),
@@ -95,24 +94,24 @@ internal fun GenreView(
         header = {
             //Recompose if data changed
             @Suppress("NAME_SHADOWING")
-            var mapChanged: Boolean by remember { genre.musicMediaItemMapUpdate }
+            var mapChanged: Boolean by remember { genre.musicSetUpdated }
             if (mapChanged) {
                 mapChanged = false
             }
             //
 
             val albumSet: SortedSet<Album> = sortedSetOf()
-            musicMap.forEach { (music: Music, _: MediaItem) ->
+            musicMap.forEach { music: Music ->
                 albumSet.add(music.album)
             }
             MediaWithAlbumsHeaderView(
                 navController = navController,
                 mediaImpl = genre,
-                albumList = albumSet.toList()
+                albumCollection = albumSet
             )
         },
         extraButtons = {
-            if (genre.getMusicMap().isNotEmpty()) {
+            if (genre.getMusicSet().isNotEmpty()) {
                 ExtraButton(icon = SatunesIcons.PLAY, onClick = {
                     playbackViewModel.loadMusic(musicSet = genre.getMusicSet())
                     openMedia(playbackViewModel = playbackViewModel, navController = navController)

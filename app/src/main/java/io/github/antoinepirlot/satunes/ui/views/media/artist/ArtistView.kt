@@ -34,7 +34,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.media3.common.MediaItem
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
@@ -49,7 +48,6 @@ import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
 import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.ui.views.media.MediaCollectionView
 import io.github.antoinepirlot.satunes.ui.views.media.MediaWithAlbumsHeaderView
-import java.util.SortedMap
 
 /**
  * @author Antoine Pirlot on 01/04/2024
@@ -63,9 +61,9 @@ internal fun ArtistView(
     artist: Artist,
 ) {
     //TODO create mediaViewModel and UiState when you select media
-    val musicMap: Map<Music, MediaItem> = artist.getMusicMap()
+    val musicMap: Set<Music> = artist.getMusicSet()
     //Recompose if data changed
-    var musicMapChanged: Boolean by rememberSaveable { artist.musicMediaItemMapUpdate }
+    var musicMapChanged: Boolean by rememberSaveable { artist.musicSetUpdated }
     if (musicMapChanged) {
         musicMapChanged = false
     }
@@ -74,7 +72,7 @@ internal fun ArtistView(
     MediaCollectionView(
         modifier = modifier,
         navController = navController,
-        mediaImplCollection = musicMap.keys.toList(),
+        mediaImplCollection = musicMap,
         openMedia = { clickedMediaImpl: MediaImpl ->
             playbackViewModel.loadMusic(
                 musicSet = artist.getMusicSet(),
@@ -93,7 +91,7 @@ internal fun ArtistView(
             )
         },
         header = {
-            val albumMap: SortedMap<String, Album> = artist.albumSortedMap
+            val albumSet: Set<Album> = artist.getAlbumSet()
 
             //Recompose if data changed
             var albumMapChanged: Boolean by remember { artist.albumSortedMapUpdate }
@@ -104,12 +102,12 @@ internal fun ArtistView(
 
             MediaWithAlbumsHeaderView(
                 mediaImpl = artist,
-                albumList = albumMap.values.toList(),
+                albumCollection = albumSet,
                 navController = navController
             )
         },
         extraButtons = {
-            if (artist.getMusicMap().isNotEmpty()) {
+            if (artist.getMusicSet().isNotEmpty()) {
                 ExtraButton(icon = SatunesIcons.PLAY, onClick = {
                     playbackViewModel.loadMusic(musicSet = artist.getMusicSet())
                     openMedia(playbackViewModel = playbackViewModel, navController = navController)

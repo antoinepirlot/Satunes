@@ -73,7 +73,7 @@ internal fun AlbumView(
     val musicSet: Set<Music> = album.getMusicSet()
 
     //Recompose if data changed
-    var mapChanged: Boolean by rememberSaveable { album.musicMediaItemMapUpdate }
+    var mapChanged: Boolean by rememberSaveable { album.musicSetUpdated }
     if (mapChanged) {
         mapChanged = false
     }
@@ -104,7 +104,7 @@ internal fun AlbumView(
             Header(navController = navController, album = album)
         },
         extraButtons = {
-            if (album.getMusicMap().isNotEmpty()) {
+            if (album.getMusicSet().isNotEmpty()) {
                 ExtraButton(icon = SatunesIcons.PLAY, onClick = {
                     playbackViewModel.loadMusic(album.getMusicSet())
                     openMedia(

@@ -232,7 +232,7 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
         }
         mediaItemList.add(getShuffleButton())
         for (media: MediaImpl in mediaList) {
-            if (media !is Music && (media.getMusicMap().isEmpty())) {
+            if (media !is Music && (media.getMusicSet().isEmpty())) {
                 continue
             }
             val mediaItem: MediaItem = addToQueue(media = media)
@@ -267,7 +267,7 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
         val listToReturn: MutableList<MediaItem> = mutableListOf()
         listToReturn.addAll(
             this.getAllMediaItem(
-                mediaList = mediaImpl?.getMusicMap()?.keys?.toList() ?: mutableListOf()
+                mediaList = mediaImpl?.getMusicSet() ?: mutableListOf()
             )
         )
         return listToReturn

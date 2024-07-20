@@ -60,7 +60,7 @@ internal fun RootFolderView(
     MediaCollectionView(
         modifier = modifier,
         navController = navController,
-        mediaImplCollection = rootFolderSet.toList(),
+        mediaImplCollection = rootFolderSet,
         openMedia = { clickedMediaImpl: MediaImpl ->
             openMediaFromFolder(
                 media = clickedMediaImpl,

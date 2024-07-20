@@ -72,7 +72,7 @@ internal fun PlaylistView(
     val musicSet: Set<Music> = playlist.getMusicSet()
 
     //Recompose if data changed
-    var mapChanged: Boolean by rememberSaveable { playlist.musicMediaItemMapUpdate }
+    var mapChanged: Boolean by rememberSaveable { playlist.musicSetUpdated }
     if (mapChanged) {
         mapChanged = false
     }
@@ -110,7 +110,7 @@ internal fun PlaylistView(
         },
         extraButtons = {
             ExtraButton(icon = SatunesIcons.ADD, onClick = { openAddMusicsDialog = true })
-            if (playlist.getMusicMap().isNotEmpty()) {
+            if (playlist.getMusicSet().isNotEmpty()) {
                 ExtraButton(icon = SatunesIcons.PLAY, onClick = {
                     playbackViewModel.loadMusic(musicSet = musicSet)
                     openMedia(playbackViewModel = playbackViewModel, navController = navController)

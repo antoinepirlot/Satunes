@@ -51,7 +51,7 @@ internal fun SettingsSwitchList(
     val context: Context = LocalContext.current
 
     Column(modifier = modifier) {
-        for (setting: Settings in checkedMap.keys.toList()) {
+        for (setting: Settings in checkedMap.keys) {
             ListItem( //Has always horizontal padding of 16.dp
                 headlineContent = {
                     SettingWithSwitch(

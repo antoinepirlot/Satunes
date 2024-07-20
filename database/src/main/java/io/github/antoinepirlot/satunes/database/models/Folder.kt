@@ -25,9 +25,8 @@
 
 package io.github.antoinepirlot.satunes.database.models
 
-import androidx.media3.common.MediaItem
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
-import java.util.SortedMap
+import java.util.SortedSet
 
 /**
  * @author Antoine Pirlot on 27/03/2024
@@ -37,7 +36,7 @@ class Folder(
     title: String,
     var parentFolder: Folder? = null,
 ) : MediaImpl(id = nextId, title = title) {
-    private val subFolderMapByTitle: SortedMap<String, Folder> = sortedMapOf()
+    private val subFolderSortedSet: SortedSet<Folder> = sortedSetOf()
 
     val absolutePath: String = if (parentFolder == null) {
         "/$title"
@@ -55,7 +54,7 @@ class Folder(
 
     override fun isEmpty(): Boolean {
         return super.isEmpty() || try {
-            this.subFolderMapByTitle.values.first { it.isNotEmpty() }
+            this.subFolderSortedSet.first { it.isNotEmpty() }
             false
         } catch (_: NoSuchElementException) {
             true
@@ -64,7 +63,7 @@ class Folder(
 
     override fun isNotEmpty(): Boolean {
         return super.isNotEmpty() || try {
-            this.subFolderMapByTitle.values.first { it.isNotEmpty() }
+            this.subFolderSortedSet.first { it.isNotEmpty() }
             true
         } catch (_: NoSuchElementException) {
             false
@@ -76,8 +75,8 @@ class Folder(
      *
      * @return a list of subfolder and each subfolder is a Folder object
      */
-    fun getSubFolderMap(): Map<String, Folder> {
-        return this.subFolderMapByTitle
+    fun getSubFolderMap(): Set<Folder> {
+        return this.subFolderSortedSet
     }
 
     /**
@@ -88,8 +87,8 @@ class Folder(
      */
     fun getSubFolderListWithMusics(): List<MediaImpl> {
         val list: MutableList<MediaImpl> = mutableListOf()
-        list.addAll(getSubFolderMap().values)
-        list.addAll(this.musicMediaItemMap.keys)
+        list.addAll(this.subFolderSortedSet)
+        list.addAll(this.musicSortedSet)
         return list
     }
 
@@ -105,7 +104,7 @@ class Folder(
         var parentFolder = this
         subFolderNameChainList.forEach { folderName: String ->
             var subFolder: Folder? = null
-            for (folder in parentFolder.subFolderMapByTitle.values) {
+            for (folder in parentFolder.subFolderSortedSet) {
                 if (folder.title == folderName) {
                     subFolder = folder
                 }
@@ -114,7 +113,7 @@ class Folder(
                 // No subfolder matching folder name, create new one
                 subFolder = Folder(title = folderName, parentFolder = parentFolder)
                 DataManager.addFolder(folder = subFolder)
-                parentFolder.subFolderMapByTitle[subFolder.title] = subFolder
+                parentFolder.subFolderSortedSet.add(element = subFolder)
             }
 
             parentFolder = subFolder
@@ -132,7 +131,7 @@ class Folder(
         if (splitPath.isEmpty() || splitPath.size == 1 && this.title == splitPath[0]) {
             return this
         }
-        this.subFolderMapByTitle.values.forEach { subFolder: Folder ->
+        this.subFolderSortedSet.forEach { subFolder: Folder ->
             if (subFolder.title == splitPath[0]) {
                 splitPath.remove(splitPath[0])
                 return subFolder.getSubFolder(splitPath)
@@ -147,18 +146,18 @@ class Folder(
      * #1 musics from this current folder sorted by name
      * #2 musics from each subfolder sorted by name and by folder
      */
-    fun getAllMusic(): Map<Music, MediaItem> {
-        val musicMediaMap: MutableMap<Music, MediaItem> = mutableMapOf()
+    fun getAllMusic(): Set<Music> {
+        val musicSet: MutableSet<Music> = mutableSetOf()
 
-        musicMediaMap.putAll(this.musicMediaItemMap)
+        musicSet.addAll(elements = this.musicSortedSet)
 
-        if (this.subFolderMapByTitle.isNotEmpty()) {
-            this.subFolderMapByTitle.values.forEach { folder: Folder ->
-                musicMediaMap.putAll(folder.getAllMusic())
+        if (this.subFolderSortedSet.isNotEmpty()) {
+            this.subFolderSortedSet.forEach { folder: Folder ->
+                musicSet.addAll(elements = folder.getAllMusic())
             }
         }
 
-        return musicMediaMap
+        return musicSet
     }
 
     override fun equals(other: Any?): Boolean {

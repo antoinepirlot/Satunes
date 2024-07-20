@@ -27,7 +27,6 @@ package io.github.antoinepirlot.satunes.database.services.data
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.media3.common.MediaItem
 import io.github.antoinepirlot.satunes.database.exceptions.MusicNotFoundException
 import io.github.antoinepirlot.satunes.database.exceptions.PlaylistNotFoundException
 import io.github.antoinepirlot.satunes.database.models.Album
@@ -36,7 +35,6 @@ import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
-import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import java.util.SortedMap
 import java.util.SortedSet
 
@@ -46,7 +44,7 @@ import java.util.SortedSet
 
 object DataManager {
     // All public map and sortedmap has bool state to recompose as Map are not supported for recomposition
-    private val musicMediaItemMap: SortedMap<Music, MediaItem> = sortedMapOf()
+    private val musicSortedSet: SortedSet<Music> = sortedSetOf()
     private val musicMapById: MutableMap<Long, Music> = mutableMapOf()
 
     private val rootFolderSortedSet: SortedSet<Folder> = sortedSetOf()
@@ -68,9 +66,6 @@ object DataManager {
     private val playlistsSortedMap: SortedMap<Playlist, Playlist> = sortedMapOf()
     val playlistsMapUpdated: MutableState<Boolean> = mutableStateOf(false)
 
-    private val logger = SatunesLogger(name = this::class.java.name)
-
-
     fun getMusic(musicId: Long): Music {
         try {
             return musicMapById[musicId]!!
@@ -81,22 +76,14 @@ object DataManager {
         }
     }
 
-    fun getMusic(mediaItem: MediaItem): Music {
-        return getMusic(musicId = mediaItem.mediaId.toLong())
-    }
-
-    fun getMediaItem(music: Music): MediaItem {
-        return musicMediaItemMap[music]!!
-    }
-
     fun getMusicSet(): Set<Music> {
-        return this.musicMediaItemMap.keys
+        return this.musicSortedSet
     }
 
     fun addMusic(music: Music): Music {
         if (this.musicMapById[music.id] == null) {
-            musicMediaItemMap[music] = music.mediaItem
-            musicMapById[music.id] = music
+            this.musicSortedSet.add(element = music)
+            this.musicMapById[music.id] = music
         }
         return getMusic(musicId = music.id)
     }
@@ -173,7 +160,7 @@ object DataManager {
      * Remove folder and its subfolder from data
      */
     fun removeFolder(folder: Folder) {
-        folder.getSubFolderMap().values.forEach {
+        folder.getSubFolderMap().forEach {
             this.removeFolder(folder = it)
         }
         rootFolderSortedSet.remove(folder)

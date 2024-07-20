@@ -27,7 +27,7 @@ package io.github.antoinepirlot.satunes.database.models
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import java.util.SortedMap
+import java.util.SortedSet
 
 /**
  * @author Antoine Pirlot on 27/03/2024
@@ -36,7 +36,7 @@ import java.util.SortedMap
 class Artist(
     title: String,
 ) : MediaImpl(id = nextId, title = title) {
-    val albumSortedMap: SortedMap<String, Album> = sortedMapOf()
+    private val albumSortedSet: SortedSet<Album> = sortedSetOf()
 
     val albumSortedMapUpdate: MutableState<Boolean> = mutableStateOf(false)
 
@@ -50,14 +50,18 @@ class Artist(
 
     fun addAlbum(album: Album): Boolean {
         if (!contains(album = album)) {
-            albumSortedMap[album.title] = album
+            albumSortedSet.add(element = album)
             return true
         }
         return false
     }
 
+    fun getAlbumSet(): Set<Album> {
+        return this.albumSortedSet
+    }
+
     fun contains(album: Album): Boolean {
-        return this.albumSortedMap.contains(key = album.title)
+        return this.albumSortedSet.contains(album)
     }
 
     override fun toString(): String {

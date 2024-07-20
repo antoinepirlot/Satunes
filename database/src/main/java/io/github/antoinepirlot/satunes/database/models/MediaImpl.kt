@@ -28,8 +28,7 @@ package io.github.antoinepirlot.satunes.database.models
 import android.graphics.Bitmap
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.media3.common.MediaItem
-import java.util.SortedMap
+import java.util.SortedSet
 
 /**
  * @author Antoine Pirlot on 29/03/2024
@@ -49,36 +48,33 @@ abstract class MediaImpl(
 
     var artwork: Bitmap? = null
 
-    protected val musicMediaItemMap: SortedMap<Music, MediaItem> = sortedMapOf()
-    val musicMediaItemMapUpdate: MutableState<Boolean> = mutableStateOf(false)
+    protected val musicSortedSet: SortedSet<Music> = sortedSetOf()
+    val musicSetUpdated: MutableState<Boolean> = mutableStateOf(false)
 
     open fun isEmpty(): Boolean {
-        return this.musicMediaItemMap.isEmpty()
+        return this.musicSortedSet.isEmpty()
     }
 
     open fun isNotEmpty(): Boolean {
-        return this.musicMediaItemMap.isNotEmpty()
-    }
-
-    fun getMusicMap(): Map<Music, MediaItem> {
-        return this.musicMediaItemMap
+        return this.musicSortedSet.isNotEmpty()
     }
 
     fun getMusicSet(): Set<Music> {
-        return this.musicMediaItemMap.keys
+        return this.musicSortedSet
     }
 
     fun addMusic(music: Music) {
-        if (this.musicMediaItemMap[music] == null) {
-            this.musicMediaItemMap[music] = music.mediaItem
-            this.musicMediaItemMapUpdate.value = true
+        if (!this.musicSortedSet.contains(element = music)) {
+            this.musicSortedSet.add(element = music)
+            this.musicSetUpdated.value = true
         }
     }
 
     fun removeMusic(music: Music) {
-        if (this.musicMediaItemMap[music] == null) return
-        this.musicMediaItemMap.remove(music)
-        this.musicMediaItemMapUpdate.value = true
+        if (this.musicSortedSet.contains(element = music)) {
+            this.musicSortedSet.remove(music)
+            this.musicSetUpdated.value = true
+        }
     }
 
     override fun compareTo(other: MediaImpl): Int {

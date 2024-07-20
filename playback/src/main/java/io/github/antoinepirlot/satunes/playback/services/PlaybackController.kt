@@ -35,7 +35,6 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.core.content.ContextCompat
-import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
@@ -293,12 +292,12 @@ class PlaybackController private constructor(
         shuffleMode: Boolean = SettingsManager.shuffleMode.value,
         musicToPlay: Music? = null
     ) {
-        val musicMediaItemSortedMap: MutableMap<Music, MediaItem> = mutableMapOf()
+        val musicSet: MutableSet<Music> = mutableSetOf()
         folders.forEach { folder: Folder ->
-            musicMediaItemSortedMap.putAll(folder.getAllMusic())
+            musicSet.addAll(elements = folder.getAllMusic())
         }
         loadMusic(
-            musicSet = musicMediaItemSortedMap.keys,
+            musicSet = musicSet,
             shuffleMode = shuffleMode,
             musicToPlay = musicToPlay
         )
@@ -344,19 +343,19 @@ class PlaybackController private constructor(
         when (media) {
             is Folder -> {
                 loadMusic(
-                    musicSet = media.getAllMusic().keys,
+                    musicSet = media.getAllMusic(),
                     shuffleMode = shuffleMode,
                     musicToPlay = musicToPlay
                 )
             }
 
             else -> {
-                val musicMediaItemSortedMap: MutableMap<Music, MediaItem> = mutableMapOf()
-                media.getMusicMap().keys.forEach { music: Music ->
-                    musicMediaItemSortedMap.putAll(music.getMusicMap())
+                val musicSet: MutableSet<Music> = mutableSetOf()
+                media.getMusicSet().forEach { music: Music ->
+                    musicSet.addAll(elements = music.getMusicSet())
                 }
                 loadMusic(
-                    musicSet = musicMediaItemSortedMap.keys,
+                    musicSet = musicSet,
                     shuffleMode = shuffleMode,
                     musicToPlay = musicToPlay
                 )
@@ -420,10 +419,10 @@ class PlaybackController private constructor(
                 hasNext.value = true
             }
 
-            is Folder -> addToQueue(mediaImplList = mediaImpl.getAllMusic().keys.reversed())
+            is Folder -> addToQueue(mediaImplList = mediaImpl.getAllMusic().reversed())
 
             else -> {
-                addToQueue(mediaImplList = mediaImpl.getMusicMap().keys.reversed())
+                addToQueue(mediaImplList = mediaImpl.getMusicSet().reversed())
             }
         }
     }
@@ -454,10 +453,10 @@ class PlaybackController private constructor(
                 hasNext.value = true
             }
 
-            is Folder -> addNext(mediaImplList = mediaImpl.getAllMusic().keys.reversed())
+            is Folder -> addNext(mediaImplList = mediaImpl.getAllMusic().reversed())
 
             else -> {
-                addNext(mediaImplList = mediaImpl.getMusicMap().keys.reversed())
+                addNext(mediaImplList = mediaImpl.getMusicSet().reversed())
             }
         }
     }

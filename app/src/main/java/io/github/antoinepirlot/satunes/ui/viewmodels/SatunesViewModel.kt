@@ -122,7 +122,7 @@ internal class SatunesViewModel : ViewModel() {
         }
     }
 
-    fun selectMenuTitle(navBarSection: NavBarSection) {
+    fun selectNavBarSection(navBarSection: NavBarSection) {
         _uiState.update { currentState: SatunesUiState ->
             currentState.copy(
                 selectedNavBarSection = navBarSection

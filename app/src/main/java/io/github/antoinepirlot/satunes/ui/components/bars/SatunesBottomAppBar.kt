@@ -80,7 +80,7 @@ internal fun SatunesBottomAppBar(
                 },
                 selected = selectedNavBarSection == navBarSection,
                 onClick = {
-                    satunesViewModel.selectMenuTitle(navBarSection = navBarSection)
+                    satunesViewModel.selectNavBarSection(navBarSection = navBarSection)
                     val rootRoute: String = when (navBarSection) {
                         NavBarSection.FOLDERS -> Destination.FOLDERS.link
                         NavBarSection.ARTISTS -> Destination.ARTISTS.link

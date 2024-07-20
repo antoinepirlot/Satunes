@@ -54,7 +54,6 @@ internal fun AllArtistsListView(
     dataViewModel: DataViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
 ) {
-    //TODO use view model
     val artistSet: Set<Artist> = dataViewModel.artistSet
 
     MediaCollectionView(

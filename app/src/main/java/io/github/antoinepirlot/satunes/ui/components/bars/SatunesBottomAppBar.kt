@@ -28,26 +28,20 @@ package io.github.antoinepirlot.satunes.ui.components.bars
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
-import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.ui.ScreenSizes
-import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 import io.github.antoinepirlot.satunes.ui.states.SatunesUiState
-import io.github.antoinepirlot.satunes.ui.utils.getRightIconAndDescription
 import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
 
 /**
@@ -62,67 +56,55 @@ internal fun SatunesBottomAppBar(
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
 
-    val selectedNavBarSection: NavBarSection = satunesUiState.selectedNavBarSection
-
     val screenWidthDp = LocalConfiguration.current.screenWidthDp
     val navigationModifier: Modifier =
         if (screenWidthDp < ScreenSizes.VERY_VERY_SMALL) modifier.fillMaxHeight(0.11f) else modifier
-    NavigationBar(
-        modifier = navigationModifier,
-    ) {
-        val navigationItemModifier: Modifier =
-            if (screenWidthDp < ScreenSizes.VERY_VERY_SMALL) Modifier.size(16.dp) else Modifier
-        satunesViewModel.availableNavBarSections.forEach { navBarSection: NavBarSection ->
-            NavigationBarItem(
+    val navigationItemModifier: Modifier =
+        if (screenWidthDp < ScreenSizes.VERY_VERY_SMALL) Modifier.size(16.dp) else Modifier
+    NavigationBar(modifier = navigationModifier) {
+        if (satunesUiState.foldersChecked) {
+            MediaNavBarSelection(
                 modifier = navigationItemModifier,
-                label = {
-                    NormalText(text = stringResource(id = navBarSection.stringId))
-                },
-                selected = selectedNavBarSection == navBarSection,
-                onClick = {
-                    satunesViewModel.selectNavBarSection(navBarSection = navBarSection)
-                    val rootRoute: String = when (navBarSection) {
-                        NavBarSection.FOLDERS -> Destination.FOLDERS.link
-                        NavBarSection.ARTISTS -> Destination.ARTISTS.link
-                        NavBarSection.ALBUMS -> Destination.ALBUMS.link
-                        NavBarSection.GENRES -> Destination.GENRES.link
-                        NavBarSection.PLAYLISTS -> Destination.PLAYLISTS.link
-                        NavBarSection.MUSICS -> Destination.MUSICS.link
-
-                    }
-                    backToRoot(rootRoute = rootRoute, navController = navController)
-                },
-                icon = {
-                    val pair = getRightIconAndDescription(navBarSection = navBarSection)
-
-                    Icon(
-                        imageVector = pair.first,
-                        contentDescription = pair.second
-                    )
-                }
+                navController = navController,
+                navBarSection = NavBarSection.FOLDERS
             )
         }
-    }
-}
 
-/**
- * Redirect controller to the state where the user is in a bottom button's view.
- * For example, if the user click on Album button and he is in settings, then it redirects to albums.
- *
- * @param rootRoute the root route to go
- */
-private fun backToRoot(
-    rootRoute: String,
-    navController: NavHostController
-) {
-    var currentRoute: String? = navController.currentBackStackEntry!!.destination.route!!//TODO
-    if (currentRoute != rootRoute) {
-        while (currentRoute != null && currentRoute != rootRoute) {
-            navController.popBackStack()
-            currentRoute = navController.currentBackStackEntry?.destination?.route
+        if (satunesUiState.artistsChecked) {
+            MediaNavBarSelection(
+                modifier = navigationItemModifier,
+                navController = navController,
+                navBarSection = NavBarSection.ARTISTS
+            )
         }
-        if (currentRoute == null) {
-            navController.navigate(rootRoute)
+
+        if (satunesUiState.albumsChecked) {
+            MediaNavBarSelection(
+                modifier = navigationItemModifier,
+                navController = navController,
+                navBarSection = NavBarSection.ALBUMS
+            )
+        }
+        if (satunesUiState.genresChecked) {
+            MediaNavBarSelection(
+                modifier = navigationItemModifier,
+                navController = navController,
+                navBarSection = NavBarSection.GENRES
+            )
+        }
+
+        MediaNavBarSelection(
+            modifier = navigationItemModifier,
+            navController = navController,
+            navBarSection = NavBarSection.MUSICS
+        )
+
+        if (satunesUiState.playlistsChecked) {
+            MediaNavBarSelection(
+                modifier = navigationItemModifier,
+                navController = navController,
+                navBarSection = NavBarSection.PLAYLISTS
+            )
         }
     }
 }

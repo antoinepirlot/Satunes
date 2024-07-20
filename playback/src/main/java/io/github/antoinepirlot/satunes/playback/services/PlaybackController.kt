@@ -304,22 +304,14 @@ class PlaybackController private constructor(
         )
     }
 
-    fun loadMusicFromMedias(
-        medias: Map<MediaImpl, Any>,
-        shuffleMode: Boolean = SettingsManager.shuffleMode.value,
-        musicToPlay: Music? = null,
-    ) {
-        val musicMediaItemSortedMap: MutableMap<Music, MediaItem> = mutableMapOf()
-        medias.keys.forEach { media: MediaImpl ->
-            musicMediaItemSortedMap.putAll(media.getMusicMap())
-        }
-        loadMusic(
-            musicSet = musicMediaItemSortedMap.keys,
-            shuffleMode = shuffleMode,
-            musicToPlay = musicToPlay
-        )
-    }
-
+    /**
+     * Add all music from medias to the mediaController in the same order.
+     * If the shuffle mode is true then shuffle the playlist
+     *
+     * @param medias the medias to load
+     * @param shuffleMode indicate if the playlistDB has to be started in shuffle mode by default false
+     * @param musicToPlay the music to play
+     */
     fun loadMusicFromMedias(
         medias: Set<MediaImpl>,
         shuffleMode: Boolean = SettingsManager.shuffleMode.value,
@@ -337,31 +329,7 @@ class PlaybackController private constructor(
     }
 
     /**
-     * Add all music from medias to the mediaController in the same order.
-     * If the shuffle mode is true then shuffle the playlist
-     *
-     * @param medias the medias to load
-     * @param shuffleMode indicate if the playlistDB has to be started in shuffle mode by default false
-     * @param musicToPlay the music to play
-     */
-    fun loadMusicFromStringMediasMedia(
-        medias: Map<String, MediaImpl>,
-        shuffleMode: Boolean = SettingsManager.shuffleMode.value,
-        musicToPlay: Music? = null,
-    ) {
-        val musicMediaItemSortedMap: MutableMap<Music, MediaItem> = mutableMapOf()
-        medias.values.forEach { media: MediaImpl ->
-            musicMediaItemSortedMap.putAll(media.getMusicMap())
-        }
-        loadMusic(
-            musicSet = musicMediaItemSortedMap.keys,
-            shuffleMode = shuffleMode,
-            musicToPlay = musicToPlay
-        )
-    }
-
-    /**
-     * Add all music from medias to the mediaController in the same order.
+     * Add all music from one media to the mediaController in the same order.
      * If the shuffle mode is true then shuffle the playlist
      *
      * @param media the media to load

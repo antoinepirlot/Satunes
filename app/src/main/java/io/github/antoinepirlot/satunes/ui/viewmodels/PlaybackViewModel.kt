@@ -36,7 +36,6 @@ import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.models.ProgressBarLifecycleCallbacks
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
-import java.util.SortedMap
 
 /**
  * @author Antoine Pirlot on 19/07/2024
@@ -107,30 +106,6 @@ class PlaybackViewModel : ViewModel() {
         musicToPlay: Music? = null,
     ) {
         this._playbackController.loadMusicFromMedias(
-            medias = medias,
-            shuffleMode = shuffleMode,
-            musicToPlay = musicToPlay
-        )
-    }
-
-    fun loadMusicFromMedias(
-        medias: SortedMap<MediaImpl, Any>,
-        shuffleMode: Boolean = SettingsManager.shuffleMode.value,
-        musicToPlay: Music? = null,
-    ) {
-        this._playbackController.loadMusicFromMedias(
-            medias = medias,
-            shuffleMode = shuffleMode,
-            musicToPlay = musicToPlay
-        )
-    }
-
-    fun loadMusicFromStringMediasMedia(
-        medias: SortedMap<String, MediaImpl>,
-        shuffleMode: Boolean = SettingsManager.shuffleMode.value,
-        musicToPlay: Music? = null
-    ) {
-        this._playbackController.loadMusicFromStringMediasMedia(
             medias = medias,
             shuffleMode = shuffleMode,
             musicToPlay = musicToPlay

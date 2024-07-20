@@ -23,19 +23,14 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.viewmodels
+package io.github.antoinepirlot.satunes.ui.states
 
-import androidx.lifecycle.ViewModel
-import io.github.antoinepirlot.satunes.ui.states.FoldersUiState
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 
 /**
  * @author Antoine Pirlot on 19/07/2024
  */
-class FoldersViewModel : ViewModel() {
-    private val _uiState: MutableStateFlow<FoldersUiState> = MutableStateFlow(FoldersUiState())
-
-    val uiState: StateFlow<FoldersUiState> = _uiState.asStateFlow()
-}
+data class MediasUiState(
+    val musicMediaItemSortedMapUpdated: MutableState<Boolean> = mutableStateOf(false)
+)

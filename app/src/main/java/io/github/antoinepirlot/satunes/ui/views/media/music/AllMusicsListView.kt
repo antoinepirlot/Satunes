@@ -26,9 +26,6 @@
 package io.github.antoinepirlot.satunes.ui.views.media.music
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -39,11 +36,11 @@ import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
+import io.github.antoinepirlot.satunes.ui.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 
@@ -55,17 +52,11 @@ import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 internal fun AllMusicsListView(
     modifier: Modifier = Modifier,
     navController: NavHostController,
+    dataViewModel: DataViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
 ) {
     //Find a way to do something more aesthetic but it works
-    val musicMediaItemMap: Map<Music, MediaItem> = DataManager.getMusicMap()
-
-    //Recompose if data changed
-    var mapChanged: Boolean by rememberSaveable { DataManager.musicMediaItemSortedMapUpdated }
-    if (mapChanged) {
-        mapChanged = false
-    }
-    //
+    val musicMediaItemMap: Map<Music, MediaItem> = dataViewModel.musicMap
 
     MediaListView(
         modifier = modifier,

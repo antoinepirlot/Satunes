@@ -26,9 +26,6 @@
 package io.github.antoinepirlot.satunes.ui.views.media.genre
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -38,11 +35,11 @@ import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
-import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
+import io.github.antoinepirlot.satunes.ui.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 import java.util.SortedMap
@@ -55,16 +52,10 @@ import java.util.SortedMap
 internal fun AllGenresListView(
     modifier: Modifier = Modifier,
     navController: NavHostController,
+    dataViewModel: DataViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
 ) {
-    val genreMap: Map<String, Genre> = DataManager.getGenreMap()
-
-    //Recompose if data changed
-    var mapChanged: Boolean by rememberSaveable { DataManager.genreMapUpdated }
-    if (mapChanged) {
-        mapChanged = false
-    }
-    //
+    val genreMap: Map<String, Genre> = dataViewModel.genreMap
 
     MediaListView(
         modifier = modifier,

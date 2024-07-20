@@ -49,7 +49,6 @@ object DataManager {
     // All public map and sortedmap has bool state to recompose as Map are not supported for recomposition
     private val musicMediaItemMap: SortedMap<Music, MediaItem> = sortedMapOf()
     private val musicMapById: MutableMap<Long, Music> = mutableMapOf()
-    val musicMediaItemSortedMapUpdated: MutableState<Boolean> = mutableStateOf(false)
 
     private val rootFolderMap: MutableMap<String, Folder> = mutableMapOf()
     private val rootFolderSortedSet: SortedSet<Folder> = sortedSetOf()
@@ -59,17 +58,14 @@ object DataManager {
 
     private val artistMapById: MutableMap<Long, Artist> = mutableMapOf()
     private val artistMap: SortedMap<String, Artist> = sortedMapOf(comparator = StringComparator)
-    val artistMapUpdated: MutableState<Boolean> = mutableStateOf(false)
 
     private val albumMapById: MutableMap<Long, Album> = mutableMapOf()
 
     // Used to know if Album is already in set. This avoid Log(N) process
     private val albumSortedMap: SortedMap<Album, Album> = sortedMapOf()
-    val albumMapUpdated: MutableState<Boolean> = mutableStateOf(false)
 
     private val genreMapById: MutableMap<Long, Genre> = mutableMapOf()
     private val genreMap: SortedMap<String, Genre> = sortedMapOf(comparator = StringComparator)
-    val genreMapUpdated: MutableState<Boolean> = mutableStateOf(false)
 
     private val playlistsMapById: MutableMap<Long, Playlist> = mutableMapOf()
     private val playlistsSortedMap: SortedMap<String, Playlist> =
@@ -133,7 +129,6 @@ object DataManager {
         if (artistMap[artist.title] == null) {
             artistMap[artist.title] = artist
             artistMapById[artist.id] = artist
-            artistMapUpdated.value = true
         }
 
         return getArtist(artistName = artist.title)
@@ -142,7 +137,6 @@ object DataManager {
     fun removeArtist(artist: Artist) {
         if (artistMap.contains(artist.title)) {
             artistMap.remove(artist.title)
-            artistMapUpdated.value = true
         }
         artistMapById.remove(artist.id)
     }
@@ -163,7 +157,6 @@ object DataManager {
         if (this.albumSortedMap[album] == null) {
             this.albumSortedMap[album] = album
             this.albumMapById[album.id] = album
-            this.albumMapUpdated.value = true
         }
 
         return this.albumSortedMap[album]!!
@@ -172,7 +165,6 @@ object DataManager {
     fun removeAlbum(album: Album) {
         albumSortedMap.remove(key = album)
         albumMapById.remove(album.id)
-        albumMapUpdated.value = true
     }
 
     fun getFolder(folderId: Long): Folder {
@@ -219,7 +211,6 @@ object DataManager {
         if (!genreMap.contains(key = genre.title)) {
             genreMap[genre.title] = genre
             genreMapById[genre.id] = genre
-            genreMapUpdated.value = true
             return genre
         }
         //You can have multiple same genre's name but different id, but it's the same genre.
@@ -229,7 +220,6 @@ object DataManager {
     fun removeGenre(genre: Genre) {
         genreMap.remove(genre.title)
         genreMapById.remove(genre.id)
-        genreMapUpdated.value = true
     }
 
     @Throws(PlaylistNotFoundException::class)

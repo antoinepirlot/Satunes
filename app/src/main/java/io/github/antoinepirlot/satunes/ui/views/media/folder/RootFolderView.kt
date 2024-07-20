@@ -26,8 +26,6 @@
 package io.github.antoinepirlot.satunes.ui.views.media.folder
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -42,8 +40,7 @@ import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.router.utils.openMediaFromFolder
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
-import io.github.antoinepirlot.satunes.ui.states.FoldersUiState
-import io.github.antoinepirlot.satunes.ui.viewmodels.FoldersViewModel
+import io.github.antoinepirlot.satunes.ui.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 
@@ -55,11 +52,10 @@ import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 internal fun RootFolderView(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    foldersViewModel: FoldersViewModel = viewModel(),
+    dataViewModel: DataViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
 ) {
-    val uiState: FoldersUiState by foldersViewModel.uiState.collectAsState()
-    val rootFolderSet: Set<Folder> = uiState.rootFolderSet
+    val rootFolderSet: Set<Folder> = dataViewModel.rootFolderSet
 
     MediaListView(
         modifier = modifier,

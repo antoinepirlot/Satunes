@@ -62,6 +62,7 @@ internal fun ArtistView(
     playbackViewModel: PlaybackViewModel = viewModel(),
     artist: Artist,
 ) {
+    //TODO create mediaViewModel and UiState when you select media
     val musicMap: Map<Music, MediaItem> = artist.getMusicMap()
     //Recompose if data changed
     var musicMapChanged: Boolean by rememberSaveable { artist.musicMediaItemMapUpdate }

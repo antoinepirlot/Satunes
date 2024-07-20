@@ -276,7 +276,7 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
     override fun onTaskRemoved(rootIntent: Intent?) {
         super.onTaskRemoved(rootIntent)
         if (
-            !SettingsManager.playbackWhenClosedChecked.value ||
+            !SettingsManager.playbackWhenClosedChecked ||
             PlaybackService.playbackController == null ||
             !PlaybackService.playbackController!!.isPlaying.value
         ) {
@@ -286,7 +286,7 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
 
     override fun onDestroy() {
         if (
-            !SettingsManager.playbackWhenClosedChecked.value ||
+            !SettingsManager.playbackWhenClosedChecked ||
             PlaybackService.playbackController == null ||
             !PlaybackService.playbackController!!.isPlaying.value
         ) {

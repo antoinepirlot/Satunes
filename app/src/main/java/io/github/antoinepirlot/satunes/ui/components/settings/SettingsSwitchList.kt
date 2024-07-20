@@ -25,18 +25,20 @@
 
 package io.github.antoinepirlot.satunes.ui.components.settings
 
-import android.content.Context
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.database.models.MenuTitle
-import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.models.SearchChips
 import io.github.antoinepirlot.satunes.models.SwitchSettings
 import io.github.antoinepirlot.satunes.services.search.SearchChipsManager
 import io.github.antoinepirlot.satunes.ui.components.cards.ListItem
+import io.github.antoinepirlot.satunes.ui.states.SatunesUiState
+import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
 
 /**
  *   @author Antoine Pirlot 06/03/2024
@@ -45,9 +47,10 @@ import io.github.antoinepirlot.satunes.ui.components.cards.ListItem
 @Composable
 internal fun SettingsSwitchList(
     modifier: Modifier = Modifier,
+    satunesViewModel: SatunesViewModel = viewModel(),
     checkedMap: Map<SwitchSettings, Boolean>,
 ) {
-    val context: Context = LocalContext.current
+    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
 
     Column(modifier = modifier) {
         for (setting: SwitchSettings in checkedMap.keys) {
@@ -58,7 +61,8 @@ internal fun SettingsSwitchList(
                         checked = checkedMap[setting]!!,
                         onCheckedChange = {
                             switchSetting(
-                                context = context,
+                                satunesViewModel = satunesViewModel,
+                                uiState = satunesUiState,
                                 setting = setting
                             )
                         }
@@ -75,107 +79,106 @@ private fun SettingsSwitchListPreview() {
     SettingsSwitchList(checkedMap = mapOf())
 }
 
-private fun switchSetting(context: Context, setting: SwitchSettings) {
+private fun switchSetting(
+    satunesViewModel: SatunesViewModel,
+    uiState: SatunesUiState,
+    setting: SwitchSettings
+) {
     when (setting) {
         SwitchSettings.FOLDERS_CHECKED -> {
-            SettingsManager.switchMenuTitle(
-                context = context,
+            satunesViewModel.switchMenuTitle(
                 menuTitle = MenuTitle.FOLDERS
             )
         }
 
         SwitchSettings.ARTISTS_CHECKED -> {
-            SettingsManager.switchMenuTitle(
-                context = context,
+            satunesViewModel.switchMenuTitle(
                 menuTitle = MenuTitle.ARTISTS
             )
         }
 
         SwitchSettings.ALBUMS_CHECKED -> {
-            SettingsManager.switchMenuTitle(
-                context = context,
+            satunesViewModel.switchMenuTitle(
                 menuTitle = MenuTitle.ALBUMS
             )
         }
 
         SwitchSettings.GENRES_CHECKED -> {
-            SettingsManager.switchMenuTitle(
-                context = context,
+            satunesViewModel.switchMenuTitle(
                 menuTitle = MenuTitle.GENRES
             )
         }
 
         SwitchSettings.PLAYLISTS_CHECKED -> {
-            SettingsManager.switchMenuTitle(
-                context = context,
+            satunesViewModel.switchMenuTitle(
                 menuTitle = MenuTitle.PLAYLISTS
             )
         }
 
         SwitchSettings.PLAYBACK_WHEN_CLOSED -> {
-            SettingsManager.switchPlaybackWhenClosedChecked(context = context)
+            satunesViewModel.switchPlaybackWhenClosedChecked()
         }
 
         SwitchSettings.PAUSE_IF_NOISY -> {
-            SettingsManager.switchPauseIfNoisy(context = context)
+            satunesViewModel.switchPauseIfNoisy()
         }
 
         SwitchSettings.INCLUDE_RINGTONES -> {
-            SettingsManager.switchIncludeRingtones(context = context)
+            satunesViewModel.switchIncludeRingtones()
         }
 
         SwitchSettings.SHUFFLE_MODE -> {
-            SettingsManager.switchShuffleMode(context = context)
+            satunesViewModel.switchShuffleMode()
         }
 
         SwitchSettings.PAUSE_IF_ANOTHER_PLAYBACK -> {
-            SettingsManager.switchPauseIfPlayback(context = context)
+            satunesViewModel.switchPauseIfAnotherPlayback()
         }
 
         SwitchSettings.MUSICS_FILTER -> {
-            SettingsManager.switchFilter(context = context, filterSetting = MenuTitle.MUSICS)
+            satunesViewModel.switchFilter(filterSetting = MenuTitle.MUSICS)
             val searchChip: SearchChips = SearchChips.MUSICS
-            if (SettingsManager.musicsFilter.value != searchChip.enabled.value) {
+            if (uiState.musicsFilter != searchChip.enabled.value) {
                 switchSearchChip(searchChip = searchChip)
             }
         }
 
         SwitchSettings.ARTISTS_FILTER -> {
-            SettingsManager.switchFilter(context = context, filterSetting = MenuTitle.ARTISTS)
+            satunesViewModel.switchFilter(filterSetting = MenuTitle.ARTISTS)
             val searchChip: SearchChips = SearchChips.ARTISTS
-            if (SettingsManager.artistsFilter.value != searchChip.enabled.value) {
+            if (uiState.artistsFilter != searchChip.enabled.value) {
                 switchSearchChip(searchChip = searchChip)
             }
         }
 
         SwitchSettings.ALBUMS_FILTER -> {
-            SettingsManager.switchFilter(context = context, filterSetting = MenuTitle.ALBUMS)
+            satunesViewModel.switchFilter(filterSetting = MenuTitle.ALBUMS)
             val searchChip: SearchChips = SearchChips.ALBUMS
-            if (SettingsManager.albumsFilter.value != searchChip.enabled.value) {
+            if (uiState.albumsFilter != searchChip.enabled.value) {
                 switchSearchChip(searchChip = searchChip)
             }
         }
 
         SwitchSettings.GENRES_FILTER -> {
-            SettingsManager.switchFilter(context = context, filterSetting = MenuTitle.GENRES)
+            satunesViewModel.switchFilter(filterSetting = MenuTitle.GENRES)
             val searchChip: SearchChips = SearchChips.GENRES
-            if (SettingsManager.genresFilter.value != searchChip.enabled.value) {
+            if (uiState.genresFilter != searchChip.enabled.value) {
                 switchSearchChip(searchChip = searchChip)
             }
         }
 
         SwitchSettings.FOLDERS_FILTER -> {
-            SettingsManager.switchFilter(context = context, filterSetting = MenuTitle.FOLDERS)
+            satunesViewModel.switchFilter(filterSetting = MenuTitle.FOLDERS)
             val searchChip: SearchChips = SearchChips.FOLDERS
-            if (SettingsManager.foldersFilter.value != searchChip.enabled.value) {
+            if (uiState.foldersFilter != searchChip.enabled.value) {
                 switchSearchChip(searchChip = searchChip)
             }
         }
 
         SwitchSettings.PLAYLISTS_FILTER -> {
-            SettingsManager.switchFilter(context = context, filterSetting = MenuTitle.PLAYLISTS)
+            satunesViewModel.switchFilter(filterSetting = MenuTitle.PLAYLISTS)
             val searchChip: SearchChips = SearchChips.PLAYLISTS
-            if (SettingsManager.playlistsFilter.value != searchChip.enabled.value) {
+            if (uiState.playlistsFilter != searchChip.enabled.value) {
                 switchSearchChip(searchChip = searchChip)
             }
         }

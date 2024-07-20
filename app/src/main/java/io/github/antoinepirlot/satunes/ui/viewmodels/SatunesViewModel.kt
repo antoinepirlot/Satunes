@@ -25,22 +25,25 @@
 
 package io.github.antoinepirlot.satunes.ui.viewmodels
 
-import android.content.Context
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.database.models.MenuTitle
 import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
-import io.github.antoinepirlot.satunes.models.SwitchSettings
 import io.github.antoinepirlot.satunes.ui.states.SatunesUiState
 import io.github.antoinepirlot.satunes.ui.viewmodels.utils.isAudioAllowed
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 /**
  * @author Antoine Pirlot on 19/07/2024
@@ -51,94 +54,27 @@ internal class SatunesViewModel : ViewModel() {
     private val _isDataLoaded: MutableState<Boolean> = DataLoader.isLoaded
     private var _selectedMenuTitle: MenuTitle = _uiState.value.selectedMenuTitle
 
-    //Exclusion
-    private val _includeRingtonesChecked: MutableState<Boolean> =
-        SettingsManager.includeRingtonesChecked
-
-    //Nav Bar Items
-    private val _foldersChecked: MutableState<Boolean> = SettingsManager.foldersChecked
-    private val _artistsChecked: MutableState<Boolean> = SettingsManager.artistsChecked
-    private val _albumsChecked: MutableState<Boolean> = SettingsManager.albumsChecked
-    private val _genresChecked: MutableState<Boolean> = SettingsManager.genresChecked
-    private val _playlistsChecked: MutableState<Boolean> = SettingsManager.playlistsChecked
-
-    //Search Filters
-    private val _foldersFilter: MutableState<Boolean> = SettingsManager.foldersFilter
-    private val _artistsFilter: MutableState<Boolean> = SettingsManager.artistsFilter
-    private val _albumsFilter: MutableState<Boolean> = SettingsManager.albumsFilter
-    private val _genresFilter: MutableState<Boolean> = SettingsManager.genresFilter
-    private val _playlistsFilter: MutableState<Boolean> = SettingsManager.playlistsFilter
-    private val _musicsFilter: MutableState<Boolean> = SettingsManager.musicsFilter
-
-    // Playback
-    private val _playbackWhenClosedChecked: MutableState<Boolean> =
-        SettingsManager.playbackWhenClosedChecked
-    private val _pauseIfNoisyChecked: MutableState<Boolean> = SettingsManager.pauseIfNoisyChecked
-    private val _pauseIfAnotherPlayback: MutableState<Boolean> =
-        SettingsManager.pauseIfAnotherPlayback
-
     val uiState: StateFlow<SatunesUiState> = _uiState.asStateFlow()
 
     val isLoadingData: Boolean by _isLoadingData
     val isDataLoaded: Boolean by _isDataLoaded
 
-    //TODO adapt to use ui state. Settings Manager must not contains mutable states
-    //Exclusion
-    val includeRingtonesChecked: Boolean by _includeRingtonesChecked
-
-    val exclusionSettingsChecked: Map<SwitchSettings, Boolean> = mapOf(
-        Pair(first = SwitchSettings.INCLUDE_RINGTONES, second = includeRingtonesChecked)
-    )
-
-    //Nav Bar Items
-    val foldersChecked: Boolean by _foldersChecked
-    val artistsChecked: Boolean by _artistsChecked
-    val albumsChecked: Boolean by _albumsChecked
-    val genresChecked: Boolean by _genresChecked
-    val playlistsChecked: Boolean by _playlistsChecked
-
-    val navBarItemSettingsChecked: Map<SwitchSettings, Boolean> = mapOf(
-        Pair(first = SwitchSettings.FOLDERS_CHECKED, second = foldersChecked),
-        Pair(first = SwitchSettings.ARTISTS_CHECKED, second = artistsChecked),
-        Pair(first = SwitchSettings.ALBUMS_CHECKED, second = albumsChecked),
-        Pair(first = SwitchSettings.GENRES_CHECKED, second = genresChecked),
-        Pair(first = SwitchSettings.PLAYLISTS_CHECKED, second = playlistsChecked),
-    )
-
-    //Search Filters
-    val foldersFilter: Boolean by _foldersFilter
-    val artistsFilter: Boolean by _artistsFilter
-    val albumsFilter: Boolean by _albumsFilter
-    val genresFilter: Boolean by _genresFilter
-    val playlistsFilter: Boolean by _playlistsFilter
-    val musicsFilter: Boolean by _musicsFilter
-
-    val filterSettingsChecked: Map<SwitchSettings, Boolean> = mapOf(
-        Pair(SwitchSettings.MUSICS_FILTER, musicsFilter),
-        Pair(SwitchSettings.ALBUMS_FILTER, albumsFilter),
-        Pair(SwitchSettings.ARTISTS_FILTER, artistsFilter),
-        Pair(SwitchSettings.GENRES_FILTER, genresFilter),
-        Pair(SwitchSettings.FOLDERS_FILTER, foldersFilter),
-        Pair(SwitchSettings.PLAYLISTS_FILTER, playlistsFilter)
-    )
-
-    //Playback
-    val playbackWhenClosedChecked: Boolean by _playbackWhenClosedChecked
-    val pauseIfNoisyChecked: Boolean by _pauseIfNoisyChecked
-    val pauseIfAnotherPlayback: Boolean by _pauseIfAnotherPlayback
-    val playbackSettingsChecked: Map<SwitchSettings, Boolean> = mapOf(
-        Pair(first = SwitchSettings.PLAYBACK_WHEN_CLOSED, second = playbackWhenClosedChecked),
-        Pair(first = SwitchSettings.PAUSE_IF_NOISY, second = pauseIfNoisyChecked),
-        Pair(first = SwitchSettings.PAUSE_IF_ANOTHER_PLAYBACK, second = pauseIfAnotherPlayback)
-    )
-
     //Use this in UiSate and ViewModel as it is a particular value. It could change but most of the time it won't change
     var isAudioAllowed: Boolean by mutableStateOf(_uiState.value.isAudioAllowed)
         private set
 
-    fun seeWhatsNew(context: Context, permanently: Boolean = false) {
-        if (permanently) {
-            SettingsManager.seeWhatsNew(context = context)
+    fun loadSettings() {
+        runBlocking {
+            SettingsManager.loadSettings(context = MainActivity.instance.applicationContext)
+            _uiState.update { SatunesUiState() }
+        }
+    }
+
+    fun seeWhatsNew(permanently: Boolean = false) {
+        CoroutineScope(Dispatchers.IO).launch {
+            if (permanently) {
+                SettingsManager.seeWhatsNew(context = MainActivity.instance.applicationContext)
+            }
         }
         _uiState.update { currentState: SatunesUiState ->
             currentState.copy(whatsNewSeen = true)
@@ -158,8 +94,8 @@ internal class SatunesViewModel : ViewModel() {
         }
     }
 
-    fun loadAllData(context: Context) {
-        DataLoader.loadAllData(context = context)
+    fun loadAllData() {
+        DataLoader.loadAllData(context = MainActivity.instance.applicationContext)
     }
 
     internal fun updateIsAudioAllowed() {
@@ -167,6 +103,136 @@ internal class SatunesViewModel : ViewModel() {
         if (this.isAudioAllowed != this._uiState.value.isAudioAllowed) {
             this._uiState.update { currentState: SatunesUiState ->
                 currentState.copy(isAudioAllowed = this.isAudioAllowed)
+            }
+        }
+    }
+
+    fun switchMenuTitle(menuTitle: MenuTitle) {
+        runBlocking {
+            SettingsManager.switchMenuTitle(
+                context = MainActivity.instance.applicationContext,
+                menuTitle = menuTitle
+            )
+            _uiState.update { currentState: SatunesUiState ->
+                currentState.copy(
+                    foldersChecked = SettingsManager.foldersChecked,
+                    artistsChecked = SettingsManager.artistsChecked,
+                    albumsChecked = SettingsManager.albumsChecked,
+                    genresChecked = SettingsManager.genresChecked,
+                    playlistsChecked = SettingsManager.playlistsChecked,
+                )
+            }
+        }
+    }
+
+    fun switchPlaybackWhenClosedChecked() {
+        runBlocking {
+            SettingsManager.switchPlaybackWhenClosedChecked(context = MainActivity.instance.applicationContext)
+            _uiState.update { currentState: SatunesUiState ->
+                currentState.copy(
+                    playbackWhenClosedChecked = SettingsManager.playbackWhenClosedChecked
+                )
+            }
+        }
+    }
+
+    fun switchPauseIfNoisy() {
+        runBlocking {
+            SettingsManager.switchPauseIfNoisy(context = MainActivity.instance.applicationContext)
+            _uiState.update { currentState: SatunesUiState ->
+                currentState.copy(
+                    pauseIfNoisyChecked = SettingsManager.pauseIfNoisyChecked
+                )
+            }
+        }
+    }
+
+    fun switchIncludeRingtones() {
+        runBlocking {
+            SettingsManager.switchIncludeRingtones(context = MainActivity.instance.applicationContext)
+            _uiState.update { currentState: SatunesUiState ->
+                currentState.copy(
+                    includeRingtonesChecked = SettingsManager.includeRingtonesChecked
+                )
+            }
+        }
+    }
+
+    fun switchShuffleMode() {
+        runBlocking {
+            SettingsManager.switchPauseIfNoisy(context = MainActivity.instance.applicationContext)
+            _uiState.update { currentState: SatunesUiState ->
+                currentState.copy(
+                    shuffleMode = SettingsManager.shuffleMode
+                )
+            }
+        }
+    }
+
+    fun switchPauseIfAnotherPlayback() {
+        runBlocking {
+            SettingsManager.switchPauseIfPlayback(context = MainActivity.instance.applicationContext)
+            _uiState.update { currentState: SatunesUiState ->
+                currentState.copy(
+                    pauseIfAnotherPlayback = SettingsManager.pauseIfAnotherPlayback
+                )
+            }
+        }
+    }
+
+    fun switchFilter(filterSetting: MenuTitle) {
+        runBlocking {
+            SettingsManager.switchFilter(
+                context = MainActivity.instance.applicationContext,
+                filterSetting = filterSetting
+            )
+            _uiState.update { currentState: SatunesUiState ->
+                currentState.copy(
+                    foldersFilter = SettingsManager.foldersFilter,
+                    artistsFilter = SettingsManager.artistsFilter,
+                    albumsFilter = SettingsManager.albumsFilter,
+                    genresFilter = SettingsManager.genresFilter,
+                    playlistsFilter = SettingsManager.playlistsFilter,
+                )
+            }
+        }
+    }
+
+    fun updateRepeatMode(newValue: Int) {
+        runBlocking {
+            SettingsManager.updateRepeatMode(
+                context = MainActivity.instance.applicationContext,
+                newValue = newValue
+            )
+            _uiState.update { currentState: SatunesUiState ->
+                currentState.copy(
+                    repeatMode = SettingsManager.repeatMode
+                )
+            }
+        }
+    }
+
+    fun switchAudioOffload() {
+        runBlocking {
+            SettingsManager.switchAudioOffload(context = MainActivity.instance.applicationContext)
+            _uiState.update { currentState: SatunesUiState ->
+                currentState.copy(
+                    audioOffloadChecked = SettingsManager.audioOffloadChecked
+                )
+            }
+        }
+    }
+
+    fun updateBarSpeed(newValue: Float) {
+        runBlocking {
+            SettingsManager.updateBarSpeed(
+                context = MainActivity.instance.applicationContext,
+                newValue = newValue
+            )
+            _uiState.update { currentState: SatunesUiState ->
+                currentState.copy(
+                    barSpeed = SettingsManager.barSpeed
+                )
             }
         }
     }

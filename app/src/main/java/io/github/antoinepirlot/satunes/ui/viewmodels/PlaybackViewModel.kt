@@ -66,7 +66,7 @@ class PlaybackViewModel : ViewModel() {
 
     fun loadMusicFromFolders(
         folders: Set<Folder>,
-        shuffleMode: Boolean = SettingsManager.shuffleMode.value,
+        shuffleMode: Boolean = SettingsManager.shuffleMode,
         musicToPlay: Music? = null
     ) {
         val musicSet: MutableSet<Music> = mutableSetOf()
@@ -82,7 +82,7 @@ class PlaybackViewModel : ViewModel() {
 
     fun loadMusicFromMedia(
         media: MediaImpl,
-        shuffleMode: Boolean = SettingsManager.shuffleMode.value,
+        shuffleMode: Boolean = SettingsManager.shuffleMode,
         musicToPlay: Music? = null
     ) {
         val musicSet: Set<Music> =
@@ -104,7 +104,7 @@ class PlaybackViewModel : ViewModel() {
 
     fun loadMusicFromMedias(
         medias: Set<MediaImpl>,
-        shuffleMode: Boolean = SettingsManager.shuffleMode.value,
+        shuffleMode: Boolean = SettingsManager.shuffleMode,
         musicToPlay: Music? = null,
     ) {
         val musicSet: MutableSet<Music> = mutableSetOf()
@@ -120,7 +120,7 @@ class PlaybackViewModel : ViewModel() {
 
     fun loadMusic(
         musicSet: Set<Music>,
-        shuffleMode: Boolean = SettingsManager.shuffleMode.value,
+        shuffleMode: Boolean = SettingsManager.shuffleMode,
         musicToPlay: Music? = null,
     ) {
         this._playbackController.loadMusic(

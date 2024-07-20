@@ -25,7 +25,6 @@
 
 package io.github.antoinepirlot.satunes
 
-import android.content.Context
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -39,7 +38,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -62,6 +60,7 @@ internal fun Satunes(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel()
 ) {
+    satunesViewModel.loadAllData()
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     SatunesTheme {
         Surface(
@@ -87,15 +86,14 @@ internal fun Satunes(
                 )
 
                 if (!satunesUiState.whatsNewSeen) {
-                    val context: Context = LocalContext.current
                     WhatsNewDialog(
                         onConfirm = {
                             // When app relaunch, it's not shown again
-                            satunesViewModel.seeWhatsNew(context = context, permanently = true)
+                            satunesViewModel.seeWhatsNew(permanently = true)
                         },
                         onDismiss = {
                             // When app relaunch, it's shown again
-                            satunesViewModel.seeWhatsNew(context = context)
+                            satunesViewModel.seeWhatsNew()
                         }
                     )
                 }

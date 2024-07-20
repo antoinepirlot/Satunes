@@ -32,7 +32,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -65,8 +64,8 @@ internal fun SatunesBottomAppBar(
 ) {
     val uiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
 
-    SettingsManager.menuTitleCheckedMap.forEach { (menuTitle: MenuTitle, checked: MutableState<Boolean>) ->
-        if (!checked.value) {
+    SettingsManager.menuTitleCheckedMap.forEach { (menuTitle: MenuTitle, checked: Boolean) ->
+        if (!checked) {
             menuTitleLists.remove(menuTitle)
         }
     }

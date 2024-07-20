@@ -290,7 +290,7 @@ class PlaybackController private constructor(
      */
     fun loadMusic(
         musicSet: Set<Music>,
-        shuffleMode: Boolean = SettingsManager.shuffleMode.value,
+        shuffleMode: Boolean = SettingsManager.shuffleMode,
         musicToPlay: Music? = null,
     ) {
         this.playlist = Playlist(musicSet = musicSet)
@@ -304,7 +304,7 @@ class PlaybackController private constructor(
         this.mediaController.clearMediaItems()
         this.mediaController.addMediaItems(this.playlist.mediaItemList)
         this.mediaController.addListener(listener)
-        this.mediaController.repeatMode = when (SettingsManager.repeatMode.intValue) {
+        this.mediaController.repeatMode = when (SettingsManager.repeatMode) {
             1 -> Player.REPEAT_MODE_ALL
             2 -> Player.REPEAT_MODE_ONE
             else -> Player.REPEAT_MODE_OFF // For 0 and other incorrect numbers

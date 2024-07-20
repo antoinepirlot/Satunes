@@ -39,26 +39,26 @@ enum class SearchChips(
 ) {
     MUSICS(
         stringId = R.string.musics,
-        enabled = mutableStateOf(SettingsManager.musicsFilter.value)
+        enabled = mutableStateOf(SettingsManager.musicsFilter)
     ),
     ARTISTS(
         stringId = R.string.artists,
-        enabled = mutableStateOf(SettingsManager.artistsFilter.value)
+        enabled = mutableStateOf(SettingsManager.artistsFilter)
     ),
     ALBUMS(
         stringId = R.string.albums,
-        enabled = mutableStateOf(SettingsManager.albumsFilter.value)
+        enabled = mutableStateOf(SettingsManager.albumsFilter)
     ),
     GENRES(
         stringId = R.string.genres,
-        enabled = mutableStateOf(SettingsManager.genresFilter.value)
+        enabled = mutableStateOf(SettingsManager.genresFilter)
     ),
     FOLDERS(
         stringId = R.string.folders,
-        enabled = mutableStateOf(SettingsManager.foldersFilter.value)
+        enabled = mutableStateOf(SettingsManager.foldersFilter)
     ),
     PLAYLISTS(
         stringId = R.string.playlists,
-        enabled = mutableStateOf(SettingsManager.playlistsFilter.value)
+        enabled = mutableStateOf(SettingsManager.playlistsFilter)
     )
 }

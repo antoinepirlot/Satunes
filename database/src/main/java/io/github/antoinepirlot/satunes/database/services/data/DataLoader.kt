@@ -98,7 +98,7 @@ object DataLoader {
     )
 
     private val selection: String = "${MediaStore.Audio.Media.DATA} LIKE ?" +
-            if (SettingsManager.includeRingtonesChecked.value) {
+            if (SettingsManager.includeRingtonesChecked) {
                 " OR ${MediaStore.Audio.Media.DATA} LIKE ?" +
                         " OR ${MediaStore.Audio.Media.DATA} LIKE ?" +
                         " OR ${MediaStore.Audio.Media.DATA} LIKE ?"
@@ -111,7 +111,7 @@ object DataLoader {
     private val logger = SatunesLogger.getLogger()
 
     init {
-        if (SettingsManager.includeRingtonesChecked.value) {
+        if (SettingsManager.includeRingtonesChecked) {
             selection_args += "$EXTERNAL_STORAGE_PATH/Android/%"
             selection_args += "$EXTERNAL_STORAGE_PATH/Ringtones/%"
             selection_args += "$EXTERNAL_STORAGE_PATH/Notifications/%"

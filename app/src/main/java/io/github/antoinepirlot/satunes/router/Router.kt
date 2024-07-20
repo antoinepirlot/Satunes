@@ -25,14 +25,12 @@
 
 package io.github.antoinepirlot.satunes.router
 
-import android.content.Context
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -54,12 +52,11 @@ internal fun Router(
     navController: NavHostController,
     satunesViewModel: SatunesViewModel = viewModel(),
 ) {
-    val context: Context = LocalContext.current
     val isAudioAllowed: Boolean = satunesViewModel.isAudioAllowed
 
     if (isAudioAllowed) {
         LaunchedEffect(key1 = Unit) {
-            satunesViewModel.loadAllData(context = context)
+            satunesViewModel.loadAllData()
         }
     }
 

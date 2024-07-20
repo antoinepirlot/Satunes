@@ -41,7 +41,6 @@ import androidx.media3.common.util.UnstableApi
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.database.services.data.DataCleanerManager
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
-import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.playback.services.PlaybackService
 import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.ui.viewmodels.factories.PlaybackViewModelFactory
@@ -87,7 +86,6 @@ internal class MainActivity : ComponentActivity() {
         logger.info("Satunes started on API: ${Build.VERSION.SDK_INT}")
         instance = this
         setNotificationOnClick()
-        SettingsManager.loadSettings(context = this)
         setContent {
             //Init viewModel that needs context
             viewModel<PlaybackViewModel>(factory = PlaybackViewModelFactory(context = LocalContext.current))

@@ -59,10 +59,10 @@ class PlaybackService : MediaSessionService() {
         logger = SatunesLogger.getLogger()
 
         val exoPlayer = ExoPlayer.Builder(this)
-            .setHandleAudioBecomingNoisy(SettingsManager.pauseIfNoisyChecked.value) // Pause when bluetooth or headset disconnect
+            .setHandleAudioBecomingNoisy(SettingsManager.pauseIfNoisyChecked) // Pause when bluetooth or headset disconnect
             .setAudioAttributes(
                 AudioAttributes.DEFAULT,
-                SettingsManager.pauseIfAnotherPlayback.value
+                SettingsManager.pauseIfAnotherPlayback
             )
             .build()
 
@@ -72,7 +72,7 @@ class PlaybackService : MediaSessionService() {
             .setIsGaplessSupportRequired(true)
             .build()
 
-        if (SettingsManager.audioOffloadChecked.value) {
+        if (SettingsManager.audioOffloadChecked) {
             exoPlayer.trackSelectionParameters = exoPlayer.trackSelectionParameters
                 .buildUpon()
                 .setAudioOffloadPreferences(audioOffloadPreferences)
@@ -95,7 +95,7 @@ class PlaybackService : MediaSessionService() {
     override fun onTaskRemoved(rootIntent: Intent?) {
         super.onTaskRemoved(rootIntent)
         if (
-            !SettingsManager.playbackWhenClosedChecked.value ||
+            !SettingsManager.playbackWhenClosedChecked ||
             playbackController == null ||
             !playbackController!!.isPlaying.value
         ) {
@@ -108,7 +108,7 @@ class PlaybackService : MediaSessionService() {
     override fun onDestroy() {
         logger.info("Destroying $this")
         if (
-            !SettingsManager.playbackWhenClosedChecked.value ||
+            !SettingsManager.playbackWhenClosedChecked ||
             playbackController == null ||
             !playbackController!!.isPlaying.value
         ) {

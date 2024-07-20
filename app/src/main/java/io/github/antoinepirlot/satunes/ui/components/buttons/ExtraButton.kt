@@ -50,7 +50,7 @@ internal fun ExtraButton(
     description: String? = null,
     onClick: () -> Unit,
 ) {
-    if (icon == SatunesIcons.SHUFFLE && SettingsManager.shuffleMode.value)
+    if (icon == SatunesIcons.SHUFFLE && SettingsManager.shuffleMode)
         return //The shuffle mode is always activated by default and don't need to be shown
     val screenWidthDp: Int = LocalConfiguration.current.screenWidthDp
     val buttonSize: Dp = if (screenWidthDp < ScreenSizes.VERY_VERY_SMALL)

@@ -26,11 +26,14 @@
 package io.github.antoinepirlot.satunes.ui.components.settings
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.ui.states.SatunesUiState
 import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
 
 /**
@@ -44,11 +47,13 @@ internal fun DefaultSearchFiltersSetting(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel()
 ) {
+    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+
     SubSettings(
         modifier = modifier,
         title = stringResource(id = R.string.default_filter_setting_title)
     ) {
-        SettingsSwitchList(checkedMap = satunesViewModel.filterSettingsChecked)
+        SettingsSwitchList(checkedMap = satunesUiState.filterSettingsChecked)
     }
 }
 

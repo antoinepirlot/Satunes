@@ -46,7 +46,7 @@ import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.ui.components.EmptyView
 import io.github.antoinepirlot.satunes.ui.components.bars.ShowCurrentMusicButton
-import io.github.antoinepirlot.satunes.ui.components.cards.media.MediaCardCollection
+import io.github.antoinepirlot.satunes.ui.components.cards.media.MediaCardList
 import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
 
 /**
@@ -54,7 +54,7 @@ import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
  */
 
 @Composable
-internal fun MediaCollectionView(
+internal fun MediaListView(
     modifier: Modifier = Modifier,
     navController: NavHostController,
     playbackViewModel: PlaybackViewModel = viewModel(),
@@ -81,7 +81,7 @@ internal fun MediaCollectionView(
         floatingActionButtonPosition = FabPosition.End
     ) { innerPadding ->
         if (mediaImplCollection.isNotEmpty()) {
-            MediaCardCollection(
+            MediaCardList(
                 modifier = Modifier.padding(innerPadding),
                 navController = navController,
                 header = header,
@@ -117,7 +117,7 @@ private fun MediaListViewPreview() {
         )
     )
     val navController: NavHostController = rememberNavController()
-    MediaCollectionView(
+    MediaListView(
         navController = navController,
         mediaImplCollection = map,
         openMedia = {},

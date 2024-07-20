@@ -57,7 +57,7 @@ import io.github.antoinepirlot.satunes.ui.components.images.AlbumArtwork
 import io.github.antoinepirlot.satunes.ui.components.texts.Subtitle
 import io.github.antoinepirlot.satunes.ui.components.texts.Title
 import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
-import io.github.antoinepirlot.satunes.ui.views.media.MediaCollectionView
+import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 
 /**
  * @author Antoine Pirlot on 01/04/2024
@@ -79,7 +79,7 @@ internal fun AlbumView(
     }
     //
 
-    MediaCollectionView(
+    MediaListView(
         modifier = modifier,
         navController = navController,
         mediaImplCollection = musicSet,

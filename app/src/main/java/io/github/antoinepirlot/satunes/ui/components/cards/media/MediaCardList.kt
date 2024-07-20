@@ -44,7 +44,7 @@ import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
  */
 
 @Composable
-internal fun MediaCardCollection(
+internal fun MediaCardList(
     modifier: Modifier = Modifier,
     navController: NavHostController,
     playbackViewModel: PlaybackViewModel = viewModel(),
@@ -103,7 +103,7 @@ internal fun MediaCardCollection(
 @Preview
 private fun CardListPreview() {
     val navController: NavHostController = rememberNavController()
-    MediaCardCollection(
+    MediaCardList(
         navController = navController,
         header = {},
         mediaImplCollection = listOf(),

@@ -64,7 +64,7 @@ object UpdateCheckManager {
     val latestVersion: MutableState<String?> = mutableStateOf(null)
     val downloadStatus: MutableState<APKDownloadStatus> =
         mutableStateOf(APKDownloadStatus.NOT_STARTED)
-    private val logger = SatunesLogger(name = this::class.java.name)
+    private val logger = SatunesLogger.getLogger()
 
     /**
      * Create a httpclient and get the response matching url.

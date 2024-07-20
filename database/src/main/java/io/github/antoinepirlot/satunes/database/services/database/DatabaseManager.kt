@@ -62,7 +62,7 @@ class DatabaseManager(context: Context) {
     private val musicDao: MusicDAO = database.musicDao()
     private val playlistDao: PlaylistDAO = database.playlistDao()
     private val musicsPlaylistsRelDAO: MusicsPlaylistsRelDAO = database.musicsPlaylistsRelDao()
-    private val logger = SatunesLogger(name = this::class.java.name)
+    private val logger = SatunesLogger.getLogger()
 
     companion object {
         private const val PLAYLIST_JSON_OBJECT_NAME = "all_playlists"
@@ -271,7 +271,7 @@ class DatabaseManager(context: Context) {
 
     fun importPlaylists(context: Context, uri: Uri) {
         importingPlaylist.value = true
-        val logger = SatunesLogger(this::class.java.name)
+        val logger = SatunesLogger.getLogger()
 
         CoroutineScope(Dispatchers.IO).launch {
             showToastOnUiThread(

@@ -108,7 +108,7 @@ object DataLoader {
 
     private var selection_args: Array<String> = arrayOf("$EXTERNAL_STORAGE_PATH/Music/%")
 
-    private val logger = SatunesLogger(name = this::class.java.name)
+    private val logger = SatunesLogger.getLogger()
 
     init {
         if (SettingsManager.includeRingtonesChecked.value) {

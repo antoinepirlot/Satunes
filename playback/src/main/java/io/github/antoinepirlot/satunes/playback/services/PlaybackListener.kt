@@ -38,7 +38,7 @@ import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
  */
 open class PlaybackListener : Player.Listener {
 
-    private val logger = SatunesLogger(name = this::class.java.name)
+    private val logger = SatunesLogger.getLogger()
 
     override fun onPlaybackStateChanged(playbackState: Int) {
         super.onPlaybackStateChanged(playbackState)

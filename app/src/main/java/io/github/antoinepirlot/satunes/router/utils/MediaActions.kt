@@ -64,7 +64,7 @@ internal fun openMedia(
     if (navigate) {
         if (navController == null) {
             val message = "navController can't be null if you navigate"
-            val logger = SatunesLogger(name = null)
+            val logger = SatunesLogger.getLogger()
             logger.severe(message)
             throw IllegalArgumentException(message)
         }
@@ -137,7 +137,7 @@ internal fun openCurrentMusic(
     val musicPlaying: Music? = playbackViewModel.musicPlaying
     if (musicPlaying == null) {
         val message = "No music is currently playing, this button can be accessible"
-        val logger = SatunesLogger(name = null)
+        val logger = SatunesLogger.getLogger()
         logger.severe(message)
         throw IllegalStateException(message)
     }

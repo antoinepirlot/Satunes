@@ -56,7 +56,7 @@ class PlaybackService : MediaSessionService() {
         super.onCreate()
         SatunesLogger.DOCUMENTS_PATH =
             applicationContext.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)!!.path
-        logger = SatunesLogger(name = this::class.java.name)
+        logger = SatunesLogger.getLogger()
 
         val exoPlayer = ExoPlayer.Builder(this)
             .setHandleAudioBecomingNoisy(SettingsManager.pauseIfNoisyChecked.value) // Pause when bluetooth or headset disconnect

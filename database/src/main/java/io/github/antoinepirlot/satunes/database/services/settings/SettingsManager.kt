@@ -153,7 +153,7 @@ object SettingsManager {
     val playlistsFilter: MutableState<Boolean> = mutableStateOf(DEFAULT_PLAYLISTS_FILTER)
     val musicsFilter: MutableState<Boolean> = mutableStateOf(DEFAULT_MUSICS_FILTER)
 
-    private val logger = SatunesLogger(name = this::class.java.name)
+    private val logger = SatunesLogger.getLogger()
 
     fun loadSettings(context: Context) {
         runBlocking {

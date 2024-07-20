@@ -39,7 +39,7 @@ internal class Playlist(musicSet: Set<Music>) {
     private val originalMusicMediaItemMap: MutableMap<Music, MediaItem> = mutableMapOf()
     val musicList: SnapshotStateList<Music> = SnapshotStateList()
     val mediaItemList: MutableList<MediaItem> = mutableListOf()
-    private val logger = SatunesLogger(name = this::class.java.name)
+    private val logger = SatunesLogger.getLogger()
 
 
     init {

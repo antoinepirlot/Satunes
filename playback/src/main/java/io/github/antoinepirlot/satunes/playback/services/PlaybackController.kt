@@ -94,7 +94,7 @@ class PlaybackController private constructor(
         val DEFAULT_MUSIC_PLAYING = null
 
         private lateinit var instance: PlaybackController
-        private val logger = SatunesLogger(name = this::class.java.name)
+        private val logger = SatunesLogger.getLogger()
 
         /**
          * Return only one instance of MediaController. If there's no instance already created

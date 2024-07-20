@@ -83,7 +83,7 @@ internal class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         SatunesLogger.DOCUMENTS_PATH =
             applicationContext.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)!!.path
-        logger = SatunesLogger(name = MainActivity::class.java.name)
+        logger = SatunesLogger.getLogger()
         logger.info("Satunes started on API: ${Build.VERSION.SDK_INT}")
         instance = this
         setNotificationOnClick()

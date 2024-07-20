@@ -34,7 +34,7 @@ import java.io.File
  * @author Antoine Pirlot on 14/04/2024
  */
 object DataCleanerManager {
-    private val logger = SatunesLogger(name = this::class.java.name)
+    private val logger = SatunesLogger.getLogger()
 
     fun removeApkFiles(context: Context) {
         try {

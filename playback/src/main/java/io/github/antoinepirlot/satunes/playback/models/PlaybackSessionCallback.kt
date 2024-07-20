@@ -38,7 +38,7 @@ import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 @UnstableApi
 object PlaybackSessionCallback : MediaSession.Callback {
 
-    private val logger: SatunesLogger = SatunesLogger(name = this::class.java.name)
+    private val logger: SatunesLogger = SatunesLogger.getLogger()
 
     override fun onPlaybackResumption(
         mediaSession: MediaSession,

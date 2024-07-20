@@ -44,7 +44,7 @@ fun showToastOnUiThread(context: Context, message: String) {
             ).show()
         }
     } catch (e: Exception) {
-        SatunesLogger(name = null).warning(e.message)
+        SatunesLogger.getLogger().warning(e.message)
         e.printStackTrace()
     }
 }

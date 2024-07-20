@@ -66,7 +66,7 @@ class Music(
         set(displayName) {
             if (displayName.isBlank()) {
                 val message = "Display name must not be blank"
-                SatunesLogger(name = this::class.java.name).warning(message)
+                SatunesLogger.getLogger().warning(message)
                 throw IllegalArgumentException(message)
             }
             field = displayName

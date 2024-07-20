@@ -66,7 +66,7 @@ internal class RouteDeque {
     fun get(index: Int): String {
         if (index !in this.routeDeque.indices) {
             val message = "The index is $index and is out of bound"
-            val logger = SatunesLogger(name = this::class.java.name)
+            val logger = SatunesLogger.getLogger()
             logger.severe(message)
             throw ArrayIndexOutOfBoundsException(message)
         }

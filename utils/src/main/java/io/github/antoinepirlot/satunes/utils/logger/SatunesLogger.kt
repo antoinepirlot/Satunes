@@ -48,9 +48,12 @@ class SatunesLogger private constructor(
         private const val MAX_FILES = 1
         lateinit var DOCUMENTS_PATH: String
         private lateinit var LOGS_PATH: String
-        private val _logger: SatunesLogger = SatunesLogger(this::class.java.name)
+        private lateinit var _logger: SatunesLogger
 
         fun getLogger(): SatunesLogger {
+            if (!this::_logger.isInitialized) {
+                _logger = SatunesLogger(this::class.java.name)
+            }
             return _logger
         }
     }

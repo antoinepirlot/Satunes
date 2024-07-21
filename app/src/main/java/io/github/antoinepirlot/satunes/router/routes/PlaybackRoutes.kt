@@ -26,17 +26,16 @@
 package io.github.antoinepirlot.satunes.router.routes
 
 import androidx.compose.animation.AnimatedContentScope
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
-import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.router.utils.openMedia
+import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
+import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.ui.views.LoadingView
 import io.github.antoinepirlot.satunes.ui.views.playback.PlaybackView
 import io.github.antoinepirlot.satunes.ui.views.playback.common.PlaybackQueueView
@@ -45,26 +44,35 @@ import io.github.antoinepirlot.satunes.ui.views.playback.common.PlaybackQueueVie
  * @author Antoine Pirlot on 15/07/2024
  */
 
-fun NavGraphBuilder.playbackRoutes(
+internal fun NavGraphBuilder.playbackRoutes(
     navController: NavHostController,
+    satunesViewModel: SatunesViewModel,
+    playbackViewModel: PlaybackViewModel,
     onStart: AnimatedContentScope.(NavBackStackEntry) -> Unit,
 ) {
     composable(Destination.PLAYBACK.link) {
         onStart(it)
-        val isLoading: Boolean by rememberSaveable { DataLoader.isLoading }
-        val isLoaded: Boolean by rememberSaveable { DataLoader.isLoaded }
-        if (isLoading || !isLoaded) {
+
+        if (satunesViewModel.isLoadingData || !satunesViewModel.isDataLoaded) {
             LoadingView()
         } else {
             PlaybackView(
                 navController = navController,
                 onAlbumClick = { album: Album? ->
                     if (album != null) {
-                        openMedia(media = album, navController = navController)
+                        openMedia(
+                            playbackViewModel = playbackViewModel,
+                            media = album,
+                            navController = navController
+                        )
                     }
                 },
                 onArtistClick = { artist: Artist ->
-                    openMedia(media = artist, navController = navController)
+                    openMedia(
+                        playbackViewModel = playbackViewModel,
+                        media = artist,
+                        navController = navController
+                    )
                 }
             )
         }

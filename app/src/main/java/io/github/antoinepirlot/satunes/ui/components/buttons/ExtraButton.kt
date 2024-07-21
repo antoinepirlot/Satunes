@@ -30,14 +30,18 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
+import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.ScreenSizes
+import io.github.antoinepirlot.satunes.ui.states.SatunesUiState
+import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
 
 /**
  * @author Antoine Pirlot on 20/04/2024
@@ -46,11 +50,14 @@ import io.github.antoinepirlot.satunes.ui.ScreenSizes
 @Composable
 internal fun ExtraButton(
     modifier: Modifier = Modifier,
+    satunesViewModel: SatunesViewModel = viewModel(),
     icon: SatunesIcons,
     description: String? = null,
     onClick: () -> Unit,
 ) {
-    if (icon == SatunesIcons.SHUFFLE && SettingsManager.shuffleMode.value)
+    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+
+    if (icon == SatunesIcons.SHUFFLE && satunesUiState.shuffleMode)
         return //The shuffle mode is always activated by default and don't need to be shown
     val screenWidthDp: Int = LocalConfiguration.current.screenWidthDp
     val buttonSize: Dp = if (screenWidthDp < ScreenSizes.VERY_VERY_SMALL)

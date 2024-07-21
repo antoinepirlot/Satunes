@@ -25,17 +25,15 @@
 
 package io.github.antoinepirlot.satunes.ui.views.media.playlist
 
-import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.media3.common.MediaItem
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
@@ -43,16 +41,15 @@ import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
-import io.github.antoinepirlot.satunes.database.services.data.DataManager
-import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.router.utils.openMedia
-import io.github.antoinepirlot.satunes.services.MediaSelectionManager
+import io.github.antoinepirlot.satunes.services.MediaSelectionViewModel
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
 import io.github.antoinepirlot.satunes.ui.components.dialog.MediaSelectionDialog
 import io.github.antoinepirlot.satunes.ui.components.texts.Title
+import io.github.antoinepirlot.satunes.ui.viewmodels.DataViewModel
+import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 import io.github.antoinepirlot.satunes.database.R as RDb
 
@@ -64,15 +61,17 @@ import io.github.antoinepirlot.satunes.database.R as RDb
 internal fun PlaylistView(
     modifier: Modifier = Modifier,
     navController: NavHostController,
+    dataViewModel: DataViewModel = viewModel(),
+    mediaSelectionViewModel: MediaSelectionViewModel = viewModel(),
+    playbackViewModel: PlaybackViewModel = viewModel(),
     playlist: Playlist,
 ) {
     //TODO try using nav controller instead try to remember it in an object if possible
     var openAddMusicsDialog: Boolean by rememberSaveable { mutableStateOf(false) }
-    val playbackController: PlaybackController = PlaybackController.getInstance()
-    val musicMap: Map<Music, MediaItem> = playlist.getMusicMap()
+    val musicSet: Set<Music> = playlist.getMusicSet()
 
     //Recompose if data changed
-    var mapChanged: Boolean by rememberSaveable { playlist.musicMediaItemMapUpdate }
+    var mapChanged: Boolean by rememberSaveable { playlist.musicSetUpdated }
     if (mapChanged) {
         mapChanged = false
     }
@@ -81,16 +80,25 @@ internal fun PlaylistView(
     MediaListView(
         modifier = modifier,
         navController = navController,
-        mediaImplList = musicMap.keys.toList(),
+        mediaImplCollection = musicSet,
         openMedia = { clickedMediaImpl: MediaImpl ->
-            playbackController.loadMusic(
-                musicMediaItemSortedMap = playlist.getMusicMap(),
+            playbackViewModel.loadMusic(
+                musicSet = playlist.getMusicSet(),
                 musicToPlay = clickedMediaImpl as Music
             )
-            openMedia(media = clickedMediaImpl, navController = navController)
+            openMedia(
+                playbackViewModel = playbackViewModel,
+                media = clickedMediaImpl,
+                navController = navController
+            )
         },
         openedPlaylistWithMusics = playlist,
-        onFABClick = { openCurrentMusic(navController = navController) },
+        onFABClick = {
+            openCurrentMusic(
+                playbackViewModel = playbackViewModel,
+                navController = navController
+            )
+        },
         header = {
             val title: String = if (playlist.title == LIKES_PLAYLIST_TITLE) {
                 stringResource(id = RDb.string.likes_playlist_title)
@@ -101,36 +109,34 @@ internal fun PlaylistView(
         },
         extraButtons = {
             ExtraButton(icon = SatunesIcons.ADD, onClick = { openAddMusicsDialog = true })
-            if (playlist.getMusicMap().isNotEmpty()) {
+            if (playlist.getMusicSet().isNotEmpty()) {
                 ExtraButton(icon = SatunesIcons.PLAY, onClick = {
-                    playbackController.loadMusic(musicMediaItemSortedMap = playlist.getMusicMap())
-                    openMedia(navController = navController)
+                    playbackViewModel.loadMusic(musicSet = musicSet)
+                    openMedia(playbackViewModel = playbackViewModel, navController = navController)
                 })
                 ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
-                    playbackController.loadMusic(
-                        musicMediaItemSortedMap = playlist.getMusicMap(),
+                    playbackViewModel.loadMusic(
+                        musicSet = musicSet,
                         shuffleMode = true
                     )
-                    openMedia(navController = navController)
+                    openMedia(playbackViewModel = playbackViewModel, navController = navController)
                 })
             }
         },
         emptyViewText = stringResource(id = R.string.no_music_in_playlist)
     )
     if (openAddMusicsDialog) {
-        val allMusic: List<Music> = DataManager.getMusicMap().keys.toList()
-        val context: Context = LocalContext.current
+        val allMusic: Set<Music> = dataViewModel.getMusicSet()
         MediaSelectionDialog(
             onDismissRequest = { openAddMusicsDialog = false },
             onConfirm = {
-                val db = DatabaseManager(context = context)
-                db.insertMusicsToPlaylist(
-                    musics = MediaSelectionManager.getCheckedMusics(),
+                dataViewModel.insertMusicsToPlaylist(
+                    musics = mediaSelectionViewModel.getCheckedMusics(),
                     playlist = playlist
                 )
                 openAddMusicsDialog = false
             },
-            mediaList = allMusic,
+            mediaImplCollection = allMusic,
             icon = SatunesIcons.PLAYLIST_ADD,
             playlistTitle = playlist.title
         )

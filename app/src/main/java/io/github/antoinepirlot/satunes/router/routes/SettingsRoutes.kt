@@ -27,12 +27,12 @@ package io.github.antoinepirlot.satunes.router.routes
 
 import android.os.Build
 import androidx.compose.animation.AnimatedContentScope
-import androidx.compose.runtime.MutableState
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import io.github.antoinepirlot.satunes.models.Destination
+import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.ui.views.settings.AndroidAutoSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.BatterySettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.BottomNavigationBarSettingsView
@@ -51,7 +51,7 @@ import io.github.antoinepirlot.satunes.ui.views.settings.logs.LogsSettingsView
 
 internal fun NavGraphBuilder.settingsRoutes(
     navController: NavHostController,
-    isAudioAllowed: MutableState<Boolean>,
+    satunesViewModel: SatunesViewModel, // Pass it as param to fix no recomposition when permission granted
     onStart: AnimatedContentScope.(NavBackStackEntry) -> Unit
 ) {
     composable(Destination.SETTINGS.link) {
@@ -88,7 +88,8 @@ internal fun NavGraphBuilder.settingsRoutes(
 
     composable(Destination.PERMISSIONS_SETTINGS.link) {
         onStart(it)
-        PermissionsSettingsView(isAudioAllowed = isAudioAllowed)
+        // Pass it as param to fix no recomposition when permission granted
+        PermissionsSettingsView(satunesViewModel = satunesViewModel)
     }
 
     composable(Destination.ANDROID_AUTO_SETTINGS.link) {

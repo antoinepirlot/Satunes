@@ -43,7 +43,7 @@ internal class InternetManager(context: Context) : Application() {
         context.getSystemService(ConnectivityManager::class.java)
 
     private val currentNetwork: Network? = connectivityManager.activeNetwork
-    private val logger = SatunesLogger(name = this::class.java.name)
+    private val logger = SatunesLogger.getLogger()
 
     internal fun isConnected(): Boolean {
         return if (currentNetwork != null) {

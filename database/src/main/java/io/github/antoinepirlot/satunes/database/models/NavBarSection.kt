@@ -23,15 +23,19 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.services
+package io.github.antoinepirlot.satunes.database.models
 
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
+import io.github.antoinepirlot.satunes.database.R
 
 /**
- * @author Antoine Pirlot on 29/04/2024
+ * @author Antoine Pirlot on 03/02/24
  */
-internal object PermissionManager {
-    val isReadExternalStorageAllowed: MutableState<Boolean> = mutableStateOf(false)
-    val isReadAudioAllowed: MutableState<Boolean> = mutableStateOf(false)
+
+enum class NavBarSection(open val stringId: Int) {
+    FOLDERS(stringId = R.string.folders),
+    ARTISTS(stringId = R.string.artists),
+    MUSICS(stringId = R.string.musics),
+    ALBUMS(stringId = R.string.albums),
+    GENRES(stringId = R.string.genres),
+    PLAYLISTS(stringId = R.string.playlists)
 }

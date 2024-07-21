@@ -26,36 +26,44 @@
 package io.github.antoinepirlot.satunes.ui.components.settings
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
-import io.github.antoinepirlot.satunes.models.Settings
+import io.github.antoinepirlot.satunes.models.SwitchSettings
+import io.github.antoinepirlot.satunes.ui.states.SatunesUiState
+import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
 
 /**
  * @author Antoine Pirlot on 08/07/2024
  */
 
-private val filtersMap: Map<Settings, MutableState<Boolean>> = mapOf(
-    Pair(Settings.MUSICS_FILTER, SettingsManager.musicsFilter),
-    Pair(Settings.ALBUMS_FILTER, SettingsManager.albumsFilter),
-    Pair(Settings.ARTISTS_FILTER, SettingsManager.artistsFilter),
-    Pair(Settings.GENRES_FILTER, SettingsManager.genresFilter),
-    Pair(Settings.FOLDERS_FILTER, SettingsManager.foldersFilter),
-    Pair(Settings.PLAYLISTS_FILTER, SettingsManager.playlistsFilter)
-)
+
 
 @Composable
 internal fun DefaultSearchFiltersSetting(
     modifier: Modifier = Modifier,
+    satunesViewModel: SatunesViewModel = viewModel()
 ) {
+    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+
+    val filterSettingsChecked: Map<SwitchSettings, Boolean> = mapOf(
+        Pair(SwitchSettings.MUSICS_FILTER, satunesUiState.musicsFilter),
+        Pair(SwitchSettings.ALBUMS_FILTER, satunesUiState.albumsFilter),
+        Pair(SwitchSettings.ARTISTS_FILTER, satunesUiState.artistsFilter),
+        Pair(SwitchSettings.GENRES_FILTER, satunesUiState.genresFilter),
+        Pair(SwitchSettings.FOLDERS_FILTER, satunesUiState.foldersFilter),
+        Pair(SwitchSettings.PLAYLISTS_FILTER, satunesUiState.playlistsFilter)
+    )
+
     SubSettings(
         modifier = modifier,
         title = stringResource(id = R.string.default_filter_setting_title)
     ) {
-        SettingsSwitchList(checkedMap = filtersMap)
+        SettingsSwitchList(checkedMap = filterSettingsChecked)
     }
 }
 

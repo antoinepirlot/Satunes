@@ -25,7 +25,6 @@
 
 package io.github.antoinepirlot.satunes.router.utils
 
-import android.net.Uri.encode
 import androidx.navigation.NavHostController
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
@@ -35,8 +34,8 @@ import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.models.Destination
-import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.ui.utils.startMusic
+import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 
 /**
@@ -54,17 +53,18 @@ import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
  * @param media the mediaImpl to open
  */
 internal fun openMedia(
+    playbackViewModel: PlaybackViewModel,
     media: MediaImpl? = null,
     navigate: Boolean = true,
     navController: NavHostController?,
 ) {
     if (media == null || media is Music) {
-        startMusic(media)
+        startMusic(playbackViewModel = playbackViewModel, mediaToPlay = media)
     }
     if (navigate) {
         if (navController == null) {
             val message = "navController can't be null if you navigate"
-            val logger = SatunesLogger(name = null)
+            val logger = SatunesLogger.getLogger()
             logger.severe(message)
             throw IllegalArgumentException(message)
         }
@@ -80,13 +80,20 @@ internal fun openMedia(
  */
 internal fun openMediaFromFolder(
     media: MediaImpl,
+    playbackViewModel: PlaybackViewModel,
     navController: NavHostController
 ) {
     when (media) {
         is Music -> {
-            val playbackController = PlaybackController.getInstance()
-            playbackController.loadMusicFromMedia(media = media.folder, musicToPlay = media)
-            openMedia(media, navController = navController)
+            playbackViewModel.loadMusicFromMedia(
+                media = media.folder,
+                musicToPlay = media
+            )
+            openMedia(
+                playbackViewModel = playbackViewModel,
+                media = media,
+                navController = navController
+            )
         }
 
         is Folder -> navController.navigate(getDestinationOf(media))
@@ -106,11 +113,11 @@ private fun getDestinationOf(media: MediaImpl?): String {
     return when (media) {
         is Folder -> "${Destination.FOLDERS.link}/${media.id}"
 
-        is Artist -> "${Destination.ARTISTS.link}/${encode(media.title)}"
+        is Artist -> "${Destination.ARTISTS.link}/${media.id}"
 
         is Album -> "${Destination.ALBUMS.link}/${media.id}"
 
-        is Genre -> "${Destination.GENRES.link}/${encode(media.title)}"
+        is Genre -> "${Destination.GENRES.link}/${media.id}"
 
         is Playlist -> "${Destination.PLAYLISTS.link}/${media.id}"
 
@@ -123,12 +130,14 @@ private fun getDestinationOf(media: MediaImpl?): String {
  *
  * @throws IllegalStateException if there's no music playing
  */
-internal fun openCurrentMusic(navController: NavHostController) {
-    val playbackController: PlaybackController = PlaybackController.getInstance()
-    val musicPlaying: Music? = playbackController.musicPlaying.value
+internal fun openCurrentMusic(
+    playbackViewModel: PlaybackViewModel,
+    navController: NavHostController
+) {
+    val musicPlaying: Music? = playbackViewModel.musicPlaying
     if (musicPlaying == null) {
         val message = "No music is currently playing, this button can be accessible"
-        val logger = SatunesLogger(name = null)
+        val logger = SatunesLogger.getLogger()
         logger.severe(message)
         throw IllegalStateException(message)
     }

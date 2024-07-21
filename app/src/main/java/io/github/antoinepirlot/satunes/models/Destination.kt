@@ -57,6 +57,8 @@ internal enum class Destination(val link: String) {
     UPDATES_SETTINGS(link = "/updates"),
 }
 
+internal val DEFAULT_DESTINATION: String = Destination.FOLDERS.link
+
 internal val settingsDestinations: List<String> =
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
         listOf(

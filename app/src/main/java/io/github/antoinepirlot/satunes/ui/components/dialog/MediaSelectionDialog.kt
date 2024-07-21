@@ -25,7 +25,6 @@
 
 package io.github.antoinepirlot.satunes.ui.components.dialog
 
-import android.content.Context
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
@@ -35,20 +34,19 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
-import io.github.antoinepirlot.satunes.database.services.data.DataManager
-import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.services.MediaSelectionManager
+import io.github.antoinepirlot.satunes.services.MediaSelectionViewModel
 import io.github.antoinepirlot.satunes.ui.components.forms.MediaSelectionForm
 import io.github.antoinepirlot.satunes.ui.components.forms.PlaylistCreationForm
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
+import io.github.antoinepirlot.satunes.ui.viewmodels.DataViewModel
 
 /**
  * @author Antoine Pirlot on 30/03/2024
@@ -59,12 +57,12 @@ internal fun MediaSelectionDialog(
     modifier: Modifier = Modifier,
     onDismissRequest: () -> Unit,
     onConfirm: () -> Unit,
-    mediaList: List<MediaImpl>,
+    mediaImplCollection: Collection<MediaImpl>,
     playlistTitle: String? = null,
     icon: SatunesIcons,
 ) {
     val showPlaylistCreation: MutableState<Boolean> =
-        rememberSaveable { mutableStateOf(mediaList.isEmpty()) }
+        rememberSaveable { mutableStateOf(mediaImplCollection.isEmpty()) }
 
     if (showPlaylistCreation.value) {
         CreateNewPlaylistForm(
@@ -78,7 +76,7 @@ internal fun MediaSelectionDialog(
             showPlaylistCreation = showPlaylistCreation,
             onDismissRequest = onDismissRequest,
             onConfirm = onConfirm,
-            mediaImplList = mediaList,
+            mediaImplCollection = mediaImplCollection,
             playlistTitle = playlistTitle,
             icon = icon
         )
@@ -88,18 +86,14 @@ internal fun MediaSelectionDialog(
 @Composable
 private fun CreateNewPlaylistForm(
     modifier: Modifier,
+    dataViewModel: DataViewModel = viewModel(),
     showPlaylistCreation: MutableState<Boolean>,
     onDismissRequest: () -> Unit
 ) {
-    val context: Context = LocalContext.current
-
     PlaylistCreationForm(
         modifier = modifier,
         onConfirm = { playlistTitle: String ->
-            DatabaseManager(context = context).addOnePlaylist(
-                context = context,
-                playlistTitle = playlistTitle
-            )
+            dataViewModel.addOnePlaylist(playlistTitle = playlistTitle)
             showPlaylistCreation.value = false
         },
         onDismissRequest = onDismissRequest
@@ -109,10 +103,12 @@ private fun CreateNewPlaylistForm(
 @Composable
 private fun MediaSelectionDialogList(
     modifier: Modifier,
+    dataViewModel: DataViewModel = viewModel(),
+    mediaSelectionViewModel: MediaSelectionViewModel = viewModel(),
     showPlaylistCreation: MutableState<Boolean>,
     onDismissRequest: () -> Unit,
     onConfirm: () -> Unit,
-    mediaImplList: List<MediaImpl>,
+    mediaImplCollection: Collection<MediaImpl>,
     playlistTitle: String? = null,
     icon: SatunesIcons,
 ) {
@@ -122,9 +118,9 @@ private fun MediaSelectionDialogList(
             Icon(imageVector = icon.imageVector, contentDescription = icon.description)
         },
         title = {
-            if (mediaImplList.isEmpty()) {
+            if (mediaImplCollection.isEmpty()) {
                 NormalText(text = stringResource(id = R.string.no_music))
-            } else if (mediaImplList[0] is Music) {
+            } else if (mediaImplCollection.first() is Music) {
                 if (playlistTitle == null) {
                     throw IllegalStateException("PlaylistDB title is required when adding music to playlistDB")
                 }
@@ -136,29 +132,27 @@ private fun MediaSelectionDialogList(
         text = {
             Column {
                 if (
-                    mediaImplList.isEmpty() && DataManager.getPlaylistMap()
+                    mediaImplCollection.isEmpty() && dataViewModel.getPlaylistSet()
                         .isNotEmpty() || // Avoid having create new playlistDB when user has no music
-                    mediaImplList.isEmpty() || mediaImplList[0] is Playlist
+                    mediaImplCollection.isEmpty() || mediaImplCollection.first() is Playlist
                 ) {
                     TextButton(onClick = { showPlaylistCreation.value = true }) {
                         NormalText(text = stringResource(id = R.string.create_playlist))
                     }
                 }
-                MediaSelectionForm(mediaImplList = mediaImplList)
+                MediaSelectionForm(mediaImplCollection = mediaImplCollection)
             }
         },
         onDismissRequest = {
-            MediaSelectionManager.clearCheckedMusics()
-            MediaSelectionManager.clearCheckedPlaylistWithMusics()
+            mediaSelectionViewModel.clearAll()
             onDismissRequest()
         },
         confirmButton = {
             TextButton(onClick = {
                 onConfirm()
-                MediaSelectionManager.clearCheckedMusics()
-                MediaSelectionManager.clearCheckedPlaylistWithMusics()
+                mediaSelectionViewModel.clearAll()
             }) {
-                if (mediaImplList.isNotEmpty()) {
+                if (mediaImplCollection.isNotEmpty()) {
                     NormalText(text = stringResource(id = R.string.add))
                 }
             }
@@ -178,6 +172,6 @@ private fun PlaylistSelectionDialogPreview() {
         icon = SatunesIcons.PLAYLIST_ADD,
         onDismissRequest = {},
         onConfirm = {},
-        mediaList = listOf()
+        mediaImplCollection = listOf()
     )
 }

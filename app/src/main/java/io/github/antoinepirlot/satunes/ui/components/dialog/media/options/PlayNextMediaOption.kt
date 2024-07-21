@@ -29,27 +29,29 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.ui.components.dialog.options.DialogOption
+import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
 
 /**
  * @author Antoine Pirlot on 25/06/2024
  */
 
 @Composable
-fun PlayNextMediaOption(
+internal fun PlayNextMediaOption(
     modifier: Modifier = Modifier,
+    playbackViewModel: PlaybackViewModel = viewModel(),
     mediaImpl: MediaImpl,
     onFinished: () -> Unit,
 ) {
     DialogOption(
         modifier = modifier,
         onClick = {
-            PlaybackController.getInstance().addNext(mediaImpl = mediaImpl)
+            playbackViewModel.addNext(mediaImpl = mediaImpl)
             onFinished()
         },
         icon = SatunesIcons.PLAY_NEXT,

@@ -26,25 +26,22 @@
 package io.github.antoinepirlot.satunes.ui.views.media.album
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
-import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
+import io.github.antoinepirlot.satunes.ui.viewmodels.DataViewModel
+import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
-import java.util.SortedMap
 
 /**
  * @author Antoine Pirlot on 01/04/2024
@@ -54,42 +51,42 @@ import java.util.SortedMap
 internal fun AllAlbumsListView(
     modifier: Modifier = Modifier,
     navController: NavHostController,
+    dataViewModel: DataViewModel = viewModel(),
+    playbackViewModel: PlaybackViewModel = viewModel(),
 ) {
-    val playbackController: PlaybackController = PlaybackController.getInstance()
-
-    val albumMap: Map<Album, Album> = DataManager.getAlbumMap()
-
-    //Recompose if data changed
-    var sortedSetChanged: Boolean by rememberSaveable { DataManager.albumMapUpdated }
-    if (sortedSetChanged) {
-        sortedSetChanged = false
-    }
-    //
+    val albumSet: Set<Album> = dataViewModel.getAlbumSet()
 
     MediaListView(
         modifier = modifier,
         navController = navController,
-        mediaImplList = albumMap.keys.toList(),
+        mediaImplCollection = albumSet,
 
         openMedia = { clickedMediaImpl: MediaImpl ->
-            openMedia(navController = navController, media = clickedMediaImpl)
+            openMedia(
+                playbackViewModel = playbackViewModel,
+                navController = navController,
+                media = clickedMediaImpl
+            )
         },
-        onFABClick = { openCurrentMusic(navController = navController) },
+        onFABClick = {
+            openCurrentMusic(
+                playbackViewModel = playbackViewModel,
+                navController = navController
+            )
+        },
         extraButtons = {
-            if (albumMap.isNotEmpty()) {
-                @Suppress("UNCHECKED_CAST")
-                albumMap as SortedMap<MediaImpl, Any>
+            if (albumSet.isNotEmpty()) {
                 ExtraButton(icon = SatunesIcons.PLAY, onClick = {
-                    playbackController.loadMusicFromMedias(medias = albumMap)
-                    openMedia(navController = navController)
+                    playbackViewModel.loadMusicFromMedias(medias = albumSet)
+                    openMedia(playbackViewModel = playbackViewModel, navController = navController)
                 })
                 ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
 
-                    playbackController.loadMusicFromMedias(
-                        medias = albumMap,
+                    playbackViewModel.loadMusicFromMedias(
+                        medias = albumSet,
                         shuffleMode = true
                     )
-                    openMedia(navController = navController)
+                    openMedia(playbackViewModel = playbackViewModel, navController = navController)
                 })
             }
         },

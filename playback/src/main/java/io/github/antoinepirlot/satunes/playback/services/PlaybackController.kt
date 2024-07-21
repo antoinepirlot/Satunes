@@ -28,20 +28,19 @@ package io.github.antoinepirlot.satunes.playback.services
 import android.content.ComponentName
 import android.content.Context
 import androidx.compose.runtime.MutableFloatState
+import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.core.content.ContextCompat
-import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
 import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.playback.exceptions.AlreadyInPlaybackException
@@ -58,20 +57,19 @@ import kotlinx.coroutines.launch
 class PlaybackController private constructor(
     context: Context,
     sessionToken: SessionToken,
-    musicMediaItemSortedMap: Map<Music, MediaItem>,
 ) {
     internal lateinit var mediaController: MediaController
 
-    internal var playlist: Playlist
+    internal lateinit var playlist: Playlist
 
     internal var musicPlayingIndex: Int = DEFAULT_MUSIC_PLAYING_INDEX
-    var isEnded: Boolean = DEFAULT_IS_ENDED
+    var isEnded: MutableState<Boolean> = mutableStateOf(DEFAULT_IS_ENDED)
 
     // Mutable var are used in ui, it needs to be recomposed
     // I use mutable to avoid using function with multiples params like to add listener
     val musicPlaying: MutableState<Music?> = mutableStateOf(DEFAULT_MUSIC_PLAYING)
     val isPlaying: MutableState<Boolean> = mutableStateOf(DEFAULT_IS_PLAYING_VALUE)
-    val repeatMode: MutableState<Int> = mutableIntStateOf(DEFAULT_REPEAT_MODE)
+    val repeatMode: MutableIntState = mutableIntStateOf(DEFAULT_REPEAT_MODE)
     val isShuffle: MutableState<Boolean> = mutableStateOf(DEFAULT_IS_SHUFFLE)
     val hasNext: MutableState<Boolean> = mutableStateOf(DEFAULT_HAS_NEXT)
     val hasPrevious: MutableState<Boolean> = mutableStateOf(DEFAULT_HAS_PREVIOUS)
@@ -96,7 +94,7 @@ class PlaybackController private constructor(
         val DEFAULT_MUSIC_PLAYING = null
 
         private lateinit var instance: PlaybackController
-        private val logger = SatunesLogger(name = this::class.java.name)
+        private val logger = SatunesLogger.getLogger()
 
         /**
          * Return only one instance of MediaController. If there's no instance already created
@@ -127,7 +125,6 @@ class PlaybackController private constructor(
                 instance = PlaybackController(
                     context = context.applicationContext,
                     sessionToken = sessionToken,
-                    musicMediaItemSortedMap = DataManager.getMusicMap(),
                 )
             } else if (listener != null) {
                 while (!instance::mediaController.isInitialized) {
@@ -147,15 +144,6 @@ class PlaybackController private constructor(
 
             instance.listener = listener ?: instance.listener
 
-            if (!DataLoader.isLoaded.value && !DataLoader.isLoading.value) {
-                DataLoader.loadAllData(context.applicationContext)
-            } else {
-                logger.warning(
-                    """isLoaded: ${DataLoader.isLoaded.value},
-                        | isLoading: ${DataLoader.isLoading.value}""".trimMargin()
-                )
-            }
-
             return getInstance()
         }
     }
@@ -168,7 +156,6 @@ class PlaybackController private constructor(
             controllerFuture.addListener({
                 this.mediaController = controllerFuture.get()
             }, ContextCompat.getMainExecutor(context))
-            this.playlist = Playlist(musicMediaItemSortedMap = musicMediaItemSortedMap)
         } catch (e: Throwable) {
             logger.severe(e.message)
             throw e
@@ -220,9 +207,9 @@ class PlaybackController private constructor(
 
             return
         } else {
-            if (this.isEnded) {
+            if (this.isEnded.value) {
                 this.start()
-                this.isEnded = false
+                this.isEnded.value = false
             } else {
                 this.mediaController.play()
             }
@@ -264,7 +251,7 @@ class PlaybackController private constructor(
     }
 
     fun seekTo(positionPercentage: Float) {
-        if (this.musicPlaying.value == null || this.isEnded) {
+        if (this.musicPlaying.value == null || this.isEnded.value) {
             val message = """"
                 |Impossible to seek while no music is playing 
                 |$this"""".trimMargin()
@@ -293,101 +280,20 @@ class PlaybackController private constructor(
     }
 
     /**
-     * Add all music from medias to the mediaController in the same order.
-     * If the shuffle mode is true then shuffle the playlist
-     *
-     * @param medias the medias to load
-     * @param shuffleMode indicate if the playlistDB has to be started in shuffle mode by default false
-     * @param musicToPlay the music to play
-     */
-    fun loadMusicFromMedias(
-        medias: Map<MediaImpl, Any>,
-        shuffleMode: Boolean = SettingsManager.shuffleMode.value,
-        musicToPlay: Music? = null,
-    ) {
-        val musicMediaItemSortedMap: MutableMap<Music, MediaItem> = mutableMapOf()
-        medias.keys.forEach { media: MediaImpl ->
-            musicMediaItemSortedMap.putAll(media.getMusicMap())
-        }
-        loadMusic(
-            musicMediaItemSortedMap = musicMediaItemSortedMap,
-            shuffleMode = shuffleMode,
-            musicToPlay = musicToPlay
-        )
-    }
-
-    /**
-     * Add all music from medias to the mediaController in the same order.
-     * If the shuffle mode is true then shuffle the playlist
-     *
-     * @param medias the medias to load
-     * @param shuffleMode indicate if the playlistDB has to be started in shuffle mode by default false
-     * @param musicToPlay the music to play
-     */
-    fun loadMusicFromStringMediasMedia(
-        medias: Map<String, MediaImpl>,
-        shuffleMode: Boolean = SettingsManager.shuffleMode.value,
-        musicToPlay: Music? = null,
-    ) {
-        val musicMediaItemSortedMap: MutableMap<Music, MediaItem> = mutableMapOf()
-        medias.values.forEach { media: MediaImpl ->
-            musicMediaItemSortedMap.putAll(media.getMusicMap())
-        }
-        loadMusic(
-            musicMediaItemSortedMap = musicMediaItemSortedMap,
-            shuffleMode = shuffleMode,
-            musicToPlay = musicToPlay
-        )
-    }
-
-    /**
-     * Add all music from medias to the mediaController in the same order.
-     * If the shuffle mode is true then shuffle the playlist
-     *
-     * @param media the media to load
-     * @param shuffleMode indicate if the playlistDB has to be started in shuffle mode by default false
-     * @param musicToPlay the music to play
-     */
-    fun loadMusicFromMedia(
-        media: MediaImpl,
-        shuffleMode: Boolean = SettingsManager.shuffleMode.value,
-        musicToPlay: Music? = null,
-    ) {
-        var musicMediaItemSortedMap: MutableMap<Music, MediaItem> = mutableMapOf()
-        when (media) {
-            is Folder -> {
-                musicMediaItemSortedMap = media.getAllMusic()
-            }
-
-            else -> {
-                media.getMusicMap().keys.forEach { music: Music ->
-                    musicMediaItemSortedMap.putAll(music.getMusicMap())
-                }
-            }
-        }
-
-        loadMusic(
-            musicMediaItemSortedMap = musicMediaItemSortedMap,
-            shuffleMode = shuffleMode,
-            musicToPlay = musicToPlay
-        )
-    }
-
-    /**
      * Add all music from musicMap to the mediaController in the same order.
      * If the shuffle mode is true then shuffle the playlist
      *
-     * @param musicMediaItemSortedMap the music map to load
+     * @param musicSet the music Set to load
      * @param shuffleMode indicate if the playlistDB has to be started in shuffle mode by default false
      * @param musicToPlay the music to play
      *
      */
     fun loadMusic(
-        musicMediaItemSortedMap: Map<Music, MediaItem>,
-        shuffleMode: Boolean = SettingsManager.shuffleMode.value,
+        musicSet: Set<Music>,
+        shuffleMode: Boolean = SettingsManager.shuffleMode,
         musicToPlay: Music? = null,
     ) {
-        this.playlist = Playlist(musicMediaItemSortedMap = musicMediaItemSortedMap)
+        this.playlist = Playlist(musicSet = musicSet)
         if (shuffleMode) {
             if (musicToPlay == null) {
                 this.playlist.shuffle()
@@ -398,7 +304,7 @@ class PlaybackController private constructor(
         this.mediaController.clearMediaItems()
         this.mediaController.addMediaItems(this.playlist.mediaItemList)
         this.mediaController.addListener(listener)
-        this.mediaController.repeatMode = when (SettingsManager.repeatMode.intValue) {
+        this.mediaController.repeatMode = when (SettingsManager.repeatMode) {
             1 -> Player.REPEAT_MODE_ALL
             2 -> Player.REPEAT_MODE_ONE
             else -> Player.REPEAT_MODE_OFF // For 0 and other incorrect numbers
@@ -429,10 +335,10 @@ class PlaybackController private constructor(
                 hasNext.value = true
             }
 
-            is Folder -> addToQueue(mediaImplList = mediaImpl.getAllMusic().keys.reversed())
+            is Folder -> addToQueue(mediaImplList = mediaImpl.getAllMusic().reversed())
 
             else -> {
-                addToQueue(mediaImplList = mediaImpl.getMusicMap().keys.reversed())
+                addToQueue(mediaImplList = mediaImpl.getMusicSet().reversed())
             }
         }
     }
@@ -463,10 +369,10 @@ class PlaybackController private constructor(
                 hasNext.value = true
             }
 
-            is Folder -> addNext(mediaImplList = mediaImpl.getAllMusic().keys.reversed())
+            is Folder -> addNext(mediaImplList = mediaImpl.getAllMusic().reversed())
 
             else -> {
-                addNext(mediaImplList = mediaImpl.getMusicMap().keys.reversed())
+                addNext(mediaImplList = mediaImpl.getMusicSet().reversed())
             }
         }
     }
@@ -474,7 +380,7 @@ class PlaybackController private constructor(
     private fun moveMusic(music: Music, newIndex: Int) {
         val musicToMoveIndex: Int = this.playlist.getMusicIndex(music = music)
         if (musicToMoveIndex == -1) {
-            throw IllegalArgumentException("This music is not inside the playlistDB")
+            throw IllegalArgumentException("This music is not inside the playlist")
         }
 
         if (musicToMoveIndex < this.musicPlayingIndex) {
@@ -623,21 +529,21 @@ class PlaybackController private constructor(
     }
 
     fun switchRepeatMode() {
-        when (this.repeatMode.value) {
+        when (this.repeatMode.intValue) {
             Player.REPEAT_MODE_OFF -> {
-                this.repeatMode.value = Player.REPEAT_MODE_ALL
+                this.repeatMode.intValue = Player.REPEAT_MODE_ALL
             }
 
             Player.REPEAT_MODE_ALL -> {
-                this.repeatMode.value = Player.REPEAT_MODE_ONE
+                this.repeatMode.intValue = Player.REPEAT_MODE_ONE
             }
 
             Player.REPEAT_MODE_ONE -> {
-                this.repeatMode.value = Player.REPEAT_MODE_OFF
+                this.repeatMode.intValue = Player.REPEAT_MODE_OFF
             }
         }
 
-        this.mediaController.repeatMode = this.repeatMode.value
+        this.mediaController.repeatMode = this.repeatMode.intValue
     }
 
     fun stop() {
@@ -672,7 +578,7 @@ class PlaybackController private constructor(
             musicPlayingIndex in MediaController: ${if (mediaControllerInit) mediaController.currentMediaItemIndex else "/"}
             musicPlaying != null: ${musicPlaying.value != null}
             isPlaying: ${isPlaying.value}
-            repeatMode: ${repeatMode.value}
+            repeatMode: ${repeatMode.intValue}
             isShuffle: ${isShuffle.value}
             hasNext: ${hasNext.value}
             hasPrevious: ${hasPrevious.value}
@@ -680,5 +586,12 @@ class PlaybackController private constructor(
             currentPositionProgression: ${currentPositionProgression.floatValue}
             isEnded: $isEnded
         """.trimIndent()
+    }
+
+    fun updateCurrentPosition() {
+        val maxPosition: Long = this.musicPlaying.value!!.duration
+        val newPosition: Long = this.getCurrentPosition()
+        this.currentPositionProgression.floatValue =
+            newPosition.toFloat() / maxPosition.toFloat()
     }
 }

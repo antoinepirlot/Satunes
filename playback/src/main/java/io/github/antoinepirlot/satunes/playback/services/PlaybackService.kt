@@ -35,6 +35,7 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.session.MediaSession
 import androidx.media3.session.MediaSessionService
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
+import io.github.antoinepirlot.satunes.playback.models.PlaybackSessionCallback
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 
 /**
@@ -55,13 +56,13 @@ class PlaybackService : MediaSessionService() {
         super.onCreate()
         SatunesLogger.DOCUMENTS_PATH =
             applicationContext.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)!!.path
-        logger = SatunesLogger(name = this::class.java.name)
+        logger = SatunesLogger.getLogger()
 
         val exoPlayer = ExoPlayer.Builder(this)
-            .setHandleAudioBecomingNoisy(SettingsManager.pauseIfNoisyChecked.value) // Pause when bluetooth or headset disconnect
+            .setHandleAudioBecomingNoisy(SettingsManager.pauseIfNoisyChecked) // Pause when bluetooth or headset disconnect
             .setAudioAttributes(
                 AudioAttributes.DEFAULT,
-                SettingsManager.pauseIfAnotherPlayback.value
+                SettingsManager.pauseIfAnotherPlayback
             )
             .build()
 
@@ -71,14 +72,17 @@ class PlaybackService : MediaSessionService() {
             .setIsGaplessSupportRequired(true)
             .build()
 
-        if (SettingsManager.audioOffloadChecked.value) {
+        if (SettingsManager.audioOffloadChecked) {
             exoPlayer.trackSelectionParameters = exoPlayer.trackSelectionParameters
                 .buildUpon()
                 .setAudioOffloadPreferences(audioOffloadPreferences)
                 .build()
         }
 
-        mediaSession = MediaSession.Builder(this, exoPlayer).build()
+        mediaSession = MediaSession.Builder(this, exoPlayer)
+            .setCallback(PlaybackSessionCallback)
+            .build()
+
         try {
             playbackController =
                 PlaybackController.getInstance() // Called from init instance (session)
@@ -91,7 +95,7 @@ class PlaybackService : MediaSessionService() {
     override fun onTaskRemoved(rootIntent: Intent?) {
         super.onTaskRemoved(rootIntent)
         if (
-            !SettingsManager.playbackWhenClosedChecked.value ||
+            !SettingsManager.playbackWhenClosedChecked ||
             playbackController == null ||
             !playbackController!!.isPlaying.value
         ) {
@@ -104,7 +108,7 @@ class PlaybackService : MediaSessionService() {
     override fun onDestroy() {
         logger.info("Destroying $this")
         if (
-            !SettingsManager.playbackWhenClosedChecked.value ||
+            !SettingsManager.playbackWhenClosedChecked ||
             playbackController == null ||
             !playbackController!!.isPlaying.value
         ) {

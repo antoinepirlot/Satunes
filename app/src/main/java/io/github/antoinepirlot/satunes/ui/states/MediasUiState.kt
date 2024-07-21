@@ -23,14 +23,14 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.services
+package io.github.antoinepirlot.satunes.ui.states
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 
 /**
- * @author Antoine Pirlot on 23/06/2024
+ * @author Antoine Pirlot on 19/07/2024
  */
-internal object RoutesManager {
-    val currentDestination: MutableState<String?> = mutableStateOf(null)
-}
+data class MediasUiState(
+    val musicMediaItemSortedMapUpdated: MutableState<Boolean> = mutableStateOf(false)
+)

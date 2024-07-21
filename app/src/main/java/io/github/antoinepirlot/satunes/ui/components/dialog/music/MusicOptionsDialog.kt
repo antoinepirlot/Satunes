@@ -29,15 +29,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToPlaylistMediaOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToQueueDialogOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.PlayNextMediaOption
@@ -45,6 +42,7 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.music.options.LikeUn
 import io.github.antoinepirlot.satunes.ui.components.dialog.music.options.NavigateToMediaMusicOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.music.options.RemoveFromPlaylistMusicOption
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
+import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
 
 /**
  * @author Antoine Pirlot on 30/03/2024
@@ -55,6 +53,7 @@ import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 internal fun MusicOptionsDialog(
     modifier: Modifier = Modifier,
     navController: NavHostController,
+    playbackViewModel: PlaybackViewModel = viewModel(),
     music: Music,
     playlist: Playlist? = null,
     onDismissRequest: () -> Unit,
@@ -72,8 +71,7 @@ internal fun MusicOptionsDialog(
         },
         text = {
             Column {
-                val playbackController: PlaybackController = PlaybackController.getInstance()
-                val musicPlaying: Music? by remember { playbackController.musicPlaying }
+                val musicPlaying: Music? = playbackViewModel.musicPlaying
                 LikeUnlikeMusicOption(music = music)
                 AddToPlaylistMediaOption(mediaImpl = music, onFinished = onDismissRequest)
 
@@ -85,12 +83,12 @@ internal fun MusicOptionsDialog(
                     )
                 }
 
-                val isPlaybackLoaded: Boolean by rememberSaveable { PlaybackController.getInstance().isLoaded }
+                val isPlaybackLoaded: Boolean = playbackViewModel.isLoaded
 
                 if (isPlaybackLoaded) {
                     if (music != musicPlaying) {
                         PlayNextMediaOption(mediaImpl = music, onFinished = onDismissRequest)
-                        if (!playbackController.isMusicInQueue(music = music)) {
+                        if (!playbackViewModel.isMusicInQueue(music = music)) {
                             AddToQueueDialogOption(mediaImpl = music, onFinished = onDismissRequest)
                         }
                     }

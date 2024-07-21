@@ -49,6 +49,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
@@ -56,14 +57,14 @@ import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
-import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.models.SearchChips
-import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.router.utils.openMedia
-import io.github.antoinepirlot.satunes.services.search.SearchChipsManager
 import io.github.antoinepirlot.satunes.ui.components.chips.MediaChipList
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
+import io.github.antoinepirlot.satunes.ui.viewmodels.DataViewModel
+import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
+import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -79,11 +80,14 @@ import io.github.antoinepirlot.satunes.database.R as RDb
 internal fun SearchView(
     modifier: Modifier = Modifier,
     navController: NavHostController,
+    satunesViewModel: SatunesViewModel = viewModel(),
+    dataViewModel: DataViewModel = viewModel(),
+    playbackViewModel: PlaybackViewModel = viewModel(),
 ) {
     val context: Context = LocalContext.current
     var query: String by rememberSaveable { mutableStateOf("") }
     val mediaImplList: MutableList<MediaImpl> = remember { SnapshotStateList() }
-    val selectedSearchChips: List<SearchChips> = remember { SearchChipsManager.selectedSearchChips }
+    val selectedSearchChips: List<SearchChips> = satunesViewModel.selectedSearchChips
 
     val searchCoroutine: CoroutineScope = rememberCoroutineScope()
     var searchJob: Job? = null
@@ -92,14 +96,20 @@ internal fun SearchView(
             searchJob!!.cancel()
         }
         searchJob = searchCoroutine.launch {
-            search(context = context, mediaImplList = mediaImplList, query = query)
+            search(
+                context = context,
+                dataViewModel = dataViewModel,
+                selectedSearchChips = selectedSearchChips,
+                mediaImplList = mediaImplList,
+                query = query
+            )
         }
     }
 
     var resetSelectedChips: Boolean by rememberSaveable { mutableStateOf(true) }
     if (resetSelectedChips) {
         LaunchedEffect(key1 = true) {
-            SearchChipsManager.resetSelectedChips(context = context)
+            satunesViewModel.resetSelectedChips(context = context)
         }
         resetSelectedChips = false
     }
@@ -128,21 +138,35 @@ internal fun SearchView(
         MediaChipList()
         MediaListView(
             navController = navController,
-            mediaImplList = mediaImplList,
+            mediaImplCollection = mediaImplList,
             openMedia = { mediaImpl: MediaImpl ->
                 if (mediaImpl is Music) {
-                    PlaybackController.getInstance()
-                        .loadMusic(musicMediaItemSortedMap = DataManager.getMusicMap())
+                    playbackViewModel.loadMusic(musicSet = dataViewModel.getMusicSet())
                 }
-                openMedia(media = mediaImpl, navController = navController)
+                openMedia(
+                    playbackViewModel = playbackViewModel,
+                    media = mediaImpl,
+                    navController = navController
+                )
             },
-            onFABClick = { openCurrentMusic(navController = navController) },
+            onFABClick = {
+                openCurrentMusic(
+                    playbackViewModel = playbackViewModel,
+                    navController = navController
+                )
+            },
             emptyViewText = stringResource(id = R.string.no_result)
         )
     }
 }
 
-private fun search(context: Context, mediaImplList: MutableList<MediaImpl>, query: String) {
+private fun search(
+    context: Context,
+    dataViewModel: DataViewModel,
+    selectedSearchChips: List<SearchChips>,
+    mediaImplList: MutableList<MediaImpl>,
+    query: String
+) {
     mediaImplList.clear()
     if (query.isBlank()) {
         // Prevent loop if string is "" or " "
@@ -152,8 +176,8 @@ private fun search(context: Context, mediaImplList: MutableList<MediaImpl>, quer
     @Suppress("NAME_SHADOWING")
     val query: String = query.lowercase()
 
-    for (searchChip: SearchChips in SearchChipsManager.selectedSearchChips) {
-        DataManager.getMusicMap().keys.forEach { music: Music ->
+    for (searchChip: SearchChips in selectedSearchChips) {
+        dataViewModel.getMusicSet().forEach { music: Music ->
             when (searchChip) {
                 SearchChips.MUSICS -> {
                     if (music.title.lowercase().contains(query)) {
@@ -200,14 +224,11 @@ private fun search(context: Context, mediaImplList: MutableList<MediaImpl>, quer
             }
         }
         if (searchChip == SearchChips.PLAYLISTS) {
-            DataManager.getPlaylistMap().forEach { (playlistTitle: String, playlist: Playlist) ->
-                @Suppress("NAME_SHADOWING")
-                var playlistTitle: String = playlistTitle
-
-                if (playlistTitle == LIKES_PLAYLIST_TITLE) {
-                    playlistTitle = context.getString(RDb.string.likes_playlist_title)
+            dataViewModel.getPlaylistSet().forEach { playlist: Playlist ->
+                if (playlist.title == LIKES_PLAYLIST_TITLE) {
+                    playlist.title = context.getString(RDb.string.likes_playlist_title)
                 }
-                if (playlistTitle.lowercase().contains(query)) {
+                if (playlist.title.lowercase().contains(query)) {
                     mediaImplList.add(element = playlist)
                 }
             }

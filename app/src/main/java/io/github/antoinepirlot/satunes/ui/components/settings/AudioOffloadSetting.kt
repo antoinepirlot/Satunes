@@ -25,20 +25,21 @@
 
 package io.github.antoinepirlot.satunes.ui.components.settings
 
-import android.content.Context
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
-import io.github.antoinepirlot.satunes.models.Settings
+import io.github.antoinepirlot.satunes.models.SwitchSettings
 import io.github.antoinepirlot.satunes.ui.components.dialog.InformationDialog
+import io.github.antoinepirlot.satunes.ui.states.SatunesUiState
+import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
 
 /**
  * @author Antoine Pirlot on 27/05/2024
@@ -47,18 +48,20 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.InformationDialog
 @Composable
 internal fun AudioOffloadSetting(
     modifier: Modifier = Modifier,
+    satunesViewModel: SatunesViewModel = viewModel(),
 ) {
-    val context: Context = LocalContext.current
-    val audioOffloadChecked: Boolean by rememberSaveable { SettingsManager.audioOffloadChecked }
+    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+
+    val audioOffloadChecked: Boolean = satunesUiState.audioOffloadChecked
     var showAudioOffloadDialog: Boolean by rememberSaveable { mutableStateOf(false) }
 
     SettingWithSwitch(
         modifier = modifier,
-        setting = Settings.AUDIO_OFFLOAD,
+        setting = SwitchSettings.AUDIO_OFFLOAD,
         checked = audioOffloadChecked,
         onCheckedChange = {
             if (audioOffloadChecked) {
-                SettingsManager.switchAudioOffload(context = context)
+                satunesViewModel.switchAudioOffload()
             } else {
                 showAudioOffloadDialog = true
             }
@@ -72,7 +75,7 @@ internal fun AudioOffloadSetting(
             onDismissRequest = { showAudioOffloadDialog = false },
             onConfirm = {
                 showAudioOffloadDialog = false
-                SettingsManager.switchAudioOffload(context = context)
+                satunesViewModel.switchAudioOffload()
             }
         )
     }

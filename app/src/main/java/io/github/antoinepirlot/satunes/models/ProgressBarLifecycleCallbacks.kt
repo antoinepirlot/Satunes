@@ -28,7 +28,7 @@ package io.github.antoinepirlot.satunes.models
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
-import io.github.antoinepirlot.satunes.playback.services.PlaybackController
+import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -40,6 +40,7 @@ import kotlinx.coroutines.launch
 internal object ProgressBarLifecycleCallbacks : DefaultLifecycleObserver {
     var isUpdatingPosition: Boolean = false
     private var stopRefresh: Boolean = false
+    lateinit var playbackViewModel: PlaybackViewModel
 
     override fun onResume(owner: LifecycleOwner) {
         super.onResume(owner)
@@ -71,22 +72,17 @@ internal object ProgressBarLifecycleCallbacks : DefaultLifecycleObserver {
      * If this function is already running, just return by using isUpdatingPosition.
      */
     private fun refreshCurrentPosition() {
-        val playbackController: PlaybackController = PlaybackController.getInstance()
-        if (isUpdatingPosition || playbackController.musicPlaying.value == null) {
+        if (isUpdatingPosition || playbackViewModel.musicPlaying == null) {
             return
         }
         isUpdatingPosition = true
         CoroutineScope(Dispatchers.Main).launch {
             updateCurrentPosition()
-            while (playbackController.isPlaying.value && !stopRefresh) {
+            while (playbackViewModel.isPlaying && !stopRefresh) {
                 updateCurrentPosition()
-                val timeMillis: Long = (SettingsManager.barSpeed.value * 1000f).toLong()
+//TODO do it outside function
+                val timeMillis: Long = (SettingsManager.barSpeed * 1000f).toLong()
                 delay(timeMillis) // Wait one second to avoid refreshing all the time
-            }
-
-            if (playbackController.isEnded) {
-                // It means the music has reached the end of playlistDB and the music is finished
-                playbackController.currentPositionProgression.floatValue = 1f
             }
 
             isUpdatingPosition = false
@@ -94,15 +90,10 @@ internal object ProgressBarLifecycleCallbacks : DefaultLifecycleObserver {
     }
 
     private fun updateCurrentPosition() {
-        val playbackController: PlaybackController = PlaybackController.getInstance()
-        if (playbackController.isEnded) {
+        if (playbackViewModel.isEnded) {
             // It means the music has reached the end of playlistDB and the music is finished
             return
         }
-        val maxPosition: Long = playbackController.musicPlaying.value!!.duration
-        val newPosition: Long = playbackController.getCurrentPosition()
-
-        playbackController.currentPositionProgression.floatValue =
-            newPosition.toFloat() / maxPosition.toFloat()
+        playbackViewModel.updateCurrentPosition()
     }
 }

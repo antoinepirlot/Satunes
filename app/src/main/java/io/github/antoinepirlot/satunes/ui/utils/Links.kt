@@ -40,7 +40,7 @@ internal fun openUrl(context: Context, url: String) {
         val intent = Intent(Intent.ACTION_VIEW, uri)
         context.startActivity(intent)
     } catch (e: Throwable) {
-        val logger = SatunesLogger(name = null)
+        val logger = SatunesLogger.getLogger()
         logger.severe(e.message)
         throw e
     }

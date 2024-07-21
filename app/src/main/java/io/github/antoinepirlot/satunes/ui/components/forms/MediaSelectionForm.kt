@@ -40,15 +40,21 @@ import io.github.antoinepirlot.satunes.database.models.MediaImpl
 @Composable
 internal fun MediaSelectionForm(
     modifier: Modifier = Modifier,
-    mediaImplList: List<MediaImpl>
+    mediaImplCollection: Collection<MediaImpl>
 ) {
     val lazyState = rememberLazyListState()
+    val mediaList: List<MediaImpl> =
+        try {
+            mediaImplCollection as List<MediaImpl>
+        } catch (_: ClassCastException) {
+            mediaImplCollection.toList()
+        }
     LazyColumn(
         modifier = modifier,
         state = lazyState
     ) {
         items(
-            items = mediaImplList,
+            items = mediaList,
             key = { it.id }
         ) { mediaImpl: MediaImpl ->
             MediaSelectionCheckbox(mediaImpl = mediaImpl)
@@ -59,5 +65,5 @@ internal fun MediaSelectionForm(
 @Preview
 @Composable
 private fun PlaylistSelectionFormPreview() {
-    MediaSelectionForm(mediaImplList = listOf())
+    MediaSelectionForm(mediaImplCollection = listOf())
 }

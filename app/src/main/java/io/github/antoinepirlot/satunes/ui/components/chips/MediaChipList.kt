@@ -34,16 +34,16 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.models.SearchChips
-import io.github.antoinepirlot.satunes.services.search.SearchChipsManager
+import io.github.antoinepirlot.satunes.models.allSearchChips
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
+import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
 
 /**
  * @author Antoine Pirlot on 28/06/2024
@@ -52,16 +52,17 @@ import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 @Composable
 internal fun MediaChipList(
     modifier: Modifier = Modifier,
+    satunesViewModel: SatunesViewModel = viewModel(),
 ) {
     val scrollState: ScrollState = rememberScrollState()
-    val searchChipsList: List<SearchChips> = SearchChipsManager.allSearchChips
+    val searchChipsList: List<SearchChips> = allSearchChips
     Row(
         modifier = modifier
             .fillMaxWidth()
             .horizontalScroll(state = scrollState),
     ) {
         searchChipsList.forEach { searchChip: SearchChips ->
-            val selected: Boolean by rememberSaveable { searchChip.enabled }
+            val selected: Boolean = satunesViewModel.selectedSearchChips.contains(searchChip)
             val filterChipModifier: Modifier = when (searchChip) {
                 searchChipsList.first() -> {
                     Modifier.padding(start = 16.dp, end = 4.dp)
@@ -81,9 +82,9 @@ internal fun MediaChipList(
                 selected = selected,
                 onClick = {
                     if (selected) {
-                        SearchChipsManager.unselect(searchChip = searchChip)
+                        satunesViewModel.unselect(searchChip = searchChip)
                     } else {
-                        SearchChipsManager.select(searchChip = searchChip)
+                        satunesViewModel.select(searchChip = searchChip)
                     }
                 },
                 leadingIcon = {

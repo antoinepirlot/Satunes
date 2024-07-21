@@ -54,8 +54,8 @@ import java.io.File
 object DataLoader {
     private val URI: Uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
 
-    var isLoaded: MutableState<Boolean> = mutableStateOf(false)
-    var isLoading: MutableState<Boolean> = mutableStateOf(false)
+    val isLoaded: MutableState<Boolean> = mutableStateOf(false)
+    val isLoading: MutableState<Boolean> = mutableStateOf(false)
 
     // Music variables
     private var musicIdColumn: Int? = null
@@ -98,7 +98,7 @@ object DataLoader {
     )
 
     private val selection: String = "${MediaStore.Audio.Media.DATA} LIKE ?" +
-            if (SettingsManager.includeRingtonesChecked.value) {
+            if (SettingsManager.includeRingtonesChecked) {
                 " OR ${MediaStore.Audio.Media.DATA} LIKE ?" +
                         " OR ${MediaStore.Audio.Media.DATA} LIKE ?" +
                         " OR ${MediaStore.Audio.Media.DATA} LIKE ?"
@@ -108,10 +108,10 @@ object DataLoader {
 
     private var selection_args: Array<String> = arrayOf("$EXTERNAL_STORAGE_PATH/Music/%")
 
-    private val logger = SatunesLogger(name = this::class.java.name)
+    private val logger = SatunesLogger.getLogger()
 
     init {
-        if (SettingsManager.includeRingtonesChecked.value) {
+        if (SettingsManager.includeRingtonesChecked) {
             selection_args += "$EXTERNAL_STORAGE_PATH/Android/%"
             selection_args += "$EXTERNAL_STORAGE_PATH/Ringtones/%"
             selection_args += "$EXTERNAL_STORAGE_PATH/Notifications/%"
@@ -127,6 +127,9 @@ object DataLoader {
      * Load all Media data from device's storage.
      */
     fun loadAllData(context: Context) {
+        if (isLoading.value) {
+            return
+        }
         isLoading.value = true
         CoroutineScope(Dispatchers.IO).launch {
             context.contentResolver.query(

@@ -38,7 +38,7 @@ import java.util.logging.Logger
 /**
  * @author Antoine Pirlot on 15/07/2024
  */
-class SatunesLogger(
+class SatunesLogger private constructor(
     name: String?,
     resourceBundleName: String? = null
 ) : Logger(name, resourceBundleName) {
@@ -48,6 +48,14 @@ class SatunesLogger(
         private const val MAX_FILES = 1
         lateinit var DOCUMENTS_PATH: String
         private lateinit var LOGS_PATH: String
+        private lateinit var _logger: SatunesLogger
+
+        fun getLogger(): SatunesLogger {
+            if (!this::_logger.isInitialized) {
+                _logger = SatunesLogger(this::class.java.name)
+            }
+            return _logger
+        }
     }
 
     init {

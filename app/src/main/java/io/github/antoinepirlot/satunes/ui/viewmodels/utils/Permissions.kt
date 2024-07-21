@@ -23,19 +23,26 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.database.models
+package io.github.antoinepirlot.satunes.ui.viewmodels.utils
 
-import io.github.antoinepirlot.satunes.database.R
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
+import androidx.core.content.ContextCompat
+import io.github.antoinepirlot.satunes.MainActivity
 
 /**
- * @author Antoine Pirlot on 03/02/24
+ * @author Antoine Pirlot on 20/07/2024
  */
 
-enum class MenuTitle(open val stringId: Int) {
-    FOLDERS(stringId = R.string.folders),
-    ARTISTS(stringId = R.string.artists),
-    MUSICS(stringId = R.string.musics),
-    ALBUMS(stringId = R.string.albums),
-    GENRES(stringId = R.string.genres),
-    PLAYLISTS(stringId = R.string.playlists)
+internal fun isAudioAllowed(): Boolean {
+    // Permission Granted
+    return ContextCompat.checkSelfPermission(
+        MainActivity.instance.applicationContext,
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            Manifest.permission.READ_MEDIA_AUDIO
+        } else {
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        }
+    ) == PackageManager.PERMISSION_GRANTED
 }

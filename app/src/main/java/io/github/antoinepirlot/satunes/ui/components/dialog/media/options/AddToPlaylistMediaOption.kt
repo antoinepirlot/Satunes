@@ -34,17 +34,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
-import io.github.antoinepirlot.satunes.database.services.data.DataManager
-import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.services.MediaSelectionManager
+import io.github.antoinepirlot.satunes.services.MediaSelectionViewModel
 import io.github.antoinepirlot.satunes.ui.components.dialog.MediaSelectionDialog
 import io.github.antoinepirlot.satunes.ui.components.dialog.options.DialogOption
+import io.github.antoinepirlot.satunes.ui.viewmodels.DataViewModel
 
 /**
  * @author Antoine Pirlot on 01/06/2024
@@ -53,6 +53,8 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.options.DialogOption
 @Composable
 internal fun AddToPlaylistMediaOption(
     modifier: Modifier = Modifier,
+    dataViewModel: DataViewModel = viewModel(),
+    mediaSelectionViewModel: MediaSelectionViewModel = viewModel(),
     mediaImpl: MediaImpl,
     onFinished: () -> Unit
 ) {
@@ -66,9 +68,9 @@ internal fun AddToPlaylistMediaOption(
         text = stringResource(id = R.string.add_to_playlist)
     )
     if (showDialog) {
-        val playlistList: Map<String, Playlist> = DataManager.getPlaylistMap()
+        val playlistSet: Set<Playlist> = dataViewModel.getPlaylistSet()
         //Recompose if data changed
-        var mapChanged: Boolean by rememberSaveable { DataManager.playlistsMapUpdated }
+        var mapChanged: Boolean = dataViewModel.playlistSetUpdated
         if (mapChanged) {
             mapChanged = false
         }
@@ -79,32 +81,39 @@ internal fun AddToPlaylistMediaOption(
                 showDialog = false
             },
             onConfirm = {
-                insertMediaToPlaylist(context = context, mediaImpl = mediaImpl)
+                insertMediaToPlaylist(
+                    dataViewModel = dataViewModel,
+                    mediaSelectionViewModel = mediaSelectionViewModel,
+                    mediaImpl = mediaImpl
+                )
                 onFinished()
             },
-            mediaList = playlistList.values.toList(),
+            mediaImplCollection = playlistSet,
             icon = SatunesIcons.PLAYLIST_ADD,
         )
     }
 }
 
-private fun insertMediaToPlaylist(context: Context, mediaImpl: MediaImpl) {
-    val db = DatabaseManager(context = context)
+private fun insertMediaToPlaylist(
+    dataViewModel: DataViewModel,
+    mediaSelectionViewModel: MediaSelectionViewModel,
+    mediaImpl: MediaImpl
+) {
     if (mediaImpl is Music) {
-        db.insertMusicToPlaylists(
+        dataViewModel.insertMusicToPlaylists(
             music = mediaImpl,
-            playlists = MediaSelectionManager.getCheckedPlaylistWithMusics()
+            playlists = mediaSelectionViewModel.getCheckedPlaylistWithMusics()
         )
     } else {
-        val musicList: List<Music> = if (mediaImpl is Folder) {
-            mediaImpl.getAllMusic().keys.toList()
+        val musicList: Set<Music> = if (mediaImpl is Folder) {
+            mediaImpl.getAllMusic()
         } else {
-            mediaImpl.getMusicMap().keys.toList()
+            mediaImpl.getMusicSet()
         }
 
-        MediaSelectionManager.getCheckedPlaylistWithMusics()
+        mediaSelectionViewModel.getCheckedPlaylistWithMusics()
             .forEach { playlist: Playlist ->
-                db.insertMusicsToPlaylist(
+                dataViewModel.insertMusicsToPlaylist(
                     musics = musicList,
                     playlist = playlist
                 )

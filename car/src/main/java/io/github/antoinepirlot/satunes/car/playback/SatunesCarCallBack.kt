@@ -34,7 +34,6 @@ import android.support.v4.media.session.PlaybackStateCompat.ACTION_SKIP_TO_NEXT
 import android.support.v4.media.session.PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS
 import android.support.v4.media.session.PlaybackStateCompat.STATE_PAUSED
 import android.support.v4.media.session.PlaybackStateCompat.STATE_PLAYING
-import androidx.media3.common.MediaItem
 import io.github.antoinepirlot.satunes.car.pages.ScreenPages
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
@@ -143,13 +142,13 @@ internal object SatunesCarCallBack : MediaSessionCompat.Callback() {
         try {
             loadMusicFromMedia(shuffleMode = shuffleMode, mediaId = lastRoute.toLong())
         } catch (e: NumberFormatException) {
-            val mapToLoad: Map<Music, MediaItem> = DataManager.getMusicMap()
+            val musicSet: Set<Music> = DataManager.getMusicSet()
             playbackController.loadMusic(
-                musicMediaItemSortedMap = mapToLoad,
+                musicSet = musicSet,
                 shuffleMode = shuffleMode
             )
             CoroutineScope(Dispatchers.IO).launch {
-                mapToLoad.forEach { (music: Music, _: MediaItem) ->
+                musicSet.forEach { music: Music ->
                     SatunesCarMusicService.addToQueue(media = music)
                 }
                 SatunesCarMusicService.updateQueue()
@@ -164,41 +163,41 @@ internal object SatunesCarCallBack : MediaSessionCompat.Callback() {
         val playbackController: PlaybackController = PlaybackController.getInstance()
         val routeDeque: RouteDeque = SatunesCarMusicService.routeDeque
         var musicToPlay: Music? = null
-        val musicMediaItemSortedMap: Map<Music, MediaItem> =
+        val musicSet: Set<Music> =
             when (routeDeque.oneBeforeLast()) {
                 ScreenPages.ALL_FOLDERS.id -> {
                     //Current folder has to be loaded (music)
-                    val folder: Folder = DataManager.getFolder(folderId = mediaId)
-                    folder.getMusicMap()
+                    val folder: Folder = DataManager.getFolder(id = mediaId)
+                    folder.getMusicSet()
                 }
 
                 ScreenPages.ALL_ALBUMS.id -> {
-                    val album: Album = DataManager.getAlbum(albumId = mediaId)
-                    album.getMusicMap()
+                    val album: Album = DataManager.getAlbum(id = mediaId)
+                    album.getMusicSet()
                 }
 
                 ScreenPages.ALL_ARTISTS.id -> {
-                    val artist: Artist = DataManager.getArtist(artistId = mediaId)
-                    artist.getMusicMap()
+                    val artist: Artist = DataManager.getArtist(id = mediaId)
+                    artist.getMusicSet()
                 }
 
                 ScreenPages.ALL_GENRES.id -> {
-                    val genre: Genre = DataManager.getGenre(genreId = mediaId)
-                    genre.getMusicMap()
+                    val genre: Genre = DataManager.getGenre(id = mediaId)
+                    genre.getMusicSet()
                 }
 
                 ScreenPages.ALL_PLAYLISTS.id -> {
                     val playlist: Playlist = DataManager.getPlaylist(mediaId)
-                    playlist.getMusicMap()
+                    playlist.getMusicSet()
                 }
 
                 else -> {
                     musicToPlay = DataManager.getMusic(musicId = mediaId)
-                    DataManager.getMusicMap()
+                    DataManager.getMusicSet()
                 }
             }
         playbackController.loadMusic(
-            musicMediaItemSortedMap = musicMediaItemSortedMap,
+            musicSet = musicSet,
             shuffleMode = shuffleMode,
             musicToPlay = musicToPlay
         )

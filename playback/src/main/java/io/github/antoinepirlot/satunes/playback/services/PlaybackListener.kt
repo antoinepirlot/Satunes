@@ -38,14 +38,15 @@ import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
  */
 open class PlaybackListener : Player.Listener {
 
-    private val logger = SatunesLogger(name = this::class.java.name)
+    private val logger = SatunesLogger.getLogger()
 
     override fun onPlaybackStateChanged(playbackState: Int) {
         super.onPlaybackStateChanged(playbackState)
         val playbackController: PlaybackController = PlaybackController.getInstance()
 
         if (playbackState == Player.STATE_ENDED) {
-            playbackController.isEnded = !PlaybackController.DEFAULT_IS_ENDED
+            playbackController.isEnded.value = true
+            playbackController.currentPositionProgression.floatValue = 1f
         }
     }
 
@@ -55,7 +56,7 @@ open class PlaybackListener : Player.Listener {
 
     override fun onRepeatModeChanged(repeatMode: Int) {
         super.onRepeatModeChanged(repeatMode)
-        PlaybackController.getInstance().repeatMode.value = repeatMode
+        PlaybackController.getInstance().repeatMode.intValue = repeatMode
     }
 
     override fun onIsPlayingChanged(isPlaying: Boolean) {
@@ -63,7 +64,7 @@ open class PlaybackListener : Player.Listener {
         val playbackController: PlaybackController = PlaybackController.getInstance()
 
         playbackController.isPlaying.value = isPlaying
-        playbackController.isEnded = PlaybackController.DEFAULT_IS_ENDED
+        playbackController.isEnded.value = PlaybackController.DEFAULT_IS_ENDED
     }
 
     /**

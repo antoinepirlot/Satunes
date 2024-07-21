@@ -17,7 +17,8 @@ Nouvelles Fonctionnalités:
 
 * Possiblité de choisir les filtres de recherches activés par défaut
 * Demande de confirmation lors d'une suppression dans les playlists
-* Tous les types de media (musiques, artistes, etc.) ont un menu d'option lors d'un appuis long
+* Tous les types de media (musiques, artistes, etc.) ont un menu d'option lors d'un appuis
+  long
 
 Améliorations, Optimisations et Résolutions de problèmes:
 
@@ -98,7 +99,8 @@ Nouvelles Fonctionnalités:
 * Ajout d'un nouveau paramètre permettant d'utiliser l'Audio Offload (envoie de la lecture dans un
   processus dédié). Cette option permet d'optimiser la batterie
 * Possiblité d'ajouter la musique en cours de lecture dans des playlists via les actions rapides
-* Navigation vers les albums, genres, artistes, etc. depuis le menu d'un appui long sur une musique
+* Navigation vers les albums, genres, artistes, etc. depuis le menu d'un appui long sur une
+  musique
 
 Améliorations, Optimisations et Résolutions de problèmes:
 

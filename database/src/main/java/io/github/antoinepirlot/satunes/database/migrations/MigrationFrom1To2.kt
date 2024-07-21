@@ -34,7 +34,7 @@ import java.sql.SQLException
  * @author Antoine Pirlot on 28/06/2024
  */
 internal object MigrationFrom1To2 : Migration(1, 2) {
-    private val logger = SatunesLogger(name = this::class.java.name)
+    private val logger = SatunesLogger.getLogger()
 
     override fun migrate(db: SupportSQLiteDatabase) {
         try {

@@ -29,17 +29,16 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToPlaylistMediaOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToQueueDialogOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.PlayNextMediaOption
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
+import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
 
 /**
  * @author Antoine Pirlot on 07/07/2024
@@ -48,6 +47,7 @@ import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 @Composable
 internal fun ArtistOptionsDialog(
     modifier: Modifier = Modifier,
+    playbackViewModel: PlaybackViewModel = viewModel(),
     artist: Artist,
     onDismissRequest: () -> Unit,
 ) {
@@ -64,9 +64,6 @@ internal fun ArtistOptionsDialog(
         },
         text = {
             Column {
-                val playbackController: PlaybackController = PlaybackController.getInstance()
-                val isPlaybackLoaded: Boolean by rememberSaveable { playbackController.isLoaded }
-
                 /**
                  * PlaylistDB
                  */
@@ -75,7 +72,7 @@ internal fun ArtistOptionsDialog(
                 /**
                  * Playback
                  */
-                if (isPlaybackLoaded) {
+                if (playbackViewModel.isLoaded) {
                     PlayNextMediaOption(mediaImpl = artist, onFinished = onDismissRequest)
                     AddToQueueDialogOption(mediaImpl = artist, onFinished = onDismissRequest)
                 }

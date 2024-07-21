@@ -25,27 +25,24 @@
 
 package io.github.antoinepirlot.satunes.router
 
-import android.content.Context
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import io.github.antoinepirlot.satunes.MainActivity
+import io.github.antoinepirlot.satunes.models.DEFAULT_DESTINATION
 import io.github.antoinepirlot.satunes.models.Destination
-import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.router.routes.mediaRoutes
 import io.github.antoinepirlot.satunes.router.routes.playbackRoutes
 import io.github.antoinepirlot.satunes.router.routes.searchRoutes
 import io.github.antoinepirlot.satunes.router.routes.settingsRoutes
-import io.github.antoinepirlot.satunes.services.RoutesManager
+import io.github.antoinepirlot.satunes.ui.viewmodels.DataViewModel
+import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
+import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
 
 /**
  * @author Antoine Pirlot on 23-01-24
@@ -55,50 +52,56 @@ import io.github.antoinepirlot.satunes.services.RoutesManager
 internal fun Router(
     modifier: Modifier = Modifier,
     navController: NavHostController,
+    satunesViewModel: SatunesViewModel = viewModel(),
+    dataViewModel: DataViewModel = viewModel(),
+    playbackViewModel: PlaybackViewModel = viewModel(),
 ) {
-    val context: Context = LocalContext.current
-    val isAudioAllowed: MutableState<Boolean> =
-        rememberSaveable { mutableStateOf(MainActivity.instance.isAudioAllowed()) }
+    val isAudioAllowed: Boolean = satunesViewModel.isAudioAllowed
 
-    if (isAudioAllowed.value) {
+    if (isAudioAllowed) {
         LaunchedEffect(key1 = Unit) {
-            PlaybackController.initInstance(context = context)
+            satunesViewModel.loadAllData()
         }
     }
 
     NavHost(
         modifier = modifier,
         navController = navController,
-        startDestination = Destination.FOLDERS.link,
+        startDestination = DEFAULT_DESTINATION,
         enterTransition = { fadeIn(animationSpec = tween(500)) },
         exitTransition = { fadeOut(animationSpec = tween(0)) },
     ) {
         mediaRoutes(
             navController = navController,
+            satunesViewModel = satunesViewModel,
+            dataViewModel = dataViewModel,
             onStart = {
-                permissionView(isAudioAllowed = isAudioAllowed.value, navController = navController)
-                RoutesManager.currentDestination.value = it.destination.route
+                checkIfAllowed(isAudioAllowed = isAudioAllowed, navController = navController)
+                satunesViewModel.setCurrentDestination(destination = it.destination.route!!)
             }
         )
         searchRoutes(
             navController = navController,
+            satunesViewModel = satunesViewModel,
             onStart = {
-                permissionView(isAudioAllowed = isAudioAllowed.value, navController = navController)
-                RoutesManager.currentDestination.value = it.destination.route
+                checkIfAllowed(isAudioAllowed = isAudioAllowed, navController = navController)
+                satunesViewModel.setCurrentDestination(destination = it.destination.route!!)
             }
         )
         playbackRoutes(
             navController = navController,
+            satunesViewModel = satunesViewModel,
+            playbackViewModel = playbackViewModel,
             onStart = {
-                permissionView(isAudioAllowed = isAudioAllowed.value, navController = navController)
-                RoutesManager.currentDestination.value = it.destination.route
+                checkIfAllowed(isAudioAllowed = isAudioAllowed, navController = navController)
+                satunesViewModel.setCurrentDestination(destination = it.destination.route!!)
             }
         )
         settingsRoutes(
             navController = navController,
-            isAudioAllowed = isAudioAllowed,
+            satunesViewModel = satunesViewModel, // Pass it as param to fix no recomposition when permission granted
             onStart = {
-                RoutesManager.currentDestination.value = it.destination.route
+                satunesViewModel.setCurrentDestination(destination = it.destination.route!!)
             }
         )
     }
@@ -112,7 +115,7 @@ internal fun Router(
  *
  * @param isAudioAllowed true if the permission has been allowed, otherwise false
  */
-private fun permissionView(isAudioAllowed: Boolean, navController: NavHostController) {
+private fun checkIfAllowed(isAudioAllowed: Boolean, navController: NavHostController) {
     if (!isAudioAllowed) {
         navController.popBackStack()
         navController.navigate(Destination.PERMISSIONS_SETTINGS.link)

@@ -25,23 +25,24 @@
 
 package io.github.antoinepirlot.satunes.ui.components.settings
 
-import android.content.Context
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
+import io.github.antoinepirlot.satunes.ui.states.SatunesUiState
+import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
 import kotlin.math.floor
 
 /**
@@ -51,9 +52,12 @@ import kotlin.math.floor
 @Composable
 internal fun BarSpeedSetting(
     modifier: Modifier = Modifier,
+    satunesViewModel: SatunesViewModel = viewModel(),
 ) {
-    val context: Context = LocalContext.current
-    val currentBarSpeed: Float by rememberSaveable { SettingsManager.barSpeed }
+    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+
+    val currentBarSpeed: Float = satunesUiState.barSpeed
+
     var isUpdating: Boolean by rememberSaveable { mutableStateOf(false) }
     var newBarSpeed: Float by rememberSaveable { mutableFloatStateOf(currentBarSpeed) }
     Column(modifier = modifier) {
@@ -74,7 +78,7 @@ internal fun BarSpeedSetting(
                 newBarSpeed = it
             },
             onValueChangeFinished = {
-                SettingsManager.updateBarSpeed(context = context, newValue = newBarSpeed)
+                satunesViewModel.updateBarSpeed(newValue = newBarSpeed)
                 isUpdating = false
             },
             valueRange = 0.1f..1f,

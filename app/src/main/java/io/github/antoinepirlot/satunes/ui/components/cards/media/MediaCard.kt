@@ -55,6 +55,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.toBitmap
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
@@ -67,7 +68,6 @@ import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.icons.R
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.ui.ScreenSizes
 import io.github.antoinepirlot.satunes.ui.components.cards.ListItem
 import io.github.antoinepirlot.satunes.ui.components.dialog.album.AlbumOptionsDialog
@@ -79,6 +79,7 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.playlist.PlaylistOpt
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 import io.github.antoinepirlot.satunes.ui.components.texts.Subtitle
 import io.github.antoinepirlot.satunes.ui.utils.getRootFolderName
+import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.database.R as RDb
 
 /**
@@ -90,6 +91,7 @@ import io.github.antoinepirlot.satunes.database.R as RDb
 internal fun MediaCard(
     modifier: Modifier = Modifier,
     navController: NavHostController,
+    playbackViewModel: PlaybackViewModel = viewModel(),
     media: MediaImpl,
     onClick: () -> Unit,
     openedPlaylist: Playlist?,
@@ -157,8 +159,7 @@ internal fun MediaCard(
                     val imageModifier: Modifier = Modifier
                         .fillMaxSize()
                         .align(Alignment.Center)
-                    val playbackController: PlaybackController = PlaybackController.getInstance()
-                    if (media == playbackController.musicPlaying.value) {
+                    if (media == playbackViewModel.musicPlaying) {
                         val playingIcon: SatunesIcons = SatunesIcons.MUSIC_PLAYING
                         Icon(
                             modifier = imageModifier,

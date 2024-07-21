@@ -94,6 +94,7 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
         routeDeque.resetRouteDeque()
 
         //Init playback
+        DataLoader.loadAllData(context = baseContext)
         playbackController =
             PlaybackController.initInstance(baseContext, listener = SatunesPlaybackListener)
         while (DataLoader.isLoading.value) {
@@ -145,31 +146,31 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
             ScreenPages.ALL_ARTISTS.id -> {
                 routeDeque.resetRouteDeque()
                 routeDeque.addLast(parentId)
-                children.addAll(getAllMediaItem(mediaList = DataManager.getArtistMap().values))
+                children.addAll(getAllMediaItem(mediaList = DataManager.getArtistSet()))
             }
 
             ScreenPages.ALL_ALBUMS.id -> {
                 routeDeque.resetRouteDeque()
                 routeDeque.addLast(parentId)
-                children.addAll(getAllMediaItem(mediaList = DataManager.getAlbumMap().keys))
+                children.addAll(getAllMediaItem(mediaList = DataManager.getAlbumSet()))
             }
 
             ScreenPages.ALL_GENRES.id -> {
                 routeDeque.resetRouteDeque()
                 routeDeque.addLast(parentId)
-                children.addAll(getAllMediaItem(mediaList = DataManager.getGenreMap().values))
+                children.addAll(getAllMediaItem(mediaList = DataManager.getGenreSet()))
             }
 
             ScreenPages.ALL_MUSICS.id -> {
                 routeDeque.resetRouteDeque()
                 routeDeque.addLast(parentId)
-                children.addAll(getAllMediaItem(mediaList = DataManager.getMusicMap().keys))
+                children.addAll(getAllMediaItem(mediaList = DataManager.getMusicSet()))
             }
 
             ScreenPages.ALL_PLAYLISTS.id -> {
                 routeDeque.resetRouteDeque()
                 routeDeque.addLast(parentId)
-                children.addAll(getAllMediaItem(mediaList = DataManager.getPlaylistMap().values))
+                children.addAll(getAllMediaItem(mediaList = DataManager.getPlaylistSet()))
             }
 
             else -> {
@@ -231,7 +232,7 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
         }
         mediaItemList.add(getShuffleButton())
         for (media: MediaImpl in mediaList) {
-            if (media !is Music && (media.getMusicMap().isEmpty())) {
+            if (media !is Music && (media.getMusicSet().isEmpty())) {
                 continue
             }
             val mediaItem: MediaItem = addToQueue(media = media)
@@ -255,10 +256,10 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
         }
 
         val mediaImpl: MediaImpl? = when (oneBeforeLastRoute) {
-            ScreenPages.ALL_FOLDERS.id -> DataManager.getFolder(folderId = mediaId)
-            ScreenPages.ALL_ARTISTS.id -> DataManager.getArtist(artistId = mediaId)
-            ScreenPages.ALL_ALBUMS.id -> DataManager.getAlbum(albumId = mediaId)
-            ScreenPages.ALL_GENRES.id -> DataManager.getGenre(genreId = mediaId)
+            ScreenPages.ALL_FOLDERS.id -> DataManager.getFolder(id = mediaId)
+            ScreenPages.ALL_ARTISTS.id -> DataManager.getArtist(id = mediaId)
+            ScreenPages.ALL_ALBUMS.id -> DataManager.getAlbum(id = mediaId)
+            ScreenPages.ALL_GENRES.id -> DataManager.getGenre(id = mediaId)
             ScreenPages.ALL_PLAYLISTS.id -> DataManager.getPlaylist(id = mediaId)
             else -> null
         }
@@ -266,7 +267,7 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
         val listToReturn: MutableList<MediaItem> = mutableListOf()
         listToReturn.addAll(
             this.getAllMediaItem(
-                mediaList = mediaImpl?.getMusicMap()?.keys?.toList() ?: mutableListOf()
+                mediaList = mediaImpl?.getMusicSet() ?: mutableListOf()
             )
         )
         return listToReturn
@@ -275,7 +276,7 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
     override fun onTaskRemoved(rootIntent: Intent?) {
         super.onTaskRemoved(rootIntent)
         if (
-            !SettingsManager.playbackWhenClosedChecked.value ||
+            !SettingsManager.playbackWhenClosedChecked ||
             PlaybackService.playbackController == null ||
             !PlaybackService.playbackController!!.isPlaying.value
         ) {
@@ -285,7 +286,7 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
 
     override fun onDestroy() {
         if (
-            !SettingsManager.playbackWhenClosedChecked.value ||
+            !SettingsManager.playbackWhenClosedChecked ||
             PlaybackService.playbackController == null ||
             !PlaybackService.playbackController!!.isPlaying.value
         ) {

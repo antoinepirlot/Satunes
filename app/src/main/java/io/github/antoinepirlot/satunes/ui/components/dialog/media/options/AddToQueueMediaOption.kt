@@ -29,12 +29,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.ui.components.dialog.options.DialogOption
+import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
 
 /**
  * @author Antoine Pirlot on 25/06/2024
@@ -43,13 +44,14 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.options.DialogOption
 @Composable
 internal fun AddToQueueDialogOption(
     modifier: Modifier = Modifier,
+    playbackViewModel: PlaybackViewModel = viewModel(),
     mediaImpl: MediaImpl,
     onFinished: () -> Unit,
 ) {
     DialogOption(
         modifier = modifier,
         onClick = {
-            PlaybackController.getInstance().addToQueue(mediaImpl = mediaImpl)
+            playbackViewModel.addToQueue(mediaImpl = mediaImpl)
             onFinished()
         },
         icon = SatunesIcons.ADD_TO_PLAYBACK_QUEUE,

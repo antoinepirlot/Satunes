@@ -62,7 +62,7 @@ class Music(
     val genre: Genre,
     context: Context,
 ) : MediaImpl(id = id, title = title.ifBlank { displayName }) {
-    private val logger = SatunesLogger(name = this::class.java.name)
+    private val logger: SatunesLogger = SatunesLogger.getLogger()
     private var displayName: String = displayName
         set(displayName) {
             if (displayName.isBlank()) {

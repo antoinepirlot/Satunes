@@ -34,6 +34,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.database.models.Album
@@ -43,10 +44,10 @@ import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
-import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.ui.components.EmptyView
 import io.github.antoinepirlot.satunes.ui.components.bars.ShowCurrentMusicButton
 import io.github.antoinepirlot.satunes.ui.components.cards.media.MediaCardList
+import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
 
 /**
  * @author Antoine Pirlot on 01/02/24
@@ -56,7 +57,8 @@ import io.github.antoinepirlot.satunes.ui.components.cards.media.MediaCardList
 internal fun MediaListView(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    mediaImplList: List<MediaImpl>,
+    playbackViewModel: PlaybackViewModel = viewModel(),
+    mediaImplCollection: Collection<MediaImpl>,
     openMedia: (mediaImpl: MediaImpl) -> Unit,
     openedPlaylistWithMusics: Playlist? = null,
     onFABClick: () -> Unit,
@@ -71,19 +73,19 @@ internal fun MediaListView(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 extraButtons()
-                if (PlaybackController.getInstance().musicPlaying.value != null) {
+                if (playbackViewModel.musicPlaying != null) {
                     ShowCurrentMusicButton(onClick = onFABClick)
                 }
             }
         },
         floatingActionButtonPosition = FabPosition.End
     ) { innerPadding ->
-        if (mediaImplList.isNotEmpty()) {
+        if (mediaImplCollection.isNotEmpty()) {
             MediaCardList(
                 modifier = Modifier.padding(innerPadding),
                 navController = navController,
                 header = header,
-                mediaImplList = mediaImplList,
+                mediaImplCollection = mediaImplCollection,
                 openMedia = openMedia,
                 openedPlaylist = openedPlaylistWithMusics
             )
@@ -117,7 +119,7 @@ private fun MediaListViewPreview() {
     val navController: NavHostController = rememberNavController()
     MediaListView(
         navController = navController,
-        mediaImplList = map,
+        mediaImplCollection = map,
         openMedia = {},
         onFABClick = {},
         openedPlaylistWithMusics = null,

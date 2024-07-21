@@ -45,7 +45,7 @@ import java.io.InputStreamReader
  */
 @Throws(IOException::class)
 fun readTextFromUri(context: Context, uri: Uri, showToast: Boolean = false): String? {
-    val logger = SatunesLogger(name = null)
+    val logger = SatunesLogger.getLogger()
     return try {
         val stringBuilder = StringBuilder()
         context.contentResolver.openInputStream(uri)?.use { inputStream ->
@@ -81,7 +81,7 @@ fun readTextFromUri(context: Context, uri: Uri, showToast: Boolean = false): Str
  * Copied from https://developer.android.com/training/data-storage/shared/documents-files?hl=fr#edit
  */
 fun writeToUri(context: Context, uri: Uri, string: String): Boolean {
-    val logger = SatunesLogger(name = null)
+    val logger = SatunesLogger.getLogger()
     return try {
         context.contentResolver.openFileDescriptor(uri, "w")
             ?.use { parcelFileDescriptor: ParcelFileDescriptor ->

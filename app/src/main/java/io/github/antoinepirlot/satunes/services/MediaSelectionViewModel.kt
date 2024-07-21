@@ -25,53 +25,58 @@
 
 package io.github.antoinepirlot.satunes.services
 
+import androidx.lifecycle.ViewModel
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
 
 /**
  * @author Antoine Pirlot on 30/03/2024
  */
-internal object MediaSelectionManager {
+internal class MediaSelectionViewModel : ViewModel() {
     /**
-     * Mutable list of checked playlists' ids to know where to add music from form
+     * List of checked playlists' ids to know where to add music from form
      */
-    private val checkedPlaylistWithMusics: MutableList<Playlist> = mutableListOf()
+    private val _checkedPlaylistWithMusics: MutableList<Playlist> = mutableListOf()
+    private val _checkedMusics: MutableList<Music> = mutableListOf()
 
-    private val checkedMusics: MutableList<Music> = mutableListOf()
+    fun clearAll() {
+        this.clearCheckedMusics()
+        this.clearCheckedPlaylistWithMusics()
+    }
 
-    internal fun getCheckedPlaylistWithMusics(): List<Playlist> {
-        val list: List<Playlist> = checkedPlaylistWithMusics.toList()
+    fun getCheckedPlaylistWithMusics(): List<Playlist> {
+        val list: List<Playlist> = _checkedPlaylistWithMusics.toList()
         clearCheckedPlaylistWithMusics()
         return list
     }
 
-    internal fun addPlaylist(playlist: Playlist) {
-        checkedPlaylistWithMusics.add(playlist)
+    fun addPlaylist(playlist: Playlist) {
+        _checkedPlaylistWithMusics.add(playlist)
     }
 
-    internal fun removePlaylist(playlist: Playlist) {
-        checkedPlaylistWithMusics.remove(playlist)
+    fun removePlaylist(playlist: Playlist) {
+        _checkedPlaylistWithMusics.remove(playlist)
     }
 
-    internal fun clearCheckedPlaylistWithMusics() {
-        checkedPlaylistWithMusics.clear()
+    fun clearCheckedPlaylistWithMusics() {
+        _checkedPlaylistWithMusics.clear()
     }
 
-    internal fun getCheckedMusics(): List<Music> {
-        val list: List<Music> = checkedMusics.toList()
+    fun getCheckedMusics(): List<Music> {
+        val list: List<Music> = _checkedMusics.toList()
         clearCheckedMusics()
         return list
     }
 
-    internal fun addMusic(music: Music) {
-        checkedMusics.add(music)
+    fun addMusic(music: Music) {
+        _checkedMusics.add(music)
     }
 
-    internal fun removeMusic(music: Music) {
-        checkedMusics.remove(music)
+    fun removeMusic(music: Music) {
+        _checkedMusics.remove(music)
     }
 
-    internal fun clearCheckedMusics() {
-        checkedMusics.clear()
+    fun clearCheckedMusics() {
+        _checkedMusics.clear()
     }
 }

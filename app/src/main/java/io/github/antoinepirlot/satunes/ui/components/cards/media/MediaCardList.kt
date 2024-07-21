@@ -32,11 +32,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Playlist
-import io.github.antoinepirlot.satunes.playback.services.PlaybackController
+import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
 
 /**
  * @author Antoine Pirlot on 16/01/24
@@ -46,15 +47,22 @@ import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 internal fun MediaCardList(
     modifier: Modifier = Modifier,
     navController: NavHostController,
+    playbackViewModel: PlaybackViewModel = viewModel(),
     header: @Composable (() -> Unit)? = null,
-    mediaImplList: List<MediaImpl>,
+    mediaImplCollection: Collection<MediaImpl>,
     openMedia: (mediaImpl: MediaImpl) -> Unit,
     openedPlaylist: Playlist? = null,
     scrollToMusicPlaying: Boolean = false,
 ) {
     val lazyListState = rememberLazyListState()
+    val mediaListToLoad: List<MediaImpl> =
+        try {
+            mediaImplCollection as List<MediaImpl>
+        } catch (_: ClassCastException) {
+            mediaImplCollection.toList()
+        }
 
-    if (mediaImplList.isEmpty()) {
+    if (mediaImplCollection.isEmpty()) {
         // It fixes issue while accessing last folder in chain
         return
     }
@@ -64,10 +72,10 @@ internal fun MediaCardList(
         state = lazyListState
     ) {
         items(
-            items = mediaImplList,
+            items = mediaListToLoad,
             key = { it.javaClass.name + '-' + it.id }
         ) { media: MediaImpl ->
-            if (media == mediaImplList.first()) {
+            if (media == mediaImplCollection.first()) {
                 if (header != null) {
                     header()
                 }
@@ -85,7 +93,7 @@ internal fun MediaCardList(
     if (scrollToMusicPlaying) {
         LaunchedEffect(key1 = Unit) {
             lazyListState.scrollToItem(
-                PlaybackController.getInstance().getMusicPlayingIndexPosition()
+                playbackViewModel.getMusicPlayingIndexPosition()
             )
         }
     }
@@ -98,7 +106,7 @@ private fun CardListPreview() {
     MediaCardList(
         navController = navController,
         header = {},
-        mediaImplList = listOf(),
+        mediaImplCollection = listOf(),
         openMedia = {},
         openedPlaylist = null,
         scrollToMusicPlaying = false

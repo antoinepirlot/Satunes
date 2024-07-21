@@ -136,14 +136,6 @@ object SettingsManager {
     var audioOffloadChecked: Boolean = DEFAULT_AUDIO_OFFLOAD_CHECKED
         private set
 
-    val navBarSectionCheckedMap: Map<NavBarSection, Boolean> = mapOf(
-        Pair(NavBarSection.FOLDERS, foldersChecked.value),
-        Pair(NavBarSection.ARTISTS, artistsChecked.value),
-        Pair(NavBarSection.ALBUMS, albumsChecked.value),
-        Pair(NavBarSection.GENRES, genresChecked.value),
-        Pair(NavBarSection.PLAYLISTS, playlistsChecked.value)
-    )
-
     var whatsNewSeen: Boolean = DEFAULT_WHATS_NEW_SEEN
         private set
 

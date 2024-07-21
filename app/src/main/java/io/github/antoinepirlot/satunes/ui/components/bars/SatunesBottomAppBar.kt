@@ -39,7 +39,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.ui.ScreenSizes
-import io.github.antoinepirlot.satunes.ui.states.SatunesUiState
 import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
 
 /**
@@ -51,10 +50,7 @@ internal fun SatunesBottomAppBar(
     modifier: Modifier = Modifier,
     navController: NavHostController,
     satunesViewModel: SatunesViewModel = viewModel(),
-    satunesUiState: SatunesUiState
 ) {
-//    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
-
     val screenWidthDp = LocalConfiguration.current.screenWidthDp
     val navigationModifier: Modifier =
         if (screenWidthDp < ScreenSizes.VERY_VERY_SMALL) modifier.fillMaxHeight(0.11f) else modifier
@@ -113,5 +109,5 @@ internal fun SatunesBottomAppBar(
 @Composable
 private fun SatunesBottomAppBarPreview() {
     val navController: NavHostController = rememberNavController()
-//    SatunesBottomAppBar(navController = navController)
+    SatunesBottomAppBar(navController = navController)
 }

@@ -37,6 +37,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.models.SwitchSettings
 import io.github.antoinepirlot.satunes.ui.components.settings.SettingsSwitchList
 import io.github.antoinepirlot.satunes.ui.components.texts.Title
 import io.github.antoinepirlot.satunes.ui.states.SatunesUiState
@@ -53,10 +54,18 @@ internal fun BottomNavigationBarSettingsView(
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
 
+    val navBarSectionSettingsChecked: Map<SwitchSettings, Boolean> = mapOf(
+        Pair(first = SwitchSettings.FOLDERS_CHECKED, second = satunesUiState.foldersChecked),
+        Pair(first = SwitchSettings.ARTISTS_CHECKED, second = satunesUiState.artistsChecked),
+        Pair(first = SwitchSettings.ALBUMS_CHECKED, second = satunesUiState.albumsChecked),
+        Pair(first = SwitchSettings.GENRES_CHECKED, second = satunesUiState.genresChecked),
+        Pair(first = SwitchSettings.PLAYLISTS_CHECKED, second = satunesUiState.playlistsChecked),
+    )
+
     val scrollState: ScrollState = rememberScrollState()
     Column(modifier = modifier.verticalScroll(scrollState)) {
         Title(text = stringResource(id = R.string.bottom_bar))
-        SettingsSwitchList(checkedMap = satunesUiState.navBarSectionSettingsChecked)
+        SettingsSwitchList(checkedMap = navBarSectionSettingsChecked)
     }
 }
 

@@ -37,7 +37,6 @@ import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.models.SearchChips
-import io.github.antoinepirlot.satunes.models.SwitchSettings
 import io.github.antoinepirlot.satunes.ui.states.SatunesUiState
 import io.github.antoinepirlot.satunes.ui.viewmodels.utils.isAudioAllowed
 import kotlinx.coroutines.CoroutineScope
@@ -152,28 +151,6 @@ internal class SatunesViewModel : ViewModel() {
                 albumsChecked = SettingsManager.albumsChecked.value,
                 genresChecked = SettingsManager.genresChecked.value,
                 playlistsChecked = SettingsManager.playlistsChecked.value,
-                navBarSectionSettingsChecked = mapOf(
-                    Pair(
-                        first = SwitchSettings.FOLDERS_CHECKED,
-                        second = SettingsManager.foldersChecked.value
-                    ),
-                    Pair(
-                        first = SwitchSettings.ARTISTS_CHECKED,
-                        second = SettingsManager.artistsChecked.value
-                    ),
-                    Pair(
-                        first = SwitchSettings.ALBUMS_CHECKED,
-                        second = SettingsManager.albumsChecked.value
-                    ),
-                    Pair(
-                        first = SwitchSettings.GENRES_CHECKED,
-                        second = SettingsManager.genresChecked.value
-                    ),
-                    Pair(
-                        first = SwitchSettings.PLAYLISTS_CHECKED,
-                        second = SettingsManager.playlistsChecked.value
-                    ),
-                )
             )
         }
     }

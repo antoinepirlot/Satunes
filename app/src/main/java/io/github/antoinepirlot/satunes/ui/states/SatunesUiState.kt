@@ -59,14 +59,6 @@ internal data class SatunesUiState(
         else if (albumsChecked) NavBarSection.ALBUMS
         else if (genresChecked) NavBarSection.GENRES
         else NavBarSection.MUSICS,
-    val navBarSectionSettingsChecked: Map<SwitchSettings, Boolean> = mapOf(
-        Pair(first = SwitchSettings.FOLDERS_CHECKED, second = foldersChecked),
-        Pair(first = SwitchSettings.ARTISTS_CHECKED, second = artistsChecked),
-        Pair(first = SwitchSettings.ALBUMS_CHECKED, second = albumsChecked),
-        Pair(first = SwitchSettings.GENRES_CHECKED, second = genresChecked),
-        Pair(first = SwitchSettings.PLAYLISTS_CHECKED, second = playlistsChecked),
-    ),
-
     val includeRingtonesChecked: Boolean = SettingsManager.includeRingtonesChecked,
     val exclusionSettingsChecked: Map<SwitchSettings, Boolean> = mapOf(
         Pair(first = SwitchSettings.INCLUDE_RINGTONES, second = includeRingtonesChecked)
@@ -78,8 +70,4 @@ internal data class SatunesUiState(
     val repeatMode: Int = SettingsManager.repeatMode,
     val audioOffloadChecked: Boolean = SettingsManager.audioOffloadChecked,
     val barSpeed: Float = SettingsManager.barSpeed,
-) {
-    init {
-
-    }
-}
+)

@@ -20,6 +20,7 @@ Améliorations, optimisations et dépannage:
   Satunes
 * Désormais, la lecture de musique à partir d'un dossier chargera d'abord ses musiques, puis celles
   de ses sous-dossiers, toujours triées par titre.
+* Ajout d'icônes pour identifier les paramètres plus facilement.
 
 ## 1.3 (Android 5.1.1 Lollipop et ultérieur)
 

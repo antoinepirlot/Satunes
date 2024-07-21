@@ -54,7 +54,7 @@ internal fun AllAlbumsListView(
     dataViewModel: DataViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
 ) {
-    val albumSet: Set<Album> = dataViewModel.albumSet
+    val albumSet: Set<Album> = dataViewModel.getAlbumSet()
 
     MediaListView(
         modifier = modifier,

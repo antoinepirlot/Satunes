@@ -66,7 +66,7 @@ internal fun PlaylistListView(
     val context: Context = LocalContext.current
     var openAlertDialog by remember { mutableStateOf(false) }
     Column(modifier = modifier) {
-        val playlistSet: Set<Playlist> = dataViewModel.playlistSet
+        val playlistSet: Set<Playlist> = dataViewModel.getPlaylistSet()
 
         //Recompose if data changed
         var mapChanged: Boolean = dataViewModel.playlistSetUpdated

@@ -34,15 +34,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
-import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.services.MediaSelectionManager
 import io.github.antoinepirlot.satunes.ui.components.buttons.playback.CustomActionButton
 import io.github.antoinepirlot.satunes.ui.components.dialog.MediaSelectionDialog
+import io.github.antoinepirlot.satunes.ui.viewmodels.DataViewModel
 
 /**
  * @author Antoine Pirlot on 01/06/2024
@@ -51,6 +52,7 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.MediaSelectionDialog
 @Composable
 internal fun AddToPlaylistCustomAction(
     modifier: Modifier = Modifier,
+    dataViewModel: DataViewModel = viewModel(),
     music: Music,
 ) {
     val context: Context = LocalContext.current
@@ -64,10 +66,10 @@ internal fun AddToPlaylistCustomAction(
     )
 
     if (showForm) {
-        val playlistMap: Set<Playlist> = DataManager.getPlaylistSet()
+        val playlistMap: Set<Playlist> = dataViewModel.getPlaylistSet()
 
         //Recompose if data changed
-        var mapChanged: Boolean by rememberSaveable { DataManager.playlistsMapUpdated }
+        var mapChanged: Boolean = dataViewModel.playlistSetUpdated
         if (mapChanged) {
             mapChanged = false
         }

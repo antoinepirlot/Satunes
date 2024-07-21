@@ -42,35 +42,22 @@ import io.github.antoinepirlot.satunes.database.services.data.DataManager
 class DataViewModel : ViewModel() {
     private val _playlistSetUpdated: MutableState<Boolean> = DataManager.playlistsMapUpdated
 
-    val rootFolderSet: Set<Folder> = DataManager.getRootFolderSet()
-    val artistSet: Set<Artist> = DataManager.getArtistSet()
-    val albumSet: Set<Album> = DataManager.getAlbumSet()
-    val genreSet: Set<Genre> = DataManager.getGenreSet()
-    val musicSet: Set<Music> = DataManager.getMusicSet()
-    val playlistSet: Set<Playlist> = DataManager.getPlaylistSet()
     val playlistSetUpdated: Boolean by _playlistSetUpdated
 
     fun playlistMapUpdated() {
         this._playlistSetUpdated.value = false
     }
 
-    fun getFolder(id: Long): Folder {
-        return DataManager.getFolder(id = id)
-    }
+    fun getRootFolderSet(): Set<Folder> = DataManager.getRootFolderSet()
+    fun getArtistSet(): Set<Artist> = DataManager.getArtistSet()
+    fun getAlbumSet(): Set<Album> = DataManager.getAlbumSet()
+    fun getGenreSet(): Set<Genre> = DataManager.getGenreSet()
+    fun getMusicSet(): Set<Music> = DataManager.getMusicSet()
+    fun getPlaylistSet(): Set<Playlist> = DataManager.getPlaylistSet()
 
-    fun getArtist(id: Long): Artist {
-        return DataManager.getArtist(id = id)
-    }
-
-    fun getAlbum(id: Long): Album {
-        return DataManager.getAlbum(id = id)
-    }
-
-    fun getGenre(id: Long): Genre {
-        return DataManager.getGenre(id = id)
-    }
-
-    fun getPlaylist(id: Long): Playlist {
-        return DataManager.getPlaylist(id = id)
-    }
+    fun getFolder(id: Long): Folder = DataManager.getFolder(id = id)
+    fun getArtist(id: Long): Artist = DataManager.getArtist(id = id)
+    fun getAlbum(id: Long): Album = DataManager.getAlbum(id = id)
+    fun getGenre(id: Long): Genre = DataManager.getGenre(id = id)
+    fun getPlaylist(id: Long): Playlist = DataManager.getPlaylist(id = id)
 }

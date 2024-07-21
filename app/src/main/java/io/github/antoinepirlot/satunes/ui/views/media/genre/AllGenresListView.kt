@@ -54,7 +54,7 @@ internal fun AllGenresListView(
     dataViewModel: DataViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
 ) {
-    val genreSet: Set<Genre> = dataViewModel.genreSet
+    val genreSet: Set<Genre> = dataViewModel.getGenreSet()
 
     MediaListView(
         modifier = modifier,

@@ -57,12 +57,12 @@ import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
-import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.models.SearchChips
 import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.chips.MediaChipList
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
+import io.github.antoinepirlot.satunes.ui.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
@@ -81,6 +81,7 @@ internal fun SearchView(
     modifier: Modifier = Modifier,
     navController: NavHostController,
     satunesViewModel: SatunesViewModel = viewModel(),
+    dataViewModel: DataViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
 ) {
     val context: Context = LocalContext.current
@@ -97,6 +98,7 @@ internal fun SearchView(
         searchJob = searchCoroutine.launch {
             search(
                 context = context,
+                dataViewModel = dataViewModel,
                 selectedSearchChips = selectedSearchChips,
                 mediaImplList = mediaImplList,
                 query = query
@@ -139,7 +141,7 @@ internal fun SearchView(
             mediaImplCollection = mediaImplList,
             openMedia = { mediaImpl: MediaImpl ->
                 if (mediaImpl is Music) {
-                    playbackViewModel.loadMusic(musicSet = DataManager.getMusicSet())
+                    playbackViewModel.loadMusic(musicSet = dataViewModel.getMusicSet())
                 }
                 openMedia(
                     playbackViewModel = playbackViewModel,
@@ -160,6 +162,7 @@ internal fun SearchView(
 
 private fun search(
     context: Context,
+    dataViewModel: DataViewModel,
     selectedSearchChips: List<SearchChips>,
     mediaImplList: MutableList<MediaImpl>,
     query: String
@@ -174,7 +177,7 @@ private fun search(
     val query: String = query.lowercase()
 
     for (searchChip: SearchChips in selectedSearchChips) {
-        DataManager.getMusicSet().forEach { music: Music ->
+        dataViewModel.getMusicSet().forEach { music: Music ->
             when (searchChip) {
                 SearchChips.MUSICS -> {
                     if (music.title.lowercase().contains(query)) {
@@ -221,7 +224,7 @@ private fun search(
             }
         }
         if (searchChip == SearchChips.PLAYLISTS) {
-            DataManager.getPlaylistSet().forEach { playlist: Playlist ->
+            dataViewModel.getPlaylistSet().forEach { playlist: Playlist ->
                 if (playlist.title == LIKES_PLAYLIST_TITLE) {
                     playlist.title = context.getString(RDb.string.likes_playlist_title)
                 }

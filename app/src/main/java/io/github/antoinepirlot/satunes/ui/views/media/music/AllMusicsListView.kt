@@ -55,7 +55,7 @@ internal fun AllMusicsListView(
     playbackViewModel: PlaybackViewModel = viewModel(),
 ) {
     //Find a way to do something more aesthetic but it works
-    val musicSet: Set<Music> = dataViewModel.musicSet
+    val musicSet: Set<Music> = dataViewModel.getMusicSet()
 
     MediaListView(
         modifier = modifier,

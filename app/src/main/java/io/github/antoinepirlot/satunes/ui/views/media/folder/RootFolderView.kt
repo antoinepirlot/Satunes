@@ -55,7 +55,7 @@ internal fun RootFolderView(
     dataViewModel: DataViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
 ) {
-    val rootFolderSet: Set<Folder> = dataViewModel.rootFolderSet
+    val rootFolderSet: Set<Folder> = dataViewModel.getRootFolderSet()
 
     MediaListView(
         modifier = modifier,

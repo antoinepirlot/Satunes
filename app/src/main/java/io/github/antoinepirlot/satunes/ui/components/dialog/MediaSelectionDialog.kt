@@ -38,17 +38,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
-import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.services.MediaSelectionManager
 import io.github.antoinepirlot.satunes.ui.components.forms.MediaSelectionForm
 import io.github.antoinepirlot.satunes.ui.components.forms.PlaylistCreationForm
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
+import io.github.antoinepirlot.satunes.ui.viewmodels.DataViewModel
 
 /**
  * @author Antoine Pirlot on 30/03/2024
@@ -109,6 +110,7 @@ private fun CreateNewPlaylistForm(
 @Composable
 private fun MediaSelectionDialogList(
     modifier: Modifier,
+    dataViewModel: DataViewModel = viewModel(),
     showPlaylistCreation: MutableState<Boolean>,
     onDismissRequest: () -> Unit,
     onConfirm: () -> Unit,
@@ -136,7 +138,7 @@ private fun MediaSelectionDialogList(
         text = {
             Column {
                 if (
-                    mediaImplCollection.isEmpty() && DataManager.getPlaylistSet()
+                    mediaImplCollection.isEmpty() && dataViewModel.getPlaylistSet()
                         .isNotEmpty() || // Avoid having create new playlistDB when user has no music
                     mediaImplCollection.isEmpty() || mediaImplCollection.first() is Playlist
                 ) {

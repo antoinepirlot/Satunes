@@ -43,7 +43,6 @@ import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
-import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
@@ -52,6 +51,7 @@ import io.github.antoinepirlot.satunes.services.MediaSelectionManager
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
 import io.github.antoinepirlot.satunes.ui.components.dialog.MediaSelectionDialog
 import io.github.antoinepirlot.satunes.ui.components.texts.Title
+import io.github.antoinepirlot.satunes.ui.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 import io.github.antoinepirlot.satunes.database.R as RDb
@@ -63,6 +63,7 @@ import io.github.antoinepirlot.satunes.database.R as RDb
 @Composable
 internal fun PlaylistView(
     modifier: Modifier = Modifier,
+    dataViewModel: DataViewModel = viewModel(),
     navController: NavHostController,
     playbackViewModel: PlaybackViewModel = viewModel(),
     playlist: Playlist,
@@ -127,7 +128,7 @@ internal fun PlaylistView(
         emptyViewText = stringResource(id = R.string.no_music_in_playlist)
     )
     if (openAddMusicsDialog) {
-        val allMusic: Set<Music> = DataManager.getMusicSet()
+        val allMusic: Set<Music> = dataViewModel.getMusicSet()
         val context: Context = LocalContext.current
         MediaSelectionDialog(
             onDismissRequest = { openAddMusicsDialog = false },

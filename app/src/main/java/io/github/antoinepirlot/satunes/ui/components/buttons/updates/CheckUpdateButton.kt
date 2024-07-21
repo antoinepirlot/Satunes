@@ -25,7 +25,6 @@
 
 package io.github.antoinepirlot.satunes.ui.components.buttons.updates
 
-import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.material3.Button
@@ -33,7 +32,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedback
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -52,7 +50,6 @@ internal fun CheckUpdateButton(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
 ) {
-    val context: Context = LocalContext.current
     val haptics: HapticFeedback = LocalHapticFeedback.current
     Button(
         modifier = modifier,

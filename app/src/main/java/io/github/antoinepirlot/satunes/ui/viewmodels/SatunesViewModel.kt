@@ -35,7 +35,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
-import androidx.navigation.NavHostController
 import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.database.services.data.DataLoader
@@ -43,9 +42,7 @@ import io.github.antoinepirlot.satunes.database.services.settings.SettingsManage
 import io.github.antoinepirlot.satunes.internet.updates.APKDownloadStatus
 import io.github.antoinepirlot.satunes.internet.updates.UpdateAvailableStatus
 import io.github.antoinepirlot.satunes.internet.updates.UpdateCheckManager
-import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.models.SearchChips
-import io.github.antoinepirlot.satunes.models.settingsDestinations
 import io.github.antoinepirlot.satunes.ui.states.SatunesUiState
 import io.github.antoinepirlot.satunes.ui.viewmodels.utils.isAudioAllowed
 import kotlinx.coroutines.CoroutineScope
@@ -114,8 +111,6 @@ internal class SatunesViewModel : ViewModel() {
     var updateAvailableStatus: UpdateAvailableStatus by _updateAvailableStatus
         private set
     var isCheckingUpdate: Boolean by _isCheckingUpdate
-        private set
-    var latestVersion: String? by _latestVersion
         private set
     var downloadStatus: APKDownloadStatus by _downloadStatus
         private set
@@ -328,39 +323,6 @@ internal class SatunesViewModel : ViewModel() {
     fun unselect(searchChip: SearchChips) {
         _filtersList[searchChip] = false
         selectedSearchChips.remove(searchChip)
-    }
-
-    /**
-     * When currentDestination is the settings list, then return to app only if audio permission has been allowed.
-     * Otherwise navigate to settings
-     */
-    private fun onSettingButtonClick(
-        uiState: SatunesUiState,
-        navController: NavHostController,
-        satunesViewModel: SatunesViewModel,
-    ) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (satunesViewModel.updateAvailableStatus != UpdateAvailableStatus.AVAILABLE) {
-                satunesViewModel.updateAvailableStatus =
-                    UpdateAvailableStatus.UNDEFINED
-            }
-        }
-
-        when (val currentDestination: String = uiState.currentDestination) {
-            in settingsDestinations -> {
-                if (currentDestination == Destination.PERMISSIONS_SETTINGS.link && uiState.isAudioAllowed) {
-                    return
-                } else {
-                    navController.popBackStack()
-                    if (navController.currentBackStackEntry == null) {
-                        navController.navigate(Destination.FOLDERS.link)
-                        navController.navigate(Destination.SETTINGS.link)
-                    }
-                }
-            }
-
-            else -> navController.navigate(Destination.SETTINGS.link)
-        }
     }
 
     fun resetUpdatesStatus() {

@@ -19,7 +19,7 @@ Improvements, Optimizations and Troubleshooting:
 * Implementing the use of ViewModel and UiState for a better Satunes' states management
 * Now playing music from folder will first load its musics then its subfolders' musics always sorted
   by title.
-
+* Add icons in settings to identify them easily.
 ## 1.3 (Android 5.1.1 Lollipop and later)
 
 ### 1.3.1

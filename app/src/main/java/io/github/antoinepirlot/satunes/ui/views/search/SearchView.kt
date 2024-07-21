@@ -25,7 +25,6 @@
 
 package io.github.antoinepirlot.satunes.ui.views.search
 
-import android.content.Context
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -40,12 +39,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -53,10 +50,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.models.SearchChips
 import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.router.utils.openMedia
@@ -65,11 +60,11 @@ import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 import io.github.antoinepirlot.satunes.ui.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
+import io.github.antoinepirlot.satunes.ui.viewmodels.SearchViewModel
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import io.github.antoinepirlot.satunes.database.R as RDb
 
 /**
  * @author Antoine Pirlot on 27/06/2024
@@ -83,10 +78,10 @@ internal fun SearchView(
     satunesViewModel: SatunesViewModel = viewModel(),
     dataViewModel: DataViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
+    searchViewModel: SearchViewModel = viewModel(),
 ) {
-    val context: Context = LocalContext.current
-    var query: String by rememberSaveable { mutableStateOf("") }
-    val mediaImplList: MutableList<MediaImpl> = remember { SnapshotStateList() }
+    val query: String = searchViewModel.query
+    val mediaImplList: List<MediaImpl> = searchViewModel.mediaImplList
     val selectedSearchChips: List<SearchChips> = satunesViewModel.selectedSearchChips
 
     val searchCoroutine: CoroutineScope = rememberCoroutineScope()
@@ -96,12 +91,9 @@ internal fun SearchView(
             searchJob!!.cancel()
         }
         searchJob = searchCoroutine.launch {
-            search(
-                context = context,
+            searchViewModel.search(
                 dataViewModel = dataViewModel,
                 selectedSearchChips = selectedSearchChips,
-                mediaImplList = mediaImplList,
-                query = query
             )
         }
     }
@@ -109,7 +101,7 @@ internal fun SearchView(
     var resetSelectedChips: Boolean by rememberSaveable { mutableStateOf(true) }
     if (resetSelectedChips) {
         LaunchedEffect(key1 = true) {
-            satunesViewModel.resetSelectedChips(context = context)
+            satunesViewModel.resetSelectedChips()
         }
         resetSelectedChips = false
     }
@@ -127,8 +119,8 @@ internal fun SearchView(
         SearchBar(
             modifier = Modifier.focusRequester(focusRequester),
             query = query,
-            onQueryChange = { query = it },
-            onSearch = { query = it },
+            onQueryChange = { searchViewModel.updateQuery(value = it) },
+            onSearch = { searchViewModel.updateQuery(value = it) },
             active = false,
             onActiveChange = { /* Do not use active mode */ },
             placeholder = { NormalText(text = stringResource(id = R.string.search_placeholder)) },
@@ -158,83 +150,6 @@ internal fun SearchView(
             emptyViewText = stringResource(id = R.string.no_result)
         )
     }
-}
-
-private fun search(
-    context: Context,
-    dataViewModel: DataViewModel,
-    selectedSearchChips: List<SearchChips>,
-    mediaImplList: MutableList<MediaImpl>,
-    query: String
-) {
-    mediaImplList.clear()
-    if (query.isBlank()) {
-        // Prevent loop if string is "" or " "
-        return
-    }
-
-    @Suppress("NAME_SHADOWING")
-    val query: String = query.lowercase()
-
-    for (searchChip: SearchChips in selectedSearchChips) {
-        dataViewModel.getMusicSet().forEach { music: Music ->
-            when (searchChip) {
-                SearchChips.MUSICS -> {
-                    if (music.title.lowercase().contains(query)) {
-                        if (!mediaImplList.contains(music)) {
-                            mediaImplList.add(element = music)
-                        }
-                    }
-                }
-
-                SearchChips.ARTISTS -> {
-                    if (music.artist.title.lowercase().contains(query)) {
-                        if (!mediaImplList.contains(music.artist)) {
-                            mediaImplList.add(element = music.artist)
-                        }
-                    }
-                }
-
-                SearchChips.ALBUMS -> {
-                    if (music.album.title.lowercase().contains(query)) {
-                        if (!mediaImplList.contains(music.album)) {
-                            mediaImplList.add(element = music.album)
-                        }
-                    }
-                }
-
-                SearchChips.GENRES -> {
-                    if (music.genre.title.lowercase().contains(query)) {
-                        if (!mediaImplList.contains(music.genre)) {
-                            mediaImplList.add(element = music.genre)
-                        }
-                    }
-                }
-
-                SearchChips.FOLDERS -> {
-                    if (music.folder.title.lowercase().contains(query)) {
-                        if (!mediaImplList.contains(music.folder)) {
-                            mediaImplList.add(element = music.folder)
-                        }
-                    }
-                }
-
-                SearchChips.PLAYLISTS -> { /* Nothing at this stage, see below */
-                }
-            }
-        }
-        if (searchChip == SearchChips.PLAYLISTS) {
-            dataViewModel.getPlaylistSet().forEach { playlist: Playlist ->
-                if (playlist.title == LIKES_PLAYLIST_TITLE) {
-                    playlist.title = context.getString(RDb.string.likes_playlist_title)
-                }
-                if (playlist.title.lowercase().contains(query)) {
-                    mediaImplList.add(element = playlist)
-                }
-            }
-        }
-    }
-    mediaImplList.sort()
 }
 
 @Preview

@@ -34,8 +34,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -45,7 +43,6 @@ import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.models.SearchChips
 import io.github.antoinepirlot.satunes.models.allSearchChips
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
-import io.github.antoinepirlot.satunes.ui.states.SatunesUiState
 import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
 
 /**
@@ -57,8 +54,6 @@ internal fun MediaChipList(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
 ) {
-    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
-
     val scrollState: ScrollState = rememberScrollState()
     val searchChipsList: List<SearchChips> = allSearchChips
     Row(

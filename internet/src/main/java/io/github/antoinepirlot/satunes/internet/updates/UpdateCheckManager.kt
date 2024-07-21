@@ -58,13 +58,14 @@ import okhttp3.Response
 
 @RequiresApi(Build.VERSION_CODES.M)
 object UpdateCheckManager {
+    private val _logger = SatunesLogger.getLogger()
+
     val updateAvailableStatus: MutableState<UpdateAvailableStatus> =
         mutableStateOf(UpdateAvailableStatus.UNDEFINED)
     val isCheckingUpdate: MutableState<Boolean> = mutableStateOf(false)
     val latestVersion: MutableState<String?> = mutableStateOf(null)
     val downloadStatus: MutableState<APKDownloadStatus> =
         mutableStateOf(APKDownloadStatus.NOT_STARTED)
-    private val logger = SatunesLogger.getLogger()
 
     /**
      * Create a httpclient and get the response matching url.
@@ -87,7 +88,7 @@ object UpdateCheckManager {
                 .build()
             httpClient.newCall(req).execute()
         } catch (e: Throwable) {
-            logger.warning(e.message)
+            _logger.warning(e.message)
             null
         }
     }
@@ -142,7 +143,7 @@ object UpdateCheckManager {
                     context = context,
                     message = context.getString(R.string.cannot_check_update)
                 )
-                logger.warning(e.message)
+                _logger.warning(e.message)
                 e.printStackTrace()
             } finally {
                 isCheckingUpdate.value = false
@@ -176,7 +177,7 @@ object UpdateCheckManager {
         } else {
             val message =
                 "No update url found. Latest version is $latestVersion & currentVersion is $currentVersion"
-            logger.warning(message)
+            _logger.warning(message)
             null
         }
     }
@@ -185,7 +186,7 @@ object UpdateCheckManager {
         val versionName: String = try {
             context.packageManager.getPackageInfo(context.packageName, 0).versionName!!
         } catch (e: PackageManager.NameNotFoundException) {
-            logger.severe(e.message)
+            _logger.severe(e.message)
             throw e
         }
 

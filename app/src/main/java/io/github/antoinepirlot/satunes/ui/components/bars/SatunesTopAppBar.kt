@@ -50,8 +50,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.internet.updates.UpdateAvailableStatus
-import io.github.antoinepirlot.satunes.internet.updates.UpdateCheckManager
 import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.models.playbackViews
 import io.github.antoinepirlot.satunes.models.settingsDestinations
@@ -70,9 +68,9 @@ internal fun SatunesTopAppBar(
     modifier: Modifier = Modifier,
     scrollBehavior: TopAppBarScrollBehavior,
     navController: NavHostController,
-    viewModel: SatunesViewModel = viewModel(),
+    satunesViewModel: SatunesViewModel = viewModel(),
 ) {
-    val uiState: SatunesUiState by viewModel.uiState.collectAsState()
+    val uiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
 
     val screenWidthDp = LocalConfiguration.current.screenWidthDp
     val barModifier: Modifier =
@@ -130,6 +128,7 @@ internal fun SatunesTopAppBar(
             IconButton(onClick = {
                 onSettingButtonClick(
                     uiState = uiState,
+                    satunesViewModel = satunesViewModel,
                     navController = navController
                 )
             }) {
@@ -163,12 +162,13 @@ private fun onPlaybackQueueButtonClick(uiState: SatunesUiState, navController: N
  * When currentDestination is the settings list, then return to app only if audio permission has been allowed.
  * Otherwise navigate to settings
  */
-private fun onSettingButtonClick(uiState: SatunesUiState, navController: NavHostController) {
+private fun onSettingButtonClick(
+    uiState: SatunesUiState,
+    navController: NavHostController,
+    satunesViewModel: SatunesViewModel,
+) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        if (UpdateCheckManager.updateAvailableStatus.value != UpdateAvailableStatus.AVAILABLE) {
-            UpdateCheckManager.updateAvailableStatus.value =
-                UpdateAvailableStatus.UNDEFINED
-        }
+        satunesViewModel.resetUpdatesStatus()
     }
 
     when (val currentDestination: String = uiState.currentDestination) {

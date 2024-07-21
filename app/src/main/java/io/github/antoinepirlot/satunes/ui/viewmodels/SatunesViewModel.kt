@@ -25,18 +25,27 @@
 
 package io.github.antoinepirlot.satunes.ui.viewmodels
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
+import androidx.navigation.NavHostController
 import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
+import io.github.antoinepirlot.satunes.internet.updates.APKDownloadStatus
+import io.github.antoinepirlot.satunes.internet.updates.UpdateAvailableStatus
+import io.github.antoinepirlot.satunes.internet.updates.UpdateCheckManager
+import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.models.SearchChips
+import io.github.antoinepirlot.satunes.models.settingsDestinations
 import io.github.antoinepirlot.satunes.ui.states.SatunesUiState
 import io.github.antoinepirlot.satunes.ui.viewmodels.utils.isAudioAllowed
 import kotlinx.coroutines.CoroutineScope
@@ -51,6 +60,7 @@ import kotlinx.coroutines.runBlocking
 /**
  * @author Antoine Pirlot on 19/07/2024
  */
+@SuppressLint("NewApi")
 internal class SatunesViewModel : ViewModel() {
     private val _uiState: MutableStateFlow<SatunesUiState> = MutableStateFlow(SatunesUiState())
     private val _isLoadingData: MutableState<Boolean> = DataLoader.isLoading
@@ -72,6 +82,19 @@ internal class SatunesViewModel : ViewModel() {
         Pair(SearchChips.PLAYLISTS, SettingsManager.playlistsFilter),
     )
 
+    @RequiresApi(Build.VERSION_CODES.M)
+    private val _updateAvailableStatus: MutableState<UpdateAvailableStatus> =
+        UpdateCheckManager.updateAvailableStatus
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    private val _isCheckingUpdate: MutableState<Boolean> = UpdateCheckManager.isCheckingUpdate
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    private val _latestVersion: MutableState<String?> = UpdateCheckManager.latestVersion
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    private val _downloadStatus: MutableState<APKDownloadStatus> = UpdateCheckManager.downloadStatus
+
     val uiState: StateFlow<SatunesUiState> = _uiState.asStateFlow()
 
     val isLoadingData: Boolean by _isLoadingData
@@ -87,6 +110,15 @@ internal class SatunesViewModel : ViewModel() {
         private set
 
     val selectedSearchChips: MutableList<SearchChips> = SnapshotStateList()
+
+    var updateAvailableStatus: UpdateAvailableStatus by _updateAvailableStatus
+        private set
+    var isCheckingUpdate: Boolean by _isCheckingUpdate
+        private set
+    var latestVersion: String? by _latestVersion
+        private set
+    var downloadStatus: APKDownloadStatus by _downloadStatus
+        private set
 
     init {
         selectedSearchChips.addAll(_filtersList.filter { it.value }.keys)
@@ -297,4 +329,50 @@ internal class SatunesViewModel : ViewModel() {
         _filtersList[searchChip] = false
         selectedSearchChips.remove(searchChip)
     }
+
+    /**
+     * When currentDestination is the settings list, then return to app only if audio permission has been allowed.
+     * Otherwise navigate to settings
+     */
+    private fun onSettingButtonClick(
+        uiState: SatunesUiState,
+        navController: NavHostController,
+        satunesViewModel: SatunesViewModel,
+    ) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (satunesViewModel.updateAvailableStatus != UpdateAvailableStatus.AVAILABLE) {
+                satunesViewModel.updateAvailableStatus =
+                    UpdateAvailableStatus.UNDEFINED
+            }
+        }
+
+        when (val currentDestination: String = uiState.currentDestination) {
+            in settingsDestinations -> {
+                if (currentDestination == Destination.PERMISSIONS_SETTINGS.link && uiState.isAudioAllowed) {
+                    return
+                } else {
+                    navController.popBackStack()
+                    if (navController.currentBackStackEntry == null) {
+                        navController.navigate(Destination.FOLDERS.link)
+                        navController.navigate(Destination.SETTINGS.link)
+                    }
+                }
+            }
+
+            else -> navController.navigate(Destination.SETTINGS.link)
+        }
+    }
+
+    fun resetUpdatesStatus() {
+        if (updateAvailableStatus != UpdateAvailableStatus.AVAILABLE) {
+            updateAvailableStatus = UpdateAvailableStatus.UNDEFINED
+        }
+    }
+
+    fun checkUpdate() {
+        UpdateCheckManager.checkUpdate(context = MainActivity.instance.applicationContext)
+    }
+
+    fun getCurrentVersion(): String =
+        UpdateCheckManager.getCurrentVersion(context = MainActivity.instance.applicationContext)
 }

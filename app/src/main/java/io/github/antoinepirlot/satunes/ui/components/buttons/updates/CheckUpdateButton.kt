@@ -37,9 +37,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.internet.updates.UpdateCheckManager
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
+import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
 
 /**
  * @author Antoine Pirlot on 11/04/2024
@@ -49,6 +50,7 @@ import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 @Composable
 internal fun CheckUpdateButton(
     modifier: Modifier = Modifier,
+    satunesViewModel: SatunesViewModel = viewModel(),
 ) {
     val context: Context = LocalContext.current
     val haptics: HapticFeedback = LocalHapticFeedback.current
@@ -56,7 +58,7 @@ internal fun CheckUpdateButton(
         modifier = modifier,
         onClick = {
             haptics.performHapticFeedback(hapticFeedbackType = HapticFeedbackType.TextHandleMove)
-            UpdateCheckManager.checkUpdate(context = context)
+            satunesViewModel.checkUpdate()
         }
     ) {
         NormalText(text = stringResource(id = R.string.check_update))

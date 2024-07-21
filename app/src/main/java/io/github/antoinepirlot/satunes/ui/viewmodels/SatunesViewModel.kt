@@ -26,7 +26,6 @@
 package io.github.antoinepirlot.satunes.ui.viewmodels
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.MutableState
@@ -295,10 +294,10 @@ internal class SatunesViewModel : ViewModel() {
         }
     }
 
-    fun resetSelectedChips(context: Context) {
+    fun resetSelectedChips() {
         runBlocking {
             selectedSearchChips.clear()
-            SettingsManager.loadFilters(context = context)
+            SettingsManager.loadFilters(context = MainActivity.instance.applicationContext)
             _filtersList[SearchChips.MUSICS] = SettingsManager.musicsFilter
             _filtersList[SearchChips.ALBUMS] = SettingsManager.albumsFilter
             _filtersList[SearchChips.ARTISTS] = SettingsManager.artistsFilter

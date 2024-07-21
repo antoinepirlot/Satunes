@@ -39,6 +39,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.models.SwitchSettings
 import io.github.antoinepirlot.satunes.ui.components.settings.AudioOffloadSetting
 import io.github.antoinepirlot.satunes.ui.components.settings.BarSpeedSetting
 import io.github.antoinepirlot.satunes.ui.components.settings.PlaybackModesSubSettings
@@ -59,11 +60,23 @@ internal fun PlaybackSettingsView(
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
 
+    val playbackSettingsChecked: Map<SwitchSettings, Boolean> = mapOf(
+        Pair(
+            first = SwitchSettings.PLAYBACK_WHEN_CLOSED,
+            second = satunesUiState.playbackWhenClosedChecked
+        ),
+        Pair(first = SwitchSettings.PAUSE_IF_NOISY, second = satunesUiState.pauseIfNoisyChecked),
+        Pair(
+            first = SwitchSettings.PAUSE_IF_ANOTHER_PLAYBACK,
+            second = satunesUiState.pauseIfAnotherPlayback
+        )
+    )
+
     val scrollState: ScrollState = rememberScrollState()
     Column(modifier = modifier.verticalScroll(scrollState)) {
         Title(text = stringResource(id = R.string.playback_settings))
         SubSettings {
-            SettingsSwitchList(checkedMap = satunesUiState.playbackSettingsChecked) //Contains list item so always padding horizontal 16.dp
+            SettingsSwitchList(checkedMap = playbackSettingsChecked) //Contains list item so always padding horizontal 16.dp
             BarSpeedSetting(modifier = Modifier.padding(horizontal = 16.dp))
         }
         PlaybackModesSubSettings() //Contains list item so always padding horizontal 16.dp

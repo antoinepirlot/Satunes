@@ -83,12 +83,6 @@ internal data class SatunesUiState(
     val playbackWhenClosedChecked: Boolean = SettingsManager.playbackWhenClosedChecked,
     val pauseIfNoisyChecked: Boolean = SettingsManager.pauseIfNoisyChecked,
     val pauseIfAnotherPlayback: Boolean = SettingsManager.pauseIfAnotherPlayback,
-    val playbackSettingsChecked: Map<SwitchSettings, Boolean> = mapOf(
-        Pair(first = SwitchSettings.PLAYBACK_WHEN_CLOSED, second = playbackWhenClosedChecked),
-        Pair(first = SwitchSettings.PAUSE_IF_NOISY, second = pauseIfNoisyChecked),
-        Pair(first = SwitchSettings.PAUSE_IF_ANOTHER_PLAYBACK, second = pauseIfAnotherPlayback)
-    ),
-
     val shuffleMode: Boolean = SettingsManager.shuffleMode,
     val repeatMode: Int = SettingsManager.repeatMode,
     val audioOffloadChecked: Boolean = SettingsManager.audioOffloadChecked,

@@ -56,50 +56,25 @@ internal fun SatunesBottomAppBar(
         if (screenWidthDp < ScreenSizes.VERY_VERY_SMALL) modifier.fillMaxHeight(0.11f) else modifier
     val navigationItemModifier: Modifier =
         if (screenWidthDp < ScreenSizes.VERY_VERY_SMALL) Modifier.size(16.dp) else Modifier
+
+    val navBarSections: Map<NavBarSection, Boolean> = mapOf(
+        Pair(NavBarSection.FOLDERS, satunesViewModel.foldersChecked),
+        Pair(NavBarSection.ARTISTS, satunesViewModel.artistsChecked),
+        Pair(NavBarSection.ALBUMS, satunesViewModel.albumsChecked),
+        Pair(NavBarSection.GENRES, satunesViewModel.genresChecked),
+        Pair(NavBarSection.MUSICS, true), // Music is always checked
+        Pair(NavBarSection.PLAYLISTS, satunesViewModel.playlistsChecked)
+    )
+
     NavigationBar(modifier = navigationModifier) {
-        if (satunesViewModel.foldersChecked) {
-            MediaNavBarSelection(
-                modifier = navigationItemModifier,
-                navController = navController,
-                navBarSection = NavBarSection.FOLDERS
-            )
-        }
-
-        if (satunesViewModel.artistsChecked) {
-            MediaNavBarSelection(
-                modifier = navigationItemModifier,
-                navController = navController,
-                navBarSection = NavBarSection.ARTISTS
-            )
-        }
-
-        if (satunesViewModel.albumsChecked) {
-            MediaNavBarSelection(
-                modifier = navigationItemModifier,
-                navController = navController,
-                navBarSection = NavBarSection.ALBUMS
-            )
-        }
-        if (satunesViewModel.genresChecked) {
-            MediaNavBarSelection(
-                modifier = navigationItemModifier,
-                navController = navController,
-                navBarSection = NavBarSection.GENRES
-            )
-        }
-
-        MediaNavBarSelection(
-            modifier = navigationItemModifier,
-            navController = navController,
-            navBarSection = NavBarSection.MUSICS
-        )
-
-        if (satunesViewModel.playlistsChecked) {
-            MediaNavBarSelection(
-                modifier = navigationItemModifier,
-                navController = navController,
-                navBarSection = NavBarSection.PLAYLISTS
-            )
+        for ((navBarSection: NavBarSection, visible: Boolean) in navBarSections) {
+            if (visible) {
+                MediaNavBarSelection(
+                    modifier = navigationItemModifier,
+                    navController = navController,
+                    navBarSection = navBarSection
+                )
+            }
         }
     }
 }

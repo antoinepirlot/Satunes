@@ -71,15 +71,6 @@ internal data class SatunesUiState(
     val genresFilter: Boolean = SettingsManager.genresFilter,
     val foldersFilter: Boolean = SettingsManager.foldersFilter,
     val playlistsFilter: Boolean = SettingsManager.playlistsFilter,
-    val filterSettingsChecked: Map<SwitchSettings, Boolean> = mapOf(
-        Pair(SwitchSettings.MUSICS_FILTER, musicsFilter),
-        Pair(SwitchSettings.ALBUMS_FILTER, albumsFilter),
-        Pair(SwitchSettings.ARTISTS_FILTER, artistsFilter),
-        Pair(SwitchSettings.GENRES_FILTER, genresFilter),
-        Pair(SwitchSettings.FOLDERS_FILTER, foldersFilter),
-        Pair(SwitchSettings.PLAYLISTS_FILTER, playlistsFilter)
-    ),
-
     val playbackWhenClosedChecked: Boolean = SettingsManager.playbackWhenClosedChecked,
     val pauseIfNoisyChecked: Boolean = SettingsManager.pauseIfNoisyChecked,
     val pauseIfAnotherPlayback: Boolean = SettingsManager.pauseIfAnotherPlayback,

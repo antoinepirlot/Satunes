@@ -71,9 +71,6 @@ internal class SatunesViewModel : ViewModel() {
     val genresChecked: Boolean by _genresChecked
     val playlistsChecked: Boolean by _playlistsChecked
 
-    val navBarSections: Map<NavBarSection, Boolean> = mapOf(
-    )
-
     //Use this in UiSate and ViewModel as it is a particular value. It could change but most of the time it won't change
     var isAudioAllowed: Boolean by mutableStateOf(_uiState.value.isAudioAllowed)
         private set
@@ -226,6 +223,7 @@ internal class SatunesViewModel : ViewModel() {
             )
             _uiState.update { currentState: SatunesUiState ->
                 currentState.copy(
+                    musicsFilter = SettingsManager.musicsFilter,
                     foldersFilter = SettingsManager.foldersFilter,
                     artistsFilter = SettingsManager.artistsFilter,
                     albumsFilter = SettingsManager.albumsFilter,

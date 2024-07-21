@@ -33,6 +33,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.models.SwitchSettings
 import io.github.antoinepirlot.satunes.ui.states.SatunesUiState
 import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
 
@@ -49,11 +50,20 @@ internal fun DefaultSearchFiltersSetting(
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
 
+    val filterSettingsChecked: Map<SwitchSettings, Boolean> = mapOf(
+        Pair(SwitchSettings.MUSICS_FILTER, satunesUiState.musicsFilter),
+        Pair(SwitchSettings.ALBUMS_FILTER, satunesUiState.albumsFilter),
+        Pair(SwitchSettings.ARTISTS_FILTER, satunesUiState.artistsFilter),
+        Pair(SwitchSettings.GENRES_FILTER, satunesUiState.genresFilter),
+        Pair(SwitchSettings.FOLDERS_FILTER, satunesUiState.foldersFilter),
+        Pair(SwitchSettings.PLAYLISTS_FILTER, satunesUiState.playlistsFilter)
+    )
+
     SubSettings(
         modifier = modifier,
         title = stringResource(id = R.string.default_filter_setting_title)
     ) {
-        SettingsSwitchList(checkedMap = satunesUiState.filterSettingsChecked)
+        SettingsSwitchList(checkedMap = filterSettingsChecked)
     }
 }
 

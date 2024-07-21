@@ -42,7 +42,7 @@ import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.services.MediaSelectionManager
+import io.github.antoinepirlot.satunes.services.MediaSelectionViewModel
 import io.github.antoinepirlot.satunes.ui.components.forms.MediaSelectionForm
 import io.github.antoinepirlot.satunes.ui.components.forms.PlaylistCreationForm
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
@@ -104,6 +104,7 @@ private fun CreateNewPlaylistForm(
 private fun MediaSelectionDialogList(
     modifier: Modifier,
     dataViewModel: DataViewModel = viewModel(),
+    mediaSelectionViewModel: MediaSelectionViewModel = viewModel(),
     showPlaylistCreation: MutableState<Boolean>,
     onDismissRequest: () -> Unit,
     onConfirm: () -> Unit,
@@ -143,15 +144,13 @@ private fun MediaSelectionDialogList(
             }
         },
         onDismissRequest = {
-            MediaSelectionManager.clearCheckedMusics()
-            MediaSelectionManager.clearCheckedPlaylistWithMusics()
+            mediaSelectionViewModel.clearAll()
             onDismissRequest()
         },
         confirmButton = {
             TextButton(onClick = {
                 onConfirm()
-                MediaSelectionManager.clearCheckedMusics()
-                MediaSelectionManager.clearCheckedPlaylistWithMusics()
+                mediaSelectionViewModel.clearAll()
             }) {
                 if (mediaImplCollection.isNotEmpty()) {
                     NormalText(text = stringResource(id = R.string.add))

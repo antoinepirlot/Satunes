@@ -44,7 +44,7 @@ import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.router.utils.openMedia
-import io.github.antoinepirlot.satunes.services.MediaSelectionManager
+import io.github.antoinepirlot.satunes.services.MediaSelectionViewModel
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
 import io.github.antoinepirlot.satunes.ui.components.dialog.MediaSelectionDialog
 import io.github.antoinepirlot.satunes.ui.components.texts.Title
@@ -60,8 +60,9 @@ import io.github.antoinepirlot.satunes.database.R as RDb
 @Composable
 internal fun PlaylistView(
     modifier: Modifier = Modifier,
-    dataViewModel: DataViewModel = viewModel(),
     navController: NavHostController,
+    dataViewModel: DataViewModel = viewModel(),
+    mediaSelectionViewModel: MediaSelectionViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
     playlist: Playlist,
 ) {
@@ -130,7 +131,7 @@ internal fun PlaylistView(
             onDismissRequest = { openAddMusicsDialog = false },
             onConfirm = {
                 dataViewModel.insertMusicsToPlaylist(
-                    musics = MediaSelectionManager.getCheckedMusics(),
+                    musics = mediaSelectionViewModel.getCheckedMusics(),
                     playlist = playlist
                 )
                 openAddMusicsDialog = false

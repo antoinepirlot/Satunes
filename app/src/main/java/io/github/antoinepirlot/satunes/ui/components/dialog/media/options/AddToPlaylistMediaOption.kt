@@ -41,7 +41,7 @@ import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.services.MediaSelectionManager
+import io.github.antoinepirlot.satunes.services.MediaSelectionViewModel
 import io.github.antoinepirlot.satunes.ui.components.dialog.MediaSelectionDialog
 import io.github.antoinepirlot.satunes.ui.components.dialog.options.DialogOption
 import io.github.antoinepirlot.satunes.ui.viewmodels.DataViewModel
@@ -54,6 +54,7 @@ import io.github.antoinepirlot.satunes.ui.viewmodels.DataViewModel
 internal fun AddToPlaylistMediaOption(
     modifier: Modifier = Modifier,
     dataViewModel: DataViewModel = viewModel(),
+    mediaSelectionViewModel: MediaSelectionViewModel = viewModel(),
     mediaImpl: MediaImpl,
     onFinished: () -> Unit
 ) {
@@ -80,7 +81,11 @@ internal fun AddToPlaylistMediaOption(
                 showDialog = false
             },
             onConfirm = {
-                insertMediaToPlaylist(dataViewModel = dataViewModel, mediaImpl = mediaImpl)
+                insertMediaToPlaylist(
+                    dataViewModel = dataViewModel,
+                    mediaSelectionViewModel = mediaSelectionViewModel,
+                    mediaImpl = mediaImpl
+                )
                 onFinished()
             },
             mediaImplCollection = playlistSet,
@@ -89,11 +94,15 @@ internal fun AddToPlaylistMediaOption(
     }
 }
 
-private fun insertMediaToPlaylist(dataViewModel: DataViewModel, mediaImpl: MediaImpl) {
+private fun insertMediaToPlaylist(
+    dataViewModel: DataViewModel,
+    mediaSelectionViewModel: MediaSelectionViewModel,
+    mediaImpl: MediaImpl
+) {
     if (mediaImpl is Music) {
         dataViewModel.insertMusicToPlaylists(
             music = mediaImpl,
-            playlists = MediaSelectionManager.getCheckedPlaylistWithMusics()
+            playlists = mediaSelectionViewModel.getCheckedPlaylistWithMusics()
         )
     } else {
         val musicList: Set<Music> = if (mediaImpl is Folder) {
@@ -102,7 +111,7 @@ private fun insertMediaToPlaylist(dataViewModel: DataViewModel, mediaImpl: Media
             mediaImpl.getMusicSet()
         }
 
-        MediaSelectionManager.getCheckedPlaylistWithMusics()
+        mediaSelectionViewModel.getCheckedPlaylistWithMusics()
             .forEach { playlist: Playlist ->
                 dataViewModel.insertMusicsToPlaylist(
                     musics = musicList,

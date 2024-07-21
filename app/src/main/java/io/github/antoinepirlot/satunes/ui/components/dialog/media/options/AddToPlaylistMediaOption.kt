@@ -41,10 +41,10 @@ import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.services.MediaSelectionViewModel
 import io.github.antoinepirlot.satunes.ui.components.dialog.MediaSelectionDialog
 import io.github.antoinepirlot.satunes.ui.components.dialog.options.DialogOption
 import io.github.antoinepirlot.satunes.ui.viewmodels.DataViewModel
+import io.github.antoinepirlot.satunes.ui.viewmodels.MediaSelectionViewModel
 
 /**
  * @author Antoine Pirlot on 01/06/2024

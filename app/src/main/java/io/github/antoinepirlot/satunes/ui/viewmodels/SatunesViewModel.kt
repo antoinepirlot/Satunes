@@ -25,15 +25,18 @@
 
 package io.github.antoinepirlot.satunes.ui.viewmodels
 
+import android.content.Context
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
+import io.github.antoinepirlot.satunes.models.SearchChips
 import io.github.antoinepirlot.satunes.models.SwitchSettings
 import io.github.antoinepirlot.satunes.ui.states.SatunesUiState
 import io.github.antoinepirlot.satunes.ui.viewmodels.utils.isAudioAllowed
@@ -61,6 +64,15 @@ internal class SatunesViewModel : ViewModel() {
     private val _genresChecked: MutableState<Boolean> = SettingsManager.genresChecked
     private val _playlistsChecked: MutableState<Boolean> = SettingsManager.playlistsChecked
 
+    private val _filtersList: MutableMap<SearchChips, Boolean> = mutableMapOf(
+        Pair(SearchChips.MUSICS, SettingsManager.musicsFilter),
+        Pair(SearchChips.ALBUMS, SettingsManager.albumsFilter),
+        Pair(SearchChips.ARTISTS, SettingsManager.artistsFilter),
+        Pair(SearchChips.GENRES, SettingsManager.genresFilter),
+        Pair(SearchChips.FOLDERS, SettingsManager.foldersFilter),
+        Pair(SearchChips.PLAYLISTS, SettingsManager.playlistsFilter),
+    )
+
     val uiState: StateFlow<SatunesUiState> = _uiState.asStateFlow()
 
     val isLoadingData: Boolean by _isLoadingData
@@ -74,6 +86,12 @@ internal class SatunesViewModel : ViewModel() {
     //Use this in UiSate and ViewModel as it is a particular value. It could change but most of the time it won't change
     var isAudioAllowed: Boolean by mutableStateOf(_uiState.value.isAudioAllowed)
         private set
+
+    val selectedSearchChips: MutableList<SearchChips> = SnapshotStateList()
+
+    init {
+        selectedSearchChips.addAll(_filtersList.filter { it.value }.keys)
+    }
 
     fun loadSettings() {
         runBlocking {
@@ -271,5 +289,35 @@ internal class SatunesViewModel : ViewModel() {
                 )
             }
         }
+    }
+
+    fun resetSelectedChips(context: Context) {
+        runBlocking {
+            selectedSearchChips.clear()
+            SettingsManager.loadFilters(context = context)
+            _filtersList[SearchChips.MUSICS] = SettingsManager.musicsFilter
+            _filtersList[SearchChips.ALBUMS] = SettingsManager.albumsFilter
+            _filtersList[SearchChips.ARTISTS] = SettingsManager.artistsFilter
+            _filtersList[SearchChips.GENRES] = SettingsManager.genresFilter
+            _filtersList[SearchChips.FOLDERS] = SettingsManager.foldersFilter
+            _filtersList[SearchChips.PLAYLISTS] = SettingsManager.playlistsFilter
+            _filtersList.forEach { (searchChip: SearchChips, checked: Boolean) ->
+                if (checked) {
+                    selectedSearchChips.add(searchChip)
+                }
+            }
+        }
+    }
+
+    fun select(searchChip: SearchChips) {
+        _filtersList[searchChip] = true
+        if (!selectedSearchChips.contains(element = searchChip)) {
+            selectedSearchChips.add(searchChip)
+        }
+    }
+
+    fun unselect(searchChip: SearchChips) {
+        _filtersList[searchChip] = false
+        selectedSearchChips.remove(searchChip)
     }
 }

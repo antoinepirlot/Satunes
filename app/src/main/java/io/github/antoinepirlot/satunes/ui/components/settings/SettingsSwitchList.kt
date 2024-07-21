@@ -35,7 +35,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.models.SearchChips
 import io.github.antoinepirlot.satunes.models.SwitchSettings
-import io.github.antoinepirlot.satunes.services.search.SearchChipsManager
 import io.github.antoinepirlot.satunes.ui.components.cards.ListItem
 import io.github.antoinepirlot.satunes.ui.states.SatunesUiState
 import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
@@ -62,7 +61,7 @@ internal fun SettingsSwitchList(
                         onCheckedChange = {
                             switchSetting(
                                 satunesViewModel = satunesViewModel,
-                                uiState = satunesUiState,
+                                satunesUiState = satunesUiState,
                                 setting = setting
                             )
                         }
@@ -81,7 +80,7 @@ private fun SettingsSwitchListPreview() {
 
 private fun switchSetting(
     satunesViewModel: SatunesViewModel,
-    uiState: SatunesUiState,
+    satunesUiState: SatunesUiState,
     setting: SwitchSettings
 ) {
     when (setting) {
@@ -138,60 +137,107 @@ private fun switchSetting(
         SwitchSettings.MUSICS_FILTER -> {
             satunesViewModel.switchFilter(filterSetting = NavBarSection.MUSICS)
             val searchChip: SearchChips = SearchChips.MUSICS
-            if (uiState.musicsFilter != searchChip.enabled.value) {
-                switchSearchChip(searchChip = searchChip)
+            if (satunesUiState.musicsFilter != satunesViewModel.selectedSearchChips.contains(
+                    searchChip
+                )
+            ) {
+                switchSearchChip(
+                    satunesViewModel = satunesViewModel,
+                    searchChip = searchChip,
+                    selected = satunesUiState.musicsFilter
+                )
             }
         }
 
         SwitchSettings.ARTISTS_FILTER -> {
             satunesViewModel.switchFilter(filterSetting = NavBarSection.ARTISTS)
             val searchChip: SearchChips = SearchChips.ARTISTS
-            if (uiState.artistsFilter != searchChip.enabled.value) {
-                switchSearchChip(searchChip = searchChip)
+            if (satunesUiState.artistsFilter != satunesViewModel.selectedSearchChips.contains(
+                    searchChip
+                )
+            ) {
+                switchSearchChip(
+                    satunesViewModel = satunesViewModel,
+                    searchChip = searchChip,
+                    selected = satunesUiState.artistsFilter
+                )
             }
         }
 
         SwitchSettings.ALBUMS_FILTER -> {
             satunesViewModel.switchFilter(filterSetting = NavBarSection.ALBUMS)
             val searchChip: SearchChips = SearchChips.ALBUMS
-            if (uiState.albumsFilter != searchChip.enabled.value) {
-                switchSearchChip(searchChip = searchChip)
+            if (satunesUiState.albumsFilter != satunesViewModel.selectedSearchChips.contains(
+                    searchChip
+                )
+            ) {
+                switchSearchChip(
+                    satunesViewModel = satunesViewModel,
+                    searchChip = searchChip,
+                    selected = satunesUiState.albumsFilter
+                )
             }
         }
 
         SwitchSettings.GENRES_FILTER -> {
             satunesViewModel.switchFilter(filterSetting = NavBarSection.GENRES)
             val searchChip: SearchChips = SearchChips.GENRES
-            if (uiState.genresFilter != searchChip.enabled.value) {
-                switchSearchChip(searchChip = searchChip)
+            if (satunesUiState.genresFilter != satunesViewModel.selectedSearchChips.contains(
+                    searchChip
+                )
+            ) {
+                switchSearchChip(
+                    satunesViewModel = satunesViewModel,
+                    searchChip = searchChip,
+                    selected = satunesUiState.genresFilter
+                )
             }
         }
 
         SwitchSettings.FOLDERS_FILTER -> {
             satunesViewModel.switchFilter(filterSetting = NavBarSection.FOLDERS)
             val searchChip: SearchChips = SearchChips.FOLDERS
-            if (uiState.foldersFilter != searchChip.enabled.value) {
-                switchSearchChip(searchChip = searchChip)
+            if (satunesUiState.foldersChecked != satunesViewModel.selectedSearchChips.contains(
+                    searchChip
+                )
+            ) {
+                switchSearchChip(
+                    satunesViewModel = satunesViewModel,
+                    searchChip = searchChip,
+                    selected = satunesUiState.foldersChecked
+                )
             }
         }
 
         SwitchSettings.PLAYLISTS_FILTER -> {
             satunesViewModel.switchFilter(filterSetting = NavBarSection.PLAYLISTS)
             val searchChip: SearchChips = SearchChips.PLAYLISTS
-            if (uiState.playlistsFilter != searchChip.enabled.value) {
-                switchSearchChip(searchChip = searchChip)
+            if (satunesUiState.playlistsFilter != satunesViewModel.selectedSearchChips.contains(
+                    searchChip
+                )
+            ) {
+                switchSearchChip(
+                    satunesViewModel = satunesViewModel,
+                    searchChip = searchChip,
+                    selected = satunesUiState.playlistsFilter
+                )
             }
         }
 
-        else -> { /* Not a switch */
+        else -> {
+            /* Not a switch */
         }
     }
 }
 
-private fun switchSearchChip(searchChip: SearchChips) {
-    if (searchChip.enabled.value) {
-        SearchChipsManager.unselect(searchChip = searchChip)
+private fun switchSearchChip(
+    satunesViewModel: SatunesViewModel,
+    searchChip: SearchChips,
+    selected: Boolean
+) {
+    if (selected) {
+        satunesViewModel.unselect(searchChip = searchChip)
     } else {
-        SearchChipsManager.select(searchChip = searchChip)
+        satunesViewModel.select(searchChip = searchChip)
     }
 }

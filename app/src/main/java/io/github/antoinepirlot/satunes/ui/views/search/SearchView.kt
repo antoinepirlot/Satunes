@@ -61,10 +61,10 @@ import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.models.SearchChips
 import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.router.utils.openMedia
-import io.github.antoinepirlot.satunes.services.search.SearchChipsManager
 import io.github.antoinepirlot.satunes.ui.components.chips.MediaChipList
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
+import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -80,12 +80,13 @@ import io.github.antoinepirlot.satunes.database.R as RDb
 internal fun SearchView(
     modifier: Modifier = Modifier,
     navController: NavHostController,
+    satunesViewModel: SatunesViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
 ) {
     val context: Context = LocalContext.current
     var query: String by rememberSaveable { mutableStateOf("") }
     val mediaImplList: MutableList<MediaImpl> = remember { SnapshotStateList() }
-    val selectedSearchChips: List<SearchChips> = remember { SearchChipsManager.selectedSearchChips }
+    val selectedSearchChips: List<SearchChips> = satunesViewModel.selectedSearchChips
 
     val searchCoroutine: CoroutineScope = rememberCoroutineScope()
     var searchJob: Job? = null
@@ -94,14 +95,19 @@ internal fun SearchView(
             searchJob!!.cancel()
         }
         searchJob = searchCoroutine.launch {
-            search(context = context, mediaImplList = mediaImplList, query = query)
+            search(
+                context = context,
+                selectedSearchChips = selectedSearchChips,
+                mediaImplList = mediaImplList,
+                query = query
+            )
         }
     }
 
     var resetSelectedChips: Boolean by rememberSaveable { mutableStateOf(true) }
     if (resetSelectedChips) {
         LaunchedEffect(key1 = true) {
-            SearchChipsManager.resetSelectedChips(context = context)
+            satunesViewModel.resetSelectedChips(context = context)
         }
         resetSelectedChips = false
     }
@@ -152,7 +158,12 @@ internal fun SearchView(
     }
 }
 
-private fun search(context: Context, mediaImplList: MutableList<MediaImpl>, query: String) {
+private fun search(
+    context: Context,
+    selectedSearchChips: List<SearchChips>,
+    mediaImplList: MutableList<MediaImpl>,
+    query: String
+) {
     mediaImplList.clear()
     if (query.isBlank()) {
         // Prevent loop if string is "" or " "
@@ -162,7 +173,7 @@ private fun search(context: Context, mediaImplList: MutableList<MediaImpl>, quer
     @Suppress("NAME_SHADOWING")
     val query: String = query.lowercase()
 
-    for (searchChip: SearchChips in SearchChipsManager.selectedSearchChips) {
+    for (searchChip: SearchChips in selectedSearchChips) {
         DataManager.getMusicSet().forEach { music: Music ->
             when (searchChip) {
                 SearchChips.MUSICS -> {

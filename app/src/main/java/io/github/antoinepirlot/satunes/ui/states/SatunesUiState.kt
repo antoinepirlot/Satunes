@@ -40,6 +40,13 @@ internal data class SatunesUiState(
     //Use this in UiSate and ViewModel as it is a particular value. It could change but most of the time it won't change
     val isAudioAllowed: Boolean = isAudioAllowed(),
 
+    val musicsFilter: Boolean = SettingsManager.musicsFilter,
+    val albumsFilter: Boolean = SettingsManager.albumsFilter,
+    val artistsFilter: Boolean = SettingsManager.artistsFilter,
+    val genresFilter: Boolean = SettingsManager.genresFilter,
+    val foldersFilter: Boolean = SettingsManager.foldersFilter,
+    val playlistsFilter: Boolean = SettingsManager.playlistsFilter,
+
     val foldersChecked: Boolean = SettingsManager.foldersChecked.value,
     val artistsChecked: Boolean = SettingsManager.artistsChecked.value,
     val albumsChecked: Boolean = SettingsManager.albumsChecked.value,
@@ -64,13 +71,6 @@ internal data class SatunesUiState(
     val exclusionSettingsChecked: Map<SwitchSettings, Boolean> = mapOf(
         Pair(first = SwitchSettings.INCLUDE_RINGTONES, second = includeRingtonesChecked)
     ),
-
-    val musicsFilter: Boolean = SettingsManager.musicsFilter,
-    val albumsFilter: Boolean = SettingsManager.albumsFilter,
-    val artistsFilter: Boolean = SettingsManager.artistsFilter,
-    val genresFilter: Boolean = SettingsManager.genresFilter,
-    val foldersFilter: Boolean = SettingsManager.foldersFilter,
-    val playlistsFilter: Boolean = SettingsManager.playlistsFilter,
     val playbackWhenClosedChecked: Boolean = SettingsManager.playbackWhenClosedChecked,
     val pauseIfNoisyChecked: Boolean = SettingsManager.pauseIfNoisyChecked,
     val pauseIfAnotherPlayback: Boolean = SettingsManager.pauseIfAnotherPlayback,

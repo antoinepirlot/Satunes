@@ -25,22 +25,21 @@
 
 package io.github.antoinepirlot.satunes.ui.components.dialog.music.options
 
-import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
-import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.dialog.RemoveConfirmationDialog
 import io.github.antoinepirlot.satunes.ui.components.dialog.options.DialogOption
+import io.github.antoinepirlot.satunes.ui.viewmodels.DataViewModel
 
 /**
  * @author Antoine Pirlot on 01/06/2024
@@ -49,11 +48,11 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.options.DialogOption
 @Composable
 internal fun RemoveFromPlaylistMusicOption(
     modifier: Modifier = Modifier,
+    dataViewModel: DataViewModel = viewModel(),
     music: Music,
     playlist: Playlist,
     onFinished: () -> Unit,
 ) {
-    val context: Context = LocalContext.current
     var showRemoveConfirmation: Boolean by rememberSaveable { mutableStateOf(false) }
 
     DialogOption(
@@ -67,8 +66,7 @@ internal fun RemoveFromPlaylistMusicOption(
         RemoveConfirmationDialog(
             onDismissRequest = { showRemoveConfirmation = false },
             onRemoveRequest = {
-                val db = DatabaseManager(context = context)
-                db.removeMusicFromPlaylist(
+                dataViewModel.removeMusicFromPlaylist(
                     music = music,
                     playlist = playlist
                 )

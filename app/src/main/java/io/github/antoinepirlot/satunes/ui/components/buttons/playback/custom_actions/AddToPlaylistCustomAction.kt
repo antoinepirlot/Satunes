@@ -38,7 +38,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
-import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.services.MediaSelectionManager
 import io.github.antoinepirlot.satunes.ui.components.buttons.playback.CustomActionButton
@@ -80,6 +79,7 @@ internal fun AddToPlaylistCustomAction(
             onConfirm = {
                 addMusicPlayingToPlaylist(
                     context = context,
+                    dataViewModel = dataViewModel,
                     checkedPlaylists = MediaSelectionManager.getCheckedPlaylistWithMusics(),
                     music = music
                 )
@@ -93,9 +93,9 @@ internal fun AddToPlaylistCustomAction(
 
 private fun addMusicPlayingToPlaylist(
     context: Context,
+    dataViewModel: DataViewModel,
     checkedPlaylists: List<Playlist>,
     music: Music,
 ) {
-    val db = DatabaseManager(context = context)
-    db.insertMusicToPlaylists(music = music, playlists = checkedPlaylists)
+    dataViewModel.insertMusicToPlaylists(music = music, playlists = checkedPlaylists)
 }

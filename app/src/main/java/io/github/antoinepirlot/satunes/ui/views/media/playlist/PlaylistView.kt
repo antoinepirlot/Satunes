@@ -25,14 +25,12 @@
 
 package io.github.antoinepirlot.satunes.ui.views.media.playlist
 
-import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -43,7 +41,6 @@ import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
-import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.router.utils.openMedia
@@ -129,12 +126,10 @@ internal fun PlaylistView(
     )
     if (openAddMusicsDialog) {
         val allMusic: Set<Music> = dataViewModel.getMusicSet()
-        val context: Context = LocalContext.current
         MediaSelectionDialog(
             onDismissRequest = { openAddMusicsDialog = false },
             onConfirm = {
-                val db = DatabaseManager(context = context)
-                db.insertMusicsToPlaylist(
+                dataViewModel.insertMusicsToPlaylist(
                     musics = MediaSelectionManager.getCheckedMusics(),
                     playlist = playlist
                 )

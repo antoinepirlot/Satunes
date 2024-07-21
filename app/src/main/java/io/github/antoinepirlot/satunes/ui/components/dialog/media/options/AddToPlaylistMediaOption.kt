@@ -40,7 +40,6 @@ import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
-import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.services.MediaSelectionManager
 import io.github.antoinepirlot.satunes.ui.components.dialog.MediaSelectionDialog
@@ -81,7 +80,7 @@ internal fun AddToPlaylistMediaOption(
                 showDialog = false
             },
             onConfirm = {
-                insertMediaToPlaylist(context = context, mediaImpl = mediaImpl)
+                insertMediaToPlaylist(dataViewModel = dataViewModel, mediaImpl = mediaImpl)
                 onFinished()
             },
             mediaImplCollection = playlistSet,
@@ -90,10 +89,9 @@ internal fun AddToPlaylistMediaOption(
     }
 }
 
-private fun insertMediaToPlaylist(context: Context, mediaImpl: MediaImpl) {
-    val db = DatabaseManager(context = context)
+private fun insertMediaToPlaylist(dataViewModel: DataViewModel, mediaImpl: MediaImpl) {
     if (mediaImpl is Music) {
-        db.insertMusicToPlaylists(
+        dataViewModel.insertMusicToPlaylists(
             music = mediaImpl,
             playlists = MediaSelectionManager.getCheckedPlaylistWithMusics()
         )
@@ -106,7 +104,7 @@ private fun insertMediaToPlaylist(context: Context, mediaImpl: MediaImpl) {
 
         MediaSelectionManager.getCheckedPlaylistWithMusics()
             .forEach { playlist: Playlist ->
-                db.insertMusicsToPlaylist(
+                dataViewModel.insertMusicsToPlaylist(
                     musics = musicList,
                     playlist = playlist
                 )

@@ -28,6 +28,7 @@ package io.github.antoinepirlot.satunes.ui.viewmodels
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.ViewModel
+import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Folder
@@ -35,12 +36,15 @@ import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
+import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 
 /**
  * @author Antoine Pirlot on 19/07/2024
  */
 class DataViewModel : ViewModel() {
     private val _playlistSetUpdated: MutableState<Boolean> = DataManager.playlistsMapUpdated
+    private val _db: DatabaseManager =
+        DatabaseManager(context = MainActivity.instance.applicationContext)
 
     val playlistSetUpdated: Boolean by _playlistSetUpdated
 
@@ -60,4 +64,31 @@ class DataViewModel : ViewModel() {
     fun getAlbum(id: Long): Album = DataManager.getAlbum(id = id)
     fun getGenre(id: Long): Genre = DataManager.getGenre(id = id)
     fun getPlaylist(id: Long): Playlist = DataManager.getPlaylist(id = id)
+
+    fun insertMusicToPlaylists(music: Music, playlists: List<Playlist>) {
+        _db.insertMusicToPlaylists(music = music, playlists = playlists)
+    }
+
+    fun addOnePlaylist(playlistTitle: String) {
+        _db.addOnePlaylist(
+            context = MainActivity.instance.applicationContext,
+            playlistTitle = playlistTitle
+        )
+    }
+
+    fun insertMusicsToPlaylist(musics: Collection<Music>, playlist: Playlist) {
+        _db.insertMusicsToPlaylist(musics = musics, playlist = playlist)
+    }
+
+    fun removeMusicFromPlaylist(music: Music, playlist: Playlist) {
+        _db.removeMusicFromPlaylist(music = music, playlist = playlist)
+    }
+
+    fun updatePlaylists(vararg playlists: Playlist) {
+        _db.updatePlaylists(playlists = playlists)
+    }
+
+    fun removePlaylist(playlist: Playlist) {
+        _db.removePlaylist(playlist = playlist)
+    }
 }

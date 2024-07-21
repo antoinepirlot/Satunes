@@ -25,7 +25,6 @@
 
 package io.github.antoinepirlot.satunes.ui.components.dialog
 
-import android.content.Context
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
@@ -35,7 +34,6 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -43,7 +41,6 @@ import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
-import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.services.MediaSelectionManager
 import io.github.antoinepirlot.satunes.ui.components.forms.MediaSelectionForm
@@ -89,18 +86,14 @@ internal fun MediaSelectionDialog(
 @Composable
 private fun CreateNewPlaylistForm(
     modifier: Modifier,
+    dataViewModel: DataViewModel = viewModel(),
     showPlaylistCreation: MutableState<Boolean>,
     onDismissRequest: () -> Unit
 ) {
-    val context: Context = LocalContext.current
-
     PlaylistCreationForm(
         modifier = modifier,
         onConfirm = { playlistTitle: String ->
-            DatabaseManager(context = context).addOnePlaylist(
-                context = context,
-                playlistTitle = playlistTitle
-            )
+            dataViewModel.addOnePlaylist(playlistTitle = playlistTitle)
             showPlaylistCreation.value = false
         },
         onDismissRequest = onDismissRequest

@@ -25,7 +25,6 @@
 
 package io.github.antoinepirlot.satunes.ui.components.dialog.playlist
 
-import android.content.Context
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
@@ -37,17 +36,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.models.Playlist
-import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.dialog.playlist.options.ExportPlaylistOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.playlist.options.RemovePlaylistOption
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
+import io.github.antoinepirlot.satunes.ui.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.database.R as RDb
 
 /**
@@ -57,6 +56,7 @@ import io.github.antoinepirlot.satunes.database.R as RDb
 @Composable
 internal fun PlaylistOptionsDialog(
     modifier: Modifier = Modifier,
+    dataViewModel: DataViewModel = viewModel(),
     playlist: Playlist,
     onDismissRequest: () -> Unit,
 ) {
@@ -99,15 +99,13 @@ internal fun PlaylistOptionsDialog(
         },
         onDismissRequest = onDismissRequest,
         confirmButton = {
-            val context: Context = LocalContext.current
             TextButton(onClick = {
                 onDismissRequest()
                 val oldTitle: String = playlist.title
                 playlist.title = playlistTitle
                 // TODO this case must be managed in database module
                 try {
-                    val db = DatabaseManager(context = context)
-                    db.updatePlaylists(playlist)
+                    dataViewModel.updatePlaylists(playlist)
                 } catch (_: Exception) {
                     playlist.title = oldTitle
                 }

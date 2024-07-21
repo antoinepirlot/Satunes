@@ -16,7 +16,7 @@ New features:
 
 * Possibility of choosing the search filters activated by default
 * Request for confirmation when deleting from playlists
-* All types of media (music, artists, etc.) have an option navBarSection during a long press
+* All types of media (music, artists, etc.) have an option menu during a long press
 
 Improvements, Optimizations and Troubleshooting:
 
@@ -95,7 +95,7 @@ New features:
 * Added a new setting allowing the use of Audio Offload (sends playback to a dedicated process).
   This option allows you to optimize the battery
 * Ability to add currently playing music to playlists via quick actions
-* Navigation to albums, genres, artists, etc. from the navBarSection with a long press on music
+* Navigation to albums, genres, artists, etc. from the menu with a long press on music
 
 Improvements, Optimizations and Troubleshooting:
 
@@ -147,7 +147,7 @@ Improvements, Optimizations and Troubleshooting:
 * The design has been improved:
   * The shuffle and repeat buttons in the playback view (only in the phone app) are completely round
   * Support for screen sizes has been improved
-* Added a navBarSection in settings explaining how to activate Android Auto
+* Added a menu in settings explaining how to activate Android Auto
 
 ### 1.0.0-preview-2
 

@@ -1,6 +1,25 @@
 # Releases (🇬🇧)
 Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
+## 2.0 (Android 5.1.1 Lollipop and later)
+
+### 2.0.0-alpha-1
+
+⚠ Alpha version is not recommended for regular use.
+
+Improvements, Optimizations and Troubleshooting:
+
+* The code structure has been fully refactored to be more simple and better to use.
+* The code has been reworked to be faster
+* Satunes now support Android 15 Vanilla Ice Cream (API 35)
+* Now the app will load even your duplicated musics
+* By default, Satunes will load only the main Musics folder and not all.
+* Satunes logs some errors (without personal information), you can export it, nothing will leave the
+  app without your permission.
+* Implementing the use of ViewModel and UiState for a better Satunes' states management
+* Now playing music from folder will first load its musics then its subfolders' musics always sorted
+  by title.
+
 ## 1.3 (Android 5.1.1 Lollipop and later)
 
 ### 1.3.1

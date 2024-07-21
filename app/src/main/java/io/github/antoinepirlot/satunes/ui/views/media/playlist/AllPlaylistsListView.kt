@@ -67,7 +67,7 @@ internal fun PlaylistListView(
         //Recompose if data changed
         var mapChanged: Boolean = dataViewModel.playlistSetUpdated
         if (mapChanged) {
-            dataViewModel.playlistMapUpdated()
+            dataViewModel.playlistSetUpdated()
         }
         //
 

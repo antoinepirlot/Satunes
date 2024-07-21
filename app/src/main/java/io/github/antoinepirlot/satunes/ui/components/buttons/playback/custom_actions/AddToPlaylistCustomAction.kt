@@ -25,14 +25,12 @@
 
 package io.github.antoinepirlot.satunes.ui.components.buttons.playback.custom_actions
 
-import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
@@ -55,7 +53,6 @@ internal fun AddToPlaylistCustomAction(
     mediaSelectionViewModel: MediaSelectionViewModel = viewModel(),
     music: Music,
 ) {
-    val context: Context = LocalContext.current
     var showForm: Boolean by rememberSaveable { mutableStateOf(false) }
 
     CustomActionButton(
@@ -69,9 +66,9 @@ internal fun AddToPlaylistCustomAction(
         val playlistMap: Set<Playlist> = dataViewModel.getPlaylistSet()
 
         //Recompose if data changed
-        var mapChanged: Boolean = dataViewModel.playlistSetUpdated
+        val mapChanged: Boolean = dataViewModel.playlistSetUpdated
         if (mapChanged) {
-            mapChanged = false
+            dataViewModel.playlistSetUpdated()
         }
         //
 
@@ -79,7 +76,6 @@ internal fun AddToPlaylistCustomAction(
             onDismissRequest = { showForm = false },
             onConfirm = {
                 addMusicPlayingToPlaylist(
-                    context = context,
                     dataViewModel = dataViewModel,
                     checkedPlaylists = mediaSelectionViewModel.getCheckedPlaylistWithMusics(),
                     music = music
@@ -93,7 +89,6 @@ internal fun AddToPlaylistCustomAction(
 }
 
 private fun addMusicPlayingToPlaylist(
-    context: Context,
     dataViewModel: DataViewModel,
     checkedPlaylists: List<Playlist>,
     music: Music,

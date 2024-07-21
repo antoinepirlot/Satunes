@@ -27,6 +27,7 @@ package io.github.antoinepirlot.satunes.ui.viewmodels
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.database.models.Album
@@ -46,9 +47,10 @@ class DataViewModel : ViewModel() {
     private val _db: DatabaseManager =
         DatabaseManager(context = MainActivity.instance.applicationContext)
 
-    val playlistSetUpdated: Boolean by _playlistSetUpdated
+    var playlistSetUpdated: Boolean by _playlistSetUpdated
+        private set
 
-    fun playlistMapUpdated() {
+    fun playlistSetUpdated() {
         this._playlistSetUpdated.value = false
     }
 

@@ -25,14 +25,12 @@
 
 package io.github.antoinepirlot.satunes.ui.components.dialog.media.options
 
-import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
@@ -41,10 +39,10 @@ import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.services.MediaSelectionViewModel
 import io.github.antoinepirlot.satunes.ui.components.dialog.MediaSelectionDialog
 import io.github.antoinepirlot.satunes.ui.components.dialog.options.DialogOption
 import io.github.antoinepirlot.satunes.ui.viewmodels.DataViewModel
+import io.github.antoinepirlot.satunes.ui.viewmodels.MediaSelectionViewModel
 
 /**
  * @author Antoine Pirlot on 01/06/2024
@@ -58,7 +56,6 @@ internal fun AddToPlaylistMediaOption(
     mediaImpl: MediaImpl,
     onFinished: () -> Unit
 ) {
-    val context: Context = LocalContext.current
     var showDialog: Boolean by rememberSaveable { mutableStateOf(false) }
 
     DialogOption(
@@ -70,9 +67,9 @@ internal fun AddToPlaylistMediaOption(
     if (showDialog) {
         val playlistSet: Set<Playlist> = dataViewModel.getPlaylistSet()
         //Recompose if data changed
-        var mapChanged: Boolean = dataViewModel.playlistSetUpdated
+        val mapChanged: Boolean = dataViewModel.playlistSetUpdated
         if (mapChanged) {
-            mapChanged = false
+            dataViewModel.playlistSetUpdated()
         }
         //
 

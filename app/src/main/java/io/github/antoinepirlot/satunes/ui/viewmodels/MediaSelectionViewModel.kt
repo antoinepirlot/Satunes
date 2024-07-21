@@ -23,7 +23,7 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.services
+package io.github.antoinepirlot.satunes.ui.viewmodels
 
 import androidx.lifecycle.ViewModel
 import io.github.antoinepirlot.satunes.database.models.Music

@@ -28,7 +28,6 @@ package io.github.antoinepirlot.satunes.ui.states
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.models.DEFAULT_DESTINATION
-import io.github.antoinepirlot.satunes.models.SwitchSettings
 import io.github.antoinepirlot.satunes.ui.viewmodels.utils.isAudioAllowed
 
 /**
@@ -60,9 +59,6 @@ internal data class SatunesUiState(
         else if (genresChecked) NavBarSection.GENRES
         else NavBarSection.MUSICS,
     val includeRingtonesChecked: Boolean = SettingsManager.includeRingtonesChecked,
-    val exclusionSettingsChecked: Map<SwitchSettings, Boolean> = mapOf(
-        Pair(first = SwitchSettings.INCLUDE_RINGTONES, second = includeRingtonesChecked)
-    ),
     val playbackWhenClosedChecked: Boolean = SettingsManager.playbackWhenClosedChecked,
     val pauseIfNoisyChecked: Boolean = SettingsManager.pauseIfNoisyChecked,
     val pauseIfAnotherPlayback: Boolean = SettingsManager.pauseIfAnotherPlayback,

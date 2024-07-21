@@ -37,6 +37,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.models.SwitchSettings
 import io.github.antoinepirlot.satunes.ui.components.settings.SettingsSwitchList
 import io.github.antoinepirlot.satunes.ui.components.texts.Title
 import io.github.antoinepirlot.satunes.ui.states.SatunesUiState
@@ -53,10 +54,17 @@ internal fun ExclusionSettingsView(
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
 
+    val exclusionSettingsChecked: Map<SwitchSettings, Boolean> = mapOf(
+        Pair(
+            first = SwitchSettings.INCLUDE_RINGTONES,
+            second = satunesUiState.includeRingtonesChecked
+        )
+    )
+
     val scrollState: ScrollState = rememberScrollState()
     Column(modifier = modifier.verticalScroll(scrollState)) {
         Title(text = stringResource(id = R.string.exclusion_setting))
-        SettingsSwitchList(checkedMap = satunesUiState.exclusionSettingsChecked) //Contains list item so always padding horizontal 16.dp
+        SettingsSwitchList(checkedMap = exclusionSettingsChecked) //Contains list item so always padding horizontal 16.dp
     }
 }
 

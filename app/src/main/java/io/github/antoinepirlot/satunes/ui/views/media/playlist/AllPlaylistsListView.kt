@@ -65,7 +65,7 @@ internal fun PlaylistListView(
         val playlistSet: Set<Playlist> = dataViewModel.getPlaylistSet()
 
         //Recompose if data changed
-        var mapChanged: Boolean = dataViewModel.playlistSetUpdated
+        val mapChanged: Boolean = dataViewModel.playlistSetUpdated
         if (mapChanged) {
             dataViewModel.playlistSetUpdated()
         }

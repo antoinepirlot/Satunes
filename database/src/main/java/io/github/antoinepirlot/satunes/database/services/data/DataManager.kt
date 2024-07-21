@@ -96,8 +96,8 @@ object DataManager {
         return this.folderSortedSet
     }
 
-    fun getArtist(artistId: Long): Artist {
-        return artistMapById[artistId]!!
+    fun getArtist(id: Long): Artist {
+        return artistMapById[id]!!
     }
 
     fun getArtistSet(): Set<Artist> {
@@ -120,8 +120,8 @@ object DataManager {
         artistMapById.remove(artist.id)
     }
 
-    fun getAlbum(albumId: Long): Album {
-        return albumMapById[albumId]!!
+    fun getAlbum(id: Long): Album {
+        return albumMapById[id]!!
     }
 
     fun getAlbumSet(): Set<Album> {
@@ -142,8 +142,8 @@ object DataManager {
         albumMapById.remove(album.id)
     }
 
-    fun getFolder(folderId: Long): Folder {
-        return folderMapById[folderId]!!
+    fun getFolder(id: Long): Folder {
+        return folderMapById[id]!!
     }
 
     fun addFolder(folder: Folder) {
@@ -166,8 +166,8 @@ object DataManager {
         rootFolderSortedSet.remove(folder)
     }
 
-    fun getGenre(genreId: Long): Genre {
-        return genreMapById[genreId]!!
+    fun getGenre(id: Long): Genre {
+        return genreMapById[id]!!
     }
 
     fun getGenreSet(): Set<Genre> {

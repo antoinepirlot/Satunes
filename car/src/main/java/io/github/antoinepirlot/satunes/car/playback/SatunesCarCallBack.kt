@@ -167,22 +167,22 @@ internal object SatunesCarCallBack : MediaSessionCompat.Callback() {
             when (routeDeque.oneBeforeLast()) {
                 ScreenPages.ALL_FOLDERS.id -> {
                     //Current folder has to be loaded (music)
-                    val folder: Folder = DataManager.getFolder(folderId = mediaId)
+                    val folder: Folder = DataManager.getFolder(id = mediaId)
                     folder.getMusicSet()
                 }
 
                 ScreenPages.ALL_ALBUMS.id -> {
-                    val album: Album = DataManager.getAlbum(albumId = mediaId)
+                    val album: Album = DataManager.getAlbum(id = mediaId)
                     album.getMusicSet()
                 }
 
                 ScreenPages.ALL_ARTISTS.id -> {
-                    val artist: Artist = DataManager.getArtist(artistId = mediaId)
+                    val artist: Artist = DataManager.getArtist(id = mediaId)
                     artist.getMusicSet()
                 }
 
                 ScreenPages.ALL_GENRES.id -> {
-                    val genre: Genre = DataManager.getGenre(genreId = mediaId)
+                    val genre: Genre = DataManager.getGenre(id = mediaId)
                     genre.getMusicSet()
                 }
 

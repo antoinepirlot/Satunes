@@ -40,6 +40,8 @@ import io.github.antoinepirlot.satunes.router.routes.mediaRoutes
 import io.github.antoinepirlot.satunes.router.routes.playbackRoutes
 import io.github.antoinepirlot.satunes.router.routes.searchRoutes
 import io.github.antoinepirlot.satunes.router.routes.settingsRoutes
+import io.github.antoinepirlot.satunes.ui.viewmodels.DataViewModel
+import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
 
 /**
@@ -51,6 +53,8 @@ internal fun Router(
     modifier: Modifier = Modifier,
     navController: NavHostController,
     satunesViewModel: SatunesViewModel = viewModel(),
+    dataViewModel: DataViewModel = viewModel(),
+    playbackViewModel: PlaybackViewModel = viewModel(),
 ) {
     val isAudioAllowed: Boolean = satunesViewModel.isAudioAllowed
 
@@ -69,6 +73,8 @@ internal fun Router(
     ) {
         mediaRoutes(
             navController = navController,
+            satunesViewModel = satunesViewModel,
+            dataViewModel = dataViewModel,
             onStart = {
                 checkIfAllowed(isAudioAllowed = isAudioAllowed, navController = navController)
                 satunesViewModel.setCurrentDestination(destination = it.destination.route!!)
@@ -76,6 +82,7 @@ internal fun Router(
         )
         searchRoutes(
             navController = navController,
+            satunesViewModel = satunesViewModel,
             onStart = {
                 checkIfAllowed(isAudioAllowed = isAudioAllowed, navController = navController)
                 satunesViewModel.setCurrentDestination(destination = it.destination.route!!)
@@ -83,6 +90,8 @@ internal fun Router(
         )
         playbackRoutes(
             navController = navController,
+            satunesViewModel = satunesViewModel,
+            playbackViewModel = playbackViewModel,
             onStart = {
                 checkIfAllowed(isAudioAllowed = isAudioAllowed, navController = navController)
                 satunesViewModel.setCurrentDestination(destination = it.destination.route!!)

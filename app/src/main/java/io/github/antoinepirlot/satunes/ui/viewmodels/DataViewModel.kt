@@ -53,4 +53,24 @@ class DataViewModel : ViewModel() {
     fun playlistMapUpdated() {
         this._playlistSetUpdated.value = false
     }
+
+    fun getFolder(id: Long): Folder {
+        return DataManager.getFolder(id = id)
+    }
+
+    fun getArtist(id: Long): Artist {
+        return DataManager.getArtist(id = id)
+    }
+
+    fun getAlbum(id: Long): Album {
+        return DataManager.getAlbum(id = id)
+    }
+
+    fun getGenre(id: Long): Genre {
+        return DataManager.getGenre(id = id)
+    }
+
+    fun getPlaylist(id: Long): Playlist {
+        return DataManager.getPlaylist(id = id)
+    }
 }

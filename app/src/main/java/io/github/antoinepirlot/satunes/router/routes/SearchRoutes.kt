@@ -26,7 +26,6 @@
 package io.github.antoinepirlot.satunes.router.routes
 
 import androidx.compose.animation.AnimatedContentScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -42,13 +41,13 @@ import io.github.antoinepirlot.satunes.ui.views.search.SearchView
 
 internal fun NavGraphBuilder.searchRoutes(
     navController: NavHostController,
+    satunesViewModel: SatunesViewModel,
     onStart: AnimatedContentScope.(NavBackStackEntry) -> Unit
 ) {
     composable(Destination.SEARCH.link) {
         onStart(it)
-        val viewModel: SatunesViewModel = viewModel()
 
-        if (viewModel.isLoadingData || !viewModel.isDataLoaded) {
+        if (satunesViewModel.isLoadingData || !satunesViewModel.isDataLoaded) {
             LoadingView()
         } else {
             SearchView(navController = navController)

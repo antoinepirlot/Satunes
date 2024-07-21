@@ -256,10 +256,10 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
         }
 
         val mediaImpl: MediaImpl? = when (oneBeforeLastRoute) {
-            ScreenPages.ALL_FOLDERS.id -> DataManager.getFolder(folderId = mediaId)
-            ScreenPages.ALL_ARTISTS.id -> DataManager.getArtist(artistId = mediaId)
-            ScreenPages.ALL_ALBUMS.id -> DataManager.getAlbum(albumId = mediaId)
-            ScreenPages.ALL_GENRES.id -> DataManager.getGenre(genreId = mediaId)
+            ScreenPages.ALL_FOLDERS.id -> DataManager.getFolder(id = mediaId)
+            ScreenPages.ALL_ARTISTS.id -> DataManager.getArtist(id = mediaId)
+            ScreenPages.ALL_ALBUMS.id -> DataManager.getAlbum(id = mediaId)
+            ScreenPages.ALL_GENRES.id -> DataManager.getGenre(id = mediaId)
             ScreenPages.ALL_PLAYLISTS.id -> DataManager.getPlaylist(id = mediaId)
             else -> null
         }

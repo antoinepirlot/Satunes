@@ -53,21 +53,26 @@ internal class SatunesViewModel : ViewModel() {
     private val _uiState: MutableStateFlow<SatunesUiState> = MutableStateFlow(SatunesUiState())
     private val _isLoadingData: MutableState<Boolean> = DataLoader.isLoading
     private val _isDataLoaded: MutableState<Boolean> = DataLoader.isLoaded
-    val _foldersChecked: MutableState<Boolean> = SettingsManager.foldersChecked
-    val _artistsChecked: MutableState<Boolean> = SettingsManager.artistsChecked
-    val _albumsChecked: MutableState<Boolean> = SettingsManager.albumsChecked
-    val _genresChecked: MutableState<Boolean> = SettingsManager.genresChecked
-    val _playlistsChecked: MutableState<Boolean> = SettingsManager.playlistsChecked
+
+    //Use this only for nav bar items as it won't refresh if uiState is updated, idk why.
+    private val _foldersChecked: MutableState<Boolean> = SettingsManager.foldersChecked
+    private val _artistsChecked: MutableState<Boolean> = SettingsManager.artistsChecked
+    private val _albumsChecked: MutableState<Boolean> = SettingsManager.albumsChecked
+    private val _genresChecked: MutableState<Boolean> = SettingsManager.genresChecked
+    private val _playlistsChecked: MutableState<Boolean> = SettingsManager.playlistsChecked
 
     val uiState: StateFlow<SatunesUiState> = _uiState.asStateFlow()
 
     val isLoadingData: Boolean by _isLoadingData
     val isDataLoaded: Boolean by _isDataLoaded
-    val foldersChecked: Boolean by SettingsManager.foldersChecked
-    val artistsChecked: Boolean by SettingsManager.artistsChecked
-    val albumsChecked: Boolean by SettingsManager.albumsChecked
-    val genresChecked: Boolean by SettingsManager.genresChecked
-    val playlistsChecked: Boolean by SettingsManager.playlistsChecked
+    val foldersChecked: Boolean by _foldersChecked
+    val artistsChecked: Boolean by _artistsChecked
+    val albumsChecked: Boolean by _albumsChecked
+    val genresChecked: Boolean by _genresChecked
+    val playlistsChecked: Boolean by _playlistsChecked
+
+    val navBarSections: Map<NavBarSection, Boolean> = mapOf(
+    )
 
     //Use this in UiSate and ViewModel as it is a particular value. It could change but most of the time it won't change
     var isAudioAllowed: Boolean by mutableStateOf(_uiState.value.isAudioAllowed)

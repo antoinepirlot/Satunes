@@ -51,7 +51,6 @@ internal data class SatunesUiState(
         else if (artistsChecked) NavBarSection.ARTISTS
         else if (albumsChecked) NavBarSection.ALBUMS
         else if (genresChecked) NavBarSection.GENRES
-        else if (playlistsChecked) NavBarSection.PLAYLISTS
         else NavBarSection.MUSICS,
     val navBarSectionSettingsChecked: Map<SwitchSettings, Boolean> = mapOf(
         Pair(first = SwitchSettings.FOLDERS_CHECKED, second = foldersChecked),

@@ -61,10 +61,10 @@ internal fun MediaWithAlbumsHeaderView(
         Title(text = mediaImpl.title)
         AlbumGrid(
             albumCollection = albumCollection,
-            onClick = {
+            onClick = { album: Album? ->
                 openMedia(
                     playbackViewModel = playbackViewModel,
-                    media = mediaImpl,
+                    media = album,
                     navController = navController
                 )
             },

@@ -36,9 +36,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -65,7 +68,7 @@ import kotlinx.coroutines.launch
  * @author Antoine Pirlot on 27/06/2024
  */
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 internal fun SearchView(
     modifier: Modifier = Modifier,
@@ -98,6 +101,8 @@ internal fun SearchView(
         focusRequester.requestFocus()
     }
 
+    val keyboard: SoftwareKeyboardController? = LocalSoftwareKeyboardController.current
+
     Column(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -106,7 +111,10 @@ internal fun SearchView(
             modifier = Modifier.focusRequester(focusRequester),
             query = query,
             onQueryChange = { searchViewModel.updateQuery(value = it) },
-            onSearch = { searchViewModel.updateQuery(value = it) },
+            onSearch = {
+                searchViewModel.updateQuery(value = it)
+                keyboard?.hide()
+            },
             active = false,
             onActiveChange = { /* Do not use active mode */ },
             placeholder = { NormalText(text = stringResource(id = R.string.search_placeholder)) },

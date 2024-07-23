@@ -30,7 +30,6 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
@@ -41,7 +40,6 @@ import io.github.antoinepirlot.satunes.database.services.settings.SettingsManage
 import io.github.antoinepirlot.satunes.internet.updates.APKDownloadStatus
 import io.github.antoinepirlot.satunes.internet.updates.UpdateAvailableStatus
 import io.github.antoinepirlot.satunes.internet.updates.UpdateCheckManager
-import io.github.antoinepirlot.satunes.models.SearchChips
 import io.github.antoinepirlot.satunes.ui.states.SatunesUiState
 import io.github.antoinepirlot.satunes.ui.viewmodels.utils.isAudioAllowed
 import kotlinx.coroutines.CoroutineScope
@@ -68,15 +66,6 @@ internal class SatunesViewModel : ViewModel() {
     private val _albumsChecked: MutableState<Boolean> = SettingsManager.albumsChecked
     private val _genresChecked: MutableState<Boolean> = SettingsManager.genresChecked
     private val _playlistsChecked: MutableState<Boolean> = SettingsManager.playlistsChecked
-
-    private val _filtersList: MutableMap<SearchChips, Boolean> = mutableMapOf(
-        Pair(SearchChips.MUSICS, SettingsManager.musicsFilter),
-        Pair(SearchChips.ALBUMS, SettingsManager.albumsFilter),
-        Pair(SearchChips.ARTISTS, SettingsManager.artistsFilter),
-        Pair(SearchChips.GENRES, SettingsManager.genresFilter),
-        Pair(SearchChips.FOLDERS, SettingsManager.foldersFilter),
-        Pair(SearchChips.PLAYLISTS, SettingsManager.playlistsFilter),
-    )
 
     @RequiresApi(Build.VERSION_CODES.M)
     private val _updateAvailableStatus: MutableState<UpdateAvailableStatus> =
@@ -105,18 +94,12 @@ internal class SatunesViewModel : ViewModel() {
     var isAudioAllowed: Boolean by mutableStateOf(_uiState.value.isAudioAllowed)
         private set
 
-    val selectedSearchChips: MutableList<SearchChips> = mutableStateListOf()
-
     var updateAvailableStatus: UpdateAvailableStatus by _updateAvailableStatus
         private set
     var isCheckingUpdate: Boolean by _isCheckingUpdate
         private set
     var downloadStatus: APKDownloadStatus by _downloadStatus
         private set
-
-    init {
-        selectedSearchChips.addAll(_filtersList.filter { it.value }.keys)
-    }
 
     fun loadSettings() {
         runBlocking {
@@ -236,25 +219,6 @@ internal class SatunesViewModel : ViewModel() {
         }
     }
 
-    fun switchFilter(filterSetting: NavBarSection) {
-        runBlocking {
-            SettingsManager.switchFilter(
-                context = MainActivity.instance.applicationContext,
-                filterSetting = filterSetting
-            )
-            _uiState.update { currentState: SatunesUiState ->
-                currentState.copy(
-                    musicsFilter = SettingsManager.musicsFilter,
-                    foldersFilter = SettingsManager.foldersFilter,
-                    artistsFilter = SettingsManager.artistsFilter,
-                    albumsFilter = SettingsManager.albumsFilter,
-                    genresFilter = SettingsManager.genresFilter,
-                    playlistsFilter = SettingsManager.playlistsFilter,
-                )
-            }
-        }
-    }
-
     fun updateRepeatMode(newValue: Int) {
         runBlocking {
             SettingsManager.updateRepeatMode(
@@ -292,36 +256,6 @@ internal class SatunesViewModel : ViewModel() {
                 )
             }
         }
-    }
-
-    fun resetSelectedChips() {
-        runBlocking {
-            selectedSearchChips.clear()
-            SettingsManager.loadFilters(context = MainActivity.instance.applicationContext)
-            _filtersList[SearchChips.MUSICS] = SettingsManager.musicsFilter
-            _filtersList[SearchChips.ALBUMS] = SettingsManager.albumsFilter
-            _filtersList[SearchChips.ARTISTS] = SettingsManager.artistsFilter
-            _filtersList[SearchChips.GENRES] = SettingsManager.genresFilter
-            _filtersList[SearchChips.FOLDERS] = SettingsManager.foldersFilter
-            _filtersList[SearchChips.PLAYLISTS] = SettingsManager.playlistsFilter
-            _filtersList.forEach { (searchChip: SearchChips, checked: Boolean) ->
-                if (checked) {
-                    selectedSearchChips.add(searchChip)
-                }
-            }
-        }
-    }
-
-    fun select(searchChip: SearchChips) {
-        _filtersList[searchChip] = true
-        if (!selectedSearchChips.contains(element = searchChip)) {
-            selectedSearchChips.add(searchChip)
-        }
-    }
-
-    fun unselect(searchChip: SearchChips) {
-        _filtersList[searchChip] = false
-        selectedSearchChips.remove(searchChip)
     }
 
     fun resetUpdatesStatus() {

@@ -33,16 +33,15 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SearchBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -59,7 +58,6 @@ import io.github.antoinepirlot.satunes.ui.components.chips.MediaChipList
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 import io.github.antoinepirlot.satunes.ui.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
-import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.ui.viewmodels.SearchViewModel
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 import kotlinx.coroutines.CoroutineScope
@@ -70,19 +68,18 @@ import kotlinx.coroutines.launch
  * @author Antoine Pirlot on 27/06/2024
  */
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 internal fun SearchView(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    satunesViewModel: SatunesViewModel = viewModel(),
     dataViewModel: DataViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
     searchViewModel: SearchViewModel = viewModel(),
 ) {
     val query: String = searchViewModel.query
     val mediaImplList: Set<MediaImpl> = searchViewModel.mediaImplSet
-    val selectedSearchChips: List<SearchChips> = satunesViewModel.selectedSearchChips
+    val selectedSearchChips: List<SearchChips> = searchViewModel.selectedSearchChips
 
     val searchCoroutine: CoroutineScope = rememberCoroutineScope()
     var searchJob: Job? = null
@@ -98,19 +95,13 @@ internal fun SearchView(
         }
     }
 
-    var resetSelectedChips: Boolean by rememberSaveable { mutableStateOf(true) }
-    if (resetSelectedChips) {
-        LaunchedEffect(key1 = true) {
-            satunesViewModel.resetSelectedChips()
-        }
-        resetSelectedChips = false
-    }
-
     val focusRequester: FocusRequester = remember { FocusRequester() }
     LaunchedEffect(key1 = true) {
         // Request focus after composable becomes visible
         focusRequester.requestFocus()
     }
+
+    val keyboard: SoftwareKeyboardController? = LocalSoftwareKeyboardController.current
 
     Column(
         modifier = modifier.fillMaxSize(),
@@ -120,7 +111,10 @@ internal fun SearchView(
             modifier = Modifier.focusRequester(focusRequester),
             query = query,
             onQueryChange = { searchViewModel.updateQuery(value = it) },
-            onSearch = { searchViewModel.updateQuery(value = it) },
+            onSearch = {
+                searchViewModel.updateQuery(value = it)
+                keyboard?.hide()
+            },
             active = false,
             onActiveChange = { /* Do not use active mode */ },
             placeholder = { NormalText(text = stringResource(id = R.string.search_placeholder)) },

@@ -138,6 +138,13 @@ class DatabaseManager(context: Context) {
         showToast: Boolean = true
     ) {
         CoroutineScope(Dispatchers.IO).launch {
+            if (playlistTitle.isBlank()) {
+                showToastOnUiThread(
+                    context = context,
+                    message = context.getString(R.string.blank_string_error)
+                )
+                return@launch
+            }
             if (playlistDao.playlistExist(title = playlistTitle)) {
                 val message: String =
                     playlistTitle + context.getString(R.string.playlist_already_exist)
@@ -166,11 +173,18 @@ class DatabaseManager(context: Context) {
         }
     }
 
-    fun updatePlaylists(vararg playlists: Playlist) {
+    fun updatePlaylists(context: Context, vararg playlists: Playlist) {
         CoroutineScope(Dispatchers.IO).launch {
             val playlistDBs: MutableList<PlaylistDB> = mutableListOf()
             playlists.forEach { playlist: Playlist ->
-                playlistDBs.add(PlaylistDB(id = playlist.id, title = playlist.title))
+                if (playlist.title.isBlank()) {
+                    showToastOnUiThread(
+                        context = context,
+                        message = context.getString(R.string.blank_string_error)
+                    )
+                } else {
+                    playlistDBs.add(PlaylistDB(id = playlist.id, title = playlist.title))
+                }
             }
             try {
                 playlistDao.update(*playlistDBs.toTypedArray())

@@ -131,7 +131,8 @@ object DataLoader {
      * Load all Media data from device's storage.
      */
     fun loadAllData(context: Context) {
-        if (isLoading.value) {
+        //No coroutine here as in app its a thread but in android auto it's must block the process
+        if (isLoading.value || isLoaded.value) {
             return
         }
         isLoading.value = true

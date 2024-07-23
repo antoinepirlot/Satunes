@@ -48,6 +48,8 @@ import io.github.antoinepirlot.satunes.database.services.settings.SettingsManage
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.playback.services.PlaybackService
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
 import io.github.antoinepirlot.satunes.icons.R as RIcons
 
 /**
@@ -56,6 +58,7 @@ import io.github.antoinepirlot.satunes.icons.R as RIcons
 internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
 
     private lateinit var playbackController: PlaybackController
+    private lateinit var _logger: SatunesLogger
 
     companion object {
         val routeDeque: RouteDeque = RouteDeque()
@@ -86,27 +89,32 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
         super.onCreate()
         SatunesLogger.DOCUMENTS_PATH =
             applicationContext.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)!!.path
+        _logger = SatunesLogger.getLogger()
+        _logger.info("Android Auto is Starting")
         val className: String = this.javaClass.name.split(".").last()
         session = MediaSessionCompat(this, className)
         sessionToken = session.sessionToken
         session.setCallback(SatunesCarCallBack)
 
         routeDeque.resetRouteDeque()
-
-        //Init playback
-        DataLoader.loadAllData(context = baseContext)
-        playbackController =
-            PlaybackController.initInstance(baseContext, listener = SatunesPlaybackListener)
-        while (DataLoader.isLoading.value) {
-            //Wait
-        }
-        if (DataLoader.isLoaded.value) {
-            loadAllPlaybackData()
-        }
+        loadAllPlaybackData()
     }
 
     private fun loadAllPlaybackData() {
-        val playbackController: PlaybackController = PlaybackController.getInstance()
+        DataLoader.loadAllData(context = baseContext)
+        playbackController =
+            PlaybackController.initInstance(baseContext, listener = SatunesPlaybackListener)
+        runBlocking {
+            while (DataLoader.isLoading.value) {
+                delay(50) //Wait (use delay to reduce cpu usage
+            }
+        }
+        if (!DataLoader.isLoaded.value) {
+            val message = "Data has not been loaded"
+            _logger.severe(message)
+            throw IllegalStateException(message)
+        }
+
         SatunesPlaybackListener.updateMediaPlaying()
         if (playbackController.isPlaying.value) {
             SatunesPlaybackListener.updatePlaybackState(
@@ -232,6 +240,9 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
         }
         mediaItemList.add(getShuffleButton())
         for (media: MediaImpl in mediaList) {
+            if (mediaItemList.size >= 1000) {
+                break // Do not add more than 1000 media as it could make android bugging
+            }
             if (media !is Music && (media.getMusicSet().isEmpty())) {
                 continue
             }

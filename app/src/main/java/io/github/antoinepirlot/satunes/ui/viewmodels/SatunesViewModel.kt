@@ -30,9 +30,9 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
@@ -105,7 +105,7 @@ internal class SatunesViewModel : ViewModel() {
     var isAudioAllowed: Boolean by mutableStateOf(_uiState.value.isAudioAllowed)
         private set
 
-    val selectedSearchChips: MutableList<SearchChips> = SnapshotStateList()
+    val selectedSearchChips: MutableList<SearchChips> = mutableStateListOf()
 
     var updateAvailableStatus: UpdateAvailableStatus by _updateAvailableStatus
         private set

@@ -28,7 +28,6 @@ package io.github.antoinepirlot.satunes.ui.viewmodels
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.database.R
@@ -37,16 +36,19 @@ import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.models.SearchChips
+import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
+import java.util.SortedSet
 
 /**
  * @author Antoine Pirlot on 21/07/2024
  */
 class SearchViewModel : ViewModel() {
+    private val _logger: SatunesLogger = SatunesLogger.getLogger()
 
     var query: String by mutableStateOf("")
         private set
 
-    val mediaImplList: List<MediaImpl> = SnapshotStateList()
+    val mediaImplSet: Set<MediaImpl> = sortedSetOf()
 
     fun updateQuery(value: String) {
         query = value
@@ -56,74 +58,69 @@ class SearchViewModel : ViewModel() {
         dataViewModel: DataViewModel,
         selectedSearchChips: List<SearchChips>,
     ) {
-        mediaImplList as MutableList
-        mediaImplList.clear()
-        if (this.query.isBlank()) {
-            // Prevent loop if string is "" or " "
-            return
-        }
+        try {
+            mediaImplSet as SortedSet
+            mediaImplSet.clear()
+            if (this.query.isBlank()) {
+                // Prevent loop if string is "" or " "
+                return
+            }
 
-        val query: String = this.query.lowercase()
+            val query: String = this.query.lowercase()
 
-        for (searchChip: SearchChips in selectedSearchChips) {
-            dataViewModel.getMusicSet().forEach { music: Music ->
-                when (searchChip) {
-                    SearchChips.MUSICS -> {
-                        if (music.title.lowercase().contains(query)) {
-                            if (!mediaImplList.contains(music)) {
-                                mediaImplList.add(element = music)
+            for (searchChip: SearchChips in selectedSearchChips) {
+                dataViewModel.getMusicSet().forEach { music: Music ->
+                    when (searchChip) {
+                        SearchChips.MUSICS -> {
+                            if (music.title.lowercase().contains(query)) {
+                                mediaImplSet.add(element = music)
                             }
                         }
-                    }
 
-                    SearchChips.ARTISTS -> {
-                        if (music.artist.title.lowercase().contains(query)) {
-                            if (!mediaImplList.contains(music.artist)) {
-                                mediaImplList.add(element = music.artist)
+                        SearchChips.ARTISTS -> {
+                            if (music.artist.title.lowercase().contains(query)) {
+                                mediaImplSet.add(element = music.artist)
                             }
                         }
-                    }
 
-                    SearchChips.ALBUMS -> {
-                        if (music.album.title.lowercase().contains(query)) {
-                            if (!mediaImplList.contains(music.album)) {
-                                mediaImplList.add(element = music.album)
+                        SearchChips.ALBUMS -> {
+                            if (music.album.title.lowercase().contains(query)) {
+                                mediaImplSet.add(element = music.album)
                             }
                         }
-                    }
 
-                    SearchChips.GENRES -> {
-                        if (music.genre.title.lowercase().contains(query)) {
-                            if (!mediaImplList.contains(music.genre)) {
-                                mediaImplList.add(element = music.genre)
+                        SearchChips.GENRES -> {
+                            if (music.genre.title.lowercase().contains(query)) {
+                                mediaImplSet.add(element = music.genre)
                             }
                         }
-                    }
 
-                    SearchChips.FOLDERS -> {
-                        if (music.folder.title.lowercase().contains(query)) {
-                            if (!mediaImplList.contains(music.folder)) {
-                                mediaImplList.add(element = music.folder)
+                        SearchChips.FOLDERS -> {
+                            if (music.folder.title.lowercase().contains(query)) {
+                                mediaImplSet.add(element = music.folder)
                             }
                         }
-                    }
 
-                    SearchChips.PLAYLISTS -> { /* Nothing at this stage, see below */
+                        SearchChips.PLAYLISTS -> {
+                            /* Nothing at this stage, see below */
+                        }
+                    }
+                }
+                if (searchChip == SearchChips.PLAYLISTS) {
+                    dataViewModel.getPlaylistSet().forEach { playlist: Playlist ->
+                        val context = MainActivity.instance.applicationContext
+                        if (playlist.title == LIKES_PLAYLIST_TITLE) {
+                            playlist.title = context.getString(R.string.likes_playlist_title)
+                        }
+                        if (playlist.title.lowercase().contains(query)) {
+                            mediaImplSet.add(element = playlist)
+                        }
                     }
                 }
             }
-            if (searchChip == SearchChips.PLAYLISTS) {
-                dataViewModel.getPlaylistSet().forEach { playlist: Playlist ->
-                    val context = MainActivity.instance.applicationContext
-                    if (playlist.title == LIKES_PLAYLIST_TITLE) {
-                        playlist.title = context.getString(R.string.likes_playlist_title)
-                    }
-                    if (playlist.title.lowercase().contains(query)) {
-                        mediaImplList.add(element = playlist)
-                    }
-                }
-            }
+        } catch (e: Throwable) {
+            _logger.severe(e.message)
+            throw e
         }
-        mediaImplList.sort()
     }
 }

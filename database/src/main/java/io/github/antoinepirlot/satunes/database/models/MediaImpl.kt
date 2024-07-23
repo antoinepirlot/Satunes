@@ -78,9 +78,6 @@ abstract class MediaImpl(
     }
 
     override fun compareTo(other: MediaImpl): Int {
-        if (this == other) {
-            return 0
-        }
-        return StringComparator.compare(o1 = this.title, o2 = other.title)
+        return if (this == other) 0 else StringComparator.compare(o1 = this.title, o2 = other.title)
     }
 }

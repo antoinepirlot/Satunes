@@ -173,7 +173,7 @@ private fun onSettingButtonClick(
 
     when (val currentDestination: String = uiState.currentDestination) {
         in settingsDestinations -> {
-            if (currentDestination == Destination.PERMISSIONS_SETTINGS.link && uiState.isAudioAllowed) {
+            if (currentDestination == Destination.PERMISSIONS_SETTINGS.link && !uiState.isAudioAllowed) {
                 return
             } else {
                 navController.popBackStack()

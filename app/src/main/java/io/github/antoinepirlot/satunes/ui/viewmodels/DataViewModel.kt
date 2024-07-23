@@ -87,7 +87,10 @@ class DataViewModel : ViewModel() {
     }
 
     fun updatePlaylists(vararg playlists: Playlist) {
-        _db.updatePlaylists(playlists = playlists)
+        _db.updatePlaylists(
+            context = MainActivity.instance.applicationContext,
+            playlists = playlists
+        )
     }
 
     fun removePlaylist(playlist: Playlist) {

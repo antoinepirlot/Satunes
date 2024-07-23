@@ -42,4 +42,5 @@
     <string name="added">Ajouté(s)</string>
     <string name="created">Playlist Créée</string>
     <string name="likes_playlist_title">Favoris</string>
+    <string name="blank_string_error">Le titre de la playlist est vide.</string>
 </resources>

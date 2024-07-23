@@ -81,7 +81,7 @@ internal fun SearchView(
     searchViewModel: SearchViewModel = viewModel(),
 ) {
     val query: String = searchViewModel.query
-    val mediaImplList: List<MediaImpl> = searchViewModel.mediaImplList
+    val mediaImplList: Set<MediaImpl> = searchViewModel.mediaImplSet
     val selectedSearchChips: List<SearchChips> = satunesViewModel.selectedSearchChips
 
     val searchCoroutine: CoroutineScope = rememberCoroutineScope()

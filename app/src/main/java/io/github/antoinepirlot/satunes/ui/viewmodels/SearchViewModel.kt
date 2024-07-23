@@ -26,7 +26,6 @@
 package io.github.antoinepirlot.satunes.ui.viewmodels
 
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
@@ -38,6 +37,7 @@ import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.models.SearchChips
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
+import java.util.SortedSet
 
 /**
  * @author Antoine Pirlot on 21/07/2024
@@ -48,7 +48,7 @@ class SearchViewModel : ViewModel() {
     var query: String by mutableStateOf("")
         private set
 
-    val mediaImplList: List<MediaImpl> = mutableStateListOf()
+    val mediaImplSet: Set<MediaImpl> = sortedSetOf()
 
     fun updateQuery(value: String) {
         query = value
@@ -59,8 +59,8 @@ class SearchViewModel : ViewModel() {
         selectedSearchChips: List<SearchChips>,
     ) {
         try {
-            mediaImplList as MutableList
-            mediaImplList.clear()
+            mediaImplSet as SortedSet
+            mediaImplSet.clear()
             if (this.query.isBlank()) {
                 // Prevent loop if string is "" or " "
                 return
@@ -73,40 +73,40 @@ class SearchViewModel : ViewModel() {
                     when (searchChip) {
                         SearchChips.MUSICS -> {
                             if (music.title.lowercase().contains(query)) {
-                                if (!mediaImplList.contains(music)) {
-                                    mediaImplList.add(element = music)
+                                if (!mediaImplSet.contains(music)) {
+                                    mediaImplSet.add(element = music)
                                 }
                             }
                         }
 
                         SearchChips.ARTISTS -> {
                             if (music.artist.title.lowercase().contains(query)) {
-                                if (!mediaImplList.contains(music.artist)) {
-                                    mediaImplList.add(element = music.artist)
+                                if (!mediaImplSet.contains(music.artist)) {
+                                    mediaImplSet.add(element = music.artist)
                                 }
                             }
                         }
 
                         SearchChips.ALBUMS -> {
                             if (music.album.title.lowercase().contains(query)) {
-                                if (!mediaImplList.contains(music.album)) {
-                                    mediaImplList.add(element = music.album)
+                                if (!mediaImplSet.contains(music.album)) {
+                                    mediaImplSet.add(element = music.album)
                                 }
                             }
                         }
 
                         SearchChips.GENRES -> {
                             if (music.genre.title.lowercase().contains(query)) {
-                                if (!mediaImplList.contains(music.genre)) {
-                                    mediaImplList.add(element = music.genre)
+                                if (!mediaImplSet.contains(music.genre)) {
+                                    mediaImplSet.add(element = music.genre)
                                 }
                             }
                         }
 
                         SearchChips.FOLDERS -> {
                             if (music.folder.title.lowercase().contains(query)) {
-                                if (!mediaImplList.contains(music.folder)) {
-                                    mediaImplList.add(element = music.folder)
+                                if (!mediaImplSet.contains(music.folder)) {
+                                    mediaImplSet.add(element = music.folder)
                                 }
                             }
                         }
@@ -122,12 +122,11 @@ class SearchViewModel : ViewModel() {
                             playlist.title = context.getString(R.string.likes_playlist_title)
                         }
                         if (playlist.title.lowercase().contains(query)) {
-                            mediaImplList.add(element = playlist)
+                            mediaImplSet.add(element = playlist)
                         }
                     }
                 }
             }
-            mediaImplList.sort()
         } catch (e: Throwable) {
             _logger.severe(e.message)
             throw e

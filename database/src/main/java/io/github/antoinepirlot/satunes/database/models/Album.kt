@@ -70,4 +70,8 @@ class Album(
         }
         return titleCompared
     }
+
+    override fun toString(): String {
+        return "$title - $artist"
+    }
 }

@@ -98,6 +98,7 @@ object DataLoader {
     )
 
     private val selection: String = "${MediaStore.Audio.Media.DATA} LIKE ?" +
+            " OR ${MediaStore.Audio.Media.DATA} REGEXP ?" +
             if (SettingsManager.includeRingtonesChecked) {
                 " OR ${MediaStore.Audio.Media.DATA} LIKE ?" +
                         " OR ${MediaStore.Audio.Media.DATA} LIKE ?" +
@@ -106,7 +107,10 @@ object DataLoader {
                 ""
             }
 
-    private var selection_args: Array<String> = arrayOf("$EXTERNAL_STORAGE_PATH/Music/%")
+    private var selection_args: Array<String> = arrayOf(
+        "$EXTERNAL_STORAGE_PATH/Music/%",
+        "^\\/storage\\/[^\\\\\\/]+\\/Music\\/.*\$" //^\/storage(\/emulated)?\/[^\\\/]+\/Music\/.*$ regex
+    )
 
     private val logger = SatunesLogger.getLogger()
 

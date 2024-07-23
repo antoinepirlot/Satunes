@@ -26,6 +26,7 @@
 package io.github.antoinepirlot.satunes.ui.viewmodels
 
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
@@ -34,24 +35,98 @@ import io.github.antoinepirlot.satunes.database.R
 import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.database.models.Playlist
+import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.models.SearchChips
+import io.github.antoinepirlot.satunes.ui.states.SearchUiState
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.runBlocking
 import java.util.SortedSet
 
 /**
  * @author Antoine Pirlot on 21/07/2024
  */
 class SearchViewModel : ViewModel() {
+    private val _uiState: MutableStateFlow<SearchUiState> = MutableStateFlow(SearchUiState())
     private val _logger: SatunesLogger = SatunesLogger.getLogger()
+    private val _filtersList: MutableMap<SearchChips, Boolean> = mutableMapOf(
+        Pair(SearchChips.MUSICS, SettingsManager.musicsFilter),
+        Pair(SearchChips.ALBUMS, SettingsManager.albumsFilter),
+        Pair(SearchChips.ARTISTS, SettingsManager.artistsFilter),
+        Pair(SearchChips.GENRES, SettingsManager.genresFilter),
+        Pair(SearchChips.FOLDERS, SettingsManager.foldersFilter),
+        Pair(SearchChips.PLAYLISTS, SettingsManager.playlistsFilter),
+    )
+
+    val uiState: StateFlow<SearchUiState> = _uiState.asStateFlow()
+
+    val selectedSearchChips: MutableList<SearchChips> = mutableStateListOf()
 
     var query: String by mutableStateOf("")
         private set
 
     val mediaImplSet: Set<MediaImpl> = sortedSetOf()
 
+    init {
+        selectedSearchChips.addAll(_filtersList.filter { it.value }.keys)
+    }
+
     fun updateQuery(value: String) {
         query = value
+    }
+
+    fun resetSelectedChips() {
+        runBlocking {
+            selectedSearchChips.clear()
+            SettingsManager.loadFilters(context = MainActivity.instance.applicationContext)
+            _filtersList[SearchChips.MUSICS] = SettingsManager.musicsFilter
+            _filtersList[SearchChips.ALBUMS] = SettingsManager.albumsFilter
+            _filtersList[SearchChips.ARTISTS] = SettingsManager.artistsFilter
+            _filtersList[SearchChips.GENRES] = SettingsManager.genresFilter
+            _filtersList[SearchChips.FOLDERS] = SettingsManager.foldersFilter
+            _filtersList[SearchChips.PLAYLISTS] = SettingsManager.playlistsFilter
+            _filtersList.forEach { (searchChip: SearchChips, checked: Boolean) ->
+                if (checked) {
+                    selectedSearchChips.add(searchChip)
+                }
+            }
+        }
+    }
+
+    fun select(searchChip: SearchChips) {
+        _filtersList[searchChip] = true
+        if (!selectedSearchChips.contains(element = searchChip)) {
+            selectedSearchChips.add(searchChip)
+        }
+    }
+
+    fun unselect(searchChip: SearchChips) {
+        _filtersList[searchChip] = false
+        selectedSearchChips.remove(searchChip)
+    }
+
+    fun switchFilter(filterSetting: NavBarSection) {
+        runBlocking {
+            SettingsManager.switchFilter(
+                context = MainActivity.instance.applicationContext,
+                filterSetting = filterSetting
+            )
+            _uiState.update { currentState: SearchUiState ->
+                currentState.copy(
+                    musicsFilter = SettingsManager.musicsFilter,
+                    foldersFilter = SettingsManager.foldersFilter,
+                    artistsFilter = SettingsManager.artistsFilter,
+                    albumsFilter = SettingsManager.albumsFilter,
+                    genresFilter = SettingsManager.genresFilter,
+                    playlistsFilter = SettingsManager.playlistsFilter,
+                )
+            }
+        }
     }
 
     fun search(

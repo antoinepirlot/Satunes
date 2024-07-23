@@ -33,12 +33,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SearchBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -59,7 +55,6 @@ import io.github.antoinepirlot.satunes.ui.components.chips.MediaChipList
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 import io.github.antoinepirlot.satunes.ui.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
-import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.ui.viewmodels.SearchViewModel
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 import kotlinx.coroutines.CoroutineScope
@@ -75,14 +70,13 @@ import kotlinx.coroutines.launch
 internal fun SearchView(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    satunesViewModel: SatunesViewModel = viewModel(),
     dataViewModel: DataViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
     searchViewModel: SearchViewModel = viewModel(),
 ) {
     val query: String = searchViewModel.query
     val mediaImplList: Set<MediaImpl> = searchViewModel.mediaImplSet
-    val selectedSearchChips: List<SearchChips> = satunesViewModel.selectedSearchChips
+    val selectedSearchChips: List<SearchChips> = searchViewModel.selectedSearchChips
 
     val searchCoroutine: CoroutineScope = rememberCoroutineScope()
     var searchJob: Job? = null
@@ -96,14 +90,6 @@ internal fun SearchView(
                 selectedSearchChips = selectedSearchChips,
             )
         }
-    }
-
-    var resetSelectedChips: Boolean by rememberSaveable { mutableStateOf(true) }
-    if (resetSelectedChips) {
-        LaunchedEffect(key1 = true) {
-            satunesViewModel.resetSelectedChips()
-        }
-        resetSelectedChips = false
     }
 
     val focusRequester: FocusRequester = remember { FocusRequester() }

@@ -34,8 +34,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.models.SwitchSettings
-import io.github.antoinepirlot.satunes.ui.states.SatunesUiState
-import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
+import io.github.antoinepirlot.satunes.ui.states.SearchUiState
+import io.github.antoinepirlot.satunes.ui.viewmodels.SearchViewModel
 
 /**
  * @author Antoine Pirlot on 08/07/2024
@@ -46,9 +46,9 @@ import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
 @Composable
 internal fun DefaultSearchFiltersSetting(
     modifier: Modifier = Modifier,
-    satunesViewModel: SatunesViewModel = viewModel()
+    searchViewModel: SearchViewModel = viewModel()
 ) {
-    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+    val satunesUiState: SearchUiState by searchViewModel.uiState.collectAsState()
 
     val filterSettingsChecked: Map<SwitchSettings, Boolean> = mapOf(
         Pair(SwitchSettings.MUSICS_FILTER, satunesUiState.musicsFilter),

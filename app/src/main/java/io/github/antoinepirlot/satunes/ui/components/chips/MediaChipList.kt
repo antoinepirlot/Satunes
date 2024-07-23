@@ -43,7 +43,7 @@ import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.models.SearchChips
 import io.github.antoinepirlot.satunes.models.allSearchChips
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
-import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
+import io.github.antoinepirlot.satunes.ui.viewmodels.SearchViewModel
 
 /**
  * @author Antoine Pirlot on 28/06/2024
@@ -52,7 +52,7 @@ import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
 @Composable
 internal fun MediaChipList(
     modifier: Modifier = Modifier,
-    satunesViewModel: SatunesViewModel = viewModel(),
+    searchViewModel: SearchViewModel = viewModel(),
 ) {
     val scrollState: ScrollState = rememberScrollState()
     val searchChipsList: List<SearchChips> = allSearchChips
@@ -62,7 +62,7 @@ internal fun MediaChipList(
             .horizontalScroll(state = scrollState),
     ) {
         searchChipsList.forEach { searchChip: SearchChips ->
-            val selected: Boolean = satunesViewModel.selectedSearchChips.contains(searchChip)
+            val selected: Boolean = searchViewModel.selectedSearchChips.contains(searchChip)
             val filterChipModifier: Modifier = when (searchChip) {
                 searchChipsList.first() -> {
                     Modifier.padding(start = 16.dp, end = 4.dp)
@@ -82,9 +82,9 @@ internal fun MediaChipList(
                 selected = selected,
                 onClick = {
                     if (selected) {
-                        satunesViewModel.unselect(searchChip = searchChip)
+                        searchViewModel.unselect(searchChip = searchChip)
                     } else {
-                        satunesViewModel.select(searchChip = searchChip)
+                        searchViewModel.select(searchChip = searchChip)
                     }
                 },
                 leadingIcon = {

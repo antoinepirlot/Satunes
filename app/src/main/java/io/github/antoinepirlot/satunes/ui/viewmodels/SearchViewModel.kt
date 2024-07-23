@@ -33,6 +33,10 @@ import androidx.lifecycle.ViewModel
 import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.database.R
 import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
+import io.github.antoinepirlot.satunes.database.models.Album
+import io.github.antoinepirlot.satunes.database.models.Artist
+import io.github.antoinepirlot.satunes.database.models.Folder
+import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
@@ -153,26 +157,30 @@ class SearchViewModel : ViewModel() {
                         }
 
                         SearchChips.ARTISTS -> {
-                            if (music.artist.title.lowercase().contains(query)) {
-                                mediaImplSet.add(element = music.artist)
+                            val artist: Artist = music.artist
+                            if (artist.title.lowercase().contains(query)) {
+                                mediaImplSet.add(element = artist)
                             }
                         }
 
                         SearchChips.ALBUMS -> {
-                            if (music.album.title.lowercase().contains(query)) {
-                                mediaImplSet.add(element = music.album)
+                            val album: Album = music.album
+                            if (album.title.lowercase().contains(query)) {
+                                mediaImplSet.add(element = album)
                             }
                         }
 
                         SearchChips.GENRES -> {
-                            if (music.genre.title.lowercase().contains(query)) {
-                                mediaImplSet.add(element = music.genre)
+                            val genre: Genre = music.genre
+                            if (genre.title.lowercase().contains(query)) {
+                                mediaImplSet.add(element = genre)
                             }
                         }
 
                         SearchChips.FOLDERS -> {
-                            if (music.folder.title.lowercase().contains(query)) {
-                                mediaImplSet.add(element = music.folder)
+                            val folder: Folder = music.folder
+                            if (folder.title.lowercase().contains(query)) {
+                                mediaImplSet.add(element = folder)
                             }
                         }
 

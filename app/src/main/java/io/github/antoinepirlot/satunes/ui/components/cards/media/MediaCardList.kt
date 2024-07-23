@@ -73,7 +73,7 @@ internal fun MediaCardList(
     ) {
         items(
             items = mediaListToLoad,
-            key = { it.javaClass.name + '-' + it.id }
+            key = null //TODO { it.javaClass.name + '-' + it.id } this crash in search for Unknown Album as Set can contains 2 same objects that's impossible
         ) { media: MediaImpl ->
             if (media == mediaImplCollection.first()) {
                 if (header != null) {

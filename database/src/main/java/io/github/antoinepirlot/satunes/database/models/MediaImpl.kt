@@ -81,12 +81,6 @@ abstract class MediaImpl(
         if (this == other) {
             return 0
         }
-        var comparedValue: Int = StringComparator.compare(o1 = this.title, o2 = other.title)
-        if (comparedValue == 0) {
-            if (this != other) {
-                comparedValue = 1
-            }
-        }
-        return comparedValue
+        return StringComparator.compare(o1 = this.title, o2 = other.title)
     }
 }

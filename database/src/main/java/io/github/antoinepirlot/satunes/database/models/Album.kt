@@ -61,12 +61,9 @@ class Album(
     }
 
     override fun compareTo(other: MediaImpl): Int {
-        val compared: Int = super.compareTo(other)
-        if (artist == null || other is Album && other.artist == null) {
-            return compared
-        }
+        var compared: Int = super.compareTo(other)
         if (compared == 0 && other is Album) {
-            return artist!!.compareTo(other.artist!!)
+            compared = this.artist!!.compareTo(other.artist!!)
         }
         return compared
     }

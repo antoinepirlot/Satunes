@@ -73,45 +73,36 @@ class SearchViewModel : ViewModel() {
                     when (searchChip) {
                         SearchChips.MUSICS -> {
                             if (music.title.lowercase().contains(query)) {
-                                if (!mediaImplSet.contains(music)) {
-                                    mediaImplSet.add(element = music)
-                                }
+                                mediaImplSet.add(element = music)
                             }
                         }
 
                         SearchChips.ARTISTS -> {
                             if (music.artist.title.lowercase().contains(query)) {
-                                if (!mediaImplSet.contains(music.artist)) {
-                                    mediaImplSet.add(element = music.artist)
-                                }
+                                mediaImplSet.add(element = music.artist)
                             }
                         }
 
                         SearchChips.ALBUMS -> {
                             if (music.album.title.lowercase().contains(query)) {
-                                if (!mediaImplSet.contains(music.album)) {
-                                    mediaImplSet.add(element = music.album)
-                                }
+                                mediaImplSet.add(element = music.album)
                             }
                         }
 
                         SearchChips.GENRES -> {
                             if (music.genre.title.lowercase().contains(query)) {
-                                if (!mediaImplSet.contains(music.genre)) {
-                                    mediaImplSet.add(element = music.genre)
-                                }
+                                mediaImplSet.add(element = music.genre)
                             }
                         }
 
                         SearchChips.FOLDERS -> {
                             if (music.folder.title.lowercase().contains(query)) {
-                                if (!mediaImplSet.contains(music.folder)) {
-                                    mediaImplSet.add(element = music.folder)
-                                }
+                                mediaImplSet.add(element = music.folder)
                             }
                         }
 
-                        SearchChips.PLAYLISTS -> { /* Nothing at this stage, see below */
+                        SearchChips.PLAYLISTS -> {
+                            /* Nothing at this stage, see below */
                         }
                     }
                 }

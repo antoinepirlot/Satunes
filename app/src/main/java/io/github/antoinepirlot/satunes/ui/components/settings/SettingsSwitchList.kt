@@ -140,7 +140,7 @@ private fun switchSetting(
         SwitchSettings.MUSICS_FILTER -> {
             searchViewModel.switchFilter(filterSetting = NavBarSection.MUSICS)
             val searchChip: SearchChips = SearchChips.MUSICS
-            if (searchUiState.musicsFilter != searchUiState.selectedSearchChips.contains(
+            if (searchUiState.musicsFilter != searchViewModel.selectedSearchChips.contains(
                     searchChip
                 )
             ) {
@@ -155,7 +155,7 @@ private fun switchSetting(
         SwitchSettings.ARTISTS_FILTER -> {
             searchViewModel.switchFilter(filterSetting = NavBarSection.ARTISTS)
             val searchChip: SearchChips = SearchChips.ARTISTS
-            if (searchUiState.artistsFilter != searchUiState.selectedSearchChips.contains(
+            if (searchUiState.artistsFilter != searchViewModel.selectedSearchChips.contains(
                     searchChip
                 )
             ) {
@@ -170,7 +170,7 @@ private fun switchSetting(
         SwitchSettings.ALBUMS_FILTER -> {
             searchViewModel.switchFilter(filterSetting = NavBarSection.ALBUMS)
             val searchChip: SearchChips = SearchChips.ALBUMS
-            if (searchUiState.albumsFilter != searchUiState.selectedSearchChips.contains(
+            if (searchUiState.albumsFilter != searchViewModel.selectedSearchChips.contains(
                     searchChip
                 )
             ) {
@@ -185,7 +185,7 @@ private fun switchSetting(
         SwitchSettings.GENRES_FILTER -> {
             searchViewModel.switchFilter(filterSetting = NavBarSection.GENRES)
             val searchChip: SearchChips = SearchChips.GENRES
-            if (searchUiState.genresFilter != searchUiState.selectedSearchChips.contains(
+            if (searchUiState.genresFilter != searchViewModel.selectedSearchChips.contains(
                     searchChip
                 )
             ) {
@@ -200,7 +200,7 @@ private fun switchSetting(
         SwitchSettings.FOLDERS_FILTER -> {
             searchViewModel.switchFilter(filterSetting = NavBarSection.FOLDERS)
             val searchChip: SearchChips = SearchChips.FOLDERS
-            if (searchUiState.foldersFilter != searchUiState.selectedSearchChips.contains(
+            if (searchUiState.foldersFilter != searchViewModel.selectedSearchChips.contains(
                     searchChip
                 )
             ) {
@@ -215,7 +215,7 @@ private fun switchSetting(
         SwitchSettings.PLAYLISTS_FILTER -> {
             searchViewModel.switchFilter(filterSetting = NavBarSection.PLAYLISTS)
             val searchChip: SearchChips = SearchChips.PLAYLISTS
-            if (searchUiState.playlistsFilter != searchUiState.selectedSearchChips.contains(
+            if (searchUiState.playlistsFilter != searchViewModel.selectedSearchChips.contains(
                     searchChip
                 )
             ) {

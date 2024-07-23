@@ -26,7 +26,6 @@
 package io.github.antoinepirlot.satunes.ui.states
 
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
-import io.github.antoinepirlot.satunes.models.SearchChips
 
 /**
  * @author Antoine Pirlot on 23/07/2024
@@ -38,6 +37,4 @@ data class SearchUiState(
     val genresFilter: Boolean = SettingsManager.genresFilter,
     val foldersFilter: Boolean = SettingsManager.foldersFilter,
     val playlistsFilter: Boolean = SettingsManager.playlistsFilter,
-    val query: String = "",
-    val selectedSearchChips: List<SearchChips> = listOf()
 )

@@ -85,20 +85,25 @@ class SearchViewModel : ViewModel() {
     }
 
     fun resetSelectedChips() {
-        runBlocking {
-            selectedSearchChips.clear()
-            SettingsManager.loadFilters(context = MainActivity.instance.applicationContext)
-            _filtersList[SearchChips.MUSICS] = SettingsManager.musicsFilter
-            _filtersList[SearchChips.ALBUMS] = SettingsManager.albumsFilter
-            _filtersList[SearchChips.ARTISTS] = SettingsManager.artistsFilter
-            _filtersList[SearchChips.GENRES] = SettingsManager.genresFilter
-            _filtersList[SearchChips.FOLDERS] = SettingsManager.foldersFilter
-            _filtersList[SearchChips.PLAYLISTS] = SettingsManager.playlistsFilter
-            _filtersList.forEach { (searchChip: SearchChips, checked: Boolean) ->
-                if (checked) {
-                    selectedSearchChips.add(searchChip)
+        try {
+            runBlocking {
+                selectedSearchChips.clear()
+                SettingsManager.loadFilters(context = MainActivity.instance.applicationContext)
+                _filtersList[SearchChips.MUSICS] = SettingsManager.musicsFilter
+                _filtersList[SearchChips.ALBUMS] = SettingsManager.albumsFilter
+                _filtersList[SearchChips.ARTISTS] = SettingsManager.artistsFilter
+                _filtersList[SearchChips.GENRES] = SettingsManager.genresFilter
+                _filtersList[SearchChips.FOLDERS] = SettingsManager.foldersFilter
+                _filtersList[SearchChips.PLAYLISTS] = SettingsManager.playlistsFilter
+                _filtersList.forEach { (searchChip: SearchChips, checked: Boolean) ->
+                    if (checked) {
+                        selectedSearchChips.add(searchChip)
+                    }
                 }
             }
+        } catch (e: Throwable) {
+            _logger.severe(e.message)
+            throw e
         }
     }
 
@@ -115,21 +120,26 @@ class SearchViewModel : ViewModel() {
     }
 
     fun switchFilter(filterSetting: NavBarSection) {
-        runBlocking {
-            SettingsManager.switchFilter(
-                context = MainActivity.instance.applicationContext,
-                filterSetting = filterSetting
-            )
-            _uiState.update { currentState: SearchUiState ->
-                currentState.copy(
-                    musicsFilter = SettingsManager.musicsFilter,
-                    foldersFilter = SettingsManager.foldersFilter,
-                    artistsFilter = SettingsManager.artistsFilter,
-                    albumsFilter = SettingsManager.albumsFilter,
-                    genresFilter = SettingsManager.genresFilter,
-                    playlistsFilter = SettingsManager.playlistsFilter,
+        try {
+            runBlocking {
+                SettingsManager.switchFilter(
+                    context = MainActivity.instance.applicationContext,
+                    filterSetting = filterSetting
                 )
+                _uiState.update { currentState: SearchUiState ->
+                    currentState.copy(
+                        musicsFilter = SettingsManager.musicsFilter,
+                        foldersFilter = SettingsManager.foldersFilter,
+                        artistsFilter = SettingsManager.artistsFilter,
+                        albumsFilter = SettingsManager.albumsFilter,
+                        genresFilter = SettingsManager.genresFilter,
+                        playlistsFilter = SettingsManager.playlistsFilter,
+                    )
+                }
             }
+        } catch (e: Throwable) {
+            _logger.severe(e.message)
+            throw e
         }
     }
 

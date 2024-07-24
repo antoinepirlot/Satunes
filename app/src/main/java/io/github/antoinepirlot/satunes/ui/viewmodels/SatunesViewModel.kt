@@ -42,6 +42,7 @@ import io.github.antoinepirlot.satunes.internet.updates.UpdateAvailableStatus
 import io.github.antoinepirlot.satunes.internet.updates.UpdateCheckManager
 import io.github.antoinepirlot.satunes.ui.states.SatunesUiState
 import io.github.antoinepirlot.satunes.ui.viewmodels.utils.isAudioAllowed
+import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -56,6 +57,7 @@ import kotlinx.coroutines.runBlocking
  */
 @SuppressLint("NewApi")
 internal class SatunesViewModel : ViewModel() {
+    private val _logger: SatunesLogger = SatunesLogger.getLogger()
     private val _uiState: MutableStateFlow<SatunesUiState> = MutableStateFlow(SatunesUiState())
     private val _isLoadingData: MutableState<Boolean> = DataLoader.isLoading
     private val _isDataLoaded: MutableState<Boolean> = DataLoader.isLoaded
@@ -102,9 +104,14 @@ internal class SatunesViewModel : ViewModel() {
         private set
 
     fun loadSettings() {
-        runBlocking {
-            SettingsManager.loadSettings(context = MainActivity.instance.applicationContext)
-            _uiState.update { SatunesUiState() }
+        try {
+            runBlocking {
+                SettingsManager.loadSettings(context = MainActivity.instance.applicationContext)
+                _uiState.update { SatunesUiState() }
+            }
+        } catch (e: Throwable) {
+            _logger.severe(e.message)
+            throw e
         }
     }
 
@@ -147,114 +154,155 @@ internal class SatunesViewModel : ViewModel() {
     }
 
     fun switchNavBarSection(navBarSection: NavBarSection) {
-        runBlocking {
-            SettingsManager.switchNavBarSection(
-                context = MainActivity.instance.applicationContext,
-                navBarSection = navBarSection
-            )
-        }
-        _uiState.update { currentState: SatunesUiState ->
-            currentState.copy(
-                foldersChecked = SettingsManager.foldersChecked.value,
-                artistsChecked = SettingsManager.artistsChecked.value,
-                albumsChecked = SettingsManager.albumsChecked.value,
-                genresChecked = SettingsManager.genresChecked.value,
-                playlistsChecked = SettingsManager.playlistsChecked.value,
-            )
+        try {
+            runBlocking {
+                SettingsManager.switchNavBarSection(
+                    context = MainActivity.instance.applicationContext,
+                    navBarSection = navBarSection
+                )
+            }
+            _uiState.update { currentState: SatunesUiState ->
+                currentState.copy(
+                    foldersChecked = SettingsManager.foldersChecked.value,
+                    artistsChecked = SettingsManager.artistsChecked.value,
+                    albumsChecked = SettingsManager.albumsChecked.value,
+                    genresChecked = SettingsManager.genresChecked.value,
+                    playlistsChecked = SettingsManager.playlistsChecked.value,
+                )
+            }
+        } catch (e: Throwable) {
+            _logger.warning(e.message)
         }
     }
 
     fun switchPlaybackWhenClosedChecked() {
-        runBlocking {
-            SettingsManager.switchPlaybackWhenClosedChecked(context = MainActivity.instance.applicationContext)
-            _uiState.update { currentState: SatunesUiState ->
-                currentState.copy(
-                    playbackWhenClosedChecked = SettingsManager.playbackWhenClosedChecked
-                )
+        try {
+            runBlocking {
+                SettingsManager.switchPlaybackWhenClosedChecked(context = MainActivity.instance.applicationContext)
+                _uiState.update { currentState: SatunesUiState ->
+                    currentState.copy(
+                        playbackWhenClosedChecked = SettingsManager.playbackWhenClosedChecked
+                    )
+                }
             }
+        } catch (e: Throwable) {
+            _logger.warning(e.message)
         }
     }
 
     fun switchPauseIfNoisy() {
-        runBlocking {
-            SettingsManager.switchPauseIfNoisy(context = MainActivity.instance.applicationContext)
-            _uiState.update { currentState: SatunesUiState ->
-                currentState.copy(
-                    pauseIfNoisyChecked = SettingsManager.pauseIfNoisyChecked
-                )
+        try {
+            runBlocking {
+                SettingsManager.switchPauseIfNoisy(context = MainActivity.instance.applicationContext)
+                _uiState.update { currentState: SatunesUiState ->
+                    currentState.copy(
+                        pauseIfNoisyChecked = SettingsManager.pauseIfNoisyChecked
+                    )
+                }
             }
+        } catch (e: Throwable) {
+            _logger.warning(e.message)
         }
     }
 
     fun switchIncludeRingtones() {
-        runBlocking {
-            SettingsManager.switchIncludeRingtones(context = MainActivity.instance.applicationContext)
-            _uiState.update { currentState: SatunesUiState ->
-                currentState.copy(
-                    includeRingtonesChecked = SettingsManager.includeRingtonesChecked
-                )
+        try {
+            runBlocking {
+                SettingsManager.switchIncludeRingtones(context = MainActivity.instance.applicationContext)
+                _uiState.update { currentState: SatunesUiState ->
+                    currentState.copy(
+                        includeRingtonesChecked = SettingsManager.includeRingtonesChecked
+                    )
+                }
             }
+        } catch (e: Throwable) {
+            _logger.warning(e.message)
         }
     }
 
     fun switchShuffleMode() {
-        runBlocking {
-            SettingsManager.switchShuffleMode(context = MainActivity.instance.applicationContext)
-            _uiState.update { currentState: SatunesUiState ->
-                currentState.copy(
-                    shuffleMode = SettingsManager.shuffleMode
-                )
+        try {
+            runBlocking {
+                SettingsManager.switchShuffleMode(context = MainActivity.instance.applicationContext)
+                _uiState.update { currentState: SatunesUiState ->
+                    currentState.copy(
+                        shuffleMode = SettingsManager.shuffleMode
+                    )
+                }
             }
+        } catch (e: Throwable) {
+            _logger.warning(e.message)
         }
     }
 
     fun switchPauseIfAnotherPlayback() {
-        runBlocking {
-            SettingsManager.switchPauseIfAnotherPlayback(context = MainActivity.instance.applicationContext)
-            _uiState.update { currentState: SatunesUiState ->
-                currentState.copy(
-                    pauseIfAnotherPlayback = SettingsManager.pauseIfAnotherPlayback
-                )
+        try {
+            runBlocking {
+                SettingsManager.switchPauseIfAnotherPlayback(context = MainActivity.instance.applicationContext)
+                _uiState.update { currentState: SatunesUiState ->
+                    currentState.copy(
+                        pauseIfAnotherPlayback = SettingsManager.pauseIfAnotherPlayback
+                    )
+                }
             }
+        } catch (e: Throwable) {
+            _logger.warning(e.message)
         }
     }
 
     fun updateRepeatMode(newValue: Int) {
-        runBlocking {
-            SettingsManager.updateRepeatMode(
-                context = MainActivity.instance.applicationContext,
-                newValue = newValue
-            )
-            _uiState.update { currentState: SatunesUiState ->
-                currentState.copy(
-                    repeatMode = SettingsManager.repeatMode
-                )
+        try {
+            runBlocking {
+                try {
+                    SettingsManager.updateRepeatMode(
+                        context = MainActivity.instance.applicationContext,
+                        newValue = newValue
+                    )
+                    _uiState.update { currentState: SatunesUiState ->
+                        currentState.copy(
+                            repeatMode = SettingsManager.repeatMode
+                        )
+                    }
+                } catch (e: Throwable) {
+                    _logger.severe(e.message)
+                    throw e
+                }
             }
+        } catch (e: Throwable) {
+            _logger.warning(e.message)
         }
     }
 
     fun switchAudioOffload() {
-        runBlocking {
-            SettingsManager.switchAudioOffload(context = MainActivity.instance.applicationContext)
-            _uiState.update { currentState: SatunesUiState ->
-                currentState.copy(
-                    audioOffloadChecked = SettingsManager.audioOffloadChecked
-                )
+        try {
+            runBlocking {
+                SettingsManager.switchAudioOffload(context = MainActivity.instance.applicationContext)
+                _uiState.update { currentState: SatunesUiState ->
+                    currentState.copy(
+                        audioOffloadChecked = SettingsManager.audioOffloadChecked
+                    )
+                }
             }
+        } catch (e: Throwable) {
+            _logger.warning(e.message)
         }
     }
 
     fun updateBarSpeed(newValue: Float) {
-        runBlocking {
-            SettingsManager.updateBarSpeed(
-                context = MainActivity.instance.applicationContext,
-                newValue = newValue
-            )
-            _uiState.update { currentState: SatunesUiState ->
-                currentState.copy(
-                    barSpeed = SettingsManager.barSpeed
+        try {
+            runBlocking {
+                SettingsManager.updateBarSpeed(
+                    context = MainActivity.instance.applicationContext,
+                    newValue = newValue
                 )
+                _uiState.update { currentState: SatunesUiState ->
+                    currentState.copy(
+                        barSpeed = SettingsManager.barSpeed
+                    )
+                }
             }
+        } catch (e: Throwable) {
+            _logger.warning(e.message)
         }
     }
 
@@ -265,9 +313,19 @@ internal class SatunesViewModel : ViewModel() {
     }
 
     fun checkUpdate() {
-        UpdateCheckManager.checkUpdate(context = MainActivity.instance.applicationContext)
+        try {
+            UpdateCheckManager.checkUpdate(context = MainActivity.instance.applicationContext)
+        } catch (e: Throwable) {
+            _logger.warning(e.message)
+        }
     }
 
-    fun getCurrentVersion(): String =
-        UpdateCheckManager.getCurrentVersion(context = MainActivity.instance.applicationContext)
+    fun getCurrentVersion(): String {
+        try {
+            return UpdateCheckManager.getCurrentVersion(context = MainActivity.instance.applicationContext)
+        } catch (e: Throwable) {
+            _logger.severe(e.message)
+            throw e
+        }
+    }
 }

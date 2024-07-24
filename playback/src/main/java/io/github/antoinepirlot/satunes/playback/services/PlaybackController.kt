@@ -115,7 +115,6 @@ class PlaybackController private constructor(
 
         fun initInstance(context: Context, listener: Player.Listener? = null): PlaybackController {
             if (!Companion::instance.isInitialized) {
-                //TODO
                 val sessionToken =
                     SessionToken(
                         context.applicationContext,
@@ -149,7 +148,6 @@ class PlaybackController private constructor(
     }
 
     init {
-        //TODO
         try {
             val controllerFuture = MediaController.Builder(context, sessionToken).buildAsync()
 

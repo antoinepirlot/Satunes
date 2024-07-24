@@ -96,7 +96,7 @@ internal fun SatunesTopAppBar(
                     navController = navController
                 )
             }) {
-                val playbackQueueIcon: SatunesIcons = SatunesIcons.PLAYLIST
+                val playbackQueueIcon: SatunesIcons = SatunesIcons.PLAYBACK
                 Icon(
                     imageVector = playbackQueueIcon.imageVector,
                     contentDescription = playbackQueueIcon.description

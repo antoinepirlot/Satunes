@@ -80,12 +80,12 @@ abstract class MediaImpl(
     override fun compareTo(other: MediaImpl): Int {
         if (this == other) return 0
         var compared: Int = StringComparator.compare(o1 = this.title, o2 = other.title)
-        if (compared == 0) {
+        if (compared == 0 && this.javaClass != other.javaClass) {
             compared = when(this) {
                 is Music -> -1
-                is Album -> if (other !is Album && other is Music)  1 else -1
-                is Artist -> if (other !is Artist && (other is Music || other is Album)) 1 else -1
-                is Genre -> if (other !is Genre && (other is Folder || other is Playlist)) -1 else 1
+                is Album -> if (other is Music)  1 else -1
+                is Artist -> if (other is Music || other is Album) 1 else -1
+                is Genre -> if (other is Folder || other is Playlist) -1 else 1
                 is Playlist -> if (other !is Playlist && other is Folder) -1 else 1
                 else -> 1
             }

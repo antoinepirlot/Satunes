@@ -70,6 +70,10 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
             session.setQueue(loadedQueueItemList)
         }
 
+        fun resetQueue() {
+            loadedQueueItemList.clear()
+        }
+
         /**
          * Add the mediaImpl to the queue by creating a mediaImpl item.
          *
@@ -234,7 +238,6 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
      */
     private fun getAllMediaItem(mediaList: Collection<MediaImpl>): MutableList<MediaItem> {
         val mediaItemList: MutableList<MediaItem> = mutableListOf()
-        loadedQueueItemList.clear()
         if (mediaList.isEmpty()) {
             return mediaItemList
         }
@@ -246,7 +249,7 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
             if (media !is Music && (media.getMusicSet().isEmpty())) {
                 continue
             }
-            val mediaItem: MediaItem = addToQueue(media = media)
+            val mediaItem: MediaItem = buildMediaItem(media = media)
             mediaItemList.add(mediaItem)
         }
         return mediaItemList
@@ -266,13 +269,17 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
             throw IllegalStateException("An error occurred in the route processing")
         }
 
-        val mediaImpl: MediaImpl? = when (oneBeforeLastRoute) {
-            ScreenPages.ALL_FOLDERS.id -> DataManager.getFolder(id = mediaId)
-            ScreenPages.ALL_ARTISTS.id -> DataManager.getArtist(id = mediaId)
-            ScreenPages.ALL_ALBUMS.id -> DataManager.getAlbum(id = mediaId)
-            ScreenPages.ALL_GENRES.id -> DataManager.getGenre(id = mediaId)
-            ScreenPages.ALL_PLAYLISTS.id -> DataManager.getPlaylist(id = mediaId)
-            else -> null
+        val mediaImpl: MediaImpl? = try {
+            when (oneBeforeLastRoute) {
+                ScreenPages.ALL_FOLDERS.id -> DataManager.getFolder(id = mediaId)
+                ScreenPages.ALL_ARTISTS.id -> DataManager.getArtist(id = mediaId)
+                ScreenPages.ALL_ALBUMS.id -> DataManager.getAlbum(id = mediaId)
+                ScreenPages.ALL_GENRES.id -> DataManager.getGenre(id = mediaId)
+                ScreenPages.ALL_PLAYLISTS.id -> DataManager.getPlaylist(id = mediaId)
+                else -> null
+            }
+        } catch (_: NullPointerException) {
+            null
         }
 
         val listToReturn: MutableList<MediaItem> = mutableListOf()

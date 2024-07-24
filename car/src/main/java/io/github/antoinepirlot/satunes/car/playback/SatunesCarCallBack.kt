@@ -148,6 +148,7 @@ internal object SatunesCarCallBack : MediaSessionCompat.Callback() {
                 shuffleMode = shuffleMode
             )
             CoroutineScope(Dispatchers.IO).launch {
+                SatunesCarMusicService.resetQueue()
                 musicSet.forEach { music: Music ->
                     SatunesCarMusicService.addToQueue(media = music)
                 }

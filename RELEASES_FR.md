@@ -3,6 +3,37 @@ You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
 ## 2.0 (Android 5.1.1 Lollipop et ultérieur)
 
+### 2.0.0-beta-1
+
+Améliorations, optimisations et dépannage:
+
+* La structure du code a été entièrement remaniée pour être plus simple et meilleure à utiliser.
+* Le code a été retravaillé pour être plus rapide
+* Satunes prend désormais en charge Android 15 Vanilla Ice Cream (API 35)
+* Désormais, l'application chargera même vos musiques dupliquées
+* Par défaut, Satunes ne chargera que le dossier principal Musiques et pas la totalité.
+* Satunes enregistre certaines erreurs via des logs (sans informations personnelles), tu pouvez les
+  exporter, rien ne quittera l'application sans votre autorisation.
+* Implémentation de l'utilisation de ViewModel et UiState pour une meilleure gestion des états de
+  Satunes
+* Désormais, la lecture de musique à partir d'un dossier chargera d'abord ses musiques, puis celles
+  de ses sous-dossiers, toujours triées par titre.
+* Ajout d'icônes pour identifier les paramètres plus facilement.
+* Définition d'un ordre pour les médias si leur titre est exactement le même lors de la comparaison,
+  à l'écran si cela se produit, tu verras les médias dans cet ordre:
+  * Musique
+  * Album
+  * Artiste
+  * Genre
+  * Playlist
+  * Dossier
+* Limitation de la liste d'éléments à 300 maximum dans Android Auto en raison de ses limitations
+* Le chargement devrait être plus rapide dans Android Auto car une boucle a été supprimée pour
+  chaque chargement de liste
+* Les boutons des réglages aléatoire ne sont plus des commutateurs mais agissent comme les boutons
+  pour le mode de répétition
+* Correction du chargement des musiques présentes sur un stockage externe (comme les cartes SD)
+
 ### 2.0.0-alpha-1
 
 ⚠ La version Alpha n'est pas recommandée pour une utilisation régulière.

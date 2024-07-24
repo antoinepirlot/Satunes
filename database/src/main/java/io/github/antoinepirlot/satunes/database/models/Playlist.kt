@@ -25,6 +25,8 @@
 
 package io.github.antoinepirlot.satunes.database.models
 
+import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
+
 /**
  * @author Antoine Pirlot on 11/07/2024
  */
@@ -43,5 +45,15 @@ class Playlist(
 
     override fun hashCode(): Int {
         return title.lowercase().hashCode()
+    }
+
+    override fun compareTo(other: MediaImpl): Int {
+        if (this.title == LIKES_PLAYLIST_TITLE) {
+            return -1
+        }
+        if (other.title == LIKES_PLAYLIST_TITLE) {
+            return 1
+        }
+        return super.compareTo(other)
     }
 }

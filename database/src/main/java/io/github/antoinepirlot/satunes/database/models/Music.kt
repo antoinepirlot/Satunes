@@ -168,4 +168,12 @@ class Music(
     override fun hashCode(): Int {
         return this.id.hashCode()
     }
+
+    override fun compareTo(other: MediaImpl): Int {
+        var compared: Int = super.compareTo(other)
+        if (compared == 0 && this.id != other.id) {
+            compared = 1
+        }
+        return compared
+    }
 }

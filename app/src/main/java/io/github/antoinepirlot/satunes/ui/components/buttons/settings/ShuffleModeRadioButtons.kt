@@ -88,7 +88,11 @@ internal fun ShuffleModeRadioButtons(
                 RadioButton(
                     selected = state == isShuffleOnIcon,
                     onClick = {
-                        satunesViewModel.switchShuffleMode()
+                        if (i == 0) {
+                            satunesViewModel.setShuffleModeOff()
+                        } else {
+                            satunesViewModel.setShuffleModeOn()
+                        }
                     }
                 )
 

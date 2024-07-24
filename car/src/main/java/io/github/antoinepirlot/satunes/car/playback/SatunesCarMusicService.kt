@@ -141,48 +141,48 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
         return BrowserRoot(ScreenPages.ROOT.id, null)
     }
 
-    override fun onLoadChildren(parentId: String, result: Result<MutableList<MediaItem>>) {
-        val children: MutableList<MediaItem> = mutableListOf()
+    override fun onLoadChildren(parentId: String, result: Result<List<MediaItem>>) {
+        val children: List<MediaItem>
         when (parentId) {
             ScreenPages.ROOT.id -> {
                 routeDeque.resetRouteDeque()
-                children.addAll(getHomeScreenBars())
+                children = getHomeScreenBars()
             }
 
             ScreenPages.ALL_FOLDERS.id -> {
                 routeDeque.resetRouteDeque()
                 routeDeque.addLast(parentId)
-                children.addAll(getAllMediaItem(mediaList = DataManager.getFolderSet()))
+                children = getAllMediaItem(mediaList = DataManager.getFolderSet())
             }
 
             ScreenPages.ALL_ARTISTS.id -> {
                 routeDeque.resetRouteDeque()
                 routeDeque.addLast(parentId)
-                children.addAll(getAllMediaItem(mediaList = DataManager.getArtistSet()))
+                children = getAllMediaItem(mediaList = DataManager.getArtistSet())
             }
 
             ScreenPages.ALL_ALBUMS.id -> {
                 routeDeque.resetRouteDeque()
                 routeDeque.addLast(parentId)
-                children.addAll(getAllMediaItem(mediaList = DataManager.getAlbumSet()))
+                children = getAllMediaItem(mediaList = DataManager.getAlbumSet())
             }
 
             ScreenPages.ALL_GENRES.id -> {
                 routeDeque.resetRouteDeque()
                 routeDeque.addLast(parentId)
-                children.addAll(getAllMediaItem(mediaList = DataManager.getGenreSet()))
+                children = getAllMediaItem(mediaList = DataManager.getGenreSet())
             }
 
             ScreenPages.ALL_MUSICS.id -> {
                 routeDeque.resetRouteDeque()
                 routeDeque.addLast(parentId)
-                children.addAll(getAllMediaItem(mediaList = DataManager.getMusicSet()))
+                children = getAllMediaItem(mediaList = DataManager.getMusicSet())
             }
 
             ScreenPages.ALL_PLAYLISTS.id -> {
                 routeDeque.resetRouteDeque()
                 routeDeque.addLast(parentId)
-                children.addAll(getAllMediaItem(mediaList = DataManager.getPlaylistSet()))
+                children = getAllMediaItem(mediaList = DataManager.getPlaylistSet())
             }
 
             else -> {
@@ -192,7 +192,7 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
                     return
                 }
                 routeDeque.addLast(parentId)
-                children.addAll(getAllMediaItem(mediaId = parentId.toLong()))
+                children = getAllMediaItem(mediaId = parentId.toLong())
             }
         }
         result.sendResult(children)
@@ -236,7 +236,7 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
      *
      * @return a mutable list of MediaItem
      */
-    private fun getAllMediaItem(mediaList: Collection<MediaImpl>): MutableList<MediaItem> {
+    private fun getAllMediaItem(mediaList: Collection<MediaImpl>): List<MediaItem> {
         val mediaItemList: MutableList<MediaItem> = mutableListOf()
         if (mediaList.isEmpty()) {
             return mediaItemList
@@ -263,7 +263,7 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
      *
      * @return a mutable list of media item.
      */
-    private fun getAllMediaItem(mediaId: Long): MutableList<MediaItem> {
+    private fun getAllMediaItem(mediaId: Long): List<MediaItem> {
         val oneBeforeLastRoute: String = routeDeque.oneBeforeLast()
         if (oneBeforeLastRoute == ScreenPages.ROOT.id || oneBeforeLastRoute == ScreenPages.ALL_MUSICS.id) {
             throw IllegalStateException("An error occurred in the route processing")
@@ -282,13 +282,7 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
             null
         }
 
-        val listToReturn: MutableList<MediaItem> = mutableListOf()
-        listToReturn.addAll(
-            this.getAllMediaItem(
-                mediaList = mediaImpl?.getMusicSet() ?: mutableListOf()
-            )
-        )
-        return listToReturn
+        return this.getAllMediaItem(mediaList = mediaImpl?.getMusicSet() ?: mutableListOf())
     }
 
     override fun onTaskRemoved(rootIntent: Intent?) {

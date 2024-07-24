@@ -243,8 +243,8 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
         }
         mediaItemList.add(getShuffleButton())
         for (media: MediaImpl in mediaList) {
-            if (mediaItemList.size >= 1000) {
-                break // Do not add more than 1000 media as it could make android bugging
+            if (mediaItemList.size >= 300) {
+                break // Do not add more than 300 media as it could make android auto bugging
             }
             if (media !is Music && (media.getMusicSet().isEmpty())) {
                 continue

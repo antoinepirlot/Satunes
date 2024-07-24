@@ -129,10 +129,6 @@ private fun switchSetting(
             satunesViewModel.switchIncludeRingtones()
         }
 
-        SwitchSettings.SHUFFLE_MODE -> {
-            satunesViewModel.switchShuffleMode()
-        }
-
         SwitchSettings.PAUSE_IF_ANOTHER_PLAYBACK -> {
             satunesViewModel.switchPauseIfAnotherPlayback()
         }

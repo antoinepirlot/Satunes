@@ -211,7 +211,7 @@ internal class SatunesViewModel : ViewModel() {
                 SettingsManager.switchIncludeRingtones(context = MainActivity.instance.applicationContext)
                 _uiState.update { currentState: SatunesUiState ->
                     currentState.copy(
-                        includeRingtonesChecked = SettingsManager.includeRingtonesChecked
+                        shuffleMode = SettingsManager.shuffleMode
                     )
                 }
             }
@@ -220,10 +220,25 @@ internal class SatunesViewModel : ViewModel() {
         }
     }
 
-    fun switchShuffleMode() {
+    fun setShuffleModeOn() {
         try {
             runBlocking {
-                SettingsManager.switchShuffleMode(context = MainActivity.instance.applicationContext)
+                SettingsManager.setShuffleModeOn(context = MainActivity.instance.applicationContext)
+                _uiState.update { currentState: SatunesUiState ->
+                    currentState.copy(
+                        shuffleMode = SettingsManager.shuffleMode
+                    )
+                }
+            }
+        } catch (e: Throwable) {
+            _logger.warning(e.message)
+        }
+    }
+
+    fun setShuffleModeOff() {
+        try {
+            runBlocking {
+                SettingsManager.setShuffleModeOff(context = MainActivity.instance.applicationContext)
                 _uiState.update { currentState: SatunesUiState ->
                     currentState.copy(
                         shuffleMode = SettingsManager.shuffleMode

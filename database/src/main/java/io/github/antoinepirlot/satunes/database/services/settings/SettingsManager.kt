@@ -302,10 +302,17 @@ object SettingsManager {
         }
     }
 
-    suspend fun switchShuffleMode(context: Context) {
+    suspend fun setShuffleModeOn(context: Context) {
         context.dataStore.edit { preferences: MutablePreferences ->
-            shuffleMode = !shuffleMode
-            preferences[SHUFFLE_MODE_KEY] = shuffleMode
+            shuffleMode = true
+            preferences[SHUFFLE_MODE_KEY] = true
+        }
+    }
+
+    suspend fun setShuffleModeOff(context: Context) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            shuffleMode = false
+            preferences[SHUFFLE_MODE_KEY] = false
         }
     }
 

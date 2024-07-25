@@ -35,6 +35,7 @@ import android.provider.DocumentsContract
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.OptIn
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.media3.common.util.UnstableApi
@@ -42,6 +43,7 @@ import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.database.services.data.DataCleanerManager
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.playback.services.PlaybackService
+import io.github.antoinepirlot.satunes.ui.utils.showSnackBar
 import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.ui.viewmodels.factories.PlaybackViewModelFactory
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
@@ -118,10 +120,15 @@ internal class MainActivity : ComponentActivity() {
 
     //TODO find a way to move it to database module, no solution found instead of here
     // No enough knowledge about Activity
-    fun createFileToExportPlaylists(defaultFileName: String) {
+    fun createFileToExportPlaylists(
+        scope: CoroutineScope,
+        snackBarHostState: SnackbarHostState,
+        defaultFileName: String
+    ) {
         if (playlistsToExport.isEmpty()) {
-            showToastOnUiThread(
-                context = this,
+            showSnackBar(
+                scope = scope,
+                snackBarHostState = snackBarHostState,
                 message = this.getString(RDb.string.no_playlist)
             )
             return

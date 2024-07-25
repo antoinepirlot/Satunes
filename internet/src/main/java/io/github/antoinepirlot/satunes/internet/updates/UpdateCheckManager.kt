@@ -32,7 +32,6 @@ import androidx.annotation.RequiresApi
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import io.github.antoinepirlot.satunes.internet.InternetManager
-import io.github.antoinepirlot.satunes.internet.R
 import io.github.antoinepirlot.satunes.internet.updates.Versions.ALPHA
 import io.github.antoinepirlot.satunes.internet.updates.Versions.ALPHA_REGEX
 import io.github.antoinepirlot.satunes.internet.updates.Versions.BETA
@@ -43,10 +42,6 @@ import io.github.antoinepirlot.satunes.internet.updates.Versions.RELEASES_URL
 import io.github.antoinepirlot.satunes.internet.updates.Versions.RELEASE_REGEX
 import io.github.antoinepirlot.satunes.internet.updates.Versions.versionType
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
-import io.github.antoinepirlot.satunes.utils.utils.showToastOnUiThread
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
@@ -62,7 +57,6 @@ object UpdateCheckManager {
 
     val updateAvailableStatus: MutableState<UpdateAvailableStatus> =
         mutableStateOf(UpdateAvailableStatus.UNDEFINED)
-    val isCheckingUpdate: MutableState<Boolean> = mutableStateOf(false)
     val latestVersion: MutableState<String?> = mutableStateOf(null)
     val downloadStatus: MutableState<APKDownloadStatus> =
         mutableStateOf(APKDownloadStatus.NOT_STARTED)
@@ -79,7 +73,6 @@ object UpdateCheckManager {
             if (!internetManager.isConnected()) {
                 UpdateAvailableStatus.CANNOT_CHECK.updateLink = null
                 updateAvailableStatus.value = UpdateAvailableStatus.CANNOT_CHECK
-                isCheckingUpdate.value = false
                 return null
             }
             val httpClient = OkHttpClient()
@@ -99,55 +92,33 @@ object UpdateCheckManager {
      */
     fun checkUpdate(context: Context) {
         //Check update
-        CoroutineScope(Dispatchers.IO).launch {
-            isCheckingUpdate.value = true
-            showToastOnUiThread(
-                context = context,
-                message = context.getString(R.string.checking_update)
-            )
-            try {
-                //Get all versions
-                val res: Response = getUrlResponse(context = context, url = RELEASES_URL)!!
-                if (!res.isSuccessful) {
-                    res.close()
-                    UpdateAvailableStatus.CANNOT_CHECK.updateLink = null
-                    updateAvailableStatus.value = UpdateAvailableStatus.CANNOT_CHECK
-                    isCheckingUpdate.value = false
-                    return@launch
-                }
-                val page: String = res.body!!.string()
+        try {
+            //Get all versions
+            val res: Response = getUrlResponse(context = context, url = RELEASES_URL)!!
+            if (!res.isSuccessful) {
                 res.close()
-
-                val currentVersion: String =
-                    'v' + getCurrentVersion(context = context)
-                val updateUrl: String? = getUpdateUrl(page = page, currentVersion = currentVersion)
-                UpdateAvailableStatus.AVAILABLE.updateLink = updateUrl
-                if (updateUrl == null) {
-                    updateAvailableStatus.value = UpdateAvailableStatus.UP_TO_DATE
-                    showToastOnUiThread(
-                        context = context,
-                        message = context.getString(R.string.no_update)
-                    )
-                } else {
-                    updateAvailableStatus.value = UpdateAvailableStatus.AVAILABLE
-                    showToastOnUiThread(
-                        context = context,
-                        message = context.getString(R.string.update_available)
-                    )
-                }
-            } catch (e: Exception) {
-                //Don't crash the app if an error occurred internet connection
-                //Don't care of internet
+                UpdateAvailableStatus.CANNOT_CHECK.updateLink = null
                 updateAvailableStatus.value = UpdateAvailableStatus.CANNOT_CHECK
-                showToastOnUiThread(
-                    context = context,
-                    message = context.getString(R.string.cannot_check_update)
-                )
-                _logger.warning(e.message)
-                e.printStackTrace()
-            } finally {
-                isCheckingUpdate.value = false
+                return
             }
+            val page: String = res.body!!.string()
+            res.close()
+
+            val currentVersion: String =
+                'v' + getCurrentVersion(context = context)
+            val updateUrl: String? = getUpdateUrl(page = page, currentVersion = currentVersion)
+            UpdateAvailableStatus.AVAILABLE.updateLink = updateUrl
+            if (updateUrl == null) {
+                updateAvailableStatus.value = UpdateAvailableStatus.UP_TO_DATE
+            } else {
+                updateAvailableStatus.value = UpdateAvailableStatus.AVAILABLE
+            }
+        } catch (e: Throwable) {
+            //Don't crash the app if an error occurred internet connection
+            //Don't care of internet
+            updateAvailableStatus.value = UpdateAvailableStatus.CANNOT_CHECK
+            _logger.severe(e.message)
+            throw e
         }
     }
 

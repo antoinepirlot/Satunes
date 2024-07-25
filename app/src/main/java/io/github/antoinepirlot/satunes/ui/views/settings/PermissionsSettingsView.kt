@@ -81,7 +81,7 @@ internal fun PermissionsSettingsView(
         for (permission: Permissions in permissionsList) {
             val permissionState: PermissionState =
                 rememberPermissionState(permission = permission.value)
-            if (permissionState.status.isGranted) {
+            if (permissionState.status.isGranted && !satunesViewModel.isAudioAllowed) {
                 satunesViewModel.updateIsAudioAllowed()
             }
             Row(

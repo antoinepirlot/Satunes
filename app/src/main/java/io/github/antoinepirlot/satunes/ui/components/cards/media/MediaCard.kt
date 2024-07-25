@@ -125,17 +125,6 @@ internal fun MediaCard(
         ),
     ) {
         ListItem(
-            headlineContent = {
-                Column {
-                    NormalText(text = title)
-                    //Use these as for the same thing the builder doesn't like in one
-                    if (media is Album) {
-                        Subtitle(text = media.artist!!.title)
-                    } else if (media is Music) {
-                        Subtitle(text = media.artist.title)
-                    }
-                }
-            },
             leadingContent = {
                 val boxSize: Dp = if (screenWidthDp < ScreenSizes.VERY_VERY_SMALL)
                     25.dp
@@ -184,6 +173,29 @@ internal fun MediaCard(
                                 )
                             }
                         }
+                    }
+                }
+            },
+            headlineContent = {
+                Column {
+                    NormalText(text = title)
+                    //Use these as for the same thing the builder doesn't like in one
+                    if (media is Album) {
+                        Subtitle(text = media.artist!!.title)
+                    } else if (media is Music) {
+                        Subtitle(text = media.artist.title)
+                    }
+                }
+            },
+            trailingContent = {
+                if (media is Music) {
+                    val liked: Boolean by media.liked
+                    if (liked) {
+                        val likedIcon: SatunesIcons = SatunesIcons.LIKED
+                        Icon(
+                            imageVector = likedIcon.imageVector,
+                            contentDescription = likedIcon.description
+                        )
                     }
                 }
             }

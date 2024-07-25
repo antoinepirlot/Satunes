@@ -171,13 +171,15 @@ internal class MainActivity : ComponentActivity() {
                         }
 
                         if (requestCode == EXPORT_PLAYLIST_CODE) {
-                            DatabaseManager(context = this)
-                                .exportPlaylists(
-                                    context = this,
-                                    playlists = playlistsToExport,
-                                    uri = it
-                                )
-                            playlistsToExport = arrayOf()
+                            CoroutineScope(Dispatchers.IO).launch {
+                                DatabaseManager(context = this@MainActivity)
+                                    .exportPlaylists(
+                                        context = this@MainActivity,
+                                        playlists = playlistsToExport,
+                                        uri = it
+                                    )
+                                playlistsToExport = arrayOf()
+                            }
                         } else {
                             logger.exportLogs(context = this, uri = it)
                         }

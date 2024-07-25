@@ -31,6 +31,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.annotation.RequiresApi
+import io.github.antoinepirlot.satunes.internet.R
+import io.github.antoinepirlot.satunes.utils.utils.showToastOnUiThread
 
 /**
  * @author Antoine Pirlot on 14/04/2024
@@ -41,6 +43,7 @@ internal object DownloadReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.action == DownloadManager.ACTION_DOWNLOAD_COMPLETE) {
             UpdateCheckManager.downloadStatus.value = APKDownloadStatus.DOWNLOADED
+            showToastOnUiThread(context = context, context.getString(R.string.downloaded))
         }
     }
 }

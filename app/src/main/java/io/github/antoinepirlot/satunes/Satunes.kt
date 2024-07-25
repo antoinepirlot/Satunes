@@ -39,6 +39,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -54,6 +55,7 @@ import io.github.antoinepirlot.satunes.router.Router
 import io.github.antoinepirlot.satunes.ui.components.bars.SatunesBottomAppBar
 import io.github.antoinepirlot.satunes.ui.components.bars.SatunesTopAppBar
 import io.github.antoinepirlot.satunes.ui.components.dialog.WhatsNewDialog
+import io.github.antoinepirlot.satunes.ui.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.ui.states.SatunesUiState
 import io.github.antoinepirlot.satunes.ui.theme.SatunesTheme
 import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
@@ -84,51 +86,53 @@ internal fun Satunes(
             val snackBarState: SnackbarHostState = remember { SnackbarHostState() }
             val context: Context = LocalContext.current
 
-            Scaffold(
-                modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-                snackbarHost = {
-                    SnackbarHost(hostState = snackBarState)
-                },
-                topBar = {
-                    SatunesTopAppBar(
-                        scrollBehavior = scrollBehavior,
+            CompositionLocalProvider(value = LocalSnackBarHostState provides snackBarState) {
+                Scaffold(
+                    modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+                    snackbarHost = {
+                        SnackbarHost(hostState = snackBarState)
+                    },
+                    topBar = {
+                        SatunesTopAppBar(
+                            scrollBehavior = scrollBehavior,
+                            navController = navController
+                        )
+                    },
+                    bottomBar = { SatunesBottomAppBar(navController = navController) }
+                ) { innerPadding ->
+                    Router(
+                        modifier = Modifier.padding(innerPadding),
                         navController = navController
                     )
-                },
-                bottomBar = { SatunesBottomAppBar(navController = navController) }
-            ) { innerPadding ->
-                Router(
-                    modifier = Modifier.padding(innerPadding),
-                    navController = navController
-                )
 
-                if (!satunesUiState.whatsNewSeen) {
-                    WhatsNewDialog(
-                        onConfirm = {
-                            // When app relaunch, it's not shown again
-                            satunesViewModel.seeWhatsNew(permanently = true)
-                            scope.launch {
-                                val result: SnackbarResult = snackBarState.showSnackbar(
-                                    message = context.getString(R.string.stop_seeing_update_modal),
-                                    actionLabel = context.getString(R.string.cancel),
-                                    duration = SnackbarDuration.Indefinite, //To let the user to have the time to read and take action
-                                    withDismissAction = true
-                                )
-                                if (result == SnackbarResult.ActionPerformed) {
-                                    satunesViewModel.seeWhatsNew()
-                                    snackBarState.showSnackbar(
-                                        message = context.getString(R.string.canceled),
-                                        withDismissAction = true,
-                                        duration = SnackbarDuration.Short
+                    if (!satunesUiState.whatsNewSeen) {
+                        WhatsNewDialog(
+                            onConfirm = {
+                                // When app relaunch, it's not shown again
+                                satunesViewModel.seeWhatsNew(permanently = true)
+                                scope.launch {
+                                    val result: SnackbarResult = snackBarState.showSnackbar(
+                                        message = context.getString(R.string.stop_seeing_update_modal),
+                                        actionLabel = context.getString(R.string.cancel),
+                                        duration = SnackbarDuration.Indefinite, //To let the user to have the time to read and take action
+                                        withDismissAction = true
                                     )
+                                    if (result == SnackbarResult.ActionPerformed) {
+                                        satunesViewModel.seeWhatsNew()
+                                        snackBarState.showSnackbar(
+                                            message = context.getString(R.string.canceled),
+                                            withDismissAction = true,
+                                            duration = SnackbarDuration.Short
+                                        )
+                                    }
                                 }
+                            },
+                            onDismiss = {
+                                // When app relaunch, it's shown again
+                                satunesViewModel.seeWhatsNew()
                             }
-                        },
-                        onDismiss = {
-                            // When app relaunch, it's shown again
-                            satunesViewModel.seeWhatsNew()
-                        }
-                    )
+                        )
+                    }
                 }
             }
         }

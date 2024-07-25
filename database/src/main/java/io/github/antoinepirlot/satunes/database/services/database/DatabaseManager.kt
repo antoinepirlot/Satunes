@@ -35,6 +35,7 @@ import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.daos.MusicDAO
 import io.github.antoinepirlot.satunes.database.daos.MusicsPlaylistsRelDAO
 import io.github.antoinepirlot.satunes.database.daos.PlaylistDAO
+import io.github.antoinepirlot.satunes.database.exceptions.BlankStringException
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.database.models.SatunesDatabase
@@ -141,11 +142,7 @@ class DatabaseManager(context: Context) {
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             if (playlistTitle.isBlank()) {
-                showToastOnUiThread(
-                    context = context,
-                    message = context.getString(R.string.blank_string_error)
-                )
-                return@launch
+                throw BlankStringException()
             }
             if (playlistDao.playlistExist(title = playlistTitle)) {
                 val message: String =

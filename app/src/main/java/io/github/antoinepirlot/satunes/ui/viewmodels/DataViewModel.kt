@@ -34,6 +34,7 @@ import androidx.lifecycle.ViewModel
 import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
+import io.github.antoinepirlot.satunes.database.exceptions.BlankStringException
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Folder
@@ -109,15 +110,21 @@ class DataViewModel : ViewModel() {
         snackBarHostState: SnackbarHostState,
         playlistTitle: String
     ) {
+        val context: Context = MainActivity.instance.applicationContext
         try {
             _db.addOnePlaylist(
-                context = MainActivity.instance.applicationContext, playlistTitle = playlistTitle
+                context = context, playlistTitle = playlistTitle
             )
-            val context: Context = MainActivity.instance.applicationContext
             showSnackBar(
                 scope = scope,
                 snackBarHostState = snackBarHostState,
                 message = playlistTitle + ' ' + context.getString(R.string.add_playlist_success)
+            )
+        } catch (e: BlankStringException) {
+            showSnackBar(
+                scope = scope,
+                snackBarHostState = snackBarHostState,
+                message = context.getString(RDb.string.blank_string_error)
             )
         } catch (e: Throwable) {
             _logger.warning(e.message)

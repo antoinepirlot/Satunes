@@ -35,6 +35,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -47,7 +48,10 @@ import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 import io.github.antoinepirlot.satunes.ui.components.texts.Title
+import io.github.antoinepirlot.satunes.ui.local.LocalMainScope
+import io.github.antoinepirlot.satunes.ui.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.ui.viewmodels.DataViewModel
+import kotlinx.coroutines.CoroutineScope
 import io.github.antoinepirlot.satunes.database.R as RDb
 
 /**
@@ -59,7 +63,10 @@ internal fun PlaylistsSettingsView(
     modifier: Modifier = Modifier,
     dataViewModel: DataViewModel = viewModel(),
 ) {
+    val scope: CoroutineScope = LocalMainScope.current
+    val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
     val scrollState: ScrollState = rememberScrollState()
+
     Column(
         modifier = modifier
             .padding(horizontal = 16.dp)
@@ -76,7 +83,11 @@ internal fun PlaylistsSettingsView(
             Button(onClick = {
                 MainActivity.playlistsToExport =
                     dataViewModel.getPlaylistSet().toTypedArray()
-                MainActivity.instance.createFileToExportPlaylists(defaultFileName = "Satunes")
+                MainActivity.instance.createFileToExportPlaylists(
+                    scope = scope,
+                    snackBarHostState = snackBarHostState,
+                    defaultFileName = "Satunes"
+                )
             }) {
                 Text(text = stringResource(id = R.string.export_all))
             }

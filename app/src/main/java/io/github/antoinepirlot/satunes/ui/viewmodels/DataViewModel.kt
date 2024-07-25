@@ -104,10 +104,35 @@ class DataViewModel : ViewModel() {
         }
     }
 
-    fun addOnePlaylist(playlistTitle: String) {
-        _db.addOnePlaylist(
-            context = MainActivity.instance.applicationContext, playlistTitle = playlistTitle
-        )
+    fun addOnePlaylist(
+        scope: CoroutineScope,
+        snackBarHostState: SnackbarHostState,
+        playlistTitle: String
+    ) {
+        try {
+            _db.addOnePlaylist(
+                context = MainActivity.instance.applicationContext, playlistTitle = playlistTitle
+            )
+            val context: Context = MainActivity.instance.applicationContext
+            showSnackBar(
+                scope = scope,
+                snackBarHostState = snackBarHostState,
+                message = playlistTitle + ' ' + context.getString(R.string.add_playlist_success)
+            )
+        } catch (e: Throwable) {
+            _logger.warning(e.message)
+            showErrorSnackBar(
+                scope = scope,
+                snackBarHostState = snackBarHostState,
+                action = {
+                    addOnePlaylist(
+                        scope = scope,
+                        snackBarHostState = snackBarHostState,
+                        playlistTitle = playlistTitle
+                    )
+                }
+            )
+        }
     }
 
     fun insertMusicsToPlaylist(

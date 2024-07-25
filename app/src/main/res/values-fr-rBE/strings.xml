@@ -82,4 +82,5 @@
     <string name="add_playlist_success">a été créée.</string>
     <string name="add_to_likes_success">Tu aimes %1$s.</string>
     <string name="remove_from_likes_success">Tu n\'aimes plus %1$s.</string>
+    <string name="update_playlist_success">%1$s a été mise à jour.</string>
 </resources>

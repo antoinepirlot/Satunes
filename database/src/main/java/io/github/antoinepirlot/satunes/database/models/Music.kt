@@ -91,7 +91,7 @@ class Music(
         this.liked.value = !this.liked.value
         val db = DatabaseManager(context = context)
         if (this.liked.value) {
-            db.like(context = context, music = this)
+            db.like(music = this)
         } else {
             db.unlike(music = this)
         }

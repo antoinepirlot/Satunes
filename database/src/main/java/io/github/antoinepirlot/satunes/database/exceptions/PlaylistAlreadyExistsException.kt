@@ -28,5 +28,6 @@ package io.github.antoinepirlot.satunes.database.exceptions
 /**
  * @author Antoine Pirlot on 25/07/2024
  */
-class BlankStringException(message: String? = "Blank String not allowed") :
-    Exception(message)
+class PlaylistAlreadyExistsException(
+    message: String? = "The playlist already exists with this name."
+) : Exception(message)

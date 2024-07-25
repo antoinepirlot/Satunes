@@ -29,6 +29,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -46,7 +47,10 @@ import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.dialog.playlist.options.ExportPlaylistOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.playlist.options.RemovePlaylistOption
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
+import io.github.antoinepirlot.satunes.ui.local.LocalMainScope
+import io.github.antoinepirlot.satunes.ui.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.ui.viewmodels.DataViewModel
+import kotlinx.coroutines.CoroutineScope
 import io.github.antoinepirlot.satunes.database.R as RDb
 
 /**
@@ -60,7 +64,10 @@ internal fun PlaylistOptionsDialog(
     playlist: Playlist,
     onDismissRequest: () -> Unit,
 ) {
+    val scope: CoroutineScope = LocalMainScope.current
+    val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
     var playlistTitle: String by remember { mutableStateOf(playlist.title) }
+
     AlertDialog(
         modifier = modifier,
         icon = {
@@ -105,7 +112,11 @@ internal fun PlaylistOptionsDialog(
                 playlist.title = playlistTitle
                 // TODO this case must be managed in database module
                 try {
-                    dataViewModel.updatePlaylists(playlist)
+                    dataViewModel.updatePlaylist(
+                        scope = scope,
+                        snackBarHostState = snackBarHostState,
+                        playlist = playlist
+                    )
                 } catch (_: Exception) {
                     playlist.title = oldTitle
                 }

@@ -36,6 +36,7 @@ import io.github.antoinepirlot.satunes.database.daos.MusicDAO
 import io.github.antoinepirlot.satunes.database.daos.MusicsPlaylistsRelDAO
 import io.github.antoinepirlot.satunes.database.daos.PlaylistDAO
 import io.github.antoinepirlot.satunes.database.exceptions.BlankStringException
+import io.github.antoinepirlot.satunes.database.exceptions.PlaylistAlreadyExistsException
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.database.models.SatunesDatabase
@@ -94,10 +95,7 @@ class DatabaseManager(context: Context) {
         }
     }
 
-    fun insertMusicToPlaylists(
-        music: Music,
-        playlists: List<Playlist>,
-    ) {
+    fun insertMusicToPlaylists(music: Music, playlists: List<Playlist>) {
         CoroutineScope(Dispatchers.IO).launch {
             playlists.forEach { playlist: Playlist ->
                 val musicsPlaylistsRel =
@@ -129,26 +127,18 @@ class DatabaseManager(context: Context) {
     /**
      * Create new Playlist if doesn't exist in DB otherwise advertise the user that it already exists.
      *
-     * @param context
      * @param playlistTitle the playlist title
      * @param musicList the music contains all music as MusicDB
-     * @param showToast true if you want the app showing toast
+     * @throws BlankStringException when playlistTitle is blank
+     * @throws PlaylistAlreadyExistsException when there's already a playlist with the same playlistTitle
      */
-    fun addOnePlaylist(
-        context: Context,
-        playlistTitle: String,
-        musicList: MutableList<Music>? = null,
-        showToast: Boolean = true
-    ) {
+    fun addOnePlaylist(playlistTitle: String, musicList: MutableList<Music>? = null) {
         CoroutineScope(Dispatchers.IO).launch {
             if (playlistTitle.isBlank()) {
                 throw BlankStringException()
             }
             if (playlistDao.playlistExist(title = playlistTitle)) {
-                val message: String =
-                    playlistTitle + context.getString(R.string.playlist_already_exist)
-                showToastOnUiThread(context = context, message = message)
-                return@launch
+                throw PlaylistAlreadyExistsException()
             }
             val playlistId: Long =
                 playlistDao.insertOne(playlistDB = PlaylistDB(title = playlistTitle))
@@ -163,30 +153,16 @@ class DatabaseManager(context: Context) {
                     playlists = listOf(playlistWithMusics.playlistDB.playlist!!),
                 )
             }
-            if (showToast) {
-                showToastOnUiThread(
-                    context = context,
-                    message = context.getString(R.string.created)
-                )
-            }
         }
     }
 
-    fun updatePlaylists(context: Context, vararg playlists: Playlist) {
+    fun updatePlaylist(playlist: Playlist) {
         CoroutineScope(Dispatchers.IO).launch {
-            val playlistDBs: MutableList<PlaylistDB> = mutableListOf()
-            playlists.forEach { playlist: Playlist ->
-                if (playlist.title.isBlank()) {
-                    showToastOnUiThread(
-                        context = context,
-                        message = context.getString(R.string.blank_string_error)
-                    )
-                } else {
-                    playlistDBs.add(PlaylistDB(id = playlist.id, title = playlist.title))
-                }
-            }
+            if (playlist.title.isBlank()) throw BlankStringException()
+            val playlistDB = PlaylistDB(id = playlist.id, title = playlist.title)
+            if (playlistDao.exists(title = playlist.title)) throw PlaylistAlreadyExistsException()
             try {
-                playlistDao.update(*playlistDBs.toTypedArray())
+                playlistDao.update(playlistDB = playlistDB)
             } catch (e: SQLiteConstraintException) {
                 _logger.severe(e.message)
                 throw e
@@ -228,10 +204,7 @@ class DatabaseManager(context: Context) {
         }
     }
 
-    fun insertMusicsToPlaylist(
-        musics: Collection<Music>,
-        playlist: Playlist
-    ) {
+    fun insertMusicsToPlaylist(musics: Collection<Music>, playlist: Playlist) {
         CoroutineScope(Dispatchers.IO).launch {
             musics.forEach { music: Music ->
                 insertMusicToPlaylists(
@@ -242,11 +215,7 @@ class DatabaseManager(context: Context) {
         }
     }
 
-    fun exportPlaylists(
-        context: Context,
-        vararg playlists: Playlist,
-        uri: Uri
-    ) {
+    fun exportPlaylists(context: Context, vararg playlists: Playlist, uri: Uri) {
         CoroutineScope(Dispatchers.IO).launch {
             val playlistsDBs: MutableList<PlaylistDB> = mutableListOf()
             playlists.forEach { playlist: Playlist ->
@@ -315,10 +284,7 @@ class DatabaseManager(context: Context) {
                 playlistList.forEach { s: String ->
                     json = "{\"playlistDB\":" + s.removeSuffix(",{")
                     val playlistWithMusics: PlaylistWithMusics = Json.decodeFromString(json)
-                    importPlaylistToDatabase(
-                        context = context,
-                        playlistWithMusics = playlistWithMusics
-                    )
+                    importPlaylistToDatabase(playlistWithMusics = playlistWithMusics)
                 }
                 showToastOnUiThread(
                     context = context,
@@ -341,10 +307,7 @@ class DatabaseManager(context: Context) {
     }
 
     @Throws(NullPointerException::class)
-    private fun importPlaylistToDatabase(
-        context: Context,
-        playlistWithMusics: PlaylistWithMusics
-    ) {
+    private fun importPlaylistToDatabase(playlistWithMusics: PlaylistWithMusics) {
         playlistWithMusics.playlistDB.id = 0
         playlistWithMusics.id = 0
 
@@ -353,21 +316,18 @@ class DatabaseManager(context: Context) {
             musicList.add(musicDB.music!!)
         }
         addOnePlaylist(
-            context = context,
             playlistTitle = playlistWithMusics.playlistDB.playlist!!.title, // TODO issue
             musicList = musicList,
-            showToast = false
         )
     }
 
-    fun like(context: Context, music: Music) {
+    fun like(music: Music) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val likesPlaylist: PlaylistWithMusics? =
                     playlistDao.getPlaylistWithMusics(title = LIKES_PLAYLIST_TITLE)
                 if (likesPlaylist == null) {
                     addOnePlaylist(
-                        context = context,
                         musicList = mutableListOf(MusicDB(id = music.id).music!!),
                         playlistTitle = LIKES_PLAYLIST_TITLE
                     )

@@ -43,6 +43,9 @@ const val LIKES_PLAYLIST_TITLE: String = "_likes"
 @Dao
 internal interface PlaylistDAO {
 
+    @Query("SELECT * FROM playlists WHERE title = :title")
+    fun exists(title: String): Boolean
+
     @Transaction
     @Query("SELECT * FROM playlists WHERE playlist_id = :playlistId")
     fun getPlaylistWithMusics(playlistId: Long): PlaylistWithMusics?
@@ -65,7 +68,7 @@ internal interface PlaylistDAO {
     fun insertOne(playlistDB: PlaylistDB): Long
 
     @Update
-    fun update(vararg playlistDBs: PlaylistDB)
+    fun update(playlistDB: PlaylistDB)
 
     @Delete
     fun remove(playlistDB: PlaylistDB)

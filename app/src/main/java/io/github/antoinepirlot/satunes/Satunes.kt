@@ -31,10 +31,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
@@ -59,9 +57,9 @@ import io.github.antoinepirlot.satunes.ui.local.LocalMainScope
 import io.github.antoinepirlot.satunes.ui.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.ui.states.SatunesUiState
 import io.github.antoinepirlot.satunes.ui.theme.SatunesTheme
+import io.github.antoinepirlot.satunes.ui.utils.showSnackBar
 import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 
 /**
  * @author Antoine Pirlot on 10/04/2024
@@ -84,19 +82,19 @@ internal fun Satunes(
                 TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
             val navController: NavHostController = rememberNavController()
             val scope: CoroutineScope = rememberCoroutineScope()
-            val snackBarState: SnackbarHostState = remember { SnackbarHostState() }
+            val snackBarHostState: SnackbarHostState = remember { SnackbarHostState() }
             val context: Context = LocalContext.current
 
             CompositionLocalProvider(
                 values = arrayOf(
-                    LocalSnackBarHostState provides snackBarState,
+                    LocalSnackBarHostState provides snackBarHostState,
                     LocalMainScope provides scope,
                 )
             ) {
                 Scaffold(
                     modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
                     snackbarHost = {
-                        SnackbarHost(hostState = snackBarState)
+                        SnackbarHost(hostState = snackBarHostState)
                     },
                     topBar = {
                         SatunesTopAppBar(
@@ -116,22 +114,20 @@ internal fun Satunes(
                             onConfirm = {
                                 // When app relaunch, it's not shown again
                                 satunesViewModel.seeWhatsNew(permanently = true)
-                                scope.launch {
-                                    val result: SnackbarResult = snackBarState.showSnackbar(
-                                        message = context.getString(R.string.stop_seeing_update_modal),
-                                        actionLabel = context.getString(R.string.cancel),
-                                        duration = SnackbarDuration.Indefinite, //To let the user to have the time to read and take action
-                                        withDismissAction = true
-                                    )
-                                    if (result == SnackbarResult.ActionPerformed) {
+                                showSnackBar(
+                                    scope = scope,
+                                    snackBarHostState = snackBarHostState,
+                                    message = context.getString(R.string.stop_seeing_update_modal),
+                                    actionLabel = context.getString(R.string.cancel),
+                                    action = {
                                         satunesViewModel.seeWhatsNew()
-                                        snackBarState.showSnackbar(
-                                            message = context.getString(R.string.canceled),
-                                            withDismissAction = true,
-                                            duration = SnackbarDuration.Short
+                                        showSnackBar(
+                                            scope = scope,
+                                            snackBarHostState = snackBarHostState,
+                                            message = context.getString(R.string.canceled)
                                         )
                                     }
-                                }
+                                )
                             },
                             onDismiss = {
                                 // When app relaunch, it's shown again

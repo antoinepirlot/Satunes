@@ -27,7 +27,6 @@ package io.github.antoinepirlot.satunes.ui.viewmodels
 
 import android.content.Context
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
@@ -43,9 +42,10 @@ import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
+import io.github.antoinepirlot.satunes.ui.utils.showErrorSnackBar
+import io.github.antoinepirlot.satunes.ui.utils.showSnackBar
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 import io.github.antoinepirlot.satunes.database.R as RDb
 
 /**
@@ -86,28 +86,24 @@ class DataViewModel : ViewModel() {
         val context: Context = MainActivity.instance.applicationContext
         try {
             _db.insertMusicToPlaylists(music = music, playlists = playlists)
-            scope.launch {
-                snackBarHostState.showSnackbar(
-                    message = music.title + ' ' + context.getString(R.string.insert_music_to_playlists_success),
-                    withDismissAction = true,
-                )
-            }
+            showSnackBar(
+                scope = scope,
+                snackBarHostState = snackBarHostState,
+                message = music.title + ' ' + context.getString(R.string.insert_music_to_playlists_success)
+            )
         } catch (e: Throwable) {
             _logger.warning(e.message)
-            scope.launch {
-                val result: SnackbarResult = snackBarHostState.showSnackbar(
-                    message = context.getString(R.string.error_occured),
-                    actionLabel = context.getString(R.string.retry),
-                    withDismissAction = true
-                )
-                if (result == SnackbarResult.ActionPerformed) {
+            showErrorSnackBar(
+                scope = scope,
+                snackBarHostState = snackBarHostState,
+                action = {
                     insertMusicToPlaylists(
                         scope = scope,
                         snackBarHostState = snackBarHostState,
                         music = music, playlists = playlists
                     )
                 }
-            }
+            )
         }
     }
 
@@ -127,23 +123,19 @@ class DataViewModel : ViewModel() {
         val context: Context = MainActivity.instance.applicationContext
         try {
             _db.insertMusicsToPlaylist(musics = musics, playlist = playlist)
-            scope.launch {
-                snackBarHostState.showSnackbar(
-                    message = context.getString(R.string.insert_musics_to_playlist_success) + ' ' +
-                            if (playlist.title == LIKES_PLAYLIST_TITLE) context.getString(RDb.string.likes_playlist_title)
-                            else playlist.title,
-                    withDismissAction = true,
-                )
-            }
+            showSnackBar(
+                scope = scope,
+                snackBarHostState = snackBarHostState,
+                message = context.getString(R.string.insert_musics_to_playlist_success) + ' ' +
+                        if (playlist.title == LIKES_PLAYLIST_TITLE) context.getString(RDb.string.likes_playlist_title)
+                        else playlist.title
+            )
         } catch (e: Throwable) {
             _logger.warning(e.message)
-            scope.launch {
-                val result: SnackbarResult = snackBarHostState.showSnackbar(
-                    message = context.getString(R.string.error_occured),
-                    actionLabel = context.getString(R.string.retry),
-                    withDismissAction = true
-                )
-                if (result == SnackbarResult.ActionPerformed) {
+            showErrorSnackBar(
+                scope = scope,
+                snackBarHostState = snackBarHostState,
+                action = {
                     insertMusicsToPlaylist(
                         scope = scope,
                         snackBarHostState = snackBarHostState,
@@ -151,7 +143,7 @@ class DataViewModel : ViewModel() {
                         playlist = playlist
                     )
                 }
-            }
+            )
         }
     }
 

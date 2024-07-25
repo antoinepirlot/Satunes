@@ -159,7 +159,12 @@ class DataViewModel : ViewModel() {
             showSnackBar(
                 scope = scope,
                 snackBarHostState = snackBarHostState,
-                message = music.title + ' ' + context.getString(R.string.remove_from_playlist_success) + ' ' + playlist.title
+                message = music.title + ' ' + context.getString(R.string.remove_from_playlist_success) + ' ' +
+                        if (playlist.title == LIKES_PLAYLIST_TITLE) {
+                            context.getString(RDb.string.likes_playlist_title)
+                        } else {
+                            playlist.title
+                        }
             )
         } catch (e: Throwable) {
             _logger.warning(e.message)

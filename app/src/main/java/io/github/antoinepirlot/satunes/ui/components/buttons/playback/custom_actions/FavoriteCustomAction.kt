@@ -25,28 +25,41 @@
 
 package io.github.antoinepirlot.satunes.ui.components.buttons.playback.custom_actions
 
-import android.content.Context
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.buttons.playback.CustomActionButton
+import io.github.antoinepirlot.satunes.ui.local.LocalMainScope
+import io.github.antoinepirlot.satunes.ui.local.LocalSnackBarHostState
+import io.github.antoinepirlot.satunes.ui.viewmodels.DataViewModel
+import kotlinx.coroutines.CoroutineScope
 
 /**
  * @author Antoine Pirlot on 28/06/2024
  */
 
 @Composable
-fun FavoriteCustomAction(
+internal fun FavoriteCustomAction(
     modifier: Modifier = Modifier,
+    dataViewModel: DataViewModel = viewModel(),
     music: Music,
 ) {
     // Assume the media is remembered in parent composable
-    val context: Context = LocalContext.current
+    val scope: CoroutineScope = LocalMainScope.current
+    val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
+
     CustomActionButton(
         modifier = modifier,
         icon = if (music.liked.value) SatunesIcons.LIKED else SatunesIcons.UNLIKED,
-        onClick = { music.switchLike(context = context) }
+        onClick = {
+            dataViewModel.switchLike(
+                scope = scope,
+                snackBarHostState = snackBarHostState,
+                music = music
+            )
+        }
     )
 }

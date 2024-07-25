@@ -78,4 +78,5 @@
     <string name="play_next_success">sera lu après cette musique</string>
     <string name="add_to_queue_success">a été ajouté à la fin de la liste en cours de lecture.</string>
     <string name="remove_from_playlist_success">a été supprimé de</string>
+    <string name="remove_playlist_success">a été supprimée.</string>
 </resources>

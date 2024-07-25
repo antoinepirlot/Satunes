@@ -78,4 +78,5 @@
     <string name="play_next_success">will be played next this music</string>
     <string name="add_to_queue_success">has been added at the end of the current playback queue.</string>
     <string name="remove_from_playlist_success">has been removed from</string>
+    <string name="remove_playlist_success">has been removed.</string>
 </resources>

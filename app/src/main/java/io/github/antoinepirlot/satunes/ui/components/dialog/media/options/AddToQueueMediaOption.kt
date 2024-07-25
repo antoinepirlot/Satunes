@@ -54,6 +54,7 @@ internal fun AddToQueueDialogOption(
 ) {
     val scope: CoroutineScope = LocalMainScope.current
     val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
+
     DialogOption(
         modifier = modifier,
         onClick = {

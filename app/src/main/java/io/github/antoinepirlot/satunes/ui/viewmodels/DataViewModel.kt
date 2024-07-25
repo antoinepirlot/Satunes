@@ -147,8 +147,35 @@ class DataViewModel : ViewModel() {
         }
     }
 
-    fun removeMusicFromPlaylist(music: Music, playlist: Playlist) {
-        _db.removeMusicFromPlaylist(music = music, playlist = playlist)
+    fun removeMusicFromPlaylist(
+        scope: CoroutineScope,
+        snackBarHostState: SnackbarHostState,
+        music: Music,
+        playlist: Playlist
+    ) {
+        try {
+            _db.removeMusicFromPlaylist(music = music, playlist = playlist)
+            val context: Context = MainActivity.instance.applicationContext
+            showSnackBar(
+                scope = scope,
+                snackBarHostState = snackBarHostState,
+                message = music.title + ' ' + context.getString(R.string.remove_from_playlist_success) + ' ' + playlist.title
+            )
+        } catch (e: Throwable) {
+            _logger.warning(e.message)
+            showErrorSnackBar(
+                scope = scope,
+                snackBarHostState = snackBarHostState,
+                action = {
+                    removeMusicFromPlaylist(
+                        scope = scope,
+                        snackBarHostState = snackBarHostState,
+                        music = music,
+                        playlist = playlist
+                    )
+                }
+            )
+        }
     }
 
     fun updatePlaylists(vararg playlists: Playlist) {

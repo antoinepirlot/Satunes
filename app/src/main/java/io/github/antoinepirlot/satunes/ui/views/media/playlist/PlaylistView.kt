@@ -26,6 +26,7 @@
 package io.github.antoinepirlot.satunes.ui.views.media.playlist
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -47,9 +48,11 @@ import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
 import io.github.antoinepirlot.satunes.ui.components.dialog.MediaSelectionDialog
 import io.github.antoinepirlot.satunes.ui.components.texts.Title
+import io.github.antoinepirlot.satunes.ui.states.SatunesUiState
 import io.github.antoinepirlot.satunes.ui.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.ui.viewmodels.MediaSelectionViewModel
 import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
+import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 import io.github.antoinepirlot.satunes.database.R as RDb
 
@@ -61,21 +64,35 @@ import io.github.antoinepirlot.satunes.database.R as RDb
 internal fun PlaylistView(
     modifier: Modifier = Modifier,
     navController: NavHostController,
+    satunesViewModel: SatunesViewModel = viewModel(),
     dataViewModel: DataViewModel = viewModel(),
     mediaSelectionViewModel: MediaSelectionViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
     playlist: Playlist,
 ) {
+    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+
     //TODO try using nav controller instead try to remember it in an object if possible
     var openAddMusicsDialog: Boolean by rememberSaveable { mutableStateOf(false) }
     val musicSet: Set<Music> = playlist.getMusicSet()
 
     //Recompose if data changed
-    var mapChanged: Boolean by rememberSaveable { playlist.musicSetUpdated }
-    if (mapChanged) {
-        mapChanged = false
+    if (playlist.title == LIKES_PLAYLIST_TITLE) {
+        //This prevent the modal of music option closing after unlike press becuase the music is removed from the playlist
+        if (!satunesUiState.isMediaOptionsOpened) {
+            var mapChanged: Boolean by rememberSaveable { playlist.musicSetUpdated }
+            if (mapChanged) {
+                mapChanged = false
+            }
+        }
+    } else {
+        var mapChanged: Boolean by rememberSaveable { playlist.musicSetUpdated }
+        if (mapChanged) {
+            mapChanged = false
+        }
     }
     //
+
 
     MediaListView(
         modifier = modifier,

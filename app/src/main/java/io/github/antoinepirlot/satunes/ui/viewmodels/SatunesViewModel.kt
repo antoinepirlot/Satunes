@@ -343,4 +343,16 @@ internal class SatunesViewModel : ViewModel() {
             throw e
         }
     }
+
+    fun mediaOptionsIsOpen() {
+        _uiState.update { currentState: SatunesUiState ->
+            currentState.copy(isMediaOptionsOpened = true)
+        }
+    }
+
+    fun mediaOptionsIsClosed() {
+        _uiState.update { currentState: SatunesUiState ->
+            currentState.copy(isMediaOptionsOpened = false)
+        }
+    }
 }

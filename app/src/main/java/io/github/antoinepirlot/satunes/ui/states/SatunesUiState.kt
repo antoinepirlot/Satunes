@@ -59,4 +59,5 @@ internal data class SatunesUiState(
     val repeatMode: Int = SettingsManager.repeatMode,
     val audioOffloadChecked: Boolean = SettingsManager.audioOffloadChecked,
     val barSpeed: Float = SettingsManager.barSpeed,
+    val isMediaOptionsOpened: Boolean = false
 )

@@ -40,7 +40,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -121,6 +120,7 @@ internal fun MediaCard(
             onLongClick = {
                 haptics.performHapticFeedback(HapticFeedbackType.LongPress)
                 showMediaOption = true
+                satunesViewModel.mediaOptionsIsOpen()
             }
         ),
     ) {
@@ -197,7 +197,10 @@ internal fun MediaCard(
             navController = navController,
             music = media,
             playlist = openedPlaylist,
-            onDismissRequest = { showMediaOption = false }
+            onDismissRequest = {
+                showMediaOption = false
+                satunesViewModel.mediaOptionsIsClosed()
+            }
         )
     }
 
@@ -205,7 +208,10 @@ internal fun MediaCard(
     if (showMediaOption && media is Playlist) {
         PlaylistOptionsDialog(
             playlist = media,
-            onDismissRequest = { showMediaOption = false }
+            onDismissRequest = {
+                showMediaOption = false
+                satunesViewModel.mediaOptionsIsClosed()
+            }
         )
     }
 
@@ -213,8 +219,10 @@ internal fun MediaCard(
     if (showMediaOption && media is Artist) {
         ArtistOptionsDialog(
             artist = media,
-            onDismissRequest = { showMediaOption = false }
-
+            onDismissRequest = {
+                showMediaOption = false
+                satunesViewModel.mediaOptionsIsClosed()
+            }
         )
     }
 
@@ -223,7 +231,10 @@ internal fun MediaCard(
         AlbumOptionsDialog(
             navController = navController,
             album = media,
-            onDismissRequest = { showMediaOption = false }
+            onDismissRequest = {
+                showMediaOption = false
+                satunesViewModel.mediaOptionsIsClosed()
+            }
         )
     }
 
@@ -231,7 +242,10 @@ internal fun MediaCard(
     if (showMediaOption && media is Genre) {
         GenreOptionsDialog(
             genre = media,
-            onDismissRequest = { showMediaOption = false }
+            onDismissRequest = {
+                showMediaOption = false
+                satunesViewModel.mediaOptionsIsClosed()
+            }
         )
     }
 
@@ -239,7 +253,10 @@ internal fun MediaCard(
     if (showMediaOption && media is Folder) {
         FolderOptionsDialog(
             folder = media,
-            onDismissRequest = { showMediaOption = false }
+            onDismissRequest = {
+                showMediaOption = false
+                satunesViewModel.mediaOptionsIsClosed()
+            },
         )
     }
 }

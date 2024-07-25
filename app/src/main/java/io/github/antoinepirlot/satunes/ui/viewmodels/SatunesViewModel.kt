@@ -43,6 +43,7 @@ import io.github.antoinepirlot.satunes.internet.R
 import io.github.antoinepirlot.satunes.internet.updates.APKDownloadStatus
 import io.github.antoinepirlot.satunes.internet.updates.UpdateAvailableStatus
 import io.github.antoinepirlot.satunes.internet.updates.UpdateCheckManager
+import io.github.antoinepirlot.satunes.internet.updates.UpdateDownloadManager
 import io.github.antoinepirlot.satunes.ui.states.SatunesUiState
 import io.github.antoinepirlot.satunes.ui.utils.showErrorSnackBar
 import io.github.antoinepirlot.satunes.ui.utils.showSnackBar
@@ -411,6 +412,46 @@ internal class SatunesViewModel : ViewModel() {
     fun mediaOptionsIsClosed() {
         _uiState.update { currentState: SatunesUiState ->
             currentState.copy(isMediaOptionsOpened = false)
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    fun downloadUpdateApk(
+        scope: CoroutineScope,
+        snackBarHostState: SnackbarHostState,
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val context: Context = MainActivity.instance.applicationContext
+                showSnackBar(
+                    scope = scope,
+                    snackBarHostState = snackBarHostState,
+                    message = context.getString(RInternet.string.downloading)
+                )
+                UpdateDownloadManager.downloadUpdateApk(context = context)
+                if (downloadStatus == APKDownloadStatus.DOWNLOADED) {
+                    showSnackBar(
+                        scope = scope,
+                        snackBarHostState = snackBarHostState,
+                        message = context.getString(RInternet.string.downloaded)
+                    )
+                } else if (downloadStatus == APKDownloadStatus.NOT_FOUND) {
+                    showSnackBar(
+                        scope = scope,
+                        snackBarHostState = snackBarHostState,
+                        message = context.getString(RInternet.string.download_not_found)
+                    )
+                }
+            } catch (e: Throwable) {
+                _logger.warning(e.message)
+                showErrorSnackBar(
+                    scope = scope,
+                    snackBarHostState = snackBarHostState,
+                    action = {
+                        downloadUpdateApk(scope = scope, snackBarHostState = snackBarHostState)
+                    }
+                )
+            }
         }
     }
 }

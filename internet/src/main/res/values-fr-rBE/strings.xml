@@ -7,7 +7,6 @@
     <string name="see_on_github">Ouvrir dans GitHub</string>
     <string name="install_request">Installer</string>
     <string name="download_not_found">Fichier non trouvé</string>
-    <string name="download_failed">Echec lors du téléchargement</string>
     <string name="downloaded">Mise à jour téléchargée</string>
     <string name="downloading">Téléchargement en cours…</string>
     <string name="download_checking">Recherche du fichier…</string>

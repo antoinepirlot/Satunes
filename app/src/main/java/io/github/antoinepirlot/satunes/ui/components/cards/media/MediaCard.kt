@@ -39,6 +39,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -80,6 +81,7 @@ import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 import io.github.antoinepirlot.satunes.ui.components.texts.Subtitle
 import io.github.antoinepirlot.satunes.ui.utils.getRootFolderName
 import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
+import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.R as RDb
 
 /**
@@ -91,18 +93,14 @@ import io.github.antoinepirlot.satunes.database.R as RDb
 internal fun MediaCard(
     modifier: Modifier = Modifier,
     navController: NavHostController,
+    satunesViewModel: SatunesViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
     media: MediaImpl,
     onClick: () -> Unit,
     openedPlaylist: Playlist?,
 ) {
     val haptics = LocalHapticFeedback.current
-    var showMusicOptions: Boolean by rememberSaveable { mutableStateOf(false) }
-    var showPlaylistOptions: Boolean by rememberSaveable { mutableStateOf(false) }
-    var showArtistOptions: Boolean by rememberSaveable { mutableStateOf(false) }
-    var showAlbumOptions: Boolean by rememberSaveable { mutableStateOf(false) }
-    var showGenreOptions: Boolean by rememberSaveable { mutableStateOf(false) }
-    var showFolderOptions: Boolean by rememberSaveable { mutableStateOf(false) }
+    var showMediaOption: Boolean by remember { mutableStateOf(false) }
 
     val title: String =
         if (media is Folder && media.parentFolder == null) {
@@ -116,21 +114,13 @@ internal fun MediaCard(
     Box(
         modifier = modifier.combinedClickable(
             onClick = {
-                if (!showMusicOptions) {
+                if (!showMediaOption) {
                     onClick()
                 }
-                showMusicOptions = false
             },
             onLongClick = {
                 haptics.performHapticFeedback(HapticFeedbackType.LongPress)
-                when (media) {
-                    is Music -> showMusicOptions = true
-                    is Playlist -> showPlaylistOptions = true
-                    is Artist -> showArtistOptions = true
-                    is Album -> showAlbumOptions = true
-                    is Genre -> showGenreOptions = true
-                    is Folder -> showFolderOptions = true
-                }
+                showMediaOption = true
             }
         ),
     ) {
@@ -202,53 +192,54 @@ internal fun MediaCard(
     HorizontalDivider(modifier = modifier)
 
     // Music options dialog
-    if (showMusicOptions && media is Music) {
+    if (showMediaOption && media is Music) {
         MusicOptionsDialog(
             navController = navController,
             music = media,
             playlist = openedPlaylist,
-            onDismissRequest = { showMusicOptions = false },
+            onDismissRequest = { showMediaOption = false }
         )
     }
 
-    // PlaylistDB option dialog
-    if (showPlaylistOptions && media is Playlist) {
+    // Playlist option dialog
+    if (showMediaOption && media is Playlist) {
         PlaylistOptionsDialog(
             playlist = media,
-            onDismissRequest = { showPlaylistOptions = false }
+            onDismissRequest = { showMediaOption = false }
         )
     }
 
     // Artist option dialog
-    if (showArtistOptions && media is Artist) {
+    if (showMediaOption && media is Artist) {
         ArtistOptionsDialog(
             artist = media,
-            onDismissRequest = { showArtistOptions = false }
+            onDismissRequest = { showMediaOption = false }
+
         )
     }
 
     // Album option dialog
-    if (showAlbumOptions && media is Album) {
+    if (showMediaOption && media is Album) {
         AlbumOptionsDialog(
             navController = navController,
             album = media,
-            onDismissRequest = { showAlbumOptions = false }
+            onDismissRequest = { showMediaOption = false }
         )
     }
 
     // Genre option dialog
-    if (showGenreOptions && media is Genre) {
+    if (showMediaOption && media is Genre) {
         GenreOptionsDialog(
             genre = media,
-            onDismissRequest = { showGenreOptions = false }
+            onDismissRequest = { showMediaOption = false }
         )
     }
 
     // Folder option dialog
-    if (showFolderOptions && media is Folder) {
+    if (showMediaOption && media is Folder) {
         FolderOptionsDialog(
             folder = media,
-            onDismissRequest = { showFolderOptions = false }
+            onDismissRequest = { showMediaOption = false }
         )
     }
 }

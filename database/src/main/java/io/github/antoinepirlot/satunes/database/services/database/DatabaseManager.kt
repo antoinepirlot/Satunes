@@ -62,7 +62,7 @@ class DatabaseManager(context: Context) {
     private val musicDao: MusicDAO = database.musicDao()
     private val playlistDao: PlaylistDAO = database.playlistDao()
     private val musicsPlaylistsRelDAO: MusicsPlaylistsRelDAO = database.musicsPlaylistsRelDao()
-    private val logger = SatunesLogger.getLogger()
+    private val _logger = SatunesLogger.getLogger()
 
     companion object {
         private const val PLAYLIST_JSON_OBJECT_NAME = "all_playlists"
@@ -88,7 +88,7 @@ class DatabaseManager(context: Context) {
                 }
             }
         } catch (e: Exception) {
-            logger.warning(e.message)
+            _logger.warning(e.message)
             e.printStackTrace()
         }
     }
@@ -108,11 +108,13 @@ class DatabaseManager(context: Context) {
                     musicsPlaylistsRelDAO.insert(musicsPlaylistsRel)
                     try {
                         musicDao.insert(MusicDB(id = music.id))
-                    } catch (_: SQLiteConstraintException) {
+                    } catch (e: SQLiteConstraintException) {
+                        _logger.warning(e.message)
                         // Do nothing
                     }
                     playlist.addMusic(music = music)
-                } catch (_: SQLiteConstraintException) {
+                } catch (e: SQLiteConstraintException) {
+                    _logger.warning(e.message)
                     // Do nothing
                 }
                 if (playlist.title == LIKES_PLAYLIST_TITLE) {
@@ -189,7 +191,7 @@ class DatabaseManager(context: Context) {
             try {
                 playlistDao.update(*playlistDBs.toTypedArray())
             } catch (e: SQLiteConstraintException) {
-                logger.severe(e.message)
+                _logger.severe(e.message)
                 throw e
             }
         }
@@ -277,7 +279,7 @@ class DatabaseManager(context: Context) {
                 )
             }
         } catch (e: Throwable) {
-            logger.severe(e.message)
+            _logger.severe(e.message)
             e.printStackTrace()
             throw e
         }
@@ -379,7 +381,7 @@ class DatabaseManager(context: Context) {
                     )
                 }
             } catch (e: Exception) {
-                logger.warning(e.message)
+                _logger.warning(e.message)
                 e.printStackTrace()
             }
         }
@@ -397,7 +399,7 @@ class DatabaseManager(context: Context) {
                 )
                 musicDao.unlike(musicId = music.id)
             } catch (e: Exception) {
-                logger.warning(e.message)
+                _logger.warning(e.message)
                 e.printStackTrace()
             }
         }

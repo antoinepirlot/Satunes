@@ -55,6 +55,7 @@ import io.github.antoinepirlot.satunes.router.Router
 import io.github.antoinepirlot.satunes.ui.components.bars.SatunesBottomAppBar
 import io.github.antoinepirlot.satunes.ui.components.bars.SatunesTopAppBar
 import io.github.antoinepirlot.satunes.ui.components.dialog.WhatsNewDialog
+import io.github.antoinepirlot.satunes.ui.local.LocalMainScope
 import io.github.antoinepirlot.satunes.ui.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.ui.states.SatunesUiState
 import io.github.antoinepirlot.satunes.ui.theme.SatunesTheme
@@ -86,7 +87,12 @@ internal fun Satunes(
             val snackBarState: SnackbarHostState = remember { SnackbarHostState() }
             val context: Context = LocalContext.current
 
-            CompositionLocalProvider(value = LocalSnackBarHostState provides snackBarState) {
+            CompositionLocalProvider(
+                values = arrayOf(
+                    LocalSnackBarHostState provides snackBarState,
+                    LocalMainScope provides scope,
+                )
+            ) {
                 Scaffold(
                     modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
                     snackbarHost = {
@@ -137,7 +143,6 @@ internal fun Satunes(
             }
         }
     }
-
 }
 
 @Preview

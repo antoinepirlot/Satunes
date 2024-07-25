@@ -25,6 +25,7 @@
 
 package io.github.antoinepirlot.satunes.ui.components.dialog.media.options
 
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -41,8 +42,11 @@ import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.dialog.MediaSelectionDialog
 import io.github.antoinepirlot.satunes.ui.components.dialog.options.DialogOption
+import io.github.antoinepirlot.satunes.ui.local.LocalMainScope
+import io.github.antoinepirlot.satunes.ui.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.ui.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.ui.viewmodels.MediaSelectionViewModel
+import kotlinx.coroutines.CoroutineScope
 
 /**
  * @author Antoine Pirlot on 01/06/2024
@@ -56,6 +60,8 @@ internal fun AddToPlaylistMediaOption(
     mediaImpl: MediaImpl,
     onFinished: () -> Unit
 ) {
+    val scope: CoroutineScope = LocalMainScope.current
+    val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
     var showDialog: Boolean by rememberSaveable { mutableStateOf(false) }
 
     DialogOption(
@@ -79,6 +85,8 @@ internal fun AddToPlaylistMediaOption(
             },
             onConfirm = {
                 insertMediaToPlaylist(
+                    scope = scope,
+                    snackBarHostState = snackBarHostState,
                     dataViewModel = dataViewModel,
                     mediaSelectionViewModel = mediaSelectionViewModel,
                     mediaImpl = mediaImpl
@@ -93,11 +101,15 @@ internal fun AddToPlaylistMediaOption(
 
 private fun insertMediaToPlaylist(
     dataViewModel: DataViewModel,
+    scope: CoroutineScope,
+    snackBarHostState: SnackbarHostState,
     mediaSelectionViewModel: MediaSelectionViewModel,
     mediaImpl: MediaImpl
 ) {
     if (mediaImpl is Music) {
         dataViewModel.insertMusicToPlaylists(
+            scope = scope,
+            snackBarHostState = snackBarHostState,
             music = mediaImpl,
             playlists = mediaSelectionViewModel.getCheckedPlaylistWithMusics()
         )
@@ -111,6 +123,8 @@ private fun insertMediaToPlaylist(
         mediaSelectionViewModel.getCheckedPlaylistWithMusics()
             .forEach { playlist: Playlist ->
                 dataViewModel.insertMusicsToPlaylist(
+                    scope = scope,
+                    snackBarHostState = snackBarHostState,
                     musics = musicList,
                     playlist = playlist
                 )

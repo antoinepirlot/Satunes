@@ -71,4 +71,8 @@
     <string name="logs_settings_content">You can export logs to send me them by email.\n\nWith these logs I can understand more about what\'s wrong with the app.\n\nLogs files contain informations about what the app does and its state.\nThese informations includes:\n- Dates\n- Process\n- App state\n\nIn these logs, there\'s not confidential informations as music informations or data that can identify you.\n\nIf you\'re not convinced, you can choose to describe me the problem but it will be more difficult to fix issues.</string>
     <string name="stop_seeing_update_modal">You won\'t see this modal again until the next update</string>
     <string name="canceled">Canceled</string>
+    <string name="insert_music_to_playlists_success">has been added to the playlist(s)</string>
+    <string name="error_occured">An error occured</string>
+    <string name="retry">Retry</string>
+    <string name="insert_musics_to_playlist_success">Musics have been added to</string>
 </resources>

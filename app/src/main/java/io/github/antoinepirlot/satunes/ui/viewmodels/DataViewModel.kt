@@ -25,11 +25,15 @@
 
 package io.github.antoinepirlot.satunes.ui.viewmodels
 
+import android.content.Context
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import io.github.antoinepirlot.satunes.MainActivity
+import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Folder
@@ -38,11 +42,15 @@ import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
+import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 /**
  * @author Antoine Pirlot on 19/07/2024
  */
 class DataViewModel : ViewModel() {
+    private val _logger: SatunesLogger = SatunesLogger.getLogger()
     private val _playlistSetUpdated: MutableState<Boolean> = DataManager.playlistsMapUpdated
     private val _db: DatabaseManager =
         DatabaseManager(context = MainActivity.instance.applicationContext)
@@ -67,8 +75,38 @@ class DataViewModel : ViewModel() {
     fun getGenre(id: Long): Genre = DataManager.getGenre(id = id)
     fun getPlaylist(id: Long): Playlist = DataManager.getPlaylist(id = id)
 
-    fun insertMusicToPlaylists(music: Music, playlists: List<Playlist>) {
-        _db.insertMusicToPlaylists(music = music, playlists = playlists)
+    fun insertMusicToPlaylists(
+        scope: CoroutineScope,
+        snackBarHostState: SnackbarHostState,
+        music: Music,
+        playlists: List<Playlist>
+    ) {
+        val context: Context = MainActivity.instance.applicationContext
+        try {
+            _db.insertMusicToPlaylists(music = music, playlists = playlists)
+            scope.launch {
+                snackBarHostState.showSnackbar(
+                    message = music.title + ' ' + context.getString(R.string.insert_music_to_playlists_success),
+                    withDismissAction = true,
+                )
+            }
+        } catch (e: Throwable) {
+            _logger.warning(e.message)
+            scope.launch {
+                val result: SnackbarResult = snackBarHostState.showSnackbar(
+                    message = context.getString(R.string.error_occured),
+                    actionLabel = context.getString(R.string.retry),
+                    withDismissAction = true
+                )
+                if (result == SnackbarResult.ActionPerformed) {
+                    insertMusicToPlaylists(
+                        scope = scope,
+                        snackBarHostState = snackBarHostState,
+                        music = music, playlists = playlists
+                    )
+                }
+            }
+        }
     }
 
     fun addOnePlaylist(playlistTitle: String) {
@@ -78,8 +116,39 @@ class DataViewModel : ViewModel() {
         )
     }
 
-    fun insertMusicsToPlaylist(musics: Collection<Music>, playlist: Playlist) {
-        _db.insertMusicsToPlaylist(musics = musics, playlist = playlist)
+    fun insertMusicsToPlaylist(
+        scope: CoroutineScope,
+        snackBarHostState: SnackbarHostState,
+        musics: Collection<Music>,
+        playlist: Playlist
+    ) {
+        val context: Context = MainActivity.instance.applicationContext
+        try {
+            _db.insertMusicsToPlaylist(musics = musics, playlist = playlist)
+            scope.launch {
+                snackBarHostState.showSnackbar(
+                    message = context.getString(R.string.insert_musics_to_playlist_success) + ' ' + playlist.title,
+                    withDismissAction = true,
+                )
+            }
+        } catch (e: Throwable) {
+            _logger.warning(e.message)
+            scope.launch {
+                val result: SnackbarResult = snackBarHostState.showSnackbar(
+                    message = context.getString(R.string.error_occured),
+                    actionLabel = context.getString(R.string.retry),
+                    withDismissAction = true
+                )
+                if (result == SnackbarResult.ActionPerformed) {
+                    insertMusicsToPlaylist(
+                        scope = scope,
+                        snackBarHostState = snackBarHostState,
+                        musics = musics,
+                        playlist = playlist
+                    )
+                }
+            }
+        }
     }
 
     fun removeMusicFromPlaylist(music: Music, playlist: Playlist) {

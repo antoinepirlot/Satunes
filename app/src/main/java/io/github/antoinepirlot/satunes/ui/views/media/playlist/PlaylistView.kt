@@ -25,6 +25,7 @@
 
 package io.github.antoinepirlot.satunes.ui.views.media.playlist
 
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -48,12 +49,15 @@ import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
 import io.github.antoinepirlot.satunes.ui.components.dialog.MediaSelectionDialog
 import io.github.antoinepirlot.satunes.ui.components.texts.Title
+import io.github.antoinepirlot.satunes.ui.local.LocalMainScope
+import io.github.antoinepirlot.satunes.ui.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.ui.states.SatunesUiState
 import io.github.antoinepirlot.satunes.ui.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.ui.viewmodels.MediaSelectionViewModel
 import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
+import kotlinx.coroutines.CoroutineScope
 import io.github.antoinepirlot.satunes.database.R as RDb
 
 /**
@@ -71,6 +75,8 @@ internal fun PlaylistView(
     playlist: Playlist,
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+    val maineScope: CoroutineScope = LocalMainScope.current
+    val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
 
     //TODO try using nav controller instead try to remember it in an object if possible
     var openAddMusicsDialog: Boolean by rememberSaveable { mutableStateOf(false) }
@@ -148,6 +154,8 @@ internal fun PlaylistView(
             onDismissRequest = { openAddMusicsDialog = false },
             onConfirm = {
                 dataViewModel.insertMusicsToPlaylist(
+                    scope = maineScope,
+                    snackBarHostState = snackBarHostState,
                     musics = mediaSelectionViewModel.getCheckedMusics(),
                     playlist = playlist
                 )

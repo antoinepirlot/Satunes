@@ -71,4 +71,8 @@
     <string name="logs_settings_content">Tu peux exporter les logs pour me les envoyer par e-mail à l\'adresse: pirlot.antoine@outlook.com.\n\nGrâce à ces logs, je peux mieux comprendre ce qui ne va pas avec l\'application.\n\nLes fichiers logs contiennent des informations sur ce que fait l\'application et son état.\nCes informations incluent : \n- Dates\n- Processus\n- Etat de l\'application\n\nDans ces logs, il n\'y a pas d\'informations confidentielles comme des informations musicales ou des données permettant de t\'identifier.\n\nSi tu n\'es pas convaincu, tu peux choisir de me décrire le problème mais il sera plus difficile pour moi de le résoudre.</string>
     <string name="stop_seeing_update_modal">Tu ne verras plus cette modal jusqu\'à la prochaine mise à jour</string>
     <string name="canceled">Annulé</string>
+    <string name="insert_music_to_playlists_success">a été ajoutée à/aux playlist(s)</string>
+    <string name="error_occured">Une erreur est survenue</string>
+    <string name="retry">Réessayer</string>
+    <string name="insert_musics_to_playlist_success">Les musiques ont été ajoutées à</string>
 </resources>

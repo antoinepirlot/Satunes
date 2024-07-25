@@ -97,7 +97,6 @@ class Music(
         }
     }
 
-
     private fun getMediaMetadata(): MediaItem {
         val mediaMetaData: MediaMetadata = MediaMetadata.Builder()
             .setArtist(artist.title)

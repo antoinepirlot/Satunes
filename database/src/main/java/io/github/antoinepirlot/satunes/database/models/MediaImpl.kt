@@ -27,7 +27,9 @@ package io.github.antoinepirlot.satunes.database.models
 
 import android.graphics.Bitmap
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import java.util.SortedSet
 
 /**
@@ -46,7 +48,8 @@ abstract class MediaImpl(
             }
         }
 
-    var artwork: Bitmap? = null
+    var artwork: Bitmap? by mutableStateOf(null)
+        internal set
 
     protected val musicSortedSet: SortedSet<Music> = sortedSetOf()
     val musicSetUpdated: MutableState<Boolean> = mutableStateOf(false)

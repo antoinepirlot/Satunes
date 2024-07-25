@@ -46,7 +46,7 @@ internal fun showErrorSnackBar(
     showSnackBar(
         scope = scope,
         snackBarHostState = snackBarHostState,
-        message = context.getString(R.string.error_occured),
+        message = context.getString(R.string.error_occurred),
         actionLabel = context.getString(R.string.retry),
         action = action,
         duration = SnackbarDuration.Long

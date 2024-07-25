@@ -72,7 +72,7 @@
     <string name="stop_seeing_update_modal">Tu ne verras plus cette modal jusqu\'à la prochaine mise à jour</string>
     <string name="canceled">Annulé</string>
     <string name="insert_music_to_playlists_success">a été ajoutée à/aux playlist(s)</string>
-    <string name="error_occured">Une erreur est survenue</string>
+    <string name="error_occurred">Une erreur est survenue</string>
     <string name="retry">Réessayer</string>
     <string name="insert_musics_to_playlist_success">Les musiques ont été ajoutées à</string>
     <string name="play_next_success">sera lu après cette musique</string>

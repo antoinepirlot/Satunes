@@ -36,6 +36,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -53,7 +54,10 @@ import io.github.antoinepirlot.satunes.ui.components.buttons.updates.CheckUpdate
 import io.github.antoinepirlot.satunes.ui.components.settings.UpdateAvailable
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 import io.github.antoinepirlot.satunes.ui.components.texts.Title
+import io.github.antoinepirlot.satunes.ui.local.LocalMainScope
+import io.github.antoinepirlot.satunes.ui.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
+import kotlinx.coroutines.CoroutineScope
 
 /**
  * @author Antoine Pirlot on 11/04/2024
@@ -67,6 +71,8 @@ internal fun UpdatesSettingView(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
 ) {
+    val scope: CoroutineScope = LocalMainScope.current
+    val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
     val currentVersion: String = satunesViewModel.getCurrentVersion()
     val isCheckingUpdate: Boolean = satunesViewModel.isCheckingUpdate
     val updateAvailable: UpdateAvailableStatus = satunesViewModel.updateAvailableStatus
@@ -97,7 +103,10 @@ internal fun UpdatesSettingView(
                     Spacer(modifier = Modifier.size(PADDING)) // To align with text and not have a vertical cut
                     CheckUpdateButton()
                 }
-                AVAILABLE -> UpdateAvailable()
+
+                AVAILABLE -> {
+                    UpdateAvailable()
+                }
             }
         }
     }

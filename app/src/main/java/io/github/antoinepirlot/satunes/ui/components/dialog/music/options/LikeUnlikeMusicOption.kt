@@ -25,15 +25,19 @@
 
 package io.github.antoinepirlot.satunes.ui.components.dialog.music.options
 
-import android.content.Context
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.dialog.options.DialogOption
+import io.github.antoinepirlot.satunes.ui.local.LocalMainScope
+import io.github.antoinepirlot.satunes.ui.local.LocalSnackBarHostState
+import io.github.antoinepirlot.satunes.ui.viewmodels.DataViewModel
+import kotlinx.coroutines.CoroutineScope
 
 /**
  * @author Antoine Pirlot on 29/06/2024
@@ -42,13 +46,21 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.options.DialogOption
 @Composable
 internal fun LikeUnlikeMusicOption(
     modifier: Modifier = Modifier,
+    dataViewModel: DataViewModel = viewModel(),
     music: Music,
 ) {
-    val context: Context = LocalContext.current
+    val scope: CoroutineScope = LocalMainScope.current
+    val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
 
     DialogOption(
         modifier = modifier,
-        onClick = { music.switchLike(context = context) },
+        onClick = {
+            dataViewModel.switchLike(
+                scope = scope,
+                snackBarHostState = snackBarHostState,
+                music = music
+            )
+        },
         icon = if (music.liked.value) SatunesIcons.LIKED else SatunesIcons.UNLIKED,
         text = stringResource(id = if (music.liked.value) R.string.remove_from_likes else R.string.add_to_likes)
     )

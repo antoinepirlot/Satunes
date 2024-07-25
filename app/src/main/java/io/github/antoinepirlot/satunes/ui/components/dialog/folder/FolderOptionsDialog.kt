@@ -72,7 +72,7 @@ internal fun FolderOptionsDialog(
             Column {
 
                 /**
-                 * PlaylistDB
+                 * Playlist
                  */
 
                 AddToPlaylistMediaOption(mediaImpl = folder, onFinished = onDismissRequest)

@@ -25,6 +25,7 @@
 
 package io.github.antoinepirlot.satunes.ui.components.dialog.playlist.options
 
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -33,6 +34,9 @@ import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.dialog.options.DialogOption
+import io.github.antoinepirlot.satunes.ui.local.LocalMainScope
+import io.github.antoinepirlot.satunes.ui.local.LocalSnackBarHostState
+import kotlinx.coroutines.CoroutineScope
 
 /**
  * @author Antoine Pirlot on 01/06/2024
@@ -43,11 +47,16 @@ internal fun ExportPlaylistOption(
     modifier: Modifier = Modifier,
     playlistToExport: Playlist
 ) {
+    val scope: CoroutineScope = LocalMainScope.current
+    val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
+
     DialogOption(
         modifier = modifier,
         onClick = {
             MainActivity.playlistsToExport = arrayOf(playlistToExport)
             MainActivity.instance.createFileToExportPlaylists(
+                scope = scope,
+                snackBarHostState = snackBarHostState,
                 defaultFileName = playlistToExport.title
             )
         },

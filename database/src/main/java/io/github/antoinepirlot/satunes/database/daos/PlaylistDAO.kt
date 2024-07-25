@@ -52,7 +52,7 @@ internal interface PlaylistDAO {
     fun getPlaylistWithMusics(title: String): PlaylistWithMusics?
 
     @Query("SELECT playlist_id FROM playlists WHERE lower(title) = lower(:title)")
-    fun playlistExist(title: String): Boolean
+    fun exists(title: String): Boolean
 
     @Transaction
     @Query("SELECT * FROM  playlists")
@@ -65,7 +65,7 @@ internal interface PlaylistDAO {
     fun insertOne(playlistDB: PlaylistDB): Long
 
     @Update
-    fun update(vararg playlistDBs: PlaylistDB)
+    fun update(playlistDB: PlaylistDB)
 
     @Delete
     fun remove(playlistDB: PlaylistDB)

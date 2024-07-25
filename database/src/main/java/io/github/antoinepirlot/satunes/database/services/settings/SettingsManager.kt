@@ -155,7 +155,7 @@ object SettingsManager {
     var musicsFilter: Boolean = DEFAULT_MUSICS_FILTER
         private set
 
-    private val logger = SatunesLogger.getLogger()
+    private val _logger = SatunesLogger.getLogger()
 
     suspend fun loadSettings(context: Context) {
         context.dataStore.data.map { preferences: Preferences ->
@@ -342,7 +342,7 @@ object SettingsManager {
         }
     }
 
-    private suspend fun unSeeWhatsNew(context: Context) {
+    suspend fun unSeeWhatsNew(context: Context) {
         context.dataStore.edit { preferences: MutablePreferences ->
             whatsNewSeen = false
             preferences[WHATS_NEW_SEEN_KEY] = whatsNewSeen

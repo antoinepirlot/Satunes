@@ -25,6 +25,7 @@
 
 package io.github.antoinepirlot.satunes.ui.components.dialog.music.options
 
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -39,7 +40,10 @@ import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.dialog.RemoveConfirmationDialog
 import io.github.antoinepirlot.satunes.ui.components.dialog.options.DialogOption
+import io.github.antoinepirlot.satunes.ui.local.LocalMainScope
+import io.github.antoinepirlot.satunes.ui.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.ui.viewmodels.DataViewModel
+import kotlinx.coroutines.CoroutineScope
 
 /**
  * @author Antoine Pirlot on 01/06/2024
@@ -53,6 +57,8 @@ internal fun RemoveFromPlaylistMusicOption(
     playlist: Playlist,
     onFinished: () -> Unit,
 ) {
+    val scope: CoroutineScope = LocalMainScope.current
+    val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
     var showRemoveConfirmation: Boolean by rememberSaveable { mutableStateOf(false) }
 
     DialogOption(
@@ -67,6 +73,8 @@ internal fun RemoveFromPlaylistMusicOption(
             onDismissRequest = { showRemoveConfirmation = false },
             onRemoveRequest = {
                 dataViewModel.removeMusicFromPlaylist(
+                    scope = scope,
+                    snackBarHostState = snackBarHostState,
                     music = music,
                     playlist = playlist
                 )

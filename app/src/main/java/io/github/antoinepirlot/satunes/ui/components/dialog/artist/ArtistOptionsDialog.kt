@@ -65,7 +65,7 @@ internal fun ArtistOptionsDialog(
         text = {
             Column {
                 /**
-                 * PlaylistDB
+                 * Playlist
                  */
                 AddToPlaylistMediaOption(mediaImpl = artist, onFinished = onDismissRequest)
 

@@ -25,22 +25,32 @@
 
 package io.github.antoinepirlot.satunes.ui.viewmodels
 
+import android.content.Context
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.MutableFloatState
 import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.ViewModel
+import io.github.antoinepirlot.satunes.MainActivity
+import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.models.ProgressBarLifecycleCallbacks
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
+import io.github.antoinepirlot.satunes.ui.utils.showErrorSnackBar
+import io.github.antoinepirlot.satunes.ui.utils.showSnackBar
+import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
+import kotlinx.coroutines.CoroutineScope
 
 /**
  * @author Antoine Pirlot on 19/07/2024
  */
 class PlaybackViewModel : ViewModel() {
+    private val _logger: SatunesLogger = SatunesLogger.getLogger()
     private val _playbackController: PlaybackController = PlaybackController.getInstance()
     private val _isPlaying: MutableState<Boolean> = _playbackController.isPlaying
     private val _musicPlaying: MutableState<Music?> = _playbackController.musicPlaying
@@ -162,12 +172,63 @@ class PlaybackViewModel : ViewModel() {
         return this._playbackController.getMusicPlayingIndexPosition()
     }
 
-    fun addToQueue(mediaImpl: MediaImpl) {
-        this._playbackController.addToQueue(mediaImpl = mediaImpl)
+    fun addToQueue(
+        scope: CoroutineScope,
+        snackBarHostState: SnackbarHostState,
+        mediaImpl: MediaImpl
+    ) {
+        val context: Context = MainActivity.instance.applicationContext
+        try {
+            this._playbackController.addToQueue(mediaImpl = mediaImpl)
+            showSnackBar(
+                scope = scope,
+                snackBarHostState = snackBarHostState,
+                message = mediaImpl.title + ' ' + context.getString(R.string.add_to_queue_success),
+                duration = SnackbarDuration.Long
+            )
+        } catch (e: Throwable) {
+            _logger.warning(e.message)
+            showErrorSnackBar(
+                scope = scope,
+                snackBarHostState = snackBarHostState,
+                action = {
+                    addToQueue(
+                        scope = scope,
+                        snackBarHostState = snackBarHostState,
+                        mediaImpl = mediaImpl
+                    )
+                }
+            )
+        }
     }
 
-    fun addNext(mediaImpl: MediaImpl) {
-        this._playbackController.addNext(mediaImpl = mediaImpl)
+    fun addNext(
+        scope: CoroutineScope,
+        snackBarHostState: SnackbarHostState,
+        mediaImpl: MediaImpl
+    ) {
+        val context: Context = MainActivity.instance.applicationContext
+        try {
+            this._playbackController.addNext(mediaImpl = mediaImpl)
+            showSnackBar(
+                scope = scope,
+                snackBarHostState = snackBarHostState,
+                message = mediaImpl.title + ' ' + context.getString(R.string.play_next_success)
+            )
+        } catch (e: Throwable) {
+            _logger.warning(e.message)
+            showErrorSnackBar(
+                scope = scope,
+                snackBarHostState = snackBarHostState,
+                action = {
+                    addNext(
+                        scope = scope,
+                        snackBarHostState = snackBarHostState,
+                        mediaImpl = mediaImpl
+                    )
+                }
+            )
+        }
     }
 
     fun isMusicInQueue(music: Music): Boolean {

@@ -25,11 +25,17 @@
 
 package io.github.antoinepirlot.satunes.ui.viewmodels
 
+import android.content.Context
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import io.github.antoinepirlot.satunes.MainActivity
+import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
+import io.github.antoinepirlot.satunes.database.exceptions.BlankStringException
+import io.github.antoinepirlot.satunes.database.exceptions.PlaylistAlreadyExistsException
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Folder
@@ -38,11 +44,19 @@ import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
+import io.github.antoinepirlot.satunes.ui.utils.showErrorSnackBar
+import io.github.antoinepirlot.satunes.ui.utils.showSnackBar
+import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import io.github.antoinepirlot.satunes.database.R as RDb
 
 /**
  * @author Antoine Pirlot on 19/07/2024
  */
 class DataViewModel : ViewModel() {
+    private val _logger: SatunesLogger = SatunesLogger.getLogger()
     private val _playlistSetUpdated: MutableState<Boolean> = DataManager.playlistsMapUpdated
     private val _db: DatabaseManager =
         DatabaseManager(context = MainActivity.instance.applicationContext)
@@ -67,33 +81,269 @@ class DataViewModel : ViewModel() {
     fun getGenre(id: Long): Genre = DataManager.getGenre(id = id)
     fun getPlaylist(id: Long): Playlist = DataManager.getPlaylist(id = id)
 
-    fun insertMusicToPlaylists(music: Music, playlists: List<Playlist>) {
-        _db.insertMusicToPlaylists(music = music, playlists = playlists)
+    fun insertMusicToPlaylists(
+        scope: CoroutineScope,
+        snackBarHostState: SnackbarHostState,
+        music: Music,
+        playlists: List<Playlist>
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val context: Context = MainActivity.instance.applicationContext
+            try {
+                _db.insertMusicToPlaylists(music = music, playlists = playlists)
+                showSnackBar(
+                    scope = scope,
+                    snackBarHostState = snackBarHostState,
+                    message = music.title + ' ' + context.getString(R.string.insert_music_to_playlists_success)
+                )
+            } catch (e: Throwable) {
+                _logger.warning(e.message)
+                showErrorSnackBar(scope = scope, snackBarHostState = snackBarHostState, action = {
+                    insertMusicToPlaylists(
+                        scope = scope,
+                        snackBarHostState = snackBarHostState,
+                        music = music,
+                        playlists = playlists
+                    )
+                })
+            }
+        }
     }
 
-    fun addOnePlaylist(playlistTitle: String) {
-        _db.addOnePlaylist(
-            context = MainActivity.instance.applicationContext,
-            playlistTitle = playlistTitle
-        )
+    fun addOnePlaylist(
+        scope: CoroutineScope,
+        snackBarHostState: SnackbarHostState,
+        playlistTitle: String
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val context: Context = MainActivity.instance.applicationContext
+            try {
+                _db.addOnePlaylist(playlistTitle = playlistTitle)
+                showSnackBar(
+                    scope = scope,
+                    snackBarHostState = snackBarHostState,
+                    message = playlistTitle + ' ' + context.getString(R.string.add_playlist_success)
+                )
+            } catch (e: Throwable) {
+                val message: String? = when (e) {
+                    is BlankStringException -> {
+                        context.getString(RDb.string.blank_string_error)
+                    }
+
+                    is PlaylistAlreadyExistsException -> {
+                        playlistTitle + context.getString(RDb.string.playlist_already_exist)
+                    }
+
+                    else -> null
+                }
+
+                if (message != null) {
+                    showSnackBar(
+                        scope = scope,
+                        snackBarHostState = snackBarHostState,
+                        message = message
+                    )
+                } else {
+                    _logger.warning(e.message)
+                    showErrorSnackBar(
+                        scope = scope,
+                        snackBarHostState = snackBarHostState,
+                        action = {
+                            addOnePlaylist(
+                                scope = scope,
+                                snackBarHostState = snackBarHostState,
+                                playlistTitle = playlistTitle
+                            )
+                        }
+                    )
+                }
+            }
+        }
     }
 
-    fun insertMusicsToPlaylist(musics: Collection<Music>, playlist: Playlist) {
-        _db.insertMusicsToPlaylist(musics = musics, playlist = playlist)
+    fun insertMusicsToPlaylist(
+        scope: CoroutineScope,
+        snackBarHostState: SnackbarHostState,
+        musics: Collection<Music>,
+        playlist: Playlist
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val context: Context = MainActivity.instance.applicationContext
+            try {
+                _db.insertMusicsToPlaylist(musics = musics, playlist = playlist)
+                showSnackBar(
+                    scope = scope,
+                    snackBarHostState = snackBarHostState,
+                    message = context.getString(R.string.insert_musics_to_playlist_success) + ' ' + if (playlist.title == LIKES_PLAYLIST_TITLE) context.getString(
+                        RDb.string.likes_playlist_title
+                    )
+                    else playlist.title
+                )
+            } catch (e: Throwable) {
+                _logger.warning(e.message)
+                showErrorSnackBar(scope = scope, snackBarHostState = snackBarHostState, action = {
+                    insertMusicsToPlaylist(
+                        scope = scope,
+                        snackBarHostState = snackBarHostState,
+                        musics = musics,
+                        playlist = playlist
+                    )
+                })
+            }
+        }
     }
 
-    fun removeMusicFromPlaylist(music: Music, playlist: Playlist) {
-        _db.removeMusicFromPlaylist(music = music, playlist = playlist)
+    fun removeMusicFromPlaylist(
+        scope: CoroutineScope,
+        snackBarHostState: SnackbarHostState,
+        music: Music,
+        playlist: Playlist
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                _db.removeMusicFromPlaylist(music = music, playlist = playlist)
+                val context: Context = MainActivity.instance.applicationContext
+                showSnackBar(
+                    scope = scope,
+                    snackBarHostState = snackBarHostState,
+                    message = music.title + ' ' + context.getString(R.string.remove_from_playlist_success) + ' ' + if (playlist.title == LIKES_PLAYLIST_TITLE) {
+                        context.getString(RDb.string.likes_playlist_title)
+                    } else {
+                        playlist.title
+                    }
+                )
+            } catch (e: Throwable) {
+                _logger.warning(e.message)
+                showErrorSnackBar(scope = scope, snackBarHostState = snackBarHostState, action = {
+                    removeMusicFromPlaylist(
+                        scope = scope,
+                        snackBarHostState = snackBarHostState,
+                        music = music,
+                        playlist = playlist
+                    )
+                })
+            }
+        }
     }
 
-    fun updatePlaylists(vararg playlists: Playlist) {
-        _db.updatePlaylists(
-            context = MainActivity.instance.applicationContext,
-            playlists = playlists
-        )
+    fun updatePlaylist(
+        scope: CoroutineScope,
+        snackBarHostState: SnackbarHostState,
+        playlist: Playlist
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val context: Context = MainActivity.instance.applicationContext
+            try {
+                _db.updatePlaylist(playlist = playlist)
+                showSnackBar(
+                    scope = scope,
+                    snackBarHostState = snackBarHostState,
+                    message = context.getString(R.string.update_playlist_success, playlist.title)
+                )
+            } catch (e: Throwable) {
+                val message: String? = when (e) {
+                    is BlankStringException -> {
+                        context.getString(RDb.string.blank_string_error)
+                    }
+
+                    is PlaylistAlreadyExistsException -> {
+                        context.getString(RDb.string.playlist_already_exist)
+                    }
+
+                    else -> null
+                }
+
+                if (message != null) {
+                    showSnackBar(
+                        scope = scope,
+                        snackBarHostState = snackBarHostState,
+                        message = message
+                    )
+                } else {
+                    showErrorSnackBar(
+                        scope = scope,
+                        snackBarHostState = snackBarHostState,
+                        action = {
+                            updatePlaylist(
+                                scope = scope,
+                                snackBarHostState = snackBarHostState,
+                                playlist = playlist
+                            )
+                        }
+                    )
+                }
+            }
+        }
     }
 
-    fun removePlaylist(playlist: Playlist) {
-        _db.removePlaylist(playlist = playlist)
+    fun removePlaylist(
+        scope: CoroutineScope, snackBarHostState: SnackbarHostState, playlist: Playlist
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                _db.removePlaylist(playlist = playlist)
+                val context: Context = MainActivity.instance.applicationContext
+                val message: String =
+                    if (playlist.title == LIKES_PLAYLIST_TITLE) {
+                        context.getString(RDb.string.likes_playlist_title)
+                    } else {
+                        playlist.title
+                    } + ' ' + context.getString(R.string.remove_playlist_success)
+                showSnackBar(
+                    scope = scope,
+                    snackBarHostState = snackBarHostState,
+                    message = message,
+                )
+            } catch (e: Throwable) {
+                _logger.warning(e.message)
+                showErrorSnackBar(
+                    scope = scope,
+                    snackBarHostState = snackBarHostState,
+                    action = {
+                        removePlaylist(
+                            scope = scope,
+                            snackBarHostState = snackBarHostState,
+                            playlist = playlist
+                        )
+                    }
+                )
+            }
+        }
+    }
+
+    fun switchLike(
+        scope: CoroutineScope,
+        snackBarHostState: SnackbarHostState,
+        music: Music
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val context: Context = MainActivity.instance.applicationContext
+                music.switchLike(context = context)
+                val message: String =
+                    if (music.liked.value) {
+                        context.getString(R.string.add_to_likes_success, music.title)
+                    } else {
+                        context.getString(R.string.remove_from_likes_success, music.title)
+                    }
+                showSnackBar(
+                    scope = scope,
+                    snackBarHostState = snackBarHostState,
+                    message = message
+                )
+            } catch (e: Throwable) {
+                showErrorSnackBar(
+                    scope = scope,
+                    snackBarHostState = snackBarHostState,
+                    action = {
+                        switchLike(
+                            scope = scope,
+                            snackBarHostState = snackBarHostState,
+                            music = music
+                        )
+                    }
+                )
+            }
+        }
     }
 }

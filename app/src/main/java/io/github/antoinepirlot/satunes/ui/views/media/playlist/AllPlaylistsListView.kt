@@ -26,6 +26,7 @@
 package io.github.antoinepirlot.satunes.ui.views.media.playlist
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -45,9 +46,12 @@ import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
 import io.github.antoinepirlot.satunes.ui.components.forms.PlaylistCreationForm
+import io.github.antoinepirlot.satunes.ui.local.LocalMainScope
+import io.github.antoinepirlot.satunes.ui.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.ui.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
+import kotlinx.coroutines.CoroutineScope
 
 /**
  * @author Antoine Pirlot on 30/03/2024
@@ -60,7 +64,10 @@ internal fun PlaylistListView(
     playbackViewModel: PlaybackViewModel = viewModel(),
     navController: NavHostController,
 ) {
+    val scope: CoroutineScope = LocalMainScope.current
+    val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
     var openAlertDialog by remember { mutableStateOf(false) }
+
     Column(modifier = modifier) {
         val playlistSet: Set<Playlist> = dataViewModel.getPlaylistSet()
 
@@ -97,7 +104,11 @@ internal fun PlaylistListView(
             openAlertDialog -> {
                 PlaylistCreationForm(
                     onConfirm = { playlistTitle: String ->
-                        dataViewModel.addOnePlaylist(playlistTitle = playlistTitle)
+                        dataViewModel.addOnePlaylist(
+                            scope = scope,
+                            snackBarHostState = snackBarHostState,
+                            playlistTitle = playlistTitle
+                        )
                         openAlertDialog = false
                     },
                     onDismissRequest = { openAlertDialog = false }

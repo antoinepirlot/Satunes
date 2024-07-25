@@ -23,41 +23,11 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.database.models
-
-import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
+package io.github.antoinepirlot.satunes.database.exceptions
 
 /**
- * @author Antoine Pirlot on 11/07/2024
+ * @author Antoine Pirlot on 25/07/2024
  */
-class Playlist(
-    id: Long, // Managed by Database
-    title: String
-) : MediaImpl(id = id, title = title) {
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as Playlist
-
-        return title.lowercase() == other.title.lowercase()
-    }
-
-    override fun hashCode(): Int {
-        return title.lowercase().hashCode()
-    }
-
-    override fun compareTo(other: MediaImpl): Int {
-        if (this.title == LIKES_PLAYLIST_TITLE || other.title == LIKES_PLAYLIST_TITLE) {
-            if (this.title == other.title) {
-                return 0
-            }
-            if (this.title == LIKES_PLAYLIST_TITLE) {
-                return -1
-            }
-            return 1
-        }
-
-        return super.compareTo(other)
-    }
-}
+class PlaylistAlreadyExistsException(
+    message: String? = "The playlist already exists with this name."
+) : Exception(message)

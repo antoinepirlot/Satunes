@@ -75,4 +75,6 @@
     <string name="error_occured">Une erreur est survenue</string>
     <string name="retry">Réessayer</string>
     <string name="insert_musics_to_playlist_success">Les musiques ont été ajoutées à</string>
+    <string name="play_next_success">sera lu après cette musique</string>
+    <string name="add_to_queue_success">a été ajouté à la fin de la liste en cours de lecture.</string>
 </resources>

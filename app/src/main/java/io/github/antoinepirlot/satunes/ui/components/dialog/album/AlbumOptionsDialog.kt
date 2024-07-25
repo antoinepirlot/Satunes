@@ -74,12 +74,9 @@ internal fun AlbumOptionsDialog(
         text = {
             Column {
                 /**
-                 * PlaylistDB
+                 * Playlist
                  */
-                AddToPlaylistMediaOption(
-                    mediaImpl = album,
-                    onFinished = onDismissRequest
-                )
+                AddToPlaylistMediaOption(mediaImpl = album, onFinished = onDismissRequest)
 
                 /**
                  * Queue

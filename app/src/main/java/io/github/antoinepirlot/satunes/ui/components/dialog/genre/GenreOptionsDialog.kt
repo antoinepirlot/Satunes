@@ -65,7 +65,7 @@ internal fun GenreOptionsDialog(
         text = {
             Column {
                 /**
-                 * PlaylistDB
+                 * Playlist
                  */
                 AddToPlaylistMediaOption(mediaImpl = genre, onFinished = onDismissRequest)
 

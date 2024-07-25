@@ -34,6 +34,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Folder
@@ -45,6 +46,7 @@ import io.github.antoinepirlot.satunes.database.services.database.DatabaseManage
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import io.github.antoinepirlot.satunes.database.R as RDb
 
 /**
  * @author Antoine Pirlot on 19/07/2024
@@ -127,7 +129,9 @@ class DataViewModel : ViewModel() {
             _db.insertMusicsToPlaylist(musics = musics, playlist = playlist)
             scope.launch {
                 snackBarHostState.showSnackbar(
-                    message = context.getString(R.string.insert_musics_to_playlist_success) + ' ' + playlist.title,
+                    message = context.getString(R.string.insert_musics_to_playlist_success) + ' ' +
+                            if (playlist.title == LIKES_PLAYLIST_TITLE) context.getString(RDb.string.likes_playlist_title)
+                            else playlist.title,
                     withDismissAction = true,
                 )
             }

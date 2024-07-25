@@ -133,26 +133,22 @@ class DatabaseManager(context: Context) {
      * @throws PlaylistAlreadyExistsException when there's already a playlist with the same playlistTitle
      */
     fun addOnePlaylist(playlistTitle: String, musicList: MutableList<Music>? = null) {
-        CoroutineScope(Dispatchers.IO).launch {
-            if (playlistTitle.isBlank()) {
-                throw BlankStringException()
-            }
-            if (playlistDao.playlistExist(title = playlistTitle)) {
-                throw PlaylistAlreadyExistsException()
-            }
-            val playlistId: Long =
-                playlistDao.insertOne(playlistDB = PlaylistDB(title = playlistTitle))
-            val playlistWithMusics: PlaylistWithMusics =
-                playlistDao.getPlaylistWithMusics(playlistId = playlistId)!!
+        if (playlistTitle.isBlank()) {
+            throw BlankStringException()
+        }
+        if (playlistDao.exists(title = playlistTitle)) throw PlaylistAlreadyExistsException()
+        val playlistId: Long =
+            playlistDao.insertOne(playlistDB = PlaylistDB(title = playlistTitle))
+        val playlistWithMusics: PlaylistWithMusics =
+            playlistDao.getPlaylistWithMusics(playlistId = playlistId)!!
 
-            DataManager.addPlaylist(playlist = playlistWithMusics.playlistDB.playlist!!)
+        DataManager.addPlaylist(playlist = playlistWithMusics.playlistDB.playlist!!)
 
-            musicList?.forEach { music: Music ->
-                insertMusicToPlaylists(
-                    music = music,
-                    playlists = listOf(playlistWithMusics.playlistDB.playlist!!),
-                )
-            }
+        musicList?.forEach { music: Music ->
+            insertMusicToPlaylists(
+                music = music,
+                playlists = listOf(playlistWithMusics.playlistDB.playlist!!),
+            )
         }
     }
 

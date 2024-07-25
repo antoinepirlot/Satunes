@@ -48,6 +48,8 @@ import io.github.antoinepirlot.satunes.ui.utils.showErrorSnackBar
 import io.github.antoinepirlot.satunes.ui.utils.showSnackBar
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import io.github.antoinepirlot.satunes.database.R as RDb
 
 /**
@@ -112,45 +114,47 @@ class DataViewModel : ViewModel() {
         playlistTitle: String
     ) {
         val context: Context = MainActivity.instance.applicationContext
-        try {
-            _db.addOnePlaylist(playlistTitle = playlistTitle)
-            showSnackBar(
-                scope = scope,
-                snackBarHostState = snackBarHostState,
-                message = playlistTitle + ' ' + context.getString(R.string.add_playlist_success)
-            )
-        } catch (e: Throwable) {
-            val message: String? = when (e) {
-                is PlaylistAlreadyExistsException -> {
-                    playlistTitle + context.getString(RDb.string.playlist_already_exist)
-                }
-
-                is BlankStringException -> {
-                    context.getString(RDb.string.blank_string_error)
-                }
-
-                else -> null
-            }
-
-            if (message != null) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                _db.addOnePlaylist(playlistTitle = playlistTitle)
                 showSnackBar(
                     scope = scope,
                     snackBarHostState = snackBarHostState,
-                    message = message
+                    message = playlistTitle + ' ' + context.getString(R.string.add_playlist_success)
                 )
-            } else {
-                _logger.warning(e.message)
-                showErrorSnackBar(
-                    scope = scope,
-                    snackBarHostState = snackBarHostState,
-                    action = {
-                        addOnePlaylist(
-                            scope = scope,
-                            snackBarHostState = snackBarHostState,
-                            playlistTitle = playlistTitle
-                        )
+            } catch (e: Throwable) {
+                val message: String? = when (e) {
+                    is BlankStringException -> {
+                        context.getString(RDb.string.blank_string_error)
                     }
-                )
+
+                    is PlaylistAlreadyExistsException -> {
+                        playlistTitle + context.getString(RDb.string.playlist_already_exist)
+                    }
+
+                    else -> null
+                }
+
+                if (message != null) {
+                    showSnackBar(
+                        scope = scope,
+                        snackBarHostState = snackBarHostState,
+                        message = message
+                    )
+                } else {
+                    _logger.warning(e.message)
+                    showErrorSnackBar(
+                        scope = scope,
+                        snackBarHostState = snackBarHostState,
+                        action = {
+                            addOnePlaylist(
+                                scope = scope,
+                                snackBarHostState = snackBarHostState,
+                                playlistTitle = playlistTitle
+                            )
+                        }
+                    )
+                }
             }
         }
     }

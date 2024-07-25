@@ -43,9 +43,6 @@ const val LIKES_PLAYLIST_TITLE: String = "_likes"
 @Dao
 internal interface PlaylistDAO {
 
-    @Query("SELECT * FROM playlists WHERE title = :title")
-    fun exists(title: String): Boolean
-
     @Transaction
     @Query("SELECT * FROM playlists WHERE playlist_id = :playlistId")
     fun getPlaylistWithMusics(playlistId: Long): PlaylistWithMusics?
@@ -55,7 +52,7 @@ internal interface PlaylistDAO {
     fun getPlaylistWithMusics(title: String): PlaylistWithMusics?
 
     @Query("SELECT playlist_id FROM playlists WHERE lower(title) = lower(:title)")
-    fun playlistExist(title: String): Boolean
+    fun exists(title: String): Boolean
 
     @Transaction
     @Query("SELECT * FROM  playlists")

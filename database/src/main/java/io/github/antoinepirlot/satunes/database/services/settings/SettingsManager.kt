@@ -342,7 +342,7 @@ object SettingsManager {
         }
     }
 
-    private suspend fun unSeeWhatsNew(context: Context) {
+    suspend fun unSeeWhatsNew(context: Context) {
         context.dataStore.edit { preferences: MutablePreferences ->
             whatsNewSeen = false
             preferences[WHATS_NEW_SEEN_KEY] = whatsNewSeen

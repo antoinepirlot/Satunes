@@ -25,19 +25,27 @@
 
 package io.github.antoinepirlot.satunes
 
+import android.content.Context
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -49,6 +57,8 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.WhatsNewDialog
 import io.github.antoinepirlot.satunes.ui.states.SatunesUiState
 import io.github.antoinepirlot.satunes.ui.theme.SatunesTheme
 import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 /**
  * @author Antoine Pirlot on 10/04/2024
@@ -70,8 +80,15 @@ internal fun Satunes(
             val scrollBehavior =
                 TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
             val navController: NavHostController = rememberNavController()
+            val scope: CoroutineScope = rememberCoroutineScope()
+            val snackBarState: SnackbarHostState = remember { SnackbarHostState() }
+            val context: Context = LocalContext.current
+
             Scaffold(
                 modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+                snackbarHost = {
+                    SnackbarHost(hostState = snackBarState)
+                },
                 topBar = {
                     SatunesTopAppBar(
                         scrollBehavior = scrollBehavior,
@@ -90,6 +107,22 @@ internal fun Satunes(
                         onConfirm = {
                             // When app relaunch, it's not shown again
                             satunesViewModel.seeWhatsNew(permanently = true)
+                            scope.launch {
+                                val result: SnackbarResult = snackBarState.showSnackbar(
+                                    message = context.getString(R.string.stop_seeing_update_modal),
+                                    actionLabel = context.getString(R.string.cancel),
+                                    duration = SnackbarDuration.Indefinite, //To let the user to have the time to read and take action
+                                    withDismissAction = true
+                                )
+                                if (result == SnackbarResult.ActionPerformed) {
+                                    satunesViewModel.seeWhatsNew()
+                                    snackBarState.showSnackbar(
+                                        message = context.getString(R.string.canceled),
+                                        withDismissAction = true,
+                                        duration = SnackbarDuration.Short
+                                    )
+                                }
+                            }
                         },
                         onDismiss = {
                             // When app relaunch, it's shown again

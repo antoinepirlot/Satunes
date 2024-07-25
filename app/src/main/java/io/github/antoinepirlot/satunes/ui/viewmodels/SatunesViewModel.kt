@@ -119,6 +119,8 @@ internal class SatunesViewModel : ViewModel() {
         CoroutineScope(Dispatchers.IO).launch {
             if (permanently) {
                 SettingsManager.seeWhatsNew(context = MainActivity.instance.applicationContext)
+            } else if (SettingsManager.whatsNewSeen) {
+                SettingsManager.unSeeWhatsNew(context = MainActivity.instance.applicationContext)
             }
         }
         _uiState.update { currentState: SatunesUiState ->

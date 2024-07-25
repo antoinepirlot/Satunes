@@ -215,8 +215,8 @@ object DataManager {
     fun removePlaylist(playlist: Playlist) {
         if (playlistsSortedMap.contains(playlist)) {
             playlistsSortedMap.remove(playlist)
+            playlistsMapById.remove(playlist.id)
             playlistsMapUpdated.value = true
         }
-        playlistsMapById.remove(playlist.id)
     }
 }

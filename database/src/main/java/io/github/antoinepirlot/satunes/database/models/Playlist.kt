@@ -48,12 +48,16 @@ class Playlist(
     }
 
     override fun compareTo(other: MediaImpl): Int {
-        if (this.title == LIKES_PLAYLIST_TITLE) {
-            return -1
-        }
-        if (other.title == LIKES_PLAYLIST_TITLE) {
+        if (this.title == LIKES_PLAYLIST_TITLE || other.title == LIKES_PLAYLIST_TITLE) {
+            if (this.title == other.title) {
+                return 0
+            }
+            if (this.title == LIKES_PLAYLIST_TITLE) {
+                return -1
+            }
             return 1
         }
+
         return super.compareTo(other)
     }
 }

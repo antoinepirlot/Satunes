@@ -89,7 +89,7 @@ class Music(
 
     fun switchLike(context: Context) {
         this.liked.value = !this.liked.value
-        val db = DatabaseManager(context = context)
+        val db = DatabaseManager.getInstance()
         if (this.liked.value) {
             db.like(music = this)
         } else {

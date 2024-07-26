@@ -172,7 +172,7 @@ internal class MainActivity : ComponentActivity() {
 
                         if (requestCode == EXPORT_PLAYLIST_CODE) {
                             CoroutineScope(Dispatchers.IO).launch {
-                                DatabaseManager(context = this@MainActivity)
+                                DatabaseManager.getInstance()
                                     .exportPlaylists(
                                         context = this@MainActivity,
                                         playlists = playlistsToExport,
@@ -188,7 +188,7 @@ internal class MainActivity : ComponentActivity() {
 
                 IMPORT_PLAYLIST_CODE -> {
                     data?.data?.also {
-                        DatabaseManager(context = this).importPlaylists(context = this, uri = it)
+                        DatabaseManager.getInstance().importPlaylists(context = this, uri = it)
                     }
                 }
             }

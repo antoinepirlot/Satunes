@@ -59,7 +59,7 @@ import kotlinx.serialization.json.Json
 /**
  * @author Antoine Pirlot on 27/03/2024
  */
-class DatabaseManager(context: Context) {
+class DatabaseManager private constructor(context: Context) {
 
     private val database: SatunesDatabase = SatunesDatabase.getDatabase(context = context)
     private val musicDao: MusicDAO = database.musicDao()
@@ -69,7 +69,22 @@ class DatabaseManager(context: Context) {
 
     companion object {
         private const val PLAYLIST_JSON_OBJECT_NAME = "all_playlists"
+        private lateinit var _instance: DatabaseManager
         val importingPlaylist: MutableState<Boolean> = mutableStateOf(false)
+
+        fun getInstance(): DatabaseManager {
+            if (!this::_instance.isInitialized) {
+                throw IllegalStateException("The DatabaseManager has not been initialized")
+            }
+            return _instance
+        }
+
+        fun initInstance(context: Context): DatabaseManager {
+            if (!this::_instance.isInitialized) {
+                this._instance = DatabaseManager(context = context)
+            }
+            return this._instance
+        }
     }
 
     internal fun loadAllPlaylistsWithMusic() {

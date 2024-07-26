@@ -3,22 +3,33 @@ You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
 ## 2.0 (Android 5.1.1 Lollipop et ultérieur)
 
+### 2.0.0-preview-1
+
+Améliorations, optimisations et dépannage:
+
+* Utilisation des snack bar pour les notifications
+* L'importation/exportation de playlists a été corrigé et fonctionne désormais comme prévu
+* Refactorisation de Android Auto, j'ai essayé de le rendre plus stable et de résoudre les
+  différents problèmes
+* Ajout du titre de l'album sur l'élément musical pour différencier les albums et les musiques
+* Correction de la fermeture de l'application lors de la lecture lorsque le paramètre pour la
+  maintenir en mode lecture désactivé
+* La barre de progression affichera les niveaux prédéfinis dans cet ordre:
+  * Très lent
+  * Lent
+  * Un peu lent
+  * Normal
+  * Rapide
+  * Très rapide
+  * En temps réel
+* La fenêtre modale ne se fermera plus lorsque tu décide de unliker la musique dans la vue de la
+  playlist Favoris
+* Quelques autres optimisations
+
 ### 2.0.0-beta-1
 
 Améliorations, optimisations et dépannage:
 
-* La structure du code a été entièrement remaniée pour être plus simple et meilleure à utiliser.
-* Le code a été retravaillé pour être plus rapide
-* Satunes prend désormais en charge Android 15 Vanilla Ice Cream (API 35)
-* Désormais, l'application chargera même vos musiques dupliquées
-* Par défaut, Satunes ne chargera que le dossier principal Musiques et pas la totalité.
-* Satunes enregistre certaines erreurs via des logs (sans informations personnelles), tu pouvez les
-  exporter, rien ne quittera l'application sans votre autorisation.
-* Implémentation de l'utilisation de ViewModel et UiState pour une meilleure gestion des états de
-  Satunes
-* Désormais, la lecture de musique à partir d'un dossier chargera d'abord ses musiques, puis celles
-  de ses sous-dossiers, toujours triées par titre.
-* Ajout d'icônes pour identifier les paramètres plus facilement.
 * Définition d'un ordre pour les médias si leur titre est exactement le même lors de la comparaison,
   à l'écran si cela se produit, tu verras les médias dans cet ordre:
   * Musique

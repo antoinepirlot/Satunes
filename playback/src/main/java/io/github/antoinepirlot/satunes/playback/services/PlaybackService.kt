@@ -12,7 +12,7 @@
  *  You should have received a copy of the GNU General Public License along with Satunes.
  *  If not, see <https://www.gnu.org/licenses/>.
  *
- *  **** INFORMATIONS ABOUT THE AUTHOR *****
+ *  **** INFORMATION ABOUT THE AUTHOR *****
  *  The author of this file is Antoine Pirlot, the owner of this project.
  *  You find this original project on github.
  *
@@ -37,6 +37,7 @@ import androidx.media3.session.MediaSessionService
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.playback.models.PlaybackSessionCallback
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
+import kotlin.system.exitProcess
 
 /**
  * @author Antoine Pirlot on 31/01/24
@@ -100,13 +101,11 @@ class PlaybackService : MediaSessionService() {
             !playbackController!!.isPlaying.value
         ) {
             playbackController?.release()
-            logger.info("Shutting down $this")
             stopSelf()
         }
     }
 
     override fun onDestroy() {
-        logger.info("Destroying $this")
         if (
             !SettingsManager.playbackWhenClosedChecked ||
             playbackController == null ||
@@ -118,7 +117,7 @@ class PlaybackService : MediaSessionService() {
                 mediaSession = null
             }
             super.onDestroy()
-            logger.info("$this is technically destroyed")
+            exitProcess(0)
         }
     }
 

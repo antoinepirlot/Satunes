@@ -23,20 +23,20 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.models
+package io.github.antoinepirlot.satunes.data
 
-import io.github.antoinepirlot.satunes.database.R
+import io.github.antoinepirlot.satunes.models.SearchChips
 
 /**
- * @author Antoine Pirlot on 28/06/2024
+ * @author Antoine Pirlot on 26/07/2024
  */
-enum class SearchChips(
-    val stringId: Int,
-) {
-    MUSICS(stringId = R.string.musics),
-    ARTISTS(stringId = R.string.artists),
-    ALBUMS(stringId = R.string.albums),
-    GENRES(stringId = R.string.genres),
-    FOLDERS(stringId = R.string.folders),
-    PLAYLISTS(stringId = R.string.playlists)
-}
+
+
+val allSearchChips: List<SearchChips> = listOf(
+    SearchChips.MUSICS,
+    SearchChips.ALBUMS,
+    SearchChips.ARTISTS,
+    SearchChips.GENRES,
+    SearchChips.FOLDERS,
+    SearchChips.PLAYLISTS
+)

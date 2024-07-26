@@ -30,7 +30,6 @@ import io.github.antoinepirlot.satunes.R.string.include_ringtones
 import io.github.antoinepirlot.satunes.R.string.pause_if_another_playback
 import io.github.antoinepirlot.satunes.R.string.pause_if_noisy
 import io.github.antoinepirlot.satunes.R.string.playback_when_paused
-import io.github.antoinepirlot.satunes.car.R.string.shuffle
 import io.github.antoinepirlot.satunes.database.R.string.albums
 import io.github.antoinepirlot.satunes.database.R.string.artists
 import io.github.antoinepirlot.satunes.database.R.string.folders
@@ -60,12 +59,4 @@ internal enum class SwitchSettings(val stringId: Int) {
     PLAYBACK_WHEN_CLOSED(stringId = playback_when_paused),
     PLAYLISTS_CHECKED(stringId = playlists),
     PAUSE_IF_ANOTHER_PLAYBACK(stringId = pause_if_another_playback),
-    SHUFFLE_MODE(stringId = shuffle),
 }
-
-internal val switchSettingsNeedRestarts: List<SwitchSettings> = listOf(
-    SwitchSettings.AUDIO_OFFLOAD,
-    SwitchSettings.INCLUDE_RINGTONES,
-    SwitchSettings.PAUSE_IF_ANOTHER_PLAYBACK,
-    SwitchSettings.PAUSE_IF_NOISY,
-)

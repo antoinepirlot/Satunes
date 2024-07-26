@@ -320,17 +320,6 @@ class DataViewModel : ViewModel() {
             try {
                 val context: Context = MainActivity.instance.applicationContext
                 music.switchLike(context = context)
-                val message: String =
-                    if (music.liked.value) {
-                        context.getString(R.string.add_to_likes_success, music.title)
-                    } else {
-                        context.getString(R.string.remove_from_likes_success, music.title)
-                    }
-                showSnackBar(
-                    scope = scope,
-                    snackBarHostState = snackBarHostState,
-                    message = message
-                )
             } catch (e: Throwable) {
                 showErrorSnackBar(
                     scope = scope,

@@ -34,7 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import io.github.antoinepirlot.satunes.models.DEFAULT_DESTINATION
+import io.github.antoinepirlot.satunes.data.DEFAULT_DESTINATION
 import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.router.routes.mediaRoutes
 import io.github.antoinepirlot.satunes.router.routes.playbackRoutes

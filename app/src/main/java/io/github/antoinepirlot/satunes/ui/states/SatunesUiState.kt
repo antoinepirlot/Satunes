@@ -25,9 +25,9 @@
 
 package io.github.antoinepirlot.satunes.ui.states
 
+import io.github.antoinepirlot.satunes.data.DEFAULT_DESTINATION
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
-import io.github.antoinepirlot.satunes.models.DEFAULT_DESTINATION
 import io.github.antoinepirlot.satunes.ui.viewmodels.utils.isAudioAllowed
 
 /**

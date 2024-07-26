@@ -33,6 +33,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Album
+import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.dialog.options.DialogOption
@@ -73,5 +74,8 @@ internal fun AddToQueueDialogOption(
 @Preview
 @Composable
 private fun AddToQueueDialogOptionPreview() {
-    AddToQueueDialogOption(mediaImpl = Album(title = "Album"), onFinished = {})
+    AddToQueueDialogOption(mediaImpl = Album(
+        title = "Album",
+        artist = Artist(title = "Artist Title")
+    ), onFinished = {})
 }

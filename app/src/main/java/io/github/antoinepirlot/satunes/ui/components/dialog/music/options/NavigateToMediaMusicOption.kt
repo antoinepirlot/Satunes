@@ -77,7 +77,7 @@ internal fun NavigateToMediaMusicOption(
 private fun NavigateToMediaMusicOptionPreview() {
     val navController: NavHostController = rememberNavController()
     NavigateToMediaMusicOption(
-        mediaImpl = Album(title = "Album Title"),
+        mediaImpl = Album(title = "Album Title", artist = Artist(title = "Artist Title")),
         navController = navController
     )
 }

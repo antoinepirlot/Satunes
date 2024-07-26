@@ -35,7 +35,6 @@
     <string name="exclusion_setting">Excluding files</string>
     <string name="include_ringtones">Include ringtones</string>
     <string name="bar_speed">"Progress bar speed: "</string>
-    <string name="second">second</string>
     <string name="export">Export</string>
     <string name="export_all">Export All</string>
     <string name="_import">Import</string>

@@ -349,7 +349,7 @@ object DataLoader {
         return DataManager.addArtist(artist = Artist(title = name))
     }
 
-    private fun loadAlbum(context: Context, cursor: Cursor, artist: Artist?): Album {
+    private fun loadAlbum(context: Context, cursor: Cursor, artist: Artist): Album {
         var name = try {
             cursor.getString(albumNameColumn!!)
         } catch (e: NullPointerException) {

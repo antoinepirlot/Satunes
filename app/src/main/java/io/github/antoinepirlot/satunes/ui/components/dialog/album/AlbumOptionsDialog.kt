@@ -36,6 +36,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.database.models.Album
+import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToPlaylistMediaOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToQueueDialogOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.PlayNextMediaOption
@@ -104,7 +105,7 @@ private fun AlbumOptionsDialogPreview() {
     val navController: NavHostController = rememberNavController()
     AlbumOptionsDialog(
         navController = navController,
-        album = Album(title = "Album title"),
+        album = Album(title = "Album title", artist = Artist(title = "Artist Title")),
         onDismissRequest = {}
     )
 }

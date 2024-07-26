@@ -40,6 +40,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.database.models.Album
+import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.icons.R
@@ -119,5 +120,5 @@ internal fun MusicPlayingAlbumArtwork(
 @Composable
 @Preview
 private fun AlbumArtworkPreview() {
-    AlbumArtwork(mediaImpl = Album(title = ""))
+    AlbumArtwork(mediaImpl = Album(title = "", artist = Artist(title = "Artist Title")))
 }

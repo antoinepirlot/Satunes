@@ -181,9 +181,9 @@ internal fun MediaCard(
                     NormalText(text = title)
                     //Use these as for the same thing the builder doesn't like in one
                     if (media is Album) {
-                        Subtitle(text = media.artist!!.title)
-                    } else if (media is Music) {
                         Subtitle(text = media.artist.title)
+                    } else if (media is Music) {
+                        Subtitle(text = media.album.title + " - " + media.artist.title)
                     }
                 }
             },
@@ -287,6 +287,7 @@ private fun getRightIconAndDescription(media: MediaImpl): SatunesIcons {
 @Composable
 @Preview
 private fun CardPreview() {
+    val artist = Artist(title = "Artist Title")
     val music = Music(
         id = 1,
         title = "",
@@ -294,8 +295,8 @@ private fun CardPreview() {
         duration = 2,
         size = 2,
         folder = Folder(title = "Folder"),
-        album = Album(title = "Album Title"),
-        artist = Artist(title = "Artist Title"),
+        album = Album(title = "Album Title", artist = artist),
+        artist = artist,
         genre = Genre(title = "Genre Title"),
         absolutePath = "absolute path",
         context = LocalContext.current

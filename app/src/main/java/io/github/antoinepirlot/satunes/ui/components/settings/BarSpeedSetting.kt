@@ -91,8 +91,8 @@ internal fun BarSpeedSetting(
                 )
                 isUpdating = false
             },
-            valueRange = 0f..6f,
-            steps = 5
+            valueRange = 0f..availableSpeeds.lastIndex.toFloat(),
+            steps = availableSpeeds.size - 2 // remove the first and last position to have the correct number of level
         )
     }
 }

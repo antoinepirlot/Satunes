@@ -110,7 +110,7 @@ private fun MediaListViewPreview() {
             size = 0,
             absolutePath = "",
             folder = Folder(title = "Folder"),
-            album = Album(title = "Album Title"),
+            album = Album(title = "Album Title", artist = Artist(title = "Artist Title")),
             artist = Artist(title = "Artist Title"),
             genre = Genre(title = "Genre Title"),
             context = LocalContext.current

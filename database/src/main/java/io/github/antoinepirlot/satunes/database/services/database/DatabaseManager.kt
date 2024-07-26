@@ -87,6 +87,10 @@ class DatabaseManager private constructor(context: Context) {
         }
     }
 
+    internal fun getAllMusicDb(): List<MusicDB> {
+        return this.musicDao.getAll()
+    }
+
     internal fun loadAllPlaylistsWithMusic() {
         try {
             val playlistsWithMusicsList: List<PlaylistWithMusics> =

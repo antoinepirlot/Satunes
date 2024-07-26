@@ -60,4 +60,7 @@ internal data class MusicDB(
         // Happens when importing playlistDB
         null
     }
+
+    @ColumnInfo("absolute_path")
+    var absolutePath: String? = music?.absolutePath
 }

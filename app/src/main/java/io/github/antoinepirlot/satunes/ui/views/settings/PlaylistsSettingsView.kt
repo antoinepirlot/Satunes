@@ -71,7 +71,7 @@ internal fun PlaylistsSettingsView(
             .verticalScroll(scrollState),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Title(text = stringResource(id = RDb.string.playlists) + " (Beta)")
+        Title(text = stringResource(id = RDb.string.playlists))
         NormalText(
             text = stringResource(id = R.string.playlist_beta_info),
             maxLines = Int.MAX_VALUE

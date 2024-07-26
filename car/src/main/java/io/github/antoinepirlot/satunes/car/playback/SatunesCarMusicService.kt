@@ -110,7 +110,7 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
             PlaybackController.initInstance(baseContext, listener = SatunesPlaybackListener)
         runBlocking {
             while (DataLoader.isLoading.value) {
-                delay(50) //Wait (use delay to reduce cpu usage
+                delay(50) //Wait (use delay to reduce cpu usage)
             }
         }
         if (!DataLoader.isLoaded.value) {

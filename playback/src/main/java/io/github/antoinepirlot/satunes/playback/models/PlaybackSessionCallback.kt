@@ -28,7 +28,6 @@ package io.github.antoinepirlot.satunes.playback.models
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.session.MediaSession
 import com.google.common.util.concurrent.ListenableFuture
-import io.github.antoinepirlot.satunes.playback.services.PlaybackService
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 
 /**
@@ -45,7 +44,6 @@ object PlaybackSessionCallback : MediaSession.Callback {
         controller: MediaSession.ControllerInfo
     ): ListenableFuture<MediaSession.MediaItemsWithStartPosition> {
         logger.info("onPlaybackResumption called")
-        PlaybackService.mediaSession = mediaSession
         return super.onPlaybackResumption(mediaSession, controller)
     }
 }

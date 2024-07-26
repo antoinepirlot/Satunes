@@ -123,7 +123,7 @@ class DataViewModel : ViewModel() {
                 showSnackBar(
                     scope = scope,
                     snackBarHostState = snackBarHostState,
-                    message = playlistTitle + ' ' + context.getString(R.string.add_playlist_success)
+                    message = context.getString(RDb.string.add_playlist_success, playlistTitle)
                 )
             } catch (e: Throwable) {
                 val message: String? = when (e) {
@@ -327,7 +327,7 @@ class DataViewModel : ViewModel() {
                         scope = scope,
                         snackBarHostState = snackBarHostState,
                         message = context.getString(
-                            RDb.string.playlist_created,
+                            RDb.string.add_playlist_success,
                             context.getString(RDb.string.likes_playlist_title)
                         )
                     )

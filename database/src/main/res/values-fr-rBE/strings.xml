@@ -40,7 +40,7 @@
     <string name="no_playlist">Il n\'y a aucune playlist</string>
     <string name="exporting_success">Exportation réussie</string>
     <string name="added">Ajouté(s)</string>
-    <string name="playlist_created">%1$s a été créée.</string>
+    <string name="add_playlist_success">%1$s a été créée.</string>
     <string name="likes_playlist_title">Favoris</string>
     <string name="blank_string_error">Le titre de la playlist est vide.</string>
     <string name="real_time_speed">Temp réel</string>

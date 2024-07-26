@@ -35,6 +35,7 @@ import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.exceptions.BlankStringException
+import io.github.antoinepirlot.satunes.database.exceptions.LikesPlaylistCreationException
 import io.github.antoinepirlot.satunes.database.exceptions.PlaylistAlreadyExistsException
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
@@ -317,10 +318,20 @@ class DataViewModel : ViewModel() {
         music: Music
     ) {
         CoroutineScope(Dispatchers.IO).launch {
+            val context: Context = MainActivity.instance.applicationContext
             try {
-                val context: Context = MainActivity.instance.applicationContext
                 music.switchLike(context = context)
             } catch (e: Throwable) {
+                if (e is LikesPlaylistCreationException) {
+                    showSnackBar(
+                        scope = scope,
+                        snackBarHostState = snackBarHostState,
+                        message = context.getString(
+                            RDb.string.playlist_created,
+                            context.getString(RDb.string.likes_playlist_title)
+                        )
+                    )
+                }
                 showErrorSnackBar(
                     scope = scope,
                     snackBarHostState = snackBarHostState,

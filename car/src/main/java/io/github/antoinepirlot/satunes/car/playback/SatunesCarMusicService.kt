@@ -66,6 +66,8 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
 
         private val loadedQueueItemList: MutableList<QueueItem> = mutableListOf()
 
+        const val SHUFFLE_ID: String = "shuffle"
+
         fun updateQueue() {
             session.setQueue(loadedQueueItemList)
         }
@@ -202,7 +204,7 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
         val icon: Bitmap = this.getDrawable(RIcons.drawable.white_shuffle_off)!!.toBitmap()
 
         return buildMediaItem(
-            id = "shuffle",
+            id = SHUFFLE_ID,
             description = "Shuffle Button",
             title = this.getString(R.string.shuffle),
             icon = icon,

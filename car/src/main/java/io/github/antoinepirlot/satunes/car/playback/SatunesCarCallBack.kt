@@ -35,12 +35,7 @@ import android.support.v4.media.session.PlaybackStateCompat.ACTION_SKIP_TO_PREVI
 import android.support.v4.media.session.PlaybackStateCompat.STATE_PAUSED
 import android.support.v4.media.session.PlaybackStateCompat.STATE_PLAYING
 import io.github.antoinepirlot.satunes.car.pages.ScreenPages
-import io.github.antoinepirlot.satunes.database.models.Album
-import io.github.antoinepirlot.satunes.database.models.Artist
-import io.github.antoinepirlot.satunes.database.models.Folder
-import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import kotlinx.coroutines.CoroutineScope
@@ -86,7 +81,7 @@ internal object SatunesCarCallBack : MediaSessionCompat.Callback() {
     }
 
     override fun onPlayFromMediaId(mediaId: String, extras: Bundle?) {
-        val shuffleMode: Boolean = mediaId == "shuffle"
+        val shuffleMode: Boolean = mediaId == SatunesCarMusicService.SHUFFLE_ID
         loadMusic(shuffleMode = shuffleMode)
         val playbackController: PlaybackController = PlaybackController.getInstance()
         var musicToPlay: Music? = null
@@ -141,74 +136,51 @@ internal object SatunesCarCallBack : MediaSessionCompat.Callback() {
     private fun loadMusic(shuffleMode: Boolean = false) {
         val lastRoute: String = SatunesCarMusicService.routeDeque.last()
         val playbackController: PlaybackController = PlaybackController.getInstance()
-        var musicSet: Set<Music> = setOf()
-        try {
-            musicSet = loadMusicFromMedia(shuffleMode = shuffleMode, mediaId = lastRoute.toLong())
-        } catch (e: NumberFormatException) {
-            musicSet = DataManager.getMusicSet()
-            playbackController.loadMusic(
-                musicSet = musicSet,
-                shuffleMode = shuffleMode
-            )
-        } finally {
-            if (this::_job.isInitialized) {
-                _job.cancel()
-            }
-            _job = CoroutineScope(Dispatchers.IO).launch {
-                SatunesCarMusicService.resetQueue()
-                musicSet.forEach { music: Music ->
-                    SatunesCarMusicService.addToQueue(media = music)
-                }
-                SatunesCarMusicService.updateQueue()
-            }
-        }
-    }
-
-    /**
-     * Load musics from the media matching mediaId according to the last route deque route
-     */
-    private fun loadMusicFromMedia(shuffleMode: Boolean, mediaId: Long): Set<Music> {
-        val playbackController: PlaybackController = PlaybackController.getInstance()
-        val routeDeque: RouteDeque = SatunesCarMusicService.routeDeque
         var musicToPlay: Music? = null
-        val musicSet: Set<Music> =
-            when (routeDeque.oneBeforeLast()) {
-                ScreenPages.ALL_FOLDERS.id -> {
-                    //Current folder has to be loaded (music)
-                    val folder: Folder = DataManager.getFolder(id = mediaId)
-                    folder.getMusicSet()
-                }
+        val musicSet: Set<Music> = if (lastRoute == SatunesCarMusicService.SHUFFLE_ID) {
+            DataManager.getMusicSet()
+        } else {
+            when (lastRoute) {
+                ScreenPages.ALL_FOLDERS.id -> DataManager.getFolder(id = lastRoute.toLong())
+                    .getMusicSet()
 
-                ScreenPages.ALL_ALBUMS.id -> {
-                    val album: Album = DataManager.getAlbum(id = mediaId)
-                    album.getMusicSet()
-                }
+                ScreenPages.ALL_ALBUMS.id -> DataManager.getAlbum(id = lastRoute.toLong())
+                    .getMusicSet()
 
-                ScreenPages.ALL_ARTISTS.id -> {
-                    val artist: Artist = DataManager.getArtist(id = mediaId)
-                    artist.getMusicSet()
-                }
+                ScreenPages.ALL_ARTISTS.id -> DataManager.getArtist(id = lastRoute.toLong())
+                    .getMusicSet()
 
-                ScreenPages.ALL_GENRES.id -> {
-                    val genre: Genre = DataManager.getGenre(id = mediaId)
-                    genre.getMusicSet()
-                }
+                ScreenPages.ALL_GENRES.id -> DataManager.getGenre(id = lastRoute.toLong())
+                    .getMusicSet()
 
-                ScreenPages.ALL_PLAYLISTS.id -> {
-                    val playlist: Playlist = DataManager.getPlaylist(mediaId)
-                    playlist.getMusicSet()
-                }
+                ScreenPages.ALL_PLAYLISTS.id -> DataManager.getPlaylist(lastRoute.toLong())
+                    .getMusicSet()
 
+                ScreenPages.ALL_MUSICS.id -> DataManager.getMusicSet()
                 else -> {
-                    musicToPlay = DataManager.getMusic(musicId = mediaId)
+                    musicToPlay = DataManager.getMusic(musicId = lastRoute.toLong())
                     DataManager.getMusicSet()
                 }
             }
+        }
         playbackController.loadMusic(
             musicSet = musicSet,
             shuffleMode = shuffleMode,
             musicToPlay = musicToPlay
         )
-        return musicSet
+        loadInQueue(musicSet = musicSet)
+    }
+
+    private fun loadInQueue(musicSet: Set<Music>) {
+        if (this::_job.isInitialized) {
+            _job.cancel()
+        }
+        _job = CoroutineScope(Dispatchers.IO).launch {
+            SatunesCarMusicService.resetQueue()
+            musicSet.forEach { music: Music ->
+                SatunesCarMusicService.addToQueue(media = music)
+            }
+            SatunesCarMusicService.updateQueue()
+        }
     }
 }

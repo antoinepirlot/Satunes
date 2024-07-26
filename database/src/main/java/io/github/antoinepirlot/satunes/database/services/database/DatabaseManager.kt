@@ -303,16 +303,13 @@ class DatabaseManager private constructor(context: Context) {
     @Throws(NullPointerException::class)
     private fun importPlaylistToDatabase(playlistWithMusicsList: List<PlaylistWithMusics>) {
         playlistWithMusicsList.forEach { playlistWithMusics: PlaylistWithMusics ->
-            playlistWithMusics.playlistDB.id = 0
-            playlistWithMusics.id = 0
-
             val musicList: MutableList<Music> = mutableListOf()
             playlistWithMusics.musics.forEach { musicDB: MusicDB ->
                 musicList.add(musicDB.music!!)
             }
             try {
                 addOnePlaylist(
-                    playlistTitle = playlistWithMusics.playlistDB.playlist!!.title, // TODO issue
+                    playlistTitle = playlistWithMusics.playlistDB.title, // TODO issue
                     musicList = musicList,
                 )
             } catch (_: PlaylistAlreadyExistsException) {

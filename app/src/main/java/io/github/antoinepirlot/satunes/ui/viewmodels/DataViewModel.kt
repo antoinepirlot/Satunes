@@ -331,18 +331,19 @@ class DataViewModel : ViewModel() {
                             context.getString(RDb.string.likes_playlist_title)
                         )
                     )
+                } else {
+                    showErrorSnackBar(
+                        scope = scope,
+                        snackBarHostState = snackBarHostState,
+                        action = {
+                            switchLike(
+                                scope = scope,
+                                snackBarHostState = snackBarHostState,
+                                music = music
+                            )
+                        }
+                    )
                 }
-                showErrorSnackBar(
-                    scope = scope,
-                    snackBarHostState = snackBarHostState,
-                    action = {
-                        switchLike(
-                            scope = scope,
-                            snackBarHostState = snackBarHostState,
-                            music = music
-                        )
-                    }
-                )
             }
         }
     }

@@ -45,6 +45,7 @@ import kotlinx.serialization.Transient
 internal data class MusicDB(
     @PrimaryKey
     @ColumnInfo("music_id") override val id: Long,
+    @ColumnInfo("absolute_path") var absolutePath: String,
 ) : Media {
     @Ignore
     @Transient
@@ -60,7 +61,4 @@ internal data class MusicDB(
         // Happens when importing playlistDB
         null
     }
-
-    @ColumnInfo("absolute_path")
-    var absolutePath: String? = music?.absolutePath
 }

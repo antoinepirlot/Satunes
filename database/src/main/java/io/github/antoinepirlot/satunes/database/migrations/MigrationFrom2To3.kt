@@ -40,7 +40,7 @@ internal object MigrationFrom2To3 : Migration(2, 3) {
 
     override fun migrate(db: SupportSQLiteDatabase) {
         try {
-            db.execSQL("ALTER TABLE musics ADD COLUMN absolute_path TEXT NULL DEFAULT NULL;")
+            db.execSQL("ALTER TABLE musics ADD COLUMN absolute_path TEXT NOT NULL DEFAULT '';")
             DataManager.getMusicSet().forEach { music: Music ->
                 db.execSQL(
                     "UPDATE musics" +

@@ -69,6 +69,7 @@ class DatabaseManager private constructor(context: Context) {
 
     companion object {
         private const val PLAYLIST_JSON_OBJECT_NAME = "all_playlists"
+        private const val MUSICS_JSON_OBJECT_NAME = "musics"
         private lateinit var _instance: DatabaseManager
         val importingPlaylist: MutableState<Boolean> = mutableStateOf(false)
 
@@ -121,7 +122,7 @@ class DatabaseManager private constructor(context: Context) {
             try {
                 musicsPlaylistsRelDAO.insert(musicsPlaylistsRel)
                 try {
-                    musicDao.insert(MusicDB(id = music.id))
+                    musicDao.insert(MusicDB(id = music.id, absolutePath = music.absolutePath))
                 } catch (e: SQLiteConstraintException) {
                     _logger.warning(e.message)
                     // Do nothing
@@ -189,7 +190,7 @@ class DatabaseManager private constructor(context: Context) {
         )
         playlist.removeMusic(music = music)
         if (!musicsPlaylistsRelDAO.isMusicInPlaylist(musicId = music.id)) {
-            musicDao.delete(MusicDB(id = music.id))
+            musicDao.delete(MusicDB(id = music.id, absolutePath = music.absolutePath))
         }
     }
 
@@ -226,6 +227,12 @@ class DatabaseManager private constructor(context: Context) {
         var json = "{\"$PLAYLIST_JSON_OBJECT_NAME\":["
         playlistsDBs.forEach { playlistDB: PlaylistDB ->
             json += Json.encodeToString(playlistDB) + ','
+            "\"$MUSICS_JSON_OBJECT_NAME\": ["
+            playlistDB.playlist!!.getMusicSet().forEach { music: Music ->
+                val musicDB = MusicDB(id = music.id, absolutePath = music.absolutePath)
+                json += Json.encodeToString(musicDB) + ','
+            }
+            json += "],"
         }
         json += "]}"
         exportJson(context = context, json = json, uri = uri)
@@ -325,7 +332,7 @@ class DatabaseManager private constructor(context: Context) {
                 playlistDao.getPlaylistWithMusics(title = LIKES_PLAYLIST_TITLE)
             if (likesPlaylist == null) {
                 addOnePlaylist(
-                    musicList = mutableListOf(MusicDB(id = music.id).music!!),
+                    musicList = mutableListOf(music),
                     playlistTitle = LIKES_PLAYLIST_TITLE
                 )
                 throw LikesPlaylistCreationException()

@@ -27,6 +27,8 @@ package io.github.antoinepirlot.satunes.database.migrations
 
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
+import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 
 /**
@@ -39,6 +41,13 @@ internal object MigrationFrom2To3 : Migration(2, 3) {
     override fun migrate(db: SupportSQLiteDatabase) {
         try {
             db.execSQL("ALTER TABLE musics ADD COLUMN absolute_path TEXT NULL DEFAULT NULL;")
+            DataManager.getMusicSet().forEach { music: Music ->
+                db.execSQL(
+                    "UPDATE musics" +
+                            " SET absolute_path = ?" +
+                            " WHERE music_id = ?;", arrayOf(music.absolutePath, music.id)
+                )
+            }
         } catch (e: Throwable) {
             _logger.severe(e.message)
             throw e

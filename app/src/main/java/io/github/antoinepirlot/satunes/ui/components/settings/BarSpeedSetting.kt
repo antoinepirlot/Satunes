@@ -26,8 +26,9 @@
 package io.github.antoinepirlot.satunes.ui.components.settings
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Slider
-import androidx.compose.material3.Text
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -40,49 +41,58 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.data.availableSpeeds
+import io.github.antoinepirlot.satunes.database.models.BarSpeed
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
+import io.github.antoinepirlot.satunes.ui.local.LocalMainScope
+import io.github.antoinepirlot.satunes.ui.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.ui.states.SatunesUiState
 import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
-import kotlin.math.floor
+import kotlinx.coroutines.CoroutineScope
 
 /**
  * @author Antoine Pirlot on 27/04/2024
  */
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun BarSpeedSetting(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+    val scope: CoroutineScope = LocalMainScope.current
+    val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
 
-    val currentBarSpeed: Float = satunesUiState.barSpeed
+    val currentBarSpeed: BarSpeed = satunesUiState.barSpeed
 
     var isUpdating: Boolean by rememberSaveable { mutableStateOf(false) }
-    var newBarSpeed: Float by rememberSaveable { mutableFloatStateOf(currentBarSpeed) }
+    var newBarSpeed: Float by rememberSaveable { mutableFloatStateOf(currentBarSpeed.speed) }
+
     Column(modifier = modifier) {
         NormalText(text = stringResource(id = R.string.bar_speed))
         if (isUpdating) {
-            Text(text = (floor(newBarSpeed * 100) / 100).toString() + ' ' + stringResource(id = R.string.second))
+            NormalText(text = stringResource(id = satunesViewModel.getBarSpeed(speed = newBarSpeed).stringId))
         } else {
-            NormalText(
-                text = (floor(currentBarSpeed * 100) / 100).toString() + ' ' + stringResource(
-                    id = R.string.second
-                )
-            )
+            NormalText(text = stringResource(id = currentBarSpeed.stringId))
         }
         Slider(
-            value = if (isUpdating) newBarSpeed else currentBarSpeed,
+            value = if (isUpdating) newBarSpeed else availableSpeeds.indexOf(element = currentBarSpeed)
+                .toFloat(),
             onValueChange = {
                 isUpdating = true
                 newBarSpeed = it
             },
             onValueChangeFinished = {
-                satunesViewModel.updateBarSpeed(newValue = newBarSpeed)
+                satunesViewModel.updateBarSpeed(
+                    scope = scope,
+                    snackBarHostState = snackBarHostState,
+                    newSpeedValue = newBarSpeed
+                )
                 isUpdating = false
             },
-            valueRange = 0.1f..1f,
-            steps = 20
+            valueRange = 0f..6f,
+            steps = 5
         )
     }
 }

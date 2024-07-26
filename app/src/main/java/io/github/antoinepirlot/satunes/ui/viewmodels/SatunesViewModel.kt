@@ -36,6 +36,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import io.github.antoinepirlot.satunes.MainActivity
+import io.github.antoinepirlot.satunes.data.availableSpeeds
+import io.github.antoinepirlot.satunes.database.models.BarSpeed
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
@@ -57,6 +59,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlin.math.floor
 import io.github.antoinepirlot.satunes.internet.R as RInternet
 
 /**
@@ -312,12 +315,16 @@ internal class SatunesViewModel : ViewModel() {
         }
     }
 
-    fun updateBarSpeed(newValue: Float) {
+    fun updateBarSpeed(
+        scope: CoroutineScope,
+        snackBarHostState: SnackbarHostState,
+        newSpeedValue: Float
+    ) {
         try {
             runBlocking {
                 SettingsManager.updateBarSpeed(
                     context = MainActivity.instance.applicationContext,
-                    newValue = newValue
+                    newSpeedBar = getBarSpeed(speed = newSpeedValue)
                 )
                 _uiState.update { currentState: SatunesUiState ->
                     currentState.copy(
@@ -327,6 +334,26 @@ internal class SatunesViewModel : ViewModel() {
             }
         } catch (e: Throwable) {
             _logger.warning(e.message)
+            showErrorSnackBar(
+                scope = scope,
+                snackBarHostState = snackBarHostState,
+                action = {
+                    updateBarSpeed(
+                        scope = scope,
+                        snackBarHostState = snackBarHostState,
+                        newSpeedValue = newSpeedValue
+                    )
+                }
+            )
+        }
+    }
+
+    fun getBarSpeed(speed: Float): BarSpeed {
+        try {
+            return availableSpeeds[floor(speed).toInt()]
+        } catch (e: Throwable) {
+            _logger.severe(e.message)
+            throw e
         }
     }
 

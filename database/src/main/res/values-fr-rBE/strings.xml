@@ -43,4 +43,11 @@
     <string name="created">Playlist Créée</string>
     <string name="likes_playlist_title">Favoris</string>
     <string name="blank_string_error">Le titre de la playlist est vide.</string>
+    <string name="real_time_speed">Temp réel</string>
+    <string name="very_fast_speed">Très rapide</string>
+    <string name="fast_speed">Rapide</string>
+    <string name="normal_speed">Normal</string>
+    <string name="bit_slow_speed">Un peu lent</string>
+    <string name="slow_speed">Lent</string>
+    <string name="very_slow_speed">Très lent</string>
 </resources>

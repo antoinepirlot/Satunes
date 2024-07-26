@@ -24,7 +24,7 @@
   -->
 
 <resources>
-    <string name="folders">Fichiers</string>
+    <string name="folders">Dossiers</string>
     <string name="artists">Artistes</string>
     <string name="musics">Musiques</string>
     <string name="unknown">Inconnu</string>
@@ -39,4 +39,15 @@
     <string name="importing_success">Importation réussie</string>
     <string name="no_playlist">Il n\'y a aucune playlist</string>
     <string name="exporting_success">Exportation réussie</string>
+    <string name="added">Ajouté(s)</string>
+    <string name="add_playlist_success">%1$s a été créée.</string>
+    <string name="likes_playlist_title">Favoris</string>
+    <string name="blank_string_error">Le titre de la playlist est vide.</string>
+    <string name="real_time_speed">Temp réel</string>
+    <string name="very_fast_speed">Très rapide</string>
+    <string name="fast_speed">Rapide</string>
+    <string name="normal_speed">Normal</string>
+    <string name="bit_slow_speed">Un peu lent</string>
+    <string name="slow_speed">Lent</string>
+    <string name="very_slow_speed">Très lent</string>
 </resources>

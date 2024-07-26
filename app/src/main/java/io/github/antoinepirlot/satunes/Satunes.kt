@@ -25,24 +25,41 @@
 
 package io.github.antoinepirlot.satunes
 
+import android.content.Context
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.router.Router
 import io.github.antoinepirlot.satunes.ui.components.bars.SatunesBottomAppBar
 import io.github.antoinepirlot.satunes.ui.components.bars.SatunesTopAppBar
+import io.github.antoinepirlot.satunes.ui.components.dialog.WhatsNewDialog
+import io.github.antoinepirlot.satunes.ui.local.LocalMainScope
+import io.github.antoinepirlot.satunes.ui.local.LocalSnackBarHostState
+import io.github.antoinepirlot.satunes.ui.states.SatunesUiState
 import io.github.antoinepirlot.satunes.ui.theme.SatunesTheme
+import io.github.antoinepirlot.satunes.ui.utils.showSnackBar
+import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
+import kotlinx.coroutines.CoroutineScope
 
 /**
  * @author Antoine Pirlot on 10/04/2024
@@ -50,9 +67,12 @@ import io.github.antoinepirlot.satunes.ui.theme.SatunesTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Satunes(
+internal fun Satunes(
     modifier: Modifier = Modifier,
+    satunesViewModel: SatunesViewModel = viewModel()
 ) {
+    satunesViewModel.loadSettings()
+    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     SatunesTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
@@ -61,20 +81,68 @@ fun Satunes(
             val scrollBehavior =
                 TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
             val navController: NavHostController = rememberNavController()
-            Scaffold(
-                modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-                topBar = { SatunesTopAppBar(scrollBehavior = scrollBehavior, navController = navController) },
-                bottomBar = { SatunesBottomAppBar(navController = navController) }
-            ) { innerPadding ->
-                Router(modifier = Modifier.padding(innerPadding), navController = navController)
+            val scope: CoroutineScope = rememberCoroutineScope()
+            val snackBarHostState: SnackbarHostState = remember { SnackbarHostState() }
+            val context: Context = LocalContext.current
+
+            CompositionLocalProvider(
+                values = arrayOf(
+                    LocalSnackBarHostState provides snackBarHostState,
+                    LocalMainScope provides scope,
+                )
+            ) {
+                Scaffold(
+                    modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+                    snackbarHost = {
+                        SnackbarHost(hostState = snackBarHostState)
+                    },
+                    topBar = {
+                        SatunesTopAppBar(
+                            scrollBehavior = scrollBehavior,
+                            navController = navController
+                        )
+                    },
+                    bottomBar = { SatunesBottomAppBar(navController = navController) }
+                ) { innerPadding ->
+                    Router(
+                        modifier = Modifier.padding(innerPadding),
+                        navController = navController
+                    )
+
+                    if (!satunesUiState.whatsNewSeen) {
+                        WhatsNewDialog(
+                            onConfirm = {
+                                // When app relaunch, it's not shown again
+                                satunesViewModel.seeWhatsNew(permanently = true)
+                                showSnackBar(
+                                    scope = scope,
+                                    snackBarHostState = snackBarHostState,
+                                    message = context.getString(R.string.stop_seeing_update_modal),
+                                    actionLabel = context.getString(R.string.cancel),
+                                    action = {
+                                        satunesViewModel.seeWhatsNew()
+                                        showSnackBar(
+                                            scope = scope,
+                                            snackBarHostState = snackBarHostState,
+                                            message = context.getString(R.string.canceled)
+                                        )
+                                    }
+                                )
+                            },
+                            onDismiss = {
+                                // When app relaunch, it's shown again
+                                satunesViewModel.seeWhatsNew()
+                            }
+                        )
+                    }
+                }
             }
         }
     }
-
 }
 
 @Preview
 @Composable
-fun ApplicationPreview() {
+private fun ApplicationPreview() {
     Satunes()
 }

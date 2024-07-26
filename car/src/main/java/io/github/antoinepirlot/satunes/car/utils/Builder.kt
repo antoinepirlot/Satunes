@@ -35,9 +35,9 @@ import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.Genre
-import io.github.antoinepirlot.satunes.database.models.Media
+import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
+import io.github.antoinepirlot.satunes.database.models.Playlist
 
 /**
  * @author Antoine Pirlot on 16/03/2024
@@ -46,7 +46,7 @@ import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMus
 /**
  * Build a media item
  */
-fun buildMediaItem(
+internal fun buildMediaItem(
     id: String,
     description: String,
     title: String,
@@ -72,9 +72,9 @@ fun buildMediaItem(
 }
 
 /**
- * Build a media item
+ * Build a mediaImpl item
  */
-fun buildMediaItem(media: Media): MediaBrowserCompat.MediaItem {
+internal fun buildMediaItem(media: MediaImpl): MediaBrowserCompat.MediaItem {
     val flags: Int =
         if (media is Music) {
             MediaBrowserCompat.MediaItem.FLAG_PLAYABLE
@@ -88,7 +88,7 @@ fun buildMediaItem(media: Media): MediaBrowserCompat.MediaItem {
             is Artist -> "Artist"
             is Album -> "Album"
             is Genre -> "Genre"
-            is PlaylistWithMusics -> "Playlist"
+            is Playlist -> "Playlist"
             else -> throw IllegalArgumentException("An issue occurred with Media interface")
         }
     val extras = Bundle()
@@ -104,10 +104,10 @@ fun buildMediaItem(media: Media): MediaBrowserCompat.MediaItem {
         extras.putDouble(MediaConstants.DESCRIPTION_EXTRAS_KEY_COMPLETION_PERCENTAGE, 0.0)
     }
     return buildMediaItem(
-        id = if (media is PlaylistWithMusics) media.playlist.id.toString() else media.id.toString(),
+        id = media.id.toString(),
         description = description,
         subtitle = if (media is Music) media.artist.title else null,
-        title = if (media is PlaylistWithMusics) media.playlist.title else media.title,
+        title = media.title,
         uri = if (media is Music) media.uri else null,
         icon = media.artwork,
         flags = flags

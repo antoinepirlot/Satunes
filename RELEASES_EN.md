@@ -1,6 +1,241 @@
 # Releases (🇬🇧)
 Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
+## 2.0 (Android 5.1.1 Lollipop and later)
+
+### 2.0.0-beta-1
+
+Improvements, Optimizations and Troubleshooting:
+
+* The code structure has been fully refactored to be more simple and better to use.
+* The code has been reworked to be faster
+* Satunes now support Android 15 Vanilla Ice Cream (API 35)
+* Now the app will load even your duplicated musics
+* By default, Satunes will load only the main Musics folder and not all.
+* Satunes logs some errors (without personal information), you can export it, nothing will leave the
+  app without your permission.
+* Implementing the use of ViewModel and UiState for a better Satunes' states management
+* Now playing music from folder will first load its musics then its subfolders' musics always sorted
+  by title.
+* Add icons in settings to identify them easily.
+* Defined an order for media if their title is exactly the same while comparing, on the screen if it
+  happens you will see media in this order:
+  * Music
+  * Album
+  * Artist
+  * Genre
+  * Playlist
+  * Folder
+* Limit the item list with 300 element max in Android Auto due to its limitations
+* Loading should be faster in Android Auto as one loop has been removed for each list loading
+* The shuffle setting buttons are no more switches but act like repeat buttons
+* Fix musics from external storage like sd card not loaded
+
+### 2.0.0-alpha-1
+
+⚠ Alpha version is not recommended for regular use.
+
+Improvements, Optimizations and Troubleshooting:
+
+* The code structure has been fully refactored to be more simple and better to use.
+* The code has been reworked to be faster
+* Satunes now support Android 15 Vanilla Ice Cream (API 35)
+* Now the app will load even your duplicated musics
+* By default, Satunes will load only the main Musics folder and not all.
+* Satunes logs some errors (without personal information), you can export it, nothing will leave the
+  app without your permission.
+* Implementing the use of ViewModel and UiState for a better Satunes' states management
+* Now playing music from folder will first load its musics then its subfolders' musics always sorted
+  by title.
+* Add icons in settings to identify them easily.
+
+## 1.3 (Android 5.1.1 Lollipop and later)
+
+### 1.3.1
+
+Improvements, Optimizations and Troubleshooting:
+
+* Musics in folder are no more modified when the user click on music to play it
+* Search icon has been remove from the search setting view
+
+### 1.3.0
+
+New features:
+
+* Possibility of choosing the search filters activated by default
+* Request for confirmation when deleting from playlists
+* All types of media (music, artists, etc.) have an option menu during a long press
+
+Improvements, Optimizations and Troubleshooting:
+
+* Added a button to open F-Droid when an update is available
+
+## 1.2 (Android 5.1.1 Lollipop and later)
+
+### 1.2.1
+
+Improvements, Optimizations and Troubleshooting:
+
+* Fixed bug when adding currently playing music to a playlist when there is none and the user
+  cancels its creation
+* Added search filter for playlists
+* Navigation animations between pages are faster and avoid clicking on the previous page
+* The music queue list page opens with the currently playing music in mind
+* Added a button to open currently playing music from the search page
+* The music filter in the search is activated by default
+
+### 1.2.0
+
+New features:
+
+* Search for different media
+* Favorite music system
+* Viewing the playlist and being able to:
+* Play music after current track
+* Add to queue
+* Added a tablet mode for displaying music currently playing
+* Popup after installing an update
+
+Improvements, Optimizations and Troubleshooting:
+
+* Removal of the Facebook button following the future disappearance of the Satunes' Facebook page
+* Optimizations
+* A bug causing the application to crash following the creation of the first playlist has been fixed
+
+### 1.2.0-preview-1
+
+New features:
+
+* Search for different media
+* Favorite music system
+* Viewing the playlist and being able to:
+* Play music after current track
+* Add to queue
+* Added a tablet mode for displaying music currently playing
+* Popup after installing an update
+
+Improvements, Optimizations and Troubleshooting:
+
+* Removal of the Facebook button following the future disappearance of the Satunes' Facebook page
+* Optimizations
+
+## 1.1 (Android 5.1.1 Lollipop and later)
+
+### 1.1.1
+
+Improvements, Optimizations and Troubleshooting:
+
+* When playing the next music when it is already the last one after shuffling.
+* Playlists load faster at starting
+
+### 1.1.0
+
+Improvements, Optimizations and Troubleshooting:
+
+* The size of the repeat one mode icon in the default playback settings displays correctly on
+  different screen sizes
+* Updating libraries
+
+### 1.1.0-beta-1
+
+New features:
+
+* Added a new setting allowing the use of Audio Offload (sends playback to a dedicated process).
+  This option allows you to optimize the battery
+* Ability to add currently playing music to playlists via quick actions
+* Navigation to albums, genres, artists, etc. from the menu with a long press on music
+
+Improvements, Optimizations and Troubleshooting:
+
+* Display issue when launching first music in Android Auto fixed
+* The default random mode selection is represented by buttons with icons and more using a switch
+* Displaying navigation bar button names
+
+## 1.0 (Android 5.1.1 Lollipop and later)
+
+### 1.0.3
+
+Improvements, Optimizations and Troubleshooting:
+
+* The album is no longer displayed in playback if the screen height size is too small in landscape
+  mode
+* Fixed crash when clicking the parameter button when audio permission is not granted
+* Default language if system language is not supported is now English and no longer French
+* Album titles will no longer exceed the width of the album
+* Fixes to the text size of the "Music" section in the artist and genre views
+* Adding music to several playlists is now resolved
+* Fixed issue when adding 2 playlists with the same name with upper and lower case on different
+  letters
+* When adding music to a playlist and no playlist has been created, the application starts creating
+  a new playlist
+
+### 1.0.2
+
+Improvements, Optimizations and Troubleshooting:
+
+* Settings navigation works consistently for all menus.
+* Design improvement
+
+### 1.0.1
+
+Improvements, Optimizations and Troubleshooting:
+
+* Fix icons on playback views no more showing full black or full white when deactivated
+* Harmonize shuffle and repeat icon by making the ones in settings with round border
+* Adding a horizontal padding to Android Auto setting view
+* Fix downloading release update
+
+### 1.0.0
+
+Satunes is now stable!
+
+Improvements, Optimizations and Troubleshooting:
+
+* Navigating to genres or albums with a name containing the '/' character can now work normally
+* The design has been improved:
+  * The shuffle and repeat buttons in the playback view (only in the phone app) are completely round
+  * Support for screen sizes has been improved
+* Added a menu in settings explaining how to activate Android Auto
+
+### 1.0.0-preview-2
+
+New features:
+
+* Ability to change the name of a playlist
+
+Improvements, Optimizations and Troubleshooting:
+
+* Problems related to playback in Android Auto have been fixed:
+  * No display at launch
+  * Progress bar during repeat one mode that goes beyond the time limit
+* Added text explaining why exporting and exporting playlists is in beta
+* Attempted to fix crash when opening the app after a long time after pausing
+
+### 1.0.0-preview-1
+
+This version is planned to be deployed as a stable version if no bugs are detected during this
+phase.
+
+New features:
+
+* Added a shuffle button to all Android Auto views
+* Removed the "Musics" tab because there were too many elements in Android Auto.
+* New settings:
+  * Choice of repeat mode
+  * Choice of shuffle mode
+  * Ability to prevent other applications from pausing/playing playback
+
+Improvements, Optimizations and Troubleshooting:
+
+* Accents are sorted correctly
+* Progress bar no longer glitches when enabling/disabling shuffle mode
+* Background playback works correctly depending on the chosen setting
+* Updates will take into account alpha, beta and preview 1,2,3, etc. for example "1.0.0-preview-1"
+* Multi-language is now supported in Android Auto
+* The shuffle button in Android Auto has an icon
+* Edited link for github
+* Improved design and support for different screen sizes.
+
 ## 0.10.0 (Android 5.1.1 Lollipop and later)
 
 ### 0.10.1-beta
@@ -201,7 +436,7 @@ Fix issues:
 Features:
 
 * Android Auto support
-    * To activate Android Auto you can find instructions [here](#android-auto)
+  * To activate Android Auto you can find instructions [here](README-EN.md)
 
 Fix issues:
 

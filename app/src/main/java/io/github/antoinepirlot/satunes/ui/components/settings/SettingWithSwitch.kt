@@ -29,11 +29,22 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Switch
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.data.switchSettingsNeedRestarts
+import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import io.github.antoinepirlot.satunes.models.SwitchSettings
+import io.github.antoinepirlot.satunes.ui.components.dialog.InformationDialog
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 
 /**
@@ -41,27 +52,56 @@ import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
  */
 
 @Composable
-fun SettingWithSwitch(
+internal fun SettingWithSwitch(
     modifier: Modifier = Modifier,
-    text: String,
+    setting: SwitchSettings,
+    icon: SatunesIcons? = null,
     checked: Boolean,
     onCheckedChange: () -> Unit
 ) {
+    val isRestartNeeded: Boolean = switchSettingsNeedRestarts.contains(setting)
+    var showInfo: Boolean by rememberSaveable { mutableStateOf(false) }
+
     Row(
         modifier = modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         NormalText(
-            text = text,
+            text = stringResource(id = setting.stringId),
             maxLines = Int.MAX_VALUE,
             modifier = Modifier
-                .align(Alignment.CenterVertically)
-                .fillMaxWidth(0.9f) // Fix the button to be outside the screen if text is long
+                .fillMaxWidth(if (icon != null) 0.7f else 0.75f) // Fix the button to be outside the screen if text is long
         )
+        if (icon != null) {
+            Icon(imageVector = icon.imageVector, contentDescription = icon.description)
+        } else {
+            if (isRestartNeeded) {
+                @Suppress("NAME_SHADOWING")
+                val icon = SatunesIcons.INFO
+                Icon(imageVector = icon.imageVector, contentDescription = icon.description)
+            }
+        }
         Switch(
-            modifier = Modifier.align(Alignment.CenterVertically),
             checked = checked,
-            onCheckedChange = { onCheckedChange() }
+            onCheckedChange = {
+                if (isRestartNeeded) {
+                    showInfo = true
+                } else {
+                    onCheckedChange()
+                }
+            }
+        )
+    }
+
+    if (showInfo) {
+        InformationDialog(
+            title = stringResource(id = R.string.restart_required),
+            onDismissRequest = { showInfo = false },
+            onConfirm = {
+                onCheckedChange()
+                showInfo = false
+            }
         )
     }
 }
@@ -69,10 +109,11 @@ fun SettingWithSwitch(
 @SuppressLint("UnrememberedMutableState")
 @Composable
 @Preview
-fun SettingWithSwitchPreview() {
+private fun SettingWithSwitchPreview() {
     SettingWithSwitch(
-        text = "Setting Example",
+        setting = SwitchSettings.PAUSE_IF_ANOTHER_PLAYBACK,
         checked = true,
+        icon = SatunesIcons.INFO,
         onCheckedChange = {}
     )
 }

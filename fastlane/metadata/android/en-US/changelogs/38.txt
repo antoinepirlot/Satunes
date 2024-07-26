@@ -1,0 +1,4 @@
+Improvements, Optimizations and Troubleshooting:
+
+* Musics in folder are no more modified when the user click on music to play it
+* Search icon has been remove from the search setting view

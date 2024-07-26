@@ -25,61 +25,68 @@
 
 package io.github.antoinepirlot.satunes.playback.models
 
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.media3.common.MediaItem
 import io.github.antoinepirlot.satunes.database.models.Music
-import java.util.SortedMap
+import io.github.antoinepirlot.satunes.playback.exceptions.AlreadyInPlaybackException
+import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 
 /**
  * @author Antoine Pirlot on 18/02/24
  */
 
-class Playlist(
-    musicMediaItemSortedMap: SortedMap<Music, MediaItem>,
-) {
-    private val originalMusicMediaItemMap: SortedMap<Music, MediaItem>
-    var musicList: MutableList<Music>
-    var mediaItemList: MutableList<MediaItem>
+internal class Playlist(musicSet: Set<Music>) {
+    private val originalMusicMediaItemMap: MutableMap<Music, MediaItem> = mutableMapOf()
+    val musicList: SnapshotStateList<Music> = SnapshotStateList()
+    val mediaItemList: MutableList<MediaItem> = mutableListOf()
+    private val logger = SatunesLogger.getLogger()
 
 
     init {
-        this.musicList = musicMediaItemSortedMap.keys.toMutableList()
-        this.mediaItemList = musicMediaItemSortedMap.values.toMutableList()
-        this.originalMusicMediaItemMap = musicMediaItemSortedMap.toSortedMap()
+        musicSet.forEach { music: Music ->
+            this.musicList.add(element = music)
+            this.mediaItemList.add(element = music.mediaItem)
+            this.originalMusicMediaItemMap[music] = music.mediaItem
+        }
     }
 
     /**
-     * Shuffle the playlist
+     * Shuffle the playlistDB
      * @param musicIndex the music index of the music to place at the index 0
      */
     fun shuffle(musicIndex: Int = -1) {
         if (musicIndex > this.musicList.lastIndex) {
-            throw IllegalArgumentException("The music index is greater than last index of the list")
+            val message = "The music index is greater than last index of the list"
+            logger.severe(message)
+            throw IllegalArgumentException(message)
         }
         var musicMoving: Music? = null
         if (musicIndex >= 0) {
             musicMoving = this.musicList.removeAt(musicIndex)
         }
 
+        val shuffledMusicList: List<Music> = this.musicList.shuffled()
+        this.musicList.clear()
         if (musicMoving != null) {
-            val oldMusicList: MutableList<Music> = this.musicList
-            this.musicList = mutableListOf()
             this.musicList.add(musicMoving)
-            this.musicList.addAll(oldMusicList.shuffled())
-        } else {
-            this.musicList = this.musicList.shuffled().toMutableList()
         }
-        this.mediaItemList = mutableListOf()
+        this.musicList.addAll(shuffledMusicList)
+        this.mediaItemList.clear()
         this.musicList.forEach { music: Music ->
             this.mediaItemList.add(music.mediaItem)
         }
     }
 
     /**
-     * Undo shuffle, set to the original playlist
+     * Undo shuffle, set to the original playlistDB
      */
     fun undoShuffle() {
-        this.musicList = this.originalMusicMediaItemMap.keys.toMutableList()
-        this.mediaItemList = this.originalMusicMediaItemMap.values.toMutableList()
+        this.musicList.clear()
+        this.mediaItemList.clear()
+        this.originalMusicMediaItemMap.forEach { (music: Music, mediaItem: MediaItem) ->
+            this.musicList.add(music)
+            this.mediaItemList.add(mediaItem)
+        }
     }
 
     fun getMusicIndex(music: Music): Int {
@@ -87,11 +94,16 @@ class Playlist(
     }
 
     fun getMusic(musicIndex: Int): Music {
-        return this.musicList[musicIndex]
+        try {
+            return this.musicList[musicIndex]
+        } catch (e: Throwable) {
+            logger.severe(e.message)
+            throw e
+        }
     }
 
     /**
-     * Return the number of music into the playlist
+     * Return the number of music into the playlistDB
      */
     fun musicCount(): Int {
         return this.musicList.size
@@ -107,25 +119,63 @@ class Playlist(
      * If toIndex is greater than the last index of the music list, then it's replaced by last index
      * If fromIndex is less than 0, then it's replaced by 0.
      *
+     * If no fromIndex is specified then fromIndex is 0
+     * If no toIndex is specified then it goes to the last index of the playlistDB.
+     *
      * @param fromIndex the first music index to get
-     * @param toIndex the last music index to get
+     * @param toIndex the last music index to get (included)
      *
      * @throws IllegalArgumentException if fromIndex is greater than toIndex
      *
      * @return a list of media items fromIndex toIndex included.
      */
     @Suppress("NAME_SHADOWING")
-    fun getMediaItems(fromIndex: Int, toIndex: Int): List<MediaItem> {
+    fun getMediaItems(fromIndex: Int = 0, toIndex: Int = lastIndex()): List<MediaItem> {
         val toIndex = if (toIndex > this.musicList.lastIndex) this.musicList.lastIndex else toIndex
         val fromIndex = if (fromIndex < 0) 0 else fromIndex
         if (fromIndex > toIndex) {
-            throw IllegalArgumentException("The fromIndex has to be lower than toIndex")
+            val message = "The fromIndex has to be lower than toIndex"
+            logger.severe(message)
+            throw IllegalArgumentException(message)
         }
-
-        val toReturn: MutableList<MediaItem> = mutableListOf()
-        for (i: Int in fromIndex..toIndex) {
-            toReturn.add(this.mediaItemList[i])
-        }
-        return toReturn
+        return mediaItemList.subList(fromIndex = fromIndex, toIndex = toIndex + 1)
     }
+
+    fun addToQueue(music: Music) {
+        checkMusicIsInPlaylist(music = music)
+        this.originalMusicMediaItemMap[music] = music.mediaItem
+        this.musicList.add(music)
+        this.mediaItemList.add(music.mediaItem)
+    }
+
+    fun addNext(index: Int, music: Music) {
+        checkMusicIsInPlaylist(music = music)
+        this.originalMusicMediaItemMap[music] = music.mediaItem
+        this.musicList.add(index = index, element = music)
+        this.mediaItemList.add(index = index, element = music.mediaItem)
+    }
+
+    private fun checkMusicIsInPlaylist(music: Music) {
+        if (isMusicInQueue(music = music)) {
+            logger.severe("this.originalMusicMediaItemMap[music] != null")
+            throw AlreadyInPlaybackException()
+        }
+    }
+
+    /**
+     * Move music to next to the current music
+     *
+     * @param music the music to move
+     */
+    fun moveMusic(music: Music, oldIndex: Int, newIndex: Int) {
+        this.musicList.removeAt(oldIndex)
+        this.musicList.add(index = newIndex, element = music)
+        this.mediaItemList.removeAt(oldIndex)
+        this.mediaItemList.add(index = newIndex, element = music.mediaItem)
+    }
+
+    fun isMusicInQueue(music: Music): Boolean {
+        return this.originalMusicMediaItemMap[music] != null
+    }
+
 }

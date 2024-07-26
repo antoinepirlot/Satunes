@@ -26,121 +26,55 @@
 package io.github.antoinepirlot.satunes.ui.components.bars
 
 import android.annotation.SuppressLint
-import androidx.compose.material3.Icon
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import io.github.antoinepirlot.satunes.database.models.MenuTitle
-import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
-import io.github.antoinepirlot.satunes.router.Destination
-import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
-import io.github.antoinepirlot.satunes.ui.utils.getRightIconAndDescription
+import io.github.antoinepirlot.satunes.database.models.NavBarSection
+import io.github.antoinepirlot.satunes.ui.ScreenSizes
+import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
 
 /**
  * @author Antoine Pirlot on 03/02/24
  */
 
 @Composable
-fun SatunesBottomAppBar(
+internal fun SatunesBottomAppBar(
     modifier: Modifier = Modifier,
     navController: NavHostController,
+    satunesViewModel: SatunesViewModel = viewModel(),
 ) {
-    val menuTitleLists: MutableList<MenuTitle> = mutableListOf(
-        MenuTitle.FOLDERS,
-        MenuTitle.ARTISTS,
-        MenuTitle.ALBUMS,
-        MenuTitle.GENRES,
-        MenuTitle.MUSICS,
-        MenuTitle.PLAYLISTS
+    val screenWidthDp = LocalConfiguration.current.screenWidthDp
+    val navigationModifier: Modifier =
+        if (screenWidthDp < ScreenSizes.VERY_VERY_SMALL) modifier.fillMaxHeight(0.11f) else modifier
+    val navigationItemModifier: Modifier =
+        if (screenWidthDp < ScreenSizes.VERY_VERY_SMALL) Modifier.size(16.dp) else Modifier
+
+    val navBarSections: Map<NavBarSection, Boolean> = mapOf(
+        Pair(NavBarSection.FOLDERS, satunesViewModel.foldersChecked),
+        Pair(NavBarSection.ARTISTS, satunesViewModel.artistsChecked),
+        Pair(NavBarSection.ALBUMS, satunesViewModel.albumsChecked),
+        Pair(NavBarSection.GENRES, satunesViewModel.genresChecked),
+        Pair(NavBarSection.MUSICS, true), // Music is always checked
+        Pair(NavBarSection.PLAYLISTS, satunesViewModel.playlistsChecked)
     )
 
-    SettingsManager.menuTitleCheckedMap.forEach { (menuTitle: MenuTitle, checked: MutableState<Boolean>) ->
-        if (!checked.value) {
-            menuTitleLists.remove(menuTitle)
-        }
-    }
-
-    val selectedMenuTitle: MutableState<MenuTitle> =
-        // Update the tab by default if settings has changed
-        if (SettingsManager.foldersChecked.value) {
-            remember { mutableStateOf(MenuTitle.FOLDERS) }
-        } else if (SettingsManager.artistsChecked.value) {
-            remember { mutableStateOf(MenuTitle.ARTISTS) }
-        } else if (SettingsManager.albumsChecked.value) {
-            remember { mutableStateOf(MenuTitle.ALBUMS) }
-        } else if (SettingsManager.genresChecked.value) {
-            remember { mutableStateOf(MenuTitle.GENRES) }
-        } else if (SettingsManager.playlistsChecked.value) {
-            remember { mutableStateOf(MenuTitle.PLAYLISTS) }
-        } else {
-            remember { mutableStateOf(MenuTitle.MUSICS) }
-        }
-    val hasMaxFiveItems: Boolean = menuTitleLists.size <= 5
-
-    NavigationBar(
-        modifier = modifier
-    ) {
-        menuTitleLists.forEach { menuTitle: MenuTitle ->
-            NavigationBarItem(
-                label = {
-                    if (hasMaxFiveItems) {
-                        NormalText(text = stringResource(id = menuTitle.stringId))
-                    }
-                },
-                selected = selectedMenuTitle.value == menuTitle,
-                onClick = {
-                    selectedMenuTitle.value = menuTitle
-                    val rootRoute: String = when (menuTitle) {
-                        MenuTitle.FOLDERS -> Destination.FOLDERS.link
-                        MenuTitle.ARTISTS -> Destination.ARTISTS.link
-                        MenuTitle.ALBUMS -> Destination.ALBUMS.link
-                        MenuTitle.GENRES -> Destination.GENRES.link
-                        MenuTitle.PLAYLISTS -> Destination.PLAYLISTS.link
-                        MenuTitle.MUSICS -> Destination.MUSICS.link
-
-                    }
-                    backToRoot(rootRoute = rootRoute, navController = navController)
-                },
-                icon = {
-                    val pair = getRightIconAndDescription(menuTitle = menuTitle)
-
-                    Icon(
-                        imageVector = pair.first,
-                        contentDescription = pair.second
-                    )
-                }
-            )
-        }
-    }
-}
-
-/**
- * Redirect controller to the state where the user is in a bottom button's view.
- * For example, if the user click on Album button and he is in settings, then it redirects to albums.
- *
- * @param rootRoute the root route to go
- * @param navController this nav controller is redirected to the media route
- */
-private fun backToRoot(
-    rootRoute: String,
-    navController: NavHostController
-) {
-    var currentRoute: String? = navController.currentBackStackEntry!!.destination.route!!
-    if (currentRoute != rootRoute) {
-        while (currentRoute != null && currentRoute != rootRoute) {
-            navController.popBackStack()
-            currentRoute = navController.currentBackStackEntry?.destination?.route
-        }
-        if (currentRoute == null) {
-            navController.navigate(rootRoute)
+    NavigationBar(modifier = navigationModifier) {
+        for ((navBarSection: NavBarSection, visible: Boolean) in navBarSections) {
+            if (visible) {
+                MediaNavBarSelection(
+                    modifier = navigationItemModifier,
+                    navController = navController,
+                    navBarSection = navBarSection
+                )
+            }
         }
     }
 }
@@ -148,6 +82,7 @@ private fun backToRoot(
 @SuppressLint("UnrememberedMutableState")
 @Preview
 @Composable
-fun SatunesBottomAppBarPreview() {
-    SatunesBottomAppBar(navController = rememberNavController())
+private fun SatunesBottomAppBarPreview() {
+    val navController: NavHostController = rememberNavController()
+    SatunesBottomAppBar(navController = navController)
 }

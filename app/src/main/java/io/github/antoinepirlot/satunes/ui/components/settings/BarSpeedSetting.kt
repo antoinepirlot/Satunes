@@ -25,70 +25,80 @@
 
 package io.github.antoinepirlot.satunes.ui.components.settings
 
-import android.content.Context
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Slider
-import androidx.compose.material3.Text
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
+import io.github.antoinepirlot.satunes.data.availableSpeeds
+import io.github.antoinepirlot.satunes.database.models.BarSpeed
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
-import kotlin.math.floor
+import io.github.antoinepirlot.satunes.ui.local.LocalMainScope
+import io.github.antoinepirlot.satunes.ui.local.LocalSnackBarHostState
+import io.github.antoinepirlot.satunes.ui.states.SatunesUiState
+import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
+import kotlinx.coroutines.CoroutineScope
 
 /**
  * @author Antoine Pirlot on 27/04/2024
  */
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BarSpeedSetting(
+internal fun BarSpeedSetting(
     modifier: Modifier = Modifier,
+    satunesViewModel: SatunesViewModel = viewModel(),
 ) {
-    val context: Context = LocalContext.current
-    val currentBarSpeed: Float by rememberSaveable { SettingsManager.barSpeed }
+    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+    val scope: CoroutineScope = LocalMainScope.current
+    val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
+
+    val currentBarSpeed: BarSpeed = satunesUiState.barSpeed
+
     var isUpdating: Boolean by rememberSaveable { mutableStateOf(false) }
-    var newBarSpeed: Float by rememberSaveable { mutableFloatStateOf(currentBarSpeed) }
-    Column(
-        modifier = modifier.padding(horizontal = 16.dp),
-    ) {
+    var newBarSpeed: Float by rememberSaveable { mutableFloatStateOf(currentBarSpeed.speed) }
+
+    Column(modifier = modifier) {
         NormalText(text = stringResource(id = R.string.bar_speed))
         if (isUpdating) {
-            Text(text = (floor(newBarSpeed * 100) / 100).toString() + ' ' + stringResource(id = R.string.second))
+            NormalText(text = stringResource(id = satunesViewModel.getBarSpeed(speed = newBarSpeed).stringId))
         } else {
-            Text(
-                text = (floor(currentBarSpeed * 100) / 100).toString() + ' ' + stringResource(
-                    id = R.string.second
-                )
-            )
+            NormalText(text = stringResource(id = currentBarSpeed.stringId))
         }
+        Slider(
+            value = if (isUpdating) newBarSpeed else availableSpeeds.indexOf(element = currentBarSpeed)
+                .toFloat(),
+            onValueChange = {
+                isUpdating = true
+                newBarSpeed = it
+            },
+            onValueChangeFinished = {
+                satunesViewModel.updateBarSpeed(
+                    scope = scope,
+                    snackBarHostState = snackBarHostState,
+                    newSpeedValue = newBarSpeed
+                )
+                isUpdating = false
+            },
+            valueRange = 0f..availableSpeeds.lastIndex.toFloat(),
+            steps = availableSpeeds.size - 2 // remove the first and last position to have the correct number of level
+        )
     }
-    Slider(
-        value = if (isUpdating) newBarSpeed else currentBarSpeed,
-        onValueChange = {
-            isUpdating = true
-            newBarSpeed = it
-        },
-        onValueChangeFinished = {
-            SettingsManager.updateBarSpeed(context = context, newValue = newBarSpeed)
-            isUpdating = false
-        },
-        valueRange = 0.1f..1f,
-        steps = 20
-    )
 }
 
 @Preview
 @Composable
-fun BarSpeedSettingPreview() {
+private fun BarSpeedSettingPreview() {
     BarSpeedSetting()
 }

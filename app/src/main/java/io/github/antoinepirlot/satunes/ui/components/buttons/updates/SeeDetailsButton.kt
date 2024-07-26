@@ -27,7 +27,6 @@ package io.github.antoinepirlot.satunes.ui.components.buttons.updates
 
 import android.content.Context
 import androidx.compose.material3.Button
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -35,32 +34,40 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.satunes.internet.R
 import io.github.antoinepirlot.satunes.internet.updates.UpdateAvailableStatus
-import io.github.antoinepirlot.satunes.ui.components.settings.utils.openUrl
+import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
+import io.github.antoinepirlot.satunes.ui.utils.openUrl
 
 /**
  * @author Antoine Pirlot on 14/04/2024
  */
 
+private const val FDROID_SATUNES_URL: String =
+    "https://f-droid.org/fr/packages/io.github.antoinepirlot.satunes/"
+
 @Composable
-fun SeeDetailsButton(
+internal fun SeeDetailsButton(
     modifier: Modifier = Modifier,
+    text: String = stringResource(id = R.string.see_on_github),
+    onFdroid: Boolean = false
 ) {
     val context: Context = LocalContext.current
     Button(
         modifier = modifier,
         onClick = {
+            val url: String =
+                if (onFdroid) FDROID_SATUNES_URL else UpdateAvailableStatus.AVAILABLE.updateLink!!
             openUrl(
                 context = context,
-                url = UpdateAvailableStatus.AVAILABLE.updateLink!!
+                url = url
             )
         }
     ) {
-        Text(text = stringResource(id = R.string.see_details))
+        NormalText(text = text)
     }
 }
 
 @Preview
 @Composable
-fun SeeDetailsButtonPreview() {
+private fun SeeDetailsButtonPreview() {
     SeeDetailsButton()
 }

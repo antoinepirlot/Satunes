@@ -30,15 +30,20 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.github.antoinepirlot.satunes.database.models.Album
+import io.github.antoinepirlot.satunes.database.models.Artist
+import io.github.antoinepirlot.satunes.ui.ScreenSizes
 import io.github.antoinepirlot.satunes.ui.components.images.AlbumArtwork
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 
@@ -47,23 +52,38 @@ import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
  */
 
 @Composable
-fun AlbumGridCard(
+internal fun AlbumGridCard(
     modifier: Modifier = Modifier,
     album: Album,
     onClick: (album: Album?) -> Unit,
 ) {
-    Box(
-        modifier = modifier.size(250.dp),
-    ) {
+    val screenWidthDp: Int = LocalConfiguration.current.screenWidthDp
+
+    val boxSize: Dp = if (screenWidthDp < ScreenSizes.VERY_VERY_SMALL)
+        150.dp
+    else if (screenWidthDp < ScreenSizes.VERY_SMALL)
+        200.dp
+    else
+        250.dp
+
+    val artworkSize: Dp = if (screenWidthDp < ScreenSizes.VERY_VERY_SMALL)
+        125.dp
+    else if (screenWidthDp < ScreenSizes.VERY_SMALL)
+        175.dp
+    else
+        225.dp
+
+    Box(modifier = modifier
+        .padding(start = 16.dp)
+        .size(boxSize)) {
         Column(
             modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.SpaceBetween
+            verticalArrangement = Arrangement.SpaceBetween,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             AlbumArtwork(
-                modifier
-                    .size(225.dp)
-                    .align(Alignment.CenterHorizontally),
-                media = album,
+                modifier.size(artworkSize),
+                mediaImpl = album,
                 onClick = onClick
             )
             NormalText(
@@ -78,6 +98,8 @@ fun AlbumGridCard(
 
 @Preview
 @Composable
-fun AlbumGridCardPreview() {
-    AlbumGridCard(album = Album(id = 1, title = "Album #1"), onClick = {})
+private fun AlbumGridCardPreview() {
+    AlbumGridCard(
+        album = Album(title = "Album #1", artist = Artist(title = "Artist #1")),
+        onClick = {})
 }

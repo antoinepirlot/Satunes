@@ -31,18 +31,22 @@ import androidx.annotation.OptIn
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
+import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 
 /**
  * @author Antoine Pirlot on 23/03/2024
  */
 open class PlaybackListener : Player.Listener {
 
+    private val logger = SatunesLogger.getLogger()
+
     override fun onPlaybackStateChanged(playbackState: Int) {
         super.onPlaybackStateChanged(playbackState)
         val playbackController: PlaybackController = PlaybackController.getInstance()
 
         if (playbackState == Player.STATE_ENDED) {
-            playbackController.isEnded = !PlaybackController.DEFAULT_IS_ENDED
+            playbackController.isEnded.value = true
+            playbackController.currentPositionProgression.floatValue = 1f
         }
     }
 
@@ -50,12 +54,17 @@ open class PlaybackListener : Player.Listener {
         // Do nothing
     }
 
+    override fun onRepeatModeChanged(repeatMode: Int) {
+        super.onRepeatModeChanged(repeatMode)
+        PlaybackController.getInstance().repeatMode.intValue = repeatMode
+    }
+
     override fun onIsPlayingChanged(isPlaying: Boolean) {
         super.onIsPlayingChanged(isPlaying)
         val playbackController: PlaybackController = PlaybackController.getInstance()
 
         playbackController.isPlaying.value = isPlaying
-        playbackController.isEnded = PlaybackController.DEFAULT_IS_ENDED
+        playbackController.isEnded.value = PlaybackController.DEFAULT_IS_ENDED
     }
 
     /**
@@ -71,22 +80,16 @@ open class PlaybackListener : Player.Listener {
             //This line avoid mismatch with song on screen and the one playing
             player.shuffleModeEnabled = false
         }
-    }
 
-    override fun onPositionDiscontinuity(
-        oldPosition: Player.PositionInfo,
-        newPosition: Player.PositionInfo,
-        reason: Int
-    ) {
-        super.onPositionDiscontinuity(oldPosition, newPosition, reason)
-        val playbackController: PlaybackController = PlaybackController.getInstance()
-
-        playbackController.currentPositionProgression.floatValue =
-            if (playbackController.musicPlaying.value == null || playbackController.musicPlaying.value!!.duration == 0L) {
-                0f
-            } else {
-                newPosition.positionMs.toFloat() / playbackController.musicPlaying.value!!.duration.toFloat()
-            }
+        if (events.contains(Player.EVENT_PLAYER_ERROR)) {
+            val playbackController: PlaybackController = PlaybackController.getInstance()
+            val message = """
+                An error happens with the player. 
+                Here's the status of playback Controller:
+                $playbackController
+            """.trimIndent()
+            logger.warning(message)
+        }
     }
 
     override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {

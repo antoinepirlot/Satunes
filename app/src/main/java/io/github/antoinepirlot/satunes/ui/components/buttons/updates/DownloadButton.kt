@@ -25,29 +25,40 @@
 
 package io.github.antoinepirlot.satunes.ui.components.buttons.updates
 
-import android.content.Context
 import androidx.compose.material3.Button
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.internet.R
-import io.github.antoinepirlot.satunes.internet.updates.UpdateDownloadManager
+import io.github.antoinepirlot.satunes.ui.local.LocalMainScope
+import io.github.antoinepirlot.satunes.ui.local.LocalSnackBarHostState
+import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
+import kotlinx.coroutines.CoroutineScope
 
 /**
  * @author Antoine Pirlot on 14/04/2024
  */
 
 @Composable
-fun DownloadButton(
+internal fun DownloadButton(
     modifier: Modifier = Modifier,
+    satunesViewModel: SatunesViewModel = viewModel(),
 ) {
-    val context: Context = LocalContext.current
+    val scope: CoroutineScope = LocalMainScope.current
+    val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
+
     Button(
         modifier = modifier,
-        onClick = { UpdateDownloadManager.downloadUpdateApk(context = context) }
+        onClick = {
+            satunesViewModel.downloadUpdateApk(
+                scope = scope,
+                snackBarHostState = snackBarHostState
+            )
+        }
     ) {
         Text(text = stringResource(id = R.string.download_update))
     }
@@ -55,6 +66,6 @@ fun DownloadButton(
 
 @Preview
 @Composable
-fun DownloadButtonPreview() {
+private fun DownloadButtonPreview() {
     DownloadButton()
 }

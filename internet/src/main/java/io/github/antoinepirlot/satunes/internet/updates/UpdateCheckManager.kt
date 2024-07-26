@@ -26,10 +26,12 @@
 package io.github.antoinepirlot.satunes.internet.updates
 
 import android.content.Context
+import android.content.pm.PackageManager
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import io.github.antoinepirlot.satunes.internet.InternetManager
-import io.github.antoinepirlot.satunes.internet.R
 import io.github.antoinepirlot.satunes.internet.updates.Versions.ALPHA
 import io.github.antoinepirlot.satunes.internet.updates.Versions.ALPHA_REGEX
 import io.github.antoinepirlot.satunes.internet.updates.Versions.BETA
@@ -39,10 +41,7 @@ import io.github.antoinepirlot.satunes.internet.updates.Versions.PREVIEW_REGEX
 import io.github.antoinepirlot.satunes.internet.updates.Versions.RELEASES_URL
 import io.github.antoinepirlot.satunes.internet.updates.Versions.RELEASE_REGEX
 import io.github.antoinepirlot.satunes.internet.updates.Versions.versionType
-import io.github.antoinepirlot.utils.showToastOnUiThread
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
@@ -51,10 +50,13 @@ import okhttp3.Response
 /**
  * @author Antoine Pirlot on 11/04/2024
  */
+
+@RequiresApi(Build.VERSION_CODES.M)
 object UpdateCheckManager {
+    private val _logger = SatunesLogger.getLogger()
+
     val updateAvailableStatus: MutableState<UpdateAvailableStatus> =
         mutableStateOf(UpdateAvailableStatus.UNDEFINED)
-    val isCheckingUpdate: MutableState<Boolean> = mutableStateOf(false)
     val latestVersion: MutableState<String?> = mutableStateOf(null)
     val downloadStatus: MutableState<APKDownloadStatus> =
         mutableStateOf(APKDownloadStatus.NOT_STARTED)
@@ -65,19 +67,23 @@ object UpdateCheckManager {
      * @param context the context :p
      * @param url the url to get the response
      */
-    fun getUrlResponse(context: Context, url: String): Response? {
-        val internetManager = InternetManager(context = context)
-        if (!internetManager.isConnected()) {
-            UpdateAvailableStatus.CANNOT_CHECK.updateLink = null
-            updateAvailableStatus.value = UpdateAvailableStatus.CANNOT_CHECK
-            isCheckingUpdate.value = false
-            return null
+    internal fun getUrlResponse(context: Context, url: String): Response? {
+        return try {
+            val internetManager = InternetManager(context = context)
+            if (!internetManager.isConnected()) {
+                UpdateAvailableStatus.CANNOT_CHECK.updateLink = null
+                updateAvailableStatus.value = UpdateAvailableStatus.CANNOT_CHECK
+                return null
+            }
+            val httpClient = OkHttpClient()
+            val req: Request = Request.Builder()
+                .url(url)
+                .build()
+            httpClient.newCall(req).execute()
+        } catch (e: Throwable) {
+            _logger.warning(e.message)
+            null
         }
-        val httpClient = OkHttpClient()
-        val req: Request = Request.Builder()
-            .url(url)
-            .build()
-        return httpClient.newCall(req).execute()
     }
 
     /**
@@ -86,53 +92,33 @@ object UpdateCheckManager {
      */
     fun checkUpdate(context: Context) {
         //Check update
-        CoroutineScope(Dispatchers.IO).launch {
-            isCheckingUpdate.value = true
-            showToastOnUiThread(
-                context = context,
-                message = context.getString(R.string.checking_update)
-            )
-            try {
-                //Get all versions
-                val res: Response = getUrlResponse(context = context, url = RELEASES_URL)!!
-                if (!res.isSuccessful) {
-                    res.close()
-                    UpdateAvailableStatus.CANNOT_CHECK.updateLink = null
-                    updateAvailableStatus.value = UpdateAvailableStatus.CANNOT_CHECK
-                    isCheckingUpdate.value = false
-                    return@launch
-                }
-                val page: String = res.body!!.string()
+        try {
+            //Get all versions
+            val res: Response = getUrlResponse(context = context, url = RELEASES_URL)!!
+            if (!res.isSuccessful) {
                 res.close()
-
-                val currentVersion: String =
-                    'v' + getCurrentVersion(context = context)
-                val updateUrl: String? = getUpdateUrl(page = page, currentVersion = currentVersion)
-                UpdateAvailableStatus.AVAILABLE.updateLink = updateUrl
-                if (updateUrl == null) {
-                    updateAvailableStatus.value = UpdateAvailableStatus.UP_TO_DATE
-                    showToastOnUiThread(
-                        context = context,
-                        message = context.getString(R.string.no_update)
-                    )
-                } else {
-                    updateAvailableStatus.value = UpdateAvailableStatus.AVAILABLE
-                    showToastOnUiThread(
-                        context = context,
-                        message = context.getString(R.string.update_available)
-                    )
-                }
-            } catch (_: Exception) {
-                //Don't crash the app if an error occurred internet connection
-                //Don't care of internet
+                UpdateAvailableStatus.CANNOT_CHECK.updateLink = null
                 updateAvailableStatus.value = UpdateAvailableStatus.CANNOT_CHECK
-                showToastOnUiThread(
-                    context = context,
-                    message = context.getString(R.string.cannot_check_update)
-                )
-            } finally {
-                isCheckingUpdate.value = false
+                return
             }
+            val page: String = res.body!!.string()
+            res.close()
+
+            val currentVersion: String =
+                'v' + getCurrentVersion(context = context)
+            val updateUrl: String? = getUpdateUrl(page = page, currentVersion = currentVersion)
+            UpdateAvailableStatus.AVAILABLE.updateLink = updateUrl
+            if (updateUrl == null) {
+                updateAvailableStatus.value = UpdateAvailableStatus.UP_TO_DATE
+            } else {
+                updateAvailableStatus.value = UpdateAvailableStatus.AVAILABLE
+            }
+        } catch (e: Throwable) {
+            //Don't crash the app if an error occurred internet connection
+            //Don't care of internet
+            updateAvailableStatus.value = UpdateAvailableStatus.CANNOT_CHECK
+            _logger.severe(e.message)
+            throw e
         }
     }
 
@@ -145,13 +131,7 @@ object UpdateCheckManager {
      * @return the generated update url from page or null if the app is up to date.
      */
     private fun getUpdateUrl(page: String, currentVersion: String): String? {
-        val split: List<String> = currentVersion.split("-")
-        val currentVersionType: String = if (split.size == 2) {
-            split.last()
-        } else {
-            split[1]
-        }
-        val regex: Regex = when (currentVersionType) {
+        val regex: Regex = when (versionType) {
             ALPHA -> ALPHA_REGEX
             BETA -> BETA_REGEX
             PREVIEW -> PREVIEW_REGEX
@@ -165,16 +145,27 @@ object UpdateCheckManager {
         return if (latestVersion != null && latestVersion != currentVersion) {
             UpdateCheckManager.latestVersion.value = latestVersion
             "$RELEASES_URL/tag/$latestVersion"
-            //                UpdateAvailableStatus.AVAILABLE
         } else {
+            val message =
+                "No update url found. Latest version is $latestVersion & currentVersion is $currentVersion"
+            _logger.warning(message)
             null
         }
     }
 
     fun getCurrentVersion(context: Context): String {
-        val versionName: String =
-            context.packageManager.getPackageInfo(context.packageName, 0).versionName
-        versionType = versionName.split("-").last()
+        val versionName: String = try {
+            context.packageManager.getPackageInfo(context.packageName, 0).versionName!!
+        } catch (e: PackageManager.NameNotFoundException) {
+            _logger.severe(e.message)
+            throw e
+        }
+
+        versionType = try {
+            versionName.split("-")[1]
+        } catch (_: IndexOutOfBoundsException) {
+            "" //blank for release
+        }
         return versionName
     }
 }

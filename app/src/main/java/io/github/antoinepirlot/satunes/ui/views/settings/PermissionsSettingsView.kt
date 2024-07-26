@@ -29,7 +29,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -37,17 +36,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -55,17 +46,19 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.accompanist.permissions.shouldShowRationale
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.data.permissionsList
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.services.PermissionManager
-import io.github.antoinepirlot.satunes.services.Permissions
-import io.github.antoinepirlot.satunes.services.permissionsList
+import io.github.antoinepirlot.satunes.models.Permissions
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 import io.github.antoinepirlot.satunes.ui.components.texts.Title
+import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
 
 /**
  * @author Antoine Pirlot on 29/04/2024
@@ -73,90 +66,57 @@ import io.github.antoinepirlot.satunes.ui.components.texts.Title
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun PermissionsSettingsView(
+internal fun PermissionsSettingsView(
     modifier: Modifier = Modifier,
-    isAudioAllowed: MutableState<Boolean>,
+    satunesViewModel: SatunesViewModel = viewModel()
 ) {
     val spacerSize = 16.dp
     val context: Context = LocalContext.current
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(horizontal = 16.dp),
     ) {
         Title(text = stringResource(id = R.string.permissions))
-        val lazySate = rememberLazyListState()
-        LazyColumn(
-            state = lazySate,
-        ) {
-            items(
-                items = permissionsList,
-                key = { it.stringId }
-            ) { permission: Permissions ->
-                if (
-                    (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && permission != Permissions.READ_EXTERNAL_STORAGE_PERMISSION)
-                    || (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU && permission != Permissions.READ_AUDIO_PERMISSION)
-                ) {
-                    val permissionState = rememberPermissionState(permission = permission.value)
-                    if (permissionState.status.isGranted) {
-                        when (permission) {
-                            Permissions.READ_AUDIO_PERMISSION -> PermissionManager.isReadAudioAllowed.value =
-                                true
+        for (permission: Permissions in permissionsList) {
+            val permissionState: PermissionState =
+                rememberPermissionState(permission = permission.value)
+            if (permissionState.status.isGranted && !satunesViewModel.isAudioAllowed) {
+                satunesViewModel.updateIsAudioAllowed()
+            }
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                @SuppressLint("NewApi")
+                val permissionIcon: SatunesIcons = when (permission) {
+                    Permissions.READ_AUDIO_PERMISSION -> SatunesIcons.MUSIC
+                    Permissions.READ_EXTERNAL_STORAGE_PERMISSION -> SatunesIcons.FOLDER
+                }
+                Icon(
+                    imageVector = permissionIcon.imageVector,
+                    contentDescription = permissionIcon.description
+                )
+                Spacer(modifier = Modifier.size(16.dp))
+                NormalText(text = stringResource(id = permission.stringId))
+                Spacer(modifier = Modifier.size(spacerSize))
+                val icon: SatunesIcons =
+                    if (permissionState.status.isGranted) SatunesIcons.PERMISSION_GRANTED
+                    else SatunesIcons.PERMISSION_NOT_GRANTED
 
-                            Permissions.READ_EXTERNAL_STORAGE_PERMISSION -> PermissionManager.isReadExternalStorageAllowed.value =
-                                true
-                        }
-                        isAudioAllowed.value = true
-                    }
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        val permissionIcon: SatunesIcons = when (permission) {
-                            Permissions.READ_AUDIO_PERMISSION -> SatunesIcons.MUSIC
-                            Permissions.READ_EXTERNAL_STORAGE_PERMISSION -> SatunesIcons.FOLDER
-                        }
-                        Icon(
-                            imageVector = permissionIcon.imageVector,
-                            contentDescription = permissionIcon.description
+                Icon(
+                    imageVector = icon.imageVector,
+                    contentDescription = icon.description,
+                    tint = if (permissionState.status.isGranted) Color.Green else Color.Red
+                )
+                if (!permissionState.status.isGranted) {
+                    Spacer(modifier = Modifier.size(spacerSize))
+                    Button(onClick = {
+                        askPermission(
+                            context = context,
+                            permissionState = permissionState
                         )
-                        Spacer(modifier = Modifier.size(16.dp))
-                        NormalText(text = stringResource(id = permission.stringId))
-                        Spacer(modifier = Modifier.size(spacerSize))
-                        val permissionGranted: Boolean by remember {
-                            when (permission) {
-                                Permissions.READ_AUDIO_PERMISSION -> PermissionManager.isReadAudioAllowed
-                                Permissions.READ_EXTERNAL_STORAGE_PERMISSION -> PermissionManager.isReadExternalStorageAllowed
-                            }
-                        }
-
-                        if (permissionGranted) {
-                            val icon: SatunesIcons = SatunesIcons.PERMISSION_GRANTED
-                            Icon(
-                                imageVector = icon.imageVector,
-                                contentDescription = icon.description,
-                                tint = Color.Green
-                            )
-                        } else {
-                            val icon: SatunesIcons = SatunesIcons.PERMISSION_NOT_GRANTED
-                            Icon(
-                                imageVector = icon.imageVector,
-                                contentDescription = icon.description,
-                                tint = Color.Red
-                            )
-                            Spacer(modifier = Modifier.size(spacerSize))
-                            Button(onClick = {
-                                if (permissionState.status.shouldShowRationale) {
-                                    val intent = Intent(ACTION_APPLICATION_DETAILS_SETTINGS)
-                                    val uri = Uri.fromParts("package", context.packageName, null)
-                                    intent.data = uri
-                                    context.startActivity(intent)
-                                } else {
-                                    permissionState.launchPermissionRequest()
-                                }
-                            }) {
-                                Text(text = stringResource(id = R.string.ask_permission))
-                            }
-                        }
+                    }) {
+                        NormalText(text = stringResource(id = R.string.ask_permission))
                     }
                 }
             }
@@ -164,9 +124,21 @@ fun PermissionsSettingsView(
     }
 }
 
+@OptIn(ExperimentalPermissionsApi::class)
+private fun askPermission(context: Context, permissionState: PermissionState) {
+    if (permissionState.status.shouldShowRationale) {
+        val intent = Intent(ACTION_APPLICATION_DETAILS_SETTINGS)
+        val uri = Uri.fromParts("package", context.packageName, null)
+        intent.data = uri
+        context.startActivity(intent)
+    } else {
+        permissionState.launchPermissionRequest()
+    }
+}
+
 @SuppressLint("UnrememberedMutableState")
 @Preview
 @Composable
-fun PermissionsSettingsViewPreview() {
-    PermissionsSettingsView(isAudioAllowed = mutableStateOf(false))
+private fun PermissionsSettingsViewPreview() {
+    PermissionsSettingsView()
 }

@@ -30,19 +30,29 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import io.github.antoinepirlot.satunes.ui.ScreenSizes
 
 /**
  * @author Antoine Pirlot on 05/04/2024
  */
 
 @Composable
-fun LoadingCircle(
+internal fun LoadingCircle(
     modifier: Modifier = Modifier
 ) {
+    val screenWidthDp: Int = LocalConfiguration.current.screenWidthDp
+    val size: Dp = if (screenWidthDp < ScreenSizes.VERY_VERY_SMALL)
+        32.dp
+    else if (screenWidthDp < ScreenSizes.VERY_SMALL)
+        43.dp
+    else
+        64.dp
     CircularProgressIndicator(
-        modifier = modifier.size(64.dp),
+        modifier = modifier.size(size),
         color = MaterialTheme.colorScheme.secondary,
         trackColor = MaterialTheme.colorScheme.surfaceVariant
     )
@@ -50,6 +60,6 @@ fun LoadingCircle(
 
 @Preview
 @Composable
-fun LoadingCirclePreview() {
+private fun LoadingCirclePreview() {
     LoadingCircle()
 }

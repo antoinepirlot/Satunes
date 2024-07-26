@@ -32,6 +32,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -41,13 +42,14 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import io.github.antoinepirlot.satunes.ui.ScreenSizes
 
 /**
  * @author Antoine Pirlot on 10/04/2024
  */
 
 @Composable
-fun Title(
+internal fun Title(
     modifier: Modifier = Modifier,
     bottomPadding: Dp = 16.dp,
     text: String,
@@ -63,10 +65,16 @@ fun Title(
             TextAlign.Right -> Alignment.CenterEnd
             else -> Alignment.CenterStart
         }
+    val screenWidthDp = LocalConfiguration.current.screenWidthDp
+
     val textStyle = TextStyle(
         fontWeight = fontWeight,
         textAlign = textAlign,
-        fontSize = fontSize
+        fontSize = if (screenWidthDp < ScreenSizes.VERY_VERY_SMALL)
+            fontSize / 2
+        else if (screenWidthDp < ScreenSizes.VERY_SMALL)
+            fontSize / 1.5
+        else fontSize
     )
     Box(modifier = modifier.fillMaxWidth()) {
         Text(
@@ -83,6 +91,6 @@ fun Title(
 
 @Preview
 @Composable
-fun TitlePreview() {
+private fun TitlePreview() {
     Title(text = "Hello World!")
 }

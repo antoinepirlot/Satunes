@@ -32,11 +32,11 @@ import io.github.antoinepirlot.satunes.database.models.BarSpeed
  */
 
 internal val availableSpeeds: List<BarSpeed> = listOf(
-    BarSpeed.REAL_TIME,
-    BarSpeed.VERY_FAST,
-    BarSpeed.FAST,
-    BarSpeed.NORMAL,
-    BarSpeed.BIT_SLOW,
+    BarSpeed.VERY_SLOW,
     BarSpeed.SLOW,
-    BarSpeed.VERY_SLOW
+    BarSpeed.BIT_SLOW,
+    BarSpeed.NORMAL,
+    BarSpeed.FAST,
+    BarSpeed.VERY_FAST,
+    BarSpeed.REAL_TIME,
 )

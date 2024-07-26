@@ -179,7 +179,7 @@ internal class MainActivity : ComponentActivity() {
 //                                        uri = it
 //                                    )
 //                                playlistsToExport = arrayOf()
-                                DatabaseManager.getInstance().exportAllPlaylists(
+                                DatabaseManager.getInstance().exportPlaylists(
                                     context = this@MainActivity.applicationContext,
                                     uri = it
                                 )

@@ -222,29 +222,9 @@ class DatabaseManager private constructor(context: Context) {
         return this.playlistDao.getPlaylistsWithMusics()
     }
 
-    fun exportAllPlaylists(context: Context, uri: Uri) {
+    fun exportPlaylists(context: Context, uri: Uri) {
         val playlistsWithMusics: List<PlaylistWithMusics> = _instance.getAllPlaylistWithMusics()
         val json: String = Json.encodeToString(playlistsWithMusics)
-        exportJson(context = context, json = json, uri = uri)
-    }
-
-    fun exportPlaylists(context: Context, vararg playlists: Playlist, uri: Uri) {
-        val playlistsDBs: MutableList<PlaylistDB> = mutableListOf()
-        playlists.forEach { playlist: Playlist ->
-            playlistsDBs.add(element = PlaylistDB(id = playlist.id, title = playlist.title))
-        }
-
-        var json = "{\"$PLAYLIST_JSON_OBJECT_NAME\":["
-        playlistsDBs.forEach { playlistDB: PlaylistDB ->
-            json += Json.encodeToString(playlistDB) + ',' +
-                    "\"$MUSICS_JSON_OBJECT_NAME\": ["
-            playlistDB.playlist!!.getMusicSet().forEach { music: Music ->
-                val musicDB = MusicDB(id = music.id, absolutePath = music.absolutePath)
-                json += Json.encodeToString(musicDB) + ','
-            }
-            json += "],"
-        }
-        json += "]}"
         exportJson(context = context, json = json, uri = uri)
     }
 

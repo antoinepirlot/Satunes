@@ -183,7 +183,7 @@ internal fun MediaCard(
                     if (media is Album) {
                         Subtitle(text = media.artist.title)
                     } else if (media is Music) {
-                        Subtitle(text = media.artist.title)
+                        Subtitle(text = media.album.title + " - " + media.artist.title)
                     }
                 }
             },
@@ -287,7 +287,7 @@ private fun getRightIconAndDescription(media: MediaImpl): SatunesIcons {
 @Composable
 @Preview
 private fun CardPreview() {
-    val artist: Artist = Artist(title = "Artist Title")
+    val artist = Artist(title = "Artist Title")
     val music = Music(
         id = 1,
         title = "",

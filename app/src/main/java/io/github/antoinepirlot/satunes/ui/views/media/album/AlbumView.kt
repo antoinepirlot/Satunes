@@ -163,7 +163,7 @@ private fun Header(
                         navController = navController
                     )
                 },
-            text = album.artist!!.title
+            text = album.artist.title
         )
     }
 }

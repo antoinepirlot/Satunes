@@ -55,7 +55,7 @@ internal data class MusicDB(
     @Ignore
     @Transient
     var music: Music? = try {
-        DataManager.getMusic(musicId = this.id)
+        DataManager.getMusic(id = this.id)
     } catch (_: MusicNotFoundException) {
         // Happens when importing playlistDB
         null

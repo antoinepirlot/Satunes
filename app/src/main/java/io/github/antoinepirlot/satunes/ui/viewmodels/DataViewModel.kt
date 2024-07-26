@@ -75,11 +75,11 @@ class DataViewModel : ViewModel() {
     fun getMusicSet(): Set<Music> = DataManager.getMusicSet()
     fun getPlaylistSet(): Set<Playlist> = DataManager.getPlaylistSet()
 
-    fun getFolder(id: Long): Folder = DataManager.getFolder(id = id)
-    fun getArtist(id: Long): Artist = DataManager.getArtist(id = id)
-    fun getAlbum(id: Long): Album = DataManager.getAlbum(id = id)
-    fun getGenre(id: Long): Genre = DataManager.getGenre(id = id)
-    fun getPlaylist(id: Long): Playlist = DataManager.getPlaylist(id = id)
+    fun getFolder(id: Long): Folder = DataManager.getFolder(id = id)!!
+    fun getArtist(id: Long): Artist = DataManager.getArtist(id = id)!!
+    fun getAlbum(id: Long): Album = DataManager.getAlbum(id = id)!!
+    fun getGenre(id: Long): Genre = DataManager.getGenre(id = id)!!
+    fun getPlaylist(id: Long): Playlist = DataManager.getPlaylist(id = id)!!
 
     fun insertMusicToPlaylists(
         scope: CoroutineScope,

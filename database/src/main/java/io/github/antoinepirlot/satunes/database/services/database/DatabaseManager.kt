@@ -332,7 +332,7 @@ class DatabaseManager(context: Context) {
                     ?: return
             removeMusicFromPlaylist(
                 music = music,
-                playlist = DataManager.getPlaylist(id = likesPlaylist.id)
+                playlist = DataManager.getPlaylist(id = likesPlaylist.id)!!
             )
             musicDao.unlike(musicId = music.id)
         } catch (e: Exception) {

@@ -44,7 +44,6 @@ import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.ui.components.dialog.playlist.options.ExportPlaylistOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.playlist.options.RemovePlaylistOption
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 import io.github.antoinepirlot.satunes.ui.local.LocalMainScope
@@ -100,8 +99,6 @@ internal fun PlaylistOptionsDialog(
                     playlistToRemove = playlist,
                     onDismissRequest = onDismissRequest
                 )
-
-                ExportPlaylistOption(playlistToExport = playlist)
             }
         },
         onDismissRequest = onDismissRequest,

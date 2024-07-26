@@ -59,7 +59,7 @@ import kotlinx.serialization.json.Json
 /**
  * @author Antoine Pirlot on 27/03/2024
  */
-class DatabaseManager(context: Context) {
+class DatabaseManager private constructor(context: Context) {
 
     private val database: SatunesDatabase = SatunesDatabase.getDatabase(context = context)
     private val musicDao: MusicDAO = database.musicDao()
@@ -68,8 +68,22 @@ class DatabaseManager(context: Context) {
     private val _logger = SatunesLogger.getLogger()
 
     companion object {
-        private const val PLAYLIST_JSON_OBJECT_NAME = "all_playlists"
+        private lateinit var _instance: DatabaseManager
         val importingPlaylist: MutableState<Boolean> = mutableStateOf(false)
+
+        fun getInstance(): DatabaseManager {
+            if (!this::_instance.isInitialized) {
+                throw IllegalStateException("The DatabaseManager has not been initialized")
+            }
+            return _instance
+        }
+
+        fun initInstance(context: Context): DatabaseManager {
+            if (!this::_instance.isInitialized) {
+                this._instance = DatabaseManager(context = context)
+            }
+            return this._instance
+        }
     }
 
     internal fun loadAllPlaylistsWithMusic() {
@@ -106,7 +120,7 @@ class DatabaseManager(context: Context) {
             try {
                 musicsPlaylistsRelDAO.insert(musicsPlaylistsRel)
                 try {
-                    musicDao.insert(MusicDB(id = music.id))
+                    musicDao.insert(MusicDB(id = music.id, absolutePath = music.absolutePath))
                 } catch (e: SQLiteConstraintException) {
                     _logger.warning(e.message)
                     // Do nothing
@@ -174,7 +188,7 @@ class DatabaseManager(context: Context) {
         )
         playlist.removeMusic(music = music)
         if (!musicsPlaylistsRelDAO.isMusicInPlaylist(musicId = music.id)) {
-            musicDao.delete(MusicDB(id = music.id))
+            musicDao.delete(MusicDB(id = music.id, absolutePath = music.absolutePath))
         }
     }
 
@@ -202,17 +216,13 @@ class DatabaseManager(context: Context) {
         }
     }
 
-    fun exportPlaylists(context: Context, vararg playlists: Playlist, uri: Uri) {
-        val playlistsDBs: MutableList<PlaylistDB> = mutableListOf()
-        playlists.forEach { playlist: Playlist ->
-            playlistsDBs.add(element = PlaylistDB(id = playlist.id, title = playlist.title))
-        }
+    private fun getAllPlaylistWithMusics(): List<PlaylistWithMusics> {
+        return this.playlistDao.getPlaylistsWithMusics()
+    }
 
-        var json = "{\"$PLAYLIST_JSON_OBJECT_NAME\":["
-        playlistsDBs.forEach { playlistDB: PlaylistDB ->
-            json += Json.encodeToString(playlistDB) + ','
-        }
-        json += "]}"
+    fun exportPlaylists(context: Context, uri: Uri) {
+        val playlistsWithMusics: List<PlaylistWithMusics> = _instance.getAllPlaylistWithMusics()
+        val json: String = Json.encodeToString(playlistsWithMusics)
         exportJson(context = context, json = json, uri = uri)
     }
 
@@ -251,35 +261,14 @@ class DatabaseManager(context: Context) {
                     )
                     return@launch
                 }
-                var json: String =
-                    readTextFromUri(context = context, uri = uri, showToast = true)
-                        ?: throw Exception()
-                if (!json.startsWith("{\"$PLAYLIST_JSON_OBJECT_NAME\":[") && !json.endsWith("]}")) {
-                    throw IllegalArgumentException("It is not the correct file")
-                }
-                json = json.split("{\"all_playlists\":[")[1]
-                json = json.removeSuffix(",]}")
-                if (json.isBlank()) {
-                    throw IllegalArgumentException("JSON file is blank")
-                }
-                var playlistList: List<String> = json.split("\"playlistDB\":")
-                playlistList = playlistList.subList(fromIndex = 1, toIndex = playlistList.size)
-                playlistList.forEach { s: String ->
-                    json = "{\"playlistDB\":" + s.removeSuffix(",{")
-                    val playlistWithMusics: PlaylistWithMusics = Json.decodeFromString(json)
-                    importPlaylistToDatabase(playlistWithMusics = playlistWithMusics)
-                }
+                val json: String = readTextFromUri(context = context, uri = uri, showToast = true)
+                    ?: throw Exception()
+                val playlistWithMusics: List<PlaylistWithMusics> = Json.decodeFromString(json)
+                importPlaylistToDatabase(playlistWithMusicsList = playlistWithMusics)
                 showToastOnUiThread(
                     context = context,
                     message = context.getString(R.string.importing_success)
                 )
-            } catch (e: IllegalArgumentException) {
-                showToastOnUiThread(
-                    context = context,
-                    message = context.getString(R.string.importing_failed)
-                )
-                logger.warning(e.message)
-                e.printStackTrace()
             } catch (e: Throwable) {
                 logger.severe(e.message)
                 throw e
@@ -290,18 +279,21 @@ class DatabaseManager(context: Context) {
     }
 
     @Throws(NullPointerException::class)
-    private fun importPlaylistToDatabase(playlistWithMusics: PlaylistWithMusics) {
-        playlistWithMusics.playlistDB.id = 0
-        playlistWithMusics.id = 0
-
-        val musicList: MutableList<Music> = mutableListOf()
-        playlistWithMusics.musics.forEach { musicDB: MusicDB ->
-            musicList.add(musicDB.music!!)
+    private fun importPlaylistToDatabase(playlistWithMusicsList: List<PlaylistWithMusics>) {
+        playlistWithMusicsList.forEach { playlistWithMusics: PlaylistWithMusics ->
+            val musicList: MutableList<Music> = mutableListOf()
+            playlistWithMusics.musics.forEach { musicDB: MusicDB ->
+                musicList.add(musicDB.music!!)
+            }
+            try {
+                addOnePlaylist(
+                    playlistTitle = playlistWithMusics.playlistDB.title, // TODO issue
+                    musicList = musicList,
+                )
+            } catch (_: PlaylistAlreadyExistsException) {
+                /* Do nothing */
+            }
         }
-        addOnePlaylist(
-            playlistTitle = playlistWithMusics.playlistDB.playlist!!.title, // TODO issue
-            musicList = musicList,
-        )
     }
 
     fun like(music: Music) {
@@ -310,7 +302,7 @@ class DatabaseManager(context: Context) {
                 playlistDao.getPlaylistWithMusics(title = LIKES_PLAYLIST_TITLE)
             if (likesPlaylist == null) {
                 addOnePlaylist(
-                    musicList = mutableListOf(MusicDB(id = music.id).music!!),
+                    musicList = mutableListOf(music),
                     playlistTitle = LIKES_PLAYLIST_TITLE
                 )
                 throw LikesPlaylistCreationException()

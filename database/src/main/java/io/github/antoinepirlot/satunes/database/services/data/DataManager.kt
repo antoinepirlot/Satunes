@@ -46,6 +46,7 @@ object DataManager {
     // All public map and sortedmap has bool state to recompose as Map are not supported for recomposition
     private val musicSortedSet: SortedSet<Music> = sortedSetOf()
     private val musicMapById: MutableMap<Long, Music> = mutableMapOf()
+    private val musicMapByAbsolutePath: MutableMap<String, Music> = mutableMapOf()
 
     private val rootFolderSortedSet: SortedSet<Folder> = sortedSetOf()
     private val folderMapById: MutableMap<Long, Folder> = mutableMapOf()
@@ -76,6 +77,10 @@ object DataManager {
         }
     }
 
+    fun getMusic(absolutePath: String): Music {
+        return musicMapByAbsolutePath[absolutePath]!!
+    }
+
     fun getMusicSet(): Set<Music> {
         return this.musicSortedSet
     }
@@ -84,6 +89,7 @@ object DataManager {
         if (this.musicMapById[music.id] == null) {
             this.musicSortedSet.add(element = music)
             this.musicMapById[music.id] = music
+            this.musicMapByAbsolutePath[music.absolutePath] = music
         }
         return getMusic(id = music.id)
     }

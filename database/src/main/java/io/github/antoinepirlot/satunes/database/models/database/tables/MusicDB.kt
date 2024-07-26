@@ -43,8 +43,10 @@ import kotlinx.serialization.Transient
 @Serializable
 @Entity("musics")
 internal data class MusicDB(
-    @PrimaryKey
-    @ColumnInfo("music_id") override val id: Long,
+    @Transient
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo("music_id") override val id: Long = 0,
+    @ColumnInfo("absolute_path") var absolutePath: String,
 ) : Media {
     @Ignore
     @Transient
@@ -55,7 +57,7 @@ internal data class MusicDB(
     @Ignore
     @Transient
     var music: Music? = try {
-        DataManager.getMusic(id = this.id)
+        DataManager.getMusic(absolutePath = absolutePath)
     } catch (_: MusicNotFoundException) {
         // Happens when importing playlistDB
         null

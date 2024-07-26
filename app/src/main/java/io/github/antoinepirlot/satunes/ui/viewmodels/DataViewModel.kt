@@ -60,7 +60,7 @@ class DataViewModel : ViewModel() {
     private val _logger: SatunesLogger = SatunesLogger.getLogger()
     private val _playlistSetUpdated: MutableState<Boolean> = DataManager.playlistsMapUpdated
     private val _db: DatabaseManager =
-        DatabaseManager(context = MainActivity.instance.applicationContext)
+        DatabaseManager.initInstance(context = MainActivity.instance.applicationContext)
 
     var playlistSetUpdated: Boolean by _playlistSetUpdated
         private set

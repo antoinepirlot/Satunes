@@ -102,7 +102,7 @@ internal fun SettingsView(
                 }
             )
             SettingButton(
-                text = stringResource(id = RDb.string.playlists) + " (Beta)",
+                text = stringResource(id = RDb.string.playlists),
                 icon = SatunesIcons.PLAYLIST,
                 onClick = {
                     navController.navigate(Destination.PLAYLISTS_SETTINGS.link)

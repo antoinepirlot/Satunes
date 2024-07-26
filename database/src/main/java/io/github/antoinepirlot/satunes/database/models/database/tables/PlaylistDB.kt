@@ -44,6 +44,7 @@ import kotlinx.serialization.Transient
 @Serializable
 @Entity(tableName = "playlists", indices = [Index(value = ["title"], unique = true)])
 internal data class PlaylistDB(
+    @Transient
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "playlist_id") override var id: Long = 0,
     @ColumnInfo(name = "title") override var title: String,

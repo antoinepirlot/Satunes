@@ -73,7 +73,7 @@ internal fun PlaylistsSettingsView(
     ) {
         Title(text = stringResource(id = RDb.string.playlists))
         NormalText(
-            text = stringResource(id = R.string.playlist_beta_info),
+            text = stringResource(id = R.string.playlists_settings_content),
             maxLines = Int.MAX_VALUE
         )
         Row {

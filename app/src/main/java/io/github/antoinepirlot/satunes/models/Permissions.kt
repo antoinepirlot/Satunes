@@ -42,14 +42,3 @@ internal enum class Permissions(val stringId: Int, val value: String) {
         value = READ_EXTERNAL_STORAGE
     ),
 }
-
-internal val permissionsList: List<Permissions> =
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        listOf(
-            Permissions.READ_AUDIO_PERMISSION,
-        )
-    } else {
-        listOf(
-            Permissions.READ_EXTERNAL_STORAGE_PERMISSION,
-        )
-    }

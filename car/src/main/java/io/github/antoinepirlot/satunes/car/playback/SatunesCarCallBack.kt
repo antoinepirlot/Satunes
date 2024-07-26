@@ -137,13 +137,10 @@ internal object SatunesCarCallBack : MediaSessionCompat.Callback() {
      */
     private fun loadMusic() {
         val selectedTab: ScreenPages = RouteManager.getSelectedTab()
-        val isShuffleButtonSelected: Boolean = RouteManager.isShuffleButtonSelected()
         val playbackController: PlaybackController = PlaybackController.getInstance()
         var musicToPlay: Music? = null
-        val musicSet: Set<Music> = if (isShuffleButtonSelected) {
-            DataManager.getMusicSet()
-        } else {
-            val selectedMediaImpl: MediaImpl = RouteManager.getSelectedMediaImpl()
+        val selectedMediaImpl: MediaImpl = RouteManager.getSelectedMediaImpl()
+        val musicSet: Set<Music> =
             when (selectedTab) {
                 ScreenPages.ALL_FOLDERS -> selectedMediaImpl.getMusicSet()
                 ScreenPages.ALL_ALBUMS -> selectedMediaImpl.getMusicSet()
@@ -156,10 +153,9 @@ internal object SatunesCarCallBack : MediaSessionCompat.Callback() {
                     DataManager.getMusicSet()
                 }
             }
-        }
         playbackController.loadMusic(
             musicSet = musicSet,
-            shuffleMode = isShuffleButtonSelected,
+            shuffleMode = RouteManager.isShuffleButtonSelected(),
             musicToPlay = musicToPlay
         )
         loadInQueue(musicSet = musicSet)

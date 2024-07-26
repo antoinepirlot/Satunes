@@ -82,9 +82,10 @@ internal object SatunesCarCallBack : MediaSessionCompat.Callback() {
     }
 
     override fun onPlayFromMediaId(mediaId: String, extras: Bundle?) {
-        RouteManager.selectMedia(route = mediaId)
+        RouteManager.setShuffleButtonSelected(selected = true)
         val shuffleMode: Boolean = RouteManager.isShuffleButtonSelected()
         loadMusic()
+        RouteManager.setShuffleButtonSelected(selected = false)
         val playbackController: PlaybackController = PlaybackController.getInstance()
         var musicToPlay: Music? = null
         if (!shuffleMode) {
@@ -139,9 +140,10 @@ internal object SatunesCarCallBack : MediaSessionCompat.Callback() {
         val selectedTab: ScreenPages = RouteManager.getSelectedTab()
         val playbackController: PlaybackController = PlaybackController.getInstance()
         var musicToPlay: Music? = null
-        val selectedMediaImpl: MediaImpl = RouteManager.getSelectedMediaImpl()
-        val musicSet: Set<Music> =
-            when (selectedTab) {
+        val selectedMediaImpl: MediaImpl? = RouteManager.getSelectedMediaImpl()
+        var musicSet: Set<Music> = DataManager.getMusicSet()
+        if (selectedMediaImpl != null) {
+            musicSet = when (selectedTab) {
                 ScreenPages.ALL_FOLDERS -> selectedMediaImpl.getMusicSet()
                 ScreenPages.ALL_ALBUMS -> selectedMediaImpl.getMusicSet()
                 ScreenPages.ALL_ARTISTS -> selectedMediaImpl.getMusicSet()
@@ -150,9 +152,10 @@ internal object SatunesCarCallBack : MediaSessionCompat.Callback() {
                 ScreenPages.ALL_MUSICS -> DataManager.getMusicSet()
                 else -> {
                     musicToPlay = selectedMediaImpl as Music
-                    DataManager.getMusicSet()
+                    musicSet
                 }
             }
+        }
         playbackController.loadMusic(
             musicSet = musicSet,
             shuffleMode = RouteManager.isShuffleButtonSelected(),

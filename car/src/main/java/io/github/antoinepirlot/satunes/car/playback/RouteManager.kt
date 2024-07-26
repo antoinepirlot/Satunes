@@ -28,12 +28,14 @@ package io.github.antoinepirlot.satunes.car.playback
 import io.github.antoinepirlot.satunes.car.pages.ScreenPages
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
+import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 
 /**
  * @author Antoine Pirlot on 17/03/2024
  */
 internal object RouteManager {
     private const val DEFAULT_IS_SHUFFLE_BUTTON_SELECTED: Boolean = false
+    private val _logger: SatunesLogger = SatunesLogger.getLogger()
     private var _selectedTab: ScreenPages? = null
     private var _selectedMediaImpl: MediaImpl? = null
     private var _isShuffleButtonSelected: Boolean = DEFAULT_IS_SHUFFLE_BUTTON_SELECTED
@@ -49,13 +51,6 @@ internal object RouteManager {
     }
 
     fun selectMedia(route: String) {
-        if (route == SatunesCarMusicService.SHUFFLE_ID) {
-            this._isShuffleButtonSelected = true
-            return
-        } else {
-            this._isShuffleButtonSelected = false
-        }
-
         try {
             val mediaId: Long = route.toLong()
             //This is a media other than music
@@ -66,11 +61,15 @@ internal object RouteManager {
         }
     }
 
-    fun getSelectedMediaImpl(): MediaImpl = this._selectedMediaImpl!!
+    fun getSelectedMediaImpl(): MediaImpl? = this._selectedMediaImpl
 
     fun getSelectedTab(): ScreenPages = this._selectedTab!!
 
     fun isShuffleButtonSelected(): Boolean = this._isShuffleButtonSelected
+
+    fun setShuffleButtonSelected(selected: Boolean) {
+        this._isShuffleButtonSelected = selected
+    }
 
     private fun getTab(route: String): ScreenPages {
         return when (route) {
@@ -87,16 +86,21 @@ internal object RouteManager {
     }
 
     private fun getSelectedMediaImpl(mediaId: Long): MediaImpl {
-        return when (_selectedTab) {
-            ScreenPages.ALL_FOLDERS -> DataManager.getFolder(id = mediaId)
-            ScreenPages.ALL_ALBUMS -> DataManager.getAlbum(id = mediaId)
-            ScreenPages.ALL_ARTISTS -> DataManager.getAlbum(id = mediaId)
-            ScreenPages.ALL_GENRES -> DataManager.getGenre(id = mediaId)
-            ScreenPages.ALL_PLAYLISTS -> DataManager.getPlaylist(id = mediaId)
-            ScreenPages.ALL_MUSICS -> DataManager.getMusic(id = mediaId)
-            else -> {
-                throw IllegalStateException("The selected tab is not a media tab")
+        try {
+            return when (_selectedTab) {
+                ScreenPages.ALL_FOLDERS -> DataManager.getFolder(id = mediaId)
+                ScreenPages.ALL_ALBUMS -> DataManager.getAlbum(id = mediaId)
+                ScreenPages.ALL_ARTISTS -> DataManager.getArtist(id = mediaId)
+                ScreenPages.ALL_GENRES -> DataManager.getGenre(id = mediaId)
+                ScreenPages.ALL_PLAYLISTS -> DataManager.getPlaylist(id = mediaId)
+                ScreenPages.ALL_MUSICS -> DataManager.getMusic(id = mediaId)
+                else -> {
+                    throw IllegalStateException("The selected tab is not a media tab")
+                }
             }
+        } catch (e: Throwable) {
+            _logger.severe(e.message ?: "An error occurred while getting selected media impl.")
+            throw e
         }
     }
 }

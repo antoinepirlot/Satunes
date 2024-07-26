@@ -45,6 +45,7 @@ import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 /**
@@ -58,6 +59,8 @@ internal object SatunesCarCallBack : MediaSessionCompat.Callback() {
 
     internal const val ACTION_SHUFFLE = "ACTION_SHUFFLE"
     internal const val ACTION_REPEAT = "ACTION_REPEAT"
+
+    private lateinit var _job: Job
 
     override fun onPlay() {
         val playbackController: PlaybackController = PlaybackController.getInstance()
@@ -136,18 +139,22 @@ internal object SatunesCarCallBack : MediaSessionCompat.Callback() {
      * Load music from the last route deque route.
      */
     private fun loadMusic(shuffleMode: Boolean = false) {
-        SatunesCarMusicService.updateQueue()
         val lastRoute: String = SatunesCarMusicService.routeDeque.last()
         val playbackController: PlaybackController = PlaybackController.getInstance()
+        var musicSet: Set<Music> = setOf()
         try {
-            loadMusicFromMedia(shuffleMode = shuffleMode, mediaId = lastRoute.toLong())
+            musicSet = loadMusicFromMedia(shuffleMode = shuffleMode, mediaId = lastRoute.toLong())
         } catch (e: NumberFormatException) {
-            val musicSet: Set<Music> = DataManager.getMusicSet()
+            musicSet = DataManager.getMusicSet()
             playbackController.loadMusic(
                 musicSet = musicSet,
                 shuffleMode = shuffleMode
             )
-            CoroutineScope(Dispatchers.IO).launch {
+        } finally {
+            if (this::_job.isInitialized) {
+                _job.cancel()
+            }
+            _job = CoroutineScope(Dispatchers.IO).launch {
                 SatunesCarMusicService.resetQueue()
                 musicSet.forEach { music: Music ->
                     SatunesCarMusicService.addToQueue(media = music)
@@ -160,7 +167,7 @@ internal object SatunesCarCallBack : MediaSessionCompat.Callback() {
     /**
      * Load musics from the media matching mediaId according to the last route deque route
      */
-    private fun loadMusicFromMedia(shuffleMode: Boolean, mediaId: Long) {
+    private fun loadMusicFromMedia(shuffleMode: Boolean, mediaId: Long): Set<Music> {
         val playbackController: PlaybackController = PlaybackController.getInstance()
         val routeDeque: RouteDeque = SatunesCarMusicService.routeDeque
         var musicToPlay: Music? = null
@@ -202,5 +209,6 @@ internal object SatunesCarCallBack : MediaSessionCompat.Callback() {
             shuffleMode = shuffleMode,
             musicToPlay = musicToPlay
         )
+        return musicSet
     }
 }

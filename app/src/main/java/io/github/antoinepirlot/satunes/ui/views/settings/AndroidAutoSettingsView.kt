@@ -52,7 +52,7 @@ internal fun AndroidAutoSettingsView(
         .verticalScroll(scrollState)) {
         Title(text = "Android Auto")
         NormalText(
-            text = stringResource(id = R.string.android_auto_tuto),
+            text = stringResource(id = R.string.android_auto_content),
             maxLines = Int.MAX_VALUE
         )
     }

@@ -61,7 +61,6 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
     private lateinit var _logger: SatunesLogger
 
     companion object {
-        val routeDeque: RouteDeque = RouteDeque()
         lateinit var session: MediaSessionCompat
 
         private val loadedQueueItemList: MutableList<QueueItem> = mutableListOf()
@@ -102,7 +101,7 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
         sessionToken = session.sessionToken
         session.setCallback(SatunesCarCallBack)
 
-        routeDeque.resetRouteDeque()
+        RouteManager.reset()
         loadAllPlaybackData()
     }
 
@@ -147,53 +146,49 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
         val children: List<MediaItem>
         when (parentId) {
             ScreenPages.ROOT.id -> {
-                routeDeque.resetRouteDeque()
+                RouteManager.reset()
                 children = getHomeScreenBars()
             }
 
             ScreenPages.ALL_FOLDERS.id -> {
-                routeDeque.resetRouteDeque()
-                routeDeque.addLast(parentId)
+                RouteManager.reset()
+                RouteManager.selectMedia(parentId)
                 children = getAllMediaItem(mediaList = DataManager.getFolderSet())
             }
 
             ScreenPages.ALL_ARTISTS.id -> {
-                routeDeque.resetRouteDeque()
-                routeDeque.addLast(parentId)
+                RouteManager.reset()
+                RouteManager.selectMedia(parentId)
                 children = getAllMediaItem(mediaList = DataManager.getArtistSet())
             }
 
             ScreenPages.ALL_ALBUMS.id -> {
-                routeDeque.resetRouteDeque()
-                routeDeque.addLast(parentId)
+                RouteManager.reset()
+                RouteManager.selectMedia(parentId)
                 children = getAllMediaItem(mediaList = DataManager.getAlbumSet())
             }
 
             ScreenPages.ALL_GENRES.id -> {
-                routeDeque.resetRouteDeque()
-                routeDeque.addLast(parentId)
+                RouteManager.reset()
+                RouteManager.selectMedia(parentId)
                 children = getAllMediaItem(mediaList = DataManager.getGenreSet())
             }
 
             ScreenPages.ALL_MUSICS.id -> {
-                routeDeque.resetRouteDeque()
-                routeDeque.addLast(parentId)
+                RouteManager.reset()
+                RouteManager.selectMedia(parentId)
                 children = getAllMediaItem(mediaList = DataManager.getMusicSet())
             }
 
             ScreenPages.ALL_PLAYLISTS.id -> {
-                routeDeque.resetRouteDeque()
-                routeDeque.addLast(parentId)
+                RouteManager.reset()
+                RouteManager.selectMedia(parentId)
                 children = getAllMediaItem(mediaList = DataManager.getPlaylistSet())
             }
 
             else -> {
                 //When a music is selected, loadChildren is not called, so it's never a music
-                if (routeDeque.isEmpty()) {
-                    result.sendResult(null)
-                    return
-                }
-                routeDeque.addLast(parentId)
+                RouteManager.selectMedia(parentId)
                 children = getAllMediaItem(mediaId = parentId.toLong())
             }
         }
@@ -266,18 +261,14 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
      * @return a mutable list of media item.
      */
     private fun getAllMediaItem(mediaId: Long): List<MediaItem> {
-        val oneBeforeLastRoute: String = routeDeque.oneBeforeLast()
-        if (oneBeforeLastRoute == ScreenPages.ROOT.id || oneBeforeLastRoute == ScreenPages.ALL_MUSICS.id) {
-            throw IllegalStateException("An error occurred in the route processing")
-        }
-
+        val selectedTab: ScreenPages = RouteManager.getSelectedTab()
         val mediaImpl: MediaImpl? = try {
-            when (oneBeforeLastRoute) {
-                ScreenPages.ALL_FOLDERS.id -> DataManager.getFolder(id = mediaId)
-                ScreenPages.ALL_ARTISTS.id -> DataManager.getArtist(id = mediaId)
-                ScreenPages.ALL_ALBUMS.id -> DataManager.getAlbum(id = mediaId)
-                ScreenPages.ALL_GENRES.id -> DataManager.getGenre(id = mediaId)
-                ScreenPages.ALL_PLAYLISTS.id -> DataManager.getPlaylist(id = mediaId)
+            when (selectedTab) {
+                ScreenPages.ALL_FOLDERS -> DataManager.getFolder(id = mediaId)
+                ScreenPages.ALL_ARTISTS -> DataManager.getArtist(id = mediaId)
+                ScreenPages.ALL_ALBUMS -> DataManager.getAlbum(id = mediaId)
+                ScreenPages.ALL_GENRES -> DataManager.getGenre(id = mediaId)
+                ScreenPages.ALL_PLAYLISTS -> DataManager.getPlaylist(id = mediaId)
                 else -> null
             }
         } catch (_: NullPointerException) {

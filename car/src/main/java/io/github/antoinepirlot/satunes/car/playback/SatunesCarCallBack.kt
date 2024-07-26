@@ -35,6 +35,7 @@ import android.support.v4.media.session.PlaybackStateCompat.ACTION_SKIP_TO_PREVI
 import android.support.v4.media.session.PlaybackStateCompat.STATE_PAUSED
 import android.support.v4.media.session.PlaybackStateCompat.STATE_PLAYING
 import io.github.antoinepirlot.satunes.car.pages.ScreenPages
+import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
@@ -86,7 +87,7 @@ internal object SatunesCarCallBack : MediaSessionCompat.Callback() {
         val playbackController: PlaybackController = PlaybackController.getInstance()
         var musicToPlay: Music? = null
         if (!shuffleMode) {
-            musicToPlay = DataManager.getMusic(musicId = mediaId.toLong())
+            musicToPlay = DataManager.getMusic(id = mediaId.toLong())
         }
         playbackController.start(musicToPlay = musicToPlay)
     }
@@ -134,31 +135,23 @@ internal object SatunesCarCallBack : MediaSessionCompat.Callback() {
      * Load music from the last route deque route.
      */
     private fun loadMusic(shuffleMode: Boolean = false) {
-        val lastRoute: String = SatunesCarMusicService.routeDeque.last()
+        val selectedTab: ScreenPages = RouteManager.getSelectedTab()
+        val isShuffleButtonSelected: Boolean = RouteManager.isShuffleButtonSelected()
         val playbackController: PlaybackController = PlaybackController.getInstance()
         var musicToPlay: Music? = null
-        val musicSet: Set<Music> = if (lastRoute == SatunesCarMusicService.SHUFFLE_ID) {
+        val musicSet: Set<Music> = if (isShuffleButtonSelected) {
             DataManager.getMusicSet()
         } else {
-            when (lastRoute) {
-                ScreenPages.ALL_FOLDERS.id -> DataManager.getFolder(id = lastRoute.toLong())
-                    .getMusicSet()
-
-                ScreenPages.ALL_ALBUMS.id -> DataManager.getAlbum(id = lastRoute.toLong())
-                    .getMusicSet()
-
-                ScreenPages.ALL_ARTISTS.id -> DataManager.getArtist(id = lastRoute.toLong())
-                    .getMusicSet()
-
-                ScreenPages.ALL_GENRES.id -> DataManager.getGenre(id = lastRoute.toLong())
-                    .getMusicSet()
-
-                ScreenPages.ALL_PLAYLISTS.id -> DataManager.getPlaylist(lastRoute.toLong())
-                    .getMusicSet()
-
-                ScreenPages.ALL_MUSICS.id -> DataManager.getMusicSet()
+            val selectedMediaImpl: MediaImpl = RouteManager.getSelectedMediaImpl()
+            when (selectedTab) {
+                ScreenPages.ALL_FOLDERS -> selectedMediaImpl.getMusicSet()
+                ScreenPages.ALL_ALBUMS -> selectedMediaImpl.getMusicSet()
+                ScreenPages.ALL_ARTISTS -> selectedMediaImpl.getMusicSet()
+                ScreenPages.ALL_GENRES -> selectedMediaImpl.getMusicSet()
+                ScreenPages.ALL_PLAYLISTS -> selectedMediaImpl.getMusicSet()
+                ScreenPages.ALL_MUSICS -> DataManager.getMusicSet()
                 else -> {
-                    musicToPlay = DataManager.getMusic(musicId = lastRoute.toLong())
+                    musicToPlay = selectedMediaImpl as Music
                     DataManager.getMusicSet()
                 }
             }

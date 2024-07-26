@@ -66,13 +66,13 @@ object DataManager {
     private val playlistsSortedMap: SortedMap<Playlist, Playlist> = sortedMapOf()
     val playlistsMapUpdated: MutableState<Boolean> = mutableStateOf(false)
 
-    fun getMusic(musicId: Long): Music {
+    fun getMusic(id: Long): Music {
         try {
-            return musicMapById[musicId]!!
+            return musicMapById[id]!!
         } catch (_: NullPointerException) {
             //That means the music is not more present in the phone storage
             //Happens when the database is loaded with old informations.
-            throw MusicNotFoundException(id = musicId)
+            throw MusicNotFoundException(id = id)
         }
     }
 
@@ -85,7 +85,7 @@ object DataManager {
             this.musicSortedSet.add(element = music)
             this.musicMapById[music.id] = music
         }
-        return getMusic(musicId = music.id)
+        return getMusic(id = music.id)
     }
 
     fun getRootFolderSet(): Set<Folder> {

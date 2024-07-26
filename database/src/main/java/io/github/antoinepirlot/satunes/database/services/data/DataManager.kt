@@ -96,8 +96,8 @@ object DataManager {
         return this.folderSortedSet
     }
 
-    fun getArtist(id: Long): Artist {
-        return artistMapById[id]!!
+    fun getArtist(id: Long): Artist? {
+        return artistMapById[id]
     }
 
     fun getArtistSet(): Set<Artist> {
@@ -120,8 +120,8 @@ object DataManager {
         artistMapById.remove(artist.id)
     }
 
-    fun getAlbum(id: Long): Album {
-        return albumMapById[id]!!
+    fun getAlbum(id: Long): Album? {
+        return albumMapById[id]
     }
 
     fun getAlbumSet(): Set<Album> {
@@ -142,7 +142,7 @@ object DataManager {
         albumMapById.remove(album.id)
     }
 
-    fun getFolder(id: Long): Folder {
+    fun getFolder(id: Long): Folder? {
         return folderMapById[id]!!
     }
 
@@ -166,8 +166,8 @@ object DataManager {
         rootFolderSortedSet.remove(folder)
     }
 
-    fun getGenre(id: Long): Genre {
-        return genreMapById[id]!!
+    fun getGenre(id: Long): Genre? {
+        return genreMapById[id]
     }
 
     fun getGenreSet(): Set<Genre> {
@@ -190,7 +190,7 @@ object DataManager {
     }
 
     @Throws(PlaylistNotFoundException::class)
-    fun getPlaylist(id: Long): Playlist {
+    fun getPlaylist(id: Long): Playlist? {
         try {
             return playlistsMapById[id]!!
         } catch (_: NullPointerException) {

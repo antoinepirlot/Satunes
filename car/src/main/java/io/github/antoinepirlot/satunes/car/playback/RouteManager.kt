@@ -85,7 +85,7 @@ internal object RouteManager {
         }
     }
 
-    private fun getSelectedMediaImpl(mediaId: Long): MediaImpl {
+    private fun getSelectedMediaImpl(mediaId: Long): MediaImpl? {
         try {
             return when (_selectedTab) {
                 ScreenPages.ALL_FOLDERS -> DataManager.getFolder(id = mediaId)

@@ -52,6 +52,8 @@ internal object RouteManager {
         if (route == SatunesCarMusicService.SHUFFLE_ID) {
             this._isShuffleButtonSelected = true
             return
+        } else {
+            this._isShuffleButtonSelected = false
         }
 
         try {

@@ -146,7 +146,6 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
         val children: List<MediaItem>
         when (parentId) {
             ScreenPages.ROOT.id -> {
-                RouteManager.reset()
                 children = getHomeScreenBars()
             }
 

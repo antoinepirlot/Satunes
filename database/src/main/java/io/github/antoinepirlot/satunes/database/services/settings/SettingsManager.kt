@@ -38,6 +38,7 @@ import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.media3.common.Player
+import io.github.antoinepirlot.satunes.database.models.BarSpeed
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import kotlinx.coroutines.flow.first
@@ -61,7 +62,7 @@ object SettingsManager {
         false //App stop after removed app from multi-task if false
     private const val DEFAULT_PAUSE_IF_NOISY = true
     private const val DEFAULT_INCLUDE_RINGTONES = false
-    private const val DEFAULT_BAR_SPEED_VALUE = 1f
+    private val DEFAULT_BAR_SPEED_VALUE: BarSpeed = BarSpeed.NORMAL
     private const val DEFAULT_REPEAT_MODE: Int = Player.REPEAT_MODE_OFF
     private const val DEFAULT_SHUFFLE_MODE_CHECKED: Boolean = false
     private const val DEFAULT_PAUSE_IF_ANOTHER_PLAYBACK_CHECKED: Boolean = true
@@ -126,7 +127,7 @@ object SettingsManager {
         private set
     var includeRingtonesChecked: Boolean = DEFAULT_INCLUDE_RINGTONES
         private set
-    var barSpeed: Float = DEFAULT_BAR_SPEED_VALUE
+    var barSpeed: BarSpeed = DEFAULT_BAR_SPEED_VALUE
         private set
     var repeatMode: Int = DEFAULT_REPEAT_MODE
         private set
@@ -184,7 +185,7 @@ object SettingsManager {
             includeRingtonesChecked =
                 preferences[INCLUDE_RINGTONES_KEY] ?: DEFAULT_INCLUDE_RINGTONES
 
-            barSpeed = preferences[BAR_SPEED_KEY] ?: DEFAULT_BAR_SPEED_VALUE
+            barSpeed = getBarSpeed(preferences[BAR_SPEED_KEY])
 
             repeatMode = preferences[REPEAT_MODE_KEY] ?: DEFAULT_REPEAT_MODE
 
@@ -200,6 +201,17 @@ object SettingsManager {
 
             loadFilters(context = context)
         }.first()
+    }
+
+    private fun getBarSpeed(speed: Float?): BarSpeed {
+        return when (speed) {
+            BarSpeed.REAL_TIME.speed -> BarSpeed.REAL_TIME
+            BarSpeed.FAST.speed -> BarSpeed.FAST
+            BarSpeed.NORMAL.speed -> BarSpeed.NORMAL
+            BarSpeed.SLOW.speed -> BarSpeed.SLOW
+            BarSpeed.VERY_SLOW.speed -> BarSpeed.VERY_SLOW
+            else -> DEFAULT_BAR_SPEED_VALUE
+        }
     }
 
     private suspend fun loadWhatsNew(context: Context, preferences: Preferences) {
@@ -280,10 +292,10 @@ object SettingsManager {
         }
     }
 
-    suspend fun updateBarSpeed(context: Context, newValue: Float) {
+    suspend fun updateBarSpeed(context: Context, newSpeedBar: BarSpeed) {
         context.dataStore.edit { preferences: MutablePreferences ->
-            barSpeed = newValue
-            preferences[BAR_SPEED_KEY] = barSpeed
+            barSpeed = newSpeedBar
+            preferences[BAR_SPEED_KEY] = barSpeed.speed
         }
     }
 

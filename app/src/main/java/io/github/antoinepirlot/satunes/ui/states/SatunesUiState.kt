@@ -26,6 +26,7 @@
 package io.github.antoinepirlot.satunes.ui.states
 
 import io.github.antoinepirlot.satunes.data.DEFAULT_DESTINATION
+import io.github.antoinepirlot.satunes.database.models.BarSpeed
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.ui.viewmodels.utils.isAudioAllowed
@@ -58,6 +59,6 @@ internal data class SatunesUiState(
     val shuffleMode: Boolean = SettingsManager.shuffleMode,
     val repeatMode: Int = SettingsManager.repeatMode,
     val audioOffloadChecked: Boolean = SettingsManager.audioOffloadChecked,
-    val barSpeed: Float = SettingsManager.barSpeed,
+    val barSpeed: BarSpeed = SettingsManager.barSpeed,
     val isMediaOptionsOpened: Boolean = false
 )

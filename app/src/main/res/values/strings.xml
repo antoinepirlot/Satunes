@@ -86,4 +86,5 @@
     <string name="add_to_likes_success">You like %1$s.</string>
     <string name="remove_from_likes_success">ou don\'t like %1$s anymore.</string>
     <string name="update_playlist_success">%1$s has been updated.</string>
+    <string name="bar_speed_label">Speed</string>
 </resources>

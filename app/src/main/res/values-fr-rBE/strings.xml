@@ -35,7 +35,6 @@
     <string name="exclusion_setting">Exclusion de fichiers</string>
     <string name="include_ringtones">Inclure les sonneries</string>
     <string name="bar_speed">"Vitesse de la barre de progression: "</string>
-    <string name="second">seconde</string>
     <string name="export">Exporter</string>
     <string name="export_all">Exporter tout</string>
     <string name="_import">Importer</string>

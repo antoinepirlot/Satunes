@@ -46,6 +46,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Album
+import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
@@ -175,7 +176,7 @@ private fun AlbumViewPreview() {
         navController = navController,
         album = Album(
             title = "Album title",
-            artist = null,
+            artist = Artist(title = "Artist Title"),
         )
     )
 }

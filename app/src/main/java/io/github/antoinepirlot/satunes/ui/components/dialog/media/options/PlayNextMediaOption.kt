@@ -33,6 +33,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Album
+import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.dialog.options.DialogOption
@@ -73,5 +74,9 @@ internal fun PlayNextMediaOption(
 @Preview
 @Composable
 private fun PlayNextMediaOptionPreview() {
-    PlayNextMediaOption(mediaImpl = Album(title = "Album Title"), onFinished = {})
+    PlayNextMediaOption(
+        mediaImpl = Album(
+            title = "Album Title",
+            artist = Artist(title = "Artist Title")
+        ), onFinished = {})
 }

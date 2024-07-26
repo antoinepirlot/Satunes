@@ -42,6 +42,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Album
+import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.ui.components.EmptyView
 import io.github.antoinepirlot.satunes.ui.components.texts.Title
 
@@ -94,7 +95,7 @@ internal fun AlbumGrid(
 private fun AlbumGridPreview() {
     val albumList: MutableList<Album> = mutableListOf()
     for (i: Int in 0..10) {
-        albumList.add(Album(title = "Album #$i"))
+        albumList.add(Album(title = "Album #$i", artist = Artist(title = "Artist $i")))
     }
     AlbumGrid(albumCollection = albumList, onClick = {})
 }

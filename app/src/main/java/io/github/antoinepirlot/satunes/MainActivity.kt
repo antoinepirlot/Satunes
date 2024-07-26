@@ -39,8 +39,8 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.media3.common.util.UnstableApi
-import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.database.services.data.DataCleanerManager
+import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.playback.services.PlaybackService
 import io.github.antoinepirlot.satunes.ui.utils.showSnackBar
@@ -66,7 +66,6 @@ internal class MainActivity : ComponentActivity() {
         private const val EXPORT_LOGS_CODE: Int = 3
         private const val MIME_JSON: String = "application/json"
         private const val MIME_TEXT: String = "application/text"
-        internal var playlistsToExport: Array<Playlist> = arrayOf()
         private val DEFAULT_URI: Uri =
             Uri.parse(Environment.getExternalStorageDirectory().path + '/' + Environment.DIRECTORY_DOCUMENTS)
 
@@ -125,7 +124,7 @@ internal class MainActivity : ComponentActivity() {
         snackBarHostState: SnackbarHostState,
         defaultFileName: String
     ) {
-        if (playlistsToExport.isEmpty()) {
+        if (DataManager.getPlaylistSet().isEmpty()) {
             showSnackBar(
                 scope = scope,
                 snackBarHostState = snackBarHostState,
@@ -172,13 +171,6 @@ internal class MainActivity : ComponentActivity() {
 
                         if (requestCode == EXPORT_PLAYLIST_CODE) {
                             CoroutineScope(Dispatchers.IO).launch {
-//                                DatabaseManager.getInstance()
-//                                    .exportPlaylists(
-//                                        context = this@MainActivity,
-//                                        playlists = playlistsToExport,
-//                                        uri = it
-//                                    )
-//                                playlistsToExport = arrayOf()
                                 DatabaseManager.getInstance().exportPlaylists(
                                     context = this@MainActivity.applicationContext,
                                     uri = it

@@ -68,8 +68,6 @@ class DatabaseManager private constructor(context: Context) {
     private val _logger = SatunesLogger.getLogger()
 
     companion object {
-        private const val PLAYLIST_JSON_OBJECT_NAME = "all_playlists"
-        private const val MUSICS_JSON_OBJECT_NAME = "musics"
         private lateinit var _instance: DatabaseManager
         val importingPlaylist: MutableState<Boolean> = mutableStateOf(false)
 

@@ -61,6 +61,7 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
     private lateinit var _logger: SatunesLogger
 
     companion object {
+        private const val MAX_SIZE: Int = 300
         lateinit var session: MediaSessionCompat
 
         private val loadedQueueItemList: MutableList<QueueItem> = mutableListOf()
@@ -239,7 +240,7 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
         }
         mediaItemList.add(getShuffleButton())
         for (media: MediaImpl in mediaList) {
-            if (mediaItemList.size >= 300) {
+            if (mediaItemList.size >= MAX_SIZE) {
                 break // Do not add more than 300 media as it could make android auto bugging
             }
             if (media !is Music && (media.getMusicSet().isEmpty())) {

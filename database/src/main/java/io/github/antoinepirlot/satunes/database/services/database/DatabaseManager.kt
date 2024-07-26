@@ -36,6 +36,7 @@ import io.github.antoinepirlot.satunes.database.daos.MusicDAO
 import io.github.antoinepirlot.satunes.database.daos.MusicsPlaylistsRelDAO
 import io.github.antoinepirlot.satunes.database.daos.PlaylistDAO
 import io.github.antoinepirlot.satunes.database.exceptions.BlankStringException
+import io.github.antoinepirlot.satunes.database.exceptions.LikesPlaylistCreationException
 import io.github.antoinepirlot.satunes.database.exceptions.PlaylistAlreadyExistsException
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
@@ -89,9 +90,9 @@ class DatabaseManager(context: Context) {
                     playlist.addMusic(music = musicDB.music!!)
                 }
             }
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             _logger.warning(e.message)
-            e.printStackTrace()
+            throw e
         }
     }
 
@@ -157,7 +158,7 @@ class DatabaseManager(context: Context) {
         try {
             playlistDao.update(playlistDB = playlistDB)
         } catch (e: SQLiteConstraintException) {
-            _logger.severe(e.message)
+            _logger.warning(e.message)
             throw e
         }
     }
@@ -230,7 +231,6 @@ class DatabaseManager(context: Context) {
             }
         } catch (e: Throwable) {
             _logger.severe(e.message)
-            e.printStackTrace()
             throw e
         }
     }
@@ -313,15 +313,15 @@ class DatabaseManager(context: Context) {
                     musicList = mutableListOf(MusicDB(id = music.id).music!!),
                     playlistTitle = LIKES_PLAYLIST_TITLE
                 )
-            } else {
-                insertMusicToPlaylists(
-                    music = music,
-                    playlists = listOf(likesPlaylist.playlistDB.playlist!!)
-                )
+                throw LikesPlaylistCreationException()
             }
-        } catch (e: Exception) {
-            _logger.warning(e.message)
-            e.printStackTrace()
+            insertMusicToPlaylists(
+                music = music,
+                playlists = listOf(likesPlaylist.playlistDB.playlist!!)
+            )
+        } catch (e: Throwable) {
+            _logger.severe(e.message)
+            throw e
         }
     }
 
@@ -335,9 +335,9 @@ class DatabaseManager(context: Context) {
                 playlist = DataManager.getPlaylist(id = likesPlaylist.id)!!
             )
             musicDao.unlike(musicId = music.id)
-        } catch (e: Exception) {
-            _logger.warning(e.message)
-            e.printStackTrace()
+        } catch (e: Throwable) {
+            _logger.severe(e.message)
+            throw e
         }
     }
 }

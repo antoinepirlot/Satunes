@@ -35,6 +35,7 @@ import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.exceptions.BlankStringException
+import io.github.antoinepirlot.satunes.database.exceptions.LikesPlaylistCreationException
 import io.github.antoinepirlot.satunes.database.exceptions.PlaylistAlreadyExistsException
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
@@ -122,7 +123,7 @@ class DataViewModel : ViewModel() {
                 showSnackBar(
                     scope = scope,
                     snackBarHostState = snackBarHostState,
-                    message = playlistTitle + ' ' + context.getString(R.string.add_playlist_success)
+                    message = context.getString(RDb.string.add_playlist_success, playlistTitle)
                 )
             } catch (e: Throwable) {
                 val message: String? = when (e) {
@@ -317,21 +318,32 @@ class DataViewModel : ViewModel() {
         music: Music
     ) {
         CoroutineScope(Dispatchers.IO).launch {
+            val context: Context = MainActivity.instance.applicationContext
             try {
-                val context: Context = MainActivity.instance.applicationContext
                 music.switchLike(context = context)
             } catch (e: Throwable) {
-                showErrorSnackBar(
-                    scope = scope,
-                    snackBarHostState = snackBarHostState,
-                    action = {
-                        switchLike(
-                            scope = scope,
-                            snackBarHostState = snackBarHostState,
-                            music = music
+                if (e is LikesPlaylistCreationException) {
+                    showSnackBar(
+                        scope = scope,
+                        snackBarHostState = snackBarHostState,
+                        message = context.getString(
+                            RDb.string.add_playlist_success,
+                            context.getString(RDb.string.likes_playlist_title)
                         )
-                    }
-                )
+                    )
+                } else {
+                    showErrorSnackBar(
+                        scope = scope,
+                        snackBarHostState = snackBarHostState,
+                        action = {
+                            switchLike(
+                                scope = scope,
+                                snackBarHostState = snackBarHostState,
+                                music = music
+                            )
+                        }
+                    )
+                }
             }
         }
     }

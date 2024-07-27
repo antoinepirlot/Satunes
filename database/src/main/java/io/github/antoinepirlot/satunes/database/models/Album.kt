@@ -56,7 +56,7 @@ class Album(
 
     override fun hashCode(): Int {
         var result = title.hashCode()
-        result = 31 * result + (artist?.hashCode() ?: 0)
+        result = 31 * result + (artist.hashCode())
         return result
     }
 

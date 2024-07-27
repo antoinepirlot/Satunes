@@ -283,7 +283,10 @@ class DatabaseManager private constructor(context: Context) {
         playlistWithMusicsList.forEach { playlistWithMusics: PlaylistWithMusics ->
             val musicList: MutableList<Music> = mutableListOf()
             playlistWithMusics.musics.forEach { musicDB: MusicDB ->
-                musicList.add(musicDB.music!!)
+                val music: Music? = musicDB.music
+                if (music != null) { //If null, music doesn't exist no more
+                    musicList.add(musicDB.music!!)
+                }
             }
             try {
                 addOnePlaylist(

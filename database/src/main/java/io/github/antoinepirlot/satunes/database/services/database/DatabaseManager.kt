@@ -37,6 +37,7 @@ import io.github.antoinepirlot.satunes.database.daos.MusicsPlaylistsRelDAO
 import io.github.antoinepirlot.satunes.database.daos.PlaylistDAO
 import io.github.antoinepirlot.satunes.database.exceptions.BlankStringException
 import io.github.antoinepirlot.satunes.database.exceptions.LikesPlaylistCreationException
+import io.github.antoinepirlot.satunes.database.exceptions.MusicNotFoundException
 import io.github.antoinepirlot.satunes.database.exceptions.PlaylistAlreadyExistsException
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
@@ -269,6 +270,12 @@ class DatabaseManager private constructor(context: Context) {
                     context = context,
                     message = context.getString(R.string.importing_success)
                 )
+            } catch (e: MusicNotFoundException) {
+                //id is used to store the number of musics missing
+                showToastOnUiThread(
+                    context = context,
+                    message = context.getString(R.string.importing_missed_musics, e.id)
+                )
             } catch (e: Throwable) {
                 logger.severe(e.message)
                 throw e
@@ -280,12 +287,15 @@ class DatabaseManager private constructor(context: Context) {
 
     @Throws(NullPointerException::class)
     private fun importPlaylistToDatabase(playlistWithMusicsList: List<PlaylistWithMusics>) {
+        var numberOfMusicMissing = 0L
         playlistWithMusicsList.forEach { playlistWithMusics: PlaylistWithMusics ->
             val musicList: MutableList<Music> = mutableListOf()
             playlistWithMusics.musics.forEach { musicDB: MusicDB ->
                 val music: Music? = musicDB.music
-                if (music != null) { //If null, music doesn't exist no more
+                if (music != null) { //If null, music
                     musicList.add(musicDB.music!!)
+                } else {
+                    numberOfMusicMissing++
                 }
             }
             try {
@@ -296,6 +306,10 @@ class DatabaseManager private constructor(context: Context) {
             } catch (_: PlaylistAlreadyExistsException) {
                 /* Do nothing */
             }
+        }
+        if (numberOfMusicMissing > 0) {
+            //id is used to store the number of musics missing
+            throw MusicNotFoundException(id = numberOfMusicMissing)
         }
     }
 

@@ -104,7 +104,7 @@ internal object SatunesPlaybackListener : PlaybackListener() {
         val repeatAction = CustomAction.Builder(
             ACTION_REPEAT,
             "Repeat Mode",
-            when (playbackController.repeatMode.value) {
+            when (playbackController.repeatMode.intValue) {
                 Player.REPEAT_MODE_ALL -> R.drawable.repeat_on
                 Player.REPEAT_MODE_ONE -> R.drawable.repeat_one_on
                 else -> R.drawable.repeat_off

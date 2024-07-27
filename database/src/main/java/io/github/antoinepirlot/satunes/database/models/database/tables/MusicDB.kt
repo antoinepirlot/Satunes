@@ -29,7 +29,6 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
-import io.github.antoinepirlot.satunes.database.exceptions.MusicNotFoundException
 import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
@@ -58,7 +57,7 @@ internal data class MusicDB(
     @Transient
     var music: Music? = try {
         DataManager.getMusic(absolutePath = absolutePath)
-    } catch (_: MusicNotFoundException) {
+    } catch (_: Throwable) {
         // Happens when importing playlistDB
         null
     }

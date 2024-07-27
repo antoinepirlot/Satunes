@@ -31,6 +31,7 @@ import androidx.compose.material.icons.automirrored.rounded.PlaylistPlay
 import androidx.compose.material.icons.automirrored.rounded.QueueMusic
 import androidx.compose.material.icons.rounded.AccountCircle
 import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material.icons.rounded.AddToQueue
 import androidx.compose.material.icons.rounded.Album
 import androidx.compose.material.icons.rounded.BatterySaver
 import androidx.compose.material.icons.rounded.Category
@@ -49,7 +50,6 @@ import androidx.compose.material.icons.rounded.MusicNote
 import androidx.compose.material.icons.rounded.Navigation
 import androidx.compose.material.icons.rounded.PauseCircle
 import androidx.compose.material.icons.rounded.PlayCircle
-import androidx.compose.material.icons.rounded.PlaylistAddCircle
 import androidx.compose.material.icons.rounded.PlaylistRemove
 import androidx.compose.material.icons.rounded.QueuePlayNext
 import androidx.compose.material.icons.rounded.Repeat
@@ -69,7 +69,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 enum class SatunesIcons(val imageVector: ImageVector, val description: String) {
     ADD(imageVector = Icons.Rounded.Add, description = "Add Icon"),
     ADD_TO_PLAYBACK_QUEUE(
-        imageVector = Icons.Rounded.PlaylistAddCircle,
+        imageVector = Icons.Rounded.AddToQueue,
         description = "Add to queue Icon"
     ),
     ALBUM(imageVector = Icons.Rounded.Album, description = "Album Icon"),

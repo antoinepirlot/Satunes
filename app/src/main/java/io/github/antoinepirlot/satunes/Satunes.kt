@@ -57,7 +57,6 @@ import io.github.antoinepirlot.satunes.ui.local.LocalMainScope
 import io.github.antoinepirlot.satunes.ui.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.ui.states.SatunesUiState
 import io.github.antoinepirlot.satunes.ui.theme.SatunesTheme
-import io.github.antoinepirlot.satunes.ui.utils.showSnackBar
 import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
 import kotlinx.coroutines.CoroutineScope
 
@@ -113,25 +112,19 @@ internal fun Satunes(
                         WhatsNewDialog(
                             onConfirm = {
                                 // When app relaunch, it's not shown again
-                                satunesViewModel.seeWhatsNew(permanently = true)
-                                showSnackBar(
+                                satunesViewModel.seeWhatsNew(
                                     scope = scope,
                                     snackBarHostState = snackBarHostState,
-                                    message = context.getString(R.string.stop_seeing_update_modal),
-                                    actionLabel = context.getString(R.string.cancel),
-                                    action = {
-                                        satunesViewModel.seeWhatsNew()
-                                        showSnackBar(
-                                            scope = scope,
-                                            snackBarHostState = snackBarHostState,
-                                            message = context.getString(R.string.canceled)
-                                        )
-                                    }
+                                    permanently = true
                                 )
+
                             },
                             onDismiss = {
                                 // When app relaunch, it's shown again
-                                satunesViewModel.seeWhatsNew()
+                                satunesViewModel.seeWhatsNew(
+                                    scope = scope,
+                                    snackBarHostState = snackBarHostState,
+                                )
                             }
                         )
                     }

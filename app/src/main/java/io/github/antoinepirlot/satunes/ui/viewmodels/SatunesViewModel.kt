@@ -29,6 +29,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
@@ -36,12 +37,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import io.github.antoinepirlot.satunes.MainActivity
+import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.availableSpeeds
 import io.github.antoinepirlot.satunes.database.models.BarSpeed
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
-import io.github.antoinepirlot.satunes.internet.R
 import io.github.antoinepirlot.satunes.internet.updates.APKDownloadStatus
 import io.github.antoinepirlot.satunes.internet.updates.UpdateAvailableStatus
 import io.github.antoinepirlot.satunes.internet.updates.UpdateCheckManager
@@ -61,6 +62,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlin.math.floor
 import io.github.antoinepirlot.satunes.internet.R as RInternet
+
 
 /**
  * @author Antoine Pirlot on 19/07/2024
@@ -125,12 +127,30 @@ internal class SatunesViewModel : ViewModel() {
         }
     }
 
-    fun seeWhatsNew(permanently: Boolean = false) {
+    fun seeWhatsNew(
+        scope: CoroutineScope,
+        snackBarHostState: SnackbarHostState,
+        permanently: Boolean = false
+    ) {
         CoroutineScope(Dispatchers.IO).launch {
+            val context: Context = MainActivity.instance.applicationContext
             if (permanently) {
-                SettingsManager.seeWhatsNew(context = MainActivity.instance.applicationContext)
+                SettingsManager.seeWhatsNew(context = context)
+                showSnackBar(
+                    scope = scope,
+                    snackBarHostState = snackBarHostState,
+                    message = context.getString(R.string.update_modal_permanently),
+                    actionLabel = context.getString(R.string.cancel),
+                    duration = SnackbarDuration.Long,
+                    action = { seeWhatsNew(scope = scope, snackBarHostState = snackBarHostState) }
+                )
             } else if (SettingsManager.whatsNewSeen) {
-                SettingsManager.unSeeWhatsNew(context = MainActivity.instance.applicationContext)
+                SettingsManager.unSeeWhatsNew(context = context)
+                showSnackBar(
+                    scope = scope,
+                    snackBarHostState = snackBarHostState,
+                    message = context.getString(R.string.update_modal_not_permanently)
+                )
             }
         }
         _uiState.update { currentState: SatunesUiState ->
@@ -380,7 +400,7 @@ internal class SatunesViewModel : ViewModel() {
                         showSnackBar(
                             scope = scope,
                             snackBarHostState = snackBarHostState,
-                            message = context.getString(R.string.no_update)
+                            message = context.getString(RInternet.string.no_update)
                         )
                     }
 
@@ -388,7 +408,7 @@ internal class SatunesViewModel : ViewModel() {
                         showSnackBar(
                             scope = scope,
                             snackBarHostState = snackBarHostState,
-                            message = context.getString(R.string.update_available)
+                            message = context.getString(RInternet.string.update_available)
                         )
                     }
 
@@ -396,7 +416,7 @@ internal class SatunesViewModel : ViewModel() {
                         showSnackBar(
                             scope = scope,
                             snackBarHostState = snackBarHostState,
-                            message = context.getString(R.string.cannot_check_update)
+                            message = context.getString(RInternet.string.cannot_check_update)
                         )
                     }
 

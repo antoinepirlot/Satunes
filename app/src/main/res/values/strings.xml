@@ -71,7 +71,7 @@
     <string name="see_on_fdroid">Open in F-Droid</string>
     <string name="logs_settings">Logs</string>
     <string name="logs_settings_content">You can export logs to send me them by email at: pirlot.antoine@outlook.com.\n\nWith these logs I can understand more about what\'s wrong with the app.\n\nLogs files contain informations about what the app does and its state.\nThese informations include:\n- Dates\n- Process\n- App state\n\nIn these logs, there\'s not confidential informations as musics information or data that can identify you.\n\nIf you\'re not convinced, you can choose to describe me the problem but it will be more difficult for me to fix it.</string>
-    <string name="stop_seeing_update_modal">You won\'t see this modal again until the next update</string>
+    <string name="update_modal_permanently">You won\'t see this modal again until the next update</string>
     <string name="canceled">Canceled</string>
     <string name="insert_music_to_playlists_success">has been added to the playlist(s)</string>
     <string name="error_occurred">An error occurred</string>
@@ -84,4 +84,5 @@
     <string name="remove_from_likes_success">ou don\'t like %1$s anymore.</string>
     <string name="update_playlist_success">%1$s has been updated.</string>
     <string name="bar_speed_label">Speed</string>
+    <string name="update_modal_not_permanently">The modal will still be shown at next launch.</string>
 </resources>

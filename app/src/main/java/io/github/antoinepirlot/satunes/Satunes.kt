@@ -25,7 +25,6 @@
 
 package io.github.antoinepirlot.satunes
 
-import android.content.Context
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -44,7 +43,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -57,7 +55,6 @@ import io.github.antoinepirlot.satunes.ui.local.LocalMainScope
 import io.github.antoinepirlot.satunes.ui.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.ui.states.SatunesUiState
 import io.github.antoinepirlot.satunes.ui.theme.SatunesTheme
-import io.github.antoinepirlot.satunes.ui.utils.showSnackBar
 import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
 import kotlinx.coroutines.CoroutineScope
 
@@ -83,7 +80,6 @@ internal fun Satunes(
             val navController: NavHostController = rememberNavController()
             val scope: CoroutineScope = rememberCoroutineScope()
             val snackBarHostState: SnackbarHostState = remember { SnackbarHostState() }
-            val context: Context = LocalContext.current
 
             CompositionLocalProvider(
                 values = arrayOf(
@@ -113,25 +109,19 @@ internal fun Satunes(
                         WhatsNewDialog(
                             onConfirm = {
                                 // When app relaunch, it's not shown again
-                                satunesViewModel.seeWhatsNew(permanently = true)
-                                showSnackBar(
+                                satunesViewModel.seeWhatsNew(
                                     scope = scope,
                                     snackBarHostState = snackBarHostState,
-                                    message = context.getString(R.string.stop_seeing_update_modal),
-                                    actionLabel = context.getString(R.string.cancel),
-                                    action = {
-                                        satunesViewModel.seeWhatsNew()
-                                        showSnackBar(
-                                            scope = scope,
-                                            snackBarHostState = snackBarHostState,
-                                            message = context.getString(R.string.canceled)
-                                        )
-                                    }
+                                    permanently = true
                                 )
+
                             },
                             onDismiss = {
                                 // When app relaunch, it's shown again
-                                satunesViewModel.seeWhatsNew()
+                                satunesViewModel.seeWhatsNew(
+                                    scope = scope,
+                                    snackBarHostState = snackBarHostState,
+                                )
                             }
                         )
                     }

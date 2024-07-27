@@ -40,8 +40,8 @@ import io.github.antoinepirlot.satunes.car.playback.SatunesCarCallBack.ACTION_RE
 import io.github.antoinepirlot.satunes.car.playback.SatunesCarCallBack.ACTION_SHUFFLE
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.icons.R
+import io.github.antoinepirlot.satunes.playback.models.PlaybackListener
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
-import io.github.antoinepirlot.satunes.playback.services.PlaybackListener
 
 /**
  * @author Antoine Pirlot on 23/03/2024

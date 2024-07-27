@@ -56,14 +56,14 @@ class Album(
 
     override fun hashCode(): Int {
         var result = title.hashCode()
-        result = 31 * result + (artist?.hashCode() ?: 0)
+        result = 31 * result + (artist.hashCode())
         return result
     }
 
     override fun compareTo(other: MediaImpl): Int {
         var compared: Int = super.compareTo(other)
         if (compared == 0 && other is Album) {
-            compared = this.artist!!.compareTo(other.artist!!)
+            compared = this.artist.compareTo(other.artist)
         }
         return compared
     }

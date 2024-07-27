@@ -250,6 +250,7 @@ class PlaybackController private constructor(
     }
 
     fun seekTo(positionPercentage: Float) {
+        //position changed on listener events
         if (this.musicPlaying.value == null || this.isEnded.value) {
             val message = """"
                 |Impossible to seek while no music is playing 

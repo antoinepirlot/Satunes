@@ -58,7 +58,7 @@ internal fun MusicPositionBar(
     val musicPlaying: Music? = playbackViewModel.musicPlaying
     var newPositionPercentage: Float by rememberSaveable { mutableFloatStateOf(0f) }
     var isUpdating: Boolean by rememberSaveable { mutableStateOf(false) }
-    var currentPositionPercentage: Float = playbackViewModel.currentPositionProgression
+    val currentPositionPercentage: Float = playbackViewModel.currentPositionProgression
 
     Column(modifier = modifier) {
         Slider(
@@ -68,9 +68,8 @@ internal fun MusicPositionBar(
                 newPositionPercentage = it
             },
             onValueChangeFinished = {
-                playbackViewModel.seekTo(positionPercentage = newPositionPercentage)
-                currentPositionPercentage = newPositionPercentage
                 isUpdating = false
+                playbackViewModel.seekTo(positionPercentage = newPositionPercentage)
             },
         )
         Row(

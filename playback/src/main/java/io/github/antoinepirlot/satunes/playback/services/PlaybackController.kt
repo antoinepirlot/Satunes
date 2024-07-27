@@ -44,6 +44,7 @@ import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.playback.exceptions.AlreadyInPlaybackException
+import io.github.antoinepirlot.satunes.playback.models.PlaybackListener
 import io.github.antoinepirlot.satunes.playback.models.Playlist
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import kotlinx.coroutines.CoroutineScope
@@ -249,6 +250,7 @@ class PlaybackController private constructor(
     }
 
     fun seekTo(positionPercentage: Float) {
+        //position changed on listener events
         if (this.musicPlaying.value == null || this.isEnded.value) {
             val message = """"
                 |Impossible to seek while no music is playing 

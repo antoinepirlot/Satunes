@@ -25,12 +25,13 @@
 
 
 
-package io.github.antoinepirlot.satunes.playback.services
+package io.github.antoinepirlot.satunes.playback.models
 
 import androidx.annotation.OptIn
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
+import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 
 /**
@@ -73,6 +74,11 @@ open class PlaybackListener : Player.Listener {
     @OptIn(UnstableApi::class)
     override fun onEvents(player: Player, events: Player.Events) {
         super.onEvents(player, events)
+        val playbackController: PlaybackController = PlaybackController.getInstance()
+
+        if (events.contains(Player.EVENT_POSITION_DISCONTINUITY)) {
+            playbackController.updateCurrentPosition()
+        }
 
         if (events.contains(Player.EVENT_SHUFFLE_MODE_ENABLED_CHANGED)) {
             //Stop making media controller shuffled
@@ -82,7 +88,6 @@ open class PlaybackListener : Player.Listener {
         }
 
         if (events.contains(Player.EVENT_PLAYER_ERROR)) {
-            val playbackController: PlaybackController = PlaybackController.getInstance()
             val message = """
                 An error happens with the player. 
                 Here's the status of playback Controller:

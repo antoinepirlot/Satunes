@@ -26,27 +26,23 @@
 package io.github.antoinepirlot.satunes.ui.views.media.folder
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.media3.common.MediaItem
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Folder
-import io.github.antoinepirlot.satunes.database.models.Media
-import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.database.services.DataManager
+import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.router.utils.openMediaFromFolder
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
-import io.github.antoinepirlot.satunes.ui.views.MediaListView
-import java.util.SortedMap
+import io.github.antoinepirlot.satunes.ui.viewmodels.DataViewModel
+import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
+import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 
 /**
  * @author Antoine Pirlot on 01/04/2024
@@ -55,42 +51,41 @@ import java.util.SortedMap
 @Composable
 internal fun RootFolderView(
     modifier: Modifier = Modifier,
+    navController: NavHostController,
+    dataViewModel: DataViewModel = viewModel(),
+    playbackViewModel: PlaybackViewModel = viewModel(),
 ) {
-    val playbackController: PlaybackController = PlaybackController.getInstance()
-
-    val rootFolderMap: SortedMap<Folder, Folder> = remember { DataManager.rootFolderSortedMap }
-
-    //Recompose if data changed
-    var mapChanged: Boolean by rememberSaveable { DataManager.rootFolderMapUpdated }
-    if (mapChanged) {
-        mapChanged = false
-    }
-    //
+    val rootFolderSet: Set<Folder> = dataViewModel.getRootFolderSet()
 
     MediaListView(
         modifier = modifier,
-        mediaList = rootFolderMap.keys.toList(),
-        openMedia = { clickedMedia: Media ->
-            openMediaFromFolder(clickedMedia)
+        navController = navController,
+        mediaImplCollection = rootFolderSet,
+        openMedia = { clickedMediaImpl: MediaImpl ->
+            openMediaFromFolder(
+                media = clickedMediaImpl,
+                playbackViewModel = playbackViewModel,
+                navController = navController
+            )
         },
-        onFABClick = { openCurrentMusic() },
+        onFABClick = {
+            openCurrentMusic(
+                playbackViewModel = playbackViewModel,
+                navController = navController
+            )
+        },
         extraButtons = {
-            if (rootFolderMap.isNotEmpty()) {
+            if (rootFolderSet.isNotEmpty()) {
                 ExtraButton(icon = SatunesIcons.PLAY, onClick = {
-                    playbackController.loadMusic(
-                        musicMediaItemSortedMap = getFolderMusicsMap(
-                            folderMap = rootFolderMap
-                        )
-                    )
-                    openMedia()
+                    playbackViewModel.loadMusicFromFolders(folders = rootFolderSet)
+                    openMedia(playbackViewModel = playbackViewModel, navController = navController)
                 })
                 ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
-
-                    playbackController.loadMusic(
-                        musicMediaItemSortedMap = getFolderMusicsMap(folderMap = rootFolderMap),
+                    playbackViewModel.loadMusicFromFolders(
+                        folders = rootFolderSet,
                         shuffleMode = true
                     )
-                    openMedia()
+                    openMedia(playbackViewModel = playbackViewModel, navController = navController)
                 })
             }
         },
@@ -98,16 +93,9 @@ internal fun RootFolderView(
     )
 }
 
-private fun getFolderMusicsMap(folderMap: SortedMap<Folder, Folder>): SortedMap<Music, MediaItem> {
-    val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
-    folderMap.forEach { (_, folder: Folder) ->
-        musicMediaItemSortedMap.putAll(folder.getAllMusic())
-    }
-    return musicMediaItemSortedMap
-}
-
 @Preview
 @Composable
 private fun RootFolderViewPreview() {
-    RootFolderView()
+    val navController: NavHostController = rememberNavController()
+    RootFolderView(navController = navController)
 }

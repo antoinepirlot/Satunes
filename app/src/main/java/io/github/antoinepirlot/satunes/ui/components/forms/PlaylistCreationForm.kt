@@ -59,7 +59,7 @@ internal fun PlaylistCreationForm(
             val icon: SatunesIcons = SatunesIcons.PLAYLIST_ADD
             Icon(
                 imageVector = icon.imageVector,
-                contentDescription = "Playlist Creation Button Icon"
+                contentDescription = "PlaylistDB Creation Button Icon"
             )
         },
         title = {

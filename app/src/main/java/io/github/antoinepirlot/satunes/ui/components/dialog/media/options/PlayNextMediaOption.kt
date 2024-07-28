@@ -25,31 +25,45 @@
 
 package io.github.antoinepirlot.satunes.ui.components.dialog.media.options
 
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Album
-import io.github.antoinepirlot.satunes.database.models.Media
+import io.github.antoinepirlot.satunes.database.models.Artist
+import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.ui.components.dialog.options.DialogOption
+import io.github.antoinepirlot.satunes.ui.local.LocalMainScope
+import io.github.antoinepirlot.satunes.ui.local.LocalSnackBarHostState
+import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
+import kotlinx.coroutines.CoroutineScope
 
 /**
  * @author Antoine Pirlot on 25/06/2024
  */
 
 @Composable
-fun PlayNextMediaOption(
+internal fun PlayNextMediaOption(
     modifier: Modifier = Modifier,
-    media: Media,
+    playbackViewModel: PlaybackViewModel = viewModel(),
+    mediaImpl: MediaImpl,
     onFinished: () -> Unit,
 ) {
+    val scope: CoroutineScope = LocalMainScope.current
+    val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
+
     DialogOption(
         modifier = modifier,
         onClick = {
-            PlaybackController.getInstance().addNext(media = media)
+            playbackViewModel.addNext(
+                scope = scope,
+                snackBarHostState = snackBarHostState,
+                mediaImpl = mediaImpl
+            )
             onFinished()
         },
         icon = SatunesIcons.PLAY_NEXT,
@@ -60,5 +74,9 @@ fun PlayNextMediaOption(
 @Preview
 @Composable
 private fun PlayNextMediaOptionPreview() {
-    PlayNextMediaOption(media = Album(title = "Album Title"), onFinished = {})
+    PlayNextMediaOption(
+        mediaImpl = Album(
+            title = "Album Title",
+            artist = Artist(title = "Artist Title")
+        ), onFinished = {})
 }

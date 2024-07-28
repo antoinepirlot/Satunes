@@ -26,36 +26,37 @@
 package io.github.antoinepirlot.satunes.ui.components.bars
 
 import android.annotation.SuppressLint
+import android.os.Build
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
-import io.github.antoinepirlot.satunes.MainActivity
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.data.playbackViews
+import io.github.antoinepirlot.satunes.data.settingsDestinations
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.internet.updates.UpdateAvailableStatus
-import io.github.antoinepirlot.satunes.internet.updates.UpdateCheckManager
-import io.github.antoinepirlot.satunes.navController
-import io.github.antoinepirlot.satunes.router.Destination
-import io.github.antoinepirlot.satunes.router.playbackViews
-import io.github.antoinepirlot.satunes.router.settingsDestinations
-import io.github.antoinepirlot.satunes.services.RoutesManager
+import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.ui.ScreenSizes
+import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
+import io.github.antoinepirlot.satunes.ui.states.SatunesUiState
+import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
 
 /**
  * @author Antoine Pirlot on 16/01/24
@@ -66,11 +67,15 @@ import io.github.antoinepirlot.satunes.ui.ScreenSizes
 internal fun SatunesTopAppBar(
     modifier: Modifier = Modifier,
     scrollBehavior: TopAppBarScrollBehavior,
+    navController: NavHostController,
+    satunesViewModel: SatunesViewModel = viewModel(),
 ) {
+    val uiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+
     val screenWidthDp = LocalConfiguration.current.screenWidthDp
     val barModifier: Modifier =
         if (screenWidthDp < ScreenSizes.VERY_VERY_SMALL) modifier.fillMaxHeight(0.11f) else modifier
-    val currentDestination: String? by rememberSaveable { RoutesManager.currentDestination }
+    val currentDestination: String = uiState.currentDestination
 
     CenterAlignedTopAppBar(
         modifier = barModifier,
@@ -85,8 +90,13 @@ internal fun SatunesTopAppBar(
             }
 
             // Here, the user is in the playback view
-            IconButton(onClick = { onPlaybackQueueButtonClick() }) {
-                val playbackQueueIcon: SatunesIcons = SatunesIcons.PLAYLIST
+            IconButton(onClick = {
+                onPlaybackQueueButtonClick(
+                    uiState = uiState,
+                    navController = navController
+                )
+            }) {
+                val playbackQueueIcon: SatunesIcons = SatunesIcons.PLAYBACK
                 Icon(
                     imageVector = playbackQueueIcon.imageVector,
                     contentDescription = playbackQueueIcon.description
@@ -94,7 +104,7 @@ internal fun SatunesTopAppBar(
             }
         },
         title = {
-            Text(
+            NormalText(
                 text = stringResource(id = R.string.app_name),
                 fontSize = 20.sp,
                 textAlign = TextAlign.Center
@@ -103,14 +113,25 @@ internal fun SatunesTopAppBar(
         actions = {
             if (currentDestination !in settingsDestinations) {
                 // Search Button
-                IconButton(onClick = { onSearchButtonClick() }) {
+                IconButton(onClick = {
+                    onSearchButtonClick(
+                        uiState = uiState,
+                        navController = navController
+                    )
+                }) {
                     val icon: SatunesIcons = SatunesIcons.SEARCH
                     Icon(imageVector = icon.imageVector, contentDescription = icon.description)
                 }
             }
 
             //Setting Button
-            IconButton(onClick = { onSettingButtonClick() }) {
+            IconButton(onClick = {
+                onSettingButtonClick(
+                    uiState = uiState,
+                    satunesViewModel = satunesViewModel,
+                    navController = navController
+                )
+            }) {
                 val settingsIcon: SatunesIcons = SatunesIcons.SETTINGS
                 Icon(
                     imageVector = settingsIcon.imageVector,
@@ -122,15 +143,15 @@ internal fun SatunesTopAppBar(
     )
 }
 
-private fun onSearchButtonClick() {
-    when (RoutesManager.currentDestination.value) {
+private fun onSearchButtonClick(uiState: SatunesUiState, navController: NavHostController) {
+    when (uiState.currentDestination) {
         Destination.SEARCH.link -> navController.popBackStack()
         else -> navController.navigate(Destination.SEARCH.link)
     }
 }
 
-private fun onPlaybackQueueButtonClick() {
-    when (RoutesManager.currentDestination.value) {
+private fun onPlaybackQueueButtonClick(uiState: SatunesUiState, navController: NavHostController) {
+    when (uiState.currentDestination) {
         Destination.PLAYBACK.link -> navController.navigate(Destination.PLAYBACK_QUEUE.link)
         Destination.PLAYBACK_QUEUE.link -> navController.navigate(Destination.PLAYBACK.link)
         else -> return
@@ -141,17 +162,18 @@ private fun onPlaybackQueueButtonClick() {
  * When currentDestination is the settings list, then return to app only if audio permission has been allowed.
  * Otherwise navigate to settings
  */
-private fun onSettingButtonClick() {
-    if (UpdateCheckManager.updateAvailableStatus.value != UpdateAvailableStatus.AVAILABLE) {
-        UpdateCheckManager.updateAvailableStatus.value =
-            UpdateAvailableStatus.UNDEFINED
+private fun onSettingButtonClick(
+    uiState: SatunesUiState,
+    navController: NavHostController,
+    satunesViewModel: SatunesViewModel,
+) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        satunesViewModel.resetUpdatesStatus()
     }
 
-    when (val currentDestination: String = RoutesManager.currentDestination.value!!) {
+    when (val currentDestination: String = uiState.currentDestination) {
         in settingsDestinations -> {
-            if (currentDestination == Destination.PERMISSIONS_SETTINGS.link
-                && !MainActivity.instance.isAudioAllowed()
-            ) {
+            if (currentDestination == Destination.PERMISSIONS_SETTINGS.link && !uiState.isAudioAllowed) {
                 return
             } else {
                 navController.popBackStack()
@@ -174,8 +196,10 @@ private fun SatunesTopAppBarPreview() {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(
         rememberTopAppBarState()
     )
+    val navController: NavHostController = rememberNavController()
     SatunesTopAppBar(
         modifier = Modifier,
         scrollBehavior = scrollBehavior,
+        navController = navController
     )
 }

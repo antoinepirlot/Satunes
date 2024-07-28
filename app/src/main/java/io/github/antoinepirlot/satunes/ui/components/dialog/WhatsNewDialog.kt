@@ -58,7 +58,7 @@ internal fun WhatsNewDialog(
     val context: Context = LocalContext.current
     val packageManager = context.packageManager
     val packageInfo = packageManager.getPackageInfo(context.packageName, 0)
-    val versionName = 'v' + packageInfo.versionName
+    val versionName = 'v' + packageInfo.versionName!!
     AlertDialog(
         modifier = modifier,
         icon = {

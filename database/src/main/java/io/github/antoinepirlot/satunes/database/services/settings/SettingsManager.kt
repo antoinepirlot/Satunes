@@ -26,10 +26,7 @@
 package io.github.antoinepirlot.satunes.database.services.settings
 
 import android.content.Context
-import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.MutablePreferences
@@ -40,10 +37,12 @@ import androidx.datastore.preferences.core.floatPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
-import io.github.antoinepirlot.satunes.database.models.MenuTitle
+import androidx.media3.common.Player
+import io.github.antoinepirlot.satunes.database.models.BarSpeed
+import io.github.antoinepirlot.satunes.database.models.NavBarSection
+import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.runBlocking
 
 /**
  * @author Antoine Pirlot on 02-03-24
@@ -62,9 +61,9 @@ object SettingsManager {
     private const val DEFAULT_PLAYBACK_WHEN_CLOSED_CHECKED =
         false //App stop after removed app from multi-task if false
     private const val DEFAULT_PAUSE_IF_NOISY = true
-    private const val DEFAULT_EXCLUDE_RINGTONES = true
-    private const val DEFAULT_BAR_SPEED_VALUE = 1f
-    private const val DEFAULT_REPEAT_MODE: Int = 0
+    private const val DEFAULT_INCLUDE_RINGTONES = false
+    private val DEFAULT_BAR_SPEED_VALUE: BarSpeed = BarSpeed.NORMAL
+    private const val DEFAULT_REPEAT_MODE: Int = Player.REPEAT_MODE_OFF
     private const val DEFAULT_SHUFFLE_MODE_CHECKED: Boolean = false
     private const val DEFAULT_PAUSE_IF_ANOTHER_PLAYBACK_CHECKED: Boolean = true
     private const val DEFAULT_AUDIO_OFFLOAD_CHECKED: Boolean = false
@@ -89,7 +88,7 @@ object SettingsManager {
     private val PLAYBACK_WHEN_CLOSED_CHECKED_PREFERENCES_KEY =
         booleanPreferencesKey("playback_when_closed_checked")
     private val PAUSE_IF_NOISY_PREFERENCES_KEY = booleanPreferencesKey("pause_if_noisy")
-    private val EXCLUDE_RINGTONES_KEY = booleanPreferencesKey("exclude_ringtones")
+    private val INCLUDE_RINGTONES_KEY = booleanPreferencesKey("include_ringtones")
     private val BAR_SPEED_KEY = floatPreferencesKey("bar_speed")
     private val REPEAT_MODE_KEY = intPreferencesKey("repeat_mode")
     private val SHUFFLE_MODE_KEY = booleanPreferencesKey("shuffle_mode")
@@ -112,278 +111,297 @@ object SettingsManager {
      */
     private val Context.dataStore: DataStore<Preferences> by PREFERENCES_DATA_STORE
 
-    val foldersChecked: MutableState<Boolean> = mutableStateOf(DEFAULT_FOLDERS_CHECKED)
-    val artistsChecked: MutableState<Boolean> = mutableStateOf(DEFAULT_ARTISTS_CHECKED)
-    val albumsChecked: MutableState<Boolean> = mutableStateOf(DEFAULT_ALBUMS_CHECKED)
-    val genresChecked: MutableState<Boolean> = mutableStateOf(DEFAULT_GENRE_CHECKED)
-    val playlistsChecked: MutableState<Boolean> = mutableStateOf(DEFAULT_PLAYLIST_CHECKED)
-    val playbackWhenClosedChecked: MutableState<Boolean> =
-        mutableStateOf(DEFAULT_PLAYBACK_WHEN_CLOSED_CHECKED)
-    val pauseIfNoisyChecked: MutableState<Boolean> = mutableStateOf(DEFAULT_PAUSE_IF_NOISY)
-    val excludeRingtonesChecked: MutableState<Boolean> = mutableStateOf(DEFAULT_EXCLUDE_RINGTONES)
-    val barSpeed: MutableState<Float> = mutableFloatStateOf(DEFAULT_BAR_SPEED_VALUE)
-    val repeatMode: MutableIntState = mutableIntStateOf(DEFAULT_REPEAT_MODE)
-    val shuffleMode: MutableState<Boolean> = mutableStateOf(DEFAULT_SHUFFLE_MODE_CHECKED)
-    val pauseIfAnotherPlayback: MutableState<Boolean> = mutableStateOf(
-        DEFAULT_PAUSE_IF_ANOTHER_PLAYBACK_CHECKED
-    )
-    val audioOffloadChecked: MutableState<Boolean> = mutableStateOf(DEFAULT_AUDIO_OFFLOAD_CHECKED)
+    var foldersChecked: MutableState<Boolean> = mutableStateOf(DEFAULT_FOLDERS_CHECKED)
+        private set
+    var artistsChecked: MutableState<Boolean> = mutableStateOf(DEFAULT_ARTISTS_CHECKED)
+        private set
+    var albumsChecked: MutableState<Boolean> = mutableStateOf(DEFAULT_ALBUMS_CHECKED)
+        private set
+    var genresChecked: MutableState<Boolean> = mutableStateOf(DEFAULT_GENRE_CHECKED)
+        private set
+    var playlistsChecked: MutableState<Boolean> = mutableStateOf(DEFAULT_PLAYLIST_CHECKED)
+        private set
+    var playbackWhenClosedChecked: Boolean = DEFAULT_PLAYBACK_WHEN_CLOSED_CHECKED
+        private set
+    var pauseIfNoisyChecked: Boolean = DEFAULT_PAUSE_IF_NOISY
+        private set
+    var includeRingtonesChecked: Boolean = DEFAULT_INCLUDE_RINGTONES
+        private set
+    var barSpeed: BarSpeed = DEFAULT_BAR_SPEED_VALUE
+        private set
+    var repeatMode: Int = DEFAULT_REPEAT_MODE
+        private set
+    var shuffleMode: Boolean = DEFAULT_SHUFFLE_MODE_CHECKED
+        private set
+    var pauseIfAnotherPlayback: Boolean = DEFAULT_PAUSE_IF_ANOTHER_PLAYBACK_CHECKED
+        private set
+    var audioOffloadChecked: Boolean = DEFAULT_AUDIO_OFFLOAD_CHECKED
+        private set
 
-    val menuTitleCheckedMap: Map<MenuTitle, MutableState<Boolean>> = mapOf(
-        Pair(MenuTitle.FOLDERS, foldersChecked),
-        Pair(MenuTitle.ARTISTS, artistsChecked),
-        Pair(MenuTitle.ALBUMS, albumsChecked),
-        Pair(MenuTitle.GENRES, genresChecked),
-        Pair(MenuTitle.PLAYLISTS, playlistsChecked)
-    )
+    var whatsNewSeen: Boolean = DEFAULT_WHATS_NEW_SEEN
+        private set
 
-    val whatsNewSeen: MutableState<Boolean> = mutableStateOf(DEFAULT_WHATS_NEW_SEEN)
     private var whatsNewVersionSeen: String = DEFAULT_WHATS_NEW_VERSION_SEEN
 
-    val foldersFilter: MutableState<Boolean> = mutableStateOf(DEFAULT_FOLDERS_FILTER)
-    val artistsFilter: MutableState<Boolean> = mutableStateOf(DEFAULT_ARTISTS_FILTER)
-    val albumsFilter: MutableState<Boolean> = mutableStateOf(DEFAULT_ALBUMS_FILTER)
-    val genresFilter: MutableState<Boolean> = mutableStateOf(DEFAULT_GENRES_FILTER)
-    val playlistsFilter: MutableState<Boolean> = mutableStateOf(DEFAULT_PLAYLISTS_FILTER)
-    val musicsFilter: MutableState<Boolean> = mutableStateOf(DEFAULT_MUSICS_FILTER)
+    var foldersFilter: Boolean = DEFAULT_FOLDERS_FILTER
+        private set
+    var artistsFilter: Boolean = DEFAULT_ARTISTS_FILTER
+        private set
+    var albumsFilter: Boolean = DEFAULT_ALBUMS_FILTER
+        private set
+    var genresFilter: Boolean = DEFAULT_GENRES_FILTER
+        private set
+    var playlistsFilter: Boolean = DEFAULT_PLAYLISTS_FILTER
+        private set
+    var musicsFilter: Boolean = DEFAULT_MUSICS_FILTER
+        private set
 
-    fun loadSettings(context: Context) {
-        runBlocking {
-            // Using first() at the end and for nothing, prevent wrong UI data switch synchronisation
-            context.dataStore.data.map { preferences: Preferences ->
-                foldersChecked.value =
-                    preferences[FOLDERS_CHECKED_PREFERENCES_KEY] ?: DEFAULT_FOLDERS_CHECKED
+    private val _logger = SatunesLogger.getLogger()
 
-                artistsChecked.value =
-                    preferences[ARTISTS_CHECKED_PREFERENCES_KEY] ?: DEFAULT_ARTISTS_CHECKED
+    suspend fun loadSettings(context: Context) {
+        context.dataStore.data.map { preferences: Preferences ->
+            foldersChecked.value =
+                preferences[FOLDERS_CHECKED_PREFERENCES_KEY] ?: DEFAULT_FOLDERS_CHECKED
 
-                albumsChecked.value =
-                    preferences[ALBUMS_CHECKED_PREFERENCES_KEY] ?: DEFAULT_ALBUMS_CHECKED
+            artistsChecked.value =
+                preferences[ARTISTS_CHECKED_PREFERENCES_KEY] ?: DEFAULT_ARTISTS_CHECKED
 
-                genresChecked.value =
-                    preferences[GENRE_CHECKED_PREFERENCES_KEY] ?: DEFAULT_GENRE_CHECKED
+            albumsChecked.value =
+                preferences[ALBUMS_CHECKED_PREFERENCES_KEY] ?: DEFAULT_ALBUMS_CHECKED
 
-                playlistsChecked.value =
-                    preferences[PLAYLISTS_CHECKED_PREFERENCES_KEY] ?: DEFAULT_PLAYLIST_CHECKED
+            genresChecked.value =
+                preferences[GENRE_CHECKED_PREFERENCES_KEY] ?: DEFAULT_GENRE_CHECKED
 
-                playbackWhenClosedChecked.value =
-                    preferences[PLAYBACK_WHEN_CLOSED_CHECKED_PREFERENCES_KEY]
-                        ?: DEFAULT_PLAYBACK_WHEN_CLOSED_CHECKED
+            playlistsChecked.value =
+                preferences[PLAYLISTS_CHECKED_PREFERENCES_KEY] ?: DEFAULT_PLAYLIST_CHECKED
 
-                pauseIfNoisyChecked.value =
-                    preferences[PAUSE_IF_NOISY_PREFERENCES_KEY] ?: DEFAULT_PAUSE_IF_NOISY
+            playbackWhenClosedChecked =
+                preferences[PLAYBACK_WHEN_CLOSED_CHECKED_PREFERENCES_KEY]
+                    ?: DEFAULT_PLAYBACK_WHEN_CLOSED_CHECKED
 
-                excludeRingtonesChecked.value =
-                    preferences[EXCLUDE_RINGTONES_KEY] ?: DEFAULT_EXCLUDE_RINGTONES
+            pauseIfNoisyChecked =
+                preferences[PAUSE_IF_NOISY_PREFERENCES_KEY] ?: DEFAULT_PAUSE_IF_NOISY
 
-                barSpeed.value = preferences[BAR_SPEED_KEY] ?: DEFAULT_BAR_SPEED_VALUE
+            includeRingtonesChecked =
+                preferences[INCLUDE_RINGTONES_KEY] ?: DEFAULT_INCLUDE_RINGTONES
 
-                repeatMode.intValue = preferences[REPEAT_MODE_KEY] ?: DEFAULT_REPEAT_MODE
+            barSpeed = getBarSpeed(preferences[BAR_SPEED_KEY])
 
-                shuffleMode.value = preferences[SHUFFLE_MODE_KEY] ?: DEFAULT_SHUFFLE_MODE_CHECKED
+            repeatMode = preferences[REPEAT_MODE_KEY] ?: DEFAULT_REPEAT_MODE
 
-                pauseIfAnotherPlayback.value = preferences[PAUSE_IF_ANOTHER_PLAYBACK_KEY]
-                    ?: DEFAULT_PAUSE_IF_ANOTHER_PLAYBACK_CHECKED
+            shuffleMode =
+                preferences[SHUFFLE_MODE_KEY] ?: DEFAULT_SHUFFLE_MODE_CHECKED
 
-                audioOffloadChecked.value =
-                    preferences[AUDIO_OFFLOAD_CHECKED_KEY] ?: DEFAULT_AUDIO_OFFLOAD_CHECKED
-                loadWhatsNew(context = context, preferences = preferences)
+            pauseIfAnotherPlayback = preferences[PAUSE_IF_ANOTHER_PLAYBACK_KEY]
+                ?: DEFAULT_PAUSE_IF_ANOTHER_PLAYBACK_CHECKED
 
-                loadFilters(context = context)
-            }.first()
+            audioOffloadChecked =
+                preferences[AUDIO_OFFLOAD_CHECKED_KEY] ?: DEFAULT_AUDIO_OFFLOAD_CHECKED
+            loadWhatsNew(context = context, preferences = preferences)
+
+            loadFilters(context = context)
+        }.first()
+    }
+
+    private fun getBarSpeed(speed: Float?): BarSpeed {
+        return when (speed) {
+            BarSpeed.REAL_TIME.speed -> BarSpeed.REAL_TIME
+            BarSpeed.FAST.speed -> BarSpeed.FAST
+            BarSpeed.NORMAL.speed -> BarSpeed.NORMAL
+            BarSpeed.SLOW.speed -> BarSpeed.SLOW
+            BarSpeed.VERY_SLOW.speed -> BarSpeed.VERY_SLOW
+            else -> DEFAULT_BAR_SPEED_VALUE
         }
     }
 
-    private fun loadWhatsNew(context: Context, preferences: Preferences) {
-        whatsNewSeen.value = preferences[WHATS_NEW_SEEN_KEY] ?: DEFAULT_WHATS_NEW_SEEN
+    private suspend fun loadWhatsNew(context: Context, preferences: Preferences) {
+        whatsNewSeen = preferences[WHATS_NEW_SEEN_KEY] ?: DEFAULT_WHATS_NEW_SEEN
         whatsNewVersionSeen =
             preferences[WHATS_NEW_VERSION_SEEN_KEY] ?: DEFAULT_WHATS_NEW_VERSION_SEEN
-        if (whatsNewSeen.value) {
+        if (whatsNewSeen) {
             val packageManager = context.packageManager
             val packageInfo = packageManager.getPackageInfo(context.packageName, 0)
             val versionName = 'v' + packageInfo.versionName
             if (whatsNewVersionSeen != versionName) {
-                this.whatsNewSeen(context = context, seen = false)
+                this.unSeeWhatsNew(context = context)
             }
         }
     }
 
-    fun switchMenuTitle(context: Context, menuTitle: MenuTitle) {
-        runBlocking {
-            when (menuTitle) {
-                MenuTitle.FOLDERS -> {
-                    context.dataStore.edit { preferences: MutablePreferences ->
-                        foldersChecked.value = !foldersChecked.value
-                        preferences[FOLDERS_CHECKED_PREFERENCES_KEY] = foldersChecked.value
-                    }
+    suspend fun switchNavBarSection(context: Context, navBarSection: NavBarSection) {
+        when (navBarSection) {
+            NavBarSection.FOLDERS -> {
+                context.dataStore.edit { preferences: MutablePreferences ->
+                    foldersChecked.value = !foldersChecked.value
+                    preferences[FOLDERS_CHECKED_PREFERENCES_KEY] = foldersChecked.value
                 }
+            }
 
-                MenuTitle.ARTISTS -> {
-                    context.dataStore.edit { preferences: MutablePreferences ->
-                        artistsChecked.value = !artistsChecked.value
-                        preferences[ARTISTS_CHECKED_PREFERENCES_KEY] = artistsChecked.value
-                    }
+            NavBarSection.ARTISTS -> {
+                context.dataStore.edit { preferences: MutablePreferences ->
+                    artistsChecked.value = !artistsChecked.value
+                    preferences[ARTISTS_CHECKED_PREFERENCES_KEY] = artistsChecked.value
                 }
+            }
 
-                MenuTitle.ALBUMS -> {
-                    context.dataStore.edit { preferences: MutablePreferences ->
-                        albumsChecked.value = !albumsChecked.value
-                        preferences[ALBUMS_CHECKED_PREFERENCES_KEY] = albumsChecked.value
-                    }
+            NavBarSection.ALBUMS -> {
+                context.dataStore.edit { preferences: MutablePreferences ->
+                    albumsChecked.value = !albumsChecked.value
+                    preferences[ALBUMS_CHECKED_PREFERENCES_KEY] = albumsChecked.value
                 }
+            }
 
-                MenuTitle.GENRES -> {
-                    context.dataStore.edit { preferences: MutablePreferences ->
-                        genresChecked.value = !genresChecked.value
-                        preferences[GENRE_CHECKED_PREFERENCES_KEY] = genresChecked.value
-                    }
+            NavBarSection.GENRES -> {
+                context.dataStore.edit { preferences: MutablePreferences ->
+                    genresChecked.value = !genresChecked.value
+                    preferences[GENRE_CHECKED_PREFERENCES_KEY] = genresChecked.value
                 }
+            }
 
-                MenuTitle.PLAYLISTS -> {
-                    context.dataStore.edit { preferences: MutablePreferences ->
-                        playlistsChecked.value = !playlistsChecked.value
-                        preferences[PLAYLISTS_CHECKED_PREFERENCES_KEY] = playlistsChecked.value
-                    }
+            NavBarSection.PLAYLISTS -> {
+                context.dataStore.edit { preferences: MutablePreferences ->
+                    playlistsChecked.value = !playlistsChecked.value
+                    preferences[PLAYLISTS_CHECKED_PREFERENCES_KEY] = playlistsChecked.value
                 }
+            }
 
-                MenuTitle.MUSICS -> { /*Do nothing*/
-                }
+            NavBarSection.MUSICS -> { /*Do nothing*/
             }
         }
     }
 
-    fun switchPlaybackWhenClosedChecked(context: Context) {
-        runBlocking {
-            context.dataStore.edit { preferences: MutablePreferences ->
-                playbackWhenClosedChecked.value = !playbackWhenClosedChecked.value
-                preferences[PLAYBACK_WHEN_CLOSED_CHECKED_PREFERENCES_KEY] =
-                    playbackWhenClosedChecked.value
-            }
+    suspend fun switchPlaybackWhenClosedChecked(context: Context) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            playbackWhenClosedChecked = !playbackWhenClosedChecked
+            preferences[PLAYBACK_WHEN_CLOSED_CHECKED_PREFERENCES_KEY] =
+                playbackWhenClosedChecked
         }
     }
 
-    fun switchPauseIfNoisy(context: Context) {
-        runBlocking {
-            context.dataStore.edit { preferences: MutablePreferences ->
-                pauseIfNoisyChecked.value = !pauseIfNoisyChecked.value
-                preferences[PAUSE_IF_NOISY_PREFERENCES_KEY] = pauseIfNoisyChecked.value
-            }
+    suspend fun switchPauseIfNoisy(context: Context) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            pauseIfNoisyChecked = !pauseIfNoisyChecked
+            preferences[PAUSE_IF_NOISY_PREFERENCES_KEY] = pauseIfNoisyChecked
         }
     }
 
-    fun switchExcludeRingtones(context: Context) {
-        runBlocking {
-            context.dataStore.edit { preferences: MutablePreferences ->
-                excludeRingtonesChecked.value = !excludeRingtonesChecked.value
-                preferences[EXCLUDE_RINGTONES_KEY] = excludeRingtonesChecked.value
-            }
+    suspend fun switchIncludeRingtones(context: Context) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            includeRingtonesChecked = !includeRingtonesChecked
+            preferences[INCLUDE_RINGTONES_KEY] = includeRingtonesChecked
         }
     }
 
-    fun updateBarSpeed(context: Context, newValue: Float) {
-        runBlocking {
-            context.dataStore.edit { preferences: MutablePreferences ->
-                barSpeed.value = newValue
-                preferences[BAR_SPEED_KEY] = barSpeed.value
-            }
+    suspend fun updateBarSpeed(context: Context, newSpeedBar: BarSpeed) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            barSpeed = newSpeedBar
+            preferences[BAR_SPEED_KEY] = barSpeed.speed
         }
     }
 
-    fun updateRepeatMode(context: Context, newValue: Int) {
-        runBlocking {
-            context.dataStore.edit { preferences: MutablePreferences ->
-                repeatMode.intValue = newValue
-                preferences[REPEAT_MODE_KEY] = repeatMode.intValue
-            }
+    suspend fun updateRepeatMode(context: Context, newValue: Int) {
+        if (newValue !in listOf(
+                Player.REPEAT_MODE_OFF,
+                Player.REPEAT_MODE_ALL,
+                Player.REPEAT_MODE_ONE
+            )
+        ) {
+            throw IllegalArgumentException("Update repeat mode must be 0, 1 or 2. $newValue has been received.")
+        }
+        context.dataStore.edit { preferences: MutablePreferences ->
+            repeatMode = newValue
+            preferences[REPEAT_MODE_KEY] = repeatMode
         }
     }
 
-    fun switchShuffleMode(context: Context) {
-        runBlocking {
-            context.dataStore.edit { preferences: MutablePreferences ->
-                shuffleMode.value = !shuffleMode.value
-                preferences[SHUFFLE_MODE_KEY] = shuffleMode.value
-            }
+    suspend fun setShuffleModeOn(context: Context) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            shuffleMode = true
+            preferences[SHUFFLE_MODE_KEY] = true
         }
     }
 
-    fun switchPauseIfPlayback(context: Context) {
-        runBlocking {
-            context.dataStore.edit { preferences: MutablePreferences ->
-                pauseIfAnotherPlayback.value = !pauseIfAnotherPlayback.value
-                preferences[PAUSE_IF_ANOTHER_PLAYBACK_KEY] = pauseIfAnotherPlayback.value
-            }
+    suspend fun setShuffleModeOff(context: Context) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            shuffleMode = false
+            preferences[SHUFFLE_MODE_KEY] = false
         }
     }
 
-    fun switchAudioOffload(context: Context) {
-        runBlocking {
-            context.dataStore.edit { preferences: MutablePreferences ->
-                audioOffloadChecked.value = !audioOffloadChecked.value
-                preferences[AUDIO_OFFLOAD_CHECKED_KEY] = audioOffloadChecked.value
-            }
+    suspend fun switchPauseIfAnotherPlayback(context: Context) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            pauseIfAnotherPlayback = !pauseIfAnotherPlayback
+            preferences[PAUSE_IF_ANOTHER_PLAYBACK_KEY] = pauseIfAnotherPlayback
         }
     }
 
-    fun whatsNewSeen(context: Context, seen: Boolean) {
-        runBlocking {
-            context.dataStore.edit { preferences: MutablePreferences ->
-                whatsNewSeen.value = seen
-                preferences[WHATS_NEW_SEEN_KEY] = whatsNewSeen.value
-                if (seen) {
-                    val packageManager = context.packageManager
-                    val packageInfo = packageManager.getPackageInfo(context.packageName, 0)
-                    val versionName = 'v' + packageInfo.versionName
-                    preferences[WHATS_NEW_VERSION_SEEN_KEY] = versionName
-                    whatsNewVersionSeen = versionName
+    suspend fun switchAudioOffload(context: Context) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            audioOffloadChecked = !audioOffloadChecked
+            preferences[AUDIO_OFFLOAD_CHECKED_KEY] = audioOffloadChecked
+        }
+    }
+
+    suspend fun seeWhatsNew(context: Context) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            whatsNewSeen = true
+            preferences[WHATS_NEW_SEEN_KEY] = whatsNewSeen
+            val packageManager = context.packageManager
+            val packageInfo = packageManager.getPackageInfo(context.packageName, 0)
+            val versionName = 'v' + packageInfo.versionName
+            preferences[WHATS_NEW_VERSION_SEEN_KEY] = versionName
+            whatsNewVersionSeen = versionName
+        }
+    }
+
+    suspend fun unSeeWhatsNew(context: Context) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            whatsNewSeen = false
+            preferences[WHATS_NEW_SEEN_KEY] = whatsNewSeen
+        }
+    }
+
+    suspend fun switchFilter(context: Context, filterSetting: NavBarSection) {
+        when (filterSetting) {
+            NavBarSection.MUSICS -> {
+                context.dataStore.edit { preferences: MutablePreferences ->
+                    musicsFilter = !musicsFilter
+                    preferences[MUSICS_FILTER_KEY] = musicsFilter
                 }
             }
-        }
-    }
 
-    fun switchFilter(context: Context, filterSetting: MenuTitle) {
-        runBlocking {
-            when (filterSetting) {
-                MenuTitle.MUSICS -> {
-                    context.dataStore.edit { preferences: MutablePreferences ->
-                        musicsFilter.value = !musicsFilter.value
-                        preferences[MUSICS_FILTER_KEY] = musicsFilter.value
-                    }
+            NavBarSection.ARTISTS -> {
+                context.dataStore.edit { preferences: MutablePreferences ->
+                    artistsFilter = !artistsFilter
+                    preferences[ARTISTS_FILTER_KEY] = artistsFilter
                 }
+            }
 
-                MenuTitle.ARTISTS -> {
-                    context.dataStore.edit { preferences: MutablePreferences ->
-                        artistsFilter.value = !artistsFilter.value
-                        preferences[ARTISTS_FILTER_KEY] = artistsFilter.value
-                    }
+            NavBarSection.ALBUMS -> {
+                context.dataStore.edit { preferences: MutablePreferences ->
+                    albumsFilter = !albumsFilter
+                    preferences[ALBUMS_FILTER_KEY] = albumsFilter
                 }
+            }
 
-                MenuTitle.ALBUMS -> {
-                    context.dataStore.edit { preferences: MutablePreferences ->
-                        albumsFilter.value = !albumsFilter.value
-                        preferences[ALBUMS_FILTER_KEY] = albumsFilter.value
-                    }
+            NavBarSection.GENRES -> {
+                context.dataStore.edit { preferences: MutablePreferences ->
+                    genresFilter = !genresFilter
+                    preferences[GENRES_FILTER_KEY] = genresFilter
                 }
+            }
 
-                MenuTitle.GENRES -> {
-                    context.dataStore.edit { preferences: MutablePreferences ->
-                        genresFilter.value = !genresFilter.value
-                        preferences[GENRES_FILTER_KEY] = genresFilter.value
-                    }
+            NavBarSection.FOLDERS -> {
+                context.dataStore.edit { preferences: MutablePreferences ->
+                    foldersFilter = !foldersFilter
+                    preferences[FOLDERS_FILTER_KEY] = foldersFilter
                 }
+            }
 
-                MenuTitle.FOLDERS -> {
-                    context.dataStore.edit { preferences: MutablePreferences ->
-                        foldersFilter.value = !foldersFilter.value
-                        preferences[FOLDERS_FILTER_KEY] = foldersFilter.value
-                    }
-                }
-
-                MenuTitle.PLAYLISTS -> {
-                    context.dataStore.edit { preferences: MutablePreferences ->
-                        playlistsFilter.value = !playlistsFilter.value
-                        preferences[PLAYLISTS_FILTER_KEY] = playlistsFilter.value
-                    }
+            NavBarSection.PLAYLISTS -> {
+                context.dataStore.edit { preferences: MutablePreferences ->
+                    playlistsFilter = !playlistsFilter
+                    preferences[PLAYLISTS_FILTER_KEY] = playlistsFilter
                 }
             }
         }
@@ -391,13 +409,13 @@ object SettingsManager {
 
     suspend fun loadFilters(context: Context) {
         context.dataStore.edit { preferences: MutablePreferences ->
-            foldersFilter.value = preferences[FOLDERS_FILTER_KEY] ?: DEFAULT_FOLDERS_FILTER
-            artistsFilter.value = preferences[ARTISTS_FILTER_KEY] ?: DEFAULT_ARTISTS_FILTER
-            albumsFilter.value = preferences[ALBUMS_FILTER_KEY] ?: DEFAULT_ALBUMS_FILTER
-            genresFilter.value = preferences[GENRES_FILTER_KEY] ?: DEFAULT_GENRES_FILTER
-            playlistsFilter.value =
+            foldersFilter = preferences[FOLDERS_FILTER_KEY] ?: DEFAULT_FOLDERS_FILTER
+            artistsFilter = preferences[ARTISTS_FILTER_KEY] ?: DEFAULT_ARTISTS_FILTER
+            albumsFilter = preferences[ALBUMS_FILTER_KEY] ?: DEFAULT_ALBUMS_FILTER
+            genresFilter = preferences[GENRES_FILTER_KEY] ?: DEFAULT_GENRES_FILTER
+            playlistsFilter =
                 preferences[PLAYLISTS_FILTER_KEY] ?: DEFAULT_PLAYLISTS_FILTER
-            musicsFilter.value = preferences[MUSICS_FILTER_KEY] ?: DEFAULT_MUSICS_FILTER
+            musicsFilter = preferences[MUSICS_FILTER_KEY] ?: DEFAULT_MUSICS_FILTER
         }
     }
 }

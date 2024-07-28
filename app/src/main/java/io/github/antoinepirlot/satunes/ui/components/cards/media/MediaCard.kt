@@ -39,7 +39,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -55,18 +55,19 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.toBitmap
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.Genre
-import io.github.antoinepirlot.satunes.database.models.Media
+import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
-import io.github.antoinepirlot.satunes.database.models.tables.MusicDB
+import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.icons.R
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.ui.ScreenSizes
 import io.github.antoinepirlot.satunes.ui.components.cards.ListItem
 import io.github.antoinepirlot.satunes.ui.components.dialog.album.AlbumOptionsDialog
@@ -78,6 +79,8 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.playlist.PlaylistOpt
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 import io.github.antoinepirlot.satunes.ui.components.texts.Subtitle
 import io.github.antoinepirlot.satunes.ui.utils.getRootFolderName
+import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
+import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.R as RDb
 
 /**
@@ -88,29 +91,21 @@ import io.github.antoinepirlot.satunes.database.R as RDb
 @Composable
 internal fun MediaCard(
     modifier: Modifier = Modifier,
-    media: Media,
+    navController: NavHostController,
+    satunesViewModel: SatunesViewModel = viewModel(),
+    playbackViewModel: PlaybackViewModel = viewModel(),
+    media: MediaImpl,
     onClick: () -> Unit,
-    openedPlaylistWithMusics: PlaylistWithMusics?,
+    openedPlaylist: Playlist?,
 ) {
     val haptics = LocalHapticFeedback.current
-    var showMusicOptions: Boolean by rememberSaveable { mutableStateOf(false) }
-    var showPlaylistOptions: Boolean by rememberSaveable { mutableStateOf(false) }
-    var showArtistOptions: Boolean by rememberSaveable { mutableStateOf(false) }
-    var showAlbumOptions: Boolean by rememberSaveable { mutableStateOf(false) }
-    var showGenreOptions: Boolean by rememberSaveable { mutableStateOf(false) }
-    var showFolderOptions: Boolean by rememberSaveable { mutableStateOf(false) }
+    var showMediaOption: Boolean by remember { mutableStateOf(false) }
 
     val title: String =
         if (media is Folder && media.parentFolder == null) {
             getRootFolderName(title = media.title)
-        } else if (media is PlaylistWithMusics) {
-            if (media.playlist.title == LIKES_PLAYLIST_TITLE) {
-                stringResource(id = RDb.string.likes_playlist_title)
-            } else {
-                media.playlist.title
-            }
-        } else if (media is MusicDB) {
-            media.music!!.title
+        } else if (media is Playlist && media.title == LIKES_PLAYLIST_TITLE) {
+            stringResource(id = RDb.string.likes_playlist_title)
         } else {
             media.title
         }
@@ -118,36 +113,18 @@ internal fun MediaCard(
     Box(
         modifier = modifier.combinedClickable(
             onClick = {
-                if (!showMusicOptions) {
+                if (!showMediaOption) {
                     onClick()
                 }
-                showMusicOptions = false
             },
             onLongClick = {
                 haptics.performHapticFeedback(HapticFeedbackType.LongPress)
-                when (media) {
-                    is Music -> showMusicOptions = true
-                    is PlaylistWithMusics -> showPlaylistOptions = true
-                    is Artist -> showArtistOptions = true
-                    is Album -> showAlbumOptions = true
-                    is Genre -> showGenreOptions = true
-                    is Folder -> showFolderOptions = true
-                }
+                showMediaOption = true
+                satunesViewModel.mediaOptionsIsOpen()
             }
         ),
     ) {
         ListItem(
-            headlineContent = {
-                Column {
-                    NormalText(text = title)
-                    //Use these as for the same thing the builder doesn't like in one
-                    if (media is Album) {
-                        Subtitle(text = media.artist!!.title)
-                    } else if (media is Music) {
-                        Subtitle(text = media.artist.title)
-                    }
-                }
-            },
             leadingContent = {
                 val boxSize: Dp = if (screenWidthDp < ScreenSizes.VERY_VERY_SMALL)
                     25.dp
@@ -161,8 +138,7 @@ internal fun MediaCard(
                     val imageModifier: Modifier = Modifier
                         .fillMaxSize()
                         .align(Alignment.Center)
-                    val playbackController: PlaybackController = PlaybackController.getInstance()
-                    if (media == playbackController.musicPlaying.value) {
+                    if (media == playbackViewModel.musicPlaying) {
                         val playingIcon: SatunesIcons = SatunesIcons.MUSIC_PLAYING
                         Icon(
                             modifier = imageModifier,
@@ -199,75 +175,119 @@ internal fun MediaCard(
                         }
                     }
                 }
+            },
+            headlineContent = {
+                Column {
+                    NormalText(text = title)
+                    //Use these as for the same thing the builder doesn't like in one
+                    if (media is Album) {
+                        Subtitle(text = media.artist.title)
+                    } else if (media is Music) {
+                        Subtitle(text = media.album.title + " - " + media.artist.title)
+                    }
+                }
+            },
+            trailingContent = {
+                if (media is Music) {
+                    val liked: Boolean by media.liked
+                    if (liked) {
+                        val likedIcon: SatunesIcons = SatunesIcons.LIKED
+                        Icon(
+                            imageVector = likedIcon.imageVector,
+                            contentDescription = likedIcon.description
+                        )
+                    }
+                }
             }
         )
     }
     HorizontalDivider(modifier = modifier)
 
     // Music options dialog
-    if (showMusicOptions && media is Music) {
+    if (showMediaOption && media is Music) {
         MusicOptionsDialog(
+            navController = navController,
             music = media,
-            playlistWithMusics = openedPlaylistWithMusics,
-            onDismissRequest = { showMusicOptions = false },
+            playlist = openedPlaylist,
+            onDismissRequest = {
+                showMediaOption = false
+                satunesViewModel.mediaOptionsIsClosed()
+            }
         )
     }
 
     // Playlist option dialog
-    if (showPlaylistOptions && media is PlaylistWithMusics) {
+    if (showMediaOption && media is Playlist) {
         PlaylistOptionsDialog(
-            playlistWithMusics = media,
-            onDismissRequest = { showPlaylistOptions = false }
+            playlist = media,
+            onDismissRequest = {
+                showMediaOption = false
+                satunesViewModel.mediaOptionsIsClosed()
+            }
         )
     }
 
     // Artist option dialog
-    if (showArtistOptions && media is Artist) {
+    if (showMediaOption && media is Artist) {
         ArtistOptionsDialog(
             artist = media,
-            onDismissRequest = { showArtistOptions = false }
+            onDismissRequest = {
+                showMediaOption = false
+                satunesViewModel.mediaOptionsIsClosed()
+            }
         )
     }
 
     // Album option dialog
-    if (showAlbumOptions && media is Album) {
+    if (showMediaOption && media is Album) {
         AlbumOptionsDialog(
+            navController = navController,
             album = media,
-            onDismissRequest = { showAlbumOptions = false }
+            onDismissRequest = {
+                showMediaOption = false
+                satunesViewModel.mediaOptionsIsClosed()
+            }
         )
     }
 
     // Genre option dialog
-    if (showGenreOptions && media is Genre) {
+    if (showMediaOption && media is Genre) {
         GenreOptionsDialog(
             genre = media,
-            onDismissRequest = { showGenreOptions = false }
+            onDismissRequest = {
+                showMediaOption = false
+                satunesViewModel.mediaOptionsIsClosed()
+            }
         )
     }
 
     // Folder option dialog
-    if (showFolderOptions && media is Folder) {
+    if (showMediaOption && media is Folder) {
         FolderOptionsDialog(
             folder = media,
-            onDismissRequest = { showFolderOptions = false }
+            onDismissRequest = {
+                showMediaOption = false
+                satunesViewModel.mediaOptionsIsClosed()
+            },
         )
     }
 }
 
-private fun getRightIconAndDescription(media: Media): SatunesIcons {
+private fun getRightIconAndDescription(media: MediaImpl): SatunesIcons {
     return when (media) {
         is Folder -> SatunesIcons.FOLDER
         is Artist -> SatunesIcons.ARTIST
         is Album -> SatunesIcons.ALBUM
         is Genre -> SatunesIcons.GENRES
-        is PlaylistWithMusics -> SatunesIcons.PLAYLIST
-        else -> SatunesIcons.MUSIC // In that case, media is Music
+        is Playlist -> SatunesIcons.PLAYLIST
+        else -> SatunesIcons.MUSIC // In that case, mediaImpl is Music
     }
 }
 
 @Composable
 @Preview
 private fun CardPreview() {
+    val artist = Artist(title = "Artist Title")
     val music = Music(
         id = 1,
         title = "",
@@ -275,16 +295,18 @@ private fun CardPreview() {
         duration = 2,
         size = 2,
         folder = Folder(title = "Folder"),
-        album = Album(title = "Album Title"),
-        artist = Artist(title = "Artist Title"),
+        album = Album(title = "Album Title", artist = artist),
+        artist = artist,
         genre = Genre(title = "Genre Title"),
         absolutePath = "absolute path",
         context = LocalContext.current
     )
+    val navController: NavHostController = rememberNavController()
     MediaCard(
         modifier = Modifier.fillMaxSize(),
+        navController = navController,
         media = music,
         onClick = {},
-        openedPlaylistWithMusics = null
+        openedPlaylist = null
     )
 }

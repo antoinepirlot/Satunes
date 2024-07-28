@@ -25,7 +25,6 @@
 
 package io.github.antoinepirlot.satunes.ui.components.buttons.settings
 
-import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -36,36 +35,40 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.RadioButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.car.R
-import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
+import io.github.antoinepirlot.satunes.ui.states.SatunesUiState
 import io.github.antoinepirlot.satunes.ui.utils.getRightIconColors
 import io.github.antoinepirlot.satunes.ui.utils.getRightIconTintColor
+import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
 
 /**
  * @author Antoine Pirlot on 05/06/2024
  */
 
 @Composable
-fun ShuffleModeRadioButtons(
-    modifier: Modifier = Modifier
+internal fun ShuffleModeRadioButtons(
+    modifier: Modifier = Modifier,
+    satunesViewModel: SatunesViewModel = viewModel(),
 ) {
+    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+
     val iconList: List<SatunesIcons> = listOf(
         SatunesIcons.SHUFFLE, // i = 0 or false
         SatunesIcons.SHUFFLE// i = 1 or true
     )
 
-    val state: Boolean by rememberSaveable { SettingsManager.shuffleMode }
+    val state: Boolean = satunesUiState.shuffleMode
 
     Row(
         modifier = modifier
@@ -80,13 +83,16 @@ fun ShuffleModeRadioButtons(
             Row(verticalAlignment = Alignment.CenterVertically) {
                 val isShuffleOnIcon: Boolean =
                     i > 0 // If i is 0 then it is shuffle off otherwise shuffle on
-                val context: Context = LocalContext.current
                 val icon: SatunesIcons = iconList[i]
 
                 RadioButton(
                     selected = state == isShuffleOnIcon,
                     onClick = {
-                        SettingsManager.switchShuffleMode(context = context)
+                        if (i == 0) {
+                            satunesViewModel.setShuffleModeOff()
+                        } else {
+                            satunesViewModel.setShuffleModeOn()
+                        }
                     }
                 )
 

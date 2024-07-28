@@ -33,9 +33,8 @@
     <string name="no_folder">Aucun dossier contenant de la musique n\'a été trouvé</string>
     <string name="add_to">"Ajouter à "</string>
     <string name="exclusion_setting">Exclusion de fichiers</string>
-    <string name="exclude_ringtones">Exclure les sonneries</string>
+    <string name="include_ringtones">Inclure les sonneries</string>
     <string name="bar_speed">"Vitesse de la barre de progression: "</string>
-    <string name="second">seconde</string>
     <string name="export">Exporter</string>
     <string name="export_all">Exporter tout</string>
     <string name="_import">Importer</string>
@@ -48,8 +47,8 @@
     <string name="pause_if_another_playback">Pause si un autre application est en cours de lecture</string>
     <string name="update_title">Changer de nom</string>
     <string name="title">Titre</string>
-    <string name="playlist_beta_info">L\'exportation et importation des playlists est en beta du fait que seuls les identifiants des musiques sont enregistrés.\nSi les musiques sont supprimées puis réajoutées sur l\'appareil ou si tu changes d\'appareil, les musiques auront un nouvel identifiant et donc il y aura des mauvaises musiques dans les playlists.\nCe soucis sera réglé dans une prochaine mises à jour.</string>
-    <string name="android_auto_tuto">Pour activer Android Auto tu dois réaliser les étapes suivantes:\n\n1) Va dans les paramètres de Android Auto.\n\n2) Cliques plusieurs fois sur le bouton \"Version\" pour activer les paramètres développeurs.\n\n3) Va dans les paramètres développeurs en cliquant sur les 3 boutons en haut à droite et active le paramètre \"Sources Inconnues\" car mon application n\'est pas publiée dans le Google Play Store.\n\n4) Clique sur les 3 boutons comme au point 3, mais clique sur \"Quitter le mode développeur\" le paramètre que tu viens d\'activer sera enregistré.\n\n5) Il n\'y a plus qu\'à ajouter l\'application au lanceur d\'application de Android Auto dans le menu \"Personnaliser le lanceur\"\n\n6) Bonne écoute et bon voyage ;)</string>
+    <string name="playlists_settings_content">Tu peux importer/exporter tes playlists.\n⚠ Actuellement, seul le chemin absolu est utilisé pour identifier la musique. Si tu la déplace dans un autre répertoire, elle ne sera plus détectée. Je suis toujours occupé de trouver une meilleure solution.</string>
+    <string name="android_auto_content">Pour activer Android Auto tu dois réaliser les étapes suivantes:\n\n1) Va dans les paramètres de Android Auto.\n\n2) Cliques plusieurs fois sur le bouton \"Version\" pour activer les paramètres développeurs.\n\n3) Va dans les paramètres développeurs en cliquant sur les 3 boutons en haut à droite et active le paramètre \"Sources Inconnues\" car mon application n\'est pas publiée dans le Google Play Store.\n\n4) Clique sur les 3 boutons comme au point 3, mais clique sur \"Quitter le mode développeur\" le paramètre que tu viens d\'activer sera enregistré.\n\n5) Il n\'y a plus qu\'à ajouter l\'application au lanceur d\'application de Android Auto dans le menu \"Personnaliser le lanceur\"\n\n6) Bonne écoute et bon voyage ;)\n\n⚠ Garde à l\'esprit que Android Auto n\'a pas été conçu pour charger énormément de données. Si tu as beaucoup trop de musiques pour Android Auto, il risque de buguer.</string>
     <string name="battery_settings">Batterie</string>
     <string name="audio_offload_info">Ce paramètre permet d\'envoyer le traitement audio vers un processus dédié. Cela permet de réduire la consommation d\'énergie.\n\nCependant, dans la librairie Media 3 utilisée dans Satunes, cela peut causer des problèmes de compatibilité ce qui se traduit par des coupures audio. Un problème connu à ce jour est que la musique s\'arrête en cours de lecture ou après la fin d\'un morceau.\n\nEn activant ce paramètre, tu réduis la consommation d\'énergie et augmente la durée de vie de la batterie mais tu es susceptible de rencontrer des coupures audio.\n\nJ\'espère que dans un future proche, le problème puisse être réglé par Google qui détient les librairies Media3 et ExoPlayer. En attendant, j\'essaie de trouver des solutions viables pour réduire la consommation d\'énergie par Satunes.</string>
     <string name="restart_required">Redémarrage requis</string>
@@ -67,4 +66,20 @@
     <string name="remove_dialog_title">Confirmation de Suppression</string>
     <string name="remove_submit">Supprimer</string>
     <string name="see_on_fdroid">Ouvrir dans F-Droid</string>
+    <string name="logs_settings">Logs</string>
+    <string name="logs_settings_content">Tu peux exporter les logs pour me les envoyer par e-mail à l\'adresse: pirlot.antoine@outlook.com.\n\nGrâce à ces logs, je peux mieux comprendre ce qui ne va pas avec l\'application.\n\nLes fichiers logs contiennent des informations sur ce que fait l\'application et son état.\nCes informations incluent : \n- Dates\n- Processus\n- Etat de l\'application\n\nDans ces logs, il n\'y a pas d\'informations confidentielles comme des informations musicales ou des données permettant de t\'identifier.\n\nSi tu n\'es pas convaincu, tu peux choisir de me décrire le problème mais il sera plus difficile pour moi de le résoudre.</string>
+    <string name="update_modal_permanently">Tu ne verras plus cette modal jusqu\'à la prochaine mise à jour</string>
+    <string name="canceled">Annulé</string>
+    <string name="insert_music_to_playlists_success">a été ajoutée à/aux playlist(s)</string>
+    <string name="error_occurred">Une erreur est survenue</string>
+    <string name="retry">Réessayer</string>
+    <string name="insert_musics_to_playlist_success">Les musiques ont été ajoutées à</string>
+    <string name="play_next_success">sera lu après cette musique</string>
+    <string name="add_to_queue_success">a été ajouté à la fin de la liste en cours de lecture.</string>
+    <string name="remove_from_playlist_success">a été supprimé de</string>
+    <string name="remove_playlist_success">a été supprimée.</string>
+    <string name="remove_from_likes_success">Tu n\'aimes plus %1$s.</string>
+    <string name="update_playlist_success">%1$s a été mise à jour.</string>
+    <string name="bar_speed_label">Vitesse</string>
+    <string name="update_modal_not_permanently">Le modal sera toujours montré à la prochaine ouverture.</string>
 </resources>

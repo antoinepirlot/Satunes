@@ -33,6 +33,7 @@ import android.content.IntentFilter
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
+import androidx.annotation.RequiresApi
 import androidx.core.content.getSystemService
 import io.github.antoinepirlot.satunes.internet.R
 import io.github.antoinepirlot.satunes.internet.updates.Versions.ALPHA
@@ -44,68 +45,57 @@ import io.github.antoinepirlot.satunes.internet.updates.Versions.PREVIEW_APK_REG
 import io.github.antoinepirlot.satunes.internet.updates.Versions.RELEASES_URL
 import io.github.antoinepirlot.satunes.internet.updates.Versions.RELEASE_APK_REGEX
 import io.github.antoinepirlot.satunes.internet.updates.Versions.versionType
-import io.github.antoinepirlot.utils.showToastOnUiThread
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
+import io.github.antoinepirlot.satunes.utils.utils.showToastOnUiThread
 import okhttp3.Response
 
 /**
  * @author Antoine Pirlot on 14/04/2024
  */
+
+@RequiresApi(Build.VERSION_CODES.M)
 object UpdateDownloadManager {
     private var downloadId: Long = -1
     private const val MIME_TYPE = "application/vnd.android.package-archive"
+    private val logger = SatunesLogger.getLogger()
 
     fun downloadUpdateApk(context: Context) {
         if (UpdateCheckManager.downloadStatus.value == APKDownloadStatus.CHECKING || UpdateCheckManager.downloadStatus.value == APKDownloadStatus.DOWNLOADING) {
             return
         }
-        CoroutineScope(Dispatchers.IO).launch {
-            UpdateCheckManager.downloadStatus.value = APKDownloadStatus.CHECKING
-            showToastOnUiThread(
-                context = context,
-                message = context.getString(R.string.download_checking)
-            )
-            try {
-                if (UpdateCheckManager.updateAvailableStatus.value != UpdateAvailableStatus.AVAILABLE) {
-                    //Can't be downloaded
-                    UpdateCheckManager.downloadStatus.value = APKDownloadStatus.NOT_FOUND
-                    showToastOnUiThread(
-                        context = context,
-                        message = context.getString(R.string.download_not_found)
-                    )
-                    return@launch
-                }
-                val downloadUrl: String =
-                    getDownloadUrl(context = context) ?: return@launch
-                val appName: String = downloadUrl.split("/").last()
-                val downloadManager: DownloadManager = context.getSystemService()!!
-                val downloadUri: Uri = Uri.parse(downloadUrl)
-                val req: DownloadManager.Request = DownloadManager.Request(downloadUri)
-                req.setMimeType(MIME_TYPE)
-                val destination =
-                    "file://" + context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
-                        .toString() + "/$appName"
-                val destinationUri: Uri = Uri.parse(destination)
-                req.setDestinationUri(destinationUri)
-
-                req.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
-                setDownloadReceiver(context = context)
-                downloadId = downloadManager.enqueue(req)
-                UpdateCheckManager.downloadStatus.value = APKDownloadStatus.DOWNLOADING
+        UpdateCheckManager.downloadStatus.value = APKDownloadStatus.CHECKING
+        try {
+            if (UpdateCheckManager.updateAvailableStatus.value != UpdateAvailableStatus.AVAILABLE) {
+                //Can't be downloaded
+                UpdateCheckManager.downloadStatus.value = APKDownloadStatus.NOT_FOUND
                 showToastOnUiThread(
                     context = context,
-                    message = context.getString(R.string.downloading)
+                    message = context.getString(R.string.download_not_found)
                 )
-            } catch (_: Exception) {
-                UpdateCheckManager.downloadStatus.value = APKDownloadStatus.FAILED
-                showToastOnUiThread(
-                    context = context,
-                    message = context.getString(R.string.download_failed)
-                )
-                UpdateCheckManager.updateAvailableStatus.value = UpdateAvailableStatus.UNDEFINED
+                logger.warning("UpdateCheckManager.updateAvailableStatus.value != UpdateAvailableStatus.AVAILABLE")
+                return
             }
+            val downloadUrl: String = getDownloadUrl(context = context) ?: return
+            val appName: String = downloadUrl.split("/").last()
+            val downloadManager: DownloadManager = context.getSystemService()!!
+            val downloadUri: Uri = Uri.parse(downloadUrl)
+            val req: DownloadManager.Request = DownloadManager.Request(downloadUri)
+            req.setMimeType(MIME_TYPE)
+            val destination =
+                "file://" + context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
+                    .toString() + "/$appName"
+            val destinationUri: Uri = Uri.parse(destination)
+            req.setDestinationUri(destinationUri)
+
+            req.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
+            setDownloadReceiver(context = context)
+            downloadId = downloadManager.enqueue(req)
+            UpdateCheckManager.downloadStatus.value = APKDownloadStatus.DOWNLOADING
+        } catch (e: Throwable) {
+            UpdateCheckManager.downloadStatus.value = APKDownloadStatus.FAILED
+            logger.severe(e.message)
+            UpdateCheckManager.updateAvailableStatus.value = UpdateAvailableStatus.UNDEFINED
+            throw e
         }
     }
 
@@ -134,6 +124,7 @@ object UpdateDownloadManager {
                 context = context,
                 message = context.getString(R.string.download_not_found)
             )
+            logger.warning("HTTP code: ${res.code}")
             return null
         }
         val page: String = res.body!!.string()
@@ -148,6 +139,7 @@ object UpdateDownloadManager {
                 context = context,
                 message = context.getString(R.string.download_not_found)
             )
+            logger.warning("apkFileName is null")
             return null
         }
 
@@ -173,14 +165,19 @@ object UpdateDownloadManager {
      * Launch the installation procedure by request the user to install the app.
      */
     fun installUpdate(context: Context) {
-        val downloadManager: DownloadManager =
-            context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-        val contentUri: Uri = downloadManager.getUriForDownloadedFile(downloadId)
-        val install = Intent(Intent.ACTION_VIEW)
-        install.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-        install.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        install.putExtra(Intent.EXTRA_NOT_UNKNOWN_SOURCE, true)
-        install.data = contentUri
-        context.startActivity(install)
+        try {
+            val downloadManager: DownloadManager =
+                context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+            val contentUri: Uri = downloadManager.getUriForDownloadedFile(downloadId)
+            val install = Intent(Intent.ACTION_VIEW)
+            install.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            install.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            install.putExtra(Intent.EXTRA_NOT_UNKNOWN_SOURCE, true)
+            install.data = contentUri
+            context.startActivity(install)
+        } catch (e: Throwable) {
+            logger.severe(e.message)
+            throw e
+        }
     }
 }

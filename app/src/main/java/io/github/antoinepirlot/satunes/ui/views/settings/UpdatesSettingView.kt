@@ -25,7 +25,8 @@
 
 package io.github.antoinepirlot.satunes.ui.views.settings
 
-import android.content.Context
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -35,28 +36,28 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.internet.updates.UpdateAvailableStatus
 import io.github.antoinepirlot.satunes.internet.updates.UpdateAvailableStatus.AVAILABLE
 import io.github.antoinepirlot.satunes.internet.updates.UpdateAvailableStatus.CANNOT_CHECK
 import io.github.antoinepirlot.satunes.internet.updates.UpdateAvailableStatus.UNDEFINED
 import io.github.antoinepirlot.satunes.internet.updates.UpdateAvailableStatus.UP_TO_DATE
-import io.github.antoinepirlot.satunes.internet.updates.UpdateCheckManager
-import io.github.antoinepirlot.satunes.internet.updates.UpdateCheckManager.getCurrentVersion
 import io.github.antoinepirlot.satunes.ui.components.LoadingCircle
 import io.github.antoinepirlot.satunes.ui.components.buttons.updates.CheckUpdateButton
 import io.github.antoinepirlot.satunes.ui.components.settings.UpdateAvailable
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 import io.github.antoinepirlot.satunes.ui.components.texts.Title
+import io.github.antoinepirlot.satunes.ui.local.LocalMainScope
+import io.github.antoinepirlot.satunes.ui.local.LocalSnackBarHostState
+import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
+import kotlinx.coroutines.CoroutineScope
 
 /**
  * @author Antoine Pirlot on 11/04/2024
@@ -64,14 +65,17 @@ import io.github.antoinepirlot.satunes.ui.components.texts.Title
 
 private val PADDING = 16.dp
 
+@RequiresApi(Build.VERSION_CODES.M)
 @Composable
 internal fun UpdatesSettingView(
     modifier: Modifier = Modifier,
+    satunesViewModel: SatunesViewModel = viewModel(),
 ) {
-    val context: Context = LocalContext.current
-    val currentVersion = getCurrentVersion(context = context)
-    val isCheckingUpdate: Boolean by rememberSaveable { UpdateCheckManager.isCheckingUpdate }
-    val updateAvailable: UpdateAvailableStatus by remember { UpdateCheckManager.updateAvailableStatus }
+    val scope: CoroutineScope = LocalMainScope.current
+    val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
+    val currentVersion: String = satunesViewModel.getCurrentVersion()
+    val isCheckingUpdate: Boolean = satunesViewModel.isCheckingUpdate
+    val updateAvailable: UpdateAvailableStatus = satunesViewModel.updateAvailableStatus
     val scrollState: ScrollState = rememberScrollState()
 
     Column(
@@ -99,12 +103,16 @@ internal fun UpdatesSettingView(
                     Spacer(modifier = Modifier.size(PADDING)) // To align with text and not have a vertical cut
                     CheckUpdateButton()
                 }
-                AVAILABLE -> UpdateAvailable()
+
+                AVAILABLE -> {
+                    UpdateAvailable()
+                }
             }
         }
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.M)
 @Preview
 @Composable
 private fun VersionViewPreview() {

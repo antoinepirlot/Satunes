@@ -27,95 +27,69 @@ package io.github.antoinepirlot.satunes.ui.views.media.folder
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.sp
-import androidx.media3.common.MediaItem
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Folder
-import io.github.antoinepirlot.satunes.database.models.Media
-import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.router.utils.openMediaFromFolder
+import io.github.antoinepirlot.satunes.ui.components.bars.FolderPath
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
-import io.github.antoinepirlot.satunes.ui.components.texts.Title
-import io.github.antoinepirlot.satunes.ui.utils.getRootFolderName
-import io.github.antoinepirlot.satunes.ui.views.MediaListView
-import java.util.SortedMap
-import java.util.SortedSet
+import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
+import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 
 /**
  * @author Antoine Pirlot on 01/04/2024
  */
 
+
 @Composable
 internal fun FolderView(
     modifier: Modifier = Modifier,
+    navController: NavHostController,
+    playbackViewModel: PlaybackViewModel = viewModel(),
     folder: Folder,
 ) {
-    val playbackController: PlaybackController = PlaybackController.getInstance()
-    val folderMusicMediaItemSortedMap: SortedMap<Music, MediaItem> = remember {
-        folder.musicMediaItemSortedMap
-    }
-
-    //Recompose if data changed
-    var mapChanged: Boolean by rememberSaveable { folder.musicMediaItemSortedMapUpdate }
-    if (mapChanged) {
-        mapChanged = false
-    }
-    //
-
-    val subFolderMap: SortedSet<Media> = sortedSetOf()
-
     Column(modifier = modifier) {
-        if (folder.parentFolder == null) {
-            Title(
-                text = '/' + getRootFolderName(title = folder.title),
-                fontSize = 20.sp,
-                maxLines = 2
-            )
-        } else {
-            val allPath: MutableList<String> = folder.absolutePath.split("/").toMutableList()
-            allPath.removeFirst()
-            allPath[0] = getRootFolderName(title = allPath[0])
-            var path = ""
-            for (s: String in allPath) {
-                path += "/${s}"
-            }
-            Title(text = path, fontSize = 20.sp, maxLines = 2)
-        }
-        loadSubFolders(
-            subFolderMap = subFolderMap,
-            folder = folder,
-            folderMusicMediaItemSortedMap = folderMusicMediaItemSortedMap
-        )
+        FolderPath(folder)
         MediaListView(
-            mediaList = subFolderMap.toList(),
-            openMedia = { clickedMedia: Media ->
-                openMediaFromFolder(clickedMedia)
+            navController = navController,
+            mediaImplCollection = folder.getSubFolderListWithMusics(),
+            openMedia = { clickedMediaImpl: MediaImpl ->
+                openMediaFromFolder(
+                    media = clickedMediaImpl,
+                    playbackViewModel = playbackViewModel,
+                    navController = navController
+                )
             },
-            onFABClick = { openCurrentMusic() },
+            onFABClick = {
+                openCurrentMusic(
+                    playbackViewModel = playbackViewModel,
+                    navController = navController
+                )
+            },
             extraButtons = {
-                val folderMusics: SortedMap<Music, MediaItem> = folder.getAllMusic()
-                if (folderMusics.isNotEmpty()) {
+                if (folder.isNotEmpty()) {
                     ExtraButton(icon = SatunesIcons.PLAY, onClick = {
-                        playbackController.loadMusic(musicMediaItemSortedMap = folderMusics)
-                        openMedia()
+                        playbackViewModel.loadMusicFromMedia(media = folder)
+                        openMedia(
+                            playbackViewModel = playbackViewModel,
+                            navController = navController
+                        )
                     })
                     ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
-                        playbackController.loadMusic(
-                            musicMediaItemSortedMap = folderMusics,
-                            shuffleMode = true
+                        playbackViewModel.loadMusicFromMedia(media = folder, shuffleMode = true)
+                        openMedia(
+                            playbackViewModel = playbackViewModel,
+                            navController = navController
                         )
-                        openMedia()
                     })
                 }
             },
@@ -124,22 +98,9 @@ internal fun FolderView(
     }
 }
 
-private fun loadSubFolders(
-    subFolderMap: SortedSet<Media>,
-    folder: Folder,
-    folderMusicMediaItemSortedMap: SortedMap<Music, MediaItem>
-) {
-    //Load sub-folders
-    subFolderMap.addAll(folder.getSubFolderMapAsMedia().values)
-
-    //Load sub-folder's musics
-    folderMusicMediaItemSortedMap.forEach { (music: Music, _) ->
-        subFolderMap.add(music)
-    }
-}
-
 @Preview
 @Composable
 private fun FolderViewPreview() {
-    FolderView(folder = Folder(id = 0, title = "Folder title"))
+    val navController: NavHostController = rememberNavController()
+    FolderView(navController = navController, folder = Folder(title = "Folder title"))
 }

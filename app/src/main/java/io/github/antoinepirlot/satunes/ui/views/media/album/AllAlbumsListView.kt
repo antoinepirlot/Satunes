@@ -26,24 +26,22 @@
 package io.github.antoinepirlot.satunes.ui.views.media.album
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.media3.common.MediaItem
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Album
-import io.github.antoinepirlot.satunes.database.models.Media
-import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.database.services.DataManager
+import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
-import io.github.antoinepirlot.satunes.ui.views.MediaListView
-import java.util.SortedMap
-import java.util.SortedSet
+import io.github.antoinepirlot.satunes.ui.viewmodels.DataViewModel
+import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
+import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 
 /**
  * @author Antoine Pirlot on 01/04/2024
@@ -52,37 +50,43 @@ import java.util.SortedSet
 @Composable
 internal fun AllAlbumsListView(
     modifier: Modifier = Modifier,
+    navController: NavHostController,
+    dataViewModel: DataViewModel = viewModel(),
+    playbackViewModel: PlaybackViewModel = viewModel(),
 ) {
-    val playbackController: PlaybackController = PlaybackController.getInstance()
-
-    val albumSet: SortedSet<Album> = remember { DataManager.albumSet }
+    val albumSet: Set<Album> = dataViewModel.getAlbumSet()
 
     MediaListView(
         modifier = modifier,
-        mediaList = albumSet.toList(),
+        navController = navController,
+        mediaImplCollection = albumSet,
 
-        openMedia = { clickedMedia: Media ->
-            openMedia(media = clickedMedia)
+        openMedia = { clickedMediaImpl: MediaImpl ->
+            openMedia(
+                playbackViewModel = playbackViewModel,
+                navController = navController,
+                media = clickedMediaImpl
+            )
         },
-        onFABClick = { openCurrentMusic() },
+        onFABClick = {
+            openCurrentMusic(
+                playbackViewModel = playbackViewModel,
+                navController = navController
+            )
+        },
         extraButtons = {
-            val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
-            // TODO Move into object
-            albumSet.forEach { album: Album ->
-                musicMediaItemSortedMap.putAll(album.musicMediaItemSortedMap)
-            }
-            if(musicMediaItemSortedMap.isNotEmpty()) {
+            if (albumSet.isNotEmpty()) {
                 ExtraButton(icon = SatunesIcons.PLAY, onClick = {
-                    playbackController.loadMusic(musicMediaItemSortedMap = musicMediaItemSortedMap)
-                    openMedia()
+                    playbackViewModel.loadMusicFromMedias(medias = albumSet)
+                    openMedia(playbackViewModel = playbackViewModel, navController = navController)
                 })
                 ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
 
-                    playbackController.loadMusic(
-                        musicMediaItemSortedMap = musicMediaItemSortedMap,
+                    playbackViewModel.loadMusicFromMedias(
+                        medias = albumSet,
                         shuffleMode = true
                     )
-                    openMedia()
+                    openMedia(playbackViewModel = playbackViewModel, navController = navController)
                 })
             }
         },
@@ -93,5 +97,6 @@ internal fun AllAlbumsListView(
 @Preview
 @Composable
 private fun AllAlbumsListViewPreview() {
-    AllAlbumsListView()
+    val navController: NavHostController = rememberNavController()
+    AllAlbumsListView(navController = navController)
 }

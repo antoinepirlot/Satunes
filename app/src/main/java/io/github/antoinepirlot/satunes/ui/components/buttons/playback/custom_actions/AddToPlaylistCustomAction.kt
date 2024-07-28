@@ -25,28 +25,26 @@
 
 package io.github.antoinepirlot.satunes.ui.components.buttons.playback.custom_actions
 
-import android.content.Context
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
-import io.github.antoinepirlot.satunes.database.services.DataManager
-import io.github.antoinepirlot.satunes.database.services.DatabaseManager
+import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.playback.services.PlaybackController
-import io.github.antoinepirlot.satunes.services.MediaSelectionManager
-import io.github.antoinepirlot.satunes.ui.components.buttons.playback.RowButton
+import io.github.antoinepirlot.satunes.ui.components.buttons.playback.CustomActionButton
 import io.github.antoinepirlot.satunes.ui.components.dialog.MediaSelectionDialog
-import java.util.SortedMap
+import io.github.antoinepirlot.satunes.ui.local.LocalSnackBarHostState
+import io.github.antoinepirlot.satunes.ui.viewmodels.DataViewModel
+import io.github.antoinepirlot.satunes.ui.viewmodels.MediaSelectionViewModel
+import kotlinx.coroutines.CoroutineScope
 
 /**
  * @author Antoine Pirlot on 01/06/2024
@@ -55,11 +53,15 @@ import java.util.SortedMap
 @Composable
 internal fun AddToPlaylistCustomAction(
     modifier: Modifier = Modifier,
+    dataViewModel: DataViewModel = viewModel(),
+    mediaSelectionViewModel: MediaSelectionViewModel = viewModel(),
+    music: Music,
 ) {
-    val context: Context = LocalContext.current
+    val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
+    val scope: CoroutineScope = rememberCoroutineScope()
     var showForm: Boolean by rememberSaveable { mutableStateOf(false) }
 
-    RowButton(
+    CustomActionButton(
         modifier = modifier,
         icon = SatunesIcons.PLAYLIST_ADD,
         text = stringResource(id = R.string.add_to_playlist),
@@ -67,13 +69,12 @@ internal fun AddToPlaylistCustomAction(
     )
 
     if (showForm) {
-        val playlistMap: SortedMap<String, PlaylistWithMusics> =
-            remember { DataManager.playlistWithMusicsMap }
+        val playlistMap: Set<Playlist> = dataViewModel.getPlaylistSet()
 
         //Recompose if data changed
-        var mapChanged: Boolean by rememberSaveable { DataManager.playlistWithMusicsMapUpdated }
+        val mapChanged: Boolean = dataViewModel.playlistSetUpdated
         if (mapChanged) {
-            mapChanged = false
+            dataViewModel.playlistSetUpdated()
         }
         //
 
@@ -81,29 +82,31 @@ internal fun AddToPlaylistCustomAction(
             onDismissRequest = { showForm = false },
             onConfirm = {
                 addMusicPlayingToPlaylist(
-                    context = context,
-                    checkedPlaylists = MediaSelectionManager.getCheckedPlaylistWithMusics()
+                    scope = scope,
+                    snackBarHostState = snackBarHostState,
+                    dataViewModel = dataViewModel,
+                    checkedPlaylists = mediaSelectionViewModel.getCheckedPlaylistWithMusics(),
+                    music = music
                 )
                 showForm = false
             },
-            mediaList = DataManager.playlistWithMusicsMap.values.toList(),
+            mediaImplCollection = playlistMap,
             icon = SatunesIcons.PLAYLIST_ADD
         )
     }
 }
 
 private fun addMusicPlayingToPlaylist(
-    context: Context,
-    checkedPlaylists: List<PlaylistWithMusics>
+    scope: CoroutineScope,
+    snackBarHostState: SnackbarHostState,
+    dataViewModel: DataViewModel,
+    checkedPlaylists: List<Playlist>,
+    music: Music,
 ) {
-    val playbackController: PlaybackController = PlaybackController.getInstance()
-    val musicPlaying: Music = playbackController.musicPlaying.value!!
-    val db = DatabaseManager(context = context)
-    db.insertMusicToPlaylists(music = musicPlaying, playlists = checkedPlaylists)
-}
-
-@Preview
-@Composable
-private fun AddToPlaylistRowButtonPreview() {
-    AddToPlaylistCustomAction()
+    dataViewModel.insertMusicToPlaylists(
+        scope = scope,
+        snackBarHostState = snackBarHostState,
+        music = music,
+        playlists = checkedPlaylists
+    )
 }

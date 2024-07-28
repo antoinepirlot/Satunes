@@ -25,28 +25,20 @@
 
 package io.github.antoinepirlot.satunes.database.models
 
-import android.graphics.Bitmap
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.media3.common.MediaItem
-import java.util.SortedMap
+import java.util.SortedSet
 
 /**
  * @author Antoine Pirlot on 27/03/2024
  */
 
-data class Artist(
-    override val id: Long = nextId,
-    override var title: String,
-    val albumSortedMap: SortedMap<String, Album> = sortedMapOf(),
-) : Media {
-    override var liked: Boolean = false
-    override var artwork: Bitmap? = null
+class Artist(
+    title: String,
+) : MediaImpl(id = nextId, title = title) {
+    private val albumSortedSet: SortedSet<Album> = sortedSetOf()
 
     val albumSortedMapUpdate: MutableState<Boolean> = mutableStateOf(false)
-
-    override val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
-    val musicMediaItemSortedMapUpdate: MutableState<Boolean> = mutableStateOf(false)
 
     companion object {
         var nextId: Long = 1
@@ -56,16 +48,20 @@ data class Artist(
         nextId++
     }
 
-    fun addAlbum(album: Album) {
-        if (!albumSortedMap.contains(album.title)) {
-            albumSortedMap[album.title] = album
+    fun addAlbum(album: Album): Boolean {
+        if (!contains(album = album)) {
+            albumSortedSet.add(element = album)
+            return true
         }
+        return false
     }
 
-    fun addMusic(music: Music) {
-        if (!musicMediaItemSortedMap.contains(music)) {
-            musicMediaItemSortedMap[music] = music.mediaItem
-        }
+    fun getAlbumSet(): Set<Album> {
+        return this.albumSortedSet
+    }
+
+    fun contains(album: Album): Boolean {
+        return this.albumSortedSet.contains(album)
     }
 
     override fun toString(): String {

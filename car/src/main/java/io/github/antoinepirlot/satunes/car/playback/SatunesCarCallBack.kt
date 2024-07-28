@@ -34,20 +34,15 @@ import android.support.v4.media.session.PlaybackStateCompat.ACTION_SKIP_TO_NEXT
 import android.support.v4.media.session.PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS
 import android.support.v4.media.session.PlaybackStateCompat.STATE_PAUSED
 import android.support.v4.media.session.PlaybackStateCompat.STATE_PLAYING
-import androidx.media3.common.MediaItem
 import io.github.antoinepirlot.satunes.car.pages.ScreenPages
-import io.github.antoinepirlot.satunes.database.models.Album
-import io.github.antoinepirlot.satunes.database.models.Artist
-import io.github.antoinepirlot.satunes.database.models.Folder
-import io.github.antoinepirlot.satunes.database.models.Genre
+import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
-import io.github.antoinepirlot.satunes.database.services.DataManager
+import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import java.util.SortedMap
 
 /**
  * @author Antoine Pirlot on 16/03/2024
@@ -60,6 +55,8 @@ internal object SatunesCarCallBack : MediaSessionCompat.Callback() {
 
     internal const val ACTION_SHUFFLE = "ACTION_SHUFFLE"
     internal const val ACTION_REPEAT = "ACTION_REPEAT"
+
+    private lateinit var _job: Job
 
     override fun onPlay() {
         val playbackController: PlaybackController = PlaybackController.getInstance()
@@ -85,14 +82,20 @@ internal object SatunesCarCallBack : MediaSessionCompat.Callback() {
     }
 
     override fun onPlayFromMediaId(mediaId: String, extras: Bundle?) {
-        val shuffleMode: Boolean = mediaId == "shuffle"
-        loadMusic(shuffleMode = shuffleMode)
+        RouteManager.setShuffleButtonSelected(selected = true)
+        val shuffleMode: Boolean = RouteManager.isShuffleButtonSelected()
+        loadMusic()
+        RouteManager.setShuffleButtonSelected(selected = false)
         val playbackController: PlaybackController = PlaybackController.getInstance()
         var musicToPlay: Music? = null
         if (!shuffleMode) {
-            musicToPlay = DataManager.getMusic(musicId = mediaId.toLong())
+            musicToPlay = DataManager.getMusic(id = mediaId.toLong())
         }
         playbackController.start(musicToPlay = musicToPlay)
+    }
+
+    override fun onPlayFromSearch(query: String?, extras: Bundle?) {
+        super.onPlayFromSearch(query, extras)
     }
 
     override fun onSkipToNext() {
@@ -133,71 +136,44 @@ internal object SatunesCarCallBack : MediaSessionCompat.Callback() {
     /**
      * Load music from the last route deque route.
      */
-    private fun loadMusic(shuffleMode: Boolean = false) {
-        SatunesCarMusicService.updateQueue()
-        val lastRoute: String = SatunesCarMusicService.routeDeque.last()
+    private fun loadMusic() {
+        val selectedTab: ScreenPages = RouteManager.getSelectedTab()
         val playbackController: PlaybackController = PlaybackController.getInstance()
-        try {
-            loadMusicFromMedia(shuffleMode = shuffleMode, mediaId = lastRoute.toLong())
-        } catch (e: NumberFormatException) {
-            val mapToLoad: SortedMap<Music, MediaItem> = DataManager.musicMediaItemSortedMap
-            playbackController.loadMusic(
-                musicMediaItemSortedMap = mapToLoad,
-                shuffleMode = shuffleMode
-            )
-            CoroutineScope(Dispatchers.IO).launch {
-                mapToLoad.forEach { (music: Music, _: MediaItem) ->
-                    SatunesCarMusicService.addToQueue(media = music)
+        var musicToPlay: Music? = null
+        val selectedMediaImpl: MediaImpl? = RouteManager.getSelectedMediaImpl()
+        var musicSet: Set<Music> = DataManager.getMusicSet()
+        if (selectedMediaImpl != null) {
+            musicSet = when (selectedTab) {
+                ScreenPages.ALL_FOLDERS -> selectedMediaImpl.getMusicSet()
+                ScreenPages.ALL_ALBUMS -> selectedMediaImpl.getMusicSet()
+                ScreenPages.ALL_ARTISTS -> selectedMediaImpl.getMusicSet()
+                ScreenPages.ALL_GENRES -> selectedMediaImpl.getMusicSet()
+                ScreenPages.ALL_PLAYLISTS -> selectedMediaImpl.getMusicSet()
+                ScreenPages.ALL_MUSICS -> DataManager.getMusicSet()
+                else -> {
+                    musicToPlay = selectedMediaImpl as Music
+                    musicSet
                 }
-                SatunesCarMusicService.updateQueue()
             }
         }
-    }
-
-    /**
-     * Load musics from the media matching mediaId according to the last route deque route
-     */
-    private fun loadMusicFromMedia(shuffleMode: Boolean, mediaId: Long) {
-        val playbackController: PlaybackController = PlaybackController.getInstance()
-        val routeDeque: RouteDeque = SatunesCarMusicService.routeDeque
-        var musicToPlay: Music? = null
-        val musicMediaItemSortedMap: SortedMap<Music, MediaItem> =
-            when (routeDeque.oneBeforeLast()) {
-                ScreenPages.ALL_FOLDERS.id -> {
-                    //Current folder has to be loaded (music)
-                    val folder: Folder = DataManager.getFolder(folderId = mediaId)
-                    folder.musicMediaItemSortedMap
-                }
-
-                ScreenPages.ALL_ALBUMS.id -> {
-                    val album: Album = DataManager.getAlbum(albumId = mediaId)
-                    album.musicMediaItemSortedMap
-                }
-
-                ScreenPages.ALL_ARTISTS.id -> {
-                    val artist: Artist = DataManager.getArtist(artistId = mediaId)
-                    artist.musicMediaItemSortedMap
-                }
-
-                ScreenPages.ALL_GENRES.id -> {
-                    val genre: Genre = DataManager.getGenre(genreId = mediaId)
-                    genre.musicMediaItemSortedMap
-                }
-
-                ScreenPages.ALL_PLAYLISTS.id -> {
-                    val playlistWithMusics: PlaylistWithMusics = DataManager.getPlaylist(mediaId)
-                    playlistWithMusics.musicMediaItemSortedMap
-                }
-
-                else -> {
-                    musicToPlay = DataManager.getMusic(musicId = mediaId)
-                    DataManager.musicMediaItemSortedMap
-                }
-            }
         playbackController.loadMusic(
-            musicMediaItemSortedMap = musicMediaItemSortedMap,
-            shuffleMode = shuffleMode,
+            musicSet = musicSet,
+            shuffleMode = RouteManager.isShuffleButtonSelected(),
             musicToPlay = musicToPlay
         )
+        loadInQueue(musicSet = musicSet)
+    }
+
+    private fun loadInQueue(musicSet: Set<Music>) {
+        if (this::_job.isInitialized) {
+            _job.cancel()
+        }
+        _job = CoroutineScope(Dispatchers.IO).launch {
+            SatunesCarMusicService.resetQueue()
+            musicSet.forEach { music: Music ->
+                SatunesCarMusicService.addToQueue(media = music)
+            }
+            SatunesCarMusicService.updateQueue()
+        }
     }
 }

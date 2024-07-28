@@ -42,6 +42,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.github.antoinepirlot.satunes.database.models.Album
+import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.ui.ScreenSizes
 import io.github.antoinepirlot.satunes.ui.components.images.AlbumArtwork
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
@@ -82,7 +83,7 @@ internal fun AlbumGridCard(
         ) {
             AlbumArtwork(
                 modifier.size(artworkSize),
-                media = album,
+                mediaImpl = album,
                 onClick = onClick
             )
             NormalText(
@@ -98,5 +99,7 @@ internal fun AlbumGridCard(
 @Preview
 @Composable
 private fun AlbumGridCardPreview() {
-    AlbumGridCard(album = Album(id = 1, title = "Album #1"), onClick = {})
+    AlbumGridCard(
+        album = Album(title = "Album #1", artist = Artist(title = "Artist #1")),
+        onClick = {})
 }

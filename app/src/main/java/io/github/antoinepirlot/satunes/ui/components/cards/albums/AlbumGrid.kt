@@ -42,6 +42,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Album
+import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.ui.components.EmptyView
 import io.github.antoinepirlot.satunes.ui.components.texts.Title
 
@@ -52,34 +53,41 @@ import io.github.antoinepirlot.satunes.ui.components.texts.Title
 @Composable
 internal fun AlbumGrid(
     modifier: Modifier = Modifier,
-    mediaList: List<Album>,
+    albumCollection: Collection<Album>,
     onClick: (album: Album?) -> Unit,
 ) {
-    Column(modifier = modifier) {
-            if (mediaList.isNotEmpty()) {
-                Title(
-                    modifier = Modifier.padding(start = 16.dp),
-                    text = stringResource(id = io.github.antoinepirlot.satunes.database.R.string.albums),
-                    textAlign = TextAlign.Left,
-                    fontSize = 25.sp
-                )
-                val lazyState = rememberLazyListState()
-                LazyRow(
-                    modifier = modifier.fillMaxWidth(),
-                    state = lazyState
-                ) {
-                    items(
-                        items = mediaList,
-                        key = { it.id }
-                    ) { album: Album ->
-                        AlbumGridCard(album = album, onClick = onClick)
-                        Spacer(modifier = Modifier.size(16.dp))
-                    }
-                }
-            } else {
-                EmptyView(text = stringResource(id = R.string.no_album))
-            }
+    val albumList: List<Album> =
+        try {
+            albumCollection as List<Album>
+        } catch (_: ClassCastException) {
+            albumCollection.toList()
         }
+
+    Column(modifier = modifier) {
+        if (albumList.isNotEmpty()) {
+            Title(
+                modifier = Modifier.padding(start = 16.dp),
+                text = stringResource(id = io.github.antoinepirlot.satunes.database.R.string.albums),
+                textAlign = TextAlign.Left,
+                fontSize = 25.sp
+            )
+            val lazyState = rememberLazyListState()
+            LazyRow(
+                modifier = modifier.fillMaxWidth(),
+                state = lazyState
+            ) {
+                items(
+                    items = albumList,
+                    key = { it.id }
+                ) { album: Album ->
+                    AlbumGridCard(album = album, onClick = onClick)
+                    Spacer(modifier = Modifier.size(16.dp))
+                }
+            }
+        } else {
+            EmptyView(text = stringResource(id = R.string.no_album))
+        }
+    }
 }
 
 @Preview
@@ -87,7 +95,7 @@ internal fun AlbumGrid(
 private fun AlbumGridPreview() {
     val albumList: MutableList<Album> = mutableListOf()
     for (i: Int in 0..10) {
-        albumList.add(Album(id = i.toLong(), title = "Album #$i"))
+        albumList.add(Album(title = "Album #$i", artist = Artist(title = "Artist $i")))
     }
-    AlbumGrid(mediaList = albumList, onClick = {})
+    AlbumGrid(albumCollection = albumList, onClick = {})
 }

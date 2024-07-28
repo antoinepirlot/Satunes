@@ -28,20 +28,18 @@ package io.github.antoinepirlot.satunes.ui.utils
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
-import androidx.media3.common.MediaItem
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Folder
-import io.github.antoinepirlot.satunes.database.models.Media
-import io.github.antoinepirlot.satunes.database.models.MenuTitle
+import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.icons.SatunesIcons.ALBUM
 import io.github.antoinepirlot.satunes.icons.SatunesIcons.ARTIST
 import io.github.antoinepirlot.satunes.icons.SatunesIcons.FOLDER
 import io.github.antoinepirlot.satunes.icons.SatunesIcons.GENRES
 import io.github.antoinepirlot.satunes.icons.SatunesIcons.MUSIC
 import io.github.antoinepirlot.satunes.icons.SatunesIcons.PLAYLIST
-import io.github.antoinepirlot.satunes.playback.services.PlaybackController
-import java.util.SortedMap
+import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
 
 /**
  * @author Antoine Pirlot on 27/01/24
@@ -53,46 +51,36 @@ import java.util.SortedMap
  * @param mediaToPlay the music to play from the music list
  */
 
-internal fun startMusic(mediaToPlay: Media? = null) {
-    val playbackController = PlaybackController.getInstance()
-
+internal fun startMusic(
+    playbackViewModel: PlaybackViewModel,
+    mediaToPlay: MediaImpl? = null
+) {
     when (mediaToPlay) {
         is Music -> {
-            playbackController.start(mediaToPlay)
+            playbackViewModel.start(mediaToPlay)
         }
 
         is Folder -> {
-            playbackController.start()
+            playbackViewModel.start()
         }
 
         null -> {
-            playbackController.start()
+            playbackViewModel.start()
         }
     }
 }
 
-/**
- * Create the list of all music in the folder and subfolder
- */
-fun getMusicListFromFolder(folder: Folder): SortedMap<Music, MediaItem> {
-    val mapOfMusic: SortedMap<Music, MediaItem> = folder.musicMediaItemSortedMap.toSortedMap()
-    for (subfolder in folder.getSubFolderList().values) {
-        mapOfMusic.putAll(subfolder.musicMediaItemSortedMap)
-    }
-    return mapOfMusic
-}
+fun getRightIconAndDescription(navBarSection: NavBarSection): Pair<ImageVector, String> {
+    return when (navBarSection) {
+        NavBarSection.FOLDERS -> FOLDER.imageVector to FOLDER.description
 
-fun getRightIconAndDescription(menuTitle: MenuTitle): Pair<ImageVector, String> {
-    return when (menuTitle) {
-        MenuTitle.FOLDERS -> FOLDER.imageVector to FOLDER.description
+        NavBarSection.ARTISTS -> ARTIST.imageVector to ARTIST.description
 
-        MenuTitle.ARTISTS -> ARTIST.imageVector to ARTIST.description
+        NavBarSection.ALBUMS -> ALBUM.imageVector to ALBUM.description
 
-        MenuTitle.ALBUMS -> ALBUM.imageVector to ALBUM.description
+        NavBarSection.GENRES -> GENRES.imageVector to GENRES.description
 
-        MenuTitle.GENRES -> GENRES.imageVector to GENRES.description
-
-        MenuTitle.PLAYLISTS -> PLAYLIST.imageVector to PLAYLIST.description
+        NavBarSection.PLAYLISTS -> PLAYLIST.imageVector to PLAYLIST.description
 
         else -> MUSIC.imageVector to MUSIC.description
     }

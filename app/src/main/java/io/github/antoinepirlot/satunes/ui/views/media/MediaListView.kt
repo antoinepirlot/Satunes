@@ -23,7 +23,7 @@
  * PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.views
+package io.github.antoinepirlot.satunes.ui.views.media
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -34,17 +34,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.Genre
-import io.github.antoinepirlot.satunes.database.models.Media
+import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
-import io.github.antoinepirlot.satunes.playback.services.PlaybackController
+import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.ui.components.EmptyView
 import io.github.antoinepirlot.satunes.ui.components.bars.ShowCurrentMusicButton
 import io.github.antoinepirlot.satunes.ui.components.cards.media.MediaCardList
+import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
 
 /**
  * @author Antoine Pirlot on 01/02/24
@@ -53,9 +56,11 @@ import io.github.antoinepirlot.satunes.ui.components.cards.media.MediaCardList
 @Composable
 internal fun MediaListView(
     modifier: Modifier = Modifier,
-    mediaList: List<Media>,
-    openMedia: (media: Media) -> Unit,
-    openedPlaylistWithMusics: PlaylistWithMusics? = null,
+    navController: NavHostController,
+    playbackViewModel: PlaybackViewModel = viewModel(),
+    mediaImplCollection: Collection<MediaImpl>,
+    openMedia: (mediaImpl: MediaImpl) -> Unit,
+    openedPlaylistWithMusics: Playlist? = null,
     onFABClick: () -> Unit,
     header: @Composable () -> Unit = {},
     extraButtons: @Composable () -> Unit = { /*By default there's no extra buttons*/ },
@@ -68,20 +73,21 @@ internal fun MediaListView(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 extraButtons()
-                if (PlaybackController.getInstance().musicPlaying.value != null) {
+                if (playbackViewModel.musicPlaying != null) {
                     ShowCurrentMusicButton(onClick = onFABClick)
                 }
             }
         },
         floatingActionButtonPosition = FabPosition.End
     ) { innerPadding ->
-        if (mediaList.isNotEmpty()) {
+        if (mediaImplCollection.isNotEmpty()) {
             MediaCardList(
                 modifier = Modifier.padding(innerPadding),
+                navController = navController,
                 header = header,
-                mediaList = mediaList,
+                mediaImplCollection = mediaImplCollection,
                 openMedia = openMedia,
-                openedPlaylistWithMusics = openedPlaylistWithMusics
+                openedPlaylist = openedPlaylistWithMusics
             )
         } else {
             EmptyView(
@@ -104,14 +110,16 @@ private fun MediaListViewPreview() {
             size = 0,
             absolutePath = "",
             folder = Folder(title = "Folder"),
-            album = Album(title = "Album Title"),
+            album = Album(title = "Album Title", artist = Artist(title = "Artist Title")),
             artist = Artist(title = "Artist Title"),
             genre = Genre(title = "Genre Title"),
             context = LocalContext.current
         )
     )
+    val navController: NavHostController = rememberNavController()
     MediaListView(
-        mediaList = map,
+        navController = navController,
+        mediaImplCollection = map,
         openMedia = {},
         onFABClick = {},
         openedPlaylistWithMusics = null,

@@ -25,59 +25,24 @@
 
 package io.github.antoinepirlot.satunes.router
 
-import android.content.Context
-import android.net.Uri.decode
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import io.github.antoinepirlot.satunes.MainActivity
-import io.github.antoinepirlot.satunes.database.models.Album
-import io.github.antoinepirlot.satunes.database.models.Artist
-import io.github.antoinepirlot.satunes.database.models.Folder
-import io.github.antoinepirlot.satunes.database.models.Genre
-import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
-import io.github.antoinepirlot.satunes.database.services.DataLoader
-import io.github.antoinepirlot.satunes.database.services.DataManager
-import io.github.antoinepirlot.satunes.navController
-import io.github.antoinepirlot.satunes.playback.services.PlaybackController
-import io.github.antoinepirlot.satunes.router.utils.openMedia
-import io.github.antoinepirlot.satunes.services.RoutesManager
-import io.github.antoinepirlot.satunes.ui.views.LoadingView
-import io.github.antoinepirlot.satunes.ui.views.media.album.AlbumView
-import io.github.antoinepirlot.satunes.ui.views.media.album.AllAlbumsListView
-import io.github.antoinepirlot.satunes.ui.views.media.artist.AllArtistsListView
-import io.github.antoinepirlot.satunes.ui.views.media.artist.ArtistView
-import io.github.antoinepirlot.satunes.ui.views.media.folder.FolderView
-import io.github.antoinepirlot.satunes.ui.views.media.folder.RootFolderView
-import io.github.antoinepirlot.satunes.ui.views.media.genre.AllGenresListView
-import io.github.antoinepirlot.satunes.ui.views.media.genre.GenreView
-import io.github.antoinepirlot.satunes.ui.views.media.music.AllMusicsListView
-import io.github.antoinepirlot.satunes.ui.views.media.playlist.PlaylistListView
-import io.github.antoinepirlot.satunes.ui.views.media.playlist.PlaylistView
-import io.github.antoinepirlot.satunes.ui.views.playback.PlaybackView
-import io.github.antoinepirlot.satunes.ui.views.playback.common.PlaybackQueueView
-import io.github.antoinepirlot.satunes.ui.views.search.SearchView
-import io.github.antoinepirlot.satunes.ui.views.settings.AndroidAutoSettingsView
-import io.github.antoinepirlot.satunes.ui.views.settings.BatterySettingsView
-import io.github.antoinepirlot.satunes.ui.views.settings.BottomNavigationBarSettingsView
-import io.github.antoinepirlot.satunes.ui.views.settings.ExclusionSettingsView
-import io.github.antoinepirlot.satunes.ui.views.settings.PermissionsSettingsView
-import io.github.antoinepirlot.satunes.ui.views.settings.PlaybackSettingsView
-import io.github.antoinepirlot.satunes.ui.views.settings.PlaylistsSettingsView
-import io.github.antoinepirlot.satunes.ui.views.settings.SearchSettingsView
-import io.github.antoinepirlot.satunes.ui.views.settings.SettingsView
-import io.github.antoinepirlot.satunes.ui.views.settings.UpdatesSettingView
+import io.github.antoinepirlot.satunes.data.DEFAULT_DESTINATION
+import io.github.antoinepirlot.satunes.models.Destination
+import io.github.antoinepirlot.satunes.router.routes.mediaRoutes
+import io.github.antoinepirlot.satunes.router.routes.playbackRoutes
+import io.github.antoinepirlot.satunes.router.routes.searchRoutes
+import io.github.antoinepirlot.satunes.router.routes.settingsRoutes
+import io.github.antoinepirlot.satunes.ui.viewmodels.DataViewModel
+import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
+import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
 
 /**
  * @author Antoine Pirlot on 23-01-24
@@ -86,247 +51,59 @@ import io.github.antoinepirlot.satunes.ui.views.settings.UpdatesSettingView
 @Composable
 internal fun Router(
     modifier: Modifier = Modifier,
+    navController: NavHostController,
+    satunesViewModel: SatunesViewModel = viewModel(),
+    dataViewModel: DataViewModel = viewModel(),
+    playbackViewModel: PlaybackViewModel = viewModel(),
 ) {
-    val context: Context = LocalContext.current
-    val isLoading: Boolean by rememberSaveable { DataLoader.isLoading }
-    val isLoaded: Boolean by rememberSaveable { DataLoader.isLoaded }
-    val isAudioAllowed: MutableState<Boolean> =
-        rememberSaveable { mutableStateOf(MainActivity.instance.isAudioAllowed()) }
+    val isAudioAllowed: Boolean = satunesViewModel.isAudioAllowed
 
-    if (isAudioAllowed.value) {
+    if (isAudioAllowed) {
         LaunchedEffect(key1 = Unit) {
-            PlaybackController.initInstance(context = context)
+            satunesViewModel.loadAllData()
         }
     }
 
     NavHost(
         modifier = modifier,
         navController = navController,
-        startDestination = Destination.FOLDERS.link,
+        startDestination = DEFAULT_DESTINATION,
         enterTransition = { fadeIn(animationSpec = tween(500)) },
         exitTransition = { fadeOut(animationSpec = tween(0)) },
     ) {
-
-        composable(Destination.FOLDERS.link) {
-            // /!\ This route prevent back gesture to exit the app
-            RoutesManager.currentDestination.value = it.destination.route
-            permissionView(isAudioAllowed = isAudioAllowed.value)
-            if (isLoading || !isLoaded) {
-                LoadingView()
-            } else {
-                RootFolderView()
+        mediaRoutes(
+            navController = navController,
+            satunesViewModel = satunesViewModel,
+            dataViewModel = dataViewModel,
+            onStart = {
+                checkIfAllowed(isAudioAllowed = isAudioAllowed, navController = navController)
+                satunesViewModel.setCurrentDestination(destination = it.destination.route!!)
             }
-        }
-
-        composable("${Destination.FOLDERS.link}/{id}") {
-            RoutesManager.currentDestination.value = it.destination.route
-            permissionView(isAudioAllowed = isAudioAllowed.value)
-            if (isLoading || !isLoaded) {
-                LoadingView()
-            } else {
-                val folderId = it.arguments!!.getString("id")!!.toLong()
-                val folder: Folder by remember {
-                    mutableStateOf(
-                        DataManager.getFolder(
-                            folderId = folderId
-                        )
-                    )
-                }
-                FolderView(folder = folder)
+        )
+        searchRoutes(
+            navController = navController,
+            satunesViewModel = satunesViewModel,
+            onStart = {
+                checkIfAllowed(isAudioAllowed = isAudioAllowed, navController = navController)
+                satunesViewModel.setCurrentDestination(destination = it.destination.route!!)
             }
-        }
-
-        composable(Destination.ARTISTS.link) {
-            RoutesManager.currentDestination.value = it.destination.route
-            permissionView(isAudioAllowed = isAudioAllowed.value)
-            if (isLoading || !isLoaded) {
-                LoadingView()
-            } else {
-                AllArtistsListView()
+        )
+        playbackRoutes(
+            navController = navController,
+            satunesViewModel = satunesViewModel,
+            playbackViewModel = playbackViewModel,
+            onStart = {
+                checkIfAllowed(isAudioAllowed = isAudioAllowed, navController = navController)
+                satunesViewModel.setCurrentDestination(destination = it.destination.route!!)
             }
-        }
-
-        composable("${Destination.ARTISTS.link}/{name}") {
-            RoutesManager.currentDestination.value = it.destination.route
-            permissionView(isAudioAllowed = isAudioAllowed.value)
-            if (isLoading || !isLoaded) {
-                LoadingView()
-            } else {
-                val artistName: String = decode(it.arguments!!.getString("name")!!)
-                val artist: Artist by remember {
-                    mutableStateOf(
-                        DataManager.getArtist(
-                            artistName
-                        )
-                    )
-                }
-                ArtistView(artist = artist)
+        )
+        settingsRoutes(
+            navController = navController,
+            satunesViewModel = satunesViewModel, // Pass it as param to fix no recomposition when permission granted
+            onStart = {
+                satunesViewModel.setCurrentDestination(destination = it.destination.route!!)
             }
-        }
-
-        composable(Destination.ALBUMS.link) {
-            RoutesManager.currentDestination.value = it.destination.route
-            permissionView(isAudioAllowed = isAudioAllowed.value)
-            if (isLoading || !isLoaded) {
-                LoadingView()
-            } else {
-                AllAlbumsListView()
-            }
-        }
-
-        composable("${Destination.ALBUMS.link}/{id}") {
-            RoutesManager.currentDestination.value = it.destination.route
-            permissionView(isAudioAllowed = isAudioAllowed.value)
-            if (isLoading || !isLoaded) {
-                LoadingView()
-            } else {
-                val albumId: Long = it.arguments!!.getString("id")!!.toLong()
-                val album: Album by remember { mutableStateOf(DataManager.getAlbum(albumId)) }
-                AlbumView(album = album)
-            }
-        }
-
-        composable(Destination.GENRES.link) {
-            RoutesManager.currentDestination.value = it.destination.route
-            permissionView(isAudioAllowed = isAudioAllowed.value)
-            if (isLoading || !isLoaded) {
-                LoadingView()
-            } else {
-                AllGenresListView()
-            }
-        }
-
-        composable("${Destination.GENRES.link}/{name}") {
-            RoutesManager.currentDestination.value = it.destination.route
-            permissionView(isAudioAllowed = isAudioAllowed.value)
-            if (isLoading || !isLoaded) {
-                LoadingView()
-            } else {
-                val genreName: String = decode(it.arguments!!.getString("name")!!)
-                val genre: Genre by remember { mutableStateOf(DataManager.getGenre(genreName = genreName)) }
-                GenreView(genre = genre)
-            }
-        }
-
-        composable(Destination.PLAYLISTS.link) {
-            RoutesManager.currentDestination.value = it.destination.route
-            permissionView(isAudioAllowed = isAudioAllowed.value)
-            if (isLoading || !isLoaded) {
-                LoadingView()
-            } else {
-                PlaylistListView()
-            }
-        }
-
-        composable("${Destination.PLAYLISTS.link}/{id}") {
-            RoutesManager.currentDestination.value = it.destination.route
-            permissionView(isAudioAllowed = isAudioAllowed.value)
-            if (isLoading || !isLoaded) {
-                LoadingView()
-            } else {
-                val playlistId: Long = it.arguments!!.getString("id")!!.toLong()
-                val playlist: PlaylistWithMusics by remember {
-                    mutableStateOf(DataManager.getPlaylist(playlistId = playlistId))
-                }
-                PlaylistView(playlist = playlist)
-            }
-        }
-
-        composable(Destination.MUSICS.link) {
-            RoutesManager.currentDestination.value = it.destination.route
-            permissionView(isAudioAllowed = isAudioAllowed.value)
-            if (isLoading || !isLoaded) {
-                LoadingView()
-            } else {
-                AllMusicsListView()
-            }
-        }
-
-        composable(Destination.PLAYBACK.link) {
-            RoutesManager.currentDestination.value = it.destination.route
-            permissionView(isAudioAllowed = isAudioAllowed.value)
-            if (isLoading || !isLoaded) {
-                LoadingView()
-            } else {
-                PlaybackView(
-                    onAlbumClick = { album: Album? ->
-                        if (album != null) {
-                            openMedia(media = album)
-                        }
-                    },
-                    onArtistClick = { artist: Artist ->
-                        openMedia(media = artist)
-                    }
-                )
-            }
-        }
-
-        composable(Destination.SEARCH.link) {
-            RoutesManager.currentDestination.value = it.destination.route
-            permissionView(isAudioAllowed = isAudioAllowed.value)
-            if (isLoading || !isLoaded) {
-                LoadingView()
-            } else {
-                SearchView()
-            }
-        }
-
-        composable(Destination.PLAYBACK_QUEUE.link) {
-            RoutesManager.currentDestination.value = it.destination.route
-            // Here, I assume audio permission is allowed and data has been loaded
-            // Also this view will never been accessible if no music is playing
-            PlaybackQueueView()
-        }
-
-        composable(Destination.SETTINGS.link) {
-            RoutesManager.currentDestination.value = it.destination.route
-            SettingsView()
-        }
-
-        composable(Destination.BOTTOM_BAR_SETTINGS.link) {
-            RoutesManager.currentDestination.value = it.destination.route
-            BottomNavigationBarSettingsView()
-        }
-
-        composable(Destination.PLAYBACK_SETTINGS.link) {
-            RoutesManager.currentDestination.value = it.destination.route
-            PlaybackSettingsView()
-        }
-
-        composable(Destination.UPDATES_SETTINGS.link) {
-            RoutesManager.currentDestination.value = it.destination.route
-            UpdatesSettingView()
-        }
-
-        composable(Destination.EXCLUSION_SETTINGS.link) {
-            RoutesManager.currentDestination.value = it.destination.route
-            ExclusionSettingsView()
-        }
-
-        composable(Destination.PLAYLISTS_SETTINGS.link) {
-            RoutesManager.currentDestination.value = it.destination.route
-            PlaylistsSettingsView()
-        }
-
-        composable(Destination.PERMISSIONS_SETTINGS.link) {
-            RoutesManager.currentDestination.value = it.destination.route
-            PermissionsSettingsView(isAudioAllowed = isAudioAllowed)
-        }
-
-        composable(Destination.ANDROID_AUTO_SETTINGS.link) {
-            RoutesManager.currentDestination.value = it.destination.route
-            AndroidAutoSettingsView()
-        }
-
-        composable(Destination.BATTERY_SETTINGS.link) {
-            RoutesManager.currentDestination.value = it.destination.route
-            BatterySettingsView()
-        }
-
-        composable(Destination.SEARCH_SETTINGS.link) {
-            RoutesManager.currentDestination.value = it.destination.route
-            SearchSettingsView()
-        }
+        )
     }
 }
 
@@ -338,7 +115,7 @@ internal fun Router(
  *
  * @param isAudioAllowed true if the permission has been allowed, otherwise false
  */
-private fun permissionView(isAudioAllowed: Boolean) {
+private fun checkIfAllowed(isAudioAllowed: Boolean, navController: NavHostController) {
     if (!isAudioAllowed) {
         navController.popBackStack()
         navController.navigate(Destination.PERMISSIONS_SETTINGS.link)

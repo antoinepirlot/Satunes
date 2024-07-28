@@ -25,7 +25,6 @@
 
 package io.github.antoinepirlot.satunes.ui.components.buttons.settings
 
-import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -37,24 +36,24 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.RadioButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.ScreenSizes
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
+import io.github.antoinepirlot.satunes.ui.states.SatunesUiState
 import io.github.antoinepirlot.satunes.ui.utils.getRightIconColors
 import io.github.antoinepirlot.satunes.ui.utils.getRightIconTintColor
+import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
 
 /**
  * @author Antoine Pirlot on 13/05/2024
@@ -63,13 +62,16 @@ import io.github.antoinepirlot.satunes.ui.utils.getRightIconTintColor
 @Composable
 internal fun RepeatModeRadioButtons(
     modifier: Modifier = Modifier,
+    satunesViewModel: SatunesViewModel = viewModel(),
 ) {
+    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+
     val iconsList: List<SatunesIcons> = listOf(
         SatunesIcons.REPEAT, // i = 0
         SatunesIcons.REPEAT, // i = 1
         SatunesIcons.REPEAT_ONE // i = 2
     )
-    var state: Int by remember { SettingsManager.repeatMode }
+    var state: Int = satunesUiState.repeatMode
 
     val screenWidthDp: Int = LocalConfiguration.current.screenWidthDp
     val radioButtonModifier: Modifier =
@@ -93,10 +95,9 @@ internal fun RepeatModeRadioButtons(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                val context: Context = LocalContext.current
                 val onClick: () -> Unit = {
                     state = i
-                    SettingsManager.updateRepeatMode(context = context, newValue = i)
+                    satunesViewModel.updateRepeatMode(newValue = i)
                 }
 
                 RadioButton(

@@ -26,26 +26,22 @@
 package io.github.antoinepirlot.satunes.ui.views.media.genre
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.media3.common.MediaItem
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Genre
-import io.github.antoinepirlot.satunes.database.models.Media
-import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.database.services.DataManager
+import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
-import io.github.antoinepirlot.satunes.ui.views.MediaListView
-import java.util.SortedMap
+import io.github.antoinepirlot.satunes.ui.viewmodels.DataViewModel
+import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
+import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 
 /**
  * @author Antoine Pirlot on 01/04/2024
@@ -54,38 +50,43 @@ import java.util.SortedMap
 @Composable
 internal fun AllGenresListView(
     modifier: Modifier = Modifier,
+    navController: NavHostController,
+    dataViewModel: DataViewModel = viewModel(),
+    playbackViewModel: PlaybackViewModel = viewModel(),
 ) {
-    val playbackController: PlaybackController = PlaybackController.getInstance()
-    val genreMap: SortedMap<String, Genre> = remember { DataManager.genreMap }
-
-    //Recompose if data changed
-    var mapChanged: Boolean by rememberSaveable { DataManager.genreMapUpdated }
-    if (mapChanged) {
-        mapChanged = false
-    }
-    //
+    val genreSet: Set<Genre> = dataViewModel.getGenreSet()
 
     MediaListView(
         modifier = modifier,
-        mediaList = genreMap.values.toList(),
+        navController = navController,
+        mediaImplCollection = genreSet,
 
-        openMedia = { clickedMedia: Media ->
-            openMedia(media = clickedMedia)
+        openMedia = { clickedMediaImpl: MediaImpl ->
+            openMedia(
+                playbackViewModel = playbackViewModel,
+                media = clickedMediaImpl,
+                navController = navController
+            )
         },
-        onFABClick = { openCurrentMusic() },
+        onFABClick = {
+            openCurrentMusic(
+                playbackViewModel = playbackViewModel,
+                navController = navController
+            )
+        },
         extraButtons = {
-            if (genreMap.isNotEmpty()) {
+            if (genreSet.isNotEmpty()) {
                 ExtraButton(icon = SatunesIcons.PLAY, onClick = {
-                    playbackController.loadMusic(musicMediaItemSortedMap = getMusics(genreMap = genreMap))
-                    openMedia()
+                    playbackViewModel.loadMusicFromMedias(medias = genreSet)
+                    openMedia(playbackViewModel = playbackViewModel, navController = navController)
                 })
                 ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
 
-                    playbackController.loadMusic(
-                        musicMediaItemSortedMap = getMusics(genreMap = genreMap),
+                    playbackViewModel.loadMusicFromMedias(
+                        medias = genreSet,
                         shuffleMode = true
                     )
-                    openMedia()
+                    openMedia(playbackViewModel = playbackViewModel, navController = navController)
                 })
             }
         },
@@ -93,17 +94,9 @@ internal fun AllGenresListView(
     )
 }
 
-private fun getMusics(genreMap: SortedMap<String, Genre>): SortedMap<Music, MediaItem> {
-    val musicMediaItemSortedMap: SortedMap<Music, MediaItem> = sortedMapOf()
-
-    genreMap.forEach { (_: String, genre: Genre) ->
-        musicMediaItemSortedMap.putAll(genre.musicMediaItemSortedMap)
-    }
-    return musicMediaItemSortedMap
-}
-
 @Preview
 @Composable
 private fun AllGenresListViewPreview() {
-    AllGenresListView()
+    val navController: NavHostController = rememberNavController()
+    AllGenresListView(navController = navController)
 }

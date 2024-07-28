@@ -25,7 +25,6 @@
 
 package io.github.antoinepirlot.satunes.ui.views.search
 
-import android.content.Context
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -34,53 +33,53 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SearchBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
-import io.github.antoinepirlot.satunes.database.models.Media
+import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
-import io.github.antoinepirlot.satunes.database.services.DataManager
-import io.github.antoinepirlot.satunes.playback.services.PlaybackController
+import io.github.antoinepirlot.satunes.models.SearchChips
 import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.router.utils.openMedia
-import io.github.antoinepirlot.satunes.services.search.SearchChips
-import io.github.antoinepirlot.satunes.services.search.SearchChipsManager
 import io.github.antoinepirlot.satunes.ui.components.chips.MediaChipList
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
-import io.github.antoinepirlot.satunes.ui.views.MediaListView
+import io.github.antoinepirlot.satunes.ui.viewmodels.DataViewModel
+import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
+import io.github.antoinepirlot.satunes.ui.viewmodels.SearchViewModel
+import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import io.github.antoinepirlot.satunes.database.R as RDb
 
 /**
  * @author Antoine Pirlot on 27/06/2024
  */
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 internal fun SearchView(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navController: NavHostController,
+    dataViewModel: DataViewModel = viewModel(),
+    playbackViewModel: PlaybackViewModel = viewModel(),
+    searchViewModel: SearchViewModel = viewModel(),
 ) {
-    val context: Context = LocalContext.current
-    var query: String by rememberSaveable { mutableStateOf("") }
-    val mediaList: MutableList<Media> = remember { SnapshotStateList() }
-    val selectedSearchChips: List<SearchChips> = remember { SearchChipsManager.selectedSearchChips }
+    val query: String = searchViewModel.query
+    val mediaImplList: Set<MediaImpl> = searchViewModel.mediaImplSet
+    val selectedSearchChips: List<SearchChips> = searchViewModel.selectedSearchChips
 
     val searchCoroutine: CoroutineScope = rememberCoroutineScope()
     var searchJob: Job? = null
@@ -89,16 +88,11 @@ internal fun SearchView(
             searchJob!!.cancel()
         }
         searchJob = searchCoroutine.launch {
-            search(context = context, mediaList = mediaList, query = query)
+            searchViewModel.search(
+                dataViewModel = dataViewModel,
+                selectedSearchChips = selectedSearchChips,
+            )
         }
-    }
-
-    var resetSelectedChips: Boolean by rememberSaveable { mutableStateOf(true) }
-    if (resetSelectedChips) {
-        LaunchedEffect(key1 = true) {
-            SearchChipsManager.resetSelectedChips(context = context)
-        }
-        resetSelectedChips = false
     }
 
     val focusRequester: FocusRequester = remember { FocusRequester() }
@@ -107,6 +101,8 @@ internal fun SearchView(
         focusRequester.requestFocus()
     }
 
+    val keyboard: SoftwareKeyboardController? = LocalSoftwareKeyboardController.current
+
     Column(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -114,8 +110,11 @@ internal fun SearchView(
         SearchBar(
             modifier = Modifier.focusRequester(focusRequester),
             query = query,
-            onQueryChange = { query = it },
-            onSearch = { query = it },
+            onQueryChange = { searchViewModel.updateQuery(value = it) },
+            onSearch = {
+                searchViewModel.updateQuery(value = it)
+                keyboard?.hide()
+            },
             active = false,
             onActiveChange = { /* Do not use active mode */ },
             placeholder = { NormalText(text = stringResource(id = R.string.search_placeholder)) },
@@ -124,96 +123,32 @@ internal fun SearchView(
         Spacer(modifier = Modifier.size(16.dp))
         MediaChipList()
         MediaListView(
-            mediaList = mediaList,
-            openMedia = { media: Media ->
-                if (media is Music) {
-                    PlaybackController.getInstance()
-                        .loadMusic(musicMediaItemSortedMap = DataManager.musicMediaItemSortedMap)
+            navController = navController,
+            mediaImplCollection = mediaImplList,
+            openMedia = { mediaImpl: MediaImpl ->
+                if (mediaImpl is Music) {
+                    playbackViewModel.loadMusic(musicSet = dataViewModel.getMusicSet())
                 }
-                openMedia(media = media)
+                openMedia(
+                    playbackViewModel = playbackViewModel,
+                    media = mediaImpl,
+                    navController = navController
+                )
             },
-            onFABClick = { openCurrentMusic() },
+            onFABClick = {
+                openCurrentMusic(
+                    playbackViewModel = playbackViewModel,
+                    navController = navController
+                )
+            },
             emptyViewText = stringResource(id = R.string.no_result)
         )
     }
 }
 
-private fun search(context: Context, mediaList: MutableList<Media>, query: String) {
-    mediaList.clear()
-    if (query.isBlank()) {
-        // Prevent loop if string is "" or " "
-        return
-    }
-
-    @Suppress("NAME_SHADOWING")
-    val query: String = query.lowercase()
-
-    for (searchChip: SearchChips in SearchChipsManager.selectedSearchChips) {
-        DataManager.musicMediaItemSortedMap.keys.forEach { music: Music ->
-            when (searchChip) {
-                SearchChips.MUSICS -> {
-                    if (music.title.lowercase().contains(query)) {
-                        if (!mediaList.contains(music)) {
-                            mediaList.add(element = music)
-                        }
-                    }
-                }
-
-                SearchChips.ARTISTS -> {
-                    if (music.artist.title.lowercase().contains(query)) {
-                        if (!mediaList.contains(music.artist)) {
-                            mediaList.add(element = music.artist)
-                        }
-                    }
-                }
-
-                SearchChips.ALBUMS -> {
-                    if (music.album.title.lowercase().contains(query)) {
-                        if (!mediaList.contains(music.album)) {
-                            mediaList.add(element = music.album)
-                        }
-                    }
-                }
-
-                SearchChips.GENRES -> {
-                    if (music.genre.title.lowercase().contains(query)) {
-                        if (!mediaList.contains(music.genre)) {
-                            mediaList.add(element = music.genre)
-                        }
-                    }
-                }
-
-                SearchChips.FOLDERS -> {
-                    if (music.folder.title.lowercase().contains(query)) {
-                        if (!mediaList.contains(music.folder)) {
-                            mediaList.add(element = music.folder)
-                        }
-                    }
-                }
-
-                SearchChips.PLAYLISTS -> { /* Nothing at this stage, see below */
-                }
-            }
-        }
-        if (searchChip == SearchChips.PLAYLISTS) {
-            DataManager.playlistWithMusicsMap.forEach { (playlistTitle: String, playlistWithMusics: PlaylistWithMusics) ->
-                @Suppress("NAME_SHADOWING")
-                var playlistTitle: String = playlistTitle
-
-                if (playlistTitle == LIKES_PLAYLIST_TITLE) {
-                    playlistTitle = context.getString(RDb.string.likes_playlist_title)
-                }
-                if (playlistTitle.lowercase().contains(query)) {
-                    mediaList.add(element = playlistWithMusics)
-                }
-            }
-        }
-    }
-    mediaList.sort()
-}
-
 @Preview
 @Composable
 private fun SearchViewPreview() {
-    SearchView()
+    val navController: NavHostController = rememberNavController()
+    SearchView(navController = navController)
 }

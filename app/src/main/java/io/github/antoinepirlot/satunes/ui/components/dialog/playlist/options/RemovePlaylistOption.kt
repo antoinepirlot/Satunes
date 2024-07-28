@@ -25,21 +25,24 @@
 
 package io.github.antoinepirlot.satunes.ui.components.dialog.playlist.options
 
-import android.content.Context
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
-import io.github.antoinepirlot.satunes.database.services.DatabaseManager
+import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.dialog.RemoveConfirmationDialog
 import io.github.antoinepirlot.satunes.ui.components.dialog.options.DialogOption
+import io.github.antoinepirlot.satunes.ui.local.LocalMainScope
+import io.github.antoinepirlot.satunes.ui.local.LocalSnackBarHostState
+import io.github.antoinepirlot.satunes.ui.viewmodels.DataViewModel
+import kotlinx.coroutines.CoroutineScope
 
 /**
  * @author Antoine Pirlot on 01/06/2024
@@ -48,10 +51,12 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.options.DialogOption
 @Composable
 internal fun RemovePlaylistOption(
     modifier: Modifier = Modifier,
-    playlistToRemove: PlaylistWithMusics,
+    dataViewModel: DataViewModel = viewModel(),
+    playlistToRemove: Playlist,
     onDismissRequest: () -> Unit,
 ) {
-    val context: Context = LocalContext.current
+    val scope: CoroutineScope = LocalMainScope.current
+    val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
     var showRemoveConfirmation: Boolean by rememberSaveable { mutableStateOf(false) }
 
     DialogOption(
@@ -65,8 +70,11 @@ internal fun RemovePlaylistOption(
         RemoveConfirmationDialog(
             onDismissRequest = { showRemoveConfirmation = false },
             onRemoveRequest = {
-                val db = DatabaseManager(context = context)
-                db.removePlaylist(playlistToRemove = playlistToRemove)
+                dataViewModel.removePlaylist(
+                    scope = scope,
+                    snackBarHostState = snackBarHostState,
+                    playlist = playlistToRemove
+                )
                 onDismissRequest()
             }
         )

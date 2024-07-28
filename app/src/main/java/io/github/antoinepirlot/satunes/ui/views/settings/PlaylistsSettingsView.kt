@@ -35,6 +35,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -44,9 +45,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.database.services.DataManager
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 import io.github.antoinepirlot.satunes.ui.components.texts.Title
+import io.github.antoinepirlot.satunes.ui.local.LocalMainScope
+import io.github.antoinepirlot.satunes.ui.local.LocalSnackBarHostState
+import kotlinx.coroutines.CoroutineScope
 import io.github.antoinepirlot.satunes.database.R as RDb
 
 /**
@@ -57,7 +60,10 @@ import io.github.antoinepirlot.satunes.database.R as RDb
 internal fun PlaylistsSettingsView(
     modifier: Modifier = Modifier,
 ) {
+    val scope: CoroutineScope = LocalMainScope.current
+    val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
     val scrollState: ScrollState = rememberScrollState()
+
     Column(
         modifier = modifier
             .padding(horizontal = 16.dp)
@@ -65,16 +71,18 @@ internal fun PlaylistsSettingsView(
             .verticalScroll(scrollState),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Title(text = stringResource(id = RDb.string.playlists) + " (Beta)")
+        Title(text = stringResource(id = RDb.string.playlists))
         NormalText(
-            text = stringResource(id = R.string.playlist_beta_info),
+            text = stringResource(id = R.string.playlists_settings_content),
             maxLines = Int.MAX_VALUE
         )
         Row {
             Button(onClick = {
-                MainActivity.playlistsToExport =
-                    DataManager.playlistWithMusicsMap.values.toTypedArray()
-                MainActivity.instance.createFileToExportPlaylists(defaultFileName = "Satunes.json")
+                MainActivity.instance.createFileToExportPlaylists(
+                    scope = scope,
+                    snackBarHostState = snackBarHostState,
+                    defaultFileName = "Satunes"
+                )
             }) {
                 Text(text = stringResource(id = R.string.export_all))
             }

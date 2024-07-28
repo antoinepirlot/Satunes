@@ -25,28 +25,28 @@
 
 package io.github.antoinepirlot.satunes.ui.components.dialog.media.options
 
-import android.content.Context
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Folder
-import io.github.antoinepirlot.satunes.database.models.Media
+import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.database.models.relations.PlaylistWithMusics
-import io.github.antoinepirlot.satunes.database.services.DataManager
-import io.github.antoinepirlot.satunes.database.services.DatabaseManager
+import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.services.MediaSelectionManager
 import io.github.antoinepirlot.satunes.ui.components.dialog.MediaSelectionDialog
 import io.github.antoinepirlot.satunes.ui.components.dialog.options.DialogOption
-import java.util.SortedMap
+import io.github.antoinepirlot.satunes.ui.local.LocalMainScope
+import io.github.antoinepirlot.satunes.ui.local.LocalSnackBarHostState
+import io.github.antoinepirlot.satunes.ui.viewmodels.DataViewModel
+import io.github.antoinepirlot.satunes.ui.viewmodels.MediaSelectionViewModel
+import kotlinx.coroutines.CoroutineScope
 
 /**
  * @author Antoine Pirlot on 01/06/2024
@@ -55,10 +55,13 @@ import java.util.SortedMap
 @Composable
 internal fun AddToPlaylistMediaOption(
     modifier: Modifier = Modifier,
-    media: Media,
+    dataViewModel: DataViewModel = viewModel(),
+    mediaSelectionViewModel: MediaSelectionViewModel = viewModel(),
+    mediaImpl: MediaImpl,
     onFinished: () -> Unit
 ) {
-    val context: Context = LocalContext.current
+    val scope: CoroutineScope = LocalMainScope.current
+    val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
     var showDialog: Boolean by rememberSaveable { mutableStateOf(false) }
 
     DialogOption(
@@ -68,13 +71,11 @@ internal fun AddToPlaylistMediaOption(
         text = stringResource(id = R.string.add_to_playlist)
     )
     if (showDialog) {
-        val playlistList: SortedMap<String, PlaylistWithMusics> =
-            remember { DataManager.playlistWithMusicsMap }
-
+        val playlistSet: Set<Playlist> = dataViewModel.getPlaylistSet()
         //Recompose if data changed
-        var mapChanged: Boolean by rememberSaveable { DataManager.playlistWithMusicsMapUpdated }
+        val mapChanged: Boolean = dataViewModel.playlistSetUpdated
         if (mapChanged) {
-            mapChanged = false
+            dataViewModel.playlistSetUpdated()
         }
         //
 
@@ -83,34 +84,49 @@ internal fun AddToPlaylistMediaOption(
                 showDialog = false
             },
             onConfirm = {
-                insertMediaToPlaylist(context = context, media = media)
+                insertMediaToPlaylist(
+                    scope = scope,
+                    snackBarHostState = snackBarHostState,
+                    dataViewModel = dataViewModel,
+                    mediaSelectionViewModel = mediaSelectionViewModel,
+                    mediaImpl = mediaImpl
+                )
                 onFinished()
             },
-            mediaList = playlistList.values.toList(),
+            mediaImplCollection = playlistSet,
             icon = SatunesIcons.PLAYLIST_ADD,
         )
     }
 }
 
-private fun insertMediaToPlaylist(context: Context, media: Media) {
-    val db = DatabaseManager(context = context)
-    if (media is Music) {
-        db.insertMusicToPlaylists(
-            music = media,
-            playlists = MediaSelectionManager.getCheckedPlaylistWithMusics()
+private fun insertMediaToPlaylist(
+    dataViewModel: DataViewModel,
+    scope: CoroutineScope,
+    snackBarHostState: SnackbarHostState,
+    mediaSelectionViewModel: MediaSelectionViewModel,
+    mediaImpl: MediaImpl
+) {
+    if (mediaImpl is Music) {
+        dataViewModel.insertMusicToPlaylists(
+            scope = scope,
+            snackBarHostState = snackBarHostState,
+            music = mediaImpl,
+            playlists = mediaSelectionViewModel.getCheckedPlaylistWithMusics()
         )
     } else {
-        val musicList: List<Music> = if (media is Folder) {
-            media.getAllMusic().keys.toList()
+        val musicList: Set<Music> = if (mediaImpl is Folder) {
+            mediaImpl.getAllMusic()
         } else {
-            media.musicMediaItemSortedMap.keys.toList()
+            mediaImpl.getMusicSet()
         }
 
-        MediaSelectionManager.getCheckedPlaylistWithMusics()
-            .forEach { playlistWithMusics: PlaylistWithMusics ->
-                db.insertMusicsToPlaylist(
+        mediaSelectionViewModel.getCheckedPlaylistWithMusics()
+            .forEach { playlist: Playlist ->
+                dataViewModel.insertMusicsToPlaylist(
+                    scope = scope,
+                    snackBarHostState = snackBarHostState,
                     musics = musicList,
-                    playlist = playlistWithMusics
+                    playlist = playlist
                 )
             }
     }

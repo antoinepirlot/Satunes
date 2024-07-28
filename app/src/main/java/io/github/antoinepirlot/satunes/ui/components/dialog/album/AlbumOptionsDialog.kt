@@ -29,19 +29,21 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.AlertDialog
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.database.models.Album
-import io.github.antoinepirlot.satunes.playback.services.PlaybackController
+import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToPlaylistMediaOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToQueueDialogOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.PlayNextMediaOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.music.options.NavigateToMediaMusicOption
 import io.github.antoinepirlot.satunes.ui.components.images.AlbumArtwork
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
+import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
 
 /**
  * @author Antoine Pirlot on 07/07/2024
@@ -51,9 +53,12 @@ import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 @Composable
 internal fun AlbumOptionsDialog(
     modifier: Modifier = Modifier,
+    navController: NavHostController,
+    playbackViewModel: PlaybackViewModel = viewModel(),
     album: Album,
     onDismissRequest: () -> Unit,
-) {
+
+    ) {
     AlertDialog(
         modifier = modifier,
         onDismissRequest = onDismissRequest,
@@ -61,7 +66,7 @@ internal fun AlbumOptionsDialog(
         icon = {
             AlbumArtwork(
                 modifier = Modifier.size(100.dp),
-                media = album
+                mediaImpl = album
             )
         },
         title = {
@@ -69,26 +74,26 @@ internal fun AlbumOptionsDialog(
         },
         text = {
             Column {
-                val playbackController: PlaybackController = PlaybackController.getInstance()
-                val isPlaybackLoaded: Boolean by rememberSaveable { playbackController.isLoaded }
-
                 /**
                  * Playlist
                  */
-                AddToPlaylistMediaOption(media = album, onFinished = onDismissRequest)
+                AddToPlaylistMediaOption(mediaImpl = album, onFinished = onDismissRequest)
 
                 /**
                  * Queue
                  */
-                if (isPlaybackLoaded) {
-                    PlayNextMediaOption(media = album, onFinished = onDismissRequest)
-                    AddToQueueDialogOption(media = album, onFinished = onDismissRequest)
+                if (playbackViewModel.isLoaded) {
+                    PlayNextMediaOption(mediaImpl = album, onFinished = onDismissRequest)
+                    AddToQueueDialogOption(mediaImpl = album, onFinished = onDismissRequest)
                 }
 
                 /**
                  * Redirections
                  */
-                NavigateToMediaMusicOption(media = album.artist!!)
+                NavigateToMediaMusicOption(
+                    mediaImpl = album.artist!!,
+                    navController = navController
+                )
             }
         }
     )
@@ -97,5 +102,10 @@ internal fun AlbumOptionsDialog(
 @Preview
 @Composable
 private fun AlbumOptionsDialogPreview() {
-    AlbumOptionsDialog(album = Album(title = "Album title"), onDismissRequest = {})
+    val navController: NavHostController = rememberNavController()
+    AlbumOptionsDialog(
+        navController = navController,
+        album = Album(title = "Album title", artist = Artist(title = "Artist Title")),
+        onDismissRequest = {}
+    )
 }

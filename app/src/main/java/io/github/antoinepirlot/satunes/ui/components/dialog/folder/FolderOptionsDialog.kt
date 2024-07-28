@@ -27,19 +27,19 @@ package io.github.antoinepirlot.satunes.ui.components.dialog.folder
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToPlaylistMediaOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToQueueDialogOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.PlayNextMediaOption
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 import io.github.antoinepirlot.satunes.ui.utils.getRootFolderName
+import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
 
 /**
  * @author Antoine Pirlot on 07/07/2024
@@ -48,6 +48,7 @@ import io.github.antoinepirlot.satunes.ui.utils.getRootFolderName
 @Composable
 internal fun FolderOptionsDialog(
     modifier: Modifier = Modifier,
+    playbackViewModel: PlaybackViewModel = viewModel(),
     folder: Folder,
     onDismissRequest: () -> Unit,
 ) {
@@ -57,6 +58,7 @@ internal fun FolderOptionsDialog(
         confirmButton = { /* Nothing */ },
         icon = {
             val icon: SatunesIcons = SatunesIcons.FOLDER
+            Icon(imageVector = icon.imageVector, contentDescription = icon.description)
         },
         title = {
             val title: String = if (folder.parentFolder == null) {
@@ -68,21 +70,19 @@ internal fun FolderOptionsDialog(
         },
         text = {
             Column {
-                val playbackController: PlaybackController = PlaybackController.getInstance()
-                val isPlaybackLoaded: Boolean by rememberSaveable { playbackController.isLoaded }
 
                 /**
                  * Playlist
                  */
 
-                AddToPlaylistMediaOption(media = folder, onFinished = onDismissRequest)
+                AddToPlaylistMediaOption(mediaImpl = folder, onFinished = onDismissRequest)
 
                 /**
                  * Playback
                  */
-                if (isPlaybackLoaded) {
-                    PlayNextMediaOption(media = folder, onFinished = onDismissRequest)
-                    AddToQueueDialogOption(media = folder, onFinished = onDismissRequest)
+                if (playbackViewModel.isLoaded) {
+                    PlayNextMediaOption(mediaImpl = folder, onFinished = onDismissRequest)
+                    AddToQueueDialogOption(mediaImpl = folder, onFinished = onDismissRequest)
                 }
             }
         }

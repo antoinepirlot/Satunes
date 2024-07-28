@@ -32,13 +32,15 @@ import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.net.Uri.encode
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
-import io.github.antoinepirlot.satunes.database.services.DataManager
-import io.github.antoinepirlot.satunes.database.services.DatabaseManager
+import io.github.antoinepirlot.satunes.database.services.data.DataManager
+import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.icons.R
+import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -48,43 +50,52 @@ import kotlinx.coroutines.launch
  */
 
 class Music(
-    override val id: Long,
-    override var title: String,
-    private var displayName: String,
+    id: Long,
+    title: String,
+    displayName: String,
     val absolutePath: String,
     val duration: Long = 0,
     val size: Int = 0,
     var folder: Folder,
-    var artist: Artist,
-    var album: Album,
-    var genre: Genre,
+    val artist: Artist,
+    val album: Album,
+    val genre: Genre,
     context: Context,
-) : Media {
-    override var liked: Boolean = false
-    override val likedState: MutableState<Boolean> = super.likedState
+) : MediaImpl(id = id, title = title.ifBlank { displayName }) {
+    private val logger: SatunesLogger = SatunesLogger.getLogger()
+    private var displayName: String = displayName
+        set(displayName) {
+            if (displayName.isBlank()) {
+                val message = "Display name must not be blank"
+                logger.warning(message)
+                throw IllegalArgumentException(message)
+            }
+            field = displayName
+        }
+    var liked: MutableState<Boolean> = mutableStateOf(false)
+        private set
     var uri: Uri = Uri.parse(encode(absolutePath)) // Must be init before media item
+        private set
     val mediaItem: MediaItem = getMediaMetadata()
-    override var artwork: Bitmap? = null
 
     init {
         DataManager.addMusic(music = this)
-        album.addMusic(music = this@Music)
-        artist.addMusic(music = this@Music)
-        genre.addMusic(music = this@Music)
-        folder.addMusic(music = this@Music)
+        album.addMusic(music = this)
+        artist.addMusic(music = this)
+        genre.addMusic(music = this)
+        folder.addMusic(music = this)
         loadAlbumArtwork(context = context)
     }
 
-    override fun switchLike(context: Context) {
-        super.switchLike(context)
-        val db = DatabaseManager(context = context)
-        if (this.likedState.value) {
-            db.like(context = context, music = this)
+    fun switchLike(context: Context) {
+        this.liked.value = !this.liked.value
+        val db = DatabaseManager.getInstance()
+        if (this.liked.value) {
+            db.like(music = this)
         } else {
             db.unlike(music = this)
         }
     }
-
 
     private fun getMediaMetadata(): MediaItem {
         val mediaMetaData: MediaMetadata = MediaMetadata.Builder()
@@ -108,9 +119,16 @@ class Music(
      * @param context the context
      */
     private fun loadAlbumArtwork(context: Context) {
-        //Put it in Dispatchers.IO make the app not freezing while starting
-        CoroutineScope(Dispatchers.IO).launch {
+        // Set Dispatchers.Default instead of Dispatchers.IO unblock IO of too long loading
+        // Indirect impact is that it is faster to load settings
+        CoroutineScope(Dispatchers.Default).launch {
             try {
+                //TODO ask the user to show music's album or album's artwork for all music
+                // It could cause visual issues as a music has not the same artwork and the user won't know it
+//                if (album.artwork != null) {
+//                    this@Music.artwork = album.artwork
+//                    return@launch
+//                }
                 val mediaMetadataRetriever = MediaMetadataRetriever()
 
                 mediaMetadataRetriever.setDataSource(context, uri)
@@ -143,17 +161,18 @@ class Music(
 
         other as Music
 
-        if (displayName != other.displayName) return false
-        if (artist != other.artist) return false
-        if (album != other.album) return false
-
-        return true
+        return this.id == other.id
     }
 
     override fun hashCode(): Int {
-        var result = displayName.hashCode()
-        result = 31 * result + (artist.hashCode())
-        result = 31 * result + (album.hashCode())
-        return result
+        return this.id.hashCode()
+    }
+
+    override fun compareTo(other: MediaImpl): Int {
+        var compared: Int = super.compareTo(other)
+        if (compared == 0 && this != other) {
+            compared = 1
+        }
+        return compared
     }
 }

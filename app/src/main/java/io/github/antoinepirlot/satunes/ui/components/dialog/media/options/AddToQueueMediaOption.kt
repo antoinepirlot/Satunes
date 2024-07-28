@@ -25,16 +25,22 @@
 
 package io.github.antoinepirlot.satunes.ui.components.dialog.media.options
 
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Album
-import io.github.antoinepirlot.satunes.database.models.Media
+import io.github.antoinepirlot.satunes.database.models.Artist
+import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.ui.components.dialog.options.DialogOption
+import io.github.antoinepirlot.satunes.ui.local.LocalMainScope
+import io.github.antoinepirlot.satunes.ui.local.LocalSnackBarHostState
+import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
+import kotlinx.coroutines.CoroutineScope
 
 /**
  * @author Antoine Pirlot on 25/06/2024
@@ -43,13 +49,21 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.options.DialogOption
 @Composable
 internal fun AddToQueueDialogOption(
     modifier: Modifier = Modifier,
-    media: Media,
+    playbackViewModel: PlaybackViewModel = viewModel(),
+    mediaImpl: MediaImpl,
     onFinished: () -> Unit,
 ) {
+    val scope: CoroutineScope = LocalMainScope.current
+    val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
+
     DialogOption(
         modifier = modifier,
         onClick = {
-            PlaybackController.getInstance().addToQueue(media = media)
+            playbackViewModel.addToQueue(
+                scope = scope,
+                snackBarHostState = snackBarHostState,
+                mediaImpl = mediaImpl
+            )
             onFinished()
         },
         icon = SatunesIcons.ADD_TO_PLAYBACK_QUEUE,
@@ -60,5 +74,8 @@ internal fun AddToQueueDialogOption(
 @Preview
 @Composable
 private fun AddToQueueDialogOptionPreview() {
-    AddToQueueDialogOption(media = Album(title = "Album"), onFinished = {})
+    AddToQueueDialogOption(mediaImpl = Album(
+        title = "Album",
+        artist = Artist(title = "Artist Title")
+    ), onFinished = {})
 }

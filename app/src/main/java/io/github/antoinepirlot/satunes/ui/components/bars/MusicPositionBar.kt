@@ -34,17 +34,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.playback.services.PlaybackController
-import io.github.antoinepirlot.satunes.services.ProgressBarLifecycleCallbacks
+import io.github.antoinepirlot.satunes.models.ProgressBarLifecycleCallbacks
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 import io.github.antoinepirlot.satunes.ui.utils.getMillisToTimeText
+import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
 
 /**
  * @author Antoine Pirlot on 23/02/24
@@ -52,13 +52,13 @@ import io.github.antoinepirlot.satunes.ui.utils.getMillisToTimeText
 
 @Composable
 internal fun MusicPositionBar(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    playbackViewModel: PlaybackViewModel = viewModel(),
 ) {
-    val playbackController = PlaybackController.getInstance()
-    val musicPlaying: Music? by remember { playbackController.musicPlaying }
+    val musicPlaying: Music? = playbackViewModel.musicPlaying
     var newPositionPercentage: Float by rememberSaveable { mutableFloatStateOf(0f) }
     var isUpdating: Boolean by rememberSaveable { mutableStateOf(false) }
-    var currentPositionPercentage: Float by rememberSaveable { playbackController.currentPositionProgression }
+    val currentPositionPercentage: Float = playbackViewModel.currentPositionProgression
 
     Column(modifier = modifier) {
         Slider(
@@ -68,9 +68,8 @@ internal fun MusicPositionBar(
                 newPositionPercentage = it
             },
             onValueChangeFinished = {
-                playbackController.seekTo(positionPercentage = newPositionPercentage)
-                currentPositionPercentage = newPositionPercentage
                 isUpdating = false
+                playbackViewModel.seekTo(positionPercentage = newPositionPercentage)
             },
         )
         Row(
@@ -87,7 +86,7 @@ internal fun MusicPositionBar(
         }
     }
 
-    val isPlaying: Boolean by rememberSaveable { playbackController.isPlaying }
+    val isPlaying: Boolean = playbackViewModel.isPlaying
     LocalLifecycleOwner.current.lifecycle.addObserver(ProgressBarLifecycleCallbacks)
     if (isPlaying && !ProgressBarLifecycleCallbacks.isUpdatingPosition) {
         ProgressBarLifecycleCallbacks.startUpdatingCurrentPosition()

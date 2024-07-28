@@ -33,20 +33,21 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.media3.common.MediaItem
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
-import io.github.antoinepirlot.satunes.database.models.Media
+import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
-import io.github.antoinepirlot.satunes.ui.views.MediaListView
-import io.github.antoinepirlot.satunes.ui.views.MediaWithAlbumsHeaderView
-import java.util.SortedMap
+import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
+import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
+import io.github.antoinepirlot.satunes.ui.views.media.MediaWithAlbumsHeaderView
 
 /**
  * @author Antoine Pirlot on 01/04/2024
@@ -55,12 +56,14 @@ import java.util.SortedMap
 @Composable
 internal fun ArtistView(
     modifier: Modifier = Modifier,
+    navController: NavHostController,
+    playbackViewModel: PlaybackViewModel = viewModel(),
     artist: Artist,
 ) {
-    val playbackController: PlaybackController = PlaybackController.getInstance()
-    val musicMap: SortedMap<Music, MediaItem> = remember { artist.musicMediaItemSortedMap }
+    //TODO create mediaViewModel and UiState when you select media
+    val musicMap: Set<Music> = artist.getMusicSet()
     //Recompose if data changed
-    var musicMapChanged: Boolean by rememberSaveable { artist.musicMediaItemSortedMapUpdate }
+    var musicMapChanged: Boolean by rememberSaveable { artist.musicSetUpdated }
     if (musicMapChanged) {
         musicMapChanged = false
     }
@@ -68,18 +71,27 @@ internal fun ArtistView(
 
     MediaListView(
         modifier = modifier,
-        mediaList = musicMap.keys.toList(),
-
-        openMedia = { clickedMedia: Media ->
-            playbackController.loadMusic(
-                musicMediaItemSortedMap = artist.musicMediaItemSortedMap,
-                musicToPlay = clickedMedia as Music
+        navController = navController,
+        mediaImplCollection = musicMap,
+        openMedia = { clickedMediaImpl: MediaImpl ->
+            playbackViewModel.loadMusic(
+                musicSet = artist.getMusicSet(),
+                musicToPlay = clickedMediaImpl as Music
             )
-            openMedia(clickedMedia)
+            openMedia(
+                playbackViewModel = playbackViewModel,
+                media = clickedMediaImpl,
+                navController = navController
+            )
         },
-        onFABClick = { openCurrentMusic() },
+        onFABClick = {
+            openCurrentMusic(
+                playbackViewModel = playbackViewModel,
+                navController = navController
+            )
+        },
         header = {
-            val albumMap: SortedMap<String, Album> = remember { artist.albumSortedMap }
+            val albumSet: Set<Album> = artist.getAlbumSet()
 
             //Recompose if data changed
             var albumMapChanged: Boolean by remember { artist.albumSortedMapUpdate }
@@ -88,20 +100,24 @@ internal fun ArtistView(
             }
             //
 
-            MediaWithAlbumsHeaderView(media = artist, albumList = albumMap.values.toList())
+            MediaWithAlbumsHeaderView(
+                mediaImpl = artist,
+                albumCollection = albumSet,
+                navController = navController
+            )
         },
         extraButtons = {
-            if (artist.musicMediaItemSortedMap.isNotEmpty()) {
+            if (artist.getMusicSet().isNotEmpty()) {
                 ExtraButton(icon = SatunesIcons.PLAY, onClick = {
-                    playbackController.loadMusic(musicMediaItemSortedMap = artist.musicMediaItemSortedMap)
-                    openMedia()
+                    playbackViewModel.loadMusic(musicSet = artist.getMusicSet())
+                    openMedia(playbackViewModel = playbackViewModel, navController = navController)
                 })
                 ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
-                    playbackController.loadMusic(
-                        musicMediaItemSortedMap = artist.musicMediaItemSortedMap,
+                    playbackViewModel.loadMusic(
+                        musicSet = artist.getMusicSet(),
                         shuffleMode = true
                     )
-                    openMedia()
+                    openMedia(playbackViewModel = playbackViewModel, navController = navController)
                 })
             }
         },
@@ -112,5 +128,9 @@ internal fun ArtistView(
 @Preview
 @Composable
 private fun ArtistViewPreview() {
-    ArtistView(artist = Artist(id = 0, title = "Artist title", albumSortedMap = sortedMapOf()))
+    val navController: NavHostController = rememberNavController()
+    ArtistView(
+        navController = navController,
+        artist = Artist(title = "Artist title")
+    )
 }

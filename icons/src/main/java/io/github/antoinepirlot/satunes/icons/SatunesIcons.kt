@@ -27,34 +27,40 @@ package io.github.antoinepirlot.satunes.icons
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.PlaylistAdd
+import androidx.compose.material.icons.automirrored.rounded.PlaylistPlay
 import androidx.compose.material.icons.automirrored.rounded.QueueMusic
 import androidx.compose.material.icons.rounded.AccountCircle
 import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material.icons.rounded.AddToQueue
 import androidx.compose.material.icons.rounded.Album
+import androidx.compose.material.icons.rounded.BatterySaver
 import androidx.compose.material.icons.rounded.Category
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Delete
+import androidx.compose.material.icons.rounded.DirectionsCar
 import androidx.compose.material.icons.rounded.Done
 import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material.icons.rounded.FavoriteBorder
-import androidx.compose.material.icons.rounded.FileDownload
-import androidx.compose.material.icons.rounded.FileUpload
 import androidx.compose.material.icons.rounded.Folder
+import androidx.compose.material.icons.rounded.FolderOff
 import androidx.compose.material.icons.rounded.GraphicEq
 import androidx.compose.material.icons.rounded.Info
+import androidx.compose.material.icons.rounded.LogoDev
 import androidx.compose.material.icons.rounded.MusicNote
+import androidx.compose.material.icons.rounded.Navigation
 import androidx.compose.material.icons.rounded.PauseCircle
 import androidx.compose.material.icons.rounded.PlayCircle
-import androidx.compose.material.icons.rounded.PlaylistAddCircle
 import androidx.compose.material.icons.rounded.PlaylistRemove
 import androidx.compose.material.icons.rounded.QueuePlayNext
 import androidx.compose.material.icons.rounded.Repeat
 import androidx.compose.material.icons.rounded.RepeatOne
 import androidx.compose.material.icons.rounded.Search
+import androidx.compose.material.icons.rounded.Security
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material.icons.rounded.Shuffle
 import androidx.compose.material.icons.rounded.SkipNext
 import androidx.compose.material.icons.rounded.SkipPrevious
+import androidx.compose.material.icons.rounded.Update
 import androidx.compose.ui.graphics.vector.ImageVector
 
 /**
@@ -63,14 +69,18 @@ import androidx.compose.ui.graphics.vector.ImageVector
 enum class SatunesIcons(val imageVector: ImageVector, val description: String) {
     ADD(imageVector = Icons.Rounded.Add, description = "Add Icon"),
     ADD_TO_PLAYBACK_QUEUE(
-        imageVector = Icons.Rounded.PlaylistAddCircle,
+        imageVector = Icons.Rounded.AddToQueue,
         description = "Add to queue Icon"
     ),
     ALBUM(imageVector = Icons.Rounded.Album, description = "Album Icon"),
+    ANDROID_AUTO(
+        imageVector = Icons.Rounded.DirectionsCar,
+        description = "Android Auto Setting Icon"
+    ),
     ARTIST(imageVector = Icons.Rounded.AccountCircle, description = "Artist Icon"),
+    BATTERY(imageVector = Icons.Rounded.BatterySaver, description = "Battery Icon"),
+    BOTTOM_BAR(imageVector = Icons.Rounded.Navigation, description = "Bottom Bar Setting Icon"),
     CHIP_SELECTED(imageVector = Icons.Rounded.Done, description = "Chip Selected icon"),
-    EXPORT(imageVector = Icons.Rounded.FileUpload, description = "Export Icon"),
-    IMPORT(imageVector = Icons.Rounded.FileDownload, description = "Import Icon"),
     INFO(imageVector = Icons.Rounded.Info, description = "Info Icon"),
     LIKED(imageVector = Icons.Rounded.Favorite, description = "Liked Icon"),
     FOLDER(imageVector = Icons.Rounded.Folder, description = "Folder Icon"),
@@ -85,6 +95,7 @@ enum class SatunesIcons(val imageVector: ImageVector, val description: String) {
     ),
     PLAY(imageVector = Icons.Rounded.PlayCircle, description = "Play Icon"),
     PLAY_NEXT(imageVector = Icons.Rounded.QueuePlayNext, description = "Play Next Icon"),
+    PLAYBACK(imageVector = Icons.AutoMirrored.Rounded.PlaylistPlay, description = "Playback Icon"),
     PLAYLIST(imageVector = Icons.AutoMirrored.Rounded.QueueMusic, description = "Playlist Icon"),
     PLAYLIST_ADD(
         imageVector = Icons.AutoMirrored.Rounded.PlaylistAdd,
@@ -98,6 +109,16 @@ enum class SatunesIcons(val imageVector: ImageVector, val description: String) {
     REPEAT_ONE(imageVector = Icons.Rounded.RepeatOne, description = "Repeat One On Icon"),
     SEARCH(imageVector = Icons.Rounded.Search, description = "Search Icon"),
     SETTINGS(imageVector = Icons.Rounded.Settings, description = "Settings Icon"),
+    SETTING_EXCLUSION(
+        imageVector = Icons.Rounded.FolderOff,
+        description = "Exclusion Setting Icon"
+    ),
+    SETTING_LOGS(imageVector = Icons.Rounded.LogoDev, description = "Log Setting Icon"),
+    SETTING_PERMISSIONS(
+        imageVector = Icons.Rounded.Security,
+        description = "Permission Setting Icon"
+    ),
+    SETTING_UPDATE(imageVector = Icons.Rounded.Update, description = "Update Setting Icon"),
     SHUFFLE(imageVector = Icons.Rounded.Shuffle, description = "Shuffle Icon"),
     SKIP_NEXT(imageVector = Icons.Rounded.SkipNext, description = "Skip Next Icon"),
     SKIP_PREVIOUS(imageVector = Icons.Rounded.SkipPrevious, description = "Skip Previous Icon"),

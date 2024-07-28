@@ -1,6 +1,106 @@
 # Versions (🇫🇷)
 You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
+## 2.0 (Android 5.1.1 Lollipop et ultérieur)
+
+### 2.0.0
+
+Améliorations, optimisations et dépannage:
+
+* Restructuration du code
+* Amélioration des performances et de la rapidité de chargement et d'accès aux données
+* Android Auto est plus stable bien qu'Android Auto a quelques contrainte en terme de quantité de
+  donnée
+* L'importation et exportation des playlists fonctionne correctements
+* La barre de progression affichera les niveaux prédéfinis dans cet ordre:
+  * Très lent
+  * Lent
+  * Un peu lent
+  * Normal
+  * Rapide
+  * Très rapide
+  * En temps réel
+* Définition d'un ordre pour les médias si leur titre est exactement le même lors de la comparaison,
+  à l'écran si cela se produit, tu verras les médias dans cet ordre:
+  * Musique
+  * Album
+  * Artiste
+  * Genre
+  * Playlist
+  * Dossier
+* Utilisation des snack bar pour les différentes notifications
+* Ajout du titre de l'album sur l'élément musical pour différencier les albums et les musiques
+* Les boutons des réglages aléatoire ne sont plus des commutateurs mais agissent comme les boutons
+  pour le mode de répétition
+* Désormais, l'application chargera même vos musiques dupliquées
+* Par défaut, Satunes ne chargera que le dossier principal Musiques et pas la totalité.
+* Satunes enregistre certaines erreurs via des logs (sans informations personnelles), tu pouvez les
+  exporter, rien ne quittera l'application sans votre autorisation.
+* Désormais, la lecture de musique à partir d'un dossier chargera d'abord ses musiques, puis celles
+  de ses sous-dossiers, toujours triées par titre.
+* Ajout d'icônes pour identifier les paramètres plus facilement.
+
+### 2.0.0-preview-1
+
+Améliorations, optimisations et dépannage:
+
+* Utilisation des snack bar pour les notifications
+* L'importation/exportation de playlists a été corrigé et fonctionne désormais comme prévu
+* Refactorisation de Android Auto, j'ai essayé de le rendre plus stable et de résoudre les
+  différents problèmes
+* Ajout du titre de l'album sur l'élément musical pour différencier les albums et les musiques
+* Correction de la fermeture de l'application lors de la lecture lorsque le paramètre pour la
+  maintenir en mode lecture désactivé
+* La barre de progression affichera les niveaux prédéfinis dans cet ordre:
+  * Très lent
+  * Lent
+  * Un peu lent
+  * Normal
+  * Rapide
+  * Très rapide
+  * En temps réel
+* La fenêtre modale ne se fermera plus lorsque tu décide de unliker la musique dans la vue de la
+  playlist Favoris
+* Quelques autres optimisations
+
+### 2.0.0-beta-1
+
+Améliorations, optimisations et dépannage:
+
+* Définition d'un ordre pour les médias si leur titre est exactement le même lors de la comparaison,
+  à l'écran si cela se produit, tu verras les médias dans cet ordre:
+  * Musique
+  * Album
+  * Artiste
+  * Genre
+  * Playlist
+  * Dossier
+* Limitation de la liste d'éléments à 300 maximum dans Android Auto en raison de ses limitations
+* Le chargement devrait être plus rapide dans Android Auto car une boucle a été supprimée pour
+  chaque chargement de liste
+* Les boutons des réglages aléatoire ne sont plus des commutateurs mais agissent comme les boutons
+  pour le mode de répétition
+* Correction du chargement des musiques présentes sur un stockage externe (comme les cartes SD)
+
+### 2.0.0-alpha-1
+
+⚠ La version Alpha n'est pas recommandée pour une utilisation régulière.
+
+Améliorations, optimisations et dépannage:
+
+* La structure du code a été entièrement remaniée pour être plus simple et meilleure à utiliser.
+* Le code a été retravaillé pour être plus rapide
+* Satunes prend désormais en charge Android 15 Vanilla Ice Cream (API 35)
+* Désormais, l'application chargera même vos musiques dupliquées
+* Par défaut, Satunes ne chargera que le dossier principal Musiques et pas la totalité.
+* Satunes enregistre certaines erreurs via des logs (sans informations personnelles), tu pouvez les
+  exporter, rien ne quittera l'application sans votre autorisation.
+* Implémentation de l'utilisation de ViewModel et UiState pour une meilleure gestion des états de
+  Satunes
+* Désormais, la lecture de musique à partir d'un dossier chargera d'abord ses musiques, puis celles
+  de ses sous-dossiers, toujours triées par titre.
+* Ajout d'icônes pour identifier les paramètres plus facilement.
+
 ## 1.3 (Android 5.1.1 Lollipop et ultérieur)
 
 ### 1.3.1
@@ -17,7 +117,8 @@ Nouvelles Fonctionnalités:
 
 * Possiblité de choisir les filtres de recherches activés par défaut
 * Demande de confirmation lors d'une suppression dans les playlists
-* Tous les types de media (musiques, artistes, etc.) ont un menu d'option lors d'un appuis long
+* Tous les types de media (musiques, artistes, etc.) ont un menu d'option lors d'un appuis
+  long
 
 Améliorations, Optimisations et Résolutions de problèmes:
 
@@ -98,7 +199,8 @@ Nouvelles Fonctionnalités:
 * Ajout d'un nouveau paramètre permettant d'utiliser l'Audio Offload (envoie de la lecture dans un
   processus dédié). Cette option permet d'optimiser la batterie
 * Possiblité d'ajouter la musique en cours de lecture dans des playlists via les actions rapides
-* Navigation vers les albums, genres, artistes, etc. depuis le menu d'un appui long sur une musique
+* Navigation vers les albums, genres, artistes, etc. depuis le menu d'un appui long sur une
+  musique
 
 Améliorations, Optimisations et Résolutions de problèmes:
 

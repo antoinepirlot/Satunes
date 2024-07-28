@@ -28,7 +28,7 @@ package io.github.antoinepirlot.satunes.database.daos
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import io.github.antoinepirlot.satunes.database.models.tables.MusicsPlaylistsRel
+import io.github.antoinepirlot.satunes.database.models.database.tables.MusicsPlaylistsRel
 
 /**
  * @author Antoine Pirlot on 30/03/2024
@@ -42,6 +42,9 @@ internal interface MusicsPlaylistsRelDAO {
 
     @Query("DELETE FROM musics_playlists_rel WHERE music_id = :musicId AND playlist_id = :playlistId")
     fun delete(musicId: Long, playlistId: Long)
+
+    @Query("DELETE FROM musics_playlists_rel WHERE music_id = :musicId")
+    fun removeAll(musicId: Long)
 
     @Query("SELECT music_id FROM musics_playlists_rel WHERE music_id = :musicId")
     fun isMusicInPlaylist(musicId: Long): Boolean

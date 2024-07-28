@@ -33,9 +33,8 @@
     <string name="no_folder">No folder with musics found</string>
     <string name="add_to">"Add to "</string>
     <string name="exclusion_setting">Excluding files</string>
-    <string name="exclude_ringtones">Exclude ringtones</string>
+    <string name="include_ringtones">Include ringtones</string>
     <string name="bar_speed">"Progress bar speed: "</string>
-    <string name="second">second</string>
     <string name="export">Export</string>
     <string name="export_all">Export All</string>
     <string name="_import">Import</string>
@@ -50,8 +49,8 @@
     <string name="pause_if_another_playback">Pause if another app is playing</string>
     <string name="update_title">Update Name</string>
     <string name="title">Title</string>
-    <string name="playlist_beta_info">The export and import of playlists is in beta due to the fact that only the music identifiers are recorded.\nIf the music is deleted and then re-added on the device or if you change the device, the music will have a new identifier and therefore there will be bad music in the playlists.\nThis issue will be fixed in a future update.</string>
-    <string name="android_auto_tuto">To activate Android Auto you must carry out the following steps:\n\n1) Go to Android Auto settings.\n\n2) Multiple click on \"Version\" to activate dev mode.\n\n3) Go to Dev\'s settings and activate \"Unknown sources\" as this app is not published on Google Play Store.\n\n4) Click on the 3 buttons as in point 3, but click on \"Exit developer mode\" the setting you just activated will be saved.\n\n5) Add app in launcher.\n\n6) Enjoy</string>
+    <string name="playlists_settings_content">You can export/import your playlists.\n⚠ At this time, only the absolute path is used to identify the music. If you move your music to another path, it won\'t be detected. I\'m still checking to make it better.</string>
+    <string name="android_auto_content">To activate Android Auto you must carry out the following steps:\n\n1) Go to Android Auto settings.\n\n2) Multiple click on \"Version\" to activate dev mode.\n\n3) Go to Dev\'s settings and activate \"Unknown sources\" as this app is not published on Google Play Store.\n\n4) Click on the 3 buttons as in point 3, but click on \"Exit developer mode\" the setting you just activated will be saved.\n\n5) Add app in launcher.\n\n6) Enjoy\n\n⚠ Keep in mind that Android Auto has not been designed to load a lot of data and can bug if you have too much musics for Android Auto.</string>
     <string name="battery_settings">Battery</string>
     <string name="audio_offload" translatable="false">Audio Offload</string>
     <string name="audio_offload_info">This parameter allows you to send audio treatment to a dedicated process.\nThis reduces energy consumption.\n\nHowever, in the Media 3 library used in Satunes, this can cause compatibility issues which results in audio cuts. A known issue is that the music is stopping during playback or after the end of a song.\n\nBy activating this parameter, you reduce energy consumption and increase the  battery life but you are likely to meet audio cuts.\n\nI hope that in a nearby future, the problem will be resolved by Google which holds the Media3 and Exoplayer libraries. In the meantime, I try to find viable solutions to reduce energy consumption by Satunes.</string>
@@ -70,4 +69,20 @@
     <string name="remove_dialog_title">Removing Confirmation</string>
     <string name="remove_submit">Delete</string>
     <string name="see_on_fdroid">Open in F-Droid</string>
+    <string name="logs_settings">Logs</string>
+    <string name="logs_settings_content">You can export logs to send me them by email at: pirlot.antoine@outlook.com.\n\nWith these logs I can understand more about what\'s wrong with the app.\n\nLogs files contain informations about what the app does and its state.\nThese informations include:\n- Dates\n- Process\n- App state\n\nIn these logs, there\'s not confidential informations as musics information or data that can identify you.\n\nIf you\'re not convinced, you can choose to describe me the problem but it will be more difficult for me to fix it.</string>
+    <string name="update_modal_permanently">You won\'t see this modal again until the next update</string>
+    <string name="canceled">Canceled</string>
+    <string name="insert_music_to_playlists_success">has been added to the playlist(s)</string>
+    <string name="error_occurred">An error occurred</string>
+    <string name="retry">Retry</string>
+    <string name="insert_musics_to_playlist_success">Musics have been added to</string>
+    <string name="play_next_success">will be played next this music</string>
+    <string name="add_to_queue_success">has been added at the end of the current playback queue.</string>
+    <string name="remove_from_playlist_success">has been removed from</string>
+    <string name="remove_playlist_success">has been removed.</string>
+    <string name="remove_from_likes_success">ou don\'t like %1$s anymore.</string>
+    <string name="update_playlist_success">%1$s has been updated.</string>
+    <string name="bar_speed_label">Speed</string>
+    <string name="update_modal_not_permanently">The modal will still be shown at next launch.</string>
 </resources>

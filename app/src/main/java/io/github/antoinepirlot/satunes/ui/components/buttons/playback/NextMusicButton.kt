@@ -33,8 +33,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.playback.services.PlaybackController
+import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
 
 /**
  * @author Antoine Pirlot on 26/01/24
@@ -42,11 +43,12 @@ import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 
 @Composable
 internal fun NextMusicButton(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    playbackViewModel: PlaybackViewModel = viewModel(),
 ) {
     IconButton(
         modifier = modifier.size(45.dp),
-        onClick = { PlaybackController.getInstance().playNext() }
+        onClick = { playbackViewModel.playNext() }
     ) {
         val icon: SatunesIcons = SatunesIcons.SKIP_NEXT
         Icon(

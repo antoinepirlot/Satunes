@@ -41,11 +41,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.data.switchSettingsNeedRestarts
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import io.github.antoinepirlot.satunes.models.SwitchSettings
 import io.github.antoinepirlot.satunes.ui.components.dialog.InformationDialog
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
-import io.github.antoinepirlot.satunes.ui.views.settings.Settings
-import io.github.antoinepirlot.satunes.ui.views.settings.settingsNeedRestart
 
 /**
  *   @author Antoine Pirlot 06/03/2024
@@ -54,12 +54,12 @@ import io.github.antoinepirlot.satunes.ui.views.settings.settingsNeedRestart
 @Composable
 internal fun SettingWithSwitch(
     modifier: Modifier = Modifier,
-    setting: Settings,
+    setting: SwitchSettings,
     icon: SatunesIcons? = null,
     checked: Boolean,
     onCheckedChange: () -> Unit
 ) {
-    val isRestartNeeded: Boolean = settingsNeedRestart.contains(setting)
+    val isRestartNeeded: Boolean = switchSettingsNeedRestarts.contains(setting)
     var showInfo: Boolean by rememberSaveable { mutableStateOf(false) }
 
     Row(
@@ -111,7 +111,7 @@ internal fun SettingWithSwitch(
 @Preview
 private fun SettingWithSwitchPreview() {
     SettingWithSwitch(
-        setting = Settings.PAUSE_IF_ANOTHER_PLAYBACK,
+        setting = SwitchSettings.PAUSE_IF_ANOTHER_PLAYBACK,
         checked = true,
         icon = SatunesIcons.INFO,
         onCheckedChange = {}

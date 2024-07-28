@@ -32,7 +32,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -42,13 +41,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.media3.common.MediaItem
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Album
-import io.github.antoinepirlot.satunes.database.models.Media
+import io.github.antoinepirlot.satunes.database.models.Artist
+import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.ScreenSizes
@@ -56,8 +57,8 @@ import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
 import io.github.antoinepirlot.satunes.ui.components.images.AlbumArtwork
 import io.github.antoinepirlot.satunes.ui.components.texts.Subtitle
 import io.github.antoinepirlot.satunes.ui.components.texts.Title
-import io.github.antoinepirlot.satunes.ui.views.MediaListView
-import java.util.SortedMap
+import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
+import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 
 /**
  * @author Antoine Pirlot on 01/04/2024
@@ -66,15 +67,14 @@ import java.util.SortedMap
 @Composable
 internal fun AlbumView(
     modifier: Modifier = Modifier,
+    navController: NavHostController,
+    playbackViewModel: PlaybackViewModel = viewModel(),
     album: Album,
 ) {
-    val playbackController: PlaybackController = PlaybackController.getInstance()
-
-
-    val musicMap: SortedMap<Music, MediaItem> = remember { album.musicMediaItemSortedMap }
+    val musicSet: Set<Music> = album.getMusicSet()
 
     //Recompose if data changed
-    var mapChanged: Boolean by rememberSaveable { album.musicMediaItemSortedMapUpdate }
+    var mapChanged: Boolean by rememberSaveable { album.musicSetUpdated }
     if (mapChanged) {
         mapChanged = false
     }
@@ -82,30 +82,46 @@ internal fun AlbumView(
 
     MediaListView(
         modifier = modifier,
-        mediaList = musicMap.keys.toList(),
-        openMedia = { clickedMedia: Media ->
-            playbackController.loadMusic(
-                musicMediaItemSortedMap = album.musicMediaItemSortedMap,
-                musicToPlay = clickedMedia as Music
+        navController = navController,
+        mediaImplCollection = musicSet,
+        openMedia = { clickedMediaImpl: MediaImpl ->
+            playbackViewModel.loadMusic(
+                musicSet = album.getMusicSet(),
+                musicToPlay = clickedMediaImpl as Music
             )
-            openMedia(media = clickedMedia)
+            openMedia(
+                playbackViewModel = playbackViewModel,
+                media = clickedMediaImpl,
+                navController = navController
+            )
         },
-        onFABClick = { openCurrentMusic() },
+        onFABClick = {
+            openCurrentMusic(
+                playbackViewModel = playbackViewModel,
+                navController = navController
+            )
+        },
         header = {
-            Header(album = album)
+            Header(navController = navController, album = album)
         },
         extraButtons = {
-            if (album.musicMediaItemSortedMap.isNotEmpty()) {
+            if (album.getMusicSet().isNotEmpty()) {
                 ExtraButton(icon = SatunesIcons.PLAY, onClick = {
-                    playbackController.loadMusic(album.musicMediaItemSortedMap)
-                    openMedia()
+                    playbackViewModel.loadMusic(album.getMusicSet())
+                    openMedia(
+                        playbackViewModel = playbackViewModel,
+                        navController = navController
+                    )
                 })
                 ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
-                    playbackController.loadMusic(
-                        musicMediaItemSortedMap = album.musicMediaItemSortedMap,
+                    playbackViewModel.loadMusic(
+                        musicSet = album.getMusicSet(),
                         shuffleMode = true
                     )
-                    openMedia()
+                    openMedia(
+                        playbackViewModel = playbackViewModel,
+                        navController = navController
+                    )
                 })
             }
         },
@@ -114,7 +130,12 @@ internal fun AlbumView(
 }
 
 @Composable
-private fun Header(modifier: Modifier = Modifier, album: Album) {
+private fun Header(
+    modifier: Modifier = Modifier,
+    playbackViewModel: PlaybackViewModel = viewModel(),
+    navController: NavHostController,
+    album: Album
+) {
     Column(modifier = modifier.padding(vertical = 16.dp)) {
         val screenWidthDp = LocalConfiguration.current.screenWidthDp
         val albumSize: Dp = if (screenWidthDp < ScreenSizes.VERY_VERY_SMALL)
@@ -126,7 +147,7 @@ private fun Header(modifier: Modifier = Modifier, album: Album) {
             modifier = Modifier
                 .fillMaxWidth()
                 .size(albumSize),
-            media = album
+            mediaImpl = album
         )
         Title(
             bottomPadding = 0.dp,
@@ -136,9 +157,13 @@ private fun Header(modifier: Modifier = Modifier, album: Album) {
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .clickable {
-                    openMedia(media = album.artist)
+                    openMedia(
+                        playbackViewModel = playbackViewModel,
+                        media = album.artist,
+                        navController = navController
+                    )
                 },
-            text = album.artist!!.title
+            text = album.artist.title
         )
     }
 }
@@ -146,12 +171,12 @@ private fun Header(modifier: Modifier = Modifier, album: Album) {
 @Preview
 @Composable
 private fun AlbumViewPreview() {
+    val navController: NavHostController = rememberNavController()
     AlbumView(
+        navController = navController,
         album = Album(
-            id = 0,
             title = "Album title",
-            artist = null,
-            musicMediaItemSortedMap = sortedMapOf()
+            artist = Artist(title = "Artist Title"),
         )
     )
 }

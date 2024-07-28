@@ -43,6 +43,15 @@
     <string name="no_playlist">There\'s no playlist</string>
     <string name="exporting_success">Exporting Success</string>
     <string name="added">Added</string>
-    <string name="created">Created Playlist</string>
+    <string name="add_playlist_success">%1$s has been created.</string>
     <string name="likes_playlist_title">Favorites</string>
+    <string name="blank_string_error">The playlist title is blank.</string>
+    <string name="real_time_speed">Real time</string>
+    <string name="very_fast_speed">Very fast</string>
+    <string name="fast_speed">Fast</string>
+    <string name="normal_speed">Normal</string>
+    <string name="bit_slow_speed">A bit slow</string>
+    <string name="slow_speed">Slow</string>
+    <string name="very_slow_speed">Very slow</string>
+    <string name="importing_missed_musics">%d music(s) not found.</string>
 </resources>

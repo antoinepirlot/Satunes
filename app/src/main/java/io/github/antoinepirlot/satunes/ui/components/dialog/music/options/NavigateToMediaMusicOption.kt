@@ -28,14 +28,18 @@ package io.github.antoinepirlot.satunes.ui.components.dialog.music.options
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.Genre
-import io.github.antoinepirlot.satunes.database.models.Media
+import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.dialog.options.DialogOption
+import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
 
 /**
  * @author Antoine Pirlot on 01/06/2024
@@ -44,24 +48,36 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.options.DialogOption
 @Composable
 internal fun NavigateToMediaMusicOption(
     modifier: Modifier = Modifier,
-    media: Media,
+    playbackViewModel: PlaybackViewModel = viewModel(),
+    mediaImpl: MediaImpl,
+    navController: NavHostController
 ) {
     DialogOption(
         modifier = modifier,
-        onClick = { openMedia(media = media) },
-        icon = when (media) {
-                is Album -> SatunesIcons.ALBUM
-                is Artist -> SatunesIcons.ARTIST
-                is Genre -> SatunesIcons.GENRES
-                is Folder -> SatunesIcons.FOLDER
-                else -> throw IllegalArgumentException("${media.javaClass} is not allowed")
+        onClick = {
+            openMedia(
+                playbackViewModel = playbackViewModel,
+                media = mediaImpl,
+                navController = navController
+            )
         },
-        text = media.title
+        icon = when (mediaImpl) {
+            is Album -> SatunesIcons.ALBUM
+            is Artist -> SatunesIcons.ARTIST
+            is Genre -> SatunesIcons.GENRES
+            is Folder -> SatunesIcons.FOLDER
+            else -> throw IllegalArgumentException("${mediaImpl.javaClass} is not allowed")
+        },
+        text = mediaImpl.title
     )
 }
 
 @Preview
 @Composable
 private fun NavigateToMediaMusicOptionPreview() {
-    NavigateToMediaMusicOption(media = Album(title = "Album Title"))
+    val navController: NavHostController = rememberNavController()
+    NavigateToMediaMusicOption(
+        mediaImpl = Album(title = "Album Title", artist = Artist(title = "Artist Title")),
+        navController = navController
+    )
 }

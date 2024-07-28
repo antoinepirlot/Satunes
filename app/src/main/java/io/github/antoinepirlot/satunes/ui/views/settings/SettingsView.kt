@@ -25,6 +25,7 @@
 
 package io.github.antoinepirlot.satunes.ui.views.settings
 
+import android.os.Build
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -35,9 +36,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.navController
-import io.github.antoinepirlot.satunes.router.Destination
+import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.ui.components.buttons.settings.SettingButton
 import io.github.antoinepirlot.satunes.ui.components.texts.Title
 import io.github.antoinepirlot.satunes.database.R as RDb
@@ -49,63 +52,84 @@ import io.github.antoinepirlot.satunes.database.R as RDb
 @Composable
 internal fun SettingsView(
     modifier: Modifier = Modifier,
+    navController: NavHostController,
 ) {
     val scrollState = rememberScrollState()
     Column(modifier = modifier.verticalScroll(state = scrollState)) {
         Title(text = stringResource(id = R.string.settings))
         HorizontalDivider()
         Column {
-            SettingButton(text = "Android Auto", onClick = {
-                navController.navigate(Destination.ANDROID_AUTO_SETTINGS.link)
-            })
+            SettingButton(
+                text = "Android Auto",
+                icon = SatunesIcons.ANDROID_AUTO,
+                onClick = {
+                    navController.navigate(Destination.ANDROID_AUTO_SETTINGS.link)
+                }
+            )
             SettingButton(
                 text = stringResource(id = R.string.bottom_bar),
+                icon = SatunesIcons.BOTTOM_BAR,
                 onClick = {
                     navController.navigate(Destination.BOTTOM_BAR_SETTINGS.link)
                 }
             )
             SettingButton(
                 text = stringResource(id = R.string.playback_settings),
+                icon = SatunesIcons.PLAYBACK,
                 onClick = {
                     navController.navigate(Destination.PLAYBACK_SETTINGS.link)
                 }
             )
             SettingButton(
                 text = stringResource(id = R.string.search_setting_title),
+                icon = SatunesIcons.SEARCH,
                 onClick = {
                     navController.navigate(Destination.SEARCH_SETTINGS.link)
                 }
             )
             SettingButton(
                 text = stringResource(id = R.string.battery_settings),
+                icon = SatunesIcons.BATTERY,
                 onClick = {
                     navController.navigate(Destination.BATTERY_SETTINGS.link)
                 }
             )
             SettingButton(
                 text = stringResource(id = R.string.exclusion_setting),
+                icon = SatunesIcons.SETTING_EXCLUSION,
                 onClick = {
                     navController.navigate(Destination.EXCLUSION_SETTINGS.link)
                 }
             )
             SettingButton(
-                text = stringResource(id = RDb.string.playlists) + " (Beta)",
+                text = stringResource(id = RDb.string.playlists),
+                icon = SatunesIcons.PLAYLIST,
                 onClick = {
                     navController.navigate(Destination.PLAYLISTS_SETTINGS.link)
                 }
             )
             SettingButton(
                 text = stringResource(id = R.string.permissions),
+                icon = SatunesIcons.SETTING_PERMISSIONS,
                 onClick = {
                     navController.navigate(Destination.PERMISSIONS_SETTINGS.link)
                 }
             )
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                SettingButton(
+                    text = stringResource(id = R.string.version),
+                    icon = SatunesIcons.SETTING_UPDATE,
+                    onClick = { navController.navigate(Destination.UPDATES_SETTINGS.link) }
+                )
+            }
+
             SettingButton(
-                text = stringResource(id = R.string.version),
-                onClick = {
-                    navController.navigate(Destination.UPDATES_SETTINGS.link)
-                }
+                text = stringResource(id = R.string.logs_settings),
+                icon = SatunesIcons.SETTING_LOGS,
+                onClick = { navController.navigate(Destination.LOGS_SETTINGS.link) }
             )
+
             AboutView(modifier.padding(bottom = 16.dp)) // Bottom padding for a little space
         }
     }
@@ -114,5 +138,6 @@ internal fun SettingsView(
 @Composable
 @Preview
 private fun SettingsViewPreview() {
-    SettingsView()
+    val navController: NavHostController = rememberNavController()
+    SettingsView(navController = navController)
 }

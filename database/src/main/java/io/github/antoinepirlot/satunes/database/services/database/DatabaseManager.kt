@@ -98,17 +98,27 @@ class DatabaseManager private constructor(context: Context) {
                 )
                 DataManager.addPlaylist(playlist = playlist)
                 playlistWithMusics.musics.forEach { musicDB: MusicDB ->
-                    if (playlist.title == LIKES_PLAYLIST_TITLE) {
-                        val music: Music = musicDB.music!!
-                        music.liked.value = true
+                    if (musicDB.music != null) {
+                        if (playlist.title == LIKES_PLAYLIST_TITLE) {
+                            val music: Music = musicDB.music!!
+                            music.liked.value = true
+                        }
+                        playlist.addMusic(music = musicDB.music!!)
                     }
-                    playlist.addMusic(music = musicDB.music!!)
                 }
             }
         } catch (e: Throwable) {
             _logger.warning(e.message)
             throw e
         }
+    }
+
+    fun updateMusic(vararg musics: Music) {
+        var musicDBs: Array<MusicDB> = arrayOf()
+        musics.forEach { music: Music ->
+            musicDBs += MusicDB(id = music.id, absolutePath = music.absolutePath)
+        }
+        this.musicDao.update(musicDBs = musicDBs)
     }
 
     fun insertMusicToPlaylists(music: Music, playlists: List<Playlist>) {
@@ -191,6 +201,11 @@ class DatabaseManager private constructor(context: Context) {
         if (!musicsPlaylistsRelDAO.isMusicInPlaylist(musicId = music.id)) {
             musicDao.delete(MusicDB(id = music.id, absolutePath = music.absolutePath))
         }
+    }
+
+    fun removeMusic(id: Long) {
+        this.musicDao.delete(musicId = id)
+        this.musicsPlaylistsRelDAO.removeAll(musicId = id)
     }
 
     fun removePlaylist(playlist: Playlist) {

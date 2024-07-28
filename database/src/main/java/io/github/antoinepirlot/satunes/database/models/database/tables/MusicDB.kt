@@ -29,9 +29,12 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
+import io.github.antoinepirlot.satunes.database.exceptions.MusicNotFoundException
 import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
+import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
+import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
@@ -47,6 +50,10 @@ internal data class MusicDB(
     @ColumnInfo("music_id") override val id: Long = 0,
     @ColumnInfo("absolute_path") var absolutePath: String,
 ) : Media {
+    @Transient
+    @Ignore
+    private val _logger: SatunesLogger = SatunesLogger.getLogger()
+
     @Ignore
     @Transient
     override lateinit var title: String
@@ -55,10 +62,25 @@ internal data class MusicDB(
 
     @Ignore
     @Transient
-    var music: Music? = try {
-        DataManager.getMusic(absolutePath = absolutePath)
-    } catch (_: Throwable) {
-        // Happens when importing playlistDB
-        null
-    }
+    var music: Music? =
+        try {
+            try {
+                DataManager.getMusic(absolutePath = absolutePath)
+            } catch (_: NullPointerException) {
+                //The path has changed
+                try {
+                    val music: Music = DataManager.getMusic(id = id)
+                    DatabaseManager.getInstance().updateMusic(music)
+                    music
+                } catch (_: MusicNotFoundException) {
+                    //Remove music as it has been removed
+                    DatabaseManager.getInstance().removeMusic(id = id)
+                    null
+                }
+            }
+        } catch (e: Throwable) {
+            val message: String = "An error occurred while getting music in musicDB"
+            _logger.severe(message)
+            throw e
+        }
 }

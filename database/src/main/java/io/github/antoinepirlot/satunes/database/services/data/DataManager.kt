@@ -211,10 +211,8 @@ object DataManager {
     fun addPlaylist(playlist: Playlist) {
         if (!playlistsSortedMap.contains(playlist)) {
             playlistsSortedMap[playlist] = playlist
-            playlistsMapUpdated.value = true
-        }
-        if (!playlistsMapById.contains(playlist.id)) {
             playlistsMapById[playlist.id] = playlist
+            playlistsMapUpdated.value = true
         }
     }
 

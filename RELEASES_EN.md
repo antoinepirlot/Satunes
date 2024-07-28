@@ -3,6 +3,42 @@ Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
 ## 2.0 (Android 5.1.1 Lollipop and later)
 
+### 2.0.0
+
+Improvements, optimizations and troubleshooting:
+
+* Restructured the code
+* Improved performance and speed of loading and accessing data
+* Android Auto is more stable although Android Auto has some constraints in terms of data quantity
+* Importing and exporting playlists works correctly
+* The progress bar will display the predefined levels in this order:
+  * Very slow
+  * Slow
+  * A little slow
+  * Normal
+  * Fast
+  * Very fast
+  * In real time
+* Defined an order for media if their title is exactly the same when comparing,
+  on the screen if this happens, you will see the media in this order:
+  * Music
+  * Album
+  * Artist
+  * Genre
+  * Playlist
+  * Folder
+* Use of snack bars for different notifications
+* Added the album title on the music item to differentiate albums and songs
+* The buttons for the shuffle settings are no longer switches but act as the buttons
+  for the repeat mode
+* Now, the application will even load your duplicated music
+* By default, Satunes will only load the main Music folder and not the whole thing.
+* Satunes records some errors via logs (without personal information), you can export them, nothing
+  will leave the application without your permission.
+* Now, playing music from a folder will first load its music, then those
+  from its subfolders, always sorted by title.
+* Added icons to identify settings more easily.
+
 ### 2.0.0-preview-1
 
 Improvements, Optimizations and Troubleshooting:

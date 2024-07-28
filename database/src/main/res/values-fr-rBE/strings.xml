@@ -50,5 +50,5 @@
     <string name="bit_slow_speed">Un peu lent</string>
     <string name="slow_speed">Lent</string>
     <string name="very_slow_speed">Très lent</string>
-    <string name="importing_missed_musics">1%d musique(s) non trouvées.</string>
+    <string name="importing_missed_musics">%d musique(s) non trouvées.</string>
 </resources>

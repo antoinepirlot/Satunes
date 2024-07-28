@@ -12,7 +12,7 @@
  *  You should have received a copy of the GNU General Public License along with Satunes.
  *  If not, see <https://www.gnu.org/licenses/>.
  *
- *  **** INFORMATIONS ABOUT THE AUTHOR *****
+ *  **** INFORMATION ABOUT THE AUTHOR *****
  *  The author of this file is Antoine Pirlot, the owner of this project.
  *  You find this original project on github.
  *
@@ -45,7 +45,6 @@ import kotlinx.serialization.Transient
 @Serializable
 @Entity("musics")
 internal data class MusicDB(
-    @Transient
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo("music_id") override val id: Long = 0,
     @ColumnInfo("absolute_path") var absolutePath: String,
@@ -79,7 +78,7 @@ internal data class MusicDB(
                 }
             }
         } catch (e: Throwable) {
-            val message: String = "An error occurred while getting music in musicDB"
+            val message = "An error occurred while getting music in musicDB"
             _logger.severe(message)
             throw e
         }

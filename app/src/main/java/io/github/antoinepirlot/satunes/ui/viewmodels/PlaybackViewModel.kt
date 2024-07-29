@@ -26,7 +26,6 @@
 package io.github.antoinepirlot.satunes.ui.viewmodels
 
 import android.content.Context
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.MutableFloatState
 import androidx.compose.runtime.MutableIntState
@@ -184,7 +183,6 @@ class PlaybackViewModel : ViewModel() {
                 scope = scope,
                 snackBarHostState = snackBarHostState,
                 message = mediaImpl.title + ' ' + context.getString(R.string.add_to_queue_success),
-                duration = SnackbarDuration.Long
             )
         } catch (e: Throwable) {
             _logger.warning(e.message)

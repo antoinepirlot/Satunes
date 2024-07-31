@@ -132,7 +132,7 @@ class DataViewModel : ViewModel() {
                     }
 
                     is PlaylistAlreadyExistsException -> {
-                        playlistTitle + context.getString(RDb.string.playlist_already_exist)
+                        context.getString(RDb.string.playlist_already_exist, playlistTitle)
                     }
 
                     else -> null
@@ -227,19 +227,20 @@ class DataViewModel : ViewModel() {
         }
     }
 
-    fun updatePlaylist(
+    fun updatePlaylistTitle(
         scope: CoroutineScope,
         snackBarHostState: SnackbarHostState,
         playlist: Playlist
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             val context: Context = MainActivity.instance.applicationContext
+            val updatedTitle: String = playlist.title
             try {
                 _db.updatePlaylist(playlist = playlist)
                 showSnackBar(
                     scope = scope,
                     snackBarHostState = snackBarHostState,
-                    message = context.getString(R.string.update_playlist_success, playlist.title)
+                    message = context.getString(R.string.update_playlist_success, playlist)
                 )
             } catch (e: Throwable) {
                 val message: String? = when (e) {
@@ -248,7 +249,7 @@ class DataViewModel : ViewModel() {
                     }
 
                     is PlaylistAlreadyExistsException -> {
-                        context.getString(RDb.string.playlist_already_exist)
+                        context.getString(RDb.string.playlist_already_exist, updatedTitle)
                     }
 
                     else -> null
@@ -265,7 +266,7 @@ class DataViewModel : ViewModel() {
                         scope = scope,
                         snackBarHostState = snackBarHostState,
                         action = {
-                            updatePlaylist(
+                            updatePlaylistTitle(
                                 scope = scope,
                                 snackBarHostState = snackBarHostState,
                                 playlist = playlist

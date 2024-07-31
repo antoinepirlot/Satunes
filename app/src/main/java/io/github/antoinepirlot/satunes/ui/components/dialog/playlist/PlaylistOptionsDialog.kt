@@ -104,18 +104,19 @@ internal fun PlaylistOptionsDialog(
         onDismissRequest = onDismissRequest,
         confirmButton = {
             TextButton(onClick = {
-                onDismissRequest()
                 val oldTitle: String = playlist.title
                 playlist.title = playlistTitle
-                // TODO this case must be managed in database module
                 try {
-                    dataViewModel.updatePlaylist(
+                    dataViewModel.updatePlaylistTitle(
                         scope = scope,
                         snackBarHostState = snackBarHostState,
                         playlist = playlist
                     )
                 } catch (_: Exception) {
                     playlist.title = oldTitle
+                } finally {
+
+                    onDismissRequest()
                 }
             }) {
                 NormalText(text = stringResource(id = R.string.ok))

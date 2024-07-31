@@ -41,12 +41,7 @@ abstract class MediaImpl(
 ) : Media, Comparable<MediaImpl> {
     override var id: Long = id
         internal set
-    override var title: String = title
-        set(title) {
-            if (title.isNotBlank()) {
-                field = title
-            }
-        }
+    override var title: String by mutableStateOf(value = title)
 
     var artwork: Bitmap? by mutableStateOf(null)
         internal set

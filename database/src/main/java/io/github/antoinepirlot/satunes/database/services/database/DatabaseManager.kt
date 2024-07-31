@@ -113,7 +113,7 @@ class DatabaseManager private constructor(context: Context) {
         }
     }
 
-    fun updateMusic(vararg musics: Music) {
+    internal fun updateMusic(vararg musics: Music) {
         var musicDBs: Array<MusicDB> = arrayOf()
         musics.forEach { music: Music ->
             musicDBs += MusicDB(id = music.id, absolutePath = music.absolutePath)
@@ -179,7 +179,10 @@ class DatabaseManager private constructor(context: Context) {
     fun updatePlaylist(playlist: Playlist) {
         if (playlist.title.isBlank()) throw BlankStringException()
         val playlistDB = PlaylistDB(id = playlist.id, title = playlist.title)
-        if (playlistDao.exists(title = playlist.title)) throw PlaylistAlreadyExistsException()
+        if (playlistDao.exists(title = playlist.title)) {
+            playlist.title = this.playlistDao.getOriginalPlaylistTitle(playlistId = playlist.id)
+            throw PlaylistAlreadyExistsException()
+        }
         try {
             playlistDao.update(playlistDB = playlistDB)
         } catch (e: SQLiteConstraintException) {

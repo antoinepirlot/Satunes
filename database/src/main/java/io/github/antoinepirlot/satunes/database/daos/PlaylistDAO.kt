@@ -43,6 +43,9 @@ const val LIKES_PLAYLIST_TITLE: String = "_likes"
 @Dao
 internal interface PlaylistDAO {
 
+    @Query("SELECT title FROM playlists WHERE playlist_id = :playlistId")
+    fun getOriginalPlaylistTitle(playlistId: Long): String
+
     @Transaction
     @Query("SELECT * FROM playlists WHERE playlist_id = :playlistId")
     fun getPlaylistWithMusics(playlistId: Long): PlaylistWithMusics?

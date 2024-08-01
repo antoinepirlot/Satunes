@@ -3,6 +3,16 @@ Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
 ## 2.0 (Android 5.1.1 Lollipop and later)
 
+### 2.0.1
+
+Improvements, optimizations and troubleshooting:
+
+* It is no longer possible to have 2 different playlists with the same name regardless of the
+  upper/lower case
+* When launching playback via searches with shuffle mode, the selected music is the first in the
+  queue
+* When searching, if the first or last characters are spaces, they are ignored
+
 ### 2.0.0
 
 Improvements, optimizations and troubleshooting:

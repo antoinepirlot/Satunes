@@ -36,16 +36,15 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.OptIn
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.media3.common.util.UnstableApi
+import androidx.media3.session.MediaController
+import com.google.common.util.concurrent.ListenableFuture
 import io.github.antoinepirlot.satunes.database.services.data.DataCleanerManager
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
+import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.playback.services.PlaybackService
 import io.github.antoinepirlot.satunes.ui.utils.showSnackBar
-import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
-import io.github.antoinepirlot.satunes.ui.viewmodels.factories.PlaybackViewModelFactory
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import io.github.antoinepirlot.satunes.utils.utils.showToastOnUiThread
 import kotlinx.coroutines.CoroutineScope
@@ -78,6 +77,13 @@ internal class MainActivity : ComponentActivity() {
     }
 
     private lateinit var logger: SatunesLogger
+    private lateinit var mediaControllerFuture: ListenableFuture<MediaController>
+    private lateinit var mediaController: MediaController
+
+    override fun onStart() {
+        super.onStart()
+        PlaybackController.initInstance(context = applicationContext)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -86,10 +92,10 @@ internal class MainActivity : ComponentActivity() {
         logger = SatunesLogger.getLogger()
         logger.info("Satunes started on API: ${Build.VERSION.SDK_INT}")
         instance = this
+
         setNotificationOnClick()
         setContent {
             //Init viewModel that needs context
-            viewModel<PlaybackViewModel>(factory = PlaybackViewModelFactory(context = LocalContext.current))
             Satunes()
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

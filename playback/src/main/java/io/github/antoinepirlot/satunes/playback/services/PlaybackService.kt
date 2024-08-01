@@ -29,6 +29,7 @@ import android.content.Intent
 import android.os.Environment
 import androidx.annotation.OptIn
 import androidx.media3.common.AudioAttributes
+import androidx.media3.common.C
 import androidx.media3.common.TrackSelectionParameters
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
@@ -47,24 +48,26 @@ class PlaybackService : MediaSessionService() {
 
     companion object {
         var mediaSession: MediaSession? = null
-        var playbackController: PlaybackController? = null
     }
 
-    private lateinit var logger: SatunesLogger
+    private lateinit var _logger: SatunesLogger
+    private lateinit var _playbackController: PlaybackController
+    private lateinit var _exoPlayer: ExoPlayer
 
     @OptIn(UnstableApi::class)
     override fun onCreate() {
         super.onCreate()
         SatunesLogger.DOCUMENTS_PATH =
             applicationContext.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)!!.path
-        logger = SatunesLogger.getLogger()
+        _logger = SatunesLogger.getLogger()
 
-        val exoPlayer = ExoPlayer.Builder(this)
+        _exoPlayer = ExoPlayer.Builder(applicationContext)
             .setHandleAudioBecomingNoisy(SettingsManager.pauseIfNoisyChecked) // Pause when bluetooth or headset disconnect
             .setAudioAttributes(
                 AudioAttributes.DEFAULT,
                 SettingsManager.pauseIfAnotherPlayback
             )
+            .setWakeMode(C.WAKE_MODE_LOCAL)
             .build()
 
         // Add Audio Offload only if the user want it
@@ -74,21 +77,21 @@ class PlaybackService : MediaSessionService() {
             .build()
 
         if (SettingsManager.audioOffloadChecked) {
-            exoPlayer.trackSelectionParameters = exoPlayer.trackSelectionParameters
+            _exoPlayer.trackSelectionParameters = _exoPlayer.trackSelectionParameters
                 .buildUpon()
                 .setAudioOffloadPreferences(audioOffloadPreferences)
                 .build()
         }
 
-        mediaSession = MediaSession.Builder(this, exoPlayer)
+        mediaSession = MediaSession.Builder(applicationContext, _exoPlayer)
             .setCallback(PlaybackSessionCallback)
             .build()
 
         try {
-            playbackController =
+            _playbackController =
                 PlaybackController.getInstance() // Called from init instance (session)
         } catch (e: Throwable) {
-            logger.warning("Error while getting playback controller. Shutting down $this")
+            _logger.warning("Error while getting playback controller. Shutting down $this")
             stopSelf()
         }
     }
@@ -97,10 +100,10 @@ class PlaybackService : MediaSessionService() {
         super.onTaskRemoved(rootIntent)
         if (
             !SettingsManager.playbackWhenClosedChecked ||
-            playbackController == null ||
-            !playbackController!!.isPlaying.value
+            !this::_playbackController.isInitialized ||
+            !_playbackController.isPlaying.value
         ) {
-            playbackController?.release()
+            _playbackController.release()
             stopSelf()
         }
     }
@@ -108,8 +111,8 @@ class PlaybackService : MediaSessionService() {
     override fun onDestroy() {
         if (
             !SettingsManager.playbackWhenClosedChecked ||
-            playbackController == null ||
-            !playbackController!!.isPlaying.value
+            !this::_playbackController.isInitialized ||
+            !_playbackController.isPlaying.value
         ) {
             mediaSession?.run {
                 player.release()

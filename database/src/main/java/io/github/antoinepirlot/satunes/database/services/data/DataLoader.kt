@@ -149,7 +149,7 @@ object DataLoader {
                     loadData(cursor = it, context = context)
                 }
             }
-            DatabaseManager.getInstance().loadAllPlaylistsWithMusic()
+            DatabaseManager.initInstance(context = context).loadAllPlaylistsWithMusic()
             isLoaded.value = true
             isLoading.value = false
         }

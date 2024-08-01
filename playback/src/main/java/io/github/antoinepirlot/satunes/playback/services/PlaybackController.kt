@@ -34,10 +34,11 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.core.content.ContextCompat
 import androidx.media3.common.Player
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
+import com.google.common.util.concurrent.ListenableFuture
+import com.google.common.util.concurrent.MoreExecutors
 import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
@@ -150,11 +151,18 @@ class PlaybackController private constructor(
 
     init {
         try {
-            val controllerFuture = MediaController.Builder(context, sessionToken).buildAsync()
+            val mediaControllerFuture: ListenableFuture<MediaController> =
+                MediaController.Builder(context, sessionToken).buildAsync()
 
-            controllerFuture.addListener({
-                this.mediaController = controllerFuture.get()
-            }, ContextCompat.getMainExecutor(context))
+            mediaControllerFuture.addListener(
+                { mediaController = mediaControllerFuture.get() },
+                MoreExecutors.directExecutor()
+            )
+//            val controllerFuture = MediaController.Builder(context, sessionToken).buildAsync()
+//
+//            controllerFuture.addListener({
+//                this.mediaController = controllerFuture.get()
+//            }, ContextCompat.getMainExecutor(context))
         } catch (e: Throwable) {
             logger.severe(e.message)
             throw e

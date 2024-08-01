@@ -160,6 +160,8 @@ class DatabaseManager private constructor(context: Context) {
         if (playlistTitle.isBlank()) {
             throw BlankStringException()
         }
+        @Suppress("NAME_SHADOWING")
+        val playlistTitle: String = playlistTitle.trim()
         if (playlistDao.exists(title = playlistTitle)) throw PlaylistAlreadyExistsException()
         val playlistId: Long =
             playlistDao.insertOne(playlistDB = PlaylistDB(title = playlistTitle))
@@ -178,6 +180,7 @@ class DatabaseManager private constructor(context: Context) {
 
     fun updatePlaylist(playlist: Playlist) {
         if (playlist.title.isBlank()) throw BlankStringException()
+        playlist.title = playlist.title.trim()
         val playlistDB = PlaylistDB(id = playlist.id, title = playlist.title)
         if (playlistDao.exists(title = playlist.title)) {
             playlist.title = this.playlistDao.getOriginalPlaylistTitle(playlistId = playlist.id)

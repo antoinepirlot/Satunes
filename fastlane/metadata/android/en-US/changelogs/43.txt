@@ -1,5 +1,6 @@
 Improvements, optimizations and troubleshooting:
 
 * It is no longer possible to have 2 different playlists with the same name regardless of the upper/lower case
+* Blank strings are removed from playlist title when added or updated.
 * When launching playback via searches with shuffle mode, the selected music is the first in the queue
 * When searching, if the first or last characters are spaces, they are ignored

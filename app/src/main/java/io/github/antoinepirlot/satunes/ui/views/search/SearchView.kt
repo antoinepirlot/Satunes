@@ -127,7 +127,10 @@ internal fun SearchView(
             mediaImplCollection = mediaImplList,
             openMedia = { mediaImpl: MediaImpl ->
                 if (mediaImpl is Music) {
-                    playbackViewModel.loadMusic(musicSet = dataViewModel.getMusicSet())
+                    playbackViewModel.loadMusic(
+                        musicSet = dataViewModel.getMusicSet(),
+                        musicToPlay = mediaImpl
+                    )
                 }
                 openMedia(
                     playbackViewModel = playbackViewModel,

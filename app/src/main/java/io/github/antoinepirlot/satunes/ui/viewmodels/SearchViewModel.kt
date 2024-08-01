@@ -155,7 +155,7 @@ class SearchViewModel : ViewModel() {
                 return
             }
 
-            val query: String = this.query.lowercase()
+            val query: String = this.query.trim().lowercase()
 
             for (searchChip: SearchChips in selectedSearchChips) {
                 dataViewModel.getMusicSet().forEach { music: Music ->

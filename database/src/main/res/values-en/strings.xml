@@ -31,7 +31,7 @@
     <string name="unknown_artist">Unknown Artist</string>
     <string name="unknown_album">Unknown Album</string>
     <string name="unknown_genre">Unknown Genre</string>
-    <string name="playlist_already_exist">" already exists"</string>
+    <string name="playlist_already_exist">%1$s already exists</string>
     <string name="exporting_failed">Export failed</string>
     <string name="importing">Importing…</string>
     <string name="importing_failed">Importing failed</string>

@@ -60,4 +60,8 @@ class Playlist(
 
         return super.compareTo(other)
     }
+
+    override fun toString(): String {
+        return this.title
+    }
 }

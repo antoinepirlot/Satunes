@@ -29,6 +29,7 @@ import android.content.Intent
 import android.os.Environment
 import androidx.annotation.OptIn
 import androidx.media3.common.AudioAttributes
+import androidx.media3.common.C
 import androidx.media3.common.TrackSelectionParameters
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
@@ -66,7 +67,7 @@ class PlaybackService : MediaSessionService() {
                 AudioAttributes.DEFAULT,
                 SettingsManager.pauseIfAnotherPlayback
             )
-//todo            .setWakeMode(C.WAKE_MODE_LOCAL)
+            .setWakeMode(C.WAKE_MODE_LOCAL)
             .build()
 
         // Add Audio Offload only if the user want it

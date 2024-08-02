@@ -43,7 +43,7 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.PlayNe
 import io.github.antoinepirlot.satunes.ui.components.dialog.music.options.NavigateToMediaMusicOption
 import io.github.antoinepirlot.satunes.ui.components.images.AlbumArtwork
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
-import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 
 /**
  * @author Antoine Pirlot on 07/07/2024

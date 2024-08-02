@@ -23,7 +23,7 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.viewmodels
+package io.github.antoinepirlot.satunes.data.viewmodels
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
@@ -43,7 +43,7 @@ import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.models.SearchChips
-import io.github.antoinepirlot.satunes.ui.states.SearchUiState
+import io.github.antoinepirlot.satunes.data.states.SearchUiState
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

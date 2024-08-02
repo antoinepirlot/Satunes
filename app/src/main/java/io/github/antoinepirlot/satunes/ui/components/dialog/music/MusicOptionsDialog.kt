@@ -42,7 +42,7 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.music.options.LikeUn
 import io.github.antoinepirlot.satunes.ui.components.dialog.music.options.NavigateToMediaMusicOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.music.options.RemoveFromPlaylistMusicOption
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
-import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 
 /**
  * @author Antoine Pirlot on 30/03/2024

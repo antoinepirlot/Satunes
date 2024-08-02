@@ -40,8 +40,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.ScreenSizes
-import io.github.antoinepirlot.satunes.ui.states.SatunesUiState
-import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
+import io.github.antoinepirlot.satunes.data.states.SatunesUiState
+import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 
 /**
  * @author Antoine Pirlot on 20/04/2024

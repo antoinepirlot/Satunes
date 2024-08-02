@@ -23,14 +23,14 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.viewmodels.factories
+package io.github.antoinepirlot.satunes.data.viewmodels.factories
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
-import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import kotlin.reflect.KClass
 
 /**

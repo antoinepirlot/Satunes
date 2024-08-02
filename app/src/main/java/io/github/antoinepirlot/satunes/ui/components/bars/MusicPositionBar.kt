@@ -44,7 +44,7 @@ import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.models.ProgressBarLifecycleCallbacks
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 import io.github.antoinepirlot.satunes.ui.utils.getMillisToTimeText
-import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 
 /**
  * @author Antoine Pirlot on 23/02/24

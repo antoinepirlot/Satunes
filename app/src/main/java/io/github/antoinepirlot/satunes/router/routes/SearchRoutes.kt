@@ -31,7 +31,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import io.github.antoinepirlot.satunes.models.Destination
-import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.ui.views.LoadingView
 import io.github.antoinepirlot.satunes.ui.views.search.SearchView
 

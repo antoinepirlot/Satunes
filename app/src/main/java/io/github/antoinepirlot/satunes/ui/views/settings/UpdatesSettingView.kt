@@ -54,9 +54,9 @@ import io.github.antoinepirlot.satunes.ui.components.buttons.updates.CheckUpdate
 import io.github.antoinepirlot.satunes.ui.components.settings.UpdateAvailable
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 import io.github.antoinepirlot.satunes.ui.components.texts.Title
-import io.github.antoinepirlot.satunes.ui.local.LocalMainScope
-import io.github.antoinepirlot.satunes.ui.local.LocalSnackBarHostState
-import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
+import io.github.antoinepirlot.satunes.data.local.LocalMainScope
+import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
+import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import kotlinx.coroutines.CoroutineScope
 
 /**

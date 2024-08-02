@@ -23,7 +23,7 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.viewmodels
+package io.github.antoinepirlot.satunes.data.viewmodels
 
 import android.content.Context
 import androidx.compose.material3.SnackbarHostState

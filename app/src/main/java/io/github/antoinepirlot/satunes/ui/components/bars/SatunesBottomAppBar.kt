@@ -39,7 +39,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.ui.ScreenSizes
-import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 
 /**
  * @author Antoine Pirlot on 03/02/24

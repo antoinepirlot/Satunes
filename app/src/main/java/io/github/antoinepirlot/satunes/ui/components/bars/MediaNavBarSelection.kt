@@ -40,9 +40,9 @@ import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
-import io.github.antoinepirlot.satunes.ui.states.SatunesUiState
+import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.ui.utils.getRightIconAndDescription
-import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 
 /**
  * @author Antoine Pirlot on 21/07/2024

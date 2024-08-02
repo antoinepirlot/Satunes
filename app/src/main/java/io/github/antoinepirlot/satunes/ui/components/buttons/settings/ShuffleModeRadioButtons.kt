@@ -47,10 +47,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.car.R
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
-import io.github.antoinepirlot.satunes.ui.states.SatunesUiState
+import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.ui.utils.getRightIconColors
 import io.github.antoinepirlot.satunes.ui.utils.getRightIconTintColor
-import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 
 /**
  * @author Antoine Pirlot on 05/06/2024

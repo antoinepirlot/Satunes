@@ -47,7 +47,7 @@ import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.ui.components.EmptyView
 import io.github.antoinepirlot.satunes.ui.components.bars.ShowCurrentMusicButton
 import io.github.antoinepirlot.satunes.ui.components.cards.media.MediaCardList
-import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 
 /**
  * @author Antoine Pirlot on 01/02/24

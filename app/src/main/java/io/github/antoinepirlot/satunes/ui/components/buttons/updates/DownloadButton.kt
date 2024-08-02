@@ -34,9 +34,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.internet.R
-import io.github.antoinepirlot.satunes.ui.local.LocalMainScope
-import io.github.antoinepirlot.satunes.ui.local.LocalSnackBarHostState
-import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
+import io.github.antoinepirlot.satunes.data.local.LocalMainScope
+import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
+import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import kotlinx.coroutines.CoroutineScope
 
 /**

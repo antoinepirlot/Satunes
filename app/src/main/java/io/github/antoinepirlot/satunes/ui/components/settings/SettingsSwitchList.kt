@@ -36,9 +36,9 @@ import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.models.SearchChips
 import io.github.antoinepirlot.satunes.models.SwitchSettings
 import io.github.antoinepirlot.satunes.ui.components.cards.ListItem
-import io.github.antoinepirlot.satunes.ui.states.SearchUiState
-import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
-import io.github.antoinepirlot.satunes.ui.viewmodels.SearchViewModel
+import io.github.antoinepirlot.satunes.data.states.SearchUiState
+import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.SearchViewModel
 
 /**
  *   @author Antoine Pirlot 06/03/2024

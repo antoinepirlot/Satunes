@@ -38,8 +38,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.models.SwitchSettings
 import io.github.antoinepirlot.satunes.ui.components.dialog.InformationDialog
-import io.github.antoinepirlot.satunes.ui.states.SatunesUiState
-import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
+import io.github.antoinepirlot.satunes.data.states.SatunesUiState
+import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 
 /**
  * @author Antoine Pirlot on 27/05/2024

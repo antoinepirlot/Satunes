@@ -45,7 +45,7 @@ import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.icons.R
 import io.github.antoinepirlot.satunes.ui.ScreenSizes
-import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 
 /**
  * @author Antoine Pirlot on 29/02/24

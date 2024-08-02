@@ -51,7 +51,7 @@ import io.github.antoinepirlot.satunes.ui.components.buttons.playback.custom_act
 import io.github.antoinepirlot.satunes.ui.components.images.MusicPlayingAlbumArtwork
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 import io.github.antoinepirlot.satunes.ui.components.texts.Subtitle
-import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 
 /**
  * @author Antoine Pirlot on 25/01/24

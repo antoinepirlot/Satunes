@@ -39,7 +39,7 @@ import io.github.antoinepirlot.satunes.icons.SatunesIcons.FOLDER
 import io.github.antoinepirlot.satunes.icons.SatunesIcons.GENRES
 import io.github.antoinepirlot.satunes.icons.SatunesIcons.MUSIC
 import io.github.antoinepirlot.satunes.icons.SatunesIcons.PLAYLIST
-import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 
 /**
  * @author Antoine Pirlot on 27/01/24

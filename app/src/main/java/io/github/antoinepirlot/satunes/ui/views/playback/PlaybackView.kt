@@ -35,7 +35,7 @@ import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.ui.ScreenSizes
-import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.ui.views.playback.mobile.PlaybackMobileView
 import io.github.antoinepirlot.satunes.ui.views.playback.tablet.PlaybackTabletView
 

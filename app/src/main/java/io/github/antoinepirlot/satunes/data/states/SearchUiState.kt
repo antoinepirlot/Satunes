@@ -23,26 +23,18 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.viewmodels.utils
+package io.github.antoinepirlot.satunes.data.states
 
-import android.Manifest
-import android.content.pm.PackageManager
-import android.os.Build
-import androidx.core.content.ContextCompat
-import io.github.antoinepirlot.satunes.MainActivity
+import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 
 /**
- * @author Antoine Pirlot on 20/07/2024
+ * @author Antoine Pirlot on 23/07/2024
  */
-
-internal fun isAudioAllowed(): Boolean {
-    // Permission Granted
-    return ContextCompat.checkSelfPermission(
-        MainActivity.instance.applicationContext,
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            Manifest.permission.READ_MEDIA_AUDIO
-        } else {
-            Manifest.permission.READ_EXTERNAL_STORAGE
-        }
-    ) == PackageManager.PERMISSION_GRANTED
-}
+data class SearchUiState(
+    val musicsFilter: Boolean = SettingsManager.musicsFilter,
+    val albumsFilter: Boolean = SettingsManager.albumsFilter,
+    val artistsFilter: Boolean = SettingsManager.artistsFilter,
+    val genresFilter: Boolean = SettingsManager.genresFilter,
+    val foldersFilter: Boolean = SettingsManager.foldersFilter,
+    val playlistsFilter: Boolean = SettingsManager.playlistsFilter,
+)

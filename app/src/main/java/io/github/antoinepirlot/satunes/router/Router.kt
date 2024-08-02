@@ -40,9 +40,9 @@ import io.github.antoinepirlot.satunes.router.routes.mediaRoutes
 import io.github.antoinepirlot.satunes.router.routes.playbackRoutes
 import io.github.antoinepirlot.satunes.router.routes.searchRoutes
 import io.github.antoinepirlot.satunes.router.routes.settingsRoutes
-import io.github.antoinepirlot.satunes.ui.viewmodels.DataViewModel
-import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
-import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 
 /**
  * @author Antoine Pirlot on 23-01-24

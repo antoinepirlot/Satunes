@@ -42,10 +42,10 @@ import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.dialog.MediaSelectionDialog
 import io.github.antoinepirlot.satunes.ui.components.dialog.options.DialogOption
-import io.github.antoinepirlot.satunes.ui.local.LocalMainScope
-import io.github.antoinepirlot.satunes.ui.local.LocalSnackBarHostState
-import io.github.antoinepirlot.satunes.ui.viewmodels.DataViewModel
-import io.github.antoinepirlot.satunes.ui.viewmodels.MediaSelectionViewModel
+import io.github.antoinepirlot.satunes.data.local.LocalMainScope
+import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
+import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.MediaSelectionViewModel
 import kotlinx.coroutines.CoroutineScope
 
 /**

@@ -48,7 +48,7 @@ import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
-import io.github.antoinepirlot.satunes.ui.viewmodels.MediaSelectionViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.MediaSelectionViewModel
 
 /**
  * @author Antoine Pirlot on 30/03/2024

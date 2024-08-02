@@ -46,10 +46,10 @@ import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
 import io.github.antoinepirlot.satunes.ui.components.forms.PlaylistCreationForm
-import io.github.antoinepirlot.satunes.ui.local.LocalMainScope
-import io.github.antoinepirlot.satunes.ui.local.LocalSnackBarHostState
-import io.github.antoinepirlot.satunes.ui.viewmodels.DataViewModel
-import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
+import io.github.antoinepirlot.satunes.data.local.LocalMainScope
+import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
+import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 import kotlinx.coroutines.CoroutineScope
 

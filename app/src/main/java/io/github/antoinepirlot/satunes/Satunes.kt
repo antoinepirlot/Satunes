@@ -51,11 +51,11 @@ import io.github.antoinepirlot.satunes.router.Router
 import io.github.antoinepirlot.satunes.ui.components.bars.SatunesBottomAppBar
 import io.github.antoinepirlot.satunes.ui.components.bars.SatunesTopAppBar
 import io.github.antoinepirlot.satunes.ui.components.dialog.WhatsNewDialog
-import io.github.antoinepirlot.satunes.ui.local.LocalMainScope
-import io.github.antoinepirlot.satunes.ui.local.LocalSnackBarHostState
-import io.github.antoinepirlot.satunes.ui.states.SatunesUiState
+import io.github.antoinepirlot.satunes.data.local.LocalMainScope
+import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
+import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.ui.theme.SatunesTheme
-import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import kotlinx.coroutines.CoroutineScope
 
 /**

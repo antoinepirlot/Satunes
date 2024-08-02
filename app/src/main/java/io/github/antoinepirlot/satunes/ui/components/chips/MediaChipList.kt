@@ -43,7 +43,7 @@ import io.github.antoinepirlot.satunes.data.allSearchChips
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.models.SearchChips
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
-import io.github.antoinepirlot.satunes.ui.viewmodels.SearchViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.SearchViewModel
 
 /**
  * @author Antoine Pirlot on 28/06/2024

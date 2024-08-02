@@ -51,7 +51,7 @@ import io.github.antoinepirlot.satunes.ui.components.buttons.updates.DownloadBut
 import io.github.antoinepirlot.satunes.ui.components.buttons.updates.InstallRequestButton
 import io.github.antoinepirlot.satunes.ui.components.buttons.updates.SeeDetailsButton
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
-import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.internet.R as RInternet
 
 /**

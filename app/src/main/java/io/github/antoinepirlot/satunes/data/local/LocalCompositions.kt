@@ -23,14 +23,18 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.states
+package io.github.antoinepirlot.satunes.data.local
 
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.ProvidableCompositionLocal
+import androidx.compose.runtime.compositionLocalOf
+import kotlinx.coroutines.CoroutineScope
 
 /**
- * @author Antoine Pirlot on 19/07/2024
+ * @author Antoine Pirlot on 25/07/2024
  */
-data class MediasUiState(
-    val musicMediaItemSortedMapUpdated: MutableState<Boolean> = mutableStateOf(false)
-)
+
+val LocalSnackBarHostState: ProvidableCompositionLocal<SnackbarHostState> =
+    compositionLocalOf { error("No SnackbarStateHost provided.") }
+val LocalMainScope: ProvidableCompositionLocal<CoroutineScope> =
+    compositionLocalOf { error("No CoroutineScope provided.") }

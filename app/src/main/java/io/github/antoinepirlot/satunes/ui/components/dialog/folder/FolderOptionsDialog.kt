@@ -39,7 +39,7 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToQ
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.PlayNextMediaOption
 import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
 import io.github.antoinepirlot.satunes.ui.utils.getRootFolderName
-import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 
 /**
  * @author Antoine Pirlot on 07/07/2024

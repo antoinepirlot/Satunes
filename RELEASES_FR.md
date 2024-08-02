@@ -10,7 +10,7 @@ Améliorations, optimisations et dépannage:
 * Il n'est plus possible d'avoir 2 playlists différentes de même nom peu importe les
   majuscules/minuscules
 * Les espaces sont retirés lors de la création d'une playlist ou de la modification de son titre
-* Lors du lancement de la lecture via les recherches avec le mode aléatoire, la musique sélectionnée est la première que la liste de lecture
+* Lors du lancement de la lecture via les recherches avec le mode aléatoire, la musique sélectionnée est la première de la liste de lecture
 * Lors d'une recherche, si les premiers ou derniers caractères sont des espaces, ils sont ignorés
 
 ### 2.0.0

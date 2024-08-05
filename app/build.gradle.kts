@@ -48,18 +48,18 @@ android {
             resValue(type = "string", name = "app_name", value = "${rootProject.name} (debug)")
         }
     }
+    buildFeatures {
+        compose = true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.1"
+    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
         jvmTarget = "17"
-    }
-    buildFeatures {
-        compose = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
     }
     packaging {
         resources {
@@ -132,6 +132,11 @@ dependencies {
      * Android Auto
      */
     implementation(project(":car"))
+
+    /**
+     * Libs
+     */
+    implementation(project(":libs:components"))
 
     /**
      * Playback Services

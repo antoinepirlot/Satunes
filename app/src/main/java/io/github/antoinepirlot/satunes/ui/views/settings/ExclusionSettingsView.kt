@@ -36,12 +36,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.antoinepirlot.jetpack_libs.components.texts.Title
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.models.SwitchSettings
-import io.github.antoinepirlot.satunes.ui.components.settings.SettingsSwitchList
-import io.github.antoinepirlot.satunes.ui.components.texts.Title
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
+import io.github.antoinepirlot.satunes.models.SwitchSettings
+import io.github.antoinepirlot.satunes.ui.components.settings.SettingsSwitchList
 
 /**
  * @author Antoine Pirlot on 27/04/2024

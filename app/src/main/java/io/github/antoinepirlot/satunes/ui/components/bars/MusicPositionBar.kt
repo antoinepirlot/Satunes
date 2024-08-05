@@ -42,7 +42,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.models.ProgressBarLifecycleCallbacks
-import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
+import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.ui.utils.getMillisToTimeText
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 

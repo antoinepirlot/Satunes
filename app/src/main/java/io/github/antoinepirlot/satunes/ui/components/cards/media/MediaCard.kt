@@ -58,6 +58,11 @@ import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
+import io.github.antoinepirlot.jetpack_libs.components.texts.Subtitle
+import io.github.antoinepirlot.jetpack_libs.models.ScreenSizes
+import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
@@ -68,7 +73,6 @@ import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.icons.R
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.ui.ScreenSizes
 import io.github.antoinepirlot.satunes.ui.components.cards.ListItem
 import io.github.antoinepirlot.satunes.ui.components.dialog.album.AlbumOptionsDialog
 import io.github.antoinepirlot.satunes.ui.components.dialog.artist.ArtistOptionsDialog
@@ -76,11 +80,7 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.folder.FolderOptions
 import io.github.antoinepirlot.satunes.ui.components.dialog.genre.GenreOptionsDialog
 import io.github.antoinepirlot.satunes.ui.components.dialog.music.MusicOptionsDialog
 import io.github.antoinepirlot.satunes.ui.components.dialog.playlist.PlaylistOptionsDialog
-import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
-import io.github.antoinepirlot.satunes.ui.components.texts.Subtitle
 import io.github.antoinepirlot.satunes.ui.utils.getRootFolderName
-import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
-import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.R as RDb
 
 /**

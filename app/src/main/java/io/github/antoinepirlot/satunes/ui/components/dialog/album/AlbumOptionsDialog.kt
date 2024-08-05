@@ -35,6 +35,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
+import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToPlaylistMediaOption
@@ -42,8 +44,6 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToQ
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.PlayNextMediaOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.music.options.NavigateToMediaMusicOption
 import io.github.antoinepirlot.satunes.ui.components.images.AlbumArtwork
-import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
-import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 
 /**
  * @author Antoine Pirlot on 07/07/2024

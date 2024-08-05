@@ -38,16 +38,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.antoinepirlot.jetpack_libs.components.texts.Title
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.data.states.SatunesUiState
+import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.models.SwitchSettings
 import io.github.antoinepirlot.satunes.ui.components.settings.AudioOffloadSetting
 import io.github.antoinepirlot.satunes.ui.components.settings.BarSpeedSetting
 import io.github.antoinepirlot.satunes.ui.components.settings.PlaybackModesSubSettings
 import io.github.antoinepirlot.satunes.ui.components.settings.SettingsSwitchList
 import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
-import io.github.antoinepirlot.satunes.ui.components.texts.Title
-import io.github.antoinepirlot.satunes.data.states.SatunesUiState
-import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 
 /**
  *   @author Antoine Pirlot 06/03/2024

@@ -25,6 +25,7 @@
 
 package io.github.antoinepirlot.satunes.ui.components.dialog
 
+import android.annotation.SuppressLint
 import android.content.Context
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -37,11 +38,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
+import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
+import io.github.antoinepirlot.jetpack_libs.components.texts.Title
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.internet.updates.Versions
-import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
-import io.github.antoinepirlot.satunes.ui.components.texts.Title
 import io.github.antoinepirlot.satunes.ui.utils.openUrl
 import io.github.antoinepirlot.satunes.internet.R as RInternet
 
@@ -49,6 +50,7 @@ import io.github.antoinepirlot.satunes.internet.R as RInternet
  * @author Antoine Pirlot on 29/06/2024
  */
 
+@SuppressLint("NewApi")
 @Composable
 internal fun WhatsNewDialog(
     modifier: Modifier = Modifier,

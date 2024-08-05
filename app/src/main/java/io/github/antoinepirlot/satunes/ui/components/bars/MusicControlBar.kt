@@ -42,7 +42,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import io.github.antoinepirlot.satunes.ui.ScreenSizes
+import io.github.antoinepirlot.jetpack_libs.models.ScreenSizes
 import io.github.antoinepirlot.satunes.ui.components.buttons.playback.NextMusicButton
 import io.github.antoinepirlot.satunes.ui.components.buttons.playback.PlayPauseMusicButton
 import io.github.antoinepirlot.satunes.ui.components.buttons.playback.PreviousMusicButton

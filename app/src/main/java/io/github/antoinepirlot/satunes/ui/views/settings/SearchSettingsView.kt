@@ -30,9 +30,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import io.github.antoinepirlot.jetpack_libs.components.texts.Title
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.ui.components.settings.DefaultSearchFiltersSetting
-import io.github.antoinepirlot.satunes.ui.components.texts.Title
 
 /**
  * @author Antoine Pirlot on 08/07/2024

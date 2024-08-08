@@ -33,6 +33,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
+import io.github.antoinepirlot.satunes.ui.views.LoadingView
 import io.github.antoinepirlot.satunes.ui.views.settings.AndroidAutoSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.BatterySettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.BottomNavigationBarSettingsView
@@ -83,7 +84,11 @@ internal fun NavGraphBuilder.settingsRoutes(
 
     composable(Destination.PLAYLISTS_SETTINGS.link) {
         onStart(it)
-        PlaylistsSettingsView()
+        if (satunesViewModel.isLoadingData || !satunesViewModel.isDataLoaded) {
+            LoadingView()
+        } else {
+            PlaylistsSettingsView()
+        }
     }
 
     composable(Destination.PERMISSIONS_SETTINGS.link) {

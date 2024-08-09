@@ -26,7 +26,6 @@
 package io.github.antoinepirlot.satunes.ui.components.settings.folders
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -40,6 +39,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
@@ -58,53 +58,70 @@ import io.github.antoinepirlot.satunes.ui.components.buttons.IconButton
 internal fun FoldersPathsSelection(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
-
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
 
-    Column(
+    LazyColumn(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        LazyColumn {
-            items(
-                items = satunesViewModel.foldersPathsSelectedSet.toList(),
-                key = { it },
+        items(
+            items = satunesViewModel.foldersPathsSelectedSet.toList(),
+            key = { it },
+        ) {
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    NormalText(
-                        modifier = Modifier.fillMaxWidth(fraction = 0.8f),
-                        text = it.removeSuffix("%")
-                    )
-                    IconButton(
-                        icon = SatunesIcons.REMOVE_ICON,
-                        onClick = { /*TODO*/ }
-                    )
-                }
+                NormalText(
+                    modifier = Modifier.fillMaxWidth(fraction = 0.8f),
+                    text = it.removeSuffix("%")
+                )
+                IconButton(
+                    icon = SatunesIcons.REMOVE_ICON,
+                    onClick = { /*TODO*/ }
+                )
+            }
+
+            if (it == satunesViewModel.foldersPathsSelectedSet.last()) {
+                Footer()
             }
         }
-
-        Spacer(modifier = Modifier.size(5.dp))
-
-        //Show text "Add path to exclude/include".
-        ButtonWithIcon(
-            icon = SatunesIcons.ADD,
-            onClick = { satunesViewModel.addPath() },
-            text = stringResource(
-                id = R.string.add_path_button,
-                stringResource(
-                    id = satunesUiState.foldersSelectionSelected.stringId
-                ).lowercase()
-            )
-        )
     }
+}
+
+@Composable
+private fun Footer(
+    modifier: Modifier = Modifier,
+    satunesViewModel: SatunesViewModel = viewModel(),
+) {
+    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+    val spacerSize: Dp = 5.dp
+
+    Spacer(modifier = Modifier.size(spacerSize))
+
+    //Show text "Add path to exclude/include".
+    ButtonWithIcon(
+        icon = SatunesIcons.ADD,
+        onClick = { satunesViewModel.addPath() },
+        text = stringResource(
+            id = R.string.add_path_button,
+            stringResource(
+                id = satunesUiState.foldersSelectionSelected.stringId
+            ).lowercase()
+        )
+    )
+    Spacer(modifier = Modifier.size(spacerSize))
 }
 
 @Preview
 @Composable
 private fun FoldersPathsSelectionPreview() {
     FoldersPathsSelection()
+}
+
+@Preview
+@Composable
+private fun FooterPreview() {
+    Footer()
 }

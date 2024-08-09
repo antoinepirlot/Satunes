@@ -43,7 +43,6 @@ import androidx.media3.common.Player
 import io.github.antoinepirlot.satunes.database.models.BarSpeed
 import io.github.antoinepirlot.satunes.database.models.FoldersSelection
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
-import io.github.antoinepirlot.satunes.database.services.data.DataLoader.EXTERNAL_STORAGE_PATH
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -79,7 +78,7 @@ object SettingsManager {
     private const val DEFAULT_FOLDERS_FILTER: Boolean = false
     private const val DEFAULT_PLAYLISTS_FILTER: Boolean = false
     private val DEFAULT_FOLDERS_SELECTION_SELECTED: FoldersSelection = FoldersSelection.INCLUDE
-    private val DEFAULT_SELECTED_PATHS: Set<String> = setOf("$EXTERNAL_STORAGE_PATH/Music/%")
+    private val DEFAULT_SELECTED_PATHS: Set<String> = setOf("/0/Music/%")
 
     /**
      * KEYS
@@ -464,8 +463,12 @@ object SettingsManager {
     }
 
     private fun getFormattedPath(path: String): String {
-        var formattedPath: String = Uri.decode(path)
-        // TODO
-        return formattedPath
+        val formattedPath: String = Uri.decode(path)
+        val splitList: List<String> = formattedPath.split(":")
+        var storage: String = splitList[0].split("/").last()
+        if (storage == "primary") {
+            storage = "0"
+        }
+        return '/' + storage + '/' + splitList[1] + "/%"
     }
 }

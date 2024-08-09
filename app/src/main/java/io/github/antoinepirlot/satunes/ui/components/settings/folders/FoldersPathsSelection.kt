@@ -76,7 +76,7 @@ internal fun FoldersPathsSelection(
         //Show text "Add path to exclude/include".
         ButtonWithIcon(
             icon = SatunesIcons.ADD,
-            onClick = { /*TODO*/ },
+            onClick = { satunesViewModel.addPath() },
             text = stringResource(
                 id = R.string.add_path_button,
                 stringResource(

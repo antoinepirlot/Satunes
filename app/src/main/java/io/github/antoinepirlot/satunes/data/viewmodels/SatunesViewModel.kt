@@ -27,7 +27,9 @@ package io.github.antoinepirlot.satunes.data.viewmodels
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.os.Build
+import android.provider.DocumentsContract
 import androidx.annotation.RequiresApi
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
@@ -37,6 +39,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import io.github.antoinepirlot.satunes.MainActivity
+import io.github.antoinepirlot.satunes.MainActivity.Companion.DEFAULT_URI
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.availableSpeeds
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
@@ -498,5 +501,14 @@ internal class SatunesViewModel : ViewModel() {
                 currentState.copy(foldersSelectionSelected = foldersSelection)
             }
         }
+    }
+
+    fun addPath() {
+        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE).apply {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                putExtra(DocumentsContract.EXTRA_INITIAL_URI, DEFAULT_URI)
+            }
+        }
+        MainActivity.instance.startActivityForResult(intent, MainActivity.SELECT_FOLDER_TREE_CODE)
     }
 }

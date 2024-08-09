@@ -26,6 +26,7 @@
 package io.github.antoinepirlot.satunes.database.services.settings
 
 import android.content.Context
+import android.net.Uri
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.datastore.core.DataStore
@@ -434,5 +435,9 @@ object SettingsManager {
             foldersSelectionSelected = foldersSelection
             preferences[FOLDERS_SELECTION_SELECTED_KEY] = foldersSelectionSelected.id
         }
+    }
+
+    fun addPath(context: Context?, uri: Uri) {
+        TODO("Not yet implemented")
     }
 }

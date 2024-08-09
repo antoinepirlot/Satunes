@@ -51,7 +51,6 @@ import io.github.antoinepirlot.satunes.utils.utils.showToastOnUiThread
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import io.github.antoinepirlot.satunes.database.R as RDb
 
 /**
@@ -199,7 +198,7 @@ internal class MainActivity : ComponentActivity() {
 
                 SELECT_FOLDER_TREE_CODE -> {
                     data?.data?.also {
-                        runBlocking {
+                        CoroutineScope(Dispatchers.IO).launch {
                             SettingsManager.addPath(context = applicationContext, uri = it)
                         }
                     }

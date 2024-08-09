@@ -79,7 +79,7 @@ internal fun FoldersPathsSelection(
                 )
                 IconButton(
                     icon = SatunesIcons.REMOVE_ICON,
-                    onClick = { /*TODO*/ }
+                    onClick = { satunesViewModel.removePath(path = it) }
                 )
             }
 

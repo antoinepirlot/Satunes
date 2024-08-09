@@ -516,4 +516,13 @@ internal class SatunesViewModel : ViewModel() {
         }
         MainActivity.instance.startActivityForResult(intent, MainActivity.SELECT_FOLDER_TREE_CODE)
     }
+
+    fun removePath(path: String) {
+        CoroutineScope(Dispatchers.IO).launch {
+            SettingsManager.removePath(
+                context = MainActivity.instance.applicationContext,
+                path = path
+            )
+        }
+    }
 }

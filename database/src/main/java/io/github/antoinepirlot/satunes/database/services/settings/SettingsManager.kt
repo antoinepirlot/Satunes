@@ -472,4 +472,13 @@ object SettingsManager {
         }
         return '/' + storage + '/' + splitList[1] + "/%"
     }
+
+    suspend fun removePath(context: Context, path: String) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            val newSet: MutableSet<String> = foldersPathsSelectedSet.value.toMutableSet()
+            newSet.remove(path)
+            foldersPathsSelectedSet.value = newSet.toSet()
+            preferences[SELECTED_PATHS_KEY] = foldersPathsSelectedSet.value
+        }
+    }
 }

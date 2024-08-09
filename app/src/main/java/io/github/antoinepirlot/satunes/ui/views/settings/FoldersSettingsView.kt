@@ -25,14 +25,18 @@
 
 package io.github.antoinepirlot.satunes.ui.views.settings
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
+import io.github.antoinepirlot.satunes.ui.components.settings.Folders.FoldersRowSelection
 
 /**
  * @author Antoine Pirlot on 27/04/2024
@@ -45,7 +49,12 @@ internal fun FoldersSettingsView(
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
 
-
+    Column(
+        modifier = modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        FoldersRowSelection()
+    }
 }
 
 @Preview

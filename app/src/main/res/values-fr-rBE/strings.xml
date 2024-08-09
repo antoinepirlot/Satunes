@@ -81,4 +81,5 @@
     <string name="update_playlist_success">%1$s a été mise à jour.</string>
     <string name="bar_speed_label">Vitesse</string>
     <string name="update_modal_not_permanently">Le modal sera toujours montré à la prochaine ouverture.</string>
+    <string name="add_path_button">Ajouter un nouveau chemin à %1$s</string>
 </resources>

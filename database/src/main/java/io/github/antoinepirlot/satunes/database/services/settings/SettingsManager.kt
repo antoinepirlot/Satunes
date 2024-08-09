@@ -37,11 +37,13 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.floatPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.media3.common.Player
 import io.github.antoinepirlot.satunes.database.models.BarSpeed
 import io.github.antoinepirlot.satunes.database.models.FoldersSelection
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
+import io.github.antoinepirlot.satunes.database.services.data.DataLoader.EXTERNAL_STORAGE_PATH
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -77,6 +79,7 @@ object SettingsManager {
     private const val DEFAULT_FOLDERS_FILTER: Boolean = false
     private const val DEFAULT_PLAYLISTS_FILTER: Boolean = false
     private val DEFAULT_FOLDERS_SELECTION_SELECTED: FoldersSelection = FoldersSelection.INCLUDE
+    private val DEFAULT_SELECTED_PATHS: Set<String> = setOf("$EXTERNAL_STORAGE_PATH/Music/%")
 
     /**
      * KEYS
@@ -108,6 +111,8 @@ object SettingsManager {
         booleanPreferencesKey("playlists_filter")
     private val FOLDERS_SELECTION_SELECTED_KEY: Preferences.Key<Int> =
         intPreferencesKey("folders_selection")
+    private val SELECTED_PATHS_KEY: Preferences.Key<Set<String>> =
+        stringSetPreferencesKey("selected_paths_set")
 
     /**
      * VARIABLES
@@ -160,6 +165,9 @@ object SettingsManager {
     var foldersSelectionSelected: FoldersSelection = DEFAULT_FOLDERS_SELECTION_SELECTED
         private set
 
+    var selectedPaths: Set<String> = DEFAULT_SELECTED_PATHS
+        private set
+
     private val _logger = SatunesLogger.getLogger()
 
     suspend fun loadSettings(context: Context) {
@@ -201,6 +209,8 @@ object SettingsManager {
 
             foldersSelectionSelected =
                 getFoldersSelection(preferences[FOLDERS_SELECTION_SELECTED_KEY])
+
+            selectedPaths = preferences[SELECTED_PATHS_KEY] ?: DEFAULT_SELECTED_PATHS
 
             loadWhatsNew(context = context, preferences = preferences)
 
@@ -437,7 +447,25 @@ object SettingsManager {
         }
     }
 
-    fun addPath(context: Context?, uri: Uri) {
-        TODO("Not yet implemented")
+    /**
+     * Add a path to the selected paths set and memorize it in storage.
+     *
+     * @param context the app context
+     * @param uri the uri containing the selected path
+     */
+    suspend fun addPath(context: Context, uri: Uri) {
+        val formattedPath: String = getFormattedPath(path = uri.path!!)
+        context.dataStore.edit { preferences: MutablePreferences ->
+            val newSet: MutableSet<String> = selectedPaths.toMutableSet()
+            newSet.add(formattedPath)
+            selectedPaths = newSet.toSet()
+            preferences[SELECTED_PATHS_KEY] = selectedPaths
+        }
+    }
+
+    private fun getFormattedPath(path: String): String {
+        var formattedPath: String = Uri.decode(path)
+        // TODO
+        return formattedPath
     }
 }

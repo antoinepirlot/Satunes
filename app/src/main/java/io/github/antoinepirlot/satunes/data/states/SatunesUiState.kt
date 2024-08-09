@@ -30,7 +30,6 @@ import io.github.antoinepirlot.satunes.data.viewmodels.utils.isAudioAllowed
 import io.github.antoinepirlot.satunes.database.models.BarSpeed
 import io.github.antoinepirlot.satunes.database.models.FoldersSelection
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
-import io.github.antoinepirlot.satunes.database.services.data.DataLoader.EXTERNAL_STORAGE_PATH
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 
 /**
@@ -56,7 +55,7 @@ internal data class SatunesUiState(
         else NavBarSection.MUSICS,
 
     val foldersSelectionSelected: FoldersSelection = SettingsManager.foldersSelectionSelected,
-    val foldersPathsSelectedList: Set<String> = setOf("$EXTERNAL_STORAGE_PATH/Music/%"),
+    val foldersPathsSelectedSet: Set<String> = SettingsManager.selectedPaths,
 
     val playbackWhenClosedChecked: Boolean = SettingsManager.playbackWhenClosedChecked,
     val pauseIfNoisyChecked: Boolean = SettingsManager.pauseIfNoisyChecked,

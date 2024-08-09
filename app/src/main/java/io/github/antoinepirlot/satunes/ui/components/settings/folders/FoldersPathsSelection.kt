@@ -64,7 +64,7 @@ internal fun FoldersPathsSelection(
     ) {
         LazyColumn {
             items(
-                items = satunesUiState.foldersPathsSelectedList.toList(),
+                items = satunesUiState.foldersPathsSelectedSet.toList(),
                 key = { it },
             ) {
                 NormalText(text = it.removeSuffix("%"))

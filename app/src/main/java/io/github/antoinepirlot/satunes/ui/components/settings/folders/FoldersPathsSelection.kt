@@ -88,6 +88,10 @@ internal fun FoldersPathsSelection(
             }
         }
     }
+    if (satunesViewModel.foldersPathsSelectedSet.isEmpty()) {
+        NormalText(text = stringResource(id = R.string.path_set_empty))
+        Footer()
+    }
 }
 
 @Composable

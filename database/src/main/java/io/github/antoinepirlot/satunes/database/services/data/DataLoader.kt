@@ -37,9 +37,11 @@ import io.github.antoinepirlot.satunes.database.R
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Folder
+import io.github.antoinepirlot.satunes.database.models.FoldersSelection
 import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
+import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -96,13 +98,17 @@ object DataLoader {
         //GENRES is added in init function if SDK >= Android Red Velvet Cake
     )
 
-    private const val SELECTION: String =
-        "${MediaStore.Audio.Media.DATA} LIKE ? OR ${MediaStore.Audio.Media.DATA} REGEXP ?"
+    private lateinit var selection: String //see loadFoldersPaths function
 
-    private var selection_args: Array<String> = arrayOf(
-        "$EXTERNAL_STORAGE_PATH/Music/%",
-        "^\\/storage\\/[^\\\\\\/]+\\/Music\\/.*\$" //^\/storage(\/emulated)?\/[^\\\/]+\/Music\/.*$ regex
-    )
+//    private const val selection: String =
+//        "${MediaStore.Audio.Media.DATA} LIKE ? OR ${MediaStore.Audio.Media.DATA} REGEXP ?"
+
+    private lateinit var selection_args: Array<String> //see loadFoldersPaths function
+
+//    private var selection_args: Array<String> = arrayOf(
+//        "$EXTERNAL_STORAGE_PATH/Music/%",
+//        "^\\/storage\\/[^\\\\\\/]+\\/Music\\/.*\$" //^\/storage(\/emulated)?\/[^\\\/]+\/Music\/.*$ regex
+//    )
 
     private val logger = SatunesLogger.getLogger()
 
@@ -110,6 +116,29 @@ object DataLoader {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             //Genre
             projection += MediaStore.Audio.Media.GENRE
+        }
+    }
+
+    /**
+     * Load folders path to include or exclude from Data query.
+     */
+    internal fun loadFoldersPaths() {
+        this.selection = ""
+        this.selection_args = arrayOf()
+
+        val foldersSelection: FoldersSelection = SettingsManager.foldersSelectionSelected
+        for (path: String in SettingsManager.foldersPathsSelectedSet.value) {
+            if (path != SettingsManager.foldersPathsSelectedSet.value.first()) {
+                this.selection += foldersSelection.andOrQueryAttribute + ' '
+            }
+            this.selection += "${MediaStore.Audio.Media.DATA} "
+            this.selection += "${foldersSelection.likeQueryAttribute} ? "
+
+            if (path.split("/")[1] == "0") {
+                this.selection_args += "/storage/emulated$path" // the first '/' is already in the path
+            } else {
+                this.selection_args += "/storage$path" // the first '/' is already in the path
+            }
         }
     }
 
@@ -126,8 +155,8 @@ object DataLoader {
             context.contentResolver.query(
                 URI,
                 projection,
-                SELECTION,
-                selection_args,
+                this@DataLoader.selection,
+                this@DataLoader.selection_args,
                 null
             )?.use {
                 loadColumns(cursor = it)

@@ -43,6 +43,7 @@ import androidx.media3.common.Player
 import io.github.antoinepirlot.satunes.database.models.BarSpeed
 import io.github.antoinepirlot.satunes.database.models.FoldersSelection
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
+import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -211,6 +212,8 @@ object SettingsManager {
 
             foldersPathsSelectedSet.value =
                 preferences[SELECTED_PATHS_KEY] ?: DEFAULT_SELECTED_PATHS
+
+            DataLoader.loadFoldersPaths()
 
             loadWhatsNew(context = context, preferences = preferences)
 

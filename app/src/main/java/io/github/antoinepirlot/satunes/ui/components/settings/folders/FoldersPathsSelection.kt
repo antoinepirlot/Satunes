@@ -25,8 +25,11 @@
 
 package io.github.antoinepirlot.satunes.ui.components.settings.folders
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -45,6 +48,7 @@ import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.buttons.ButtonWithIcon
+import io.github.antoinepirlot.satunes.ui.components.buttons.IconButton
 
 /**
  * @author Antoine Pirlot on 09/08/2024
@@ -67,7 +71,19 @@ internal fun FoldersPathsSelection(
                 items = satunesViewModel.foldersPathsSelectedSet.toList(),
                 key = { it },
             ) {
-                NormalText(text = it.removeSuffix("%"))
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    NormalText(
+                        modifier = Modifier.fillMaxWidth(fraction = 0.8f),
+                        text = it.removeSuffix("%")
+                    )
+                    IconButton(
+                        icon = SatunesIcons.REMOVE_ICON,
+                        onClick = { /*TODO*/ }
+                    )
+                }
             }
         }
 

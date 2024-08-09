@@ -36,6 +36,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
+import io.github.antoinepirlot.satunes.ui.components.settings.folders.FoldersPathsSelection
 import io.github.antoinepirlot.satunes.ui.components.settings.folders.FoldersRowSelection
 
 /**
@@ -54,7 +55,7 @@ internal fun FoldersSettingsView(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         FoldersRowSelection()
-
+        FoldersPathsSelection()
     }
 }
 

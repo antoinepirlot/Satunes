@@ -76,7 +76,7 @@ object DataLoader {
     private const val UNKNOWN_ARTIST = "<unknown>"
     private const val UNKNOWN_ALBUM = "Unknown Album"
     private const val UNKNOWN_GENRE = "<unknown>"
-    private val EXTERNAL_STORAGE_PATH: File = Environment.getExternalStorageDirectory()
+    val EXTERNAL_STORAGE_PATH: File = Environment.getExternalStorageDirectory()
 
     private var projection: Array<String> = arrayOf(
         // AUDIO

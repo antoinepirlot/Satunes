@@ -164,7 +164,7 @@ object SettingsManager {
     var foldersSelectionSelected: FoldersSelection = DEFAULT_FOLDERS_SELECTION_SELECTED
         private set
 
-    var selectedPaths: Set<String> = DEFAULT_SELECTED_PATHS
+    var foldersPathsSelectedSet: MutableState<Set<String>> = mutableStateOf(DEFAULT_SELECTED_PATHS)
         private set
 
     private val _logger = SatunesLogger.getLogger()
@@ -209,7 +209,8 @@ object SettingsManager {
             foldersSelectionSelected =
                 getFoldersSelection(preferences[FOLDERS_SELECTION_SELECTED_KEY])
 
-            selectedPaths = preferences[SELECTED_PATHS_KEY] ?: DEFAULT_SELECTED_PATHS
+            foldersPathsSelectedSet.value =
+                preferences[SELECTED_PATHS_KEY] ?: DEFAULT_SELECTED_PATHS
 
             loadWhatsNew(context = context, preferences = preferences)
 
@@ -455,10 +456,10 @@ object SettingsManager {
     suspend fun addPath(context: Context, uri: Uri) {
         val formattedPath: String = getFormattedPath(path = uri.path!!)
         context.dataStore.edit { preferences: MutablePreferences ->
-            val newSet: MutableSet<String> = selectedPaths.toMutableSet()
+            val newSet: MutableSet<String> = foldersPathsSelectedSet.value.toMutableSet()
             newSet.add(formattedPath)
-            selectedPaths = newSet.toSet()
-            preferences[SELECTED_PATHS_KEY] = selectedPaths
+            foldersPathsSelectedSet.value = newSet.toSet()
+            preferences[SELECTED_PATHS_KEY] = foldersPathsSelectedSet.value
         }
     }
 

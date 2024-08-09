@@ -55,7 +55,6 @@ internal data class SatunesUiState(
         else NavBarSection.MUSICS,
 
     val foldersSelectionSelected: FoldersSelection = SettingsManager.foldersSelectionSelected,
-    val foldersPathsSelectedSet: Set<String> = SettingsManager.selectedPaths,
 
     val playbackWhenClosedChecked: Boolean = SettingsManager.playbackWhenClosedChecked,
     val pauseIfNoisyChecked: Boolean = SettingsManager.pauseIfNoisyChecked,

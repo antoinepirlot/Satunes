@@ -30,7 +30,7 @@ import io.github.antoinepirlot.satunes.database.R
 /**
  * @author Antoine Pirlot on 09/08/2024
  */
-enum class FoldersSelection(val stringId: Int) {
-    INCLUDE(stringId = R.string.include),
-    EXCLUDE(stringId = R.string.exclude)
+enum class FoldersSelection(internal val id: Int, val stringId: Int) {
+    INCLUDE(id = 1, stringId = R.string.include),
+    EXCLUDE(id = 2, stringId = R.string.exclude)
 }

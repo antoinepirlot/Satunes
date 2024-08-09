@@ -55,5 +55,3 @@ internal val allFoldersSelections: List<FoldersSelection> = listOf(
     FoldersSelection.INCLUDE,
     FoldersSelection.EXCLUDE
 )
-
-internal val defaultFoldersSelection: FoldersSelection = allFoldersSelections[0]

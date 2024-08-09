@@ -39,6 +39,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.media3.common.Player
 import io.github.antoinepirlot.satunes.database.models.BarSpeed
+import io.github.antoinepirlot.satunes.database.models.FoldersSelection
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import kotlinx.coroutines.flow.first
@@ -74,7 +75,7 @@ object SettingsManager {
     private const val DEFAULT_GENRES_FILTER: Boolean = false
     private const val DEFAULT_FOLDERS_FILTER: Boolean = false
     private const val DEFAULT_PLAYLISTS_FILTER: Boolean = false
-    private const val DEFAULT_FOLDERS_SELECTION: Int = 0
+    private val DEFAULT_FOLDERS_SELECTION_SELECTED: FoldersSelection = FoldersSelection.INCLUDE
 
     /**
      * KEYS
@@ -104,6 +105,8 @@ object SettingsManager {
         booleanPreferencesKey("folders_filter")
     private val PLAYLISTS_FILTER_KEY: Preferences.Key<Boolean> =
         booleanPreferencesKey("playlists_filter")
+    private val FOLDERS_SELECTION_SELECTED_KEY: Preferences.Key<Int> =
+        intPreferencesKey("folders_selection")
 
     /**
      * VARIABLES
@@ -153,6 +156,9 @@ object SettingsManager {
     var musicsFilter: Boolean = DEFAULT_MUSICS_FILTER
         private set
 
+    var foldersSelectionSelected: FoldersSelection = DEFAULT_FOLDERS_SELECTION_SELECTED
+        private set
+
     private val _logger = SatunesLogger.getLogger()
 
     suspend fun loadSettings(context: Context) {
@@ -191,6 +197,10 @@ object SettingsManager {
 
             audioOffloadChecked =
                 preferences[AUDIO_OFFLOAD_CHECKED_KEY] ?: DEFAULT_AUDIO_OFFLOAD_CHECKED
+
+            foldersSelectionSelected =
+                getFoldersSelection(preferences[FOLDERS_SELECTION_SELECTED_KEY])
+
             loadWhatsNew(context = context, preferences = preferences)
 
             loadFilters(context = context)
@@ -205,6 +215,31 @@ object SettingsManager {
             BarSpeed.SLOW.speed -> BarSpeed.SLOW
             BarSpeed.VERY_SLOW.speed -> BarSpeed.VERY_SLOW
             else -> DEFAULT_BAR_SPEED_VALUE
+        }
+    }
+
+    private fun getFoldersSelection(id: Int?): FoldersSelection {
+        if (id == null) {
+            return DEFAULT_FOLDERS_SELECTION_SELECTED
+        }
+        // Warning, be sure the id is correct
+        return when (id) {
+            1 -> FoldersSelection.INCLUDE
+            2 -> FoldersSelection.EXCLUDE
+
+            else -> DEFAULT_FOLDERS_SELECTION_SELECTED
+        }
+    }
+
+    suspend fun loadFilters(context: Context) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            foldersFilter = preferences[FOLDERS_FILTER_KEY] ?: DEFAULT_FOLDERS_FILTER
+            artistsFilter = preferences[ARTISTS_FILTER_KEY] ?: DEFAULT_ARTISTS_FILTER
+            albumsFilter = preferences[ALBUMS_FILTER_KEY] ?: DEFAULT_ALBUMS_FILTER
+            genresFilter = preferences[GENRES_FILTER_KEY] ?: DEFAULT_GENRES_FILTER
+            playlistsFilter =
+                preferences[PLAYLISTS_FILTER_KEY] ?: DEFAULT_PLAYLISTS_FILTER
+            musicsFilter = preferences[MUSICS_FILTER_KEY] ?: DEFAULT_MUSICS_FILTER
         }
     }
 
@@ -394,15 +429,10 @@ object SettingsManager {
         }
     }
 
-    suspend fun loadFilters(context: Context) {
+    suspend fun selectFoldersSelection(context: Context, foldersSelection: FoldersSelection) {
         context.dataStore.edit { preferences: MutablePreferences ->
-            foldersFilter = preferences[FOLDERS_FILTER_KEY] ?: DEFAULT_FOLDERS_FILTER
-            artistsFilter = preferences[ARTISTS_FILTER_KEY] ?: DEFAULT_ARTISTS_FILTER
-            albumsFilter = preferences[ALBUMS_FILTER_KEY] ?: DEFAULT_ALBUMS_FILTER
-            genresFilter = preferences[GENRES_FILTER_KEY] ?: DEFAULT_GENRES_FILTER
-            playlistsFilter =
-                preferences[PLAYLISTS_FILTER_KEY] ?: DEFAULT_PLAYLISTS_FILTER
-            musicsFilter = preferences[MUSICS_FILTER_KEY] ?: DEFAULT_MUSICS_FILTER
+            foldersSelectionSelected = foldersSelection
+            preferences[FOLDERS_SELECTION_SELECTED_KEY] = foldersSelectionSelected.id
         }
     }
 }

@@ -26,7 +26,6 @@
 package io.github.antoinepirlot.satunes.data.states
 
 import io.github.antoinepirlot.satunes.data.DEFAULT_DESTINATION
-import io.github.antoinepirlot.satunes.data.defaultFoldersSelection
 import io.github.antoinepirlot.satunes.data.viewmodels.utils.isAudioAllowed
 import io.github.antoinepirlot.satunes.database.models.BarSpeed
 import io.github.antoinepirlot.satunes.database.models.FoldersSelection
@@ -55,7 +54,7 @@ internal data class SatunesUiState(
         else if (genresChecked) NavBarSection.GENRES
         else NavBarSection.MUSICS,
 
-    val foldersSelectionSelected: FoldersSelection = defaultFoldersSelection,
+    val foldersSelectionSelected: FoldersSelection = SettingsManager.foldersSelectionSelected,
 
     val playbackWhenClosedChecked: Boolean = SettingsManager.playbackWhenClosedChecked,
     val pauseIfNoisyChecked: Boolean = SettingsManager.pauseIfNoisyChecked,

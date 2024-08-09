@@ -489,8 +489,14 @@ internal class SatunesViewModel : ViewModel() {
     }
 
     fun selectFoldersSelection(foldersSelection: FoldersSelection) {
-        _uiState.update { currentState: SatunesUiState ->
-            currentState.copy(foldersSelectionSelected = foldersSelection)
+        CoroutineScope(Dispatchers.IO).launch {
+            SettingsManager.selectFoldersSelection(
+                context = MainActivity.instance.applicationContext,
+                foldersSelection = foldersSelection
+            )
+            _uiState.update { currentState: SatunesUiState ->
+                currentState.copy(foldersSelectionSelected = foldersSelection)
+            }
         }
     }
 }

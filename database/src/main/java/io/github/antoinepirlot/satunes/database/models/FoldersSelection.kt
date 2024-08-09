@@ -23,37 +23,14 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.data
+package io.github.antoinepirlot.satunes.database.models
 
-import android.os.Build
-import io.github.antoinepirlot.satunes.database.models.FoldersSelection
-import io.github.antoinepirlot.satunes.models.Permissions
-import io.github.antoinepirlot.satunes.models.SwitchSettings
+import io.github.antoinepirlot.satunes.database.R
 
 /**
- * @author Antoine Pirlot on 26/07/2024
+ * @author Antoine Pirlot on 09/08/2024
  */
-
-internal val permissionsList: List<Permissions> =
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        listOf(
-            Permissions.READ_AUDIO_PERMISSION,
-        )
-    } else {
-        listOf(
-            Permissions.READ_EXTERNAL_STORAGE_PERMISSION,
-        )
-    }
-
-internal val switchSettingsNeedRestarts: List<SwitchSettings> = listOf(
-    SwitchSettings.AUDIO_OFFLOAD,
-    SwitchSettings.PAUSE_IF_ANOTHER_PLAYBACK,
-    SwitchSettings.PAUSE_IF_NOISY,
-)
-
-internal val allFoldersSelections: List<FoldersSelection> = listOf(
-    FoldersSelection.INCLUDE,
-    FoldersSelection.EXCLUDE
-)
-
-internal val defaultFoldersSelection: FoldersSelection = allFoldersSelections[0]
+enum class FoldersSelection(val stringId: Int) {
+    INCLUDE(stringId = R.string.include),
+    EXCLUDE(stringId = R.string.exclude)
+}

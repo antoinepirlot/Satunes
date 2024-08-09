@@ -39,7 +39,10 @@ import androidx.lifecycle.ViewModel
 import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.availableSpeeds
+import io.github.antoinepirlot.satunes.data.states.SatunesUiState
+import io.github.antoinepirlot.satunes.data.viewmodels.utils.isAudioAllowed
 import io.github.antoinepirlot.satunes.database.models.BarSpeed
+import io.github.antoinepirlot.satunes.database.models.FoldersSelection
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
@@ -47,10 +50,8 @@ import io.github.antoinepirlot.satunes.internet.updates.APKDownloadStatus
 import io.github.antoinepirlot.satunes.internet.updates.UpdateAvailableStatus
 import io.github.antoinepirlot.satunes.internet.updates.UpdateCheckManager
 import io.github.antoinepirlot.satunes.internet.updates.UpdateDownloadManager
-import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.ui.utils.showErrorSnackBar
 import io.github.antoinepirlot.satunes.ui.utils.showSnackBar
-import io.github.antoinepirlot.satunes.data.viewmodels.utils.isAudioAllowed
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -229,21 +230,6 @@ internal class SatunesViewModel : ViewModel() {
                 _uiState.update { currentState: SatunesUiState ->
                     currentState.copy(
                         pauseIfNoisyChecked = SettingsManager.pauseIfNoisyChecked
-                    )
-                }
-            }
-        } catch (e: Throwable) {
-            _logger.warning(e.message)
-        }
-    }
-
-    fun switchIncludeRingtones() {
-        try {
-            runBlocking {
-                SettingsManager.switchIncludeRingtones(context = MainActivity.instance.applicationContext)
-                _uiState.update { currentState: SatunesUiState ->
-                    currentState.copy(
-                        shuffleMode = SettingsManager.shuffleMode
                     )
                 }
             }
@@ -499,6 +485,12 @@ internal class SatunesViewModel : ViewModel() {
                     }
                 )
             }
+        }
+    }
+
+    fun selectFoldersSelection(foldersSelection: FoldersSelection) {
+        _uiState.update { currentState: SatunesUiState ->
+            currentState.copy(foldersSelectionSelected = foldersSelection)
         }
     }
 }

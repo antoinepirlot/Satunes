@@ -40,7 +40,6 @@ import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
-import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -97,15 +96,8 @@ object DataLoader {
         //GENRES is added in init function if SDK >= Android Red Velvet Cake
     )
 
-    private val selection: String = "${MediaStore.Audio.Media.DATA} LIKE ?" +
-            " OR ${MediaStore.Audio.Media.DATA} REGEXP ?" +
-            if (SettingsManager.includeRingtonesChecked) {
-                " OR ${MediaStore.Audio.Media.DATA} LIKE ?" +
-                        " OR ${MediaStore.Audio.Media.DATA} LIKE ?" +
-                        " OR ${MediaStore.Audio.Media.DATA} LIKE ?"
-            } else {
-                ""
-            }
+    private const val SELECTION: String =
+        "${MediaStore.Audio.Media.DATA} LIKE ? OR ${MediaStore.Audio.Media.DATA} REGEXP ?"
 
     private var selection_args: Array<String> = arrayOf(
         "$EXTERNAL_STORAGE_PATH/Music/%",
@@ -115,12 +107,6 @@ object DataLoader {
     private val logger = SatunesLogger.getLogger()
 
     init {
-        if (SettingsManager.includeRingtonesChecked) {
-            selection_args += "$EXTERNAL_STORAGE_PATH/Android/%"
-            selection_args += "$EXTERNAL_STORAGE_PATH/Ringtones/%"
-            selection_args += "$EXTERNAL_STORAGE_PATH/Notifications/%"
-        }
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             //Genre
             projection += MediaStore.Audio.Media.GENRE
@@ -140,7 +126,7 @@ object DataLoader {
             context.contentResolver.query(
                 URI,
                 projection,
-                selection,
+                SELECTION,
                 selection_args,
                 null
             )?.use {

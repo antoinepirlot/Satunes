@@ -81,7 +81,7 @@ internal fun FoldersPathsSelection(
                 id = R.string.add_path_button,
                 stringResource(
                     id = satunesUiState.foldersSelectionSelected.stringId
-                )
+                ).lowercase()
             )
         )
     }

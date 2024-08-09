@@ -32,7 +32,7 @@
     <string name="loading_data">Chargement des données…</string>
     <string name="no_folder">Aucun dossier contenant de la musique n\'a été trouvé</string>
     <string name="add_to">"Ajouter à "</string>
-    <string name="exclusion_setting">Exclusion de fichiers</string>
+    <string name="folders_settings">Dossiers</string>
     <string name="include_ringtones">Inclure les sonneries</string>
     <string name="bar_speed">"Vitesse de la barre de progression: "</string>
     <string name="export">Exporter</string>

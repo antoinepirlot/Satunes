@@ -48,13 +48,13 @@ import io.github.antoinepirlot.satunes.ui.components.settings.SettingsSwitchList
  */
 
 @Composable
-internal fun ExclusionSettingsView(
+internal fun FoldersSettingsView(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
 
-    val exclusionSettingsChecked: Map<SwitchSettings, Boolean> = mapOf(
+    val foldersSettingsChecked: Map<SwitchSettings, Boolean> = mapOf(
         Pair(
             first = SwitchSettings.INCLUDE_RINGTONES,
             second = satunesUiState.includeRingtonesChecked
@@ -63,13 +63,13 @@ internal fun ExclusionSettingsView(
 
     val scrollState: ScrollState = rememberScrollState()
     Column(modifier = modifier.verticalScroll(scrollState)) {
-        Title(text = stringResource(id = R.string.exclusion_setting))
-        SettingsSwitchList(checkedMap = exclusionSettingsChecked) //Contains list item so always padding horizontal 16.dp
+        Title(text = stringResource(id = R.string.folders_settings))
+        SettingsSwitchList(checkedMap = foldersSettingsChecked) //Contains list item so always padding horizontal 16.dp
     }
 }
 
 @Preview
 @Composable
-private fun ExclusionSettingsViewPreview() {
-    ExclusionSettingsView()
+private fun FoldersSettingsViewPreview() {
+    FoldersSettingsView()
 }

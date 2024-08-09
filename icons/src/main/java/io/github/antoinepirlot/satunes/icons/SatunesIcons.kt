@@ -109,9 +109,9 @@ enum class SatunesIcons(val imageVector: ImageVector, val description: String) {
     REPEAT_ONE(imageVector = Icons.Rounded.RepeatOne, description = "Repeat One On Icon"),
     SEARCH(imageVector = Icons.Rounded.Search, description = "Search Icon"),
     SETTINGS(imageVector = Icons.Rounded.Settings, description = "Settings Icon"),
-    SETTING_EXCLUSION(
+    SETTING_FOLDERS(
         imageVector = Icons.Rounded.FolderOff,
-        description = "Exclusion Setting Icon"
+        description = "Folders Setting Icon"
     ),
     SETTING_LOGS(imageVector = Icons.Rounded.LogoDev, description = "Log Setting Icon"),
     SETTING_PERMISSIONS(

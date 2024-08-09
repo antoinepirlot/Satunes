@@ -32,7 +32,7 @@
     <string name="loading_data">Loading Data…</string>
     <string name="no_folder">No folder with musics found</string>
     <string name="add_to">"Add to "</string>
-    <string name="exclusion_setting">Excluding files</string>
+    <string name="folders_settings">Folders</string>
     <string name="include_ringtones">Include ringtones</string>
     <string name="bar_speed">"Progress bar speed: "</string>
     <string name="export">Export</string>

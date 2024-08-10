@@ -39,7 +39,7 @@ import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.models.ProgressBarLifecycleCallbacks
-import io.github.antoinepirlot.satunes.playback.services.PlaybackController
+import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
 import io.github.antoinepirlot.satunes.ui.utils.showErrorSnackBar
 import io.github.antoinepirlot.satunes.ui.utils.showSnackBar
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
@@ -50,15 +50,15 @@ import kotlinx.coroutines.CoroutineScope
  */
 class PlaybackViewModel : ViewModel() {
     private val _logger: SatunesLogger = SatunesLogger.getLogger()
-    private val _playbackController: PlaybackController = PlaybackController.getInstance()
-    private val _isPlaying: MutableState<Boolean> = _playbackController.isPlaying
-    private val _musicPlaying: MutableState<Music?> = _playbackController.musicPlaying
-    private val _currentPositionProgression: MutableFloatState =
-        _playbackController.currentPositionProgression
-    private val _repeatMode: MutableIntState = _playbackController.repeatMode
-    private val _isShuffle: MutableState<Boolean> = _playbackController.isShuffle
-    private val _isLoaded: MutableState<Boolean> = _playbackController.isLoaded
-    private val _isEnded: MutableState<Boolean> = _playbackController.isEnded
+    private var _playbackManager: PlaybackManager = PlaybackManager
+    private var _isPlaying: MutableState<Boolean> = _playbackManager.isPlaying
+    private var _musicPlaying: MutableState<Music?> = _playbackManager.musicPlaying
+    private var _currentPositionProgression: MutableFloatState =
+        _playbackManager.currentPositionProgression
+    private var _repeatMode: MutableIntState = _playbackManager.repeatMode
+    private var _isShuffle: MutableState<Boolean> = _playbackManager.isShuffle
+    private var _isLoaded: MutableState<Boolean> = _playbackManager.isLoaded
+    private var _isEnded: MutableState<Boolean> = _playbackManager.isEnded
 
     val isPlaying: Boolean by _isPlaying
     val musicPlaying: Music? by _musicPlaying
@@ -132,7 +132,8 @@ class PlaybackViewModel : ViewModel() {
         shuffleMode: Boolean = SettingsManager.shuffleMode,
         musicToPlay: Music? = null,
     ) {
-        this._playbackController.loadMusic(
+        this._playbackManager.loadMusic(
+            context = MainActivity.instance.applicationContext,
             musicSet = musicSet,
             shuffleMode = shuffleMode,
             musicToPlay = musicToPlay
@@ -140,35 +141,38 @@ class PlaybackViewModel : ViewModel() {
     }
 
     fun getPlaylist(): List<Music> {
-        return this._playbackController.getPlaylist()
+        return this._playbackManager.getPlaylist(context = MainActivity.instance.applicationContext)
     }
 
     fun seekTo(positionPercentage: Float) {
-        this._playbackController.seekTo(positionPercentage = positionPercentage)
+        this._playbackManager.seekTo(
+            context = MainActivity.instance.applicationContext,
+            positionPercentage = positionPercentage
+        )
     }
 
     fun playNext() {
-        this._playbackController.playNext()
+        this._playbackManager.playNext(context = MainActivity.instance.applicationContext)
     }
 
     fun playPause() {
-        this._playbackController.playPause()
+        this._playbackManager.playPause(context = MainActivity.instance.applicationContext)
     }
 
     fun playPrevious() {
-        this._playbackController.playPrevious()
+        this._playbackManager.playPrevious(context = MainActivity.instance.applicationContext)
     }
 
     fun switchRepeatMode() {
-        this._playbackController.switchRepeatMode()
+        this._playbackManager.switchRepeatMode(context = MainActivity.instance.applicationContext)
     }
 
     fun switchShuffleMode() {
-        this._playbackController.switchShuffleMode()
+        this._playbackManager.switchShuffleMode(context = MainActivity.instance.applicationContext)
     }
 
     fun getMusicPlayingIndexPosition(): Int {
-        return this._playbackController.getMusicPlayingIndexPosition()
+        return this._playbackManager.getMusicPlayingIndexPosition(context = MainActivity.instance.applicationContext)
     }
 
     fun addToQueue(
@@ -178,7 +182,10 @@ class PlaybackViewModel : ViewModel() {
     ) {
         val context: Context = MainActivity.instance.applicationContext
         try {
-            this._playbackController.addToQueue(mediaImpl = mediaImpl)
+            this._playbackManager.addToQueue(
+                context = MainActivity.instance.applicationContext,
+                mediaImpl = mediaImpl
+            )
             showSnackBar(
                 scope = scope,
                 snackBarHostState = snackBarHostState,
@@ -207,7 +214,10 @@ class PlaybackViewModel : ViewModel() {
     ) {
         val context: Context = MainActivity.instance.applicationContext
         try {
-            this._playbackController.addNext(mediaImpl = mediaImpl)
+            this._playbackManager.addNext(
+                context = MainActivity.instance.applicationContext,
+                mediaImpl = mediaImpl
+            )
             showSnackBar(
                 scope = scope,
                 snackBarHostState = snackBarHostState,
@@ -230,14 +240,25 @@ class PlaybackViewModel : ViewModel() {
     }
 
     fun isMusicInQueue(music: Music): Boolean {
-        return this._playbackController.isMusicInQueue(music = music)
+        return this._playbackManager.isMusicInQueue(
+            context = MainActivity.instance.applicationContext,
+            music = music
+        )
     }
 
     fun start(mediaToPlay: Music? = null) {
-        this._playbackController.start(musicToPlay = mediaToPlay)
+        this._playbackManager.start(
+            context = MainActivity.instance.applicationContext,
+            musicToPlay = mediaToPlay
+        )
     }
 
     fun updateCurrentPosition() {
-        this._playbackController.updateCurrentPosition()
+        this._playbackManager.updateCurrentPosition(context = MainActivity.instance.applicationContext)
+    }
+
+    fun release() {
+        this._playbackManager.release(context = MainActivity.instance.applicationContext)
+        onCleared()
     }
 }

@@ -27,12 +27,6 @@ package io.github.antoinepirlot.satunes.playback.services
 
 import android.content.ComponentName
 import android.content.Context
-import androidx.compose.runtime.MutableFloatState
-import androidx.compose.runtime.MutableIntState
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.media3.common.Player
 import androidx.media3.session.MediaController
@@ -65,37 +59,42 @@ class PlaybackController private constructor(
     internal lateinit var playlist: Playlist
 
     internal var musicPlayingIndex: Int = DEFAULT_MUSIC_PLAYING_INDEX
-    var isEnded: MutableState<Boolean> = mutableStateOf(DEFAULT_IS_ENDED)
+    var isEnded: Boolean = DEFAULT_IS_ENDED
 
     // Mutable var are used in ui, it needs to be recomposed
     // I use mutable to avoid using function with multiples params like to add listener
-    val musicPlaying: MutableState<Music?> = mutableStateOf(DEFAULT_MUSIC_PLAYING)
-    val isPlaying: MutableState<Boolean> = mutableStateOf(DEFAULT_IS_PLAYING_VALUE)
-    val repeatMode: MutableIntState = mutableIntStateOf(DEFAULT_REPEAT_MODE)
-    val isShuffle: MutableState<Boolean> = mutableStateOf(DEFAULT_IS_SHUFFLE)
-    val hasNext: MutableState<Boolean> = mutableStateOf(DEFAULT_HAS_NEXT)
-    val hasPrevious: MutableState<Boolean> = mutableStateOf(DEFAULT_HAS_PREVIOUS)
-    val isLoaded: MutableState<Boolean> = mutableStateOf(DEFAULT_IS_LOADED)
-    val currentPositionProgression: MutableFloatState =
-        mutableFloatStateOf(DEFAULT_CURRENT_POSITION_PROGRESSION)
+    var musicPlaying: Music? = DEFAULT_MUSIC_PLAYING
+        private set
+    var isPlaying: Boolean = DEFAULT_IS_PLAYING_VALUE
+        private set
+    var repeatMode: Int = DEFAULT_REPEAT_MODE
+        private set
+    var isShuffle: Boolean = DEFAULT_IS_SHUFFLE
+        private set
+    var hasNext: Boolean = DEFAULT_HAS_NEXT
+        private set
+    var hasPrevious: Boolean = DEFAULT_HAS_PREVIOUS
+        private set
+    var isLoaded: Boolean = DEFAULT_IS_LOADED
+        private set
+    var currentPositionProgression: Float = DEFAULT_CURRENT_POSITION_PROGRESSION
+        private set
 
     private var listener: Player.Listener = PlaybackListener()
 
     companion object {
         internal const val DEFAULT_MUSIC_PLAYING_INDEX: Int = 0
         internal const val DEFAULT_IS_ENDED: Boolean = false
+        internal const val DEFAULT_IS_PLAYING_VALUE: Boolean = false
+        internal const val DEFAULT_REPEAT_MODE: Int = Player.REPEAT_MODE_OFF
+        internal const val DEFAULT_IS_SHUFFLE: Boolean = false
+        internal const val DEFAULT_HAS_NEXT: Boolean = false
+        internal const val DEFAULT_HAS_PREVIOUS: Boolean = false
+        internal const val DEFAULT_IS_LOADED: Boolean = false
+        internal const val DEFAULT_CURRENT_POSITION_PROGRESSION: Float = 0f
+        internal val DEFAULT_MUSIC_PLAYING = null
 
-        const val DEFAULT_IS_PLAYING_VALUE: Boolean = false
-        const val DEFAULT_REPEAT_MODE: Int = Player.REPEAT_MODE_OFF
-        const val DEFAULT_IS_SHUFFLE: Boolean = false
-        const val DEFAULT_HAS_NEXT: Boolean = false
-        const val DEFAULT_HAS_PREVIOUS: Boolean = false
-        const val DEFAULT_IS_LOADED: Boolean = false
-        const val DEFAULT_CURRENT_POSITION_PROGRESSION: Float = 0f
-
-        val DEFAULT_MUSIC_PLAYING = null
-
-        private lateinit var instance: PlaybackController
+        private var instance: PlaybackController? = null
         private val logger = SatunesLogger.getLogger()
 
         /**
@@ -106,17 +105,17 @@ class PlaybackController private constructor(
          */
         fun getInstance(): PlaybackController {
             // TODO issues relaunch app happens here
-            if (!Companion::instance.isInitialized) {
+            if (instance == null) {
                 //TODO find a way to fix crashing app after resume after inactivity
                 val message = "The PlayBackController has not been initialized"
                 logger.severe(message)
                 throw IllegalStateException(message)
             }
-            return instance
+            return instance!!
         }
 
         fun initInstance(context: Context, listener: Player.Listener? = null): PlaybackController {
-            if (!Companion::instance.isInitialized) {
+            if (instance == null) {
                 val sessionToken =
                     SessionToken(
                         context.applicationContext,
@@ -128,22 +127,22 @@ class PlaybackController private constructor(
                     sessionToken = sessionToken,
                 )
             } else if (listener != null) {
-                while (!instance::mediaController.isInitialized) {
+                while (!instance!!::mediaController.isInitialized) {
                     // Wait it is initializing
                 }
-                val wasPlaying: Boolean = instance.isPlaying.value
-                if (instance.isPlaying.value) {
-                    instance.pause()
+                val wasPlaying: Boolean = instance!!.isPlaying
+                if (instance!!.isPlaying) {
+                    instance!!.pause()
                 }
-                instance.mediaController.removeListener(instance.listener)
-                instance.mediaController.addListener(listener)
-                instance.mediaController.prepare()
+                instance!!.mediaController.removeListener(instance!!.listener)
+                instance!!.mediaController.addListener(listener)
+                instance!!.mediaController.prepare()
                 if (wasPlaying) {
-                    instance.play()
+                    instance!!.play()
                 }
             }
 
-            instance.listener = listener ?: instance.listener
+            instance!!.listener = listener ?: instance!!.listener
 
             return getInstance()
         }
@@ -180,7 +179,7 @@ class PlaybackController private constructor(
      * @param musicToPlay the music to play if it's not null, by default it's null.
      */
     fun start(musicToPlay: Music? = null) {
-        if (!isLoaded.value) {
+        if (!isLoaded) {
             throw IllegalStateException("The playlistDB has not been loaded, you can't play music")
         }
         when (musicToPlay) {
@@ -190,7 +189,7 @@ class PlaybackController private constructor(
                 musicPlayingIndex = DEFAULT_MUSIC_PLAYING_INDEX
             }
 
-            this.musicPlaying.value -> {
+            this.musicPlaying -> {
                 // The music playing is the same as the music to play, nothing is done
                 return
             }
@@ -200,7 +199,7 @@ class PlaybackController private constructor(
                 musicPlayingIndex = playlist.getMusicIndex(music = musicToPlay)
             }
         }
-        musicPlaying.value = playlist.getMusic(musicIndex = musicPlayingIndex)
+        musicPlaying = playlist.getMusic(musicIndex = musicPlayingIndex)
         if (mediaController.currentMediaItemIndex == musicPlayingIndex) {
             mediaController.play()
         } else {
@@ -209,14 +208,14 @@ class PlaybackController private constructor(
     }
 
     fun playPause() {
-        if (this.isPlaying.value) {
+        if (this.isPlaying) {
             this.mediaController.pause()
 
             return
         } else {
-            if (this.isEnded.value) {
+            if (this.isEnded) {
                 this.start()
-                this.isEnded.value = false
+                this.isEnded = false
             } else {
                 this.mediaController.play()
             }
@@ -224,13 +223,13 @@ class PlaybackController private constructor(
     }
 
     fun play() {
-        if (!isPlaying.value) {
+        if (!isPlaying) {
             this.playPause()
         }
     }
 
     fun pause() {
-        if (isPlaying.value) {
+        if (isPlaying) {
             this.playPause()
         }
     }
@@ -259,7 +258,7 @@ class PlaybackController private constructor(
 
     fun seekTo(positionPercentage: Float) {
         //position changed on listener events
-        if (this.musicPlaying.value == null || this.isEnded.value) {
+        if (this.musicPlaying == null || this.isEnded) {
             val message = """"
                 |Impossible to seek while no music is playing 
                 |$this"""".trimMargin()
@@ -267,7 +266,7 @@ class PlaybackController private constructor(
             throw IllegalStateException(message)
         }
 
-        val maxPosition: Long = this.musicPlaying.value!!.duration
+        val maxPosition: Long = this.musicPlaying!!.duration
         val newPosition: Long = (positionPercentage * maxPosition).toLong()
 
         this.seekTo(positionMs = newPosition)
@@ -320,8 +319,8 @@ class PlaybackController private constructor(
         }
         this.mediaController.prepare()
 
-        this.isLoaded.value = true
-        this.isShuffle.value = shuffleMode
+        this.isLoaded = true
+        this.isShuffle = shuffleMode
     }
 
     fun addToQueue(mediaImplList: Collection<MediaImpl>) {
@@ -341,7 +340,7 @@ class PlaybackController private constructor(
                 } catch (e: AlreadyInPlaybackException) {
                     return
                 }
-                hasNext.value = true
+                hasNext = true
             }
 
             is Folder -> addToQueue(mediaImplList = mediaImpl.getAllMusic().reversed())
@@ -361,7 +360,7 @@ class PlaybackController private constructor(
     }
 
     fun addNext(mediaImpl: MediaImpl) {
-        if (musicPlaying.value == mediaImpl) {
+        if (musicPlaying == mediaImpl) {
             return
         }
         when (mediaImpl) {
@@ -375,7 +374,7 @@ class PlaybackController private constructor(
                 } catch (e: AlreadyInPlaybackException) {
                     this.moveMusic(music = mediaImpl, newIndex = this.musicPlayingIndex + 1)
                 }
-                hasNext.value = true
+                hasNext = true
             }
 
             is Folder -> addNext(mediaImplList = mediaImpl.getAllMusic().reversed())
@@ -413,10 +412,10 @@ class PlaybackController private constructor(
      *      2) If the shuffle mode is enabling shuffle the playlistDB
      */
     fun switchShuffleMode() {
-        isShuffle.value = !isShuffle.value
+        isShuffle = !isShuffle
         CoroutineScope(Dispatchers.Main).launch {
             if (playlist.musicCount() > 1) {
-                if (!isShuffle.value) {
+                if (!isShuffle) {
                     // Deactivate shuffle
                     undoShuffle()
                 } else {
@@ -432,7 +431,7 @@ class PlaybackController private constructor(
      * the music playing has to take its original place.
      */
     private fun shuffle() {
-        if (this.musicPlaying.value == null) {
+        if (this.musicPlaying == null) {
             // No music playing
             this.playlist.shuffle()
             return
@@ -464,7 +463,7 @@ class PlaybackController private constructor(
      */
     private fun undoShuffle() {
         this.playlist.undoShuffle()
-        if (this.musicPlaying.value == null) {
+        if (this.musicPlaying == null) {
             // No music playing
             this.mediaController.clearMediaItems()
             this.mediaController.addMediaItems(this.playlist.mediaItemList)
@@ -475,7 +474,7 @@ class PlaybackController private constructor(
         val oldMusicPlayingIndex = this.musicPlayingIndex
         val lastIndex: Int = this.playlist.lastIndex()
 
-        this.musicPlayingIndex = this.playlist.getMusicIndex(this.musicPlaying.value!!)
+        this.musicPlayingIndex = this.playlist.getMusicIndex(this.musicPlaying!!)
 
         when (this.musicPlayingIndex) {
             DEFAULT_MUSIC_PLAYING_INDEX -> {
@@ -538,21 +537,21 @@ class PlaybackController private constructor(
     }
 
     fun switchRepeatMode() {
-        when (this.repeatMode.intValue) {
+        when (this.repeatMode) {
             Player.REPEAT_MODE_OFF -> {
-                this.repeatMode.intValue = Player.REPEAT_MODE_ALL
+                this.repeatMode = Player.REPEAT_MODE_ALL
             }
 
             Player.REPEAT_MODE_ALL -> {
-                this.repeatMode.intValue = Player.REPEAT_MODE_ONE
+                this.repeatMode = Player.REPEAT_MODE_ONE
             }
 
             Player.REPEAT_MODE_ONE -> {
-                this.repeatMode.intValue = Player.REPEAT_MODE_OFF
+                this.repeatMode = Player.REPEAT_MODE_OFF
             }
         }
 
-        this.mediaController.repeatMode = this.repeatMode.intValue
+        this.mediaController.repeatMode = this.repeatMode
     }
 
     fun stop() {
@@ -563,9 +562,12 @@ class PlaybackController private constructor(
 
     fun release() {
         logger.info("Releasing $this")
-        this.stop()
-        if (this::mediaController.isInitialized) {
-            this.mediaController.release()
+        if (instance != null) {
+            this.stop()
+            if (this::mediaController.isInitialized) {
+                this.mediaController.release()
+            }
+            instance = null
         }
         logger.info("PlaybackController released")
     }
@@ -585,22 +587,22 @@ class PlaybackController private constructor(
             musicPlayingIndex: $musicPlayingIndex
             mediaController initialized: $mediaControllerInit
             musicPlayingIndex in MediaController: ${if (mediaControllerInit) mediaController.currentMediaItemIndex else "/"}
-            musicPlaying != null: ${musicPlaying.value != null}
-            isPlaying: ${isPlaying.value}
-            repeatMode: ${repeatMode.intValue}
-            isShuffle: ${isShuffle.value}
-            hasNext: ${hasNext.value}
-            hasPrevious: ${hasPrevious.value}
-            isLoaded: ${isLoaded.value}
-            currentPositionProgression: ${currentPositionProgression.floatValue}
+            musicPlaying != null: ${musicPlaying != null}
+            isPlaying: $isPlaying
+            repeatMode: $repeatMode
+            isShuffle: $isShuffle
+            hasNext: $hasNext
+            hasPrevious: $hasPrevious
+            isLoaded: $isLoaded
+            currentPositionProgression: $currentPositionProgression
             isEnded: $isEnded
         """.trimIndent()
     }
 
     fun updateCurrentPosition() {
-        val maxPosition: Long = this.musicPlaying.value!!.duration
+        val maxPosition: Long = this.musicPlaying!!.duration
         val newPosition: Long = this.getCurrentPosition()
-        this.currentPositionProgression.floatValue =
+        this.currentPositionProgression =
             newPosition.toFloat() / maxPosition.toFloat()
     }
 }

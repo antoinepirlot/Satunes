@@ -142,6 +142,13 @@ object DataLoader {
         }
     }
 
+    fun resetAllData() {
+        if (isLoading.value) return
+        this.loadFoldersPaths()
+        DataManager.resetAllData()
+        isLoaded.value = false
+    }
+
     /**
      * Load all Media data from device's storage.
      */

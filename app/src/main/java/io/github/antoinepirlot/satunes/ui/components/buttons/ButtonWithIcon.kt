@@ -43,6 +43,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import io.github.antoinepirlot.satunes.ui.components.LoadingCircle
 
 /**
  * @author Antoine Pirlot on 09/08/2024
@@ -54,6 +55,7 @@ internal fun ButtonWithIcon(
     icon: SatunesIcons,
     onClick: () -> Unit,
     enabled: Boolean = true,
+    isLoading: Boolean = false,
     shape: Shape = ButtonDefaults.shape,
     colors: ButtonColors = ButtonDefaults.buttonColors(),
     elevation: ButtonElevation? = ButtonDefaults.buttonElevation(),
@@ -77,8 +79,12 @@ internal fun ButtonWithIcon(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Icon(imageVector = icon.imageVector, contentDescription = icon.description)
-            NormalText(text = text)
+            if (isLoading) {
+                LoadingCircle()
+            } else {
+                Icon(imageVector = icon.imageVector, contentDescription = icon.description)
+                NormalText(text = text)
+            }
         }
     }
 }

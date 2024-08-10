@@ -45,6 +45,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
+import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.buttons.ButtonWithIcon
@@ -98,6 +99,7 @@ internal fun FoldersPathsSelection(
 private fun Footer(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
+    playbackViewModel: PlaybackViewModel = viewModel(),
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     val spacerSize: Dp = 5.dp
@@ -105,17 +107,33 @@ private fun Footer(
     Spacer(modifier = Modifier.size(spacerSize))
 
     //Show text "Add path to exclude/include".
-    ButtonWithIcon(
-        icon = SatunesIcons.ADD,
-        onClick = { satunesViewModel.addPath() },
-        text = stringResource(
-            id = R.string.add_path_button,
-            stringResource(
-                id = satunesUiState.foldersSelectionSelected.stringId
-            ).lowercase()
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        ButtonWithIcon(
+            icon = SatunesIcons.ADD,
+            onClick = { satunesViewModel.addPath() },
+            text = stringResource(
+                id = R.string.add_path_button,
+                stringResource(
+                    id = satunesUiState.foldersSelectionSelected.stringId
+                ).lowercase()
+            )
         )
-    )
-    Spacer(modifier = Modifier.size(spacerSize))
+        ButtonWithIcon(
+            icon = SatunesIcons.REFRESH,
+            onClick = {
+                satunesViewModel.resetAllData(playbackViewModel = playbackViewModel)
+                satunesViewModel.loadAllData()
+            },
+            enabled = !satunesViewModel.isLoadingData,
+            isLoading = satunesViewModel.isLoadingData,
+            text = stringResource(id = R.string.refresh_data_button)
+        )
+        Spacer(modifier = Modifier.size(spacerSize))
+    }
 }
 
 @Preview

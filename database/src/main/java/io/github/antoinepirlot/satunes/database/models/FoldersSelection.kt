@@ -23,36 +23,29 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.models
+package io.github.antoinepirlot.satunes.database.models
 
-import android.os.Build
-import androidx.annotation.RequiresApi
+import io.github.antoinepirlot.satunes.database.R
 
 /**
- * @author Antoine Pirlot on 24-01-24
+ * @author Antoine Pirlot on 09/08/2024
  */
-
-internal enum class Destination(val link: String) {
-    ALBUMS(link = "/albums"),
-    ANDROID_AUTO_SETTINGS(link = "/android_auto_setting"),
-    ARTISTS(link = "/artists"),
-    BATTERY_SETTINGS(link = "/battery_settings"),
-    BOTTOM_BAR_SETTINGS(link = "/navbar_settings"),
-    FOLDERS_SETTINGS(link = "/folders_settings"),
-    FOLDERS(link = "/folders"),
-    GENRES(link = "/genres"),
-    LOGS_SETTINGS(link = "/logs_settings"),
-    MUSICS(link = "/musics"),
-    PERMISSIONS_SETTINGS(link = "/permissions_settings"),
-    PLAYBACK(link = "/playback"),
-    PLAYBACK_QUEUE(link = "/playback_queue"),
-    PLAYBACK_SETTINGS(link = "/playback_settings"),
-    PLAYLISTS(link = "/playlists"),
-    PLAYLISTS_SETTINGS(link = "/playlists_settings"),
-    SEARCH(link = "/search"),
-    SEARCH_SETTINGS("/search_settings"),
-    SETTINGS(link = "/settings"),
-
-    @RequiresApi(Build.VERSION_CODES.M)
-    UPDATES_SETTINGS(link = "/updates"),
+enum class FoldersSelection(
+    internal val id: Int,
+    val stringId: Int,
+    val likeQueryAttribute: String,
+    val andOrQueryAttribute: String
+) {
+    INCLUDE(
+        id = 1,
+        stringId = R.string.include,
+        likeQueryAttribute = "LIKE",
+        andOrQueryAttribute = "OR"
+    ),
+    EXCLUDE(
+        id = 2,
+        stringId = R.string.exclude,
+        likeQueryAttribute = "NOT LIKE",
+        andOrQueryAttribute = "AND"
+    )
 }

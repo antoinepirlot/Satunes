@@ -52,6 +52,7 @@ import androidx.compose.material.icons.rounded.PauseCircle
 import androidx.compose.material.icons.rounded.PlayCircle
 import androidx.compose.material.icons.rounded.PlaylistRemove
 import androidx.compose.material.icons.rounded.QueuePlayNext
+import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material.icons.rounded.Repeat
 import androidx.compose.material.icons.rounded.RepeatOne
 import androidx.compose.material.icons.rounded.Search
@@ -109,9 +110,9 @@ enum class SatunesIcons(val imageVector: ImageVector, val description: String) {
     REPEAT_ONE(imageVector = Icons.Rounded.RepeatOne, description = "Repeat One On Icon"),
     SEARCH(imageVector = Icons.Rounded.Search, description = "Search Icon"),
     SETTINGS(imageVector = Icons.Rounded.Settings, description = "Settings Icon"),
-    SETTING_EXCLUSION(
+    SETTING_FOLDERS(
         imageVector = Icons.Rounded.FolderOff,
-        description = "Exclusion Setting Icon"
+        description = "Folders Setting Icon"
     ),
     SETTING_LOGS(imageVector = Icons.Rounded.LogoDev, description = "Log Setting Icon"),
     SETTING_PERMISSIONS(
@@ -123,5 +124,6 @@ enum class SatunesIcons(val imageVector: ImageVector, val description: String) {
     SKIP_NEXT(imageVector = Icons.Rounded.SkipNext, description = "Skip Next Icon"),
     SKIP_PREVIOUS(imageVector = Icons.Rounded.SkipPrevious, description = "Skip Previous Icon"),
     UNLIKED(imageVector = Icons.Rounded.FavoriteBorder, description = "Unliked Icon"),
+    REFRESH(imageVector = Icons.Rounded.Refresh, description = "Refresh Icon"),
     REMOVE_ICON(imageVector = Icons.Rounded.Delete, description = "Remove Icon"),
 }

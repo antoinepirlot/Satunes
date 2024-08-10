@@ -31,12 +31,12 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
-import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
+import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.ui.views.settings.AndroidAutoSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.BatterySettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.BottomNavigationBarSettingsView
-import io.github.antoinepirlot.satunes.ui.views.settings.ExclusionSettingsView
+import io.github.antoinepirlot.satunes.ui.views.settings.FoldersSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.PermissionsSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.PlaybackSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.PlaylistsSettingsView
@@ -76,9 +76,9 @@ internal fun NavGraphBuilder.settingsRoutes(
         }
     }
 
-    composable(Destination.EXCLUSION_SETTINGS.link) {
+    composable(Destination.FOLDERS_SETTINGS.link) {
         onStart(it)
-        ExclusionSettingsView()
+        FoldersSettingsView()
     }
 
     composable(Destination.PLAYLISTS_SETTINGS.link) {

@@ -45,8 +45,7 @@ import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
-import io.github.antoinepirlot.satunes.playback.services.PlaybackController
-import io.github.antoinepirlot.satunes.playback.services.PlaybackService
+import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
@@ -57,10 +56,10 @@ import io.github.antoinepirlot.satunes.icons.R as RIcons
  */
 internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
 
-    private lateinit var playbackController: PlaybackController
     private lateinit var _logger: SatunesLogger
 
     companion object {
+        internal lateinit var instance: SatunesCarMusicService
         private const val MAX_SIZE: Int = 300
         lateinit var session: MediaSessionCompat
 
@@ -93,6 +92,7 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
 
     override fun onCreate() {
         super.onCreate()
+        instance = this
         SatunesLogger.DOCUMENTS_PATH =
             applicationContext.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)!!.path
         _logger = SatunesLogger.getLogger()
@@ -108,8 +108,7 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
 
     private fun loadAllPlaybackData() {
         DataLoader.loadAllData(context = baseContext)
-        playbackController =
-            PlaybackController.initInstance(baseContext, listener = SatunesPlaybackListener)
+        PlaybackManager.initPlayback(context = applicationContext)
         runBlocking {
             while (
                 !DataLoader.isLoaded.value) {
@@ -123,7 +122,7 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
         }
 
         SatunesPlaybackListener.updateMediaPlaying()
-        if (playbackController.isPlaying.value) {
+        if (PlaybackManager.isPlaying.value) {
             SatunesPlaybackListener.updatePlaybackState(
                 state = STATE_PLAYING,
                 actions = SatunesCarCallBack.ACTIONS_ON_PLAY
@@ -283,8 +282,8 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
         super.onTaskRemoved(rootIntent)
         if (
             !SettingsManager.playbackWhenClosedChecked ||
-            PlaybackService.playbackController == null ||
-            !PlaybackService.playbackController!!.isPlaying.value
+            !PlaybackManager.isConfigured() ||
+            !PlaybackManager.isPlaying.value
         ) {
             stopSelf()
         }
@@ -293,8 +292,8 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
     override fun onDestroy() {
         if (
             !SettingsManager.playbackWhenClosedChecked ||
-            PlaybackService.playbackController == null ||
-            !PlaybackService.playbackController!!.isPlaying.value
+            !PlaybackManager.isConfigured() ||
+            !PlaybackManager.isPlaying.value
         ) {
             session.release()
             super.onDestroy()

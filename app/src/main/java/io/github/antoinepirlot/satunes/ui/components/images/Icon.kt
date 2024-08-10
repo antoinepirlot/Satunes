@@ -23,36 +23,35 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.models
+package io.github.antoinepirlot.satunes.ui.components.images
 
-import android.os.Build
-import androidx.annotation.RequiresApi
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
+import io.github.antoinepirlot.satunes.icons.SatunesIcons
 
 /**
- * @author Antoine Pirlot on 24-01-24
+ * @author Antoine Pirlot on 09/08/2024
  */
 
-internal enum class Destination(val link: String) {
-    ALBUMS(link = "/albums"),
-    ANDROID_AUTO_SETTINGS(link = "/android_auto_setting"),
-    ARTISTS(link = "/artists"),
-    BATTERY_SETTINGS(link = "/battery_settings"),
-    BOTTOM_BAR_SETTINGS(link = "/navbar_settings"),
-    FOLDERS_SETTINGS(link = "/folders_settings"),
-    FOLDERS(link = "/folders"),
-    GENRES(link = "/genres"),
-    LOGS_SETTINGS(link = "/logs_settings"),
-    MUSICS(link = "/musics"),
-    PERMISSIONS_SETTINGS(link = "/permissions_settings"),
-    PLAYBACK(link = "/playback"),
-    PLAYBACK_QUEUE(link = "/playback_queue"),
-    PLAYBACK_SETTINGS(link = "/playback_settings"),
-    PLAYLISTS(link = "/playlists"),
-    PLAYLISTS_SETTINGS(link = "/playlists_settings"),
-    SEARCH(link = "/search"),
-    SEARCH_SETTINGS("/search_settings"),
-    SETTINGS(link = "/settings"),
+@Composable
+internal fun Icon(
+    modifier: Modifier = Modifier,
+    icon: SatunesIcons,
+    tint: Color = LocalContentColor.current,
+) {
+    androidx.compose.material3.Icon(
+        modifier = modifier,
+        imageVector = icon.imageVector,
+        contentDescription = icon.description,
+        tint = tint
+    )
+}
 
-    @RequiresApi(Build.VERSION_CODES.M)
-    UPDATES_SETTINGS(link = "/updates"),
+@Preview
+@Composable
+private fun IconPreview() {
+    Icon(icon = SatunesIcons.ADD)
 }

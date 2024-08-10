@@ -25,13 +25,12 @@
 
 package io.github.antoinepirlot.satunes.ui.views.settings
 
-import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -40,36 +39,34 @@ import io.github.antoinepirlot.jetpack_libs.components.texts.Title
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
-import io.github.antoinepirlot.satunes.models.SwitchSettings
-import io.github.antoinepirlot.satunes.ui.components.settings.SettingsSwitchList
+import io.github.antoinepirlot.satunes.ui.components.settings.folders.FoldersPathsSelection
+import io.github.antoinepirlot.satunes.ui.components.settings.folders.FoldersRowSelection
 
 /**
  * @author Antoine Pirlot on 27/04/2024
  */
 
 @Composable
-internal fun ExclusionSettingsView(
+internal fun FoldersSettingsView(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
 
-    val exclusionSettingsChecked: Map<SwitchSettings, Boolean> = mapOf(
-        Pair(
-            first = SwitchSettings.INCLUDE_RINGTONES,
-            second = satunesUiState.includeRingtonesChecked
-        )
-    )
+    Column(
+        modifier = modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Title(text = stringResource(id = R.string.folders_settings))
 
-    val scrollState: ScrollState = rememberScrollState()
-    Column(modifier = modifier.verticalScroll(scrollState)) {
-        Title(text = stringResource(id = R.string.exclusion_setting))
-        SettingsSwitchList(checkedMap = exclusionSettingsChecked) //Contains list item so always padding horizontal 16.dp
+        FoldersRowSelection()
+        FoldersPathsSelection()
     }
 }
 
+
 @Preview
 @Composable
-private fun ExclusionSettingsViewPreview() {
-    ExclusionSettingsView()
+private fun FoldersSettingsViewPreview() {
+    FoldersSettingsView()
 }

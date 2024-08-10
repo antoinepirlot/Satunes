@@ -29,8 +29,8 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
-import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
+import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
 import kotlin.reflect.KClass
 
 /**
@@ -42,17 +42,17 @@ class PlaybackViewModelFactory(
 ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        PlaybackController.initInstance(context = context)
+        PlaybackManager.initPlayback(context = context)
         return PlaybackViewModel() as T
     }
 
     override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
-        PlaybackController.initInstance(context = context)
+        PlaybackManager.initPlayback(context = context)
         return PlaybackViewModel() as T
     }
 
     override fun <T : ViewModel> create(modelClass: KClass<T>, extras: CreationExtras): T {
-        PlaybackController.initInstance(context = context)
+        PlaybackManager.initPlayback(context = context)
         return PlaybackViewModel() as T
     }
 }

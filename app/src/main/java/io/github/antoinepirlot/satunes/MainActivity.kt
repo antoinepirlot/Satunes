@@ -42,7 +42,8 @@ import com.google.common.util.concurrent.ListenableFuture
 import io.github.antoinepirlot.satunes.database.services.data.DataCleanerManager
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
-import io.github.antoinepirlot.satunes.playback.services.PlaybackController
+import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
+import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
 import io.github.antoinepirlot.satunes.playback.services.PlaybackService
 import io.github.antoinepirlot.satunes.ui.utils.showSnackBar
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
@@ -63,9 +64,10 @@ internal class MainActivity : ComponentActivity() {
         private const val IMPORT_PLAYLIST_CODE: Int = 1
         private const val EXPORT_PLAYLIST_CODE: Int = 2
         private const val EXPORT_LOGS_CODE: Int = 3
-        private const val MIME_JSON: String = "application/json"
+        const val SELECT_FOLDER_TREE_CODE: Int = 4
+        const val MIME_JSON: String = "application/json"
         private const val MIME_TEXT: String = "application/text"
-        private val DEFAULT_URI: Uri =
+        val DEFAULT_URI: Uri =
             Uri.parse(Environment.getExternalStorageDirectory().path + '/' + Environment.DIRECTORY_DOCUMENTS)
 
         private val createFileIntent: Intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
@@ -82,7 +84,7 @@ internal class MainActivity : ComponentActivity() {
 
     override fun onStart() {
         super.onStart()
-        PlaybackController.initInstance(context = applicationContext)
+        PlaybackManager.initPlayback(context = applicationContext)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -95,7 +97,6 @@ internal class MainActivity : ComponentActivity() {
 
         setNotificationOnClick()
         setContent {
-            //Init viewModel that needs context
             Satunes()
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -191,6 +192,14 @@ internal class MainActivity : ComponentActivity() {
                 IMPORT_PLAYLIST_CODE -> {
                     data?.data?.also {
                         DatabaseManager.getInstance().importPlaylists(context = this, uri = it)
+                    }
+                }
+
+                SELECT_FOLDER_TREE_CODE -> {
+                    data?.data?.also {
+                        CoroutineScope(Dispatchers.IO).launch {
+                            SettingsManager.addPath(context = applicationContext, uri = it)
+                        }
                     }
                 }
             }

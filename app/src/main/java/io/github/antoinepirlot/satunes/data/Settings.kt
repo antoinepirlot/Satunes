@@ -26,6 +26,7 @@
 package io.github.antoinepirlot.satunes.data
 
 import android.os.Build
+import io.github.antoinepirlot.satunes.database.models.FoldersSelection
 import io.github.antoinepirlot.satunes.models.Permissions
 import io.github.antoinepirlot.satunes.models.SwitchSettings
 
@@ -46,7 +47,11 @@ internal val permissionsList: List<Permissions> =
 
 internal val switchSettingsNeedRestarts: List<SwitchSettings> = listOf(
     SwitchSettings.AUDIO_OFFLOAD,
-    SwitchSettings.INCLUDE_RINGTONES,
     SwitchSettings.PAUSE_IF_ANOTHER_PLAYBACK,
     SwitchSettings.PAUSE_IF_NOISY,
+)
+
+internal val allFoldersSelections: List<FoldersSelection> = listOf(
+    FoldersSelection.INCLUDE,
+    FoldersSelection.EXCLUDE
 )

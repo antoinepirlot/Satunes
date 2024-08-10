@@ -32,8 +32,7 @@
     <string name="loading_data">Loading Data…</string>
     <string name="no_folder">No folder with musics found</string>
     <string name="add_to">"Add to "</string>
-    <string name="exclusion_setting">Excluding files</string>
-    <string name="include_ringtones">Include ringtones</string>
+    <string name="folders_settings">Folders</string>
     <string name="bar_speed">"Progress bar speed: "</string>
     <string name="export">Export</string>
     <string name="export_all">Export All</string>
@@ -85,4 +84,7 @@
     <string name="update_playlist_success">%1$s has been updated.</string>
     <string name="bar_speed_label">Speed</string>
     <string name="update_modal_not_permanently">The modal will still be shown at next launch.</string>
+    <string name="add_path_button">Add new path to %1$s</string>
+    <string name="path_set_empty">No path selected</string>
+    <string name="refresh_data_button">Reload all data</string>
 </resources>

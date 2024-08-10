@@ -95,10 +95,10 @@ internal fun SettingsView(
                 }
             )
             SettingButton(
-                text = stringResource(id = R.string.exclusion_setting),
-                icon = SatunesIcons.SETTING_EXCLUSION,
+                text = stringResource(id = R.string.folders_settings),
+                icon = SatunesIcons.SETTING_FOLDERS,
                 onClick = {
-                    navController.navigate(Destination.EXCLUSION_SETTINGS.link)
+                    navController.navigate(Destination.FOLDERS_SETTINGS.link)
                 }
             )
             SettingButton(

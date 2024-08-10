@@ -38,7 +38,6 @@ import androidx.media3.session.MediaSessionService
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.playback.models.PlaybackSessionCallback
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
-import kotlin.system.exitProcess
 
 /**
  * @author Antoine Pirlot on 31/01/24
@@ -48,7 +47,7 @@ class PlaybackService : MediaSessionService() {
 
     companion object {
         var mediaSession: MediaSession? = null
-        var playbackController: PlaybackController? = null
+        internal var playbackController: PlaybackController? = null
     }
 
     private lateinit var _logger: SatunesLogger
@@ -101,9 +100,9 @@ class PlaybackService : MediaSessionService() {
         if (
             !SettingsManager.playbackWhenClosedChecked ||
             playbackController == null ||
-            !playbackController!!.isPlaying.value
+            !playbackController!!.isPlaying
         ) {
-            playbackController?.release()
+            PlaybackManager.release(context = applicationContext)
             stopSelf()
         }
     }
@@ -112,7 +111,7 @@ class PlaybackService : MediaSessionService() {
         if (
             !SettingsManager.playbackWhenClosedChecked ||
             playbackController == null ||
-            !playbackController!!.isPlaying.value
+            !playbackController!!.isPlaying
         ) {
             mediaSession?.run {
                 player.release()
@@ -120,7 +119,6 @@ class PlaybackService : MediaSessionService() {
                 mediaSession = null
             }
             super.onDestroy()
-            exitProcess(0)
         }
     }
 

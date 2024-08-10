@@ -122,6 +122,7 @@ private fun Footer(
                 ).lowercase()
             )
         )
+        Spacer(modifier = Modifier.size(spacerSize))
         ButtonWithIcon(
             icon = SatunesIcons.REFRESH,
             onClick = {
@@ -132,8 +133,8 @@ private fun Footer(
             isLoading = satunesViewModel.isLoadingData,
             text = stringResource(id = R.string.refresh_data_button)
         )
-        Spacer(modifier = Modifier.size(spacerSize))
     }
+    Spacer(modifier = Modifier.size(spacerSize))
 }
 
 @Preview

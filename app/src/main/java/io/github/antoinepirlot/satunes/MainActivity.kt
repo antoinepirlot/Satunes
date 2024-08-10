@@ -97,7 +97,6 @@ internal class MainActivity : ComponentActivity() {
 
         setNotificationOnClick()
         setContent {
-            //Init viewModel that needs context
             Satunes()
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

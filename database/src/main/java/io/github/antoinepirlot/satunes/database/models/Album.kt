@@ -25,6 +25,8 @@
 
 package io.github.antoinepirlot.satunes.database.models
 
+import android.graphics.Bitmap
+
 /**
  * @author Antoine Pirlot on 27/03/2024
  */
@@ -37,6 +39,15 @@ class Album(
     companion object {
         var nextId: Long = 1
     }
+
+    override var artwork: Bitmap?
+        get() = super.artwork
+        set(value) {
+            super.artwork = value
+            this.getMusicSet().forEach { music: Music ->
+                music.artwork = value
+            }
+        }
 
     init {
         nextId++

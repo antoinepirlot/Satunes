@@ -87,7 +87,7 @@ class Music(
         loadAlbumArtwork(context = context)
     }
 
-    fun switchLike(context: Context) {
+    fun switchLike() {
         this.liked.value = !this.liked.value
         val db = DatabaseManager.getInstance()
         if (this.liked.value) {
@@ -123,18 +123,17 @@ class Music(
         // Indirect impact is that it is faster to load settings
         CoroutineScope(Dispatchers.Default).launch {
             try {
-                //TODO ask the user to show music's album or album's artwork for all music
-                // It could cause visual issues as a music has not the same artwork and the user won't know it
-//                if (album.artwork != null) {
-//                    this@Music.artwork = album.artwork
-//                    return@launch
-//                }
-                val mediaMetadataRetriever = MediaMetadataRetriever()
+                if (album.artwork != null) {
+                    this@Music.artwork = album.artwork
+                    return@launch
+                }
 
+                val mediaMetadataRetriever = MediaMetadataRetriever()
                 mediaMetadataRetriever.setDataSource(context, uri)
 
                 val artwork: ByteArray? = mediaMetadataRetriever.embeddedPicture
                 mediaMetadataRetriever.release()
+
                 if (artwork == null) {
                     this@Music.artwork = ResourcesCompat.getDrawable(
                         context.resources,
@@ -145,7 +144,7 @@ class Music(
                     val bitmap: Bitmap = BitmapFactory.decodeByteArray(artwork, 0, artwork.size)
                     this@Music.artwork = bitmap
                 }
-                if (this@Music.album.artwork == null) {
+                if (this@Music.album.artwork == null && artwork != null) {
                     this@Music.album.artwork = this@Music.artwork
                 }
             } catch (_: Exception) {

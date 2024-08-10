@@ -43,7 +43,7 @@ abstract class MediaImpl(
         internal set
     override var title: String by mutableStateOf(value = title)
 
-    var artwork: Bitmap? by mutableStateOf(null)
+    open var artwork: Bitmap? by mutableStateOf(null)
         internal set
 
     protected val musicSortedSet: SortedSet<Music> = sortedSetOf()

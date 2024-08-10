@@ -47,7 +47,7 @@ class PlaybackService : MediaSessionService() {
 
     companion object {
         var mediaSession: MediaSession? = null
-        var playbackController: PlaybackController? = null
+        internal var playbackController: PlaybackController? = null
     }
 
     private lateinit var _logger: SatunesLogger

@@ -74,6 +74,8 @@ object PlaybackManager {
 
     private fun playbackControllerNotExists(): Boolean = this._playbackController == null
 
+    fun isConfigured(): Boolean = !this.playbackControllerNotExists()
+
     private fun initPlaybackWithAllMusics(context: Context) {
         this.initPlayback(context = context)
         if (!DataLoader.isLoaded.value && !DataLoader.isLoading.value) {

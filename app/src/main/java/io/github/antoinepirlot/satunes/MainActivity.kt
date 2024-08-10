@@ -43,7 +43,7 @@ import io.github.antoinepirlot.satunes.database.services.data.DataCleanerManager
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
-import io.github.antoinepirlot.satunes.playback.services.PlaybackController
+import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
 import io.github.antoinepirlot.satunes.playback.services.PlaybackService
 import io.github.antoinepirlot.satunes.ui.utils.showSnackBar
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
@@ -84,7 +84,7 @@ internal class MainActivity : ComponentActivity() {
 
     override fun onStart() {
         super.onStart()
-        PlaybackController.initInstance(context = applicationContext)
+        PlaybackManager.initPlayback(context = applicationContext)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

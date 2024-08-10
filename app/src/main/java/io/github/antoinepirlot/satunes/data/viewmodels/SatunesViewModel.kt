@@ -53,7 +53,7 @@ import io.github.antoinepirlot.satunes.internet.updates.APKDownloadStatus
 import io.github.antoinepirlot.satunes.internet.updates.UpdateAvailableStatus
 import io.github.antoinepirlot.satunes.internet.updates.UpdateCheckManager
 import io.github.antoinepirlot.satunes.internet.updates.UpdateDownloadManager
-import io.github.antoinepirlot.satunes.playback.services.PlaybackController
+import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
 import io.github.antoinepirlot.satunes.ui.utils.showErrorSnackBar
 import io.github.antoinepirlot.satunes.ui.utils.showSnackBar
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
@@ -530,6 +530,6 @@ internal class SatunesViewModel : ViewModel() {
     fun resetAllData(playbackViewModel: PlaybackViewModel) {
         playbackViewModel.release()
         DataLoader.resetAllData()
-        PlaybackController.initInstance(context = MainActivity.instance.applicationContext)
+        PlaybackManager.initPlayback(context = MainActivity.instance.applicationContext)
     }
 }

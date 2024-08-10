@@ -50,7 +50,7 @@ import kotlinx.coroutines.launch
  * @author Antoine Pirlot on 31/01/24
  */
 
-class PlaybackController private constructor(
+internal class PlaybackController private constructor(
     context: Context,
     sessionToken: SessionToken,
 ) {
@@ -59,26 +59,55 @@ class PlaybackController private constructor(
     internal lateinit var playlist: Playlist
 
     internal var musicPlayingIndex: Int = DEFAULT_MUSIC_PLAYING_INDEX
+
     var isEnded: Boolean = DEFAULT_IS_ENDED
+        internal set(value) {
+            field = value
+            PlaybackManager.isEnded.value = value
+        }
 
     // Mutable var are used in ui, it needs to be recomposed
     // I use mutable to avoid using function with multiples params like to add listener
     var musicPlaying: Music? = DEFAULT_MUSIC_PLAYING
-        private set
+        internal set(value) {
+            field = value
+            PlaybackManager.musicPlaying.value = value
+        }
     var isPlaying: Boolean = DEFAULT_IS_PLAYING_VALUE
-        private set
+        internal set(value) {
+            field = value
+            PlaybackManager.isPlaying.value = value
+        }
     var repeatMode: Int = DEFAULT_REPEAT_MODE
-        private set
+        internal set(value) {
+            field = value
+            PlaybackManager.repeatMode.intValue = value
+        }
     var isShuffle: Boolean = DEFAULT_IS_SHUFFLE
-        private set
+        internal set(value) {
+            field = value
+            PlaybackManager.isShuffle.value = value
+        }
     var hasNext: Boolean = DEFAULT_HAS_NEXT
-        private set
+        internal set(value) {
+            field = value
+            PlaybackManager.hasNext.value = value
+        }
     var hasPrevious: Boolean = DEFAULT_HAS_PREVIOUS
-        private set
+        internal set(value) {
+            field = value
+            PlaybackManager.hasPrevious.value = value
+        }
     var isLoaded: Boolean = DEFAULT_IS_LOADED
-        private set
+        internal set(value) {
+            field = value
+            PlaybackManager.isLoaded.value = value
+        }
     var currentPositionProgression: Float = DEFAULT_CURRENT_POSITION_PROGRESSION
-        private set
+        internal set(value) {
+            field = value
+            PlaybackManager.currentPositionProgression.floatValue = value
+        }
 
     private var listener: Player.Listener = PlaybackListener()
 

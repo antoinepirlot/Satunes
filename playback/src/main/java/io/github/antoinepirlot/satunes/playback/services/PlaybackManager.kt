@@ -79,6 +79,7 @@ object PlaybackManager {
 
     fun initPlayback(context: Context) {
         this._playbackController = PlaybackController.initInstance(context = context)
+        reset()
     }
 
     private fun playbackControllerNotExists(): Boolean = this._playbackController == null
@@ -100,7 +101,6 @@ object PlaybackManager {
             } else {
                 this.initPlayback(context = context)
             }
-            reset()
         }
     }
 

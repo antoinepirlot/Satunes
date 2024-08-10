@@ -102,7 +102,7 @@ class PlaybackService : MediaSessionService() {
             playbackController == null ||
             !playbackController!!.isPlaying
         ) {
-            playbackController?.release()
+            PlaybackManager.release(context = applicationContext)
             stopSelf()
         }
     }

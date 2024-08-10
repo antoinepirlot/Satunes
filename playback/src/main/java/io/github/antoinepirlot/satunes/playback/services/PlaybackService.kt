@@ -100,7 +100,7 @@ class PlaybackService : MediaSessionService() {
         if (
             !SettingsManager.playbackWhenClosedChecked ||
             playbackController == null ||
-            !playbackController!!.isPlaying.value
+            !playbackController!!.isPlaying
         ) {
             playbackController?.release()
             stopSelf()
@@ -111,7 +111,7 @@ class PlaybackService : MediaSessionService() {
         if (
             !SettingsManager.playbackWhenClosedChecked ||
             playbackController == null ||
-            !playbackController!!.isPlaying.value
+            !playbackController!!.isPlaying
         ) {
             mediaSession?.run {
                 player.release()

@@ -50,15 +50,14 @@ import kotlinx.coroutines.CoroutineScope
  */
 class PlaybackViewModel : ViewModel() {
     private val _logger: SatunesLogger = SatunesLogger.getLogger()
-    private var _playbackManager: PlaybackManager = PlaybackManager
-    private var _isPlaying: MutableState<Boolean> = _playbackManager.isPlaying
-    private var _musicPlaying: MutableState<Music?> = _playbackManager.musicPlaying
+    private var _isPlaying: MutableState<Boolean> = PlaybackManager.isPlaying
+    private var _musicPlaying: MutableState<Music?> = PlaybackManager.musicPlaying
     private var _currentPositionProgression: MutableFloatState =
-        _playbackManager.currentPositionProgression
-    private var _repeatMode: MutableIntState = _playbackManager.repeatMode
-    private var _isShuffle: MutableState<Boolean> = _playbackManager.isShuffle
-    private var _isLoaded: MutableState<Boolean> = _playbackManager.isLoaded
-    private var _isEnded: MutableState<Boolean> = _playbackManager.isEnded
+        PlaybackManager.currentPositionProgression
+    private var _repeatMode: MutableIntState = PlaybackManager.repeatMode
+    private var _isShuffle: MutableState<Boolean> = PlaybackManager.isShuffle
+    private var _isLoaded: MutableState<Boolean> = PlaybackManager.isLoaded
+    private var _isEnded: MutableState<Boolean> = PlaybackManager.isEnded
 
     val isPlaying: Boolean by _isPlaying
     val musicPlaying: Music? by _musicPlaying
@@ -132,7 +131,7 @@ class PlaybackViewModel : ViewModel() {
         shuffleMode: Boolean = SettingsManager.shuffleMode,
         musicToPlay: Music? = null,
     ) {
-        this._playbackManager.loadMusic(
+        PlaybackManager.loadMusic(
             context = MainActivity.instance.applicationContext,
             musicSet = musicSet,
             shuffleMode = shuffleMode,
@@ -141,38 +140,38 @@ class PlaybackViewModel : ViewModel() {
     }
 
     fun getPlaylist(): List<Music> {
-        return this._playbackManager.getPlaylist(context = MainActivity.instance.applicationContext)
+        return PlaybackManager.getPlaylist(context = MainActivity.instance.applicationContext)
     }
 
     fun seekTo(positionPercentage: Float) {
-        this._playbackManager.seekTo(
+        PlaybackManager.seekTo(
             context = MainActivity.instance.applicationContext,
             positionPercentage = positionPercentage
         )
     }
 
     fun playNext() {
-        this._playbackManager.playNext(context = MainActivity.instance.applicationContext)
+        PlaybackManager.playNext(context = MainActivity.instance.applicationContext)
     }
 
     fun playPause() {
-        this._playbackManager.playPause(context = MainActivity.instance.applicationContext)
+        PlaybackManager.playPause(context = MainActivity.instance.applicationContext)
     }
 
     fun playPrevious() {
-        this._playbackManager.playPrevious(context = MainActivity.instance.applicationContext)
+        PlaybackManager.playPrevious(context = MainActivity.instance.applicationContext)
     }
 
     fun switchRepeatMode() {
-        this._playbackManager.switchRepeatMode(context = MainActivity.instance.applicationContext)
+        PlaybackManager.switchRepeatMode(context = MainActivity.instance.applicationContext)
     }
 
     fun switchShuffleMode() {
-        this._playbackManager.switchShuffleMode(context = MainActivity.instance.applicationContext)
+        PlaybackManager.switchShuffleMode(context = MainActivity.instance.applicationContext)
     }
 
     fun getMusicPlayingIndexPosition(): Int {
-        return this._playbackManager.getMusicPlayingIndexPosition(context = MainActivity.instance.applicationContext)
+        return PlaybackManager.getMusicPlayingIndexPosition(context = MainActivity.instance.applicationContext)
     }
 
     fun addToQueue(
@@ -182,7 +181,7 @@ class PlaybackViewModel : ViewModel() {
     ) {
         val context: Context = MainActivity.instance.applicationContext
         try {
-            this._playbackManager.addToQueue(
+            PlaybackManager.addToQueue(
                 context = MainActivity.instance.applicationContext,
                 mediaImpl = mediaImpl
             )
@@ -214,7 +213,7 @@ class PlaybackViewModel : ViewModel() {
     ) {
         val context: Context = MainActivity.instance.applicationContext
         try {
-            this._playbackManager.addNext(
+            PlaybackManager.addNext(
                 context = MainActivity.instance.applicationContext,
                 mediaImpl = mediaImpl
             )
@@ -240,25 +239,25 @@ class PlaybackViewModel : ViewModel() {
     }
 
     fun isMusicInQueue(music: Music): Boolean {
-        return this._playbackManager.isMusicInQueue(
+        return PlaybackManager.isMusicInQueue(
             context = MainActivity.instance.applicationContext,
             music = music
         )
     }
 
     fun start(mediaToPlay: Music? = null) {
-        this._playbackManager.start(
+        PlaybackManager.start(
             context = MainActivity.instance.applicationContext,
             musicToPlay = mediaToPlay
         )
     }
 
     fun updateCurrentPosition() {
-        this._playbackManager.updateCurrentPosition(context = MainActivity.instance.applicationContext)
+        PlaybackManager.updateCurrentPosition(context = MainActivity.instance.applicationContext)
     }
 
     fun release() {
-        this._playbackManager.release(context = MainActivity.instance.applicationContext)
+        PlaybackManager.release(context = MainActivity.instance.applicationContext)
         onCleared()
     }
 }

@@ -38,6 +38,15 @@ import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
+import io.github.antoinepirlot.satunes.playback.services.PlaybackController.Companion.DEFAULT_CURRENT_POSITION_PROGRESSION
+import io.github.antoinepirlot.satunes.playback.services.PlaybackController.Companion.DEFAULT_HAS_NEXT
+import io.github.antoinepirlot.satunes.playback.services.PlaybackController.Companion.DEFAULT_HAS_PREVIOUS
+import io.github.antoinepirlot.satunes.playback.services.PlaybackController.Companion.DEFAULT_IS_ENDED
+import io.github.antoinepirlot.satunes.playback.services.PlaybackController.Companion.DEFAULT_IS_LOADED
+import io.github.antoinepirlot.satunes.playback.services.PlaybackController.Companion.DEFAULT_IS_PLAYING_VALUE
+import io.github.antoinepirlot.satunes.playback.services.PlaybackController.Companion.DEFAULT_IS_SHUFFLE
+import io.github.antoinepirlot.satunes.playback.services.PlaybackController.Companion.DEFAULT_MUSIC_PLAYING
+import io.github.antoinepirlot.satunes.playback.services.PlaybackController.Companion.DEFAULT_REPEAT_MODE
 
 /**
  * @author Antoine Pirlot on 10/08/2024
@@ -46,26 +55,26 @@ object PlaybackManager {
 
     private var _playbackController: PlaybackController? = null
 
-    var isEnded: MutableState<Boolean> = mutableStateOf(_playbackController!!.isEnded)
+    var isEnded: MutableState<Boolean> = mutableStateOf(DEFAULT_IS_ENDED)
 
     // Mutable var are used in ui, it needs to be recomposed
     // I use mutable to avoid using function with multiples params like to add listener
-    var musicPlaying: MutableState<Music?> = mutableStateOf(_playbackController!!.musicPlaying)
+    var musicPlaying: MutableState<Music?> = mutableStateOf(DEFAULT_MUSIC_PLAYING)
         private set
-    var isPlaying: MutableState<Boolean> = mutableStateOf(_playbackController!!.isPlaying)
+    var isPlaying: MutableState<Boolean> = mutableStateOf(DEFAULT_IS_PLAYING_VALUE)
         private set
-    var repeatMode: MutableIntState = mutableIntStateOf(_playbackController!!.repeatMode)
+    var repeatMode: MutableIntState = mutableIntStateOf(DEFAULT_REPEAT_MODE)
         private set
-    var isShuffle: MutableState<Boolean> = mutableStateOf(_playbackController!!.isShuffle)
+    var isShuffle: MutableState<Boolean> = mutableStateOf(DEFAULT_IS_SHUFFLE)
         private set
-    var hasNext: MutableState<Boolean> = mutableStateOf(_playbackController!!.hasNext)
+    var hasNext: MutableState<Boolean> = mutableStateOf(DEFAULT_HAS_NEXT)
         private set
-    var hasPrevious: MutableState<Boolean> = mutableStateOf(_playbackController!!.hasPrevious)
+    var hasPrevious: MutableState<Boolean> = mutableStateOf(DEFAULT_HAS_PREVIOUS)
         private set
-    var isLoaded: MutableState<Boolean> = mutableStateOf(_playbackController!!.isLoaded)
+    var isLoaded: MutableState<Boolean> = mutableStateOf(DEFAULT_IS_LOADED)
         private set
     var currentPositionProgression: MutableFloatState =
-        mutableFloatStateOf(_playbackController!!.currentPositionProgression)
+        mutableFloatStateOf(DEFAULT_CURRENT_POSITION_PROGRESSION)
         private set
 
     fun initPlayback(context: Context) {
@@ -98,7 +107,7 @@ object PlaybackManager {
     private fun reset() {
         musicPlaying.value = _playbackController!!.musicPlaying
         isPlaying.value = _playbackController!!.isPlaying
-        repeatMode.value = _playbackController!!.repeatMode
+        repeatMode.intValue = _playbackController!!.repeatMode
         isShuffle.value = _playbackController!!.isShuffle
         hasNext.value = _playbackController!!.hasNext
         hasPrevious.value = _playbackController!!.hasPrevious

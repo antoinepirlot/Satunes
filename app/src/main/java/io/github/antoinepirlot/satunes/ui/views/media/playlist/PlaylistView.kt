@@ -131,6 +131,9 @@ internal fun PlaylistView(
             Title(text = title)
         },
         extraButtons = {
+            ExtraButton(
+                icon = SatunesIcons.EXPORT,
+                onClick = { dataViewModel.exportPlaylist(playlist = playlist) })
             ExtraButton(icon = SatunesIcons.ADD, onClick = { openAddMusicsDialog = true })
             if (playlist.getMusicSet().isNotEmpty()) {
                 ExtraButton(icon = SatunesIcons.PLAY, onClick = {

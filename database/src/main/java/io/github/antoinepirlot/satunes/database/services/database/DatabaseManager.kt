@@ -209,6 +209,12 @@ class DatabaseManager private constructor(context: Context) {
         }
     }
 
+    fun removeMusicFromPlaylists(music: Music, playlists: List<Playlist>) {
+        playlists.forEach { playlist: Playlist ->
+            removeMusicFromPlaylist(music = music, playlist = playlist)
+        }
+    }
+
     fun removeMusic(id: Long) {
         this.musicDao.delete(musicId = id)
         this.musicsPlaylistsRelDAO.removeAll(musicId = id)

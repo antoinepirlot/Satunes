@@ -75,11 +75,12 @@ dependencies {
      */
     val composeUiVersion = "1.6.8"
     val composeBomVersion = "2024.06.00"
+    val lifeCycleVersion = "2.8.4"
     implementation("androidx.core:core-ktx:1.13.1")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.3")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.3")
-    implementation("androidx.activity:activity-compose:1.9.0")
-    implementation("androidx.fragment:fragment-ktx:1.8.1")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifeCycleVersion")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifeCycleVersion")
+    implementation("androidx.activity:activity-compose:1.9.1")
+    implementation("androidx.fragment:fragment-ktx:1.8.2")
     implementation(platform("androidx.compose:compose-bom:$composeBomVersion"))
     implementation("androidx.compose.ui:ui:$composeUiVersion")
     implementation("androidx.compose.ui:ui-graphics:$composeUiVersion")
@@ -99,11 +100,10 @@ dependencies {
     /**
      * Media
      */
-    val media3Version = "1.3.1"
+    val media3Version = "1.4.0"
 
     implementation("androidx.media3:media3-common:$media3Version")
     implementation("androidx.media3:media3-session:$media3Version")
-
 
     /**
      * Icons

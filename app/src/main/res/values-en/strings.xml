@@ -85,4 +85,6 @@
     <string name="path_set_empty">No path selected</string>
     <string name="refresh_data_button">Reload all data</string>
     <string name="remove_musics_from_playlist_success">Musics have been remove from %1$s</string>
+    <string name="add_music_to_playlist_success">%1$s has been added to %2$s</string>
+    <string name="add_musics_to_playlists_success">Musics have been added to playlists</string>
 </resources>

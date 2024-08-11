@@ -324,7 +324,7 @@ internal class PlaybackController private constructor(
      * @param musicToPlay the music to play
      *
      */
-    fun loadMusic(
+    fun loadMusics(
         musicSet: Set<Music>,
         shuffleMode: Boolean = SettingsManager.shuffleMode,
         musicToPlay: Music? = null,
@@ -337,10 +337,10 @@ internal class PlaybackController private constructor(
                 playlist.shuffle(musicIndex = playlist.getMusicIndex(music = musicToPlay))
             }
         }
-        this.loadMusic(playlist = playlist)
+        this.loadMusics(playlist = playlist)
     }
 
-    fun loadMusic(playlist: Playlist) {
+    fun loadMusics(playlist: Playlist) {
         this.playlist = playlist
 
         this.mediaController.clearMediaItems()

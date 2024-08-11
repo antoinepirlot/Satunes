@@ -95,11 +95,11 @@ object PlaybackManager {
             DataLoader.loadAllData(context = context)
         } else {
             if (this::playlist.isInitialized) {
-                this._playbackController!!.loadMusic(playlist = playlist)
+                this._playbackController!!.loadMusics(playlist = playlist)
                 return
             }
         }
-        this._playbackController!!.loadMusic(musicSet = DataManager.getMusicSet())
+        this._playbackController!!.loadMusics(musicSet = DataManager.getMusicSet())
     }
 
     private fun checkPlaybackController(context: Context, loadAllMusic: Boolean = true) {
@@ -195,7 +195,7 @@ object PlaybackManager {
         musicToPlay: Music? = null,
     ) {
         checkPlaybackController(context = context, loadAllMusic = false)
-        this._playbackController!!.loadMusic(
+        this._playbackController!!.loadMusics(
             musicSet = musicSet,
             shuffleMode = shuffleMode,
             musicToPlay = musicToPlay

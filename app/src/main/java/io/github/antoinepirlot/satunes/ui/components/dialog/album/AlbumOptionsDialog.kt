@@ -42,6 +42,7 @@ import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToPlaylistMediaOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToQueueDialogOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.PlayNextMediaOption
+import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.RemoveFromQueueOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.music.options.NavigateToMediaMusicOption
 import io.github.antoinepirlot.satunes.ui.components.images.MediaArtwork
 
@@ -85,6 +86,7 @@ internal fun AlbumOptionsDialog(
                 if (playbackViewModel.isLoaded) {
                     PlayNextMediaOption(mediaImpl = album, onDismissRequest = onDismissRequest)
                     AddToQueueDialogOption(mediaImpl = album, onDismissRequest = onDismissRequest)
+                    RemoveFromQueueOption(mediaImpl = album, onDismissRequest = onDismissRequest)
                 }
 
                 /**

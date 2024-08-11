@@ -39,6 +39,7 @@ import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToPlaylistMediaOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToQueueDialogOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.PlayNextMediaOption
+import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.RemoveFromQueueOption
 import io.github.antoinepirlot.satunes.ui.utils.getRootFolderName
 
 /**
@@ -83,6 +84,7 @@ internal fun FolderOptionsDialog(
                 if (playbackViewModel.isLoaded) {
                     PlayNextMediaOption(mediaImpl = folder, onDismissRequest = onDismissRequest)
                     AddToQueueDialogOption(mediaImpl = folder, onDismissRequest = onDismissRequest)
+                    RemoveFromQueueOption(mediaImpl = folder, onDismissRequest = onDismissRequest)
                 }
             }
         }

@@ -39,6 +39,7 @@ import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToPlaylistMediaOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToQueueDialogOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.PlayNextMediaOption
+import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.RemoveFromQueueOption
 
 /**
  * @author Antoine Pirlot on 07/07/2024
@@ -75,6 +76,7 @@ internal fun ArtistOptionsDialog(
                 if (playbackViewModel.isLoaded) {
                     PlayNextMediaOption(mediaImpl = artist, onDismissRequest = onDismissRequest)
                     AddToQueueDialogOption(mediaImpl = artist, onDismissRequest = onDismissRequest)
+                    RemoveFromQueueOption(mediaImpl = artist, onDismissRequest = onDismissRequest)
                 }
             }
         }

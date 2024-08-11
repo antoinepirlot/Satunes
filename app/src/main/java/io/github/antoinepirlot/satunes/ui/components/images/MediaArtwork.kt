@@ -103,7 +103,7 @@ internal fun MediaArtwork(
 
         var artwork: ImageBitmap? by remember { mutableStateOf(null) }
         var job: Job? = null
-        LaunchedEffect(key1 = Unit) {
+        LaunchedEffect(key1 = mediaImpl) {
             job?.cancel()
             job = CoroutineScope(Dispatchers.IO).launch {
                 artwork = when (mediaImpl) {

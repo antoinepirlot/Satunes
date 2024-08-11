@@ -33,8 +33,6 @@ import android.net.Uri
 import android.net.Uri.encode
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.media3.common.MediaItem
@@ -157,7 +155,7 @@ class Music(
         }
     }
 
-    fun getAlbumArtwork(context: Context): ImageBitmap? {
+    fun getAlbumArtwork(context: Context): Bitmap? {
         val mediaMetadataRetriever = MediaMetadataRetriever()
         mediaMetadataRetriever.setDataSource(context, uri)
         val artwork: ByteArray? = mediaMetadataRetriever.embeddedPicture
@@ -166,7 +164,7 @@ class Music(
             null
         } else {
             BitmapFactory.decodeByteArray(artwork, 0, artwork.size)
-        }?.asImageBitmap()
+        }
     }
 
     override fun equals(other: Any?): Boolean {

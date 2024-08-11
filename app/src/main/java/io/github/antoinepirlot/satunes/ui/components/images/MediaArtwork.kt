@@ -25,15 +25,22 @@
 
 package io.github.antoinepirlot.satunes.ui.components.images
 
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -46,6 +53,10 @@ import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.icons.R
 import io.github.antoinepirlot.satunes.ui.utils.getRightIconAndDescription
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 /**
  * @author Antoine Pirlot on 29/02/24
@@ -88,18 +99,27 @@ internal fun MediaArtwork(
         modifier = clickableModifier,
         contentAlignment = contentAlignment
     ) {
-        val artwork: ImageBitmap? = when (mediaImpl) {
-            is Music -> mediaImpl.getAlbumArtwork(context = LocalContext.current)
-            is Album -> mediaImpl.getMusicSet().first()
-                .getAlbumArtwork(context = LocalContext.current)
+        val context: Context = LocalContext.current
 
-            else -> null
+        var artwork: ImageBitmap? by remember { mutableStateOf(null) }
+        var job: Job? = null
+        LaunchedEffect(key1 = Unit) {
+            job?.cancel()
+            job = CoroutineScope(Dispatchers.IO).launch {
+                artwork = when (mediaImpl) {
+                    is Music -> mediaImpl.getAlbumArtwork(context = context)
+                    is Album -> mediaImpl.getMusicSet().first()
+                        .getAlbumArtwork(context = context)
+
+                    else -> null
+                }?.asImageBitmap()
+            }
         }
 
         if (artwork != null) {
             Image(
                 modifier = Modifier.fillMaxSize(),
-                bitmap = artwork,
+                bitmap = artwork!!,
                 contentDescription = "Music Album Artwork"
             )
         } else {

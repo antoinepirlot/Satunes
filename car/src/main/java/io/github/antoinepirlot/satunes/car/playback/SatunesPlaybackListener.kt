@@ -25,6 +25,7 @@
 
 package io.github.antoinepirlot.satunes.car.playback
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.PlaybackStateCompat
@@ -66,6 +67,7 @@ internal object SatunesPlaybackListener : PlaybackListener() {
     }
 
     internal fun updateMediaPlaying() {
+        val context: Context = SatunesCarMusicService.instance.applicationContext
         val musicPlaying: Music = PlaybackManager.musicPlaying.value ?: return
         val metaData: MediaMetadataCompat = MediaMetadataCompat.Builder()
             .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, musicPlaying.id.toString())
@@ -74,7 +76,10 @@ internal object SatunesPlaybackListener : PlaybackListener() {
                 MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE,
                 musicPlaying.artist.title
             )
-            .putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, musicPlaying.artwork)
+            .putBitmap(
+                MediaMetadataCompat.METADATA_KEY_ALBUM_ART,
+                musicPlaying.getAlbumArtwork(context = context)
+            )
             .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, musicPlaying.duration)
             .build()
         SatunesCarMusicService.session.setMetadata(metaData)

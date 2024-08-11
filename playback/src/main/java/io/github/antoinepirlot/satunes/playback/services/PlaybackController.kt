@@ -393,6 +393,8 @@ internal class PlaybackController private constructor(
     }
 
     fun removeFromQueue(mediaImpl: MediaImpl) {
+        if (mediaImpl == musicPlaying) return
+
         when (mediaImpl) {
             is Music -> {
                 val musicIndex: Int = this.playlist.removeFromQueue(music = mediaImpl)

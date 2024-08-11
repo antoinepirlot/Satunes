@@ -34,9 +34,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -50,6 +48,8 @@ import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.local.LocalMainScope
 import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
+import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import io.github.antoinepirlot.satunes.ui.components.buttons.ButtonWithIcon
 import kotlinx.coroutines.CoroutineScope
 import io.github.antoinepirlot.satunes.database.R as RDb
 
@@ -79,15 +79,26 @@ internal fun PlaylistsSettingsView(
             maxLines = Int.MAX_VALUE
         )
         Row {
-            Button(onClick = {
-                dataViewModel.exportPlaylists(scope = scope, snackBarHostState = snackBarHostState)
-            }) {
-                Text(text = stringResource(id = R.string.export_all))
-            }
+            ButtonWithIcon(
+                icon = SatunesIcons.EXPORT,
+                onClick = {
+                    dataViewModel.exportPlaylists(
+                        scope = scope,
+                        snackBarHostState = snackBarHostState
+                    )
+                },
+                text = stringResource(id = R.string.export_all)
+            )
+
             Spacer(modifier = Modifier.size(16.dp))
-            Button(onClick = { dataViewModel.importPlaylists() }) {
-                Text(text = stringResource(id = R.string._import))
-            }
+
+            ButtonWithIcon(
+                icon = SatunesIcons.IMPORT,
+                onClick = {
+                    dataViewModel.importPlaylists()
+                },
+                text = stringResource(id = R.string._import)
+            )
         }
     }
 }

@@ -586,4 +586,13 @@ class DataViewModel : ViewModel() {
             }
         }
     }
+
+    fun exportPlaylist(
+        playlist: Playlist
+    ) {
+        MainActivity.instance.createFileToExportPlaylist(
+            defaultFileName = playlist.title,
+            playlist = playlist
+        )
+    }
 }

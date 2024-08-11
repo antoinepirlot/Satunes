@@ -39,6 +39,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.session.MediaController
 import com.google.common.util.concurrent.ListenableFuture
+import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.database.services.data.DataCleanerManager
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
@@ -62,9 +63,10 @@ internal class MainActivity : ComponentActivity() {
     companion object {
         internal lateinit var instance: MainActivity
         private const val IMPORT_PLAYLIST_CODE: Int = 1
-        private const val EXPORT_PLAYLIST_CODE: Int = 2
-        private const val EXPORT_LOGS_CODE: Int = 3
-        const val SELECT_FOLDER_TREE_CODE: Int = 4
+        private const val EXPORT_ALL_PLAYLISTS_CODE: Int = 2
+        private const val EXPORT_PLAYLIST_CODE: Int = 3
+        private const val EXPORT_LOGS_CODE: Int = 4
+        const val SELECT_FOLDER_TREE_CODE: Int = 5
         const val MIME_JSON: String = "application/json"
         private const val MIME_TEXT: String = "application/text"
         val DEFAULT_URI: Uri =
@@ -78,9 +80,10 @@ internal class MainActivity : ComponentActivity() {
         }
     }
 
-    private lateinit var logger: SatunesLogger
-    private lateinit var mediaControllerFuture: ListenableFuture<MediaController>
-    private lateinit var mediaController: MediaController
+    private lateinit var _logger: SatunesLogger
+    private lateinit var _mediaControllerFuture: ListenableFuture<MediaController>
+    private lateinit var _mediaController: MediaController
+    private var _playlistToExport: Playlist? = null
 
     override fun onStart() {
         super.onStart()
@@ -91,8 +94,8 @@ internal class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         SatunesLogger.DOCUMENTS_PATH =
             applicationContext.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)!!.path
-        logger = SatunesLogger.getLogger()
-        logger.info("Satunes started on API: ${Build.VERSION.SDK_INT}")
+        _logger = SatunesLogger.getLogger()
+        _logger.info("Satunes started on API: ${Build.VERSION.SDK_INT}")
         instance = this
 
         setNotificationOnClick()
@@ -102,7 +105,7 @@ internal class MainActivity : ComponentActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             DataCleanerManager.removeApkFiles(context = baseContext)
         } else {
-            logger.warning("Can't remove apk files with API: ${Build.VERSION.SDK_INT}")
+            _logger.warning("Can't remove apk files with API: ${Build.VERSION.SDK_INT}")
         }
     }
 
@@ -141,7 +144,7 @@ internal class MainActivity : ComponentActivity() {
         }
         createFileIntent.putExtra(Intent.EXTRA_TITLE, defaultFileName)
         createFileIntent.type = MIME_JSON
-        startActivityForResult(createFileIntent, EXPORT_PLAYLIST_CODE)
+        startActivityForResult(createFileIntent, EXPORT_ALL_PLAYLISTS_CODE)
     }
 
     fun openFileToImportPlaylists() {
@@ -167,24 +170,33 @@ internal class MainActivity : ComponentActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_OK) {
             when (requestCode) {
-                EXPORT_PLAYLIST_CODE, EXPORT_LOGS_CODE -> {
-                    data?.data?.also {
-                        if (it.path == null) {
+                EXPORT_PLAYLIST_CODE, EXPORT_ALL_PLAYLISTS_CODE, EXPORT_LOGS_CODE -> {
+                    data?.data?.also { uri: Uri ->
+                        if (uri.path == null) {
                             showToastOnUiThread(
                                 context = this,
                                 message = this.getString(R.string.no_file_created)
                             )
                         }
 
-                        if (requestCode == EXPORT_PLAYLIST_CODE) {
-                            CoroutineScope(Dispatchers.IO).launch {
-                                DatabaseManager.getInstance().exportPlaylists(
-                                    context = this@MainActivity.applicationContext,
-                                    uri = it
-                                )
-                            }
+                        if (requestCode == EXPORT_LOGS_CODE) {
+                            _logger.exportLogs(context = this, uri = uri)
                         } else {
-                            logger.exportLogs(context = this, uri = it)
+                            CoroutineScope(Dispatchers.IO).launch {
+                                if (requestCode == EXPORT_ALL_PLAYLISTS_CODE) {
+                                    DatabaseManager.getInstance().exportPlaylists(
+                                        context = this@MainActivity.applicationContext,
+                                        uri = uri
+                                    )
+                                } else {
+                                    DatabaseManager.getInstance().exportPlaylist(
+                                        context = applicationContext,
+                                        uri = uri,
+                                        playlist = _playlistToExport!!
+                                    )
+                                    _playlistToExport = null
+                                }
+                            }
                         }
                     }
                 }
@@ -204,5 +216,15 @@ internal class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    fun createFileToExportPlaylist(
+        defaultFileName: String,
+        playlist: Playlist
+    ) {
+        _playlistToExport = playlist
+        createFileIntent.putExtra(Intent.EXTRA_TITLE, defaultFileName)
+        createFileIntent.type = MIME_JSON
+        startActivityForResult(createFileIntent, EXPORT_PLAYLIST_CODE)
     }
 }

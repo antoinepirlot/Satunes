@@ -267,8 +267,15 @@ class DatabaseManager private constructor(context: Context) {
         return this.playlistDao.getPlaylistsWithMusics()
     }
 
+    fun exportPlaylist(context: Context, uri: Uri, playlist: Playlist) {
+        val playlistWithMusics: PlaylistWithMusics =
+            this.playlistDao.getPlaylistWithMusics(playlistId = playlist.id)!!
+        val json: String = Json.encodeToString(playlistWithMusics)
+        exportJson(context = context, json = json, uri = uri)
+    }
+
     fun exportPlaylists(context: Context, uri: Uri) {
-        val playlistsWithMusics: List<PlaylistWithMusics> = _instance.getAllPlaylistWithMusics()
+        val playlistsWithMusics: List<PlaylistWithMusics> = this.getAllPlaylistWithMusics()
         val json: String = Json.encodeToString(playlistsWithMusics)
         exportJson(context = context, json = json, uri = uri)
     }

@@ -62,6 +62,7 @@ import androidx.compose.material.icons.rounded.Shuffle
 import androidx.compose.material.icons.rounded.SkipNext
 import androidx.compose.material.icons.rounded.SkipPrevious
 import androidx.compose.material.icons.rounded.Update
+import androidx.compose.material.icons.rounded.Upload
 import androidx.compose.ui.graphics.vector.ImageVector
 
 /**
@@ -82,6 +83,7 @@ enum class SatunesIcons(val imageVector: ImageVector, val description: String) {
     BATTERY(imageVector = Icons.Rounded.BatterySaver, description = "Battery Icon"),
     BOTTOM_BAR(imageVector = Icons.Rounded.Navigation, description = "Bottom Bar Setting Icon"),
     CHIP_SELECTED(imageVector = Icons.Rounded.Done, description = "Chip Selected icon"),
+    EXPORT(imageVector = Icons.Rounded.Upload, description = "Export Icon"),
     INFO(imageVector = Icons.Rounded.Info, description = "Info Icon"),
     LIKED(imageVector = Icons.Rounded.Favorite, description = "Liked Icon"),
     FOLDER(imageVector = Icons.Rounded.Folder, description = "Folder Icon"),

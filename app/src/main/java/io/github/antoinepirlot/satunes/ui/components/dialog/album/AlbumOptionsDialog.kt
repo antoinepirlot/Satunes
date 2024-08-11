@@ -91,7 +91,7 @@ internal fun AlbumOptionsDialog(
                  * Redirections
                  */
                 NavigateToMediaMusicOption(
-                    mediaImpl = album.artist!!,
+                    mediaImpl = album.artist,
                     navController = navController
                 )
             }

@@ -182,4 +182,14 @@ internal class Playlist(musicSet: Set<Music>) {
         return this.originalMusicMediaItemMap[music] != null
     }
 
+    /**
+     * Removes music from queue and returns its old index position.
+     *
+     * @return old index or -1 if the music has not been found.
+     */
+    fun removeFromQueue(music: Music): Int {
+        val oldIndex: Int = this.getMusicIndex(music = music)
+        this.musicList.remove(element = music)
+        return oldIndex
+    }
 }

@@ -386,6 +386,43 @@ internal class PlaybackController private constructor(
         }
     }
 
+    fun removeFromQueue(mediaImplList: Collection<MediaImpl>) {
+        mediaImplList.forEach { mediaImpl: MediaImpl ->
+            removeFromQueue(mediaImpl = mediaImpl)
+        }
+    }
+
+    fun removeFromQueue(mediaImpl: MediaImpl) {
+        when (mediaImpl) {
+            is Music -> {
+                val musicIndex: Int = this.playlist.removeFromQueue(music = mediaImpl)
+                if (musicIndex >= 0) {
+                    this.mediaController.removeMediaItem(musicIndex)
+                    updateHasNext()
+                    updateHasPrevious()
+                }
+            }
+
+            is Folder -> removeFromQueue(mediaImplList = mediaImpl.getAllMusic().reversed())
+
+            else -> {
+                removeFromQueue(mediaImplList = mediaImpl.getMusicSet().reversed())
+            }
+        }
+    }
+
+    private fun updateHasNext() {
+        if (this.mediaController.currentMediaItemIndex == this.mediaController.mediaItemCount - 1) {
+            hasNext = false
+        }
+    }
+
+    private fun updateHasPrevious() {
+        if (this.mediaController.currentMediaItemIndex == 0) {
+            hasPrevious = false
+        }
+    }
+
     private fun addNext(mediaImplList: Collection<MediaImpl>) {
         CoroutineScope(Dispatchers.Main).launch {
             mediaImplList.forEach { mediaImpl: MediaImpl ->

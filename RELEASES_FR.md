@@ -1,6 +1,25 @@
 # Versions (🇫🇷)
 You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
+## 2.1 (Android 5.1.1 Lollipop et ultérieur)
+
+### 2.1.0
+
+Nouvelles fonctionnalités:
+
+* Il est désormais possible d'inclure/exclure des chemins
+* Exporter une seule playlist est de retour
+* Supprimer un média de la file d'attente
+* Lire ensuite et ajouter à la file d'attente pour tous les médias
+* Une fois que la ou les musiques ont été ajoutée(s) à la ou aux playlist(s), le snackBar dispose
+  d'une action d'annulation. De même, après l'annulation, tu peux annuler l'annulation mdr
+
+Améliorations, optimisations et dépannage:
+
+* L'utilisation de la RAM a été considérablement réduite, les illustrations sont chargées lorsque
+  cela est nécessaire
+* La lecture est plus stable lorsqu'elle est relachée
+
 ## 2.0 (Android 5.1.1 Lollipop et ultérieur)
 
 ### 2.0.1

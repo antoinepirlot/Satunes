@@ -45,7 +45,6 @@ import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.icons.R
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.utils.getRightIconAndDescription
 
 /**
@@ -111,13 +110,11 @@ internal fun MediaArtwork(
                     contentDescription = "Default Album Artwork"
                 )
             } else {
-                val mediaIcon: SatunesIcons = getRightIconAndDescription(media = mediaImpl)
-                androidx.compose.material3.Icon(
+                Icon(
                     modifier = Modifier
                         .size(30.dp)
                         .align(Alignment.Center),
-                    imageVector = mediaIcon.imageVector,
-                    contentDescription = mediaIcon.description
+                    icon = getRightIconAndDescription(media = mediaImpl)
                 )
             }
         }

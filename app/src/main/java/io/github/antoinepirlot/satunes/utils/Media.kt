@@ -36,8 +36,8 @@ import io.github.antoinepirlot.satunes.database.models.Playlist
  * @author Antoine Pirlot on 11/08/2024
  */
 
-fun getMediaTitle(mediaImpl: MediaImpl) {
-    val title: String = when (mediaImpl) {
+fun getMediaTitle(mediaImpl: MediaImpl): String {
+    return when (mediaImpl) {
         is Playlist -> {
             if (mediaImpl.title == LIKES_PLAYLIST_TITLE) {
                 MainActivity.instance.getString(R.string.likes_playlist_title)

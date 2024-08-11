@@ -33,6 +33,8 @@ import android.net.Uri
 import android.net.Uri.encode
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.media3.common.MediaItem
@@ -84,7 +86,7 @@ class Music(
         artist.addMusic(music = this)
         genre.addMusic(music = this)
         folder.addMusic(music = this)
-        loadAlbumArtwork(context = context)
+//        loadAlbumArtwork(context = context)
     }
 
     fun switchLike(context: Context) {
@@ -153,6 +155,18 @@ class Music(
                 artwork = null
             }
         }
+    }
+
+    fun getAlbumArtwork(context: Context): ImageBitmap? {
+        val mediaMetadataRetriever = MediaMetadataRetriever()
+        mediaMetadataRetriever.setDataSource(context, uri)
+        val artwork: ByteArray? = mediaMetadataRetriever.embeddedPicture
+        mediaMetadataRetriever.release()
+        return if (artwork == null) {
+            null
+        } else {
+            BitmapFactory.decodeByteArray(artwork, 0, artwork.size)
+        }?.asImageBitmap()
     }
 
     override fun equals(other: Any?): Boolean {

@@ -33,8 +33,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -46,6 +47,8 @@ import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.icons.R
+import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import io.github.antoinepirlot.satunes.ui.utils.getRightIconAndDescription
 
 /**
  * @author Antoine Pirlot on 29/02/24
@@ -88,18 +91,37 @@ internal fun AlbumArtwork(
         modifier = clickableModifier,
         contentAlignment = contentAlignment
     ) {
-        if (mediaImpl.artwork != null) {
+        val artwork: ImageBitmap? = when (mediaImpl) {
+            is Music -> mediaImpl.getAlbumArtwork(context = LocalContext.current)
+            is Album -> mediaImpl.getMusicSet().first()
+                .getAlbumArtwork(context = LocalContext.current)
+
+            else -> null
+        }
+
+        if (artwork != null) {
             Image(
                 modifier = Modifier.fillMaxSize(),
-                bitmap = mediaImpl.artwork!!.asImageBitmap(),
-                contentDescription = "Music Playing Album Artwork"
+                bitmap = artwork,
+                contentDescription = "Music Album Artwork"
             )
         } else {
-            Image(
-                modifier = Modifier.fillMaxSize(),
-                painter = painterResource(id = R.mipmap.empty_album_artwork_foreground),
-                contentDescription = "Default Album Artwork"
-            )
+            if (mediaImpl is Music || mediaImpl is Album) {
+                Image(
+                    modifier = Modifier.fillMaxSize(),
+                    painter = painterResource(id = R.mipmap.empty_album_artwork_foreground),
+                    contentDescription = "Default Album Artwork"
+                )
+            } else {
+                val mediaIcon: SatunesIcons = getRightIconAndDescription(media = mediaImpl)
+                androidx.compose.material3.Icon(
+                    modifier = Modifier
+                        .size(30.dp)
+                        .align(Alignment.Center),
+                    imageVector = mediaIcon.imageVector,
+                    contentDescription = mediaIcon.description
+                )
+            }
         }
     }
 }

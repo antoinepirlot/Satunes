@@ -26,13 +26,11 @@
 package io.github.antoinepirlot.satunes.ui.components.cards.media
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -43,8 +41,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
@@ -53,8 +49,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.core.content.res.ResourcesCompat
-import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -71,7 +65,6 @@ import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
-import io.github.antoinepirlot.satunes.icons.R
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.cards.ListItem
 import io.github.antoinepirlot.satunes.ui.components.dialog.album.AlbumOptionsDialog
@@ -80,6 +73,7 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.folder.FolderOptions
 import io.github.antoinepirlot.satunes.ui.components.dialog.genre.GenreOptionsDialog
 import io.github.antoinepirlot.satunes.ui.components.dialog.music.MusicOptionsDialog
 import io.github.antoinepirlot.satunes.ui.components.dialog.playlist.PlaylistOptionsDialog
+import io.github.antoinepirlot.satunes.ui.components.images.MediaArtwork
 import io.github.antoinepirlot.satunes.ui.utils.getRootFolderName
 import io.github.antoinepirlot.satunes.database.R as RDb
 
@@ -146,33 +140,7 @@ internal fun MediaCard(
                             contentDescription = playingIcon.description
                         )
                     } else {
-                        if (media.artwork != null) {
-                            Image(
-                                modifier = imageModifier,
-                                bitmap = media.artwork!!.asImageBitmap(),
-                                contentDescription = "Media Artwork"
-                            )
-                        } else {
-                            if (media is Music || media is Album) {
-                                //Use it will prevent slow devices showing icon instead of artwork
-                                val emptyArtwork: ImageBitmap = ResourcesCompat.getDrawable(
-                                    LocalContext.current.resources,
-                                    R.mipmap.empty_album_artwork_foreground,
-                                    null
-                                )?.toBitmap()!!.asImageBitmap()
-                                Image(bitmap = emptyArtwork, contentDescription = "Empty Album")
-                            } else {
-                                val mediaIcon: SatunesIcons =
-                                    getRightIconAndDescription(media = media)
-                                Icon(
-                                    modifier = Modifier
-                                        .size(30.dp)
-                                        .align(Alignment.Center),
-                                    imageVector = mediaIcon.imageVector,
-                                    contentDescription = mediaIcon.description
-                                )
-                            }
-                        }
+                        MediaArtwork(mediaImpl = media)
                     }
                 }
             },
@@ -270,17 +238,6 @@ internal fun MediaCard(
                 satunesViewModel.mediaOptionsIsClosed()
             },
         )
-    }
-}
-
-private fun getRightIconAndDescription(media: MediaImpl): SatunesIcons {
-    return when (media) {
-        is Folder -> SatunesIcons.FOLDER
-        is Artist -> SatunesIcons.ARTIST
-        is Album -> SatunesIcons.ALBUM
-        is Genre -> SatunesIcons.GENRES
-        is Playlist -> SatunesIcons.PLAYLIST
-        else -> SatunesIcons.MUSIC // In that case, mediaImpl is Music
     }
 }
 

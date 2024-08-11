@@ -57,7 +57,7 @@ import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
-import io.github.antoinepirlot.satunes.ui.components.images.AlbumArtwork
+import io.github.antoinepirlot.satunes.ui.components.images.MediaArtwork
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 
 /**
@@ -143,7 +143,7 @@ private fun Header(
         else if (screenWidthDp < ScreenSizes.VERY_SMALL)
             170.dp
         else 250.dp
-        AlbumArtwork(
+        MediaArtwork(
             modifier = Modifier
                 .fillMaxWidth()
                 .size(albumSize),

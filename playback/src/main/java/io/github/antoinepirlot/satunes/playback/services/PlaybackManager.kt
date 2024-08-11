@@ -38,6 +38,7 @@ import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
+import io.github.antoinepirlot.satunes.playback.models.Playlist
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController.Companion.DEFAULT_CURRENT_POSITION_PROGRESSION
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController.Companion.DEFAULT_HAS_NEXT
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController.Companion.DEFAULT_HAS_PREVIOUS
@@ -54,6 +55,8 @@ import io.github.antoinepirlot.satunes.playback.services.PlaybackController.Comp
 object PlaybackManager {
 
     private var _playbackController: PlaybackController? = null
+
+    internal lateinit var playlist: Playlist
 
     var isEnded: MutableState<Boolean> = mutableStateOf(DEFAULT_IS_ENDED)
 
@@ -90,8 +93,13 @@ object PlaybackManager {
         this.initPlayback(context = context)
         if (!DataLoader.isLoaded.value && !DataLoader.isLoading.value) {
             DataLoader.loadAllData(context = context)
+        } else {
+            if (this::playlist.isInitialized) {
+                this._playbackController!!.loadMusics(playlist = playlist)
+                return
+            }
         }
-        this._playbackController!!.loadMusic(musicSet = DataManager.getMusicSet())
+        this._playbackController!!.loadMusics(musicSet = DataManager.getMusicSet())
     }
 
     private fun checkPlaybackController(context: Context, loadAllMusic: Boolean = true) {
@@ -187,11 +195,12 @@ object PlaybackManager {
         musicToPlay: Music? = null,
     ) {
         checkPlaybackController(context = context, loadAllMusic = false)
-        this._playbackController!!.loadMusic(
+        this._playbackController!!.loadMusics(
             musicSet = musicSet,
             shuffleMode = shuffleMode,
             musicToPlay = musicToPlay
         )
+        this.playlist = this._playbackController!!.playlist
     }
 
     fun addToQueue(context: Context, mediaImplList: Collection<MediaImpl>) {
@@ -219,11 +228,11 @@ object PlaybackManager {
         this._playbackController!!.switchRepeatMode()
     }
 
-    fun stop(context: Context) {
+    fun stop() {
         this._playbackController?.stop()
     }
 
-    fun release(context: Context) {
+    fun release() {
         this._playbackController?.release()
         this._playbackController = null
     }

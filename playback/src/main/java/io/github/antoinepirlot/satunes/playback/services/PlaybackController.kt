@@ -324,19 +324,25 @@ internal class PlaybackController private constructor(
      * @param musicToPlay the music to play
      *
      */
-    fun loadMusic(
+    fun loadMusics(
         musicSet: Set<Music>,
         shuffleMode: Boolean = SettingsManager.shuffleMode,
         musicToPlay: Music? = null,
     ) {
-        this.playlist = Playlist(musicSet = musicSet)
+        val playlist = Playlist(musicSet = musicSet)
         if (shuffleMode) {
             if (musicToPlay == null) {
-                this.playlist.shuffle()
+                playlist.shuffle()
             } else {
-                this.playlist.shuffle(musicIndex = this.playlist.getMusicIndex(music = musicToPlay))
+                playlist.shuffle(musicIndex = playlist.getMusicIndex(music = musicToPlay))
             }
         }
+        this.loadMusics(playlist = playlist)
+    }
+
+    fun loadMusics(playlist: Playlist) {
+        this.playlist = playlist
+
         this.mediaController.clearMediaItems()
         this.mediaController.addMediaItems(this.playlist.mediaItemList)
         this.mediaController.removeListener(listener)
@@ -348,8 +354,8 @@ internal class PlaybackController private constructor(
         }
         this.mediaController.prepare()
 
+        this.isShuffle = this.playlist.isShuffle
         this.isLoaded = true
-        this.isShuffle = shuffleMode
     }
 
     fun addToQueue(mediaImplList: Collection<MediaImpl>) {

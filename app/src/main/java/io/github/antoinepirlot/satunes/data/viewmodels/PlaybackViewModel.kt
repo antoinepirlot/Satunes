@@ -257,7 +257,7 @@ class PlaybackViewModel : ViewModel() {
     }
 
     fun release() {
-        PlaybackManager.release(context = MainActivity.instance.applicationContext)
+        PlaybackManager.release()
         onCleared()
     }
 }

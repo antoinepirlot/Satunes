@@ -228,11 +228,11 @@ object PlaybackManager {
         this._playbackController!!.switchRepeatMode()
     }
 
-    fun stop(context: Context) {
+    fun stop() {
         this._playbackController?.stop()
     }
 
-    fun release(context: Context) {
+    fun release() {
         this._playbackController?.release()
         this._playbackController = null
     }

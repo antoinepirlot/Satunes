@@ -96,6 +96,15 @@ internal fun PlaylistListView(
             },
             extraButtons = {
                 ExtraButton(
+                    icon = SatunesIcons.EXPORT,
+                    onClick = {
+                        dataViewModel.exportPlaylists(
+                            scope = scope,
+                            snackBarHostState = snackBarHostState
+                        )
+                    }
+                )
+                ExtraButton(
                     icon = SatunesIcons.IMPORT,
                     onClick = { dataViewModel.importPlaylists() }
                 )

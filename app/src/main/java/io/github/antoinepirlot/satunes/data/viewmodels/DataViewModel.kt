@@ -595,4 +595,19 @@ class DataViewModel : ViewModel() {
             playlist = playlist
         )
     }
+
+    fun exportPlaylists(
+        scope: CoroutineScope,
+        snackBarHostState: SnackbarHostState,
+    ) {
+        if (DataManager.getPlaylistSet().isEmpty()) {
+            showSnackBar(
+                scope = scope,
+                snackBarHostState = snackBarHostState,
+                message = MainActivity.instance.getString(RDb.string.no_playlist)
+            )
+            return
+        }
+        MainActivity.instance.createFileToExportPlaylists(defaultFileName = "Satunes")
+    }
 }

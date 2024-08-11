@@ -46,7 +46,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.jetpack_libs.components.texts.Title
-import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.local.LocalMainScope
 import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
@@ -81,11 +80,7 @@ internal fun PlaylistsSettingsView(
         )
         Row {
             Button(onClick = {
-                MainActivity.instance.createFileToExportPlaylists(
-                    scope = scope,
-                    snackBarHostState = snackBarHostState,
-                    defaultFileName = "Satunes"
-                )
+                dataViewModel.exportPlaylists(scope = scope, snackBarHostState = snackBarHostState)
             }) {
                 Text(text = stringResource(id = R.string.export_all))
             }

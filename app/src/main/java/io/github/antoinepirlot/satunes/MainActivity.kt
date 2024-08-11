@@ -35,24 +35,20 @@ import android.provider.DocumentsContract
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.OptIn
-import androidx.compose.material3.SnackbarHostState
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.session.MediaController
 import com.google.common.util.concurrent.ListenableFuture
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.database.services.data.DataCleanerManager
-import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
 import io.github.antoinepirlot.satunes.playback.services.PlaybackService
-import io.github.antoinepirlot.satunes.ui.utils.showSnackBar
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import io.github.antoinepirlot.satunes.utils.utils.showToastOnUiThread
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import io.github.antoinepirlot.satunes.database.R as RDb
 
 /**
  * @author Antoine Pirlot on 18/01/24
@@ -127,21 +123,7 @@ internal class MainActivity : ComponentActivity() {
         }
     }
 
-    //TODO find a way to move it to database module, no solution found instead of here
-    // No enough knowledge about Activity
-    fun createFileToExportPlaylists(
-        scope: CoroutineScope,
-        snackBarHostState: SnackbarHostState,
-        defaultFileName: String
-    ) {
-        if (DataManager.getPlaylistSet().isEmpty()) {
-            showSnackBar(
-                scope = scope,
-                snackBarHostState = snackBarHostState,
-                message = this.getString(RDb.string.no_playlist)
-            )
-            return
-        }
+    fun createFileToExportPlaylists(defaultFileName: String) {
         createFileIntent.putExtra(Intent.EXTRA_TITLE, defaultFileName)
         createFileIntent.type = MIME_JSON
         startActivityForResult(createFileIntent, EXPORT_ALL_PLAYLISTS_CODE)

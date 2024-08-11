@@ -40,6 +40,7 @@ import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToPlaylistMediaOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToQueueDialogOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.PlayNextMediaOption
+import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.RemoveFromQueueOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.music.options.LikeUnlikeMusicOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.music.options.NavigateToMediaMusicOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.music.options.RemoveFromPlaylistMusicOption
@@ -90,6 +91,11 @@ internal fun MusicOptionsDialog(
                         PlayNextMediaOption(mediaImpl = music, onDismissRequest = onDismissRequest)
                         if (!playbackViewModel.isMusicInQueue(music = music)) {
                             AddToQueueDialogOption(
+                                mediaImpl = music,
+                                onDismissRequest = onDismissRequest
+                            )
+                        } else {
+                            RemoveFromQueueOption(
                                 mediaImpl = music,
                                 onDismissRequest = onDismissRequest
                             )

@@ -206,6 +206,38 @@ class PlaybackViewModel : ViewModel() {
         }
     }
 
+    fun removeFromQueue(
+        scope: CoroutineScope,
+        snackBarHostState: SnackbarHostState,
+        mediaImpl: MediaImpl
+    ) {
+        val context: Context = MainActivity.instance.applicationContext
+        try {
+            PlaybackManager.removeFromQueue(
+                context = MainActivity.instance.applicationContext,
+                mediaImpl = mediaImpl
+            )
+            showSnackBar(
+                scope = scope,
+                snackBarHostState = snackBarHostState,
+                message = context.getString(R.string.remove_from_queue_success, mediaImpl.title),
+            )
+        } catch (e: Throwable) {
+            _logger.warning(e.message)
+            showErrorSnackBar(
+                scope = scope,
+                snackBarHostState = snackBarHostState,
+                action = {
+                    removeFromQueue(
+                        scope = scope,
+                        snackBarHostState = snackBarHostState,
+                        mediaImpl = mediaImpl
+                    )
+                }
+            )
+        }
+    }
+
     fun addNext(
         scope: CoroutineScope,
         snackBarHostState: SnackbarHostState,

@@ -54,6 +54,7 @@ import androidx.compose.material.icons.rounded.PlayCircle
 import androidx.compose.material.icons.rounded.PlaylistRemove
 import androidx.compose.material.icons.rounded.QueuePlayNext
 import androidx.compose.material.icons.rounded.Refresh
+import androidx.compose.material.icons.rounded.RemoveFromQueue
 import androidx.compose.material.icons.rounded.Repeat
 import androidx.compose.material.icons.rounded.RepeatOne
 import androidx.compose.material.icons.rounded.Search
@@ -129,5 +130,9 @@ enum class SatunesIcons(val imageVector: ImageVector, val description: String) {
     SKIP_PREVIOUS(imageVector = Icons.Rounded.SkipPrevious, description = "Skip Previous Icon"),
     UNLIKED(imageVector = Icons.Rounded.FavoriteBorder, description = "Unliked Icon"),
     REFRESH(imageVector = Icons.Rounded.Refresh, description = "Refresh Icon"),
+    REMOVE_FROM_QUEUE(
+        imageVector = Icons.Rounded.RemoveFromQueue,
+        description = "Remove from queue Icon"
+    ),
     REMOVE_ICON(imageVector = Icons.Rounded.Delete, description = "Remove Icon"),
 }

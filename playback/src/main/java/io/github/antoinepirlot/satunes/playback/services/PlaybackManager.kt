@@ -213,6 +213,16 @@ object PlaybackManager {
         this._playbackController!!.addToQueue(mediaImpl = mediaImpl)
     }
 
+    fun removeFromQueue(context: Context, mediaImplList: Collection<MediaImpl>) {
+        checkPlaybackController(context = context)
+        this._playbackController!!.removeFromQueue(mediaImplList = mediaImplList)
+    }
+
+    fun removeFromQueue(context: Context, mediaImpl: MediaImpl) {
+        checkPlaybackController(context = context)
+        this._playbackController!!.removeFromQueue(mediaImpl = mediaImpl)
+    }
+
     fun addNext(context: Context, mediaImpl: MediaImpl) {
         checkPlaybackController(context = context)
         this._playbackController!!.addNext(mediaImpl = mediaImpl)

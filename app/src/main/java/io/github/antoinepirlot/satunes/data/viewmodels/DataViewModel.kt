@@ -587,9 +587,9 @@ class DataViewModel : ViewModel() {
         }
     }
 
-    fun exportPlaylist(
-        playlist: Playlist
-    ) {
+    fun importPlaylists() = MainActivity.instance.openFileToImportPlaylists()
+
+    fun exportPlaylist(playlist: Playlist) {
         MainActivity.instance.createFileToExportPlaylist(
             defaultFileName = playlist.title,
             playlist = playlist

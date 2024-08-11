@@ -39,6 +39,7 @@ import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.DirectionsCar
 import androidx.compose.material.icons.rounded.Done
+import androidx.compose.material.icons.rounded.Download
 import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material.icons.rounded.FavoriteBorder
 import androidx.compose.material.icons.rounded.Folder
@@ -84,6 +85,7 @@ enum class SatunesIcons(val imageVector: ImageVector, val description: String) {
     BOTTOM_BAR(imageVector = Icons.Rounded.Navigation, description = "Bottom Bar Setting Icon"),
     CHIP_SELECTED(imageVector = Icons.Rounded.Done, description = "Chip Selected icon"),
     EXPORT(imageVector = Icons.Rounded.Upload, description = "Export Icon"),
+    IMPORT(imageVector = Icons.Rounded.Download, description = "Import Icon"),
     INFO(imageVector = Icons.Rounded.Info, description = "Info Icon"),
     LIKED(imageVector = Icons.Rounded.Favorite, description = "Liked Icon"),
     FOLDER(imageVector = Icons.Rounded.Folder, description = "Folder Icon"),

@@ -43,12 +43,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.jetpack_libs.components.texts.Title
 import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.local.LocalMainScope
 import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
+import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import kotlinx.coroutines.CoroutineScope
 import io.github.antoinepirlot.satunes.database.R as RDb
 
@@ -59,6 +61,7 @@ import io.github.antoinepirlot.satunes.database.R as RDb
 @Composable
 internal fun PlaylistsSettingsView(
     modifier: Modifier = Modifier,
+    dataViewModel: DataViewModel = viewModel(),
 ) {
     val scope: CoroutineScope = LocalMainScope.current
     val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
@@ -87,7 +90,7 @@ internal fun PlaylistsSettingsView(
                 Text(text = stringResource(id = R.string.export_all))
             }
             Spacer(modifier = Modifier.size(16.dp))
-            Button(onClick = { MainActivity.instance.openFileToImportPlaylists() }) {
+            Button(onClick = { dataViewModel.importPlaylists() }) {
                 Text(text = stringResource(id = R.string._import))
             }
         }

@@ -38,6 +38,7 @@ import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
+import io.github.antoinepirlot.satunes.playback.models.Playlist
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController.Companion.DEFAULT_CURRENT_POSITION_PROGRESSION
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController.Companion.DEFAULT_HAS_NEXT
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController.Companion.DEFAULT_HAS_PREVIOUS
@@ -54,6 +55,8 @@ import io.github.antoinepirlot.satunes.playback.services.PlaybackController.Comp
 object PlaybackManager {
 
     private var _playbackController: PlaybackController? = null
+
+    internal lateinit var playlist: Playlist
 
     var isEnded: MutableState<Boolean> = mutableStateOf(DEFAULT_IS_ENDED)
 
@@ -90,6 +93,11 @@ object PlaybackManager {
         this.initPlayback(context = context)
         if (!DataLoader.isLoaded.value && !DataLoader.isLoading.value) {
             DataLoader.loadAllData(context = context)
+        } else {
+            if (this::playlist.isInitialized) {
+                this._playbackController!!.loadMusic(playlist = playlist)
+                return
+            }
         }
         this._playbackController!!.loadMusic(musicSet = DataManager.getMusicSet())
     }
@@ -192,6 +200,7 @@ object PlaybackManager {
             shuffleMode = shuffleMode,
             musicToPlay = musicToPlay
         )
+        this.playlist = this._playbackController!!.playlist
     }
 
     fun addToQueue(context: Context, mediaImplList: Collection<MediaImpl>) {

@@ -126,6 +126,5 @@ private fun insertMediaToPlaylist(
             musics = musicList,
             playlists = mediaSelectionViewModel.getCheckedPlaylistWithMusics()
         )
-
     }
 }

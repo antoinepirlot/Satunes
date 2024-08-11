@@ -45,6 +45,7 @@ import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.local.LocalMainScope
 import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
@@ -63,6 +64,7 @@ import io.github.antoinepirlot.satunes.database.R as RDb
 @Composable
 internal fun PlaylistOptionsDialog(
     modifier: Modifier = Modifier,
+    playbackViewModel: PlaybackViewModel = viewModel(),
     dataViewModel: DataViewModel = viewModel(),
     playlist: Playlist,
     onDismissRequest: () -> Unit,
@@ -104,9 +106,14 @@ internal fun PlaylistOptionsDialog(
                     playlistToRemove = playlist,
                     onDismissRequest = onDismissRequest
                 )
-                PlayNextMediaOption(mediaImpl = playlist, onDismissRequest = onDismissRequest)
-                AddToQueueDialogOption(mediaImpl = playlist, onDismissRequest = onDismissRequest)
-                RemoveFromQueueOption(mediaImpl = playlist, onDismissRequest = onDismissRequest)
+                if (playbackViewModel.isLoaded) {
+                    PlayNextMediaOption(mediaImpl = playlist, onDismissRequest = onDismissRequest)
+                    AddToQueueDialogOption(
+                        mediaImpl = playlist,
+                        onDismissRequest = onDismissRequest
+                    )
+                    RemoveFromQueueOption(mediaImpl = playlist, onDismissRequest = onDismissRequest)
+                }
             }
         },
         onDismissRequest = onDismissRequest,

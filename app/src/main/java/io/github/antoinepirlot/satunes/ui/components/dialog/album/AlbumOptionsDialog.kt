@@ -83,15 +83,15 @@ internal fun AlbumOptionsDialog(
                  * Queue
                  */
                 if (playbackViewModel.isLoaded) {
-                    PlayNextMediaOption(mediaImpl = album, onFinished = onDismissRequest)
-                    AddToQueueDialogOption(mediaImpl = album, onFinished = onDismissRequest)
+                    PlayNextMediaOption(mediaImpl = album, onDismissRequest = onDismissRequest)
+                    AddToQueueDialogOption(mediaImpl = album, onDismissRequest = onDismissRequest)
                 }
 
                 /**
                  * Redirections
                  */
                 NavigateToMediaMusicOption(
-                    mediaImpl = album.artist!!,
+                    mediaImpl = album.artist,
                     navController = navController
                 )
             }

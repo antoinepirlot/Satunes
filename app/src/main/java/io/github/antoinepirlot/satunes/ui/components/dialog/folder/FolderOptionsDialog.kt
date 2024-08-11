@@ -81,8 +81,8 @@ internal fun FolderOptionsDialog(
                  * Playback
                  */
                 if (playbackViewModel.isLoaded) {
-                    PlayNextMediaOption(mediaImpl = folder, onFinished = onDismissRequest)
-                    AddToQueueDialogOption(mediaImpl = folder, onFinished = onDismissRequest)
+                    PlayNextMediaOption(mediaImpl = folder, onDismissRequest = onDismissRequest)
+                    AddToQueueDialogOption(mediaImpl = folder, onDismissRequest = onDismissRequest)
                 }
             }
         }

@@ -48,6 +48,8 @@ import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToQueueDialogOption
+import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.PlayNextMediaOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.playlist.options.RemovePlaylistOption
 import kotlinx.coroutines.CoroutineScope
 import io.github.antoinepirlot.satunes.database.R as RDb
@@ -99,6 +101,8 @@ internal fun PlaylistOptionsDialog(
                     playlistToRemove = playlist,
                     onDismissRequest = onDismissRequest
                 )
+                PlayNextMediaOption(mediaImpl = playlist, onDismissRequest = onDismissRequest)
+                AddToQueueDialogOption(mediaImpl = playlist, onDismissRequest = onDismissRequest)
             }
         },
         onDismissRequest = onDismissRequest,

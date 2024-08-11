@@ -73,8 +73,8 @@ internal fun ArtistOptionsDialog(
                  * Playback
                  */
                 if (playbackViewModel.isLoaded) {
-                    PlayNextMediaOption(mediaImpl = artist, onFinished = onDismissRequest)
-                    AddToQueueDialogOption(mediaImpl = artist, onFinished = onDismissRequest)
+                    PlayNextMediaOption(mediaImpl = artist, onDismissRequest = onDismissRequest)
+                    AddToQueueDialogOption(mediaImpl = artist, onDismissRequest = onDismissRequest)
                 }
             }
         }

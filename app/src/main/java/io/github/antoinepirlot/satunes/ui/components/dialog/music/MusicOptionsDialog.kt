@@ -87,9 +87,12 @@ internal fun MusicOptionsDialog(
 
                 if (isPlaybackLoaded) {
                     if (music != musicPlaying) {
-                        PlayNextMediaOption(mediaImpl = music, onFinished = onDismissRequest)
+                        PlayNextMediaOption(mediaImpl = music, onDismissRequest = onDismissRequest)
                         if (!playbackViewModel.isMusicInQueue(music = music)) {
-                            AddToQueueDialogOption(mediaImpl = music, onFinished = onDismissRequest)
+                            AddToQueueDialogOption(
+                                mediaImpl = music,
+                                onDismissRequest = onDismissRequest
+                            )
                         }
                     }
                 }

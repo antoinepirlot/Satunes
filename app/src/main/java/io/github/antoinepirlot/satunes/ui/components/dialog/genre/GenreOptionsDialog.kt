@@ -73,8 +73,8 @@ internal fun GenreOptionsDialog(
                  * Playback
                  */
                 if (playbackViewModel.isLoaded) {
-                    PlayNextMediaOption(mediaImpl = genre, onFinished = onDismissRequest)
-                    AddToQueueDialogOption(mediaImpl = genre, onFinished = onDismissRequest)
+                    PlayNextMediaOption(mediaImpl = genre, onDismissRequest = onDismissRequest)
+                    AddToQueueDialogOption(mediaImpl = genre, onDismissRequest = onDismissRequest)
                 }
             }
         }

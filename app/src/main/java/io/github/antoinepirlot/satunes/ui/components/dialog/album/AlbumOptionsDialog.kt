@@ -43,7 +43,7 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToP
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToQueueDialogOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.PlayNextMediaOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.music.options.NavigateToMediaMusicOption
-import io.github.antoinepirlot.satunes.ui.components.images.AlbumArtwork
+import io.github.antoinepirlot.satunes.ui.components.images.MediaArtwork
 
 /**
  * @author Antoine Pirlot on 07/07/2024
@@ -64,7 +64,7 @@ internal fun AlbumOptionsDialog(
         onDismissRequest = onDismissRequest,
         confirmButton = { /* Nothing */ },
         icon = {
-            AlbumArtwork(
+            MediaArtwork(
                 modifier = Modifier.size(100.dp),
                 mediaImpl = album
             )

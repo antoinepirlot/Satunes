@@ -39,9 +39,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.models.ScreenSizes
-import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
@@ -55,7 +53,7 @@ import io.github.antoinepirlot.satunes.ui.utils.getRightIconAndDescription
  */
 
 @Composable
-internal fun AlbumArtwork(
+internal fun MediaArtwork(
     modifier: Modifier = Modifier,
     mediaImpl: MediaImpl,
     onClick: ((album: Album?) -> Unit)? = null,
@@ -127,20 +125,7 @@ internal fun AlbumArtwork(
 }
 
 @Composable
-internal fun MusicPlayingAlbumArtwork(
-    modifier: Modifier = Modifier,
-    playbackViewModel: PlaybackViewModel = viewModel(),
-    onClick: (album: Album?) -> Unit = { /* Do nothing by default */ }
-) {
-    AlbumArtwork(
-        modifier = modifier,
-        mediaImpl = playbackViewModel.musicPlaying!!,
-        onClick = onClick
-    )
-}
-
-@Composable
 @Preview
 private fun AlbumArtworkPreview() {
-    AlbumArtwork(mediaImpl = Album(title = "", artist = Artist(title = "Artist Title")))
+    MediaArtwork(mediaImpl = Album(title = "", artist = Artist(title = "Artist Title")))
 }

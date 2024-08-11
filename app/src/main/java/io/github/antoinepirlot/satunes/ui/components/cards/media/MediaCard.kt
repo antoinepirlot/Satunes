@@ -73,7 +73,7 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.folder.FolderOptions
 import io.github.antoinepirlot.satunes.ui.components.dialog.genre.GenreOptionsDialog
 import io.github.antoinepirlot.satunes.ui.components.dialog.music.MusicOptionsDialog
 import io.github.antoinepirlot.satunes.ui.components.dialog.playlist.PlaylistOptionsDialog
-import io.github.antoinepirlot.satunes.ui.components.images.AlbumArtwork
+import io.github.antoinepirlot.satunes.ui.components.images.MediaArtwork
 import io.github.antoinepirlot.satunes.ui.utils.getRootFolderName
 import io.github.antoinepirlot.satunes.database.R as RDb
 
@@ -140,7 +140,7 @@ internal fun MediaCard(
                             contentDescription = playingIcon.description
                         )
                     } else {
-                        AlbumArtwork(mediaImpl = media)
+                        MediaArtwork(mediaImpl = media)
                     }
                 }
             },

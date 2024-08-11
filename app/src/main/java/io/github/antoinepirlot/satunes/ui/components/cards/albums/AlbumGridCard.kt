@@ -45,7 +45,7 @@ import io.github.antoinepirlot.jetpack_libs.components.models.ScreenSizes
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
-import io.github.antoinepirlot.satunes.ui.components.images.AlbumArtwork
+import io.github.antoinepirlot.satunes.ui.components.images.MediaArtwork
 
 /**
  * @author Antoine Pirlot on 11/04/2024
@@ -81,7 +81,7 @@ internal fun AlbumGridCard(
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            AlbumArtwork(
+            MediaArtwork(
                 modifier.size(artworkSize),
                 mediaImpl = album,
                 onClick = onClick

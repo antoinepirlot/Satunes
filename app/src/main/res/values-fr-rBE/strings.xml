@@ -84,4 +84,7 @@
     <string name="add_path_button">Ajouter un nouveau chemin à %1$s</string>
     <string name="path_set_empty">Aucun chemin sélectionné</string>
     <string name="refresh_data_button">Recharger toutes les données</string>
+    <string name="remove_musics_from_playlist_success">Les musiques ont été supprimées de %1$s</string>
+    <string name="add_music_to_playlist_success">%1$s a été ajouté à %2$s</string>
+    <string name="add_musics_to_playlists_success">Les musiques ont été ajoutées aux playlists</string>
 </resources>

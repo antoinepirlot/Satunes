@@ -42,6 +42,7 @@ import io.github.antoinepirlot.satunes.models.ProgressBarLifecycleCallbacks
 import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
 import io.github.antoinepirlot.satunes.ui.utils.showErrorSnackBar
 import io.github.antoinepirlot.satunes.ui.utils.showSnackBar
+import io.github.antoinepirlot.satunes.utils.getMediaTitle
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import kotlinx.coroutines.CoroutineScope
 
@@ -220,7 +221,10 @@ class PlaybackViewModel : ViewModel() {
             showSnackBar(
                 scope = scope,
                 snackBarHostState = snackBarHostState,
-                message = context.getString(R.string.remove_from_queue_success, mediaImpl.title),
+                message = context.getString(
+                    R.string.remove_from_queue_success,
+                    getMediaTitle(mediaImpl = mediaImpl)
+                ),
             )
         } catch (e: Throwable) {
             _logger.warning(e.message)

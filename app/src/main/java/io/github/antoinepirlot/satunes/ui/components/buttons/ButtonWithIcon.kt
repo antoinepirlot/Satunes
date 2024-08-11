@@ -30,6 +30,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
@@ -41,6 +42,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.LoadingCircle
@@ -80,7 +82,7 @@ internal fun ButtonWithIcon(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             if (isLoading) {
-                LoadingCircle()
+                LoadingCircle(modifier = Modifier.size(20.dp))
             } else {
                 Icon(imageVector = icon.imageVector, contentDescription = icon.description)
                 NormalText(text = text)

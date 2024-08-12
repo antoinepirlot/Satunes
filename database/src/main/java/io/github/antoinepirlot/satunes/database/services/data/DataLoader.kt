@@ -37,6 +37,7 @@ import io.github.antoinepirlot.satunes.database.R
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Folder
+import io.github.antoinepirlot.satunes.database.models.FoldersSelection
 import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
@@ -77,7 +78,7 @@ object DataLoader {
     private const val UNKNOWN_ARTIST = "<unknown>"
     private const val UNKNOWN_ALBUM = "Unknown Album"
     private const val UNKNOWN_GENRE = "<unknown>"
-    private val EXTERNAL_STORAGE_PATH: File = Environment.getExternalStorageDirectory()
+    val EXTERNAL_STORAGE_PATH: File = Environment.getExternalStorageDirectory()
 
     private var projection: Array<String> = arrayOf(
         // AUDIO
@@ -97,34 +98,55 @@ object DataLoader {
         //GENRES is added in init function if SDK >= Android Red Velvet Cake
     )
 
-    private val selection: String = "${MediaStore.Audio.Media.DATA} LIKE ?" +
-            " OR ${MediaStore.Audio.Media.DATA} REGEXP ?" +
-            if (SettingsManager.includeRingtonesChecked) {
-                " OR ${MediaStore.Audio.Media.DATA} LIKE ?" +
-                        " OR ${MediaStore.Audio.Media.DATA} LIKE ?" +
-                        " OR ${MediaStore.Audio.Media.DATA} LIKE ?"
-            } else {
-                ""
-            }
+    private lateinit var selection: String //see loadFoldersPaths function
 
-    private var selection_args: Array<String> = arrayOf(
-        "$EXTERNAL_STORAGE_PATH/Music/%",
-        "^\\/storage\\/[^\\\\\\/]+\\/Music\\/.*\$" //^\/storage(\/emulated)?\/[^\\\/]+\/Music\/.*$ regex
-    )
+//    private const val selection: String =
+//        "${MediaStore.Audio.Media.DATA} LIKE ? OR ${MediaStore.Audio.Media.DATA} REGEXP ?"
+
+    private lateinit var selection_args: Array<String> //see loadFoldersPaths function
+
+//    private var selection_args: Array<String> = arrayOf(
+//        "$EXTERNAL_STORAGE_PATH/Music/%",
+//        "^\\/storage\\/[^\\\\\\/]+\\/Music\\/.*\$" //^\/storage(\/emulated)?\/[^\\\/]+\/Music\/.*$ regex
+//    )
 
     private val logger = SatunesLogger.getLogger()
 
     init {
-        if (SettingsManager.includeRingtonesChecked) {
-            selection_args += "$EXTERNAL_STORAGE_PATH/Android/%"
-            selection_args += "$EXTERNAL_STORAGE_PATH/Ringtones/%"
-            selection_args += "$EXTERNAL_STORAGE_PATH/Notifications/%"
-        }
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             //Genre
             projection += MediaStore.Audio.Media.GENRE
         }
+    }
+
+    /**
+     * Load folders path to include or exclude from Data query.
+     */
+    internal fun loadFoldersPaths() {
+        this.selection = ""
+        this.selection_args = arrayOf()
+
+        val foldersSelection: FoldersSelection = SettingsManager.foldersSelectionSelected
+        for (path: String in SettingsManager.foldersPathsSelectedSet.value) {
+            if (path != SettingsManager.foldersPathsSelectedSet.value.first()) {
+                this.selection += foldersSelection.andOrQueryAttribute + ' '
+            }
+            this.selection += "${MediaStore.Audio.Media.DATA} "
+            this.selection += "${foldersSelection.likeQueryAttribute} ? "
+
+            if (path.split("/")[1] == "0") {
+                this.selection_args += "/storage/emulated$path" // the first '/' is already in the path
+            } else {
+                this.selection_args += "/storage$path" // the first '/' is already in the path
+            }
+        }
+    }
+
+    fun resetAllData() {
+        if (isLoading.value) return
+        this.loadFoldersPaths()
+        DataManager.resetAllData()
+        isLoaded.value = false
     }
 
     /**
@@ -140,8 +162,8 @@ object DataLoader {
             context.contentResolver.query(
                 URI,
                 projection,
-                selection,
-                selection_args,
+                this@DataLoader.selection,
+                this@DataLoader.selection_args,
                 null
             )?.use {
                 loadColumns(cursor = it)

@@ -40,7 +40,7 @@ dependencies {
     /**
      * Base
      */
-    implementation("androidx.activity:activity-compose:1.9.0")
+    implementation("androidx.activity:activity-compose:1.9.1")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
@@ -48,13 +48,12 @@ dependencies {
     /**
      * Media
      */
-    val media3Version = "1.3.1"
+    val media3Version = "1.4.0"
 
     implementation("androidx.media3:media3-common:$media3Version")
     implementation("androidx.media3:media3-exoplayer:$media3Version")
     implementation("androidx.media3:media3-exoplayer-dash:$media3Version")
     implementation("androidx.media3:media3-session:$media3Version")
-    implementation("androidx.media3:media3-ui:$media3Version")
 
     /**
      * Database

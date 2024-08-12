@@ -46,8 +46,8 @@ open class PlaybackListener : Player.Listener {
         val playbackController: PlaybackController = PlaybackController.getInstance()
 
         if (playbackState == Player.STATE_ENDED) {
-            playbackController.isEnded.value = true
-            playbackController.currentPositionProgression.floatValue = 1f
+            playbackController.isEnded = true
+            playbackController.currentPositionProgression = 1f
         }
     }
 
@@ -57,15 +57,15 @@ open class PlaybackListener : Player.Listener {
 
     override fun onRepeatModeChanged(repeatMode: Int) {
         super.onRepeatModeChanged(repeatMode)
-        PlaybackController.getInstance().repeatMode.intValue = repeatMode
+        PlaybackController.getInstance().repeatMode = repeatMode
     }
 
     override fun onIsPlayingChanged(isPlaying: Boolean) {
         super.onIsPlayingChanged(isPlaying)
         val playbackController: PlaybackController = PlaybackController.getInstance()
 
-        playbackController.isPlaying.value = isPlaying
-        playbackController.isEnded.value = PlaybackController.DEFAULT_IS_ENDED
+        playbackController.isPlaying = isPlaying
+        playbackController.isEnded = PlaybackController.DEFAULT_IS_ENDED
     }
 
     /**
@@ -107,7 +107,7 @@ open class PlaybackListener : Player.Listener {
             val playbackController: PlaybackController = PlaybackController.getInstance()
             playbackController.musicPlayingIndex =
                 playbackController.mediaController.currentMediaItemIndex
-            playbackController.musicPlaying.value =
+            playbackController.musicPlaying =
                 playbackController.playlist.musicList[playbackController.musicPlayingIndex]
             updateHasNext()
             updateHasPrevious()
@@ -117,13 +117,13 @@ open class PlaybackListener : Player.Listener {
 
     private fun updateHasPrevious() {
         val playbackController: PlaybackController = PlaybackController.getInstance()
-        playbackController.hasPrevious.value =
-            playbackController.musicPlaying.value != playbackController.playlist.musicList.last()
+        playbackController.hasPrevious =
+            playbackController.musicPlaying != playbackController.playlist.musicList.last()
     }
 
     private fun updateHasNext() {
         val playbackController: PlaybackController = PlaybackController.getInstance()
-        playbackController.hasNext.value =
-            playbackController.musicPlaying.value != playbackController.playlist.musicList.last()
+        playbackController.hasNext =
+            playbackController.musicPlaying != playbackController.playlist.musicList.last()
     }
 }

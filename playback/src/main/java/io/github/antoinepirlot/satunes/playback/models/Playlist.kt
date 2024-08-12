@@ -39,6 +39,8 @@ internal class Playlist(musicSet: Set<Music>) {
     private val originalMusicMediaItemMap: MutableMap<Music, MediaItem> = mutableMapOf()
     val musicList: SnapshotStateList<Music> = SnapshotStateList()
     val mediaItemList: MutableList<MediaItem> = mutableListOf()
+    internal var isShuffle: Boolean = false
+        private set
     private val logger = SatunesLogger.getLogger()
 
 
@@ -75,6 +77,7 @@ internal class Playlist(musicSet: Set<Music>) {
         this.musicList.forEach { music: Music ->
             this.mediaItemList.add(music.mediaItem)
         }
+        this.isShuffle = true
     }
 
     /**
@@ -87,6 +90,7 @@ internal class Playlist(musicSet: Set<Music>) {
             this.musicList.add(music)
             this.mediaItemList.add(mediaItem)
         }
+        this.isShuffle = false
     }
 
     fun getMusicIndex(music: Music): Int {
@@ -178,4 +182,14 @@ internal class Playlist(musicSet: Set<Music>) {
         return this.originalMusicMediaItemMap[music] != null
     }
 
+    /**
+     * Removes music from queue and returns its old index position.
+     *
+     * @return old index or -1 if the music has not been found.
+     */
+    fun removeFromQueue(music: Music): Int {
+        val oldIndex: Int = this.getMusicIndex(music = music)
+        this.musicList.remove(element = music)
+        return oldIndex
+    }
 }

@@ -38,11 +38,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import io.github.antoinepirlot.jetpack_libs.components.texts.Title
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.ui.components.buttons.settings.SettingButton
-import io.github.antoinepirlot.satunes.ui.components.texts.Title
 import io.github.antoinepirlot.satunes.database.R as RDb
 
 /**
@@ -95,10 +95,10 @@ internal fun SettingsView(
                 }
             )
             SettingButton(
-                text = stringResource(id = R.string.exclusion_setting),
-                icon = SatunesIcons.SETTING_EXCLUSION,
+                text = stringResource(id = R.string.folders_settings),
+                icon = SatunesIcons.SETTING_FOLDERS,
                 onClick = {
-                    navController.navigate(Destination.EXCLUSION_SETTINGS.link)
+                    navController.navigate(Destination.FOLDERS_SETTINGS.link)
                 }
             )
             SettingButton(

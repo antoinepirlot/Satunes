@@ -38,7 +38,7 @@ import io.github.antoinepirlot.satunes.car.pages.ScreenPages
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
-import io.github.antoinepirlot.satunes.playback.services.PlaybackController
+import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -59,26 +59,29 @@ internal object SatunesCarCallBack : MediaSessionCompat.Callback() {
     private lateinit var _job: Job
 
     override fun onPlay() {
-        val playbackController: PlaybackController = PlaybackController.getInstance()
-        if (!playbackController.isLoaded.value) {
+
+        if (!PlaybackManager.isLoaded.value) {
             return
         }
-        playbackController.play()
+        PlaybackManager.play(context = SatunesCarMusicService.instance.applicationContext)
     }
 
     override fun onPause() {
-        val playbackController: PlaybackController = PlaybackController.getInstance()
-        playbackController.pause()
+        PlaybackManager.pause(context = SatunesCarMusicService.instance.applicationContext)
     }
 
     override fun onSkipToQueueItem(queueId: Long) {
-        val playbackController: PlaybackController = PlaybackController.getInstance()
-        playbackController.seekTo(musicId = queueId)
+        PlaybackManager.seekTo(
+            context = SatunesCarMusicService.instance.applicationContext,
+            musicId = queueId
+        )
     }
 
     override fun onSeekTo(position: Long) {
-        val playbackController: PlaybackController = PlaybackController.getInstance()
-        playbackController.seekTo(positionMs = position)
+        PlaybackManager.seekTo(
+            context = SatunesCarMusicService.instance.applicationContext,
+            positionMs = position
+        )
     }
 
     override fun onPlayFromMediaId(mediaId: String, extras: Bundle?) {
@@ -86,12 +89,14 @@ internal object SatunesCarCallBack : MediaSessionCompat.Callback() {
         val shuffleMode: Boolean = RouteManager.isShuffleButtonSelected()
         loadMusic()
         RouteManager.setShuffleButtonSelected(selected = false)
-        val playbackController: PlaybackController = PlaybackController.getInstance()
         var musicToPlay: Music? = null
         if (!shuffleMode) {
             musicToPlay = DataManager.getMusic(id = mediaId.toLong())
         }
-        playbackController.start(musicToPlay = musicToPlay)
+        PlaybackManager.start(
+            context = SatunesCarMusicService.instance.applicationContext,
+            musicToPlay = musicToPlay
+        )
     }
 
     override fun onPlayFromSearch(query: String?, extras: Bundle?) {
@@ -99,13 +104,11 @@ internal object SatunesCarCallBack : MediaSessionCompat.Callback() {
     }
 
     override fun onSkipToNext() {
-        val playbackController: PlaybackController = PlaybackController.getInstance()
-        playbackController.playNext()
+        PlaybackManager.playNext(context = SatunesCarMusicService.instance.applicationContext)
     }
 
     override fun onSkipToPrevious() {
-        val playbackController: PlaybackController = PlaybackController.getInstance()
-        playbackController.playPrevious()
+        PlaybackManager.playPrevious(context = SatunesCarMusicService.instance.applicationContext)
     }
 
     override fun onCustomAction(action: String?, extras: Bundle?) {
@@ -115,22 +118,19 @@ internal object SatunesCarCallBack : MediaSessionCompat.Callback() {
             ACTION_REPEAT -> switchRepeatMode()
         }
         //Update playback state from here as no listener function is called for this action.
-        val playbackController: PlaybackController = PlaybackController.getInstance()
         val state: Int =
-            if (playbackController.isPlaying.value) STATE_PLAYING else STATE_PAUSED
+            if (PlaybackManager.isPlaying.value) STATE_PLAYING else STATE_PAUSED
         val actions: Long =
-            if (playbackController.isPlaying.value) ACTIONS_ON_PLAY else ACTIONS_ON_PAUSE
+            if (PlaybackManager.isPlaying.value) ACTIONS_ON_PLAY else ACTIONS_ON_PAUSE
         SatunesPlaybackListener.updatePlaybackState(state = state, actions = actions)
     }
 
     private fun switchShuffleMode() {
-        val playbackController: PlaybackController = PlaybackController.getInstance()
-        playbackController.switchShuffleMode()
+        PlaybackManager.switchShuffleMode(context = SatunesCarMusicService.instance.applicationContext)
     }
 
     private fun switchRepeatMode() {
-        val playbackController: PlaybackController = PlaybackController.getInstance()
-        playbackController.switchRepeatMode()
+        PlaybackManager.switchRepeatMode(context = SatunesCarMusicService.instance.applicationContext)
     }
 
     /**
@@ -138,7 +138,6 @@ internal object SatunesCarCallBack : MediaSessionCompat.Callback() {
      */
     private fun loadMusic() {
         val selectedTab: ScreenPages = RouteManager.getSelectedTab()
-        val playbackController: PlaybackController = PlaybackController.getInstance()
         var musicToPlay: Music? = null
         val selectedMediaImpl: MediaImpl? = RouteManager.getSelectedMediaImpl()
         var musicSet: Set<Music> = DataManager.getMusicSet()
@@ -156,7 +155,8 @@ internal object SatunesCarCallBack : MediaSessionCompat.Callback() {
                 }
             }
         }
-        playbackController.loadMusic(
+        PlaybackManager.loadMusic(
+            context = SatunesCarMusicService.instance.applicationContext,
             musicSet = musicSet,
             shuffleMode = RouteManager.isShuffleButtonSelected(),
             musicToPlay = musicToPlay

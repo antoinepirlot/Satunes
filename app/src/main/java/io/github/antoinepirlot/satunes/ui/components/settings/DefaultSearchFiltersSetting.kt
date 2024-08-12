@@ -34,8 +34,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.models.SwitchSettings
-import io.github.antoinepirlot.satunes.ui.states.SearchUiState
-import io.github.antoinepirlot.satunes.ui.viewmodels.SearchViewModel
+import io.github.antoinepirlot.satunes.data.states.SearchUiState
+import io.github.antoinepirlot.satunes.data.viewmodels.SearchViewModel
 
 /**
  * @author Antoine Pirlot on 08/07/2024

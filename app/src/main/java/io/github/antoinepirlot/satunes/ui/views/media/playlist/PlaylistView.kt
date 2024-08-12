@@ -38,7 +38,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import io.github.antoinepirlot.jetpack_libs.components.texts.Title
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.data.local.LocalMainScope
+import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
+import io.github.antoinepirlot.satunes.data.states.SatunesUiState
+import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.MediaSelectionViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
@@ -48,14 +56,6 @@ import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
 import io.github.antoinepirlot.satunes.ui.components.dialog.MediaSelectionDialog
-import io.github.antoinepirlot.satunes.ui.components.texts.Title
-import io.github.antoinepirlot.satunes.ui.local.LocalMainScope
-import io.github.antoinepirlot.satunes.ui.local.LocalSnackBarHostState
-import io.github.antoinepirlot.satunes.ui.states.SatunesUiState
-import io.github.antoinepirlot.satunes.ui.viewmodels.DataViewModel
-import io.github.antoinepirlot.satunes.ui.viewmodels.MediaSelectionViewModel
-import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
-import io.github.antoinepirlot.satunes.ui.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 import kotlinx.coroutines.CoroutineScope
 import io.github.antoinepirlot.satunes.database.R as RDb
@@ -131,6 +131,9 @@ internal fun PlaylistView(
             Title(text = title)
         },
         extraButtons = {
+            ExtraButton(
+                icon = SatunesIcons.EXPORT,
+                onClick = { dataViewModel.exportPlaylist(playlist = playlist) })
             ExtraButton(icon = SatunesIcons.ADD, onClick = { openAddMusicsDialog = true })
             if (playlist.getMusicSet().isNotEmpty()) {
                 ExtraButton(icon = SatunesIcons.PLAY, onClick = {

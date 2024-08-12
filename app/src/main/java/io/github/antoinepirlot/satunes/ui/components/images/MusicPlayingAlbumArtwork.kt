@@ -23,14 +23,37 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.states
+package io.github.antoinepirlot.satunes.ui.components.images
 
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
+import io.github.antoinepirlot.satunes.database.models.Album
 
 /**
- * @author Antoine Pirlot on 19/07/2024
+ * @author Antoine Pirlot on 11/08/2024
  */
-data class MediasUiState(
-    val musicMediaItemSortedMapUpdated: MutableState<Boolean> = mutableStateOf(false)
-)
+
+@Composable
+internal fun MusicPlayingAlbumArtwork(
+    modifier: Modifier = Modifier,
+    playbackViewModel: PlaybackViewModel = viewModel(),
+    onClick: (album: Album?) -> Unit = { /* Do nothing by default */ }
+) {
+    MediaArtwork(
+        modifier = modifier,
+        mediaImpl = playbackViewModel.musicPlaying!!,
+        onClick = onClick
+    )
+}
+
+@Composable
+internal fun MusicPlayingAlbumArtworkPreview() {
+    val playbackViewModel: PlaybackViewModel = viewModel()
+    MediaArtwork(
+        mediaImpl = playbackViewModel.musicPlaying!!,
+        onClick = { }
+    )
+}
+

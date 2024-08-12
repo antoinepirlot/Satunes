@@ -23,31 +23,18 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.texts
+package io.github.antoinepirlot.satunes.data.states
 
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.sp
+import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 
 /**
- * @author Antoine Pirlot on 20/04/2024
+ * @author Antoine Pirlot on 23/07/2024
  */
-
-@Composable
-internal fun Subtitle(
-    modifier: Modifier = Modifier,
-    text: String,
-    maxLines: Int = 1,
-    overflow: TextOverflow = TextOverflow.Ellipsis) {
-    Text(
-        modifier = modifier,
-        color = Color.Gray,
-        fontSize = 15.sp,
-        text = text,
-        maxLines = maxLines,
-        overflow = overflow
-    )
-}
+data class SearchUiState(
+    val musicsFilter: Boolean = SettingsManager.musicsFilter,
+    val albumsFilter: Boolean = SettingsManager.albumsFilter,
+    val artistsFilter: Boolean = SettingsManager.artistsFilter,
+    val genresFilter: Boolean = SettingsManager.genresFilter,
+    val foldersFilter: Boolean = SettingsManager.foldersFilter,
+    val playlistsFilter: Boolean = SettingsManager.playlistsFilter,
+)

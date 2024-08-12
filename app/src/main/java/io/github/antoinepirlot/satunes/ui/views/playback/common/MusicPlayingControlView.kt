@@ -42,16 +42,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.antoinepirlot.jetpack_libs.components.models.ScreenSizes
+import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
+import io.github.antoinepirlot.jetpack_libs.components.texts.Subtitle
+import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.ui.ScreenSizes
 import io.github.antoinepirlot.satunes.ui.components.bars.MusicControlBar
 import io.github.antoinepirlot.satunes.ui.components.buttons.playback.custom_actions.PlaybackCustomActionsBar
 import io.github.antoinepirlot.satunes.ui.components.images.MusicPlayingAlbumArtwork
-import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
-import io.github.antoinepirlot.satunes.ui.components.texts.Subtitle
-import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
 
 /**
  * @author Antoine Pirlot on 25/01/24

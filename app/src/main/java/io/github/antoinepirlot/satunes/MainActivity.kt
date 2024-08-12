@@ -35,23 +35,20 @@ import android.provider.DocumentsContract
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.OptIn
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.media3.common.util.UnstableApi
+import androidx.media3.session.MediaController
+import com.google.common.util.concurrent.ListenableFuture
+import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.database.services.data.DataCleanerManager
-import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
+import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
+import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
 import io.github.antoinepirlot.satunes.playback.services.PlaybackService
-import io.github.antoinepirlot.satunes.ui.utils.showSnackBar
-import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
-import io.github.antoinepirlot.satunes.ui.viewmodels.factories.PlaybackViewModelFactory
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import io.github.antoinepirlot.satunes.utils.utils.showToastOnUiThread
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import io.github.antoinepirlot.satunes.database.R as RDb
 
 /**
  * @author Antoine Pirlot on 18/01/24
@@ -62,11 +59,13 @@ internal class MainActivity : ComponentActivity() {
     companion object {
         internal lateinit var instance: MainActivity
         private const val IMPORT_PLAYLIST_CODE: Int = 1
-        private const val EXPORT_PLAYLIST_CODE: Int = 2
-        private const val EXPORT_LOGS_CODE: Int = 3
-        private const val MIME_JSON: String = "application/json"
+        private const val EXPORT_ALL_PLAYLISTS_CODE: Int = 2
+        private const val EXPORT_PLAYLIST_CODE: Int = 3
+        private const val EXPORT_LOGS_CODE: Int = 4
+        const val SELECT_FOLDER_TREE_CODE: Int = 5
+        const val MIME_JSON: String = "application/json"
         private const val MIME_TEXT: String = "application/text"
-        private val DEFAULT_URI: Uri =
+        val DEFAULT_URI: Uri =
             Uri.parse(Environment.getExternalStorageDirectory().path + '/' + Environment.DIRECTORY_DOCUMENTS)
 
         private val createFileIntent: Intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
@@ -77,25 +76,32 @@ internal class MainActivity : ComponentActivity() {
         }
     }
 
-    private lateinit var logger: SatunesLogger
+    private lateinit var _logger: SatunesLogger
+    private lateinit var _mediaControllerFuture: ListenableFuture<MediaController>
+    private lateinit var _mediaController: MediaController
+    private var _playlistToExport: Playlist? = null
+
+    override fun onStart() {
+        super.onStart()
+        PlaybackManager.initPlayback(context = applicationContext)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         SatunesLogger.DOCUMENTS_PATH =
             applicationContext.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)!!.path
-        logger = SatunesLogger.getLogger()
-        logger.info("Satunes started on API: ${Build.VERSION.SDK_INT}")
+        _logger = SatunesLogger.getLogger()
+        _logger.info("Satunes started on API: ${Build.VERSION.SDK_INT}")
         instance = this
+
         setNotificationOnClick()
         setContent {
-            //Init viewModel that needs context
-            viewModel<PlaybackViewModel>(factory = PlaybackViewModelFactory(context = LocalContext.current))
             Satunes()
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             DataCleanerManager.removeApkFiles(context = baseContext)
         } else {
-            logger.warning("Can't remove apk files with API: ${Build.VERSION.SDK_INT}")
+            _logger.warning("Can't remove apk files with API: ${Build.VERSION.SDK_INT}")
         }
     }
 
@@ -117,24 +123,10 @@ internal class MainActivity : ComponentActivity() {
         }
     }
 
-    //TODO find a way to move it to database module, no solution found instead of here
-    // No enough knowledge about Activity
-    fun createFileToExportPlaylists(
-        scope: CoroutineScope,
-        snackBarHostState: SnackbarHostState,
-        defaultFileName: String
-    ) {
-        if (DataManager.getPlaylistSet().isEmpty()) {
-            showSnackBar(
-                scope = scope,
-                snackBarHostState = snackBarHostState,
-                message = this.getString(RDb.string.no_playlist)
-            )
-            return
-        }
+    fun createFileToExportPlaylists(defaultFileName: String) {
         createFileIntent.putExtra(Intent.EXTRA_TITLE, defaultFileName)
         createFileIntent.type = MIME_JSON
-        startActivityForResult(createFileIntent, EXPORT_PLAYLIST_CODE)
+        startActivityForResult(createFileIntent, EXPORT_ALL_PLAYLISTS_CODE)
     }
 
     fun openFileToImportPlaylists() {
@@ -160,24 +152,33 @@ internal class MainActivity : ComponentActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_OK) {
             when (requestCode) {
-                EXPORT_PLAYLIST_CODE, EXPORT_LOGS_CODE -> {
-                    data?.data?.also {
-                        if (it.path == null) {
+                EXPORT_PLAYLIST_CODE, EXPORT_ALL_PLAYLISTS_CODE, EXPORT_LOGS_CODE -> {
+                    data?.data?.also { uri: Uri ->
+                        if (uri.path == null) {
                             showToastOnUiThread(
                                 context = this,
                                 message = this.getString(R.string.no_file_created)
                             )
                         }
 
-                        if (requestCode == EXPORT_PLAYLIST_CODE) {
-                            CoroutineScope(Dispatchers.IO).launch {
-                                DatabaseManager.getInstance().exportPlaylists(
-                                    context = this@MainActivity.applicationContext,
-                                    uri = it
-                                )
-                            }
+                        if (requestCode == EXPORT_LOGS_CODE) {
+                            _logger.exportLogs(context = this, uri = uri)
                         } else {
-                            logger.exportLogs(context = this, uri = it)
+                            CoroutineScope(Dispatchers.IO).launch {
+                                if (requestCode == EXPORT_ALL_PLAYLISTS_CODE) {
+                                    DatabaseManager.getInstance().exportPlaylists(
+                                        context = this@MainActivity.applicationContext,
+                                        uri = uri
+                                    )
+                                } else {
+                                    DatabaseManager.getInstance().exportPlaylist(
+                                        context = applicationContext,
+                                        uri = uri,
+                                        playlist = _playlistToExport!!
+                                    )
+                                    _playlistToExport = null
+                                }
+                            }
                         }
                     }
                 }
@@ -187,7 +188,25 @@ internal class MainActivity : ComponentActivity() {
                         DatabaseManager.getInstance().importPlaylists(context = this, uri = it)
                     }
                 }
+
+                SELECT_FOLDER_TREE_CODE -> {
+                    data?.data?.also {
+                        CoroutineScope(Dispatchers.IO).launch {
+                            SettingsManager.addPath(context = applicationContext, uri = it)
+                        }
+                    }
+                }
             }
         }
+    }
+
+    fun createFileToExportPlaylist(
+        defaultFileName: String,
+        playlist: Playlist
+    ) {
+        _playlistToExport = playlist
+        createFileIntent.putExtra(Intent.EXTRA_TITLE, defaultFileName)
+        createFileIntent.type = MIME_JSON
+        startActivityForResult(createFileIntent, EXPORT_PLAYLIST_CODE)
     }
 }

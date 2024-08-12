@@ -23,26 +23,36 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.viewmodels.utils
+package io.github.antoinepirlot.satunes.data.viewmodels.factories
 
-import android.Manifest
-import android.content.pm.PackageManager
-import android.os.Build
-import androidx.core.content.ContextCompat
-import io.github.antoinepirlot.satunes.MainActivity
+import android.content.Context
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.CreationExtras
+import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
+import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
+import kotlin.reflect.KClass
 
 /**
  * @author Antoine Pirlot on 20/07/2024
  */
+@Suppress("UNCHECKED_CAST")
+class PlaybackViewModelFactory(
+    private val context: Context
+) : ViewModelProvider.Factory {
 
-internal fun isAudioAllowed(): Boolean {
-    // Permission Granted
-    return ContextCompat.checkSelfPermission(
-        MainActivity.instance.applicationContext,
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            Manifest.permission.READ_MEDIA_AUDIO
-        } else {
-            Manifest.permission.READ_EXTERNAL_STORAGE
-        }
-    ) == PackageManager.PERMISSION_GRANTED
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        PlaybackManager.initPlayback(context = context)
+        return PlaybackViewModel() as T
+    }
+
+    override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
+        PlaybackManager.initPlayback(context = context)
+        return PlaybackViewModel() as T
+    }
+
+    override fun <T : ViewModel> create(modelClass: KClass<T>, extras: CreationExtras): T {
+        PlaybackManager.initPlayback(context = context)
+        return PlaybackViewModel() as T
+    }
 }

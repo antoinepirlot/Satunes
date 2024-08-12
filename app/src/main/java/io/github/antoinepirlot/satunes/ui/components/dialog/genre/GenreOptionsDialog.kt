@@ -32,13 +32,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
+import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToPlaylistMediaOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToQueueDialogOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.PlayNextMediaOption
-import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
-import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
+import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.RemoveFromQueueOption
 
 /**
  * @author Antoine Pirlot on 07/07/2024
@@ -73,8 +74,9 @@ internal fun GenreOptionsDialog(
                  * Playback
                  */
                 if (playbackViewModel.isLoaded) {
-                    PlayNextMediaOption(mediaImpl = genre, onFinished = onDismissRequest)
-                    AddToQueueDialogOption(mediaImpl = genre, onFinished = onDismissRequest)
+                    PlayNextMediaOption(mediaImpl = genre, onDismissRequest = onDismissRequest)
+                    AddToQueueDialogOption(mediaImpl = genre, onDismissRequest = onDismissRequest)
+                    RemoveFromQueueOption(mediaImpl = genre, onDismissRequest = onDismissRequest)
                 }
             }
         }

@@ -36,13 +36,14 @@ import androidx.compose.material.icons.rounded.Album
 import androidx.compose.material.icons.rounded.BatterySaver
 import androidx.compose.material.icons.rounded.Category
 import androidx.compose.material.icons.rounded.Close
+import androidx.compose.material.icons.rounded.CreateNewFolder
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.DirectionsCar
 import androidx.compose.material.icons.rounded.Done
+import androidx.compose.material.icons.rounded.Download
 import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material.icons.rounded.FavoriteBorder
 import androidx.compose.material.icons.rounded.Folder
-import androidx.compose.material.icons.rounded.FolderOff
 import androidx.compose.material.icons.rounded.GraphicEq
 import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.LogoDev
@@ -52,6 +53,8 @@ import androidx.compose.material.icons.rounded.PauseCircle
 import androidx.compose.material.icons.rounded.PlayCircle
 import androidx.compose.material.icons.rounded.PlaylistRemove
 import androidx.compose.material.icons.rounded.QueuePlayNext
+import androidx.compose.material.icons.rounded.Refresh
+import androidx.compose.material.icons.rounded.RemoveFromQueue
 import androidx.compose.material.icons.rounded.Repeat
 import androidx.compose.material.icons.rounded.RepeatOne
 import androidx.compose.material.icons.rounded.Search
@@ -61,6 +64,7 @@ import androidx.compose.material.icons.rounded.Shuffle
 import androidx.compose.material.icons.rounded.SkipNext
 import androidx.compose.material.icons.rounded.SkipPrevious
 import androidx.compose.material.icons.rounded.Update
+import androidx.compose.material.icons.rounded.Upload
 import androidx.compose.ui.graphics.vector.ImageVector
 
 /**
@@ -81,6 +85,8 @@ enum class SatunesIcons(val imageVector: ImageVector, val description: String) {
     BATTERY(imageVector = Icons.Rounded.BatterySaver, description = "Battery Icon"),
     BOTTOM_BAR(imageVector = Icons.Rounded.Navigation, description = "Bottom Bar Setting Icon"),
     CHIP_SELECTED(imageVector = Icons.Rounded.Done, description = "Chip Selected icon"),
+    EXPORT(imageVector = Icons.Rounded.Upload, description = "Export Icon"),
+    IMPORT(imageVector = Icons.Rounded.Download, description = "Import Icon"),
     INFO(imageVector = Icons.Rounded.Info, description = "Info Icon"),
     LIKED(imageVector = Icons.Rounded.Favorite, description = "Liked Icon"),
     FOLDER(imageVector = Icons.Rounded.Folder, description = "Folder Icon"),
@@ -109,9 +115,9 @@ enum class SatunesIcons(val imageVector: ImageVector, val description: String) {
     REPEAT_ONE(imageVector = Icons.Rounded.RepeatOne, description = "Repeat One On Icon"),
     SEARCH(imageVector = Icons.Rounded.Search, description = "Search Icon"),
     SETTINGS(imageVector = Icons.Rounded.Settings, description = "Settings Icon"),
-    SETTING_EXCLUSION(
-        imageVector = Icons.Rounded.FolderOff,
-        description = "Exclusion Setting Icon"
+    SETTING_FOLDERS(
+        imageVector = Icons.Rounded.CreateNewFolder,
+        description = "Folders Setting Icon"
     ),
     SETTING_LOGS(imageVector = Icons.Rounded.LogoDev, description = "Log Setting Icon"),
     SETTING_PERMISSIONS(
@@ -123,5 +129,10 @@ enum class SatunesIcons(val imageVector: ImageVector, val description: String) {
     SKIP_NEXT(imageVector = Icons.Rounded.SkipNext, description = "Skip Next Icon"),
     SKIP_PREVIOUS(imageVector = Icons.Rounded.SkipPrevious, description = "Skip Previous Icon"),
     UNLIKED(imageVector = Icons.Rounded.FavoriteBorder, description = "Unliked Icon"),
+    REFRESH(imageVector = Icons.Rounded.Refresh, description = "Refresh Icon"),
+    REMOVE_FROM_QUEUE(
+        imageVector = Icons.Rounded.RemoveFromQueue,
+        description = "Remove from queue Icon"
+    ),
     REMOVE_ICON(imageVector = Icons.Rounded.Delete, description = "Remove Icon"),
 }

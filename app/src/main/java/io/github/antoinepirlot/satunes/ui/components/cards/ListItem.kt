@@ -34,7 +34,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import io.github.antoinepirlot.satunes.ui.ScreenSizes
+import io.github.antoinepirlot.jetpack_libs.components.models.ScreenSizes
 
 /**
  * @author Antoine Pirlot on 14/05/2024

@@ -23,44 +23,35 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.texts
+package io.github.antoinepirlot.satunes.ui.components.images
 
-import androidx.compose.material3.Text
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.TextUnit
-import androidx.compose.ui.unit.sp
-import io.github.antoinepirlot.satunes.ui.ScreenSizes
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
+import io.github.antoinepirlot.satunes.icons.SatunesIcons
 
 /**
- * @author Antoine Pirlot on 20/04/2024
+ * @author Antoine Pirlot on 09/08/2024
  */
 
 @Composable
-internal fun NormalText(
+internal fun Icon(
     modifier: Modifier = Modifier,
-    text: String,
-    fontSize: TextUnit = TextUnit.Unspecified,
-    textAlign: TextAlign? = null,
-    maxLines: Int = 1,
-    overflow: TextOverflow = TextOverflow.Ellipsis
+    icon: SatunesIcons,
+    tint: Color = LocalContentColor.current,
 ) {
-    val screenWidthDp: Int = LocalConfiguration.current.screenWidthDp
-    Text(
+    androidx.compose.material3.Icon(
         modifier = modifier,
-        text = text,
-        fontSize = if (fontSize != TextUnit.Unspecified && screenWidthDp < ScreenSizes.VERY_VERY_SMALL)
-            fontSize / 2
-        else if (fontSize == TextUnit.Unspecified && screenWidthDp < ScreenSizes.VERY_VERY_SMALL)
-            10.sp
-        else if (fontSize != TextUnit.Unspecified && screenWidthDp < ScreenSizes.VERY_SMALL)
-            fontSize / 1.5
-        else fontSize,
-        textAlign = textAlign,
-        maxLines = maxLines,
-        overflow = overflow,
+        imageVector = icon.imageVector,
+        contentDescription = icon.description,
+        tint = tint
     )
+}
+
+@Preview
+@Composable
+private fun IconPreview() {
+    Icon(icon = SatunesIcons.ADD)
 }

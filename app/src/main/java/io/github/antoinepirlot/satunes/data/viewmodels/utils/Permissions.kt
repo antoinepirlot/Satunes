@@ -23,36 +23,26 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.viewmodels.factories
+package io.github.antoinepirlot.satunes.data.viewmodels.utils
 
-import android.content.Context
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.CreationExtras
-import io.github.antoinepirlot.satunes.playback.services.PlaybackController
-import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
-import kotlin.reflect.KClass
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
+import androidx.core.content.ContextCompat
+import io.github.antoinepirlot.satunes.MainActivity
 
 /**
  * @author Antoine Pirlot on 20/07/2024
  */
-@Suppress("UNCHECKED_CAST")
-class PlaybackViewModelFactory(
-    private val context: Context
-) : ViewModelProvider.Factory {
 
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        PlaybackController.initInstance(context = context)
-        return PlaybackViewModel() as T
-    }
-
-    override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
-        PlaybackController.initInstance(context = context)
-        return PlaybackViewModel() as T
-    }
-
-    override fun <T : ViewModel> create(modelClass: KClass<T>, extras: CreationExtras): T {
-        PlaybackController.initInstance(context = context)
-        return PlaybackViewModel() as T
-    }
+internal fun isAudioAllowed(): Boolean {
+    // Permission Granted
+    return ContextCompat.checkSelfPermission(
+        MainActivity.instance.applicationContext,
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            Manifest.permission.READ_MEDIA_AUDIO
+        } else {
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        }
+    ) == PackageManager.PERMISSION_GRANTED
 }

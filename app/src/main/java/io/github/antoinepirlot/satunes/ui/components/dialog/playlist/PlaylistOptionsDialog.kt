@@ -40,15 +40,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.data.local.LocalMainScope
+import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
+import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToQueueDialogOption
+import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.PlayNextMediaOption
+import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.RemoveFromQueueOption
+import io.github.antoinepirlot.satunes.ui.components.dialog.playlist.options.ExportPlaylistOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.playlist.options.RemovePlaylistOption
-import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
-import io.github.antoinepirlot.satunes.ui.local.LocalMainScope
-import io.github.antoinepirlot.satunes.ui.local.LocalSnackBarHostState
-import io.github.antoinepirlot.satunes.ui.viewmodels.DataViewModel
 import kotlinx.coroutines.CoroutineScope
 import io.github.antoinepirlot.satunes.database.R as RDb
 
@@ -59,6 +64,7 @@ import io.github.antoinepirlot.satunes.database.R as RDb
 @Composable
 internal fun PlaylistOptionsDialog(
     modifier: Modifier = Modifier,
+    playbackViewModel: PlaybackViewModel = viewModel(),
     dataViewModel: DataViewModel = viewModel(),
     playlist: Playlist,
     onDismissRequest: () -> Unit,
@@ -95,10 +101,19 @@ internal fun PlaylistOptionsDialog(
         },
         text = {
             Column {
+                ExportPlaylistOption(playlist = playlist)
                 RemovePlaylistOption(
                     playlistToRemove = playlist,
                     onDismissRequest = onDismissRequest
                 )
+                if (playbackViewModel.isLoaded) {
+                    PlayNextMediaOption(mediaImpl = playlist, onDismissRequest = onDismissRequest)
+                    AddToQueueDialogOption(
+                        mediaImpl = playlist,
+                        onDismissRequest = onDismissRequest
+                    )
+                    RemoveFromQueueOption(mediaImpl = playlist, onDismissRequest = onDismissRequest)
+                }
             }
         },
         onDismissRequest = onDismissRequest,

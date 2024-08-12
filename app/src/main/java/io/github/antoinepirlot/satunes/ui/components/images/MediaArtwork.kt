@@ -25,34 +25,45 @@
 
 package io.github.antoinepirlot.satunes.ui.components.images
 
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.antoinepirlot.jetpack_libs.components.models.ScreenSizes
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.icons.R
-import io.github.antoinepirlot.satunes.ui.ScreenSizes
-import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
+import io.github.antoinepirlot.satunes.ui.utils.getRightIconAndDescription
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 /**
  * @author Antoine Pirlot on 29/02/24
  */
 
 @Composable
-internal fun AlbumArtwork(
+internal fun MediaArtwork(
     modifier: Modifier = Modifier,
     mediaImpl: MediaImpl,
     onClick: ((album: Album?) -> Unit)? = null,
@@ -88,37 +99,50 @@ internal fun AlbumArtwork(
         modifier = clickableModifier,
         contentAlignment = contentAlignment
     ) {
-        if (mediaImpl.artwork != null) {
+        val context: Context = LocalContext.current
+
+        var artwork: ImageBitmap? by remember { mutableStateOf(null) }
+        var job: Job? = null
+        LaunchedEffect(key1 = mediaImpl) {
+            job?.cancel()
+            job = CoroutineScope(Dispatchers.IO).launch {
+                artwork = when (mediaImpl) {
+                    is Music -> mediaImpl.getAlbumArtwork(context = context)
+                    is Album -> mediaImpl.getMusicSet().first()
+                        .getAlbumArtwork(context = context)
+
+                    else -> null
+                }?.asImageBitmap()
+            }
+        }
+
+        if (artwork != null) {
             Image(
                 modifier = Modifier.fillMaxSize(),
-                bitmap = mediaImpl.artwork!!.asImageBitmap(),
-                contentDescription = "Music Playing Album Artwork"
+                bitmap = artwork!!,
+                contentDescription = "Music Album Artwork"
             )
         } else {
-            Image(
-                modifier = Modifier.fillMaxSize(),
-                painter = painterResource(id = R.mipmap.empty_album_artwork_foreground),
-                contentDescription = "Default Album Artwork"
-            )
+            if (mediaImpl is Music || mediaImpl is Album) {
+                Image(
+                    modifier = Modifier.fillMaxSize(),
+                    painter = painterResource(id = R.mipmap.empty_album_artwork_foreground),
+                    contentDescription = "Default Album Artwork"
+                )
+            } else {
+                Icon(
+                    modifier = Modifier
+                        .size(30.dp)
+                        .align(Alignment.Center),
+                    icon = getRightIconAndDescription(media = mediaImpl)
+                )
+            }
         }
     }
 }
 
 @Composable
-internal fun MusicPlayingAlbumArtwork(
-    modifier: Modifier = Modifier,
-    playbackViewModel: PlaybackViewModel = viewModel(),
-    onClick: (album: Album?) -> Unit = { /* Do nothing by default */ }
-) {
-    AlbumArtwork(
-        modifier = modifier,
-        mediaImpl = playbackViewModel.musicPlaying!!,
-        onClick = onClick
-    )
-}
-
-@Composable
 @Preview
 private fun AlbumArtworkPreview() {
-    AlbumArtwork(mediaImpl = Album(title = "", artist = Artist(title = "Artist Title")))
+    MediaArtwork(mediaImpl = Album(title = "", artist = Artist(title = "Artist Title")))
 }

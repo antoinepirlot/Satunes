@@ -26,7 +26,6 @@
 package io.github.antoinepirlot.satunes.models
 
 import io.github.antoinepirlot.satunes.R.string.audio_offload
-import io.github.antoinepirlot.satunes.R.string.include_ringtones
 import io.github.antoinepirlot.satunes.R.string.pause_if_another_playback
 import io.github.antoinepirlot.satunes.R.string.pause_if_noisy
 import io.github.antoinepirlot.satunes.R.string.playback_when_paused
@@ -49,7 +48,6 @@ internal enum class SwitchSettings(val stringId: Int) {
     ARTISTS_FILTER(stringId = artists),
     AUDIO_OFFLOAD(stringId = audio_offload),
     PLAYLISTS_FILTER(stringId = playlists),
-    INCLUDE_RINGTONES(stringId = include_ringtones),
     FOLDERS_CHECKED(stringId = folders),
     FOLDERS_FILTER(stringId = folders),
     GENRES_CHECKED(stringId = genres),

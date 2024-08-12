@@ -1,6 +1,24 @@
 # Releases (🇬🇧)
 Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
+## 2.1 (Android 5.1.1 Lollipop and later)
+
+### 2.1.0
+
+New features:
+
+* It is now possible to include/exclude paths
+* Export single playlist is back
+* Remove media from queue
+* Add to next and to queue for all media
+* After music(s) has/have been added to playlist(s) the snackBar has cancel action. The same after
+  canceling, you can cancel the cancel action lol
+
+Improvements, optimizations and troubleshooting:
+
+* RAM usage has been significantly reduced, artworks are loaded when needed
+* Playback is more stable when it is released
+
 ## 2.0 (Android 5.1.1 Lollipop and later)
 
 ### 2.0.1

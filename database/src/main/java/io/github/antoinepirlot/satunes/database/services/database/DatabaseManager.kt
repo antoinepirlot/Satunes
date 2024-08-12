@@ -121,33 +121,6 @@ class DatabaseManager private constructor(context: Context) {
         this.musicDao.update(musicDBs = musicDBs)
     }
 
-    fun insertMusicToPlaylists(music: Music, playlists: List<Playlist>) {
-        playlists.forEach { playlist: Playlist ->
-            val musicsPlaylistsRel =
-                MusicsPlaylistsRel(
-                    musicId = music.id,
-                    playlistId = playlist.id
-                )
-            try {
-                musicsPlaylistsRelDAO.insert(musicsPlaylistsRel)
-                try {
-                    musicDao.insert(MusicDB(id = music.id, absolutePath = music.absolutePath))
-                } catch (e: SQLiteConstraintException) {
-                    _logger.warning(e.message)
-                    // Do nothing
-                }
-                playlist.addMusic(music = music)
-            } catch (e: SQLiteConstraintException) {
-                _logger.warning(e.message)
-                // Do nothing
-            }
-            if (playlist.title == LIKES_PLAYLIST_TITLE) {
-                musicDao.like(musicId = music.id)
-                music.liked.value = true
-            }
-        }
-    }
-
     /**
      * Create new Playlist if doesn't exist in DB otherwise advertise the user that it already exists.
      *
@@ -171,9 +144,9 @@ class DatabaseManager private constructor(context: Context) {
         DataManager.addPlaylist(playlist = playlistWithMusics.playlistDB.playlist!!)
 
         musicList?.forEach { music: Music ->
-            insertMusicToPlaylists(
+            insertMusicToPlaylist(
                 music = music,
-                playlists = listOf(playlistWithMusics.playlistDB.playlist!!),
+                playlist = playlistWithMusics.playlistDB.playlist!!
             )
         }
     }
@@ -194,6 +167,49 @@ class DatabaseManager private constructor(context: Context) {
         }
     }
 
+    fun insertMusicToPlaylist(music: Music, playlist: Playlist) {
+        val musicsPlaylistsRel =
+            MusicsPlaylistsRel(
+                musicId = music.id,
+                playlistId = playlist.id
+            )
+        try {
+            musicsPlaylistsRelDAO.insert(musicsPlaylistsRel)
+            try {
+                musicDao.insert(MusicDB(id = music.id, absolutePath = music.absolutePath))
+            } catch (e: SQLiteConstraintException) {
+                _logger.warning(e.message)
+                // Do nothing
+            }
+            playlist.addMusic(music = music)
+        } catch (e: SQLiteConstraintException) {
+            _logger.warning(e.message)
+            // Do nothing
+        }
+        if (playlist.title == LIKES_PLAYLIST_TITLE) {
+            musicDao.like(musicId = music.id)
+            music.liked.value = true
+        }
+    }
+
+    fun insertMusicsToPlaylist(musics: Collection<Music>, playlist: Playlist) {
+        musics.forEach { music: Music ->
+            insertMusicToPlaylist(music = music, playlist = playlist)
+        }
+    }
+
+    fun insertMusicToPlaylists(music: Music, playlists: Collection<Playlist>) {
+        playlists.forEach { playlist: Playlist ->
+            insertMusicToPlaylist(music = music, playlist = playlist)
+        }
+    }
+
+    fun insertMusicsToPlaylists(musics: Collection<Music>, playlists: Collection<Playlist>) {
+        for (playlist: Playlist in playlists) {
+            this.insertMusicsToPlaylist(musics = musics, playlist = playlist)
+        }
+    }
+
     fun removeMusicFromPlaylist(music: Music, playlist: Playlist) {
         if (playlist.title == LIKES_PLAYLIST_TITLE) {
             musicDao.unlike(musicId = music.id)
@@ -206,6 +222,24 @@ class DatabaseManager private constructor(context: Context) {
         playlist.removeMusic(music = music)
         if (!musicsPlaylistsRelDAO.isMusicInPlaylist(musicId = music.id)) {
             musicDao.delete(MusicDB(id = music.id, absolutePath = music.absolutePath))
+        }
+    }
+
+    fun removeMusicsFromPlaylist(musics: Collection<Music>, playlist: Playlist) {
+        for (music: Music in musics) {
+            this.removeMusicFromPlaylist(music = music, playlist = playlist)
+        }
+    }
+
+    fun removeMusicFromPlaylists(music: Music, playlists: Collection<Playlist>) {
+        playlists.forEach { playlist: Playlist ->
+            removeMusicFromPlaylist(music = music, playlist = playlist)
+        }
+    }
+
+    fun removeMusicsFromPlaylists(musics: Collection<Music>, playlists: Collection<Playlist>) {
+        for (playlist: Playlist in playlists) {
+            this.removeMusicsFromPlaylist(musics = musics, playlist = playlist)
         }
     }
 
@@ -229,21 +263,19 @@ class DatabaseManager private constructor(context: Context) {
         DataManager.removePlaylist(playlist = playlist)
     }
 
-    fun insertMusicsToPlaylist(musics: Collection<Music>, playlist: Playlist) {
-        musics.forEach { music: Music ->
-            insertMusicToPlaylists(
-                music = music,
-                playlists = listOf(playlist),
-            )
-        }
-    }
-
     private fun getAllPlaylistWithMusics(): List<PlaylistWithMusics> {
         return this.playlistDao.getPlaylistsWithMusics()
     }
 
+    fun exportPlaylist(context: Context, uri: Uri, playlist: Playlist) {
+        val playlistWithMusics: PlaylistWithMusics =
+            this.playlistDao.getPlaylistWithMusics(playlistId = playlist.id)!!
+        val json: String = Json.encodeToString(playlistWithMusics)
+        exportJson(context = context, json = json, uri = uri)
+    }
+
     fun exportPlaylists(context: Context, uri: Uri) {
-        val playlistsWithMusics: List<PlaylistWithMusics> = _instance.getAllPlaylistWithMusics()
+        val playlistsWithMusics: List<PlaylistWithMusics> = this.getAllPlaylistWithMusics()
         val json: String = Json.encodeToString(playlistsWithMusics)
         exportJson(context = context, json = json, uri = uri)
     }
@@ -345,10 +377,7 @@ class DatabaseManager private constructor(context: Context) {
                 )
                 throw LikesPlaylistCreationException()
             }
-            insertMusicToPlaylists(
-                music = music,
-                playlists = listOf(likesPlaylist.playlistDB.playlist!!)
-            )
+            insertMusicToPlaylist(music = music, playlist = likesPlaylist.playlistDB.playlist!!)
         } catch (e: Throwable) {
             _logger.severe(e.message)
             throw e

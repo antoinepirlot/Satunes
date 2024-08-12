@@ -35,15 +35,16 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
+import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToPlaylistMediaOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToQueueDialogOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.PlayNextMediaOption
+import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.RemoveFromQueueOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.music.options.NavigateToMediaMusicOption
-import io.github.antoinepirlot.satunes.ui.components.images.AlbumArtwork
-import io.github.antoinepirlot.satunes.ui.components.texts.NormalText
-import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
+import io.github.antoinepirlot.satunes.ui.components.images.MediaArtwork
 
 /**
  * @author Antoine Pirlot on 07/07/2024
@@ -64,7 +65,7 @@ internal fun AlbumOptionsDialog(
         onDismissRequest = onDismissRequest,
         confirmButton = { /* Nothing */ },
         icon = {
-            AlbumArtwork(
+            MediaArtwork(
                 modifier = Modifier.size(100.dp),
                 mediaImpl = album
             )
@@ -83,15 +84,16 @@ internal fun AlbumOptionsDialog(
                  * Queue
                  */
                 if (playbackViewModel.isLoaded) {
-                    PlayNextMediaOption(mediaImpl = album, onFinished = onDismissRequest)
-                    AddToQueueDialogOption(mediaImpl = album, onFinished = onDismissRequest)
+                    PlayNextMediaOption(mediaImpl = album, onDismissRequest = onDismissRequest)
+                    AddToQueueDialogOption(mediaImpl = album, onDismissRequest = onDismissRequest)
+                    RemoveFromQueueOption(mediaImpl = album, onDismissRequest = onDismissRequest)
                 }
 
                 /**
                  * Redirections
                  */
                 NavigateToMediaMusicOption(
-                    mediaImpl = album.artist!!,
+                    mediaImpl = album.artist,
                     navController = navController
                 )
             }

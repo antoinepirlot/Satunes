@@ -23,18 +23,37 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui
+package io.github.antoinepirlot.satunes.utils
+
+import io.github.antoinepirlot.satunes.MainActivity
+import io.github.antoinepirlot.satunes.database.R
+import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
+import io.github.antoinepirlot.satunes.database.models.Folder
+import io.github.antoinepirlot.satunes.database.models.MediaImpl
+import io.github.antoinepirlot.satunes.database.models.Playlist
 
 /**
- * @author Antoine Pirlot on 14/05/2024
+ * @author Antoine Pirlot on 11/08/2024
  */
 
-internal interface ScreenSizes {
-    // TODO Find a better way to declare sizes (width and height)
-    companion object {
-        const val VERY_VERY_SMALL = 300
-        const val VERY_SMALL = 370
-        const val NORMAL = 380
-        const val LARGE = 650
+fun getMediaTitle(mediaImpl: MediaImpl): String {
+    return when (mediaImpl) {
+        is Playlist -> {
+            if (mediaImpl.title == LIKES_PLAYLIST_TITLE) {
+                MainActivity.instance.getString(R.string.likes_playlist_title)
+            } else {
+                mediaImpl.title
+            }
+        }
+
+        is Folder -> {
+            if (mediaImpl.title == "0") {
+                MainActivity.instance.getString(io.github.antoinepirlot.satunes.R.string.this_device)
+            } else {
+                mediaImpl.title
+            }
+        }
+
+        else -> mediaImpl.title
     }
 }

@@ -25,6 +25,7 @@
 
 package io.github.antoinepirlot.satunes.car.playback
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.PlaybackStateCompat
@@ -41,7 +42,7 @@ import io.github.antoinepirlot.satunes.car.playback.SatunesCarCallBack.ACTION_SH
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.icons.R
 import io.github.antoinepirlot.satunes.playback.models.PlaybackListener
-import io.github.antoinepirlot.satunes.playback.services.PlaybackController
+import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
 
 /**
  * @author Antoine Pirlot on 23/03/2024
@@ -66,8 +67,8 @@ internal object SatunesPlaybackListener : PlaybackListener() {
     }
 
     internal fun updateMediaPlaying() {
-        val playbackController: PlaybackController = PlaybackController.getInstance()
-        val musicPlaying: Music = playbackController.musicPlaying.value ?: return
+        val context: Context = SatunesCarMusicService.instance.applicationContext
+        val musicPlaying: Music = PlaybackManager.musicPlaying.value ?: return
         val metaData: MediaMetadataCompat = MediaMetadataCompat.Builder()
             .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, musicPlaying.id.toString())
             .putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_TITLE, musicPlaying.title)
@@ -75,7 +76,10 @@ internal object SatunesPlaybackListener : PlaybackListener() {
                 MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE,
                 musicPlaying.artist.title
             )
-            .putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, musicPlaying.artwork)
+            .putBitmap(
+                MediaMetadataCompat.METADATA_KEY_ALBUM_ART,
+                musicPlaying.getAlbumArtwork(context = context)
+            )
             .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, musicPlaying.duration)
             .build()
         SatunesCarMusicService.session.setMetadata(metaData)
@@ -88,9 +92,10 @@ internal object SatunesPlaybackListener : PlaybackListener() {
      * @param actions to run if clicked on button in playback screen.
      */
     internal fun updatePlaybackState(state: Int, actions: Long) {
-        val playbackController: PlaybackController = PlaybackController.getInstance()
-        val musicPlaying: Music = playbackController.musicPlaying.value ?: return
-        val currentPosition: Long = playbackController.getCurrentPosition()
+        val musicPlaying: Music = PlaybackManager.musicPlaying.value ?: return
+        val currentPosition: Long = PlaybackManager.getCurrentPosition(
+            context = SatunesCarMusicService.instance.applicationContext
+        )
         val extras = Bundle()
         extras.putString(
             MediaConstants.PLAYBACK_STATE_EXTRAS_KEY_MEDIA_ID,
@@ -99,12 +104,12 @@ internal object SatunesPlaybackListener : PlaybackListener() {
         val shuffleAction = CustomAction.Builder(
             ACTION_SHUFFLE,
             "Shuffle Mode",
-            if (playbackController.isShuffle.value) R.drawable.shuffle_on else R.drawable.shuffle_off
+            if (PlaybackManager.isShuffle.value) R.drawable.shuffle_on else R.drawable.shuffle_off
         ).build()
         val repeatAction = CustomAction.Builder(
             ACTION_REPEAT,
             "Repeat Mode",
-            when (playbackController.repeatMode.intValue) {
+            when (PlaybackManager.repeatMode.intValue) {
                 Player.REPEAT_MODE_ALL -> R.drawable.repeat_on
                 Player.REPEAT_MODE_ONE -> R.drawable.repeat_one_on
                 else -> R.drawable.repeat_off

@@ -29,17 +29,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
+import io.github.antoinepirlot.satunes.database.models.Album
+import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Folder
+import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
+import io.github.antoinepirlot.satunes.database.models.Playlist
+import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.icons.SatunesIcons.ALBUM
 import io.github.antoinepirlot.satunes.icons.SatunesIcons.ARTIST
 import io.github.antoinepirlot.satunes.icons.SatunesIcons.FOLDER
 import io.github.antoinepirlot.satunes.icons.SatunesIcons.GENRES
 import io.github.antoinepirlot.satunes.icons.SatunesIcons.MUSIC
 import io.github.antoinepirlot.satunes.icons.SatunesIcons.PLAYLIST
-import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
 
 /**
  * @author Antoine Pirlot on 27/01/24
@@ -83,6 +88,17 @@ fun getRightIconAndDescription(navBarSection: NavBarSection): Pair<ImageVector, 
         NavBarSection.PLAYLISTS -> PLAYLIST.imageVector to PLAYLIST.description
 
         else -> MUSIC.imageVector to MUSIC.description
+    }
+}
+
+fun getRightIconAndDescription(media: MediaImpl): SatunesIcons {
+    return when (media) {
+        is Folder -> FOLDER
+        is Artist -> ARTIST
+        is Album -> ALBUM
+        is Genre -> GENRES
+        is Playlist -> PLAYLIST
+        else -> MUSIC // In that case, mediaImpl is Music
     }
 }
 

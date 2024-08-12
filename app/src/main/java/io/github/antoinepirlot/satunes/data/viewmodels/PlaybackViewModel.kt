@@ -23,7 +23,7 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.viewmodels
+package io.github.antoinepirlot.satunes.data.viewmodels
 
 import android.content.Context
 import androidx.compose.material3.SnackbarHostState
@@ -39,9 +39,10 @@ import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.models.ProgressBarLifecycleCallbacks
-import io.github.antoinepirlot.satunes.playback.services.PlaybackController
+import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
 import io.github.antoinepirlot.satunes.ui.utils.showErrorSnackBar
 import io.github.antoinepirlot.satunes.ui.utils.showSnackBar
+import io.github.antoinepirlot.satunes.utils.getMediaTitle
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import kotlinx.coroutines.CoroutineScope
 
@@ -50,15 +51,14 @@ import kotlinx.coroutines.CoroutineScope
  */
 class PlaybackViewModel : ViewModel() {
     private val _logger: SatunesLogger = SatunesLogger.getLogger()
-    private val _playbackController: PlaybackController = PlaybackController.getInstance()
-    private val _isPlaying: MutableState<Boolean> = _playbackController.isPlaying
-    private val _musicPlaying: MutableState<Music?> = _playbackController.musicPlaying
-    private val _currentPositionProgression: MutableFloatState =
-        _playbackController.currentPositionProgression
-    private val _repeatMode: MutableIntState = _playbackController.repeatMode
-    private val _isShuffle: MutableState<Boolean> = _playbackController.isShuffle
-    private val _isLoaded: MutableState<Boolean> = _playbackController.isLoaded
-    private val _isEnded: MutableState<Boolean> = _playbackController.isEnded
+    private var _isPlaying: MutableState<Boolean> = PlaybackManager.isPlaying
+    private var _musicPlaying: MutableState<Music?> = PlaybackManager.musicPlaying
+    private var _currentPositionProgression: MutableFloatState =
+        PlaybackManager.currentPositionProgression
+    private var _repeatMode: MutableIntState = PlaybackManager.repeatMode
+    private var _isShuffle: MutableState<Boolean> = PlaybackManager.isShuffle
+    private var _isLoaded: MutableState<Boolean> = PlaybackManager.isLoaded
+    private var _isEnded: MutableState<Boolean> = PlaybackManager.isEnded
 
     val isPlaying: Boolean by _isPlaying
     val musicPlaying: Music? by _musicPlaying
@@ -132,7 +132,8 @@ class PlaybackViewModel : ViewModel() {
         shuffleMode: Boolean = SettingsManager.shuffleMode,
         musicToPlay: Music? = null,
     ) {
-        this._playbackController.loadMusic(
+        PlaybackManager.loadMusic(
+            context = MainActivity.instance.applicationContext,
             musicSet = musicSet,
             shuffleMode = shuffleMode,
             musicToPlay = musicToPlay
@@ -140,35 +141,38 @@ class PlaybackViewModel : ViewModel() {
     }
 
     fun getPlaylist(): List<Music> {
-        return this._playbackController.getPlaylist()
+        return PlaybackManager.getPlaylist(context = MainActivity.instance.applicationContext)
     }
 
     fun seekTo(positionPercentage: Float) {
-        this._playbackController.seekTo(positionPercentage = positionPercentage)
+        PlaybackManager.seekTo(
+            context = MainActivity.instance.applicationContext,
+            positionPercentage = positionPercentage
+        )
     }
 
     fun playNext() {
-        this._playbackController.playNext()
+        PlaybackManager.playNext(context = MainActivity.instance.applicationContext)
     }
 
     fun playPause() {
-        this._playbackController.playPause()
+        PlaybackManager.playPause(context = MainActivity.instance.applicationContext)
     }
 
     fun playPrevious() {
-        this._playbackController.playPrevious()
+        PlaybackManager.playPrevious(context = MainActivity.instance.applicationContext)
     }
 
     fun switchRepeatMode() {
-        this._playbackController.switchRepeatMode()
+        PlaybackManager.switchRepeatMode(context = MainActivity.instance.applicationContext)
     }
 
     fun switchShuffleMode() {
-        this._playbackController.switchShuffleMode()
+        PlaybackManager.switchShuffleMode(context = MainActivity.instance.applicationContext)
     }
 
     fun getMusicPlayingIndexPosition(): Int {
-        return this._playbackController.getMusicPlayingIndexPosition()
+        return PlaybackManager.getMusicPlayingIndexPosition(context = MainActivity.instance.applicationContext)
     }
 
     fun addToQueue(
@@ -178,7 +182,10 @@ class PlaybackViewModel : ViewModel() {
     ) {
         val context: Context = MainActivity.instance.applicationContext
         try {
-            this._playbackController.addToQueue(mediaImpl = mediaImpl)
+            PlaybackManager.addToQueue(
+                context = MainActivity.instance.applicationContext,
+                mediaImpl = mediaImpl
+            )
             showSnackBar(
                 scope = scope,
                 snackBarHostState = snackBarHostState,
@@ -200,6 +207,41 @@ class PlaybackViewModel : ViewModel() {
         }
     }
 
+    fun removeFromQueue(
+        scope: CoroutineScope,
+        snackBarHostState: SnackbarHostState,
+        mediaImpl: MediaImpl
+    ) {
+        val context: Context = MainActivity.instance.applicationContext
+        try {
+            PlaybackManager.removeFromQueue(
+                context = MainActivity.instance.applicationContext,
+                mediaImpl = mediaImpl
+            )
+            showSnackBar(
+                scope = scope,
+                snackBarHostState = snackBarHostState,
+                message = context.getString(
+                    R.string.remove_from_queue_success,
+                    getMediaTitle(mediaImpl = mediaImpl)
+                ),
+            )
+        } catch (e: Throwable) {
+            _logger.warning(e.message)
+            showErrorSnackBar(
+                scope = scope,
+                snackBarHostState = snackBarHostState,
+                action = {
+                    removeFromQueue(
+                        scope = scope,
+                        snackBarHostState = snackBarHostState,
+                        mediaImpl = mediaImpl
+                    )
+                }
+            )
+        }
+    }
+
     fun addNext(
         scope: CoroutineScope,
         snackBarHostState: SnackbarHostState,
@@ -207,7 +249,10 @@ class PlaybackViewModel : ViewModel() {
     ) {
         val context: Context = MainActivity.instance.applicationContext
         try {
-            this._playbackController.addNext(mediaImpl = mediaImpl)
+            PlaybackManager.addNext(
+                context = MainActivity.instance.applicationContext,
+                mediaImpl = mediaImpl
+            )
             showSnackBar(
                 scope = scope,
                 snackBarHostState = snackBarHostState,
@@ -230,14 +275,25 @@ class PlaybackViewModel : ViewModel() {
     }
 
     fun isMusicInQueue(music: Music): Boolean {
-        return this._playbackController.isMusicInQueue(music = music)
+        return PlaybackManager.isMusicInQueue(
+            context = MainActivity.instance.applicationContext,
+            music = music
+        )
     }
 
     fun start(mediaToPlay: Music? = null) {
-        this._playbackController.start(musicToPlay = mediaToPlay)
+        PlaybackManager.start(
+            context = MainActivity.instance.applicationContext,
+            musicToPlay = mediaToPlay
+        )
     }
 
     fun updateCurrentPosition() {
-        this._playbackController.updateCurrentPosition()
+        PlaybackManager.updateCurrentPosition(context = MainActivity.instance.applicationContext)
+    }
+
+    fun release() {
+        PlaybackManager.release()
+        onCleared()
     }
 }

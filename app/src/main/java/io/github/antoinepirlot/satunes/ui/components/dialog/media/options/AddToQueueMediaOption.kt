@@ -32,14 +32,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.data.local.LocalMainScope
+import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
+import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.dialog.options.DialogOption
-import io.github.antoinepirlot.satunes.ui.local.LocalMainScope
-import io.github.antoinepirlot.satunes.ui.local.LocalSnackBarHostState
-import io.github.antoinepirlot.satunes.ui.viewmodels.PlaybackViewModel
 import kotlinx.coroutines.CoroutineScope
 
 /**
@@ -51,7 +51,7 @@ internal fun AddToQueueDialogOption(
     modifier: Modifier = Modifier,
     playbackViewModel: PlaybackViewModel = viewModel(),
     mediaImpl: MediaImpl,
-    onFinished: () -> Unit,
+    onDismissRequest: () -> Unit,
 ) {
     val scope: CoroutineScope = LocalMainScope.current
     val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
@@ -64,7 +64,7 @@ internal fun AddToQueueDialogOption(
                 snackBarHostState = snackBarHostState,
                 mediaImpl = mediaImpl
             )
-            onFinished()
+            onDismissRequest()
         },
         icon = SatunesIcons.ADD_TO_PLAYBACK_QUEUE,
         text = stringResource(id = R.string.add_to_queue)
@@ -77,5 +77,5 @@ private fun AddToQueueDialogOptionPreview() {
     AddToQueueDialogOption(mediaImpl = Album(
         title = "Album",
         artist = Artist(title = "Artist Title")
-    ), onFinished = {})
+    ), onDismissRequest = {})
 }

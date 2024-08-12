@@ -29,6 +29,7 @@ import android.content.Intent
 import android.os.Environment
 import androidx.annotation.OptIn
 import androidx.media3.common.AudioAttributes
+import androidx.media3.common.C
 import androidx.media3.common.TrackSelectionParameters
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
@@ -37,7 +38,6 @@ import androidx.media3.session.MediaSessionService
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.playback.models.PlaybackSessionCallback
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
-import kotlin.system.exitProcess
 
 /**
  * @author Antoine Pirlot on 31/01/24
@@ -47,24 +47,26 @@ class PlaybackService : MediaSessionService() {
 
     companion object {
         var mediaSession: MediaSession? = null
-        var playbackController: PlaybackController? = null
+        internal var playbackController: PlaybackController? = null
     }
 
-    private lateinit var logger: SatunesLogger
+    private lateinit var _logger: SatunesLogger
+    private lateinit var _exoPlayer: ExoPlayer
 
     @OptIn(UnstableApi::class)
     override fun onCreate() {
         super.onCreate()
         SatunesLogger.DOCUMENTS_PATH =
             applicationContext.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)!!.path
-        logger = SatunesLogger.getLogger()
+        _logger = SatunesLogger.getLogger()
 
-        val exoPlayer = ExoPlayer.Builder(this)
+        _exoPlayer = ExoPlayer.Builder(applicationContext)
             .setHandleAudioBecomingNoisy(SettingsManager.pauseIfNoisyChecked) // Pause when bluetooth or headset disconnect
             .setAudioAttributes(
                 AudioAttributes.DEFAULT,
                 SettingsManager.pauseIfAnotherPlayback
             )
+            .setWakeMode(C.WAKE_MODE_LOCAL)
             .build()
 
         // Add Audio Offload only if the user want it
@@ -74,13 +76,13 @@ class PlaybackService : MediaSessionService() {
             .build()
 
         if (SettingsManager.audioOffloadChecked) {
-            exoPlayer.trackSelectionParameters = exoPlayer.trackSelectionParameters
+            _exoPlayer.trackSelectionParameters = _exoPlayer.trackSelectionParameters
                 .buildUpon()
                 .setAudioOffloadPreferences(audioOffloadPreferences)
                 .build()
         }
 
-        mediaSession = MediaSession.Builder(this, exoPlayer)
+        mediaSession = MediaSession.Builder(applicationContext, _exoPlayer)
             .setCallback(PlaybackSessionCallback)
             .build()
 
@@ -88,7 +90,7 @@ class PlaybackService : MediaSessionService() {
             playbackController =
                 PlaybackController.getInstance() // Called from init instance (session)
         } catch (e: Throwable) {
-            logger.warning("Error while getting playback controller. Shutting down $this")
+            _logger.warning("Error while getting playback controller. Shutting down $this")
             stopSelf()
         }
     }
@@ -98,9 +100,9 @@ class PlaybackService : MediaSessionService() {
         if (
             !SettingsManager.playbackWhenClosedChecked ||
             playbackController == null ||
-            !playbackController!!.isPlaying.value
+            !playbackController!!.isPlaying
         ) {
-            playbackController?.release()
+            PlaybackManager.release()
             stopSelf()
         }
     }
@@ -109,7 +111,7 @@ class PlaybackService : MediaSessionService() {
         if (
             !SettingsManager.playbackWhenClosedChecked ||
             playbackController == null ||
-            !playbackController!!.isPlaying.value
+            !playbackController!!.isPlaying
         ) {
             mediaSession?.run {
                 player.release()
@@ -117,7 +119,6 @@ class PlaybackService : MediaSessionService() {
                 mediaSession = null
             }
             super.onDestroy()
-            exitProcess(0)
         }
     }
 

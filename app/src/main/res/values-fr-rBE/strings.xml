@@ -32,8 +32,7 @@
     <string name="loading_data">Chargement des données…</string>
     <string name="no_folder">Aucun dossier contenant de la musique n\'a été trouvé</string>
     <string name="add_to">"Ajouter à "</string>
-    <string name="exclusion_setting">Exclusion de fichiers</string>
-    <string name="include_ringtones">Inclure les sonneries</string>
+    <string name="folders_settings">Dossiers</string>
     <string name="bar_speed">"Vitesse de la barre de progression: "</string>
     <string name="export">Exporter</string>
     <string name="export_all">Exporter tout</string>
@@ -82,4 +81,12 @@
     <string name="update_playlist_success">%1$s a été mise à jour.</string>
     <string name="bar_speed_label">Vitesse</string>
     <string name="update_modal_not_permanently">Le modal sera toujours montré à la prochaine ouverture.</string>
+    <string name="add_path_button">Ajouter un nouveau chemin à %1$s</string>
+    <string name="path_set_empty">Aucun chemin sélectionné</string>
+    <string name="refresh_data_button">Recharger toutes les données</string>
+    <string name="remove_musics_from_playlist_success">Les musiques ont été supprimées de %1$s</string>
+    <string name="add_music_to_playlist_success">%1$s a été ajouté à %2$s</string>
+    <string name="add_musics_to_playlists_success">Les musiques ont été ajoutées aux playlists</string>
+    <string name="remove_from_queue_option">Retirer de la file d\'attente</string>
+    <string name="remove_from_queue_success">%1$s a été supprimée de la liste d\'attente.</string>
 </resources>

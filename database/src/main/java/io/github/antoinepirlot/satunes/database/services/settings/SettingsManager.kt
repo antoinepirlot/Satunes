@@ -26,6 +26,7 @@
 package io.github.antoinepirlot.satunes.database.services.settings
 
 import android.content.Context
+import android.net.Uri
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.datastore.core.DataStore
@@ -36,10 +37,13 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.floatPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.media3.common.Player
 import io.github.antoinepirlot.satunes.database.models.BarSpeed
+import io.github.antoinepirlot.satunes.database.models.FoldersSelection
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
+import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -61,7 +65,6 @@ object SettingsManager {
     private const val DEFAULT_PLAYBACK_WHEN_CLOSED_CHECKED =
         false //App stop after removed app from multi-task if false
     private const val DEFAULT_PAUSE_IF_NOISY = true
-    private const val DEFAULT_INCLUDE_RINGTONES = false
     private val DEFAULT_BAR_SPEED_VALUE: BarSpeed = BarSpeed.NORMAL
     private const val DEFAULT_REPEAT_MODE: Int = Player.REPEAT_MODE_OFF
     private const val DEFAULT_SHUFFLE_MODE_CHECKED: Boolean = false
@@ -75,6 +78,8 @@ object SettingsManager {
     private const val DEFAULT_GENRES_FILTER: Boolean = false
     private const val DEFAULT_FOLDERS_FILTER: Boolean = false
     private const val DEFAULT_PLAYLISTS_FILTER: Boolean = false
+    private val DEFAULT_FOLDERS_SELECTION_SELECTED: FoldersSelection = FoldersSelection.INCLUDE
+    private val DEFAULT_SELECTED_PATHS: Set<String> = setOf("/0/Music/%")
 
     /**
      * KEYS
@@ -88,7 +93,6 @@ object SettingsManager {
     private val PLAYBACK_WHEN_CLOSED_CHECKED_PREFERENCES_KEY =
         booleanPreferencesKey("playback_when_closed_checked")
     private val PAUSE_IF_NOISY_PREFERENCES_KEY = booleanPreferencesKey("pause_if_noisy")
-    private val INCLUDE_RINGTONES_KEY = booleanPreferencesKey("include_ringtones")
     private val BAR_SPEED_KEY = floatPreferencesKey("bar_speed")
     private val REPEAT_MODE_KEY = intPreferencesKey("repeat_mode")
     private val SHUFFLE_MODE_KEY = booleanPreferencesKey("shuffle_mode")
@@ -105,6 +109,10 @@ object SettingsManager {
         booleanPreferencesKey("folders_filter")
     private val PLAYLISTS_FILTER_KEY: Preferences.Key<Boolean> =
         booleanPreferencesKey("playlists_filter")
+    private val FOLDERS_SELECTION_SELECTED_KEY: Preferences.Key<Int> =
+        intPreferencesKey("folders_selection")
+    private val SELECTED_PATHS_KEY: Preferences.Key<Set<String>> =
+        stringSetPreferencesKey("selected_paths_set")
 
     /**
      * VARIABLES
@@ -124,8 +132,6 @@ object SettingsManager {
     var playbackWhenClosedChecked: Boolean = DEFAULT_PLAYBACK_WHEN_CLOSED_CHECKED
         private set
     var pauseIfNoisyChecked: Boolean = DEFAULT_PAUSE_IF_NOISY
-        private set
-    var includeRingtonesChecked: Boolean = DEFAULT_INCLUDE_RINGTONES
         private set
     var barSpeed: BarSpeed = DEFAULT_BAR_SPEED_VALUE
         private set
@@ -156,6 +162,12 @@ object SettingsManager {
     var musicsFilter: Boolean = DEFAULT_MUSICS_FILTER
         private set
 
+    var foldersSelectionSelected: FoldersSelection = DEFAULT_FOLDERS_SELECTION_SELECTED
+        private set
+
+    var foldersPathsSelectedSet: MutableState<Set<String>> = mutableStateOf(DEFAULT_SELECTED_PATHS)
+        private set
+
     private val _logger = SatunesLogger.getLogger()
 
     suspend fun loadSettings(context: Context) {
@@ -182,9 +194,6 @@ object SettingsManager {
             pauseIfNoisyChecked =
                 preferences[PAUSE_IF_NOISY_PREFERENCES_KEY] ?: DEFAULT_PAUSE_IF_NOISY
 
-            includeRingtonesChecked =
-                preferences[INCLUDE_RINGTONES_KEY] ?: DEFAULT_INCLUDE_RINGTONES
-
             barSpeed = getBarSpeed(preferences[BAR_SPEED_KEY])
 
             repeatMode = preferences[REPEAT_MODE_KEY] ?: DEFAULT_REPEAT_MODE
@@ -197,6 +206,15 @@ object SettingsManager {
 
             audioOffloadChecked =
                 preferences[AUDIO_OFFLOAD_CHECKED_KEY] ?: DEFAULT_AUDIO_OFFLOAD_CHECKED
+
+            foldersSelectionSelected =
+                getFoldersSelection(preferences[FOLDERS_SELECTION_SELECTED_KEY])
+
+            foldersPathsSelectedSet.value =
+                preferences[SELECTED_PATHS_KEY] ?: DEFAULT_SELECTED_PATHS
+
+            DataLoader.loadFoldersPaths()
+
             loadWhatsNew(context = context, preferences = preferences)
 
             loadFilters(context = context)
@@ -211,6 +229,31 @@ object SettingsManager {
             BarSpeed.SLOW.speed -> BarSpeed.SLOW
             BarSpeed.VERY_SLOW.speed -> BarSpeed.VERY_SLOW
             else -> DEFAULT_BAR_SPEED_VALUE
+        }
+    }
+
+    private fun getFoldersSelection(id: Int?): FoldersSelection {
+        if (id == null) {
+            return DEFAULT_FOLDERS_SELECTION_SELECTED
+        }
+        // Warning, be sure the id is correct
+        return when (id) {
+            1 -> FoldersSelection.INCLUDE
+            2 -> FoldersSelection.EXCLUDE
+
+            else -> DEFAULT_FOLDERS_SELECTION_SELECTED
+        }
+    }
+
+    suspend fun loadFilters(context: Context) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            foldersFilter = preferences[FOLDERS_FILTER_KEY] ?: DEFAULT_FOLDERS_FILTER
+            artistsFilter = preferences[ARTISTS_FILTER_KEY] ?: DEFAULT_ARTISTS_FILTER
+            albumsFilter = preferences[ALBUMS_FILTER_KEY] ?: DEFAULT_ALBUMS_FILTER
+            genresFilter = preferences[GENRES_FILTER_KEY] ?: DEFAULT_GENRES_FILTER
+            playlistsFilter =
+                preferences[PLAYLISTS_FILTER_KEY] ?: DEFAULT_PLAYLISTS_FILTER
+            musicsFilter = preferences[MUSICS_FILTER_KEY] ?: DEFAULT_MUSICS_FILTER
         }
     }
 
@@ -282,13 +325,6 @@ object SettingsManager {
         context.dataStore.edit { preferences: MutablePreferences ->
             pauseIfNoisyChecked = !pauseIfNoisyChecked
             preferences[PAUSE_IF_NOISY_PREFERENCES_KEY] = pauseIfNoisyChecked
-        }
-    }
-
-    suspend fun switchIncludeRingtones(context: Context) {
-        context.dataStore.edit { preferences: MutablePreferences ->
-            includeRingtonesChecked = !includeRingtonesChecked
-            preferences[INCLUDE_RINGTONES_KEY] = includeRingtonesChecked
         }
     }
 
@@ -407,15 +443,45 @@ object SettingsManager {
         }
     }
 
-    suspend fun loadFilters(context: Context) {
+    suspend fun selectFoldersSelection(context: Context, foldersSelection: FoldersSelection) {
         context.dataStore.edit { preferences: MutablePreferences ->
-            foldersFilter = preferences[FOLDERS_FILTER_KEY] ?: DEFAULT_FOLDERS_FILTER
-            artistsFilter = preferences[ARTISTS_FILTER_KEY] ?: DEFAULT_ARTISTS_FILTER
-            albumsFilter = preferences[ALBUMS_FILTER_KEY] ?: DEFAULT_ALBUMS_FILTER
-            genresFilter = preferences[GENRES_FILTER_KEY] ?: DEFAULT_GENRES_FILTER
-            playlistsFilter =
-                preferences[PLAYLISTS_FILTER_KEY] ?: DEFAULT_PLAYLISTS_FILTER
-            musicsFilter = preferences[MUSICS_FILTER_KEY] ?: DEFAULT_MUSICS_FILTER
+            foldersSelectionSelected = foldersSelection
+            preferences[FOLDERS_SELECTION_SELECTED_KEY] = foldersSelectionSelected.id
+        }
+    }
+
+    /**
+     * Add a path to the selected paths set and memorize it in storage.
+     *
+     * @param context the app context
+     * @param uri the uri containing the selected path
+     */
+    suspend fun addPath(context: Context, uri: Uri) {
+        val formattedPath: String = getFormattedPath(path = uri.path!!)
+        context.dataStore.edit { preferences: MutablePreferences ->
+            val newSet: MutableSet<String> = foldersPathsSelectedSet.value.toMutableSet()
+            newSet.add(formattedPath)
+            foldersPathsSelectedSet.value = newSet.toSet()
+            preferences[SELECTED_PATHS_KEY] = foldersPathsSelectedSet.value
+        }
+    }
+
+    private fun getFormattedPath(path: String): String {
+        val formattedPath: String = Uri.decode(path)
+        val splitList: List<String> = formattedPath.split(":")
+        var storage: String = splitList[0].split("/").last()
+        if (storage == "primary") {
+            storage = "0"
+        }
+        return '/' + storage + '/' + splitList[1] + "/%"
+    }
+
+    suspend fun removePath(context: Context, path: String) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            val newSet: MutableSet<String> = foldersPathsSelectedSet.value.toMutableSet()
+            newSet.remove(path)
+            foldersPathsSelectedSet.value = newSet.toSet()
+            preferences[SELECTED_PATHS_KEY] = foldersPathsSelectedSet.value
         }
     }
 }

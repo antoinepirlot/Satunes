@@ -54,4 +54,6 @@
     <string name="slow_speed">Slow</string>
     <string name="very_slow_speed">Very slow</string>
     <string name="importing_missed_musics">%d music(s) not found.</string>
+    <string name="include">Include</string>
+    <string name="exclude">Exclude</string>
 </resources>

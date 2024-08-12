@@ -84,7 +84,7 @@ class Music(
         artist.addMusic(music = this)
         genre.addMusic(music = this)
         folder.addMusic(music = this)
-        loadAlbumArtwork(context = context)
+//        loadAlbumArtwork(context = context)
     }
 
     fun switchLike(context: Context) {
@@ -152,6 +152,18 @@ class Music(
                 /* No artwork found*/
                 artwork = null
             }
+        }
+    }
+
+    fun getAlbumArtwork(context: Context): Bitmap? {
+        val mediaMetadataRetriever = MediaMetadataRetriever()
+        mediaMetadataRetriever.setDataSource(context, uri)
+        val artwork: ByteArray? = mediaMetadataRetriever.embeddedPicture
+        mediaMetadataRetriever.release()
+        return if (artwork == null) {
+            null
+        } else {
+            BitmapFactory.decodeByteArray(artwork, 0, artwork.size)
         }
     }
 

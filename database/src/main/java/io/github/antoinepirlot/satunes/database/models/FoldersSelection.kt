@@ -23,18 +23,29 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.states
+package io.github.antoinepirlot.satunes.database.models
 
-import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
+import io.github.antoinepirlot.satunes.database.R
 
 /**
- * @author Antoine Pirlot on 23/07/2024
+ * @author Antoine Pirlot on 09/08/2024
  */
-data class SearchUiState(
-    val musicsFilter: Boolean = SettingsManager.musicsFilter,
-    val albumsFilter: Boolean = SettingsManager.albumsFilter,
-    val artistsFilter: Boolean = SettingsManager.artistsFilter,
-    val genresFilter: Boolean = SettingsManager.genresFilter,
-    val foldersFilter: Boolean = SettingsManager.foldersFilter,
-    val playlistsFilter: Boolean = SettingsManager.playlistsFilter,
-)
+enum class FoldersSelection(
+    internal val id: Int,
+    val stringId: Int,
+    val likeQueryAttribute: String,
+    val andOrQueryAttribute: String
+) {
+    INCLUDE(
+        id = 1,
+        stringId = R.string.include,
+        likeQueryAttribute = "LIKE",
+        andOrQueryAttribute = "OR"
+    ),
+    EXCLUDE(
+        id = 2,
+        stringId = R.string.exclude,
+        likeQueryAttribute = "NOT LIKE",
+        andOrQueryAttribute = "AND"
+    )
+}

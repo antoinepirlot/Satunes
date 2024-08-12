@@ -223,4 +223,22 @@ object DataManager {
             playlistsMapUpdated.value = true
         }
     }
+
+    internal fun resetAllData() {
+        musicSortedSet.clear()
+        musicMapById.clear()
+        musicMapByAbsolutePath.clear()
+        rootFolderSortedSet.clear()
+        folderMapById.clear()
+        folderSortedSet.clear()
+        artistMapById.clear()
+        artistMap.clear()
+        albumMapById.clear()
+        albumSortedMap.clear()
+        genreMapById.clear()
+        genreMap.clear()
+        playlistsMapById.clear()
+        playlistsSortedMap.clear()
+        playlistsMapUpdated.value = true
+    }
 }

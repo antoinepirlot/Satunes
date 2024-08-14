@@ -109,7 +109,7 @@ private fun Footer(
     Column(
         modifier = modifier
             .padding(vertical = spacerSize)
-            .width(230.dp),
+            .width(250.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
     ) {

@@ -77,7 +77,14 @@ internal fun FoldersPathsSelection(
             ) {
                 NormalText(
                     modifier = Modifier.fillMaxWidth(fraction = 0.8f),
-                    text = it.removeSuffix("%")
+                    text = if (it.startsWith("/0/")) {
+                        it.replaceFirst(
+                            "/0/",
+                            stringResource(id = R.string.this_device) + '/'
+                        )
+                    } else {
+                        it
+                    }.removeSuffix("%")
                 )
                 IconButton(
                     icon = SatunesIcons.REMOVE_ICON,

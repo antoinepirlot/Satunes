@@ -26,10 +26,13 @@
 package io.github.antoinepirlot.satunes.ui.components.settings.folders
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
@@ -102,15 +105,16 @@ private fun Footer(
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     val spacerSize: Dp = 5.dp
 
-    Spacer(modifier = Modifier.size(spacerSize))
-
     //Show text "Add path to exclude/include".
-    Row(
-        modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+    Column(
+        modifier = modifier
+            .padding(vertical = spacerSize)
+            .width(230.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.SpaceBetween
     ) {
         ButtonWithIcon(
+            modifier = Modifier.fillMaxWidth(),
             icon = SatunesIcons.ADD,
             onClick = { satunesViewModel.addPath() },
             text = stringResource(
@@ -120,8 +124,11 @@ private fun Footer(
                 ).lowercase()
             )
         )
+
         Spacer(modifier = Modifier.size(spacerSize))
+
         ButtonWithIcon(
+            modifier = Modifier.fillMaxWidth(),
             icon = SatunesIcons.REFRESH,
             onClick = {
                 satunesViewModel.resetAllData(playbackViewModel = playbackViewModel)
@@ -132,7 +139,6 @@ private fun Footer(
             text = stringResource(id = R.string.refresh_data_button)
         )
     }
-    Spacer(modifier = Modifier.size(spacerSize))
 }
 
 @Preview

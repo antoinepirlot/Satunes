@@ -27,9 +27,9 @@ package io.github.antoinepirlot.satunes.ui.components.buttons
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
@@ -64,7 +64,7 @@ internal fun ButtonWithIcon(
     border: BorderStroke? = null,
     contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
-    text: String
+    text: String,
 ) {
     Button(
         onClick = onClick,
@@ -78,13 +78,13 @@ internal fun ButtonWithIcon(
         interactionSource = interactionSource,
     ) {
         Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
             if (isLoading) {
                 LoadingCircle(modifier = Modifier.size(20.dp))
             } else {
                 Icon(imageVector = icon.imageVector, contentDescription = icon.description)
+                Spacer(modifier = Modifier.size(10.dp))
                 NormalText(text = text)
             }
         }

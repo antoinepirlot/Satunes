@@ -38,6 +38,7 @@ import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
+import io.github.antoinepirlot.satunes.playback.models.PlaybackListener
 import io.github.antoinepirlot.satunes.playback.models.Playlist
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController.Companion.DEFAULT_CURRENT_POSITION_PROGRESSION
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController.Companion.DEFAULT_HAS_NEXT
@@ -57,6 +58,8 @@ object PlaybackManager {
     private var _playbackController: PlaybackController? = null
 
     internal lateinit var playlist: Playlist
+
+    internal var listener: PlaybackListener? = null
 
     var isEnded: MutableState<Boolean> = mutableStateOf(DEFAULT_IS_ENDED)
 
@@ -80,8 +83,10 @@ object PlaybackManager {
         mutableFloatStateOf(DEFAULT_CURRENT_POSITION_PROGRESSION)
         private set
 
-    fun initPlayback(context: Context) {
-        this._playbackController = PlaybackController.initInstance(context = context)
+    fun initPlayback(context: Context, listener: PlaybackListener? = this.listener) {
+        this.listener = listener
+        this._playbackController =
+            PlaybackController.initInstance(context = context, listener = listener)
         reset()
     }
 

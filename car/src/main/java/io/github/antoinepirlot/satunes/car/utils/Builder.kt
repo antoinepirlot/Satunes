@@ -31,6 +31,9 @@ import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaDescriptionCompat
 import androidx.media.utils.MediaConstants
+import io.github.antoinepirlot.satunes.car.playback.SatunesCarMusicService
+import io.github.antoinepirlot.satunes.database.R
+import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Folder
@@ -103,11 +106,16 @@ internal fun buildMediaItem(media: MediaImpl): MediaBrowserCompat.MediaItem {
         )
         extras.putDouble(MediaConstants.DESCRIPTION_EXTRAS_KEY_COMPLETION_PERCENTAGE, 0.0)
     }
+    val title: String = if (media is Playlist && media.title == LIKES_PLAYLIST_TITLE) {
+        SatunesCarMusicService.instance.getString(R.string.likes_playlist_title)
+    } else {
+        media.title
+    }
     return buildMediaItem(
         id = media.id.toString(),
         description = description,
         subtitle = if (media is Music) media.artist.title else null,
-        title = media.title,
+        title = title,
         uri = if (media is Music) media.uri else null,
         icon = media.artwork,
         flags = flags

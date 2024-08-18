@@ -31,6 +31,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import io.github.antoinepirlot.satunes.MainActivity
+import io.github.antoinepirlot.satunes.data.states.SearchUiState
 import io.github.antoinepirlot.satunes.database.R
 import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.models.Album
@@ -43,7 +44,6 @@ import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.models.SearchChips
-import io.github.antoinepirlot.satunes.data.states.SearchUiState
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -158,55 +158,56 @@ class SearchViewModel : ViewModel() {
             val query: String = this.query.trim().lowercase()
 
             for (searchChip: SearchChips in selectedSearchChips) {
-                dataViewModel.getMusicSet().forEach { music: Music ->
-                    when (searchChip) {
-                        SearchChips.MUSICS -> {
+                when (searchChip) {
+                    SearchChips.MUSICS -> {
+                        dataViewModel.getMusicSet().forEach { music: Music ->
                             if (music.title.lowercase().contains(query)) {
                                 mediaImplSet.add(element = music)
                             }
                         }
+                    }
 
-                        SearchChips.ARTISTS -> {
-                            val artist: Artist = music.artist
+                    SearchChips.ARTISTS -> {
+                        dataViewModel.getArtistSet().forEach { artist: Artist ->
                             if (artist.title.lowercase().contains(query)) {
                                 mediaImplSet.add(element = artist)
                             }
                         }
+                    }
 
-                        SearchChips.ALBUMS -> {
-                            val album: Album = music.album
+                    SearchChips.ALBUMS -> {
+                        dataViewModel.getAlbumSet().forEach { album: Album ->
                             if (album.title.lowercase().contains(query)) {
                                 mediaImplSet.add(element = album)
                             }
                         }
+                    }
 
-                        SearchChips.GENRES -> {
-                            val genre: Genre = music.genre
+                    SearchChips.GENRES -> {
+                        dataViewModel.getGenreSet().forEach { genre: Genre ->
                             if (genre.title.lowercase().contains(query)) {
                                 mediaImplSet.add(element = genre)
                             }
                         }
+                    }
 
-                        SearchChips.FOLDERS -> {
-                            val folder: Folder = music.folder
+                    SearchChips.FOLDERS -> {
+                        dataViewModel.getFolderSet().forEach { folder: Folder ->
                             if (folder.title.lowercase().contains(query)) {
                                 mediaImplSet.add(element = folder)
                             }
                         }
-
-                        SearchChips.PLAYLISTS -> {
-                            /* Nothing at this stage, see below */
-                        }
                     }
-                }
-                if (searchChip == SearchChips.PLAYLISTS) {
-                    dataViewModel.getPlaylistSet().forEach { playlist: Playlist ->
-                        val context = MainActivity.instance.applicationContext
-                        if (playlist.title == LIKES_PLAYLIST_TITLE) {
-                            playlist.title = context.getString(R.string.likes_playlist_title)
-                        }
-                        if (playlist.title.lowercase().contains(query)) {
-                            mediaImplSet.add(element = playlist)
+
+                    SearchChips.PLAYLISTS -> {
+                        dataViewModel.getPlaylistSet().forEach { playlist: Playlist ->
+                            val context = MainActivity.instance.applicationContext
+                            if (playlist.title == LIKES_PLAYLIST_TITLE) {
+                                playlist.title = context.getString(R.string.likes_playlist_title)
+                            }
+                            if (playlist.title.lowercase().contains(query)) {
+                                mediaImplSet.add(element = playlist)
+                            }
                         }
                     }
                 }

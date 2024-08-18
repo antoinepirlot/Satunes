@@ -107,6 +107,7 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
     }
 
     private fun loadAllPlaybackData() {
+        DataLoader.resetAllData()
         DataLoader.loadAllData(context = baseContext)
         PlaybackManager.initPlayback(context = applicationContext)
         runBlocking {

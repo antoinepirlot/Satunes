@@ -3,6 +3,17 @@ Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
 ## 2.1 (Android 5.1.1 Lollipop and later)
 
+### 2.1.1
+
+Improvements, optimizations and troubleshooting:
+
+* Fix Android Auto issues
+* Fix app crash everytime the app launch itself with Android Auto
+* Path:
+  * Show "this device" instead of "/0"
+  * Move refresh button to a new line
+* Optimize search process
+
 ### 2.1.0
 
 New features:

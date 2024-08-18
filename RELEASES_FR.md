@@ -3,6 +3,17 @@ You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
 ## 2.1 (Android 5.1.1 Lollipop et ultérieur)
 
+### 2.1.1
+
+Améliorations, optimisations et dépannage:
+
+* Correction des problèmes d'Android Auto
+* Correction du plantage de l'application à chaque lancement de l'application avec Android Auto
+* Chemin:
+  * Afficher "cet appareil" au lieu de "/0"
+  * Déplacement du bouton d'actualisation vers une nouvelle ligne
+* Optimisation du processus de recherche
+
 ### 2.1.0
 
 Nouvelles fonctionnalités:

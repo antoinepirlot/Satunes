@@ -107,12 +107,16 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
     }
 
     private fun loadAllPlaybackData() {
-        DataLoader.resetAllData()
-        DataLoader.loadAllData(context = baseContext)
-        PlaybackManager.initPlayback(context = applicationContext)
+        if (!DataLoader.isLoaded.value && !DataLoader.isLoading.value) {
+            DataLoader.resetAllData()
+            DataLoader.loadAllData(context = baseContext)
+        }
+        PlaybackManager.initPlayback(
+            context = applicationContext,
+            listener = SatunesPlaybackListener
+        )
         runBlocking {
-            while (
-                !DataLoader.isLoaded.value) {
+            while (!DataLoader.isLoaded.value) {
                 delay(50) //Wait (use delay to reduce cpu usage)
             }
         }

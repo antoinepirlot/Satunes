@@ -48,6 +48,7 @@ import io.github.antoinepirlot.satunes.database.models.BarSpeed
 import io.github.antoinepirlot.satunes.database.models.FoldersSelection
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.database.services.data.DataLoader
+import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.internet.updates.APKDownloadStatus
 import io.github.antoinepirlot.satunes.internet.updates.UpdateAvailableStatus
@@ -184,6 +185,18 @@ internal class SatunesViewModel : ViewModel() {
 
     fun loadAllData() {
         DataLoader.loadAllData(context = MainActivity.instance.applicationContext)
+    }
+
+    fun reloadAllData(playbackViewModel: PlaybackViewModel) {
+        CoroutineScope(Dispatchers.Default).launch {
+            while (DatabaseManager.exportingPlaylist) {
+                // Wait
+            }
+            CoroutineScope(Dispatchers.Main).launch {
+                this@SatunesViewModel.resetAllData(playbackViewModel = playbackViewModel)
+                this@SatunesViewModel.loadAllData()
+            }
+        }
     }
 
     internal fun updateIsAudioAllowed() {

@@ -89,4 +89,8 @@
     <string name="add_musics_to_playlists_success">Les musiques ont été ajoutées aux playlists</string>
     <string name="remove_from_queue_option">Retirer de la file d\'attente</string>
     <string name="remove_from_queue_success">%1$s a été supprimée de la liste d\'attente.</string>
+    <string name="export_all_dialog_content">Si tu as modifié les chemins, je te conseille d\'exporter tes playlists. \nCertaines musiques peuvent être définitivement supprimées des playlists.\nSouhaites-tu exporter tes playlists?</string>
+    <string name="warning">Attention</string>
+    <string name="yes">Oui</string>
+    <string name="no">Non</string>
 </resources>

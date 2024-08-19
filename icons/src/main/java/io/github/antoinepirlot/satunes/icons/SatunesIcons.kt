@@ -65,6 +65,7 @@ import androidx.compose.material.icons.rounded.SkipNext
 import androidx.compose.material.icons.rounded.SkipPrevious
 import androidx.compose.material.icons.rounded.Update
 import androidx.compose.material.icons.rounded.Upload
+import androidx.compose.material.icons.rounded.Warning
 import androidx.compose.ui.graphics.vector.ImageVector
 
 /**
@@ -135,4 +136,5 @@ enum class SatunesIcons(val imageVector: ImageVector, val description: String) {
         description = "Remove from queue Icon"
     ),
     REMOVE_ICON(imageVector = Icons.Rounded.Delete, description = "Remove Icon"),
+    WARNING(imageVector = Icons.Rounded.Warning, description = "Warning Icon"),
 }

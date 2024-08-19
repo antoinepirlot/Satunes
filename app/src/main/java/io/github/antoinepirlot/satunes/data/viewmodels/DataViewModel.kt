@@ -591,6 +591,7 @@ class DataViewModel : ViewModel() {
     fun importPlaylists() = MainActivity.instance.openFileToImportPlaylists()
 
     fun exportPlaylist(playlist: Playlist) {
+        DatabaseManager.exportingPlaylist = true
         MainActivity.instance.createFileToExportPlaylist(
             defaultFileName = playlist.title,
             playlist = playlist
@@ -601,14 +602,17 @@ class DataViewModel : ViewModel() {
         scope: CoroutineScope,
         snackBarHostState: SnackbarHostState,
     ) {
+        DatabaseManager.exportingPlaylist = true
         if (DataManager.getPlaylistSet().isEmpty()) {
             showSnackBar(
                 scope = scope,
                 snackBarHostState = snackBarHostState,
                 message = MainActivity.instance.getString(RDb.string.no_playlist)
             )
+            DatabaseManager.exportingPlaylist = false
             return
         }
+
         MainActivity.instance.createFileToExportPlaylists(defaultFileName = "Satunes")
     }
 }

@@ -28,8 +28,6 @@ package io.github.antoinepirlot.satunes.database.services.database
 import android.content.Context
 import android.database.sqlite.SQLiteConstraintException
 import android.net.Uri
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import io.github.antoinepirlot.satunes.database.R
 import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.daos.MusicDAO
@@ -70,7 +68,8 @@ class DatabaseManager private constructor(context: Context) {
 
     companion object {
         private lateinit var _instance: DatabaseManager
-        val importingPlaylist: MutableState<Boolean> = mutableStateOf(false)
+        var importingPlaylist: Boolean = false
+        var exportingPlaylist: Boolean = false
 
         fun getInstance(): DatabaseManager {
             if (!this::_instance.isInitialized) {
@@ -272,12 +271,14 @@ class DatabaseManager private constructor(context: Context) {
             this.playlistDao.getPlaylistWithMusics(playlistId = playlist.id)!!
         val json: String = Json.encodeToString(playlistWithMusics)
         exportJson(context = context, json = json, uri = uri)
+        exportingPlaylist = false
     }
 
     fun exportPlaylists(context: Context, uri: Uri) {
         val playlistsWithMusics: List<PlaylistWithMusics> = this.getAllPlaylistWithMusics()
         val json: String = Json.encodeToString(playlistsWithMusics)
         exportJson(context = context, json = json, uri = uri)
+        exportingPlaylist = false
     }
 
     private fun exportJson(context: Context, json: String, uri: Uri) {
@@ -300,7 +301,7 @@ class DatabaseManager private constructor(context: Context) {
     }
 
     fun importPlaylists(context: Context, uri: Uri) {
-        importingPlaylist.value = true
+        importingPlaylist = true
         val logger = SatunesLogger.getLogger()
         CoroutineScope(Dispatchers.IO).launch {
             showToastOnUiThread(
@@ -333,7 +334,7 @@ class DatabaseManager private constructor(context: Context) {
                 logger.severe(e.message)
                 throw e
             } finally {
-                importingPlaylist.value = false
+                importingPlaylist = false
             }
         }
     }

@@ -146,14 +146,16 @@ object DataLoader {
      */
     fun loadAllData(context: Context) {
         //TODO No coroutine here as in app its a thread but in android auto it's must block the process
+        if (isLoading.value || isLoaded.value) return
+
         if (
-            isLoading.value
-            || isLoaded.value
-            || this.selection_args.isEmpty()
+            this.selection_args.isEmpty()
             && SettingsManager.foldersSelectionSelected == FoldersSelection.INCLUDE
         ) {
+            isLoaded.value = true
             return
         }
+
         isLoading.value = true
         CoroutineScope(Dispatchers.IO).launch {
             context.contentResolver.query(

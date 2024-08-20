@@ -38,6 +38,7 @@ import androidx.glance.appwidget.components.SquareIconButton
 import androidx.glance.appwidget.provideContent
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Row
+import androidx.glance.layout.Spacer
 import androidx.glance.layout.fillMaxWidth
 import androidx.glance.layout.size
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
@@ -64,12 +65,14 @@ class ClassicPlaybackWidget : GlanceAppWidget() {
     ) {
         Row(
             modifier = modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalAlignment = Alignment.CenterVertically
         ) {
             val isLoaded: Boolean by PlaybackManager.isLoaded
 
             if (isLoaded) {
                 PreviousButton(context = context)
+                Spacer(modifier = GlanceModifier.size(16.dp))
             }
             PlayPauseButton(modifier = GlanceModifier.size(60.dp), context = context)
         }

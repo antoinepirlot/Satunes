@@ -26,12 +26,8 @@
 package io.github.antoinepirlot.satunes.widgets
 
 import android.content.Context
-import androidx.compose.material3.LocalContentColor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.unit.dp
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
@@ -41,43 +37,52 @@ import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.components.CircleIconButton
 import androidx.glance.appwidget.components.SquareIconButton
 import androidx.glance.appwidget.provideContent
+import androidx.glance.layout.Alignment
 import androidx.glance.layout.Row
 import androidx.glance.layout.fillMaxWidth
 import androidx.glance.layout.size
+import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
 import io.github.antoinepirlot.satunes.icons.R as RIcon
 
 /**
  * @author Antoine Pirlot on 20/08/2024
  */
+
 class ClassicPlaybackWidget : GlanceAppWidget() {
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         provideContent {
             GlanceTheme {
-                ClassicPlaybackWidgetComposable()
+                ClassicPlaybackWidgetComposable(context = context)
             }
         }
     }
 
     @Composable
-    private fun ClassicPlaybackWidgetComposable(modifier: GlanceModifier = GlanceModifier) {
+    private fun ClassicPlaybackWidgetComposable(
+        modifier: GlanceModifier = GlanceModifier,
+        context: Context
+    ) {
         Row(
-            modifier = modifier.fillMaxWidth()
+            modifier = modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            PlayPauseButton(modifier = GlanceModifier.size(60.dp))
+            PlayPauseButton(modifier = GlanceModifier.size(60.dp), context = context)
         }
     }
 
     @Composable
-    private fun PlayPauseButton(modifier: GlanceModifier = GlanceModifier) {
-        var isPlaying: Boolean by remember { mutableStateOf(false) }
+    private fun PlayPauseButton(
+        modifier: GlanceModifier = GlanceModifier,
+        context: Context
+    ) {
+        val isPlaying: Boolean by PlaybackManager.isPlaying
         if (isPlaying) {
-            LocalContentColor.current
             SquareIconButton(
                 modifier = modifier,
                 imageProvider = ImageProvider(resId = RIcon.drawable.pause),
                 contentDescription = "Pause",
-                onClick = { isPlaying = false },
+                onClick = { PlaybackManager.pause(context = context) },
                 backgroundColor = GlanceTheme.colors.background,
                 contentColor = GlanceTheme.colors.onSurface,
             )
@@ -86,7 +91,7 @@ class ClassicPlaybackWidget : GlanceAppWidget() {
                 modifier = modifier,
                 imageProvider = ImageProvider(resId = RIcon.drawable.play),
                 contentDescription = "Play",
-                onClick = { isPlaying = true },
+                onClick = { PlaybackManager.play(context = context) },
                 backgroundColor = GlanceTheme.colors.background,
                 contentColor = GlanceTheme.colors.onSurface,
             )

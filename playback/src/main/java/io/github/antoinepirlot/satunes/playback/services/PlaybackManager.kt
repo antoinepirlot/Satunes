@@ -140,7 +140,12 @@ object PlaybackManager {
 
     fun play(context: Context) {
         checkPlaybackController(context = context)
-        this._playbackController!!.play()
+        if (!this::playlist.isInitialized) {
+            this._playbackController!!.loadMusics(musicSet = DataManager.getMusicSet())
+            this._playbackController!!.start()
+        } else {
+            this._playbackController!!.play()
+        }
     }
 
     fun pause(context: Context) {

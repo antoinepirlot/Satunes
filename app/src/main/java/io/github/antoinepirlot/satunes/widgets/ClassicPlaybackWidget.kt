@@ -66,6 +66,11 @@ class ClassicPlaybackWidget : GlanceAppWidget() {
             modifier = modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            val isLoaded: Boolean by PlaybackManager.isLoaded
+
+            if (isLoaded) {
+                PreviousButton(context = context)
+            }
             PlayPauseButton(modifier = GlanceModifier.size(60.dp), context = context)
         }
     }
@@ -95,5 +100,18 @@ class ClassicPlaybackWidget : GlanceAppWidget() {
                 contentColor = GlanceTheme.colors.onSurface,
             )
         }
+    }
+
+    @Composable
+    private fun PreviousButton(
+        modifier: GlanceModifier = GlanceModifier,
+        context: Context,
+    ) {
+        CircleIconButton(
+            modifier = modifier,
+            imageProvider = SatunesIcons.SKIP_PREVIOUS.imageProvider!!,
+            contentDescription = "Skip previous",
+            onClick = { PlaybackManager.playPrevious(context = context) },
+        )
     }
 }

@@ -141,7 +141,11 @@ enum class SatunesIcons(
     SETTING_UPDATE(imageVector = Icons.Rounded.Update, description = "Update Setting Icon"),
     SHUFFLE(imageVector = Icons.Rounded.Shuffle, description = "Shuffle Icon"),
     SKIP_NEXT(imageVector = Icons.Rounded.SkipNext, description = "Skip Next Icon"),
-    SKIP_PREVIOUS(imageVector = Icons.Rounded.SkipPrevious, description = "Skip Previous Icon"),
+    SKIP_PREVIOUS(
+        imageVector = Icons.Rounded.SkipPrevious,
+        imageProvider = ImageProvider(resId = R.drawable.skip_previous),
+        description = "Skip Previous Icon"
+    ),
     UNLIKED(imageVector = Icons.Rounded.FavoriteBorder, description = "Unliked Icon"),
     REFRESH(imageVector = Icons.Rounded.Refresh, description = "Refresh Icon"),
     REMOVE_FROM_QUEUE(

@@ -129,6 +129,11 @@ dependencies {
     implementation("androidx.datastore:datastore-preferences:$dataStoreVersion")
 
     /**
+     * Widgets
+     */
+    implementation(project(":widgets"))
+
+    /**
      * Android Auto
      */
     implementation(project(":car"))

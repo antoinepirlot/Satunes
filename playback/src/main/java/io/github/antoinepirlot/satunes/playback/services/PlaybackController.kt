@@ -239,7 +239,6 @@ internal class PlaybackController private constructor(
     fun playPause() {
         if (this.isPlaying) {
             this.mediaController.pause()
-
             return
         } else {
             if (this.isEnded) {

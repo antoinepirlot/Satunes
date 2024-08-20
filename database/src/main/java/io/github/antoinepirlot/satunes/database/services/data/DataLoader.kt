@@ -100,15 +100,7 @@ object DataLoader {
 
     private lateinit var selection: String //see loadFoldersPaths function
 
-//    private const val selection: String =
-//        "${MediaStore.Audio.Media.DATA} LIKE ? OR ${MediaStore.Audio.Media.DATA} REGEXP ?"
-
     private lateinit var selection_args: Array<String> //see loadFoldersPaths function
-
-//    private var selection_args: Array<String> = arrayOf(
-//        "$EXTERNAL_STORAGE_PATH/Music/%",
-//        "^\\/storage\\/[^\\\\\\/]+\\/Music\\/.*\$" //^\/storage(\/emulated)?\/[^\\\/]+\/Music\/.*$ regex
-//    )
 
     private val logger = SatunesLogger.getLogger()
 
@@ -153,10 +145,17 @@ object DataLoader {
      * Load all Media data from device's storage.
      */
     fun loadAllData(context: Context) {
-        //No coroutine here as in app its a thread but in android auto it's must block the process
-        if (isLoading.value || isLoaded.value) {
+        //TODO No coroutine here as in app its a thread but in android auto it's must block the process
+        if (isLoading.value || isLoaded.value) return
+
+        if (
+            this.selection_args.isEmpty()
+            && SettingsManager.foldersSelectionSelected == FoldersSelection.INCLUDE
+        ) {
+            isLoaded.value = true
             return
         }
+
         isLoading.value = true
         CoroutineScope(Dispatchers.IO).launch {
             context.contentResolver.query(

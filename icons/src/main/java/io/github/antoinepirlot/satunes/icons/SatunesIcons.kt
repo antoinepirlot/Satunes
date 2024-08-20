@@ -67,11 +67,16 @@ import androidx.compose.material.icons.rounded.Update
 import androidx.compose.material.icons.rounded.Upload
 import androidx.compose.material.icons.rounded.Warning
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.glance.ImageProvider
 
 /**
  * @author Antoine Pirlot on 02/04/2024
  */
-enum class SatunesIcons(val imageVector: ImageVector, val description: String) {
+enum class SatunesIcons(
+    val imageVector: ImageVector,
+    val imageProvider: ImageProvider? = null,
+    val description: String
+) {
     ADD(imageVector = Icons.Rounded.Add, description = "Add Icon"),
     ADD_TO_PLAYBACK_QUEUE(
         imageVector = Icons.Rounded.AddToQueue,
@@ -94,13 +99,21 @@ enum class SatunesIcons(val imageVector: ImageVector, val description: String) {
     GENRES(imageVector = Icons.Rounded.Category, description = "Genre Icon"),
     MUSIC(imageVector = Icons.Rounded.MusicNote, description = "Music Icon"),
     MUSIC_PLAYING(imageVector = Icons.Rounded.GraphicEq, description = "Music Playing Icon"),
-    PAUSE(imageVector = Icons.Rounded.PauseCircle, description = "Pause Icon"),
+    PAUSE(
+        imageVector = Icons.Rounded.PauseCircle,
+        imageProvider = ImageProvider(resId = R.drawable.pause),
+        description = "Pause Icon"
+    ),
     PERMISSION_GRANTED(imageVector = Icons.Rounded.Done, description = "Permission Granted Icon"),
     PERMISSION_NOT_GRANTED(
         imageVector = Icons.Rounded.Close,
         description = "Permission Not Granted Icon"
     ),
-    PLAY(imageVector = Icons.Rounded.PlayCircle, description = "Play Icon"),
+    PLAY(
+        imageVector = Icons.Rounded.PlayCircle,
+        imageProvider = ImageProvider(resId = R.drawable.play),
+        description = "Play Icon"
+    ),
     PLAY_NEXT(imageVector = Icons.Rounded.QueuePlayNext, description = "Play Next Icon"),
     PLAYBACK(imageVector = Icons.AutoMirrored.Rounded.PlaylistPlay, description = "Playback Icon"),
     PLAYLIST(imageVector = Icons.AutoMirrored.Rounded.QueueMusic, description = "Playlist Icon"),

@@ -32,7 +32,6 @@ import androidx.compose.ui.unit.dp
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
-import androidx.glance.ImageProvider
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.components.CircleIconButton
 import androidx.glance.appwidget.components.SquareIconButton
@@ -41,8 +40,8 @@ import androidx.glance.layout.Alignment
 import androidx.glance.layout.Row
 import androidx.glance.layout.fillMaxWidth
 import androidx.glance.layout.size
+import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
-import io.github.antoinepirlot.satunes.icons.R as RIcon
 
 /**
  * @author Antoine Pirlot on 20/08/2024
@@ -80,7 +79,7 @@ class ClassicPlaybackWidget : GlanceAppWidget() {
         if (isPlaying) {
             SquareIconButton(
                 modifier = modifier,
-                imageProvider = ImageProvider(resId = RIcon.drawable.pause),
+                imageProvider = SatunesIcons.PAUSE.imageProvider!!,
                 contentDescription = "Pause",
                 onClick = { PlaybackManager.pause(context = context) },
                 backgroundColor = GlanceTheme.colors.background,
@@ -89,7 +88,7 @@ class ClassicPlaybackWidget : GlanceAppWidget() {
         } else {
             CircleIconButton(
                 modifier = modifier,
-                imageProvider = ImageProvider(resId = RIcon.drawable.play),
+                imageProvider = SatunesIcons.PLAY.imageProvider!!,
                 contentDescription = "Play",
                 onClick = { PlaybackManager.play(context = context) },
                 backgroundColor = GlanceTheme.colors.background,

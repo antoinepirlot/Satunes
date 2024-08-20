@@ -131,13 +131,7 @@ dependencies {
     /**
      * Widgets
      */
-    val widgetVersion = "1.1.0"
-    // For AppWidgets support
-    implementation("androidx.glance:glance-appwidget:$widgetVersion")
-
-    // For interop APIs with Material 3
-    implementation("androidx.glance:glance-material3:$widgetVersion")
-
+    implementation(project(":widgets"))
 
     /**
      * Android Auto

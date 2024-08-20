@@ -42,6 +42,6 @@ internal class SatunesLoggerFormatter : Formatter() {
         val date = Date(record.millis)
         val message: String = record.message
 
-        return "$threadId::$sourceClassName::$sourceMethodName::$date::$message\n"
+        return "$threadId::$sourceClassName::$sourceMethodName::$date::$message ${System.lineSeparator()}"
     }
 }

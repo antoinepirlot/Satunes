@@ -141,7 +141,7 @@ object PlaybackManager {
     fun play(context: Context) {
         checkPlaybackController(context = context)
         if (!this::playlist.isInitialized) {
-            this._playbackController!!.loadMusics(musicSet = DataManager.getMusicSet())
+            this.loadMusics(context = context, musicSet = DataManager.getMusicSet())
             this._playbackController!!.start()
         } else {
             this._playbackController!!.play()
@@ -170,6 +170,9 @@ object PlaybackManager {
 
     fun playPrevious(context: Context) {
         checkPlaybackController(context = context)
+        if (!this::playlist.isInitialized) {
+            return
+        }
         this._playbackController!!.playPrevious()
     }
 
@@ -198,7 +201,7 @@ object PlaybackManager {
         this._playbackController!!.seekTo(musicIndex = musicIndex, positionMs = positionMs)
     }
 
-    fun loadMusic(
+    fun loadMusics(
         context: Context,
         musicSet: Set<Music>,
         shuffleMode: Boolean = SettingsManager.shuffleMode,

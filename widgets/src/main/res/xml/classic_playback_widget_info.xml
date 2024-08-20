@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:minWidth="200dp"
+    android:minHeight="60dp"
+    android:widgetCategory="home_screen"
     android:description="@string/classic_widget_description"
     android:initialLayout="@layout/glance_default_loading_layout"
     android:resizeMode="horizontal" />

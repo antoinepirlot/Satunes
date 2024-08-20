@@ -28,6 +28,7 @@ package io.github.antoinepirlot.satunes.widgets
 import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
@@ -72,16 +73,17 @@ class ClassicPlaybackWidget : GlanceAppWidget() {
             verticalAlignment = Alignment.CenterVertically
         ) {
             val isLoaded: Boolean by PlaybackManager.isLoaded
+            val spacerSize: Dp = 16.dp
 
             if (isLoaded) {
                 PreviousButton(context = context)
-                Spacer(modifier = GlanceModifier.size(16.dp))
+                Spacer(modifier = GlanceModifier.size(spacerSize))
             }
 
             PlayPauseButton(modifier = GlanceModifier.size(60.dp), context = context)
 
             if (isLoaded) {
-                Spacer(modifier = GlanceModifier.size(16.dp))
+                Spacer(modifier = GlanceModifier.size(spacerSize))
                 NextButton(context = context)
             }
         }

@@ -1,0 +1,4 @@
+Améliorations, optimisations et dépannage:
+
+* Ajout d'une nouvelle ligne à la fin de la ligne de log
+* Correction de l'absence de chemin sélectionné et du paramètre d'inclusion sélectionné

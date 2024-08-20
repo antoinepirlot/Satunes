@@ -3,6 +3,13 @@ Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
 ## 2.1 (Android 5.1.1 Lollipop and later)
 
+### 2.1.2
+
+Improvements, optimizations and troubleshooting:
+
+* Add new line at the end of log line
+* Fix no path selected and include setting selected
+
 ### 2.1.1
 
 Improvements, optimizations and troubleshooting:

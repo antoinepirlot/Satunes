@@ -23,52 +23,48 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.widgets
+package io.github.antoinepirlot.satunes.widgets.components
 
 import android.content.Context
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
-import androidx.glance.GlanceTheme
-import androidx.glance.appwidget.GlanceAppWidget
-import androidx.glance.appwidget.components.Scaffold
-import androidx.glance.appwidget.provideContent
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Row
 import androidx.glance.layout.Spacer
 import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.size
-import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
-import io.github.antoinepirlot.satunes.widgets.components.Artwork
-import io.github.antoinepirlot.satunes.widgets.components.PlaybackControlBar
 
 /**
  * @author Antoine Pirlot on 20/08/2024
  */
 
-class ClassicPlaybackWidget : GlanceAppWidget() {
+@Composable
+fun PlaybackControlBar(
+    modifier: GlanceModifier = GlanceModifier,
+    context: Context,
+) {
+    Row(
+        modifier = modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        val isLoaded: Boolean by PlaybackManager.isLoaded
+        val spacerSize: Dp = 5.dp
 
-    override suspend fun provideGlance(context: Context, id: GlanceId) {
-        provideContent {
-            GlanceTheme {
-                Scaffold {
-                    Row(
-                        modifier = GlanceModifier.fillMaxSize(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                    ) {
-                        val musicPlaying: Music? by PlaybackManager.musicPlaying
+        if (isLoaded) {
+            PreviousButton(modifier = GlanceModifier.size(40.dp), context = context)
+            Spacer(modifier = GlanceModifier.size(spacerSize))
+        }
 
-                        if (musicPlaying != null) {
-                            Artwork(context = context)
-                            Spacer(modifier = GlanceModifier.size(5.dp))
-                        }
-                        PlaybackControlBar(context = context)
-                    }
-                }
-            }
+        PlayPauseButton(modifier = GlanceModifier.size(40.dp), context = context)
+
+        if (isLoaded) {
+            Spacer(modifier = GlanceModifier.size(spacerSize))
+            NextButton(modifier = GlanceModifier.size(40.dp), context = context)
         }
     }
 }

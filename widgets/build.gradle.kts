@@ -63,6 +63,11 @@ dependencies {
     implementation("androidx.glance:glance-material3:$widgetVersion")
 
     /**
+     * Database
+     */
+    implementation(project(":database"))
+
+    /**
      * Playback
      */
     implementation(project(":playback"))

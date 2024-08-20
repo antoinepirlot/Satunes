@@ -23,52 +23,41 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.widgets
+package io.github.antoinepirlot.satunes.widgets.components
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Bitmap
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.unit.dp
-import androidx.glance.GlanceId
+import androidx.core.graphics.drawable.toBitmap
 import androidx.glance.GlanceModifier
-import androidx.glance.GlanceTheme
-import androidx.glance.appwidget.GlanceAppWidget
-import androidx.glance.appwidget.components.Scaffold
-import androidx.glance.appwidget.provideContent
-import androidx.glance.layout.Alignment
-import androidx.glance.layout.Row
-import androidx.glance.layout.Spacer
-import androidx.glance.layout.fillMaxSize
+import androidx.glance.Image
+import androidx.glance.ImageProvider
 import androidx.glance.layout.size
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
-import io.github.antoinepirlot.satunes.widgets.components.Artwork
-import io.github.antoinepirlot.satunes.widgets.components.PlaybackControlBar
+import io.github.antoinepirlot.satunes.icons.R as RIcon
 
 /**
  * @author Antoine Pirlot on 20/08/2024
  */
 
-class ClassicPlaybackWidget : GlanceAppWidget() {
-
-    override suspend fun provideGlance(context: Context, id: GlanceId) {
-        provideContent {
-            GlanceTheme {
-                Scaffold {
-                    Row(
-                        modifier = GlanceModifier.fillMaxSize(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                    ) {
-                        val musicPlaying: Music? by PlaybackManager.musicPlaying
-
-                        if (musicPlaying != null) {
-                            Artwork(context = context)
-                            Spacer(modifier = GlanceModifier.size(5.dp))
-                        }
-                        PlaybackControlBar(context = context)
-                    }
-                }
-            }
-        }
+@SuppressLint("UseCompatLoadingForDrawables")
+@Composable
+internal fun Artwork(
+    modifier: GlanceModifier = GlanceModifier,
+    context: Context,
+) {
+    val musicPlaying: Music? by PlaybackManager.musicPlaying
+    var artwork: Bitmap? = musicPlaying!!.getAlbumArtwork(context = context)
+    if (artwork == null) {
+        artwork = context.getDrawable(RIcon.mipmap.empty_album_artwork_foreground)!!.toBitmap()
     }
+    Image(
+        modifier = modifier.size(70.dp),
+        provider = ImageProvider(bitmap = artwork),
+        contentDescription = "Artwork"
+    )
 }

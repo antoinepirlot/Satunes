@@ -1,0 +1,4 @@
+Improvements, optimizations and troubleshooting:
+
+* Add new line at the end of log line
+* Fix no path selected and include setting selected

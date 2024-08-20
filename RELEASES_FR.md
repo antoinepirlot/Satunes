@@ -3,6 +3,13 @@ You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
 ## 2.1 (Android 5.1.1 Lollipop et ultérieur)
 
+### 2.1.2
+
+Améliorations, optimisations et dépannage:
+
+* Ajout d'une nouvelle ligne à la fin de la ligne de log
+* Correction de l'absence de chemin sélectionné et du paramètre d'inclusion sélectionné
+
 ### 2.1.1
 
 Améliorations, optimisations et dépannage:

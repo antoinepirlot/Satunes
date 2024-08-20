@@ -34,6 +34,7 @@ import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.components.CircleIconButton
+import androidx.glance.appwidget.components.Scaffold
 import androidx.glance.appwidget.components.SquareIconButton
 import androidx.glance.appwidget.provideContent
 import androidx.glance.layout.Alignment
@@ -53,7 +54,9 @@ class ClassicPlaybackWidget : GlanceAppWidget() {
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         provideContent {
             GlanceTheme {
-                ClassicPlaybackWidgetComposable(context = context)
+                Scaffold {
+                    ClassicPlaybackWidgetComposable(context = context)
+                }
             }
         }
     }
@@ -96,8 +99,8 @@ class ClassicPlaybackWidget : GlanceAppWidget() {
                 imageProvider = SatunesIcons.PAUSE.imageProvider!!,
                 contentDescription = "Pause",
                 onClick = { PlaybackManager.pause(context = context) },
-                backgroundColor = GlanceTheme.colors.background,
-                contentColor = GlanceTheme.colors.onSurface,
+                backgroundColor = GlanceTheme.colors.primary,
+                contentColor = GlanceTheme.colors.onPrimary,
             )
         } else {
             CircleIconButton(
@@ -105,8 +108,8 @@ class ClassicPlaybackWidget : GlanceAppWidget() {
                 imageProvider = SatunesIcons.PLAY.imageProvider!!,
                 contentDescription = "Play",
                 onClick = { PlaybackManager.play(context = context) },
-                backgroundColor = GlanceTheme.colors.background,
-                contentColor = GlanceTheme.colors.onSurface,
+                backgroundColor = GlanceTheme.colors.primary,
+                contentColor = GlanceTheme.colors.onPrimary,
             )
         }
     }
@@ -121,6 +124,8 @@ class ClassicPlaybackWidget : GlanceAppWidget() {
             imageProvider = SatunesIcons.SKIP_PREVIOUS.imageProvider!!,
             contentDescription = "Skip previous",
             onClick = { PlaybackManager.playPrevious(context = context) },
+            backgroundColor = GlanceTheme.colors.primary,
+            contentColor = GlanceTheme.colors.onPrimary,
         )
     }
 
@@ -133,7 +138,9 @@ class ClassicPlaybackWidget : GlanceAppWidget() {
             modifier = modifier,
             imageProvider = SatunesIcons.SKIP_NEXT.imageProvider!!,
             contentDescription = "Skip next",
-            onClick = { PlaybackManager.playNext(context = context) }
+            onClick = { PlaybackManager.playNext(context = context) },
+            backgroundColor = GlanceTheme.colors.primary,
+            contentColor = GlanceTheme.colors.onPrimary,
         )
     }
 }

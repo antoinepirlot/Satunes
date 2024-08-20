@@ -29,7 +29,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
 import androidx.glance.GlanceModifier
@@ -37,7 +36,6 @@ import androidx.glance.Image
 import androidx.glance.ImageProvider
 import androidx.glance.layout.size
 import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
 import io.github.antoinepirlot.satunes.icons.R as RIcon
 
 /**
@@ -49,9 +47,9 @@ import io.github.antoinepirlot.satunes.icons.R as RIcon
 internal fun Artwork(
     modifier: GlanceModifier = GlanceModifier,
     context: Context,
+    music: Music,
 ) {
-    val musicPlaying: Music? by PlaybackManager.musicPlaying
-    var artwork: Bitmap? = musicPlaying!!.getAlbumArtwork(context = context)
+    var artwork: Bitmap? = music.getAlbumArtwork(context = context)
     if (artwork == null) {
         artwork = context.getDrawable(RIcon.mipmap.empty_album_artwork_foreground)!!.toBitmap()
     }

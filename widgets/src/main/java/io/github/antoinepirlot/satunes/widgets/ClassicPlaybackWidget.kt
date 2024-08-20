@@ -35,13 +35,16 @@ import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.components.Scaffold
 import androidx.glance.appwidget.provideContent
 import androidx.glance.layout.Alignment
+import androidx.glance.layout.Column
 import androidx.glance.layout.Row
 import androidx.glance.layout.Spacer
 import androidx.glance.layout.fillMaxSize
+import androidx.glance.layout.fillMaxWidth
 import androidx.glance.layout.size
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
 import io.github.antoinepirlot.satunes.widgets.components.Artwork
+import io.github.antoinepirlot.satunes.widgets.components.MusicInformations
 import io.github.antoinepirlot.satunes.widgets.components.PlaybackControlBar
 
 /**
@@ -62,10 +65,21 @@ class ClassicPlaybackWidget : GlanceAppWidget() {
                         val musicPlaying: Music? by PlaybackManager.musicPlaying
 
                         if (musicPlaying != null) {
-                            Artwork(context = context)
+                            Artwork(context = context, music = musicPlaying!!)
                             Spacer(modifier = GlanceModifier.size(5.dp))
                         }
-                        PlaybackControlBar(context = context)
+
+                        Column(
+                            modifier = GlanceModifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                        ) {
+                            if (musicPlaying != null) {
+                                MusicInformations(music = musicPlaying!!)
+                                Spacer(modifier = GlanceModifier.size(5.dp))
+                            }
+                            PlaybackControlBar(context = context)
+                        }
                     }
                 }
             }

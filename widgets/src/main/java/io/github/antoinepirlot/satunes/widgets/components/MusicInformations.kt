@@ -25,47 +25,23 @@
 
 package io.github.antoinepirlot.satunes.widgets.components
 
-import android.content.Context
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import androidx.glance.GlanceModifier
-import androidx.glance.layout.Alignment
-import androidx.glance.layout.Row
-import androidx.glance.layout.Spacer
-import androidx.glance.layout.fillMaxWidth
-import androidx.glance.layout.size
-import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
+import androidx.glance.text.Text
+import io.github.antoinepirlot.satunes.database.models.Music
 
 /**
  * @author Antoine Pirlot on 20/08/2024
  */
 
 @Composable
-internal fun PlaybackControlBar(
+internal fun MusicInformations(
     modifier: GlanceModifier = GlanceModifier,
-    context: Context,
+    music: Music
 ) {
-    Row(
-        modifier = modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        val isLoaded: Boolean by PlaybackManager.isLoaded
-        val spacerSize: Dp = 12.dp
-
-        if (isLoaded) {
-            PreviousButton(modifier = GlanceModifier.size(40.dp), context = context)
-            Spacer(modifier = GlanceModifier.size(spacerSize))
-        }
-
-        val playPauseSize: Dp = if (isLoaded) 40.dp else 60.dp
-        PlayPauseButton(modifier = GlanceModifier.size(playPauseSize), context = context)
-
-        if (isLoaded) {
-            Spacer(modifier = GlanceModifier.size(spacerSize))
-            NextButton(modifier = GlanceModifier.size(40.dp), context = context)
-        }
-    }
+    Text(
+        modifier = modifier,
+        text = music.title + " - " + music.artist.title,
+        maxLines = 1
+    )
 }

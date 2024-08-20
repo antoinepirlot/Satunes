@@ -8,4 +8,9 @@
 .externalNativeBuild
 .cxx
 local.properties
-app/release
+debug
+release
+releaseTest
+schemas
+structure/*.bkp
+*.log

@@ -4,17 +4,27 @@ plugins {
 }
 
 android {
-    namespace = "earth.satunes.car"
-    compileSdk = 34
+    namespace = "io.github.antoinepirlot.satunes.car"
+    compileSdk = 35
 
     defaultConfig {
-        minSdk = 28
+        minSdk = 22
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
+    }
+    buildTypes {
+        create("releaseTest") {
+            initWith(getByName("release"))
+        }
     }
 }
 
@@ -22,13 +32,13 @@ dependencies {
     /**
      * Base
      */
-    implementation("androidx.activity:activity-compose:1.8.2")
+    implementation("androidx.activity:activity-compose:1.9.1")
 
     /**
      * Media
      */
     val mediaVersion = "1.7.0"
-    val media3Version = "1.3.1"
+    val media3Version = "1.4.0"
     implementation("androidx.media:media:$mediaVersion")
     implementation("androidx.media3:media3-common:$media3Version")
 
@@ -46,4 +56,9 @@ dependencies {
      * Icons
      */
     implementation(project(":icons"))
+
+    /**
+     * Utils
+     */
+    implementation(project(":utils"))
 }

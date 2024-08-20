@@ -1,0 +1,8 @@
+Cette mise à jour majeure apporte une stabilisation et une amélioration des performances.
+
+* Android Auto a été retravaillé, mais certaines restrictions font en sorte que toutes les données ne puissent pas être chargées.
+* Affichage d'une snack bar au lieu des Toasts classique
+* La barre de progression affichera des niveaux prédéfinis.
+* Comme tu peux avoir plusieurs médias avec le même titre, ils sont classés.
+
+Plus de détails sur GitHub.

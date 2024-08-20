@@ -1,10 +1,56 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ This file is part of Satunes.
+  ~
+  ~  Satunes is free software: you can redistribute it and/or modify it under
+  ~  the terms of the GNU General Public License as published by the Free Software Foundation,
+  ~  either version 3 of the License, or (at your option) any later version.
+  ~
+  ~  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+  ~  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+  ~  See the GNU General Public License for more details.
+  ~
+  ~  You should have received a copy of the GNU General Public License along with Satunes.
+  ~  If not, see <https://www.gnu.org/licenses/>.
+  ~
+  ~  **** INFORMATIONS ABOUT THE AUTHOR *****
+  ~  The author of this file is Antoine Pirlot, the owner of this project.
+  ~  You find this original project on github.
+  ~
+  ~  My github link is: https://github.com/antoinepirlot
+  ~  This current project's link is: https://github.com/antoinepirlot/Satunes
+  ~
+  ~  You can contact me via my email: pirlot.antoine@outlook.com
+  ~  PS: I don't answer quickly.
+  -->
+
 <resources>
-    <string name="folders">Fichiers</string>
+    <string name="folders">Dossiers</string>
     <string name="artists">Artistes</string>
     <string name="musics">Musiques</string>
     <string name="unknown">Inconnu</string>
     <string name="unknown_artist">Artiste Inconnu</string>
     <string name="unknown_album">Album Inconnu</string>
     <string name="unknown_genre">Genre Inconnu</string>
+    <string name="playlist_already_exist">%1$s a déjà été créée</string>
+    <string name="exporting_failed">L\'exportation a échoué</string>
+    <string name="importing">Importation en cours…</string>
+    <string name="importing_failed">L\'importation a échouée</string>
+    <string name="file_not_found">Aucun fichier trouvé</string>
+    <string name="importing_success">Importation réussie</string>
+    <string name="no_playlist">Il n\'y a aucune playlist</string>
+    <string name="exporting_success">Exportation réussie</string>
+    <string name="added">Ajouté(s)</string>
+    <string name="add_playlist_success">%1$s a été créée.</string>
+    <string name="likes_playlist_title">Favoris</string>
+    <string name="blank_string_error">Le titre de la playlist est vide.</string>
+    <string name="real_time_speed">Temp réel</string>
+    <string name="very_fast_speed">Très rapide</string>
+    <string name="fast_speed">Rapide</string>
+    <string name="normal_speed">Normal</string>
+    <string name="bit_slow_speed">Un peu lent</string>
+    <string name="slow_speed">Lent</string>
+    <string name="very_slow_speed">Très lent</string>
+    <string name="importing_missed_musics">%d musique(s) non trouvées.</string>
+    <string name="include">Inclure</string>
+    <string name="exclude">Exclure</string>
 </resources>

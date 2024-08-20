@@ -1,0 +1,8 @@
+Improvements, Optimizations and Troubleshooting:
+
+* Fixed bug when adding currently playing music to a playlist
+* Added search filter for playlists
+* Navigation animations between pages are faster and avoid clicking on the previous page
+* The music queue list page opens with the currently playing music in mind
+* Added a button to open currently playing music from the search page
+* The music filter in the search is activated by default

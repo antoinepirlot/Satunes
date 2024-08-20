@@ -1,13 +1,59 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ This file is part of Satunes.
+  ~
+  ~  Satunes is free software: you can redistribute it and/or modify it under
+  ~  the terms of the GNU General Public License as published by the Free Software Foundation,
+  ~  either version 3 of the License, or (at your option) any later version.
+  ~
+  ~  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+  ~  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+  ~  See the GNU General Public License for more details.
+  ~
+  ~  You should have received a copy of the GNU General Public License along with Satunes.
+  ~  If not, see <https://www.gnu.org/licenses/>.
+  ~
+  ~  **** INFORMATIONS ABOUT THE AUTHOR *****
+  ~  The author of this file is Antoine Pirlot, the owner of this project.
+  ~  You find this original project on github.
+  ~
+  ~  My github link is: https://github.com/antoinepirlot
+  ~  This current project's link is: https://github.com/antoinepirlot/Satunes
+  ~
+  ~  You can contact me via my email: pirlot.antoine@outlook.com
+  ~  PS: I don't answer quickly.
+  -->
+
 <resources>
-    <string name="folders">Fichiers</string>
-    <string name="artists">Artistes</string>
-    <string name="musics">Musiques</string>
+    <string name="folders">Folders</string>
+    <string name="artists">Artists</string>
+    <string name="musics">Musics</string>
     <string name="albums" translatable="false">Albums</string>
     <string name="genres" translatable="false">Genres</string>
     <string name="playlists" translatable="false">Playlists</string>
-    <string name="unknown">Inconnu</string>
-    <string name="unknown_artist">Artiste Inconnu</string>
-    <string name="unknown_album">Album Inconnu</string>
-    <string name="unknown_genre">Genre Inconnu</string>
+    <string name="unknown">Unknown</string>
+    <string name="unknown_artist">Unknown Artist</string>
+    <string name="unknown_album">Unknown Album</string>
+    <string name="unknown_genre">Unknown Genre</string>
+    <string name="playlist_already_exist">%1$s already exists</string>
+    <string name="exporting_failed">Export failed</string>
+    <string name="importing">Importing…</string>
+    <string name="importing_failed">Importing failed</string>
+    <string name="file_not_found">File not found</string>
+    <string name="importing_success">Importing Success</string>
+    <string name="no_playlist">There\'s no playlist</string>
+    <string name="exporting_success">Exporting Success</string>
+    <string name="added">Added</string>
+    <string name="add_playlist_success">%1$s has been created.</string>
+    <string name="likes_playlist_title">Favorites</string>
+    <string name="blank_string_error">The playlist title is blank.</string>
+    <string name="real_time_speed">Real time</string>
+    <string name="very_fast_speed">Very fast</string>
+    <string name="fast_speed">Fast</string>
+    <string name="normal_speed">Normal</string>
+    <string name="bit_slow_speed">A bit slow</string>
+    <string name="slow_speed">Slow</string>
+    <string name="very_slow_speed">Very slow</string>
+    <string name="importing_missed_musics">%d music(s) not found.</string>
+    <string name="include">Include</string>
+    <string name="exclude">Exclude</string>
 </resources>

@@ -1,0 +1,10 @@
+Nouvelles fonctionnalités:
+* Possibilité d'inclure/exclure des chemins
+* Exporter une seule playlist est de retour
+* Supprimer un média de la file d'attente
+* Lire ensuite et ajouter à la file d'attente pour tous les médias
+* Annulation de l'ajout de musique(s) aux playlists
+
+Améliorations, optimisations et dépannage:
+* L'utilisation de la RAM a été considérablement réduite, les illustrations sont chargées lorsque cela est nécessaire
+* La lecture est plus stable lorsqu'elle est relachée

@@ -1,7 +1,411 @@
 # Versions (🇫🇷)
 You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
+## 2.1 (Android 5.1.1 Lollipop et ultérieur)
+
+### 2.1.2
+
+Améliorations, optimisations et dépannage:
+
+* Ajout d'une nouvelle ligne à la fin de la ligne de log
+* Correction de l'absence de chemin sélectionné et du paramètre d'inclusion sélectionné
+
+### 2.1.1
+
+Améliorations, optimisations et dépannage:
+
+* Correction des problèmes d'Android Auto
+* Correction du plantage de l'application à chaque lancement de l'application avec Android Auto
+* Chemin:
+  * Afficher "cet appareil" au lieu de "/0"
+  * Déplacement du bouton d'actualisation vers une nouvelle ligne
+* Optimisation du processus de recherche
+
+### 2.1.0
+
+Nouvelles fonctionnalités:
+
+* Il est désormais possible d'inclure/exclure des chemins
+* Exporter une seule playlist est de retour
+* Supprimer un média de la file d'attente
+* Lire ensuite et ajouter à la file d'attente pour tous les médias
+* Une fois que la ou les musiques ont été ajoutée(s) à la ou aux playlist(s), le snackBar dispose
+  d'une action d'annulation. De même, après l'annulation, tu peux annuler l'annulation mdr
+
+Améliorations, optimisations et dépannage:
+
+* L'utilisation de la RAM a été considérablement réduite, les illustrations sont chargées lorsque
+  cela est nécessaire
+* La lecture est plus stable lorsqu'elle est relachée
+
+## 2.0 (Android 5.1.1 Lollipop et ultérieur)
+
+### 2.0.1
+
+Améliorations, optimisations et dépannage:
+
+* Il n'est plus possible d'avoir 2 playlists différentes de même nom peu importe les
+  majuscules/minuscules
+* Les espaces sont retirés lors de la création d'une playlist ou de la modification de son titre
+* Lors du lancement de la lecture via les recherches avec le mode aléatoire, la musique sélectionnée est la première de la liste de lecture
+* Lors d'une recherche, si les premiers ou derniers caractères sont des espaces, ils sont ignorés
+
+### 2.0.0
+
+Améliorations, optimisations et dépannage:
+
+* Restructuration du code
+* Amélioration des performances et de la rapidité de chargement et d'accès aux données
+* Android Auto est plus stable bien qu'Android Auto a quelques contrainte en terme de quantité de
+  donnée
+* L'importation et exportation des playlists fonctionne correctements
+* La barre de progression affichera les niveaux prédéfinis dans cet ordre:
+  * Très lent
+  * Lent
+  * Un peu lent
+  * Normal
+  * Rapide
+  * Très rapide
+  * En temps réel
+* Définition d'un ordre pour les médias si leur titre est exactement le même lors de la comparaison,
+  à l'écran si cela se produit, tu verras les médias dans cet ordre:
+  * Musique
+  * Album
+  * Artiste
+  * Genre
+  * Playlist
+  * Dossier
+* Utilisation des snack bar pour les différentes notifications
+* Ajout du titre de l'album sur l'élément musical pour différencier les albums et les musiques
+* Les boutons des réglages aléatoire ne sont plus des commutateurs mais agissent comme les boutons
+  pour le mode de répétition
+* Désormais, l'application chargera même vos musiques dupliquées
+* Par défaut, Satunes ne chargera que le dossier principal Musiques et pas la totalité.
+* Satunes enregistre certaines erreurs via des logs (sans informations personnelles), tu pouvez les
+  exporter, rien ne quittera l'application sans votre autorisation.
+* Désormais, la lecture de musique à partir d'un dossier chargera d'abord ses musiques, puis celles
+  de ses sous-dossiers, toujours triées par titre.
+* Ajout d'icônes pour identifier les paramètres plus facilement.
+
+### 2.0.0-preview-1
+
+Améliorations, optimisations et dépannage:
+
+* Utilisation des snack bar pour les notifications
+* L'importation/exportation de playlists a été corrigé et fonctionne désormais comme prévu
+* Refactorisation de Android Auto, j'ai essayé de le rendre plus stable et de résoudre les
+  différents problèmes
+* Ajout du titre de l'album sur l'élément musical pour différencier les albums et les musiques
+* Correction de la fermeture de l'application lors de la lecture lorsque le paramètre pour la
+  maintenir en mode lecture désactivé
+* La barre de progression affichera les niveaux prédéfinis dans cet ordre:
+  * Très lent
+  * Lent
+  * Un peu lent
+  * Normal
+  * Rapide
+  * Très rapide
+  * En temps réel
+* La fenêtre modale ne se fermera plus lorsque tu décide de unliker la musique dans la vue de la
+  playlist Favoris
+* Quelques autres optimisations
+
+### 2.0.0-beta-1
+
+Améliorations, optimisations et dépannage:
+
+* Définition d'un ordre pour les médias si leur titre est exactement le même lors de la comparaison,
+  à l'écran si cela se produit, tu verras les médias dans cet ordre:
+  * Musique
+  * Album
+  * Artiste
+  * Genre
+  * Playlist
+  * Dossier
+* Limitation de la liste d'éléments à 300 maximum dans Android Auto en raison de ses limitations
+* Le chargement devrait être plus rapide dans Android Auto car une boucle a été supprimée pour
+  chaque chargement de liste
+* Les boutons des réglages aléatoire ne sont plus des commutateurs mais agissent comme les boutons
+  pour le mode de répétition
+* Correction du chargement des musiques présentes sur un stockage externe (comme les cartes SD)
+
+### 2.0.0-alpha-1
+
+⚠ La version Alpha n'est pas recommandée pour une utilisation régulière.
+
+Améliorations, optimisations et dépannage:
+
+* La structure du code a été entièrement remaniée pour être plus simple et meilleure à utiliser.
+* Le code a été retravaillé pour être plus rapide
+* Satunes prend désormais en charge Android 15 Vanilla Ice Cream (API 35)
+* Désormais, l'application chargera même vos musiques dupliquées
+* Par défaut, Satunes ne chargera que le dossier principal Musiques et pas la totalité.
+* Satunes enregistre certaines erreurs via des logs (sans informations personnelles), tu pouvez les
+  exporter, rien ne quittera l'application sans votre autorisation.
+* Implémentation de l'utilisation de ViewModel et UiState pour une meilleure gestion des états de
+  Satunes
+* Désormais, la lecture de musique à partir d'un dossier chargera d'abord ses musiques, puis celles
+  de ses sous-dossiers, toujours triées par titre.
+* Ajout d'icônes pour identifier les paramètres plus facilement.
+
+## 1.3 (Android 5.1.1 Lollipop et ultérieur)
+
+### 1.3.1
+
+Améliorations, Optimisations et Résolutions de problèmes:
+
+* La liste des musiques d'un dossier n'est plus modifiée lorsque l'utilisateur clique sur une
+  musique
+* L'icône de recherche a été supprimée de la page des paramètres de recherche
+
+### 1.3.0
+
+Nouvelles Fonctionnalités:
+
+* Possiblité de choisir les filtres de recherches activés par défaut
+* Demande de confirmation lors d'une suppression dans les playlists
+* Tous les types de media (musiques, artistes, etc.) ont un menu d'option lors d'un appuis
+  long
+
+Améliorations, Optimisations et Résolutions de problèmes:
+
+* Ajout d'un bouton pour ouvrir F-Droid lorsqu'une mise à jour est disponible
+
+## 1.2 (Android 5.1.1 Lollipop et ultérieur)
+
+### 1.2.1
+
+Améliorations, Optimisations et Résolutions de problèmes:
+
+* Correction du bug lors de l'ajout de la musique en cours de lecture à une playlist lorsqu'il n'y
+  en a aucune et que l'utilisateur annule sa création
+* Ajout d'un filtre de recherche pour les playlists
+* Les animations de navigations entre les pages est plus rapide et évite des cliques sur la page
+  précédente
+* La page de la liste des musique en attente s'ouvre avec en tête la musique en cours de lecture
+* Ajout d'un bouton permettant d'ouvrir la musique en cours de lecture depuis la page de recherche
+* Le filtre musiques dans la recherche est activé par défaut
+
+### 1.2.0
+
+Nouvelles Fonctionnalités:
+
+* Recherche des différents média
+* Système de musique favorites
+* Visualisation de la liste de lecture et possibilité de:
+  * Lire la musique après le morceaux actuel
+  * Ajouter à la file d'attente
+* Ajout d'un mode tablet pour l'affichage de la musique en cours de lecutre
+* Popup après installation d'une mise à jour
+
+Améliorations, Optimisations et Résolutions de problèmes:
+
+* Suppression du bouton Facebook suite à la future disparition de la page facebook de Satunes
+* Optimisations
+* Un bug faisant crasher l'application suite à la création de la première playlist a été corrigé
+
+### 1.2.0-preview-1
+
+Nouvelles Fonctionnalités:
+
+* Recherche des différents média
+* Système de musique favorites
+* Visualisation de la liste de lecture et possibilité de:
+  * Lire la musique après le morceaux actuel
+  * Ajouter à la file d'attente
+* Ajout d'un mode tablet pour l'affichage de la musique en cours de lecutre
+* Popup après installation d'une mise à jour
+
+Améliorations, Optimisations et Résolutions de problèmes:
+
+* Suppression du bouton Facebook suite à la future disparition de la page facebook de Satunes
+* Optimisations
+
+## 1.1 (Android 5.1.1 Lollipop et ultérieur)
+
+### 1.1.1
+
+Améliorations, Optimisations et Résolutions de problèmes:
+
+* La lecture de la musique suivante lorsque il s'agit de la dernière musique (après activation du
+  mode aléatoire) ne fait plus crasher l'application
+* Le chargement des playlists est plus rapide au démarrage de l'application
+
+### 1.1.0
+
+Améliorations, Optimisations et Résolutions de problèmes:
+
+* La taille de l'icône repeat one dans les paramètre de lecture par défaut s'affiche correctement
+  sur les différentes tailles d'écran
+* Mise à jour des librairies
+
+### 1.1.0-beta-1
+
+Nouvelles Fonctionnalités:
+
+* Ajout d'un nouveau paramètre permettant d'utiliser l'Audio Offload (envoie de la lecture dans un
+  processus dédié). Cette option permet d'optimiser la batterie
+* Possiblité d'ajouter la musique en cours de lecture dans des playlists via les actions rapides
+* Navigation vers les albums, genres, artistes, etc. depuis le menu d'un appui long sur une
+  musique
+
+Améliorations, Optimisations et Résolutions de problèmes:
+
+* Problème d'affichage lors du lancement de la première musique dans Android Auto réglé
+* La séléction du mode aléatoire par défaut est représenté par des boutons avec icônes et plus à
+  l'aide d'un switch
+* Affichage du nom des boutons de la barre de navigation
+
+## 1.0 (Android 5.1.1 Lollipop et ultérieur)
+
+### 1.0.3
+
+Améliorations, Optimisations et Résolutions de problèmes:
+
+* L'album n'est plus affiché dans le playback si la taille de la hauteur de l'écran est trop petite
+  en mode paysage
+* Résolution du crash lors du clique sur le bouton paramètre lorsque la permission audio n'est pas
+  accordée
+* La langue par défaut si la langue du système n'est pas prise en charge est maintenant l'anglais et
+  plus le français
+* Les titres des albums ne dépasseront plus la largeur de l'album
+* Corrections de la taille du texte de la section "Musique" dans les vues artiste et genre
+* L'ajout d'une musique dans plusieurs playlist est maintenant résolu
+* Résolution du problème lors de l'ajout de 2 playlists de même nom avec des majuscules et minuscule
+  sur des lettres différentes
+* Lors de l'ajout d'une musique à une playlist et qu'aucune playlist n'a été créée, l'application
+  lance la création d'une nouvelle playlist
+
+### 1.0.2
+
+Améliorations, Optimisations et Résolutions de problèmes:
+
+* La navigation dans les paramètres fonctionne de manière uniforme pour tous les menus.
+* Amélioration du design
+
+### 1.0.1
+
+Améliorations, Optimisations et Résolutions de problèmes:
+
+* Les icones dans la vue de la musique en cours de lecture n'est plus totalement blanc ni totalement
+  noir lorsque désactivé.
+* Harmonisation des icones dans les paramètre en les rendant rond.
+* Ajout d'une marge horizontale dans la vue du paramètre Android Auto
+* Problème résolu pour le téléchargement d'une mise à jour stable
+
+### 1.0.0
+
+Satunes est maintenant stable!
+
+Améliorations, Optimisations et Résolutions de problèmes:
+
+* Le problème lié à la navigation dans les genres ou albums avec un nom contenant le caractère '/'
+  peut maintenant fonctionner normalement
+* Le design a été amélioré:
+  * Les boutons shuffle et repeat dans la vue playback (uniquement dans l'application sur téléphone)
+    sont complètement rond
+  * La prise en charge des tailles d'écran à été améliorée
+* Ajout d'un menu dans les paramètres expliquant comment activer Android Auto
+
+### 1.0.0-preview-2
+
+Nouvelles Fonctionnalités:
+
+* Possibilité de changer le nom d'une playlist
+
+Améliorations, Optimisations et Résolutions de problèmes:
+
+* Les problèmes lié au playback dans Android Auto sont réglés:
+  * Pas d'affichage au lancement
+  * Barre de progression pendant le mode répéter un seul morceau qui va au delà de la limite de
+    temps
+* Ajout d'un texte expliquant pourquoi l'exportation et exportation des playlists est en bêta
+* Tentative de correction du crash lors de l'ouverture de l'app après un long moment après une pause
+
+### 1.0.0-preview-1
+
+Cette version est prévue d'être déployée comme version stable si aucun bug n'est détecté pendant
+cette phase.
+
+Nouvelles Fonctionnalités:
+
+* Ajout d'un bouton shuffle dans toutes les vues Android Auto
+* Suppression de l'onglet "Musics" car trop d'éléments dans Android Auto.
+* Nouveaux paramètres:
+  * Choix du mode répétition
+  * Choix du mode shuffle
+  * Possibilité d'empêcher les autres application de mettre le playback en pause/play
+
+Améliorations, Optimisations et Résolutions de problèmes:
+
+* Les accents sont correctement triés
+* La barre de progression ne bug plus lors de l'activation/désactivation du mode shuffle
+* La lecture en arrière plan fonctionne correctement en fonction du paramètre choisi
+* Les mises à jour prendront en compte les alpha, beta et preview 1,2,3, etc. par exemple "
+  1.0.0-preview-1"
+* Le multilangage est maintenant prit en charge dans Android Auto
+* Le bouton shuffle dans Android Auto a un icone
+* Modification du lien pour github
+* Amélioration du design et prise en charge de différentes taille d'écran.
+
+## 0.10 (Android 5.1.1 Lollipop et ultérieur)
+
+### 0.10.1-beta
+
+Améliorations, Optimisations et Résolutions de problèmes:
+
+* Les morceaux sont triés par ordre alphabétique dans les dossiers, cela évite le mauvais ordre de
+  lecture.
+* Optimization des performances et de la batterie lors de la lecture. Le rafraichissement de la
+  barre de progression se fait uniquement lorsque la vue concernée est ouverte.
+
+### 0.10.0-beta
+
+L'application est maintenant disponible pour les appareils Android Lollipop (5.1.1) et plus récents.
+Environ 99.2% d'entre vous peuvent l'installer 😜.
+
+Nouvelles Fonctionnalités:
+
+* Il est possible de changer la vitesse de rafraichissement de la barre de progression
+* Il est possible d'exporter et d'importer les playlists, au format json (des améliorations future
+  seront mises au point.)
+* Il est possible d'exclure les sonneries
+
+Améliorations, Optimisations et Résolutions de problèmes:
+
+* La façon dont les permissions sont gérée aa été amélioré et l'application ne plante plus lors du
+  premier démarrage
+* Le design a été amélioré:
+  * Afin d'éviter les blocage dans les petits écran, toutes les éléments sont scrollable en attente
+    de trouver une solution plus adéquate
+  * L'image de l'album est affichée à l'écran dans la page de l'album
+  * Les différentes vues sont dans leur entierté déroulable
+  * La vue des genres affiches, en plus des musiques, les albums comme dans la page d'un artiste
+  * Le nom de l'artiste est affiché dans la vue de l'album et permet une redirection vers celui-ci
+  * Les zones de textes ont été harmonisées et les long textes seront coupés si nécéssaire
+* Quelques optimisations légères ont été apportées
+
 ## 0.9 (Android 9 Pie et ultérieur)
+
+### 0.9.2-beta
+
+Améliorations, Optimisations et Résolutions de problèmes:
+
+* Amélioration du tri
+* Les albums contiennent plus qu'une musique
+* Prise en compte du cas où aucune donnée n'a été chargée.
+
+### 0.9.1-beta
+
+Améliorations, Optimisations et Résolutions de problèmes:
+
+* Changement du nom de domaine vers "io.github.antoinepirlot.satunes".
+* Le design a été retouché pour apporter des pochette d'album par défaut partout dans l'application.
+* Les pochettes d'albums s'affichent dans Android Auto.
+* Les migration de la base de données pourront être faites.
+* Réglage de quelques problème lors de l'initialisation de Android Auto dans certains cas.
+* La recomposition de l'écran lors de l'ajout de données comme des playlist est maintenant
+  opérationnel.
 
 ### 0.9.0-beta
 
@@ -154,7 +558,7 @@ Résolutions de problèmes:
 Fonctionnalités:
 
 * Support pour Android Auto
-    * Pour activer Android Auto clique [ici](#android-auto) pour savoir comment faire.
+  * Pour activer Android Auto clique [ici](README.md) pour savoir comment faire.
 
 Résolutions de problèmes:
 

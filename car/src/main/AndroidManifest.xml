@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <application android:appCategory="audio">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <application
+        android:appCategory="audio"
+        tools:targetApi="o">
 
         <meta-data
             android:name="com.google.android.gms.car.application"
@@ -13,7 +17,7 @@
          MediaBrowser (for browsing) and MediaController (for playback control)
         -->
         <service
-            android:name="earth.satunes.car.playback.SatunesCarMusicService"
+            android:name=".playback.SatunesCarMusicService"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.media.browse.MediaBrowserService" />

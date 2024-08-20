@@ -26,7 +26,6 @@
 package io.github.antoinepirlot.satunes.widgets
 
 import android.content.Context
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -34,17 +33,17 @@ import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
 import androidx.glance.appwidget.GlanceAppWidget
-import androidx.glance.appwidget.components.CircleIconButton
 import androidx.glance.appwidget.components.Scaffold
-import androidx.glance.appwidget.components.SquareIconButton
 import androidx.glance.appwidget.provideContent
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Row
 import androidx.glance.layout.Spacer
 import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.size
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
+import io.github.antoinepirlot.satunes.widgets.components.NextButton
+import io.github.antoinepirlot.satunes.widgets.components.PlayPauseButton
+import io.github.antoinepirlot.satunes.widgets.components.PreviousButton
 
 /**
  * @author Antoine Pirlot on 20/08/2024
@@ -56,93 +55,28 @@ class ClassicPlaybackWidget : GlanceAppWidget() {
         provideContent {
             GlanceTheme {
                 Scaffold {
-                    ClassicPlaybackWidgetComposable(context = context)
+                    Row(
+                        modifier = GlanceModifier.fillMaxSize(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        val isLoaded: Boolean by PlaybackManager.isLoaded
+                        val spacerSize: Dp = 16.dp
+
+                        if (isLoaded) {
+                            PreviousButton(context = context)
+                            Spacer(modifier = GlanceModifier.size(spacerSize))
+                        }
+
+                        PlayPauseButton(modifier = GlanceModifier.size(60.dp), context = context)
+
+                        if (isLoaded) {
+                            Spacer(modifier = GlanceModifier.size(spacerSize))
+                            NextButton(context = context)
+                        }
+                    }
                 }
             }
         }
-    }
-
-    @Composable
-    private fun ClassicPlaybackWidgetComposable(
-        modifier: GlanceModifier = GlanceModifier,
-        context: Context
-    ) {
-        Row(
-            modifier = modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            val isLoaded: Boolean by PlaybackManager.isLoaded
-            val spacerSize: Dp = 16.dp
-
-            if (isLoaded) {
-                PreviousButton(context = context)
-                Spacer(modifier = GlanceModifier.size(spacerSize))
-            }
-
-            PlayPauseButton(modifier = GlanceModifier.size(60.dp), context = context)
-
-            if (isLoaded) {
-                Spacer(modifier = GlanceModifier.size(spacerSize))
-                NextButton(context = context)
-            }
-        }
-    }
-
-    @Composable
-    private fun PlayPauseButton(
-        modifier: GlanceModifier = GlanceModifier,
-        context: Context
-    ) {
-        val isPlaying: Boolean by PlaybackManager.isPlaying
-        if (isPlaying) {
-            SquareIconButton(
-                modifier = modifier,
-                imageProvider = SatunesIcons.PAUSE.imageProvider!!,
-                contentDescription = "Pause",
-                onClick = { PlaybackManager.pause(context = context) },
-                backgroundColor = GlanceTheme.colors.primary,
-                contentColor = GlanceTheme.colors.onPrimary,
-            )
-        } else {
-            CircleIconButton(
-                modifier = modifier,
-                imageProvider = SatunesIcons.PLAY.imageProvider!!,
-                contentDescription = "Play",
-                onClick = { PlaybackManager.play(context = context) },
-                backgroundColor = GlanceTheme.colors.primary,
-                contentColor = GlanceTheme.colors.onPrimary,
-            )
-        }
-    }
-
-    @Composable
-    private fun PreviousButton(
-        modifier: GlanceModifier = GlanceModifier,
-        context: Context,
-    ) {
-        CircleIconButton(
-            modifier = modifier,
-            imageProvider = SatunesIcons.SKIP_PREVIOUS.imageProvider!!,
-            contentDescription = "Skip previous",
-            onClick = { PlaybackManager.playPrevious(context = context) },
-            backgroundColor = GlanceTheme.colors.primary,
-            contentColor = GlanceTheme.colors.onPrimary,
-        )
-    }
-
-    @Composable
-    private fun NextButton(
-        modifier: GlanceModifier = GlanceModifier,
-        context: Context,
-    ) {
-        CircleIconButton(
-            modifier = modifier,
-            imageProvider = SatunesIcons.SKIP_NEXT.imageProvider!!,
-            contentDescription = "Skip next",
-            onClick = { PlaybackManager.playNext(context = context) },
-            backgroundColor = GlanceTheme.colors.primary,
-            contentColor = GlanceTheme.colors.onPrimary,
-        )
     }
 }

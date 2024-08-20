@@ -74,7 +74,13 @@ class ClassicPlaybackWidget : GlanceAppWidget() {
                 PreviousButton(context = context)
                 Spacer(modifier = GlanceModifier.size(16.dp))
             }
+
             PlayPauseButton(modifier = GlanceModifier.size(60.dp), context = context)
+
+            if (isLoaded) {
+                Spacer(modifier = GlanceModifier.size(16.dp))
+                NextButton(context = context)
+            }
         }
     }
 
@@ -115,6 +121,19 @@ class ClassicPlaybackWidget : GlanceAppWidget() {
             imageProvider = SatunesIcons.SKIP_PREVIOUS.imageProvider!!,
             contentDescription = "Skip previous",
             onClick = { PlaybackManager.playPrevious(context = context) },
+        )
+    }
+
+    @Composable
+    private fun NextButton(
+        modifier: GlanceModifier = GlanceModifier,
+        context: Context,
+    ) {
+        CircleIconButton(
+            modifier = modifier,
+            imageProvider = SatunesIcons.SKIP_NEXT.imageProvider!!,
+            contentDescription = "Skip next",
+            onClick = { PlaybackManager.playNext(context = context) }
         )
     }
 }

@@ -44,12 +44,14 @@ import io.github.antoinepirlot.satunes.widgets.ui.views.classic_playback.LaunchV
 
 class ClassicPlaybackWidget : GlanceAppWidget() {
 
-    private val _logger: SatunesLogger = SatunesLogger.getLogger()
+    private lateinit var _logger: SatunesLogger
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
-        _logger.info("ClassicPlaybackWidget Starting")
         SatunesLogger.DOCUMENTS_PATH =
             context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)!!.path
+        _logger = SatunesLogger.getLogger()
+        _logger.info("ClassicPlaybackWidget Starting")
+
         provideContent {
             GlanceTheme {
                 Scaffold {

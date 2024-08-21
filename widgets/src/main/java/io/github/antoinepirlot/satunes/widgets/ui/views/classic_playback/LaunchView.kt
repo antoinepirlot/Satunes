@@ -39,6 +39,7 @@ import androidx.glance.appwidget.CircularProgressIndicator
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
+import io.github.antoinepirlot.satunes.widgets.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -60,7 +61,7 @@ internal fun LaunchView(
     } else {
         Button(
             modifier = modifier,
-            text = "LAUNCH",
+            text = context.getString(R.string.launch_text),
             onClick = {
                 isLoading = true
                 SatunesLogger.getLogger().info("Launching from widget")

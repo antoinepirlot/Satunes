@@ -32,18 +32,23 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.glance.Button
+import androidx.glance.GlanceComposable
 import androidx.glance.GlanceModifier
 import androidx.glance.LocalContext
 import androidx.glance.appwidget.CircularProgressIndicator
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
+import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 /**
  * @author Antoine Pirlot on 21/08/2024
  */
 
 @Composable
+@GlanceComposable
 internal fun LaunchView(
     modifier: GlanceModifier = GlanceModifier,
 ) {
@@ -59,11 +64,11 @@ internal fun LaunchView(
             onClick = {
                 isLoading = true
                 SatunesLogger.getLogger().info("Launching from widget")
-                runBlocking {
+                CoroutineScope(Dispatchers.IO).launch {
                     SettingsManager.loadSettings(context = context)
+                    PlaybackManager.initPlaybackWithAllMusics(context = context)
+                    isLoading = false
                 }
-//                PlaybackManager.initPlaybackWithAllMusics(context = context)
-//                isLoading = false
             }
         )
     }

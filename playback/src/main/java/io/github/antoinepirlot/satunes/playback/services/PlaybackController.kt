@@ -53,6 +53,7 @@ import kotlinx.coroutines.launch
 internal class PlaybackController private constructor(
     context: Context,
     sessionToken: SessionToken,
+    loadAllMusics: Boolean = false
 ) {
     internal lateinit var mediaController: MediaController
 
@@ -143,7 +144,11 @@ internal class PlaybackController private constructor(
             return instance!!
         }
 
-        fun initInstance(context: Context, listener: Player.Listener? = null): PlaybackController {
+        fun initInstance(
+            context: Context,
+            listener: Player.Listener? = null,
+            loadAllMusics: Boolean = false
+        ): PlaybackController {
             if (instance == null) {
                 val sessionToken =
                     SessionToken(
@@ -154,6 +159,7 @@ internal class PlaybackController private constructor(
                 instance = PlaybackController(
                     context = context.applicationContext,
                     sessionToken = sessionToken,
+                    loadAllMusics = loadAllMusics,
                 )
             } else if (listener != null) {
                 while (!instance!!::mediaController.isInitialized) {
@@ -186,6 +192,9 @@ internal class PlaybackController private constructor(
                 {
                     mediaController = mediaControllerFuture.get()
                     PlaybackManager.isInitialized.value = true
+                    if (loadAllMusics) {
+                        this.loadMusics(musicSet = DataManager.getMusicSet())
+                    }
                 },
                 MoreExecutors.directExecutor()
             )
@@ -672,6 +681,7 @@ internal class PlaybackController private constructor(
     }
 
     fun updateCurrentPosition() {
+        if (musicPlaying == null) return
         val maxPosition: Long = this.musicPlaying!!.duration
         val newPosition: Long = this.getCurrentPosition()
         this.currentPositionProgression =

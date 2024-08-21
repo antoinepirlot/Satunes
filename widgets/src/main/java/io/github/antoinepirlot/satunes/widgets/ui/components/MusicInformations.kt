@@ -26,6 +26,7 @@
 package io.github.antoinepirlot.satunes.widgets.ui.components
 
 import androidx.compose.runtime.Composable
+import androidx.glance.GlanceComposable
 import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
 import androidx.glance.text.Text
@@ -37,6 +38,7 @@ import io.github.antoinepirlot.satunes.database.models.Music
  */
 
 @Composable
+@GlanceComposable
 internal fun MusicInformations(
     modifier: GlanceModifier = GlanceModifier,
     music: Music

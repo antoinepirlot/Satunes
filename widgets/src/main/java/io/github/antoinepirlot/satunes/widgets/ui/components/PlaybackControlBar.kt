@@ -29,6 +29,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.glance.GlanceComposable
 import androidx.glance.GlanceModifier
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Row
@@ -42,6 +43,7 @@ import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
  */
 
 @Composable
+@GlanceComposable
 internal fun PlaybackControlBar(
     modifier: GlanceModifier = GlanceModifier,
 ) {

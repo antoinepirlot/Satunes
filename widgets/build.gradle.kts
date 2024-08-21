@@ -1,8 +1,6 @@
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
-    alias(libs.plugins.hilt)
-    alias(libs.plugins.ksp)
 }
 
 android {
@@ -87,9 +85,6 @@ dependencies {
      * Singleton, Inject
      */
     implementation("javax.inject:javax.inject:1")
-
-    implementation(libs.hilt.android)
-    ksp(libs.hilt.compiler)
 
     /**
      * Utils

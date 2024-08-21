@@ -49,8 +49,6 @@ import io.github.antoinepirlot.satunes.playback.services.PlaybackController.Comp
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController.Companion.DEFAULT_IS_SHUFFLE
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController.Companion.DEFAULT_MUSIC_PLAYING
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController.Companion.DEFAULT_REPEAT_MODE
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
 
 /**
  * @author Antoine Pirlot on 10/08/2024
@@ -87,10 +85,18 @@ object PlaybackManager {
         mutableFloatStateOf(DEFAULT_CURRENT_POSITION_PROGRESSION)
         private set
 
-    fun initPlayback(context: Context, listener: PlaybackListener? = this.listener) {
+    fun initPlayback(
+        context: Context,
+        listener: PlaybackListener? = this.listener,
+        loadAllMusics: Boolean = false
+    ) {
         this.listener = listener
         this._playbackController =
-            PlaybackController.initInstance(context = context, listener = listener)
+            PlaybackController.initInstance(
+                context = context,
+                listener = listener,
+                loadAllMusics = loadAllMusics
+            )
         reset()
     }
 
@@ -99,23 +105,17 @@ object PlaybackManager {
     fun isConfigured(): Boolean = !this.playbackControllerNotExists()
 
     fun initPlaybackWithAllMusics(context: Context) {
-        this.initPlayback(context = context)
         if (!DataLoader.isLoaded.value && !DataLoader.isLoading.value) {
             DataLoader.resetAllData()
             DataLoader.loadAllData(context = context)
+            this.initPlayback(context = context, loadAllMusics = true)
         } else {
+            this.initPlayback(context = context, loadAllMusics = false)
             if (this::playlist.isInitialized) {
                 this._playbackController!!.loadMusics(playlist = playlist)
                 return
             }
         }
-        while (DataLoader.isLoading.value) {
-            //Wait
-            runBlocking {
-                delay(50) //Wait (use delay to reduce cpu usage)
-            }
-        }
-        this._playbackController!!.loadMusics(musicSet = DataManager.getMusicSet())
     }
 
     private fun checkPlaybackController(context: Context, loadAllMusic: Boolean = true) {

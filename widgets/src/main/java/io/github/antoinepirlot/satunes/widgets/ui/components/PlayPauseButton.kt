@@ -28,6 +28,7 @@ package io.github.antoinepirlot.satunes.widgets.ui.components
 import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.glance.GlanceComposable
 import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
 import androidx.glance.LocalContext
@@ -41,6 +42,7 @@ import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
  */
 
 @Composable
+@GlanceComposable
 internal fun PlayPauseButton(
     modifier: GlanceModifier = GlanceModifier,
 ) {

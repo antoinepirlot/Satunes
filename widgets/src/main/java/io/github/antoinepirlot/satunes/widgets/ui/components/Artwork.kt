@@ -31,6 +31,7 @@ import android.graphics.Bitmap
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
+import androidx.glance.GlanceComposable
 import androidx.glance.GlanceModifier
 import androidx.glance.Image
 import androidx.glance.ImageProvider
@@ -45,6 +46,7 @@ import io.github.antoinepirlot.satunes.icons.R as RIcon
 
 @SuppressLint("UseCompatLoadingForDrawables")
 @Composable
+@GlanceComposable
 internal fun Artwork(
     modifier: GlanceModifier = GlanceModifier,
     music: Music,

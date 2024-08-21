@@ -28,9 +28,7 @@ package io.github.antoinepirlot.satunes.widgets.data.viewmodels
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.github.antoinepirlot.satunes.widgets.models.ClassicPlaybackRepository
 import javax.inject.Inject
-
 
 /**
  * @author Antoine Pirlot on 21/08/2024
@@ -39,7 +37,6 @@ import javax.inject.Inject
 @HiltViewModel
 class ClassicPlaybackWidgetViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
-    private val repository: ClassicPlaybackRepository
 ) : ViewModel() {
 
 }

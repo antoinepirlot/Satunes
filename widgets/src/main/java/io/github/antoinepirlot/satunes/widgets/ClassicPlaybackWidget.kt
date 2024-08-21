@@ -30,7 +30,6 @@ import android.os.Environment
 import androidx.compose.runtime.getValue
 import androidx.glance.GlanceId
 import androidx.glance.GlanceTheme
-import androidx.glance.LocalContext
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.components.Scaffold
 import androidx.glance.appwidget.provideContent
@@ -45,10 +44,13 @@ import io.github.antoinepirlot.satunes.widgets.ui.views.classic_playback.LaunchV
 
 class ClassicPlaybackWidget : GlanceAppWidget() {
 
+    private val _logger: SatunesLogger = SatunesLogger.getLogger()
+
     override suspend fun provideGlance(context: Context, id: GlanceId) {
+        _logger.info("ClassicPlaybackWidget Starting")
+        SatunesLogger.DOCUMENTS_PATH =
+            context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)!!.path
         provideContent {
-            SatunesLogger.DOCUMENTS_PATH =
-                LocalContext.current.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)!!.path
             GlanceTheme {
                 Scaffold {
                     val isInitialized: Boolean by PlaybackManager.isInitialized

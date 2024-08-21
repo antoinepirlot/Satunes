@@ -27,7 +27,9 @@ package io.github.antoinepirlot.satunes.widgets.ui.components
 
 import androidx.compose.runtime.Composable
 import androidx.glance.GlanceModifier
+import androidx.glance.GlanceTheme
 import androidx.glance.text.Text
+import androidx.glance.text.TextStyle
 import io.github.antoinepirlot.satunes.database.models.Music
 
 /**
@@ -42,6 +44,7 @@ internal fun MusicInformations(
     Text(
         modifier = modifier,
         text = music.title + " - " + music.artist.title,
+        style = TextStyle(color = GlanceTheme.colors.onSurface),
         maxLines = 1
     )
 }

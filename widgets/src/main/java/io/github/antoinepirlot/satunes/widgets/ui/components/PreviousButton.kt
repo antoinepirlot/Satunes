@@ -29,6 +29,7 @@ import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
+import androidx.glance.LocalContext
 import androidx.glance.appwidget.components.CircleIconButton
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
@@ -40,8 +41,8 @@ import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
 @Composable
 internal fun PreviousButton(
     modifier: GlanceModifier = GlanceModifier,
-    context: Context,
 ) {
+    val context: Context = LocalContext.current
     CircleIconButton(
         modifier = modifier,
         imageProvider = SatunesIcons.SKIP_PREVIOUS.imageProvider!!,

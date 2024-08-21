@@ -25,7 +25,6 @@
 
 package io.github.antoinepirlot.satunes.widgets.ui.components
 
-import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.unit.Dp
@@ -45,7 +44,6 @@ import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
 @Composable
 internal fun PlaybackControlBar(
     modifier: GlanceModifier = GlanceModifier,
-    context: Context,
 ) {
     Row(
         modifier = modifier.fillMaxWidth(),
@@ -56,16 +54,16 @@ internal fun PlaybackControlBar(
         val spacerSize: Dp = 12.dp
 
         if (isLoaded) {
-            PreviousButton(modifier = GlanceModifier.size(40.dp), context = context)
+            PreviousButton(modifier = GlanceModifier.size(40.dp))
             Spacer(modifier = GlanceModifier.size(spacerSize))
         }
 
         val playPauseSize: Dp = if (isLoaded) 40.dp else 60.dp
-        PlayPauseButton(modifier = GlanceModifier.size(playPauseSize), context = context)
+        PlayPauseButton(modifier = GlanceModifier.size(playPauseSize))
 
         if (isLoaded) {
             Spacer(modifier = GlanceModifier.size(spacerSize))
-            NextButton(modifier = GlanceModifier.size(40.dp), context = context)
+            NextButton(modifier = GlanceModifier.size(40.dp))
         }
     }
 }

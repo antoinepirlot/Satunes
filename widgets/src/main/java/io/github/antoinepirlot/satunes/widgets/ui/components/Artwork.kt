@@ -34,6 +34,7 @@ import androidx.core.graphics.drawable.toBitmap
 import androidx.glance.GlanceModifier
 import androidx.glance.Image
 import androidx.glance.ImageProvider
+import androidx.glance.LocalContext
 import androidx.glance.layout.size
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.icons.R as RIcon
@@ -46,9 +47,9 @@ import io.github.antoinepirlot.satunes.icons.R as RIcon
 @Composable
 internal fun Artwork(
     modifier: GlanceModifier = GlanceModifier,
-    context: Context,
     music: Music,
 ) {
+    val context: Context = LocalContext.current
     var artwork: Bitmap? = music.getAlbumArtwork(context = context)
     if (artwork == null) {
         artwork = context.getDrawable(RIcon.mipmap.empty_album_artwork_foreground)!!.toBitmap()

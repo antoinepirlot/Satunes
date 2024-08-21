@@ -30,6 +30,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
+import androidx.glance.LocalContext
 import androidx.glance.appwidget.components.CircleIconButton
 import androidx.glance.appwidget.components.SquareIconButton
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
@@ -42,8 +43,8 @@ import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
 @Composable
 internal fun PlayPauseButton(
     modifier: GlanceModifier = GlanceModifier,
-    context: Context
 ) {
+    val context: Context = LocalContext.current
     val isPlaying: Boolean by PlaybackManager.isPlaying
     if (isPlaying) {
         SquareIconButton(

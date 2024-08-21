@@ -25,13 +25,11 @@
 
 package io.github.antoinepirlot.satunes.widgets.ui.views
 
-import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.unit.dp
 import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
-import androidx.glance.LocalContext
 import androidx.glance.appwidget.components.Scaffold
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Column
@@ -55,7 +53,6 @@ import io.github.antoinepirlot.satunes.widgets.ui.components.PlaybackControlBar
 internal fun ClassicPlaybackWidgetView(
     modifier: GlanceModifier = GlanceModifier
 ) {
-    val context: Context = LocalContext.current.applicationContext
     GlanceTheme {
         Scaffold {
             Row(
@@ -66,7 +63,7 @@ internal fun ClassicPlaybackWidgetView(
                 val musicPlaying: Music? by PlaybackManager.musicPlaying
 
                 if (musicPlaying != null) {
-                    Artwork(context = context, music = musicPlaying!!)
+                    Artwork(music = musicPlaying!!)
                     Spacer(modifier = GlanceModifier.size(5.dp))
                 }
 
@@ -79,7 +76,7 @@ internal fun ClassicPlaybackWidgetView(
                         MusicInformations(music = musicPlaying!!)
                         Spacer(modifier = GlanceModifier.size(5.dp))
                     }
-                    PlaybackControlBar(context = context)
+                    PlaybackControlBar()
                 }
             }
         }

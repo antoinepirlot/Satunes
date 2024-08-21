@@ -26,9 +26,12 @@
 package io.github.antoinepirlot.satunes.widgets
 
 import android.content.Context
+import android.os.Environment
 import androidx.glance.GlanceId
+import androidx.glance.LocalContext
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.provideContent
+import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import io.github.antoinepirlot.satunes.widgets.ui.views.ClassicPlaybackWidgetView
 
 /**
@@ -39,6 +42,8 @@ class ClassicPlaybackWidget : GlanceAppWidget() {
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         provideContent {
+            SatunesLogger.DOCUMENTS_PATH =
+                LocalContext.current.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)!!.path
             ClassicPlaybackWidgetView()
         }
     }

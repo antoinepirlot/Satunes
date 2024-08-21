@@ -54,7 +54,9 @@ internal fun ClassicPlaybackWidgetView(
     modifier: GlanceModifier = GlanceModifier
 ) {
     GlanceTheme {
-        Scaffold {
+        Scaffold(
+            modifier = modifier
+        ) {
             Row(
                 modifier = GlanceModifier.fillMaxSize(),
                 verticalAlignment = Alignment.CenterVertically,

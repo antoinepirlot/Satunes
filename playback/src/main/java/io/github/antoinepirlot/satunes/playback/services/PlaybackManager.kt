@@ -59,7 +59,7 @@ object PlaybackManager {
 
     internal lateinit var playlist: Playlist
 
-    internal var listener: PlaybackListener? = null
+    private var listener: PlaybackListener? = null
 
     var isEnded: MutableState<Boolean> = mutableStateOf(DEFAULT_IS_ENDED)
 

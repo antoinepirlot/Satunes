@@ -186,11 +186,6 @@ internal class PlaybackController private constructor(
                 { mediaController = mediaControllerFuture.get() },
                 MoreExecutors.directExecutor()
             )
-//            val controllerFuture = MediaController.Builder(context, sessionToken).buildAsync()
-//
-//            controllerFuture.addListener({
-//                this.mediaController = controllerFuture.get()
-//            }, ContextCompat.getMainExecutor(context))
         } catch (e: Throwable) {
             logger.severe(e.message)
             throw e

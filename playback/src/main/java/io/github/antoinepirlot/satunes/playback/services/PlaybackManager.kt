@@ -112,7 +112,6 @@ object PlaybackManager {
             this.initPlayback(context = context, loadAllMusics = false)
             if (this::playlist.isInitialized) {
                 this._playbackController!!.loadMusics(playlist = playlist)
-                return
             }
         }
     }
@@ -150,7 +149,11 @@ object PlaybackManager {
 
     fun play(context: Context) {
         checkPlaybackController(context = context)
-        this._playbackController!!.play()
+        if (musicPlaying.value == null) {
+            this._playbackController!!.start()
+        } else {
+            this._playbackController!!.play()
+        }
     }
 
     fun pause(context: Context) {
@@ -218,7 +221,6 @@ object PlaybackManager {
             shuffleMode = shuffleMode,
             musicToPlay = musicToPlay
         )
-        this.playlist = this._playbackController!!.playlist
     }
 
     fun addToQueue(context: Context, mediaImplList: Collection<MediaImpl>) {

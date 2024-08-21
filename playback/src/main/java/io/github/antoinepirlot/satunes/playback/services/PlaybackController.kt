@@ -246,7 +246,6 @@ internal class PlaybackController private constructor(
     fun playPause() {
         if (this.isPlaying) {
             this.mediaController.pause()
-            return
         } else {
             if (this.isEnded) {
                 this.start()
@@ -348,6 +347,7 @@ internal class PlaybackController private constructor(
 
     fun loadMusics(playlist: Playlist) {
         this.playlist = playlist
+        PlaybackManager.playlist = playlist
 
         this.mediaController.clearMediaItems()
         this.mediaController.addMediaItems(this.playlist.mediaItemList)

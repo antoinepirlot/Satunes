@@ -23,49 +23,42 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.widgets.components
+package io.github.antoinepirlot.satunes.widgets.ui.components
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Bitmap
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.core.graphics.drawable.toBitmap
+import androidx.glance.GlanceComposable
 import androidx.glance.GlanceModifier
-import androidx.glance.layout.Alignment
-import androidx.glance.layout.Row
-import androidx.glance.layout.Spacer
-import androidx.glance.layout.fillMaxWidth
+import androidx.glance.Image
+import androidx.glance.ImageProvider
+import androidx.glance.LocalContext
 import androidx.glance.layout.size
-import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
+import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.icons.R as RIcon
 
 /**
  * @author Antoine Pirlot on 20/08/2024
  */
 
+@SuppressLint("UseCompatLoadingForDrawables")
 @Composable
-internal fun PlaybackControlBar(
+@GlanceComposable
+internal fun Artwork(
     modifier: GlanceModifier = GlanceModifier,
-    context: Context,
+    music: Music,
 ) {
-    Row(
-        modifier = modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        val isLoaded: Boolean by PlaybackManager.isLoaded
-        val spacerSize: Dp = 12.dp
-
-        if (isLoaded) {
-            PreviousButton(modifier = GlanceModifier.size(40.dp), context = context)
-            Spacer(modifier = GlanceModifier.size(spacerSize))
-        }
-
-        val playPauseSize: Dp = if (isLoaded) 40.dp else 60.dp
-        PlayPauseButton(modifier = GlanceModifier.size(playPauseSize), context = context)
-
-        if (isLoaded) {
-            Spacer(modifier = GlanceModifier.size(spacerSize))
-            NextButton(modifier = GlanceModifier.size(40.dp), context = context)
-        }
+    val context: Context = LocalContext.current
+    var artwork: Bitmap? = music.getAlbumArtwork(context = context)
+    if (artwork == null) {
+        artwork = context.getDrawable(RIcon.mipmap.empty_album_artwork_foreground)!!.toBitmap()
     }
+    Image(
+        modifier = modifier.size(70.dp),
+        provider = ImageProvider(bitmap = artwork),
+        contentDescription = "Artwork"
+    )
 }

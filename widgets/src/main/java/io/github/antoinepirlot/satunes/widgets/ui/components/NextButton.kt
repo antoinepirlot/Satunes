@@ -23,12 +23,14 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.widgets.components
+package io.github.antoinepirlot.satunes.widgets.ui.components
 
 import android.content.Context
 import androidx.compose.runtime.Composable
+import androidx.glance.GlanceComposable
 import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
+import androidx.glance.LocalContext
 import androidx.glance.appwidget.components.CircleIconButton
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
@@ -38,15 +40,16 @@ import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
  */
 
 @Composable
-internal fun PreviousButton(
+@GlanceComposable
+internal fun NextButton(
     modifier: GlanceModifier = GlanceModifier,
-    context: Context,
 ) {
+    val context: Context = LocalContext.current
     CircleIconButton(
         modifier = modifier,
-        imageProvider = SatunesIcons.SKIP_PREVIOUS.imageProvider!!,
-        contentDescription = "Skip previous",
-        onClick = { PlaybackManager.playPrevious(context = context) },
+        imageProvider = SatunesIcons.SKIP_NEXT.imageProvider!!,
+        contentDescription = "Skip next",
+        onClick = { PlaybackManager.playNext(context = context) },
         backgroundColor = GlanceTheme.colors.primary,
         contentColor = GlanceTheme.colors.onPrimary,
     )

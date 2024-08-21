@@ -44,23 +44,26 @@ android {
 }
 
 dependencies {
-
-    implementation("androidx.core:core-ktx:1.13.1")
-    implementation("androidx.appcompat:appcompat:1.7.0")
-    implementation("com.google.android.material:material:1.12.0")
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.2.1")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
+    /**
+     * Base
+     */
+    implementation(libs.core.ktx)
+    implementation(libs.activity.compose)
+    implementation(libs.lifecycle.runtime.ktx)
+    implementation(libs.lifecycle.viewmodel.compose)
+    //Test
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.ext.junit)
+    androidTestImplementation(libs.espresso.core)
 
     /**
      * Widget
      */
-    val widgetVersion = "1.1.0"
     // For AppWidgets support
-    implementation("androidx.glance:glance-appwidget:$widgetVersion")
+    implementation(libs.glance.appwidget)
 
     // For interop APIs with Material 3
-    implementation("androidx.glance:glance-material3:$widgetVersion")
+    implementation(libs.glance.material3)
 
     /**
      * Database
@@ -76,4 +79,14 @@ dependencies {
      * Icons
      */
     implementation(project(":icons"))
+
+    /**
+     * Singleton, Inject
+     */
+    implementation(libs.javax.inject)
+
+    /**
+     * Utils
+     */
+    implementation(project(":utils"))
 }

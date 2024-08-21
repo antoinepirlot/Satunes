@@ -44,44 +44,39 @@ android {
 
 dependencies {
 
-    implementation("com.google.android.material:material:1.12.0")
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.2.1")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
+    implementation(libs.material)
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.ext.junit)
+    androidTestImplementation(libs.espresso.core)
 
     /**
      * Serialization to JSON
      */
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
+    implementation(libs.kotlinx.serialization.json)
 
     /**
      * Mutable State
      */
-    implementation(platform("androidx.compose:compose-bom:2024.06.00"))
-    implementation("androidx.compose.material3:material3")
+    implementation(platform(libs.compose.bom))
+    implementation(libs.material3)
 
     /**
      * Media
      */
-    val media3Version = "1.4.0"
-
-    implementation("androidx.media3:media3-common:$media3Version")
+    implementation(libs.androidx.media3.common)
 
     /**
      * DataStore
      */
-    val dataStoreVersion = "1.1.1"
-    implementation("androidx.datastore:datastore-preferences:$dataStoreVersion")
+    implementation(libs.androidx.datastore.preferences)
 
     /**
      * Database Android Room
      */
-    val roomVersion = "2.6.1"
-
-    implementation("androidx.room:room-runtime:$roomVersion")
-    annotationProcessor("androidx.room:room-compiler:$roomVersion")
+    implementation(libs.androidx.room.runtime)
+    annotationProcessor(libs.androidx.room.compiler)
     // To use Kotlin Symbol Processing (KSP)
-    ksp("androidx.room:room-compiler:$roomVersion")
+    ksp(libs.androidx.room.compiler)
 
     /**
      * Icons

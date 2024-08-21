@@ -23,25 +23,50 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.widgets.components
+package io.github.antoinepirlot.satunes.widgets.ui.components
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+import androidx.glance.GlanceComposable
 import androidx.glance.GlanceModifier
-import androidx.glance.text.Text
+import androidx.glance.layout.Alignment
+import androidx.glance.layout.Row
+import androidx.glance.layout.Spacer
+import androidx.glance.layout.fillMaxWidth
+import androidx.glance.layout.size
 import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
 
 /**
  * @author Antoine Pirlot on 20/08/2024
  */
 
 @Composable
-internal fun MusicInformations(
+@GlanceComposable
+internal fun PlaybackControlBar(
     modifier: GlanceModifier = GlanceModifier,
-    music: Music
 ) {
-    Text(
-        modifier = modifier,
-        text = music.title + " - " + music.artist.title,
-        maxLines = 1
-    )
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        val musicPlaying: Music? by PlaybackManager.musicPlaying
+        val spacerSize: Dp = 12.dp
+
+        if (musicPlaying != null) {
+            PreviousButton(modifier = GlanceModifier.size(40.dp))
+            Spacer(modifier = GlanceModifier.size(spacerSize))
+        }
+
+        val playPauseSize: Dp = if (musicPlaying != null) 40.dp else 60.dp
+        PlayPauseButton(modifier = GlanceModifier.size(playPauseSize))
+
+        if (musicPlaying != null) {
+            Spacer(modifier = GlanceModifier.size(spacerSize))
+            NextButton(modifier = GlanceModifier.size(40.dp))
+        }
+    }
 }

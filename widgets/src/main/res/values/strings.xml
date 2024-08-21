@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="classic_widget_description">Classic</string>
+    <string name="launch_text">Launch Satunes</string>
 </resources>

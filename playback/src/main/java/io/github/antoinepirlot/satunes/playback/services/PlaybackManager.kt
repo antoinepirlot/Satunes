@@ -36,7 +36,6 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.data.DataLoader
-import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.playback.models.PlaybackListener
 import io.github.antoinepirlot.satunes.playback.models.Playlist
@@ -45,6 +44,7 @@ import io.github.antoinepirlot.satunes.playback.services.PlaybackController.Comp
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController.Companion.DEFAULT_HAS_PREVIOUS
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController.Companion.DEFAULT_IS_ENDED
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController.Companion.DEFAULT_IS_LOADED
+import io.github.antoinepirlot.satunes.playback.services.PlaybackController.Companion.DEFAULT_IS_LOADING
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController.Companion.DEFAULT_IS_PLAYING_VALUE
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController.Companion.DEFAULT_IS_SHUFFLE
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController.Companion.DEFAULT_MUSIC_PLAYING
@@ -59,9 +59,11 @@ object PlaybackManager {
 
     internal lateinit var playlist: Playlist
 
-    internal var listener: PlaybackListener? = null
+    private var listener: PlaybackListener? = null
 
-    var isEnded: MutableState<Boolean> = mutableStateOf(DEFAULT_IS_ENDED)
+    val isEnded: MutableState<Boolean> = mutableStateOf(DEFAULT_IS_ENDED)
+
+    val isInitialized: MutableState<Boolean> = mutableStateOf(false)
 
     // Mutable var are used in ui, it needs to be recomposed
     // I use mutable to avoid using function with multiples params like to add listener
@@ -77,16 +79,26 @@ object PlaybackManager {
         private set
     var hasPrevious: MutableState<Boolean> = mutableStateOf(DEFAULT_HAS_PREVIOUS)
         private set
+    var isLoading: MutableState<Boolean> = mutableStateOf(DEFAULT_IS_LOADING)
+        private set
     var isLoaded: MutableState<Boolean> = mutableStateOf(DEFAULT_IS_LOADED)
         private set
     var currentPositionProgression: MutableFloatState =
         mutableFloatStateOf(DEFAULT_CURRENT_POSITION_PROGRESSION)
         private set
 
-    fun initPlayback(context: Context, listener: PlaybackListener? = this.listener) {
+    fun initPlayback(
+        context: Context,
+        listener: PlaybackListener? = this.listener,
+        loadAllMusics: Boolean = false
+    ) {
         this.listener = listener
         this._playbackController =
-            PlaybackController.initInstance(context = context, listener = listener)
+            PlaybackController.initInstance(
+                context = context,
+                listener = listener,
+                loadAllMusics = loadAllMusics
+            )
         reset()
     }
 
@@ -94,17 +106,17 @@ object PlaybackManager {
 
     fun isConfigured(): Boolean = !this.playbackControllerNotExists()
 
-    private fun initPlaybackWithAllMusics(context: Context) {
-        this.initPlayback(context = context)
+    fun initPlaybackWithAllMusics(context: Context) {
         if (!DataLoader.isLoaded.value && !DataLoader.isLoading.value) {
+            DataLoader.resetAllData()
             DataLoader.loadAllData(context = context)
+            this.initPlayback(context = context, loadAllMusics = true)
         } else {
+            this.initPlayback(context = context, loadAllMusics = false)
             if (this::playlist.isInitialized) {
                 this._playbackController!!.loadMusics(playlist = playlist)
-                return
             }
         }
-        this._playbackController!!.loadMusics(musicSet = DataManager.getMusicSet())
     }
 
     private fun checkPlaybackController(context: Context, loadAllMusic: Boolean = true) {
@@ -124,6 +136,7 @@ object PlaybackManager {
         isShuffle.value = _playbackController!!.isShuffle
         hasNext.value = _playbackController!!.hasNext
         hasPrevious.value = _playbackController!!.hasPrevious
+        isLoading.value = _playbackController!!.isLoading
         isLoaded.value = _playbackController!!.isLoaded
         currentPositionProgression.floatValue = _playbackController!!.currentPositionProgression
     }
@@ -140,8 +153,7 @@ object PlaybackManager {
 
     fun play(context: Context) {
         checkPlaybackController(context = context)
-        if (!this::playlist.isInitialized) {
-            this.loadMusics(context = context, musicSet = DataManager.getMusicSet())
+        if (musicPlaying.value == null) {
             this._playbackController!!.start()
         } else {
             this._playbackController!!.play()
@@ -213,7 +225,6 @@ object PlaybackManager {
             shuffleMode = shuffleMode,
             musicToPlay = musicToPlay
         )
-        this.playlist = this._playbackController!!.playlist
     }
 
     fun addToQueue(context: Context, mediaImplList: Collection<MediaImpl>) {

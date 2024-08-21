@@ -32,15 +32,13 @@ dependencies {
     /**
      * Base
      */
-    implementation("androidx.activity:activity-compose:1.9.1")
+    implementation(libs.activity.compose)
 
     /**
      * Media
      */
-    val mediaVersion = "1.7.0"
-    val media3Version = "1.4.0"
-    implementation("androidx.media:media:$mediaVersion")
-    implementation("androidx.media3:media3-common:$media3Version")
+    implementation(libs.androidx.media)
+    implementation(libs.androidx.media3.common)
 
     /**
      * Playback

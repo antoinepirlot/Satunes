@@ -118,6 +118,7 @@ object SettingsManager {
      * VARIABLES
      */
     private val Context.dataStore: DataStore<Preferences> by PREFERENCES_DATA_STORE
+    private var _isLoaded: Boolean = false
 
     var foldersChecked: MutableState<Boolean> = mutableStateOf(DEFAULT_FOLDERS_CHECKED)
         private set
@@ -171,6 +172,10 @@ object SettingsManager {
     private val _logger = SatunesLogger.getLogger()
 
     suspend fun loadSettings(context: Context) {
+        if (_isLoaded) {
+            _logger.info("Settings already loaded")
+            return
+        }
         context.dataStore.data.map { preferences: Preferences ->
             foldersChecked.value =
                 preferences[FOLDERS_CHECKED_PREFERENCES_KEY] ?: DEFAULT_FOLDERS_CHECKED
@@ -219,6 +224,7 @@ object SettingsManager {
 
             loadFilters(context = context)
         }.first()
+        _isLoaded = true
     }
 
     private fun getBarSpeed(speed: Float?): BarSpeed {

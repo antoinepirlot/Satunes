@@ -1,8 +1,6 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-    alias(libs.plugins.hilt)
-    alias(libs.plugins.ksp)
 }
 
 val nameSpace: String = "io.github.antoinepirlot.satunes"
@@ -122,18 +120,11 @@ dependencies {
     // Jetpack Compose Integration
     implementation("androidx.navigation:navigation-compose:$navVersion")
 
-
     /**
      * DataStore
      */
     val dataStoreVersion = "1.1.1"
     implementation("androidx.datastore:datastore-preferences:$dataStoreVersion")
-
-    /**
-     * Hilt
-     */
-    implementation(libs.hilt.android)
-    ksp(libs.hilt.compiler)
 
     /**
      * Widgets

@@ -39,15 +39,13 @@ dependencies {
     /**
      * Icons
      */
-    val materialIconsVersion = "1.6.8"
-    implementation("androidx.compose.material:material-icons-core:$materialIconsVersion")
-    implementation("androidx.compose.material:material-icons-extended:$materialIconsVersion")
+    implementation(libs.androidx.material.icons.core)
+    implementation(libs.androidx.material.icons.extended)
 
     /**
      * Widget (image provider)
      */
-    val widgetVersion = "1.1.0"
-    implementation("androidx.glance:glance:$widgetVersion")
+    implementation(libs.androidx.glance)
 
     /**
      * Utils

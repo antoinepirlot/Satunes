@@ -1,0 +1,13 @@
+[versions]
+hilt = "2.49"
+ksp = "1.9.0-1.0.13"
+
+
+[libraries]
+hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
+hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
+
+
+[plugins]
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

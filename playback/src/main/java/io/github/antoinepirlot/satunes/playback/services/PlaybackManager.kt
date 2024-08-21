@@ -44,6 +44,7 @@ import io.github.antoinepirlot.satunes.playback.services.PlaybackController.Comp
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController.Companion.DEFAULT_HAS_PREVIOUS
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController.Companion.DEFAULT_IS_ENDED
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController.Companion.DEFAULT_IS_LOADED
+import io.github.antoinepirlot.satunes.playback.services.PlaybackController.Companion.DEFAULT_IS_LOADING
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController.Companion.DEFAULT_IS_PLAYING_VALUE
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController.Companion.DEFAULT_IS_SHUFFLE
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController.Companion.DEFAULT_MUSIC_PLAYING
@@ -77,6 +78,8 @@ object PlaybackManager {
     var hasNext: MutableState<Boolean> = mutableStateOf(DEFAULT_HAS_NEXT)
         private set
     var hasPrevious: MutableState<Boolean> = mutableStateOf(DEFAULT_HAS_PREVIOUS)
+        private set
+    var isLoading: MutableState<Boolean> = mutableStateOf(DEFAULT_IS_LOADING)
         private set
     var isLoaded: MutableState<Boolean> = mutableStateOf(DEFAULT_IS_LOADED)
         private set
@@ -133,6 +136,7 @@ object PlaybackManager {
         isShuffle.value = _playbackController!!.isShuffle
         hasNext.value = _playbackController!!.hasNext
         hasPrevious.value = _playbackController!!.hasPrevious
+        isLoading.value = _playbackController!!.isLoading
         isLoaded.value = _playbackController!!.isLoaded
         currentPositionProgression.floatValue = _playbackController!!.currentPositionProgression
     }

@@ -60,8 +60,9 @@ class ClassicPlaybackWidget : GlanceAppWidget() {
                     val isDataLoading: Boolean by DataLoader.isLoading
                     val isDataLoaded: Boolean by DataLoader.isLoaded
                     val isPlaybackLoaded: Boolean by PlaybackManager.isLoaded
+                    val isPlaybackLoading: Boolean by PlaybackManager.isLoading
 
-                    if (!isInitialized || isDataLoading || !isDataLoaded || !isPlaybackLoaded) {
+                    if (!isInitialized || isDataLoading || !isDataLoaded || !isPlaybackLoaded || isPlaybackLoading) {
                         LaunchView()
                     } else {
                         ClassicPlaybackWidgetView()

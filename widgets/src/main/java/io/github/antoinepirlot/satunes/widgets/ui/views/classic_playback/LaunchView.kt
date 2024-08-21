@@ -60,12 +60,13 @@ internal fun LaunchView(
     val context: Context = LocalContext.current
     var isLoading: Boolean by rememberSaveable { mutableStateOf(false) }
     val isDataLoading: Boolean by DataLoader.isLoading
+    val isPlaybackLoading: Boolean by PlaybackManager.isLoading
 
     Box(
         modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        if (isLoading || isDataLoading) {
+        if (isLoading || isDataLoading || isPlaybackLoading) {
             CircularProgressIndicator()
         } else {
             Button(
@@ -75,7 +76,9 @@ internal fun LaunchView(
                     SatunesLogger.getLogger().info("Launching from widget")
                     CoroutineScope(Dispatchers.IO).launch {
                         SettingsManager.loadSettings(context = context)
-                        PlaybackManager.initPlaybackWithAllMusics(context = context)
+                        if (!PlaybackManager.isLoading.value) {
+                            PlaybackManager.initPlaybackWithAllMusics(context = context)
+                        }
                         isLoading = false
                     }
                 }

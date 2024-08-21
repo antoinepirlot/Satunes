@@ -99,8 +99,13 @@ internal class PlaybackController private constructor(
             field = value
             PlaybackManager.hasPrevious.value = value
         }
+    var isLoading: Boolean = DEFAULT_IS_LOADING
+        private set(value) {
+            field = value
+            PlaybackManager.isLoading.value = value
+        }
     var isLoaded: Boolean = DEFAULT_IS_LOADED
-        internal set(value) {
+        private set(value) {
             field = value
             PlaybackManager.isLoaded.value = value
         }
@@ -120,6 +125,7 @@ internal class PlaybackController private constructor(
         internal const val DEFAULT_IS_SHUFFLE: Boolean = false
         internal const val DEFAULT_HAS_NEXT: Boolean = false
         internal const val DEFAULT_HAS_PREVIOUS: Boolean = false
+        internal const val DEFAULT_IS_LOADING: Boolean = false
         internal const val DEFAULT_IS_LOADED: Boolean = false
         internal const val DEFAULT_CURRENT_POSITION_PROGRESSION: Float = 0f
         internal val DEFAULT_MUSIC_PLAYING = null
@@ -334,6 +340,7 @@ internal class PlaybackController private constructor(
         shuffleMode: Boolean = SettingsManager.shuffleMode,
         musicToPlay: Music? = null,
     ) {
+        this.isLoading = true
         val playlist = Playlist(musicSet = musicSet)
         if (shuffleMode) {
             if (musicToPlay == null) {
@@ -346,6 +353,7 @@ internal class PlaybackController private constructor(
     }
 
     fun loadMusics(playlist: Playlist) {
+        this.isLoading = true
         this.playlist = playlist
         PlaybackManager.playlist = playlist
 
@@ -362,6 +370,7 @@ internal class PlaybackController private constructor(
 
         this.isShuffle = this.playlist.isShuffle
         this.isLoaded = true
+        this.isLoading = false
     }
 
     fun addToQueue(mediaImplList: Collection<MediaImpl>) {

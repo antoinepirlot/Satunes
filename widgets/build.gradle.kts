@@ -76,4 +76,9 @@ dependencies {
      * Icons
      */
     implementation(project(":icons"))
+
+    /**
+     * Singleton, Inject
+     */
+    implementation("javax.inject:javax.inject:1")
 }

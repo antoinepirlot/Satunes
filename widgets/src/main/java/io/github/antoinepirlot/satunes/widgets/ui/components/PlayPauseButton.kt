@@ -23,13 +23,15 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.widgets.components
+package io.github.antoinepirlot.satunes.widgets.ui.components
 
 import android.content.Context
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
 import androidx.glance.appwidget.components.CircleIconButton
+import androidx.glance.appwidget.components.SquareIconButton
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
 
@@ -38,16 +40,28 @@ import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
  */
 
 @Composable
-internal fun NextButton(
+internal fun PlayPauseButton(
     modifier: GlanceModifier = GlanceModifier,
-    context: Context,
+    context: Context
 ) {
-    CircleIconButton(
-        modifier = modifier,
-        imageProvider = SatunesIcons.SKIP_NEXT.imageProvider!!,
-        contentDescription = "Skip next",
-        onClick = { PlaybackManager.playNext(context = context) },
-        backgroundColor = GlanceTheme.colors.primary,
-        contentColor = GlanceTheme.colors.onPrimary,
-    )
+    val isPlaying: Boolean by PlaybackManager.isPlaying
+    if (isPlaying) {
+        SquareIconButton(
+            modifier = modifier,
+            imageProvider = SatunesIcons.PAUSE.imageProvider!!,
+            contentDescription = "Pause",
+            onClick = { PlaybackManager.pause(context = context) },
+            backgroundColor = GlanceTheme.colors.primary,
+            contentColor = GlanceTheme.colors.onPrimary,
+        )
+    } else {
+        CircleIconButton(
+            modifier = modifier,
+            imageProvider = SatunesIcons.PLAY.imageProvider!!,
+            contentDescription = "Play",
+            onClick = { PlaybackManager.play(context = context) },
+            backgroundColor = GlanceTheme.colors.primary,
+            contentColor = GlanceTheme.colors.onPrimary,
+        )
+    }
 }

@@ -23,19 +23,14 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.widgets.components
+package io.github.antoinepirlot.satunes.widgets.ui.components
 
 import android.content.Context
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import androidx.glance.GlanceModifier
-import androidx.glance.layout.Alignment
-import androidx.glance.layout.Row
-import androidx.glance.layout.Spacer
-import androidx.glance.layout.fillMaxWidth
-import androidx.glance.layout.size
+import androidx.glance.GlanceTheme
+import androidx.glance.appwidget.components.CircleIconButton
+import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
 
 /**
@@ -43,29 +38,16 @@ import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
  */
 
 @Composable
-internal fun PlaybackControlBar(
+internal fun NextButton(
     modifier: GlanceModifier = GlanceModifier,
     context: Context,
 ) {
-    Row(
-        modifier = modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        val isLoaded: Boolean by PlaybackManager.isLoaded
-        val spacerSize: Dp = 12.dp
-
-        if (isLoaded) {
-            PreviousButton(modifier = GlanceModifier.size(40.dp), context = context)
-            Spacer(modifier = GlanceModifier.size(spacerSize))
-        }
-
-        val playPauseSize: Dp = if (isLoaded) 40.dp else 60.dp
-        PlayPauseButton(modifier = GlanceModifier.size(playPauseSize), context = context)
-
-        if (isLoaded) {
-            Spacer(modifier = GlanceModifier.size(spacerSize))
-            NextButton(modifier = GlanceModifier.size(40.dp), context = context)
-        }
-    }
+    CircleIconButton(
+        modifier = modifier,
+        imageProvider = SatunesIcons.SKIP_NEXT.imageProvider!!,
+        contentDescription = "Skip next",
+        onClick = { PlaybackManager.playNext(context = context) },
+        backgroundColor = GlanceTheme.colors.primary,
+        contentColor = GlanceTheme.colors.onPrimary,
+    )
 }

@@ -23,25 +23,31 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.widgets.components
+package io.github.antoinepirlot.satunes.widgets.ui.components
 
+import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.glance.GlanceModifier
-import androidx.glance.text.Text
-import io.github.antoinepirlot.satunes.database.models.Music
+import androidx.glance.GlanceTheme
+import androidx.glance.appwidget.components.CircleIconButton
+import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
 
 /**
  * @author Antoine Pirlot on 20/08/2024
  */
 
 @Composable
-internal fun MusicInformations(
+internal fun PreviousButton(
     modifier: GlanceModifier = GlanceModifier,
-    music: Music
+    context: Context,
 ) {
-    Text(
+    CircleIconButton(
         modifier = modifier,
-        text = music.title + " - " + music.artist.title,
-        maxLines = 1
+        imageProvider = SatunesIcons.SKIP_PREVIOUS.imageProvider!!,
+        contentDescription = "Skip previous",
+        onClick = { PlaybackManager.playPrevious(context = context) },
+        backgroundColor = GlanceTheme.colors.primary,
+        contentColor = GlanceTheme.colors.onPrimary,
     )
 }

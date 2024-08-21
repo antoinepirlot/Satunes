@@ -39,6 +39,7 @@ import androidx.glance.appwidget.CircularProgressIndicator
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Box
 import androidx.glance.layout.fillMaxSize
+import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
@@ -58,12 +59,13 @@ internal fun LaunchView(
 ) {
     val context: Context = LocalContext.current
     var isLoading: Boolean by rememberSaveable { mutableStateOf(false) }
+    val isDataLoading: Boolean by DataLoader.isLoading
 
     Box(
         modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        if (isLoading) {
+        if (isLoading || isDataLoading) {
             CircularProgressIndicator()
         } else {
             Button(

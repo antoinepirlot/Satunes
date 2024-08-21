@@ -33,6 +33,7 @@ import androidx.glance.GlanceTheme
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.components.Scaffold
 import androidx.glance.appwidget.provideContent
+import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import io.github.antoinepirlot.satunes.widgets.ui.views.classic_playback.ClassicPlaybackWidgetView
@@ -56,10 +57,14 @@ class ClassicPlaybackWidget : GlanceAppWidget() {
             GlanceTheme {
                 Scaffold {
                     val isInitialized: Boolean by PlaybackManager.isInitialized
-                    if (isInitialized) {
-                        ClassicPlaybackWidgetView()
-                    } else {
+                    val isDataLoading: Boolean by DataLoader.isLoading
+                    val isDataLoaded: Boolean by DataLoader.isLoaded
+                    val isPlaybackLoaded: Boolean by PlaybackManager.isLoaded
+
+                    if (!isInitialized || isDataLoading || !isDataLoaded || !isPlaybackLoaded) {
                         LaunchView()
+                    } else {
+                        ClassicPlaybackWidgetView()
                     }
                 }
             }

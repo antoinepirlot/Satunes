@@ -29,8 +29,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.unit.dp
 import androidx.glance.GlanceModifier
-import androidx.glance.GlanceTheme
-import androidx.glance.appwidget.components.Scaffold
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Column
 import androidx.glance.layout.Row
@@ -38,8 +36,10 @@ import androidx.glance.layout.Spacer
 import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.fillMaxWidth
 import androidx.glance.layout.size
+import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
+import io.github.antoinepirlot.satunes.widgets.data.viewmodels.ClassicPlaybackWidgetViewModel
 import io.github.antoinepirlot.satunes.widgets.ui.components.Artwork
 import io.github.antoinepirlot.satunes.widgets.ui.components.MusicInformations
 import io.github.antoinepirlot.satunes.widgets.ui.components.PlaybackControlBar
@@ -51,36 +51,31 @@ import io.github.antoinepirlot.satunes.widgets.ui.components.PlaybackControlBar
 
 @Composable
 internal fun ClassicPlaybackWidgetView(
-    modifier: GlanceModifier = GlanceModifier
+    modifier: GlanceModifier = GlanceModifier,
+    classicPlaybackWidgetViewModel: ClassicPlaybackWidgetViewModel = viewModel(),
 ) {
-    GlanceTheme {
-        Scaffold(
-            modifier = modifier
+    Row(
+        modifier = modifier.fillMaxSize(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        val musicPlaying: Music? by PlaybackManager.musicPlaying
+
+        if (musicPlaying != null) {
+            Artwork(music = musicPlaying!!)
+            Spacer(modifier = GlanceModifier.size(5.dp))
+        }
+
+        Column(
+            modifier = GlanceModifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Row(
-                modifier = GlanceModifier.fillMaxSize(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                val musicPlaying: Music? by PlaybackManager.musicPlaying
-
-                if (musicPlaying != null) {
-                    Artwork(music = musicPlaying!!)
-                    Spacer(modifier = GlanceModifier.size(5.dp))
-                }
-
-                Column(
-                    modifier = GlanceModifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    if (musicPlaying != null) {
-                        MusicInformations(music = musicPlaying!!)
-                        Spacer(modifier = GlanceModifier.size(5.dp))
-                    }
-                    PlaybackControlBar()
-                }
+            if (musicPlaying != null) {
+                MusicInformations(music = musicPlaying!!)
+                Spacer(modifier = GlanceModifier.size(5.dp))
             }
+            PlaybackControlBar()
         }
     }
 }

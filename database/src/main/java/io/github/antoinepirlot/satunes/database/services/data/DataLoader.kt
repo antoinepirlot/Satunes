@@ -102,7 +102,7 @@ object DataLoader {
 
     private lateinit var selection_args: Array<String> //see loadFoldersPaths function
 
-    private val logger = SatunesLogger.getLogger()
+    private val _logger = SatunesLogger.getLogger()
 
     init {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
@@ -165,6 +165,7 @@ object DataLoader {
                 this@DataLoader.selection_args,
                 null
             )?.use {
+                _logger.info("${it.count} musics to load.")
                 loadColumns(cursor = it)
                 while (it.moveToNext()) {
                     loadData(cursor = it, context = context)
@@ -286,19 +287,19 @@ object DataLoader {
         val id: Long = cursor.getLong(musicIdColumn!!)
         if (id < 1) {
             val message = "The id is less than 1"
-            logger.severe(message)
+            _logger.severe(message)
             throw IllegalArgumentException(message)
         }
         val size = cursor.getInt(musicSizeColumn!!)
         if (size < 0) {
             val message = "Size is less than 0"
-            logger.severe(message)
+            _logger.severe(message)
             throw IllegalArgumentException(message)
         }
         val duration: Long = cursor.getLong(musicDurationColumn!!)
         if (duration < 0) {
             val message = "Duration is less than 0"
-            logger.severe(message)
+            _logger.severe(message)
             throw IllegalArgumentException(message)
         }
         val displayName: String = cursor.getString(musicNameColumn!!)

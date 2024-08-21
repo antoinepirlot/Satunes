@@ -1,6 +1,8 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    alias(libs.plugins.hilt)
+    alias(libs.plugins.ksp)
 }
 
 val nameSpace: String = "io.github.antoinepirlot.satunes"
@@ -75,10 +77,9 @@ dependencies {
      */
     val composeUiVersion = "1.6.8"
     val composeBomVersion = "2024.06.00"
-    val lifeCycleVersion = "2.8.4"
     implementation("androidx.core:core-ktx:1.13.1")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifeCycleVersion")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifeCycleVersion")
+    implementation(libs.lifecycle.runtime.ktx)
+    implementation(libs.lifecycle.viewmodel.compose)
     implementation("androidx.activity:activity-compose:1.9.1")
     implementation("androidx.fragment:fragment-ktx:1.8.2")
     implementation(platform("androidx.compose:compose-bom:$composeBomVersion"))
@@ -127,6 +128,12 @@ dependencies {
      */
     val dataStoreVersion = "1.1.1"
     implementation("androidx.datastore:datastore-preferences:$dataStoreVersion")
+
+    /**
+     * Hilt
+     */
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
 
     /**
      * Widgets

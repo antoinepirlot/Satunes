@@ -183,7 +183,10 @@ internal class PlaybackController private constructor(
                 MediaController.Builder(context, sessionToken).buildAsync()
 
             mediaControllerFuture.addListener(
-                { mediaController = mediaControllerFuture.get() },
+                {
+                    mediaController = mediaControllerFuture.get()
+                    PlaybackManager.isInitialized.value = true
+                },
                 MoreExecutors.directExecutor()
             )
         } catch (e: Throwable) {
@@ -630,6 +633,7 @@ internal class PlaybackController private constructor(
 
     fun release() {
         logger.info("Releasing $this")
+        PlaybackManager.isInitialized.value = false
         if (instance != null) {
             this.stop()
             if (this::mediaController.isInitialized) {

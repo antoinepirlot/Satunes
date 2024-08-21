@@ -38,6 +38,7 @@ import androidx.annotation.OptIn
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.session.MediaController
 import com.google.common.util.concurrent.ListenableFuture
+import dagger.hilt.android.AndroidEntryPoint
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.database.services.data.DataCleanerManager
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
@@ -54,6 +55,7 @@ import kotlinx.coroutines.launch
  * @author Antoine Pirlot on 18/01/24
  */
 
+@AndroidEntryPoint
 internal class MainActivity : ComponentActivity() {
 
     companion object {

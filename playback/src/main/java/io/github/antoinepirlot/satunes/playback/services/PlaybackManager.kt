@@ -49,6 +49,8 @@ import io.github.antoinepirlot.satunes.playback.services.PlaybackController.Comp
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController.Companion.DEFAULT_IS_SHUFFLE
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController.Companion.DEFAULT_MUSIC_PLAYING
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController.Companion.DEFAULT_REPEAT_MODE
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
 
 /**
  * @author Antoine Pirlot on 10/08/2024
@@ -61,7 +63,9 @@ object PlaybackManager {
 
     private var listener: PlaybackListener? = null
 
-    var isEnded: MutableState<Boolean> = mutableStateOf(DEFAULT_IS_ENDED)
+    val isEnded: MutableState<Boolean> = mutableStateOf(DEFAULT_IS_ENDED)
+
+    val isInitialized: MutableState<Boolean> = mutableStateOf(false)
 
     // Mutable var are used in ui, it needs to be recomposed
     // I use mutable to avoid using function with multiples params like to add listener
@@ -94,14 +98,21 @@ object PlaybackManager {
 
     fun isConfigured(): Boolean = !this.playbackControllerNotExists()
 
-    private fun initPlaybackWithAllMusics(context: Context) {
+    fun initPlaybackWithAllMusics(context: Context) {
         this.initPlayback(context = context)
         if (!DataLoader.isLoaded.value && !DataLoader.isLoading.value) {
+            DataLoader.resetAllData()
             DataLoader.loadAllData(context = context)
         } else {
             if (this::playlist.isInitialized) {
                 this._playbackController!!.loadMusics(playlist = playlist)
                 return
+            }
+        }
+        while (DataLoader.isLoading.value) {
+            //Wait
+            runBlocking {
+                delay(50) //Wait (use delay to reduce cpu usage)
             }
         }
         this._playbackController!!.loadMusics(musicSet = DataManager.getMusicSet())

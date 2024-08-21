@@ -23,43 +23,48 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.widgets
+package io.github.antoinepirlot.satunes.widgets.ui.views.classic_playback
 
 import android.content.Context
-import android.os.Environment
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.glance.GlanceId
-import androidx.glance.GlanceTheme
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.glance.Button
+import androidx.glance.GlanceModifier
 import androidx.glance.LocalContext
-import androidx.glance.appwidget.GlanceAppWidget
-import androidx.glance.appwidget.components.Scaffold
-import androidx.glance.appwidget.provideContent
-import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
+import androidx.glance.appwidget.CircularProgressIndicator
+import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
-import io.github.antoinepirlot.satunes.widgets.ui.views.classic_playback.ClassicPlaybackWidgetView
-import io.github.antoinepirlot.satunes.widgets.ui.views.classic_playback.LaunchView
+import kotlinx.coroutines.runBlocking
 
 /**
- * @author Antoine Pirlot on 20/08/2024
+ * @author Antoine Pirlot on 21/08/2024
  */
 
-class ClassicPlaybackWidget : GlanceAppWidget() {
+@Composable
+internal fun LaunchView(
+    modifier: GlanceModifier = GlanceModifier,
+) {
+    val context: Context = LocalContext.current
+    var isLoading: Boolean by rememberSaveable { mutableStateOf(false) }
 
-    override suspend fun provideGlance(context: Context, id: GlanceId) {
-        provideContent {
-            SatunesLogger.DOCUMENTS_PATH =
-                LocalContext.current.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)!!.path
-            GlanceTheme {
-                Scaffold {
-                    val isInitialized: Boolean by PlaybackManager.isInitialized
-                    if (isInitialized) {
-                        ClassicPlaybackWidgetView()
-                    } else {
-                        LaunchView()
-                    }
+    if (isLoading) {
+        CircularProgressIndicator(modifier = modifier)
+    } else {
+        Button(
+            modifier = modifier,
+            text = "LAUNCH",
+            onClick = {
+                isLoading = true
+                SatunesLogger.getLogger().info("Launching from widget")
+                runBlocking {
+                    SettingsManager.loadSettings(context = context)
                 }
+//                PlaybackManager.initPlaybackWithAllMusics(context = context)
+//                isLoading = false
             }
-
-        }
+        )
     }
 }

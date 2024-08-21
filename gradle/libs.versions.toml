@@ -1,11 +1,15 @@
 [versions]
 hilt = "2.49"
+hiltAndroidVersion = "2.48"
 ksp = "1.9.0-1.0.13"
+lifeCycleVersion = "2.8.4"
 
 
 [libraries]
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
+lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifeCycleVersion" }
+lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifeCycleVersion" }
 
 
 [plugins]

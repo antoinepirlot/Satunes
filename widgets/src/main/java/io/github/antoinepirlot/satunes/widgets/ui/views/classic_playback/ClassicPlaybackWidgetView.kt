@@ -23,7 +23,7 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.widgets.ui.views
+package io.github.antoinepirlot.satunes.widgets.ui.views.classic_playback
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue

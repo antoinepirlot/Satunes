@@ -36,6 +36,7 @@ import androidx.glance.layout.Row
 import androidx.glance.layout.Spacer
 import androidx.glance.layout.fillMaxWidth
 import androidx.glance.layout.size
+import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
 
 /**
@@ -52,18 +53,18 @@ internal fun PlaybackControlBar(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        val isLoaded: Boolean by PlaybackManager.isLoaded
+        val musicPlaying: Music? by PlaybackManager.musicPlaying
         val spacerSize: Dp = 12.dp
 
-        if (isLoaded) {
+        if (musicPlaying != null) {
             PreviousButton(modifier = GlanceModifier.size(40.dp))
             Spacer(modifier = GlanceModifier.size(spacerSize))
         }
 
-        val playPauseSize: Dp = if (isLoaded) 40.dp else 60.dp
+        val playPauseSize: Dp = if (musicPlaying != null) 40.dp else 60.dp
         PlayPauseButton(modifier = GlanceModifier.size(playPauseSize))
 
-        if (isLoaded) {
+        if (musicPlaying != null) {
             Spacer(modifier = GlanceModifier.size(spacerSize))
             NextButton(modifier = GlanceModifier.size(40.dp))
         }

@@ -29,7 +29,6 @@ import android.content.Context
 import android.database.Cursor
 import android.net.Uri
 import android.os.Build
-import android.os.Environment
 import android.provider.MediaStore
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -46,7 +45,6 @@ import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.io.File
 
 /**
  * @author Antoine Pirlot on 22/02/24
@@ -78,7 +76,6 @@ object DataLoader {
     private const val UNKNOWN_ARTIST = "<unknown>"
     private const val UNKNOWN_ALBUM = "Unknown Album"
     private const val UNKNOWN_GENRE = "<unknown>"
-    val EXTERNAL_STORAGE_PATH: File = Environment.getExternalStorageDirectory()
 
     private var projection: Array<String> = arrayOf(
         // AUDIO

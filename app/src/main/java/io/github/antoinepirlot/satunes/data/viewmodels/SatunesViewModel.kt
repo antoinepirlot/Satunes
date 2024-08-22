@@ -92,9 +92,6 @@ internal class SatunesViewModel : ViewModel() {
         UpdateCheckManager.updateAvailableStatus
 
     @RequiresApi(Build.VERSION_CODES.M)
-    private val _latestVersion: MutableState<String?> = UpdateCheckManager.latestVersion
-
-    @RequiresApi(Build.VERSION_CODES.M)
     private val _downloadStatus: MutableState<APKDownloadStatus> = UpdateCheckManager.downloadStatus
 
     private val _foldersPathsSelectedSet: MutableState<Set<String>> =

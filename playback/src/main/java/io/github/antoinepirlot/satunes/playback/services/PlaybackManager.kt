@@ -88,6 +88,12 @@ object PlaybackManager {
         mutableFloatStateOf(DEFAULT_CURRENT_POSITION_PROGRESSION)
         private set
 
+    var refreshWidgets: (() -> Unit)? = null
+        set(value) {
+            field = value
+            PlaybackListener.refreshWidgets = value
+        }
+
     private fun initPlayback(
         context: Context,
         listener: PlaybackListener? = this.listener,

@@ -55,6 +55,7 @@ internal class PlaybackController private constructor(
     sessionToken: SessionToken,
     loadAllMusics: Boolean = false
 ) {
+
     internal lateinit var mediaController: MediaController
 
     internal lateinit var playlist: Playlist
@@ -699,5 +700,8 @@ internal class PlaybackController private constructor(
         val newPosition: Long = this.getCurrentPosition()
         this.currentPositionProgression =
             newPosition.toFloat() / maxPosition.toFloat()
+        if (PlaybackListener.refreshWidgets != null) {
+            PlaybackListener.refreshWidgets!!()
+        }
     }
 }

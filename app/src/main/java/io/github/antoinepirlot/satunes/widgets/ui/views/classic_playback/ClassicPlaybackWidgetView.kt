@@ -78,12 +78,9 @@ internal fun ClassicPlaybackWidgetView(
         CircularProgressIndicator(modifier = modifier)
         return
     }
-
-    val isInitialized: Boolean by PlaybackManager.isInitialized
     val isDataLoaded: Boolean by DataLoader.isLoaded
-    val isPlaybackLoaded: Boolean by PlaybackManager.isLoaded
 
-    if (!isInitialized || !isDataLoaded || !isPlaybackLoaded) {
+    if (!isDataLoaded) {
         OpenSatunesButton(modifier = modifier)
     } else {
         WidgetView(modifier = modifier)
@@ -95,6 +92,12 @@ internal fun ClassicPlaybackWidgetView(
 private fun WidgetView(
     modifier: GlanceModifier = GlanceModifier,
 ) {
+    val context: Context = LocalContext.current
+
+    LaunchedEffect(key1 = Unit) {
+        PlaybackManager.initPlaybackWithAllMusics(context = context)
+    }
+
     Row(
         modifier = modifier.fillMaxSize(),
         verticalAlignment = Alignment.CenterVertically,

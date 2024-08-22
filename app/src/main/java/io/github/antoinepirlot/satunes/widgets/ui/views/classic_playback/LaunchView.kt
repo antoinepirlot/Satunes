@@ -56,7 +56,7 @@ internal fun LaunchView(
     var isLoading: Boolean by rememberSaveable { mutableStateOf(false) }
 
     Button(
-        text = context.getString(R.string.launch_text),
+        text = context.getString(R.string.open_satunes_text),
         onClick = {
             SatunesLogger.getLogger().info("Launching from widget")
             isLoading = true

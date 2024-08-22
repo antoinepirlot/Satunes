@@ -71,16 +71,17 @@ internal fun ClassicPlaybackWidgetView(
         return
     }
 
-    val isInitialized: Boolean by PlaybackManager.isInitialized
     val isDataLoading: Boolean by DataLoader.isLoading
-    val isDataLoaded: Boolean by DataLoader.isLoaded
-    val isPlaybackLoaded: Boolean by PlaybackManager.isLoaded
     val isPlaybackLoading: Boolean by PlaybackManager.isLoading
 
     if (isDataLoading || isPlaybackLoading) {
         CircularProgressIndicator(modifier = modifier)
         return
     }
+
+    val isInitialized: Boolean by PlaybackManager.isInitialized
+    val isDataLoaded: Boolean by DataLoader.isLoaded
+    val isPlaybackLoaded: Boolean by PlaybackManager.isLoaded
 
     if (!isInitialized || !isDataLoaded || !isPlaybackLoaded) {
         LaunchView(modifier = modifier)

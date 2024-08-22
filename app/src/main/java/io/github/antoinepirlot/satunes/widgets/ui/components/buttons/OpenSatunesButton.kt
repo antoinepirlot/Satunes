@@ -45,7 +45,7 @@ internal fun OpenSatunesButton(
 ) {
     Button(
         modifier = modifier,
-        text = LocalContext.current.getString(R.string.launch_text),
+        text = LocalContext.current.getString(R.string.open_satunes_text),
         onClick = actionStartActivity<MainActivity>()
     )
 }

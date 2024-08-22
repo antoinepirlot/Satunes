@@ -30,12 +30,15 @@ import android.os.Environment
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
+import androidx.glance.action.actionStartActivity
+import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.components.Scaffold
 import androidx.glance.appwidget.provideContent
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Box
 import androidx.glance.layout.fillMaxSize
+import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import io.github.antoinepirlot.satunes.widgets.ui.views.classic_playback.ClassicPlaybackWidgetView
 
@@ -55,7 +58,9 @@ class ClassicPlaybackWidget : GlanceAppWidget() {
 
         provideContent {
             GlanceTheme {
-                Scaffold {
+                Scaffold(
+                    modifier = GlanceModifier.clickable(onClick = actionStartActivity<MainActivity>())
+                ) {
                     Box(
                         modifier = GlanceModifier.fillMaxSize(),
                         contentAlignment = Alignment.Center

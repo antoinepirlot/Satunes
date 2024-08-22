@@ -84,7 +84,7 @@ internal fun ClassicPlaybackWidgetView(
     val isPlaybackLoaded: Boolean by PlaybackManager.isLoaded
 
     if (!isInitialized || !isDataLoaded || !isPlaybackLoaded) {
-        LaunchView(modifier = modifier)
+        OpenSatunesButton(modifier = modifier)
     } else {
         WidgetView(modifier = modifier)
     }

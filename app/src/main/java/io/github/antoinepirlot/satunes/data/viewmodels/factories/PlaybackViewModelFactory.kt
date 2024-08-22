@@ -42,17 +42,17 @@ class PlaybackViewModelFactory(
 ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        PlaybackManager.initPlayback(context = context)
+        PlaybackManager.checkPlaybackController(context = context)
         return PlaybackViewModel() as T
     }
 
     override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
-        PlaybackManager.initPlayback(context = context)
+        PlaybackManager.checkPlaybackController(context = context)
         return PlaybackViewModel() as T
     }
 
     override fun <T : ViewModel> create(modelClass: KClass<T>, extras: CreationExtras): T {
-        PlaybackManager.initPlayback(context = context)
+        PlaybackManager.checkPlaybackController(context = context)
         return PlaybackViewModel() as T
     }
 }

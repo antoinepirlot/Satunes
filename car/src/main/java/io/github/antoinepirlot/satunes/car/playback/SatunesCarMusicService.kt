@@ -111,7 +111,7 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
             DataLoader.resetAllData()
             DataLoader.loadAllData(context = baseContext)
         }
-        PlaybackManager.initPlayback(
+        PlaybackManager.checkPlaybackController(
             context = applicationContext,
             listener = SatunesPlaybackListener
         )

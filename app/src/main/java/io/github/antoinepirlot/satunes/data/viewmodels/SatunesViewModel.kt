@@ -540,6 +540,6 @@ internal class SatunesViewModel : ViewModel() {
     fun resetAllData(playbackViewModel: PlaybackViewModel) {
         playbackViewModel.release()
         DataLoader.resetAllData()
-        PlaybackManager.initPlayback(context = MainActivity.instance.applicationContext)
+        PlaybackManager.checkPlaybackController(context = MainActivity.instance.applicationContext)
     }
 }

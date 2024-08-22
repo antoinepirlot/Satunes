@@ -32,16 +32,13 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
+import io.github.antoinepirlot.satunes.playback.services.WidgetPlaybackManager
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 
 /**
  * @author Antoine Pirlot on 23/03/2024
  */
 open class PlaybackListener : Player.Listener {
-
-    companion object {
-        var refreshWidgets: (() -> Unit)? = null
-    }
 
     private val logger = SatunesLogger.getLogger()
 
@@ -70,9 +67,7 @@ open class PlaybackListener : Player.Listener {
 
         playbackController.isPlaying = isPlaying
         playbackController.isEnded = PlaybackController.DEFAULT_IS_ENDED
-        if (refreshWidgets != null) {
-            refreshWidgets!!()
-        }
+        WidgetPlaybackManager.refreshWidgets()
     }
 
     /**

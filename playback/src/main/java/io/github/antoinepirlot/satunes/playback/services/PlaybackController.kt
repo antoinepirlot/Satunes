@@ -109,6 +109,7 @@ internal class PlaybackController private constructor(
         private set(value) {
             field = value
             PlaybackManager.isLoaded.value = value
+            WidgetPlaybackManager.refreshWidgets()
         }
     var currentPositionProgression: Float = DEFAULT_CURRENT_POSITION_PROGRESSION
         internal set(value) {
@@ -700,8 +701,6 @@ internal class PlaybackController private constructor(
         val newPosition: Long = this.getCurrentPosition()
         this.currentPositionProgression =
             newPosition.toFloat() / maxPosition.toFloat()
-        if (PlaybackListener.refreshWidgets != null) {
-            PlaybackListener.refreshWidgets!!()
-        }
+        WidgetPlaybackManager.refreshWidgets()
     }
 }

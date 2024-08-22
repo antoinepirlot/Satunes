@@ -40,7 +40,7 @@ import androidx.glance.layout.Alignment
 import androidx.glance.layout.Box
 import androidx.glance.layout.fillMaxSize
 import io.github.antoinepirlot.satunes.MainActivity
-import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
+import io.github.antoinepirlot.satunes.playback.services.WidgetPlaybackManager
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import io.github.antoinepirlot.satunes.widgets.ui.views.classic_playback.ClassicPlaybackWidgetView
 import kotlinx.coroutines.CoroutineScope
@@ -60,7 +60,7 @@ class ClassicPlaybackWidget : GlanceAppWidget() {
             context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)!!.path
         _logger = SatunesLogger.getLogger()
         _logger.info("ClassicPlaybackWidget Starting")
-        PlaybackManager.refreshWidgets = {
+        WidgetPlaybackManager.refreshWidgets = {
             CoroutineScope(Dispatchers.Default).launch {
                 ClassicPlaybackWidget().updateAll(context = context.applicationContext)
             }

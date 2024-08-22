@@ -25,11 +25,15 @@
 
 package io.github.antoinepirlot.satunes.widgets.ui.views.classic_playback
 
+import android.content.Context
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.unit.dp
 import androidx.glance.GlanceComposable
 import androidx.glance.GlanceModifier
+import androidx.glance.LocalContext
+import androidx.glance.appwidget.CircularProgressIndicator
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Column
 import androidx.glance.layout.Row
@@ -37,7 +41,9 @@ import androidx.glance.layout.Spacer
 import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.fillMaxWidth
 import androidx.glance.layout.size
+import io.github.antoinepirlot.satunes.data.viewmodels.utils.isAudioAllowed
 import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
 import io.github.antoinepirlot.satunes.widgets.ui.components.Artwork
 import io.github.antoinepirlot.satunes.widgets.ui.components.MusicInformations
@@ -51,6 +57,37 @@ import io.github.antoinepirlot.satunes.widgets.ui.components.PlaybackControlBar
 @Composable
 @GlanceComposable
 internal fun ClassicPlaybackWidgetView(
+    modifier: GlanceModifier = GlanceModifier,
+) {
+    val context: Context = LocalContext.current
+
+    if (isAudioAllowed(context = context)) {
+        LaunchedEffect(key1 = Unit) {
+            DataLoader.loadAllData(context = context)
+        }
+    }
+
+    val isInitialized: Boolean by PlaybackManager.isInitialized
+    val isDataLoading: Boolean by DataLoader.isLoading
+    val isDataLoaded: Boolean by DataLoader.isLoaded
+    val isPlaybackLoaded: Boolean by PlaybackManager.isLoaded
+    val isPlaybackLoading: Boolean by PlaybackManager.isLoading
+
+    if (isDataLoading || isPlaybackLoading) {
+        CircularProgressIndicator(modifier = modifier)
+        return
+    }
+
+    if (!isInitialized || !isDataLoaded || !isPlaybackLoaded) {
+        LaunchView(modifier = modifier)
+    } else {
+        WidgetView(modifier = modifier)
+    }
+}
+
+@Composable
+@GlanceComposable
+private fun WidgetView(
     modifier: GlanceModifier = GlanceModifier,
 ) {
     Row(

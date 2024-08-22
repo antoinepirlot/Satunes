@@ -200,7 +200,7 @@ internal class SatunesViewModel : ViewModel() {
     }
 
     internal fun updateIsAudioAllowed() {
-        this.isAudioAllowed = isAudioAllowed()
+        this.isAudioAllowed = isAudioAllowed(context = MainActivity.instance.applicationContext)
         if (this.isAudioAllowed != this._uiState.value.isAudioAllowed) {
             this._uiState.update { currentState: SatunesUiState ->
                 currentState.copy(isAudioAllowed = this.isAudioAllowed)

@@ -93,4 +93,6 @@
     <string name="warning">Attention</string>
     <string name="yes">Oui</string>
     <string name="no">Non</string>
+    <string name="classic_widget_description">Classique</string>
+    <string name="launch_text">Démarrer Satunes</string>
 </resources>

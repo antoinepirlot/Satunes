@@ -27,17 +27,17 @@ package io.github.antoinepirlot.satunes.widgets
 
 import android.content.Context
 import android.os.Environment
-import androidx.compose.runtime.getValue
 import androidx.glance.GlanceId
+import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.components.Scaffold
 import androidx.glance.appwidget.provideContent
-import io.github.antoinepirlot.satunes.database.services.data.DataLoader
-import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
+import androidx.glance.layout.Alignment
+import androidx.glance.layout.Box
+import androidx.glance.layout.fillMaxSize
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import io.github.antoinepirlot.satunes.widgets.ui.views.classic_playback.ClassicPlaybackWidgetView
-import io.github.antoinepirlot.satunes.widgets.ui.views.classic_playback.LaunchView
 
 /**
  * @author Antoine Pirlot on 20/08/2024
@@ -56,15 +56,10 @@ class ClassicPlaybackWidget : GlanceAppWidget() {
         provideContent {
             GlanceTheme {
                 Scaffold {
-                    val isInitialized: Boolean by PlaybackManager.isInitialized
-                    val isDataLoading: Boolean by DataLoader.isLoading
-                    val isDataLoaded: Boolean by DataLoader.isLoaded
-                    val isPlaybackLoaded: Boolean by PlaybackManager.isLoaded
-                    val isPlaybackLoading: Boolean by PlaybackManager.isLoading
-
-                    if (!isInitialized || isDataLoading || !isDataLoaded || !isPlaybackLoaded || isPlaybackLoading) {
-                        LaunchView()
-                    } else {
+                    Box(
+                        modifier = GlanceModifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
                         ClassicPlaybackWidgetView()
                     }
                 }

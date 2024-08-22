@@ -35,11 +35,6 @@ import androidx.glance.Button
 import androidx.glance.GlanceComposable
 import androidx.glance.GlanceModifier
 import androidx.glance.LocalContext
-import androidx.glance.appwidget.CircularProgressIndicator
-import androidx.glance.layout.Alignment
-import androidx.glance.layout.Box
-import androidx.glance.layout.fillMaxSize
-import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
@@ -59,30 +54,19 @@ internal fun LaunchView(
 ) {
     val context: Context = LocalContext.current
     var isLoading: Boolean by rememberSaveable { mutableStateOf(false) }
-    val isDataLoading: Boolean by DataLoader.isLoading
-    val isPlaybackLoading: Boolean by PlaybackManager.isLoading
 
-    Box(
-        modifier = modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        if (isLoading || isDataLoading || isPlaybackLoading) {
-            CircularProgressIndicator()
-        } else {
-            Button(
-                text = context.getString(R.string.launch_text),
-                onClick = {
-                    isLoading = true
-                    SatunesLogger.getLogger().info("Launching from widget")
-                    CoroutineScope(Dispatchers.IO).launch {
-                        SettingsManager.loadSettings(context = context)
-                        if (!PlaybackManager.isLoading.value) {
-                            PlaybackManager.initPlaybackWithAllMusics(context = context)
-                        }
-                        isLoading = false
-                    }
+    Button(
+        text = context.getString(R.string.launch_text),
+        onClick = {
+            SatunesLogger.getLogger().info("Launching from widget")
+            isLoading = true
+            CoroutineScope(Dispatchers.IO).launch {
+                SettingsManager.loadSettings(context = context)
+                if (!PlaybackManager.isLoading.value) {
+                    PlaybackManager.initPlaybackWithAllMusics(context = context)
                 }
-            )
+                isLoading = false
+            }
         }
-    }
+    )
 }

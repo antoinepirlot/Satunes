@@ -93,4 +93,6 @@
     <string name="warning">Warning</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="classic_widget_description">Classic</string>
+    <string name="launch_text">Launch Satunes</string>
 </resources>

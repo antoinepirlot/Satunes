@@ -122,9 +122,18 @@ dependencies {
     implementation(libs.androidx.datastore.preferences)
 
     /**
-     * Widgets
+     * Widget
      */
-    implementation(project(":widgets"))
+    // For AppWidgets support
+    implementation(libs.glance.appwidget)
+
+    // For interop APIs with Material 3
+    implementation(libs.glance.material3)
+
+    /**
+     * Singleton, Inject
+     */
+    implementation(libs.javax.inject)
 
     /**
      * Android Auto

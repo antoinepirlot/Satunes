@@ -41,7 +41,6 @@ import androidx.glance.layout.Spacer
 import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.fillMaxWidth
 import androidx.glance.layout.size
-import io.github.antoinepirlot.satunes.data.viewmodels.utils.isAudioAllowed
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
@@ -61,25 +60,18 @@ internal fun ClassicPlaybackWidgetView(
     modifier: GlanceModifier = GlanceModifier,
 ) {
     val context: Context = LocalContext.current
-
-    if (isAudioAllowed(context = context)) {
-        LaunchedEffect(key1 = Unit) {
-            DataLoader.loadAllData(context = context)
-        }
-    } else {
-        OpenSatunesButton()
-        return
+    LaunchedEffect(key1 = Unit) {
+        DataLoader.loadAllData(context = context)
     }
 
     val isDataLoading: Boolean by DataLoader.isLoading
     val isPlaybackLoading: Boolean by PlaybackManager.isLoading
-
     if (isDataLoading || isPlaybackLoading) {
         CircularProgressIndicator(modifier = modifier)
         return
     }
-    val isDataLoaded: Boolean by DataLoader.isLoaded
 
+    val isDataLoaded: Boolean by DataLoader.isLoaded
     if (!isDataLoaded) {
         OpenSatunesButton(modifier = modifier)
     } else {

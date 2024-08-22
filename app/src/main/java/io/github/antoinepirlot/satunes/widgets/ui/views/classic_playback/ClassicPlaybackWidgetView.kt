@@ -48,6 +48,7 @@ import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
 import io.github.antoinepirlot.satunes.widgets.ui.components.Artwork
 import io.github.antoinepirlot.satunes.widgets.ui.components.MusicInformations
 import io.github.antoinepirlot.satunes.widgets.ui.components.PlaybackControlBar
+import io.github.antoinepirlot.satunes.widgets.ui.components.buttons.OpenSatunesButton
 
 /**
  * @author Antoine Pirlot on 21/08/2024
@@ -65,6 +66,9 @@ internal fun ClassicPlaybackWidgetView(
         LaunchedEffect(key1 = Unit) {
             DataLoader.loadAllData(context = context)
         }
+    } else {
+        OpenSatunesButton()
+        return
     }
 
     val isInitialized: Boolean by PlaybackManager.isInitialized

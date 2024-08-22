@@ -41,6 +41,7 @@ import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
+import io.github.antoinepirlot.satunes.database.services.widgets.WidgetDatabaseManager
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -146,6 +147,7 @@ object DataLoader {
         if (isLoading.value || isLoaded.value) return
 
         isLoading.value = true
+        WidgetDatabaseManager.refreshWidgets()
         CoroutineScope(Dispatchers.IO).launch {
             if (!this@DataLoader::selection.isInitialized || !this@DataLoader::selection_args.isInitialized) {
                 this@DataLoader.loadFoldersPaths()
@@ -176,6 +178,7 @@ object DataLoader {
             DatabaseManager.initInstance(context = context).loadAllPlaylistsWithMusic()
             isLoaded.value = true
             isLoading.value = false
+            WidgetDatabaseManager.refreshWidgets()
         }
     }
 

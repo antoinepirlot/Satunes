@@ -32,6 +32,7 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
+import io.github.antoinepirlot.satunes.playback.services.WidgetPlaybackManager
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 
 /**
@@ -66,6 +67,7 @@ open class PlaybackListener : Player.Listener {
 
         playbackController.isPlaying = isPlaying
         playbackController.isEnded = PlaybackController.DEFAULT_IS_ENDED
+        WidgetPlaybackManager.refreshWidgets()
     }
 
     /**

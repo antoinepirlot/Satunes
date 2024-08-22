@@ -55,6 +55,7 @@ internal class PlaybackController private constructor(
     sessionToken: SessionToken,
     loadAllMusics: Boolean = false
 ) {
+
     internal lateinit var mediaController: MediaController
 
     internal lateinit var playlist: Playlist
@@ -108,6 +109,7 @@ internal class PlaybackController private constructor(
         private set(value) {
             field = value
             PlaybackManager.isLoaded.value = value
+            WidgetPlaybackManager.refreshWidgets()
         }
     var currentPositionProgression: Float = DEFAULT_CURRENT_POSITION_PROGRESSION
         internal set(value) {
@@ -190,6 +192,10 @@ internal class PlaybackController private constructor(
     }
 
     init {
+        if (loadAllMusics) {
+            isLoading = true
+        }
+
         try {
             val mediaControllerFuture: ListenableFuture<MediaController> =
                 MediaController.Builder(context, sessionToken).buildAsync()
@@ -222,7 +228,7 @@ internal class PlaybackController private constructor(
      */
     fun start(musicToPlay: Music? = null) {
         if (!isLoaded) {
-            throw IllegalStateException("The playlistDB has not been loaded, you can't play music")
+            throw IllegalStateException("The playlist has not been loaded, you can't play music")
         }
         when (musicToPlay) {
             null -> {
@@ -695,5 +701,6 @@ internal class PlaybackController private constructor(
         val newPosition: Long = this.getCurrentPosition()
         this.currentPositionProgression =
             newPosition.toFloat() / maxPosition.toFloat()
+        WidgetPlaybackManager.refreshWidgets()
     }
 }

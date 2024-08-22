@@ -23,26 +23,34 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.data.viewmodels.utils
+package io.github.antoinepirlot.satunes.widgets.ui.components.buttons
 
-import android.Manifest
 import android.content.Context
-import android.content.pm.PackageManager
-import android.os.Build
-import androidx.core.content.ContextCompat
+import androidx.compose.runtime.Composable
+import androidx.glance.GlanceComposable
+import androidx.glance.GlanceModifier
+import androidx.glance.GlanceTheme
+import androidx.glance.LocalContext
+import androidx.glance.appwidget.components.CircleIconButton
+import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
 
 /**
- * @author Antoine Pirlot on 20/07/2024
+ * @author Antoine Pirlot on 20/08/2024
  */
 
-internal fun isAudioAllowed(context: Context): Boolean {
-    // Permission Granted
-    return ContextCompat.checkSelfPermission(
-        context,
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            Manifest.permission.READ_MEDIA_AUDIO
-        } else {
-            Manifest.permission.READ_EXTERNAL_STORAGE
-        }
-    ) == PackageManager.PERMISSION_GRANTED
+@Composable
+@GlanceComposable
+internal fun NextButton(
+    modifier: GlanceModifier = GlanceModifier,
+) {
+    val context: Context = LocalContext.current
+    CircleIconButton(
+        modifier = modifier,
+        imageProvider = SatunesIcons.SKIP_NEXT.imageProvider!!,
+        contentDescription = "Skip next",
+        onClick = { PlaybackManager.playNext(context = context) },
+        backgroundColor = GlanceTheme.colors.primary,
+        contentColor = GlanceTheme.colors.onPrimary,
+    )
 }

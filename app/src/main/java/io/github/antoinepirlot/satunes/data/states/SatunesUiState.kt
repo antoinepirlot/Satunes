@@ -25,6 +25,7 @@
 
 package io.github.antoinepirlot.satunes.data.states
 
+import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.data.DEFAULT_DESTINATION
 import io.github.antoinepirlot.satunes.data.viewmodels.utils.isAudioAllowed
 import io.github.antoinepirlot.satunes.database.models.BarSpeed
@@ -39,7 +40,7 @@ internal data class SatunesUiState(
     val whatsNewSeen: Boolean = SettingsManager.whatsNewSeen,
     val currentDestination: String = DEFAULT_DESTINATION,
     //Use this in UiSate and ViewModel as it is a particular value. It could change but most of the time it won't change
-    val isAudioAllowed: Boolean = isAudioAllowed(),
+    val isAudioAllowed: Boolean = isAudioAllowed(context = MainActivity.instance.applicationContext),
 
     val foldersChecked: Boolean = SettingsManager.foldersChecked.value,
     val artistsChecked: Boolean = SettingsManager.artistsChecked.value,

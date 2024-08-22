@@ -83,7 +83,7 @@ internal class MainActivity : ComponentActivity() {
 
     override fun onStart() {
         super.onStart()
-        PlaybackManager.initPlayback(context = applicationContext)
+        PlaybackManager.checkPlaybackController(context = applicationContext)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -36,6 +36,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.data.DataLoader
+import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.playback.models.PlaybackListener
 import io.github.antoinepirlot.satunes.playback.models.Playlist
@@ -87,7 +88,7 @@ object PlaybackManager {
         mutableFloatStateOf(DEFAULT_CURRENT_POSITION_PROGRESSION)
         private set
 
-    fun initPlayback(
+    private fun initPlayback(
         context: Context,
         listener: PlaybackListener? = this.listener,
         loadAllMusics: Boolean = false
@@ -106,26 +107,37 @@ object PlaybackManager {
 
     fun isConfigured(): Boolean = !this.playbackControllerNotExists()
 
-    fun initPlaybackWithAllMusics(context: Context) {
+    private fun initPlaybackWithAllMusics(context: Context) {
         if (!DataLoader.isLoaded.value && !DataLoader.isLoading.value) {
             DataLoader.resetAllData()
             DataLoader.loadAllData(context = context)
             this.initPlayback(context = context, loadAllMusics = true)
         } else {
-            this.initPlayback(context = context, loadAllMusics = false)
             if (this::playlist.isInitialized) {
+                this.initPlayback(context = context, loadAllMusics = false)
                 this._playbackController!!.loadMusics(playlist = playlist)
+            } else {
+                this.initPlayback(context = context, loadAllMusics = true)
             }
         }
     }
 
-    private fun checkPlaybackController(context: Context, loadAllMusic: Boolean = true) {
+    fun checkPlaybackController(
+        context: Context,
+        listener: PlaybackListener? = this.listener,
+        loadAllMusic: Boolean = true
+    ) {
         if (playbackControllerNotExists()) {
             if (loadAllMusic) {
                 this.initPlaybackWithAllMusics(context = context)
             } else {
                 this.initPlayback(context = context)
             }
+        } else if (
+            !this::playlist.isInitialized
+            || (this.playlist.musicCount() == 0 && DataManager.getMusicSet().isNotEmpty())
+        ) {
+            this._playbackController!!.loadMusics(musicSet = DataManager.getMusicSet())
         }
     }
 

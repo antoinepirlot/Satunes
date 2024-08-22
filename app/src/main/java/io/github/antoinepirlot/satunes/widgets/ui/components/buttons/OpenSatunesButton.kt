@@ -23,26 +23,29 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.data.viewmodels.utils
+package io.github.antoinepirlot.satunes.widgets.ui.components.buttons
 
-import android.Manifest
-import android.content.Context
-import android.content.pm.PackageManager
-import android.os.Build
-import androidx.core.content.ContextCompat
+import androidx.compose.runtime.Composable
+import androidx.glance.Button
+import androidx.glance.GlanceComposable
+import androidx.glance.GlanceModifier
+import androidx.glance.LocalContext
+import androidx.glance.action.actionStartActivity
+import io.github.antoinepirlot.satunes.MainActivity
+import io.github.antoinepirlot.satunes.R
 
 /**
- * @author Antoine Pirlot on 20/07/2024
+ * @author Antoine Pirlot on 22/08/2024
  */
 
-internal fun isAudioAllowed(context: Context): Boolean {
-    // Permission Granted
-    return ContextCompat.checkSelfPermission(
-        context,
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            Manifest.permission.READ_MEDIA_AUDIO
-        } else {
-            Manifest.permission.READ_EXTERNAL_STORAGE
-        }
-    ) == PackageManager.PERMISSION_GRANTED
+@Composable
+@GlanceComposable
+internal fun OpenSatunesButton(
+    modifier: GlanceModifier = GlanceModifier,
+) {
+    Button(
+        modifier = modifier,
+        text = LocalContext.current.getString(R.string.open_satunes_text),
+        onClick = actionStartActivity<MainActivity>()
+    )
 }

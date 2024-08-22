@@ -29,7 +29,6 @@ import android.content.Context
 import android.database.Cursor
 import android.net.Uri
 import android.os.Build
-import android.os.Environment
 import android.provider.MediaStore
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -42,11 +41,11 @@ import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
+import io.github.antoinepirlot.satunes.database.services.widgets.WidgetDatabaseManager
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.io.File
 
 /**
  * @author Antoine Pirlot on 22/02/24
@@ -78,7 +77,6 @@ object DataLoader {
     private const val UNKNOWN_ARTIST = "<unknown>"
     private const val UNKNOWN_ALBUM = "Unknown Album"
     private const val UNKNOWN_GENRE = "<unknown>"
-    val EXTERNAL_STORAGE_PATH: File = Environment.getExternalStorageDirectory()
 
     private var projection: Array<String> = arrayOf(
         // AUDIO
@@ -148,16 +146,22 @@ object DataLoader {
         //TODO No coroutine here as in app its a thread but in android auto it's must block the process
         if (isLoading.value || isLoaded.value) return
 
-        if (
-            this.selection_args.isEmpty()
-            && SettingsManager.foldersSelectionSelected == FoldersSelection.INCLUDE
-        ) {
-            isLoaded.value = true
-            return
-        }
-
         isLoading.value = true
+        WidgetDatabaseManager.refreshWidgets()
         CoroutineScope(Dispatchers.IO).launch {
+            if (!this@DataLoader::selection.isInitialized || !this@DataLoader::selection_args.isInitialized) {
+                this@DataLoader.loadFoldersPaths()
+            }
+
+            if (
+                this@DataLoader.selection_args.isEmpty()
+                && SettingsManager.foldersSelectionSelected == FoldersSelection.INCLUDE
+            ) {
+                isLoaded.value = true
+                isLoading.value = false
+                return@launch
+            }
+
             context.contentResolver.query(
                 URI,
                 projection,
@@ -174,6 +178,7 @@ object DataLoader {
             DatabaseManager.initInstance(context = context).loadAllPlaylistsWithMusic()
             isLoaded.value = true
             isLoading.value = false
+            WidgetDatabaseManager.refreshWidgets()
         }
     }
 

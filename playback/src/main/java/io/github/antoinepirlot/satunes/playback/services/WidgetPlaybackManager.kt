@@ -23,26 +23,17 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.data.viewmodels.utils
-
-import android.Manifest
-import android.content.Context
-import android.content.pm.PackageManager
-import android.os.Build
-import androidx.core.content.ContextCompat
+package io.github.antoinepirlot.satunes.playback.services
 
 /**
- * @author Antoine Pirlot on 20/07/2024
+ * @author Antoine Pirlot on 22/08/2024
  */
+object WidgetPlaybackManager {
+    var refreshWidgets: (() -> Unit)? = null
 
-internal fun isAudioAllowed(context: Context): Boolean {
-    // Permission Granted
-    return ContextCompat.checkSelfPermission(
-        context,
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            Manifest.permission.READ_MEDIA_AUDIO
-        } else {
-            Manifest.permission.READ_EXTERNAL_STORAGE
+    fun refreshWidgets() {
+        if (refreshWidgets != null) {
+            refreshWidgets!!()
         }
-    ) == PackageManager.PERMISSION_GRANTED
+    }
 }

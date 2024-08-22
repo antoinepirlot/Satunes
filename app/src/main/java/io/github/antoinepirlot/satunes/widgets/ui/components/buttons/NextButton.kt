@@ -23,7 +23,7 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.widgets.ui.components
+package io.github.antoinepirlot.satunes.widgets.ui.components.buttons
 
 import android.content.Context
 import androidx.compose.runtime.Composable

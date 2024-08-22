@@ -38,6 +38,9 @@ import androidx.glance.layout.fillMaxWidth
 import androidx.glance.layout.size
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
+import io.github.antoinepirlot.satunes.widgets.ui.components.buttons.NextButton
+import io.github.antoinepirlot.satunes.widgets.ui.components.buttons.PlayPauseButton
+import io.github.antoinepirlot.satunes.widgets.ui.components.buttons.PreviousButton
 
 /**
  * @author Antoine Pirlot on 20/08/2024

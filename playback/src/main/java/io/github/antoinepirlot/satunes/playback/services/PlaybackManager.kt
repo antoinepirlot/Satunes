@@ -36,6 +36,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.data.DataLoader
+import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.playback.models.PlaybackListener
 import io.github.antoinepirlot.satunes.playback.models.Playlist
@@ -115,6 +116,8 @@ object PlaybackManager {
             this.initPlayback(context = context, loadAllMusics = false)
             if (this::playlist.isInitialized) {
                 this._playbackController!!.loadMusics(playlist = playlist)
+            } else {
+                this._playbackController!!.loadMusics(musicSet = DataManager.getMusicSet())
             }
         }
     }

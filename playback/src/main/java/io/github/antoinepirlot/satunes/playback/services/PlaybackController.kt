@@ -222,7 +222,7 @@ internal class PlaybackController private constructor(
      */
     fun start(musicToPlay: Music? = null) {
         if (!isLoaded) {
-            throw IllegalStateException("The playlistDB has not been loaded, you can't play music")
+            throw IllegalStateException("The playlist has not been loaded, you can't play music")
         }
         when (musicToPlay) {
             null -> {

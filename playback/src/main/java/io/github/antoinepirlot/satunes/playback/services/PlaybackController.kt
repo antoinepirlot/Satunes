@@ -190,6 +190,10 @@ internal class PlaybackController private constructor(
     }
 
     init {
+        if (loadAllMusics) {
+            isLoading = true
+        }
+
         try {
             val mediaControllerFuture: ListenableFuture<MediaController> =
                 MediaController.Builder(context, sessionToken).buildAsync()

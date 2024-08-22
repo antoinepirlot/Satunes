@@ -88,6 +88,7 @@ object PlaybackManager {
         mutableFloatStateOf(DEFAULT_CURRENT_POSITION_PROGRESSION)
         private set
 
+    //TODO Make it private and use checkPlayback outside this object
     fun initPlayback(
         context: Context,
         listener: PlaybackListener? = this.listener,
@@ -107,7 +108,7 @@ object PlaybackManager {
 
     fun isConfigured(): Boolean = !this.playbackControllerNotExists()
 
-    fun initPlaybackWithAllMusics(context: Context) {
+    private fun initPlaybackWithAllMusics(context: Context) {
         if (!DataLoader.isLoaded.value && !DataLoader.isLoading.value) {
             DataLoader.resetAllData()
             DataLoader.loadAllData(context = context)
@@ -122,7 +123,7 @@ object PlaybackManager {
         }
     }
 
-    private fun checkPlaybackController(context: Context, loadAllMusic: Boolean = true) {
+    fun checkPlaybackController(context: Context, loadAllMusic: Boolean = true) {
         if (playbackControllerNotExists()) {
             if (loadAllMusic) {
                 this.initPlaybackWithAllMusics(context = context)

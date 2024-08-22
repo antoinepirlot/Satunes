@@ -89,7 +89,7 @@ private fun WidgetView(
     val context: Context = LocalContext.current
 
     LaunchedEffect(key1 = Unit) {
-        PlaybackManager.initPlaybackWithAllMusics(context = context)
+        PlaybackManager.checkPlaybackController(context = context)
     }
 
     Row(

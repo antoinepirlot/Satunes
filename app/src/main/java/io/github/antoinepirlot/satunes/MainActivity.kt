@@ -80,7 +80,7 @@ internal class MainActivity : ComponentActivity() {
          * When the user click on playing notification, the app is opened.
          */
         @OptIn(UnstableApi::class)
-        private fun setNotificationOnClick(context: Context) {
+        fun setNotificationOnClick(context: Context) {
             val intent = Intent(context.applicationContext, MainActivity::class.java)
             CoroutineScope(Dispatchers.IO).launch {
                 while (PlaybackService.mediaSession == null) {

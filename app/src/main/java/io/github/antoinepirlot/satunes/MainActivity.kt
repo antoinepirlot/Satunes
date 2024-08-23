@@ -26,6 +26,7 @@
 package io.github.antoinepirlot.satunes
 
 import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
@@ -74,6 +75,24 @@ internal class MainActivity : ComponentActivity() {
                 putExtra(DocumentsContract.EXTRA_INITIAL_URI, DEFAULT_URI)
             }
         }
+
+        /**
+         * When the user click on playing notification, the app is opened.
+         */
+        @OptIn(UnstableApi::class)
+        fun setNotificationOnClick(context: Context) {
+            val intent = Intent(context.applicationContext, MainActivity::class.java)
+            CoroutineScope(Dispatchers.IO).launch {
+                while (PlaybackService.mediaSession == null) {
+                    // The init has to be completed
+                }
+                val pendingIntent = PendingIntent.getActivity(
+                    context.applicationContext, 0, intent,
+                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                )
+                PlaybackService.mediaSession!!.setSessionActivity(pendingIntent)
+            }
+        }
     }
 
     private lateinit var _logger: SatunesLogger
@@ -94,7 +113,7 @@ internal class MainActivity : ComponentActivity() {
         _logger.info("Satunes started on API: ${Build.VERSION.SDK_INT}")
         instance = this
 
-        setNotificationOnClick()
+        setNotificationOnClick(context = applicationContext)
         setContent {
             Satunes()
         }
@@ -102,24 +121,6 @@ internal class MainActivity : ComponentActivity() {
             DataCleanerManager.removeApkFiles(context = baseContext)
         } else {
             _logger.warning("Can't remove apk files with API: ${Build.VERSION.SDK_INT}")
-        }
-    }
-
-    /**
-     * When the user click on playing notification, the app is opened.
-     */
-    @OptIn(UnstableApi::class)
-    private fun setNotificationOnClick() {
-        val intent: Intent = this.intent
-        CoroutineScope(Dispatchers.IO).launch {
-            while (PlaybackService.mediaSession == null) {
-                // The init has to be completed
-            }
-            val pendingIntent = PendingIntent.getActivity(
-                baseContext.applicationContext, 0, intent,
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-            )
-            PlaybackService.mediaSession!!.setSessionActivity(pendingIntent)
         }
     }
 

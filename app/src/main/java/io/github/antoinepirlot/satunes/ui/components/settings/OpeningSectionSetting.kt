@@ -66,7 +66,7 @@ internal fun OpeningSectionSetting(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        NormalText(text = stringResource(id = R.string.opening_section_setting_title))
+        NormalText(text = stringResource(id = R.string.opening_section_setting_content))
         Box {
             TextButton(onClick = { expanded = true }) {
                 NormalText(text = stringResource(id = selectedSection.stringId))

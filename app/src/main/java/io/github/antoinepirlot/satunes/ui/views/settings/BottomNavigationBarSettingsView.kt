@@ -27,6 +27,7 @@ package io.github.antoinepirlot.satunes.ui.views.settings
 
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
@@ -35,6 +36,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.texts.Title
 import io.github.antoinepirlot.satunes.R
@@ -69,11 +71,7 @@ internal fun BottomNavigationBarSettingsView(
         Title(text = stringResource(id = R.string.bottom_bar))
         SubSettings {
             SettingsSwitchList(checkedMap = navBarSectionSettingsChecked)
-        }
-        SubSettings(
-            title = "Sub 1"//todo
-        ) {
-            OpeningSectionSetting()
+            OpeningSectionSetting(modifier = Modifier.padding(horizontal = 16.dp))
         }
     }
 }

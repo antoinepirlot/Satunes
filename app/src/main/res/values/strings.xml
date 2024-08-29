@@ -98,5 +98,5 @@
     <string name="no">No</string>
     <string name="classic_widget_description">Classic</string>
     <string name="load_satunes_text">Load Satunes</string>
-    <string name="opening_section_setting_title">Default section:</string>
+    <string name="opening_section_setting_content">Default section:</string>
 </resources>

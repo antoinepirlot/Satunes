@@ -103,6 +103,9 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
         session.setCallback(SatunesCarCallBack)
 
         RouteManager.reset()
+        runBlocking {
+            SettingsManager.loadSettings(context = applicationContext)
+        }
         loadAllPlaybackData()
     }
 

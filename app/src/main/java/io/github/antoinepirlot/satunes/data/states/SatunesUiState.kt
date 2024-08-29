@@ -47,15 +47,8 @@ internal data class SatunesUiState(
     val albumsChecked: Boolean = SettingsManager.albumsChecked.value,
     val genresChecked: Boolean = SettingsManager.genresChecked.value,
     val playlistsChecked: Boolean = SettingsManager.playlistsChecked.value,
-    val selectedNavBarSection: NavBarSection =
-    // Selected the default menu title in this priority order
-        if (foldersChecked) NavBarSection.FOLDERS
-        else if (artistsChecked) NavBarSection.ARTISTS
-        else if (albumsChecked) NavBarSection.ALBUMS
-        else if (genresChecked) NavBarSection.GENRES
-        else NavBarSection.MUSICS,
-
     val defaultNavBarSection: NavBarSection = SettingsManager.defaultNavBarSection,
+    val selectedNavBarSection: NavBarSection = defaultNavBarSection,
 
     val foldersSelectionSelected: FoldersSelection = SettingsManager.foldersSelectionSelected,
 

@@ -133,11 +133,13 @@ object PlaybackManager {
             } else {
                 this.initPlayback(context = context)
             }
-        } else if (
-            !this::playlist.isInitialized
-            || (this.playlist.musicCount() == 0 && DataManager.getMusicSet().isNotEmpty())
-        ) {
-            this._playbackController!!.loadMusics(musicSet = DataManager.getMusicSet())
+        } else if (loadAllMusic) {
+            if (
+                !this::playlist.isInitialized
+                || (this.playlist.musicCount() == 0 && DataManager.getMusicSet().isNotEmpty())
+            ) {
+                this._playbackController!!.loadMusics(musicSet = DataManager.getMusicSet())
+            }
         }
     }
 

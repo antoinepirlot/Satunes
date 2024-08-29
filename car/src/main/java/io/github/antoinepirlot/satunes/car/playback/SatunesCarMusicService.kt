@@ -113,7 +113,7 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
         }
         PlaybackManager.checkPlaybackController(
             context = applicationContext,
-            listener = SatunesPlaybackListener
+            listener = SatunesPlaybackListener,
         )
         runBlocking {
             while (!DataLoader.isLoaded.value) {

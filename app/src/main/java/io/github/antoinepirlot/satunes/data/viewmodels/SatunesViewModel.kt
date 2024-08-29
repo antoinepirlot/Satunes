@@ -542,4 +542,20 @@ internal class SatunesViewModel : ViewModel() {
         DataLoader.resetAllData()
         PlaybackManager.checkPlaybackController(context = MainActivity.instance.applicationContext)
     }
+
+    fun selectDefaultNavBarSection(navBarSection: NavBarSection) {
+        try {
+            runBlocking {
+                SettingsManager.selectDefaultNavBarSection(
+                    context = MainActivity.instance.applicationContext,
+                    navBarSection = navBarSection
+                )
+            }
+            _uiState.update { currentState: SatunesUiState ->
+                currentState.copy(defaultNavBarSection = SettingsManager.defaultNavBarSection)
+            }
+        } catch (e: Throwable) {
+            _logger.severe("Error while selecting new default nav bar section: ${navBarSection.name}")
+        }
+    }
 }

@@ -95,4 +95,5 @@
     <string name="no">Non</string>
     <string name="classic_widget_description">Classique</string>
     <string name="load_satunes_text">Charger Satunes</string>
+    <string name="opening_section_setting_content">Menu par défault</string>
 </resources>

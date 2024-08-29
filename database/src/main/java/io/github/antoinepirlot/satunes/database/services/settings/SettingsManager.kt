@@ -53,7 +53,6 @@ import kotlinx.coroutines.flow.map
  */
 
 object SettingsManager {
-
     /**
      * DEFAULT VALUES
      */
@@ -62,6 +61,7 @@ object SettingsManager {
     private const val DEFAULT_ALBUMS_CHECKED = true
     private const val DEFAULT_GENRE_CHECKED = true
     private const val DEFAULT_PLAYLIST_CHECKED = true
+    private val DEFAULT_DEFAULT_NAV_BAR_SECTION = NavBarSection.MUSICS
     private const val DEFAULT_PLAYBACK_WHEN_CLOSED_CHECKED =
         false //App stop after removed app from multi-task if false
     private const val DEFAULT_PAUSE_IF_NOISY = true
@@ -90,6 +90,8 @@ object SettingsManager {
     private val ALBUMS_CHECKED_PREFERENCES_KEY = booleanPreferencesKey("albums_checked")
     private val GENRE_CHECKED_PREFERENCES_KEY = booleanPreferencesKey("genres_checked")
     private val PLAYLISTS_CHECKED_PREFERENCES_KEY = booleanPreferencesKey("playlists_checked")
+    private val DEFAULT_NAV_BAR_SECTION_KEY: Preferences.Key<Int> =
+        intPreferencesKey("default_nav_bar_section")
     private val PLAYBACK_WHEN_CLOSED_CHECKED_PREFERENCES_KEY =
         booleanPreferencesKey("playback_when_closed_checked")
     private val PAUSE_IF_NOISY_PREFERENCES_KEY = booleanPreferencesKey("pause_if_noisy")
@@ -130,6 +132,7 @@ object SettingsManager {
         private set
     var playlistsChecked: MutableState<Boolean> = mutableStateOf(DEFAULT_PLAYLIST_CHECKED)
         private set
+    var defaultNavBarSection: NavBarSection = DEFAULT_DEFAULT_NAV_BAR_SECTION
     var playbackWhenClosedChecked: Boolean = DEFAULT_PLAYBACK_WHEN_CLOSED_CHECKED
         private set
     var pauseIfNoisyChecked: Boolean = DEFAULT_PAUSE_IF_NOISY
@@ -192,6 +195,8 @@ object SettingsManager {
             playlistsChecked.value =
                 preferences[PLAYLISTS_CHECKED_PREFERENCES_KEY] ?: DEFAULT_PLAYLIST_CHECKED
 
+            defaultNavBarSection = getNavBarSection(preferences[DEFAULT_NAV_BAR_SECTION_KEY])
+
             playbackWhenClosedChecked =
                 preferences[PLAYBACK_WHEN_CLOSED_CHECKED_PREFERENCES_KEY]
                     ?: DEFAULT_PLAYBACK_WHEN_CLOSED_CHECKED
@@ -225,6 +230,18 @@ object SettingsManager {
             loadFilters(context = context)
         }.first()
         _isLoaded = true
+    }
+
+    private fun getNavBarSection(id: Int?): NavBarSection {
+        return when (id) {
+            0 -> NavBarSection.FOLDERS
+            1 -> NavBarSection.ARTISTS
+            2 -> NavBarSection.MUSICS
+            3 -> NavBarSection.ALBUMS
+            4 -> NavBarSection.GENRES
+            5 -> NavBarSection.PLAYLISTS
+            else -> DEFAULT_DEFAULT_NAV_BAR_SECTION
+        }
     }
 
     private fun getBarSpeed(speed: Float?): BarSpeed {
@@ -488,6 +505,13 @@ object SettingsManager {
             newSet.remove(path)
             foldersPathsSelectedSet.value = newSet.toSet()
             preferences[SELECTED_PATHS_KEY] = foldersPathsSelectedSet.value
+        }
+    }
+
+    suspend fun selectDefaultNavBarSection(context: Context, navBarSection: NavBarSection) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            this.defaultNavBarSection = navBarSection
+            preferences[DEFAULT_NAV_BAR_SECTION_KEY] = this.defaultNavBarSection.id
         }
     }
 }

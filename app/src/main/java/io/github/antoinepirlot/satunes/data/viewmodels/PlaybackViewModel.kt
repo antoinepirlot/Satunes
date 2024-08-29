@@ -175,6 +175,15 @@ class PlaybackViewModel : ViewModel() {
         return PlaybackManager.getMusicPlayingIndexPosition(context = MainActivity.instance.applicationContext)
     }
 
+    fun getNextMusic(): Music? {
+        return try {
+            PlaybackManager.getNextMusic(context = MainActivity.instance.applicationContext)
+        } catch (e: Throwable) {
+            _logger.severe("Can't get the next music in queue")
+            null
+        }
+    }
+
     fun addToQueue(
         scope: CoroutineScope,
         snackBarHostState: SnackbarHostState,

@@ -703,4 +703,12 @@ internal class PlaybackController private constructor(
             newPosition.toFloat() / maxPosition.toFloat()
         WidgetPlaybackManager.refreshWidgets()
     }
+
+    fun getNextMusic(): Music? {
+        return if (this.musicPlayingIndex == this.playlist.lastIndex()) {
+            null
+        } else {
+            this.playlist.getMusic(musicIndex = this.musicPlayingIndex + 1)
+        }
+    }
 }

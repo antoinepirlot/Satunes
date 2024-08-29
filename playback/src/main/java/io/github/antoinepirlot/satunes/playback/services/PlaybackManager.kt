@@ -299,4 +299,9 @@ object PlaybackManager {
         checkPlaybackController(context = context)
         this._playbackController!!.updateCurrentPosition()
     }
+
+    fun getNextMusic(context: Context): Music? {
+        checkPlaybackController(context = context)
+        return this._playbackController!!.getNextMusic()
+    }
 }

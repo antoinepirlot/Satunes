@@ -94,5 +94,5 @@
     <string name="yes">Oui</string>
     <string name="no">Non</string>
     <string name="classic_widget_description">Classique</string>
-    <string name="open_satunes_text">Ouvrir Satunes</string>
+    <string name="load_satunes_text">Charger Satunes</string>
 </resources>

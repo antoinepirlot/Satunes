@@ -103,6 +103,9 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
         session.setCallback(SatunesCarCallBack)
 
         RouteManager.reset()
+        runBlocking {
+            SettingsManager.loadSettings(context = applicationContext)
+        }
         loadAllPlaybackData()
     }
 
@@ -113,7 +116,7 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
         }
         PlaybackManager.checkPlaybackController(
             context = applicationContext,
-            listener = SatunesPlaybackListener
+            listener = SatunesPlaybackListener,
         )
         runBlocking {
             while (!DataLoader.isLoaded.value) {

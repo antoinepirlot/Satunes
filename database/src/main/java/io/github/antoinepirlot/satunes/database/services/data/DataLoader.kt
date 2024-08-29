@@ -144,6 +144,10 @@ object DataLoader {
      */
     fun loadAllData(context: Context) {
         //TODO No coroutine here as in app its a thread but in android auto it's must block the process
+
+        // this allow data to be reloaded if no data loaded
+        if (DataManager.getMusicSet().isEmpty()) this.resetAllData()
+
         if (isLoading.value || isLoaded.value) return
 
         isLoading.value = true

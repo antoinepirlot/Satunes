@@ -25,14 +25,11 @@
 
 package io.github.antoinepirlot.satunes.widgets.ui.views.classic_playback
 
-import android.content.Context
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.unit.dp
 import androidx.glance.GlanceComposable
 import androidx.glance.GlanceModifier
-import androidx.glance.LocalContext
 import androidx.glance.appwidget.CircularProgressIndicator
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Column
@@ -47,7 +44,7 @@ import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
 import io.github.antoinepirlot.satunes.widgets.ui.components.Artwork
 import io.github.antoinepirlot.satunes.widgets.ui.components.MusicInformations
 import io.github.antoinepirlot.satunes.widgets.ui.components.PlaybackControlBar
-import io.github.antoinepirlot.satunes.widgets.ui.components.buttons.OpenSatunesButton
+import io.github.antoinepirlot.satunes.widgets.ui.components.buttons.LoadSatunesButton
 
 /**
  * @author Antoine Pirlot on 21/08/2024
@@ -68,7 +65,7 @@ internal fun ClassicPlaybackWidgetView(
 
     val isDataLoaded: Boolean by DataLoader.isLoaded
     if (!isDataLoaded) {
-        OpenSatunesButton(modifier = modifier)
+        LoadSatunesButton(modifier = modifier)
     } else {
         WidgetView(modifier = modifier)
     }
@@ -79,12 +76,6 @@ internal fun ClassicPlaybackWidgetView(
 private fun WidgetView(
     modifier: GlanceModifier = GlanceModifier,
 ) {
-    val context: Context = LocalContext.current
-
-    LaunchedEffect(key1 = Unit) {
-        PlaybackManager.checkPlaybackController(context = context)
-    }
-
     Row(
         modifier = modifier.fillMaxSize(),
         verticalAlignment = Alignment.CenterVertically,

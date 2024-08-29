@@ -97,5 +97,5 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="classic_widget_description">Classic</string>
-    <string name="open_satunes_text">Open Satunes</string>
+    <string name="load_satunes_text">Load Satunes</string>
 </resources>

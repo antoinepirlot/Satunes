@@ -25,14 +25,14 @@
 
 package io.github.antoinepirlot.satunes.widgets.ui.components.buttons
 
+import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.glance.Button
 import androidx.glance.GlanceComposable
 import androidx.glance.GlanceModifier
 import androidx.glance.LocalContext
-import androidx.glance.action.actionStartActivity
-import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.utils.initSatunes
 
 /**
  * @author Antoine Pirlot on 22/08/2024
@@ -40,12 +40,14 @@ import io.github.antoinepirlot.satunes.R
 
 @Composable
 @GlanceComposable
-internal fun OpenSatunesButton(
+internal fun LoadSatunesButton(
     modifier: GlanceModifier = GlanceModifier,
 ) {
+    val context: Context = LocalContext.current
+
     Button(
         modifier = modifier,
-        text = LocalContext.current.getString(R.string.open_satunes_text),
-        onClick = actionStartActivity<MainActivity>()
+        text = LocalContext.current.getString(R.string.load_satunes_text),
+        onClick = { initSatunes(context = context, satunesViewModel = null) }
     )
 }

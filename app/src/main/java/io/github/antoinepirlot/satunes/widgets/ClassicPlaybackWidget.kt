@@ -30,7 +30,6 @@ import android.os.Environment
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
-import androidx.glance.LocalContext
 import androidx.glance.action.actionStartActivity
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
@@ -44,7 +43,6 @@ import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.database.services.widgets.WidgetDatabaseManager
 import io.github.antoinepirlot.satunes.playback.services.WidgetPlaybackManager
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
-import io.github.antoinepirlot.satunes.utils.setNotificationOnClick
 import io.github.antoinepirlot.satunes.widgets.ui.views.classic_playback.ClassicPlaybackWidgetView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -72,7 +70,6 @@ class ClassicPlaybackWidget : GlanceAppWidget() {
         WidgetDatabaseManager.refreshWidgets = refreshWidgets
 
         provideContent {
-            setNotificationOnClick(context = LocalContext.current)
             GlanceTheme {
                 Scaffold(
                     modifier = GlanceModifier.clickable(onClick = actionStartActivity<MainActivity>())

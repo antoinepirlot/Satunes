@@ -43,7 +43,6 @@ import androidx.glance.layout.fillMaxWidth
 import androidx.glance.layout.size
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.data.DataLoader
-import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
 import io.github.antoinepirlot.satunes.widgets.ui.components.Artwork
 import io.github.antoinepirlot.satunes.widgets.ui.components.MusicInformations
@@ -60,12 +59,6 @@ import io.github.antoinepirlot.satunes.widgets.ui.components.buttons.OpenSatunes
 internal fun ClassicPlaybackWidgetView(
     modifier: GlanceModifier = GlanceModifier,
 ) {
-    val context: Context = LocalContext.current
-    LaunchedEffect(key1 = Unit) {
-        SettingsManager.loadSettings(context = context)
-        DataLoader.loadAllData(context = context)
-    }
-
     val isDataLoading: Boolean by DataLoader.isLoading
     val isPlaybackLoading: Boolean by PlaybackManager.isLoading
     if (isDataLoading || isPlaybackLoading) {

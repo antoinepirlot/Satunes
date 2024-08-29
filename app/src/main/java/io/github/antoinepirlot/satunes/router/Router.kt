@@ -59,13 +59,11 @@ internal fun Router(
     dataViewModel: DataViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
 ) {
+    val context: Context = LocalContext.current
     val isAudioAllowed: Boolean = satunesViewModel.isAudioAllowed
 
-    if (isAudioAllowed) {
-        val context: Context = LocalContext.current
-        LaunchedEffect(key1 = Unit) {
-            initSatunes(context = context, satunesViewModel = satunesViewModel)
-        }
+    LaunchedEffect(key1 = isAudioAllowed) {
+        initSatunes(context = context, satunesViewModel = satunesViewModel)
     }
 
     NavHost(

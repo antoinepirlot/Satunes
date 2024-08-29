@@ -45,7 +45,7 @@ import io.github.antoinepirlot.satunes.router.routes.mediaRoutes
 import io.github.antoinepirlot.satunes.router.routes.playbackRoutes
 import io.github.antoinepirlot.satunes.router.routes.searchRoutes
 import io.github.antoinepirlot.satunes.router.routes.settingsRoutes
-import io.github.antoinepirlot.satunes.utils.initSatunes
+import io.github.antoinepirlot.satunes.utils.loadSatunesData
 
 /**
  * @author Antoine Pirlot on 23-01-24
@@ -63,7 +63,7 @@ internal fun Router(
     val isAudioAllowed: Boolean = satunesViewModel.isAudioAllowed
 
     LaunchedEffect(key1 = isAudioAllowed) {
-        initSatunes(context = context, satunesViewModel = satunesViewModel)
+        loadSatunesData(context = context, satunesViewModel = satunesViewModel)
     }
 
     NavHost(

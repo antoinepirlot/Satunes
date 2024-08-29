@@ -507,4 +507,11 @@ object SettingsManager {
             preferences[SELECTED_PATHS_KEY] = foldersPathsSelectedSet.value
         }
     }
+
+    suspend fun selectDefaultNavBarSection(context: Context, navBarSection: NavBarSection) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            this.defaultNavBarSection = navBarSection
+            preferences[DEFAULT_NAV_BAR_SECTION_KEY] = this.defaultNavBarSection.id
+        }
+    }
 }

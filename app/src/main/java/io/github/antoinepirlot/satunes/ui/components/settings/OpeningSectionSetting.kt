@@ -77,8 +77,14 @@ internal fun OpeningSectionSetting(
 }
 
 @Composable
-private fun Menu(expanded: Boolean, onDismissRequest: () -> Unit) {
+private fun Menu(
+    modifier: Modifier = Modifier,
+    satunesViewModel: SatunesViewModel = viewModel(),
+    expanded: Boolean,
+    onDismissRequest: () -> Unit
+) {
     DropdownMenu(
+        modifier = modifier,
         expanded = expanded,
         onDismissRequest = onDismissRequest
     ) {
@@ -86,7 +92,7 @@ private fun Menu(expanded: Boolean, onDismissRequest: () -> Unit) {
             DropdownMenuItem(
                 text = { NormalText(text = stringResource(id = navBarSection.stringId)) },
                 onClick = {
-                    //todo save it
+                    satunesViewModel.selectDefaultNavBarSection(navBarSection = navBarSection)
                     onDismissRequest()
                 }
             )

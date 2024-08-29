@@ -41,7 +41,9 @@ import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.models.SwitchSettings
+import io.github.antoinepirlot.satunes.ui.components.settings.OpeningSectionSetting
 import io.github.antoinepirlot.satunes.ui.components.settings.SettingsSwitchList
+import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
 
 /**
  *   @author Antoine Pirlot 06/03/2024
@@ -65,7 +67,14 @@ internal fun BottomNavigationBarSettingsView(
     val scrollState: ScrollState = rememberScrollState()
     Column(modifier = modifier.verticalScroll(scrollState)) {
         Title(text = stringResource(id = R.string.bottom_bar))
-        SettingsSwitchList(checkedMap = navBarSectionSettingsChecked)
+        SubSettings {
+            SettingsSwitchList(checkedMap = navBarSectionSettingsChecked)
+        }
+        SubSettings(
+            title = "Sub 1"//todo
+        ) {
+            OpeningSectionSetting()
+        }
     }
 }
 

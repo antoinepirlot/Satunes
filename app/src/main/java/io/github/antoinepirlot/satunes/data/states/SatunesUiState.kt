@@ -55,6 +55,8 @@ internal data class SatunesUiState(
         else if (genresChecked) NavBarSection.GENRES
         else NavBarSection.MUSICS,
 
+    val defaultNavBarSection: NavBarSection = SettingsManager.defaultNavBarSection,
+
     val foldersSelectionSelected: FoldersSelection = SettingsManager.foldersSelectionSelected,
 
     val playbackWhenClosedChecked: Boolean = SettingsManager.playbackWhenClosedChecked,

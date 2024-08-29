@@ -31,11 +31,11 @@ import io.github.antoinepirlot.satunes.database.R
  * @author Antoine Pirlot on 03/02/24
  */
 
-enum class NavBarSection(open val stringId: Int) {
-    FOLDERS(stringId = R.string.folders),
-    ARTISTS(stringId = R.string.artists),
-    MUSICS(stringId = R.string.musics),
-    ALBUMS(stringId = R.string.albums),
-    GENRES(stringId = R.string.genres),
-    PLAYLISTS(stringId = R.string.playlists)
+enum class NavBarSection(internal val id: Int, open val stringId: Int) {
+    FOLDERS(id = 0, stringId = R.string.folders),
+    ARTISTS(id = 1, stringId = R.string.artists),
+    MUSICS(id = 2, stringId = R.string.musics),
+    ALBUMS(id = 3, stringId = R.string.albums),
+    GENRES(id = 4, stringId = R.string.genres),
+    PLAYLISTS(id = 5, stringId = R.string.playlists)
 }

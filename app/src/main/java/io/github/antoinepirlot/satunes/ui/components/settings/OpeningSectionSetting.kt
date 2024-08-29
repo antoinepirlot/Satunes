@@ -36,6 +36,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -61,7 +62,10 @@ internal fun OpeningSectionSetting(
     var expanded: Boolean by remember { mutableStateOf(false) }
     val selectedSection: NavBarSection = satunesUiState.defaultNavBarSection
 
-    Row(modifier = modifier) {
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
         NormalText(text = stringResource(id = R.string.opening_section_setting_title))
         Box {
             TextButton(onClick = { expanded = true }) {

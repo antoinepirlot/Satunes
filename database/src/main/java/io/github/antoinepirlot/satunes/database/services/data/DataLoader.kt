@@ -386,7 +386,11 @@ object DataLoader {
         val name: String = try {
             cursor.getString(albumArtistColumn!!)
         } catch (e: NullPointerException) {
-            context.getString(R.string.unknown_artist)
+            UNKNOWN_ALBUM
+        }
+        
+        if (name == UNKNOWN_ALBUM) {
+            context.getString(R.string.unknown_album)
         }
 
         return DataManager.addArtist(artist = Artist(title = name))
@@ -399,7 +403,6 @@ object DataLoader {
             UNKNOWN_ALBUM
         }
 
-        // todo put in one line
         if (name == UNKNOWN_ALBUM) {
             name = context.getString(R.string.unknown_album)
         }

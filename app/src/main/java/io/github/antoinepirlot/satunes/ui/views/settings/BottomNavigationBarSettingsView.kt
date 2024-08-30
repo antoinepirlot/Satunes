@@ -43,7 +43,7 @@ import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.models.SwitchSettings
-import io.github.antoinepirlot.satunes.ui.components.settings.OpeningSectionSetting
+import io.github.antoinepirlot.satunes.ui.components.settings.DefaultNavBarSectionSetting
 import io.github.antoinepirlot.satunes.ui.components.settings.SettingsSwitchList
 import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
 
@@ -71,7 +71,7 @@ internal fun BottomNavigationBarSettingsView(
         Title(text = stringResource(id = R.string.bottom_bar))
         SubSettings {
             SettingsSwitchList(checkedMap = navBarSectionSettingsChecked)
-            OpeningSectionSetting(modifier = Modifier.padding(horizontal = 16.dp))
+            DefaultNavBarSectionSetting(modifier = Modifier.padding(horizontal = 16.dp))
         }
     }
 }

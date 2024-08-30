@@ -75,7 +75,7 @@ internal fun SatunesTopAppBar(
     val screenWidthDp = LocalConfiguration.current.screenWidthDp
     val barModifier: Modifier =
         if (screenWidthDp < ScreenSizes.VERY_VERY_SMALL) modifier.fillMaxHeight(0.11f) else modifier
-    val currentDestination: String = uiState.currentDestination
+    val currentDestination: Destination = uiState.currentDestination
 
     CenterAlignedTopAppBar(
         modifier = barModifier,
@@ -145,15 +145,15 @@ internal fun SatunesTopAppBar(
 
 private fun onSearchButtonClick(uiState: SatunesUiState, navController: NavHostController) {
     when (uiState.currentDestination) {
-        Destination.SEARCH.link -> navController.popBackStack()
+        Destination.SEARCH -> navController.popBackStack()
         else -> navController.navigate(Destination.SEARCH.link)
     }
 }
 
 private fun onPlaybackQueueButtonClick(uiState: SatunesUiState, navController: NavHostController) {
     when (uiState.currentDestination) {
-        Destination.PLAYBACK.link -> navController.navigate(Destination.PLAYBACK_QUEUE.link)
-        Destination.PLAYBACK_QUEUE.link -> navController.navigate(Destination.PLAYBACK.link)
+        Destination.PLAYBACK -> navController.navigate(Destination.PLAYBACK_QUEUE.link)
+        Destination.PLAYBACK_QUEUE -> navController.navigate(Destination.PLAYBACK.link)
         else -> return
     }
 }
@@ -171,9 +171,9 @@ private fun onSettingButtonClick(
         satunesViewModel.resetUpdatesStatus()
     }
 
-    when (val currentDestination: String = uiState.currentDestination) {
+    when (val currentDestination: Destination = uiState.currentDestination) {
         in settingsDestinations -> {
-            if (currentDestination == Destination.PERMISSIONS_SETTINGS.link && !uiState.isAudioAllowed) {
+            if (currentDestination == Destination.PERMISSIONS_SETTINGS && !uiState.isAudioAllowed) {
                 return
             } else {
                 navController.popBackStack()

@@ -54,6 +54,7 @@ import io.github.antoinepirlot.satunes.internet.updates.APKDownloadStatus
 import io.github.antoinepirlot.satunes.internet.updates.UpdateAvailableStatus
 import io.github.antoinepirlot.satunes.internet.updates.UpdateCheckManager
 import io.github.antoinepirlot.satunes.internet.updates.UpdateDownloadManager
+import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
 import io.github.antoinepirlot.satunes.ui.utils.showErrorSnackBar
 import io.github.antoinepirlot.satunes.ui.utils.showSnackBar
@@ -168,7 +169,7 @@ internal class SatunesViewModel : ViewModel() {
 
     fun setCurrentDestination(destination: String) {
         _uiState.update { currentState: SatunesUiState ->
-            currentState.copy(currentDestination = destination)
+            currentState.copy(currentDestination = Destination.getDestination(destination = destination))
         }
     }
 

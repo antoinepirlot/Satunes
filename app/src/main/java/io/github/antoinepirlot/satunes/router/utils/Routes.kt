@@ -32,6 +32,7 @@ import io.github.antoinepirlot.satunes.models.Destination
  * @author Antoine Pirlot on 30/08/2024
  */
 
+//TODO Optimize it by having a map
 internal fun getNavBarSectionDestination(navBarSection: NavBarSection): Destination {
     return when (navBarSection) {
         NavBarSection.FOLDERS -> Destination.FOLDERS

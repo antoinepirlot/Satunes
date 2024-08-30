@@ -58,7 +58,7 @@ internal enum class Destination(val link: String) {
     UPDATES_SETTINGS(link = "/updates");
 
     companion object {
-        private val destinationsMap: Map<String, Destination> = mutableMapOf(
+        private val destinationsMap: MutableMap<String, Destination> = mutableMapOf(
             Pair(first = ALBUMS.link, second = ALBUMS),
             Pair(first = ANDROID_AUTO_SETTINGS.link, second = ANDROID_AUTO_SETTINGS),
             Pair(first = ARTISTS.link, second = ARTISTS),
@@ -79,6 +79,12 @@ internal enum class Destination(val link: String) {
             Pair(first = SEARCH_SETTINGS.link, second = SEARCH_SETTINGS),
             Pair(first = SETTINGS.link, second = SETTINGS),
         )
+
+        init {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                this.destinationsMap[UPDATES_SETTINGS.link] = UPDATES_SETTINGS
+            }
+        }
 
         fun getDestination(destination: String): Destination {
             return this.destinationsMap[destination] ?: DEFAULT_DESTINATION

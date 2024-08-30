@@ -37,6 +37,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Folder
@@ -47,7 +48,6 @@ import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.ui.components.EmptyView
 import io.github.antoinepirlot.satunes.ui.components.bars.ShowCurrentMusicButton
 import io.github.antoinepirlot.satunes.ui.components.cards.media.MediaCardList
-import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 
 /**
  * @author Antoine Pirlot on 01/02/24
@@ -62,7 +62,7 @@ internal fun MediaListView(
     openMedia: (mediaImpl: MediaImpl) -> Unit,
     openedPlaylistWithMusics: Playlist? = null,
     onFABClick: () -> Unit,
-    header: @Composable () -> Unit = {},
+    header: (@Composable () -> Unit)? = null,
     extraButtons: @Composable () -> Unit = { /*By default there's no extra buttons*/ },
     emptyViewText: String
 ) {
@@ -90,10 +90,14 @@ internal fun MediaListView(
                 openedPlaylist = openedPlaylistWithMusics
             )
         } else {
-            EmptyView(
-                modifier = Modifier.padding(innerPadding),
-                text = emptyViewText
-            )
+            if (header != null) {
+                header()
+            } else {
+                EmptyView(
+                    modifier = Modifier.padding(innerPadding),
+                    text = emptyViewText
+                )
+            }
         }
     }
 }

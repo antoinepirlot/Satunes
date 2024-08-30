@@ -67,6 +67,7 @@ object DataLoader {
 
     // Albums variables
     private var albumNameColumn: Int? = null
+    private var albumArtistColumn: Int? = null
 
     // Artists variables
     private var artistNameColumn: Int? = null
@@ -89,6 +90,7 @@ object DataLoader {
 
         //ALBUMS
         MediaStore.Audio.Albums.ALBUM,
+        MediaStore.Audio.Media.ALBUM_ARTIST,
 
         //ARTISTS
         MediaStore.Audio.Artists.ARTIST,
@@ -189,8 +191,7 @@ object DataLoader {
     /**
      * Cache columns and columns indices for data to load
      */
-    private fun
-            loadColumns(cursor: Cursor) {
+    private fun loadColumns(cursor: Cursor) {
         // Cache music columns indices.
         musicIdColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID)
         musicNameColumn =
@@ -206,6 +207,7 @@ object DataLoader {
         //Cache album columns indices
         try {
             albumNameColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Albums.ALBUM)
+            albumArtistColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ARTIST)
         } catch (_: IllegalArgumentException) {
             // No album
         }
@@ -235,7 +237,7 @@ object DataLoader {
         val artist: Artist = loadArtist(context = context, cursor = cursor)
 
         //Load album
-        val album: Album = loadAlbum(cursor = cursor, artist = artist, context = context)
+        val album: Album = loadAlbum(cursor = cursor, context = context)
 
         //Link album to artist if the album doesn't already have the album
         artist.addAlbum(album = album)
@@ -380,17 +382,33 @@ object DataLoader {
         return DataManager.addArtist(artist = Artist(title = name))
     }
 
-    private fun loadAlbum(context: Context, cursor: Cursor, artist: Artist): Album {
+    private fun loadAlbumArtist(context: Context, cursor: Cursor): Artist {
+        val name: String = try {
+            cursor.getString(albumArtistColumn!!)
+        } catch (e: NullPointerException) {
+            context.getString(R.string.unknown_artist)
+        }
+
+        return DataManager.addArtist(artist = Artist(title = name))
+    }
+
+    private fun loadAlbum(context: Context, cursor: Cursor): Album {
         var name = try {
             cursor.getString(albumNameColumn!!)
         } catch (e: NullPointerException) {
             UNKNOWN_ALBUM
         }
 
+        // todo put in one line
         if (name == UNKNOWN_ALBUM) {
             name = context.getString(R.string.unknown_album)
         }
-        return DataManager.addAlbum(album = Album(title = name, artist = artist))
+
+        val artist: Artist = loadAlbumArtist(context = context, cursor = cursor)
+
+        val album: Album = DataManager.addAlbum(album = Album(title = name, artist = artist))
+        artist.addAlbum(album = album)
+        return album
     }
 
 

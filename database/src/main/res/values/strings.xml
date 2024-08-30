@@ -56,4 +56,5 @@
     <string name="importing_missed_musics">%d music(s) not found.</string>
     <string name="include">Include</string>
     <string name="exclude">Exclude</string>
+    <string name="various_artists">Various Artists</string>
 </resources>

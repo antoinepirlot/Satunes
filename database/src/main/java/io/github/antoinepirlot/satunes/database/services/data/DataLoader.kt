@@ -68,6 +68,7 @@ object DataLoader {
     // Albums variables
     private var albumNameColumn: Int? = null
     private var albumArtistColumn: Int? = null
+    private var albumCompilationColumn: Int? = null
 
     // Artists variables
     private var artistNameColumn: Int? = null
@@ -91,6 +92,7 @@ object DataLoader {
         //ALBUMS
         MediaStore.Audio.Albums.ALBUM,
         MediaStore.Audio.Media.ALBUM_ARTIST,
+        MediaStore.Audio.Media.COMPILATION,
 
         //ARTISTS
         MediaStore.Audio.Artists.ARTIST,
@@ -208,6 +210,8 @@ object DataLoader {
         try {
             albumNameColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Albums.ALBUM)
             albumArtistColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ARTIST)
+            albumCompilationColumn =
+                cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.COMPILATION)
         } catch (_: IllegalArgumentException) {
             // No album
         }
@@ -383,14 +387,20 @@ object DataLoader {
     }
 
     private fun loadAlbumArtist(context: Context, cursor: Cursor): Artist {
-        val name: String = try {
+        var name: String = try {
             cursor.getString(albumArtistColumn!!)
         } catch (e: NullPointerException) {
             UNKNOWN_ALBUM
         }
-        
+
+        val isCompilation: Boolean = cursor.getInt(albumCompilationColumn!!) == 1
+
         if (name == UNKNOWN_ALBUM) {
-            context.getString(R.string.unknown_album)
+            name = if (isCompilation) {
+                context.getString(R.string.various_artists)
+            } else {
+                context.getString(R.string.unknown_album)
+            }
         }
 
         return DataManager.addArtist(artist = Artist(title = name))
@@ -403,13 +413,25 @@ object DataLoader {
             UNKNOWN_ALBUM
         }
 
+        val isCompilation: Boolean = cursor.getInt(albumCompilationColumn!!) == 1
+
         if (name == UNKNOWN_ALBUM) {
-            name = context.getString(R.string.unknown_album)
+            name = if (isCompilation) {
+                context.getString(R.string.various_artists)
+            } else {
+                context.getString(R.string.unknown_album)
+            }
         }
 
         val artist: Artist = loadAlbumArtist(context = context, cursor = cursor)
 
-        val album: Album = DataManager.addAlbum(album = Album(title = name, artist = artist))
+        val album: Album = DataManager.addAlbum(
+            album = Album(
+                title = name,
+                artist = artist,
+                isCompilation = isCompilation
+            )
+        )
         artist.addAlbum(album = album)
         return album
     }

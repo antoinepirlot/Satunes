@@ -32,6 +32,7 @@ package io.github.antoinepirlot.satunes.database.models
 class Album(
     title: String,
     var artist: Artist,
+    var isCompilation: Boolean = false
 ) : MediaImpl(id = nextId, title = title) {
 
     companion object {

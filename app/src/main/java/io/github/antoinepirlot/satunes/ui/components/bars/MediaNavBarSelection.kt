@@ -37,12 +37,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
+import io.github.antoinepirlot.satunes.data.settingsDestinations
+import io.github.antoinepirlot.satunes.data.states.SatunesUiState
+import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.models.Destination
-import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
-import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.ui.utils.getRightIconAndDescription
-import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 
 /**
  * @author Antoine Pirlot on 21/07/2024
@@ -57,12 +58,15 @@ internal fun RowScope.MediaNavBarSelection(
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
 
+    val selectedNavBarSection: NavBarSection = satunesUiState.selectedNavBarSection
+    val currentDestination: Destination = satunesUiState.currentDestination
+
     NavigationBarItem(
         modifier = modifier,
         label = {
             NormalText(text = stringResource(id = navBarSection.stringId))
         },
-        selected = satunesUiState.selectedNavBarSection == navBarSection,
+        selected = currentDestination !in settingsDestinations && selectedNavBarSection == navBarSection,
         onClick = {
             satunesViewModel.selectNavBarSection(navBarSection = navBarSection)
             val rootRoute: String = when (navBarSection) {

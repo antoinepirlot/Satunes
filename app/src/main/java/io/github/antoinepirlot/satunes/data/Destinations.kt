@@ -44,7 +44,8 @@ internal val settingsDestinations: List<Destination> =
             Destination.ANDROID_AUTO_SETTINGS, Destination.PLAYBACK_SETTINGS,
             Destination.FOLDERS_SETTINGS, Destination.PLAYLISTS_SETTINGS,
             Destination.PERMISSIONS_SETTINGS, Destination.UPDATES_SETTINGS,
-            Destination.SEARCH_SETTINGS, Destination.LOGS_SETTINGS
+            Destination.SEARCH_SETTINGS, Destination.LOGS_SETTINGS,
+            Destination.BATTERY_SETTINGS
         )
     } else {
         // Without UPDATES_SETTINGS
@@ -53,7 +54,7 @@ internal val settingsDestinations: List<Destination> =
             Destination.ANDROID_AUTO_SETTINGS, Destination.PLAYBACK_SETTINGS,
             Destination.FOLDERS_SETTINGS, Destination.PLAYLISTS_SETTINGS,
             Destination.PERMISSIONS_SETTINGS, Destination.SEARCH_SETTINGS,
-            Destination.LOGS_SETTINGS
+            Destination.LOGS_SETTINGS, Destination.BATTERY_SETTINGS,
         )
     }
 

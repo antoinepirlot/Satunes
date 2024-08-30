@@ -38,6 +38,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
+import io.github.antoinepirlot.satunes.data.playbackViews
 import io.github.antoinepirlot.satunes.data.settingsDestinations
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
@@ -61,12 +62,15 @@ internal fun RowScope.MediaNavBarSelection(
     val selectedNavBarSection: NavBarSection = satunesUiState.selectedNavBarSection
     val currentDestination: Destination = satunesUiState.currentDestination
 
+    val selectedCanBeShown: Boolean =
+        currentDestination !in settingsDestinations && currentDestination !in playbackViews
+
     NavigationBarItem(
         modifier = modifier,
         label = {
             NormalText(text = stringResource(id = navBarSection.stringId))
         },
-        selected = currentDestination !in settingsDestinations && selectedNavBarSection == navBarSection,
+        selected = selectedCanBeShown && selectedNavBarSection == navBarSection,
         onClick = {
             satunesViewModel.selectNavBarSection(navBarSection = navBarSection)
             val rootRoute: String = when (navBarSection) {

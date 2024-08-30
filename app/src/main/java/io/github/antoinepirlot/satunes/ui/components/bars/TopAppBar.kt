@@ -64,7 +64,7 @@ import io.github.antoinepirlot.satunes.models.Destination
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun SatunesTopAppBar(
+internal fun TopAppBar(
     modifier: Modifier = Modifier,
     scrollBehavior: TopAppBarScrollBehavior,
     navController: NavHostController,
@@ -197,7 +197,7 @@ private fun SatunesTopAppBarPreview() {
         rememberTopAppBarState()
     )
     val navController: NavHostController = rememberNavController()
-    SatunesTopAppBar(
+    TopAppBar(
         modifier = Modifier,
         scrollBehavior = scrollBehavior,
         navController = navController

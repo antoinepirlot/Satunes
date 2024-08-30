@@ -46,7 +46,7 @@ import io.github.antoinepirlot.satunes.database.models.NavBarSection
  */
 
 @Composable
-internal fun SatunesBottomAppBar(
+internal fun BottomAppBar(
     modifier: Modifier = Modifier,
     navController: NavHostController,
     satunesViewModel: SatunesViewModel = viewModel(),
@@ -84,5 +84,5 @@ internal fun SatunesBottomAppBar(
 @Composable
 private fun SatunesBottomAppBarPreview() {
     val navController: NavHostController = rememberNavController()
-    SatunesBottomAppBar(navController = navController)
+    BottomAppBar(navController = navController)
 }

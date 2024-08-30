@@ -26,34 +26,38 @@
 package io.github.antoinepirlot.satunes.data
 
 import android.os.Build
+import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.models.Destination
+import io.github.antoinepirlot.satunes.router.utils.getNavBarSectionDestination
 
 /**
  * @author Antoine Pirlot on 26/07/2024
  */
 
-internal val DEFAULT_DESTINATION: String = Destination.FOLDERS.link
+internal val DEFAULT_DESTINATION: Destination =
+    getNavBarSectionDestination(navBarSection = SettingsManager.defaultNavBarSection)
 
-internal val settingsDestinations: List<String> =
+internal val settingsDestinations: List<Destination> =
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
         listOf(
-            Destination.SETTINGS.link, Destination.BOTTOM_BAR_SETTINGS.link,
-            Destination.ANDROID_AUTO_SETTINGS.link, Destination.PLAYBACK_SETTINGS.link,
-            Destination.FOLDERS_SETTINGS.link, Destination.PLAYLISTS_SETTINGS.link,
-            Destination.PERMISSIONS_SETTINGS.link, Destination.UPDATES_SETTINGS.link,
-            Destination.SEARCH_SETTINGS.link, Destination.LOGS_SETTINGS.link
+            Destination.SETTINGS, Destination.BOTTOM_BAR_SETTINGS,
+            Destination.ANDROID_AUTO_SETTINGS, Destination.PLAYBACK_SETTINGS,
+            Destination.FOLDERS_SETTINGS, Destination.PLAYLISTS_SETTINGS,
+            Destination.PERMISSIONS_SETTINGS, Destination.UPDATES_SETTINGS,
+            Destination.SEARCH_SETTINGS, Destination.LOGS_SETTINGS,
+            Destination.BATTERY_SETTINGS
         )
     } else {
         // Without UPDATES_SETTINGS
         listOf(
-            Destination.SETTINGS.link, Destination.BOTTOM_BAR_SETTINGS.link,
-            Destination.ANDROID_AUTO_SETTINGS.link, Destination.PLAYBACK_SETTINGS.link,
-            Destination.FOLDERS_SETTINGS.link, Destination.PLAYLISTS_SETTINGS.link,
-            Destination.PERMISSIONS_SETTINGS.link, Destination.SEARCH_SETTINGS.link,
-            Destination.LOGS_SETTINGS.link
+            Destination.SETTINGS, Destination.BOTTOM_BAR_SETTINGS,
+            Destination.ANDROID_AUTO_SETTINGS, Destination.PLAYBACK_SETTINGS,
+            Destination.FOLDERS_SETTINGS, Destination.PLAYLISTS_SETTINGS,
+            Destination.PERMISSIONS_SETTINGS, Destination.SEARCH_SETTINGS,
+            Destination.LOGS_SETTINGS, Destination.BATTERY_SETTINGS,
         )
     }
 
-internal val playbackViews: List<String> = listOf(
-    Destination.PLAYBACK.link, Destination.PLAYBACK_QUEUE.link
+internal val playbackViews: List<Destination> = listOf(
+    Destination.PLAYBACK, Destination.PLAYBACK_QUEUE
 )

@@ -38,6 +38,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import io.github.antoinepirlot.satunes.data.DEFAULT_DESTINATION
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
@@ -47,7 +48,6 @@ import io.github.antoinepirlot.satunes.router.routes.mediaRoutes
 import io.github.antoinepirlot.satunes.router.routes.playbackRoutes
 import io.github.antoinepirlot.satunes.router.routes.searchRoutes
 import io.github.antoinepirlot.satunes.router.routes.settingsRoutes
-import io.github.antoinepirlot.satunes.router.utils.getNavBarSectionDestination
 import io.github.antoinepirlot.satunes.utils.loadSatunesData
 
 /**
@@ -71,13 +71,10 @@ internal fun Router(
         loadSatunesData(context = context, satunesViewModel = satunesViewModel)
     }
 
-    val defaultDestination: Destination =
-        getNavBarSectionDestination(navBarSection = satunesUiState.defaultNavBarSection)
-
     NavHost(
         modifier = modifier,
         navController = navController,
-        startDestination = defaultDestination.link,
+        startDestination = DEFAULT_DESTINATION.link,
         enterTransition = { fadeIn(animationSpec = tween(500)) },
         exitTransition = { fadeOut(animationSpec = tween(0)) },
     ) {

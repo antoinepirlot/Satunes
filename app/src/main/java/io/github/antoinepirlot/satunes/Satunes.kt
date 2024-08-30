@@ -52,8 +52,8 @@ import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.router.Router
-import io.github.antoinepirlot.satunes.ui.components.bars.SatunesBottomAppBar
-import io.github.antoinepirlot.satunes.ui.components.bars.SatunesTopAppBar
+import io.github.antoinepirlot.satunes.ui.components.bars.BottomAppBar
+import io.github.antoinepirlot.satunes.ui.components.bars.TopAppBar
 import io.github.antoinepirlot.satunes.ui.components.dialog.WhatsNewDialog
 import io.github.antoinepirlot.satunes.ui.theme.SatunesTheme
 import kotlinx.coroutines.CoroutineScope
@@ -92,12 +92,12 @@ internal fun Satunes(
                         SnackbarHost(hostState = snackBarHostState)
                     },
                     topBar = {
-                        SatunesTopAppBar(
+                        TopAppBar(
                             scrollBehavior = scrollBehavior,
                             navController = navController
                         )
                     },
-                    bottomBar = { SatunesBottomAppBar(navController = navController) }
+                    bottomBar = { BottomAppBar(navController = navController) }
                 ) { innerPadding ->
                     Router(
                         modifier = Modifier.padding(innerPadding),

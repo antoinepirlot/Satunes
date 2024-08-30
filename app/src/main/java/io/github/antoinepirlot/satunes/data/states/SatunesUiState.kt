@@ -32,13 +32,14 @@ import io.github.antoinepirlot.satunes.database.models.BarSpeed
 import io.github.antoinepirlot.satunes.database.models.FoldersSelection
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
+import io.github.antoinepirlot.satunes.models.Destination
 
 /**
  * @author Antoine Pirlot on 19/07/2024
  */
 internal data class SatunesUiState(
     val whatsNewSeen: Boolean = SettingsManager.whatsNewSeen,
-    val currentDestination: String = DEFAULT_DESTINATION,
+    val currentDestination: Destination = DEFAULT_DESTINATION,
     //Use this in UiSate and ViewModel as it is a particular value. It could change but most of the time it won't change
     val isAudioAllowed: Boolean = isAudioAllowed(context = MainActivity.instance.applicationContext),
 

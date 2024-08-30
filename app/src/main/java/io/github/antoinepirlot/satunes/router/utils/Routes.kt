@@ -25,6 +25,7 @@
 
 package io.github.antoinepirlot.satunes.router.utils
 
+import io.github.antoinepirlot.satunes.data.DEFAULT_DESTINATION
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.models.Destination
 
@@ -32,13 +33,15 @@ import io.github.antoinepirlot.satunes.models.Destination
  * @author Antoine Pirlot on 30/08/2024
  */
 
+private val navBarSectionDestinationMap: Map<NavBarSection, Destination> = mapOf(
+    Pair(first = NavBarSection.FOLDERS, second = Destination.FOLDERS),
+    Pair(first = NavBarSection.ARTISTS, second = Destination.ARTISTS),
+    Pair(first = NavBarSection.ALBUMS, second = Destination.ALBUMS),
+    Pair(first = NavBarSection.MUSICS, second = Destination.MUSICS),
+    Pair(first = NavBarSection.GENRES, second = Destination.GENRES),
+    Pair(first = NavBarSection.PLAYLISTS, second = Destination.PLAYLISTS),
+)
+
 internal fun getNavBarSectionDestination(navBarSection: NavBarSection): Destination {
-    return when (navBarSection) {
-        NavBarSection.FOLDERS -> Destination.FOLDERS
-        NavBarSection.ARTISTS -> Destination.ARTISTS
-        NavBarSection.ALBUMS -> Destination.ALBUMS
-        NavBarSection.MUSICS -> Destination.MUSICS
-        NavBarSection.GENRES -> Destination.GENRES
-        NavBarSection.PLAYLISTS -> Destination.PLAYLISTS
-    }
+    return navBarSectionDestinationMap[navBarSection] ?: DEFAULT_DESTINATION
 }

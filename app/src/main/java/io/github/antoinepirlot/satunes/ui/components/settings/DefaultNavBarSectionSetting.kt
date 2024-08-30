@@ -53,7 +53,7 @@ import io.github.antoinepirlot.satunes.database.models.NavBarSection
  */
 
 @Composable
-internal fun OpeningSectionSetting(
+internal fun DefaultNavBarSectionSetting(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
 ) {
@@ -102,6 +102,6 @@ private fun Menu(
 
 @Preview
 @Composable
-private fun OpeningSectionSettingPreview() {
-    OpeningSectionSetting()
+private fun DefaultNavBarSectionSettingPreview() {
+    DefaultNavBarSectionSetting()
 }

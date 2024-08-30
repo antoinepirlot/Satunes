@@ -25,8 +25,10 @@
 
 package io.github.antoinepirlot.satunes.ui.components.settings
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.TextButton
@@ -65,8 +67,9 @@ internal fun DefaultNavBarSectionSetting(
     val selectedSection: NavBarSection = satunesUiState.defaultNavBarSection
 
     Row(
-        modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically
+        modifier = modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         NormalText(text = stringResource(id = R.string.opening_section_setting_content))
         Box {

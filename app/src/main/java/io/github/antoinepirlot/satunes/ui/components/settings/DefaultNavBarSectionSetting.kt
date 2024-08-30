@@ -47,6 +47,8 @@ import io.github.antoinepirlot.satunes.data.navBarSections
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
+import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import io.github.antoinepirlot.satunes.ui.components.images.Icon
 
 /**
  * @author Antoine Pirlot on 29/08/2024
@@ -69,7 +71,13 @@ internal fun DefaultNavBarSectionSetting(
         NormalText(text = stringResource(id = R.string.opening_section_setting_content))
         Box {
             TextButton(onClick = { expanded = true }) {
-                NormalText(text = stringResource(id = selectedSection.stringId))
+                Row {
+                    Icon(
+                        icon = if (expanded) SatunesIcons.CLOSE_DROPDOWN_MENU
+                        else SatunesIcons.OPEN_DROPDOWN_MENU
+                    )
+                    NormalText(text = stringResource(id = selectedSection.stringId))
+                }
             }
             Menu(expanded = expanded, onDismissRequest = { expanded = false })
         }

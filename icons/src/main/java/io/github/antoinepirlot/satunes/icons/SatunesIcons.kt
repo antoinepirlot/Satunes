@@ -33,6 +33,8 @@ import androidx.compose.material.icons.rounded.AccountCircle
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.AddToQueue
 import androidx.compose.material.icons.rounded.Album
+import androidx.compose.material.icons.rounded.ArrowDropDown
+import androidx.compose.material.icons.rounded.ArrowDropUp
 import androidx.compose.material.icons.rounded.BatterySaver
 import androidx.compose.material.icons.rounded.Category
 import androidx.compose.material.icons.rounded.Close
@@ -91,6 +93,10 @@ enum class SatunesIcons(
     BATTERY(imageVector = Icons.Rounded.BatterySaver, description = "Battery Icon"),
     BOTTOM_BAR(imageVector = Icons.Rounded.Navigation, description = "Bottom Bar Setting Icon"),
     CHIP_SELECTED(imageVector = Icons.Rounded.Done, description = "Chip Selected icon"),
+    CLOSE_DROPDOWN_MENU(
+        imageVector = Icons.Rounded.ArrowDropDown,
+        description = "Close dropdown menu icon"
+    ),
     EXPORT(imageVector = Icons.Rounded.Upload, description = "Export Icon"),
     IMPORT(imageVector = Icons.Rounded.Download, description = "Import Icon"),
     INFO(imageVector = Icons.Rounded.Info, description = "Info Icon"),
@@ -99,6 +105,10 @@ enum class SatunesIcons(
     GENRES(imageVector = Icons.Rounded.Category, description = "Genre Icon"),
     MUSIC(imageVector = Icons.Rounded.MusicNote, description = "Music Icon"),
     MUSIC_PLAYING(imageVector = Icons.Rounded.GraphicEq, description = "Music Playing Icon"),
+    OPEN_DROPDOWN_MENU(
+        imageVector = Icons.Rounded.ArrowDropUp,
+        description = "Open dropdown menu icon"
+    ),
     PAUSE(
         imageVector = Icons.Rounded.PauseCircle,
         imageProvider = ImageProvider(resId = R.drawable.pause),

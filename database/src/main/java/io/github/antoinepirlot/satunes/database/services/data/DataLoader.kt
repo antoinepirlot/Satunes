@@ -380,9 +380,16 @@ object DataLoader {
             UNKNOWN_ARTIST
         }
 
+        val isCompilation: Boolean = cursor.getInt(albumCompilationColumn!!) == 1
+
         if (name == UNKNOWN_ARTIST) {
-            name = context.getString(R.string.unknown_artist)
+            name = if (isCompilation) {
+                context.getString(R.string.various_artists)
+            } else {
+                context.getString(R.string.unknown_artist)
+            }
         }
+
         return DataManager.addArtist(artist = Artist(title = name))
     }
 
@@ -390,16 +397,16 @@ object DataLoader {
         var name: String = try {
             cursor.getString(albumArtistColumn!!)
         } catch (e: NullPointerException) {
-            UNKNOWN_ALBUM
+            UNKNOWN_ARTIST
         }
 
         val isCompilation: Boolean = cursor.getInt(albumCompilationColumn!!) == 1
 
-        if (name == UNKNOWN_ALBUM) {
+        if (name == UNKNOWN_ARTIST) {
             name = if (isCompilation) {
                 context.getString(R.string.various_artists)
             } else {
-                context.getString(R.string.unknown_album)
+                context.getString(R.string.unknown_artist)
             }
         }
 
@@ -416,11 +423,7 @@ object DataLoader {
         val isCompilation: Boolean = cursor.getInt(albumCompilationColumn!!) == 1
 
         if (name == UNKNOWN_ALBUM) {
-            name = if (isCompilation) {
-                context.getString(R.string.various_artists)
-            } else {
-                context.getString(R.string.unknown_album)
-            }
+            name = context.getString(R.string.unknown_album)
         }
 
         val artist: Artist = loadAlbumArtist(context = context, cursor = cursor)

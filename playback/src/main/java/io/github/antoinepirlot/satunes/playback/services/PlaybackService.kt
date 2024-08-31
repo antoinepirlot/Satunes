@@ -47,7 +47,6 @@ class PlaybackService : MediaSessionService() {
 
     companion object {
         var mediaSession: MediaSession? = null
-        internal var playbackController: PlaybackController? = null
     }
 
     private lateinit var _logger: SatunesLogger
@@ -85,22 +84,14 @@ class PlaybackService : MediaSessionService() {
         mediaSession = MediaSession.Builder(applicationContext, _exoPlayer)
             .setCallback(PlaybackSessionCallback)
             .build()
-
-        try {
-            playbackController =
-                PlaybackController.getInstance() // Called from init instance (session)
-        } catch (e: Throwable) {
-            _logger.warning("Error while getting playback controller. Shutting down $this")
-            stopSelf()
-        }
     }
 
     override fun onTaskRemoved(rootIntent: Intent?) {
         super.onTaskRemoved(rootIntent)
         if (
-            !SettingsManager.playbackWhenClosedChecked ||
-            playbackController == null ||
-            !playbackController!!.isPlaying
+            !SettingsManager.playbackWhenClosedChecked
+            || !PlaybackManager.isInitialized.value
+            || !PlaybackManager.isPlaying.value
         ) {
             PlaybackManager.release()
             stopSelf()
@@ -109,9 +100,9 @@ class PlaybackService : MediaSessionService() {
 
     override fun onDestroy() {
         if (
-            !SettingsManager.playbackWhenClosedChecked ||
-            playbackController == null ||
-            !playbackController!!.isPlaying
+            !SettingsManager.playbackWhenClosedChecked
+            || !PlaybackManager.isInitialized.value
+            || !PlaybackManager.isPlaying.value
         ) {
             mediaSession?.run {
                 player.release()

@@ -56,6 +56,7 @@ import io.github.antoinepirlot.satunes.ui.components.bars.BottomAppBar
 import io.github.antoinepirlot.satunes.ui.components.bars.TopAppBar
 import io.github.antoinepirlot.satunes.ui.components.dialog.WhatsNewDialog
 import io.github.antoinepirlot.satunes.ui.theme.SatunesTheme
+import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import kotlinx.coroutines.CoroutineScope
 
 /**
@@ -68,6 +69,7 @@ internal fun Satunes(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel()
 ) {
+    SatunesLogger.getLogger().info("Satunes Composable")
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     SatunesTheme {
         Surface(

@@ -155,7 +155,7 @@ internal object SatunesCarCallBack : MediaSessionCompat.Callback() {
                 }
             }
         }
-        PlaybackManager.loadMusic(
+        PlaybackManager.loadMusics(
             context = SatunesCarMusicService.instance.applicationContext,
             musicSet = musicSet,
             shuffleMode = RouteManager.isShuffleButtonSelected(),

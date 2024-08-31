@@ -84,12 +84,22 @@
     <string name="update_playlist_success">%1$s has been updated.</string>
     <string name="bar_speed_label">Speed</string>
     <string name="update_modal_not_permanently">The modal will still be shown at next launch.</string>
-    <string name="add_path_button">Add new path to %1$s</string>
+    <string name="add_path_button">Add a folder to %1$s</string>
     <string name="path_set_empty">No path selected</string>
-    <string name="refresh_data_button">Reload all data</string>
+    <string name="refresh_data_button">Reload library</string>
     <string name="remove_musics_from_playlist_success">Musics have been remove from %1$s</string>
     <string name="add_music_to_playlist_success">%1$s has been added to %2$s</string>
     <string name="add_musics_to_playlists_success">Musics have been added to playlists</string>
     <string name="remove_from_queue_option">Remove from queue</string>
     <string name="remove_from_queue_success">%1$s has been remove from queue.</string>
+    <string name="export_all_dialog_content">If you changed the paths, I advise you to export your playlists.\nSome music might be permanently deleted from the playlists.\nWould you like to export your playlists?</string>
+    <string name="warning">Warning</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="classic_widget_description">Classic</string>
+    <string name="load_satunes_text">Load Satunes</string>
+    <string name="opening_section_setting_content">Default section:</string>
+    <string name="library_settings">Library</string>
+    <string name="data_loading_settings_title">Loading logic</string>
+    <string name="compilation_music_setting_text">Add compilation\'s musics to its artist\'s music list</string>
 </resources>

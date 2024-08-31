@@ -28,7 +28,6 @@ package io.github.antoinepirlot.satunes.ui.components.dialog
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Icon
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -39,6 +38,7 @@ import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.jetpack_libs.components.texts.Title
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import io.github.antoinepirlot.satunes.ui.components.images.Icon
 
 /**
  * @author Antoine Pirlot on 27/05/2024
@@ -55,8 +55,7 @@ internal fun InformationDialog(
     AlertDialog(
         modifier = modifier,
         icon = {
-            val infoIcon: SatunesIcons = SatunesIcons.INFO
-            Icon(imageVector = infoIcon.imageVector, contentDescription = infoIcon.description)
+            Icon(icon = SatunesIcons.INFO)
         },
         title = {
             Title(text = title, fontSize = 25.sp)

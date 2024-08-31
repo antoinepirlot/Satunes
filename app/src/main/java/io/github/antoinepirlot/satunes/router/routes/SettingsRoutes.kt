@@ -36,14 +36,14 @@ import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.ui.views.settings.AndroidAutoSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.BatterySettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.BottomNavigationBarSettingsView
-import io.github.antoinepirlot.satunes.ui.views.settings.FoldersSettingsView
+import io.github.antoinepirlot.satunes.ui.views.settings.LibrarySettingsView
+import io.github.antoinepirlot.satunes.ui.views.settings.LogsSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.PermissionsSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.PlaybackSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.PlaylistsSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.SearchSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.SettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.UpdatesSettingView
-import io.github.antoinepirlot.satunes.ui.views.settings.logs.LogsSettingsView
 
 /**
  * @author Antoine Pirlot on 15/07/2024
@@ -76,9 +76,9 @@ internal fun NavGraphBuilder.settingsRoutes(
         }
     }
 
-    composable(Destination.FOLDERS_SETTINGS.link) {
+    composable(Destination.LIBRARY_SETTINGS.link) {
         onStart(it)
-        FoldersSettingsView()
+        LibrarySettingsView()
     }
 
     composable(Destination.PLAYLISTS_SETTINGS.link) {

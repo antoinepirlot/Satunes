@@ -53,7 +53,6 @@ import kotlinx.coroutines.flow.map
  */
 
 object SettingsManager {
-
     /**
      * DEFAULT VALUES
      */
@@ -62,6 +61,7 @@ object SettingsManager {
     private const val DEFAULT_ALBUMS_CHECKED = true
     private const val DEFAULT_GENRE_CHECKED = true
     private const val DEFAULT_PLAYLIST_CHECKED = true
+    private val DEFAULT_DEFAULT_NAV_BAR_SECTION = NavBarSection.MUSICS
     private const val DEFAULT_PLAYBACK_WHEN_CLOSED_CHECKED =
         false //App stop after removed app from multi-task if false
     private const val DEFAULT_PAUSE_IF_NOISY = true
@@ -80,6 +80,7 @@ object SettingsManager {
     private const val DEFAULT_PLAYLISTS_FILTER: Boolean = false
     private val DEFAULT_FOLDERS_SELECTION_SELECTED: FoldersSelection = FoldersSelection.INCLUDE
     private val DEFAULT_SELECTED_PATHS: Set<String> = setOf("/0/Music/%")
+    private const val DEFAULT_COMPILATION_MUSIC: Boolean = false
 
     /**
      * KEYS
@@ -90,6 +91,8 @@ object SettingsManager {
     private val ALBUMS_CHECKED_PREFERENCES_KEY = booleanPreferencesKey("albums_checked")
     private val GENRE_CHECKED_PREFERENCES_KEY = booleanPreferencesKey("genres_checked")
     private val PLAYLISTS_CHECKED_PREFERENCES_KEY = booleanPreferencesKey("playlists_checked")
+    private val DEFAULT_NAV_BAR_SECTION_KEY: Preferences.Key<Int> =
+        intPreferencesKey("default_nav_bar_section")
     private val PLAYBACK_WHEN_CLOSED_CHECKED_PREFERENCES_KEY =
         booleanPreferencesKey("playback_when_closed_checked")
     private val PAUSE_IF_NOISY_PREFERENCES_KEY = booleanPreferencesKey("pause_if_noisy")
@@ -113,11 +116,15 @@ object SettingsManager {
         intPreferencesKey("folders_selection")
     private val SELECTED_PATHS_KEY: Preferences.Key<Set<String>> =
         stringSetPreferencesKey("selected_paths_set")
+    private val COMPILATION_MUSIC_KEY: Preferences.Key<Boolean> =
+        booleanPreferencesKey("compilation_music")
 
     /**
      * VARIABLES
      */
+    private val _logger = SatunesLogger.getLogger()
     private val Context.dataStore: DataStore<Preferences> by PREFERENCES_DATA_STORE
+    private var _isLoaded: Boolean = false
 
     var foldersChecked: MutableState<Boolean> = mutableStateOf(DEFAULT_FOLDERS_CHECKED)
         private set
@@ -129,6 +136,7 @@ object SettingsManager {
         private set
     var playlistsChecked: MutableState<Boolean> = mutableStateOf(DEFAULT_PLAYLIST_CHECKED)
         private set
+    var defaultNavBarSection: NavBarSection = DEFAULT_DEFAULT_NAV_BAR_SECTION
     var playbackWhenClosedChecked: Boolean = DEFAULT_PLAYBACK_WHEN_CLOSED_CHECKED
         private set
     var pauseIfNoisyChecked: Boolean = DEFAULT_PAUSE_IF_NOISY
@@ -168,9 +176,16 @@ object SettingsManager {
     var foldersPathsSelectedSet: MutableState<Set<String>> = mutableStateOf(DEFAULT_SELECTED_PATHS)
         private set
 
-    private val _logger = SatunesLogger.getLogger()
+    /**
+     * This setting is true if the compilation's music has to be added to compilation's artist's music list
+     */
+    var compilationMusic: Boolean = DEFAULT_COMPILATION_MUSIC
 
     suspend fun loadSettings(context: Context) {
+        if (_isLoaded) {
+            _logger.info("Settings already loaded")
+            return
+        }
         context.dataStore.data.map { preferences: Preferences ->
             foldersChecked.value =
                 preferences[FOLDERS_CHECKED_PREFERENCES_KEY] ?: DEFAULT_FOLDERS_CHECKED
@@ -186,6 +201,8 @@ object SettingsManager {
 
             playlistsChecked.value =
                 preferences[PLAYLISTS_CHECKED_PREFERENCES_KEY] ?: DEFAULT_PLAYLIST_CHECKED
+
+            defaultNavBarSection = getNavBarSection(preferences[DEFAULT_NAV_BAR_SECTION_KEY])
 
             playbackWhenClosedChecked =
                 preferences[PLAYBACK_WHEN_CLOSED_CHECKED_PREFERENCES_KEY]
@@ -213,12 +230,27 @@ object SettingsManager {
             foldersPathsSelectedSet.value =
                 preferences[SELECTED_PATHS_KEY] ?: DEFAULT_SELECTED_PATHS
 
+            compilationMusic = preferences[COMPILATION_MUSIC_KEY] ?: DEFAULT_COMPILATION_MUSIC
+
             DataLoader.loadFoldersPaths()
 
             loadWhatsNew(context = context, preferences = preferences)
 
             loadFilters(context = context)
         }.first()
+        _isLoaded = true
+    }
+
+    private fun getNavBarSection(id: Int?): NavBarSection {
+        return when (id) {
+            0 -> NavBarSection.FOLDERS
+            1 -> NavBarSection.ARTISTS
+            2 -> NavBarSection.MUSICS
+            3 -> NavBarSection.ALBUMS
+            4 -> NavBarSection.GENRES
+            5 -> NavBarSection.PLAYLISTS
+            else -> DEFAULT_DEFAULT_NAV_BAR_SECTION
+        }
     }
 
     private fun getBarSpeed(speed: Float?): BarSpeed {
@@ -482,6 +514,20 @@ object SettingsManager {
             newSet.remove(path)
             foldersPathsSelectedSet.value = newSet.toSet()
             preferences[SELECTED_PATHS_KEY] = foldersPathsSelectedSet.value
+        }
+    }
+
+    suspend fun selectDefaultNavBarSection(context: Context, navBarSection: NavBarSection) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            this.defaultNavBarSection = navBarSection
+            preferences[DEFAULT_NAV_BAR_SECTION_KEY] = this.defaultNavBarSection.id
+        }
+    }
+
+    suspend fun switchCompilationMusic(context: Context) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            this.compilationMusic = !this.compilationMusic
+            preferences[COMPILATION_MUSIC_KEY] = this.compilationMusic
         }
     }
 }

@@ -132,7 +132,7 @@ class PlaybackViewModel : ViewModel() {
         shuffleMode: Boolean = SettingsManager.shuffleMode,
         musicToPlay: Music? = null,
     ) {
-        PlaybackManager.loadMusic(
+        PlaybackManager.loadMusics(
             context = MainActivity.instance.applicationContext,
             musicSet = musicSet,
             shuffleMode = shuffleMode,
@@ -173,6 +173,15 @@ class PlaybackViewModel : ViewModel() {
 
     fun getMusicPlayingIndexPosition(): Int {
         return PlaybackManager.getMusicPlayingIndexPosition(context = MainActivity.instance.applicationContext)
+    }
+
+    fun getNextMusic(): Music? {
+        return try {
+            PlaybackManager.getNextMusic(context = MainActivity.instance.applicationContext)
+        } catch (e: Throwable) {
+            _logger.severe("Can't get the next music in queue")
+            null
+        }
     }
 
     fun addToQueue(
@@ -293,7 +302,13 @@ class PlaybackViewModel : ViewModel() {
     }
 
     fun release() {
+        _logger.info("Release")
         PlaybackManager.release()
         onCleared()
+    }
+
+    fun stop() {
+        _logger.info("Stop")
+        PlaybackManager.stop()
     }
 }

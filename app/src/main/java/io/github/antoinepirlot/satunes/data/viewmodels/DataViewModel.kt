@@ -43,6 +43,7 @@ import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
+import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.ui.utils.showErrorSnackBar
@@ -591,6 +592,7 @@ class DataViewModel : ViewModel() {
     fun importPlaylists() = MainActivity.instance.openFileToImportPlaylists()
 
     fun exportPlaylist(playlist: Playlist) {
+        DatabaseManager.exportingPlaylist = true
         MainActivity.instance.createFileToExportPlaylist(
             defaultFileName = playlist.title,
             playlist = playlist
@@ -601,14 +603,21 @@ class DataViewModel : ViewModel() {
         scope: CoroutineScope,
         snackBarHostState: SnackbarHostState,
     ) {
+        DatabaseManager.exportingPlaylist = true
         if (DataManager.getPlaylistSet().isEmpty()) {
             showSnackBar(
                 scope = scope,
                 snackBarHostState = snackBarHostState,
                 message = MainActivity.instance.getString(RDb.string.no_playlist)
             )
+            DatabaseManager.exportingPlaylist = false
             return
         }
+
         MainActivity.instance.createFileToExportPlaylists(defaultFileName = "Satunes")
+    }
+
+    fun resetAllData() {
+        DataLoader.resetAllData()
     }
 }

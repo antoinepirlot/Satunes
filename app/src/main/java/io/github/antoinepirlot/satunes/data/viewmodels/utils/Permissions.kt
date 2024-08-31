@@ -26,19 +26,19 @@
 package io.github.antoinepirlot.satunes.data.viewmodels.utils
 
 import android.Manifest
+import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import androidx.core.content.ContextCompat
-import io.github.antoinepirlot.satunes.MainActivity
 
 /**
  * @author Antoine Pirlot on 20/07/2024
  */
 
-internal fun isAudioAllowed(): Boolean {
+internal fun isAudioAllowed(context: Context): Boolean {
     // Permission Granted
     return ContextCompat.checkSelfPermission(
-        MainActivity.instance.applicationContext,
+        context,
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             Manifest.permission.READ_MEDIA_AUDIO
         } else {

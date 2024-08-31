@@ -1,0 +1,12 @@
+Nouvelles fonctionnalités:
+* Prise en charge des compilations
+* Widget classique
+* Sélection de la section de barre de navigation par défaut
+
+Améliorations, optimisations et dépannage:
+* Le paramètre "Dossiers" devient "Bibliothèque"
+* Optimisation du démarrage d'Android Auto
+* La surbrillance de la section de la barre de navigation est masquée dans les vues paramètres, playback et recherche
+* L'option "Lire ensuite" est masquée dans les options de la musique suivante
+
+Plus de détails sur GitHub

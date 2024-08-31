@@ -25,7 +25,6 @@
 
 package io.github.antoinepirlot.satunes
 
-import android.app.PendingIntent
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
@@ -34,16 +33,12 @@ import android.os.Environment
 import android.provider.DocumentsContract
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.annotation.OptIn
-import androidx.media3.common.util.UnstableApi
 import androidx.media3.session.MediaController
 import com.google.common.util.concurrent.ListenableFuture
 import io.github.antoinepirlot.satunes.database.models.Playlist
-import io.github.antoinepirlot.satunes.database.services.data.DataCleanerManager
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
-import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
-import io.github.antoinepirlot.satunes.playback.services.PlaybackService
+import io.github.antoinepirlot.satunes.utils.initSatunes
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import io.github.antoinepirlot.satunes.utils.utils.showToastOnUiThread
 import kotlinx.coroutines.CoroutineScope
@@ -83,7 +78,7 @@ internal class MainActivity : ComponentActivity() {
 
     override fun onStart() {
         super.onStart()
-        PlaybackManager.initPlayback(context = applicationContext)
+        initSatunes(context = applicationContext, satunesViewModel = null)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -94,32 +89,8 @@ internal class MainActivity : ComponentActivity() {
         _logger.info("Satunes started on API: ${Build.VERSION.SDK_INT}")
         instance = this
 
-        setNotificationOnClick()
         setContent {
             Satunes()
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            DataCleanerManager.removeApkFiles(context = baseContext)
-        } else {
-            _logger.warning("Can't remove apk files with API: ${Build.VERSION.SDK_INT}")
-        }
-    }
-
-    /**
-     * When the user click on playing notification, the app is opened.
-     */
-    @OptIn(UnstableApi::class)
-    private fun setNotificationOnClick() {
-        val intent: Intent = this.intent
-        CoroutineScope(Dispatchers.IO).launch {
-            while (PlaybackService.mediaSession == null) {
-                // The init has to be completed
-            }
-            val pendingIntent = PendingIntent.getActivity(
-                baseContext.applicationContext, 0, intent,
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-            )
-            PlaybackService.mediaSession!!.setSessionActivity(pendingIntent)
         }
     }
 

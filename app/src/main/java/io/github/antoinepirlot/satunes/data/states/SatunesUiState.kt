@@ -25,34 +25,31 @@
 
 package io.github.antoinepirlot.satunes.data.states
 
+import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.data.DEFAULT_DESTINATION
 import io.github.antoinepirlot.satunes.data.viewmodels.utils.isAudioAllowed
 import io.github.antoinepirlot.satunes.database.models.BarSpeed
 import io.github.antoinepirlot.satunes.database.models.FoldersSelection
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
+import io.github.antoinepirlot.satunes.models.Destination
 
 /**
  * @author Antoine Pirlot on 19/07/2024
  */
 internal data class SatunesUiState(
     val whatsNewSeen: Boolean = SettingsManager.whatsNewSeen,
-    val currentDestination: String = DEFAULT_DESTINATION,
+    val currentDestination: Destination = DEFAULT_DESTINATION,
     //Use this in UiSate and ViewModel as it is a particular value. It could change but most of the time it won't change
-    val isAudioAllowed: Boolean = isAudioAllowed(),
+    val isAudioAllowed: Boolean = isAudioAllowed(context = MainActivity.instance.applicationContext),
 
     val foldersChecked: Boolean = SettingsManager.foldersChecked.value,
     val artistsChecked: Boolean = SettingsManager.artistsChecked.value,
     val albumsChecked: Boolean = SettingsManager.albumsChecked.value,
     val genresChecked: Boolean = SettingsManager.genresChecked.value,
     val playlistsChecked: Boolean = SettingsManager.playlistsChecked.value,
-    val selectedNavBarSection: NavBarSection =
-    // Selected the default menu title in this priority order
-        if (foldersChecked) NavBarSection.FOLDERS
-        else if (artistsChecked) NavBarSection.ARTISTS
-        else if (albumsChecked) NavBarSection.ALBUMS
-        else if (genresChecked) NavBarSection.GENRES
-        else NavBarSection.MUSICS,
+    val defaultNavBarSection: NavBarSection = SettingsManager.defaultNavBarSection,
+    val selectedNavBarSection: NavBarSection = defaultNavBarSection,
 
     val foldersSelectionSelected: FoldersSelection = SettingsManager.foldersSelectionSelected,
 
@@ -64,4 +61,8 @@ internal data class SatunesUiState(
     val audioOffloadChecked: Boolean = SettingsManager.audioOffloadChecked,
     val barSpeed: BarSpeed = SettingsManager.barSpeed,
     val isMediaOptionsOpened: Boolean = false,
+    /**
+     * This setting is true if the compilation's music has to be added to compilation's artist's music list
+     */
+    val compilationMusic: Boolean = SettingsManager.compilationMusic
 )

@@ -53,10 +53,16 @@ import kotlinx.coroutines.launch
 internal class PlaybackController private constructor(
     context: Context,
     sessionToken: SessionToken,
+    loadAllMusics: Boolean = false
 ) {
+
     internal lateinit var mediaController: MediaController
 
-    internal lateinit var playlist: Playlist
+    internal var playlist: Playlist? = null
+        private set(value) {
+            field = value
+            PlaybackManager.playlist = value
+        }
 
     internal var musicPlayingIndex: Int = DEFAULT_MUSIC_PLAYING_INDEX
 
@@ -98,10 +104,16 @@ internal class PlaybackController private constructor(
             field = value
             PlaybackManager.hasPrevious.value = value
         }
+    var isLoading: Boolean = DEFAULT_IS_LOADING
+        private set(value) {
+            field = value
+            PlaybackManager.isLoading.value = value
+        }
     var isLoaded: Boolean = DEFAULT_IS_LOADED
-        internal set(value) {
+        private set(value) {
             field = value
             PlaybackManager.isLoaded.value = value
+            WidgetPlaybackManager.refreshWidgets()
         }
     var currentPositionProgression: Float = DEFAULT_CURRENT_POSITION_PROGRESSION
         internal set(value) {
@@ -112,19 +124,21 @@ internal class PlaybackController private constructor(
     private var listener: Player.Listener = PlaybackListener()
 
     companion object {
+
         internal const val DEFAULT_MUSIC_PLAYING_INDEX: Int = 0
         internal const val DEFAULT_IS_ENDED: Boolean = false
         internal const val DEFAULT_IS_PLAYING_VALUE: Boolean = false
-        internal const val DEFAULT_REPEAT_MODE: Int = Player.REPEAT_MODE_OFF
-        internal const val DEFAULT_IS_SHUFFLE: Boolean = false
+        internal val DEFAULT_REPEAT_MODE: Int = SettingsManager.repeatMode
+        internal val DEFAULT_IS_SHUFFLE: Boolean = SettingsManager.shuffleMode
         internal const val DEFAULT_HAS_NEXT: Boolean = false
         internal const val DEFAULT_HAS_PREVIOUS: Boolean = false
+        internal const val DEFAULT_IS_LOADING: Boolean = false
         internal const val DEFAULT_IS_LOADED: Boolean = false
         internal const val DEFAULT_CURRENT_POSITION_PROGRESSION: Float = 0f
         internal val DEFAULT_MUSIC_PLAYING = null
 
-        private var instance: PlaybackController? = null
-        private val logger = SatunesLogger.getLogger()
+        private var _instance: PlaybackController? = null
+        private val _logger: SatunesLogger = SatunesLogger.getLogger()
 
         /**
          * Return only one instance of MediaController. If there's no instance already created
@@ -133,66 +147,100 @@ internal class PlaybackController private constructor(
          * @return the instance of MediaController
          */
         fun getInstance(): PlaybackController {
+            _logger.info("Get instance")
             // TODO issues relaunch app happens here
-            if (instance == null) {
+            if (_instance == null) {
                 //TODO find a way to fix crashing app after resume after inactivity
                 val message = "The PlayBackController has not been initialized"
-                logger.severe(message)
+                _logger.severe(message)
                 throw IllegalStateException(message)
             }
-            return instance!!
+            return _instance!!
         }
 
-        fun initInstance(context: Context, listener: Player.Listener? = null): PlaybackController {
-            if (instance == null) {
+        fun initInstance(
+            context: Context,
+            listener: Player.Listener? = null,
+            loadAllMusics: Boolean = false
+        ): PlaybackController {
+            _logger.info("Init instance")
+            val isInitializing: Boolean = _instance == null
+            if (isInitializing) {
                 val sessionToken =
                     SessionToken(
                         context.applicationContext,
                         ComponentName(context, PlaybackService::class.java)
                     )
 
-                instance = PlaybackController(
+                _instance = PlaybackController(
                     context = context.applicationContext,
                     sessionToken = sessionToken,
+                    loadAllMusics = loadAllMusics,
                 )
-            } else if (listener != null) {
-                while (!instance!!::mediaController.isInitialized) {
-                    // Wait it is initializing
-                }
-                val wasPlaying: Boolean = instance!!.isPlaying
-                if (instance!!.isPlaying) {
-                    instance!!.pause()
-                }
-                instance!!.mediaController.removeListener(instance!!.listener)
-                instance!!.mediaController.addListener(listener)
-                instance!!.mediaController.prepare()
-                if (wasPlaying) {
-                    instance!!.play()
+            }
+            updateListener(isInitializing = isInitializing, listener = listener)
+            return getInstance()
+        }
+
+        fun updateListener(listener: Player.Listener?) =
+            this.updateListener(isInitializing = false, listener = listener)
+
+        private fun updateListener(isInitializing: Boolean, listener: Player.Listener?) {
+
+            if (!isInitializing) {
+                if (listener != null && listener != this._instance?.listener) {
+                    _logger.info("Update listener")
+
+                    while (!isInitialized()) {
+                        _logger.info("Waiting")
+                        // Wait it is initializing
+                    }
+                    val wasPlaying: Boolean = _instance!!.isPlaying
+                    if (_instance!!.isPlaying) {
+                        _instance!!.pause()
+                    }
+                    _instance!!.mediaController.removeListener(_instance!!.listener)
+                    _instance!!.mediaController.addListener(listener)
+                    _instance!!.mediaController.prepare()
+                    if (wasPlaying) {
+                        _instance!!.play()
+                    }
                 }
             }
 
-            instance!!.listener = listener ?: instance!!.listener
-
-            return getInstance()
+            if (listener != this._instance?.listener) {
+                _instance!!.listener = listener ?: _instance!!.listener
+                _logger.info("Listener loaded or changed")
+            }
         }
+
+        internal fun isInitialized(): Boolean =
+            this._instance != null && this._instance!!::mediaController.isInitialized
     }
 
     init {
+        _logger.info("Init class")
+
+        if (loadAllMusics) {
+            isLoading = true
+        }
+
         try {
             val mediaControllerFuture: ListenableFuture<MediaController> =
                 MediaController.Builder(context, sessionToken).buildAsync()
 
             mediaControllerFuture.addListener(
-                { mediaController = mediaControllerFuture.get() },
+                {
+                    mediaController = mediaControllerFuture.get()
+                    PlaybackManager.isInitialized.value = true
+                    if (loadAllMusics) {
+                        this.loadMusics(musicSet = DataManager.getMusicSet())
+                    }
+                },
                 MoreExecutors.directExecutor()
             )
-//            val controllerFuture = MediaController.Builder(context, sessionToken).buildAsync()
-//
-//            controllerFuture.addListener({
-//                this.mediaController = controllerFuture.get()
-//            }, ContextCompat.getMainExecutor(context))
         } catch (e: Throwable) {
-            logger.severe(e.message)
+            _logger.severe(e.message)
             throw e
         }
     }
@@ -209,7 +257,7 @@ internal class PlaybackController private constructor(
      */
     fun start(musicToPlay: Music? = null) {
         if (!isLoaded) {
-            throw IllegalStateException("The playlistDB has not been loaded, you can't play music")
+            throw IllegalStateException("The playlist has not been loaded, you can't play music")
         }
         when (musicToPlay) {
             null -> {
@@ -225,10 +273,10 @@ internal class PlaybackController private constructor(
 
             else -> {
                 // The music to play has to be played
-                musicPlayingIndex = playlist.getMusicIndex(music = musicToPlay)
+                musicPlayingIndex = playlist!!.getMusicIndex(music = musicToPlay)
             }
         }
-        musicPlaying = playlist.getMusic(musicIndex = musicPlayingIndex)
+        musicPlaying = playlist!!.getMusic(musicIndex = musicPlayingIndex)
         if (mediaController.currentMediaItemIndex == musicPlayingIndex) {
             mediaController.play()
         } else {
@@ -239,8 +287,6 @@ internal class PlaybackController private constructor(
     fun playPause() {
         if (this.isPlaying) {
             this.mediaController.pause()
-
-            return
         } else {
             if (this.isEnded) {
                 this.start()
@@ -272,7 +318,7 @@ internal class PlaybackController private constructor(
     }
 
     fun playNext() {
-        if (playlist.musicCount() > 1) {
+        if (playlist!!.musicCount() > 1) {
             this.mediaController.seekToNext()
         }
     }
@@ -291,7 +337,7 @@ internal class PlaybackController private constructor(
             val message = """"
                 |Impossible to seek while no music is playing 
                 |$this"""".trimMargin()
-            logger.severe(message)
+            _logger.severe(message)
             throw IllegalStateException(message)
         }
 
@@ -302,7 +348,7 @@ internal class PlaybackController private constructor(
     }
 
     fun seekTo(music: Music, positionMs: Long = 0) {
-        val musicIndex: Int = playlist.getMusicIndex(music)
+        val musicIndex: Int = playlist!!.getMusicIndex(music)
         seekTo(musicIndex = musicIndex, positionMs)
     }
 
@@ -329,6 +375,7 @@ internal class PlaybackController private constructor(
         shuffleMode: Boolean = SettingsManager.shuffleMode,
         musicToPlay: Music? = null,
     ) {
+        this.isLoading = true
         val playlist = Playlist(musicSet = musicSet)
         if (shuffleMode) {
             if (musicToPlay == null) {
@@ -341,10 +388,12 @@ internal class PlaybackController private constructor(
     }
 
     fun loadMusics(playlist: Playlist) {
+        this.isLoading = true
         this.playlist = playlist
+        PlaybackManager.playlist = playlist
 
         this.mediaController.clearMediaItems()
-        this.mediaController.addMediaItems(this.playlist.mediaItemList)
+        this.mediaController.addMediaItems(this.playlist!!.mediaItemList)
         this.mediaController.removeListener(listener)
         this.mediaController.addListener(listener)
         this.mediaController.repeatMode = when (SettingsManager.repeatMode) {
@@ -354,8 +403,9 @@ internal class PlaybackController private constructor(
         }
         this.mediaController.prepare()
 
-        this.isShuffle = this.playlist.isShuffle
+        this.isShuffle = this.playlist!!.isShuffle
         this.isLoaded = true
+        this.isLoading = false
     }
 
     fun addToQueue(mediaImplList: Collection<MediaImpl>) {
@@ -370,7 +420,7 @@ internal class PlaybackController private constructor(
         when (mediaImpl) {
             is Music -> {
                 try {
-                    this.playlist.addToQueue(music = mediaImpl)
+                    this.playlist!!.addToQueue(music = mediaImpl)
                     this.mediaController.addMediaItem(mediaImpl.mediaItem)
                 } catch (e: AlreadyInPlaybackException) {
                     return
@@ -397,7 +447,7 @@ internal class PlaybackController private constructor(
 
         when (mediaImpl) {
             is Music -> {
-                val musicIndex: Int = this.playlist.removeFromQueue(music = mediaImpl)
+                val musicIndex: Int = this.playlist!!.removeFromQueue(music = mediaImpl)
                 if (musicIndex >= 0) {
                     this.mediaController.removeMediaItem(musicIndex)
                     updateHasNext()
@@ -440,7 +490,7 @@ internal class PlaybackController private constructor(
         when (mediaImpl) {
             is Music -> {
                 try {
-                    this.playlist.addNext(index = this.musicPlayingIndex + 1, music = mediaImpl)
+                    this.playlist!!.addNext(index = this.musicPlayingIndex + 1, music = mediaImpl)
                     this.mediaController.addMediaItem(
                         this.musicPlayingIndex + 1,
                         mediaImpl.mediaItem
@@ -460,13 +510,13 @@ internal class PlaybackController private constructor(
     }
 
     private fun moveMusic(music: Music, newIndex: Int) {
-        val musicToMoveIndex: Int = this.playlist.getMusicIndex(music = music)
+        val musicToMoveIndex: Int = this.playlist!!.getMusicIndex(music = music)
         if (musicToMoveIndex == -1) {
             throw IllegalArgumentException("This music is not inside the playlist")
         }
 
         if (musicToMoveIndex < this.musicPlayingIndex) {
-            this.playlist.moveMusic(
+            this.playlist!!.moveMusic(
                 music = music,
                 oldIndex = musicToMoveIndex,
                 newIndex = newIndex - 1
@@ -474,7 +524,11 @@ internal class PlaybackController private constructor(
             this.mediaController.moveMediaItem(musicToMoveIndex, newIndex)
             this.musicPlayingIndex -= 1
         } else {
-            this.playlist.moveMusic(music = music, oldIndex = musicToMoveIndex, newIndex = newIndex)
+            this.playlist!!.moveMusic(
+                music = music,
+                oldIndex = musicToMoveIndex,
+                newIndex = newIndex
+            )
             this.mediaController.moveMediaItem(musicToMoveIndex, newIndex)
         }
     }
@@ -488,7 +542,7 @@ internal class PlaybackController private constructor(
     fun switchShuffleMode() {
         isShuffle = !isShuffle
         CoroutineScope(Dispatchers.Main).launch {
-            if (playlist.musicCount() > 1) {
+            if (playlist!!.musicCount() > 1) {
                 if (!isShuffle) {
                     // Deactivate shuffle
                     undoShuffle()
@@ -507,10 +561,10 @@ internal class PlaybackController private constructor(
     private fun shuffle() {
         if (this.musicPlaying == null) {
             // No music playing
-            this.playlist.shuffle()
+            this.playlist!!.shuffle()
             return
         } else {
-            this.playlist.shuffle(musicIndex = this.musicPlayingIndex)
+            this.playlist!!.shuffle(musicIndex = this.musicPlayingIndex)
         }
 
         //A music is playing
@@ -520,12 +574,12 @@ internal class PlaybackController private constructor(
         )
 
         val fromIndex: Int = DEFAULT_MUSIC_PLAYING_INDEX + 1
-        val toIndex: Int = this.playlist.lastIndex()
+        val toIndex: Int = this.playlist!!.lastIndex()
 
         this.mediaController.replaceMediaItems(
             fromIndex,
             toIndex + 1, // +1 as it is a toIndex excluded
-            this.playlist.getMediaItems(fromIndex = fromIndex, toIndex = toIndex)
+            this.playlist!!.getMediaItems(fromIndex = fromIndex, toIndex = toIndex)
         )
 
         this.musicPlayingIndex = DEFAULT_MUSIC_PLAYING_INDEX
@@ -536,19 +590,19 @@ internal class PlaybackController private constructor(
      *
      */
     private fun undoShuffle() {
-        this.playlist.undoShuffle()
+        this.playlist!!.undoShuffle()
         if (this.musicPlaying == null) {
             // No music playing
             this.mediaController.clearMediaItems()
-            this.mediaController.addMediaItems(this.playlist.mediaItemList)
+            this.mediaController.addMediaItems(this.playlist!!.mediaItemList)
 
             return
         }
 
         val oldMusicPlayingIndex = this.musicPlayingIndex
-        val lastIndex: Int = this.playlist.lastIndex()
+        val lastIndex: Int = this.playlist!!.lastIndex()
 
-        this.musicPlayingIndex = this.playlist.getMusicIndex(this.musicPlaying!!)
+        this.musicPlayingIndex = this.playlist!!.getMusicIndex(this.musicPlaying!!)
 
         when (this.musicPlayingIndex) {
             DEFAULT_MUSIC_PLAYING_INDEX -> {
@@ -564,7 +618,7 @@ internal class PlaybackController private constructor(
                 this.mediaController.replaceMediaItems(
                     fromIndex,
                     lastIndex + 1,
-                    this.playlist.getMediaItems(fromIndex = fromIndex, toIndex = lastIndex)
+                    this.playlist!!.getMediaItems(fromIndex = fromIndex, toIndex = lastIndex)
                 )
             }
 
@@ -578,7 +632,7 @@ internal class PlaybackController private constructor(
                 this.mediaController.replaceMediaItems(
                     DEFAULT_MUSIC_PLAYING_INDEX,
                     lastIndex,
-                    this.playlist.getMediaItems(
+                    this.playlist!!.getMediaItems(
                         fromIndex = DEFAULT_MUSIC_PLAYING_INDEX,
                         toIndex = lastIndex - 1
                     )
@@ -595,13 +649,16 @@ internal class PlaybackController private constructor(
                 this.mediaController.replaceMediaItems(
                     0,
                     this.musicPlayingIndex,
-                    this.playlist.getMediaItems(fromIndex = 0, toIndex = this.musicPlayingIndex - 1)
+                    this.playlist!!.getMediaItems(
+                        fromIndex = 0,
+                        toIndex = this.musicPlayingIndex - 1
+                    )
                 )
 
                 this.mediaController.replaceMediaItems(
                     this.musicPlayingIndex + 1,
                     lastIndex + 1,
-                    this.playlist.getMediaItems(
+                    this.playlist!!.getMediaItems(
                         fromIndex = this.musicPlayingIndex + 1,
                         toIndex = lastIndex
                     )
@@ -631,27 +688,39 @@ internal class PlaybackController private constructor(
     fun stop() {
         if (this::mediaController.isInitialized) {
             this.mediaController.stop()
+            this.mediaController.clearMediaItems()
+            this.musicPlayingIndex = DEFAULT_MUSIC_PLAYING_INDEX
+            this.isPlaying = DEFAULT_IS_PLAYING_VALUE
+            this.isShuffle = DEFAULT_IS_SHUFFLE
+            this.hasNext = DEFAULT_HAS_NEXT
+            this.hasPrevious = DEFAULT_HAS_PREVIOUS
+            this.isLoaded = DEFAULT_IS_LOADED
+            this.currentPositionProgression = DEFAULT_CURRENT_POSITION_PROGRESSION
+            this.playlist = null
+            this.repeatMode = DEFAULT_REPEAT_MODE
+            this.musicPlaying = DEFAULT_MUSIC_PLAYING
         }
     }
 
     fun release() {
-        logger.info("Releasing $this")
-        if (instance != null) {
+        _logger.info("Releasing $this")
+        PlaybackManager.isInitialized.value = false
+        if (_instance != null) {
             this.stop()
             if (this::mediaController.isInitialized) {
                 this.mediaController.release()
             }
-            instance = null
+            _instance = null
         }
-        logger.info("PlaybackController released")
+        _logger.info("PlaybackController released")
     }
 
     fun getPlaylist(): SnapshotStateList<Music> {
-        return this.playlist.musicList
+        return this.playlist!!.musicList
     }
 
     fun isMusicInQueue(music: Music): Boolean {
-        return this.playlist.isMusicInQueue(music = music)
+        return this.playlist!!.isMusicInQueue(music = music)
     }
 
     override fun toString(): String {
@@ -674,9 +743,19 @@ internal class PlaybackController private constructor(
     }
 
     fun updateCurrentPosition() {
+        if (musicPlaying == null) return
         val maxPosition: Long = this.musicPlaying!!.duration
         val newPosition: Long = this.getCurrentPosition()
         this.currentPositionProgression =
             newPosition.toFloat() / maxPosition.toFloat()
+        WidgetPlaybackManager.refreshWidgets()
+    }
+
+    fun getNextMusic(): Music? {
+        return if (this.musicPlayingIndex == this.playlist!!.lastIndex()) {
+            null
+        } else {
+            this.playlist!!.getMusic(musicIndex = this.musicPlayingIndex + 1)
+        }
     }
 }

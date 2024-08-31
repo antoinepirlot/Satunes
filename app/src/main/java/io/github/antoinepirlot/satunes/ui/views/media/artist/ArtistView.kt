@@ -37,6 +37,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
@@ -45,7 +46,6 @@ import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
-import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 import io.github.antoinepirlot.satunes.ui.views.media.MediaWithAlbumsHeaderView
 
@@ -69,6 +69,8 @@ internal fun ArtistView(
     }
     //
 
+    val albumSet: Set<Album> = artist.getAlbumSet()
+
     MediaListView(
         modifier = modifier,
         navController = navController,
@@ -90,22 +92,23 @@ internal fun ArtistView(
                 navController = navController
             )
         },
-        header = {
-            val albumSet: Set<Album> = artist.getAlbumSet()
+        header = if (albumSet.isNotEmpty()) {
+            {
 
-            //Recompose if data changed
-            var albumMapChanged: Boolean by remember { artist.albumSortedMapUpdate }
-            if (albumMapChanged) {
-                albumMapChanged = false
+                //Recompose if data changed
+                var albumMapChanged: Boolean by remember { artist.albumSortedMapUpdate }
+                if (albumMapChanged) {
+                    albumMapChanged = false
+                }
+                //
+
+                MediaWithAlbumsHeaderView(
+                    mediaImpl = artist,
+                    albumCollection = albumSet,
+                    navController = navController
+                )
             }
-            //
-
-            MediaWithAlbumsHeaderView(
-                mediaImpl = artist,
-                albumCollection = albumSet,
-                navController = navController
-            )
-        },
+        } else null,
         extraButtons = {
             if (artist.getMusicSet().isNotEmpty()) {
                 ExtraButton(icon = SatunesIcons.PLAY, onClick = {

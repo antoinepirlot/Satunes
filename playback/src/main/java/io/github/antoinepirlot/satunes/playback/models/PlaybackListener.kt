@@ -32,6 +32,7 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
+import io.github.antoinepirlot.satunes.playback.services.WidgetPlaybackManager
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 
 /**
@@ -66,6 +67,7 @@ open class PlaybackListener : Player.Listener {
 
         playbackController.isPlaying = isPlaying
         playbackController.isEnded = PlaybackController.DEFAULT_IS_ENDED
+        WidgetPlaybackManager.refreshWidgets()
     }
 
     /**
@@ -108,7 +110,7 @@ open class PlaybackListener : Player.Listener {
             playbackController.musicPlayingIndex =
                 playbackController.mediaController.currentMediaItemIndex
             playbackController.musicPlaying =
-                playbackController.playlist.musicList[playbackController.musicPlayingIndex]
+                playbackController.playlist!!.musicList[playbackController.musicPlayingIndex]
             updateHasNext()
             updateHasPrevious()
             playbackController.mediaController.play()
@@ -118,12 +120,12 @@ open class PlaybackListener : Player.Listener {
     private fun updateHasPrevious() {
         val playbackController: PlaybackController = PlaybackController.getInstance()
         playbackController.hasPrevious =
-            playbackController.musicPlaying != playbackController.playlist.musicList.last()
+            playbackController.musicPlaying != playbackController.playlist!!.musicList.last()
     }
 
     private fun updateHasNext() {
         val playbackController: PlaybackController = PlaybackController.getInstance()
         playbackController.hasNext =
-            playbackController.musicPlaying != playbackController.playlist.musicList.last()
+            playbackController.musicPlaying != playbackController.playlist!!.musicList.last()
     }
 }

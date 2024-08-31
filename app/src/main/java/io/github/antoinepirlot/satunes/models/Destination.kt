@@ -27,6 +27,7 @@ package io.github.antoinepirlot.satunes.models
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import io.github.antoinepirlot.satunes.data.DEFAULT_DESTINATION
 
 /**
  * @author Antoine Pirlot on 24-01-24
@@ -38,7 +39,7 @@ internal enum class Destination(val link: String) {
     ARTISTS(link = "/artists"),
     BATTERY_SETTINGS(link = "/battery_settings"),
     BOTTOM_BAR_SETTINGS(link = "/navbar_settings"),
-    FOLDERS_SETTINGS(link = "/folders_settings"),
+    LIBRARY_SETTINGS(link = "/library_settings"),
     FOLDERS(link = "/folders"),
     GENRES(link = "/genres"),
     LOGS_SETTINGS(link = "/logs_settings"),
@@ -54,5 +55,39 @@ internal enum class Destination(val link: String) {
     SETTINGS(link = "/settings"),
 
     @RequiresApi(Build.VERSION_CODES.M)
-    UPDATES_SETTINGS(link = "/updates"),
+    UPDATES_SETTINGS(link = "/updates");
+
+    companion object {
+        private val destinationsMap: MutableMap<String, Destination> = mutableMapOf(
+            Pair(first = ALBUMS.link, second = ALBUMS),
+            Pair(first = ANDROID_AUTO_SETTINGS.link, second = ANDROID_AUTO_SETTINGS),
+            Pair(first = ARTISTS.link, second = ARTISTS),
+            Pair(first = BATTERY_SETTINGS.link, second = BATTERY_SETTINGS),
+            Pair(first = BOTTOM_BAR_SETTINGS.link, second = BOTTOM_BAR_SETTINGS),
+            Pair(first = LIBRARY_SETTINGS.link, second = LIBRARY_SETTINGS),
+            Pair(first = FOLDERS.link, second = FOLDERS),
+            Pair(first = GENRES.link, second = GENRES),
+            Pair(first = LOGS_SETTINGS.link, second = LOGS_SETTINGS),
+            Pair(first = MUSICS.link, second = MUSICS),
+            Pair(first = PERMISSIONS_SETTINGS.link, second = PERMISSIONS_SETTINGS),
+            Pair(first = PLAYBACK.link, second = PLAYBACK),
+            Pair(first = PLAYBACK_QUEUE.link, second = PLAYBACK_QUEUE),
+            Pair(first = PLAYBACK_SETTINGS.link, second = PLAYBACK_SETTINGS),
+            Pair(first = PLAYLISTS.link, second = PLAYLISTS),
+            Pair(first = PLAYLISTS_SETTINGS.link, second = PLAYLISTS_SETTINGS),
+            Pair(first = SEARCH.link, second = SEARCH),
+            Pair(first = SEARCH_SETTINGS.link, second = SEARCH_SETTINGS),
+            Pair(first = SETTINGS.link, second = SETTINGS),
+        )
+
+        init {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                this.destinationsMap[UPDATES_SETTINGS.link] = UPDATES_SETTINGS
+            }
+        }
+
+        fun getDestination(destination: String): Destination {
+            return this.destinationsMap[destination] ?: DEFAULT_DESTINATION
+        }
+    }
 }

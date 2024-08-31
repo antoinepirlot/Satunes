@@ -37,6 +37,9 @@ If you decide to use my code to create new app, you can but you have to use the 
     <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/10.png" width = "200">
     <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/11.png" width = "200">
     <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/12.png" width = "200">
+    <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/13.png" width = "200">
+    <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/14.png" width = "200">
+    <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/15.png" width = "200">
 </p>
 
 # Features

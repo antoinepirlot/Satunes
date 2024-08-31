@@ -18,8 +18,8 @@ android {
         applicationId = nameSpace
         minSdk = 22
         targetSdk = 35
-        versionCode = 46
-        versionName = "2.1.2"
+        versionCode = 47
+        versionName = "2.2.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -73,37 +73,33 @@ dependencies {
     /**
      * Base
      */
-    val composeUiVersion = "1.6.8"
-    val composeBomVersion = "2024.06.00"
-    val lifeCycleVersion = "2.8.4"
-    implementation("androidx.core:core-ktx:1.13.1")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifeCycleVersion")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifeCycleVersion")
-    implementation("androidx.activity:activity-compose:1.9.1")
-    implementation("androidx.fragment:fragment-ktx:1.8.2")
-    implementation(platform("androidx.compose:compose-bom:$composeBomVersion"))
-    implementation("androidx.compose.ui:ui:$composeUiVersion")
-    implementation("androidx.compose.ui:ui-graphics:$composeUiVersion")
-    implementation("androidx.compose.ui:ui-tooling-preview:$composeUiVersion")
-    implementation("androidx.compose.material3:material3:1.2.1")
-    implementation("com.google.accompanist:accompanist-permissions:0.31.0-alpha")
+    implementation(libs.core.ktx)
+    implementation(libs.lifecycle.runtime.ktx)
+    implementation(libs.lifecycle.viewmodel.compose)
+    implementation(libs.activity.compose)
+    implementation(libs.fragment.ktx)
+    implementation(platform(libs.compose.bom))
+    implementation(libs.ui)
+    implementation(libs.ui.graphics)
+    implementation(libs.ui.tooling.preview)
+    implementation(libs.androidx.material3)
+    implementation(libs.accompanist.permissions)
 
     //Test
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.2.1")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
-    androidTestImplementation(platform("androidx.compose:compose-bom:$composeBomVersion"))
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
-    debugImplementation("androidx.compose.ui:ui-tooling")
-    debugImplementation("androidx.compose.ui:ui-test-manifest")
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.ext.junit)
+    androidTestImplementation(libs.espresso.core)
+    androidTestImplementation(platform(libs.compose.bom))
+    androidTestImplementation(libs.androidx.ui.test.junit4)
+    debugImplementation(libs.androidx.ui.tooling)
+    debugImplementation(libs.androidx.ui.test.manifest)
 
     /**
      * Media
      */
-    val media3Version = "1.4.0"
 
-    implementation("androidx.media3:media3-common:$media3Version")
-    implementation("androidx.media3:media3-session:$media3Version")
+    implementation(libs.androidx.media3.common)
+    implementation(libs.androidx.media3.session)
 
     /**
      * Icons
@@ -113,20 +109,31 @@ dependencies {
     /**
      * Navigation
      */
-    val navVersion = "2.7.7"
     // Kotlin
-    implementation("androidx.navigation:navigation-fragment-ktx:$navVersion")
-    implementation("androidx.navigation:navigation-ui-ktx:$navVersion")
+    implementation(libs.androidx.navigation.fragment.ktx)
+    implementation(libs.androidx.navigation.ui.ktx)
 
     // Jetpack Compose Integration
-    implementation("androidx.navigation:navigation-compose:$navVersion")
-
+    implementation(libs.androidx.navigation.compose)
 
     /**
      * DataStore
      */
-    val dataStoreVersion = "1.1.1"
-    implementation("androidx.datastore:datastore-preferences:$dataStoreVersion")
+    implementation(libs.androidx.datastore.preferences)
+
+    /**
+     * Widget
+     */
+    // For AppWidgets support
+    implementation(libs.glance.appwidget)
+
+    // For interop APIs with Material 3
+    implementation(libs.glance.material3)
+
+    /**
+     * Singleton, Inject
+     */
+    implementation(libs.javax.inject)
 
     /**
      * Android Auto

@@ -48,12 +48,13 @@ import io.github.antoinepirlot.satunes.database.models.BarSpeed
 import io.github.antoinepirlot.satunes.database.models.FoldersSelection
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.database.services.data.DataLoader
+import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.internet.updates.APKDownloadStatus
 import io.github.antoinepirlot.satunes.internet.updates.UpdateAvailableStatus
 import io.github.antoinepirlot.satunes.internet.updates.UpdateCheckManager
 import io.github.antoinepirlot.satunes.internet.updates.UpdateDownloadManager
-import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
+import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.ui.utils.showErrorSnackBar
 import io.github.antoinepirlot.satunes.ui.utils.showSnackBar
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
@@ -89,9 +90,6 @@ internal class SatunesViewModel : ViewModel() {
     @RequiresApi(Build.VERSION_CODES.M)
     private val _updateAvailableStatus: MutableState<UpdateAvailableStatus> =
         UpdateCheckManager.updateAvailableStatus
-
-    @RequiresApi(Build.VERSION_CODES.M)
-    private val _latestVersion: MutableState<String?> = UpdateCheckManager.latestVersion
 
     @RequiresApi(Build.VERSION_CODES.M)
     private val _downloadStatus: MutableState<APKDownloadStatus> = UpdateCheckManager.downloadStatus
@@ -170,6 +168,9 @@ internal class SatunesViewModel : ViewModel() {
 
     fun setCurrentDestination(destination: String) {
         _uiState.update { currentState: SatunesUiState ->
+            @Suppress("NAME_SHADOWING")
+            val destination: Destination = Destination.getDestination(destination = destination)
+            _logger.info("Going to destination: ${destination.name}")
             currentState.copy(currentDestination = destination)
         }
     }
@@ -183,11 +184,27 @@ internal class SatunesViewModel : ViewModel() {
     }
 
     fun loadAllData() {
-        DataLoader.loadAllData(context = MainActivity.instance.applicationContext)
+        CoroutineScope(Dispatchers.IO).launch {
+            DataLoader.loadAllData(context = MainActivity.instance.applicationContext)
+        }
+    }
+
+    fun reloadAllData(playbackViewModel: PlaybackViewModel) {
+        CoroutineScope(Dispatchers.IO).launch {
+            while (DatabaseManager.exportingPlaylist) {
+                // Wait
+            }
+            runBlocking(Dispatchers.Main) {
+                // run from MAIN thread as media controller seems to not be reachable from IO thread
+                playbackViewModel.stop()
+            }
+            DataLoader.resetAllData()
+            this@SatunesViewModel.loadAllData()
+        }
     }
 
     internal fun updateIsAudioAllowed() {
-        this.isAudioAllowed = isAudioAllowed()
+        this.isAudioAllowed = isAudioAllowed(context = MainActivity.instance.applicationContext)
         if (this.isAudioAllowed != this._uiState.value.isAudioAllowed) {
             this._uiState.update { currentState: SatunesUiState ->
                 currentState.copy(isAudioAllowed = this.isAudioAllowed)
@@ -527,9 +544,32 @@ internal class SatunesViewModel : ViewModel() {
         }
     }
 
-    fun resetAllData(playbackViewModel: PlaybackViewModel) {
-        playbackViewModel.release()
-        DataLoader.resetAllData()
-        PlaybackManager.initPlayback(context = MainActivity.instance.applicationContext)
+    fun selectDefaultNavBarSection(navBarSection: NavBarSection) {
+        try {
+            runBlocking {
+                SettingsManager.selectDefaultNavBarSection(
+                    context = MainActivity.instance.applicationContext,
+                    navBarSection = navBarSection
+                )
+            }
+            _uiState.update { currentState: SatunesUiState ->
+                currentState.copy(defaultNavBarSection = SettingsManager.defaultNavBarSection)
+            }
+        } catch (e: Throwable) {
+            _logger.severe("Error while selecting new default nav bar section: ${navBarSection.name}")
+        }
+    }
+
+    fun switchCompilationMusic() {
+        try {
+            runBlocking {
+                SettingsManager.switchCompilationMusic(context = MainActivity.instance.applicationContext)
+                _uiState.update { currentState: SatunesUiState ->
+                    currentState.copy(compilationMusic = SettingsManager.compilationMusic)
+                }
+            }
+        } catch (e: Throwable) {
+            _logger.severe("Error while switching compilation music setting")
+        }
     }
 }

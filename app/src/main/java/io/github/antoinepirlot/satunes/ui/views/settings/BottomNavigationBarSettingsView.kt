@@ -27,6 +27,7 @@ package io.github.antoinepirlot.satunes.ui.views.settings
 
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
@@ -35,13 +36,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.texts.Title
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.models.SwitchSettings
+import io.github.antoinepirlot.satunes.ui.components.settings.DefaultNavBarSectionSetting
 import io.github.antoinepirlot.satunes.ui.components.settings.SettingsSwitchList
+import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
 
 /**
  *   @author Antoine Pirlot 06/03/2024
@@ -65,7 +69,10 @@ internal fun BottomNavigationBarSettingsView(
     val scrollState: ScrollState = rememberScrollState()
     Column(modifier = modifier.verticalScroll(scrollState)) {
         Title(text = stringResource(id = R.string.bottom_bar))
-        SettingsSwitchList(checkedMap = navBarSectionSettingsChecked)
+        SubSettings {
+            SettingsSwitchList(checkedMap = navBarSectionSettingsChecked)
+            DefaultNavBarSectionSetting(modifier = Modifier.padding(horizontal = 16.dp))
+        }
     }
 }
 

@@ -29,8 +29,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -39,32 +37,26 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.texts.Title
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
-import io.github.antoinepirlot.satunes.ui.components.settings.folders.FoldersPathsSelection
-import io.github.antoinepirlot.satunes.ui.components.settings.folders.FoldersRowSelection
+import io.github.antoinepirlot.satunes.ui.components.settings.data.folders.FoldersSubSettings
 
 /**
  * @author Antoine Pirlot on 27/04/2024
  */
 
 @Composable
-internal fun FoldersSettingsView(
+internal fun DataSettingsView(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
 ) {
-    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
-
     Column(
         modifier = modifier
             .fillMaxSize()
             .padding(horizontal = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Title(text = stringResource(id = R.string.folders_settings))
-
-        FoldersRowSelection()
-        FoldersPathsSelection()
+        Title(text = stringResource(id = R.string.data_settings))
+        FoldersSubSettings()
     }
 }
 
@@ -72,5 +64,5 @@ internal fun FoldersSettingsView(
 @Preview
 @Composable
 private fun FoldersSettingsViewPreview() {
-    FoldersSettingsView()
+    DataSettingsView()
 }

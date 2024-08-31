@@ -36,7 +36,7 @@ import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.ui.views.settings.AndroidAutoSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.BatterySettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.BottomNavigationBarSettingsView
-import io.github.antoinepirlot.satunes.ui.views.settings.FoldersSettingsView
+import io.github.antoinepirlot.satunes.ui.views.settings.DataSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.PermissionsSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.PlaybackSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.PlaylistsSettingsView
@@ -78,7 +78,7 @@ internal fun NavGraphBuilder.settingsRoutes(
 
     composable(Destination.FOLDERS_SETTINGS.link) {
         onStart(it)
-        FoldersSettingsView()
+        DataSettingsView()
     }
 
     composable(Destination.PLAYLISTS_SETTINGS.link) {

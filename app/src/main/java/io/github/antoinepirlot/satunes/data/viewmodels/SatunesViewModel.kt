@@ -55,7 +55,6 @@ import io.github.antoinepirlot.satunes.internet.updates.UpdateAvailableStatus
 import io.github.antoinepirlot.satunes.internet.updates.UpdateCheckManager
 import io.github.antoinepirlot.satunes.internet.updates.UpdateDownloadManager
 import io.github.antoinepirlot.satunes.models.Destination
-import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
 import io.github.antoinepirlot.satunes.ui.utils.showErrorSnackBar
 import io.github.antoinepirlot.satunes.ui.utils.showSnackBar
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
@@ -188,14 +187,12 @@ internal class SatunesViewModel : ViewModel() {
     }
 
     fun reloadAllData(playbackViewModel: PlaybackViewModel) {
-        CoroutineScope(Dispatchers.Default).launch {
+        CoroutineScope(Dispatchers.IO).launch {
             while (DatabaseManager.exportingPlaylist) {
                 // Wait
             }
-            CoroutineScope(Dispatchers.Main).launch {
-                this@SatunesViewModel.resetAllData(playbackViewModel = playbackViewModel)
-                this@SatunesViewModel.loadAllData()
-            }
+            this@SatunesViewModel.resetAllData(playbackViewModel = playbackViewModel)
+            this@SatunesViewModel.loadAllData()
         }
     }
 
@@ -540,10 +537,12 @@ internal class SatunesViewModel : ViewModel() {
         }
     }
 
-    fun resetAllData(playbackViewModel: PlaybackViewModel) {
-        playbackViewModel.release()
+    private fun resetAllData(playbackViewModel: PlaybackViewModel) {
+        runBlocking(Dispatchers.Main) {
+            // run from MAIN thread as media controller seems to not be reachable from IO thread
+            playbackViewModel.release()
+        }
         DataLoader.resetAllData()
-        PlaybackManager.checkPlaybackController(context = MainActivity.instance.applicationContext)
     }
 
     fun selectDefaultNavBarSection(navBarSection: NavBarSection) {

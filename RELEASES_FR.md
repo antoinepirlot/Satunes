@@ -1,6 +1,26 @@
 # Versions (🇫🇷)
 You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
+## 2.2
+
+### 2.2.0
+
+Nouvelles fonctionnalités:
+
+* Prise en charge des compilations
+* Widget classique
+* Sélection de la section de barre de navigation par défaut
+
+Améliorations, optimisations et dépannage:
+
+* Optimisation du démarrage d'Android Auto
+* La surbrillance de la section de la barre de navigation est masquée dans les vues paramètres,
+  playback et recherche
+* Correction d'un crash lorsque Satunes n'a pas été utilisé pendant un moment et est réouvert à
+  partir du multitâche
+* L'option "Lire ensuite" est masquée dans les options de la musique suivante
+* Quelques autres optimisations
+
 ## 2.1 (Android 5.1.1 Lollipop et ultérieur)
 
 ### 2.1.2

@@ -257,7 +257,6 @@ object DataLoader {
         //Load music and folder inside load music function
         try {
             loadMusic(
-                context = context,
                 cursor = cursor,
                 album = album,
                 artist = artist,
@@ -290,7 +289,6 @@ object DataLoader {
      * @return the created music
      */
     private fun loadMusic(
-        context: Context,
         cursor: Cursor,
         album: Album,
         artist: Artist,
@@ -331,7 +329,6 @@ object DataLoader {
             artist = artist,
             folder = folder,
             genre = genre,
-            context = context
         )
     }
 

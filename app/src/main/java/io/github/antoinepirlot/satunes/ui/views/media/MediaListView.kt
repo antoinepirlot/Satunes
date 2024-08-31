@@ -32,7 +32,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -117,7 +116,6 @@ private fun MediaListViewPreview() {
             album = Album(title = "Album Title", artist = Artist(title = "Artist Title")),
             artist = Artist(title = "Artist Title"),
             genre = Genre(title = "Genre Title"),
-            context = LocalContext.current
         )
     )
     val navController: NavHostController = rememberNavController()

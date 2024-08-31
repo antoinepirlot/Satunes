@@ -81,9 +81,9 @@
     <string name="update_playlist_success">%1$s a été mise à jour.</string>
     <string name="bar_speed_label">Vitesse</string>
     <string name="update_modal_not_permanently">Le modal sera toujours montré à la prochaine ouverture.</string>
-    <string name="add_path_button">Ajouter un nouveau chemin à %1$s</string>
+    <string name="add_path_button">Ajouter un dossier à %1$s</string>
     <string name="path_set_empty">Aucun chemin sélectionné</string>
-    <string name="refresh_data_button">Recharger toutes les données</string>
+    <string name="refresh_data_button">Recharger la bibliothèque</string>
     <string name="remove_musics_from_playlist_success">Les musiques ont été supprimées de %1$s</string>
     <string name="add_music_to_playlist_success">%1$s a été ajouté à %2$s</string>
     <string name="add_musics_to_playlists_success">Les musiques ont été ajoutées aux playlists</string>
@@ -96,4 +96,7 @@
     <string name="classic_widget_description">Classique</string>
     <string name="load_satunes_text">Charger Satunes</string>
     <string name="opening_section_setting_content">Menu par défault</string>
+    <string name="library_settings">Bibliothèque</string>
+    <string name="data_loading_settings_title">Logique de chargement</string>
+    <string name="compilation_music_setting_text">Ajouter les musiques de la compilation à la liste des musiques de son artiste</string>
 </resources>

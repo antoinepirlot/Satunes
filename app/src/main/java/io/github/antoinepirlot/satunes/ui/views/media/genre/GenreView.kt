@@ -37,6 +37,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
@@ -45,7 +46,6 @@ import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
-import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 import io.github.antoinepirlot.satunes.ui.views.media.MediaWithAlbumsHeaderView
 import java.util.SortedSet
@@ -70,6 +70,8 @@ internal fun GenreView(
     }
     //
 
+    val albumSet: SortedSet<Album> = sortedSetOf()
+
     MediaListView(
         modifier = modifier,
         navController = navController,
@@ -91,25 +93,26 @@ internal fun GenreView(
                 navController = navController
             )
         },
-        header = {
-            //Recompose if data changed
-            @Suppress("NAME_SHADOWING")
-            var mapChanged: Boolean by remember { genre.musicSetUpdated }
-            if (mapChanged) {
-                mapChanged = false
-            }
-            //
+        header = if (albumSet.isNotEmpty()) {
+            {
+                //Recompose if data changed
+                @Suppress("NAME_SHADOWING")
+                var mapChanged: Boolean by remember { genre.musicSetUpdated }
+                if (mapChanged) {
+                    mapChanged = false
+                }
+                //
 
-            val albumSet: SortedSet<Album> = sortedSetOf()
-            musicMap.forEach { music: Music ->
-                albumSet.add(music.album)
+                musicMap.forEach { music: Music ->
+                    albumSet.add(music.album)
+                }
+                MediaWithAlbumsHeaderView(
+                    navController = navController,
+                    mediaImpl = genre,
+                    albumCollection = albumSet
+                )
             }
-            MediaWithAlbumsHeaderView(
-                navController = navController,
-                mediaImpl = genre,
-                albumCollection = albumSet
-            )
-        },
+        } else null,
         extraButtons = {
             if (genre.getMusicSet().isNotEmpty()) {
                 ExtraButton(icon = SatunesIcons.PLAY, onClick = {

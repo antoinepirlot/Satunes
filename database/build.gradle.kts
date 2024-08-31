@@ -79,6 +79,11 @@ dependencies {
     ksp(libs.androidx.room.compiler)
 
     /**
+     * ID3 tags
+     */
+    implementation(libs.mp3agic)
+
+    /**
      * Icons
      */
     implementation(project(":icons"))

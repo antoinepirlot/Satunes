@@ -39,6 +39,7 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
+import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.icons.R
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import kotlinx.coroutines.CoroutineScope
@@ -60,7 +61,6 @@ class Music(
     val artist: Artist,
     val album: Album,
     val genre: Genre,
-    context: Context,
 ) : MediaImpl(id = id, title = title.ifBlank { displayName }) {
     private val logger: SatunesLogger = SatunesLogger.getLogger()
     private var displayName: String = displayName
@@ -81,10 +81,12 @@ class Music(
     init {
         DataManager.addMusic(music = this)
         album.addMusic(music = this)
+        if (SettingsManager.compilationMusic) {
+            album.artist.addMusic(music = this)
+        }
         artist.addMusic(music = this)
         genre.addMusic(music = this)
         folder.addMusic(music = this)
-//        loadAlbumArtwork(context = context)
     }
 
     fun switchLike(context: Context) {

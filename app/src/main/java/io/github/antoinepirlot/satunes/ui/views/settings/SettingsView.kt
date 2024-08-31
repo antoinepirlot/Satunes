@@ -95,10 +95,10 @@ internal fun SettingsView(
                 }
             )
             SettingButton(
-                text = stringResource(id = R.string.folders_settings),
-                icon = SatunesIcons.SETTING_FOLDERS,
+                text = stringResource(id = R.string.library_settings),
+                icon = SatunesIcons.SETTING_LIBRARY,
                 onClick = {
-                    navController.navigate(Destination.FOLDERS_SETTINGS.link)
+                    navController.navigate(Destination.LIBRARY_SETTINGS.link)
                 }
             )
             SettingButton(

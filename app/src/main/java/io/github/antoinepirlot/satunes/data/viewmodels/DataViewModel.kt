@@ -43,6 +43,7 @@ import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
+import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.ui.utils.showErrorSnackBar
@@ -614,5 +615,9 @@ class DataViewModel : ViewModel() {
         }
 
         MainActivity.instance.createFileToExportPlaylists(defaultFileName = "Satunes")
+    }
+
+    fun resetAllData() {
+        DataLoader.resetAllData()
     }
 }

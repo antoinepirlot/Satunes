@@ -185,7 +185,9 @@ internal class SatunesViewModel : ViewModel() {
     }
 
     fun loadAllData() {
-        DataLoader.loadAllData(context = MainActivity.instance.applicationContext)
+        CoroutineScope(Dispatchers.IO).launch {
+            DataLoader.loadAllData(context = MainActivity.instance.applicationContext)
+        }
     }
 
     fun reloadAllData(playbackViewModel: PlaybackViewModel) {

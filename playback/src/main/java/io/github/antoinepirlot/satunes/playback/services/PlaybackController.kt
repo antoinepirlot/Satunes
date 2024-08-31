@@ -120,6 +120,7 @@ internal class PlaybackController private constructor(
     private var listener: Player.Listener = PlaybackListener()
 
     companion object {
+
         internal const val DEFAULT_MUSIC_PLAYING_INDEX: Int = 0
         internal const val DEFAULT_IS_ENDED: Boolean = false
         internal const val DEFAULT_IS_PLAYING_VALUE: Boolean = false
@@ -132,8 +133,8 @@ internal class PlaybackController private constructor(
         internal const val DEFAULT_CURRENT_POSITION_PROGRESSION: Float = 0f
         internal val DEFAULT_MUSIC_PLAYING = null
 
-        private var instance: PlaybackController? = null
-        private val logger = SatunesLogger.getLogger()
+        private var _instance: PlaybackController? = null
+        private val _logger: SatunesLogger = SatunesLogger.getLogger()
 
         /**
          * Return only one instance of MediaController. If there's no instance already created
@@ -142,14 +143,15 @@ internal class PlaybackController private constructor(
          * @return the instance of MediaController
          */
         fun getInstance(): PlaybackController {
+            _logger.info("Get instance")
             // TODO issues relaunch app happens here
-            if (instance == null) {
+            if (_instance == null) {
                 //TODO find a way to fix crashing app after resume after inactivity
                 val message = "The PlayBackController has not been initialized"
-                logger.severe(message)
+                _logger.severe(message)
                 throw IllegalStateException(message)
             }
-            return instance!!
+            return _instance!!
         }
 
         fun initInstance(
@@ -157,41 +159,64 @@ internal class PlaybackController private constructor(
             listener: Player.Listener? = null,
             loadAllMusics: Boolean = false
         ): PlaybackController {
-            if (instance == null) {
+            _logger.info("Init instance")
+            val isInitializing: Boolean = _instance == null
+            if (isInitializing) {
                 val sessionToken =
                     SessionToken(
                         context.applicationContext,
                         ComponentName(context, PlaybackService::class.java)
                     )
 
-                instance = PlaybackController(
+                _instance = PlaybackController(
                     context = context.applicationContext,
                     sessionToken = sessionToken,
                     loadAllMusics = loadAllMusics,
                 )
-            } else if (listener != null) {
-                while (!instance!!::mediaController.isInitialized) {
-                    // Wait it is initializing
-                }
-                val wasPlaying: Boolean = instance!!.isPlaying
-                if (instance!!.isPlaying) {
-                    instance!!.pause()
-                }
-                instance!!.mediaController.removeListener(instance!!.listener)
-                instance!!.mediaController.addListener(listener)
-                instance!!.mediaController.prepare()
-                if (wasPlaying) {
-                    instance!!.play()
+            }
+            updateListener(isInitializing = isInitializing, listener = listener)
+            return getInstance()
+        }
+
+        fun updateListener(listener: Player.Listener?) =
+            this.updateListener(isInitializing = false, listener = listener)
+
+        private fun updateListener(isInitializing: Boolean, listener: Player.Listener?) {
+
+            if (!isInitializing) {
+                if (listener != null && listener != this._instance?.listener) {
+                    _logger.info("Update listener")
+
+                    while (!isInitialized()) {
+                        _logger.info("Waiting")
+                        // Wait it is initializing
+                    }
+                    val wasPlaying: Boolean = _instance!!.isPlaying
+                    if (_instance!!.isPlaying) {
+                        _instance!!.pause()
+                    }
+                    _instance!!.mediaController.removeListener(_instance!!.listener)
+                    _instance!!.mediaController.addListener(listener)
+                    _instance!!.mediaController.prepare()
+                    if (wasPlaying) {
+                        _instance!!.play()
+                    }
                 }
             }
 
-            instance!!.listener = listener ?: instance!!.listener
-
-            return getInstance()
+            if (listener != this._instance?.listener) {
+                _instance!!.listener = listener ?: _instance!!.listener
+                _logger.info("Listener loaded or changed")
+            }
         }
+
+        internal fun isInitialized(): Boolean =
+            this._instance != null && this._instance!!::mediaController.isInitialized
     }
 
     init {
+        _logger.info("Init class")
+
         if (loadAllMusics) {
             isLoading = true
         }
@@ -211,7 +236,7 @@ internal class PlaybackController private constructor(
                 MoreExecutors.directExecutor()
             )
         } catch (e: Throwable) {
-            logger.severe(e.message)
+            _logger.severe(e.message)
             throw e
         }
     }
@@ -308,7 +333,7 @@ internal class PlaybackController private constructor(
             val message = """"
                 |Impossible to seek while no music is playing 
                 |$this"""".trimMargin()
-            logger.severe(message)
+            _logger.severe(message)
             throw IllegalStateException(message)
         }
 
@@ -656,16 +681,16 @@ internal class PlaybackController private constructor(
     }
 
     fun release() {
-        logger.info("Releasing $this")
+        _logger.info("Releasing $this")
         PlaybackManager.isInitialized.value = false
-        if (instance != null) {
+        if (_instance != null) {
             this.stop()
             if (this::mediaController.isInitialized) {
                 this.mediaController.release()
             }
-            instance = null
+            _instance = null
         }
-        logger.info("PlaybackController released")
+        _logger.info("PlaybackController released")
     }
 
     fun getPlaylist(): SnapshotStateList<Music> {

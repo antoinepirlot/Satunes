@@ -47,7 +47,7 @@ import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import io.github.antoinepirlot.satunes.icons.R as RIcons
 
@@ -103,26 +103,21 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
         session.setCallback(SatunesCarCallBack)
 
         RouteManager.reset()
-        runBlocking {
+        runBlocking(Dispatchers.IO) {
             SettingsManager.loadSettings(context = applicationContext)
         }
         loadAllPlaybackData()
     }
 
     private fun loadAllPlaybackData() {
-        if (!DataLoader.isLoaded.value && !DataLoader.isLoading.value) {
-            DataLoader.resetAllData()
+        runBlocking(Dispatchers.IO) {
             DataLoader.loadAllData(context = baseContext)
         }
         PlaybackManager.checkPlaybackController(
             context = applicationContext,
             listener = SatunesPlaybackListener,
         )
-        runBlocking {
-            while (!DataLoader.isLoaded.value) {
-                delay(50) //Wait (use delay to reduce cpu usage)
-            }
-        }
+
         if (!DataLoader.isLoaded.value) {
             val message = "Data has not been loaded"
             _logger.severe(message)

@@ -43,9 +43,6 @@ import io.github.antoinepirlot.satunes.database.services.database.DatabaseManage
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.database.services.widgets.WidgetDatabaseManager
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 /**
  * @author Antoine Pirlot on 22/02/24
@@ -142,48 +139,44 @@ object DataLoader {
     /**
      * Load all Media data from device's storage.
      */
-    fun loadAllData(context: Context) {
-        //TODO No coroutine here as in app its a thread but in android auto it's must block the process
+    suspend fun loadAllData(context: Context) {
+        if (isLoading.value || (isLoaded.value && DataManager.getMusicSet().isNotEmpty())) return
 
+        isLoading.value = true
         // this allow data to be reloaded if no data loaded
         if (DataManager.getMusicSet().isEmpty()) this.resetAllData()
 
-        if (isLoading.value || isLoaded.value) return
-
-        isLoading.value = true
         WidgetDatabaseManager.refreshWidgets()
-        CoroutineScope(Dispatchers.IO).launch {
-            if (!this@DataLoader::selection.isInitialized || !this@DataLoader::selection_args.isInitialized) {
-                this@DataLoader.loadFoldersPaths()
-            }
+        if (!this@DataLoader::selection.isInitialized || !this@DataLoader::selection_args.isInitialized) {
+            this@DataLoader.loadFoldersPaths()
+        }
 
-            if (
-                this@DataLoader.selection_args.isEmpty()
-                && SettingsManager.foldersSelectionSelected == FoldersSelection.INCLUDE
-            ) {
-                isLoaded.value = true
-                isLoading.value = false
-                return@launch
-            }
-
-            context.contentResolver.query(
-                URI,
-                projection,
-                this@DataLoader.selection,
-                this@DataLoader.selection_args,
-                null
-            )?.use {
-                _logger.info("${it.count} musics to load.")
-                loadColumns(cursor = it)
-                while (it.moveToNext()) {
-                    loadData(cursor = it, context = context)
-                }
-            }
-            DatabaseManager.initInstance(context = context).loadAllPlaylistsWithMusic()
+        if (
+            this@DataLoader.selection_args.isEmpty()
+            && SettingsManager.foldersSelectionSelected == FoldersSelection.INCLUDE
+        ) {
             isLoaded.value = true
             isLoading.value = false
-            WidgetDatabaseManager.refreshWidgets()
+            return
         }
+
+        context.contentResolver.query(
+            URI,
+            projection,
+            this@DataLoader.selection,
+            this@DataLoader.selection_args,
+            null
+        )?.use {
+            _logger.info("${it.count} musics to load.")
+            loadColumns(cursor = it)
+            while (it.moveToNext()) {
+                loadData(cursor = it, context = context)
+            }
+        }
+        DatabaseManager.initInstance(context = context).loadAllPlaylistsWithMusic()
+        WidgetDatabaseManager.refreshWidgets()
+        isLoaded.value = true
+        isLoading.value = false
     }
 
     /**

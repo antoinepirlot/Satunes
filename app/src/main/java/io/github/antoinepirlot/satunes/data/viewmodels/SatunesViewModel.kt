@@ -558,4 +558,17 @@ internal class SatunesViewModel : ViewModel() {
             _logger.severe("Error while selecting new default nav bar section: ${navBarSection.name}")
         }
     }
+
+    fun switchCompilationMusic() {
+        try {
+            runBlocking {
+                SettingsManager.switchCompilationMusic(context = MainActivity.instance.applicationContext)
+                _uiState.update { currentState: SatunesUiState ->
+                    currentState.copy(compilationMusic = SettingsManager.compilationMusic)
+                }
+            }
+        } catch (e: Throwable) {
+            _logger.severe("Error while switching compilation music setting")
+        }
+    }
 }

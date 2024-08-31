@@ -26,10 +26,15 @@
 package io.github.antoinepirlot.satunes.ui.components.settings.data.loading
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.data.states.SatunesUiState
+import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.models.SwitchSettings
 import io.github.antoinepirlot.satunes.ui.components.settings.SettingWithSwitch
 import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
@@ -39,17 +44,20 @@ import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
  */
 
 @Composable
-fun DataLoadingLogicSubSettings(
-    modifier: Modifier = Modifier
+internal fun DataLoadingLogicSubSettings(
+    modifier: Modifier = Modifier,
+    satunesViewModel: SatunesViewModel = viewModel(),
 ) {
+    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+
     SubSettings(
         modifier = modifier,
         title = stringResource(R.string.data_loading_settings_title)
     ) {
         SettingWithSwitch(
             setting = SwitchSettings.COMPILATION_MUSIC,
-            checked = false,
-            onCheckedChange = {}
+            checked = satunesUiState.compilationMusic,
+            onCheckedChange = { satunesViewModel.switchCompilationMusic() }
         )
     }
 }

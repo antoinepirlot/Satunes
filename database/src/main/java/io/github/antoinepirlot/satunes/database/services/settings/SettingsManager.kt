@@ -80,6 +80,7 @@ object SettingsManager {
     private const val DEFAULT_PLAYLISTS_FILTER: Boolean = false
     private val DEFAULT_FOLDERS_SELECTION_SELECTED: FoldersSelection = FoldersSelection.INCLUDE
     private val DEFAULT_SELECTED_PATHS: Set<String> = setOf("/0/Music/%")
+    private const val DEFAULT_COMPILATION_MUSIC: Boolean = false
 
     /**
      * KEYS
@@ -115,10 +116,13 @@ object SettingsManager {
         intPreferencesKey("folders_selection")
     private val SELECTED_PATHS_KEY: Preferences.Key<Set<String>> =
         stringSetPreferencesKey("selected_paths_set")
+    private val COMPILATION_MUSIC_KEY: Preferences.Key<Boolean> =
+        booleanPreferencesKey("compilation_music")
 
     /**
      * VARIABLES
      */
+    private val _logger = SatunesLogger.getLogger()
     private val Context.dataStore: DataStore<Preferences> by PREFERENCES_DATA_STORE
     private var _isLoaded: Boolean = false
 
@@ -172,7 +176,10 @@ object SettingsManager {
     var foldersPathsSelectedSet: MutableState<Set<String>> = mutableStateOf(DEFAULT_SELECTED_PATHS)
         private set
 
-    private val _logger = SatunesLogger.getLogger()
+    /**
+     * This setting is true if the compilation's music has to be added to compilation's artist's music list
+     */
+    var compilationMusic: Boolean = DEFAULT_COMPILATION_MUSIC
 
     suspend fun loadSettings(context: Context) {
         if (_isLoaded) {
@@ -222,6 +229,8 @@ object SettingsManager {
 
             foldersPathsSelectedSet.value =
                 preferences[SELECTED_PATHS_KEY] ?: DEFAULT_SELECTED_PATHS
+
+            compilationMusic = preferences[COMPILATION_MUSIC_KEY] ?: DEFAULT_COMPILATION_MUSIC
 
             DataLoader.loadFoldersPaths()
 
@@ -512,6 +521,13 @@ object SettingsManager {
         context.dataStore.edit { preferences: MutablePreferences ->
             this.defaultNavBarSection = navBarSection
             preferences[DEFAULT_NAV_BAR_SECTION_KEY] = this.defaultNavBarSection.id
+        }
+    }
+
+    suspend fun switchCompilationMusic(context: Context) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            this.compilationMusic = !this.compilationMusic
+            preferences[COMPILATION_MUSIC_KEY] = this.compilationMusic
         }
     }
 }

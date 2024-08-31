@@ -60,4 +60,8 @@ internal data class SatunesUiState(
     val audioOffloadChecked: Boolean = SettingsManager.audioOffloadChecked,
     val barSpeed: BarSpeed = SettingsManager.barSpeed,
     val isMediaOptionsOpened: Boolean = false,
+    /**
+     * This setting is true if the compilation's music has to be added to compilation's artist's music list
+     */
+    val compilationMusic: Boolean = SettingsManager.compilationMusic
 )

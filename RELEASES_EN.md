@@ -13,6 +13,7 @@ New features:
 
 Improvements, optimizations and troubleshooting:
 
+* The "Folders" setting become "Library"
 * Optimize Android Auto startup
 * Hide tab section highlight when user is in settings, search or playback views
 * Fix crash when Satunes has been not used for a moment and reopen from multi-task

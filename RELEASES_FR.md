@@ -13,6 +13,7 @@ Nouvelles fonctionnalités:
 
 Améliorations, optimisations et dépannage:
 
+* Le paramètre "Dossiers" devient "Bibliothèque"
 * Optimisation du démarrage d'Android Auto
 * La surbrillance de la section de la barre de navigation est masquée dans les vues paramètres,
   playback et recherche

@@ -194,7 +194,11 @@ internal class SatunesViewModel : ViewModel() {
             while (DatabaseManager.exportingPlaylist) {
                 // Wait
             }
-            this@SatunesViewModel.resetAllData(playbackViewModel = playbackViewModel)
+            runBlocking(Dispatchers.Main) {
+                // run from MAIN thread as media controller seems to not be reachable from IO thread
+                playbackViewModel.stop()
+            }
+            DataLoader.resetAllData()
             this@SatunesViewModel.loadAllData()
         }
     }
@@ -538,14 +542,6 @@ internal class SatunesViewModel : ViewModel() {
                 path = path
             )
         }
-    }
-
-    private fun resetAllData(playbackViewModel: PlaybackViewModel) {
-        runBlocking(Dispatchers.Main) {
-            // run from MAIN thread as media controller seems to not be reachable from IO thread
-            playbackViewModel.release()
-        }
-        DataLoader.resetAllData()
     }
 
     fun selectDefaultNavBarSection(navBarSection: NavBarSection) {

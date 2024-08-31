@@ -182,11 +182,11 @@ internal class PlaybackController private constructor(
             this.updateListener(isInitializing = false, listener = listener)
 
         private fun updateListener(isInitializing: Boolean, listener: Player.Listener?) {
-            _logger.info("Update listener")
 
             if (!isInitializing) {
-                if (listener == this._instance!!.listener) return
-                if (listener != null) {
+                if (listener != null && listener != this._instance?.listener) {
+                    _logger.info("Update listener")
+
                     while (!isInitialized()) {
                         _logger.info("Waiting")
                         // Wait it is initializing
@@ -204,7 +204,10 @@ internal class PlaybackController private constructor(
                 }
             }
 
-            _instance!!.listener = listener ?: _instance!!.listener
+            if (listener != this._instance?.listener) {
+                _instance!!.listener = listener ?: _instance!!.listener
+                _logger.info("Listener loaded or changed")
+            }
         }
 
         internal fun isInitialized(): Boolean =

@@ -26,6 +26,7 @@
 package io.github.antoinepirlot.satunes.models
 
 import io.github.antoinepirlot.satunes.R.string.audio_offload
+import io.github.antoinepirlot.satunes.R.string.compilation_music_setting_text
 import io.github.antoinepirlot.satunes.R.string.pause_if_another_playback
 import io.github.antoinepirlot.satunes.R.string.pause_if_noisy
 import io.github.antoinepirlot.satunes.R.string.playback_when_paused
@@ -57,4 +58,5 @@ internal enum class SwitchSettings(val stringId: Int) {
     PLAYBACK_WHEN_CLOSED(stringId = playback_when_paused),
     PLAYLISTS_CHECKED(stringId = playlists),
     PAUSE_IF_ANOTHER_PLAYBACK(stringId = pause_if_another_playback),
+    COMPILATION_MUSIC(stringId = compilation_music_setting_text),
 }

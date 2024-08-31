@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import io.github.antoinepirlot.jetpack_libs.components.texts.Title
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.ui.components.settings.data.folders.FoldersSubSettings
+import io.github.antoinepirlot.satunes.ui.components.settings.data.loading.DataLoadingLogicSubSettings
 
 /**
  * @author Antoine Pirlot on 27/04/2024
@@ -53,6 +54,7 @@ internal fun LibrarySettingsView(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Title(text = stringResource(id = R.string.library_settings))
+        DataLoadingLogicSubSettings()
         FoldersSubSettings()
     }
 }

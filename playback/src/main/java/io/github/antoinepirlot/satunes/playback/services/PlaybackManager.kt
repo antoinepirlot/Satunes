@@ -50,6 +50,8 @@ import io.github.antoinepirlot.satunes.playback.services.PlaybackController.Comp
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController.Companion.DEFAULT_IS_SHUFFLE
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController.Companion.DEFAULT_MUSIC_PLAYING
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController.Companion.DEFAULT_REPEAT_MODE
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
 
 /**
  * @author Antoine Pirlot on 10/08/2024
@@ -103,21 +105,27 @@ object PlaybackManager {
         reset()
     }
 
-    private fun playbackControllerNotExists(): Boolean = this._playbackController == null
+    private fun playbackControllerNotExists(): Boolean =
+        this._playbackController == null && !PlaybackController.isInitialized()
 
     fun isConfigured(): Boolean = !this.playbackControllerNotExists()
 
-    private fun initPlaybackWithAllMusics(context: Context) {
+    private fun initPlaybackWithAllMusics(
+        context: Context,
+        listener: PlaybackListener? = this.listener
+    ) {
         if (!DataLoader.isLoaded.value && !DataLoader.isLoading.value) {
             DataLoader.resetAllData()
-            DataLoader.loadAllData(context = context)
-            this.initPlayback(context = context, loadAllMusics = true)
+            runBlocking(Dispatchers.IO) {
+                DataLoader.loadAllData(context = context)
+            }
+            this.initPlayback(context = context, listener = listener, loadAllMusics = true)
         } else {
             if (this::playlist.isInitialized) {
-                this.initPlayback(context = context, loadAllMusics = false)
+                this.initPlayback(context = context, listener = listener, loadAllMusics = false)
                 this._playbackController!!.loadMusics(playlist = playlist)
             } else {
-                this.initPlayback(context = context, loadAllMusics = true)
+                this.initPlayback(context = context, listener = listener, loadAllMusics = true)
             }
         }
     }
@@ -125,20 +133,23 @@ object PlaybackManager {
     fun checkPlaybackController(
         context: Context,
         listener: PlaybackListener? = this.listener,
-        loadAllMusic: Boolean = true
+        loadAllMusics: Boolean = true
     ) {
         if (playbackControllerNotExists()) {
-            if (loadAllMusic) {
-                this.initPlaybackWithAllMusics(context = context)
+            if (loadAllMusics) {
+                this.initPlaybackWithAllMusics(context = context, listener = listener)
             } else {
-                this.initPlayback(context = context)
+                this.initPlayback(context = context, listener = listener)
             }
-        } else if (loadAllMusic) {
-            if (
-                !this::playlist.isInitialized
-                || (this.playlist.musicCount() == 0 && DataManager.getMusicSet().isNotEmpty())
-            ) {
-                this._playbackController!!.loadMusics(musicSet = DataManager.getMusicSet())
+        } else {
+            PlaybackController.updateListener(listener = listener)
+            if (loadAllMusics) {
+                if (
+                    !this::playlist.isInitialized
+                    || (this.playlist.musicCount() == 0 && DataManager.getMusicSet().isNotEmpty())
+                ) {
+                    this._playbackController!!.loadMusics(musicSet = DataManager.getMusicSet())
+                }
             }
         }
     }
@@ -233,7 +244,7 @@ object PlaybackManager {
         shuffleMode: Boolean = SettingsManager.shuffleMode,
         musicToPlay: Music? = null,
     ) {
-        checkPlaybackController(context = context, loadAllMusic = false)
+        checkPlaybackController(context = context, loadAllMusics = false)
         this._playbackController!!.loadMusics(
             musicSet = musicSet,
             shuffleMode = shuffleMode,

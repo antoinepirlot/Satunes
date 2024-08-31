@@ -168,7 +168,10 @@ internal class SatunesViewModel : ViewModel() {
 
     fun setCurrentDestination(destination: String) {
         _uiState.update { currentState: SatunesUiState ->
-            currentState.copy(currentDestination = Destination.getDestination(destination = destination))
+            @Suppress("NAME_SHADOWING")
+            val destination: Destination = Destination.getDestination(destination = destination)
+            _logger.info("Going to destination: ${destination.name}")
+            currentState.copy(currentDestination = destination)
         }
     }
 

@@ -25,8 +25,10 @@
 
 package io.github.antoinepirlot.satunes.ui.components.settings
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.TextButton
@@ -47,13 +49,15 @@ import io.github.antoinepirlot.satunes.data.navBarSections
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
+import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import io.github.antoinepirlot.satunes.ui.components.images.Icon
 
 /**
  * @author Antoine Pirlot on 29/08/2024
  */
 
 @Composable
-internal fun OpeningSectionSetting(
+internal fun DefaultNavBarSectionSetting(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
 ) {
@@ -63,13 +67,20 @@ internal fun OpeningSectionSetting(
     val selectedSection: NavBarSection = satunesUiState.defaultNavBarSection
 
     Row(
-        modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically
+        modifier = modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         NormalText(text = stringResource(id = R.string.opening_section_setting_content))
         Box {
             TextButton(onClick = { expanded = true }) {
-                NormalText(text = stringResource(id = selectedSection.stringId))
+                Row {
+                    Icon(
+                        icon = if (expanded) SatunesIcons.CLOSE_DROPDOWN_MENU
+                        else SatunesIcons.OPEN_DROPDOWN_MENU
+                    )
+                    NormalText(text = stringResource(id = selectedSection.stringId))
+                }
             }
             Menu(expanded = expanded, onDismissRequest = { expanded = false })
         }
@@ -102,6 +113,6 @@ private fun Menu(
 
 @Preview
 @Composable
-private fun OpeningSectionSettingPreview() {
-    OpeningSectionSetting()
+private fun DefaultNavBarSectionSettingPreview() {
+    DefaultNavBarSectionSetting()
 }

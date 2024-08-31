@@ -23,7 +23,7 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.views.settings.logs
+package io.github.antoinepirlot.satunes.ui.views.settings
 
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Column

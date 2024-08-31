@@ -34,10 +34,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.texts.Title
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.ui.components.settings.data.folders.FoldersSubSettings
 
 /**
@@ -45,9 +43,8 @@ import io.github.antoinepirlot.satunes.ui.components.settings.data.folders.Folde
  */
 
 @Composable
-internal fun DataSettingsView(
+internal fun LibrarySettingsView(
     modifier: Modifier = Modifier,
-    satunesViewModel: SatunesViewModel = viewModel(),
 ) {
     Column(
         modifier = modifier
@@ -55,7 +52,7 @@ internal fun DataSettingsView(
             .padding(horizontal = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Title(text = stringResource(id = R.string.data_settings))
+        Title(text = stringResource(id = R.string.library_settings))
         FoldersSubSettings()
     }
 }
@@ -64,5 +61,5 @@ internal fun DataSettingsView(
 @Preview
 @Composable
 private fun FoldersSettingsViewPreview() {
-    DataSettingsView()
+    LibrarySettingsView()
 }

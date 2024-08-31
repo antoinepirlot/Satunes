@@ -39,7 +39,7 @@ internal val settingsDestinations: List<String> =
         listOf(
             Destination.SETTINGS.link, Destination.BOTTOM_BAR_SETTINGS.link,
             Destination.ANDROID_AUTO_SETTINGS.link, Destination.PLAYBACK_SETTINGS.link,
-            Destination.FOLDERS_SETTINGS.link, Destination.PLAYLISTS_SETTINGS.link,
+            Destination.LIBRARY_SETTINGS.link, Destination.PLAYLISTS_SETTINGS.link,
             Destination.PERMISSIONS_SETTINGS.link, Destination.UPDATES_SETTINGS.link,
             Destination.SEARCH_SETTINGS.link, Destination.LOGS_SETTINGS.link
         )
@@ -48,7 +48,7 @@ internal val settingsDestinations: List<String> =
         listOf(
             Destination.SETTINGS.link, Destination.BOTTOM_BAR_SETTINGS.link,
             Destination.ANDROID_AUTO_SETTINGS.link, Destination.PLAYBACK_SETTINGS.link,
-            Destination.FOLDERS_SETTINGS.link, Destination.PLAYLISTS_SETTINGS.link,
+            Destination.LIBRARY_SETTINGS.link, Destination.PLAYLISTS_SETTINGS.link,
             Destination.PERMISSIONS_SETTINGS.link, Destination.SEARCH_SETTINGS.link,
             Destination.LOGS_SETTINGS.link
         )

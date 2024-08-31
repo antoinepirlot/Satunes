@@ -53,7 +53,7 @@ internal fun initSatunes(
     satunesViewModel: SatunesViewModel?,
 ) {
     loadSatunesData(context = context, satunesViewModel = satunesViewModel)
-    PlaybackManager.checkPlaybackController(context = context, loadAllMusic = false)
+    PlaybackManager.checkPlaybackController(context = context, loadAllMusics = false)
     setNotificationOnClick(context = context)
     removeSatunesDownloadedApkFiles(context = context)
 }

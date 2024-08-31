@@ -102,7 +102,7 @@ internal fun RowScope.MediaNavBarSelection(
  *
  * @param rootRoute the root route to go
  */
-private fun backToRoot(
+internal fun backToRoot(
     rootRoute: String,
     navController: NavHostController
 ) {

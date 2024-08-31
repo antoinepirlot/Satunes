@@ -50,6 +50,8 @@ import io.github.antoinepirlot.satunes.playback.services.PlaybackController.Comp
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController.Companion.DEFAULT_IS_SHUFFLE
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController.Companion.DEFAULT_MUSIC_PLAYING
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController.Companion.DEFAULT_REPEAT_MODE
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
 
 /**
  * @author Antoine Pirlot on 10/08/2024
@@ -103,7 +105,8 @@ object PlaybackManager {
         reset()
     }
 
-    private fun playbackControllerNotExists(): Boolean = this._playbackController == null
+    private fun playbackControllerNotExists(): Boolean =
+        this._playbackController == null && !PlaybackController.isInitialized()
 
     fun isConfigured(): Boolean = !this.playbackControllerNotExists()
 
@@ -113,7 +116,9 @@ object PlaybackManager {
     ) {
         if (!DataLoader.isLoaded.value && !DataLoader.isLoading.value) {
             DataLoader.resetAllData()
-            DataLoader.loadAllData(context = context)
+            runBlocking(Dispatchers.IO) {
+                DataLoader.loadAllData(context = context)
+            }
             this.initPlayback(context = context, listener = listener, loadAllMusics = true)
         } else {
             if (this::playlist.isInitialized) {

@@ -160,7 +160,8 @@ internal class PlaybackController private constructor(
             loadAllMusics: Boolean = false
         ): PlaybackController {
             _logger.info("Init instance")
-            if (_instance == null) {
+            val isInitializing: Boolean = _instance == null
+            if (isInitializing) {
                 val sessionToken =
                     SessionToken(
                         context.applicationContext,
@@ -173,32 +174,41 @@ internal class PlaybackController private constructor(
                     loadAllMusics = loadAllMusics,
                 )
             }
-            updateListener(listener = listener)
+            updateListener(isInitializing = isInitializing, listener = listener)
             return getInstance()
         }
 
-        fun updateListener(listener: Player.Listener?) {
-            _logger.info("Update listener")
-            if (listener == this._instance?.listener) return
+        fun updateListener(listener: Player.Listener?) =
+            this.updateListener(isInitializing = false, listener = listener)
 
-            if (listener != null) {
-                while (!_instance!!::mediaController.isInitialized) {
-                    // Wait it is initializing
-                }
-                val wasPlaying: Boolean = _instance!!.isPlaying
-                if (_instance!!.isPlaying) {
-                    _instance!!.pause()
-                }
-                _instance!!.mediaController.removeListener(_instance!!.listener)
-                _instance!!.mediaController.addListener(listener)
-                _instance!!.mediaController.prepare()
-                if (wasPlaying) {
-                    _instance!!.play()
+        private fun updateListener(isInitializing: Boolean, listener: Player.Listener?) {
+            _logger.info("Update listener")
+
+            if (!isInitializing) {
+                if (listener == this._instance!!.listener) return
+                if (listener != null) {
+                    while (!isInitialized()) {
+                        _logger.info("Waiting")
+                        // Wait it is initializing
+                    }
+                    val wasPlaying: Boolean = _instance!!.isPlaying
+                    if (_instance!!.isPlaying) {
+                        _instance!!.pause()
+                    }
+                    _instance!!.mediaController.removeListener(_instance!!.listener)
+                    _instance!!.mediaController.addListener(listener)
+                    _instance!!.mediaController.prepare()
+                    if (wasPlaying) {
+                        _instance!!.play()
+                    }
                 }
             }
 
             _instance!!.listener = listener ?: _instance!!.listener
         }
+
+        internal fun isInitialized(): Boolean =
+            this._instance != null && this._instance!!::mediaController.isInitialized
     }
 
     init {

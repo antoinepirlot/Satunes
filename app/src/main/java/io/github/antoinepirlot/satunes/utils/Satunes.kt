@@ -65,6 +65,8 @@ internal fun loadSatunesData(
     if (satunesViewModel == null) {
         runBlocking {
             SettingsManager.loadSettings(context = context)
+        }
+        CoroutineScope(Dispatchers.IO).launch {
             DataLoader.loadAllData(context = context)
         }
     } else {

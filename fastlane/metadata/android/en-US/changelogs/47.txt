@@ -1,0 +1,12 @@
+New features:
+* Support of compilation
+* Classic Widget
+* Selection of default navbar section
+
+Improvements, optimizations and troubleshooting:
+* The "Folders" setting become "Library"
+* Optimize Android Auto startup
+* Hide tab section highlight when user is in settings, search or playback views
+* Fix crash when Satunes has been not used for a moment and reopen from multi-task
+* Play next is hidden on next music's options
+* Some other optimizations

@@ -55,7 +55,6 @@ import io.github.antoinepirlot.satunes.internet.updates.UpdateAvailableStatus
 import io.github.antoinepirlot.satunes.internet.updates.UpdateCheckManager
 import io.github.antoinepirlot.satunes.internet.updates.UpdateDownloadManager
 import io.github.antoinepirlot.satunes.models.Destination
-import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
 import io.github.antoinepirlot.satunes.ui.utils.showErrorSnackBar
 import io.github.antoinepirlot.satunes.ui.utils.showSnackBar
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
@@ -169,7 +168,10 @@ internal class SatunesViewModel : ViewModel() {
 
     fun setCurrentDestination(destination: String) {
         _uiState.update { currentState: SatunesUiState ->
-            currentState.copy(currentDestination = Destination.getDestination(destination = destination))
+            @Suppress("NAME_SHADOWING")
+            val destination: Destination = Destination.getDestination(destination = destination)
+            _logger.info("Going to destination: ${destination.name}")
+            currentState.copy(currentDestination = destination)
         }
     }
 
@@ -182,18 +184,22 @@ internal class SatunesViewModel : ViewModel() {
     }
 
     fun loadAllData() {
-        DataLoader.loadAllData(context = MainActivity.instance.applicationContext)
+        CoroutineScope(Dispatchers.IO).launch {
+            DataLoader.loadAllData(context = MainActivity.instance.applicationContext)
+        }
     }
 
     fun reloadAllData(playbackViewModel: PlaybackViewModel) {
-        CoroutineScope(Dispatchers.Default).launch {
+        CoroutineScope(Dispatchers.IO).launch {
             while (DatabaseManager.exportingPlaylist) {
                 // Wait
             }
-            CoroutineScope(Dispatchers.Main).launch {
-                this@SatunesViewModel.resetAllData(playbackViewModel = playbackViewModel)
-                this@SatunesViewModel.loadAllData()
+            runBlocking(Dispatchers.Main) {
+                // run from MAIN thread as media controller seems to not be reachable from IO thread
+                playbackViewModel.stop()
             }
+            DataLoader.resetAllData()
+            this@SatunesViewModel.loadAllData()
         }
     }
 
@@ -538,12 +544,6 @@ internal class SatunesViewModel : ViewModel() {
         }
     }
 
-    fun resetAllData(playbackViewModel: PlaybackViewModel) {
-        playbackViewModel.release()
-        DataLoader.resetAllData()
-        PlaybackManager.checkPlaybackController(context = MainActivity.instance.applicationContext)
-    }
-
     fun selectDefaultNavBarSection(navBarSection: NavBarSection) {
         try {
             runBlocking {
@@ -557,6 +557,19 @@ internal class SatunesViewModel : ViewModel() {
             }
         } catch (e: Throwable) {
             _logger.severe("Error while selecting new default nav bar section: ${navBarSection.name}")
+        }
+    }
+
+    fun switchCompilationMusic() {
+        try {
+            runBlocking {
+                SettingsManager.switchCompilationMusic(context = MainActivity.instance.applicationContext)
+                _uiState.update { currentState: SatunesUiState ->
+                    currentState.copy(compilationMusic = SettingsManager.compilationMusic)
+                }
+            }
+        } catch (e: Throwable) {
+            _logger.severe("Error while switching compilation music setting")
         }
     }
 }

@@ -23,35 +23,34 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.playback.models
+package io.github.antoinepirlot.satunes.ui.components.settings.data.folders
 
-import androidx.media3.common.util.UnstableApi
-import androidx.media3.session.MediaSession
-import com.google.common.util.concurrent.Futures
-import com.google.common.util.concurrent.ListenableFuture
-import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
-import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
 
 /**
- * @author Antoine Pirlot on 20/07/2024
+ * @author Antoine Pirlot on 31/08/2024
  */
 
-@UnstableApi
-object PlaybackSessionCallback : MediaSession.Callback {
-
-    private val logger: SatunesLogger = SatunesLogger.getLogger()
-
-    override fun onPlaybackResumption(
-        mediaSession: MediaSession,
-        controller: MediaSession.ControllerInfo
-    ): ListenableFuture<MediaSession.MediaItemsWithStartPosition> {
-        logger.info("onPlaybackResumption called")
-        return Futures.immediateFuture(
-            MediaSession.MediaItemsWithStartPosition(
-                PlaybackManager.playlist?.mediaItemList ?: listOf(),
-                0,
-                0
-            )
-        )
+@Composable
+internal fun FoldersSubSettings(
+    modifier: Modifier = Modifier
+) {
+    SubSettings(
+        modifier = modifier,
+        title = stringResource(R.string.folders_settings)
+    ) {
+        FoldersRowSelection()
+        FoldersPathsSelection()
     }
+}
+
+@Preview
+@Composable
+private fun FoldersSubSettingsPreview() {
+    FoldersSubSettings()
 }

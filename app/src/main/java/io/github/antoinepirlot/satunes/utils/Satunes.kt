@@ -52,8 +52,9 @@ internal fun initSatunes(
     context: Context,
     satunesViewModel: SatunesViewModel?,
 ) {
+    SatunesLogger.getLogger().info("Init Satunes")
     loadSatunesData(context = context, satunesViewModel = satunesViewModel)
-    PlaybackManager.checkPlaybackController(context = context, loadAllMusic = false)
+    PlaybackManager.checkPlaybackController(context = context, loadAllMusics = false)
     setNotificationOnClick(context = context)
     removeSatunesDownloadedApkFiles(context = context)
 }
@@ -62,9 +63,12 @@ internal fun loadSatunesData(
     context: Context,
     satunesViewModel: SatunesViewModel?
 ) {
+    SatunesLogger.getLogger().info("Load Satunes Data")
     if (satunesViewModel == null) {
         runBlocking {
             SettingsManager.loadSettings(context = context)
+        }
+        CoroutineScope(Dispatchers.IO).launch {
             DataLoader.loadAllData(context = context)
         }
     } else {
@@ -74,6 +78,7 @@ internal fun loadSatunesData(
 }
 
 internal fun removeSatunesDownloadedApkFiles(context: Context) {
+    SatunesLogger.getLogger().info("Remove Satunes Downloaded Apk Files")
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
         DataCleanerManager.removeApkFiles(context = context)
     } else {
@@ -87,6 +92,7 @@ internal fun removeSatunesDownloadedApkFiles(context: Context) {
  */
 @OptIn(UnstableApi::class)
 internal fun setNotificationOnClick(context: Context) {
+    SatunesLogger.getLogger().info("Set Notification On Click")
     val intent = Intent(context.applicationContext, MainActivity::class.java)
     CoroutineScope(Dispatchers.IO).launch {
         while (PlaybackService.mediaSession == null) {

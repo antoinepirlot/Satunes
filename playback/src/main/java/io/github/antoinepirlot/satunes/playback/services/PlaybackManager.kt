@@ -50,15 +50,19 @@ import io.github.antoinepirlot.satunes.playback.services.PlaybackController.Comp
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController.Companion.DEFAULT_IS_SHUFFLE
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController.Companion.DEFAULT_MUSIC_PLAYING
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController.Companion.DEFAULT_REPEAT_MODE
+import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
 
 /**
  * @author Antoine Pirlot on 10/08/2024
  */
 object PlaybackManager {
 
+    private val _logger: SatunesLogger = SatunesLogger.getLogger()
     private var _playbackController: PlaybackController? = null
 
-    internal lateinit var playlist: Playlist
+    internal var playlist: Playlist? = null
 
     private var listener: PlaybackListener? = null
 
@@ -93,6 +97,7 @@ object PlaybackManager {
         listener: PlaybackListener? = this.listener,
         loadAllMusics: Boolean = false
     ) {
+        _logger.info("Init playback")
         this.listener = listener
         this._playbackController =
             PlaybackController.initInstance(
@@ -103,21 +108,28 @@ object PlaybackManager {
         reset()
     }
 
-    private fun playbackControllerNotExists(): Boolean = this._playbackController == null
+    private fun playbackControllerNotExists(): Boolean =
+        this._playbackController == null && !PlaybackController.isInitialized()
 
     fun isConfigured(): Boolean = !this.playbackControllerNotExists()
 
-    private fun initPlaybackWithAllMusics(context: Context) {
+    private fun initPlaybackWithAllMusics(
+        context: Context,
+        listener: PlaybackListener? = this.listener
+    ) {
+        _logger.info("Init playback with all musics")
         if (!DataLoader.isLoaded.value && !DataLoader.isLoading.value) {
             DataLoader.resetAllData()
-            DataLoader.loadAllData(context = context)
-            this.initPlayback(context = context, loadAllMusics = true)
+            runBlocking(Dispatchers.IO) {
+                DataLoader.loadAllData(context = context)
+            }
+            this.initPlayback(context = context, listener = listener, loadAllMusics = true)
         } else {
-            if (this::playlist.isInitialized) {
-                this.initPlayback(context = context, loadAllMusics = false)
-                this._playbackController!!.loadMusics(playlist = playlist)
+            if (this.playlist != null) {
+                this.initPlayback(context = context, listener = listener, loadAllMusics = false)
+                this._playbackController!!.loadMusics(playlist = playlist!!)
             } else {
-                this.initPlayback(context = context, loadAllMusics = true)
+                this.initPlayback(context = context, listener = listener, loadAllMusics = true)
             }
         }
     }
@@ -125,25 +137,30 @@ object PlaybackManager {
     fun checkPlaybackController(
         context: Context,
         listener: PlaybackListener? = this.listener,
-        loadAllMusic: Boolean = true
+        loadAllMusics: Boolean = true
     ) {
+        _logger.info("Check Playback Controller")
         if (playbackControllerNotExists()) {
-            if (loadAllMusic) {
-                this.initPlaybackWithAllMusics(context = context)
+            if (loadAllMusics) {
+                this.initPlaybackWithAllMusics(context = context, listener = listener)
             } else {
-                this.initPlayback(context = context)
+                this.initPlayback(context = context, listener = listener)
             }
-        } else if (loadAllMusic) {
-            if (
-                !this::playlist.isInitialized
-                || (this.playlist.musicCount() == 0 && DataManager.getMusicSet().isNotEmpty())
-            ) {
-                this._playbackController!!.loadMusics(musicSet = DataManager.getMusicSet())
+        } else {
+            PlaybackController.updateListener(listener = listener)
+            if (loadAllMusics) {
+                if (
+                    this.playlist == null
+                    || (this.playlist!!.musicCount() == 0 && DataManager.getMusicSet().isNotEmpty())
+                ) {
+                    this._playbackController!!.loadMusics(musicSet = DataManager.getMusicSet())
+                }
             }
         }
     }
 
     private fun reset() {
+        _logger.info("Reset")
         musicPlaying.value = _playbackController!!.musicPlaying
         isPlaying.value = _playbackController!!.isPlaying
         repeatMode.intValue = _playbackController!!.repeatMode
@@ -156,16 +173,19 @@ object PlaybackManager {
     }
 
     fun start(context: Context, musicToPlay: Music? = null) {
+        _logger.info("Start")
         checkPlaybackController(context = context)
         this._playbackController!!.start(musicToPlay = musicToPlay)
     }
 
     fun playPause(context: Context) {
+        _logger.info("Play pause")
         checkPlaybackController(context = context)
         this._playbackController!!.playPause()
     }
 
     fun play(context: Context) {
+        _logger.info("Play")
         checkPlaybackController(context = context)
         if (musicPlaying.value == null) {
             this._playbackController!!.start()
@@ -175,54 +195,64 @@ object PlaybackManager {
     }
 
     fun pause(context: Context) {
+        _logger.info("Pause")
         checkPlaybackController(context = context)
         this._playbackController!!.pause()
     }
 
     fun getCurrentPosition(context: Context): Long {
+        _logger.info("Get current position")
         checkPlaybackController(context = context)
         return this._playbackController!!.getCurrentPosition()
     }
 
     fun getMusicPlayingIndexPosition(context: Context): Int {
+        _logger.info("Get music playing index position")
         checkPlaybackController(context = context)
         return this._playbackController!!.getMusicPlayingIndexPosition()
     }
 
     fun playNext(context: Context) {
+        _logger.info("Play next")
         checkPlaybackController(context = context)
         this._playbackController!!.playNext()
     }
 
     fun playPrevious(context: Context) {
+        _logger.info("Play previous")
         checkPlaybackController(context = context)
-        if (!this::playlist.isInitialized) {
+        if (this.playlist == null) {
             return
         }
         this._playbackController!!.playPrevious()
     }
 
     fun seekTo(context: Context, positionMs: Long) {
+        _logger.info("Seek to with position ms")
         checkPlaybackController(context = context)
         this._playbackController!!.seekTo(positionMs = positionMs)
     }
 
     fun seekTo(context: Context, positionPercentage: Float) {
+        _logger.info("Seek to with position percentage")
         checkPlaybackController(context = context)
         this._playbackController!!.seekTo(positionPercentage = positionPercentage)
     }
 
     fun seekTo(context: Context, music: Music, positionMs: Long = 0) {
+        _logger.info("Seek to with music and position ms")
         checkPlaybackController(context = context)
         this._playbackController!!.seekTo(music = music, positionMs = positionMs)
     }
 
     fun seekTo(context: Context, musicId: Long, positionMs: Long = 0) {
+        _logger.info("Seek to with music id and position ms = $positionMs")
         checkPlaybackController(context = context)
         this._playbackController!!.seekTo(musicId = musicId, positionMs = positionMs)
     }
 
     fun seekTo(context: Context, musicIndex: Int, positionMs: Long = 0) {
+        _logger.info("Seek to with music index and position ms")
         checkPlaybackController(context = context)
         this._playbackController!!.seekTo(musicIndex = musicIndex, positionMs = positionMs)
     }
@@ -233,7 +263,8 @@ object PlaybackManager {
         shuffleMode: Boolean = SettingsManager.shuffleMode,
         musicToPlay: Music? = null,
     ) {
-        checkPlaybackController(context = context, loadAllMusic = false)
+        _logger.info("Load musics")
+        checkPlaybackController(context = context, loadAllMusics = false)
         this._playbackController!!.loadMusics(
             musicSet = musicSet,
             shuffleMode = shuffleMode,
@@ -242,65 +273,78 @@ object PlaybackManager {
     }
 
     fun addToQueue(context: Context, mediaImplList: Collection<MediaImpl>) {
+        _logger.info("Add to queue with collection")
         checkPlaybackController(context = context)
         this._playbackController!!.addToQueue(mediaImplList = mediaImplList)
     }
 
     fun addToQueue(context: Context, mediaImpl: MediaImpl) {
+        _logger.info("Add to queue with media impl")
         checkPlaybackController(context = context)
         this._playbackController!!.addToQueue(mediaImpl = mediaImpl)
     }
 
     fun removeFromQueue(context: Context, mediaImplList: Collection<MediaImpl>) {
+        _logger.info("Remove from queue with collection")
         checkPlaybackController(context = context)
         this._playbackController!!.removeFromQueue(mediaImplList = mediaImplList)
     }
 
     fun removeFromQueue(context: Context, mediaImpl: MediaImpl) {
+        _logger.info("Remove from queue with media impl")
         checkPlaybackController(context = context)
         this._playbackController!!.removeFromQueue(mediaImpl = mediaImpl)
     }
 
     fun addNext(context: Context, mediaImpl: MediaImpl) {
+        _logger.info("Add next with media impl")
         checkPlaybackController(context = context)
         this._playbackController!!.addNext(mediaImpl = mediaImpl)
     }
 
     fun switchShuffleMode(context: Context) {
+        _logger.info("Switch Shuffle Mode")
         checkPlaybackController(context = context)
         this._playbackController!!.switchShuffleMode()
     }
 
     fun switchRepeatMode(context: Context) {
+        _logger.info("Switch repeat mode")
         checkPlaybackController(context = context)
         this._playbackController!!.switchRepeatMode()
     }
 
     fun stop() {
+        _logger.info("Stop")
         this._playbackController?.stop()
     }
 
     fun release() {
+        _logger.info("Release")
         this._playbackController?.release()
         this._playbackController = null
     }
 
     fun getPlaylist(context: Context): SnapshotStateList<Music> {
+        _logger.info("Get playlist")
         checkPlaybackController(context = context)
         return this._playbackController!!.getPlaylist()
     }
 
     fun isMusicInQueue(context: Context, music: Music): Boolean {
+        _logger.info("Is music in queue")
         checkPlaybackController(context = context)
         return this._playbackController!!.isMusicInQueue(music = music)
     }
 
     fun updateCurrentPosition(context: Context) {
+        _logger.info("Update current position")
         checkPlaybackController(context = context)
         this._playbackController!!.updateCurrentPosition()
     }
 
     fun getNextMusic(context: Context): Music? {
+        _logger.info("Get next music")
         checkPlaybackController(context = context)
         return this._playbackController!!.getNextMusic()
     }

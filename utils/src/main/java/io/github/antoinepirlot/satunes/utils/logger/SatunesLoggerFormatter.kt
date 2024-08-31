@@ -27,6 +27,7 @@ package io.github.antoinepirlot.satunes.utils.logger
 
 import java.util.Date
 import java.util.logging.Formatter
+import java.util.logging.Level
 import java.util.logging.LogRecord
 
 /**
@@ -41,7 +42,8 @@ internal class SatunesLoggerFormatter : Formatter() {
         val sourceMethodName: String? = record.sourceMethodName
         val date = Date(record.millis)
         val message: String = record.message
+        val level: Level = record.level
 
-        return "$threadId::$sourceClassName::$sourceMethodName::$date::$message ${System.lineSeparator()}"
+        return "$level::$threadId::$sourceClassName::$sourceMethodName::$date::$message ||${System.lineSeparator()}"
     }
 }

@@ -43,9 +43,6 @@ import io.github.antoinepirlot.satunes.database.services.database.DatabaseManage
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.database.services.widgets.WidgetDatabaseManager
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 /**
  * @author Antoine Pirlot on 22/02/24
@@ -67,6 +64,8 @@ object DataLoader {
 
     // Albums variables
     private var albumNameColumn: Int? = null
+    private var albumArtistColumn: Int? = null
+    private var albumCompilationColumn: Int? = null
 
     // Artists variables
     private var artistNameColumn: Int? = null
@@ -89,6 +88,8 @@ object DataLoader {
 
         //ALBUMS
         MediaStore.Audio.Albums.ALBUM,
+        MediaStore.Audio.Media.ALBUM_ARTIST,
+        MediaStore.Audio.Media.COMPILATION,
 
         //ARTISTS
         MediaStore.Audio.Artists.ARTIST,
@@ -142,55 +143,50 @@ object DataLoader {
     /**
      * Load all Media data from device's storage.
      */
-    fun loadAllData(context: Context) {
-        //TODO No coroutine here as in app its a thread but in android auto it's must block the process
+    suspend fun loadAllData(context: Context) {
+        if (isLoading.value || (isLoaded.value && DataManager.getMusicSet().isNotEmpty())) return
 
+        isLoading.value = true
         // this allow data to be reloaded if no data loaded
         if (DataManager.getMusicSet().isEmpty()) this.resetAllData()
 
-        if (isLoading.value || isLoaded.value) return
-
-        isLoading.value = true
         WidgetDatabaseManager.refreshWidgets()
-        CoroutineScope(Dispatchers.IO).launch {
-            if (!this@DataLoader::selection.isInitialized || !this@DataLoader::selection_args.isInitialized) {
-                this@DataLoader.loadFoldersPaths()
-            }
+        if (!this@DataLoader::selection.isInitialized || !this@DataLoader::selection_args.isInitialized) {
+            this@DataLoader.loadFoldersPaths()
+        }
 
-            if (
-                this@DataLoader.selection_args.isEmpty()
-                && SettingsManager.foldersSelectionSelected == FoldersSelection.INCLUDE
-            ) {
-                isLoaded.value = true
-                isLoading.value = false
-                return@launch
-            }
-
-            context.contentResolver.query(
-                URI,
-                projection,
-                this@DataLoader.selection,
-                this@DataLoader.selection_args,
-                null
-            )?.use {
-                _logger.info("${it.count} musics to load.")
-                loadColumns(cursor = it)
-                while (it.moveToNext()) {
-                    loadData(cursor = it, context = context)
-                }
-            }
-            DatabaseManager.initInstance(context = context).loadAllPlaylistsWithMusic()
+        if (
+            this@DataLoader.selection_args.isEmpty()
+            && SettingsManager.foldersSelectionSelected == FoldersSelection.INCLUDE
+        ) {
             isLoaded.value = true
             isLoading.value = false
-            WidgetDatabaseManager.refreshWidgets()
+            return
         }
+
+        context.contentResolver.query(
+            URI,
+            projection,
+            this@DataLoader.selection,
+            this@DataLoader.selection_args,
+            null
+        )?.use {
+            _logger.info("${it.count} musics to load.")
+            loadColumns(cursor = it)
+            while (it.moveToNext()) {
+                loadData(cursor = it, context = context)
+            }
+        }
+        DatabaseManager.initInstance(context = context).loadAllPlaylistsWithMusic()
+        WidgetDatabaseManager.refreshWidgets()
+        isLoaded.value = true
+        isLoading.value = false
     }
 
     /**
      * Cache columns and columns indices for data to load
      */
-    private fun
-            loadColumns(cursor: Cursor) {
+    private fun loadColumns(cursor: Cursor) {
         // Cache music columns indices.
         musicIdColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID)
         musicNameColumn =
@@ -206,6 +202,9 @@ object DataLoader {
         //Cache album columns indices
         try {
             albumNameColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Albums.ALBUM)
+            albumArtistColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ARTIST)
+            albumCompilationColumn =
+                cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.COMPILATION)
         } catch (_: IllegalArgumentException) {
             // No album
         }
@@ -235,7 +234,7 @@ object DataLoader {
         val artist: Artist = loadArtist(context = context, cursor = cursor)
 
         //Load album
-        val album: Album = loadAlbum(cursor = cursor, artist = artist, context = context)
+        val album: Album = loadAlbum(cursor = cursor, context = context)
 
         //Link album to artist if the album doesn't already have the album
         artist.addAlbum(album = album)
@@ -251,7 +250,6 @@ object DataLoader {
         //Load music and folder inside load music function
         try {
             loadMusic(
-                context = context,
                 cursor = cursor,
                 album = album,
                 artist = artist,
@@ -284,7 +282,6 @@ object DataLoader {
      * @return the created music
      */
     private fun loadMusic(
-        context: Context,
         cursor: Cursor,
         album: Album,
         artist: Artist,
@@ -325,7 +322,6 @@ object DataLoader {
             artist = artist,
             folder = folder,
             genre = genre,
-            context = context
         )
     }
 
@@ -374,23 +370,63 @@ object DataLoader {
             UNKNOWN_ARTIST
         }
 
+        val isCompilation: Boolean = cursor.getInt(albumCompilationColumn!!) == 1
+
         if (name == UNKNOWN_ARTIST) {
-            name = context.getString(R.string.unknown_artist)
+            name = if (isCompilation) {
+                context.getString(R.string.various_artists)
+            } else {
+                context.getString(R.string.unknown_artist)
+            }
         }
+
         return DataManager.addArtist(artist = Artist(title = name))
     }
 
-    private fun loadAlbum(context: Context, cursor: Cursor, artist: Artist): Album {
+    private fun loadAlbumArtist(context: Context, cursor: Cursor): Artist {
+        var name: String = try {
+            cursor.getString(albumArtistColumn!!)
+        } catch (e: NullPointerException) {
+            UNKNOWN_ARTIST
+        }
+
+        val isCompilation: Boolean = cursor.getInt(albumCompilationColumn!!) == 1
+
+        if (name == UNKNOWN_ARTIST) {
+            name = if (isCompilation) {
+                context.getString(R.string.various_artists)
+            } else {
+                context.getString(R.string.unknown_artist)
+            }
+        }
+
+        return DataManager.addArtist(artist = Artist(title = name))
+    }
+
+    private fun loadAlbum(context: Context, cursor: Cursor): Album {
         var name = try {
             cursor.getString(albumNameColumn!!)
         } catch (e: NullPointerException) {
             UNKNOWN_ALBUM
         }
 
+        val isCompilation: Boolean = cursor.getInt(albumCompilationColumn!!) == 1
+
         if (name == UNKNOWN_ALBUM) {
             name = context.getString(R.string.unknown_album)
         }
-        return DataManager.addAlbum(album = Album(title = name, artist = artist))
+
+        val artist: Artist = loadAlbumArtist(context = context, cursor = cursor)
+
+        val album: Album = DataManager.addAlbum(
+            album = Album(
+                title = name,
+                artist = artist,
+                isCompilation = isCompilation
+            )
+        )
+        artist.addAlbum(album = album)
+        return album
     }
 
 

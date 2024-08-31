@@ -38,7 +38,6 @@ import androidx.compose.material.icons.rounded.ArrowDropUp
 import androidx.compose.material.icons.rounded.BatterySaver
 import androidx.compose.material.icons.rounded.Category
 import androidx.compose.material.icons.rounded.Close
-import androidx.compose.material.icons.rounded.CreateNewFolder
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.DirectionsCar
 import androidx.compose.material.icons.rounded.Done
@@ -48,6 +47,7 @@ import androidx.compose.material.icons.rounded.FavoriteBorder
 import androidx.compose.material.icons.rounded.Folder
 import androidx.compose.material.icons.rounded.GraphicEq
 import androidx.compose.material.icons.rounded.Info
+import androidx.compose.material.icons.rounded.LibraryMusic
 import androidx.compose.material.icons.rounded.LogoDev
 import androidx.compose.material.icons.rounded.MusicNote
 import androidx.compose.material.icons.rounded.Navigation
@@ -139,9 +139,9 @@ enum class SatunesIcons(
     REPEAT_ONE(imageVector = Icons.Rounded.RepeatOne, description = "Repeat One On Icon"),
     SEARCH(imageVector = Icons.Rounded.Search, description = "Search Icon"),
     SETTINGS(imageVector = Icons.Rounded.Settings, description = "Settings Icon"),
-    SETTING_FOLDERS(
-        imageVector = Icons.Rounded.CreateNewFolder,
-        description = "Folders Setting Icon"
+    SETTING_LIBRARY(
+        imageVector = Icons.Rounded.LibraryMusic,
+        description = "Library Setting Icon"
     ),
     SETTING_LOGS(imageVector = Icons.Rounded.LogoDev, description = "Log Setting Icon"),
     SETTING_PERMISSIONS(

@@ -1,6 +1,24 @@
 # Releases (🇬🇧)
 Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
+## 2.2 (Android 5.1.1 Lollipop and later)
+
+### 2.2.0
+
+New features:
+
+* Support of compilation
+* Classic Widget
+* Selection of default navbar section
+
+Improvements, optimizations and troubleshooting:
+
+* Optimize Android Auto startup
+* Hide tab section highlight when user is in settings, search or playback views
+* Fix crash when Satunes has been not used for a moment and reopen from multi-task
+* Play next is hidden on next music's options
+* Some other optimizations
+
 ## 2.1 (Android 5.1.1 Lollipop and later)
 
 ### 2.1.2

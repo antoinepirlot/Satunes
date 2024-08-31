@@ -62,7 +62,7 @@ object PlaybackManager {
     private val _logger: SatunesLogger = SatunesLogger.getLogger()
     private var _playbackController: PlaybackController? = null
 
-    internal lateinit var playlist: Playlist
+    internal var playlist: Playlist? = null
 
     private var listener: PlaybackListener? = null
 
@@ -125,9 +125,9 @@ object PlaybackManager {
             }
             this.initPlayback(context = context, listener = listener, loadAllMusics = true)
         } else {
-            if (this::playlist.isInitialized) {
+            if (this.playlist != null) {
                 this.initPlayback(context = context, listener = listener, loadAllMusics = false)
-                this._playbackController!!.loadMusics(playlist = playlist)
+                this._playbackController!!.loadMusics(playlist = playlist!!)
             } else {
                 this.initPlayback(context = context, listener = listener, loadAllMusics = true)
             }
@@ -150,8 +150,8 @@ object PlaybackManager {
             PlaybackController.updateListener(listener = listener)
             if (loadAllMusics) {
                 if (
-                    !this::playlist.isInitialized
-                    || (this.playlist.musicCount() == 0 && DataManager.getMusicSet().isNotEmpty())
+                    this.playlist == null
+                    || (this.playlist!!.musicCount() == 0 && DataManager.getMusicSet().isNotEmpty())
                 ) {
                     this._playbackController!!.loadMusics(musicSet = DataManager.getMusicSet())
                 }
@@ -221,7 +221,7 @@ object PlaybackManager {
     fun playPrevious(context: Context) {
         _logger.info("Play previous")
         checkPlaybackController(context = context)
-        if (!this::playlist.isInitialized) {
+        if (this.playlist == null) {
             return
         }
         this._playbackController!!.playPrevious()

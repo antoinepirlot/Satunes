@@ -36,6 +36,9 @@ Tu as le droit de réutiliser mon code pour créer une nouvelle application dér
     <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/10.png" width = "200">
     <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/11.png" width = "200">
     <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/12.png" width = "200">
+    <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/13.png" width = "200">
+    <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/14.png" width = "200">
+    <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/15.png" width = "200">
 </p>
 
 # Fonctionnalités

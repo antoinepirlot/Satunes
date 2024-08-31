@@ -64,7 +64,7 @@ internal enum class Destination(val link: String) {
             Pair(first = ARTISTS.link, second = ARTISTS),
             Pair(first = BATTERY_SETTINGS.link, second = BATTERY_SETTINGS),
             Pair(first = BOTTOM_BAR_SETTINGS.link, second = BOTTOM_BAR_SETTINGS),
-            Pair(first = FOLDERS_SETTINGS.link, second = FOLDERS_SETTINGS),
+            Pair(first = LIBRARY_SETTINGS.link, second = LIBRARY_SETTINGS),
             Pair(first = FOLDERS.link, second = FOLDERS),
             Pair(first = GENRES.link, second = GENRES),
             Pair(first = LOGS_SETTINGS.link, second = LOGS_SETTINGS),

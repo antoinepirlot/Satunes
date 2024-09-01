@@ -71,7 +71,7 @@ internal fun DefaultNavBarSectionSetting(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
-        NormalText(text = stringResource(id = R.string.opening_section_setting_content))
+        NormalText(text = stringResource(id = R.string.default_section_setting_content))
         Box {
             TextButton(onClick = { expanded = true }) {
                 Row {

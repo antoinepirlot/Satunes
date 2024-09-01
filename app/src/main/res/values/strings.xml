@@ -35,7 +35,6 @@
     <string name="folders_settings">Folders</string>
     <string name="bar_speed">"Progress bar speed: "</string>
     <string name="export">Export</string>
-    <string name="export_all">Export All</string>
     <string name="_import">Import</string>
     <string name="no_file_created">No file created</string>
     <string name="read_audio_permission">Music and audio</string>

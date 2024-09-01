@@ -1,7 +1,14 @@
 # Versions (🇫🇷)
 You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
-## 2.2
+## 2.2 (Android 5.1.1 Lollipop et ultérieur)
+
+### 2.2.1
+
+Améliorations, optimisations et dépannage:
+
+* Correction du crash sur les versions Android Quince Tart (10) et plus anciennes
+* Mise à jour de quelques chaînes de caractères
 
 ### 2.2.0
 

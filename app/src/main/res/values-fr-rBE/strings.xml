@@ -35,7 +35,6 @@
     <string name="folders_settings">Dossiers</string>
     <string name="bar_speed">"Vitesse de la barre de progression: "</string>
     <string name="export">Exporter</string>
-    <string name="export_all">Exporter tout</string>
     <string name="_import">Importer</string>
     <string name="no_file_created">Le fichier n\'a pas été créé</string>
     <string name="read_audio_permission">Musique et audio</string>
@@ -89,14 +88,15 @@
     <string name="add_musics_to_playlists_success">Les musiques ont été ajoutées aux playlists</string>
     <string name="remove_from_queue_option">Retirer de la file d\'attente</string>
     <string name="remove_from_queue_success">%1$s a été supprimée de la liste d\'attente.</string>
-    <string name="export_all_dialog_content">Si tu as modifié les chemins, je te conseille d\'exporter tes playlists. \nCertaines musiques peuvent être définitivement supprimées des playlists.\nSouhaites-tu exporter tes playlists?</string>
+    <string name="export_all_dialog_content">Si tu as modifié les chemins, je te conseille d\'exporter tes playlists. \nCertaines musiques peuvent être définitivement supprimées des playlists.\n\nSouhaites-tu exporter tes playlists?</string>
     <string name="warning">Attention</string>
     <string name="yes">Oui</string>
     <string name="no">Non</string>
     <string name="classic_widget_description">Classique</string>
     <string name="load_satunes_text">Charger Satunes</string>
-    <string name="opening_section_setting_content">Menu par défault</string>
+    <string name="default_section_setting_content">Section par défault:</string>
     <string name="library_settings">Bibliothèque</string>
     <string name="data_loading_settings_title">Logique de chargement</string>
     <string name="compilation_music_setting_text">Ajouter les musiques de la compilation à la liste des musiques de son artiste</string>
+    <string name="reload_library_no_export_button">Ne pas exporter</string>
 </resources>

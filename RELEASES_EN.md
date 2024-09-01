@@ -7,7 +7,7 @@ Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
 Improvements, optimizations and troubleshooting:
 
-* Fix crash on Android Quince Tart (10) and older versions
+* Fix crash on Android 10 (Quince Tart) and older versions
 * Update some strings
 
 ### 2.2.0

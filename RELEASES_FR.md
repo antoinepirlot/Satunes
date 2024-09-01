@@ -7,7 +7,7 @@ You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
 Améliorations, optimisations et dépannage:
 
-* Correction du crash sur les version Android Quince Tart (10) et plus anciennes
+* Correction du crash sur les versions Android Quince Tart (10) et plus anciennes
 * Mise à jour de quelques chaînes de caractères
 
 ### 2.2.0

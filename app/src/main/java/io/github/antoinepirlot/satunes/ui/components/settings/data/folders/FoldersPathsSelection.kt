@@ -168,7 +168,7 @@ private fun Footer(
                             showDialog = false
                             satunesViewModel.reloadAllData(playbackViewModel = playbackViewModel)
                         }) {
-                            NormalText(text = stringResource(id = R.string.no))
+                            NormalText(text = stringResource(id = R.string.reload_library_no_export_button))
                         }
 
                         TextButton(onClick = {
@@ -179,7 +179,7 @@ private fun Footer(
                             showDialog = false
                             satunesViewModel.reloadAllData(playbackViewModel = playbackViewModel)
                         }) {
-                            NormalText(text = stringResource(id = R.string.yes))
+                            NormalText(text = stringResource(id = R.string.export))
                         }
                     }
                 }

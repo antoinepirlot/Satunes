@@ -35,7 +35,6 @@
     <string name="folders_settings">Folders</string>
     <string name="bar_speed">"Progress bar speed: "</string>
     <string name="export">Export</string>
-    <string name="export_all">Export All</string>
     <string name="_import">Import</string>
     <string name="no_file_created">No file created</string>
     <string name="read_audio_permission">Music and audio</string>
@@ -92,14 +91,15 @@
     <string name="add_musics_to_playlists_success">Musics have been added to playlists</string>
     <string name="remove_from_queue_option">Remove from queue</string>
     <string name="remove_from_queue_success">%1$s has been remove from queue.</string>
-    <string name="export_all_dialog_content">If you changed the paths, I advise you to export your playlists.\nSome music might be permanently deleted from the playlists.\nWould you like to export your playlists?</string>
+    <string name="export_all_dialog_content">If you changed the paths, I advise you to export your playlists.\nSome music might be permanently deleted from the playlists.\n\nWould you like to export your playlists?</string>
     <string name="warning">Warning</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="classic_widget_description">Classic</string>
     <string name="load_satunes_text">Load Satunes</string>
-    <string name="opening_section_setting_content">Default section:</string>
+    <string name="default_section_setting_content">Default section:</string>
     <string name="library_settings">Library</string>
     <string name="data_loading_settings_title">Loading logic</string>
     <string name="compilation_music_setting_text">Add compilation\'s musics to its artist\'s music list</string>
+    <string name="reload_library_no_export_button">Don\'t export</string>
 </resources>

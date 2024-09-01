@@ -3,6 +3,13 @@ Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
 ## 2.2 (Android 5.1.1 Lollipop and later)
 
+### 2.2.1
+
+Improvements, optimizations and troubleshooting:
+
+* Fix crash on Android Quince Tart (10) and older versions
+* Update some strings
+
 ### 2.2.0
 
 New features:

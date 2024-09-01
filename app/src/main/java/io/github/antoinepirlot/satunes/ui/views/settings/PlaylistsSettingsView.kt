@@ -87,7 +87,7 @@ internal fun PlaylistsSettingsView(
                         snackBarHostState = snackBarHostState
                     )
                 },
-                text = stringResource(id = R.string.export_all)
+                text = stringResource(id = R.string.export)
             )
 
             Spacer(modifier = Modifier.size(16.dp))

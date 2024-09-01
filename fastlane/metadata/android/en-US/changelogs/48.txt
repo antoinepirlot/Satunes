@@ -1,0 +1,4 @@
+Improvements, optimizations and troubleshooting:
+
+* Fix crash on Android Quince Tart (10) and older versions
+* Update some strings

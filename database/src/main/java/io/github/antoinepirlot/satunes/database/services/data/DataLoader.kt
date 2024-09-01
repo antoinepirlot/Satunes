@@ -89,7 +89,6 @@ object DataLoader {
         //ALBUMS
         MediaStore.Audio.Albums.ALBUM,
         MediaStore.Audio.Media.ALBUM_ARTIST,
-        MediaStore.Audio.Media.COMPILATION,
 
         //ARTISTS
         MediaStore.Audio.Artists.ARTIST,
@@ -107,6 +106,7 @@ object DataLoader {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             //Genre
             projection += MediaStore.Audio.Media.GENRE
+            projection += MediaStore.Audio.Media.COMPILATION
         }
     }
 
@@ -203,8 +203,10 @@ object DataLoader {
         try {
             albumNameColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Albums.ALBUM)
             albumArtistColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ARTIST)
-            albumCompilationColumn =
-                cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.COMPILATION)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                albumCompilationColumn =
+                    cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.COMPILATION)
+            }
         } catch (_: IllegalArgumentException) {
             // No album
         }
@@ -370,7 +372,13 @@ object DataLoader {
             UNKNOWN_ARTIST
         }
 
-        val isCompilation: Boolean = cursor.getInt(albumCompilationColumn!!) == 1
+
+        val isCompilation: Boolean =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                cursor.getInt(albumCompilationColumn!!) == 1
+            } else {
+                false
+            }
 
         if (name == UNKNOWN_ARTIST) {
             name = if (isCompilation) {
@@ -390,7 +398,12 @@ object DataLoader {
             UNKNOWN_ARTIST
         }
 
-        val isCompilation: Boolean = cursor.getInt(albumCompilationColumn!!) == 1
+        val isCompilation: Boolean =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                cursor.getInt(albumCompilationColumn!!) == 1
+            } else {
+                false
+            }
 
         if (name == UNKNOWN_ARTIST) {
             name = if (isCompilation) {
@@ -410,7 +423,12 @@ object DataLoader {
             UNKNOWN_ALBUM
         }
 
-        val isCompilation: Boolean = cursor.getInt(albumCompilationColumn!!) == 1
+        val isCompilation: Boolean =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                cursor.getInt(albumCompilationColumn!!) == 1
+            } else {
+                false
+            }
 
         if (name == UNKNOWN_ALBUM) {
             name = context.getString(R.string.unknown_album)

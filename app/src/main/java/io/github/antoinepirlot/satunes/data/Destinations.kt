@@ -26,16 +26,11 @@
 package io.github.antoinepirlot.satunes.data
 
 import android.os.Build
-import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.models.Destination
-import io.github.antoinepirlot.satunes.router.utils.getNavBarSectionDestination
 
 /**
  * @author Antoine Pirlot on 26/07/2024
  */
-
-internal val DEFAULT_DESTINATION: Destination =
-    getNavBarSectionDestination(navBarSection = SettingsManager.defaultNavBarSection)
 
 internal val settingsDestinations: List<Destination> =
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

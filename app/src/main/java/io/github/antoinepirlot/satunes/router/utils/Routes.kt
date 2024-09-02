@@ -25,7 +25,6 @@
 
 package io.github.antoinepirlot.satunes.router.utils
 
-import io.github.antoinepirlot.satunes.data.DEFAULT_DESTINATION
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.models.Destination
 
@@ -43,5 +42,5 @@ private val navBarSectionDestinationMap: Map<NavBarSection, Destination> = mapOf
 )
 
 internal fun getNavBarSectionDestination(navBarSection: NavBarSection): Destination {
-    return navBarSectionDestinationMap[navBarSection] ?: DEFAULT_DESTINATION
+    return navBarSectionDestinationMap[navBarSection]!!
 }

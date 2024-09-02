@@ -30,7 +30,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -73,8 +72,11 @@ internal fun FoldersPathsSelection(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
 ) {
+    val scope: CoroutineScope = LocalMainScope.current
+    val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
+
     LazyColumn(
-        modifier = modifier,
+        modifier = modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         items(
@@ -98,7 +100,13 @@ internal fun FoldersPathsSelection(
                 )
                 IconButton(
                     icon = SatunesIcons.REMOVE_ICON,
-                    onClick = { satunesViewModel.removePath(path = it) }
+                    onClick = {
+                        satunesViewModel.removePath(
+                            scope = scope,
+                            snackBarHostState = snackBarHostState,
+                            path = it
+                        )
+                    }
                 )
             }
 
@@ -108,8 +116,13 @@ internal fun FoldersPathsSelection(
         }
     }
     if (satunesViewModel.foldersPathsSelectedSet.isEmpty()) {
-        NormalText(text = stringResource(id = R.string.path_set_empty))
-        Footer()
+        Column(
+            modifier = modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            NormalText(text = stringResource(id = R.string.path_set_empty))
+            Footer()
+        }
     }
 }
 
@@ -130,9 +143,7 @@ private fun Footer(
 
     //Show text "Add path to exclude/include".
     Column(
-        modifier = modifier
-            .padding(vertical = spacerSize)
-            .width(250.dp),
+        modifier = modifier.width(250.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
     ) {

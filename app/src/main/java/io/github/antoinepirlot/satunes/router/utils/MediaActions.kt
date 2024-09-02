@@ -26,6 +26,7 @@
 package io.github.antoinepirlot.satunes.router.utils
 
 import androidx.navigation.NavHostController
+import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Folder
@@ -34,8 +35,6 @@ import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.models.Destination
-import io.github.antoinepirlot.satunes.ui.utils.startMusic
-import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 
 /**
@@ -59,7 +58,7 @@ internal fun openMedia(
     navController: NavHostController?,
 ) {
     if (media == null || media is Music) {
-        startMusic(playbackViewModel = playbackViewModel, mediaToPlay = media)
+        playbackViewModel.start(mediaToPlay = media)
     }
     if (navigate) {
         if (navController == null) {

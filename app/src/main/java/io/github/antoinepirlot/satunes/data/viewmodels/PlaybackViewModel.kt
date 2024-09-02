@@ -290,11 +290,23 @@ class PlaybackViewModel : ViewModel() {
         )
     }
 
-    fun start(mediaToPlay: Music? = null) {
-        PlaybackManager.start(
-            context = MainActivity.instance.applicationContext,
-            musicToPlay = mediaToPlay
-        )
+    fun start(mediaToPlay: MediaImpl? = null) {
+        when (mediaToPlay) {
+            is Music -> {
+                PlaybackManager.start(
+                    context = MainActivity.instance.applicationContext,
+                    musicToPlay = mediaToPlay
+                )
+            }
+
+            is Folder -> {
+                PlaybackManager.start(context = MainActivity.instance.applicationContext)
+            }
+
+            null -> {
+                PlaybackManager.start(context = MainActivity.instance.applicationContext)
+            }
+        }
     }
 
     fun updateCurrentPosition() {

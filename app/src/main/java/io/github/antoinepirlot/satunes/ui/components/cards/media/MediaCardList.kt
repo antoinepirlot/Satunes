@@ -31,6 +31,9 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedback
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -54,6 +57,7 @@ internal fun MediaCardList(
     openedPlaylist: Playlist? = null,
     scrollToMusicPlaying: Boolean = false,
 ) {
+    val haptics: HapticFeedback = LocalHapticFeedback.current
     val lazyListState = rememberLazyListState()
     val mediaListToLoad: List<MediaImpl> =
         try {
@@ -84,7 +88,10 @@ internal fun MediaCardList(
                 modifier = modifier,
                 navController = navController,
                 media = media,
-                onClick = { openMedia(media) },
+                onClick = {
+                    haptics.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                    openMedia(media)
+                },
                 openedPlaylist = openedPlaylist,
             )
         }

@@ -29,13 +29,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
-import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
@@ -49,31 +47,6 @@ import io.github.antoinepirlot.satunes.icons.SatunesIcons.PLAYLIST
 /**
  * @author Antoine Pirlot on 27/01/24
  */
-
-/**
- * Start the music
- *
- * @param mediaToPlay the music to play from the music list
- */
-
-internal fun startMusic(
-    playbackViewModel: PlaybackViewModel,
-    mediaToPlay: MediaImpl? = null
-) {
-    when (mediaToPlay) {
-        is Music -> {
-            playbackViewModel.start(mediaToPlay)
-        }
-
-        is Folder -> {
-            playbackViewModel.start()
-        }
-
-        null -> {
-            playbackViewModel.start()
-        }
-    }
-}
 
 fun getRightIconAndDescription(navBarSection: NavBarSection): Pair<ImageVector, String> {
     return when (navBarSection) {

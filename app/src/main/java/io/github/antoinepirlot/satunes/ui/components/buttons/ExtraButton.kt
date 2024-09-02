@@ -28,12 +28,14 @@ package io.github.antoinepirlot.satunes.ui.components.buttons
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedback
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -42,6 +44,7 @@ import io.github.antoinepirlot.jetpack_libs.components.models.ScreenSizes
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import io.github.antoinepirlot.satunes.ui.components.images.Icon
 
 /**
  * @author Antoine Pirlot on 20/04/2024
@@ -56,6 +59,7 @@ internal fun ExtraButton(
     onClick: () -> Unit,
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+    val haptics: HapticFeedback = LocalHapticFeedback.current
 
     if (icon == SatunesIcons.SHUFFLE && satunesUiState.shuffleMode)
         return //The shuffle mode is always activated by default and don't need to be shown
@@ -68,17 +72,14 @@ internal fun ExtraButton(
         modifier = modifier
             .padding(bottom = 8.dp)
             .size(buttonSize),
-        onClick = onClick
-    ) {
-        @Suppress("NAME_SHADOWING")
-        var description: String = description?: icon.description
-        if (description.isBlank()) {
-            description = icon.description
+        onClick = {
+            haptics.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+            onClick()
         }
+    ) {
         Icon(
+            icon = icon,
             modifier = Modifier.size(buttonSize / 2),
-            imageVector = icon.imageVector,
-            contentDescription = description
         )
     }
 }

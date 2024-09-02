@@ -26,7 +26,6 @@
 package io.github.antoinepirlot.satunes.ui.components.bars
 
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Icon
 import androidx.compose.material3.LargeFloatingActionButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -39,6 +38,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import io.github.antoinepirlot.jetpack_libs.components.models.ScreenSizes
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import io.github.antoinepirlot.satunes.ui.components.images.Icon
 
 /**
  * @author Antoine Pirlot on 3/02/24
@@ -65,8 +65,7 @@ internal fun ShowCurrentMusicButton(
     ) {
         Icon(
             modifier = Modifier.size(buttonSize / 1.5f),
-            imageVector = SatunesIcons.MUSIC.imageVector,
-            contentDescription = "Show Current Music Icon"
+            icon = SatunesIcons.MUSIC
         )
     }
 }

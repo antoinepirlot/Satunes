@@ -28,7 +28,6 @@ package io.github.antoinepirlot.satunes.ui.components.buttons
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -42,6 +41,7 @@ import io.github.antoinepirlot.jetpack_libs.components.models.ScreenSizes
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import io.github.antoinepirlot.satunes.ui.components.images.Icon
 
 /**
  * @author Antoine Pirlot on 20/04/2024
@@ -70,15 +70,9 @@ internal fun ExtraButton(
             .size(buttonSize),
         onClick = onClick
     ) {
-        @Suppress("NAME_SHADOWING")
-        var description: String = description?: icon.description
-        if (description.isBlank()) {
-            description = icon.description
-        }
         Icon(
+            icon = icon,
             modifier = Modifier.size(buttonSize / 2),
-            imageVector = icon.imageVector,
-            contentDescription = description
         )
     }
 }

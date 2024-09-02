@@ -99,4 +99,5 @@
     <string name="data_loading_settings_title">Loading logic</string>
     <string name="compilation_music_setting_text">Add compilation\'s musics to its artist\'s music list</string>
     <string name="reload_library_no_export_button">Don\'t export</string>
+    <string name="export_log_button_content">Export logs</string>
 </resources>

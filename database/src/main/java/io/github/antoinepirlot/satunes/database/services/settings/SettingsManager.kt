@@ -511,6 +511,7 @@ object SettingsManager {
     private fun getFormattedPath(path: String): String {
         val formattedPath: String = Uri.decode(path)
         val splitList: List<String> = formattedPath.split(":")
+        if (splitList.size == 1) return path
         var storage: String = splitList[0].split("/").last()
         if (storage == "primary") {
             storage = "0"

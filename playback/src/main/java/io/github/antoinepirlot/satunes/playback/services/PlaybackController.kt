@@ -521,8 +521,8 @@ internal class PlaybackController private constructor(
                 oldIndex = musicToMoveIndex,
                 newIndex = newIndex - 1
             )
-            this.mediaController.moveMediaItem(musicToMoveIndex, newIndex)
-            this.musicPlayingIndex -= 1
+            this.mediaController.moveMediaItem(musicToMoveIndex, newIndex - 1)
+            this.musicPlayingIndex = this.mediaController.currentMediaItemIndex
         } else {
             this.playlist!!.moveMusic(
                 music = music,

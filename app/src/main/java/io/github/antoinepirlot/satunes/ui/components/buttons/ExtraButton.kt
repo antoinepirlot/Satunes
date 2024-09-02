@@ -32,7 +32,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedback
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -56,6 +59,7 @@ internal fun ExtraButton(
     onClick: () -> Unit,
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+    val haptics: HapticFeedback = LocalHapticFeedback.current
 
     if (icon == SatunesIcons.SHUFFLE && satunesUiState.shuffleMode)
         return //The shuffle mode is always activated by default and don't need to be shown
@@ -68,7 +72,10 @@ internal fun ExtraButton(
         modifier = modifier
             .padding(bottom = 8.dp)
             .size(buttonSize),
-        onClick = onClick
+        onClick = {
+            haptics.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+            onClick()
+        }
     ) {
         Icon(
             icon = icon,

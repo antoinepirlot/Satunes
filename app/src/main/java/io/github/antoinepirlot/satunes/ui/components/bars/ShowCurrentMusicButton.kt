@@ -30,7 +30,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.LargeFloatingActionButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedback
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -46,6 +49,8 @@ internal fun ShowCurrentMusicButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
+    val haptics: HapticFeedback = LocalHapticFeedback.current
+
     val screenWidthDp: Int = LocalConfiguration.current.screenWidthDp
     val buttonSize: Dp = if (screenWidthDp < ScreenSizes.VERY_VERY_SMALL)
         80.dp
@@ -53,7 +58,10 @@ internal fun ShowCurrentMusicButton(
         100.dp
     LargeFloatingActionButton(
         modifier = modifier.size(buttonSize),
-        onClick = onClick
+        onClick = {
+            haptics.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+            onClick()
+        }
     ) {
         Icon(
             modifier = Modifier.size(buttonSize / 1.5f),

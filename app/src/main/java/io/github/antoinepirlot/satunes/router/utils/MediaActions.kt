@@ -25,6 +25,7 @@
 
 package io.github.antoinepirlot.satunes.router.utils
 
+import androidx.annotation.Discouraged
 import androidx.navigation.NavHostController
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.database.models.Album
@@ -60,6 +61,46 @@ internal fun openMedia(
     if (media == null || media is Music) {
         playbackViewModel.start(mediaToPlay = media)
     }
+    if (navigate) {
+        if (navController == null) {
+            val message = "navController can't be null if you navigate"
+            val logger = SatunesLogger.getLogger()
+            logger.severe(message)
+            throw IllegalArgumentException(message)
+        }
+        navController.navigate(getDestinationOf(media))
+    }
+}
+
+/**
+ * Load musics to play and play the media if this is music and then navigate to the right view
+ *
+ * There's some conditions:
+ *      If the music set is null, then do not load musics
+ *      If the media is the music playing, then do not load musics even if music set is not null
+ *
+ * TODO
+ *
+ * @param media the mediaImpl to open
+ */
+@Discouraged("Not finished")
+internal fun openMediaBis(
+    playbackViewModel: PlaybackViewModel,
+    media: MediaImpl? = null,
+    navigate: Boolean = true,
+    navController: NavHostController?,
+    musicSet: Set<Music>? = null,
+) {
+    if (media != playbackViewModel.musicPlaying) {
+        if (musicSet != null) {
+            if (media is Music?)
+                playbackViewModel.loadMusic(musicSet = musicSet, musicToPlay = media)
+            else
+                playbackViewModel.loadMusic(musicSet = musicSet)
+        }
+        playbackViewModel.start(mediaToPlay = media)
+    }
+
     if (navigate) {
         if (navController == null) {
             val message = "navController can't be null if you navigate"

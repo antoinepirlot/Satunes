@@ -72,6 +72,9 @@ internal fun FoldersPathsSelection(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
 ) {
+    val scope: CoroutineScope = LocalMainScope.current
+    val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
+
     LazyColumn(
         modifier = modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -97,7 +100,13 @@ internal fun FoldersPathsSelection(
                 )
                 IconButton(
                     icon = SatunesIcons.REMOVE_ICON,
-                    onClick = { satunesViewModel.removePath(path = it) }
+                    onClick = {
+                        satunesViewModel.removePath(
+                            scope = scope,
+                            snackBarHostState = snackBarHostState,
+                            path = it
+                        )
+                    }
                 )
             }
 

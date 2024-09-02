@@ -100,4 +100,5 @@
     <string name="compilation_music_setting_text">Ajouter les musiques de la compilation à la liste des musiques de son artiste</string>
     <string name="reload_library_no_export_button">Ne pas exporter</string>
     <string name="export_log_button_content">Exporter les logs</string>
+    <string name="path_removed">%1$s a été supprimé.</string>
 </resources>

@@ -535,11 +535,28 @@ internal class SatunesViewModel : ViewModel() {
         MainActivity.instance.startActivityForResult(intent, MainActivity.SELECT_FOLDER_TREE_CODE)
     }
 
-    fun removePath(path: String) {
+    fun removePath(scope: CoroutineScope, snackBarHostState: SnackbarHostState, path: String) {
         CoroutineScope(Dispatchers.IO).launch {
             SettingsManager.removePath(
                 context = MainActivity.instance.applicationContext,
                 path = path
+            )
+            showSnackBar(
+                scope = scope,
+                snackBarHostState = snackBarHostState,
+                message = MainActivity.instance.applicationContext.getString(
+                    R.string.path_removed,
+                    path
+                ),
+                actionLabel = MainActivity.instance.applicationContext.getString(R.string.cancel),
+                action = {
+                    CoroutineScope(Dispatchers.IO).launch {
+                        SettingsManager.addPath(
+                            context = MainActivity.instance.applicationContext,
+                            path = path
+                        )
+                    }
+                }
             )
         }
     }

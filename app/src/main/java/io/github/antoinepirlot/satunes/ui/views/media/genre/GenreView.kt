@@ -27,7 +27,6 @@ package io.github.antoinepirlot.satunes.ui.views.media.genre
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -70,7 +69,12 @@ internal fun GenreView(
     }
     //
 
+    // TODO optimize it by adding an album set in genre object like artist
     val albumSet: SortedSet<Album> = sortedSetOf()
+
+    musicMap.forEach { music: Music ->
+        albumSet.add(music.album)
+    }
 
     MediaListView(
         modifier = modifier,
@@ -95,17 +99,6 @@ internal fun GenreView(
         },
         header = if (albumSet.isNotEmpty()) {
             {
-                //Recompose if data changed
-                @Suppress("NAME_SHADOWING")
-                var mapChanged: Boolean by remember { genre.musicSetUpdated }
-                if (mapChanged) {
-                    mapChanged = false
-                }
-                //
-
-                musicMap.forEach { music: Music ->
-                    albumSet.add(music.album)
-                }
                 MediaWithAlbumsHeaderView(
                     navController = navController,
                     mediaImpl = genre,

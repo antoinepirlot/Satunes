@@ -28,6 +28,7 @@ package io.github.antoinepirlot.satunes.ui.components.bars.scroll_bar
 import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.width
@@ -62,12 +63,13 @@ fun ScrollBar(
     val heightOfSliderButton: Dp = 150.dp
     var height: Dp = 0.dp
 
-    Box(modifier = modifier
-        .height(350.dp)
-        .width(width)
-        .onGloballyPositioned { coordinates: LayoutCoordinates ->
-            height = coordinates.size.height.dp
-        }
+    Box(
+        modifier = modifier
+            .fillMaxHeight()
+            .width(width)
+            .onGloballyPositioned { coordinates: LayoutCoordinates ->
+                height = coordinates.size.height.dp
+            }
     ) {
         var yPosition: Float by remember { mutableFloatStateOf(0f) }
 

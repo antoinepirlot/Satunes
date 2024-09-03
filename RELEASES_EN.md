@@ -11,6 +11,7 @@ New features:
 
 Improvements, optimizations and troubleshooting:
 
+* Add feedback haptic on extra buttons
 * Fixed the display of paths, now centered
 * Changed some texts
 * Opening the application will always take the default section setting into account

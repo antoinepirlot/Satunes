@@ -3,6 +3,22 @@ You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
 ## 2.2 (Android 5.1.1 Lollipop et ultérieur)
 
+### 2.2.2
+
+Nouvelles fonctionnalités:
+
+* Possibilité d'annuler la suppression d'un chemin
+
+Améliorations, optimisations et dépannage:
+
+* Correction de l'affichage des chemins, maintenant centré
+* Modification de quelques textes
+* L'ouverture de l'application prendra toujours le paramètre de section par défaut en compte
+* La musique suivante peut être supprimée de la liste de lecture
+* Les genres affichent de nouveau les albums
+* Lorsque une musique précendent la musique en cours est mise en suivante, la liste reste
+  synchronisée avec l'ordre
+
 ### 2.2.1
 
 Améliorations, optimisations et dépannage:

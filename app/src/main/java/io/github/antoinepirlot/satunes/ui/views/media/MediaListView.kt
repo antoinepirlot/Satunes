@@ -26,6 +26,7 @@
 package io.github.antoinepirlot.satunes.ui.views.media
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Scaffold
@@ -36,6 +37,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import io.github.antoinepirlot.jetpack_libs.components.HorizontalScrollBar
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
@@ -68,13 +70,22 @@ internal fun MediaListView(
     Scaffold(
         modifier = modifier,
         floatingActionButton = {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally
+            Row(
+                verticalAlignment = Alignment.Bottom
             ) {
-                extraButtons()
-                if (playbackViewModel.musicPlaying != null) {
-                    ShowCurrentMusicButton(onClick = onFABClick)
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    extraButtons()
+                    if (playbackViewModel.musicPlaying != null) {
+                        ShowCurrentMusicButton(onClick = onFABClick)
+                    }
                 }
+                HorizontalScrollBar(
+                    onPositionChanged = {
+
+                    }
+                )
             }
         },
         floatingActionButtonPosition = FabPosition.End

@@ -33,6 +33,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -41,6 +42,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.input.pointer.PointerInputChange
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.LayoutCoordinates
@@ -49,6 +51,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import io.github.antoinepirlot.satunes.ui.theme.SatunesTheme
 import kotlin.math.roundToInt
 
 /**
@@ -58,7 +61,9 @@ import kotlin.math.roundToInt
 @Composable
 fun ScrollBar(
     modifier: Modifier = Modifier,
-    barWidth: Dp = 15.dp
+    barWidth: Dp = 15.dp,
+    color: Color = MaterialTheme.colorScheme.onPrimary,
+    shape: Shape = CircleShape
 ) {
     val heightOfSliderButton: Dp = 150.dp
     var height: Dp = 0.dp
@@ -88,7 +93,7 @@ fun ScrollBar(
                 }
                 .height(heightOfSliderButton)
                 .width(barWidth)
-                .border(width = 20.dp, color = Color.Red, shape = CircleShape)
+                .border(width = barWidth, color = color, shape = shape)
         )
     }
 }
@@ -96,5 +101,7 @@ fun ScrollBar(
 @Preview
 @Composable
 fun ScrollBarPreview() {
-    ScrollBar()
+    SatunesTheme {
+        ScrollBar()
+    }
 }

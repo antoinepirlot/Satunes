@@ -41,6 +41,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedback
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalHapticFeedback
@@ -91,7 +92,7 @@ internal fun MediaCard(
     onClick: () -> Unit,
     openedPlaylist: Playlist?,
 ) {
-    val haptics = LocalHapticFeedback.current
+    val haptics: HapticFeedback = LocalHapticFeedback.current
     var showMediaOption: Boolean by remember { mutableStateOf(false) }
 
     val title: String =

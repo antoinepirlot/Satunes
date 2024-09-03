@@ -1,0 +1,11 @@
+Nouvelles fonctionnalités:
+* Possibilité d'annuler la suppression d'un chemin
+
+Améliorations, optimisations et dépannage:
+* Correction de l'affichage des chemins, maintenant centré
+* Modification de quelques textes
+* L'ouverture de l'application prendra toujours le paramètre de section par défaut en compte
+* La musique suivante peut être supprimée de la liste de lecture
+* Les genres affichent de nouveau les albums
+
+Plus de détails sur GitHub

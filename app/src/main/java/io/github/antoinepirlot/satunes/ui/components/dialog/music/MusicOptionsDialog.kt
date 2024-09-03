@@ -87,8 +87,13 @@ internal fun MusicOptionsDialog(
                 val isPlaybackLoaded: Boolean = playbackViewModel.isLoaded
 
                 if (isPlaybackLoaded) {
-                    if (music != musicPlaying && playbackViewModel.getNextMusic() != music) {
-                        PlayNextMediaOption(mediaImpl = music, onDismissRequest = onDismissRequest)
+                    if (music != musicPlaying) {
+                        if (music != playbackViewModel.getNextMusic()) {
+                            PlayNextMediaOption(
+                                mediaImpl = music,
+                                onDismissRequest = onDismissRequest
+                            )
+                        }
                         if (!playbackViewModel.isMusicInQueue(music = music)) {
                             AddToQueueDialogOption(
                                 mediaImpl = music,

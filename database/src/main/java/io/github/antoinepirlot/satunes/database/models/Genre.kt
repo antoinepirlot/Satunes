@@ -25,6 +25,10 @@
 
 package io.github.antoinepirlot.satunes.database.models
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import java.util.SortedSet
+
 /**
  * @author Antoine Pirlot on 27/03/2024
  */
@@ -32,6 +36,9 @@ package io.github.antoinepirlot.satunes.database.models
 class Genre(
     title: String,
 ) : MediaImpl(id = nextId, title = title) {
+    private val _albumSortedSet: SortedSet<Album> = sortedSetOf()
+
+    val albumSortedMapUpdate: MutableState<Boolean> = mutableStateOf(false)
 
     companion object {
         var nextId: Long = 1
@@ -39,6 +46,17 @@ class Genre(
 
     init {
         nextId++
+    }
+
+    fun getAlbumSet(): Set<Album> {
+        return this._albumSortedSet
+    }
+
+    fun addAlbum(album: Album) {
+        if (!this._albumSortedSet.contains(element = album)) {
+            this._albumSortedSet.add(element = album)
+            this.albumSortedMapUpdate.value = true
+        }
     }
 
     override fun equals(other: Any?): Boolean {

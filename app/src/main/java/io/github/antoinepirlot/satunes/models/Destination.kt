@@ -27,7 +27,8 @@ package io.github.antoinepirlot.satunes.models
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import io.github.antoinepirlot.satunes.data.DEFAULT_DESTINATION
+import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
+import io.github.antoinepirlot.satunes.router.utils.getNavBarSectionDestination
 
 /**
  * @author Antoine Pirlot on 24-01-24
@@ -87,7 +88,8 @@ internal enum class Destination(val link: String) {
         }
 
         fun getDestination(destination: String): Destination {
-            return this.destinationsMap[destination] ?: DEFAULT_DESTINATION
+            return this.destinationsMap[destination]
+                ?: getNavBarSectionDestination(navBarSection = SettingsManager.defaultNavBarSection)
         }
     }
 }

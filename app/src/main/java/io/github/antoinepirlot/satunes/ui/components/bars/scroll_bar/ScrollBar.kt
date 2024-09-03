@@ -28,7 +28,6 @@ package io.github.antoinepirlot.satunes.ui.components.bars.scroll_bar
 import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.width
@@ -43,7 +42,10 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.PointerInputChange
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.LayoutCoordinates
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import kotlin.math.roundToInt
@@ -56,22 +58,34 @@ import kotlin.math.roundToInt
 fun ScrollBar(
     modifier: Modifier = Modifier,
 ) {
-    Box(modifier = modifier.fillMaxSize()) {
-        var xPosition: Float by remember { mutableFloatStateOf(0f) }
+    val width: Dp = 20.dp
+    val heightOfSliderButton: Dp = 150.dp
+    var height: Dp = 0.dp
+
+    Box(modifier = modifier
+        .height(350.dp)
+        .width(width)
+        .onGloballyPositioned { coordinates: LayoutCoordinates ->
+            height = coordinates.size.height.dp
+        }
+    ) {
         var yPosition: Float by remember { mutableFloatStateOf(0f) }
 
         Box(
             modifier = Modifier
-                .offset { IntOffset(xPosition.roundToInt(), yPosition.roundToInt()) }
+
+                .offset { IntOffset(0, yPosition.roundToInt()) }
                 .pointerInput(Unit) {
                     detectDragGestures { change: PointerInputChange, dragAmount: Offset ->
                         change.consume()
-                        xPosition += dragAmount.x
-                        yPosition += dragAmount.y
+                        val newYPosition: Float = yPosition + dragAmount.y
+                        if (newYPosition >= 0f && newYPosition + heightOfSliderButton.toPx() <= height.value) {
+                            yPosition = newYPosition
+                        }
                     }
                 }
-                .height(150.dp)
-                .width(20.dp)
+                .height(heightOfSliderButton)
+                .width(width)
                 .border(width = 20.dp, color = Color.Red, shape = CircleShape)
         )
     }

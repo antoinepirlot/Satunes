@@ -58,15 +58,15 @@ import kotlin.math.roundToInt
 @Composable
 fun ScrollBar(
     modifier: Modifier = Modifier,
+    barWidth: Dp = 15.dp
 ) {
-    val width: Dp = 20.dp
     val heightOfSliderButton: Dp = 150.dp
     var height: Dp = 0.dp
 
     Box(
         modifier = modifier
             .fillMaxHeight()
-            .width(width)
+            .width(barWidth)
             .onGloballyPositioned { coordinates: LayoutCoordinates ->
                 height = coordinates.size.height.dp
             }
@@ -87,7 +87,7 @@ fun ScrollBar(
                     }
                 }
                 .height(heightOfSliderButton)
-                .width(width)
+                .width(barWidth)
                 .border(width = 20.dp, color = Color.Red, shape = CircleShape)
         )
     }

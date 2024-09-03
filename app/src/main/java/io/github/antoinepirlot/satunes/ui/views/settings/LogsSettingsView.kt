@@ -65,7 +65,7 @@ internal fun LogsSettingsView(
         Button(onClick = {
             MainActivity.instance.exportLogs()
         }) {
-            NormalText(text = stringResource(id = R.string.export) + ' ' + stringResource(id = R.string.logs_settings))
+            NormalText(text = stringResource(id = R.string.export_log_button_content))
         }
     }
 }

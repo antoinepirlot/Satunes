@@ -27,7 +27,6 @@ package io.github.antoinepirlot.satunes.ui.views.media.genre
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -48,7 +47,6 @@ import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 import io.github.antoinepirlot.satunes.ui.views.media.MediaWithAlbumsHeaderView
-import java.util.SortedSet
 
 /**
  * @author Antoine Pirlot on 01/04/2024
@@ -62,6 +60,7 @@ internal fun GenreView(
     genre: Genre,
 ) {
     val musicMap: Set<Music> = genre.getMusicSet()
+    val albumSet: Set<Album> = genre.getAlbumSet()
 
     //Recompose if data changed
     var mapChanged: Boolean by rememberSaveable { genre.musicSetUpdated }
@@ -69,8 +68,6 @@ internal fun GenreView(
         mapChanged = false
     }
     //
-
-    val albumSet: SortedSet<Album> = sortedSetOf()
 
     MediaListView(
         modifier = modifier,
@@ -95,17 +92,6 @@ internal fun GenreView(
         },
         header = if (albumSet.isNotEmpty()) {
             {
-                //Recompose if data changed
-                @Suppress("NAME_SHADOWING")
-                var mapChanged: Boolean by remember { genre.musicSetUpdated }
-                if (mapChanged) {
-                    mapChanged = false
-                }
-                //
-
-                musicMap.forEach { music: Music ->
-                    albumSet.add(music.album)
-                }
                 MediaWithAlbumsHeaderView(
                     navController = navController,
                     mediaImpl = genre,

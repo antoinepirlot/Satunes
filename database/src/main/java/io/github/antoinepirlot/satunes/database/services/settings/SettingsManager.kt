@@ -489,7 +489,17 @@ object SettingsManager {
      * @param uri the uri containing the selected path
      */
     suspend fun addPath(context: Context, uri: Uri) {
-        val formattedPath: String = getFormattedPath(path = uri.path!!)
+        this.addPath(context = context, path = uri.path!!)
+    }
+
+    /**
+     * Add a path to the selected paths set and memorize it in storage.
+     *
+     * @param context the app context
+     * @param path the selected path as string
+     */
+    suspend fun addPath(context: Context, path: String) {
+        val formattedPath: String = getFormattedPath(path = path)
         context.dataStore.edit { preferences: MutablePreferences ->
             val newSet: MutableSet<String> = foldersPathsSelectedSet.value.toMutableSet()
             newSet.add(formattedPath)
@@ -501,6 +511,7 @@ object SettingsManager {
     private fun getFormattedPath(path: String): String {
         val formattedPath: String = Uri.decode(path)
         val splitList: List<String> = formattedPath.split(":")
+        if (splitList.size == 1) return path
         var storage: String = splitList[0].split("/").last()
         if (storage == "primary") {
             storage = "0"

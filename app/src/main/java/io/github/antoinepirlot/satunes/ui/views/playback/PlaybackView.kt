@@ -26,6 +26,8 @@
 package io.github.antoinepirlot.satunes.ui.views.playback
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
@@ -33,10 +35,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.jetpack_libs.components.models.ScreenSizes
-import io.github.antoinepirlot.satunes.data.DEFAULT_DESTINATION
+import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
+import io.github.antoinepirlot.satunes.router.utils.getNavBarSectionDestination
 import io.github.antoinepirlot.satunes.ui.components.bars.backToRoot
 import io.github.antoinepirlot.satunes.ui.views.playback.mobile.PlaybackMobileView
 import io.github.antoinepirlot.satunes.ui.views.playback.tablet.PlaybackTabletView
@@ -49,12 +53,18 @@ import io.github.antoinepirlot.satunes.ui.views.playback.tablet.PlaybackTabletVi
 internal fun PlaybackView(
     modifier: Modifier = Modifier,
     navController: NavHostController,
+    satunesViewModel: SatunesViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
     onAlbumClick: (album: Album?) -> Unit,
     onArtistClick: (artist: Artist) -> Unit,
 ) {
+    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+
     if (playbackViewModel.musicPlaying == null) {
-        backToRoot(rootRoute = DEFAULT_DESTINATION.link, navController = navController)
+        backToRoot(
+            rootRoute = getNavBarSectionDestination(navBarSection = satunesUiState.defaultNavBarSection).link,
+            navController = navController
+        )
         return
     }
     /**

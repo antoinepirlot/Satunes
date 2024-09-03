@@ -3,6 +3,21 @@ Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
 ## 2.2 (Android 5.1.1 Lollipop and later)
 
+### 2.2.2
+
+New features:
+
+* Ability to undo the deletion of a path
+
+Improvements, optimizations and troubleshooting:
+
+* Fixed the display of paths, now centered
+* Changed some texts
+* Opening the application will always take the default section setting into account
+* Next music can be removed from the playlist
+* Genres display albums again
+* When a music before the current music is put next, the list stays in sync with the order
+
 ### 2.2.1
 
 Improvements, optimizations and troubleshooting:

@@ -51,7 +51,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import io.github.antoinepirlot.satunes.ui.theme.SatunesTheme
 import kotlin.math.roundToInt
 
 /**
@@ -100,8 +99,6 @@ fun ScrollBar(
 
 @Preview
 @Composable
-fun ScrollBarPreview() {
-    SatunesTheme {
-        ScrollBar()
-    }
+private fun ScrollBarPreview() {
+    ScrollBar()
 }

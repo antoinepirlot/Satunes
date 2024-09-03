@@ -11,6 +11,7 @@ Nouvelles fonctionnalités:
 
 Améliorations, optimisations et dépannage:
 
+* Ajout de retour haptique lors de clique sur les boutons rapide
 * Correction de l'affichage des chemins, maintenant centré
 * Modification de quelques textes
 * L'ouverture de l'application prendra toujours le paramètre de section par défaut en compte

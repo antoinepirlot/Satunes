@@ -244,7 +244,7 @@ object DataLoader {
         val absolutePath: String = cursor.getString(absolutePathColumnId!!)
 
         //Load Genre
-        val genre: Genre = loadGenre(context = context, cursor = cursor)
+        val genre: Genre = loadGenre(context = context, cursor = cursor, album = album)
 
         //Load Folder
         val folder: Folder = loadFolder(absolutePath = absolutePath)
@@ -448,7 +448,7 @@ object DataLoader {
     }
 
 
-    private fun loadGenre(context: Context, cursor: Cursor): Genre {
+    private fun loadGenre(context: Context, cursor: Cursor, album: Album): Genre {
         var name: String = try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 cursor.getString(genreNameColumn!!)
@@ -462,7 +462,9 @@ object DataLoader {
         if (name == UNKNOWN_GENRE) {
             name = context.getString(R.string.unknown_genre)
         }
-        return DataManager.addGenre(genre = Genre(title = name))
+        val genre: Genre = DataManager.addGenre(genre = Genre(title = name))
+        genre.addAlbum(album = album)
+        return genre
     }
 
     private fun getGenreNameForAndroidQAndLess(context: Context, cursor: Cursor): String {

@@ -25,6 +25,7 @@
 
 package io.github.antoinepirlot.satunes.ui.views.settings
 
+import android.content.Context
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -34,6 +35,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -42,10 +44,12 @@ import io.github.antoinepirlot.jetpack_libs.components.texts.Title
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
+import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.models.SwitchSettings
 import io.github.antoinepirlot.satunes.ui.components.settings.DefaultNavBarSectionSetting
 import io.github.antoinepirlot.satunes.ui.components.settings.SettingsSwitchList
 import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
+import java.util.SortedSet
 
 /**
  *   @author Antoine Pirlot 06/03/2024
@@ -57,6 +61,7 @@ internal fun BottomNavigationBarSettingsView(
     satunesViewModel: SatunesViewModel = viewModel(),
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+    val context: Context = LocalContext.current
 
     val navBarSectionSettingsChecked: Map<SwitchSettings, Boolean> = mapOf(
         Pair(first = SwitchSettings.FOLDERS_CHECKED, second = satunesUiState.foldersChecked),
@@ -66,12 +71,28 @@ internal fun BottomNavigationBarSettingsView(
         Pair(first = SwitchSettings.PLAYLISTS_CHECKED, second = satunesUiState.playlistsChecked),
     )
 
+    val navBarSectionsAvailable: SortedSet<NavBarSection> = sortedSetOf(
+        comparator = { o1: NavBarSection, o2: NavBarSection ->
+            context.getString(o1.stringId).compareTo(other = context.getString(o2.stringId))
+        },
+        NavBarSection.MUSICS
+    )
+
+    navBarSectionSettingsChecked.filter { it.value }.keys.forEach { switchSettings: SwitchSettings ->
+        if (switchSettings.navBarSection != null) {
+            navBarSectionsAvailable.add(element = switchSettings.navBarSection)
+        }
+    }
+
     val scrollState: ScrollState = rememberScrollState()
     Column(modifier = modifier.verticalScroll(scrollState)) {
         Title(text = stringResource(id = R.string.bottom_bar))
         SubSettings {
             SettingsSwitchList(checkedMap = navBarSectionSettingsChecked)
-            DefaultNavBarSectionSetting(modifier = Modifier.padding(horizontal = 16.dp))
+            DefaultNavBarSectionSetting(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                navBarSectionsAvailable = navBarSectionsAvailable
+            )
         }
     }
 }

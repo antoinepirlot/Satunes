@@ -44,12 +44,10 @@ import io.github.antoinepirlot.jetpack_libs.components.texts.Title
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
-import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.models.SwitchSettings
 import io.github.antoinepirlot.satunes.ui.components.settings.DefaultNavBarSectionSetting
 import io.github.antoinepirlot.satunes.ui.components.settings.SettingsSwitchList
 import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
-import java.util.SortedSet
 
 /**
  *   @author Antoine Pirlot 06/03/2024
@@ -71,28 +69,12 @@ internal fun BottomNavigationBarSettingsView(
         Pair(first = SwitchSettings.PLAYLISTS_CHECKED, second = satunesUiState.playlistsChecked),
     )
 
-    val navBarSectionsAvailable: SortedSet<NavBarSection> = sortedSetOf(
-        comparator = { o1: NavBarSection, o2: NavBarSection ->
-            context.getString(o1.stringId).compareTo(other = context.getString(o2.stringId))
-        },
-        NavBarSection.MUSICS
-    )
-
-    navBarSectionSettingsChecked.filter { it.value }.keys.forEach { switchSettings: SwitchSettings ->
-        if (switchSettings.navBarSection != null) {
-            navBarSectionsAvailable.add(element = switchSettings.navBarSection)
-        }
-    }
-
     val scrollState: ScrollState = rememberScrollState()
     Column(modifier = modifier.verticalScroll(scrollState)) {
         Title(text = stringResource(id = R.string.bottom_bar))
         SubSettings {
             SettingsSwitchList(checkedMap = navBarSectionSettingsChecked)
-            DefaultNavBarSectionSetting(
-                modifier = Modifier.padding(horizontal = 16.dp),
-                navBarSectionsAvailable = navBarSectionsAvailable
-            )
+            DefaultNavBarSectionSetting(modifier = Modifier.padding(horizontal = 16.dp))
         }
     }
 }

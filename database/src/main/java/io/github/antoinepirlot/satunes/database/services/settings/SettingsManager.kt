@@ -189,18 +189,23 @@ object SettingsManager {
         context.dataStore.data.map { preferences: Preferences ->
             foldersChecked.value =
                 preferences[FOLDERS_CHECKED_PREFERENCES_KEY] ?: DEFAULT_FOLDERS_CHECKED
+            NavBarSection.FOLDERS.isEnabled = foldersChecked.value
 
             artistsChecked.value =
                 preferences[ARTISTS_CHECKED_PREFERENCES_KEY] ?: DEFAULT_ARTISTS_CHECKED
+            NavBarSection.ARTISTS.isEnabled = artistsChecked.value
 
             albumsChecked.value =
                 preferences[ALBUMS_CHECKED_PREFERENCES_KEY] ?: DEFAULT_ALBUMS_CHECKED
+            NavBarSection.ALBUMS.isEnabled = albumsChecked.value
 
             genresChecked.value =
                 preferences[GENRE_CHECKED_PREFERENCES_KEY] ?: DEFAULT_GENRE_CHECKED
+            NavBarSection.GENRES.isEnabled = genresChecked.value
 
             playlistsChecked.value =
                 preferences[PLAYLISTS_CHECKED_PREFERENCES_KEY] ?: DEFAULT_PLAYLIST_CHECKED
+            NavBarSection.PLAYLISTS.isEnabled = playlistsChecked.value
 
             defaultNavBarSection = getNavBarSection(preferences[DEFAULT_NAV_BAR_SECTION_KEY])
 
@@ -242,7 +247,7 @@ object SettingsManager {
     }
 
     private fun getNavBarSection(id: Int?): NavBarSection {
-        return when (id) {
+        var navBarSection: NavBarSection = when (id) {
             0 -> NavBarSection.FOLDERS
             1 -> NavBarSection.ARTISTS
             2 -> NavBarSection.MUSICS
@@ -251,6 +256,10 @@ object SettingsManager {
             5 -> NavBarSection.PLAYLISTS
             else -> DEFAULT_DEFAULT_NAV_BAR_SECTION
         }
+        if (!navBarSection.isEnabled) {
+            navBarSection = DEFAULT_DEFAULT_NAV_BAR_SECTION
+        }
+        return navBarSection
     }
 
     private fun getBarSpeed(speed: Float?): BarSpeed {
@@ -303,60 +312,52 @@ object SettingsManager {
         }
     }
 
-    /**
-     * Switch the navbar section and returned true if it was removed, false otherwise.
-     *
-     * @param context the Context
-     * @param navBarSection the nav bar section to switch
-     *
-     * @return true if the section has been disabled
-     */
-    suspend fun switchNavBarSection(context: Context, navBarSection: NavBarSection): Boolean {
-        val isDisabled: Boolean
+    suspend fun switchNavBarSection(context: Context, navBarSection: NavBarSection) {
         when (navBarSection) {
             NavBarSection.FOLDERS -> {
-                isDisabled = foldersChecked.value
                 context.dataStore.edit { preferences: MutablePreferences ->
                     foldersChecked.value = !foldersChecked.value
                     preferences[FOLDERS_CHECKED_PREFERENCES_KEY] = foldersChecked.value
+                    NavBarSection.FOLDERS.isEnabled = foldersChecked.value
                 }
             }
 
             NavBarSection.ARTISTS -> {
-                isDisabled = artistsChecked.value
                 context.dataStore.edit { preferences: MutablePreferences ->
                     artistsChecked.value = !artistsChecked.value
                     preferences[ARTISTS_CHECKED_PREFERENCES_KEY] = artistsChecked.value
+                    NavBarSection.ARTISTS.isEnabled = artistsChecked.value
                 }
             }
 
             NavBarSection.ALBUMS -> {
-                isDisabled = albumsChecked.value
                 context.dataStore.edit { preferences: MutablePreferences ->
                     albumsChecked.value = !albumsChecked.value
                     preferences[ALBUMS_CHECKED_PREFERENCES_KEY] = albumsChecked.value
+                    NavBarSection.ALBUMS.isEnabled = albumsChecked.value
                 }
             }
 
             NavBarSection.GENRES -> {
-                isDisabled = genresChecked.value
                 context.dataStore.edit { preferences: MutablePreferences ->
                     genresChecked.value = !genresChecked.value
                     preferences[GENRE_CHECKED_PREFERENCES_KEY] = genresChecked.value
+                    NavBarSection.GENRES.isEnabled = genresChecked.value
                 }
             }
 
             NavBarSection.PLAYLISTS -> {
-                isDisabled = playlistsChecked.value
                 context.dataStore.edit { preferences: MutablePreferences ->
                     playlistsChecked.value = !playlistsChecked.value
                     preferences[PLAYLISTS_CHECKED_PREFERENCES_KEY] = playlistsChecked.value
+                    NavBarSection.PLAYLISTS.isEnabled = playlistsChecked.value
                 }
             }
 
-            NavBarSection.MUSICS -> isDisabled = false
+            NavBarSection.MUSICS -> {
+                /* DO NOTHING */
+            }
         }
-        return isDisabled
     }
 
     suspend fun switchPlaybackWhenClosedChecked(context: Context) {

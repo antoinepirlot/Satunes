@@ -45,6 +45,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.data.allNavBarSections
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
@@ -59,7 +60,6 @@ import io.github.antoinepirlot.satunes.ui.components.images.Icon
 internal fun DefaultNavBarSectionSetting(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
-    navBarSectionsAvailable: Set<NavBarSection>,
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
 
@@ -82,10 +82,7 @@ internal fun DefaultNavBarSectionSetting(
                     NormalText(text = stringResource(id = selectedSection.stringId))
                 }
             }
-            Menu(
-                navBarSectionsAvailable = navBarSectionsAvailable,
-                expanded = expanded,
-                onDismissRequest = { expanded = false })
+            Menu(expanded = expanded, onDismissRequest = { expanded = false })
         }
     }
 }
@@ -94,7 +91,6 @@ internal fun DefaultNavBarSectionSetting(
 private fun Menu(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
-    navBarSectionsAvailable: Set<NavBarSection>,
     expanded: Boolean,
     onDismissRequest: () -> Unit
 ) {
@@ -103,14 +99,16 @@ private fun Menu(
         expanded = expanded,
         onDismissRequest = onDismissRequest
     ) {
-        for (navBarSection: NavBarSection in navBarSectionsAvailable) {
-            DropdownMenuItem(
-                text = { NormalText(text = stringResource(id = navBarSection.stringId)) },
-                onClick = {
-                    satunesViewModel.selectDefaultNavBarSection(navBarSection = navBarSection)
-                    onDismissRequest()
-                }
-            )
+        for (navBarSection: NavBarSection in allNavBarSections) {
+            if (navBarSection.isEnabled) {
+                DropdownMenuItem(
+                    text = { NormalText(text = stringResource(id = navBarSection.stringId)) },
+                    onClick = {
+                        satunesViewModel.selectDefaultNavBarSection(navBarSection = navBarSection)
+                        onDismissRequest()
+                    }
+                )
+            }
         }
     }
 }
@@ -118,5 +116,5 @@ private fun Menu(
 @Preview
 @Composable
 private fun DefaultNavBarSectionSettingPreview() {
-    DefaultNavBarSectionSetting(navBarSectionsAvailable = setOf())
+    DefaultNavBarSectionSetting()
 }

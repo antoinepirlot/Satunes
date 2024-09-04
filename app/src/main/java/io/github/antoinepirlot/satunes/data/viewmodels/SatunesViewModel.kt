@@ -215,10 +215,16 @@ internal class SatunesViewModel : ViewModel() {
     fun switchNavBarSection(navBarSection: NavBarSection) {
         try {
             runBlocking {
-                SettingsManager.switchNavBarSection(
+                val isDisabled: Boolean = SettingsManager.switchNavBarSection(
                     context = MainActivity.instance.applicationContext,
                     navBarSection = navBarSection
                 )
+                if (
+                    this@SatunesViewModel.uiState.value.defaultNavBarSection == navBarSection
+                    && isDisabled
+                ) {
+                    selectDefaultNavBarSection(navBarSection = NavBarSection.MUSICS)
+                }
             }
             _uiState.update { currentState: SatunesUiState ->
                 currentState.copy(

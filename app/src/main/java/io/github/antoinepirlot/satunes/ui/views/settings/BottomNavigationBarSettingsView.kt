@@ -25,7 +25,6 @@
 
 package io.github.antoinepirlot.satunes.ui.views.settings
 
-import android.content.Context
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -35,7 +34,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -59,7 +57,6 @@ internal fun BottomNavigationBarSettingsView(
     satunesViewModel: SatunesViewModel = viewModel(),
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
-    val context: Context = LocalContext.current
 
     val navBarSectionSettingsChecked: Map<SwitchSettings, Boolean> = mapOf(
         Pair(first = SwitchSettings.FOLDERS_CHECKED, second = satunesUiState.foldersChecked),

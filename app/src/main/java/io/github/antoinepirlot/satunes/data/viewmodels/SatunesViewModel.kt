@@ -219,6 +219,12 @@ internal class SatunesViewModel : ViewModel() {
                     context = MainActivity.instance.applicationContext,
                     navBarSection = navBarSection
                 )
+                if (
+                    this@SatunesViewModel.uiState.value.defaultNavBarSection == navBarSection
+                    && !navBarSection.isEnabled
+                ) {
+                    selectDefaultNavBarSection(navBarSection = NavBarSection.MUSICS)
+                }
             }
             _uiState.update { currentState: SatunesUiState ->
                 currentState.copy(

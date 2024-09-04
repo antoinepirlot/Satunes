@@ -36,27 +36,29 @@ import io.github.antoinepirlot.satunes.database.R.string.folders
 import io.github.antoinepirlot.satunes.database.R.string.genres
 import io.github.antoinepirlot.satunes.database.R.string.musics
 import io.github.antoinepirlot.satunes.database.R.string.playlists
+import io.github.antoinepirlot.satunes.database.models.NavBarSection
 
 /**
  *   @author Antoine Pirlot 06/03/2024
  */
 
 // TODO rename for Switch SwitchSettings enum class
-internal enum class SwitchSettings(val stringId: Int) {
-    ALBUMS_CHECKED(stringId = albums),
+internal enum class SwitchSettings(val stringId: Int, val navBarSection: NavBarSection? = null) {
+    ALBUMS_CHECKED(stringId = albums, navBarSection = NavBarSection.ALBUMS),
     ALBUMS_FILTER(stringId = albums),
-    ARTISTS_CHECKED(stringId = artists),
+    ARTISTS_CHECKED(stringId = artists, navBarSection = NavBarSection.ARTISTS),
     ARTISTS_FILTER(stringId = artists),
     AUDIO_OFFLOAD(stringId = audio_offload),
     PLAYLISTS_FILTER(stringId = playlists),
-    FOLDERS_CHECKED(stringId = folders),
+    FOLDERS_CHECKED(stringId = folders, navBarSection = NavBarSection.FOLDERS),
     FOLDERS_FILTER(stringId = folders),
-    GENRES_CHECKED(stringId = genres),
+    GENRES_CHECKED(stringId = genres, navBarSection = NavBarSection.GENRES),
     GENRES_FILTER(stringId = genres),
     MUSICS_FILTER(stringId = musics),
     PAUSE_IF_NOISY(stringId = pause_if_noisy),
     PLAYBACK_WHEN_CLOSED(stringId = playback_when_paused),
-    PLAYLISTS_CHECKED(stringId = playlists),
+    PLAYLISTS_CHECKED(stringId = playlists, navBarSection = NavBarSection.PLAYLISTS),
     PAUSE_IF_ANOTHER_PLAYBACK(stringId = pause_if_another_playback),
-    COMPILATION_MUSIC(stringId = compilation_music_setting_text),
+    COMPILATION_MUSIC(stringId = compilation_music_setting_text);
+
 }

@@ -19,7 +19,7 @@ Tu peux l'utiliser pour écouter ta musique présente sur ton appareil Android. 
 
 L'entierté du projet est sous la licence GNU/GPL v3 et s'applique à toutes les versions de ce projet y compris le code ajouté avant l'introduction de la licence.
 
-Tu as le droit de réutiliser mon code pour créer une nouvelle application dérivée mais tu devras utiliser la même licence ou une licence compatible.
+Tu as le droit de réutiliser mon code pour créer une nouvelle application dérivée mais tu devras impérativement le republier sous la même licence afin de faire prospérer le logiciel libre 🗽.
 
 # Aperçu
 

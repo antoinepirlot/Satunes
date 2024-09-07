@@ -94,7 +94,7 @@
     <string name="no">Non</string>
     <string name="classic_widget_description">Classique</string>
     <string name="load_satunes_text">Charger Satunes</string>
-    <string name="default_section_setting_content">Section par défault:</string>
+    <string name="default_section_setting_content">Section par défaut:</string>
     <string name="library_settings">Bibliothèque</string>
     <string name="data_loading_settings_title">Logique de chargement</string>
     <string name="compilation_music_setting_text">Ajouter les musiques de la compilation à la liste des musiques de son artiste</string>

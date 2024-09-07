@@ -3,6 +3,15 @@ You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
 ## 2.2 (Android 5.1.1 Lollipop et ultérieur)
 
+### 2.2.3
+
+Améliorations, optimisations et dépannage:
+
+* Désactivation des boutons de navigation s'ils ont été désactivé.
+* La section par défaut ne peut pas être une section de barre de navigation désactivée
+* Correction d'orthographe dans une chaîne de caractère en français
+* Ajout d'un espace entre le texte du contenu et les boutons dans les paramètres des playlists
+
 ### 2.2.2
 
 Nouvelles fonctionnalités:

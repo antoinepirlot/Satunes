@@ -1,0 +1,6 @@
+Improvements, optimizations and troubleshooting:
+
+* Completely disable bottom navbar items when switched off
+* The default section cannot be a switched off navbar section
+* Fix spelling in a french string
+* Add space between content text and buttons in playlists settings view

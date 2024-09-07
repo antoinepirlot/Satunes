@@ -78,6 +78,7 @@ internal fun PlaylistsSettingsView(
             text = stringResource(id = R.string.playlists_settings_content),
             maxLines = Int.MAX_VALUE
         )
+        Spacer(modifier = Modifier.size(size = 16.dp))
         Row {
             ButtonWithIcon(
                 icon = SatunesIcons.EXPORT,

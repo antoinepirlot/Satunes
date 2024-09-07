@@ -31,7 +31,7 @@ import io.github.antoinepirlot.satunes.database.models.NavBarSection
  * @author Antoine Pirlot on 20/07/2024
  */
 
-internal val navBarSections: Set<NavBarSection> = setOf(
+internal val allNavBarSections: Set<NavBarSection> = setOf(
     NavBarSection.FOLDERS,
     NavBarSection.ARTISTS,
     NavBarSection.ALBUMS,

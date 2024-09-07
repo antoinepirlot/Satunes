@@ -17,10 +17,10 @@ Vous pouvez retrouver ce fichier en [français 🇫🇷](README.md)
 Satunes is a mp3 player on Android. Use it to listen your music from your audio files stored in your
 Android phone (Android Lollipop 5.1.1 and later).
 
-This entire project is under GNU/GPL v3 and it's applied on all version of this project (even the
+This entire project is under GNU/GPL v3 and it's applied on all versions of this project (even the
 code pushed from the very first commit.).
 
-If you decide to use my code to create new app, you can but you have to use the same license :p
+You can reuse my code but you will have to redistribute it. This allows free software to prosper 🗽.
 
 # Screenshots
 

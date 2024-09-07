@@ -45,7 +45,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.data.navBarSections
+import io.github.antoinepirlot.satunes.data.allNavBarSections
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
@@ -99,14 +99,16 @@ private fun Menu(
         expanded = expanded,
         onDismissRequest = onDismissRequest
     ) {
-        for (navBarSection: NavBarSection in navBarSections) {
-            DropdownMenuItem(
-                text = { NormalText(text = stringResource(id = navBarSection.stringId)) },
-                onClick = {
-                    satunesViewModel.selectDefaultNavBarSection(navBarSection = navBarSection)
-                    onDismissRequest()
-                }
-            )
+        for (navBarSection: NavBarSection in allNavBarSections) {
+            if (navBarSection.isEnabled) {
+                DropdownMenuItem(
+                    text = { NormalText(text = stringResource(id = navBarSection.stringId)) },
+                    onClick = {
+                        satunesViewModel.selectDefaultNavBarSection(navBarSection = navBarSection)
+                        onDismissRequest()
+                    }
+                )
+            }
         }
     }
 }

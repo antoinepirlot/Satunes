@@ -3,6 +3,15 @@ Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
 ## 2.2 (Android 5.1.1 Lollipop and later)
 
+### 2.2.3
+
+Improvements, optimizations and troubleshooting:
+
+* Completely disable bottom navbar items when switched off
+* The default section cannot be a switched off navbar section
+* Fix spelling in a french string
+* Add space between content text and buttons in playlists settings view
+
 ### 2.2.2
 
 New features:

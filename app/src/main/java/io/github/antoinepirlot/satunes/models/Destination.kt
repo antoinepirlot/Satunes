@@ -27,6 +27,7 @@ package io.github.antoinepirlot.satunes.models
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.router.utils.getNavBarSectionDestination
 
@@ -79,6 +80,15 @@ internal enum class Destination(val link: String) {
             Pair(first = SEARCH.link, second = SEARCH),
             Pair(first = SEARCH_SETTINGS.link, second = SEARCH_SETTINGS),
             Pair(first = SETTINGS.link, second = SETTINGS),
+        )
+
+        val mediaMainRoutesMap: Map<Destination, NavBarSection> = mapOf(
+            Pair(first = FOLDERS, second = NavBarSection.FOLDERS),
+            Pair(first = ARTISTS, second = NavBarSection.ARTISTS),
+            Pair(first = ALBUMS, second = NavBarSection.ALBUMS),
+            Pair(first = GENRES, second = NavBarSection.GENRES),
+            Pair(first = MUSICS, second = NavBarSection.MUSICS),
+            Pair(first = PLAYLISTS, second = NavBarSection.PLAYLISTS)
         )
 
         init {

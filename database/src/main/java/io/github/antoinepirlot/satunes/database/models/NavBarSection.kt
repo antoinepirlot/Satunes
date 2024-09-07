@@ -31,7 +31,11 @@ import io.github.antoinepirlot.satunes.database.R
  * @author Antoine Pirlot on 03/02/24
  */
 
-enum class NavBarSection(internal val id: Int, open val stringId: Int) {
+enum class NavBarSection(
+    internal val id: Int,
+    open val stringId: Int,
+    var isEnabled: Boolean = true
+) {
     FOLDERS(id = 0, stringId = R.string.folders),
     ARTISTS(id = 1, stringId = R.string.artists),
     MUSICS(id = 2, stringId = R.string.musics),

@@ -55,17 +55,17 @@ enum class CustomCommands(val commandButton: CommandButton) {
             .setSessionCommand(PlaybackSessionCallback.REPEAT_COMMAND)
             .build(),
     ),
-    REPEAT_ON(
+    REPEAT_ALL(
         commandButton = CommandButton.Builder()
-            .setDisplayName("Repeat on")
-            .setIconResId(R.drawable.repeat_on)
+            .setDisplayName("Repeat all")
+            .setIconResId(R.drawable.repeat_all)
             .setSessionCommand(PlaybackSessionCallback.REPEAT_COMMAND)
             .build(),
     ),
-    REPEAT_ONE_ON(
+    REPEAT_ONE(
         commandButton = CommandButton.Builder()
             .setDisplayName("Repeat one on")
-            .setIconResId(R.drawable.repeat_off)
+            .setIconResId(R.drawable.repeat_one_on)
             .setSessionCommand(PlaybackSessionCallback.REPEAT_COMMAND)
             .build(),
     ),

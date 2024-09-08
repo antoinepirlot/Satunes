@@ -32,6 +32,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.session.MediaController
+import androidx.media3.session.MediaSession
 import androidx.media3.session.SessionToken
 import com.google.common.util.concurrent.ListenableFuture
 import com.google.common.util.concurrent.MoreExecutors
@@ -88,8 +89,15 @@ internal class PlaybackController private constructor(
             PlaybackManager.isPlaying.value = value
         }
     var repeatMode: Int = DEFAULT_REPEAT_MODE
+        @OptIn(UnstableApi::class)
         internal set(value) {
             field = value
+            val session: MediaSession? = PlaybackService.mediaSession
+            when (value) {
+                Player.REPEAT_MODE_OFF -> session?.setCustomLayout(listOf(CustomCommands.REPEAT_OFF.commandButton))
+                Player.REPEAT_MODE_ALL -> session?.setCustomLayout(listOf(CustomCommands.REPEAT_ALL.commandButton))
+                Player.REPEAT_MODE_ONE -> session?.setCustomLayout(listOf(CustomCommands.REPEAT_ONE.commandButton))
+            }
             PlaybackManager.repeatMode.intValue = value
         }
     var isShuffle: Boolean = DEFAULT_IS_SHUFFLE

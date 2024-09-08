@@ -31,6 +31,7 @@ import androidx.media3.session.MediaSession
 import androidx.media3.session.MediaSession.ConnectionResult
 import androidx.media3.session.MediaSession.ConnectionResult.AcceptedResultBuilder
 import androidx.media3.session.SessionCommand
+import androidx.media3.session.SessionError
 import androidx.media3.session.SessionResult
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
@@ -70,19 +71,34 @@ object PlaybackSessionCallback : MediaSession.Callback {
     ): ListenableFuture<SessionResult> {
         return when (customCommand.customAction) {
             SHUFFLE_COMMAND.customAction -> shuffleCommand()
+            REPEAT_COMMAND.customAction -> repeatCommand()
             else -> super.onCustomCommand(session, controller, customCommand, args)
         }
     }
 
     private fun shuffleCommand(): ListenableFuture<SessionResult> {
         _logger.info("Shuffle from notification")
-        try {
+        return try {
             val playbackController: PlaybackController = PlaybackController.getInstance()
             playbackController.switchShuffleMode()
+            Futures.immediateFuture(SessionResult(SessionResult.RESULT_SUCCESS))
         } catch (e: Throwable) {
             _logger.severe(e.message)
+            Futures.immediateFuture(SessionResult(SessionError.ERROR_INVALID_STATE))
         }
-        return Futures.immediateFuture(SessionResult(SessionResult.RESULT_SUCCESS))
+    }
+
+    private fun repeatCommand(): ListenableFuture<SessionResult> {
+        _logger.info("Repeat from notification")
+        return try {
+            val playbackController: PlaybackController = PlaybackController.getInstance()
+            playbackController.switchRepeatMode()
+            Futures.immediateFuture(SessionResult(SessionResult.RESULT_SUCCESS))
+        } catch (e: Throwable) {
+            _logger.severe(e.message)
+            Futures.immediateFuture(SessionResult(SessionError.ERROR_INVALID_STATE))
+        }
+
     }
 
     override fun onPlaybackResumption(

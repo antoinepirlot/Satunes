@@ -32,7 +32,6 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.session.MediaController
-import androidx.media3.session.MediaSession
 import androidx.media3.session.SessionToken
 import com.google.common.util.concurrent.ListenableFuture
 import com.google.common.util.concurrent.MoreExecutors
@@ -42,7 +41,6 @@ import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.playback.exceptions.AlreadyInPlaybackException
-import io.github.antoinepirlot.satunes.playback.models.CustomCommands
 import io.github.antoinepirlot.satunes.playback.models.PlaybackListener
 import io.github.antoinepirlot.satunes.playback.models.Playlist
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
@@ -92,17 +90,14 @@ internal class PlaybackController private constructor(
         @OptIn(UnstableApi::class)
         internal set(value) {
             field = value
-            val session: MediaSession? = PlaybackService.mediaSession
-            when (value) {
-                Player.REPEAT_MODE_OFF -> session?.setCustomLayout(listOf(CustomCommands.REPEAT_OFF.commandButton))
-                Player.REPEAT_MODE_ALL -> session?.setCustomLayout(listOf(CustomCommands.REPEAT_ALL.commandButton))
-                Player.REPEAT_MODE_ONE -> session?.setCustomLayout(listOf(CustomCommands.REPEAT_ONE.commandButton))
-            }
+            PlaybackService.updateCustomCommands()
             PlaybackManager.repeatMode.intValue = value
         }
     var isShuffle: Boolean = DEFAULT_IS_SHUFFLE
+        @OptIn(UnstableApi::class)
         internal set(value) {
             field = value
+            PlaybackService.updateCustomCommands()
             PlaybackManager.isShuffle.value = value
         }
     var hasNext: Boolean = DEFAULT_HAS_NEXT
@@ -417,11 +412,7 @@ internal class PlaybackController private constructor(
         this.mediaController.prepare()
 
         this.isShuffle = this.playlist!!.isShuffle
-        if (this.isShuffle) {
-            PlaybackService.mediaSession?.setCustomLayout(listOf(CustomCommands.SHUFFLE_ON.commandButton))
-        } else {
-            PlaybackService.mediaSession?.setCustomLayout(listOf(CustomCommands.SHUFFLE_OFF.commandButton))
-        }
+        PlaybackService.updateCustomCommands()
         this.isLoaded = true
         this.isLoading = false
     }
@@ -579,7 +570,6 @@ internal class PlaybackController private constructor(
      */
     @OptIn(UnstableApi::class)
     private fun shuffle() {
-        PlaybackService.mediaSession!!.setCustomLayout(listOf(CustomCommands.SHUFFLE_ON.commandButton))
         if (this.musicPlaying == null) {
             // No music playing
             this.playlist!!.shuffle()
@@ -612,7 +602,6 @@ internal class PlaybackController private constructor(
      */
     @OptIn(UnstableApi::class)
     private fun undoShuffle() {
-        PlaybackService.mediaSession!!.setCustomLayout(listOf(CustomCommands.SHUFFLE_OFF.commandButton))
         this.playlist!!.undoShuffle()
         if (this.musicPlaying == null) {
             // No music playing

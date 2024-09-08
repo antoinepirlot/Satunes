@@ -30,12 +30,15 @@ import android.os.Environment
 import androidx.annotation.OptIn
 import androidx.media3.common.AudioAttributes
 import androidx.media3.common.C
+import androidx.media3.common.Player
 import androidx.media3.common.TrackSelectionParameters
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.session.CommandButton
 import androidx.media3.session.MediaSession
 import androidx.media3.session.MediaSessionService
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
+import io.github.antoinepirlot.satunes.playback.models.CustomCommands
 import io.github.antoinepirlot.satunes.playback.models.PlaybackSessionCallback
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 
@@ -47,10 +50,31 @@ import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 class PlaybackService : MediaSessionService() {
 
     companion object {
+        private lateinit var _logger: SatunesLogger
         var mediaSession: MediaSession? = null
+
+        internal fun updateCustomCommands() {
+            _logger.info("Updating custom commands for notification")
+            try {
+                val playbackController: PlaybackController = PlaybackController.getInstance()
+                val commands: MutableList<CommandButton> = mutableListOf()
+                if (playbackController.isShuffle) {
+                    commands.add(CustomCommands.SHUFFLE_ON.commandButton)
+                } else {
+                    commands.add(CustomCommands.SHUFFLE_OFF.commandButton)
+                }
+                when (playbackController.repeatMode) {
+                    Player.REPEAT_MODE_OFF -> commands.add(CustomCommands.REPEAT_OFF.commandButton)
+                    Player.REPEAT_MODE_ALL -> commands.add(CustomCommands.REPEAT_ALL.commandButton)
+                    Player.REPEAT_MODE_ONE -> commands.add(CustomCommands.REPEAT_ONE.commandButton)
+                }
+                mediaSession!!.setCustomLayout(commands.toList())
+            } catch (e: Throwable) {
+                _logger.severe(e.message)
+            }
+        }
     }
 
-    private lateinit var _logger: SatunesLogger
     private lateinit var _exoPlayer: ExoPlayer
 
     @OptIn(UnstableApi::class)

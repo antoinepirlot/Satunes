@@ -548,6 +548,7 @@ internal class PlaybackController private constructor(
      *      1) If the shuffle mode is disabling then undo shuffle.
      *      2) If the shuffle mode is enabling shuffle the playlistDB
      */
+    @OptIn(UnstableApi::class)
     fun switchShuffleMode() {
         isShuffle = !isShuffle
         CoroutineScope(Dispatchers.Main).launch {
@@ -567,7 +568,9 @@ internal class PlaybackController private constructor(
      * Move music playing to the first index and remove other
      * the music playing has to take its original place.
      */
+    @OptIn(UnstableApi::class)
     private fun shuffle() {
+        PlaybackService.mediaSession!!.setCustomLayout(listOf(PlaybackService.shuffleOnButton))
         if (this.musicPlaying == null) {
             // No music playing
             this.playlist!!.shuffle()
@@ -598,7 +601,9 @@ internal class PlaybackController private constructor(
      * Restore the original playlistDB.
      *
      */
+    @OptIn(UnstableApi::class)
     private fun undoShuffle() {
+        PlaybackService.mediaSession!!.setCustomLayout(listOf(PlaybackService.shuffleOffButton))
         this.playlist!!.undoShuffle()
         if (this.musicPlaying == null) {
             // No music playing

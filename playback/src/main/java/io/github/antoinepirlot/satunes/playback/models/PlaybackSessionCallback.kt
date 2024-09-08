@@ -36,7 +36,6 @@ import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
-import io.github.antoinepirlot.satunes.playback.services.PlaybackService
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 
 /**
@@ -74,12 +73,6 @@ object PlaybackSessionCallback : MediaSession.Callback {
             try {
                 val playbackController: PlaybackController = PlaybackController.getInstance()
                 playbackController.switchShuffleMode()
-                if (playbackController.isShuffle) {
-                    session.setCustomLayout(listOf(PlaybackService.shuffleOnButton))
-                } else {
-                    session.setCustomLayout(listOf(PlaybackService.shuffleOffButton))
-                }
-
             } catch (e: Throwable) {
                 _logger.severe(e.message)
             }

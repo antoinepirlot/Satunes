@@ -75,9 +75,9 @@ object PlaybackSessionCallback : MediaSession.Callback {
                 val playbackController: PlaybackController = PlaybackController.getInstance()
                 playbackController.switchShuffleMode()
                 if (playbackController.isShuffle) {
-                    session.setCustomLayout(listOf(PlaybackService.unShuffleButton))
+                    session.setCustomLayout(listOf(PlaybackService.shuffleOnButton))
                 } else {
-                    session.setCustomLayout(listOf(PlaybackService.shuffleButton))
+                    session.setCustomLayout(listOf(PlaybackService.shuffleOffButton))
                 }
 
             } catch (e: Throwable) {

@@ -51,13 +51,13 @@ class PlaybackService : MediaSessionService() {
     companion object {
         var mediaSession: MediaSession? = null
 
-        internal val shuffleButton: CommandButton = CommandButton.Builder()
-            .setDisplayName("Shuffle")
+        internal val shuffleOffButton: CommandButton = CommandButton.Builder()
+            .setDisplayName("Shuffle off")
             .setIconResId(RIcons.drawable.shuffle_off)
             .setSessionCommand(PlaybackSessionCallback.SHUFFLE_COMMAND)
             .build()
-        internal val unShuffleButton: CommandButton = CommandButton.Builder()
-            .setDisplayName("Unshuffle")
+        internal val shuffleOnButton: CommandButton = CommandButton.Builder()
+            .setDisplayName("Shuffle on")
             .setIconResId(RIcons.drawable.shuffle_on)
             .setSessionCommand(PlaybackSessionCallback.SHUFFLE_COMMAND)
             .build()
@@ -97,7 +97,7 @@ class PlaybackService : MediaSessionService() {
 
         mediaSession = MediaSession.Builder(applicationContext, _exoPlayer)
             .setCallback(PlaybackSessionCallback)
-            .setCustomLayout(listOf(shuffleButton))
+            .setCustomLayout(listOf(shuffleOffButton))
             .build()
     }
 

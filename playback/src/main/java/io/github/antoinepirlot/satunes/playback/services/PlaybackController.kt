@@ -27,8 +27,10 @@ package io.github.antoinepirlot.satunes.playback.services
 
 import android.content.ComponentName
 import android.content.Context
+import androidx.annotation.OptIn
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.media3.common.Player
+import androidx.media3.common.util.UnstableApi
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
 import com.google.common.util.concurrent.ListenableFuture
@@ -158,6 +160,7 @@ internal class PlaybackController private constructor(
             return _instance!!
         }
 
+        @OptIn(UnstableApi::class)
         fun initInstance(
             context: Context,
             listener: Player.Listener? = null,
@@ -387,6 +390,7 @@ internal class PlaybackController private constructor(
         this.loadMusics(playlist = playlist)
     }
 
+    @OptIn(UnstableApi::class)
     fun loadMusics(playlist: Playlist) {
         this.isLoading = true
         this.playlist = playlist
@@ -404,6 +408,11 @@ internal class PlaybackController private constructor(
         this.mediaController.prepare()
 
         this.isShuffle = this.playlist!!.isShuffle
+        if (this.isShuffle) {
+            PlaybackService.mediaSession?.setCustomLayout(listOf(PlaybackService.shuffleOnButton))
+        } else {
+            PlaybackService.mediaSession?.setCustomLayout(listOf(PlaybackService.shuffleOffButton))
+        }
         this.isLoaded = true
         this.isLoading = false
     }

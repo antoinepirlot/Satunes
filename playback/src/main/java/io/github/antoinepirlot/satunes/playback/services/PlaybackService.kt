@@ -97,7 +97,6 @@ class PlaybackService : MediaSessionService() {
 
         mediaSession = MediaSession.Builder(applicationContext, _exoPlayer)
             .setCallback(PlaybackSessionCallback)
-            .setCustomLayout(listOf(shuffleOffButton))
             .build()
     }
 

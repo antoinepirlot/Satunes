@@ -47,6 +47,7 @@ object PlaybackSessionCallback : MediaSession.Callback {
 
     private val _logger: SatunesLogger = SatunesLogger.getLogger()
     internal val SHUFFLE_COMMAND: SessionCommand = SessionCommand("SHUFFLE_COMMAND", Bundle.EMPTY)
+    internal val REPEAT_COMMAND: SessionCommand = SessionCommand("REPEAT_COMMAND", Bundle.EMPTY)
 
     override fun onConnect(
         session: MediaSession,

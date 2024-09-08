@@ -47,5 +47,26 @@ enum class CustomCommands(val commandButton: CommandButton) {
             .setIconResId(R.drawable.shuffle_off)
             .setSessionCommand(PlaybackSessionCallback.SHUFFLE_COMMAND)
             .build()
-    )
+    ),
+    REPEAT_OFF(
+        commandButton = CommandButton.Builder()
+            .setDisplayName("Repeat off")
+            .setIconResId(R.drawable.repeat_off)
+            .setSessionCommand(PlaybackSessionCallback.REPEAT_COMMAND)
+            .build(),
+    ),
+    REPEAT_ON(
+        commandButton = CommandButton.Builder()
+            .setDisplayName("Repeat on")
+            .setIconResId(R.drawable.repeat_on)
+            .setSessionCommand(PlaybackSessionCallback.REPEAT_COMMAND)
+            .build(),
+    ),
+    REPEAT_ONE_ON(
+        commandButton = CommandButton.Builder()
+            .setDisplayName("Repeat one on")
+            .setIconResId(R.drawable.repeat_off)
+            .setSessionCommand(PlaybackSessionCallback.REPEAT_COMMAND)
+            .build(),
+    ),
 }

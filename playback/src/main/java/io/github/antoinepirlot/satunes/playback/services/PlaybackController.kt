@@ -193,7 +193,6 @@ internal class PlaybackController private constructor(
             this.updateListener(isInitializing = false, listener = listener)
 
         private fun updateListener(isInitializing: Boolean, listener: Player.Listener?) {
-
             if (!isInitializing) {
                 if (listener != null && listener != this._instance?.listener) {
                     _logger.info("Update listener")

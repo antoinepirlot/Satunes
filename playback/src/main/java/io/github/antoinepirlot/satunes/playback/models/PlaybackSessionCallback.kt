@@ -56,6 +56,7 @@ object PlaybackSessionCallback : MediaSession.Callback {
     ): ConnectionResult {
         val sessionCommands = ConnectionResult.DEFAULT_SESSION_COMMANDS.buildUpon()
             .add(SHUFFLE_COMMAND)
+            .add(REPEAT_COMMAND)
             .build()
 
         return AcceptedResultBuilder(session)

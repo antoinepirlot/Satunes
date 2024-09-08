@@ -26,6 +26,8 @@
 package io.github.antoinepirlot.satunes.data.viewmodels
 
 import android.content.Context
+import android.content.Intent
+import android.webkit.MimeTypeMap
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
@@ -622,6 +624,19 @@ class DataViewModel : ViewModel() {
     }
 
     fun share(music: Music) {
-        TODO("Not yet implemented")
+        val extension: String? = MimeTypeMap.getFileExtensionFromUrl(music.uri.path)
+        var type: String? = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+        if (type.isNullOrBlank()) {
+            type = "audio/*"
+        }
+        val sendIntent: Intent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_STREAM, music.uri)
+            setDataAndType(music.uri, type)
+            flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+        }
+
+        val shareIntent = Intent.createChooser(sendIntent, null)
+        MainActivity.instance.startActivity(shareIntent)
     }
 }

@@ -27,6 +27,7 @@ package io.github.antoinepirlot.satunes.data.viewmodels
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.webkit.MimeTypeMap
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.MutableState
@@ -624,15 +625,18 @@ class DataViewModel : ViewModel() {
     }
 
     fun share(music: Music) {
-        val extension: String? = MimeTypeMap.getFileExtensionFromUrl(music.uri.path)
+
+        //IT WORKED BUT NOW DOESN'T WANT TO WORK
+        val extension: String? = MimeTypeMap.getFileExtensionFromUrl(music.absolutePath)
         var type: String? = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
         if (type.isNullOrBlank()) {
             type = "audio/*"
         }
+        val uri: Uri = Uri.parse("content://${music.absolutePath}")
         val sendIntent: Intent = Intent().apply {
             action = Intent.ACTION_SEND
-            putExtra(Intent.EXTRA_STREAM, music.uri)
-            setDataAndType(music.uri, type)
+            putExtra(Intent.EXTRA_STREAM, uri)
+            setDataAndType(uri, type)
             flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
         }
 

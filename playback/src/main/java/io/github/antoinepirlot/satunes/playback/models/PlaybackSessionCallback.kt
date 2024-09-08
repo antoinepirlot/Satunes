@@ -68,18 +68,21 @@ object PlaybackSessionCallback : MediaSession.Callback {
         customCommand: SessionCommand,
         args: Bundle
     ): ListenableFuture<SessionResult> {
-        if (customCommand.customAction == SHUFFLE_COMMAND.customAction) {
-            // TODO shuffle feature
-            _logger.info("Shuffle from notification")
-            try {
-                val playbackController: PlaybackController = PlaybackController.getInstance()
-                playbackController.switchShuffleMode()
-            } catch (e: Throwable) {
-                _logger.severe(e.message)
-            }
-            return Futures.immediateFuture(SessionResult(SessionResult.RESULT_SUCCESS))
+        return when (customCommand.customAction) {
+            SHUFFLE_COMMAND.customAction -> shuffleCommand()
+            else -> super.onCustomCommand(session, controller, customCommand, args)
         }
-        return super.onCustomCommand(session, controller, customCommand, args)
+    }
+
+    private fun shuffleCommand(): ListenableFuture<SessionResult> {
+        _logger.info("Shuffle from notification")
+        try {
+            val playbackController: PlaybackController = PlaybackController.getInstance()
+            playbackController.switchShuffleMode()
+        } catch (e: Throwable) {
+            _logger.severe(e.message)
+        }
+        return Futures.immediateFuture(SessionResult(SessionResult.RESULT_SUCCESS))
     }
 
     override fun onPlaybackResumption(

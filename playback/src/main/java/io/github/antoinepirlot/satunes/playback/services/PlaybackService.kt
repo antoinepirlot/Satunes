@@ -33,13 +33,11 @@ import androidx.media3.common.C
 import androidx.media3.common.TrackSelectionParameters
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
-import androidx.media3.session.CommandButton
 import androidx.media3.session.MediaSession
 import androidx.media3.session.MediaSessionService
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.playback.models.PlaybackSessionCallback
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
-import io.github.antoinepirlot.satunes.icons.R as RIcons
 
 /**
  * @author Antoine Pirlot on 31/01/24
@@ -50,17 +48,6 @@ class PlaybackService : MediaSessionService() {
 
     companion object {
         var mediaSession: MediaSession? = null
-
-        internal val shuffleOffButton: CommandButton = CommandButton.Builder()
-            .setDisplayName("Shuffle off")
-            .setIconResId(RIcons.drawable.shuffle_off)
-            .setSessionCommand(PlaybackSessionCallback.SHUFFLE_COMMAND)
-            .build()
-        internal val shuffleOnButton: CommandButton = CommandButton.Builder()
-            .setDisplayName("Shuffle on")
-            .setIconResId(RIcons.drawable.shuffle_on)
-            .setSessionCommand(PlaybackSessionCallback.SHUFFLE_COMMAND)
-            .build()
     }
 
     private lateinit var _logger: SatunesLogger

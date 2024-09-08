@@ -41,6 +41,7 @@ import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.playback.exceptions.AlreadyInPlaybackException
+import io.github.antoinepirlot.satunes.playback.models.CustomCommands
 import io.github.antoinepirlot.satunes.playback.models.PlaybackListener
 import io.github.antoinepirlot.satunes.playback.models.Playlist
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
@@ -409,9 +410,9 @@ internal class PlaybackController private constructor(
 
         this.isShuffle = this.playlist!!.isShuffle
         if (this.isShuffle) {
-            PlaybackService.mediaSession?.setCustomLayout(listOf(PlaybackService.shuffleOnButton))
+            PlaybackService.mediaSession?.setCustomLayout(listOf(CustomCommands.SHUFFLE_ON.commandButton))
         } else {
-            PlaybackService.mediaSession?.setCustomLayout(listOf(PlaybackService.shuffleOffButton))
+            PlaybackService.mediaSession?.setCustomLayout(listOf(CustomCommands.SHUFFLE_OFF.commandButton))
         }
         this.isLoaded = true
         this.isLoading = false
@@ -570,7 +571,7 @@ internal class PlaybackController private constructor(
      */
     @OptIn(UnstableApi::class)
     private fun shuffle() {
-        PlaybackService.mediaSession!!.setCustomLayout(listOf(PlaybackService.shuffleOnButton))
+        PlaybackService.mediaSession!!.setCustomLayout(listOf(CustomCommands.SHUFFLE_ON.commandButton))
         if (this.musicPlaying == null) {
             // No music playing
             this.playlist!!.shuffle()
@@ -603,7 +604,7 @@ internal class PlaybackController private constructor(
      */
     @OptIn(UnstableApi::class)
     private fun undoShuffle() {
-        PlaybackService.mediaSession!!.setCustomLayout(listOf(PlaybackService.shuffleOffButton))
+        PlaybackService.mediaSession!!.setCustomLayout(listOf(CustomCommands.SHUFFLE_OFF.commandButton))
         this.playlist!!.undoShuffle()
         if (this.musicPlaying == null) {
             // No music playing

@@ -34,7 +34,9 @@ import androidx.media3.session.SessionCommand
 import androidx.media3.session.SessionResult
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
+import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
+import io.github.antoinepirlot.satunes.playback.services.PlaybackService
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 
 /**
@@ -68,6 +70,19 @@ object PlaybackSessionCallback : MediaSession.Callback {
     ): ListenableFuture<SessionResult> {
         if (customCommand.customAction == SHUFFLE_COMMAND.customAction) {
             // TODO shuffle feature
+            _logger.info("Shuffle from notification")
+            try {
+                val playbackController: PlaybackController = PlaybackController.getInstance()
+                playbackController.switchShuffleMode()
+                if (playbackController.isShuffle) {
+                    session.setCustomLayout(listOf(PlaybackService.unShuffleButton))
+                } else {
+                    session.setCustomLayout(listOf(PlaybackService.shuffleButton))
+                }
+
+            } catch (e: Throwable) {
+                _logger.severe(e.message)
+            }
             return Futures.immediateFuture(SessionResult(SessionResult.RESULT_SUCCESS))
         }
         return super.onCustomCommand(session, controller, customCommand, args)

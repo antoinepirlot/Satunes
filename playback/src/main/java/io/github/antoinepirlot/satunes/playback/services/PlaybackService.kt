@@ -50,16 +50,21 @@ class PlaybackService : MediaSessionService() {
 
     companion object {
         var mediaSession: MediaSession? = null
+
+        internal val shuffleButton: CommandButton = CommandButton.Builder()
+            .setDisplayName("Shuffle")
+            .setIconResId(RIcons.drawable.shuffle_off)
+            .setSessionCommand(PlaybackSessionCallback.SHUFFLE_COMMAND)
+            .build()
+        internal val unShuffleButton: CommandButton = CommandButton.Builder()
+            .setDisplayName("Unshuffle")
+            .setIconResId(RIcons.drawable.shuffle_on)
+            .setSessionCommand(PlaybackSessionCallback.SHUFFLE_COMMAND)
+            .build()
     }
 
     private lateinit var _logger: SatunesLogger
     private lateinit var _exoPlayer: ExoPlayer
-
-    private val shuffleButton: CommandButton = CommandButton.Builder()
-        .setDisplayName("Shuffle")
-        .setIconResId(RIcons.drawable.shuffle_off)
-        .setSessionCommand(PlaybackSessionCallback.SHUFFLE_COMMAND)
-        .build()
 
     @OptIn(UnstableApi::class)
     override fun onCreate() {

@@ -620,4 +620,8 @@ class DataViewModel : ViewModel() {
     fun resetAllData() {
         DataLoader.resetAllData()
     }
+
+    fun share(music: Music) {
+        TODO("Not yet implemented")
+    }
 }

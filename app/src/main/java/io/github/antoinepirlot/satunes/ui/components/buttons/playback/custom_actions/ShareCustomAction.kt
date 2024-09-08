@@ -25,51 +25,30 @@
 
 package io.github.antoinepirlot.satunes.ui.components.buttons.playback.custom_actions
 
-import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
-import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
+import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import io.github.antoinepirlot.satunes.ui.components.buttons.playback.CustomActionButton
 
 /**
- * @author Antoine Pirlot on 01/06/2024
+ * @author Antoine Pirlot on 08/09/2024
  */
 
 @Composable
-internal fun PlaybackCustomActionsBar(
+internal fun ShareCustomAction(
     modifier: Modifier = Modifier,
-    playbackViewModel: PlaybackViewModel = viewModel(),
+    dataViewModel: DataViewModel = viewModel(),
+    music: Music,
 ) {
-    val musicPlaying: Music = playbackViewModel.musicPlaying!!
-    val scrollState = rememberScrollState()
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .horizontalScroll(state = scrollState),
-    ) {
-        val spacerSize: Dp = 8.dp
-
-        FavoriteCustomAction(music = musicPlaying)
-        Spacer(modifier = Modifier.size(spacerSize))
-
-        AddToPlaylistCustomAction(music = musicPlaying)
-        Spacer(modifier = Modifier.size(spacerSize))
-
-        ShareCustomAction(music = musicPlaying)
-    }
-}
-
-@Preview
-@Composable
-private fun PlaybackButtonsRowPreview() {
-    PlaybackCustomActionsBar()
+    CustomActionButton(
+        modifier = modifier,
+        icon = SatunesIcons.SHARE,
+        text = stringResource(R.string.share_button_content),
+        onClick = { dataViewModel.share(music = music) }
+    )
 }

@@ -75,7 +75,8 @@ internal fun AlbumGridCard(
 
     Box(modifier = modifier
         .padding(start = 16.dp)
-        .size(boxSize)) {
+        .size(boxSize)
+    ) {
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.SpaceBetween,

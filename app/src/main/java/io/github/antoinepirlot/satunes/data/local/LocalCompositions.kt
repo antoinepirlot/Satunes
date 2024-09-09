@@ -28,6 +28,7 @@ package io.github.antoinepirlot.satunes.data.local
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.ProvidableCompositionLocal
 import androidx.compose.runtime.compositionLocalOf
+import androidx.navigation.NavHostController
 import kotlinx.coroutines.CoroutineScope
 
 /**
@@ -38,3 +39,5 @@ val LocalSnackBarHostState: ProvidableCompositionLocal<SnackbarHostState> =
     compositionLocalOf { error("No SnackbarStateHost provided.") }
 val LocalMainScope: ProvidableCompositionLocal<CoroutineScope> =
     compositionLocalOf { error("No CoroutineScope provided.") }
+val LocalNavController: ProvidableCompositionLocal<NavHostController> =
+    compositionLocalOf { error("No NavHostController provided.") }

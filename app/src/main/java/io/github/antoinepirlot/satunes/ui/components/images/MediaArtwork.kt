@@ -26,8 +26,9 @@
 package io.github.antoinepirlot.satunes.ui.components.images
 
 import android.content.Context
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
@@ -36,22 +37,30 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.hapticfeedback.HapticFeedback
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.models.ScreenSizes
+import io.github.antoinepirlot.satunes.data.local.LocalNavController
+import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.icons.R
+import io.github.antoinepirlot.satunes.ui.components.dialog.album.AlbumOptionsDialog
 import io.github.antoinepirlot.satunes.ui.utils.getRightIconAndDescription
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -62,14 +71,24 @@ import kotlinx.coroutines.launch
  * @author Antoine Pirlot on 29/02/24
  */
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun MediaArtwork(
     modifier: Modifier = Modifier,
     mediaImpl: MediaImpl,
+    satunesViewModel: SatunesViewModel = viewModel(),
     onClick: ((album: Album?) -> Unit)? = null,
     contentAlignment: Alignment = Alignment.Center
 ) {
+    val haptics: HapticFeedback = LocalHapticFeedback.current
     val screenWidthDp = LocalConfiguration.current.screenWidthDp
+    var showAlbumDialog: Boolean by rememberSaveable { mutableStateOf(false) }
+    val album: Album? = when (mediaImpl) {
+        is Music -> mediaImpl.album
+        is Album -> mediaImpl
+        else -> null
+    }
+
     val clickableModifier: Modifier = if (onClick != null) {
         modifier
             .size(
@@ -77,15 +96,14 @@ internal fun MediaArtwork(
                 else if (screenWidthDp < ScreenSizes.VERY_VERY_SMALL) 100.dp
                 else 300.dp // Normal
             )
-            .clickable {
-                onClick(
-                    when (mediaImpl) {
-                        is Music -> mediaImpl.album
-                        is Album -> mediaImpl
-                        else -> null
-                    }
-                )
-            }
+            .combinedClickable(
+                onClick = { onClick(album) },
+                onLongClick = {
+                    haptics.performHapticFeedback(HapticFeedbackType.LongPress)
+                    satunesViewModel.mediaOptionsIsOpen()
+                    showAlbumDialog = true
+                }
+            )
     } else {
         modifier
             .size(
@@ -138,6 +156,20 @@ internal fun MediaArtwork(
                 )
             }
         }
+    }
+
+    /**
+     * Albums Options
+     */
+    if (album != null && showAlbumDialog) {
+        AlbumOptionsDialog(
+            navController = LocalNavController.current,
+            album = album,
+            onDismissRequest = {
+                satunesViewModel.mediaOptionsIsClosed()
+                showAlbumDialog = false
+            }
+        )
     }
 }
 

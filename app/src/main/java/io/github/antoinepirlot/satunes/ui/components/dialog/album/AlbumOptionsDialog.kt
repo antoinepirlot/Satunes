@@ -59,7 +59,6 @@ internal fun AlbumOptionsDialog(
     playbackViewModel: PlaybackViewModel = viewModel(),
     album: Album,
     onDismissRequest: () -> Unit,
-
     ) {
     AlertDialog(
         modifier = modifier,

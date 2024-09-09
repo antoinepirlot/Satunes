@@ -7,7 +7,7 @@ You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
 Améliorations, optimisations et dépannage:
 
-* Si les fichiers ont une taille de 0 et une durée de 0, ils ne seront pas chargés
+* Si les fichiers ont une taille de 0 ou une durée de 0, ils ne seront pas chargés
 * Si la vue de lecture souhaite afficher une valeur NaN Float pour la position actuelle, elle
   affichera 00:00 au lieu de faire planter l'application
 

@@ -651,6 +651,11 @@ class DataViewModel : ViewModel() {
                 }
             }
 
+            if (paths.isEmpty()) {
+                isSharingLoading = false
+                return
+            }
+
             val uris: ArrayList<Uri> = arrayListOf()
 
             MediaScannerConnection.scanFile(

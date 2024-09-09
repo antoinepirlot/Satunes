@@ -7,7 +7,7 @@ Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
 Improvements, optimizations and troubleshooting:
 
-* If files with size of 0 and duration of 0, then it won't be loaded
+* If files with size of 0 or duration of 0, then it won't be loaded
 * If the playback view wants to show a NaN Float value for the current position, it will show 00:00
   instead of crashing app
 

@@ -62,12 +62,12 @@ class Music(
     val album: Album,
     val genre: Genre,
 ) : MediaImpl(id = id, title = title.ifBlank { displayName }) {
-    private val logger: SatunesLogger = SatunesLogger.getLogger()
+    private val _logger: SatunesLogger = SatunesLogger.getLogger()
     private var displayName: String = displayName
         set(displayName) {
             if (displayName.isBlank()) {
                 val message = "Display name must not be blank"
-                logger.warning(message)
+                _logger.warning(message)
                 throw IllegalArgumentException(message)
             }
             field = displayName
@@ -158,14 +158,16 @@ class Music(
     }
 
     fun getAlbumArtwork(context: Context): Bitmap? {
-        val mediaMetadataRetriever = MediaMetadataRetriever()
-        mediaMetadataRetriever.setDataSource(context, uri)
-        val artwork: ByteArray? = mediaMetadataRetriever.embeddedPicture
-        mediaMetadataRetriever.release()
-        return if (artwork == null) {
+        return try {
+            val mediaMetadataRetriever = MediaMetadataRetriever()
+            mediaMetadataRetriever.setDataSource(context, uri)
+            val artwork: ByteArray? = mediaMetadataRetriever.embeddedPicture
+            mediaMetadataRetriever.release()
+            if (artwork == null) null
+            else BitmapFactory.decodeByteArray(artwork, 0, artwork.size)
+        } catch (e: Throwable) {
+            _logger.warning(e.message)
             null
-        } else {
-            BitmapFactory.decodeByteArray(artwork, 0, artwork.size)
         }
     }
 

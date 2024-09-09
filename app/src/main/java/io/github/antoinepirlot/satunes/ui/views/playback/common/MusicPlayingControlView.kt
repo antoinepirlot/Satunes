@@ -27,7 +27,8 @@ package io.github.antoinepirlot.satunes.ui.views.playback.common
 
 import android.annotation.SuppressLint
 import android.content.res.Configuration
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -35,9 +36,16 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedback
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -46,24 +54,30 @@ import io.github.antoinepirlot.jetpack_libs.components.models.ScreenSizes
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.jetpack_libs.components.texts.Subtitle
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.ui.components.bars.MusicControlBar
 import io.github.antoinepirlot.satunes.ui.components.buttons.playback.custom_actions.PlaybackCustomActionsBar
+import io.github.antoinepirlot.satunes.ui.components.dialog.artist.ArtistOptionsDialog
 import io.github.antoinepirlot.satunes.ui.components.images.MusicPlayingAlbumArtwork
 
 /**
  * @author Antoine Pirlot on 25/01/24
  */
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun MusicPlayingControlView(
     modifier: Modifier = Modifier,
+    satunesViewModel: SatunesViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
     onAlbumClick: (album: Album?) -> Unit,
     onArtistClick: (artist: Artist) -> Unit,
 ) {
+    val haptics: HapticFeedback = LocalHapticFeedback.current
+    var showArtistOptions: Boolean by rememberSaveable { mutableStateOf(false) }
     val musicPlaying: Music = playbackViewModel.musicPlaying!!
 
     Column(
@@ -95,11 +109,34 @@ internal fun MusicPlayingControlView(
         ) {
             NormalText(text = musicPlaying.title, fontSize = 20.sp)
             Subtitle(
-                modifier = Modifier.clickable { onArtistClick(musicPlaying.artist) },
+                modifier = Modifier.combinedClickable(
+                    onClick = {
+                        haptics.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                        onArtistClick(musicPlaying.artist)
+                    },
+                    onLongClick = {
+                        haptics.performHapticFeedback(HapticFeedbackType.LongPress)
+                        satunesViewModel.mediaOptionsIsOpen()
+                        showArtistOptions = true
+                    }
+                ),
                 text = musicPlaying.artist.title
             )
             PlaybackCustomActionsBar()
             MusicControlBar()
+        }
+
+        /**
+         * Artist Options
+         */
+        if (showArtistOptions) {
+            ArtistOptionsDialog(
+                artist = musicPlaying.artist,
+                onDismissRequest = {
+                    satunesViewModel.mediaOptionsIsClosed()
+                    showArtistOptions = false
+                }
+            )
         }
     }
 }

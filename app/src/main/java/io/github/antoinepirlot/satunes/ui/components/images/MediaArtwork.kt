@@ -97,7 +97,10 @@ internal fun MediaArtwork(
                 else 300.dp // Normal
             )
             .combinedClickable(
-                onClick = { onClick(album) },
+                onClick = {
+                    haptics.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                    onClick(album)
+                },
                 onLongClick = {
                     haptics.performHapticFeedback(HapticFeedbackType.LongPress)
                     satunesViewModel.mediaOptionsIsOpen()

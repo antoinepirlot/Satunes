@@ -27,6 +27,7 @@ package io.github.antoinepirlot.satunes.data.viewmodels
 
 import android.content.Context
 import android.content.Intent
+import android.media.MediaScannerConnection
 import android.net.Uri
 import android.webkit.MimeTypeMap
 import androidx.compose.material3.SnackbarHostState
@@ -625,22 +626,28 @@ class DataViewModel : ViewModel() {
     }
 
     fun share(music: Music) {
+        val listener: MediaScannerConnection.OnScanCompletedListener =
+            MediaScannerConnection.OnScanCompletedListener { _: String, uri: Uri ->
+                val extension: String? = MimeTypeMap.getFileExtensionFromUrl(uri.path)
+                var type: String? = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+                if (type.isNullOrBlank()) {
+                    type = "audio/*"
+                }
+                val sendIntent: Intent = Intent().apply {
+                    action = Intent.ACTION_SEND
+                    putExtra(Intent.EXTRA_STREAM, uri)
+                    setDataAndType(uri, type)
+                    flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+                }
 
-        //IT WORKED BUT NOW DOESN'T WANT TO WORK
-        val extension: String? = MimeTypeMap.getFileExtensionFromUrl(music.absolutePath)
-        var type: String? = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
-        if (type.isNullOrBlank()) {
-            type = "audio/*"
-        }
-        val uri: Uri = Uri.parse("content://${music.absolutePath}")
-        val sendIntent: Intent = Intent().apply {
-            action = Intent.ACTION_SEND
-            putExtra(Intent.EXTRA_STREAM, uri)
-            setDataAndType(uri, type)
-            flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
-        }
-
-        val shareIntent = Intent.createChooser(sendIntent, null)
-        MainActivity.instance.startActivity(shareIntent)
+                val shareIntent = Intent.createChooser(sendIntent, null)
+                MainActivity.instance.startActivity(shareIntent)
+            }
+        MediaScannerConnection.scanFile(
+            MainActivity.instance.applicationContext,
+            arrayOf(music.absolutePath),
+            arrayOf("audio/*"),
+            listener
+        )
     }
 }

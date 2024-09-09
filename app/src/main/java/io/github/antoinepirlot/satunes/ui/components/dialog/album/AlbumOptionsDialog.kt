@@ -43,6 +43,7 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToP
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToQueueDialogOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.PlayNextMediaOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.RemoveFromQueueOption
+import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.ShareMediaOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.music.options.NavigateToMediaMusicOption
 import io.github.antoinepirlot.satunes.ui.components.images.MediaArtwork
 
@@ -88,6 +89,11 @@ internal fun AlbumOptionsDialog(
                     AddToQueueDialogOption(mediaImpl = album, onDismissRequest = onDismissRequest)
                     RemoveFromQueueOption(mediaImpl = album, onDismissRequest = onDismissRequest)
                 }
+
+                /**
+                 * Share
+                 */
+                ShareMediaOption(media = album)
 
                 /**
                  * Redirections

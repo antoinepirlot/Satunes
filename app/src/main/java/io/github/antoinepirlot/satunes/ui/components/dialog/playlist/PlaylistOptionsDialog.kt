@@ -52,6 +52,7 @@ import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToQueueDialogOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.PlayNextMediaOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.RemoveFromQueueOption
+import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.ShareMediaOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.playlist.options.ExportPlaylistOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.playlist.options.RemovePlaylistOption
 import kotlinx.coroutines.CoroutineScope
@@ -114,6 +115,11 @@ internal fun PlaylistOptionsDialog(
                     )
                     RemoveFromQueueOption(mediaImpl = playlist, onDismissRequest = onDismissRequest)
                 }
+
+                /**
+                 * Share
+                 */
+                ShareMediaOption(media = playlist)
             }
         },
         onDismissRequest = onDismissRequest,

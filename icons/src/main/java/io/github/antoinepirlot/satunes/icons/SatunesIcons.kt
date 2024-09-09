@@ -62,6 +62,7 @@ import androidx.compose.material.icons.rounded.RepeatOne
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.icons.rounded.Security
 import androidx.compose.material.icons.rounded.Settings
+import androidx.compose.material.icons.rounded.Share
 import androidx.compose.material.icons.rounded.Shuffle
 import androidx.compose.material.icons.rounded.SkipNext
 import androidx.compose.material.icons.rounded.SkipPrevious
@@ -149,6 +150,7 @@ enum class SatunesIcons(
         description = "Permission Setting Icon"
     ),
     SETTING_UPDATE(imageVector = Icons.Rounded.Update, description = "Update Setting Icon"),
+    SHARE(imageVector = Icons.Rounded.Share, description = "Share Icon"),
     SHUFFLE(imageVector = Icons.Rounded.Shuffle, description = "Shuffle Icon"),
     SKIP_NEXT(
         imageVector = Icons.Rounded.SkipNext,

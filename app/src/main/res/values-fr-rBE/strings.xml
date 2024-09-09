@@ -101,4 +101,7 @@
     <string name="reload_library_no_export_button">Ne pas exporter</string>
     <string name="export_log_button_content">Exporter les logs</string>
     <string name="path_removed">%1$s a été supprimé.</string>
+    <string name="share_button_content">Partager</string>
+    <string name="sharing_loading">Partage en cours...</string>
+    <string name="sharing_failed_no_data">Pas de musique à partager</string>
 </resources>

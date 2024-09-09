@@ -632,30 +632,27 @@ class DataViewModel : ViewModel() {
                 TODO("${media::class.java} is not compatible with sharing option at this time.")
             }
 
-            val listener: MediaScannerConnection.OnScanCompletedListener =
-                MediaScannerConnection.OnScanCompletedListener { _: String, uri: Uri ->
-                    val extension: String? = MimeTypeMap.getFileExtensionFromUrl(uri.path)
-                    var type: String? =
-                        MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
-                    if (type.isNullOrBlank()) {
-                        type = "audio/*"
-                    }
-                    val sendIntent: Intent = Intent().apply {
-                        action = Intent.ACTION_SEND
-                        putExtra(Intent.EXTRA_STREAM, uri)
-                        setDataAndType(uri, type)
-                        flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
-                    }
-
-                    val shareIntent = Intent.createChooser(sendIntent, null)
-                    MainActivity.instance.startActivity(shareIntent)
-                }
             MediaScannerConnection.scanFile(
                 MainActivity.instance.applicationContext,
                 arrayOf(media.absolutePath),
-                arrayOf("audio/*"),
-                listener
-            )
+                arrayOf("audio/*")
+            ) { _: String, uri: Uri ->
+                val extension: String? = MimeTypeMap.getFileExtensionFromUrl(uri.path)
+                var type: String? =
+                    MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+                if (type.isNullOrBlank()) {
+                    type = "audio/*"
+                }
+                val sendIntent: Intent = Intent().apply {
+                    action = Intent.ACTION_SEND
+                    putExtra(Intent.EXTRA_STREAM, uri)
+                    setDataAndType(uri, type)
+                    flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+                }
+
+                val shareIntent = Intent.createChooser(sendIntent, null)
+                MainActivity.instance.startActivity(shareIntent)
+            }
         } catch (e: NotImplementedError) {
             return
         } catch (e: Throwable) {

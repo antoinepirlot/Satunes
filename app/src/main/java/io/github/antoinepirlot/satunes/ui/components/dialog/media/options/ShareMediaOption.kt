@@ -23,7 +23,7 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.buttons.playback.custom_actions
+package io.github.antoinepirlot.satunes.ui.components.dialog.media.options
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -31,24 +31,24 @@ import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
-import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.ui.components.buttons.playback.CustomActionButton
+import io.github.antoinepirlot.satunes.ui.components.dialog.options.DialogOption
 
 /**
- * @author Antoine Pirlot on 08/09/2024
+ * @author Antoine Pirlot on 09/09/2024
  */
 
 @Composable
-internal fun ShareCustomAction(
+fun ShareMediaOption(
     modifier: Modifier = Modifier,
     dataViewModel: DataViewModel = viewModel(),
-    music: Music,
+    media: MediaImpl
 ) {
-    CustomActionButton(
+    DialogOption(
         modifier = modifier,
+        onClick = { dataViewModel.share(media = media) },
         icon = SatunesIcons.SHARE,
-        text = stringResource(R.string.share_button_content),
-        onClick = { dataViewModel.share(media = music) }
+        text = stringResource(R.string.share_button_content)
     )
 }

@@ -45,6 +45,7 @@ import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.Genre
+import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.database.services.data.DataLoader
@@ -625,7 +626,11 @@ class DataViewModel : ViewModel() {
         DataLoader.resetAllData()
     }
 
-    fun share(music: Music) {
+    fun share(media: MediaImpl) {
+        if (media !is Music) {
+            TODO("${media::class.java} is not compatible with sharing option at this time.")
+        }
+
         val listener: MediaScannerConnection.OnScanCompletedListener =
             MediaScannerConnection.OnScanCompletedListener { _: String, uri: Uri ->
                 val extension: String? = MimeTypeMap.getFileExtensionFromUrl(uri.path)
@@ -645,7 +650,7 @@ class DataViewModel : ViewModel() {
             }
         MediaScannerConnection.scanFile(
             MainActivity.instance.applicationContext,
-            arrayOf(music.absolutePath),
+            arrayOf(media.absolutePath),
             arrayOf("audio/*"),
             listener
         )

@@ -687,8 +687,15 @@ class DataViewModel : ViewModel() {
                     // Loading is finished, now they can be exported
                     isSharingLoading = false
                     val sendIntent: Intent = Intent().apply {
-                        action = Intent.ACTION_SEND_MULTIPLE
-                        putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris)
+                        if (uris.size == 1) {
+                            action = Intent.ACTION_SEND
+                            putExtra(Intent.EXTRA_STREAM, uris[0])
+                        } else if (uris.size > 1) {
+                            action = Intent.ACTION_SEND_MULTIPLE
+                            putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris)
+                        } else {
+                            throw IllegalStateException("Uri size is: 0")
+                        }
                         type = mimeType
                         flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
                     }

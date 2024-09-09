@@ -259,7 +259,7 @@ object DataLoader {
                 genre = genre,
                 absolutePath = absolutePath,
             )
-        } catch (e: IllegalAccessError) {
+        } catch (e: Throwable) {
             _logger.warning(e.message)
 
             // No music found

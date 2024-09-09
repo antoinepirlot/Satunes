@@ -37,6 +37,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import io.github.antoinepirlot.satunes.ui.components.LoadingCircle
 
 /**
  * @author Antoine Pirlot on 19/04/2024
@@ -50,6 +51,7 @@ internal fun DialogOption(
     onClick: () -> Unit,
     icon: SatunesIcons,
     text: String,
+    isLoading: Boolean = false
 ) {
     TextButton(
         modifier = modifier,
@@ -58,7 +60,10 @@ internal fun DialogOption(
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(imageVector = icon.imageVector, contentDescription = icon.description)
+            if (isLoading)
+                LoadingCircle(modifier = Modifier.size(20.dp))
+            else
+                Icon(imageVector = icon.imageVector, contentDescription = icon.description)
             Spacer(modifier = Modifier.size(SPACER_SIZE))
             NormalText(text = text)
         }

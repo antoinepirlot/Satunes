@@ -33,6 +33,7 @@ import android.webkit.MimeTypeMap
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import io.github.antoinepirlot.satunes.MainActivity
@@ -69,6 +70,9 @@ class DataViewModel : ViewModel() {
         DatabaseManager.initInstance(context = MainActivity.instance.applicationContext)
 
     var playlistSetUpdated: Boolean by _playlistSetUpdated
+        private set
+
+    var isSharingLoading: Boolean by mutableStateOf(false)
         private set
 
     fun playlistSetUpdated() {
@@ -628,6 +632,7 @@ class DataViewModel : ViewModel() {
 
     fun share(media: MediaImpl) {
         _logger.info("Sharing media type: ${media::class.java}")
+        isSharingLoading = true
         try {
             var paths: Array<String> = arrayOf()
 
@@ -663,8 +668,8 @@ class DataViewModel : ViewModel() {
                 uris += uri
 
                 if (uris.size == paths.size) {
-                    // It is the last item
-
+                    // Loading is finished, now they can be exported
+                    isSharingLoading = false
                     val sendIntent: Intent = Intent().apply {
                         action = Intent.ACTION_SEND_MULTIPLE
                         putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris)

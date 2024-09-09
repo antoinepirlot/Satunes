@@ -45,10 +45,12 @@ fun ShareMediaOption(
     dataViewModel: DataViewModel = viewModel(),
     media: MediaImpl
 ) {
+    val isSharingLoading: Boolean = dataViewModel.isSharingLoading
     DialogOption(
         modifier = modifier,
         onClick = { dataViewModel.share(media = media) },
         icon = SatunesIcons.SHARE,
-        text = stringResource(R.string.share_button_content)
+        text = stringResource(if (isSharingLoading) R.string.sharing_loading else R.string.share_button_content),
+        isLoading = isSharingLoading
     )
 }

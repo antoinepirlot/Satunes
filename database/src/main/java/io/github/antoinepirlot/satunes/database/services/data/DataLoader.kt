@@ -259,7 +259,9 @@ object DataLoader {
                 genre = genre,
                 absolutePath = absolutePath,
             )
-        } catch (_: IllegalAccessError) {
+        } catch (e: Throwable) {
+            _logger.warning(e.message)
+
             // No music found
             if (album.isEmpty()) {
                 DataManager.removeAlbum(album = album)
@@ -294,20 +296,18 @@ object DataLoader {
         // Get values of columns for a given music.
         val id: Long = cursor.getLong(musicIdColumn!!)
         if (id < 1) {
-            val message = "The id is less than 1"
+            val message = "Id < 1"
             _logger.severe(message)
             throw IllegalArgumentException(message)
         }
         val size = cursor.getInt(musicSizeColumn!!)
-        if (size < 0) {
-            val message = "Size is less than 0"
-            _logger.severe(message)
+        if (size <= 0) {
+            val message = "Size <= 0"
             throw IllegalArgumentException(message)
         }
         val duration: Long = cursor.getLong(musicDurationColumn!!)
-        if (duration < 0) {
-            val message = "Duration is less than 0"
-            _logger.severe(message)
+        if (duration <= 0) {
+            val message = "Duration <= 0"
             throw IllegalArgumentException(message)
         }
         val displayName: String = cursor.getString(musicNameColumn!!)

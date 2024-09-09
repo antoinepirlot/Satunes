@@ -3,6 +3,14 @@ You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
 ## 2.2 (Android 5.1.1 Lollipop et ultérieur)
 
+### 2.2.4
+
+Améliorations, optimisations et dépannage:
+
+* Si les fichiers ont une taille de 0 et une durée de 0, ils ne seront pas chargés
+* Si la vue de lecture souhaite afficher une valeur NaN Float pour la position actuelle, elle
+  affichera 00:00 au lieu de faire planter l'application
+
 ### 2.2.3
 
 Améliorations, optimisations et dépannage:

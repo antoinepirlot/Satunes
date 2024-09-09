@@ -23,44 +23,30 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.images
+package io.github.antoinepirlot.satunes.ui.components.settings
 
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.graphics.RectangleShape
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
+import io.github.antoinepirlot.satunes.ui.components.images.ImageWithLink
 
 /**
- * @author Antoine Pirlot on 11/04/2024
+ * @author Antoine Pirlot on 09/09/2024
  */
 
 @Composable
-internal fun ImageWithLink(
-    modifier: Modifier = Modifier,
-    url: String,
-    painterId: Int,
-    shape: Shape = CircleShape,
-    imageBackgroundColor: Color? = null
-) {
-    io.github.antoinepirlot.jetpack_libs.components.images.ImageWithLink(
+fun Fdroid(modifier: Modifier = Modifier) {
+    val satunesOnFdroidUrl = "https://f-droid.org/fr/packages/io.github.antoinepirlot.satunes/"
+    ImageWithLink(
         modifier = modifier,
-        url = url,
-        painterId = painterId,
-        shape = shape,
-        imageBackgroundColor = imageBackgroundColor,
-        logger = SatunesLogger.getLogger()
+        url = satunesOnFdroidUrl,
+        shape = RectangleShape,
+        painterId = R.drawable.fdroid_logo
     )
 }
 
-@Preview
 @Composable
-private fun ImageWithLinkPreview() {
-    ImageWithLink(
-        url = "",
-        painterId = R.drawable.tipeee_logo
-    )
+private fun FdroidPreview() {
+    Fdroid()
 }

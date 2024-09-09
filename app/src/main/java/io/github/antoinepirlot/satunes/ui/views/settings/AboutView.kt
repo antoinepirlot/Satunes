@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.sp
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.jetpack_libs.components.texts.Title
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.ui.components.settings.Fdroid
 import io.github.antoinepirlot.satunes.ui.components.settings.GitHub
 import io.github.antoinepirlot.satunes.ui.components.settings.Tipeee
 
@@ -61,6 +62,7 @@ internal fun AboutView(
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             Tipeee()
+            Fdroid()
             GitHub()
         }
     }

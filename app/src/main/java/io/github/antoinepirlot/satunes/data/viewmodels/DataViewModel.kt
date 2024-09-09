@@ -627,31 +627,54 @@ class DataViewModel : ViewModel() {
     }
 
     fun share(media: MediaImpl) {
+        _logger.info("Sharing media type: ${media::class.java}")
         try {
-            if (media !is Music) {
-                TODO("${media::class.java} is not compatible with sharing option at this time.")
+            var paths: Array<String> = arrayOf()
+
+            when (media) {
+                is Music -> paths += media.absolutePath
+                is Folder -> {
+                    media.getAllMusic().forEach { music: Music ->
+                        paths += music.absolutePath
+                    }
+                }
+
+                else -> {
+                    media.getMusicSet().forEach { media: Music ->
+                        paths += media.absolutePath
+                    }
+                }
             }
+
+            val uris: ArrayList<Uri> = arrayListOf()
 
             MediaScannerConnection.scanFile(
                 MainActivity.instance.applicationContext,
-                arrayOf(media.absolutePath),
+                paths,
                 arrayOf("audio/*")
             ) { _: String, uri: Uri ->
                 val extension: String? = MimeTypeMap.getFileExtensionFromUrl(uri.path)
-                var type: String? =
+                var mimeType: String? =
                     MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
-                if (type.isNullOrBlank()) {
-                    type = "audio/*"
-                }
-                val sendIntent: Intent = Intent().apply {
-                    action = Intent.ACTION_SEND
-                    putExtra(Intent.EXTRA_STREAM, uri)
-                    setDataAndType(uri, type)
-                    flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+                if (mimeType.isNullOrBlank()) {
+                    mimeType = "audio/*"
                 }
 
-                val shareIntent = Intent.createChooser(sendIntent, null)
-                MainActivity.instance.startActivity(shareIntent)
+                uris += uri
+
+                if (uris.size == paths.size) {
+                    // It is the last item
+
+                    val sendIntent: Intent = Intent().apply {
+                        action = Intent.ACTION_SEND_MULTIPLE
+                        putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris)
+                        type = mimeType
+                        flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+                    }
+
+                    val shareIntent = Intent.createChooser(sendIntent, null)
+                    MainActivity.instance.startActivity(shareIntent)
+                }
             }
         } catch (e: NotImplementedError) {
             return

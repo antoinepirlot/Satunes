@@ -40,6 +40,7 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToP
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToQueueDialogOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.PlayNextMediaOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.RemoveFromQueueOption
+import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.ShareMediaOption
 import io.github.antoinepirlot.satunes.ui.utils.getRootFolderName
 
 /**
@@ -86,6 +87,11 @@ internal fun FolderOptionsDialog(
                     AddToQueueDialogOption(mediaImpl = folder, onDismissRequest = onDismissRequest)
                     RemoveFromQueueOption(mediaImpl = folder, onDismissRequest = onDismissRequest)
                 }
+
+                /**
+                 * Share
+                 */
+                ShareMediaOption(media = folder)
             }
         }
     )

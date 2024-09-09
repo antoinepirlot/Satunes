@@ -630,7 +630,11 @@ class DataViewModel : ViewModel() {
         DataLoader.resetAllData()
     }
 
-    fun share(media: MediaImpl) {
+    fun share(
+        scope: CoroutineScope,
+        snackBarHostState: SnackbarHostState,
+        media: MediaImpl
+    ) {
         _logger.info("Sharing media type: ${media::class.java}")
         isSharingLoading = true
         try {
@@ -653,6 +657,13 @@ class DataViewModel : ViewModel() {
 
             if (paths.isEmpty()) {
                 isSharingLoading = false
+                scope.launch {
+                    showSnackBar(
+                        scope = scope,
+                        snackBarHostState = snackBarHostState,
+                        message = MainActivity.instance.getString(R.string.sharing_failed_no_data)
+                    )
+                }
                 return
             }
 

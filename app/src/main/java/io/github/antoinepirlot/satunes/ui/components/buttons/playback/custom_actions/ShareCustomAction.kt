@@ -25,15 +25,19 @@
 
 package io.github.antoinepirlot.satunes.ui.components.buttons.playback.custom_actions
 
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.data.local.LocalMainScope
+import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.buttons.playback.CustomActionButton
+import kotlinx.coroutines.CoroutineScope
 
 /**
  * @author Antoine Pirlot on 08/09/2024
@@ -45,10 +49,19 @@ internal fun ShareCustomAction(
     dataViewModel: DataViewModel = viewModel(),
     music: Music,
 ) {
+    val scope: CoroutineScope = LocalMainScope.current
+    val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
+
     CustomActionButton(
         modifier = modifier,
         icon = SatunesIcons.SHARE,
         text = stringResource(R.string.share_button_content),
-        onClick = { dataViewModel.share(media = music) }
+        onClick = {
+            dataViewModel.share(
+                scope = scope,
+                snackBarHostState = snackBarHostState,
+                media = music
+            )
+        }
     )
 }

@@ -106,4 +106,5 @@
     <string name="path_removed">%1$s has been removed.</string>
     <string name="share_button_content">Share</string>
     <string name="sharing_loading">Sharing...</string>
+    <string name="sharing_failed_no_data">No music to share</string>
 </resources>

@@ -39,6 +39,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
@@ -61,6 +62,7 @@ internal fun ImageWithLink(
     modifier: Modifier = Modifier,
     url: String,
     painterId: Int,
+    shape: Shape = CircleShape,
     imageBackgroundColor: Color? = null
 ) {
     val haptics = LocalHapticFeedback.current
@@ -74,7 +76,7 @@ internal fun ImageWithLink(
         Image(
             modifier = Modifier
                 .size(imageSize)
-                .clip(CircleShape)
+                .clip(shape)
                 .align(Alignment.Center)
                 .background(imageBackgroundColor ?: Color.Unspecified)
                 .combinedClickable(

@@ -40,11 +40,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
+import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.models.ProgressBarLifecycleCallbacks
-import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.ui.utils.getMillisToTimeText
-import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 
 /**
  * @author Antoine Pirlot on 23/02/24
@@ -62,7 +62,7 @@ internal fun MusicPositionBar(
 
     Column(modifier = modifier) {
         Slider(
-            value = if (isUpdating) newPositionPercentage else currentPositionPercentage,
+            value = if (isUpdating) newPositionPercentage else if (!currentPositionPercentage.isNaN()) currentPositionPercentage else 0f,
             onValueChange = {
                 isUpdating = true
                 newPositionPercentage = it

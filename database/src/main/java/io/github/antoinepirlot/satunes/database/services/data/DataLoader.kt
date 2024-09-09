@@ -296,19 +296,18 @@ object DataLoader {
         // Get values of columns for a given music.
         val id: Long = cursor.getLong(musicIdColumn!!)
         if (id < 1) {
-            val message = "The id is less than 1"
+            val message = "Id < 1"
             _logger.severe(message)
             throw IllegalArgumentException(message)
         }
         val size = cursor.getInt(musicSizeColumn!!)
         if (size <= 0) {
-            val message = "Size is less or equals to 0"
+            val message = "Size <= 0"
             throw IllegalArgumentException(message)
         }
         val duration: Long = cursor.getLong(musicDurationColumn!!)
-        if (duration < 0) {
-            val message = "Duration is less than 0"
-            _logger.severe(message)
+        if (duration <= 0) {
+            val message = "Duration <= 0"
             throw IllegalArgumentException(message)
         }
         val displayName: String = cursor.getString(musicNameColumn!!)

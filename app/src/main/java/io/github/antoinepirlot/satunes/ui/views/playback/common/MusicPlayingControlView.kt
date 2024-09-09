@@ -110,7 +110,10 @@ internal fun MusicPlayingControlView(
             NormalText(text = musicPlaying.title, fontSize = 20.sp)
             Subtitle(
                 modifier = Modifier.combinedClickable(
-                    onClick = { onArtistClick(musicPlaying.artist) },
+                    onClick = {
+                        haptics.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                        onArtistClick(musicPlaying.artist)
+                    },
                     onLongClick = {
                         haptics.performHapticFeedback(HapticFeedbackType.LongPress)
                         satunesViewModel.mediaOptionsIsOpen()

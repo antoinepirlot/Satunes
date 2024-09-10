@@ -417,10 +417,8 @@ internal class PlaybackController private constructor(
     }
 
     fun addToQueue(mediaImplList: Collection<MediaImpl>) {
-        CoroutineScope(Dispatchers.Main).launch {
-            mediaImplList.forEach { mediaImpl: MediaImpl ->
-                addToQueue(mediaImpl = mediaImpl)
-            }
+        mediaImplList.forEach { mediaImpl: MediaImpl ->
+            addToQueue(mediaImpl = mediaImpl)
         }
     }
 

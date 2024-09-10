@@ -54,7 +54,7 @@ internal fun AboutView(
     Column(modifier.padding(horizontal = 16.dp)) {
         Title(text = stringResource(id = R.string.about), fontSize = 25.sp)
         NormalText(
-            text = stringResource(id = R.string.about_text),
+            text = stringResource(id = R.string.about_content),
             maxLines = Int.MAX_VALUE
         )
         Row(

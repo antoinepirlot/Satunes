@@ -74,10 +74,13 @@ internal fun ArtistOptionsDialog(
                 /**
                  * Playback
                  */
-                if (playbackViewModel.isLoaded) {
+                if (playbackViewModel.isLoaded && artist.musicCount() <= 500) {
                     PlayNextMediaOption(mediaImpl = artist, onDismissRequest = onDismissRequest)
                     AddToQueueDialogOption(mediaImpl = artist, onDismissRequest = onDismissRequest)
-                    RemoveFromQueueOption(mediaImpl = artist, onDismissRequest = onDismissRequest)
+                    RemoveFromQueueOption(
+                        mediaImpl = artist,
+                        onDismissRequest = onDismissRequest
+                    )
                 }
 
                 /**

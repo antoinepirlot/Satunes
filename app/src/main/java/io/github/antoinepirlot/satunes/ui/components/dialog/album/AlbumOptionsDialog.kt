@@ -59,7 +59,7 @@ internal fun AlbumOptionsDialog(
     playbackViewModel: PlaybackViewModel = viewModel(),
     album: Album,
     onDismissRequest: () -> Unit,
-    ) {
+) {
     AlertDialog(
         modifier = modifier,
         onDismissRequest = onDismissRequest,
@@ -83,10 +83,13 @@ internal fun AlbumOptionsDialog(
                 /**
                  * Queue
                  */
-                if (playbackViewModel.isLoaded) {
+                if (playbackViewModel.isLoaded && album.musicCount() <= 500) {
                     PlayNextMediaOption(mediaImpl = album, onDismissRequest = onDismissRequest)
                     AddToQueueDialogOption(mediaImpl = album, onDismissRequest = onDismissRequest)
-                    RemoveFromQueueOption(mediaImpl = album, onDismissRequest = onDismissRequest)
+                    RemoveFromQueueOption(
+                        mediaImpl = album,
+                        onDismissRequest = onDismissRequest
+                    )
                 }
 
                 /**

@@ -82,10 +82,13 @@ internal fun FolderOptionsDialog(
                 /**
                  * Playback
                  */
-                if (playbackViewModel.isLoaded) {
+                if (playbackViewModel.isLoaded && folder.getAllMusic().size <= 500) {
                     PlayNextMediaOption(mediaImpl = folder, onDismissRequest = onDismissRequest)
                     AddToQueueDialogOption(mediaImpl = folder, onDismissRequest = onDismissRequest)
-                    RemoveFromQueueOption(mediaImpl = folder, onDismissRequest = onDismissRequest)
+                    RemoveFromQueueOption(
+                        mediaImpl = folder,
+                        onDismissRequest = onDismissRequest
+                    )
                 }
 
                 /**

@@ -107,13 +107,16 @@ internal fun PlaylistOptionsDialog(
                     playlistToRemove = playlist,
                     onDismissRequest = onDismissRequest
                 )
-                if (playbackViewModel.isLoaded) {
+                if (playbackViewModel.isLoaded && playlist.musicCount() <= 500) {
                     PlayNextMediaOption(mediaImpl = playlist, onDismissRequest = onDismissRequest)
                     AddToQueueDialogOption(
                         mediaImpl = playlist,
                         onDismissRequest = onDismissRequest
                     )
-                    RemoveFromQueueOption(mediaImpl = playlist, onDismissRequest = onDismissRequest)
+                    RemoveFromQueueOption(
+                        mediaImpl = playlist,
+                        onDismissRequest = onDismissRequest
+                    )
                 }
 
                 /**

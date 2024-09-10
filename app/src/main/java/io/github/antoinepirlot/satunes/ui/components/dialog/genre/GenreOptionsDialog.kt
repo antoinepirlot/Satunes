@@ -77,7 +77,12 @@ internal fun GenreOptionsDialog(
                 if (playbackViewModel.isLoaded) {
                     PlayNextMediaOption(mediaImpl = genre, onDismissRequest = onDismissRequest)
                     AddToQueueDialogOption(mediaImpl = genre, onDismissRequest = onDismissRequest)
-                    RemoveFromQueueOption(mediaImpl = genre, onDismissRequest = onDismissRequest)
+                    if (genre.musicCount() <= 500) {
+                        RemoveFromQueueOption(
+                            mediaImpl = genre,
+                            onDismissRequest = onDismissRequest
+                        )
+                    }
                 }
 
                 /**

@@ -86,7 +86,12 @@ internal fun AlbumOptionsDialog(
                 if (playbackViewModel.isLoaded) {
                     PlayNextMediaOption(mediaImpl = album, onDismissRequest = onDismissRequest)
                     AddToQueueDialogOption(mediaImpl = album, onDismissRequest = onDismissRequest)
-                    RemoveFromQueueOption(mediaImpl = album, onDismissRequest = onDismissRequest)
+                    if (album.musicCount() <= 500) {
+                        RemoveFromQueueOption(
+                            mediaImpl = album,
+                            onDismissRequest = onDismissRequest
+                        )
+                    }
                 }
 
                 /**

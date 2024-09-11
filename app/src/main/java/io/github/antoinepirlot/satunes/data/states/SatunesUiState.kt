@@ -64,5 +64,7 @@ internal data class SatunesUiState(
     /**
      * This setting is true if the compilation's music has to be added to compilation's artist's music list
      */
-    val compilationMusic: Boolean = SettingsManager.compilationMusic
-)
+    val compilationMusic: Boolean = SettingsManager.compilationMusic,
+    val artistReplacement: Boolean = SettingsManager.artistReplacement,
+) {
+}

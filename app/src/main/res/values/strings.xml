@@ -100,7 +100,7 @@
     <string name="default_section_setting_content">Default section:</string>
     <string name="library_settings">Library</string>
     <string name="data_loading_settings_title">Loading logic</string>
-    <string name="compilation_music_setting_text">Add compilation\'s musics to its artist\'s music list</string>
+    <string name="compilation_music_setting_text">Add compilation\'s musics to its artist\'s music list.</string>
     <string name="reload_library_no_export_button">Don\'t export</string>
     <string name="export_log_button_content">Export logs</string>
     <string name="path_removed">%1$s has been removed.</string>
@@ -108,4 +108,5 @@
     <string name="sharing_loading">Sharing...</string>
     <string name="sharing_failed_no_data">No music to share</string>
     <string name="oversize_sharing_message">Too much files, cancelled.</string>
+    <string name="artist_replacement_setting_content">Load music\'s artist if the album\'s artist is unknown.</string>
 </resources>

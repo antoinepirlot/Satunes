@@ -25,6 +25,7 @@
 
 package io.github.antoinepirlot.satunes.models
 
+import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.R.string.audio_offload
 import io.github.antoinepirlot.satunes.R.string.compilation_music_setting_text
 import io.github.antoinepirlot.satunes.R.string.pause_if_another_playback
@@ -59,6 +60,6 @@ internal enum class SwitchSettings(val stringId: Int, val navBarSection: NavBarS
     PLAYBACK_WHEN_CLOSED(stringId = playback_when_paused),
     PLAYLISTS_CHECKED(stringId = playlists, navBarSection = NavBarSection.PLAYLISTS),
     PAUSE_IF_ANOTHER_PLAYBACK(stringId = pause_if_another_playback),
-    COMPILATION_MUSIC(stringId = compilation_music_setting_text);
-
+    COMPILATION_MUSIC(stringId = compilation_music_setting_text),
+    ARTIST_REPLACEMENT(stringId = R.string.artist_replacement_setting_content);
 }

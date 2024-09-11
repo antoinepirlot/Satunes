@@ -107,4 +107,5 @@
     <string name="share_button_content">Share</string>
     <string name="sharing_loading">Sharing...</string>
     <string name="sharing_failed_no_data">No music to share</string>
+    <string name="artist_replacement_setting_content">Load music\'s artist if the album\'s artist is unknown.</string>
 </resources>

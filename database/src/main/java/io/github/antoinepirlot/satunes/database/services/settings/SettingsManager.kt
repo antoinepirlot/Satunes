@@ -81,6 +81,7 @@ object SettingsManager {
     private val DEFAULT_FOLDERS_SELECTION_SELECTED: FoldersSelection = FoldersSelection.INCLUDE
     private val DEFAULT_SELECTED_PATHS: Set<String> = setOf("/0/Music/%")
     private const val DEFAULT_COMPILATION_MUSIC: Boolean = false
+    private const val DEFAULT_ARTISTS_REPLACEMENT: Boolean = false
 
     /**
      * KEYS
@@ -118,6 +119,8 @@ object SettingsManager {
         stringSetPreferencesKey("selected_paths_set")
     private val COMPILATION_MUSIC_KEY: Preferences.Key<Boolean> =
         booleanPreferencesKey("compilation_music")
+    private val ARTISTS_REPLACEMENT_KEY: Preferences.Key<Boolean> =
+        booleanPreferencesKey("artist_replacement")
 
     /**
      * VARIABLES
@@ -180,6 +183,7 @@ object SettingsManager {
      * This setting is true if the compilation's music has to be added to compilation's artist's music list
      */
     var compilationMusic: Boolean = DEFAULT_COMPILATION_MUSIC
+    var artistReplacement: Boolean = DEFAULT_ARTISTS_REPLACEMENT
 
     suspend fun loadSettings(context: Context) {
         if (_isLoaded) {
@@ -236,6 +240,8 @@ object SettingsManager {
                 preferences[SELECTED_PATHS_KEY] ?: DEFAULT_SELECTED_PATHS
 
             compilationMusic = preferences[COMPILATION_MUSIC_KEY] ?: DEFAULT_COMPILATION_MUSIC
+
+            artistReplacement = preferences[ARTISTS_REPLACEMENT_KEY] ?: DEFAULT_ARTISTS_REPLACEMENT
 
             DataLoader.loadFoldersPaths()
 
@@ -554,6 +560,13 @@ object SettingsManager {
         context.dataStore.edit { preferences: MutablePreferences ->
             this.compilationMusic = !this.compilationMusic
             preferences[COMPILATION_MUSIC_KEY] = this.compilationMusic
+        }
+    }
+
+    suspend fun switchArtistReplacement(context: Context) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            this.artistReplacement = !this.artistReplacement
+            preferences[ARTISTS_REPLACEMENT_KEY] = this.artistReplacement
         }
     }
 }

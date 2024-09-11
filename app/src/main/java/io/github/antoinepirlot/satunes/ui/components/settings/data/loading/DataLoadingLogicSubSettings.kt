@@ -25,6 +25,7 @@
 
 package io.github.antoinepirlot.satunes.ui.components.settings.data.loading
 
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -33,11 +34,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.data.local.LocalMainScope
+import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.models.SwitchSettings
 import io.github.antoinepirlot.satunes.ui.components.settings.SettingWithSwitch
 import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
+import kotlinx.coroutines.CoroutineScope
 
 /**
  * @author Antoine Pirlot on 31/08/2024
@@ -49,6 +53,8 @@ internal fun DataLoadingLogicSubSettings(
     satunesViewModel: SatunesViewModel = viewModel(),
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+    val scope: CoroutineScope = LocalMainScope.current
+    val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
 
     SubSettings(
         modifier = modifier,
@@ -58,6 +64,16 @@ internal fun DataLoadingLogicSubSettings(
             setting = SwitchSettings.COMPILATION_MUSIC,
             checked = satunesUiState.compilationMusic,
             onCheckedChange = { satunesViewModel.switchCompilationMusic() }
+        )
+        SettingWithSwitch(
+            setting = SwitchSettings.ARTIST_REPLACEMENT,
+            checked = satunesUiState.artistReplacement,
+            onCheckedChange = {
+                satunesViewModel.switchArtistReplacement(
+                    scope = scope,
+                    snackBarHostState = snackBarHostState
+                )
+            }
         )
     }
 }

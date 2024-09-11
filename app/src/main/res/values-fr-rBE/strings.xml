@@ -104,4 +104,5 @@
     <string name="share_button_content">Partager</string>
     <string name="sharing_loading">Partage en cours...</string>
     <string name="sharing_failed_no_data">Pas de musique à partager</string>
+    <string name="artist_replacement_setting_content">Charger l\'artiste de la musique si l\'artiste de l\'album est inconnu.</string>
 </resources>

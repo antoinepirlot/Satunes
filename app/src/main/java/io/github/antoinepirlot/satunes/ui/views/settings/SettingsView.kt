@@ -43,7 +43,6 @@ import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.ui.components.buttons.settings.SettingButton
-import io.github.antoinepirlot.satunes.database.R as RDb
 
 /**
  * @author Antoine Pirlot on 02/03/24
@@ -99,13 +98,6 @@ internal fun SettingsView(
                 icon = SatunesIcons.SETTING_LIBRARY,
                 onClick = {
                     navController.navigate(Destination.LIBRARY_SETTINGS.link)
-                }
-            )
-            SettingButton(
-                text = stringResource(id = RDb.string.playlists),
-                icon = SatunesIcons.PLAYLIST,
-                onClick = {
-                    navController.navigate(Destination.PLAYLISTS_SETTINGS.link)
                 }
             )
             SettingButton(

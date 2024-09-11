@@ -25,9 +25,12 @@
 
 package io.github.antoinepirlot.satunes.ui.views.settings
 
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,6 +39,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.antoinepirlot.jetpack_libs.components.texts.Title
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.ui.components.settings.PlaylistsSettings
 import io.github.antoinepirlot.satunes.ui.components.settings.data.folders.FoldersSubSettings
 import io.github.antoinepirlot.satunes.ui.components.settings.data.loading.DataLoadingLogicSubSettings
 
@@ -47,15 +51,19 @@ import io.github.antoinepirlot.satunes.ui.components.settings.data.loading.DataL
 internal fun LibrarySettingsView(
     modifier: Modifier = Modifier,
 ) {
+    val scrollState: ScrollState = rememberScrollState()
+
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(horizontal = 16.dp),
+            .padding(horizontal = 16.dp)
+            .verticalScroll(state = scrollState),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Title(text = stringResource(id = R.string.library_settings))
         DataLoadingLogicSubSettings()
         FoldersSubSettings()
+        PlaylistsSettings()
     }
 }
 

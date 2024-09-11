@@ -32,8 +32,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -75,27 +73,24 @@ internal fun FoldersPathsSelection(
     val scope: CoroutineScope = LocalMainScope.current
     val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
 
-    LazyColumn(
+    Column(
         modifier = modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        items(
-            items = satunesViewModel.foldersPathsSelectedSet.toList(),
-            key = { it },
-        ) {
+        for (path: String in satunesViewModel.foldersPathsSelectedSet.toList()) {
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 NormalText(
                     modifier = Modifier.fillMaxWidth(fraction = 0.8f),
-                    text = if (it.startsWith("/0/")) {
-                        it.replaceFirst(
+                    text = if (path.startsWith("/0/")) {
+                        path.replaceFirst(
                             "/0/",
                             stringResource(id = R.string.this_device) + '/'
                         )
                     } else {
-                        it
+                        path
                     }.removeSuffix("%")
                 )
                 IconButton(
@@ -104,13 +99,13 @@ internal fun FoldersPathsSelection(
                         satunesViewModel.removePath(
                             scope = scope,
                             snackBarHostState = snackBarHostState,
-                            path = it
+                            path = path
                         )
                     }
                 )
             }
 
-            if (it == satunesViewModel.foldersPathsSelectedSet.last()) {
+            if (path == satunesViewModel.foldersPathsSelectedSet.last()) {
                 Footer()
             }
         }

@@ -655,6 +655,18 @@ class DataViewModel : ViewModel() {
                 }
             }
 
+            if (paths.size > 850) {
+                isSharingLoading = false
+                scope.launch {
+                    showSnackBar(
+                        scope = scope,
+                        snackBarHostState = snackBarHostState,
+                        message = MainActivity.instance.getString(R.string.oversize_sharing_message)
+                    )
+                }
+                return
+            }
+
             if (paths.isEmpty()) {
                 isSharingLoading = false
                 scope.launch {

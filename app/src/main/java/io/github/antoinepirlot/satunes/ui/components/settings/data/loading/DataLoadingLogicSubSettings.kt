@@ -25,6 +25,8 @@
 
 package io.github.antoinepirlot.satunes.ui.components.settings.data.loading
 
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -32,6 +34,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.local.LocalMainScope
@@ -65,6 +68,8 @@ internal fun DataLoadingLogicSubSettings(
             checked = satunesUiState.compilationMusic,
             onCheckedChange = { satunesViewModel.switchCompilationMusic() }
         )
+        Spacer(modifier = Modifier.size(size = 16.dp))
+
         SettingWithSwitch(
             setting = SwitchSettings.ARTIST_REPLACEMENT,
             checked = satunesUiState.artistReplacement,

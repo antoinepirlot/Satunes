@@ -548,15 +548,13 @@ internal class PlaybackController private constructor(
     @OptIn(UnstableApi::class)
     fun switchShuffleMode() {
         isShuffle = !isShuffle
-        CoroutineScope(Dispatchers.Main).launch {
-            if (playlist!!.musicCount() > 1) {
-                if (!isShuffle) {
-                    // Deactivate shuffle
-                    undoShuffle()
-                } else {
-                    // Activate shuffle mode
-                    shuffle()
-                }
+        if (playlist!!.musicCount() > 1) {
+            if (!isShuffle) {
+                // Deactivate shuffle
+                undoShuffle()
+            } else {
+                // Activate shuffle mode
+                shuffle()
             }
         }
     }

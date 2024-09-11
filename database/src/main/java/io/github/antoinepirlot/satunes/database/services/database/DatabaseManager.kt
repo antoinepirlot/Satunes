@@ -316,10 +316,17 @@ class DatabaseManager private constructor(context: Context) {
                     )
                     return@launch
                 }
+
                 val json: String = readTextFromUri(context = context, uri = uri, showToast = true)
                     ?: throw Exception()
-                val playlistWithMusics: List<PlaylistWithMusics> = Json.decodeFromString(json)
-                importPlaylistToDatabase(playlistWithMusicsList = playlistWithMusics)
+                val playlistsWithMusics: List<PlaylistWithMusics> = try {
+                    Json.decodeFromString(json)
+                } catch (_: IllegalArgumentException) {
+                    val playlistWithMusics: PlaylistWithMusics = Json.decodeFromString(json)
+                    listOf(playlistWithMusics)
+                }
+
+                importPlaylistToDatabase(playlistWithMusicsList = playlistsWithMusics)
                 showToastOnUiThread(
                     context = context,
                     message = context.getString(R.string.importing_success)

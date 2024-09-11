@@ -23,22 +23,16 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.database.models.database.tables
+package io.github.antoinepirlot.satunes.database.migrations
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.Index
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 
 /**
- * @author Antoine Pirlot on 27/03/2024
+ * @author Antoine Pirlot on 11/09/2024
  */
-
-@Entity(
-    tableName = "musics_playlists_rel",
-    indices = [Index("music_id")],
-    primaryKeys = ["playlist_id", "music_id"]
-)
-internal data class MusicsPlaylistsRel(
-    @ColumnInfo(name = "playlist_id") val playlistId: Long,
-    @ColumnInfo(name = "music_id") val musicId: Long
-)
+internal object MigrationFrom3To4 : Migration(3, 4) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        //todo add indices for migration
+    }
+}

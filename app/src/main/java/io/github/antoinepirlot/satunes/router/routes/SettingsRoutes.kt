@@ -40,7 +40,6 @@ import io.github.antoinepirlot.satunes.ui.views.settings.LibrarySettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.LogsSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.PermissionsSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.PlaybackSettingsView
-import io.github.antoinepirlot.satunes.ui.views.settings.PlaylistsSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.SearchSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.SettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.UpdatesSettingView
@@ -79,11 +78,6 @@ internal fun NavGraphBuilder.settingsRoutes(
     composable(Destination.LIBRARY_SETTINGS.link) {
         onStart(it)
         LibrarySettingsView()
-    }
-
-    composable(Destination.PLAYLISTS_SETTINGS.link) {
-        onStart(it)
-        PlaylistsSettingsView()
     }
 
     composable(Destination.PERMISSIONS_SETTINGS.link) {

@@ -408,6 +408,9 @@ object DataLoader {
         if (name == UNKNOWN_ARTIST) {
             name = if (isCompilation) {
                 context.getString(R.string.various_artists)
+            } else if (SettingsManager.artistReplacement) {
+                //Load music's artist
+                return this.loadArtist(context = context, cursor = cursor)
             } else {
                 context.getString(R.string.unknown_artist)
             }

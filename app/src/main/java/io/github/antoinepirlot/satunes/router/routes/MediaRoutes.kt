@@ -61,6 +61,8 @@ internal fun NavGraphBuilder.mediaRoutes(
     dataViewModel: DataViewModel,
     onStart: AnimatedContentScope.(NavBackStackEntry) -> Unit
 ) {
+    editRoutes(dataViewModel = dataViewModel, onStart = onStart)
+
     composable(Destination.FOLDERS.link) {
         // /!\ This route prevent back gesture to exit the app
         onStart(it)

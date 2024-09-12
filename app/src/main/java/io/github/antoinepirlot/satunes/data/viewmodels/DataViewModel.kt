@@ -91,6 +91,7 @@ class DataViewModel : ViewModel() {
     fun getArtist(id: Long): Artist = DataManager.getArtist(id = id)!!
     fun getAlbum(id: Long): Album = DataManager.getAlbum(id = id)!!
     fun getGenre(id: Long): Genre = DataManager.getGenre(id = id)!!
+    fun getMusic(id: Long): Music = DataManager.getMusic(id = id)
     fun getPlaylist(id: Long): Playlist = DataManager.getPlaylist(id = id)!!
 
     fun addOnePlaylist(

@@ -45,6 +45,7 @@ import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.buttons.ButtonWithIcon
 import io.github.antoinepirlot.satunes.ui.components.buttons.settings.data.playlists.CleanPlaylistsButton
+import io.github.antoinepirlot.satunes.ui.components.buttons.settings.data.playlists.ImportPlaylistsButton
 import kotlinx.coroutines.CoroutineScope
 import io.github.antoinepirlot.satunes.database.R as RDb
 
@@ -91,6 +92,8 @@ internal fun PlaylistsSettings(
                 },
                 text = stringResource(id = R.string._import)
             )
+
+            ImportPlaylistsButton()
 
             CleanPlaylistsButton()
         }

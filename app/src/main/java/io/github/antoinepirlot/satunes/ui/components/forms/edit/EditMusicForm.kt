@@ -27,6 +27,8 @@ package io.github.antoinepirlot.satunes.ui.components.forms.edit
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -34,6 +36,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.ui.components.forms.CancelButton
@@ -66,6 +69,7 @@ internal fun EditMusicForm(
                     title = music.title
                 }
             )
+            Spacer(Modifier.size(8.dp))
             ConfirmButton(
                 onConfirm = {
                     /*TODO save music title with dataviewmodel*/

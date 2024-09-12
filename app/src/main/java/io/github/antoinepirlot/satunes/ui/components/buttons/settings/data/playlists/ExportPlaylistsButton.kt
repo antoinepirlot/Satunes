@@ -23,64 +23,49 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.settings
+package io.github.antoinepirlot.satunes.ui.components.buttons.settings.data.playlists
 
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.local.LocalMainScope
 import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
-import io.github.antoinepirlot.satunes.ui.components.buttons.settings.data.playlists.CleanPlaylistsButton
-import io.github.antoinepirlot.satunes.ui.components.buttons.settings.data.playlists.ExportPlaylistsButton
-import io.github.antoinepirlot.satunes.ui.components.buttons.settings.data.playlists.ImportPlaylistsButton
+import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import io.github.antoinepirlot.satunes.ui.components.buttons.ButtonWithIcon
 import kotlinx.coroutines.CoroutineScope
-import io.github.antoinepirlot.satunes.database.R as RDb
 
 /**
- * @author Antoine Pirlot on 27/04/2024
+ * @author Antoine Pirlot on 12/09/2024
  */
 
 @Composable
-internal fun PlaylistsSettings(
+fun ExportPlaylistsButton(
     modifier: Modifier = Modifier,
     dataViewModel: DataViewModel = viewModel(),
 ) {
     val scope: CoroutineScope = LocalMainScope.current
     val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
 
-    SubSettings(
-        modifier = modifier.fillMaxWidth(),
-        title = stringResource(id = RDb.string.playlists),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        NormalText(
-            text = stringResource(id = R.string.playlists_settings_content),
-            maxLines = Int.MAX_VALUE
-        )
-        Spacer(modifier = Modifier.size(size = 16.dp))
-        Row {
-            ExportPlaylistsButton()
-            Spacer(modifier = Modifier.size(16.dp))
-            ImportPlaylistsButton()
-            CleanPlaylistsButton()
-        }
-    }
+    ButtonWithIcon(
+        modifier = modifier,
+        icon = SatunesIcons.EXPORT,
+        onClick = {
+            dataViewModel.exportPlaylists(
+                scope = scope,
+                snackBarHostState = snackBarHostState
+            )
+        },
+        text = stringResource(id = R.string.export)
+    )
 }
 
 @Preview
 @Composable
-private fun PlaylistsSettingsViewPreview() {
-    PlaylistsSettings()
+private fun ExportPlaylistsButtonPreview() {
+    ExportPlaylistsButton()
 }

@@ -43,6 +43,7 @@ import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.DirectionsCar
 import androidx.compose.material.icons.rounded.Done
 import androidx.compose.material.icons.rounded.Download
+import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material.icons.rounded.FavoriteBorder
 import androidx.compose.material.icons.rounded.Folder
@@ -100,6 +101,7 @@ enum class SatunesIcons(
         imageVector = Icons.Rounded.ArrowDropDown,
         description = "Close dropdown menu icon"
     ),
+    EDIT(imageVector = Icons.Rounded.Edit, description = "Edit Icon"),
     EXPORT(imageVector = Icons.Rounded.Upload, description = "Export Icon"),
     IMPORT(imageVector = Icons.Rounded.Download, description = "Import Icon"),
     INFO(imageVector = Icons.Rounded.Info, description = "Info Icon"),

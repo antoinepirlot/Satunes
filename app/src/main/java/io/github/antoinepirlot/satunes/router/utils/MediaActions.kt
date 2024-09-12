@@ -26,6 +26,7 @@
 package io.github.antoinepirlot.satunes.router.utils
 
 import androidx.navigation.NavHostController
+import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Folder
@@ -35,7 +36,6 @@ import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.ui.utils.startMusic
-import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 
 /**
@@ -109,7 +109,7 @@ internal fun openMediaFromFolder(
  *
  * @return the mediaImpl destination link with the mediaImpl's id
  */
-private fun getDestinationOf(media: MediaImpl?): String {
+fun getDestinationOf(media: MediaImpl?): String {
     return when (media) {
         is Folder -> "${Destination.FOLDERS.link}/${media.id}"
 
@@ -121,7 +121,9 @@ private fun getDestinationOf(media: MediaImpl?): String {
 
         is Playlist -> "${Destination.PLAYLISTS.link}/${media.id}"
 
-        else -> Destination.PLAYBACK.link
+        null -> Destination.PLAYBACK.link
+
+        else -> throw IllegalArgumentException("media is ${media::class.java}")
     }
 }
 

@@ -109,4 +109,5 @@
     <string name="clean_playlist_button_text">Clean</string>
     <string name="cleaning_snack_message">Cleaning… 🧹</string>
     <string name="cleaned_snackbar_text">Cleaned 🧹</string>
+    <string name="edit">Edit</string>
 </resources>

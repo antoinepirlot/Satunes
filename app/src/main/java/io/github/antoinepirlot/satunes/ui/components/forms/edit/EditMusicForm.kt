@@ -37,7 +37,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.ui.components.forms.CancelButton
 import io.github.antoinepirlot.satunes.ui.components.forms.ConfirmButton
@@ -49,10 +51,12 @@ import io.github.antoinepirlot.satunes.ui.components.forms.ConfirmButton
 @Composable
 internal fun EditMusicForm(
     modifier: Modifier = Modifier,
+    dataViewModel: DataViewModel = viewModel(),
     music: Music,
 ) {
-    var placeholder: String by remember { mutableStateOf(music.title) }
-    var title: String by remember { mutableStateOf(music.title) }
+    val updatedMusic: Music = music.clone()
+    var placeholder: String by remember { mutableStateOf(updatedMusic.title) }
+    var title: String by remember { mutableStateOf(updatedMusic.title) }
 
     Column(modifier = modifier) {
         EditRow(
@@ -65,14 +69,14 @@ internal fun EditMusicForm(
         Row {
             CancelButton(
                 onCancel = {
-                    /*TODO*/
+                    updatedMusic.title = music.title
                     title = music.title
                 }
             )
             Spacer(Modifier.size(8.dp))
             ConfirmButton(
                 onConfirm = {
-                    /*TODO save music title with dataviewmodel*/
+//                  todo  dataViewModel.updateMusic()
                     placeholder = title // todo later music.title
                 }
             )

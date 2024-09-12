@@ -38,7 +38,7 @@ import java.util.SortedSet
 abstract class MediaImpl(
     id: Long,
     title: String
-) : Media, Comparable<MediaImpl> {
+) : Media, Comparable<MediaImpl>, Cloneable {
     override var id: Long = id
         internal set
     override var title: String by mutableStateOf(value = title)
@@ -92,4 +92,8 @@ abstract class MediaImpl(
     }
 
     fun musicCount(): Int = this.musicSortedSet.size
+
+    override fun clone(): MediaImpl {
+        return super.clone() as MediaImpl
+    }
 }

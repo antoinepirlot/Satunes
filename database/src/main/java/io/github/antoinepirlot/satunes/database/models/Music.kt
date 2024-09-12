@@ -191,4 +191,8 @@ class Music(
         }
         return compared
     }
+
+    public override fun clone(): Music {
+        return super.clone() as Music
+    }
 }

@@ -43,6 +43,7 @@ import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.ui.components.buttons.settings.SettingButton
+import io.github.antoinepirlot.satunes.ui.components.settings.about.AboutSettings
 
 /**
  * @author Antoine Pirlot on 02/03/24
@@ -122,7 +123,7 @@ internal fun SettingsView(
                 onClick = { navController.navigate(Destination.LOGS_SETTINGS.link) }
             )
 
-            AboutView(modifier.padding(bottom = 16.dp)) // Bottom padding for a little space
+            AboutSettings(modifier.padding(bottom = 16.dp)) // Bottom padding for a little space
         }
     }
 }

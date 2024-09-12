@@ -91,11 +91,11 @@ class DatabaseManager private constructor(context: Context) {
             val playlistsWithMusicsList: List<PlaylistWithMusics> =
                 playlistDao.getPlaylistsWithMusics()
             playlistsWithMusicsList.forEach { playlistWithMusics: PlaylistWithMusics ->
-                val playlist = Playlist(
+                var playlist = Playlist(
                     id = playlistWithMusics.playlistDB.id,
                     title = playlistWithMusics.playlistDB.title
                 )
-                DataManager.addPlaylist(playlist = playlist)
+                playlist = DataManager.addPlaylist(playlist = playlist)
                 playlistWithMusics.musics.forEach { musicDB: MusicDB ->
                     if (musicDB.music != null) {
                         if (playlist.title == LIKES_PLAYLIST_TITLE) {
@@ -137,15 +137,13 @@ class DatabaseManager private constructor(context: Context) {
         if (playlistDao.exists(title = playlistTitle)) throw PlaylistAlreadyExistsException()
         val playlistId: Long =
             playlistDao.insertOne(playlistDB = PlaylistDB(title = playlistTitle))
-        val playlistWithMusics: PlaylistWithMusics =
-            playlistDao.getPlaylistWithMusics(playlistId = playlistId)!!
-
-        DataManager.addPlaylist(playlist = playlistWithMusics.playlistDB.playlist!!)
+        var playlist = Playlist(id = playlistId, title = playlistTitle)
+        playlist = DataManager.addPlaylist(playlist = playlist)
 
         musicList?.forEach { music: Music ->
             insertMusicToPlaylist(
                 music = music,
-                playlist = playlistWithMusics.playlistDB.playlist!!
+                playlist = playlist
             )
         }
     }
@@ -327,10 +325,14 @@ class DatabaseManager private constructor(context: Context) {
                 }
 
                 importPlaylistsToDatabase(playlistWithMusicsList = playlistsWithMusics)
-                showToastOnUiThread(
-                    context = context,
-                    message = context.getString(R.string.importing_success)
-                )
+                try {
+                    showToastOnUiThread(
+                        context = context,
+                        message = context.getString(R.string.importing_success)
+                    )
+                } catch (_: Throwable) {
+                    /*TODO use snackbar instead of this buggy thing */
+                }
             } catch (e: MusicNotFoundException) {
                 //id is used to store the number of musics missing
                 showToastOnUiThread(

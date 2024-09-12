@@ -205,13 +205,14 @@ object DataManager {
         return this.playlistsSortedMap.keys
     }
 
-    fun addPlaylist(playlist: Playlist) {
+    fun addPlaylist(playlist: Playlist): Playlist {
         if (!playlistsSortedMap.contains(playlist)) {
             playlistsSortedMap[playlist] = playlist
             playlistsMapById[playlist.id] = playlist
             playlistsMapByTitle[playlist.title] = playlist
             playlistsMapUpdated.value = true
         }
+        return this.playlistsMapById[playlist.id]!!
     }
 
     fun removePlaylist(playlist: Playlist) {

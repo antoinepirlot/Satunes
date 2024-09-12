@@ -425,9 +425,11 @@ class DatabaseManager private constructor(context: Context) {
             if (musicDB == null) {
                 _logger.warning("Not musicDB matching with id in relation (it's weird)")
                 musicsPlaylistsRelDAO.removeAll(musicId = musicId)
+                musicDao.delete(musicId = musicId)
             } else if (musicDB.music == null) {
                 _logger.info("Removing not loaded music")
                 musicsPlaylistsRelDAO.removeAll(musicId = musicId)
+                musicDao.delete(musicId = musicId)
             }
         }
     }

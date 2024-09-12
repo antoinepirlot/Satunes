@@ -23,49 +23,45 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.settings
+package io.github.antoinepirlot.satunes.ui.components.settings.data.playlists
 
+import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
-import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
-import io.github.antoinepirlot.satunes.ui.components.settings.data.playlists.PlaylistsSettingsButtons
-import io.github.antoinepirlot.satunes.database.R as RDb
+import io.github.antoinepirlot.satunes.ui.components.buttons.settings.data.playlists.CleanPlaylistsButton
+import io.github.antoinepirlot.satunes.ui.components.buttons.settings.data.playlists.ExportPlaylistsButton
+import io.github.antoinepirlot.satunes.ui.components.buttons.settings.data.playlists.ImportPlaylistsButton
 
 /**
- * @author Antoine Pirlot on 27/04/2024
+ * @author Antoine Pirlot on 12/09/2024
  */
 
 @Composable
-internal fun PlaylistsSettings(
-    modifier: Modifier = Modifier,
-    dataViewModel: DataViewModel = viewModel(),
-) {
-    SubSettings(
-        modifier = modifier.fillMaxWidth(),
-        title = stringResource(id = RDb.string.playlists),
-        horizontalAlignment = Alignment.CenterHorizontally
+internal fun PlaylistsSettingsButtons(modifier: Modifier = Modifier) {
+    val scrollState: ScrollState = rememberScrollState()
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .horizontalScroll(state = scrollState)
     ) {
-        NormalText(
-            text = stringResource(id = R.string.playlists_settings_content),
-            maxLines = Int.MAX_VALUE
-        )
-        Spacer(modifier = Modifier.size(size = 16.dp))
-        PlaylistsSettingsButtons()
+        ExportPlaylistsButton()
+        Spacer(modifier = Modifier.size(16.dp))
+        ImportPlaylistsButton()
+        Spacer(modifier = Modifier.size(16.dp))
+        CleanPlaylistsButton()
     }
 }
 
 @Preview
 @Composable
-private fun PlaylistsSettingsViewPreview() {
-    PlaylistsSettings()
+private fun PlaylistsSettingsButtonsPreview() {
+    PlaylistsSettingsButtons()
 }

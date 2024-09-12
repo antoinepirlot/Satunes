@@ -90,6 +90,8 @@ internal fun PlaylistsSettings(
                 },
                 text = stringResource(id = R.string._import)
             )
+
+            CleanPlaylistsButton()
         }
     }
 }

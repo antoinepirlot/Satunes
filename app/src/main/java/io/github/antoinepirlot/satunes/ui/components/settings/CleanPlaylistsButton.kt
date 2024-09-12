@@ -45,7 +45,7 @@ import kotlinx.coroutines.CoroutineScope
  */
 
 @Composable
-internal fun CleanPlaylistsSetting(
+internal fun CleanPlaylistsButton(
     modifier: Modifier = Modifier,
     dataViewModel: DataViewModel = viewModel(),
 ) {
@@ -68,5 +68,5 @@ internal fun CleanPlaylistsSetting(
 @Preview
 @Composable
 private fun CleanPlaylistsSettingPreview() {
-    CleanPlaylistsSetting()
+    CleanPlaylistsButton()
 }

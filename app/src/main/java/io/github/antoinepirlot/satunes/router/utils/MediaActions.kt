@@ -68,7 +68,10 @@ internal fun openMedia(
             logger.severe(message)
             throw IllegalArgumentException(message)
         }
-        navController.navigate(getDestinationOf(media))
+        if (media is Music)
+            navController.navigate(getDestinationOf(media = null))
+        else
+            navController.navigate(getDestinationOf(media = media))
     }
 }
 
@@ -105,6 +108,8 @@ internal fun openMediaFromFolder(
  * Return the destination link of mediaImpl (folder, artists or music) with its id.
  * For example if mediaImpl is folder, it returns: /folders/5
  *
+ * If media is null, then it returns playback.
+ *
  * @param media the mediaImpl to get the destination link
  *
  * @return the mediaImpl destination link with the mediaImpl's id
@@ -120,6 +125,7 @@ fun getDestinationOf(media: MediaImpl?): String {
         is Genre -> "${Destination.GENRES.link}/${media.id}"
 
         is Playlist -> "${Destination.PLAYLISTS.link}/${media.id}"
+
 
         null -> Destination.PLAYBACK.link
 

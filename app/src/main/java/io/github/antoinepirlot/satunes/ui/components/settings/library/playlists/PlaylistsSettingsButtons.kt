@@ -53,9 +53,9 @@ internal fun PlaylistsSettingsButtons(modifier: Modifier = Modifier) {
             .horizontalScroll(state = scrollState)
     ) {
         ExportPlaylistsButton()
-        Spacer(modifier = Modifier.size(16.dp))
+        Spacer(modifier = Modifier.size(8.dp))
         ImportPlaylistsButton()
-        Spacer(modifier = Modifier.size(16.dp))
+        Spacer(modifier = Modifier.size(8.dp))
         CleanPlaylistsButton()
     }
 }

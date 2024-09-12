@@ -106,7 +106,7 @@
     <string name="sharing_failed_no_data">No music to share</string>
     <string name="oversize_sharing_message">Too much files, cancelled.</string>
     <string name="artist_replacement_setting_content">Load music\'s artist if the album\'s artist is unknown.</string>
-    <string name="clean_playlist_button_text">Clean playlists by removing not loaded musics.</string>
+    <string name="clean_playlist_button_text">Clean</string>
     <string name="cleaning_snack_message">Cleaning...</string>
     <string name="cleaned_snackbar_text">Playlists have been cleaned.</string>
 </resources>

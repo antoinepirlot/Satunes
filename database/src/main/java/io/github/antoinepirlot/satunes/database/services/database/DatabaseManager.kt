@@ -410,4 +410,25 @@ class DatabaseManager private constructor(context: Context) {
             throw e
         }
     }
+
+    /**
+     * Cleans playlists of not loaded musics.
+     *
+     * For each musics from all playlists, check if Satunes has loaded them, if not, remove them
+     * from playlists.
+     */
+    suspend fun cleanPlaylists() {
+        _logger.info("Cleaning playlists")
+        val musicsPlaylistsRelList: List<Long> = musicsPlaylistsRelDAO.getAllMusicIds()
+        for (musicId: Long in musicsPlaylistsRelList) {
+            val musicDB: MusicDB? = musicDao.get(id = musicId)
+            if (musicDB == null) {
+                _logger.warning("Not musicDB matching with id in relation (it's weird)")
+                musicsPlaylistsRelDAO.removeAll(musicId = musicId)
+            } else if (musicDB.music == null) {
+                _logger.info("Removing not loaded music")
+                musicsPlaylistsRelDAO.removeAll(musicId = musicId)
+            }
+        }
+    }
 }

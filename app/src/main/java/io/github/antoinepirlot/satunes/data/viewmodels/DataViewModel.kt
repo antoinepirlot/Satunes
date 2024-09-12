@@ -722,4 +722,41 @@ class DataViewModel : ViewModel() {
             _logger.severe(e.message)
         }
     }
+
+    /**
+     * Asks DatabaseManager to clean playlists of not loaded musics.
+     *
+     * @param scope the screen [CoroutineScope]
+     * @param snackBarHostState a [SnackbarHostState]
+     */
+    fun cleanPlaylists(scope: CoroutineScope, snackBarHostState: SnackbarHostState) {
+        val context: Context = MainActivity.instance.applicationContext
+        showSnackBar(
+            scope = scope,
+            snackBarHostState = snackBarHostState,
+            message = context.getString(R.string.cleaning_snack_message)
+        )
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val dbManager: DatabaseManager = DatabaseManager.getInstance()
+                dbManager.cleanPlaylists()
+                showSnackBar(
+                    scope = scope,
+                    snackBarHostState = snackBarHostState,
+                    message = context.getString(R.string.cleaned_snackbar_text)
+                )
+            } catch (e: Throwable) {
+                showErrorSnackBar(
+                    scope = scope,
+                    snackBarHostState = snackBarHostState,
+                    action = {
+                        cleanPlaylists(
+                            scope = scope,
+                            snackBarHostState = snackBarHostState
+                        )
+                    }
+                )
+            }
+        }
+    }
 }

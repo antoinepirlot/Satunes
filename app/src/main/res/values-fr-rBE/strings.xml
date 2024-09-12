@@ -106,4 +106,7 @@
     <string name="sharing_failed_no_data">Pas de musique à partager</string>
     <string name="oversize_sharing_message">Trop de fichiers, annulé.</string>
     <string name="artist_replacement_setting_content">Charger l\'artiste de la musique si l\'artiste de l\'album est inconnu.</string>
+    <string name="clean_playlist_button_text">Nettoyer les playlists en supprimant les musiques qui n\'ont pas été chargée.</string>
+    <string name="cleaning_snack_message">Nettoyage en cours...</string>
+    <string name="cleaned_snackbar_text">Les playlists ont été nettoyées.</string>
 </resources>

@@ -30,7 +30,6 @@ import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import io.github.antoinepirlot.satunes.database.exceptions.PlaylistNotFoundException
 import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
@@ -51,17 +50,7 @@ internal data class PlaylistDB(
 ) : Media {
     @Ignore
     @Transient
-    var playlist: Playlist? = try {
-        DataManager.getPlaylist(id = this.id)
-    } catch (_: PlaylistNotFoundException) {
-        // Happens when importing playlistDB
-        if (this.id != 0L) {
-            //It means, the playlist is get from database while creating
-            Playlist(id = id, title = title)
-        } else {
-            null
-        }
-    }
+    var playlist: Playlist? = DataManager.getPlaylist(title = this.title)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

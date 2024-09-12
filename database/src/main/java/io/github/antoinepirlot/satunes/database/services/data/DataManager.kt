@@ -64,6 +64,7 @@ object DataManager {
     private val genreMap: SortedMap<Genre, Genre> = sortedMapOf()
 
     private val playlistsMapById: MutableMap<Long, Playlist> = mutableMapOf()
+    private val playlistsMapByTitle: MutableMap<String, Playlist> = mutableMapOf()
     private val playlistsSortedMap: SortedMap<Playlist, Playlist> = sortedMapOf()
     val playlistsMapUpdated: MutableState<Boolean> = mutableStateOf(false)
 
@@ -196,13 +197,9 @@ object DataManager {
     }
 
     @Throws(PlaylistNotFoundException::class)
-    fun getPlaylist(id: Long): Playlist? {
-        try {
-            return playlistsMapById[id]!!
-        } catch (_: NullPointerException) {
-            throw PlaylistNotFoundException(id = id)
-        }
-    }
+    fun getPlaylist(id: Long): Playlist? = playlistsMapById[id]
+
+    fun getPlaylist(title: String): Playlist? = playlistsMapByTitle[title]
 
     fun getPlaylistSet(): Set<Playlist> {
         return this.playlistsSortedMap.keys
@@ -212,6 +209,7 @@ object DataManager {
         if (!playlistsSortedMap.contains(playlist)) {
             playlistsSortedMap[playlist] = playlist
             playlistsMapById[playlist.id] = playlist
+            playlistsMapByTitle[playlist.title] = playlist
             playlistsMapUpdated.value = true
         }
     }
@@ -220,6 +218,7 @@ object DataManager {
         if (playlistsSortedMap.contains(playlist)) {
             playlistsSortedMap.remove(playlist)
             playlistsMapById.remove(playlist.id)
+            playlistsMapByTitle.remove(playlist.title)
             playlistsMapUpdated.value = true
         }
     }
@@ -238,6 +237,7 @@ object DataManager {
         genreMapById.clear()
         genreMap.clear()
         playlistsMapById.clear()
+        playlistsMapByTitle.clear()
         playlistsSortedMap.clear()
         playlistsMapUpdated.value = true
     }

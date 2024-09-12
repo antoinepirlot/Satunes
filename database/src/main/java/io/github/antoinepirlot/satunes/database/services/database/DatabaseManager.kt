@@ -326,7 +326,7 @@ class DatabaseManager private constructor(context: Context) {
                     listOf(playlistWithMusics)
                 }
 
-                importPlaylistToDatabase(playlistWithMusicsList = playlistsWithMusics)
+                importPlaylistsToDatabase(playlistWithMusicsList = playlistsWithMusics)
                 showToastOnUiThread(
                     context = context,
                     message = context.getString(R.string.importing_success)
@@ -347,7 +347,7 @@ class DatabaseManager private constructor(context: Context) {
     }
 
     @Throws(NullPointerException::class)
-    private fun importPlaylistToDatabase(playlistWithMusicsList: List<PlaylistWithMusics>) {
+    private fun importPlaylistsToDatabase(playlistWithMusicsList: List<PlaylistWithMusics>) {
         var numberOfMusicMissing = 0L
         playlistWithMusicsList.forEach { playlistWithMusics: PlaylistWithMusics ->
             val musicList: MutableList<Music> = mutableListOf()
@@ -361,11 +361,14 @@ class DatabaseManager private constructor(context: Context) {
             }
             try {
                 addOnePlaylist(
-                    playlistTitle = playlistWithMusics.playlistDB.title, // TODO issue
+                    playlistTitle = playlistWithMusics.playlistDB.title,
                     musicList = musicList,
                 )
             } catch (_: PlaylistAlreadyExistsException) {
-                /* Do nothing */
+                this.insertMusicsToPlaylist(
+                    musics = musicList,
+                    playlist = playlistWithMusics.playlistDB.playlist!!
+                )
             }
         }
         if (numberOfMusicMissing > 0) {

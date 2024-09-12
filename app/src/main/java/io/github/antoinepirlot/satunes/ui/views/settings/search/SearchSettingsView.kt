@@ -23,32 +23,36 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.database.daos
+package io.github.antoinepirlot.satunes.ui.views.settings.search
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
-import io.github.antoinepirlot.satunes.database.models.database.tables.MusicsPlaylistsRel
+import androidx.compose.foundation.layout.Column
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import io.github.antoinepirlot.jetpack_libs.components.texts.Title
+import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.ui.components.settings.search.DefaultSearchFiltersSetting
 
 /**
- * @author Antoine Pirlot on 30/03/2024
+ * @author Antoine Pirlot on 08/07/2024
  */
 
-@Dao
-internal interface MusicsPlaylistsRelDAO {
+@Composable
+internal fun SearchSettingsView(
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier,
+    ) {
+        Title(text = stringResource(id = R.string.search_setting_title))
 
-    @Query("SELECT music_id FROM musics_playlists_rel GROUP BY music_id")
-    fun getAllMusicIds(): List<Long>
+        DefaultSearchFiltersSetting()
+    }
+}
 
-    @Insert
-    fun insert(musicsPlaylistsRel: MusicsPlaylistsRel)
-
-    @Query("DELETE FROM musics_playlists_rel WHERE music_id = :musicId AND playlist_id = :playlistId")
-    fun delete(musicId: Long, playlistId: Long)
-
-    @Query("DELETE FROM musics_playlists_rel WHERE music_id = :musicId")
-    fun removeAll(musicId: Long)
-
-    @Query("SELECT music_id FROM musics_playlists_rel WHERE music_id = :musicId")
-    fun isMusicInPlaylist(musicId: Long): Boolean
+@Preview
+@Composable
+private fun SearchSettingsViewPreview() {
+    SearchSettingsView()
 }

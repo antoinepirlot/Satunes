@@ -72,8 +72,6 @@ internal data class MusicDB(
                     DatabaseManager.getInstance().updateMusic(music)
                     music
                 } catch (_: MusicNotFoundException) {
-                    //Remove music as it has been removed
-                    DatabaseManager.getInstance().removeMusic(id = id)
                     null
                 }
             }

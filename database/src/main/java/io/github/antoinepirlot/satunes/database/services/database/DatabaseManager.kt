@@ -91,11 +91,11 @@ class DatabaseManager private constructor(context: Context) {
             val playlistsWithMusicsList: List<PlaylistWithMusics> =
                 playlistDao.getPlaylistsWithMusics()
             playlistsWithMusicsList.forEach { playlistWithMusics: PlaylistWithMusics ->
-                val playlist = Playlist(
+                var playlist = Playlist(
                     id = playlistWithMusics.playlistDB.id,
                     title = playlistWithMusics.playlistDB.title
                 )
-                DataManager.addPlaylist(playlist = playlist)
+                playlist = DataManager.addPlaylist(playlist = playlist)
                 playlistWithMusics.musics.forEach { musicDB: MusicDB ->
                     if (musicDB.music != null) {
                         if (playlist.title == LIKES_PLAYLIST_TITLE) {
@@ -137,15 +137,13 @@ class DatabaseManager private constructor(context: Context) {
         if (playlistDao.exists(title = playlistTitle)) throw PlaylistAlreadyExistsException()
         val playlistId: Long =
             playlistDao.insertOne(playlistDB = PlaylistDB(title = playlistTitle))
-        val playlistWithMusics: PlaylistWithMusics =
-            playlistDao.getPlaylistWithMusics(playlistId = playlistId)!!
-
-        DataManager.addPlaylist(playlist = playlistWithMusics.playlistDB.playlist!!)
+        var playlist = Playlist(id = playlistId, title = playlistTitle)
+        playlist = DataManager.addPlaylist(playlist = playlist)
 
         musicList?.forEach { music: Music ->
             insertMusicToPlaylist(
                 music = music,
-                playlist = playlistWithMusics.playlistDB.playlist!!
+                playlist = playlist
             )
         }
     }
@@ -326,11 +324,15 @@ class DatabaseManager private constructor(context: Context) {
                     listOf(playlistWithMusics)
                 }
 
-                importPlaylistToDatabase(playlistWithMusicsList = playlistsWithMusics)
-                showToastOnUiThread(
-                    context = context,
-                    message = context.getString(R.string.importing_success)
-                )
+                importPlaylistsToDatabase(playlistWithMusicsList = playlistsWithMusics)
+                try {
+                    showToastOnUiThread(
+                        context = context,
+                        message = context.getString(R.string.importing_success)
+                    )
+                } catch (_: Throwable) {
+                    /*TODO use snackbar instead of this buggy thing */
+                }
             } catch (e: MusicNotFoundException) {
                 //id is used to store the number of musics missing
                 showToastOnUiThread(
@@ -347,7 +349,7 @@ class DatabaseManager private constructor(context: Context) {
     }
 
     @Throws(NullPointerException::class)
-    private fun importPlaylistToDatabase(playlistWithMusicsList: List<PlaylistWithMusics>) {
+    private fun importPlaylistsToDatabase(playlistWithMusicsList: List<PlaylistWithMusics>) {
         var numberOfMusicMissing = 0L
         playlistWithMusicsList.forEach { playlistWithMusics: PlaylistWithMusics ->
             val musicList: MutableList<Music> = mutableListOf()
@@ -361,11 +363,14 @@ class DatabaseManager private constructor(context: Context) {
             }
             try {
                 addOnePlaylist(
-                    playlistTitle = playlistWithMusics.playlistDB.title, // TODO issue
+                    playlistTitle = playlistWithMusics.playlistDB.title,
                     musicList = musicList,
                 )
             } catch (_: PlaylistAlreadyExistsException) {
-                /* Do nothing */
+                this.insertMusicsToPlaylist(
+                    musics = musicList,
+                    playlist = playlistWithMusics.playlistDB.playlist!!
+                )
             }
         }
         if (numberOfMusicMissing > 0) {
@@ -405,6 +410,29 @@ class DatabaseManager private constructor(context: Context) {
         } catch (e: Throwable) {
             _logger.severe(e.message)
             throw e
+        }
+    }
+
+    /**
+     * Cleans playlists of not loaded musics.
+     *
+     * For each musics from all playlists, check if Satunes has loaded them, if not, remove them
+     * from playlists.
+     */
+    suspend fun cleanPlaylists() {
+        _logger.info("Cleaning playlists")
+        val musicsPlaylistsRelList: List<Long> = musicsPlaylistsRelDAO.getAllMusicIds()
+        for (musicId: Long in musicsPlaylistsRelList) {
+            val musicDB: MusicDB? = musicDao.get(id = musicId)
+            if (musicDB == null) {
+                _logger.warning("Not musicDB matching with id in relation (it's weird)")
+                musicsPlaylistsRelDAO.removeAll(musicId = musicId)
+                musicDao.delete(musicId = musicId)
+            } else if (musicDB.music == null) {
+                _logger.info("Removing not loaded music")
+                musicsPlaylistsRelDAO.removeAll(musicId = musicId)
+                musicDao.delete(musicId = musicId)
+            }
         }
     }
 }

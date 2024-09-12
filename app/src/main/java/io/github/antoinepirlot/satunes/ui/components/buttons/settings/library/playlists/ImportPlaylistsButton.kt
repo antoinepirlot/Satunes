@@ -23,32 +23,39 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.database.daos
+package io.github.antoinepirlot.satunes.ui.components.buttons.settings.library.playlists
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
-import io.github.antoinepirlot.satunes.database.models.database.tables.MusicsPlaylistsRel
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
+import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import io.github.antoinepirlot.satunes.ui.components.buttons.ButtonWithIcon
 
 /**
- * @author Antoine Pirlot on 30/03/2024
+ * @author Antoine Pirlot on 12/09/2024
  */
 
-@Dao
-internal interface MusicsPlaylistsRelDAO {
+@Composable
+internal fun ImportPlaylistsButton(
+    modifier: Modifier = Modifier,
+    dataViewModel: DataViewModel = viewModel(),
+) {
+    ButtonWithIcon(
+        modifier = modifier,
+        icon = SatunesIcons.IMPORT,
+        onClick = {
+            dataViewModel.importPlaylists()
+        },
+        text = stringResource(id = R.string._import)
+    )
+}
 
-    @Query("SELECT music_id FROM musics_playlists_rel GROUP BY music_id")
-    fun getAllMusicIds(): List<Long>
-
-    @Insert
-    fun insert(musicsPlaylistsRel: MusicsPlaylistsRel)
-
-    @Query("DELETE FROM musics_playlists_rel WHERE music_id = :musicId AND playlist_id = :playlistId")
-    fun delete(musicId: Long, playlistId: Long)
-
-    @Query("DELETE FROM musics_playlists_rel WHERE music_id = :musicId")
-    fun removeAll(musicId: Long)
-
-    @Query("SELECT music_id FROM musics_playlists_rel WHERE music_id = :musicId")
-    fun isMusicInPlaylist(musicId: Long): Boolean
+@Preview
+@Composable
+private fun ImportPlaylistsButtonPreview() {
+    ImportPlaylistsButton()
 }

@@ -23,32 +23,28 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.database.daos
+package io.github.antoinepirlot.satunes.ui.components.settings.about
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
-import io.github.antoinepirlot.satunes.database.models.database.tables.MusicsPlaylistsRel
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.ui.components.images.ImageWithLink
 
 /**
- * @author Antoine Pirlot on 30/03/2024
+ * @author Antoine Pirlot on 10/04/2024
  */
 
-@Dao
-internal interface MusicsPlaylistsRelDAO {
+@Composable
+internal fun Tipeee(
+    modifier: Modifier = Modifier
+) {
+    val tipeeeUrl = "https://tipeee.com/antoinepirlot"
+    ImageWithLink(modifier = modifier, url = tipeeeUrl, painterId = R.drawable.tipeee_logo)
+}
 
-    @Query("SELECT music_id FROM musics_playlists_rel GROUP BY music_id")
-    fun getAllMusicIds(): List<Long>
-
-    @Insert
-    fun insert(musicsPlaylistsRel: MusicsPlaylistsRel)
-
-    @Query("DELETE FROM musics_playlists_rel WHERE music_id = :musicId AND playlist_id = :playlistId")
-    fun delete(musicId: Long, playlistId: Long)
-
-    @Query("DELETE FROM musics_playlists_rel WHERE music_id = :musicId")
-    fun removeAll(musicId: Long)
-
-    @Query("SELECT music_id FROM musics_playlists_rel WHERE music_id = :musicId")
-    fun isMusicInPlaylist(musicId: Long): Boolean
+@Preview
+@Composable
+private fun TipeeePreview() {
+    Tipeee()
 }

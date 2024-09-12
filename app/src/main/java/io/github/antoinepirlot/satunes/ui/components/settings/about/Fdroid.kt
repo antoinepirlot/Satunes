@@ -23,32 +23,30 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.database.daos
+package io.github.antoinepirlot.satunes.ui.components.settings.about
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
-import io.github.antoinepirlot.satunes.database.models.database.tables.MusicsPlaylistsRel
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.RectangleShape
+import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.ui.components.images.ImageWithLink
 
 /**
- * @author Antoine Pirlot on 30/03/2024
+ * @author Antoine Pirlot on 09/09/2024
  */
 
-@Dao
-internal interface MusicsPlaylistsRelDAO {
+@Composable
+fun Fdroid(modifier: Modifier = Modifier) {
+    val satunesOnFdroidUrl = "https://f-droid.org/fr/packages/io.github.antoinepirlot.satunes/"
+    ImageWithLink(
+        modifier = modifier,
+        url = satunesOnFdroidUrl,
+        shape = RectangleShape,
+        painterId = R.drawable.fdroid_logo
+    )
+}
 
-    @Query("SELECT music_id FROM musics_playlists_rel GROUP BY music_id")
-    fun getAllMusicIds(): List<Long>
-
-    @Insert
-    fun insert(musicsPlaylistsRel: MusicsPlaylistsRel)
-
-    @Query("DELETE FROM musics_playlists_rel WHERE music_id = :musicId AND playlist_id = :playlistId")
-    fun delete(musicId: Long, playlistId: Long)
-
-    @Query("DELETE FROM musics_playlists_rel WHERE music_id = :musicId")
-    fun removeAll(musicId: Long)
-
-    @Query("SELECT music_id FROM musics_playlists_rel WHERE music_id = :musicId")
-    fun isMusicInPlaylist(musicId: Long): Boolean
+@Composable
+private fun FdroidPreview() {
+    Fdroid()
 }

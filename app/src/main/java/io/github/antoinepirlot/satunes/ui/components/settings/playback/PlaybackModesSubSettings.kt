@@ -23,32 +23,37 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.database.daos
+package io.github.antoinepirlot.satunes.ui.components.settings.playback
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
-import io.github.antoinepirlot.satunes.database.models.database.tables.MusicsPlaylistsRel
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.ui.components.buttons.settings.playback.RepeatModeRadioButtons
+import io.github.antoinepirlot.satunes.ui.components.buttons.settings.playback.ShuffleModeRadioButtons
+import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
 
 /**
- * @author Antoine Pirlot on 30/03/2024
+ * @author Antoine Pirlot on 13/05/2024
  */
 
-@Dao
-internal interface MusicsPlaylistsRelDAO {
 
-    @Query("SELECT music_id FROM musics_playlists_rel GROUP BY music_id")
-    fun getAllMusicIds(): List<Long>
+@Composable
+internal fun PlaybackModesSubSettings(
+    modifier: Modifier = Modifier,
+) {
+    SubSettings(
+        modifier = modifier,
+        title = stringResource(id = R.string.playback_mode_settings)
+    ) {
+        ShuffleModeRadioButtons()
+        RepeatModeRadioButtons()
+    }
+}
 
-    @Insert
-    fun insert(musicsPlaylistsRel: MusicsPlaylistsRel)
-
-    @Query("DELETE FROM musics_playlists_rel WHERE music_id = :musicId AND playlist_id = :playlistId")
-    fun delete(musicId: Long, playlistId: Long)
-
-    @Query("DELETE FROM musics_playlists_rel WHERE music_id = :musicId")
-    fun removeAll(musicId: Long)
-
-    @Query("SELECT music_id FROM musics_playlists_rel WHERE music_id = :musicId")
-    fun isMusicInPlaylist(musicId: Long): Boolean
+@Preview
+@Composable
+private fun PlaybackModesSwitchesPreview() {
+    PlaybackModesSubSettings()
 }

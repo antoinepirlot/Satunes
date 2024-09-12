@@ -156,25 +156,21 @@ object DataLoader {
         }
 
         if (
-            this@DataLoader.selection_args.isEmpty()
-            && SettingsManager.foldersSelectionSelected == FoldersSelection.INCLUDE
+            this@DataLoader.selection_args.isNotEmpty()
+            || SettingsManager.foldersSelectionSelected != FoldersSelection.INCLUDE
         ) {
-            isLoaded.value = true
-            isLoading.value = false
-            return
-        }
-
-        context.contentResolver.query(
-            URI,
-            projection,
-            this@DataLoader.selection,
-            this@DataLoader.selection_args,
-            null
-        )?.use {
-            _logger.info("${it.count} musics to load.")
-            loadColumns(cursor = it)
-            while (it.moveToNext()) {
-                loadData(cursor = it, context = context)
+            context.contentResolver.query(
+                URI,
+                projection,
+                this@DataLoader.selection,
+                this@DataLoader.selection_args,
+                null
+            )?.use {
+                _logger.info("${it.count} musics to load.")
+                loadColumns(cursor = it)
+                while (it.moveToNext()) {
+                    loadData(cursor = it, context = context)
+                }
             }
         }
         DatabaseManager.initInstance(context = context).loadAllPlaylistsWithMusic()

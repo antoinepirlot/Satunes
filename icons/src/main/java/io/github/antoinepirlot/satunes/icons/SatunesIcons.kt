@@ -37,6 +37,7 @@ import androidx.compose.material.icons.rounded.ArrowDropDown
 import androidx.compose.material.icons.rounded.ArrowDropUp
 import androidx.compose.material.icons.rounded.BatterySaver
 import androidx.compose.material.icons.rounded.Category
+import androidx.compose.material.icons.rounded.CleaningServices
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.DirectionsCar
@@ -94,6 +95,7 @@ enum class SatunesIcons(
     BATTERY(imageVector = Icons.Rounded.BatterySaver, description = "Battery Icon"),
     BOTTOM_BAR(imageVector = Icons.Rounded.Navigation, description = "Bottom Bar Setting Icon"),
     CHIP_SELECTED(imageVector = Icons.Rounded.Done, description = "Chip Selected icon"),
+    CLEANING(imageVector = Icons.Rounded.CleaningServices, description = "Cleaning Icon"),
     CLOSE_DROPDOWN_MENU(
         imageVector = Icons.Rounded.ArrowDropDown,
         description = "Close dropdown menu icon"

@@ -39,9 +39,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.antoinepirlot.jetpack_libs.components.texts.Title
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.ui.components.settings.PlaylistsSettings
 import io.github.antoinepirlot.satunes.ui.components.settings.data.folders.FoldersSubSettings
 import io.github.antoinepirlot.satunes.ui.components.settings.data.loading.DataLoadingLogicSubSettings
-import io.github.antoinepirlot.satunes.ui.components.settings.data.playlists.PlaylistsSettings
 
 /**
  * @author Antoine Pirlot on 27/04/2024

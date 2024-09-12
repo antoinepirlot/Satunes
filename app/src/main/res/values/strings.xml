@@ -113,5 +113,5 @@
     <string name="cleaning_snack_message">Cleaning… 🧹</string>
     <string name="cleaned_snackbar_text">Cleaned 🧹</string>
     <string name="edit">Edit</string>
-    <string name="confirm_button_text">Save</string>
+    <string name="confirm">Save</string>
 </resources>

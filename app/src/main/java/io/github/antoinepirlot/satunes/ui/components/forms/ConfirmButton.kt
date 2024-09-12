@@ -46,7 +46,7 @@ internal fun ConfirmButton(
         modifier = modifier,
         onClick = onConfirm
     ) {
-        NormalText(text = stringResource(R.string.confirm_button_text))
+        NormalText(text = stringResource(R.string.confirm))
     }
 }
 

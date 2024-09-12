@@ -23,55 +23,34 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.forms.edit
+package io.github.antoinepirlot.satunes.ui.components.forms
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.material3.Button
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.ui.components.forms.CancelButton
-import io.github.antoinepirlot.satunes.ui.components.forms.ConfirmButton
 
 /**
  * @author Antoine Pirlot on 12/09/2024
  */
-
 @Composable
-internal fun EditMusicForm(
+internal fun CancelButton(
     modifier: Modifier = Modifier,
-    music: Music,
+    onCancel: () -> Unit
 ) {
-    var placeholder: String by remember { mutableStateOf(music.title) }
-    var title: String by remember { mutableStateOf(music.title) }
-
-    Column(modifier = modifier) {
-        EditRow(
-            value = title,
-            onValueChange = { title = it },
-            placeholder = placeholder,
-            label = stringResource(R.string.title)
-        )
-
-        Row {
-            CancelButton(
-                onCancel = {
-                    /*TODO*/
-                    title = music.title
-                }
-            )
-            ConfirmButton(
-                onConfirm = {
-                    /*TODO save music title with dataviewmodel*/
-                    placeholder = title // todo later music.title
-                }
-            )
-        }
+    Button(
+        modifier = modifier,
+        onClick = onCancel
+    ) {
+        NormalText(text = stringResource(R.string.cancel))
     }
+}
+
+@Preview
+@Composable
+private fun CancelButtonPreview() {
+    CancelButton(onCancel = {})
 }

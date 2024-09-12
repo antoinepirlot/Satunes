@@ -52,7 +52,6 @@ internal fun EditMediaOption(
         modifier = modifier,
         onClick = {
             // Link looks like: "/edit/musics/5
-            val destination: String = getDestinationOf(media = mediaImpl)
             navController.navigate(
                 Destination.EDIT.link + '/' + getDestinationOf(media = mediaImpl)
             )

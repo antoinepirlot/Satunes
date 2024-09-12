@@ -23,33 +23,41 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.views.media.edit
+package io.github.antoinepirlot.satunes.ui.components.forms.edit
 
-import androidx.compose.foundation.ScrollState
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.ui.components.forms.edit.EditMusicForm
+import androidx.compose.ui.tooling.preview.Preview
+import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 
 /**
  * @author Antoine Pirlot on 12/09/2024
  */
 
 @Composable
-internal fun EditMusicView(
+fun EditRow(
     modifier: Modifier = Modifier,
-    music: Music,
+    value: String,
+    placeholder: String,
+    label: String,
+    onValueChange: (value: String) -> Unit,
+    enabled: Boolean = true,
+    readOnly: Boolean = false
 ) {
-    val scrollState: ScrollState = rememberScrollState()
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .verticalScroll(state = scrollState),
-    ) {
-        EditMusicForm(music = music)
-    }
+    OutlinedTextField(
+        modifier = modifier,
+        value = value,
+        onValueChange = onValueChange,
+        enabled = enabled,
+        readOnly = readOnly,
+        placeholder = { NormalText(text = placeholder) },
+        label = { NormalText(text = label) }
+    )
+}
+
+@Preview
+@Composable
+private fun EditRowPreview() {
+    EditRow(value = "Value", onValueChange = {}, placeholder = "Placeholder", label = "Label")
 }

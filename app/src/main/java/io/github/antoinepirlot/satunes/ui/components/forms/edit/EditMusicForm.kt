@@ -23,33 +23,45 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.views.media.edit
+package io.github.antoinepirlot.satunes.ui.components.forms.edit
 
-import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.ui.components.forms.edit.EditMusicForm
+import io.github.antoinepirlot.satunes.ui.components.forms.ConfirmButton
 
 /**
  * @author Antoine Pirlot on 12/09/2024
  */
 
 @Composable
-internal fun EditMusicView(
+internal fun EditMusicForm(
     modifier: Modifier = Modifier,
     music: Music,
 ) {
-    val scrollState: ScrollState = rememberScrollState()
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .verticalScroll(state = scrollState),
-    ) {
-        EditMusicForm(music = music)
+    var placeholder: String by remember { mutableStateOf(music.title) }
+    var title: String by remember { mutableStateOf(music.title) }
+
+    Column(modifier = modifier) {
+        EditRow(
+            value = title,
+            onValueChange = { title = it },
+            placeholder = placeholder,
+            label = stringResource(R.string.title)
+        )
+
+        ConfirmButton(
+            onConfirm = {
+                /*TODO save music title with dataviewmodel*/
+                placeholder = title // todo later music.title
+            }
+        )
     }
 }

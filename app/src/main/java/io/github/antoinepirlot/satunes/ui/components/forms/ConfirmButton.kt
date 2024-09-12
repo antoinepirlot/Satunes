@@ -23,33 +23,35 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.views.media.edit
+package io.github.antoinepirlot.satunes.ui.components.forms
 
-import androidx.compose.foundation.ScrollState
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.ui.components.forms.edit.EditMusicForm
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
+import io.github.antoinepirlot.satunes.R
 
 /**
  * @author Antoine Pirlot on 12/09/2024
  */
 
 @Composable
-internal fun EditMusicView(
+internal fun ConfirmButton(
     modifier: Modifier = Modifier,
-    music: Music,
+    onConfirm: () -> Unit
 ) {
-    val scrollState: ScrollState = rememberScrollState()
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .verticalScroll(state = scrollState),
+    Button(
+        modifier = modifier,
+        onClick = onConfirm
     ) {
-        EditMusicForm(music = music)
+        NormalText(text = stringResource(R.string.confirm_button_text))
     }
+}
+
+@Preview
+@Composable
+private fun ConfirmButtonPreview() {
+    ConfirmButton(onConfirm = {})
 }

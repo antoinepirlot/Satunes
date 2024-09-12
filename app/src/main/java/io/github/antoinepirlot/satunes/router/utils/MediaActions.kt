@@ -126,6 +126,7 @@ fun getDestinationOf(media: MediaImpl?): String {
 
         is Playlist -> "${Destination.PLAYLISTS.link}/${media.id}"
 
+        is Music -> "${Destination.MUSICS.link}/${media.id}"
 
         null -> Destination.PLAYBACK.link
 

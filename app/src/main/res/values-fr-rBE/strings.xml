@@ -102,11 +102,11 @@
     <string name="export_log_button_content">Exporter les logs</string>
     <string name="path_removed">%1$s a été supprimé.</string>
     <string name="share_button_content">Partager</string>
-    <string name="sharing_loading">Partage en cours...</string>
+    <string name="sharing_loading">Partage en cours…</string>
     <string name="sharing_failed_no_data">Pas de musique à partager</string>
     <string name="oversize_sharing_message">Trop de fichiers, annulé.</string>
     <string name="artist_replacement_setting_content">Charger l\'artiste de la musique si l\'artiste de l\'album est inconnu.</string>
     <string name="clean_playlist_button_text">Nettoyer</string>
-    <string name="cleaning_snack_message">Nettoyage en cours...</string>
-    <string name="cleaned_snackbar_text">Les playlists ont été nettoyées.</string>
+    <string name="cleaning_snack_message">Nettoyage en cours… 🧹</string>
+    <string name="cleaned_snackbar_text">Nettoyées 🧹</string>
 </resources>

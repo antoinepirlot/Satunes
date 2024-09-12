@@ -23,7 +23,7 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.settings.library.playlists.folders
+package io.github.antoinepirlot.satunes.ui.components.settings.library.folders
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier

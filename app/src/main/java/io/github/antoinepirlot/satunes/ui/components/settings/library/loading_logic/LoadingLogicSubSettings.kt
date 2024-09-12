@@ -23,67 +23,68 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.settings.library.playlists.folders
+package io.github.antoinepirlot.satunes.ui.components.settings.library.loading_logic
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.SegmentedButton
-import androidx.compose.material3.SegmentedButtonDefaults
-import androidx.compose.material3.SingleChoiceSegmentedButtonRow
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
-import io.github.antoinepirlot.satunes.data.allFoldersSelections
+import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.data.local.LocalMainScope
+import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
-import io.github.antoinepirlot.satunes.database.models.FoldersSelection
+import io.github.antoinepirlot.satunes.models.SwitchSettings
+import io.github.antoinepirlot.satunes.ui.components.settings.SettingWithSwitch
+import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
+import kotlinx.coroutines.CoroutineScope
 
 /**
- * @author Antoine Pirlot on 09/08/2024
+ * @author Antoine Pirlot on 31/08/2024
  */
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun FoldersRowSelection(
+internal fun LoadingLogicSubSettings(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+    val scope: CoroutineScope = LocalMainScope.current
+    val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
 
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(vertical = 16.dp),
-        contentAlignment = Alignment.Center
+    SubSettings(
+        modifier = modifier,
+        title = stringResource(R.string.data_loading_settings_title)
     ) {
-        SingleChoiceSegmentedButtonRow {
-            for (i: Int in allFoldersSelections.indices) {
-                val foldersSelection: FoldersSelection = allFoldersSelections[i]
-                SegmentedButton(
-                    selected = foldersSelection == satunesUiState.foldersSelectionSelected,
-                    shape = SegmentedButtonDefaults.itemShape(
-                        index = i,
-                        count = allFoldersSelections.size
-                    ),
-                    onClick = { satunesViewModel.selectFoldersSelection(foldersSelection = foldersSelection) },
-                    label = { NormalText(text = stringResource(id = foldersSelection.stringId)) }
+        SettingWithSwitch(
+            setting = SwitchSettings.COMPILATION_MUSIC,
+            checked = satunesUiState.compilationMusic,
+            onCheckedChange = { satunesViewModel.switchCompilationMusic() }
+        )
+        Spacer(modifier = Modifier.size(size = 16.dp))
+
+        SettingWithSwitch(
+            setting = SwitchSettings.ARTIST_REPLACEMENT,
+            checked = satunesUiState.artistReplacement,
+            onCheckedChange = {
+                satunesViewModel.switchArtistReplacement(
+                    scope = scope,
+                    snackBarHostState = snackBarHostState
                 )
             }
-        }
+        )
     }
 }
 
 @Preview
 @Composable
-private fun FoldersRowSelectionPreview() {
-    FoldersRowSelection()
+private fun LoadingSubSettingsPreview() {
+    LoadingLogicSubSettings()
 }

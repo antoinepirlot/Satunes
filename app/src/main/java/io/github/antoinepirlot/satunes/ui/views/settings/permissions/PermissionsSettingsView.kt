@@ -91,6 +91,8 @@ internal fun PermissionsSettingsView(
                 val permissionIcon: SatunesIcons = when (permission) {
                     Permissions.READ_AUDIO_PERMISSION -> SatunesIcons.MUSIC
                     Permissions.READ_EXTERNAL_STORAGE_PERMISSION -> SatunesIcons.FOLDER
+                    Permissions.MANAGE_MEDIA_PERMISSION -> TODO()
+                    Permissions.ACCESS_MEDIA_LOCATION_PERMISSION -> TODO()
                 }
                 Icon(
                     imageVector = permissionIcon.imageVector,

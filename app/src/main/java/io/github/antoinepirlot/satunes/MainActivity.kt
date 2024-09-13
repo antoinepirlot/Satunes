@@ -33,9 +33,12 @@ import android.os.Environment
 import android.provider.DocumentsContract
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
 import androidx.media3.session.MediaController
 import com.google.common.util.concurrent.ListenableFuture
+import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.utils.isAudioAllowed
+import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
@@ -59,6 +62,13 @@ internal class MainActivity : ComponentActivity() {
         private const val EXPORT_PLAYLIST_CODE: Int = 3
         private const val EXPORT_LOGS_CODE: Int = 4
         const val SELECT_FOLDER_TREE_CODE: Int = 5
+        const val UPDATE_MUSIC_CODE: Int = 6
+
+        /**
+         * Todo mode to a specific object
+         */
+        var updatedMusic: Music? = null
+
         const val MIME_JSON: String = "application/json"
         private const val MIME_TEXT: String = "application/text"
         val DEFAULT_URI: Uri =
@@ -168,6 +178,16 @@ internal class MainActivity : ComponentActivity() {
                         CoroutineScope(Dispatchers.IO).launch {
                             SettingsManager.addPath(context = applicationContext, uri = it)
                         }
+                    }
+                }
+
+
+                UPDATE_MUSIC_CODE -> @RequiresApi(Build.VERSION_CODES.Q) {
+                    CoroutineScope(Dispatchers.IO).launch {
+                        DataViewModel.updateMusic(
+                            context = applicationContext,
+                            updatedMusic = updatedMusic!!
+                        )
                     }
                 }
             }

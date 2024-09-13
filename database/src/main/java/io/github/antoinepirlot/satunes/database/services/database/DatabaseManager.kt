@@ -102,7 +102,7 @@ class DatabaseManager private constructor(context: Context) {
                             val music: Music = musicDB.music!!
                             music.liked.value = true
                         }
-                        playlist.addMusic(music = musicDB.music!!)
+                        playlist.addMusic(musicDB.music!!)
                     }
                 }
             }
@@ -178,7 +178,7 @@ class DatabaseManager private constructor(context: Context) {
                 _logger.warning(e.message)
                 // Do nothing
             }
-            playlist.addMusic(music = music)
+            playlist.addMusic(music)
         } catch (e: SQLiteConstraintException) {
             _logger.warning(e.message)
             // Do nothing

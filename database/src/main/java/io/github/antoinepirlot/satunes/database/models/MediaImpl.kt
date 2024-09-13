@@ -61,11 +61,17 @@ abstract class MediaImpl(
         return this.musicSortedSet
     }
 
-    fun addMusic(music: Music) {
-        if (!this.musicSortedSet.contains(element = music)) {
-            this.musicSortedSet.add(element = music)
-            this.musicSetUpdated.value = true
+    fun addMusic(vararg music: Music) {
+        music.forEach {
+            if (!this.musicSortedSet.contains(element = it)) {
+                this.musicSortedSet.add(element = it)
+                this.musicSetUpdated.value = true
+            }
         }
+    }
+
+    fun addMusic(musics: Collection<Music>) {
+        this.musicSortedSet.addAll(musics)
     }
 
     fun removeMusic(music: Music) {
@@ -92,8 +98,4 @@ abstract class MediaImpl(
     }
 
     fun musicCount(): Int = this.musicSortedSet.size
-
-    override fun clone(): MediaImpl {
-        return super.clone() as MediaImpl
-    }
 }

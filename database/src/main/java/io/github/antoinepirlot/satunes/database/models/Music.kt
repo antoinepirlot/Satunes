@@ -80,17 +80,18 @@ class Music(
      */
     var uri: Uri = Uri.parse(encode(absolutePath)) // Must be init before media item
         private set
-    val mediaItem: MediaItem = getMediaMetadata()
+    var mediaItem: MediaItem = getMediaMetadata()
+        private set
 
     init {
         DataManager.addMusic(music = this)
-        album.addMusic(music = this)
+        album.addMusic(this)
         if (SettingsManager.compilationMusic) {
-            album.artist.addMusic(music = this)
+            album.artist.addMusic(this)
         }
-        artist.addMusic(music = this)
-        genre.addMusic(music = this)
-        folder.addMusic(music = this)
+        artist.addMusic(this)
+        genre.addMusic(this)
+        folder.addMusic(this)
     }
 
     fun switchLike(context: Context) {
@@ -197,6 +198,23 @@ class Music(
     }
 
     public override fun clone(): Music {
-        return super.clone() as Music
+        val copy = Music(
+            id = id,
+            title = title,
+            displayName = displayName,
+            absolutePath = absolutePath,
+            duration = duration,
+            size = size,
+            folder = folder,
+            artist = artist,
+            album = album,
+            genre = genre
+        )
+        copy.uri = uri
+        copy.liked = liked
+        copy.mediaItem = mediaItem
+        copy.addMusic(musicSortedSet)
+        copy.artwork = artwork
+        return copy
     }
 }

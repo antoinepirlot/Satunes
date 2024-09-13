@@ -25,8 +25,10 @@
 
 package io.github.antoinepirlot.satunes.data.viewmodels
 
+import android.app.RecoverableSecurityException
 import android.content.Context
 import android.content.Intent
+import android.content.IntentSender
 import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Build
@@ -39,6 +41,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import io.github.antoinepirlot.satunes.MainActivity
+import io.github.antoinepirlot.satunes.MainActivity.Companion.UPDATE_MUSIC_CODE
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.exceptions.BlankStringException
@@ -60,6 +63,7 @@ import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import io.github.antoinepirlot.satunes.database.R as RDb
 
 /**
@@ -95,6 +99,37 @@ class DataViewModel : ViewModel() {
     fun getGenre(id: Long): Genre = DataManager.getGenre(id = id)!!
     fun getMusic(id: Long): Music = DataManager.getMusic(id = id)
     fun getPlaylist(id: Long): Playlist = DataManager.getPlaylist(id = id)!!
+
+    companion object {
+        @RequiresApi(Build.VERSION_CODES.Q)
+        fun updateMusic(context: Context, updatedMusic: Music) {
+            MediaScannerConnection.scanFile(
+                context,
+                arrayOf(updatedMusic.absolutePath),
+                arrayOf("audio/*")
+            ) { _: String, contentUri: Uri ->
+                try {
+                    runBlocking {
+                        DataManager.updateMusic(
+                            context = context,
+                            updatedMusic = updatedMusic,
+                        )
+                    }
+                } catch (e: SecurityException) {
+                    val recoverableSecurityException =
+                        e as? RecoverableSecurityException ?: throw RuntimeException(
+                            e.message,
+                            e
+                        )
+                    val intentSender: IntentSender =
+                        recoverableSecurityException.userAction.actionIntent.intentSender
+                    MainActivity.instance.startIntentSenderForResult(
+                        intentSender, UPDATE_MUSIC_CODE, null, 0, 0, 0, null
+                    )
+                }
+            }
+        }
+    }
 
     fun addOnePlaylist(
         scope: CoroutineScope,
@@ -764,7 +799,7 @@ class DataViewModel : ViewModel() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.R)
+    @RequiresApi(Build.VERSION_CODES.Q)
     fun updateMusic(
         scope: CoroutineScope,
         snackBarHostState: SnackbarHostState,
@@ -780,7 +815,8 @@ class DataViewModel : ViewModel() {
         )
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                /*TODO*/
+                MainActivity.updatedMusic = updatedMusic
+                Companion.updateMusic(context = context, updatedMusic = updatedMusic)
             } catch (e: Throwable) {
                 e.printStackTrace()
                 _logger.warning(e.message)

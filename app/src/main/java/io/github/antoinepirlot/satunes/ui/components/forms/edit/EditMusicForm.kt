@@ -25,6 +25,8 @@
 
 package io.github.antoinepirlot.satunes.ui.components.forms.edit
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -52,6 +54,7 @@ import kotlinx.coroutines.CoroutineScope
  * @author Antoine Pirlot on 12/09/2024
  */
 
+@RequiresApi(Build.VERSION_CODES.Q)
 @Composable
 internal fun EditMusicForm(
     modifier: Modifier = Modifier,
@@ -60,25 +63,21 @@ internal fun EditMusicForm(
 ) {
     val scope: CoroutineScope = LocalMainScope.current
     val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
-    val updatedMusic: Music = music.clone()
+    val updatedMusic: Music by remember { mutableStateOf(music.clone()) }
     var placeholder: String by remember { mutableStateOf(updatedMusic.title) }
-    var title: String by remember { mutableStateOf(updatedMusic.title) }
 
     Column(modifier = modifier) {
         EditRow(
-            value = title,
-            onValueChange = { title = it },
+            value = updatedMusic.title,
+            onValueChange = {
+                updatedMusic.title = it
+            },
             placeholder = placeholder,
             label = stringResource(R.string.title)
         )
 
         Row {
-            CancelButton(
-                onCancel = {
-                    updatedMusic.title = music.title
-                    title = music.title
-                }
-            )
+            CancelButton(onCancel = { updatedMusic.title = music.title })
             Spacer(Modifier.size(8.dp))
             ConfirmButton(
                 onConfirm = {

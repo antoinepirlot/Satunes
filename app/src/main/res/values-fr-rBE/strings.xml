@@ -111,4 +111,5 @@
     <string name="cleaned_snackbar_text">Nettoyées 🧹</string>
     <string name="edit">Modifier</string>
     <string name="confirm">Enregistrer</string>
+    <string name="updating_snack">Modification en cours…</string>
 </resources>

@@ -25,6 +25,16 @@
 
 package io.github.antoinepirlot.satunes.database.services.data
 
+import android.content.ContentResolver
+import android.content.ContentUris
+import android.content.ContentValues
+import android.content.Context
+import android.media.MediaMetadataRetriever
+import android.net.Uri
+import android.os.Build
+import android.os.ParcelFileDescriptor
+import android.provider.MediaStore
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import io.github.antoinepirlot.satunes.database.exceptions.MusicNotFoundException
@@ -93,6 +103,74 @@ object DataManager {
             this.musicMapByAbsolutePath[music.absolutePath] = music
         }
         return getMusic(id = music.id)
+    }
+
+    /**
+     * Updates the matching music with new modifiable values and apply these modifications
+     * in audio file.
+     *
+     * @param updatedMusic a [Music] containing the new values to apply to the current music.
+     *
+     * @throws IllegalArgumentException if the [updatedMusic] is not valid.
+     */
+    @RequiresApi(Build.VERSION_CODES.R)
+    suspend fun updateMusic(context: Context, updatedMusic: Music, parcelFd: ParcelFileDescriptor) {
+        checkMusicValues(music = updatedMusic)
+        val currentMusic: Music = this.getMusic(id = updatedMusic.id)
+        val contentResolver: ContentResolver = context.contentResolver
+        val metaDataRetriever = MediaMetadataRetriever()
+        metaDataRetriever.setDataSource(parcelFd.fileDescriptor)
+        val contentValues = ContentValues().apply {
+            put(MediaStore.Audio.Media.TITLE, updatedMusic.title)
+        }
+        val selection = "${MediaStore.Audio.Media._ID} = ?"
+        val selectionArgs: Array<String> = arrayOf(updatedMusic.id.toString())
+        val uri: Uri =
+            ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, updatedMusic.id)
+        val rowsUpdated: Int = contentResolver.update(
+            uri,
+            contentValues,
+            null,
+            null,
+        )
+        metaDataRetriever.release()
+
+
+//        parcelFd.set
+        //
+
+
+//
+////        contentValues.put(MediaStore.Audio.Media.IS_PENDING, 0)
+////        contentResolver.update(
+////            MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+////            contentValues,
+////            null,
+////            null
+////        )
+////        contentValues.clear()
+//
+////        contentValues.put(MediaStore.Audio.Media.IS_PENDING, 0)
+//        contentValues.put(MediaColumns.IS_TRASHED, true)
+//        val rowsUpdated: Int = contentResolver.update(
+//            MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+//            contentValues,
+//            selection,
+//            selectionArgs,
+//        )
+        if (rowsUpdated == 0) throw IllegalAccessError("The audio file has not been updated")
+        currentMusic.title = updatedMusic.title
+    }
+
+    /**
+     * Check if the modifiable values of the music are correct.
+     *
+     * @param music the [Music] to check.
+     *
+     * @throws IllegalArgumentException if at least one of the modifiable values is incorrect
+     */
+    private fun checkMusicValues(music: Music) {
+        if (music.title.isBlank()) throw IllegalArgumentException("Music title is blank")
     }
 
     fun getRootFolderSet(): Set<Folder> {

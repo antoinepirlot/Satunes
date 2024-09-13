@@ -74,6 +74,10 @@ class Music(
         }
     var liked: MutableState<Boolean> = mutableStateOf(false)
         private set
+
+    /**
+     * Encoded uri of the absolute path
+     */
     var uri: Uri = Uri.parse(encode(absolutePath)) // Must be init before media item
         private set
     val mediaItem: MediaItem = getMediaMetadata()

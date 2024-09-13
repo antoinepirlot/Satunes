@@ -29,6 +29,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -39,10 +40,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.data.local.LocalMainScope
+import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.ui.components.forms.CancelButton
 import io.github.antoinepirlot.satunes.ui.components.forms.ConfirmButton
+import kotlinx.coroutines.CoroutineScope
 
 /**
  * @author Antoine Pirlot on 12/09/2024
@@ -54,6 +58,8 @@ internal fun EditMusicForm(
     dataViewModel: DataViewModel = viewModel(),
     music: Music,
 ) {
+    val scope: CoroutineScope = LocalMainScope.current
+    val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
     val updatedMusic: Music = music.clone()
     var placeholder: String by remember { mutableStateOf(updatedMusic.title) }
     var title: String by remember { mutableStateOf(updatedMusic.title) }
@@ -76,8 +82,12 @@ internal fun EditMusicForm(
             Spacer(Modifier.size(8.dp))
             ConfirmButton(
                 onConfirm = {
-//                  todo  dataViewModel.updateMusic()
-                    placeholder = title // todo later music.title
+                    dataViewModel.updateMusic(
+                        scope = scope,
+                        snackBarHostState = snackBarHostState,
+                        updatedMusic = updatedMusic,
+                        onFinish = { placeholder = music.title }
+                    )
                 }
             )
         }

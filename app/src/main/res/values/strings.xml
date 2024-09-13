@@ -114,4 +114,5 @@
     <string name="cleaned_snackbar_text">Cleaned 🧹</string>
     <string name="edit">Edit</string>
     <string name="confirm">Save</string>
+    <string name="updating_snack">Updating…</string>
 </resources>

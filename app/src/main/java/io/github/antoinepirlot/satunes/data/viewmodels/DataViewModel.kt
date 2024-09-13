@@ -29,7 +29,9 @@ import android.content.Context
 import android.content.Intent
 import android.media.MediaScannerConnection
 import android.net.Uri
+import android.os.Build
 import android.webkit.MimeTypeMap
+import androidx.annotation.RequiresApi
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
@@ -656,6 +658,7 @@ class DataViewModel : ViewModel() {
                 }
             }
 
+            //TODO optimize by moving it into the loop to break
             if (paths.size > 850) {
                 isSharingLoading = false
                 scope.launch {
@@ -757,6 +760,44 @@ class DataViewModel : ViewModel() {
                         )
                     }
                 )
+            }
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.R)
+    fun updateMusic(
+        scope: CoroutineScope,
+        snackBarHostState: SnackbarHostState,
+        updatedMusic: Music,
+        onFinish: () -> Unit
+    ) {
+        _logger.info("Updating music")
+        val context: Context = MainActivity.instance.applicationContext
+        showSnackBar(
+            scope = scope,
+            snackBarHostState = snackBarHostState,
+            message = context.getString(R.string.updating_snack)
+        )
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                /*TODO*/
+            } catch (e: Throwable) {
+                e.printStackTrace()
+                _logger.warning(e.message)
+                showErrorSnackBar(
+                    scope = scope,
+                    snackBarHostState = snackBarHostState,
+                    action = {
+                        this@DataViewModel.updateMusic(
+                            scope = scope,
+                            snackBarHostState = snackBarHostState,
+                            updatedMusic = updatedMusic,
+                            onFinish = onFinish
+                        )
+                    }
+                )
+            } finally {
+                onFinish()
             }
         }
     }

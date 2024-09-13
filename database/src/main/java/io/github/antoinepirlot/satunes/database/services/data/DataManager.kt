@@ -30,9 +30,7 @@ import android.content.ContentUris
 import android.content.ContentValues
 import android.content.Context
 import android.net.Uri
-import android.os.Build
 import android.provider.MediaStore
-import androidx.annotation.RequiresApi
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import io.github.antoinepirlot.satunes.database.exceptions.MusicNotFoundException
@@ -111,35 +109,18 @@ object DataManager {
      *
      * @throws IllegalArgumentException if the [updatedMusic] is not valid.
      */
-    @RequiresApi(Build.VERSION_CODES.Q)
+//    @RequiresApi(Build.VERSION_CODES.Q)
     suspend fun updateMusic(context: Context, updatedMusic: Music) {
         checkMusicValues(music = updatedMusic)
         val currentMusic: Music = this.getMusic(id = updatedMusic.id)
 
         val contentResolver: ContentResolver = context.contentResolver
-//        val metaDataRetriever = MediaMetadataRetriever()
-//        metaDataRetriever.setDataSource(parcelFd.fileDescriptor)
         val contentValues = ContentValues().apply {
-//            put(MediaStore.Audio.Media.TITLE, updatedMusic.title)
+            put(MediaStore.Audio.Media.TITLE, updatedMusic.title)
         }
-//        val selection = "${MediaStore.Audio.Media._ID} = ?"
-//        val selectionArgs: Array<String> = arrayOf(updatedMusic.id.toString())
         val uri: Uri =
             ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, updatedMusic.id)
-//        val rowsUpdated: Int = contentResolver.update(
-//            uri,
-//            contentValues,
-//            null,
-//            null,
-//        )
-//        metaDataRetriever.release()
 
-
-//        parcelFd.set
-        //
-
-
-//
         contentValues.put(MediaStore.Audio.Media.IS_PENDING, 1)
         contentResolver.update(
             uri,
@@ -149,7 +130,8 @@ object DataManager {
         )
         contentValues.clear()
 
-        contentValues.put(MediaStore.Audio.Media.TITLE, "Holà") //TODO remove Holà
+        contentValues.put(MediaStore.Audio.Media.IS_PENDING, 0)
+        contentValues.put(MediaStore.Audio.Media.TITLE, updatedMusic.title)
         val rowsUpdated: Int = contentResolver.update(
             uri,
             contentValues,
@@ -157,14 +139,6 @@ object DataManager {
             null,
         )
         contentValues.clear()
-
-        contentValues.put(MediaStore.Audio.Media.IS_PENDING, 0)
-        contentResolver.update(
-            uri,
-            contentValues,
-            null,
-            null
-        )
         if (rowsUpdated == 0) throw IllegalAccessError("The audio file has not been updated")
         currentMusic.title = updatedMusic.title
     }

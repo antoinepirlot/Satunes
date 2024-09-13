@@ -112,6 +112,5 @@
     <string name="edit">Edit</string>
     <string name="confirm">Save</string>
     <string name="updating_snack">Updating…</string>
-    <string name="manage_media_permission">Manage Media</string>
     <string name="access_media_location_permission">Photos and videos</string>
 </resources>

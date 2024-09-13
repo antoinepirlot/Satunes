@@ -112,6 +112,5 @@
     <string name="edit">Modifier</string>
     <string name="confirm">Enregistrer</string>
     <string name="updating_snack">Modification en cours…</string>
-    <string name="manage_media_permission">Gérer les médias</string>
     <string name="access_media_location_permission">Photos et vidéos</string>
 </resources>

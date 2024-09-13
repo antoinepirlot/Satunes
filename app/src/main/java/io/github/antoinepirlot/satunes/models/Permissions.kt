@@ -26,7 +26,6 @@
 package io.github.antoinepirlot.satunes.models
 
 import android.Manifest.permission.ACCESS_MEDIA_LOCATION
-import android.Manifest.permission.MANAGE_MEDIA
 import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.Manifest.permission.READ_MEDIA_AUDIO
 import android.os.Build
@@ -43,9 +42,6 @@ internal enum class Permissions(val stringId: Int, val value: String) {
         stringId = R.string.read_external_storage_permission,
         value = READ_EXTERNAL_STORAGE
     ),
-
-    @RequiresApi(Build.VERSION_CODES.S)
-    MANAGE_MEDIA_PERMISSION(stringId = R.string.manage_media_permission, value = MANAGE_MEDIA),
 
     @RequiresApi(Build.VERSION_CODES.Q)
     ACCESS_MEDIA_LOCATION_PERMISSION(

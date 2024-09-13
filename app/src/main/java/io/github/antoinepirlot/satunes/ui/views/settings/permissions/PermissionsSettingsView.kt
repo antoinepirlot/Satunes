@@ -92,7 +92,7 @@ internal fun PermissionsSettingsView(
                     Permissions.READ_AUDIO_PERMISSION -> SatunesIcons.MUSIC
                     Permissions.READ_EXTERNAL_STORAGE_PERMISSION -> SatunesIcons.FOLDER
                     Permissions.MANAGE_MEDIA_PERMISSION -> TODO()
-                    Permissions.ACCESS_MEDIA_LOCATION_PERMISSION -> TODO()
+                    Permissions.ACCESS_MEDIA_LOCATION_PERMISSION -> SatunesIcons.EDIT
                 }
                 Icon(
                     imageVector = permissionIcon.imageVector,

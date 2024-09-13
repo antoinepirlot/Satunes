@@ -36,14 +36,18 @@ import io.github.antoinepirlot.satunes.models.SwitchSettings
 
 internal val permissionsList: List<Permissions> =
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        listOf(
+        mutableListOf(
             Permissions.READ_AUDIO_PERMISSION,
         )
     } else {
-        listOf(
+        mutableListOf(
             Permissions.READ_EXTERNAL_STORAGE_PERMISSION,
         )
-    }
+    }.also {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            it.add(element = Permissions.ACCESS_MEDIA_LOCATION_PERMISSION)
+        }
+    }.toList()
 
 internal val switchSettingsNeedRestarts: List<SwitchSettings> = listOf(
     SwitchSettings.AUDIO_OFFLOAD,

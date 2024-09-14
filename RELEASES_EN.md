@@ -1,6 +1,32 @@
 # Releases (🇬🇧)
 Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
+## 2.3 (Android 5.1.1 Lollipop and later)
+
+### 2.3.0
+
+New features:
+
+* Be able to shuffle and change repeat mode with notification
+* Share medias files
+* Long click on album artwork opens the album's options
+* Long click on artist text in playback view opens the artist's options
+* Be able to load music's artist if the album's artist is unknown (library settings)
+* Clean playlists to removed saved music if they don't exists in loaded musics instead of cleaning
+  automatically
+
+Improvements, optimizations and troubleshooting:
+
+* Fix importing single playlist
+* Fix importing playlist when it already exists
+* Some optimizations
+* Add Fdroid button in about setting's section
+* Playlist settings have been moved to Library settings
+* Fix play next in certain conditions
+* Fix remove from queue in certain conditions
+* Fix crash while launching on Android 9 and earlier if read external storage permission is not
+  allowed
+
 ## 2.2 (Android 5.1.1 Lollipop and later)
 
 ### 2.2.4

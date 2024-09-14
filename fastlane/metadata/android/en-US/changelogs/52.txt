@@ -1,0 +1,10 @@
+New features:
+
+* Be able to shuffle and change repeat mode with notification
+* Share medias files
+* Long click on album artwork opens the album's options
+* Long click on artist text in playback view opens the artist's options
+* Be able to load music's artist if the album's artist is unknown (library settings)
+* Clean playlists to removed saved music if they don't exists in loaded musics instead of cleaning automatically
+
+More details on GitHub

@@ -1,6 +1,33 @@
 # Versions (🇫🇷)
 You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
+## 2.3 (Android 5.1.1 Lollipop et ultérieur)
+
+### 2.3.0
+
+Nouvelles fonctionnalités:
+
+* Possibilité d'activer les modes aléatoire et répétition avec la notification
+* Partager des fichiers multimédias
+* Un clic long sur la pochette de l'album ouvre les options de l'album
+* Un clic long sur le texte de l'artiste dans la vue de lecture ouvre les options de l'artiste
+* Possibilité de charger l'artiste de la musique si l'artiste de l'album est inconnu (paramètres de
+  la bibliothèque)
+* Nettoyer les playlists pour supprimer la musique enregistrée si elle n'existe plus dans les
+  musiques chargées au lieu de le faire automatiquement
+
+Améliorations, optimisations et dépannage:
+
+* Correction de l'importation d'une seule liste de lecture
+* Correction de l'importation d'une liste de lecture lorsqu'elle existe déjà
+* Quelques optimisations
+* Ajout du bouton Fdroid dans la section des paramètres
+* Les paramètres de la liste de lecture ont été déplacés vers les paramètres de la bibliothèque
+* Correction de la lecture suivante dans certaines conditions
+* Correction de la suppression de musiques de la file d'attente dans certaines conditions
+* Correction du crash lors du lancement sur Android 9 et versions antérieures si l'autorisation de
+  lecture du stockage externe n'est pas autorisée
+
 ## 2.2 (Android 5.1.1 Lollipop et ultérieur)
 
 ### 2.2.4

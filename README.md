@@ -57,7 +57,7 @@ Tu as le droit de réutiliser mon code pour créer une nouvelle application dér
   * Choix de la vitesse du rafraichissement de la barre de progresssion
   * Choix des modes de lectures par défaut
 * Choisir les dossiers à inclure ou exclure
-* Faire la mise à jour de l'application sans la quitter
+* Mises à jour au sein de l'application
 
 # Installation
 Pour installer facilement, tu peux télécharger l'application sur Fdroid en cliquant sur le bouton ci-dessous.

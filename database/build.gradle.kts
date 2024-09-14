@@ -92,4 +92,6 @@ dependencies {
      * Utils
      */
     implementation(project(":utils"))
+
+    implementation("com.mpatric:mp3agic:0.9.1")
 }

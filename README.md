@@ -10,6 +10,7 @@
 </p>
 <p align="center">
   <a href="https://f-droid.org/app/io.github.antoinepirlot.satunes"><img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" width="200"></a>
+  <a href="https://github.com/antoinepirlot/Satunes/releases/latest"><img src="https://raw.githubusercontent.com/NeoApplications/Neo-Backup/034b226cea5c1b30eb4f6a6f313e4dadcbb0ece4/badge_github.png" width="200"></a>
 </p>
 
 You can find this file in [english 🇬🇧](README-EN.md).

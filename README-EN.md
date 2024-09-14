@@ -47,9 +47,9 @@ You can reuse my code but you will have to redistribute it. This allows free sof
 * Play music on phone
 * View artists and their albums and music
 * View genres and their albums and music
-* Custom playlists
+* Playlists
 * Play music based on folders, albums, genres, artists and playlists
-* Export and import playlists (beta)
+* Export and import playlists
 * Personalization of the experience:
     * Stop or continue playing music if the app is closed
     * Pause or not if:
@@ -57,7 +57,7 @@ You can reuse my code but you will have to redistribute it. This allows free sof
         * Headphones are unplugged (bluetooth and cable)
     * Choice of progress bar refresh speed
     * Choice of default playback modes
-* Exclude ringtones or not
+* Choose folders to exclude or include
 * Update the application without leaving it
 
 # Installation

@@ -58,7 +58,7 @@ You can reuse my code but you will have to redistribute it. This allows free sof
     * Choice of progress bar refresh speed
     * Choice of default playback modes
 * Choose folders to exclude or include
-* Update the application without leaving it
+* In-app update
 
 # Installation
 

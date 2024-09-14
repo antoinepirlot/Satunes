@@ -47,8 +47,8 @@ Tu as le droit de réutiliser mon code pour créer une nouvelle application dér
 * Voir les artistes et leurs albums et musiques
 * Voir les genres et leurs albums et musiques
 * Lire la musique en fonction des dossiers, albums, genres et artists
-* Playlists personnalisées
-* Exportation et importation des playlists (beta)
+* Playlists
+* Exportation et importation des playlists
 * Personnalisation de l'expérience:
   * Arrrêter ou continuer la lecture si l'application est fermée
   * Mettre sur pause ou non si:
@@ -56,7 +56,7 @@ Tu as le droit de réutiliser mon code pour créer une nouvelle application dér
     * Les écouteurs sont débranchés (bluetooth et câble)
   * Choix de la vitesse du rafraichissement de la barre de progresssion
   * Choix des modes de lectures par défaut
-* Exclure ou non les sonneries
+* Choisir les dossiers à inclure ou exclure
 * Faire la mise à jour de l'application sans la quitter
 
 # Installation

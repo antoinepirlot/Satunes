@@ -25,10 +25,17 @@
 
 package io.github.antoinepirlot.satunes.playback.models
 
+import android.os.Bundle
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.session.MediaSession
+import androidx.media3.session.MediaSession.ConnectionResult
+import androidx.media3.session.MediaSession.ConnectionResult.AcceptedResultBuilder
+import androidx.media3.session.SessionCommand
+import androidx.media3.session.SessionError
+import androidx.media3.session.SessionResult
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
+import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 
@@ -39,13 +46,67 @@ import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 @UnstableApi
 object PlaybackSessionCallback : MediaSession.Callback {
 
-    private val logger: SatunesLogger = SatunesLogger.getLogger()
+    private val _logger: SatunesLogger = SatunesLogger.getLogger()
+    internal val SHUFFLE_COMMAND: SessionCommand = SessionCommand("SHUFFLE_COMMAND", Bundle.EMPTY)
+    internal val REPEAT_COMMAND: SessionCommand = SessionCommand("REPEAT_COMMAND", Bundle.EMPTY)
+
+    override fun onConnect(
+        session: MediaSession,
+        controller: MediaSession.ControllerInfo
+    ): ConnectionResult {
+        val sessionCommands = ConnectionResult.DEFAULT_SESSION_COMMANDS.buildUpon()
+            .add(SHUFFLE_COMMAND)
+            .add(REPEAT_COMMAND)
+            .build()
+
+        return AcceptedResultBuilder(session)
+            .setAvailableSessionCommands(sessionCommands)
+            .build()
+    }
+
+    override fun onCustomCommand(
+        session: MediaSession,
+        controller: MediaSession.ControllerInfo,
+        customCommand: SessionCommand,
+        args: Bundle
+    ): ListenableFuture<SessionResult> {
+        return when (customCommand.customAction) {
+            SHUFFLE_COMMAND.customAction -> shuffleCommand()
+            REPEAT_COMMAND.customAction -> repeatCommand()
+            else -> super.onCustomCommand(session, controller, customCommand, args)
+        }
+    }
+
+    private fun shuffleCommand(): ListenableFuture<SessionResult> {
+        _logger.info("Shuffle from notification")
+        return try {
+            val playbackController: PlaybackController = PlaybackController.getInstance()
+            playbackController.switchShuffleMode()
+            Futures.immediateFuture(SessionResult(SessionResult.RESULT_SUCCESS))
+        } catch (e: Throwable) {
+            _logger.severe(e.message)
+            Futures.immediateFuture(SessionResult(SessionError.ERROR_INVALID_STATE))
+        }
+    }
+
+    private fun repeatCommand(): ListenableFuture<SessionResult> {
+        _logger.info("Repeat from notification")
+        return try {
+            val playbackController: PlaybackController = PlaybackController.getInstance()
+            playbackController.switchRepeatMode()
+            Futures.immediateFuture(SessionResult(SessionResult.RESULT_SUCCESS))
+        } catch (e: Throwable) {
+            _logger.severe(e.message)
+            Futures.immediateFuture(SessionResult(SessionError.ERROR_INVALID_STATE))
+        }
+
+    }
 
     override fun onPlaybackResumption(
         mediaSession: MediaSession,
         controller: MediaSession.ControllerInfo
     ): ListenableFuture<MediaSession.MediaItemsWithStartPosition> {
-        logger.info("onPlaybackResumption called")
+        _logger.info("onPlaybackResumption called")
         return Futures.immediateFuture(
             MediaSession.MediaItemsWithStartPosition(
                 PlaybackManager.playlist?.mediaItemList ?: listOf(),

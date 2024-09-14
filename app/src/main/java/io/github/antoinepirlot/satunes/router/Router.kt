@@ -74,7 +74,9 @@ internal fun Router(
         getNavBarSectionDestination(navBarSection = satunesUiState.defaultNavBarSection)
 
     LaunchedEffect(key1 = isAudioAllowed) {
-        loadSatunesData(context = context, satunesViewModel = satunesViewModel)
+        if (isAudioAllowed) {
+            loadSatunesData(context = context, satunesViewModel = satunesViewModel)
+        }
     }
 
     NavHost(

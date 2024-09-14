@@ -40,6 +40,7 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToP
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToQueueDialogOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.PlayNextMediaOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.RemoveFromQueueOption
+import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.ShareMediaOption
 
 /**
  * @author Antoine Pirlot on 07/07/2024
@@ -73,11 +74,19 @@ internal fun ArtistOptionsDialog(
                 /**
                  * Playback
                  */
-                if (playbackViewModel.isLoaded) {
+                if (playbackViewModel.isLoaded && artist.musicCount() <= 500) {
                     PlayNextMediaOption(mediaImpl = artist, onDismissRequest = onDismissRequest)
                     AddToQueueDialogOption(mediaImpl = artist, onDismissRequest = onDismissRequest)
-                    RemoveFromQueueOption(mediaImpl = artist, onDismissRequest = onDismissRequest)
+                    RemoveFromQueueOption(
+                        mediaImpl = artist,
+                        onDismissRequest = onDismissRequest
+                    )
                 }
+
+                /**
+                 * Share
+                 */
+                ShareMediaOption(media = artist)
             }
         }
     )

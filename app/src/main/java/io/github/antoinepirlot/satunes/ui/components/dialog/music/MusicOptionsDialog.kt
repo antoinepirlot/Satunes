@@ -41,6 +41,7 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToP
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToQueueDialogOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.PlayNextMediaOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.RemoveFromQueueOption
+import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.ShareMediaOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.music.options.LikeUnlikeMusicOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.music.options.NavigateToMediaMusicOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.music.options.RemoveFromPlaylistMusicOption
@@ -107,6 +108,11 @@ internal fun MusicOptionsDialog(
                         }
                     }
                 }
+
+                /**
+                 * Share
+                 */
+                ShareMediaOption(media = music)
 
                 /**
                  * Redirections

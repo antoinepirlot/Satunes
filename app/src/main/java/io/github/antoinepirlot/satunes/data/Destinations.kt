@@ -37,19 +37,18 @@ internal val settingsDestinations: List<Destination> =
         listOf(
             Destination.SETTINGS, Destination.BOTTOM_BAR_SETTINGS,
             Destination.ANDROID_AUTO_SETTINGS, Destination.PLAYBACK_SETTINGS,
-            Destination.LIBRARY_SETTINGS, Destination.PLAYLISTS_SETTINGS,
-            Destination.PERMISSIONS_SETTINGS, Destination.UPDATES_SETTINGS,
-            Destination.SEARCH_SETTINGS, Destination.LOGS_SETTINGS,
-            Destination.BATTERY_SETTINGS
+            Destination.LIBRARY_SETTINGS, Destination.PERMISSIONS_SETTINGS,
+            Destination.UPDATES_SETTINGS, Destination.SEARCH_SETTINGS,
+            Destination.LOGS_SETTINGS, Destination.BATTERY_SETTINGS
         )
     } else {
         // Without UPDATES_SETTINGS
         listOf(
             Destination.SETTINGS, Destination.BOTTOM_BAR_SETTINGS,
             Destination.ANDROID_AUTO_SETTINGS, Destination.PLAYBACK_SETTINGS,
-            Destination.LIBRARY_SETTINGS, Destination.PLAYLISTS_SETTINGS,
-            Destination.PERMISSIONS_SETTINGS, Destination.SEARCH_SETTINGS,
-            Destination.LOGS_SETTINGS, Destination.BATTERY_SETTINGS,
+            Destination.LIBRARY_SETTINGS, Destination.PERMISSIONS_SETTINGS,
+            Destination.SEARCH_SETTINGS, Destination.LOGS_SETTINGS,
+            Destination.BATTERY_SETTINGS,
         )
     }
 

@@ -1,0 +1,10 @@
+Nouvelles fonctionnalités:
+
+* Ajout de commande dans la notificaton
+* Partage
+* Clic long sur la pochette ouvre les options de l'album
+* Clic long sur le texte de l'artiste ouvre les options de l'artiste
+* Possibilité de charger l'artiste de la musique si l'artiste de l'album est inconnu
+* Nettoyer les playlists pour supprimer la musique enregistrée si elle n'existe plus dans les musiques chargées au lieu de le faire automatiquement
+
+Plus de détails sur GitHub

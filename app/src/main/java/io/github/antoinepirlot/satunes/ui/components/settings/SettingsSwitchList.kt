@@ -80,6 +80,7 @@ private fun SettingsSwitchListPreview() {
     SettingsSwitchList(checkedMap = mapOf())
 }
 
+//TODO remove this way as it adds complexity. Keep things simple
 private fun switchSetting(
     satunesViewModel: SatunesViewModel,
     searchViewModel: SearchViewModel,

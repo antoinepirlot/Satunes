@@ -34,10 +34,11 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
+import io.github.antoinepirlot.satunes.database.models.Music
 
 /**
  * @author Antoine Pirlot on 01/06/2024
@@ -55,9 +56,15 @@ internal fun PlaybackCustomActionsBar(
             .fillMaxWidth()
             .horizontalScroll(state = scrollState),
     ) {
+        val spacerSize: Dp = 8.dp
+
         FavoriteCustomAction(music = musicPlaying)
-        Spacer(modifier = Modifier.size(8.dp))
+        Spacer(modifier = Modifier.size(spacerSize))
+
         AddToPlaylistCustomAction(music = musicPlaying)
+        Spacer(modifier = Modifier.size(spacerSize))
+
+        ShareCustomAction(music = musicPlaying)
     }
 }
 

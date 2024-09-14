@@ -26,8 +26,6 @@
 package io.github.antoinepirlot.satunes.ui.utils
 
 import android.content.Context
-import android.content.Intent
-import android.net.Uri
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 
 /**
@@ -35,13 +33,9 @@ import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
  */
 
 internal fun openUrl(context: Context, url: String) {
-    try {
-        val uri: Uri = Uri.parse(url)
-        val intent = Intent(Intent.ACTION_VIEW, uri)
-        context.startActivity(intent)
-    } catch (e: Throwable) {
-        val logger = SatunesLogger.getLogger()
-        logger.severe(e.message)
-        throw e
-    }
+    io.github.antoinepirlot.jetpack_libs.components.utils.openUrl(
+        context = context,
+        url = url,
+        logger = SatunesLogger.getLogger()
+    )
 }

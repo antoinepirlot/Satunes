@@ -25,71 +25,35 @@
 
 package io.github.antoinepirlot.satunes.ui.components.images
 
-import android.content.Context
-import android.widget.Toast
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.hapticfeedback.HapticFeedbackType
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalHapticFeedback
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
-import io.github.antoinepirlot.jetpack_libs.components.models.ScreenSizes
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.ui.utils.openUrl
+import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 
 /**
  * @author Antoine Pirlot on 11/04/2024
  */
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun ImageWithLink(
     modifier: Modifier = Modifier,
     url: String,
     painterId: Int,
+    shape: Shape = CircleShape,
     imageBackgroundColor: Color? = null
 ) {
-    val haptics = LocalHapticFeedback.current
-    val context: Context = LocalContext.current
-    val screenWidthDp: Int = LocalConfiguration.current.screenWidthDp
-    Box(modifier = modifier) {
-        val imageSize: Dp = if (screenWidthDp < ScreenSizes.VERY_VERY_SMALL)
-            40.dp
-        else
-            60.dp
-        Image(
-            modifier = Modifier
-                .size(imageSize)
-                .clip(CircleShape)
-                .align(Alignment.Center)
-                .background(imageBackgroundColor ?: Color.Unspecified)
-                .combinedClickable(
-                    onClick = { openUrl(context = context, url = url) },
-                    onLongClick = {
-                        haptics.performHapticFeedback(HapticFeedbackType.LongPress)
-                        Toast
-                            .makeText(context, url, Toast.LENGTH_SHORT)
-                            .show()
-                    }
-                ),
-            painter = painterResource(id = painterId),
-            contentDescription = "Tipeee Logo",
-        )
-    }
+    io.github.antoinepirlot.jetpack_libs.components.images.ImageWithLink(
+        modifier = modifier,
+        url = url,
+        painterId = painterId,
+        shape = shape,
+        imageBackgroundColor = imageBackgroundColor,
+        logger = SatunesLogger.getLogger()
+    )
 }
 
 @Preview

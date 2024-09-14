@@ -37,6 +37,9 @@ import io.github.antoinepirlot.satunes.database.models.database.tables.MusicsPla
 @Dao
 internal interface MusicsPlaylistsRelDAO {
 
+    @Query("SELECT music_id FROM musics_playlists_rel GROUP BY music_id")
+    fun getAllMusicIds(): List<Long>
+
     @Insert
     fun insert(musicsPlaylistsRel: MusicsPlaylistsRel)
 

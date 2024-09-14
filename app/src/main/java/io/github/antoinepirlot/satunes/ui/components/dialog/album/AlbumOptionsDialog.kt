@@ -43,6 +43,7 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToP
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToQueueDialogOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.PlayNextMediaOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.RemoveFromQueueOption
+import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.ShareMediaOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.music.options.NavigateToMediaMusicOption
 import io.github.antoinepirlot.satunes.ui.components.images.MediaArtwork
 
@@ -58,8 +59,7 @@ internal fun AlbumOptionsDialog(
     playbackViewModel: PlaybackViewModel = viewModel(),
     album: Album,
     onDismissRequest: () -> Unit,
-
-    ) {
+) {
     AlertDialog(
         modifier = modifier,
         onDismissRequest = onDismissRequest,
@@ -83,11 +83,19 @@ internal fun AlbumOptionsDialog(
                 /**
                  * Queue
                  */
-                if (playbackViewModel.isLoaded) {
+                if (playbackViewModel.isLoaded && album.musicCount() <= 500) {
                     PlayNextMediaOption(mediaImpl = album, onDismissRequest = onDismissRequest)
                     AddToQueueDialogOption(mediaImpl = album, onDismissRequest = onDismissRequest)
-                    RemoveFromQueueOption(mediaImpl = album, onDismissRequest = onDismissRequest)
+                    RemoveFromQueueOption(
+                        mediaImpl = album,
+                        onDismissRequest = onDismissRequest
+                    )
                 }
+
+                /**
+                 * Share
+                 */
+                ShareMediaOption(media = album)
 
                 /**
                  * Redirections

@@ -40,6 +40,7 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToP
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToQueueDialogOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.PlayNextMediaOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.RemoveFromQueueOption
+import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.ShareMediaOption
 
 /**
  * @author Antoine Pirlot on 07/07/2024
@@ -73,11 +74,19 @@ internal fun GenreOptionsDialog(
                 /**
                  * Playback
                  */
-                if (playbackViewModel.isLoaded) {
+                if (playbackViewModel.isLoaded && genre.musicCount() <= 500) {
                     PlayNextMediaOption(mediaImpl = genre, onDismissRequest = onDismissRequest)
                     AddToQueueDialogOption(mediaImpl = genre, onDismissRequest = onDismissRequest)
-                    RemoveFromQueueOption(mediaImpl = genre, onDismissRequest = onDismissRequest)
+                    RemoveFromQueueOption(
+                        mediaImpl = genre,
+                        onDismissRequest = onDismissRequest
+                    )
                 }
+
+                /**
+                 * Share
+                 */
+                ShareMediaOption(media = genre)
             }
         }
     )

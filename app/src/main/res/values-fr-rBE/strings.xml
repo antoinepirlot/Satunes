@@ -17,7 +17,7 @@
     <string name="remove_from_playlist">Supprimer de la playlist</string>
     <string name="remove_playlist">Supprimer la playlist</string>
     <string name="settings">Paramètres</string>
-    <string name="about_text">Tu peux cliquer sur les icones pour visiter mes différentes pages et me soutenir 🤗.\nSi tu veux faire un don, clique sur le bouton tipeee 😃.</string>
+    <string name="about_content">Tu peux cliquer sur les icones pour visiter les différentes pages de Satunes et/ou me soutenir 🤗.\nSi tu veux faire un don, clique sur le bouton tipeee 😃.</string>
     <string name="about">A Propos</string>
     <string name="version">Mises à jour</string>
     <string name="current_version">"Version installée: "</string>
@@ -94,11 +94,19 @@
     <string name="no">Non</string>
     <string name="classic_widget_description">Classique</string>
     <string name="load_satunes_text">Charger Satunes</string>
-    <string name="default_section_setting_content">Section par défaut:</string>
+    <string name="default_section_setting_content">Section par défaut</string>
     <string name="library_settings">Bibliothèque</string>
     <string name="data_loading_settings_title">Logique de chargement</string>
-    <string name="compilation_music_setting_text">Ajouter les musiques de la compilation à la liste des musiques de son artiste</string>
+    <string name="compilation_music_setting_text">Ajouter les musiques de la compilation à la liste des musiques de son artiste.</string>
     <string name="reload_library_no_export_button">Ne pas exporter</string>
     <string name="export_log_button_content">Exporter les logs</string>
     <string name="path_removed">%1$s a été supprimé.</string>
+    <string name="share_button_content">Partager</string>
+    <string name="sharing_loading">Partage en cours…</string>
+    <string name="sharing_failed_no_data">Pas de musique à partager</string>
+    <string name="oversize_sharing_message">Trop de fichiers, annulé.</string>
+    <string name="artist_replacement_setting_content">Charger l\'artiste de la musique si l\'artiste de l\'album est inconnu.</string>
+    <string name="clean_playlist_button_text">Nettoyer</string>
+    <string name="cleaning_snack_message">Nettoyage en cours… 🧹</string>
+    <string name="cleaned_snackbar_text">Nettoyées 🧹</string>
 </resources>

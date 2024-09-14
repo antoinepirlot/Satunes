@@ -48,6 +48,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.data.local.LocalMainScope
+import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
@@ -86,6 +87,7 @@ internal fun Satunes(
                 values = arrayOf(
                     LocalSnackBarHostState provides snackBarHostState,
                     LocalMainScope provides scope,
+                    LocalNavController provides navController,
                 )
             ) {
                 Scaffold(

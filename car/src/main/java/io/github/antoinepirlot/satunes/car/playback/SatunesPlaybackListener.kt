@@ -116,7 +116,7 @@ internal object SatunesPlaybackListener : PlaybackListener() {
             ACTION_REPEAT,
             "Repeat Mode",
             when (PlaybackManager.repeatMode.intValue) {
-                Player.REPEAT_MODE_ALL -> R.drawable.repeat_on
+                Player.REPEAT_MODE_ALL -> R.drawable.repeat_all
                 Player.REPEAT_MODE_ONE -> R.drawable.repeat_one_on
                 else -> R.drawable.repeat_off
             }

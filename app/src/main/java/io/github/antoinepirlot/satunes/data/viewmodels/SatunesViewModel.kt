@@ -595,4 +595,29 @@ internal class SatunesViewModel : ViewModel() {
             _logger.severe("Error while switching compilation music setting")
         }
     }
+
+    fun switchArtistReplacement(
+        scope: CoroutineScope,
+        snackBarHostState: SnackbarHostState
+    ) {
+        try {
+            runBlocking {
+                SettingsManager.switchArtistReplacement(context = MainActivity.instance.applicationContext)
+                _uiState.update { currentState: SatunesUiState ->
+                    currentState.copy(artistReplacement = SettingsManager.artistReplacement)
+                }
+            }
+        } catch (e: Throwable) {
+            showErrorSnackBar(
+                scope = scope,
+                snackBarHostState = snackBarHostState,
+                action = {
+                    this.switchArtistReplacement(
+                        scope = scope,
+                        snackBarHostState = snackBarHostState
+                    )
+                }
+            )
+        }
+    }
 }

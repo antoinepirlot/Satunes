@@ -90,4 +90,6 @@ abstract class MediaImpl(
         }
         return compared
     }
+
+    fun musicCount(): Int = this.musicSortedSet.size
 }

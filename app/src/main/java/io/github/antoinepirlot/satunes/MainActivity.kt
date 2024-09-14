@@ -35,6 +35,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.media3.session.MediaController
 import com.google.common.util.concurrent.ListenableFuture
+import io.github.antoinepirlot.satunes.data.viewmodels.utils.isAudioAllowed
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
@@ -78,7 +79,9 @@ internal class MainActivity : ComponentActivity() {
 
     override fun onStart() {
         super.onStart()
-        initSatunes(context = applicationContext, satunesViewModel = null)
+        if (isAudioAllowed(context = applicationContext)) {
+            initSatunes(context = applicationContext, satunesViewModel = null)
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

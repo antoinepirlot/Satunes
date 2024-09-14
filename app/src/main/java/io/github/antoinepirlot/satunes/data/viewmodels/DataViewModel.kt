@@ -26,9 +26,14 @@
 package io.github.antoinepirlot.satunes.data.viewmodels
 
 import android.content.Context
+import android.content.Intent
+import android.media.MediaScannerConnection
+import android.net.Uri
+import android.webkit.MimeTypeMap
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import io.github.antoinepirlot.satunes.MainActivity
@@ -41,6 +46,7 @@ import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.Genre
+import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.database.services.data.DataLoader
@@ -64,6 +70,9 @@ class DataViewModel : ViewModel() {
         DatabaseManager.initInstance(context = MainActivity.instance.applicationContext)
 
     var playlistSetUpdated: Boolean by _playlistSetUpdated
+        private set
+
+    var isSharingLoading: Boolean by mutableStateOf(false)
         private set
 
     fun playlistSetUpdated() {
@@ -619,5 +628,135 @@ class DataViewModel : ViewModel() {
 
     fun resetAllData() {
         DataLoader.resetAllData()
+    }
+
+    fun share(
+        scope: CoroutineScope,
+        snackBarHostState: SnackbarHostState,
+        media: MediaImpl
+    ) {
+        _logger.info("Sharing media type: ${media::class.java}")
+        isSharingLoading = true
+        try {
+            var paths: Array<String> = arrayOf()
+
+            when (media) {
+                is Music -> paths += media.absolutePath
+                is Folder -> {
+                    media.getAllMusic().forEach { music: Music ->
+                        paths += music.absolutePath
+                    }
+                }
+
+                else -> {
+                    media.getMusicSet().forEach { media: Music ->
+                        paths += media.absolutePath
+                    }
+                }
+            }
+
+            if (paths.size > 850) {
+                isSharingLoading = false
+                scope.launch {
+                    showSnackBar(
+                        scope = scope,
+                        snackBarHostState = snackBarHostState,
+                        message = MainActivity.instance.getString(R.string.oversize_sharing_message)
+                    )
+                }
+                return
+            }
+
+            if (paths.isEmpty()) {
+                isSharingLoading = false
+                scope.launch {
+                    showSnackBar(
+                        scope = scope,
+                        snackBarHostState = snackBarHostState,
+                        message = MainActivity.instance.getString(R.string.sharing_failed_no_data)
+                    )
+                }
+                return
+            }
+
+            val uris: ArrayList<Uri> = arrayListOf()
+
+            MediaScannerConnection.scanFile(
+                MainActivity.instance.applicationContext,
+                paths,
+                arrayOf("audio/*")
+            ) { _: String, uri: Uri ->
+                val extension: String? = MimeTypeMap.getFileExtensionFromUrl(uri.path)
+                var mimeType: String? =
+                    MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+                if (mimeType.isNullOrBlank()) {
+                    mimeType = "audio/*"
+                }
+
+                uris += uri
+
+                if (uris.size == paths.size) {
+                    // Loading is finished, now they can be exported
+                    isSharingLoading = false
+                    val sendIntent: Intent = Intent().apply {
+                        if (uris.size == 1) {
+                            action = Intent.ACTION_SEND
+                            putExtra(Intent.EXTRA_STREAM, uris[0])
+                        } else if (uris.size > 1) {
+                            action = Intent.ACTION_SEND_MULTIPLE
+                            putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris)
+                        } else {
+                            throw IllegalStateException("Uri size is: 0")
+                        }
+                        type = mimeType
+                        flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+                    }
+
+                    val shareIntent = Intent.createChooser(sendIntent, null)
+                    MainActivity.instance.startActivity(shareIntent)
+                }
+            }
+        } catch (e: NotImplementedError) {
+            return
+        } catch (e: Throwable) {
+            _logger.severe(e.message)
+        }
+    }
+
+    /**
+     * Asks DatabaseManager to clean playlists of not loaded musics.
+     *
+     * @param scope the screen [CoroutineScope]
+     * @param snackBarHostState a [SnackbarHostState]
+     */
+    fun cleanPlaylists(scope: CoroutineScope, snackBarHostState: SnackbarHostState) {
+        val context: Context = MainActivity.instance.applicationContext
+        showSnackBar(
+            scope = scope,
+            snackBarHostState = snackBarHostState,
+            message = context.getString(R.string.cleaning_snack_message)
+        )
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val dbManager: DatabaseManager = DatabaseManager.getInstance()
+                dbManager.cleanPlaylists()
+                showSnackBar(
+                    scope = scope,
+                    snackBarHostState = snackBarHostState,
+                    message = context.getString(R.string.cleaned_snackbar_text)
+                )
+            } catch (e: Throwable) {
+                showErrorSnackBar(
+                    scope = scope,
+                    snackBarHostState = snackBarHostState,
+                    action = {
+                        cleanPlaylists(
+                            scope = scope,
+                            snackBarHostState = snackBarHostState
+                        )
+                    }
+                )
+            }
+        }
     }
 }

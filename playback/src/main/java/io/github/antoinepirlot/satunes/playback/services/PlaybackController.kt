@@ -27,8 +27,10 @@ package io.github.antoinepirlot.satunes.playback.services
 
 import android.content.ComponentName
 import android.content.Context
+import androidx.annotation.OptIn
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.media3.common.Player
+import androidx.media3.common.util.UnstableApi
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
 import com.google.common.util.concurrent.ListenableFuture
@@ -85,13 +87,17 @@ internal class PlaybackController private constructor(
             PlaybackManager.isPlaying.value = value
         }
     var repeatMode: Int = DEFAULT_REPEAT_MODE
+        @OptIn(UnstableApi::class)
         internal set(value) {
             field = value
+            PlaybackService.updateCustomCommands()
             PlaybackManager.repeatMode.intValue = value
         }
     var isShuffle: Boolean = DEFAULT_IS_SHUFFLE
+        @OptIn(UnstableApi::class)
         internal set(value) {
             field = value
+            PlaybackService.updateCustomCommands()
             PlaybackManager.isShuffle.value = value
         }
     var hasNext: Boolean = DEFAULT_HAS_NEXT
@@ -158,6 +164,7 @@ internal class PlaybackController private constructor(
             return _instance!!
         }
 
+        @OptIn(UnstableApi::class)
         fun initInstance(
             context: Context,
             listener: Player.Listener? = null,
@@ -186,7 +193,6 @@ internal class PlaybackController private constructor(
             this.updateListener(isInitializing = false, listener = listener)
 
         private fun updateListener(isInitializing: Boolean, listener: Player.Listener?) {
-
             if (!isInitializing) {
                 if (listener != null && listener != this._instance?.listener) {
                     _logger.info("Update listener")
@@ -387,6 +393,7 @@ internal class PlaybackController private constructor(
         this.loadMusics(playlist = playlist)
     }
 
+    @OptIn(UnstableApi::class)
     fun loadMusics(playlist: Playlist) {
         this.isLoading = true
         this.playlist = playlist
@@ -404,15 +411,14 @@ internal class PlaybackController private constructor(
         this.mediaController.prepare()
 
         this.isShuffle = this.playlist!!.isShuffle
+        PlaybackService.updateCustomCommands()
         this.isLoaded = true
         this.isLoading = false
     }
 
     fun addToQueue(mediaImplList: Collection<MediaImpl>) {
-        CoroutineScope(Dispatchers.Main).launch {
-            mediaImplList.forEach { mediaImpl: MediaImpl ->
-                addToQueue(mediaImpl = mediaImpl)
-            }
+        mediaImplList.forEach { mediaImpl: MediaImpl ->
+            addToQueue(mediaImpl = mediaImpl)
         }
     }
 
@@ -539,17 +545,16 @@ internal class PlaybackController private constructor(
      *      1) If the shuffle mode is disabling then undo shuffle.
      *      2) If the shuffle mode is enabling shuffle the playlistDB
      */
+    @OptIn(UnstableApi::class)
     fun switchShuffleMode() {
         isShuffle = !isShuffle
-        CoroutineScope(Dispatchers.Main).launch {
-            if (playlist!!.musicCount() > 1) {
-                if (!isShuffle) {
-                    // Deactivate shuffle
-                    undoShuffle()
-                } else {
-                    // Activate shuffle mode
-                    shuffle()
-                }
+        if (playlist!!.musicCount() > 1) {
+            if (!isShuffle) {
+                // Deactivate shuffle
+                undoShuffle()
+            } else {
+                // Activate shuffle mode
+                shuffle()
             }
         }
     }
@@ -558,6 +563,7 @@ internal class PlaybackController private constructor(
      * Move music playing to the first index and remove other
      * the music playing has to take its original place.
      */
+    @OptIn(UnstableApi::class)
     private fun shuffle() {
         if (this.musicPlaying == null) {
             // No music playing
@@ -589,6 +595,7 @@ internal class PlaybackController private constructor(
      * Restore the original playlistDB.
      *
      */
+    @OptIn(UnstableApi::class)
     private fun undoShuffle() {
         this.playlist!!.undoShuffle()
         if (this.musicPlaying == null) {

@@ -25,7 +25,10 @@
 
 package io.github.antoinepirlot.satunes.ui.views.settings.search
 
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -42,8 +45,9 @@ import io.github.antoinepirlot.satunes.ui.components.settings.search.DefaultSear
 internal fun SearchSettingsView(
     modifier: Modifier = Modifier,
 ) {
+    val scrollState: ScrollState = rememberScrollState()
     Column(
-        modifier = modifier,
+        modifier = modifier.verticalScroll(state = scrollState),
     ) {
         Title(text = stringResource(id = R.string.search_setting_title))
 

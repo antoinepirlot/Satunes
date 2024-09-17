@@ -411,6 +411,7 @@ internal class PlaybackController private constructor(
         this.mediaController.prepare()
 
         this.isShuffle = this.playlist!!.isShuffle
+        this.repeatMode = this.mediaController.repeatMode
         PlaybackService.updateCustomCommands()
         this.isLoaded = true
         this.isLoading = false

@@ -35,6 +35,7 @@ import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
  * @author Antoine Pirlot on 18/02/24
  */
 
+//TODO refactor and clarify the usage of original map
 internal class Playlist(musicSet: Set<Music>) {
     private val originalMusicMediaItemMap: MutableMap<Music, MediaItem> = mutableMapOf()
     val musicList: SnapshotStateList<Music> = SnapshotStateList()
@@ -179,7 +180,7 @@ internal class Playlist(musicSet: Set<Music>) {
     }
 
     fun isMusicInQueue(music: Music): Boolean {
-        return this.originalMusicMediaItemMap[music] != null
+        return this.musicList.contains(music) //TODO optimize by using map to access music from queue
     }
 
     /**

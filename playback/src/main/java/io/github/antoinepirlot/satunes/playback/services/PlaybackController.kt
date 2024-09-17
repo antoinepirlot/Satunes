@@ -501,10 +501,11 @@ internal class PlaybackController private constructor(
                         this.musicPlayingIndex + 1,
                         mediaImpl.mediaItem
                     )
+                    hasNext = true
                 } catch (e: AlreadyInPlaybackException) {
                     this.moveMusic(music = mediaImpl, newIndex = this.musicPlayingIndex + 1)
+                    hasNext = true
                 }
-                hasNext = true
             }
 
             is Folder -> addNext(mediaImplList = mediaImpl.getAllMusic().reversed())

@@ -27,17 +27,24 @@ package io.github.antoinepirlot.satunes.ui.components.buttons.settings.library.p
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.local.LocalMainScope
 import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.buttons.ButtonWithIcon
+import io.github.antoinepirlot.satunes.ui.components.dialog.WarningDialog
 import kotlinx.coroutines.CoroutineScope
 
 /**
@@ -49,20 +56,48 @@ internal fun CleanPlaylistsButton(
     modifier: Modifier = Modifier,
     dataViewModel: DataViewModel = viewModel(),
 ) {
-    val scope: CoroutineScope = LocalMainScope.current
-    val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
+    var showDialog: Boolean by remember { mutableStateOf(false) }
 
     ButtonWithIcon(
         modifier = modifier.fillMaxWidth(),
         icon = SatunesIcons.CLEANING,
-        onClick = {
-            dataViewModel.cleanPlaylists(
-                scope = scope,
-                snackBarHostState = snackBarHostState
-            )
-        },
+        onClick = { showDialog = true },
         text = stringResource(id = R.string.clean_playlist_button_text),
     )
+
+    if (showDialog) {
+        val scope: CoroutineScope = LocalMainScope.current
+        val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
+
+        WarningDialog(
+            text = stringResource(R.string.clean_playlists_dialog_content),
+            onDismissRequest = { showDialog = false },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        dataViewModel.cleanPlaylists(
+                            scope = scope,
+                            snackBarHostState = snackBarHostState
+                        )
+                        showDialog = false
+                    }
+                ) {
+                    NormalText(text = stringResource(R.string.clean_playlist_button_text))
+                }
+                //Put export on the far right to prevent too fast user click and prevent cleaning in that case
+                TextButton(
+                    onClick = {
+                        dataViewModel.exportPlaylists(
+                            scope = scope,
+                            snackBarHostState = snackBarHostState
+                        )
+                    }
+                ) {
+                    NormalText(text = stringResource(R.string.export))
+                }
+            },
+        )
+    }
 }
 
 @Preview

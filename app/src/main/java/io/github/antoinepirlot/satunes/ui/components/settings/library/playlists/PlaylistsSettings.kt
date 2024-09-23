@@ -34,10 +34,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
 import io.github.antoinepirlot.satunes.database.R as RDb
 
@@ -48,7 +46,6 @@ import io.github.antoinepirlot.satunes.database.R as RDb
 @Composable
 internal fun PlaylistsSettings(
     modifier: Modifier = Modifier,
-    dataViewModel: DataViewModel = viewModel(),
 ) {
     SubSettings(
         modifier = modifier.fillMaxWidth(),

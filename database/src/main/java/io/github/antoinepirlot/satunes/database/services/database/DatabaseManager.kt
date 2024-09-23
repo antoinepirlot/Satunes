@@ -126,12 +126,11 @@ class DatabaseManager private constructor(context: Context) {
      * @param playlistTitle the playlist title
      * @param musicList the music contains all music as MusicDB
      * @throws BlankStringException when playlistTitle is blank
+     * @throws IllegalArgumentException when playlistTitle is in incorrect format
      * @throws PlaylistAlreadyExistsException when there's already a playlist with the same playlistTitle
      */
     fun addOnePlaylist(playlistTitle: String, musicList: MutableList<Music>? = null) {
-        if (playlistTitle.isBlank()) {
-            throw BlankStringException()
-        }
+        checkString(string = playlistTitle)
         @Suppress("NAME_SHADOWING")
         val playlistTitle: String = playlistTitle.trim()
         if (playlistDao.exists(title = playlistTitle)) throw PlaylistAlreadyExistsException()
@@ -148,8 +147,20 @@ class DatabaseManager private constructor(context: Context) {
         }
     }
 
+    /**
+     * Checks the validity of string.
+     *
+     * @throws BlankStringException if the string is blank.
+     * @throws IllegalArgumentException if the string contains spaces or tabulations
+     */
+    private fun checkString(string: String) {
+        if (string.isBlank()) throw BlankStringException()
+        if (string.contains("\n") || string.contains("\t"))
+            throw IllegalArgumentException("string contains spaces or tabulations")
+    }
+
     fun updatePlaylist(playlist: Playlist) {
-        if (playlist.title.isBlank()) throw BlankStringException()
+        checkString(playlist.title)
         playlist.title = playlist.title.trim()
         val playlistDB = PlaylistDB(id = playlist.id, title = playlist.title)
         if (playlistDao.exists(title = playlist.title)) {

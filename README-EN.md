@@ -15,7 +15,7 @@
 
 Vous pouvez retrouver ce fichier en [français 🇫🇷](README.md)
 
-Satunes is a mp3 player on Android. Use it to listen your music from your audio files stored in your
+Satunes is an mp3 player on Android. Use it to listen your music from your audio files stored in your
 Android phone (Android Lollipop 5.1.1 and later).
 
 This entire project is under GNU/GPL v3 and it's applied on all versions of this project (even the

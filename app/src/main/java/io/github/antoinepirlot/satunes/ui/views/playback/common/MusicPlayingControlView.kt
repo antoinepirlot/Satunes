@@ -82,8 +82,7 @@ internal fun MusicPlayingControlView(
 
     Column(
         modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp),
+            .fillMaxSize(),
     ) {
         val screenHeightDp: Int = LocalConfiguration.current.screenHeightDp
         if (!(LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE && screenHeightDp < 480)) {
@@ -95,7 +94,8 @@ internal fun MusicPlayingControlView(
                         if (screenWidthDp < ScreenSizes.VERY_VERY_SMALL) 0.35f
                         else if (screenWidthDp < ScreenSizes.VERY_SMALL) 0.4f
                         else 0.55f
-                    ),
+                    )
+                    .padding(top = 16.dp),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
@@ -123,7 +123,7 @@ internal fun MusicPlayingControlView(
                 text = musicPlaying.artist.title
             )
             PlaybackCustomActionsBar()
-            MusicControlBar()
+            MusicControlBar(modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp))
         }
 
         /**

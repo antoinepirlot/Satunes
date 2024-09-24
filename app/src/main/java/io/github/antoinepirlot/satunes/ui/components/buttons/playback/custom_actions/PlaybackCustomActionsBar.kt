@@ -58,6 +58,7 @@ internal fun PlaybackCustomActionsBar(
     ) {
         val spacerSize: Dp = 8.dp
 
+        Spacer(modifier = Modifier.size(spacerSize))
         FavoriteCustomAction(music = musicPlaying)
         Spacer(modifier = Modifier.size(spacerSize))
 
@@ -65,6 +66,7 @@ internal fun PlaybackCustomActionsBar(
         Spacer(modifier = Modifier.size(spacerSize))
 
         ShareCustomAction(music = musicPlaying)
+        Spacer(modifier = Modifier.size(spacerSize))
     }
 }
 

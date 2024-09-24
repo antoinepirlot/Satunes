@@ -39,10 +39,7 @@ import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
 
 /**
  * @author Antoine Pirlot on 16/03/2024
@@ -161,19 +158,5 @@ internal object SatunesCarCallBack : MediaSessionCompat.Callback() {
             shuffleMode = RouteManager.isShuffleButtonSelected(),
             musicToPlay = musicToPlay
         )
-        loadInQueue(musicSet = musicSet)
-    }
-
-    private fun loadInQueue(musicSet: Set<Music>) {
-        if (this::_job.isInitialized) {
-            _job.cancel()
-        }
-        _job = CoroutineScope(Dispatchers.IO).launch {
-            SatunesCarMusicService.resetQueue()
-            musicSet.forEach { music: Music ->
-                SatunesCarMusicService.addToQueue(media = music)
-            }
-            SatunesCarMusicService.updateQueue()
-        }
     }
 }

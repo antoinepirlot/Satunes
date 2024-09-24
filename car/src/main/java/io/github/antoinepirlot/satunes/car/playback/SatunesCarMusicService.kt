@@ -31,7 +31,6 @@ import android.os.Bundle
 import android.os.Environment
 import android.support.v4.media.MediaBrowserCompat.MediaItem
 import android.support.v4.media.session.MediaSessionCompat
-import android.support.v4.media.session.MediaSessionCompat.QueueItem
 import android.support.v4.media.session.PlaybackStateCompat.STATE_PAUSED
 import android.support.v4.media.session.PlaybackStateCompat.STATE_PLAYING
 import androidx.core.graphics.drawable.toBitmap
@@ -60,34 +59,9 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
 
     companion object {
         internal lateinit var instance: SatunesCarMusicService
-        private const val MAX_SIZE: Int = 300
         lateinit var session: MediaSessionCompat
 
-        private val loadedQueueItemList: MutableList<QueueItem> = mutableListOf()
-
         const val SHUFFLE_ID: String = "shuffle"
-
-        fun updateQueue() {
-            session.setQueue(loadedQueueItemList)
-        }
-
-        fun resetQueue() {
-            loadedQueueItemList.clear()
-        }
-
-        /**
-         * Add the mediaImpl to the queue by creating a mediaImpl item.
-         *
-         * @return the newly created mediaImpl item.
-         */
-        internal fun addToQueue(media: MediaImpl): MediaItem {
-            val mediaItem: MediaItem = buildMediaItem(media = media)
-            if (media is Music) {
-                val queueItem = QueueItem(mediaItem.description, media.id)
-                loadedQueueItemList.add(queueItem)
-            }
-            return mediaItem
-        }
     }
 
     override fun onCreate() {

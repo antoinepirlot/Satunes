@@ -27,6 +27,7 @@ package io.github.antoinepirlot.satunes.ui.components.settings.library.playlists
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -53,6 +54,7 @@ internal fun PlaylistsSettings(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         NormalText(
+            modifier = Modifier.padding(horizontal = 16.dp),
             text = stringResource(id = R.string.playlists_settings_content),
             maxLines = Int.MAX_VALUE
         )

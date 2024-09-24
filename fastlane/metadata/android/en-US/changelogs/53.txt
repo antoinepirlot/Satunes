@@ -1,0 +1,13 @@
+Improvements, optimizations and troubleshooting:
+
+* Remove Android Auto limit
+* By default Satunes load music's artist if there's no album's artist
+* Loading library won't show warning modal
+* Clean playlists will show warning modal
+* Playlist's title won't accept backlines or tabulations
+* Buttons rows scrolling zone is no more cut
+* Fix wrong repeat mode after reloading library
+* Make search setting view scrollable
+* Fix playing next music in certain conditions
+
+More details on GitHub.

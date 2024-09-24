@@ -44,7 +44,7 @@ class SatunesLogger private constructor(
 ) : Logger(name, resourceBundleName) {
 
     companion object {
-        private const val MAX_BYTES = 26214400 // 25MB
+        private const val MAX_BYTES = 5242880 // 5MB
         private const val MAX_FILES = 1
         lateinit var DOCUMENTS_PATH: String
         private lateinit var LOGS_PATH: String

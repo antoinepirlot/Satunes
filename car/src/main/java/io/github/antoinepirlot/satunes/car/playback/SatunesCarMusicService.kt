@@ -243,9 +243,6 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
         }
         mediaItemList.add(getShuffleButton())
         for (media: MediaImpl in mediaList) {
-            if (mediaItemList.size >= MAX_SIZE) {
-                break // Do not add more than 300 media as it could make android auto bugging
-            }
             if (media is Music || media.getMusicSet().isNotEmpty()) {
                 val mediaItem: MediaItem = buildMediaItem(media = media)
                 mediaItemList.add(mediaItem)

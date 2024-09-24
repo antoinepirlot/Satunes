@@ -297,8 +297,11 @@ class PlaybackViewModel : ViewModel() {
         )
     }
 
-    fun updateCurrentPosition() {
-        PlaybackManager.updateCurrentPosition(context = MainActivity.instance.applicationContext)
+    fun updateCurrentPosition(log: Boolean = true) {
+        PlaybackManager.updateCurrentPosition(
+            context = MainActivity.instance.applicationContext,
+            log = log
+        )
     }
 
     fun release() {

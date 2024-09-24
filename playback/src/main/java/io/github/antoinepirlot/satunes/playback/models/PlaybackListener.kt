@@ -76,9 +76,9 @@ open class PlaybackListener : Player.Listener {
     @OptIn(UnstableApi::class)
     override fun onEvents(player: Player, events: Player.Events) {
         super.onEvents(player, events)
-        val playbackController: PlaybackController = PlaybackController.getInstance()
 
         if (events.contains(Player.EVENT_POSITION_DISCONTINUITY)) {
+            val playbackController: PlaybackController = PlaybackController.getInstance()
             playbackController.updateCurrentPosition()
         }
 
@@ -90,6 +90,7 @@ open class PlaybackListener : Player.Listener {
         }
 
         if (events.contains(Player.EVENT_PLAYER_ERROR)) {
+            val playbackController: PlaybackController = PlaybackController.getInstance()
             val message = """
                 An error happens with the player. 
                 Here's the status of playback Controller:

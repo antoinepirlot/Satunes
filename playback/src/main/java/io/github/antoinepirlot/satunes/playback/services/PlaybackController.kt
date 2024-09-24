@@ -214,8 +214,8 @@ internal class PlaybackController private constructor(
                 }
             }
 
-            if (listener != this._instance?.listener) {
-                _instance!!.listener = listener ?: _instance!!.listener
+            if (listener != null && listener != this._instance?.listener) {
+                _instance!!.listener = listener
                 _logger.info("Listener loaded or changed")
             }
         }

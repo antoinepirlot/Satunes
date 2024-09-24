@@ -246,11 +246,10 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
             if (mediaItemList.size >= MAX_SIZE) {
                 break // Do not add more than 300 media as it could make android auto bugging
             }
-            if (media !is Music && (media.getMusicSet().isEmpty())) {
-                continue
+            if (media is Music || media.getMusicSet().isNotEmpty()) {
+                val mediaItem: MediaItem = buildMediaItem(media = media)
+                mediaItemList.add(mediaItem)
             }
-            val mediaItem: MediaItem = buildMediaItem(media = media)
-            mediaItemList.add(mediaItem)
         }
         return mediaItemList
     }

@@ -29,6 +29,7 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
+import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -38,6 +39,7 @@ import kotlinx.coroutines.launch
  * @author Antoine Pirlot on 02/05/2024
  */
 internal object ProgressBarLifecycleCallbacks : DefaultLifecycleObserver {
+    private val _logger: SatunesLogger = SatunesLogger.getLogger()
     var isUpdatingPosition: Boolean = false
     private var stopRefresh: Boolean = false
     private var resumed: Boolean = false // used to avoid refresh when widget is used (optimization)
@@ -82,10 +84,11 @@ internal object ProgressBarLifecycleCallbacks : DefaultLifecycleObserver {
             return
         }
         isUpdatingPosition = true
+        _logger.info("Update current position")
         CoroutineScope(Dispatchers.Main).launch {
             updateCurrentPosition()
             while (playbackViewModel.isPlaying && !stopRefresh) {
-                updateCurrentPosition()
+                updateCurrentPosition(log = false)
 //TODO do it outside function
                 val timeMillis: Long = (SettingsManager.barSpeed.speed * 1000f).toLong()
                 delay(timeMillis) // Wait one second to avoid refreshing all the time
@@ -95,11 +98,11 @@ internal object ProgressBarLifecycleCallbacks : DefaultLifecycleObserver {
         }
     }
 
-    private fun updateCurrentPosition() {
+    private fun updateCurrentPosition(log: Boolean = true) {
         if (playbackViewModel.isEnded) {
             // It means the music has reached the end of playlistDB and the music is finished
             return
         }
-        playbackViewModel.updateCurrentPosition()
+        playbackViewModel.updateCurrentPosition(log = log)
     }
 }

@@ -81,7 +81,7 @@ object SettingsManager {
     private val DEFAULT_FOLDERS_SELECTION_SELECTED: FoldersSelection = FoldersSelection.INCLUDE
     private val DEFAULT_SELECTED_PATHS: Set<String> = setOf("/0/Music/%")
     private const val DEFAULT_COMPILATION_MUSIC: Boolean = false
-    private const val DEFAULT_ARTISTS_REPLACEMENT: Boolean = false
+    private const val DEFAULT_ARTISTS_REPLACEMENT: Boolean = true
 
     /**
      * KEYS

@@ -52,11 +52,13 @@ internal fun PlaylistsSettingsButtons(modifier: Modifier = Modifier) {
             .fillMaxWidth()
             .horizontalScroll(state = scrollState)
     ) {
+        Spacer(modifier = Modifier.size(8.dp))
         ExportPlaylistsButton()
         Spacer(modifier = Modifier.size(8.dp))
         ImportPlaylistsButton()
         Spacer(modifier = Modifier.size(8.dp))
         CleanPlaylistsButton()
+        Spacer(modifier = Modifier.size(8.dp))
     }
 }
 

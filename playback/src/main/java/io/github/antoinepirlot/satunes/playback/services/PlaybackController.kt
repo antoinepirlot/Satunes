@@ -214,8 +214,8 @@ internal class PlaybackController private constructor(
                 }
             }
 
-            if (listener != this._instance?.listener) {
-                _instance!!.listener = listener ?: _instance!!.listener
+            if (listener != null && listener != this._instance?.listener) {
+                _instance!!.listener = listener
                 _logger.info("Listener loaded or changed")
             }
         }
@@ -411,6 +411,7 @@ internal class PlaybackController private constructor(
         this.mediaController.prepare()
 
         this.isShuffle = this.playlist!!.isShuffle
+        this.repeatMode = this.mediaController.repeatMode
         PlaybackService.updateCustomCommands()
         this.isLoaded = true
         this.isLoading = false
@@ -501,10 +502,11 @@ internal class PlaybackController private constructor(
                         this.musicPlayingIndex + 1,
                         mediaImpl.mediaItem
                     )
+                    hasNext = true
                 } catch (e: AlreadyInPlaybackException) {
                     this.moveMusic(music = mediaImpl, newIndex = this.musicPlayingIndex + 1)
+                    hasNext = true
                 }
-                hasNext = true
             }
 
             is Folder -> addNext(mediaImplList = mediaImpl.getAllMusic().reversed())

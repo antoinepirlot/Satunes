@@ -56,13 +56,12 @@ internal fun LibrarySettingsView(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(horizontal = 16.dp)
             .verticalScroll(state = scrollState),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Title(text = stringResource(id = R.string.library_settings))
-        LoadingLogicSubSettings()
-        FoldersSubSettings()
+        LoadingLogicSubSettings(modifier = Modifier.padding(horizontal = 16.dp))
+        FoldersSubSettings(modifier = Modifier.padding(horizontal = 16.dp))
         PlaylistsSettings()
     }
 }

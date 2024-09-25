@@ -29,11 +29,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 
 /**
@@ -54,7 +54,9 @@ internal fun CustomActionButton(
         Icon(imageVector = icon.imageVector, contentDescription = icon.description)
         if (!text.isNullOrBlank()) {
             Spacer(modifier = Modifier.size(16.dp))
-            Text(text = text)
+            NormalText(
+                text = text
+            )
         }
     }
 }

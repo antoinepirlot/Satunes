@@ -147,11 +147,13 @@ class DataViewModel : ViewModel() {
     fun updatePlaylistTitle(
         scope: CoroutineScope,
         snackBarHostState: SnackbarHostState,
-        playlist: Playlist
+        playlist: Playlist,
+        newTitle: String
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             val context: Context = MainActivity.instance.applicationContext
-            val updatedTitle: String = playlist.title
+            val oldTitle: String = playlist.title
+            playlist.title = newTitle
             try {
                 _db.updatePlaylist(playlist = playlist)
                 showSnackBar(
@@ -160,13 +162,14 @@ class DataViewModel : ViewModel() {
                     message = context.getString(R.string.update_playlist_success, playlist)
                 )
             } catch (e: Throwable) {
+                playlist.title = oldTitle
                 val message: String? = when (e) {
                     is BlankStringException -> {
                         context.getString(RDb.string.blank_string_error)
                     }
 
                     is PlaylistAlreadyExistsException -> {
-                        context.getString(RDb.string.playlist_already_exist, updatedTitle)
+                        context.getString(RDb.string.playlist_already_exist, newTitle)
                     }
 
                     else -> null
@@ -186,6 +189,7 @@ class DataViewModel : ViewModel() {
                             updatePlaylistTitle(
                                 scope = scope,
                                 snackBarHostState = snackBarHostState,
+                                newTitle = newTitle,
                                 playlist = playlist
                             )
                         }

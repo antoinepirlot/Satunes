@@ -137,9 +137,10 @@ object PlaybackManager {
     fun checkPlaybackController(
         context: Context,
         listener: PlaybackListener? = this.listener,
-        loadAllMusics: Boolean = true
+        loadAllMusics: Boolean = true,
+        log: Boolean = true
     ) {
-        _logger.info("Check Playback Controller")
+        if (log) _logger.info("Check Playback Controller")
         if (playbackControllerNotExists()) {
             if (loadAllMusics) {
                 this.initPlaybackWithAllMusics(context = context, listener = listener)
@@ -337,9 +338,9 @@ object PlaybackManager {
         return this._playbackController!!.isMusicInQueue(music = music)
     }
 
-    fun updateCurrentPosition(context: Context) {
-        _logger.info("Update current position")
-        checkPlaybackController(context = context)
+    fun updateCurrentPosition(context: Context, log: Boolean = true) {
+        if (log) _logger.info("Update current position")
+        checkPlaybackController(context = context, log = log)
         this._playbackController!!.updateCurrentPosition()
     }
 

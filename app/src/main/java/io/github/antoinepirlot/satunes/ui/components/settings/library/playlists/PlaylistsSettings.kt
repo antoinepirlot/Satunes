@@ -27,6 +27,7 @@ package io.github.antoinepirlot.satunes.ui.components.settings.library.playlists
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -34,10 +35,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
 import io.github.antoinepirlot.satunes.database.R as RDb
 
@@ -48,7 +47,6 @@ import io.github.antoinepirlot.satunes.database.R as RDb
 @Composable
 internal fun PlaylistsSettings(
     modifier: Modifier = Modifier,
-    dataViewModel: DataViewModel = viewModel(),
 ) {
     SubSettings(
         modifier = modifier.fillMaxWidth(),
@@ -56,6 +54,7 @@ internal fun PlaylistsSettings(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         NormalText(
+            modifier = Modifier.padding(horizontal = 16.dp),
             text = stringResource(id = R.string.playlists_settings_content),
             maxLines = Int.MAX_VALUE
         )

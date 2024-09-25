@@ -128,20 +128,13 @@ internal fun PlaylistOptionsDialog(
         onDismissRequest = onDismissRequest,
         confirmButton = {
             TextButton(onClick = {
-                val oldTitle: String = playlist.title
-                playlist.title = playlistTitle
-                try {
-                    dataViewModel.updatePlaylistTitle(
-                        scope = scope,
-                        snackBarHostState = snackBarHostState,
-                        playlist = playlist
-                    )
-                } catch (_: Exception) {
-                    playlist.title = oldTitle
-                } finally {
-
-                    onDismissRequest()
-                }
+                dataViewModel.updatePlaylistTitle(
+                    scope = scope,
+                    snackBarHostState = snackBarHostState,
+                    newTitle = playlistTitle,
+                    playlist = playlist
+                )
+                onDismissRequest()
             }) {
                 NormalText(text = stringResource(id = R.string.ok))
             }

@@ -3,6 +3,23 @@ You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
 ## 2.3 (Android 5.1.1 Lollipop et ultérieur)
 
+### 2.3.1
+
+Améliorations, optimisations et dépannage:
+
+* Suppression de la limite d'Android Auto
+* Par défaut, Satunes charge l'artiste de la musique s'il n'y a pas d'artiste de l'album
+* Le chargement de la bibliothèque n'affichera pas de message d'avertissement
+* Le nettoyage des playlists affichera un message d'avertissement
+* Modification de certains textes
+* Le titre de la playlist n'acceptera pas les retour à la ligne ou les tabulations
+* La zone de défilement des rangées de boutons n'est plus coupée
+* La taille du fichier journal est de 5MB maximum et suppression des logs lors de la mise à jour de
+  la barre de progression pour optimiser l'utilisation de la batterie.
+* Correction du mauvais mode de répétition après le rechargement de la bibliothèque
+* Rendre la vue des paramètres de recherche déroulante
+* Correction de la lecture de la musique suivante dans certaines conditions
+
 ### 2.3.0
 
 Nouvelles fonctionnalités:

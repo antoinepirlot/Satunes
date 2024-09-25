@@ -3,6 +3,23 @@ Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
 ## 2.3 (Android 5.1.1 Lollipop and later)
 
+### 2.3.1
+
+Improvements, optimizations and troubleshooting:
+
+* Remove Android Auto limit
+* By default Satunes load music's artist if there's no album's artist
+* Loading library won't show warning modal
+* "Clean playlists" will show warning modal
+* Change some text
+* Playlist's title won't accept backlines or tabulations
+* Buttons rows scrolling zone is no more cut
+* Log file size is max 5MB and when Satunes update the current position in playback view, no more
+  logs to optimize battery
+* Fix wrong repeat mode after reloading library
+* Make search setting view scrollable
+* Fix playing next music in certain conditions
+
 ### 2.3.0
 
 New features:

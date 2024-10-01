@@ -62,7 +62,7 @@ class ClassicPlaybackWidget : GlanceAppWidget() {
                     ClassicPlaybackWidget().updateAll(context = context.applicationContext)
                 }
             }
-            WidgetPlaybackManager.refreshWidgets = refreshWidgets
+            WidgetPlaybackManager.setRefreshWidgets(refreshWidgets = refreshWidgets)
         }
     }
 

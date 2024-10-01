@@ -72,6 +72,7 @@ class ClassicPlaybackWidget : GlanceAppWidget() {
         _logger = SatunesLogger.getLogger()
         _logger.info("ClassicPlaybackWidget Starting")
         setRefreshWidget(context = context)
+        WidgetPlaybackManager.refreshWidgets()
 
         provideContent {
             GlanceTheme {

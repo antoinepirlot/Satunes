@@ -47,6 +47,7 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -79,10 +80,10 @@ internal fun MusicPlayingControlView(
     val haptics: HapticFeedback = LocalHapticFeedback.current
     var showArtistOptions: Boolean by rememberSaveable { mutableStateOf(false) }
     val musicPlaying: Music = playbackViewModel.musicPlaying!!
+    val padding: Dp = 16.dp
 
     Column(
-        modifier = modifier
-            .fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
     ) {
         val screenHeightDp: Int = LocalConfiguration.current.screenHeightDp
         if (!(LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE && screenHeightDp < 480)) {
@@ -95,7 +96,7 @@ internal fun MusicPlayingControlView(
                         else if (screenWidthDp < ScreenSizes.VERY_SMALL) 0.4f
                         else 0.55f
                     )
-                    .padding(top = 16.dp),
+                    .padding(top = padding),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
@@ -103,27 +104,35 @@ internal fun MusicPlayingControlView(
             }
         }
         Column(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(bottom = padding),
             verticalArrangement = Arrangement.Bottom,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            NormalText(text = musicPlaying.title, fontSize = 20.sp)
+            NormalText(
+                modifier = Modifier.padding(horizontal = padding),
+                text = musicPlaying.title,
+                fontSize = 20.sp
+            )
             Subtitle(
-                modifier = Modifier.combinedClickable(
-                    onClick = {
-                        haptics.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-                        onArtistClick(musicPlaying.artist)
-                    },
-                    onLongClick = {
-                        haptics.performHapticFeedback(HapticFeedbackType.LongPress)
-                        satunesViewModel.mediaOptionsIsOpen()
-                        showArtistOptions = true
-                    }
-                ),
+                modifier = Modifier
+                    .padding(horizontal = padding)
+                    .combinedClickable(
+                        onClick = {
+                            haptics.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                            onArtistClick(musicPlaying.artist)
+                        },
+                        onLongClick = {
+                            haptics.performHapticFeedback(HapticFeedbackType.LongPress)
+                            satunesViewModel.mediaOptionsIsOpen()
+                            showArtistOptions = true
+                        }
+                    ),
                 text = musicPlaying.artist.title
             )
             PlaybackCustomActionsBar()
-            MusicControlBar(modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp))
+            MusicControlBar(modifier = Modifier.padding(horizontal = padding))
         }
 
         /**

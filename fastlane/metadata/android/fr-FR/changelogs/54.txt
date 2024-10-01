@@ -1,0 +1,4 @@
+Améliorations, optimisations et dépannage:
+
+* Le rafraichissement du widget a été amélioré
+* Retour du padding horizontal pour les textes dans la vue du playback

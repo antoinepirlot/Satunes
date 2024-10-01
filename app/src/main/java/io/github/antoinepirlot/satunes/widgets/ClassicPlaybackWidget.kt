@@ -55,17 +55,23 @@ class ClassicPlaybackWidget : GlanceAppWidget() {
 
     private lateinit var _logger: SatunesLogger
 
+    companion object {
+        fun setRefreshWidget(context: Context) {
+            val refreshWidgets: () -> Unit = {
+                CoroutineScope(Dispatchers.Default).launch {
+                    ClassicPlaybackWidget().updateAll(context = context.applicationContext)
+                }
+            }
+            WidgetPlaybackManager.refreshWidgets = refreshWidgets
+        }
+    }
+
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         SatunesLogger.DOCUMENTS_PATH =
             context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)!!.path
         _logger = SatunesLogger.getLogger()
         _logger.info("ClassicPlaybackWidget Starting")
-        val refreshWidgets: () -> Unit = {
-            CoroutineScope(Dispatchers.Default).launch {
-                ClassicPlaybackWidget().updateAll(context = context.applicationContext)
-            }
-        }
-        WidgetPlaybackManager.refreshWidgets = refreshWidgets
+        setRefreshWidget(context = context)
 
         provideContent {
             GlanceTheme {

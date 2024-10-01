@@ -42,6 +42,7 @@ import io.github.antoinepirlot.satunes.database.services.settings.SettingsManage
 import io.github.antoinepirlot.satunes.utils.initSatunes
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import io.github.antoinepirlot.satunes.utils.utils.showToastOnUiThread
+import io.github.antoinepirlot.satunes.widgets.ClassicPlaybackWidget
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -91,6 +92,8 @@ internal class MainActivity : ComponentActivity() {
         _logger = SatunesLogger.getLogger()
         _logger.info("Satunes started on API: ${Build.VERSION.SDK_INT}")
         instance = this
+
+        ClassicPlaybackWidget.setRefreshWidget(context = baseContext)
 
         setContent {
             Satunes()

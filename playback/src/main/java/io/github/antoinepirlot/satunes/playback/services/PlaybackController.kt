@@ -757,7 +757,6 @@ internal class PlaybackController private constructor(
         val newPosition: Long = this.getCurrentPosition()
         this.currentPositionProgression =
             newPosition.toFloat() / maxPosition.toFloat()
-        WidgetPlaybackManager.refreshWidgets()
     }
 
     fun getNextMusic(): Music? {

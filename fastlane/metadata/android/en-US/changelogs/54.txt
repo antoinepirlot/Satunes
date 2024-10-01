@@ -1,0 +1,4 @@
+Improvements, optimizations and troubleshooting:
+
+* Widget refreshing has been improved
+* Bring back horizontal padding on playback view for texts

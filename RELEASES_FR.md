@@ -3,6 +3,13 @@ You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
 ## 2.3 (Android 5.1.1 Lollipop et ultérieur)
 
+### 2.3.2
+
+Améliorations, optimisations et dépannage:
+
+* Le rafraichissement du widget a été amélioré
+* Retour du padding horizontal pour les textes dans la vue du playback
+
 ### 2.3.1
 
 Améliorations, optimisations et dépannage:

@@ -40,7 +40,6 @@ import androidx.glance.layout.Alignment
 import androidx.glance.layout.Box
 import androidx.glance.layout.fillMaxSize
 import io.github.antoinepirlot.satunes.MainActivity
-import io.github.antoinepirlot.satunes.database.services.widgets.WidgetDatabaseManager
 import io.github.antoinepirlot.satunes.playback.services.WidgetPlaybackManager
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import io.github.antoinepirlot.satunes.widgets.ui.views.classic_playback.ClassicPlaybackWidgetView
@@ -56,18 +55,24 @@ class ClassicPlaybackWidget : GlanceAppWidget() {
 
     private lateinit var _logger: SatunesLogger
 
+    companion object {
+        fun setRefreshWidget(context: Context) {
+            val refreshWidgets: () -> Unit = {
+                CoroutineScope(Dispatchers.Default).launch {
+                    ClassicPlaybackWidget().updateAll(context = context.applicationContext)
+                }
+            }
+            WidgetPlaybackManager.setRefreshWidgets(refreshWidgets = refreshWidgets)
+        }
+    }
+
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         SatunesLogger.DOCUMENTS_PATH =
             context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)!!.path
         _logger = SatunesLogger.getLogger()
         _logger.info("ClassicPlaybackWidget Starting")
-        val refreshWidgets: () -> Unit = {
-            CoroutineScope(Dispatchers.Default).launch {
-                ClassicPlaybackWidget().updateAll(context = context.applicationContext)
-            }
-        }
-        WidgetPlaybackManager.refreshWidgets = refreshWidgets
-        WidgetDatabaseManager.refreshWidgets = refreshWidgets
+        setRefreshWidget(context = context)
+        WidgetPlaybackManager.refreshWidgets()
 
         provideContent {
             GlanceTheme {

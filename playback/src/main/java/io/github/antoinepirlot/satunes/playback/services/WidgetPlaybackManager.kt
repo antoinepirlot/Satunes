@@ -29,11 +29,15 @@ package io.github.antoinepirlot.satunes.playback.services
  * @author Antoine Pirlot on 22/08/2024
  */
 object WidgetPlaybackManager {
-    var refreshWidgets: (() -> Unit)? = null
+    private var _refreshWidgets: (() -> Unit)? = null
+
+    fun setRefreshWidgets(refreshWidgets: (() -> Unit)?) {
+        this._refreshWidgets = refreshWidgets
+    }
 
     fun refreshWidgets() {
-        if (refreshWidgets != null) {
-            refreshWidgets!!()
+        if (this._refreshWidgets != null) {
+            this._refreshWidgets!!()
         }
     }
 }

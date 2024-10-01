@@ -80,11 +80,13 @@ internal class PlaybackController private constructor(
         internal set(value) {
             field = value
             PlaybackManager.musicPlaying.value = value
+            WidgetPlaybackManager.refreshWidgets()
         }
     var isPlaying: Boolean = DEFAULT_IS_PLAYING_VALUE
         internal set(value) {
             field = value
             PlaybackManager.isPlaying.value = value
+            WidgetPlaybackManager.refreshWidgets()
         }
     var repeatMode: Int = DEFAULT_REPEAT_MODE
         @OptIn(UnstableApi::class)
@@ -757,7 +759,6 @@ internal class PlaybackController private constructor(
         val newPosition: Long = this.getCurrentPosition()
         this.currentPositionProgression =
             newPosition.toFloat() / maxPosition.toFloat()
-        WidgetPlaybackManager.refreshWidgets()
     }
 
     fun getNextMusic(): Music? {

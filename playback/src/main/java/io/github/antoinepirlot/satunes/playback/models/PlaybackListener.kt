@@ -50,6 +50,7 @@ open class PlaybackListener : Player.Listener {
             playbackController.isEnded = true
             playbackController.currentPositionProgression = 1f
         }
+        WidgetPlaybackManager.refreshWidgets()
     }
 
     override fun onShuffleModeEnabledChanged(shuffleModeEnabled: Boolean) {
@@ -67,7 +68,6 @@ open class PlaybackListener : Player.Listener {
 
         playbackController.isPlaying = isPlaying
         playbackController.isEnded = PlaybackController.DEFAULT_IS_ENDED
-        WidgetPlaybackManager.refreshWidgets()
     }
 
     /**

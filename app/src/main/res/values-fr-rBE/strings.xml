@@ -109,4 +109,6 @@
     <string name="clean_playlist_button_text">Nettoyer</string>
     <string name="cleaning_snack_message">Nettoyage en cours… 🧹</string>
     <string name="cleaned_snackbar_text">Nettoyées 🧹</string>
+    <string name="timer_settings_title">Minuteur</string>
+    <string name="minutes_text_field_label">Minutes</string>
 </resources>

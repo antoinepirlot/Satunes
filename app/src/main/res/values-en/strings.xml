@@ -109,4 +109,6 @@
     <string name="clean_playlist_button_text">Clean</string>
     <string name="cleaning_snack_message">Cleaning… 🧹</string>
     <string name="cleaned_snackbar_text">Cleaned 🧹</string>
+    <string name="timer_settings_title">Timer</string>
+    <string name="minutes_text_field_label">Minutes</string>
 </resources>

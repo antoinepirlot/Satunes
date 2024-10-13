@@ -25,9 +25,12 @@
 
 package io.github.antoinepirlot.satunes.ui.components.settings.playback
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
@@ -37,10 +40,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
@@ -62,10 +67,15 @@ internal fun TimerSubSetting(
     playbackViewModel: PlaybackViewModel = viewModel(),
 ) {
     SubSettings(
-        modifier = modifier,
+        modifier = modifier.fillMaxWidth(),
         title = stringResource(R.string.timer_settings_title)
     ) {
-        Column(modifier = Modifier.selectableGroup()) {
+        Column(
+            modifier = Modifier
+                .selectableGroup()
+                .fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
             val scope: CoroutineScope = LocalMainScope.current
             val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
 
@@ -80,7 +90,10 @@ internal fun TimerSubSetting(
                 ) //max 8 hours
             }
             RemainingTime()
-            Row {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
                 Button(
                     onClick = {
                         playbackViewModel.cancelTimer(
@@ -91,6 +104,9 @@ internal fun TimerSubSetting(
                 ) {
                     NormalText(text = stringResource(R.string.cancel))
                 }
+
+                Spacer(modifier = Modifier.size(5.dp))
+
                 Button(
                     onClick = {
                         playbackViewModel.setTimer(

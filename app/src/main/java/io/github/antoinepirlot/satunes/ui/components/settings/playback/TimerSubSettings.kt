@@ -48,7 +48,6 @@ import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.local.LocalMainScope
 import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
-import io.github.antoinepirlot.satunes.models.Timer
 import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
 import io.github.antoinepirlot.satunes.ui.components.settings.playback.timer.RemainingTime
 import kotlinx.coroutines.CoroutineScope
@@ -62,8 +61,6 @@ internal fun TimerSubSetting(
     modifier: Modifier = Modifier,
     playbackViewModel: PlaybackViewModel = viewModel(),
 ) {
-    val timer: Timer? = playbackViewModel.timer
-
     SubSettings(
         modifier = modifier,
         title = stringResource(R.string.timer_settings_title)

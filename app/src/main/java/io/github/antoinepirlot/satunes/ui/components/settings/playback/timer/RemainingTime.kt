@@ -67,6 +67,7 @@ fun RemainingTime(
             }
         }
         NormalText(
+            modifier = modifier,
             text = stringResource(
                 R.string.remaining_time_content,
                 remainingTime

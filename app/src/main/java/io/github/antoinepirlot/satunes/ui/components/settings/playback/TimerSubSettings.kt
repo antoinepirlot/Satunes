@@ -109,7 +109,7 @@ internal fun TimerSubSetting(
                         playbackViewModel.setTimer(
                             scope = scope,
                             snackBarHostState = snackBarHostState,
-                            delay = minutesTextField.intValue
+                            delay = minutesTextField.value.toInt()
                         )
                     }
                 ) {

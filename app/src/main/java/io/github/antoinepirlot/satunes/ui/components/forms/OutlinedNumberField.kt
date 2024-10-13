@@ -51,13 +51,16 @@ internal fun OutlinedNumberField(
     val keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
     OutlinedTextField(
         modifier = modifier,
-        value = value.intValue.toString(),
+        value = if (value.intValue > 0) value.intValue.toString() else "",
         label = { NormalText(text = label) },
         onValueChange = {
-            if (it.isNotBlank() && it.isDigitsOnly()) {
+            if (it.isBlank()) {
+                value.intValue = 0
+            } else if (it.isDigitsOnly()) {
                 val itAsInt: Int = it.toInt()
-                if (itAsInt <= maxValue)
+                if (itAsInt <= maxValue) {
                     value.intValue = it.toInt()
+                }
             }
         },
         keyboardOptions = keyboardOptions,

@@ -31,6 +31,7 @@ import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.mutableIntStateOf
@@ -43,8 +44,11 @@ import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.data.local.LocalMainScope
+import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
+import kotlinx.coroutines.CoroutineScope
 
 /**
  * @author Antoine Pirlot on 03/10/2024
@@ -60,6 +64,9 @@ internal fun TimerSubSetting(
         title = stringResource(R.string.timer_settings_title)
     ) {
         Column(modifier = Modifier.selectableGroup()) {
+            val scope: CoroutineScope = LocalMainScope.current
+            val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
+
             val minutesTextField: MutableIntState = rememberSaveable { mutableIntStateOf(0) }
             Row {
                 OutlinedNumberField(
@@ -70,7 +77,11 @@ internal fun TimerSubSetting(
             }
             Button(
                 onClick = {
-                    playbackViewModel.setTimer(delay = minutesTextField.intValue)
+                    playbackViewModel.setTimer(
+                        scope = scope,
+                        snackBarHostState = snackBarHostState,
+                        delay = minutesTextField.intValue
+                    )
                 }
             ) {
                 NormalText(text = stringResource(R.string.ok))

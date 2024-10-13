@@ -316,12 +316,36 @@ class PlaybackViewModel : ViewModel() {
         PlaybackManager.stop()
     }
 
-    fun setTimer(delay: Int) {
-        Timer(
-            function = {
-                PlaybackManager.pause(context = MainActivity.instance.applicationContext)
-            },
-            delay = delay.toLong() * 60L * 1000L
-        )
+    fun setTimer(
+        scope: CoroutineScope,
+        snackBarHostState: SnackbarHostState,
+        delay: Int
+    ) {
+        val context: Context = MainActivity.instance.applicationContext
+        try {
+            Timer(
+                function = {
+                    PlaybackManager.pause(context = context)
+                },
+                delay = delay.toLong() * 60L * 1000L
+            )
+            showSnackBar(
+                scope = scope,
+                snackBarHostState = snackBarHostState,
+                message = context.getString(R.string.timer_launch_snackbar_content, delay)
+            )
+        } catch (e: Throwable) {
+            showErrorSnackBar(
+                scope = scope,
+                snackBarHostState = snackBarHostState,
+                action = {
+                    this.setTimer(
+                        scope = scope,
+                        snackBarHostState = snackBarHostState,
+                        delay = delay
+                    )
+                }
+            )
+        }
     }
 }

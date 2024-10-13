@@ -111,4 +111,5 @@
     <string name="cleaned_snackbar_text">Nettoyées 🧹</string>
     <string name="timer_settings_title">Minuteur</string>
     <string name="minutes_text_field_label">Minutes</string>
+    <string name="timer_launch_snackbar_content">La musique se mettera en pause après %d minutes</string>
 </resources>

@@ -27,6 +27,7 @@ package io.github.antoinepirlot.satunes.ui.components.settings.playback
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
@@ -47,7 +48,9 @@ import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.local.LocalMainScope
 import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
+import io.github.antoinepirlot.satunes.models.Timer
 import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
+import io.github.antoinepirlot.satunes.ui.components.settings.playback.timer.RemainingTime
 import kotlinx.coroutines.CoroutineScope
 
 /**
@@ -59,6 +62,8 @@ internal fun TimerSubSetting(
     modifier: Modifier = Modifier,
     playbackViewModel: PlaybackViewModel = viewModel(),
 ) {
+    val timer: Timer? = playbackViewModel.timer
+
     SubSettings(
         modifier = modifier,
         title = stringResource(R.string.timer_settings_title)
@@ -68,23 +73,38 @@ internal fun TimerSubSetting(
             val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
 
             val minutesTextField: MutableIntState = rememberSaveable { mutableIntStateOf(0) }
+
             Row {
                 OutlinedNumberField(
+                    modifier = Modifier.fillMaxWidth(fraction = 0.2f),
                     value = minutesTextField,
                     label = stringResource(R.string.minutes_text_field_label),
                     maxValue = 480
                 ) //max 8 hours
             }
-            Button(
-                onClick = {
-                    playbackViewModel.setTimer(
-                        scope = scope,
-                        snackBarHostState = snackBarHostState,
-                        delay = minutesTextField.intValue
-                    )
+            RemainingTime()
+            Row {
+                Button(
+                    onClick = {
+                        playbackViewModel.cancelTimer(
+                            scope = scope,
+                            snackBarHostState = snackBarHostState,
+                        )
+                    }
+                ) {
+                    NormalText(text = stringResource(R.string.cancel))
                 }
-            ) {
-                NormalText(text = stringResource(R.string.ok))
+                Button(
+                    onClick = {
+                        playbackViewModel.setTimer(
+                            scope = scope,
+                            snackBarHostState = snackBarHostState,
+                            delay = minutesTextField.intValue
+                        )
+                    }
+                ) {
+                    NormalText(text = stringResource(R.string.start_timer_button_content))
+                }
             }
         }
     }

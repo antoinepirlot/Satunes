@@ -36,21 +36,26 @@ import java.util.TimerTask
  */
 class Timer(
     function: () -> Unit,
-    delay: Long
+    delayMinutes: Int
 ) {
     private val _logger: SatunesLogger = SatunesLogger.getLogger()
-    private val _task = Task(function = function)
-    private val _delay = delay
+    private val _task: TimerTask = Task(function = function)
+    private val _delayMillis: Long = delayMinutes.toLong() * 60L * 1000L
+    private val _createdTimeMillis: Long = System.currentTimeMillis()
     private val _timer = Timer()
 
     init {
         _logger.info("Create Timer")
-        _timer.schedule(_task, _delay)
+        _timer.schedule(_task, _delayMillis)
     }
 
     fun cancel() {
         _logger.info("Cancel Timer")
         _timer.cancel()
+    }
+
+    fun getRemainingTime(): Long {
+        return _delayMillis - (System.currentTimeMillis() - _createdTimeMillis)
     }
 
     private inner class Task(private val function: () -> Unit) : TimerTask() {

@@ -31,6 +31,8 @@ import androidx.compose.runtime.MutableFloatState
 import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.R
@@ -68,6 +70,9 @@ class PlaybackViewModel : ViewModel() {
     val isShuffle: Boolean by _isShuffle
     val isLoaded: Boolean by _isLoaded
     val isEnded: Boolean by _isEnded
+    var timer: Timer? by mutableStateOf(null)
+        private set
+
 
     init {
         // Needed to refresh progress bar
@@ -316,6 +321,13 @@ class PlaybackViewModel : ViewModel() {
         PlaybackManager.stop()
     }
 
+    /**
+     * Set a timer for [delay] minutes.
+     *
+     * @param scope
+     * @param snackBarHostState
+     * @param delay the number of minutes as [Int]
+     */
     fun setTimer(
         scope: CoroutineScope,
         snackBarHostState: SnackbarHostState,
@@ -323,11 +335,13 @@ class PlaybackViewModel : ViewModel() {
     ) {
         val context: Context = MainActivity.instance.applicationContext
         try {
-            Timer(
+            this.timer?.cancel()
+            this.timer = Timer(
                 function = {
                     PlaybackManager.pause(context = context)
+                    this.timer = null
                 },
-                delay = delay.toLong() * 60L * 1000L
+                delayMinutes = delay
             )
             showSnackBar(
                 scope = scope,
@@ -335,6 +349,7 @@ class PlaybackViewModel : ViewModel() {
                 message = context.getString(R.string.timer_launch_snackbar_content, delay)
             )
         } catch (e: Throwable) {
+            _logger.severe(e.message)
             showErrorSnackBar(
                 scope = scope,
                 snackBarHostState = snackBarHostState,
@@ -344,6 +359,26 @@ class PlaybackViewModel : ViewModel() {
                         snackBarHostState = snackBarHostState,
                         delay = delay
                     )
+                }
+            )
+        }
+    }
+
+    fun cancelTimer(scope: CoroutineScope, snackBarHostState: SnackbarHostState) {
+        try {
+            this.timer?.cancel()
+            showSnackBar(
+                scope = scope,
+                snackBarHostState = snackBarHostState,
+                message = MainActivity.instance.getString(R.string.timer_cancelled_snackbar_content)
+            )
+        } catch (e: Throwable) {
+            _logger.severe(e.message)
+            showErrorSnackBar(
+                scope = scope,
+                snackBarHostState = snackBarHostState,
+                action = {
+                    this.cancelTimer(scope = scope, snackBarHostState = snackBarHostState)
                 }
             )
         }

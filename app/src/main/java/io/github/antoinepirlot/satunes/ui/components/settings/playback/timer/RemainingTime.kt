@@ -50,7 +50,7 @@ import kotlinx.coroutines.launch
  */
 
 @Composable
-fun RemainingTime(
+internal fun RemainingTime(
     modifier: Modifier = Modifier,
     playbackViewModel: PlaybackViewModel = viewModel(),
 ) {
@@ -78,6 +78,6 @@ fun RemainingTime(
 
 @Preview
 @Composable
-fun RemainingTimePreview() {
+private fun RemainingTimePreview() {
     RemainingTime()
 }

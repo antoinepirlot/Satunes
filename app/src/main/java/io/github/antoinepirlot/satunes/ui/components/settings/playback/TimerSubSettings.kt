@@ -32,9 +32,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.selection.selectableGroup
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableIntState
@@ -43,16 +41,15 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.local.LocalMainScope
 import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
+import io.github.antoinepirlot.satunes.ui.components.forms.OutlinedNumberField
 import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
 import io.github.antoinepirlot.satunes.ui.components.settings.playback.timer.RemainingTime
 import kotlinx.coroutines.CoroutineScope
@@ -122,30 +119,6 @@ internal fun TimerSubSetting(
         }
     }
 }
-
-@Composable
-private fun OutlinedNumberField(
-    modifier: Modifier = Modifier,
-    value: MutableIntState,
-    label: String,
-    maxValue: Int
-) {
-    val keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-    OutlinedTextField(
-        modifier = modifier,
-        value = value.intValue.toString(),
-        label = { NormalText(text = label) },
-        onValueChange = {
-            if (it.isNotBlank() && it.isDigitsOnly()) {
-                val itAsInt: Int = it.toInt()
-                if (itAsInt <= maxValue)
-                    value.intValue = it.toInt()
-            }
-        },
-        keyboardOptions = keyboardOptions,
-    )
-}
-
 
 @Preview
 @Composable

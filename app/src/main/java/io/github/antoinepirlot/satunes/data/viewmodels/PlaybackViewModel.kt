@@ -37,6 +37,7 @@ import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.database.models.Timer
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.models.ProgressBarLifecycleCallbacks
 import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
@@ -313,5 +314,14 @@ class PlaybackViewModel : ViewModel() {
     fun stop() {
         _logger.info("Stop")
         PlaybackManager.stop()
+    }
+
+    fun setTimer(delay: Int) {
+        Timer(
+            function = {
+                PlaybackManager.pause(context = MainActivity.instance.applicationContext)
+            },
+            delay = delay.toLong() * 60L * 1000L
+        )
     }
 }

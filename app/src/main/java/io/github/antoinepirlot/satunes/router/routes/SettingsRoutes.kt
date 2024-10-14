@@ -29,7 +29,6 @@ import android.os.Build
 import androidx.compose.animation.AnimatedContentScope
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.models.Destination
@@ -49,13 +48,12 @@ import io.github.antoinepirlot.satunes.ui.views.settings.updates.UpdatesSettingV
  */
 
 internal fun NavGraphBuilder.settingsRoutes(
-    navController: NavHostController,
     satunesViewModel: SatunesViewModel, // Pass it as param to fix no recomposition when permission granted
     onStart: AnimatedContentScope.(NavBackStackEntry) -> Unit
 ) {
     composable(Destination.SETTINGS.link) {
         onStart(it)
-        SettingsView(navController = navController)
+        SettingsView()
     }
 
     composable(Destination.BOTTOM_BAR_SETTINGS.link) {

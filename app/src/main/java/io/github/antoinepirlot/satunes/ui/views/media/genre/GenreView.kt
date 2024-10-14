@@ -34,8 +34,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Genre
@@ -55,10 +55,10 @@ import io.github.antoinepirlot.satunes.ui.views.media.MediaWithAlbumsHeaderView
 @Composable
 internal fun GenreView(
     modifier: Modifier = Modifier,
-    navController: NavHostController,
     playbackViewModel: PlaybackViewModel = viewModel(),
     genre: Genre,
 ) {
+    val navController: NavHostController = LocalNavController.current
     val musicMap: Set<Music> = genre.getMusicSet()
     val albumSet: Set<Album> = genre.getAlbumSet()
 
@@ -71,7 +71,6 @@ internal fun GenreView(
 
     MediaListView(
         modifier = modifier,
-        navController = navController,
         mediaImplCollection = musicMap,
         openMedia = { clickedMediaImpl: MediaImpl ->
             playbackViewModel.loadMusic(
@@ -93,7 +92,6 @@ internal fun GenreView(
         header = if (albumSet.isNotEmpty()) {
             {
                 MediaWithAlbumsHeaderView(
-                    navController = navController,
                     mediaImpl = genre,
                     albumCollection = albumSet
                 )
@@ -121,7 +119,6 @@ internal fun GenreView(
 @Preview
 @Composable
 private fun GenreViewPreview() {
-    val navController: NavHostController = rememberNavController()
-    GenreView(navController = navController, genre = Genre("Genre"))
+    GenreView(genre = Genre("Genre"))
 }
 

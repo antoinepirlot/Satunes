@@ -33,8 +33,8 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.jetpack_libs.components.models.ScreenSizes
+import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
@@ -52,13 +52,13 @@ import io.github.antoinepirlot.satunes.ui.views.playback.tablet.PlaybackTabletVi
 @Composable
 internal fun PlaybackView(
     modifier: Modifier = Modifier,
-    navController: NavHostController,
     satunesViewModel: SatunesViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
     onAlbumClick: (album: Album?) -> Unit,
     onArtistClick: (artist: Artist) -> Unit,
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+    val navController: NavHostController = LocalNavController.current
 
     if (playbackViewModel.musicPlaying == null) {
         backToRoot(
@@ -83,7 +83,6 @@ internal fun PlaybackView(
         // Tablet
         PlaybackTabletView(
             modifier = modifier,
-            navController = navController,
             onAlbumClick = onAlbumClick,
             onArtistClick = onArtistClick
         )
@@ -93,6 +92,5 @@ internal fun PlaybackView(
 @Preview
 @Composable
 private fun PlaybackViewPreview() {
-    val navController: NavHostController = rememberNavController()
-    PlaybackView(navController = navController, onAlbumClick = {}, onArtistClick = {})
+    PlaybackView(onAlbumClick = {}, onArtistClick = {})
 }

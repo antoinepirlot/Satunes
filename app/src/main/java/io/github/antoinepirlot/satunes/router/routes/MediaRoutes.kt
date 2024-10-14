@@ -28,7 +28,6 @@ package io.github.antoinepirlot.satunes.router.routes
 import androidx.compose.animation.AnimatedContentScope
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
@@ -56,7 +55,6 @@ import io.github.antoinepirlot.satunes.ui.views.media.playlist.PlaylistView
  */
 
 internal fun NavGraphBuilder.mediaRoutes(
-    navController: NavHostController,
     satunesViewModel: SatunesViewModel,
     dataViewModel: DataViewModel,
     onStart: AnimatedContentScope.(NavBackStackEntry) -> Unit
@@ -67,7 +65,7 @@ internal fun NavGraphBuilder.mediaRoutes(
         if (satunesViewModel.isLoadingData || !satunesViewModel.isDataLoaded) {
             LoadingView()
         } else {
-            RootFolderView(navController = navController)
+            RootFolderView()
         }
     }
 
@@ -79,7 +77,7 @@ internal fun NavGraphBuilder.mediaRoutes(
         } else {
             val folderId = it.arguments!!.getString("id")!!.toLong()
             val folder: Folder = dataViewModel.getFolder(id = folderId)
-            FolderView(navController = navController, folder = folder)
+            FolderView(folder = folder)
         }
     }
 
@@ -89,7 +87,7 @@ internal fun NavGraphBuilder.mediaRoutes(
         if (satunesViewModel.isLoadingData || !satunesViewModel.isDataLoaded) {
             LoadingView()
         } else {
-            AllArtistsListView(navController = navController)
+            AllArtistsListView()
         }
     }
 
@@ -101,7 +99,7 @@ internal fun NavGraphBuilder.mediaRoutes(
         } else {
             val artistId: Long = it.arguments!!.getString("id")!!.toLong()
             val artist: Artist = dataViewModel.getArtist(id = artistId)
-            ArtistView(navController = navController, artist = artist)
+            ArtistView(artist = artist)
         }
     }
 
@@ -111,7 +109,7 @@ internal fun NavGraphBuilder.mediaRoutes(
         if (satunesViewModel.isLoadingData || !satunesViewModel.isDataLoaded) {
             LoadingView()
         } else {
-            AllAlbumsListView(navController = navController)
+            AllAlbumsListView()
         }
     }
 
@@ -123,7 +121,7 @@ internal fun NavGraphBuilder.mediaRoutes(
         } else {
             val albumId: Long = it.arguments!!.getString("id")!!.toLong()
             val album: Album = dataViewModel.getAlbum(albumId)
-            AlbumView(navController = navController, album = album)
+            AlbumView(album = album)
         }
     }
 
@@ -133,7 +131,7 @@ internal fun NavGraphBuilder.mediaRoutes(
         if (satunesViewModel.isLoadingData || !satunesViewModel.isDataLoaded) {
             LoadingView()
         } else {
-            AllGenresListView(navController = navController)
+            AllGenresListView()
         }
     }
 
@@ -145,7 +143,7 @@ internal fun NavGraphBuilder.mediaRoutes(
         } else {
             val genreId: Long = it.arguments!!.getString("id")!!.toLong()
             val genre: Genre = dataViewModel.getGenre(id = genreId)
-            GenreView(navController = navController, genre = genre)
+            GenreView(genre = genre)
         }
     }
 
@@ -155,7 +153,7 @@ internal fun NavGraphBuilder.mediaRoutes(
         if (satunesViewModel.isLoadingData || !satunesViewModel.isDataLoaded) {
             LoadingView()
         } else {
-            PlaylistListView(navController = navController)
+            PlaylistListView()
         }
     }
 
@@ -167,7 +165,7 @@ internal fun NavGraphBuilder.mediaRoutes(
         } else {
             val playlistId: Long = it.arguments!!.getString("id")!!.toLong()
             val playlist: Playlist = dataViewModel.getPlaylist(id = playlistId)
-            PlaylistView(playlist = playlist, navController = navController)
+            PlaylistView(playlist = playlist)
         }
     }
 
@@ -177,7 +175,7 @@ internal fun NavGraphBuilder.mediaRoutes(
         if (satunesViewModel.isLoadingData || !satunesViewModel.isDataLoaded) {
             LoadingView()
         } else {
-            AllMusicsListView(navController = navController)
+            AllMusicsListView()
         }
     }
 }

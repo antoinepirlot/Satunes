@@ -97,6 +97,7 @@ internal fun MediaSelectionCheckbox(
                 }
             )
             Spacer(modifier = modifier.size(10.dp))
+
             NormalText(
                 modifier = Modifier.align(Alignment.CenterVertically),
                 fontSize = 20.sp,

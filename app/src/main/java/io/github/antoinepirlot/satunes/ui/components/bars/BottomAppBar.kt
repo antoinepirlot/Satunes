@@ -35,8 +35,6 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.jetpack_libs.components.models.ScreenSizes
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
@@ -48,7 +46,6 @@ import io.github.antoinepirlot.satunes.database.models.NavBarSection
 @Composable
 internal fun BottomAppBar(
     modifier: Modifier = Modifier,
-    navController: NavHostController,
     satunesViewModel: SatunesViewModel = viewModel(),
 ) {
     val screenWidthDp = LocalConfiguration.current.screenWidthDp
@@ -71,7 +68,6 @@ internal fun BottomAppBar(
             if (visible) {
                 MediaNavBarSelection(
                     modifier = navigationItemModifier,
-                    navController = navController,
                     navBarSection = navBarSection
                 )
             }
@@ -83,6 +79,5 @@ internal fun BottomAppBar(
 @Preview
 @Composable
 private fun SatunesBottomAppBarPreview() {
-    val navController: NavHostController = rememberNavController()
-    BottomAppBar(navController = navController)
+    BottomAppBar()
 }

@@ -33,8 +33,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.database.models.Album
@@ -55,7 +53,6 @@ import io.github.antoinepirlot.satunes.ui.components.images.MediaArtwork
 @Composable
 internal fun AlbumOptionsDialog(
     modifier: Modifier = Modifier,
-    navController: NavHostController,
     playbackViewModel: PlaybackViewModel = viewModel(),
     album: Album,
     onDismissRequest: () -> Unit,
@@ -100,10 +97,7 @@ internal fun AlbumOptionsDialog(
                 /**
                  * Redirections
                  */
-                NavigateToMediaMusicOption(
-                    mediaImpl = album.artist,
-                    navController = navController
-                )
+                NavigateToMediaMusicOption(mediaImpl = album.artist)
             }
         }
     )
@@ -112,9 +106,7 @@ internal fun AlbumOptionsDialog(
 @Preview
 @Composable
 private fun AlbumOptionsDialogPreview() {
-    val navController: NavHostController = rememberNavController()
     AlbumOptionsDialog(
-        navController = navController,
         album = Album(title = "Album title", artist = Artist(title = "Artist Title")),
         onDismissRequest = {}
     )

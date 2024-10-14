@@ -33,8 +33,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Playlist
@@ -46,7 +44,6 @@ import io.github.antoinepirlot.satunes.database.models.Playlist
 @Composable
 internal fun MediaCardList(
     modifier: Modifier = Modifier,
-    navController: NavHostController,
     playbackViewModel: PlaybackViewModel = viewModel(),
     header: @Composable (() -> Unit)? = null,
     mediaImplCollection: Collection<MediaImpl>,
@@ -82,7 +79,6 @@ internal fun MediaCardList(
             }
             MediaCard(
                 modifier = modifier,
-                navController = navController,
                 media = media,
                 onClick = { openMedia(media) },
                 openedPlaylist = openedPlaylist,
@@ -102,9 +98,7 @@ internal fun MediaCardList(
 @Composable
 @Preview
 private fun CardListPreview() {
-    val navController: NavHostController = rememberNavController()
     MediaCardList(
-        navController = navController,
         header = {},
         mediaImplCollection = listOf(),
         openMedia = {},

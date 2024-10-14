@@ -30,8 +30,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.jetpack_libs.components.texts.Title
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
@@ -47,14 +45,12 @@ import io.github.antoinepirlot.satunes.ui.components.cards.media.MediaCardList
 @Composable
 internal fun PlaybackQueueView(
     modifier: Modifier = Modifier,
-    navController: NavHostController,
     playbackViewModel: PlaybackViewModel = viewModel(),
 ) {
     val playbackPlaylist: List<Music> = playbackViewModel.getPlaylist()
 
     MediaCardList(
         modifier = modifier,
-        navController = navController,
         scrollToMusicPlaying = true,
         header = { Title(text = stringResource(id = R.string.playback_queue)) },
         mediaImplCollection = playbackPlaylist,
@@ -72,6 +68,5 @@ internal fun PlaybackQueueView(
 @Preview
 @Composable
 private fun PlaybackQueueViewPreview() {
-    val navController: NavHostController = rememberNavController()
-    PlaybackQueueView(navController = navController)
+    PlaybackQueueView()
 }

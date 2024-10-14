@@ -36,8 +36,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
+import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.playbackViews
 import io.github.antoinepirlot.satunes.data.settingsDestinations
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
@@ -53,11 +53,11 @@ import io.github.antoinepirlot.satunes.ui.utils.getRightIconAndDescription
 @Composable
 internal fun RowScope.MediaNavBarSelection(
     modifier: Modifier = Modifier,
-    navController: NavHostController,
     satunesViewModel: SatunesViewModel = viewModel(),
     navBarSection: NavBarSection,
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+    val navController: NavHostController = LocalNavController.current
 
     val selectedNavBarSection: NavBarSection = satunesUiState.selectedNavBarSection
     val currentDestination: Destination = satunesUiState.currentDestination
@@ -121,8 +121,5 @@ internal fun backToRoot(
 @Preview
 @Composable
 private fun RowScope.MediaNavBarSelectionPreview() {
-    MediaNavBarSelection(
-        navController = rememberNavController(),
-        navBarSection = NavBarSection.MUSICS
-    )
+    MediaNavBarSelection(navBarSection = NavBarSection.MUSICS)
 }

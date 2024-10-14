@@ -35,8 +35,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
@@ -56,10 +56,11 @@ import io.github.antoinepirlot.satunes.ui.views.media.MediaWithAlbumsHeaderView
 @Composable
 internal fun ArtistView(
     modifier: Modifier = Modifier,
-    navController: NavHostController,
     playbackViewModel: PlaybackViewModel = viewModel(),
     artist: Artist,
 ) {
+    val navController: NavHostController = LocalNavController.current
+
     //TODO create mediaViewModel and UiState when you select media
     val musicMap: Set<Music> = artist.getMusicSet()
     //Recompose if data changed
@@ -73,7 +74,6 @@ internal fun ArtistView(
 
     MediaListView(
         modifier = modifier,
-        navController = navController,
         mediaImplCollection = musicMap,
         openMedia = { clickedMediaImpl: MediaImpl ->
             playbackViewModel.loadMusic(
@@ -105,7 +105,6 @@ internal fun ArtistView(
                 MediaWithAlbumsHeaderView(
                     mediaImpl = artist,
                     albumCollection = albumSet,
-                    navController = navController
                 )
             }
         } else null,
@@ -131,9 +130,5 @@ internal fun ArtistView(
 @Preview
 @Composable
 private fun ArtistViewPreview() {
-    val navController: NavHostController = rememberNavController()
-    ArtistView(
-        navController = navController,
-        artist = Artist(title = "Artist title")
-    )
+    ArtistView(artist = Artist(title = "Artist title"))
 }

@@ -25,40 +25,44 @@
 
 package io.github.antoinepirlot.satunes.ui.components.buttons.playback.custom_actions
 
-import androidx.compose.material3.SnackbarHostState
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.viewmodel.compose.viewModel
-import io.github.antoinepirlot.satunes.data.local.LocalMainScope
-import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
-import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
-import io.github.antoinepirlot.satunes.database.models.Music
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import kotlinx.coroutines.CoroutineScope
 
 /**
- * @author Antoine Pirlot on 28/06/2024
+ * @author Antoine Pirlot on 01/06/2024
  */
 
 @Composable
-internal fun FavoriteCustomAction(
+internal fun CustomActionButton(
     modifier: Modifier = Modifier,
-    dataViewModel: DataViewModel = viewModel(),
-    music: Music,
+    icon: SatunesIcons,
+    text: String? = null,
+    onClick: () -> Unit
 ) {
-    // Assume the media is remembered in parent composable
-    val scope: CoroutineScope = LocalMainScope.current
-    val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
-
-    CustomActionButton(
+    FilledTonalButton(
         modifier = modifier,
-        icon = if (music.liked.value) SatunesIcons.LIKED else SatunesIcons.UNLIKED,
-        onClick = {
-            dataViewModel.switchLike(
-                scope = scope,
-                snackBarHostState = snackBarHostState,
-                music = music
+        onClick = onClick
+    ) {
+        Icon(imageVector = icon.imageVector, contentDescription = icon.description)
+        if (!text.isNullOrBlank()) {
+            Spacer(modifier = Modifier.size(16.dp))
+            NormalText(
+                text = text
             )
         }
-    )
+    }
+}
+
+@Preview
+@Composable
+private fun RowButtonPreview() {
+    CustomActionButton(icon = SatunesIcons.PLAYLIST_ADD, text = "Add to PlaylistDB", onClick = {})
 }

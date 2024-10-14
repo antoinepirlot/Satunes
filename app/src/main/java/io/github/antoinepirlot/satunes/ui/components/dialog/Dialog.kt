@@ -23,46 +23,61 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.buttons.playback
+package io.github.antoinepirlot.satunes.ui.components.dialog
 
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
+import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 
 /**
- * @author Antoine Pirlot on 01/06/2024
+ * @author Antoine Pirlot on 14/10/2024
  */
 
 @Composable
-internal fun CustomActionButton(
+internal fun Dialog(
     modifier: Modifier = Modifier,
     icon: SatunesIcons,
-    text: String? = null,
-    onClick: () -> Unit
+    title: String,
+    onDismissRequest: () -> Unit,
+    onConfirmRequest: () -> Unit,
+    confirmText: String? = stringResource(id = R.string.ok),
+    dismissText: String? = stringResource(id = R.string.cancel),
+    content: @Composable () -> Unit,
 ) {
-    FilledTonalButton(
+    AlertDialog(
         modifier = modifier,
-        onClick = onClick
-    ) {
-        Icon(imageVector = icon.imageVector, contentDescription = icon.description)
-        if (!text.isNullOrBlank()) {
-            Spacer(modifier = Modifier.size(16.dp))
-            NormalText(
-                text = text
+        icon = {
+            Icon(
+                imageVector = icon.imageVector,
+                contentDescription = icon.description
             )
-        }
-    }
-}
-
-@Preview
-@Composable
-private fun RowButtonPreview() {
-    CustomActionButton(icon = SatunesIcons.PLAYLIST_ADD, text = "Add to PlaylistDB", onClick = {})
+        },
+        title = {
+            NormalText(text = title)
+        },
+        text = {
+            content()
+        },
+        onDismissRequest = onDismissRequest,
+        confirmButton = {
+            if (confirmText != null) {
+                TextButton(onClick = onConfirmRequest) {
+                    NormalText(text = confirmText)
+                }
+            }
+        },
+        dismissButton = if (dismissText != null) {
+            {
+                TextButton(onClick = onDismissRequest) {
+                    NormalText(text = dismissText)
+                }
+            }
+        } else null
+    )
 }

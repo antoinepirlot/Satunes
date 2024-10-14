@@ -48,6 +48,7 @@ import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
 import io.github.antoinepirlot.satunes.ui.components.settings.battery.AudioOffloadSetting
 import io.github.antoinepirlot.satunes.ui.components.settings.playback.BarSpeedSetting
 import io.github.antoinepirlot.satunes.ui.components.settings.playback.PlaybackModesSubSettings
+import io.github.antoinepirlot.satunes.ui.components.settings.playback.TimerSubSetting
 
 /**
  *   @author Antoine Pirlot 06/03/2024
@@ -80,6 +81,7 @@ internal fun PlaybackSettingsView(
             BarSpeedSetting(modifier = Modifier.padding(horizontal = 16.dp))
         }
         PlaybackModesSubSettings() //Contains list item so always padding horizontal 16.dp
+        TimerSubSetting(modifier.padding(horizontal = 16.dp))
         SubSettings(
             modifier = Modifier.padding(horizontal = 16.dp),
             title = stringResource(id = R.string.battery_settings)

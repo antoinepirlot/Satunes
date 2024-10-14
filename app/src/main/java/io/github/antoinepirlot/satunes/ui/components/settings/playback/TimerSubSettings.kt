@@ -23,44 +23,33 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.buttons.playback.custom_actions
+package io.github.antoinepirlot.satunes.ui.components.settings.playback
 
-import androidx.compose.material3.SnackbarHostState
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.data.local.LocalMainScope
-import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
-import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
-import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import kotlinx.coroutines.CoroutineScope
+import io.github.antoinepirlot.satunes.ui.components.forms.CreateTimerForm
+import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
 
 /**
- * @author Antoine Pirlot on 08/09/2024
+ * @author Antoine Pirlot on 03/10/2024
  */
 
 @Composable
-internal fun ShareCustomAction(
-    modifier: Modifier = Modifier,
-    dataViewModel: DataViewModel = viewModel(),
-    music: Music,
-) {
-    val scope: CoroutineScope = LocalMainScope.current
-    val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
+internal fun TimerSubSetting(modifier: Modifier = Modifier) {
+    SubSettings(
+        modifier = modifier.fillMaxWidth(),
+        title = stringResource(R.string.timer_settings_title)
+    ) {
+        CreateTimerForm()
+    }
+}
 
-    CustomActionButton(
-        modifier = modifier,
-        icon = SatunesIcons.SHARE,
-        text = stringResource(R.string.share_button_content),
-        onClick = {
-            dataViewModel.share(
-                scope = scope,
-                snackBarHostState = snackBarHostState,
-                media = music
-            )
-        }
-    )
+@Preview
+@Composable
+private fun TimerSubSettingPreview() {
+    TimerSubSetting()
 }

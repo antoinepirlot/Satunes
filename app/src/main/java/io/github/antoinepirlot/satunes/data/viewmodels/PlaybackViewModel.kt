@@ -42,6 +42,7 @@ import io.github.antoinepirlot.satunes.database.services.settings.SettingsManage
 import io.github.antoinepirlot.satunes.models.ProgressBarLifecycleCallbacks
 import io.github.antoinepirlot.satunes.models.Timer
 import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
+import io.github.antoinepirlot.satunes.ui.utils.getMillisToTimeText
 import io.github.antoinepirlot.satunes.ui.utils.showErrorSnackBar
 import io.github.antoinepirlot.satunes.ui.utils.showSnackBar
 import io.github.antoinepirlot.satunes.utils.getMediaTitle
@@ -373,9 +374,7 @@ class PlaybackViewModel : ViewModel() {
                 snackBarHostState = snackBarHostState,
                 message = context.getString(
                     R.string.timer_launch_snackbar_content,
-                    hours,
-                    minutes,
-                    seconds
+                    getMillisToTimeText(_uiState.value.timer?.getRemainingTime() ?: 0)
                 )
             )
         } catch (e: Throwable) {

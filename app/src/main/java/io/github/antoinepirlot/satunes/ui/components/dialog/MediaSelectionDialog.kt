@@ -25,6 +25,7 @@
 
 package io.github.antoinepirlot.satunes.ui.components.dialog
 
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarHostState
@@ -35,6 +36,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.R
@@ -122,7 +124,7 @@ private fun MediaSelectionDialogList(
     icon: SatunesIcons,
 ) {
     AlertDialog(
-        modifier = modifier,
+        modifier = modifier.padding(vertical = 50.dp),
         icon = {
             Icon(imageVector = icon.imageVector, contentDescription = icon.description)
         },

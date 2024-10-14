@@ -188,4 +188,8 @@ internal class MainActivity : ComponentActivity() {
         createFileIntent.type = MIME_JSON
         startActivityForResult(createFileIntent, EXPORT_PLAYLIST_CODE)
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+    }
 }

@@ -23,7 +23,7 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.buttons.playback
+package io.github.antoinepirlot.satunes.ui.components.buttons.playback.custom_actions
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size

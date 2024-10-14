@@ -36,7 +36,6 @@ import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.ui.components.buttons.playback.CustomActionButton
 import kotlinx.coroutines.CoroutineScope
 
 /**

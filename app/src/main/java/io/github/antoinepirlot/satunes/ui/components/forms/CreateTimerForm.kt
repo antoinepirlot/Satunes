@@ -53,7 +53,7 @@ import io.github.antoinepirlot.satunes.data.local.LocalMainScope
 import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.data.states.PlaybackUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
-import io.github.antoinepirlot.satunes.ui.components.settings.playback.timer.RemainingTime
+import io.github.antoinepirlot.satunes.ui.components.settings.playback.timer.TimerRemainingTime
 import kotlinx.coroutines.CoroutineScope
 
 /**
@@ -102,7 +102,7 @@ internal fun CreateTimerForm(
                 )
             }
         }
-        RemainingTime()
+        TimerRemainingTime()
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center

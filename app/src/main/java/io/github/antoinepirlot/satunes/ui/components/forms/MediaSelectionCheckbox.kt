@@ -31,6 +31,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Checkbox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -38,6 +39,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -71,13 +73,17 @@ internal fun MediaSelectionCheckbox(
         mediaImpl.title
     }
 
-    Box(modifier = modifier.clickable {
-        onClick(
-            checked = checked,
-            mediaSelectionViewModel = mediaSelectionViewModel,
-            mediaImpl = mediaImpl
-        )
-    }) {
+    Box(
+        modifier = modifier
+            .clip(CircleShape)
+            .clickable {
+                onClick(
+                    checked = checked,
+                    mediaSelectionViewModel = mediaSelectionViewModel,
+                    mediaImpl = mediaImpl
+                )
+            }
+    ) {
         Row(modifier = Modifier.fillMaxWidth()) {
             Checkbox(checked = checked.value, onCheckedChange = {
                 onClick(

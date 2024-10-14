@@ -42,6 +42,7 @@ import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.ui.components.buttons.playback.custom_actions.AddToPlaylistCustomAction
 import io.github.antoinepirlot.satunes.ui.components.buttons.playback.custom_actions.FavoriteCustomAction
 import io.github.antoinepirlot.satunes.ui.components.buttons.playback.custom_actions.ShareCustomAction
+import io.github.antoinepirlot.satunes.ui.components.buttons.playback.custom_actions.TimerCustomAction
 
 /**
  * @author Antoine Pirlot on 01/06/2024
@@ -69,6 +70,9 @@ internal fun PlaybackCustomActionsBar(
         Spacer(modifier = Modifier.size(spacerSize))
 
         ShareCustomAction(music = musicPlaying)
+        Spacer(modifier = Modifier.size(spacerSize))
+
+        TimerCustomAction()
         Spacer(modifier = Modifier.size(spacerSize))
     }
 }

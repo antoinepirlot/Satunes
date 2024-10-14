@@ -67,6 +67,7 @@ import androidx.compose.material.icons.rounded.Share
 import androidx.compose.material.icons.rounded.Shuffle
 import androidx.compose.material.icons.rounded.SkipNext
 import androidx.compose.material.icons.rounded.SkipPrevious
+import androidx.compose.material.icons.rounded.Timer
 import androidx.compose.material.icons.rounded.Update
 import androidx.compose.material.icons.rounded.Upload
 import androidx.compose.material.icons.rounded.Warning
@@ -164,6 +165,7 @@ enum class SatunesIcons(
         imageProvider = ImageProvider(resId = R.drawable.skip_previous),
         description = "Skip Previous Icon"
     ),
+    TIMER(imageVector = Icons.Rounded.Timer, description = "Timer Icon"),
     UNLIKED(imageVector = Icons.Rounded.FavoriteBorder, description = "Unliked Icon"),
     REFRESH(imageVector = Icons.Rounded.Refresh, description = "Refresh Icon"),
     REMOVE_FROM_QUEUE(

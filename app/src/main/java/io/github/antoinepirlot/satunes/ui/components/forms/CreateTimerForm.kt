@@ -68,7 +68,7 @@ internal fun CreateTimerForm(
     val playbackUiState: PlaybackUiState by playbackViewModel.uiState.collectAsState()
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .selectableGroup()
             .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,

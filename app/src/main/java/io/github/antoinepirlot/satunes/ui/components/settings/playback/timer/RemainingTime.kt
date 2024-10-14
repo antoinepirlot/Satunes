@@ -44,6 +44,7 @@ import io.github.antoinepirlot.satunes.models.Timer
 import io.github.antoinepirlot.satunes.ui.utils.getMillisToTimeText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -63,8 +64,11 @@ internal fun RemainingTime(
         var remainingTime: String by rememberSaveable {
             mutableStateOf(getMillisToTimeText(milliseconds = timer.getRemainingTime()))
         }
+
+        var job: Job? = null
         LaunchedEffect(remainingTime) {
-            CoroutineScope(Dispatchers.IO).launch {
+            job?.cancel()
+            job = CoroutineScope(Dispatchers.IO).launch {
                 delay(1000) // Wait one second to be refreshed
                 remainingTime =
                     getMillisToTimeText(milliseconds = timer.getRemainingTime())

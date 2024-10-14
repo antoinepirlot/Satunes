@@ -86,7 +86,8 @@ internal fun MediaCard(
     satunesViewModel: SatunesViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
     media: MediaImpl,
-    onClick: () -> Unit,
+    onClick: (() -> Unit)?,
+    enableExtraOptions: Boolean = true,
     openedPlaylist: Playlist?,
 ) {
     val haptics: HapticFeedback = LocalHapticFeedback.current
@@ -101,18 +102,36 @@ internal fun MediaCard(
             media.title
         }
     val screenWidthDp: Int = LocalConfiguration.current.screenWidthDp
+    val boxModifier: Modifier = if (onClick != null) {
+        modifier.combinedClickable(
+            onClick = {
+                if (!showMediaOption) {
+                    onClick?.invoke()
+                }
+            },
+            onLongClick = if (enableExtraOptions) {
+                {
+                    haptics.performHapticFeedback(HapticFeedbackType.LongPress)
+                    showMediaOption = true
+                    satunesViewModel.mediaOptionsIsOpen()
+                }
+            } else null
+        )
+    } else modifier
     Box(
         modifier = modifier.combinedClickable(
             onClick = {
                 if (!showMediaOption) {
-                    onClick()
+                    onClick?.invoke()
                 }
             },
-            onLongClick = {
-                haptics.performHapticFeedback(HapticFeedbackType.LongPress)
-                showMediaOption = true
-                satunesViewModel.mediaOptionsIsOpen()
-            }
+            onLongClick = if (enableExtraOptions) {
+                {
+                    haptics.performHapticFeedback(HapticFeedbackType.LongPress)
+                    showMediaOption = true
+                    satunesViewModel.mediaOptionsIsOpen()
+                }
+            } else null
         ),
     ) {
         ListItem(

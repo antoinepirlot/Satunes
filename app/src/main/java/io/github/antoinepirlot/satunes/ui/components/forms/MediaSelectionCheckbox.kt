@@ -37,21 +37,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.data.viewmodels.MediaSelectionViewModel
 import io.github.antoinepirlot.satunes.database.R
 import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
+import io.github.antoinepirlot.satunes.ui.components.cards.media.MediaCard
 
 /**
  * @author Antoine Pirlot on 30/03/2024
@@ -98,11 +96,11 @@ internal fun MediaSelectionCheckbox(
                 }
             )
             Spacer(modifier = modifier.size(10.dp))
-
-            NormalText(
-                modifier = Modifier.align(Alignment.CenterVertically),
-                fontSize = 20.sp,
-                text = text
+            MediaCard(
+                media = mediaImpl,
+                onClick = null,
+                enableExtraOptions = false,
+                openedPlaylist = null,
             )
         }
     }

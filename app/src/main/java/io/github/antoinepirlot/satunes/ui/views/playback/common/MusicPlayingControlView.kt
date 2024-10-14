@@ -65,7 +65,7 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.artist.ArtistOptions
 import io.github.antoinepirlot.satunes.ui.components.images.MusicPlayingAlbumArtwork
 
 /**
- * @author Antoine Pirlot on 25/01/24
+ * @author Antoine Pirlot on 25/01/2024
  */
 
 @OptIn(ExperimentalFoundationApi::class)

@@ -130,6 +130,7 @@ internal fun CreateTimerForm(
                         secondsIntField.intValue = 0
                         minutesIntField.intValue = 0
                         hoursIntField.intValue = 0
+                        onFinished?.invoke()
                     }
                 ) {
                     NormalText(text = stringResource(R.string.cancel))

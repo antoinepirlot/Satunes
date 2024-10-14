@@ -116,4 +116,5 @@
     <string name="start_timer_button_content">Démarrer</string>
     <string name="timer_cancelled_snackbar_content">Minuteur annulé</string>
     <string name="pause_media_timer_snackbar">Le minuteur a mit la musique en pause</string>
+    <string name="seconds_text_field_label">Secondes</string>
 </resources>

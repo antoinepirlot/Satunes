@@ -331,16 +331,17 @@ class PlaybackViewModel : ViewModel() {
     }
 
     /**
-     * Set a timer for [delay] minutes.
+     * Set a timer for [minutes] minutes.
      *
      * @param scope
      * @param snackBarHostState
-     * @param delay the number of minutes as [Int]
+     * @param minutes the number of minutes as [Int]
      */
     fun setTimer(
         scope: CoroutineScope,
         snackBarHostState: SnackbarHostState,
-        delay: Int
+        minutes: Int,
+        seconds: Int
     ) {
         val context: Context = MainActivity.instance.applicationContext
         try {
@@ -359,14 +360,15 @@ class PlaybackViewModel : ViewModel() {
                                 message = context.getString(R.string.pause_media_timer_snackbar)
                             )
                         },
-                        delayMinutes = delay
+                        minutes = minutes,
+                        seconds = seconds
                     )
                 )
             }
             showSnackBar(
                 scope = scope,
                 snackBarHostState = snackBarHostState,
-                message = context.getString(R.string.timer_launch_snackbar_content, delay)
+                message = context.getString(R.string.timer_launch_snackbar_content, minutes)
             )
         } catch (e: Throwable) {
             _logger.severe(e.message)
@@ -377,7 +379,8 @@ class PlaybackViewModel : ViewModel() {
                     this.setTimer(
                         scope = scope,
                         snackBarHostState = snackBarHostState,
-                        delay = delay
+                        minutes = minutes,
+                        seconds = seconds
                     )
                 }
             )

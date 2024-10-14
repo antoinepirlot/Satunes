@@ -36,16 +36,19 @@ import java.util.TimerTask
  */
 class Timer(
     function: () -> Unit,
-    delayMinutes: Int
+    minutes: Int,
+    seconds: Int
 ) {
     private val _logger: SatunesLogger = SatunesLogger.getLogger()
     private val _task: TimerTask = Task(function = function)
-    private val _delayMillis: Long = delayMinutes.toLong() * 60L * 1000L
+    private val _delayMillis: Long = (minutes.toLong() * 60L + seconds.toLong()) * 1000L
     private val _createdTimeMillis: Long = System.currentTimeMillis()
     private val _timer = Timer()
 
     init {
         _logger.info("Create Timer")
+        if (minutes < 0 || seconds < 0)
+            throw IllegalArgumentException("Minutes is: $minutes and seconds is: $seconds.")
         _timer.schedule(_task, _delayMillis)
     }
 

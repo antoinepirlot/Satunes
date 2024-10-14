@@ -26,6 +26,7 @@
 package io.github.antoinepirlot.satunes.ui.components.settings.playback
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -76,15 +77,30 @@ internal fun TimerSubSetting(
             val scope: CoroutineScope = LocalMainScope.current
             val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
 
+            val secondsIntField: MutableIntState = rememberSaveable { mutableIntStateOf(0) }
             val minutesIntField: MutableIntState = rememberSaveable { mutableIntStateOf(0) }
 
-            Row {
-                OutlinedNumberField(
-                    modifier = Modifier.fillMaxWidth(fraction = 0.2f),
-                    value = minutesIntField,
-                    label = stringResource(R.string.minutes_text_field_label),
-                    maxValue = 480
-                ) //max 8 hours
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.Center,
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(0.6f),
+                ) {
+                    OutlinedNumberField(
+                        modifier = Modifier.fillMaxWidth(fraction = 0.45f),
+                        value = minutesIntField,
+                        label = stringResource(R.string.minutes_text_field_label),
+                        maxValue = 480
+                    ) //max 8 hours
+                    Spacer(modifier = Modifier.size(16.dp))
+                    OutlinedNumberField(
+                        modifier = Modifier.fillMaxWidth(),
+                        value = secondsIntField,
+                        label = stringResource(R.string.seconds_text_field_label),
+                        maxValue = 59
+                    )
+                }
             }
             RemainingTime()
             Row(
@@ -109,7 +125,8 @@ internal fun TimerSubSetting(
                         playbackViewModel.setTimer(
                             scope = scope,
                             snackBarHostState = snackBarHostState,
-                            delay = minutesIntField.value.toInt()
+                            minutes = minutesIntField.intValue,
+                            seconds = secondsIntField.intValue
                         )
                     }
                 ) {

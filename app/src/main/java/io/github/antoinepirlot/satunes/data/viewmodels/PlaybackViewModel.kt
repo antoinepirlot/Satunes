@@ -353,6 +353,11 @@ class PlaybackViewModel : ViewModel() {
                             _uiState.update { currentState: PlaybackUiState ->
                                 currentState.copy(timer = null)
                             }
+                            showSnackBar(
+                                scope = scope,
+                                snackBarHostState = snackBarHostState,
+                                message = context.getString(R.string.pause_media_timer_snackbar)
+                            )
                         },
                         delayMinutes = delay
                     )

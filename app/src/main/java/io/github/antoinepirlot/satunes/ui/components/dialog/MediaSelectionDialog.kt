@@ -100,7 +100,10 @@ private fun CreateNewPlaylistForm(
             dataViewModel.addOnePlaylist(
                 scope = scope,
                 snackBarHostState = snackBarHostState,
-                playlistTitle = playlistTitle
+                playlistTitle = playlistTitle,
+                onPlaylistAdded = {
+                    mediaSelectionViewModel.addPlaylist(dataViewModel.getPlaylist(title = playlistTitle))
+                }
             )
             mediaSelectionViewModel.setShowPlaylistCreation(value = false)
         },

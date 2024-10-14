@@ -63,7 +63,8 @@ internal fun MediaSelectionCheckbox(
     mediaSelectionViewModel: MediaSelectionViewModel = viewModel(),
     mediaImpl: MediaImpl
 ) {
-    val checked: MutableState<Boolean> = rememberSaveable { mutableStateOf(false) }
+    val checked: MutableState<Boolean> =
+        rememberSaveable { mutableStateOf(mediaSelectionViewModel.isChecked(mediaImpl = mediaImpl)) }
     val text: String = if (mediaImpl is Playlist) {
         if (mediaImpl.title == LIKES_PLAYLIST_TITLE) {
             stringResource(id = R.string.likes_playlist_title)
@@ -113,7 +114,7 @@ private fun onClick(
     mediaImpl: MediaImpl
 ) {
     checked.value = !checked.value
-    if (checked.value) {
+    if (!checked.value) {
         if (mediaImpl is Playlist) {
             mediaSelectionViewModel.addPlaylist(playlist = mediaImpl)
         } else if (mediaImpl is Music) {

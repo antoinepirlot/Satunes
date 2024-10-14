@@ -46,7 +46,7 @@ internal fun OutlinedNumberField(
     modifier: Modifier = Modifier,
     value: MutableIntState,
     label: String,
-    maxValue: Int
+    maxValue: Int,
 ) {
     val keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
     OutlinedTextField(

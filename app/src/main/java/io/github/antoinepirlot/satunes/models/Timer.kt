@@ -36,12 +36,14 @@ import java.util.TimerTask
  */
 class Timer(
     function: () -> Unit,
+    hours: Int,
     minutes: Int,
     seconds: Int
 ) {
     private val _logger: SatunesLogger = SatunesLogger.getLogger()
     private val _task: TimerTask = Task(function = function)
-    private val _delayMillis: Long = (minutes.toLong() * 60L + seconds.toLong()) * 1000L
+    private val _delayMillis: Long =
+        (hours.toLong() * 3600L + minutes.toLong() * 60L + seconds.toLong()) * 1000L
     private val _createdTimeMillis: Long = System.currentTimeMillis()
     private val _timer = Timer()
 

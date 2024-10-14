@@ -81,7 +81,7 @@ internal fun PlaybackSettingsView(
             BarSpeedSetting(modifier = Modifier.padding(horizontal = 16.dp))
         }
         PlaybackModesSubSettings() //Contains list item so always padding horizontal 16.dp
-        TimerSubSetting()
+        TimerSubSetting(modifier.padding(horizontal = 16.dp))
         SubSettings(
             modifier = Modifier.padding(horizontal = 16.dp),
             title = stringResource(id = R.string.battery_settings)

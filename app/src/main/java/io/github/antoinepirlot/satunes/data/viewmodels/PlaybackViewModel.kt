@@ -340,6 +340,7 @@ class PlaybackViewModel : ViewModel() {
     fun setTimer(
         scope: CoroutineScope,
         snackBarHostState: SnackbarHostState,
+        hours: Int,
         minutes: Int,
         seconds: Int
     ) {
@@ -361,6 +362,7 @@ class PlaybackViewModel : ViewModel() {
                                 message = context.getString(R.string.pause_media_timer_snackbar)
                             )
                         },
+                        hours = hours,
                         minutes = minutes,
                         seconds = seconds
                     )
@@ -380,6 +382,7 @@ class PlaybackViewModel : ViewModel() {
                     this.setTimer(
                         scope = scope,
                         snackBarHostState = snackBarHostState,
+                        hours = hours,
                         minutes = minutes,
                         seconds = seconds
                     )

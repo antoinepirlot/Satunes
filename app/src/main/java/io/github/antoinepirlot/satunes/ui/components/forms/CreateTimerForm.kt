@@ -60,6 +60,11 @@ import kotlinx.coroutines.CoroutineScope
  * @author Antoine Pirlot on 14/10/2024
  */
 
+//max 8 hours
+private const val MAX_HOURS: Int = 8
+private const val MAX_MINUTES: Int = MAX_HOURS * 60
+private const val MAX_SECONDS: Int = MAX_MINUTES * 60
+
 @Composable
 internal fun CreateTimerForm(
     modifier: Modifier = Modifier,
@@ -79,26 +84,34 @@ internal fun CreateTimerForm(
 
         val secondsIntField: MutableIntState = rememberSaveable { mutableIntStateOf(0) }
         val minutesIntField: MutableIntState = rememberSaveable { mutableIntStateOf(0) }
+        val hoursIntField: MutableIntState = rememberSaveable { mutableIntStateOf(0) }
 
         Box(
             modifier = Modifier.fillMaxWidth(),
             contentAlignment = Alignment.Center,
         ) {
             Row(
-                modifier = Modifier.fillMaxWidth(0.6f),
+                modifier = Modifier.fillMaxWidth(),
             ) {
+                OutlinedNumberField(
+                    modifier = Modifier.fillMaxWidth(fraction = 0.30f),
+                    value = hoursIntField,
+                    label = stringResource(R.string.hours_text_field_label),
+                    maxValue = MAX_HOURS
+                )
+                Spacer(modifier = Modifier.size(16.dp))
                 OutlinedNumberField(
                     modifier = Modifier.fillMaxWidth(fraction = 0.49f),
                     value = minutesIntField,
                     label = stringResource(R.string.minutes_text_field_label),
-                    maxValue = 480
-                ) //max 8 hours
+                    maxValue = MAX_MINUTES
+                )
                 Spacer(modifier = Modifier.size(16.dp))
                 OutlinedNumberField(
                     modifier = Modifier.fillMaxWidth(),
                     value = secondsIntField,
                     label = stringResource(R.string.seconds_text_field_label),
-                    maxValue = 59
+                    maxValue = MAX_SECONDS
                 )
             }
         }
@@ -114,6 +127,9 @@ internal fun CreateTimerForm(
                             scope = scope,
                             snackBarHostState = snackBarHostState,
                         )
+                        secondsIntField.intValue = 0
+                        minutesIntField.intValue = 0
+                        hoursIntField.intValue = 0
                     }
                 ) {
                     NormalText(text = stringResource(R.string.cancel))
@@ -123,9 +139,20 @@ internal fun CreateTimerForm(
             }
             Button(
                 onClick = {
+                    computeTime(
+                        secondsIntField = secondsIntField,
+                        minutesIntField = minutesIntField,
+                        hoursIntField = hoursIntField
+                    )
+                    if (hoursIntField.intValue > MAX_HOURS) {
+                        hoursIntField.intValue = 8
+                        minutesIntField.intValue = 0
+                        secondsIntField.intValue = 0
+                    }
                     playbackViewModel.setTimer(
                         scope = scope,
                         snackBarHostState = snackBarHostState,
+                        hours = hoursIntField.intValue,
                         minutes = minutesIntField.intValue,
                         seconds = secondsIntField.intValue
                     )
@@ -135,6 +162,25 @@ internal fun CreateTimerForm(
                 NormalText(text = stringResource(R.string.start_timer_button_content))
             }
         }
+    }
+}
+
+private fun computeTime(
+    secondsIntField: MutableIntState,
+    minutesIntField: MutableIntState,
+    hoursIntField: MutableIntState
+) {
+    val exceedMinutes = secondsIntField.intValue / 60
+    minutesIntField.intValue += exceedMinutes
+    val exceedHours = minutesIntField.intValue / 60
+    hoursIntField.intValue += exceedHours
+    if (hoursIntField.intValue >= MAX_HOURS) {
+        hoursIntField.intValue = MAX_HOURS
+        minutesIntField.intValue = 0
+        secondsIntField.intValue = 0
+    } else {
+        secondsIntField.intValue -= exceedMinutes * 60
+        minutesIntField.intValue -= exceedHours * 60
     }
 }
 

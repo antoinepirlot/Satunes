@@ -76,12 +76,12 @@ internal fun TimerSubSetting(
             val scope: CoroutineScope = LocalMainScope.current
             val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
 
-            val minutesTextField: MutableIntState = rememberSaveable { mutableIntStateOf(0) }
+            val minutesIntField: MutableIntState = rememberSaveable { mutableIntStateOf(0) }
 
             Row {
                 OutlinedNumberField(
                     modifier = Modifier.fillMaxWidth(fraction = 0.2f),
-                    value = minutesTextField,
+                    value = minutesIntField,
                     label = stringResource(R.string.minutes_text_field_label),
                     maxValue = 480
                 ) //max 8 hours
@@ -109,7 +109,7 @@ internal fun TimerSubSetting(
                         playbackViewModel.setTimer(
                             scope = scope,
                             snackBarHostState = snackBarHostState,
-                            delay = minutesTextField.value.toInt()
+                            delay = minutesIntField.value.toInt()
                         )
                     }
                 ) {

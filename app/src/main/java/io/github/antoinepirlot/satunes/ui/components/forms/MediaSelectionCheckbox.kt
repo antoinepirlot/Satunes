@@ -43,6 +43,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.data.viewmodels.MediaSelectionViewModel
@@ -85,16 +86,20 @@ internal fun MediaSelectionCheckbox(
             }
     ) {
         Row(modifier = Modifier.fillMaxWidth()) {
-            Checkbox(checked = checked.value, onCheckedChange = {
-                onClick(
-                    checked = checked,
-                    mediaSelectionViewModel = mediaSelectionViewModel,
-                    mediaImpl = mediaImpl
-                )
-            })
+            Checkbox(
+                checked = checked.value,
+                onCheckedChange = {
+                    onClick(
+                        checked = checked,
+                        mediaSelectionViewModel = mediaSelectionViewModel,
+                        mediaImpl = mediaImpl
+                    )
+                }
+            )
             Spacer(modifier = modifier.size(10.dp))
             NormalText(
                 modifier = Modifier.align(Alignment.CenterVertically),
+                fontSize = 20.sp,
                 text = text
             )
         }

@@ -88,7 +88,7 @@ internal fun CreateTimerForm(
                 modifier = Modifier.fillMaxWidth(0.6f),
             ) {
                 OutlinedNumberField(
-                    modifier = Modifier.fillMaxWidth(fraction = 0.45f),
+                    modifier = Modifier.fillMaxWidth(fraction = 0.49f),
                     value = minutesIntField,
                     label = stringResource(R.string.minutes_text_field_label),
                     maxValue = 480

@@ -63,21 +63,23 @@ internal fun TimerCustomAction(
 ) {
     val playbackUiState: PlaybackUiState by playbackViewModel.uiState.collectAsState()
     val timer: Timer? = playbackUiState.timer
-    var remainingTime: String by rememberSaveable {
-        mutableStateOf(getMillisToTimeText(timer?.getRemainingTime() ?: 0))
-    }
+    var remainingTime: String by rememberSaveable { mutableStateOf("") }
     var showDialog: Boolean by rememberSaveable { mutableStateOf(false) }
 
     if (timer != null) {
         var job: Job? = null
         LaunchedEffect(remainingTime) {
             job?.cancel()
+            remainingTime =
+                getMillisToTimeText(milliseconds = timer.getRemainingTime())
             job = CoroutineScope(Dispatchers.IO).launch {
                 delay(1000) // Wait one second to be refreshed
                 remainingTime =
                     getMillisToTimeText(milliseconds = timer.getRemainingTime())
             }
         }
+    } else {
+        remainingTime = getMillisToTimeText(0)
     }
 
     CustomActionButton(
@@ -96,7 +98,7 @@ internal fun TimerCustomAction(
             confirmText = null,
             dismissText = null,
         ) {
-            CreateTimerForm()
+            CreateTimerForm(onFinished = { showDialog = false })
         }
     }
 }

@@ -64,6 +64,7 @@ import kotlinx.coroutines.CoroutineScope
 internal fun CreateTimerForm(
     modifier: Modifier = Modifier,
     playbackViewModel: PlaybackViewModel = viewModel(),
+    onFinished: (() -> Unit)? = null,
 ) {
     val playbackUiState: PlaybackUiState by playbackViewModel.uiState.collectAsState()
 
@@ -128,6 +129,7 @@ internal fun CreateTimerForm(
                         minutes = minutesIntField.intValue,
                         seconds = secondsIntField.intValue
                     )
+                    onFinished?.invoke()
                 }
             ) {
                 NormalText(text = stringResource(R.string.start_timer_button_content))

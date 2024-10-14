@@ -68,6 +68,8 @@ internal fun RemainingTime(
         var job: Job? = null
         LaunchedEffect(remainingTime) {
             job?.cancel()
+            remainingTime =
+                getMillisToTimeText(milliseconds = timer.getRemainingTime())
             job = CoroutineScope(Dispatchers.IO).launch {
                 delay(1000) // Wait one second to be refreshed
                 remainingTime =

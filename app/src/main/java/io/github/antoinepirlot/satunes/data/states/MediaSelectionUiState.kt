@@ -25,12 +25,9 @@
 
 package io.github.antoinepirlot.satunes.data.states
 
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-
 /**
- * @author Antoine Pirlot on 19/07/2024
+ * @author Antoine Pirlot on 14/10/2024
  */
-data class MediasUiState(
-    val musicMediaItemSortedMapUpdated: MutableState<Boolean> = mutableStateOf(false)
+data class MediaSelectionUiState(
+    val showPlaylistCreation: Boolean = false
 )

@@ -60,9 +60,8 @@ internal fun ArtistView(
     artist: Artist,
 ) {
     val navController: NavHostController = LocalNavController.current
-
-    //TODO create mediaViewModel and UiState when you select media
     val musicMap: Set<Music> = artist.getMusicSet()
+
     //Recompose if data changed
     var musicMapChanged: Boolean by rememberSaveable { artist.musicSetUpdated }
     if (musicMapChanged) {
@@ -94,7 +93,6 @@ internal fun ArtistView(
         },
         header = if (albumSet.isNotEmpty()) {
             {
-
                 //Recompose if data changed
                 var albumMapChanged: Boolean by remember { artist.albumSortedMapUpdate }
                 if (albumMapChanged) {

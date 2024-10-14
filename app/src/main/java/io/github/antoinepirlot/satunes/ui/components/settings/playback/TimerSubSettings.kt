@@ -37,6 +37,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableIntState
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -49,6 +51,7 @@ import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.local.LocalMainScope
 import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
+import io.github.antoinepirlot.satunes.data.states.PlaybackUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.ui.components.forms.OutlinedNumberField
 import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
@@ -64,6 +67,7 @@ internal fun TimerSubSetting(
     modifier: Modifier = Modifier,
     playbackViewModel: PlaybackViewModel = viewModel(),
 ) {
+    val playbackUiState: PlaybackUiState by playbackViewModel.uiState.collectAsState()
     SubSettings(
         modifier = modifier.fillMaxWidth(),
         title = stringResource(R.string.timer_settings_title)
@@ -107,19 +111,20 @@ internal fun TimerSubSetting(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center
             ) {
-                Button(
-                    onClick = {
-                        playbackViewModel.cancelTimer(
-                            scope = scope,
-                            snackBarHostState = snackBarHostState,
-                        )
+                if (playbackUiState.timer != null) {
+                    Button(
+                        onClick = {
+                            playbackViewModel.cancelTimer(
+                                scope = scope,
+                                snackBarHostState = snackBarHostState,
+                            )
+                        }
+                    ) {
+                        NormalText(text = stringResource(R.string.cancel))
                     }
-                ) {
-                    NormalText(text = stringResource(R.string.cancel))
+
+                    Spacer(modifier = Modifier.size(5.dp))
                 }
-
-                Spacer(modifier = Modifier.size(5.dp))
-
                 Button(
                     onClick = {
                         playbackViewModel.setTimer(

@@ -343,6 +343,7 @@ class PlaybackViewModel : ViewModel() {
         minutes: Int,
         seconds: Int
     ) {
+        if (minutes <= 0 && seconds <= 0) return
         val context: Context = MainActivity.instance.applicationContext
         try {
             _uiState.value.timer?.cancel()

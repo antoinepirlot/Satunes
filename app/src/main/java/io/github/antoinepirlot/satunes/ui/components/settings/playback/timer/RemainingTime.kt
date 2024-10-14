@@ -27,6 +27,7 @@ package io.github.antoinepirlot.satunes.ui.components.settings.playback.timer
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -37,6 +38,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.data.states.PlaybackUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.models.Timer
 import io.github.antoinepirlot.satunes.ui.utils.getMillisToTimeText
@@ -54,7 +56,9 @@ internal fun RemainingTime(
     modifier: Modifier = Modifier,
     playbackViewModel: PlaybackViewModel = viewModel(),
 ) {
-    val timer: Timer? = playbackViewModel.timer
+    val playbackUiState: PlaybackUiState by playbackViewModel.uiState.collectAsState()
+    val timer: Timer? = playbackUiState.timer
+    
     if (timer != null) {
         var remainingTime: String by rememberSaveable {
             mutableStateOf(getMillisToTimeText(milliseconds = timer.getRemainingTime()))

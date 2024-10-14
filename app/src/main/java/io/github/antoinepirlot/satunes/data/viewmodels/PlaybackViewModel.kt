@@ -31,11 +31,10 @@ import androidx.compose.runtime.MutableFloatState
 import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.data.states.PlaybackUiState
 import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
@@ -48,11 +47,21 @@ import io.github.antoinepirlot.satunes.ui.utils.showSnackBar
 import io.github.antoinepirlot.satunes.utils.getMediaTitle
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 
 /**
  * @author Antoine Pirlot on 19/07/2024
  */
 class PlaybackViewModel : ViewModel() {
+
+    companion object {
+        private val _uiState: MutableStateFlow<PlaybackUiState> =
+            MutableStateFlow(PlaybackUiState())
+    }
+
     private val _logger: SatunesLogger = SatunesLogger.getLogger()
     private var _isPlaying: MutableState<Boolean> = PlaybackManager.isPlaying
     private var _musicPlaying: MutableState<Music?> = PlaybackManager.musicPlaying
@@ -63,6 +72,8 @@ class PlaybackViewModel : ViewModel() {
     private var _isLoaded: MutableState<Boolean> = PlaybackManager.isLoaded
     private var _isEnded: MutableState<Boolean> = PlaybackManager.isEnded
 
+    val uiState: StateFlow<PlaybackUiState> = _uiState.asStateFlow()
+
     val isPlaying: Boolean by _isPlaying
     val musicPlaying: Music? by _musicPlaying
     val currentPositionProgression: Float by _currentPositionProgression
@@ -70,8 +81,6 @@ class PlaybackViewModel : ViewModel() {
     val isShuffle: Boolean by _isShuffle
     val isLoaded: Boolean by _isLoaded
     val isEnded: Boolean by _isEnded
-    var timer: Timer? by mutableStateOf(null)
-        private set
 
 
     init {
@@ -335,14 +344,20 @@ class PlaybackViewModel : ViewModel() {
     ) {
         val context: Context = MainActivity.instance.applicationContext
         try {
-            this.timer?.cancel()
-            this.timer = Timer(
-                function = {
-                    PlaybackManager.pause(context = context)
-                    this.timer = null
-                },
-                delayMinutes = delay
-            )
+            _uiState.value.timer?.cancel()
+            _uiState.update { currentState: PlaybackUiState ->
+                currentState.copy(
+                    timer = Timer(
+                        function = {
+                            PlaybackManager.pause(context = context)
+                            _uiState.update { currentState: PlaybackUiState ->
+                                currentState.copy(timer = null)
+                            }
+                        },
+                        delayMinutes = delay
+                    )
+                )
+            }
             showSnackBar(
                 scope = scope,
                 snackBarHostState = snackBarHostState,
@@ -366,7 +381,10 @@ class PlaybackViewModel : ViewModel() {
 
     fun cancelTimer(scope: CoroutineScope, snackBarHostState: SnackbarHostState) {
         try {
-            this.timer?.cancel()
+            _uiState.value.timer?.cancel()
+            _uiState.update { currentState: PlaybackUiState ->
+                currentState.copy(timer = null)
+            }
             showSnackBar(
                 scope = scope,
                 snackBarHostState = snackBarHostState,

@@ -344,7 +344,7 @@ class PlaybackViewModel : ViewModel() {
         minutes: Int,
         seconds: Int
     ) {
-        if (minutes <= 0 && seconds <= 0) return
+        if (hours <= 0 && minutes <= 0 && seconds <= 0) return
         val context: Context = MainActivity.instance.applicationContext
         try {
             _uiState.value.timer?.cancel()
@@ -371,7 +371,12 @@ class PlaybackViewModel : ViewModel() {
             showSnackBar(
                 scope = scope,
                 snackBarHostState = snackBarHostState,
-                message = context.getString(R.string.timer_launch_snackbar_content, minutes)
+                message = context.getString(
+                    R.string.timer_launch_snackbar_content,
+                    hours,
+                    minutes,
+                    seconds
+                )
             )
         } catch (e: Throwable) {
             _logger.severe(e.message)

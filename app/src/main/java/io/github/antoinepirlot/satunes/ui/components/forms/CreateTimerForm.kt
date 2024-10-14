@@ -144,11 +144,6 @@ internal fun CreateTimerForm(
                         minutesIntField = minutesIntField,
                         hoursIntField = hoursIntField
                     )
-                    if (hoursIntField.intValue > MAX_HOURS) {
-                        hoursIntField.intValue = 8
-                        minutesIntField.intValue = 0
-                        secondsIntField.intValue = 0
-                    }
                     playbackViewModel.setTimer(
                         scope = scope,
                         snackBarHostState = snackBarHostState,

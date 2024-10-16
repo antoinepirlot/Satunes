@@ -81,7 +81,6 @@ internal fun MediaCardList(
                 }
             }
             MediaCard(
-                modifier = modifier,
                 navController = navController,
                 media = media,
                 onClick = { openMedia(media) },

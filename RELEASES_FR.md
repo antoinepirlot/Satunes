@@ -3,6 +3,12 @@ You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
 ## 2.3 (Android 5.1.1 Lollipop et ultérieur)
 
+### 2.3.3
+
+Améliorations, optimisations et dépannage:
+
+* Correction du bug d'affichage innatendu causé par Android 15 en rétrogradant targetSdk vers 14
+
 ### 2.3.2
 
 Améliorations, optimisations et dépannage:

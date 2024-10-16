@@ -3,6 +3,12 @@ Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
 ## 2.3 (Android 5.1.1 Lollipop and later)
 
+### 2.3.3
+
+Improvements, optimizations and troubleshooting:
+
+* Fix Android 15 unintended ui issues by rolling back targetSdk to 14
+
 ### 2.3.2
 
 Improvements, optimizations and troubleshooting:
@@ -637,7 +643,7 @@ Fix issues:
 Features:
 
 * Android Auto support
-  * To activate Android Auto you can find instructions [here](README-EN.md)
+  * To activate Android Auto you can find instructions [here](README_EN)
 
 Fix issues:
 

@@ -68,7 +68,7 @@ internal fun MediaListView(
 ) {
     Scaffold(
         modifier = modifier,
-        floatingActionButton = {
+        floatingActionButton = { //TODO move it to first scaffold for Android 15 targeting
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {

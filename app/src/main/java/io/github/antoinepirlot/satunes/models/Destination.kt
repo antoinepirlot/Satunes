@@ -96,7 +96,7 @@ internal enum class Destination(val link: String) {
         }
 
         fun getDestination(destination: String): Destination {
-            return this.destinationsMap[destination]
+            return this.destinationsMap["/${destination.split("/")[1]}"] // don't care of id
                 ?: getNavBarSectionDestination(navBarSection = SettingsManager.defaultNavBarSection)
         }
     }

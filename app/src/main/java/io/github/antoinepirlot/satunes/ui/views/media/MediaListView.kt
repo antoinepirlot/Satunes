@@ -25,8 +25,8 @@
 
 package io.github.antoinepirlot.satunes.ui.views.media
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -50,6 +50,7 @@ import io.github.antoinepirlot.satunes.ui.components.cards.media.MediaCardList
  * @author Antoine Pirlot on 01/02/24
  */
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 internal fun MediaListView(
     modifier: Modifier = Modifier,
@@ -64,7 +65,7 @@ internal fun MediaListView(
 ) {
     Scaffold(
         modifier = modifier,
-        floatingActionButton = {
+        floatingActionButton = { //TODO move it to first scaffold for Android 15 targeting
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -75,10 +76,10 @@ internal fun MediaListView(
             }
         },
         floatingActionButtonPosition = FabPosition.End
-    ) { innerPadding ->
+    ) { _ ->
         if (mediaImplCollection.isNotEmpty()) {
             MediaCardList(
-                modifier = Modifier.padding(innerPadding),
+                modifier = Modifier,
                 header = header,
                 mediaImplCollection = mediaImplCollection,
                 openMedia = openMedia,
@@ -89,7 +90,7 @@ internal fun MediaListView(
                 header()
             } else {
                 EmptyView(
-                    modifier = Modifier.padding(innerPadding),
+                    modifier = Modifier,
                     text = emptyViewText
                 )
             }

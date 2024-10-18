@@ -39,12 +39,12 @@ import kotlinx.coroutines.flow.update
  * @author Antoine Pirlot on 30/03/2024
  */
 internal class MediaSelectionViewModel : ViewModel() {
-    /**
-     * List of checked playlists' ids to know where to add music from form
-     */
     private val _uiState: MutableStateFlow<MediaSelectionUiState> = MutableStateFlow(
         MediaSelectionUiState()
     )
+    /**
+     * List of checked playlists to know where to add music from form
+     */
     private val _checkedPlaylistWithMusics: MutableList<Playlist> = mutableListOf()
     private val _checkedMusics: MutableList<Music> = mutableListOf()
 

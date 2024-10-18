@@ -106,7 +106,7 @@ internal fun MediaCard(
         modifier.combinedClickable(
             onClick = {
                 if (!showMediaOption) {
-                    onClick?.invoke()
+                    onClick.invoke()
                 }
             },
             onLongClick = if (enableExtraOptions) {
@@ -118,22 +118,7 @@ internal fun MediaCard(
             } else null
         )
     } else modifier
-    Box(
-        modifier = modifier.combinedClickable(
-            onClick = {
-                if (!showMediaOption) {
-                    onClick?.invoke()
-                }
-            },
-            onLongClick = if (enableExtraOptions) {
-                {
-                    haptics.performHapticFeedback(HapticFeedbackType.LongPress)
-                    showMediaOption = true
-                    satunesViewModel.mediaOptionsIsOpen()
-                }
-            } else null
-        ),
-    ) {
+    Box(modifier = boxModifier) {
         ListItem(
             leadingContent = {
                 val boxSize: Dp = if (screenWidthDp < ScreenSizes.VERY_VERY_SMALL)

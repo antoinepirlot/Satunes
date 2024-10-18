@@ -37,10 +37,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.jetpack_libs.components.texts.Title
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.local.LocalMainScope
+import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
@@ -67,7 +67,6 @@ import io.github.antoinepirlot.satunes.database.R as RDb
 @Composable
 internal fun PlaylistView(
     modifier: Modifier = Modifier,
-    navController: NavHostController,
     satunesViewModel: SatunesViewModel = viewModel(),
     dataViewModel: DataViewModel = viewModel(),
     mediaSelectionViewModel: MediaSelectionViewModel = viewModel(),
@@ -75,6 +74,7 @@ internal fun PlaylistView(
     playlist: Playlist,
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+    val navController: NavHostController = LocalNavController.current
     val maineScope: CoroutineScope = LocalMainScope.current
     val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
 
@@ -102,7 +102,6 @@ internal fun PlaylistView(
 
     MediaListView(
         modifier = modifier,
-        navController = navController,
         mediaImplCollection = musicSet,
         openMedia = { clickedMediaImpl: MediaImpl ->
             playbackViewModel.loadMusic(
@@ -174,9 +173,7 @@ internal fun PlaylistView(
 @Preview
 @Composable
 private fun PlaylistViewPreview() {
-    val navController: NavHostController = rememberNavController()
     PlaylistView(
-        navController = navController,
         playlist = Playlist(id = 0, title = "PlaylistDB")
     )
 }

@@ -28,10 +28,9 @@ package io.github.antoinepirlot.satunes.router.routes
 import androidx.compose.animation.AnimatedContentScope
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
-import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
+import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.ui.views.LoadingView
 import io.github.antoinepirlot.satunes.ui.views.search.SearchView
 
@@ -40,7 +39,6 @@ import io.github.antoinepirlot.satunes.ui.views.search.SearchView
  */
 
 internal fun NavGraphBuilder.searchRoutes(
-    navController: NavHostController,
     satunesViewModel: SatunesViewModel,
     onStart: AnimatedContentScope.(NavBackStackEntry) -> Unit
 ) {
@@ -50,7 +48,7 @@ internal fun NavGraphBuilder.searchRoutes(
         if (satunesViewModel.isLoadingData || !satunesViewModel.isDataLoaded) {
             LoadingView()
         } else {
-            SearchView(navController = navController)
+            SearchView()
         }
     }
 }

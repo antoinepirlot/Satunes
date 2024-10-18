@@ -32,8 +32,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.data.local.LocalNavController
+import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
@@ -42,7 +43,6 @@ import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.router.utils.openMediaFromFolder
 import io.github.antoinepirlot.satunes.ui.components.bars.FolderPath
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
-import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 
 /**
@@ -53,14 +53,14 @@ import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 @Composable
 internal fun FolderView(
     modifier: Modifier = Modifier,
-    navController: NavHostController,
     playbackViewModel: PlaybackViewModel = viewModel(),
     folder: Folder,
 ) {
+    val navController: NavHostController = LocalNavController.current
+
     Column(modifier = modifier) {
         FolderPath(folder)
         MediaListView(
-            navController = navController,
             mediaImplCollection = folder.getSubFolderListWithMusics(),
             openMedia = { clickedMediaImpl: MediaImpl ->
                 openMediaFromFolder(
@@ -101,6 +101,5 @@ internal fun FolderView(
 @Preview
 @Composable
 private fun FolderViewPreview() {
-    val navController: NavHostController = rememberNavController()
-    FolderView(navController = navController, folder = Folder(title = "Folder title"))
+    FolderView(folder = Folder(title = "Folder title"))
 }

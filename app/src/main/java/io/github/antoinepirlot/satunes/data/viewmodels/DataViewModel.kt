@@ -92,16 +92,19 @@ class DataViewModel : ViewModel() {
     fun getAlbum(id: Long): Album = DataManager.getAlbum(id = id)!!
     fun getGenre(id: Long): Genre = DataManager.getGenre(id = id)!!
     fun getPlaylist(id: Long): Playlist = DataManager.getPlaylist(id = id)!!
+    fun getPlaylist(title: String): Playlist = DataManager.getPlaylist(title = title)!!
 
     fun addOnePlaylist(
         scope: CoroutineScope,
         snackBarHostState: SnackbarHostState,
-        playlistTitle: String
+        playlistTitle: String,
+        onPlaylistAdded: ((playlist: Playlist) -> Unit)? = null,
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             val context: Context = MainActivity.instance.applicationContext
             try {
-                _db.addOnePlaylist(playlistTitle = playlistTitle)
+                val playlist: Playlist = _db.addOnePlaylist(playlistTitle = playlistTitle)
+                onPlaylistAdded?.invoke(playlist)
                 showSnackBar(
                     scope = scope,
                     snackBarHostState = snackBarHostState,

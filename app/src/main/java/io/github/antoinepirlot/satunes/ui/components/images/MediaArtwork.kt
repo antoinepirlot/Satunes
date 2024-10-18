@@ -53,7 +53,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.models.ScreenSizes
-import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
@@ -166,7 +165,6 @@ internal fun MediaArtwork(
      */
     if (album != null && showAlbumDialog) {
         AlbumOptionsDialog(
-            navController = LocalNavController.current,
             album = album,
             onDismissRequest = {
                 satunesViewModel.mediaOptionsIsClosed()

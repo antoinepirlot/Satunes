@@ -34,8 +34,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
@@ -56,7 +54,6 @@ import io.github.antoinepirlot.satunes.ui.components.cards.media.MediaCardList
 @Composable
 internal fun MediaListView(
     modifier: Modifier = Modifier,
-    navController: NavHostController,
     playbackViewModel: PlaybackViewModel = viewModel(),
     mediaImplCollection: Collection<MediaImpl>,
     openMedia: (mediaImpl: MediaImpl) -> Unit,
@@ -83,7 +80,6 @@ internal fun MediaListView(
         if (mediaImplCollection.isNotEmpty()) {
             MediaCardList(
                 modifier = Modifier,
-                navController = navController,
                 header = header,
                 mediaImplCollection = mediaImplCollection,
                 openMedia = openMedia,
@@ -119,9 +115,7 @@ private fun MediaListViewPreview() {
             genre = Genre(title = "Genre Title"),
         )
     )
-    val navController: NavHostController = rememberNavController()
     MediaListView(
-        navController = navController,
         mediaImplCollection = map,
         openMedia = {},
         onFABClick = {},

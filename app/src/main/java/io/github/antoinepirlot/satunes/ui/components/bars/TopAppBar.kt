@@ -47,10 +47,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.jetpack_libs.components.models.ScreenSizes
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.playbackViews
 import io.github.antoinepirlot.satunes.data.settingsDestinations
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
@@ -67,11 +67,10 @@ import io.github.antoinepirlot.satunes.models.Destination
 internal fun TopAppBar(
     modifier: Modifier = Modifier,
     scrollBehavior: TopAppBarScrollBehavior,
-    navController: NavHostController,
     satunesViewModel: SatunesViewModel = viewModel(),
 ) {
     val uiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
-
+    val navController: NavHostController = LocalNavController.current
     val screenWidthDp = LocalConfiguration.current.screenWidthDp
     val barModifier: Modifier =
         if (screenWidthDp < ScreenSizes.VERY_VERY_SMALL) modifier.fillMaxHeight(0.11f) else modifier
@@ -196,10 +195,5 @@ private fun SatunesTopAppBarPreview() {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(
         rememberTopAppBarState()
     )
-    val navController: NavHostController = rememberNavController()
-    TopAppBar(
-        modifier = Modifier,
-        scrollBehavior = scrollBehavior,
-        navController = navController
-    )
+    TopAppBar(modifier = Modifier, scrollBehavior = scrollBehavior)
 }

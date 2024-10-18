@@ -37,9 +37,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.jetpack_libs.components.texts.Title
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.ui.components.buttons.settings.SettingButton
@@ -52,8 +52,8 @@ import io.github.antoinepirlot.satunes.ui.components.settings.about.AboutSetting
 @Composable
 internal fun SettingsView(
     modifier: Modifier = Modifier,
-    navController: NavHostController,
 ) {
+    val navController: NavHostController = LocalNavController.current
     val scrollState = rememberScrollState()
     Column(modifier = modifier.verticalScroll(state = scrollState)) {
         Title(text = stringResource(id = R.string.settings))
@@ -131,6 +131,5 @@ internal fun SettingsView(
 @Composable
 @Preview
 private fun SettingsViewPreview() {
-    val navController: NavHostController = rememberNavController()
-    SettingsView(navController = navController)
+    SettingsView()
 }

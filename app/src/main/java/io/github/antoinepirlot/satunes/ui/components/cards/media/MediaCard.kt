@@ -50,8 +50,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.jetpack_libs.components.models.ScreenSizes
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.jetpack_libs.components.texts.Subtitle
@@ -85,11 +83,11 @@ import io.github.antoinepirlot.satunes.database.R as RDb
 @Composable
 internal fun MediaCard(
     modifier: Modifier = Modifier,
-    navController: NavHostController,
     satunesViewModel: SatunesViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
     media: MediaImpl,
-    onClick: () -> Unit,
+    onClick: (() -> Unit)?,
+    enableExtraOptions: Boolean = true,
     openedPlaylist: Playlist?,
 ) {
     val haptics: HapticFeedback = LocalHapticFeedback.current
@@ -104,20 +102,23 @@ internal fun MediaCard(
             media.title
         }
     val screenWidthDp: Int = LocalConfiguration.current.screenWidthDp
-    Box(
-        modifier = modifier.combinedClickable(
+    val boxModifier: Modifier = if (onClick != null) {
+        modifier.combinedClickable(
             onClick = {
                 if (!showMediaOption) {
-                    onClick()
+                    onClick.invoke()
                 }
             },
-            onLongClick = {
-                haptics.performHapticFeedback(HapticFeedbackType.LongPress)
-                showMediaOption = true
-                satunesViewModel.mediaOptionsIsOpen()
-            }
-        ),
-    ) {
+            onLongClick = if (enableExtraOptions) {
+                {
+                    haptics.performHapticFeedback(HapticFeedbackType.LongPress)
+                    showMediaOption = true
+                    satunesViewModel.mediaOptionsIsOpen()
+                }
+            } else null
+        )
+    } else modifier
+    Box(modifier = boxModifier) {
         ListItem(
             leadingContent = {
                 val boxSize: Dp = if (screenWidthDp < ScreenSizes.VERY_VERY_SMALL)
@@ -174,7 +175,6 @@ internal fun MediaCard(
     // Music options dialog
     if (showMediaOption && media is Music) {
         MusicOptionsDialog(
-            navController = navController,
             music = media,
             playlist = openedPlaylist,
             onDismissRequest = {
@@ -209,7 +209,6 @@ internal fun MediaCard(
     // Album option dialog
     if (showMediaOption && media is Album) {
         AlbumOptionsDialog(
-            navController = navController,
             album = media,
             onDismissRequest = {
                 showMediaOption = false
@@ -257,10 +256,8 @@ private fun CardPreview() {
         genre = Genre(title = "Genre Title"),
         absolutePath = "absolute path",
     )
-    val navController: NavHostController = rememberNavController()
     MediaCard(
         modifier = Modifier.fillMaxSize(),
-        navController = navController,
         media = music,
         onClick = {},
         openedPlaylist = null

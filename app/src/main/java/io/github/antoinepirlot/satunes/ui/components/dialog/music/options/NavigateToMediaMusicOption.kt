@@ -30,7 +30,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
+import io.github.antoinepirlot.satunes.data.local.LocalNavController
+import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Folder
@@ -39,7 +40,6 @@ import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.dialog.options.DialogOption
-import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 
 /**
  * @author Antoine Pirlot on 01/06/2024
@@ -50,8 +50,9 @@ internal fun NavigateToMediaMusicOption(
     modifier: Modifier = Modifier,
     playbackViewModel: PlaybackViewModel = viewModel(),
     mediaImpl: MediaImpl,
-    navController: NavHostController
 ) {
+    val navController: NavHostController = LocalNavController.current
+
     DialogOption(
         modifier = modifier,
         onClick = {
@@ -75,9 +76,7 @@ internal fun NavigateToMediaMusicOption(
 @Preview
 @Composable
 private fun NavigateToMediaMusicOptionPreview() {
-    val navController: NavHostController = rememberNavController()
     NavigateToMediaMusicOption(
         mediaImpl = Album(title = "Album Title", artist = Artist(title = "Artist Title")),
-        navController = navController
     )
 }

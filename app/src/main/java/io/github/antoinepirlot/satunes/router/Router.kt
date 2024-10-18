@@ -38,6 +38,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
@@ -60,7 +61,6 @@ import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 @Composable
 internal fun Router(
     modifier: Modifier = Modifier,
-    navController: NavHostController,
     satunesViewModel: SatunesViewModel = viewModel(),
     dataViewModel: DataViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
@@ -69,6 +69,7 @@ internal fun Router(
 
     val context: Context = LocalContext.current
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+    val navController: NavHostController = LocalNavController.current
     val isAudioAllowed: Boolean = satunesViewModel.isAudioAllowed
     val defaultDestination: Destination =
         getNavBarSectionDestination(navBarSection = satunesUiState.defaultNavBarSection)
@@ -87,7 +88,6 @@ internal fun Router(
         exitTransition = { fadeOut(animationSpec = tween(0)) },
     ) {
         mediaRoutes(
-            navController = navController,
             satunesViewModel = satunesViewModel,
             dataViewModel = dataViewModel,
             onStart = {
@@ -100,7 +100,6 @@ internal fun Router(
             }
         )
         searchRoutes(
-            navController = navController,
             satunesViewModel = satunesViewModel,
             onStart = {
                 checkIfAllowed(
@@ -112,7 +111,6 @@ internal fun Router(
             }
         )
         playbackRoutes(
-            navController = navController,
             satunesViewModel = satunesViewModel,
             playbackViewModel = playbackViewModel,
             onStart = {
@@ -125,7 +123,6 @@ internal fun Router(
             }
         )
         settingsRoutes(
-            navController = navController,
             satunesViewModel = satunesViewModel, // Pass it as param to fix no recomposition when permission granted
             onStart = {
                 satunesViewModel.setCurrentDestination(destination = it.destination.route!!)

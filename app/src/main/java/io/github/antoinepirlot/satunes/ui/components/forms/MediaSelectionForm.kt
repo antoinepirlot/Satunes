@@ -25,13 +25,25 @@
 
 package io.github.antoinepirlot.satunes.ui.components.forms
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
+import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.data.states.SatunesUiState
+import io.github.antoinepirlot.satunes.data.viewmodels.MediaSelectionViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
+import io.github.antoinepirlot.satunes.models.Destination
 
 /**
  * @author Antoine Pirlot on 30/03/2024
@@ -40,8 +52,11 @@ import io.github.antoinepirlot.satunes.database.models.MediaImpl
 @Composable
 internal fun MediaSelectionForm(
     modifier: Modifier = Modifier,
+    satunesViewModel: SatunesViewModel = viewModel(),
+    mediaSelectionViewModel: MediaSelectionViewModel = viewModel(),
     mediaImplCollection: Collection<MediaImpl>
 ) {
+    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     val lazyState = rememberLazyListState()
     val mediaList: List<MediaImpl> =
         try {
@@ -49,15 +64,25 @@ internal fun MediaSelectionForm(
         } catch (_: ClassCastException) {
             mediaImplCollection.toList()
         }
-    LazyColumn(
-        modifier = modifier,
-        state = lazyState
-    ) {
-        items(
-            items = mediaList,
-            key = { it.id }
-        ) { mediaImpl: MediaImpl ->
-            MediaSelectionCheckbox(mediaImpl = mediaImpl)
+    Column {
+        if (
+            satunesUiState.currentDestination != Destination.PLAYLISTS //TODO
+        ) {
+            println(satunesUiState.currentDestination.link)
+            TextButton(onClick = { mediaSelectionViewModel.setShowPlaylistCreation(value = true) }) {
+                NormalText(text = stringResource(id = R.string.create_playlist))
+            }
+        }
+        LazyColumn(
+            modifier = modifier,
+            state = lazyState
+        ) {
+            items(
+                items = mediaList,
+                key = { it.id }
+            ) { mediaImpl: MediaImpl ->
+                MediaSelectionCheckbox(mediaImpl = mediaImpl)
+            }
         }
     }
 }

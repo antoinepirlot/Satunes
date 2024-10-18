@@ -96,17 +96,11 @@ internal fun Satunes(
                         SnackbarHost(hostState = snackBarHostState)
                     },
                     topBar = {
-                        TopAppBar(
-                            scrollBehavior = scrollBehavior,
-                            navController = navController
-                        )
+                        TopAppBar(scrollBehavior = scrollBehavior)
                     },
-                    bottomBar = { BottomAppBar(navController = navController) }
+                    bottomBar = { BottomAppBar() }
                 ) { innerPadding ->
-                    Router(
-                        modifier = Modifier.padding(innerPadding),
-                        navController = navController
-                    )
+                    Router(modifier = Modifier.padding(innerPadding))
 
                     if (!satunesUiState.whatsNewSeen) {
                         WhatsNewDialog(

@@ -129,7 +129,7 @@ class DatabaseManager private constructor(context: Context) {
      * @throws IllegalArgumentException when playlistTitle is in incorrect format
      * @throws PlaylistAlreadyExistsException when there's already a playlist with the same playlistTitle
      */
-    fun addOnePlaylist(playlistTitle: String, musicList: MutableList<Music>? = null) {
+    fun addOnePlaylist(playlistTitle: String, musicList: MutableList<Music>? = null): Playlist {
         checkString(string = playlistTitle)
         @Suppress("NAME_SHADOWING")
         val playlistTitle: String = playlistTitle.trim()
@@ -145,6 +145,7 @@ class DatabaseManager private constructor(context: Context) {
                 playlist = playlist
             )
         }
+        return playlist
     }
 
     /**

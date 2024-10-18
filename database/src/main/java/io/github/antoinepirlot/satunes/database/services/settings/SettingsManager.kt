@@ -52,18 +52,18 @@ import kotlinx.coroutines.flow.map
  * @author Antoine Pirlot on 02-03-24
  */
 
+//TODO v3.0.0 refactor this file by splitting it into multiple files for better readability
 object SettingsManager {
-    /**
-     * DEFAULT VALUES
-     */
+    //DEFAULT VALUES
     private const val DEFAULT_FOLDERS_CHECKED = true
     private const val DEFAULT_ARTISTS_CHECKED = true
     private const val DEFAULT_ALBUMS_CHECKED = true
     private const val DEFAULT_GENRE_CHECKED = true
     private const val DEFAULT_PLAYLIST_CHECKED = true
     private val DEFAULT_DEFAULT_NAV_BAR_SECTION = NavBarSection.MUSICS
-    private const val DEFAULT_PLAYBACK_WHEN_CLOSED_CHECKED =
-        false //App stop after removed app from multi-task if false
+
+    //App stop after removed app from multi-task if false (val down this comment)
+    private const val DEFAULT_PLAYBACK_WHEN_CLOSED_CHECKED = false
     private const val DEFAULT_PAUSE_IF_NOISY = true
     private val DEFAULT_BAR_SPEED_VALUE: BarSpeed = BarSpeed.NORMAL
     private const val DEFAULT_REPEAT_MODE: Int = Player.REPEAT_MODE_OFF
@@ -82,10 +82,9 @@ object SettingsManager {
     private val DEFAULT_SELECTED_PATHS: Set<String> = setOf("/0/Music/%")
     private const val DEFAULT_COMPILATION_MUSIC: Boolean = false
     private const val DEFAULT_ARTISTS_REPLACEMENT: Boolean = true
+    private const val DEFAULT_LOAD_DUPLICATION: Boolean = true
 
-    /**
-     * KEYS
-     */
+    //KEYS
     private val PREFERENCES_DATA_STORE = preferencesDataStore("settings")
     private val FOLDERS_CHECKED_PREFERENCES_KEY = booleanPreferencesKey("folders_checked")
     private val ARTISTS_CHECKED_PREFERENCES_KEY = booleanPreferencesKey("artist_checked")
@@ -121,10 +120,10 @@ object SettingsManager {
         booleanPreferencesKey("compilation_music")
     private val ARTISTS_REPLACEMENT_KEY: Preferences.Key<Boolean> =
         booleanPreferencesKey("artist_replacement")
+    private val LOAD_DUPLICATION_KEY: Preferences.Key<Boolean> =
+        booleanPreferencesKey("load_duplication")
 
-    /**
-     * VARIABLES
-     */
+    //VARIABLES
     private val _logger = SatunesLogger.getLogger()
     private val Context.dataStore: DataStore<Preferences> by PREFERENCES_DATA_STORE
     private var _isLoaded: Boolean = false
@@ -184,6 +183,8 @@ object SettingsManager {
      */
     var compilationMusic: Boolean = DEFAULT_COMPILATION_MUSIC
     var artistReplacement: Boolean = DEFAULT_ARTISTS_REPLACEMENT
+    var loadDuplication: Boolean = DEFAULT_LOAD_DUPLICATION
+
 
     suspend fun loadSettings(context: Context) {
         if (_isLoaded) {
@@ -242,6 +243,8 @@ object SettingsManager {
             compilationMusic = preferences[COMPILATION_MUSIC_KEY] ?: DEFAULT_COMPILATION_MUSIC
 
             artistReplacement = preferences[ARTISTS_REPLACEMENT_KEY] ?: DEFAULT_ARTISTS_REPLACEMENT
+
+            loadDuplication = preferences[LOAD_DUPLICATION_KEY] ?: DEFAULT_LOAD_DUPLICATION
 
             DataLoader.loadFoldersPaths()
 
@@ -567,6 +570,13 @@ object SettingsManager {
         context.dataStore.edit { preferences: MutablePreferences ->
             this.artistReplacement = !this.artistReplacement
             preferences[ARTISTS_REPLACEMENT_KEY] = this.artistReplacement
+        }
+    }
+
+    suspend fun switchLoadDuplication(context: Context) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            this.loadDuplication = !this.loadDuplication
+            preferences[LOAD_DUPLICATION_KEY] = this.loadDuplication
         }
     }
 }

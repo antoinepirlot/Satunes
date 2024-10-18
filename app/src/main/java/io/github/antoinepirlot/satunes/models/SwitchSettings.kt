@@ -61,5 +61,6 @@ internal enum class SwitchSettings(val stringId: Int, val navBarSection: NavBarS
     PLAYLISTS_CHECKED(stringId = playlists, navBarSection = NavBarSection.PLAYLISTS),
     PAUSE_IF_ANOTHER_PLAYBACK(stringId = pause_if_another_playback),
     COMPILATION_MUSIC(stringId = compilation_music_setting_text),
-    ARTIST_REPLACEMENT(stringId = R.string.artist_replacement_setting_content);
+    ARTIST_REPLACEMENT(stringId = R.string.artist_replacement_setting_content),
+    LOAD_DUPLICATION(stringId = R.string.load_duplication_setting_content);
 }

@@ -623,4 +623,23 @@ internal class SatunesViewModel : ViewModel() {
             )
         }
     }
+
+    fun switchLoadDuplication(scope: CoroutineScope, snackBarHostState: SnackbarHostState) {
+        try {
+            runBlocking {
+                SettingsManager.switchLoadDuplication(context = MainActivity.instance.applicationContext)
+                _uiState.update { currentState: SatunesUiState ->
+                    currentState.copy(loadDuplication = SettingsManager.loadDuplication)
+                }
+            }
+        } catch (e: Throwable) {
+            showErrorSnackBar(
+                scope = scope,
+                snackBarHostState = snackBarHostState,
+                action = {
+                    switchLoadDuplication(scope = scope, snackBarHostState = snackBarHostState)
+                }
+            )
+        }
+    }
 }

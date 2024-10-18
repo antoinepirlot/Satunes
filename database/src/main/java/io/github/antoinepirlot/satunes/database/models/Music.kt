@@ -177,14 +177,31 @@ class Music(
 
         other as Music
 
-        return this.id == other.id
+        if (SettingsManager.loadDuplication) {
+            if (id != other.id) return false
+        } else {
+            if (title != other.title) return false
+            if (artist != other.artist) return false
+            if (album != other.album) return false
+        }
+
+        return true
     }
 
     override fun hashCode(): Int {
-        return this.id.hashCode()
+        var result: Int
+        if (SettingsManager.loadDuplication) {
+            result = id.hashCode()
+        } else {
+            result = 31 * title.hashCode()
+            result = 31 * result + artist.hashCode()
+            result = 31 * result + album.hashCode()
+        }
+        return result
     }
 
     override fun compareTo(other: MediaImpl): Int {
+        if (this == other) return 0
         var compared: Int = super.compareTo(other)
         if (compared == 0 && this != other) {
             compared = 1

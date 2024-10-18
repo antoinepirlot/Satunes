@@ -248,13 +248,13 @@ private fun CardPreview() {
         id = 1,
         title = "",
         displayName = "Il avait les mots",
+        absolutePath = "absolute path",
         duration = 2,
         size = 2,
         folder = Folder(title = "Folder"),
-        album = Album(title = "Album Title", artist = artist),
         artist = artist,
+        album = Album(title = "Album Title", artist = artist),
         genre = Genre(title = "Genre Title"),
-        absolutePath = "absolute path",
     )
     MediaCard(
         modifier = Modifier.fillMaxSize(),

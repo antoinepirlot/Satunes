@@ -57,6 +57,8 @@ class Music(
     val absolutePath: String,
     val duration: Long = 0,
     val size: Int = 0,
+    val discNumber: Int? = null,
+    val cdTrackNumber: Int? = null,
     var folder: Folder,
     val artist: Artist,
     val album: Album,

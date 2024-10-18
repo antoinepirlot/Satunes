@@ -54,6 +54,7 @@ import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.ui.utils.showErrorSnackBar
 import io.github.antoinepirlot.satunes.ui.utils.showSnackBar
+import io.github.antoinepirlot.satunes.utils.getNow
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -629,8 +630,8 @@ class DataViewModel : ViewModel() {
             DatabaseManager.exportingPlaylist = false
             return
         }
-
-        MainActivity.instance.createFileToExportPlaylists(defaultFileName = "Satunes")
+        val fileName = "Satunes_${getNow()}"
+        MainActivity.instance.createFileToExportPlaylists(defaultFileName = fileName)
     }
 
     fun resetAllData() {

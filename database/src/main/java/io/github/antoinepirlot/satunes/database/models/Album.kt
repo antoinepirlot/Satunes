@@ -25,6 +25,8 @@
 
 package io.github.antoinepirlot.satunes.database.models
 
+import java.util.SortedSet
+
 /**
  * @author Antoine Pirlot on 27/03/2024
  */
@@ -39,6 +41,8 @@ class Album(
     companion object {
         var nextId: Long = 1
     }
+
+    override val musicSortedSet: SortedSet<Music> = sortedSetOf(MusicInAlbumComparator)
 
     init {
         nextId++

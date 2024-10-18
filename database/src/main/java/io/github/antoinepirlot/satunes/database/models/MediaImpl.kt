@@ -46,7 +46,7 @@ abstract class MediaImpl(
     var artwork: Bitmap? by mutableStateOf(null)
         internal set
 
-    protected val musicSortedSet: SortedSet<Music> = sortedSetOf()
+    protected open val musicSortedSet: SortedSet<Music> = sortedSetOf()
     val musicSetUpdated: MutableState<Boolean> = mutableStateOf(false)
 
     open fun isEmpty(): Boolean {

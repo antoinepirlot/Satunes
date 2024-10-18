@@ -75,8 +75,11 @@ import io.github.antoinepirlot.satunes.internet.R as RInternet
  */
 @SuppressLint("NewApi")
 internal class SatunesViewModel : ViewModel() {
-    private val _logger: SatunesLogger = SatunesLogger.getLogger()
-    private val _uiState: MutableStateFlow<SatunesUiState> = MutableStateFlow(SatunesUiState())
+    companion object {
+        private val _logger: SatunesLogger = SatunesLogger.getLogger()
+        private val _uiState: MutableStateFlow<SatunesUiState> = MutableStateFlow(SatunesUiState())
+    }
+
     private val _isLoadingData: MutableState<Boolean> = DataLoader.isLoading
     private val _isDataLoaded: MutableState<Boolean> = DataLoader.isLoaded
 
@@ -205,8 +208,8 @@ internal class SatunesViewModel : ViewModel() {
 
     internal fun updateIsAudioAllowed() {
         this.isAudioAllowed = isAudioAllowed(context = MainActivity.instance.applicationContext)
-        if (this.isAudioAllowed != this._uiState.value.isAudioAllowed) {
-            this._uiState.update { currentState: SatunesUiState ->
+        if (this.isAudioAllowed != _uiState.value.isAudioAllowed) {
+            _uiState.update { currentState: SatunesUiState ->
                 currentState.copy(isAudioAllowed = this.isAudioAllowed)
             }
         }

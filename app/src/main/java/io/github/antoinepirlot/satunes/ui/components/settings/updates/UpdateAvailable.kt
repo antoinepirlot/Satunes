@@ -31,7 +31,6 @@ import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -75,11 +74,11 @@ internal fun UpdateAvailable(
             text = stringResource(id = RInternet.string.update_available)
         )
         val scrollState: ScrollState = rememberScrollState()
-        Row(
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .horizontalScroll(scrollState),
-            verticalAlignment = Alignment.CenterVertically
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.size(16.dp)) // To align with text and not have a vertical cut
             SeeDetailsButton(text = stringResource(id = R.string.see_on_fdroid), onFdroid = true)

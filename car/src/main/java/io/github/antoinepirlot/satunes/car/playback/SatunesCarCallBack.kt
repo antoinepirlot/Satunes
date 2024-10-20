@@ -52,6 +52,7 @@ internal object SatunesCarCallBack : MediaSessionCompat.Callback() {
 
     internal const val ACTION_SHUFFLE = "ACTION_SHUFFLE"
     internal const val ACTION_REPEAT = "ACTION_REPEAT"
+    internal const val ACTION_LIKE = "ACTION_LIKE"
 
     private lateinit var _job: Job
 
@@ -113,6 +114,7 @@ internal object SatunesCarCallBack : MediaSessionCompat.Callback() {
         when (action) {
             ACTION_SHUFFLE -> switchShuffleMode()
             ACTION_REPEAT -> switchRepeatMode()
+            ACTION_LIKE -> likePlayingMusic()
         }
         //Update playback state from here as no listener function is called for this action.
         val state: Int =
@@ -120,6 +122,10 @@ internal object SatunesCarCallBack : MediaSessionCompat.Callback() {
         val actions: Long =
             if (PlaybackManager.isPlaying.value) ACTIONS_ON_PLAY else ACTIONS_ON_PAUSE
         SatunesPlaybackListener.updatePlaybackState(state = state, actions = actions)
+    }
+
+    private fun likePlayingMusic() {
+        PlaybackManager.musicPlaying.value!!.switchLike(context = SatunesCarMusicService.instance.applicationContext)
     }
 
     private fun switchShuffleMode() {

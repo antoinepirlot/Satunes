@@ -68,12 +68,7 @@ import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.ui.components.cards.ListItem
-import io.github.antoinepirlot.satunes.ui.components.dialog.album.AlbumOptionsDialog
-import io.github.antoinepirlot.satunes.ui.components.dialog.artist.ArtistOptionsDialog
-import io.github.antoinepirlot.satunes.ui.components.dialog.folder.FolderOptionsDialog
-import io.github.antoinepirlot.satunes.ui.components.dialog.genre.GenreOptionsDialog
-import io.github.antoinepirlot.satunes.ui.components.dialog.music.MusicOptionsDialog
-import io.github.antoinepirlot.satunes.ui.components.dialog.playlist.PlaylistOptionsDialog
+import io.github.antoinepirlot.satunes.ui.components.dialog.media.MediaOptionsDialog
 import io.github.antoinepirlot.satunes.ui.components.images.MediaArtwork
 import io.github.antoinepirlot.satunes.ui.utils.getRootFolderName
 import io.github.antoinepirlot.satunes.database.R as RDb
@@ -181,70 +176,14 @@ internal fun MediaCard(
     }
     HorizontalDivider(modifier = modifier)
 
-    // Music options dialog
-    if (showMediaOption && media is Music) {
-        MusicOptionsDialog(
-            music = media,
-            playlist = openedPlaylist,
+    // Media option dialog
+    if (showMediaOption) {
+        MediaOptionsDialog(
+            media = media,
             onDismissRequest = {
                 showMediaOption = false
                 satunesViewModel.mediaOptionsIsClosed()
             }
-        )
-    }
-
-    // Playlist option dialog
-    if (showMediaOption && media is Playlist) {
-        PlaylistOptionsDialog(
-            playlist = media,
-            onDismissRequest = {
-                showMediaOption = false
-                satunesViewModel.mediaOptionsIsClosed()
-            }
-        )
-    }
-
-    // Artist option dialog
-    if (showMediaOption && media is Artist) {
-        ArtistOptionsDialog(
-            artist = media,
-            onDismissRequest = {
-                showMediaOption = false
-                satunesViewModel.mediaOptionsIsClosed()
-            }
-        )
-    }
-
-    // Album option dialog
-    if (showMediaOption && media is Album) {
-        AlbumOptionsDialog(
-            album = media,
-            onDismissRequest = {
-                showMediaOption = false
-                satunesViewModel.mediaOptionsIsClosed()
-            }
-        )
-    }
-
-    // Genre option dialog
-    if (showMediaOption && media is Genre) {
-        GenreOptionsDialog(
-            genre = media,
-            onDismissRequest = {
-                showMediaOption = false
-                satunesViewModel.mediaOptionsIsClosed()
-            }
-        )
-    }
-
-    // Folder option dialog
-    if (showMediaOption && media is Folder) {
-        FolderOptionsDialog(
-            folder = media,
-            onDismissRequest = {
-                showMediaOption = false
-                satunesViewModel.mediaOptionsIsClosed()
-            },
         )
     }
 }

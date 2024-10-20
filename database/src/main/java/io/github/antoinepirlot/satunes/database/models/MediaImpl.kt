@@ -30,6 +30,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import io.github.antoinepirlot.satunes.database.models.comparators.StringComparator
 import java.util.SortedSet
 
 /**
@@ -46,7 +47,7 @@ abstract class MediaImpl(
     var artwork: Bitmap? by mutableStateOf(null)
         internal set
 
-    protected val musicSortedSet: SortedSet<Music> = sortedSetOf()
+    protected open val musicSortedSet: SortedSet<Music> = sortedSetOf()
     val musicSetUpdated: MutableState<Boolean> = mutableStateOf(false)
 
     open fun isEmpty(): Boolean {

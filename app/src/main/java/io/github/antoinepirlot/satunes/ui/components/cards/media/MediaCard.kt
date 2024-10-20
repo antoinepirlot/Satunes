@@ -35,6 +35,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -53,6 +54,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.models.ScreenSizes
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.jetpack_libs.components.texts.Subtitle
+import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
@@ -64,6 +66,7 @@ import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.ui.components.cards.ListItem
 import io.github.antoinepirlot.satunes.ui.components.dialog.album.AlbumOptionsDialog
 import io.github.antoinepirlot.satunes.ui.components.dialog.artist.ArtistOptionsDialog
@@ -90,6 +93,8 @@ internal fun MediaCard(
     enableExtraOptions: Boolean = true,
     openedPlaylist: Playlist?,
 ) {
+    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+
     val haptics: HapticFeedback = LocalHapticFeedback.current
     var showMediaOption: Boolean by remember { mutableStateOf(false) }
 
@@ -147,7 +152,11 @@ internal fun MediaCard(
             },
             headlineContent = {
                 Column {
-                    NormalText(text = title)
+                    if (satunesUiState.currentDestination == Destination.ALBUMS && media is Music && media.cdTrackNumber != null) {
+                        NormalText(text = media.cdTrackNumber.toString() + " - " + title)
+                    } else {
+                        NormalText(text = title)
+                    }
                     //Use these as for the same thing the builder doesn't like in one
                     if (media is Album) {
                         Subtitle(text = media.artist.title)

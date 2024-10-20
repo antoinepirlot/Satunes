@@ -45,12 +45,14 @@ import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.data.states.MediaSelectionUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.MediaSelectionViewModel
+import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.forms.MediaSelectionForm
 import io.github.antoinepirlot.satunes.ui.components.forms.PlaylistCreationForm
 import kotlinx.coroutines.CoroutineScope
+import io.github.antoinepirlot.satunes.database.R as RDb
 
 /**
  * @author Antoine Pirlot on 30/03/2024
@@ -135,6 +137,12 @@ private fun MediaSelectionDialogList(
                 if (playlistTitle == null) {
                     throw IllegalStateException("PlaylistDB title is required when adding music to playlistDB")
                 }
+                val playlistTitle: String =
+                    if (playlistTitle == LIKES_PLAYLIST_TITLE)
+                        stringResource(RDb.string.likes_playlist_title)
+                    else
+                        playlistTitle
+
                 NormalText(text = stringResource(id = R.string.add_to) + playlistTitle)
             } else {
                 NormalText(text = stringResource(id = R.string.add_to_playlist))

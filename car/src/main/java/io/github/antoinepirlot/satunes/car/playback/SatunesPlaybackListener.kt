@@ -125,10 +125,11 @@ internal object SatunesPlaybackListener : PlaybackListener() {
         val likeAction = CustomAction.Builder(
             ACTION_LIKE, "Like",
             if (musicPlaying.liked.value) R.drawable.favorite else R.drawable.unfavorite
-        )
+        ).build()
         val playbackState: PlaybackStateCompat = PlaybackStateCompat.Builder()
             .addCustomAction(shuffleAction)
             .addCustomAction(repeatAction)
+            .addCustomAction(likeAction)
             .setState(state, currentPosition, 1F)
             .setActions(actions)
             .setActiveQueueItemId(musicPlaying.id)

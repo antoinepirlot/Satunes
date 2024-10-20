@@ -39,7 +39,9 @@ import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 /**
  * @author Antoine Pirlot on 16/03/2024
@@ -53,8 +55,6 @@ internal object SatunesCarCallBack : MediaSessionCompat.Callback() {
     internal const val ACTION_SHUFFLE = "ACTION_SHUFFLE"
     internal const val ACTION_REPEAT = "ACTION_REPEAT"
     internal const val ACTION_LIKE = "ACTION_LIKE"
-
-    private lateinit var _job: Job
 
     override fun onPlay() {
 
@@ -125,7 +125,9 @@ internal object SatunesCarCallBack : MediaSessionCompat.Callback() {
     }
 
     private fun likePlayingMusic() {
-        PlaybackManager.musicPlaying.value!!.switchLike(context = SatunesCarMusicService.instance.applicationContext)
+        CoroutineScope(Dispatchers.IO).launch {
+            PlaybackManager.musicPlaying.value!!.switchLike(context = SatunesCarMusicService.instance.applicationContext)
+        }
     }
 
     private fun switchShuffleMode() {

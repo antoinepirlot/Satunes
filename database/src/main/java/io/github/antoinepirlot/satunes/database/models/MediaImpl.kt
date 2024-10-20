@@ -30,6 +30,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import io.github.antoinepirlot.satunes.database.models.comparators.StringComparator
 import java.util.SortedSet
 
 /**

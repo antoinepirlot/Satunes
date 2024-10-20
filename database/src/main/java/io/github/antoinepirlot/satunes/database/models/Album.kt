@@ -25,6 +25,7 @@
 
 package io.github.antoinepirlot.satunes.database.models
 
+import io.github.antoinepirlot.satunes.database.models.comparators.MusicInAlbumComparator
 import java.util.SortedSet
 
 /**

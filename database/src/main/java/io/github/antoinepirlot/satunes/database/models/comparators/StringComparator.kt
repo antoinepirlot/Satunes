@@ -23,34 +23,19 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.database.models
+package io.github.antoinepirlot.satunes.database.models.comparators
 
-import io.github.antoinepirlot.satunes.database.exceptions.NotInAlbumException
+import java.text.Normalizer
 
 /**
- * @author Antoine Pirlot on 18/10/2024
+ * @author Antoine Pirlot on 24/04/2024
  */
-object MusicInAlbumComparator : Comparator<Music> {
-    /**
-     * Compare 2 music's in the same album.
-     * Assume it is used only in Album's music set
-     *
-     * If o1 album is not the same as o2's throws [NotInAlbumException]
-     * If at least one cdTrackNumber is null or the o1's is greater than o2's returns 1
-     * If the o1 track number is < of the o2's return -1
-     * returns 0 in other cases.
-     *
-     * @param o1 [Music]
-     * @param o2 [Music]
-     *
-     * @throws [NotInAlbumException] if o1 has not the same album as o2
-     * @return [Int]: -1 or 0 or 1 as specified.
-     */
-    override fun compare(o1: Music, o2: Music): Int {
-        if (o1.album != o2.album) throw NotInAlbumException()
-        if (o1.cdTrackNumber == null || o2.cdTrackNumber == null || o1.cdTrackNumber > o2.cdTrackNumber) return 1
-        if (o1.cdTrackNumber!! < o2.cdTrackNumber!!) return -1
-        return 0
+internal object StringComparator : Comparator<String> {
+    override fun compare(o1: String, o2: String): Int {
+        val o1Normalized: String =
+            Normalizer.normalize(o1, Normalizer.Form.NFD)
+        val o2Normalized: String =
+            Normalizer.normalize(o2, Normalizer.Form.NFD)
+        return o1Normalized.compareTo(o2Normalized, ignoreCase = true)
     }
-
 }

@@ -320,21 +320,9 @@ object DataLoader {
         val displayName: String = cursor.getString(musicNameColumn!!)
         val title: String = cursor.getString(musicTitleColumn!!)
 
-        var discNumber: Int? = try {
-            cursor.getInt(discNumberColumn!!)
-        } catch (e: NullPointerException) {
-            null
-        }
-        if (discNumber != null && discNumber <= 0)
-            discNumber = null
+        var discNumber: Int = cursor.getInt(discNumberColumn!!)
 
-        val cdTrackNumber: Int? = try {
-            cursor.getInt(cdTrackNumberColumn!!)
-        } catch (e: NullPointerException) {
-            null
-        }
-        if (cdTrackNumber != null && cdTrackNumber <= 0)
-            cdTrackNumber == null
+        val cdTrackNumber: Int = cursor.getInt(cdTrackNumberColumn!!)
 
         return Music(
             id = id,

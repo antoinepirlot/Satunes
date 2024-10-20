@@ -58,7 +58,7 @@ class Music(
     val duration: Long = 0,
     val size: Int = 0,
     val discNumber: Int? = null,
-    val cdTrackNumber: Int? = null,
+    cdTrackNumber: Int? = null,
     var folder: Folder,
     val artist: Artist,
     val album: Album,
@@ -74,6 +74,7 @@ class Music(
             }
             field = displayName
         }
+    val cdTrackNumber: Int?
     var liked: MutableState<Boolean> = mutableStateOf(false)
         private set
     var uri: Uri = Uri.parse(encode(absolutePath)) // Must be init before media item
@@ -81,6 +82,10 @@ class Music(
     val mediaItem: MediaItem = getMediaMetadata()
 
     init {
+        if (cdTrackNumber != null && cdTrackNumber < 1)
+            this.cdTrackNumber = null
+        else
+            this.cdTrackNumber = cdTrackNumber
         DataManager.addMusic(music = this)
         album.addMusic(music = this)
         if (SettingsManager.compilationMusic) {

@@ -49,8 +49,11 @@ object MusicInAlbumComparator : Comparator<Music> {
      */
     override fun compare(o1: Music, o2: Music): Int {
         if (o1.album != o2.album) throw NotInAlbumException()
-        if (o1.cdTrackNumber == null || o2.cdTrackNumber == null || o1.cdTrackNumber > o2.cdTrackNumber) return 1
-        if (o1.cdTrackNumber!! < o2.cdTrackNumber!!) return -1
+        if (o1.cdTrackNumber != null && o2.cdTrackNumber == null) return -1
+        if (o1.cdTrackNumber == null && o2.cdTrackNumber != null) return 1
+        if (o1.cdTrackNumber == null || o2.cdTrackNumber == null) return o1.compareTo(o2) //both are null
+        if (o1.cdTrackNumber > o2.cdTrackNumber) return 1
+        if (o1.cdTrackNumber < o2.cdTrackNumber) return -1
         return 0
     }
 

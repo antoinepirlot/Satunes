@@ -37,6 +37,7 @@ class Album(
     var artist: Artist,
     var isCompilation: Boolean = false,
     val numTracks: Int? = null,
+    year: Int? = null
 ) : MediaImpl(id = nextId, title = title) {
 
     companion object {
@@ -44,7 +45,7 @@ class Album(
     }
 
     override val musicSortedSet: SortedSet<Music> = sortedSetOf(MusicInAlbumComparator)
-
+    val year: Int? = if (year != null && year < 1) null else year
     init {
         nextId++
     }

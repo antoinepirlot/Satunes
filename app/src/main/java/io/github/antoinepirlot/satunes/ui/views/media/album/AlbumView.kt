@@ -163,7 +163,7 @@ private fun Header(
                         navController = navController
                     )
                 },
-            text = album.artist.title
+            text = if (album.year != null) "${album.artist.title} - ${album.year}" else album.artist.title
         )
     }
 }

@@ -69,6 +69,7 @@ object DataLoader {
     private var discNumberColumn: Int? = null
     private var numTracksColumn: Int? = null
     private var cdTrackNumberColumn: Int? = null
+    private var albumYearColumn: Int? = null
 
     // Artists variables
     private var artistNameColumn: Int? = null
@@ -92,10 +93,11 @@ object DataLoader {
         //ALBUMS
         MediaStore.Audio.Albums.ALBUM,
         MediaStore.Audio.Media.ALBUM_ARTIST,
-        //TODO test the next 3 fields for old Android versions
+        //TODO test the next 4 fields for old Android versions
         MediaStore.Audio.Media.NUM_TRACKS,
         MediaStore.Audio.Media.CD_TRACK_NUMBER,
         MediaStore.Audio.Media.DISC_NUMBER,
+        MediaStore.Audio.Media.YEAR,
 
         //ARTISTS
         MediaStore.Audio.Artists.ARTIST,
@@ -210,6 +212,7 @@ object DataLoader {
             numTracksColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.NUM_TRACKS)
             cdTrackNumberColumn =
                 cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.CD_TRACK_NUMBER)
+            albumYearColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.YEAR)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 albumCompilationColumn =
                     cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.COMPILATION)
@@ -450,11 +453,8 @@ object DataLoader {
             name = context.getString(R.string.unknown_album)
         }
 
-        val numTracks: Int? = try {
-            cursor.getInt(numTracksColumn!!)
-        } catch (e: NullPointerException) {
-            null
-        }
+        val numTracks: Int = cursor.getInt(numTracksColumn!!)
+        val year: Int = cursor.getInt(albumYearColumn!!)
 
         val artist: Artist = loadAlbumArtist(context = context, cursor = cursor)
 
@@ -463,7 +463,8 @@ object DataLoader {
                 title = name,
                 artist = artist,
                 isCompilation = isCompilation,
-                numTracks = numTracks
+                numTracks = numTracks,
+                year = year
             )
         )
         artist.addAlbum(album = album)

@@ -55,7 +55,7 @@ internal fun MusicOptionsDialog(
     modifier: Modifier = Modifier,
     playbackViewModel: PlaybackViewModel = viewModel(),
     music: Music,
-    playlist: Playlist? = null,
+    playlist: Playlist? = null, //TODO move that in satunes view model or using current route
     onDismissRequest: () -> Unit,
 ) {
     AlertDialog(

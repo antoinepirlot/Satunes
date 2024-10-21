@@ -65,9 +65,7 @@ internal fun MediaSelectionForm(
             mediaImplCollection.toList()
         }
     Column {
-        if (
-            satunesUiState.currentDestination != Destination.PLAYLISTS //TODO
-        ) {
+        if (satunesUiState.currentDestination != Destination.PLAYLISTS) {
             println(satunesUiState.currentDestination.link)
             TextButton(onClick = { mediaSelectionViewModel.setShowPlaylistCreation(value = true) }) {
                 NormalText(text = stringResource(id = R.string.create_playlist))

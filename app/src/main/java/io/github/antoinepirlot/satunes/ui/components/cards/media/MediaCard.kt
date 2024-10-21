@@ -180,6 +180,7 @@ internal fun MediaCard(
     if (showMediaOption) {
         MediaOptionsDialog(
             media = media,
+            openedPlaylist = openedPlaylist,
             onDismissRequest = {
                 showMediaOption = false
                 satunesViewModel.mediaOptionsIsClosed()

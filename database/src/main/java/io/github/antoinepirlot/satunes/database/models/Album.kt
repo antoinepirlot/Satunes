@@ -36,7 +36,6 @@ class Album(
     title: String,
     var artist: Artist,
     var isCompilation: Boolean = false,
-    val numTracks: Int? = null,
     year: Int? = null
 ) : MediaImpl(id = nextId, title = title) {
 

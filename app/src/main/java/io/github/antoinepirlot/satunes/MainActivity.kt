@@ -40,6 +40,7 @@ import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.playback.services.WidgetPlaybackManager
+import io.github.antoinepirlot.satunes.utils.getNow
 import io.github.antoinepirlot.satunes.utils.initSatunes
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import io.github.antoinepirlot.satunes.utils.utils.showToastOnUiThread
@@ -120,7 +121,7 @@ internal class MainActivity : ComponentActivity() {
     }
 
     fun exportLogs() {
-        createFileIntent.putExtra(Intent.EXTRA_TITLE, "Satunes_logs")
+        createFileIntent.putExtra(Intent.EXTRA_TITLE, "Satunes_logs_${getNow()}.txt")
         createFileIntent.type = MIME_TEXT
         startActivityForResult(createFileIntent, EXPORT_LOGS_CODE)
     }

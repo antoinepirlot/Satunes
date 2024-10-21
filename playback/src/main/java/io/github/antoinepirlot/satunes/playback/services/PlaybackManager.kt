@@ -265,7 +265,7 @@ object PlaybackManager {
         musicToPlay: Music? = null,
     ) {
         _logger.info("Load musics")
-        if (this.playlist?.hasPlaylistMusicSet(musicSet = musicSet) == true) {
+        if (this.playlist?.hasPlaylistMusicSet(musicSet = musicSet) == true && this.musicPlaying.value == musicToPlay) {
             _logger.info("MusicSet is already loaded.")
             return
         }

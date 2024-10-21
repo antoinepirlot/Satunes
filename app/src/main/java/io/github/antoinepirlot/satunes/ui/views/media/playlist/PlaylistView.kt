@@ -54,6 +54,7 @@ import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.router.utils.openMedia
+import io.github.antoinepirlot.satunes.ui.components.EmptyView
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
 import io.github.antoinepirlot.satunes.ui.components.dialog.MediaSelectionDialog
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
@@ -99,7 +100,6 @@ internal fun PlaylistView(
     }
     //
 
-
     MediaListView(
         modifier = modifier,
         mediaImplCollection = musicSet,
@@ -128,6 +128,8 @@ internal fun PlaylistView(
                 playlist.title
             }
             Title(text = title)
+            if (playlist.isEmpty()) //TODO reformat how it is implemented
+                EmptyView(text = stringResource(R.string.no_music_in_playlist))
         },
         extraButtons = {
             ExtraButton(

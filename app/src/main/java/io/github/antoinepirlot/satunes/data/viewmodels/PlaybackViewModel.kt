@@ -147,6 +147,7 @@ class PlaybackViewModel : ViewModel() {
         shuffleMode: Boolean = SettingsManager.shuffleMode,
         musicToPlay: Music? = null,
     ) {
+        if (this.musicPlaying == musicToPlay)
         PlaybackManager.loadMusics(
             context = MainActivity.instance.applicationContext,
             musicSet = musicSet,

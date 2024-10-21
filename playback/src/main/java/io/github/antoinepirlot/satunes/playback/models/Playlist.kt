@@ -37,6 +37,10 @@ import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 
 //TODO refactor and clarify the usage of original map
 internal class Playlist(musicSet: Set<Music>) {
+    /**
+     * Original music set not copied.
+     */
+    private val originalMusicSet: Set<Music> = musicSet
     private val originalMusicMediaItemMap: MutableMap<Music, MediaItem> = mutableMapOf()
     val musicList: SnapshotStateList<Music> = SnapshotStateList()
     val mediaItemList: MutableList<MediaItem> = mutableListOf()
@@ -192,5 +196,27 @@ internal class Playlist(musicSet: Set<Music>) {
         val oldIndex: Int = this.getMusicIndex(music = music)
         this.musicList.remove(element = music)
         return oldIndex
+    }
+
+    /**
+     * Checks if this playlist has the music set object as [originalMusicSet].
+     * True means it's the same playlist otherwise false.
+     *
+     * @return true if the musicSet is the [originalMusicSet] false otherwise
+     */
+    internal fun hasPlaylistMusicSet(musicSet: Set<Music>): Boolean =
+        this.originalMusicSet == musicSet
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Playlist) return false
+
+        if (originalMusicSet != other.originalMusicSet) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        return originalMusicSet.hashCode()
     }
 }

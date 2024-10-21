@@ -199,13 +199,13 @@ internal class Playlist(musicSet: Set<Music>) {
     }
 
     /**
-     * Checks if this playlist has the music set object as [originalMusicSet].
+     * Checks if this playlist has the music set object reference as [originalMusicSet].
      * True means it's the same playlist otherwise false.
      *
      * @return true if the musicSet is the [originalMusicSet] false otherwise
      */
     internal fun hasPlaylistMusicSet(musicSet: Set<Music>): Boolean =
-        this.originalMusicSet == musicSet
+        this.originalMusicSet === musicSet
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

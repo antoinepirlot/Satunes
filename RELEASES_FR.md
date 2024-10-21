@@ -3,6 +3,16 @@ You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
 ## 2.4 (Android 5.1.1 Lollipop et ultérieur)
 
+### v2.4.0-preview-1
+
+Améliorations, optimisations et dépannage:
+
+* Correction des bogues de la v2.4.0-beta-1
+  * Crash de la lecture de la musique en cours de lecture
+  * Ajout d'une musique dans une playlist
+  * Montre à nouveau le bouton pour supprimer la musique de la playlist
+  * Crash lors du démarrahe sur Android Q et antérieur
+
 ### 2.4.0-beta-1
 
 Nouvelles fonctionnalités:

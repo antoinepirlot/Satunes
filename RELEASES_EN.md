@@ -3,6 +3,16 @@ Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
 ## 2.4 (Android 5.1.1 Lollipop and later)
 
+### 2.4.0-preview-1
+
+Improvements, optimizations and troubleshooting:
+
+* Fix v2.4.0-beta-1 issues
+  * Playing music crash in certain conditions
+  * Add music into playlists
+  * Show missing remove music from playlist
+  * Android Q and less crash at launching
+
 ### 2.4.0-beta-1
 
 New features:

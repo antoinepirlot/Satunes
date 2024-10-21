@@ -137,6 +137,7 @@ private fun MediaSelectionDialogList(
                 if (playlistTitle == null) {
                     throw IllegalStateException("PlaylistDB title is required when adding music to playlistDB")
                 }
+                @Suppress("NAME_SHADOWING")
                 val playlistTitle: String =
                     if (playlistTitle == LIKES_PLAYLIST_TITLE)
                         stringResource(RDb.string.likes_playlist_title)

@@ -66,8 +66,6 @@ object DataLoader {
     private var albumNameColumn: Int? = null
     private var albumArtistColumn: Int? = null
     private var albumCompilationColumn: Int? = null
-    private var discNumberColumn: Int? = null
-    private var numTracksColumn: Int? = null
     private var cdTrackNumberColumn: Int? = null
     private var albumYearColumn: Int? = null
 
@@ -93,10 +91,7 @@ object DataLoader {
         //ALBUMS
         MediaStore.Audio.Albums.ALBUM,
         MediaStore.Audio.Media.ALBUM_ARTIST,
-        //TODO test the next 4 fields for old Android versions
-        MediaStore.Audio.Media.NUM_TRACKS,
-        MediaStore.Audio.Media.CD_TRACK_NUMBER,
-        MediaStore.Audio.Media.DISC_NUMBER,
+        //TODO test the next fields for old Android versions
         MediaStore.Audio.Media.YEAR,
 
         //ARTISTS
@@ -113,9 +108,13 @@ object DataLoader {
 
     init {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            //Albums
+            projection += MediaStore.Audio.Media.CD_TRACK_NUMBER
             //Genre
             projection += MediaStore.Audio.Media.GENRE
             projection += MediaStore.Audio.Media.COMPILATION
+        } else {
+            projection += MediaStore.Audio.Media.TRACK
         }
     }
 
@@ -208,10 +207,10 @@ object DataLoader {
         try {
             albumNameColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Albums.ALBUM)
             albumArtistColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ARTIST)
-            discNumberColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DISC_NUMBER)
-            numTracksColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.NUM_TRACKS)
             cdTrackNumberColumn =
-                cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.CD_TRACK_NUMBER)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
+                    cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.CD_TRACK_NUMBER)
+                else cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TRACK)
             albumYearColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.YEAR)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 albumCompilationColumn =
@@ -322,9 +321,6 @@ object DataLoader {
         }
         val displayName: String = cursor.getString(musicNameColumn!!)
         val title: String = cursor.getString(musicTitleColumn!!)
-
-        var discNumber: Int = cursor.getInt(discNumberColumn!!)
-
         val cdTrackNumber: Int = cursor.getInt(cdTrackNumberColumn!!)
 
         return Music(
@@ -334,7 +330,6 @@ object DataLoader {
             displayName = displayName,
             duration = duration,
             size = size,
-            discNumber = discNumber,
             cdTrackNumber = cdTrackNumber,
             album = album,
             artist = artist,
@@ -453,7 +448,6 @@ object DataLoader {
             name = context.getString(R.string.unknown_album)
         }
 
-        val numTracks: Int = cursor.getInt(numTracksColumn!!)
         val year: Int = cursor.getInt(albumYearColumn!!)
 
         val artist: Artist = loadAlbumArtist(context = context, cursor = cursor)
@@ -463,7 +457,6 @@ object DataLoader {
                 title = name,
                 artist = artist,
                 isCompilation = isCompilation,
-                numTracks = numTracks,
                 year = year
             )
         )

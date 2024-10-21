@@ -3,7 +3,7 @@ Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
 ## 2.4 (Android 5.1.1 Lollipop and later)
 
-### 2.4.0
+### 2.4.0-beta-1
 
 New features:
 

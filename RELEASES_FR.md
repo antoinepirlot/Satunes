@@ -1,13 +1,40 @@
 # Versions (🇫🇷)
 You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
+## 2.4 (Android 5.1.1 Lollipop et ultérieur)
+
+### 2.4.0-beta-1
+
+Nouvelles fonctionnalités:
+
+* Possibilité de liker la music dans Android Auto
+* Minuteur pouvant mettre la musique ne pause (maximum pendant 8h)
+
+Améliorations, optimisations et dépannage:
+
+* La lecture de la musique en cours depuis la meme playlist chargée ne recharge pas la lecture
+* Les musiques sont triées par numéro de piste dans les albums puis, sinon, par ordre alphabétique
+* Le nom de l'exportation du fichier de playlist et logs contiennent une date et une heure
+* Amélioration du refresh du widget
+* Suppression de la visualisation de la liste de lecture dans Android Auto pour éviter les
+  distractions
+* L'année de l'album est affichée, si elle existe
+* Les boutons de mises à jours sont mit en colonne pour améliorer leur visibilité sur certains
+  écrans
+
+Fonctionnalités supprimées:
+
+* Suppression de la visualisation de la liste de lecture dans Android Auto pour éviter les
+  distractions
+
 ## 2.3 (Android 5.1.1 Lollipop et ultérieur)
 
 ### 2.3.3
 
 Améliorations, optimisations et dépannage:
 
-* Correction du bug d'affichage innatendu causé par Android 15 en rétrogradant targetSdk vers 14
+* Correction du bug d'affichage innatendu causé par Android 15 en rétrogradant targetSdk vers
+  Android 14
 
 ### 2.3.2
 

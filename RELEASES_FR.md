@@ -11,7 +11,7 @@ Améliorations, optimisations et dépannage:
   * Crash de la lecture de la musique en cours de lecture
   * Ajout d'une musique dans une playlist
   * Montre à nouveau le bouton pour supprimer la musique de la playlist
-  * Crash lors du démarrahe sur Android Q et antérieur
+  * Crash lors du démarrage sur Android Q et antérieur
 
 ### 2.4.0-beta-1
 

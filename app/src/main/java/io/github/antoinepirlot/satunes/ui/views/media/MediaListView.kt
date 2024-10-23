@@ -31,6 +31,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -52,6 +54,9 @@ import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.ui.components.EmptyView
 import io.github.antoinepirlot.satunes.ui.components.bars.ShowCurrentMusicButton
 import io.github.antoinepirlot.satunes.ui.components.cards.media.MediaCardList
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 /**
  * @author Antoine Pirlot on 01/02/24
@@ -70,6 +75,8 @@ internal fun MediaListView(
     extraButtons: @Composable () -> Unit = { /*By default there's no extra buttons*/ },
     emptyViewText: String
 ) {
+    val lazyListState: LazyListState = rememberLazyListState()
+
     Scaffold(
         modifier = modifier,
         floatingActionButton = { //TODO move it to first scaffold for Android 15 targeting
@@ -86,7 +93,15 @@ internal fun MediaListView(
                     }
                 }
                 Spacer(modifier = Modifier.size(size = 15.dp))
-                VerticalScrollBar(color = Color.Blue, onPositionChanged = {})
+                VerticalScrollBar(
+                    color = Color.Blue,
+                    onPositionChanged = {
+                        CoroutineScope(Dispatchers.Main).launch {
+                            //Issues for the beginning of the list (jump is too big)
+                            lazyListState.scrollToItem((it * (mediaImplCollection.size)).toInt())
+                        }
+                    }
+                )
             }
         },
         floatingActionButtonPosition = FabPosition.End
@@ -94,6 +109,7 @@ internal fun MediaListView(
         if (mediaImplCollection.isNotEmpty()) {
             MediaCardList(
                 header = header,
+                lazyListState = lazyListState,
                 mediaImplCollection = mediaImplCollection,
                 openMedia = openMedia,
                 openedPlaylist = openedPlaylistWithMusics

@@ -26,6 +26,7 @@
 package io.github.antoinepirlot.satunes.ui.components.cards.media
 
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
@@ -44,6 +45,7 @@ import io.github.antoinepirlot.satunes.database.models.Playlist
 @Composable
 internal fun MediaCardList(
     modifier: Modifier = Modifier,
+    lazyListState: LazyListState = rememberLazyListState(),
     playbackViewModel: PlaybackViewModel = viewModel(),
     header: @Composable (() -> Unit)? = null,
     mediaImplCollection: Collection<MediaImpl>,
@@ -51,7 +53,6 @@ internal fun MediaCardList(
     openedPlaylist: Playlist? = null,
     scrollToMusicPlaying: Boolean = false,
 ) {
-    val lazyListState = rememberLazyListState()
     val mediaListToLoad: List<MediaImpl> =
         try {
             mediaImplCollection as List<MediaImpl>

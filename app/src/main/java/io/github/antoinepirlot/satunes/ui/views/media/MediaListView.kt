@@ -27,13 +27,20 @@ package io.github.antoinepirlot.satunes.ui.views.media
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.antoinepirlot.jetpack_libs.components.VerticalScrollBar
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
@@ -66,20 +73,26 @@ internal fun MediaListView(
     Scaffold(
         modifier = modifier,
         floatingActionButton = { //TODO move it to first scaffold for Android 15 targeting
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally
+            Row(
+                modifier = Modifier.fillMaxHeight(),
+                verticalAlignment = Alignment.Bottom,
             ) {
-                extraButtons()
-                if (playbackViewModel.musicPlaying != null) {
-                    ShowCurrentMusicButton(onClick = onFABClick)
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    extraButtons()
+                    if (playbackViewModel.musicPlaying != null) {
+                        ShowCurrentMusicButton(onClick = onFABClick)
+                    }
                 }
+                Spacer(modifier = Modifier.size(size = 15.dp))
+                VerticalScrollBar(color = Color.Blue, onPositionChanged = {})
             }
         },
         floatingActionButtonPosition = FabPosition.End
     ) { _ ->
         if (mediaImplCollection.isNotEmpty()) {
             MediaCardList(
-                modifier = Modifier,
                 header = header,
                 mediaImplCollection = mediaImplCollection,
                 openMedia = openMedia,

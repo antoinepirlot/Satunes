@@ -58,6 +58,7 @@ class Music(
     val duration: Long = 0,
     val size: Int = 0,
     cdTrackNumber: Int? = null,
+    val lyrics: String? = null,
     var folder: Folder,
     val artist: Artist,
     val album: Album,

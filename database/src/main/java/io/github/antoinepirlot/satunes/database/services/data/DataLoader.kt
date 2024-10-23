@@ -61,12 +61,12 @@ object DataLoader {
     private var musicDurationColumn: Int? = null
     private var musicSizeColumn: Int? = null
     private var absolutePathColumnId: Int? = null
+    private var cdTrackNumberColumn: Int? = null
 
     // Albums variables
     private var albumNameColumn: Int? = null
     private var albumArtistColumn: Int? = null
     private var albumCompilationColumn: Int? = null
-    private var cdTrackNumberColumn: Int? = null
     private var albumYearColumn: Int? = null
 
     // Artists variables
@@ -201,16 +201,15 @@ object DataLoader {
         musicSizeColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE)
 
         absolutePathColumnId = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA)
-
+        cdTrackNumberColumn =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
+                cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.CD_TRACK_NUMBER)
+            else cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TRACK)
 
         //Cache album columns indices
         try {
             albumNameColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Albums.ALBUM)
             albumArtistColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ARTIST)
-            cdTrackNumberColumn =
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
-                    cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.CD_TRACK_NUMBER)
-                else cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TRACK)
             albumYearColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.YEAR)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 albumCompilationColumn =

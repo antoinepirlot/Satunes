@@ -18,11 +18,11 @@ Améliorations, optimisations et dépannage:
 Nouvelles fonctionnalités:
 
 * Possibilité de liker la music dans Android Auto
-* Minuteur pouvant mettre la musique ne pause (maximum pendant 8h)
+* Minuteur pouvant mettre la musique en pause (maximum pendant 8h)
 
 Améliorations, optimisations et dépannage:
 
-* La lecture de la musique en cours depuis la meme playlist chargée ne recharge pas la lecture
+* La lecture de la musique en cours depuis la même playlist chargée ne recharge pas la lecture
 * Les musiques sont triées par numéro de piste dans les albums puis, sinon, par ordre alphabétique
 * Le nom de l'exportation du fichier de playlist et logs contiennent une date et une heure
 * Amélioration du refresh du widget

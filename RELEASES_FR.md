@@ -1,13 +1,72 @@
 # Versions (🇫🇷)
 You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
+## 2.4 (Android 5.1.1 Lollipop et ultérieur)
+
+### 2.4.0
+
+Nouvelles fonctionnalités:
+
+* Possibilité de liker la music dans Android Auto
+* Minuteur pouvant mettre la musique en pause (maximum pendant 8h)
+
+Améliorations, optimisations et dépannage:
+
+* La lecture de la musique en cours depuis la même playlist chargée ne recharge pas la lecture
+* Les musiques sont triées par numéro de piste dans les albums puis, sinon, par ordre alphabétique
+* Le nom de l'exportation du fichier de playlist et logs contiennent une date et une heure
+* Amélioration du refresh du widget
+* L'année de l'album est affichée, si elle existe
+* Les boutons de mises à jours sont mit en colonne pour améliorer leur visibilité sur certains
+  écrans
+* Le bouton like dans Android Auto a été échangé avec le bouton shuffle
+* Correction du changement de piste vers la précédente dans certaines conditions
+
+Fonctionnalités supprimées:
+
+* Suppression de la visualisation de la liste de lecture dans Android Auto pour éviter les
+  distractions
+
+### v2.4.0-preview-1
+
+Améliorations, optimisations et dépannage:
+
+* Correction des bogues de la v2.4.0-beta-1
+  * Crash de la lecture de la musique en cours de lecture
+  * Ajout d'une musique dans une playlist
+  * Montre à nouveau le bouton pour supprimer la musique de la playlist
+  * Crash lors du démarrage sur Android Q et antérieur
+
+### 2.4.0-beta-1
+
+Nouvelles fonctionnalités:
+
+* Possibilité de liker la music dans Android Auto
+* Minuteur pouvant mettre la musique en pause (maximum pendant 8h)
+
+Améliorations, optimisations et dépannage:
+
+* La lecture de la musique en cours depuis la même playlist chargée ne recharge pas la lecture
+* Les musiques sont triées par numéro de piste dans les albums puis, sinon, par ordre alphabétique
+* Le nom de l'exportation du fichier de playlist et logs contiennent une date et une heure
+* Amélioration du refresh du widget
+* L'année de l'album est affichée, si elle existe
+* Les boutons de mises à jours sont mit en colonne pour améliorer leur visibilité sur certains
+  écrans
+
+Fonctionnalités supprimées:
+
+* Suppression de la visualisation de la liste de lecture dans Android Auto pour éviter les
+  distractions
+
 ## 2.3 (Android 5.1.1 Lollipop et ultérieur)
 
 ### 2.3.3
 
 Améliorations, optimisations et dépannage:
 
-* Correction du bug d'affichage innatendu causé par Android 15 en rétrogradant targetSdk vers 14
+* Correction du bug d'affichage innatendu causé par Android 15 en rétrogradant targetSdk vers
+  Android 14
 
 ### 2.3.2
 

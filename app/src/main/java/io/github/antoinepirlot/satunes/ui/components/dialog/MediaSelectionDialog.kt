@@ -25,32 +25,34 @@
 
 package io.github.antoinepirlot.satunes.ui.components.dialog
 
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.local.LocalMainScope
 import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
+import io.github.antoinepirlot.satunes.data.states.MediaSelectionUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.MediaSelectionViewModel
+import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.forms.MediaSelectionForm
 import io.github.antoinepirlot.satunes.ui.components.forms.PlaylistCreationForm
 import kotlinx.coroutines.CoroutineScope
+import io.github.antoinepirlot.satunes.database.R as RDb
 
 /**
  * @author Antoine Pirlot on 30/03/2024
@@ -59,25 +61,24 @@ import kotlinx.coroutines.CoroutineScope
 @Composable
 internal fun MediaSelectionDialog(
     modifier: Modifier = Modifier,
+    mediaSelectionViewModel: MediaSelectionViewModel = viewModel(),
     onDismissRequest: () -> Unit,
     onConfirm: () -> Unit,
     mediaImplCollection: Collection<MediaImpl>,
     playlistTitle: String? = null,
     icon: SatunesIcons,
 ) {
-    val showPlaylistCreation: MutableState<Boolean> =
-        rememberSaveable { mutableStateOf(mediaImplCollection.isEmpty()) }
+    val mediaSelectionUiState: MediaSelectionUiState by mediaSelectionViewModel.uiState.collectAsState()
+    val showPlaylistCreation: Boolean = mediaSelectionUiState.showPlaylistCreation
 
-    if (showPlaylistCreation.value) {
+    if (showPlaylistCreation) {
         CreateNewPlaylistForm(
             modifier = modifier,
-            showPlaylistCreation = showPlaylistCreation,
-            onDismissRequest = { showPlaylistCreation.value = false }
+            onDismissRequest = { mediaSelectionViewModel.setShowPlaylistCreation(value = false) }
         )
     } else {
         MediaSelectionDialogList(
             modifier = modifier,
-            showPlaylistCreation = showPlaylistCreation,
             onDismissRequest = onDismissRequest,
             onConfirm = onConfirm,
             mediaImplCollection = mediaImplCollection,
@@ -90,8 +91,8 @@ internal fun MediaSelectionDialog(
 @Composable
 private fun CreateNewPlaylistForm(
     modifier: Modifier,
+    mediaSelectionViewModel: MediaSelectionViewModel = viewModel(),
     dataViewModel: DataViewModel = viewModel(),
-    showPlaylistCreation: MutableState<Boolean>,
     onDismissRequest: () -> Unit
 ) {
     val scope: CoroutineScope = LocalMainScope.current
@@ -103,9 +104,12 @@ private fun CreateNewPlaylistForm(
             dataViewModel.addOnePlaylist(
                 scope = scope,
                 snackBarHostState = snackBarHostState,
-                playlistTitle = playlistTitle
+                playlistTitle = playlistTitle,
+                onPlaylistAdded = {
+                    mediaSelectionViewModel.addPlaylist(dataViewModel.getPlaylist(title = playlistTitle))
+                }
             )
-            showPlaylistCreation.value = false
+            mediaSelectionViewModel.setShowPlaylistCreation(value = false)
         },
         onDismissRequest = onDismissRequest
     )
@@ -114,9 +118,7 @@ private fun CreateNewPlaylistForm(
 @Composable
 private fun MediaSelectionDialogList(
     modifier: Modifier,
-    dataViewModel: DataViewModel = viewModel(),
     mediaSelectionViewModel: MediaSelectionViewModel = viewModel(),
-    showPlaylistCreation: MutableState<Boolean>,
     onDismissRequest: () -> Unit,
     onConfirm: () -> Unit,
     mediaImplCollection: Collection<MediaImpl>,
@@ -124,7 +126,7 @@ private fun MediaSelectionDialogList(
     icon: SatunesIcons,
 ) {
     AlertDialog(
-        modifier = modifier,
+        modifier = modifier.padding(vertical = 50.dp),
         icon = {
             Icon(imageVector = icon.imageVector, contentDescription = icon.description)
         },
@@ -135,24 +137,20 @@ private fun MediaSelectionDialogList(
                 if (playlistTitle == null) {
                     throw IllegalStateException("PlaylistDB title is required when adding music to playlistDB")
                 }
+                @Suppress("NAME_SHADOWING")
+                val playlistTitle: String =
+                    if (playlistTitle == LIKES_PLAYLIST_TITLE)
+                        stringResource(RDb.string.likes_playlist_title)
+                    else
+                        playlistTitle
+
                 NormalText(text = stringResource(id = R.string.add_to) + playlistTitle)
             } else {
                 NormalText(text = stringResource(id = R.string.add_to_playlist))
             }
         },
         text = {
-            Column {
-                if (
-                    mediaImplCollection.isEmpty() && dataViewModel.getPlaylistSet()
-                        .isNotEmpty() || // Avoid having create new playlistDB when user has no music
-                    mediaImplCollection.isEmpty() || mediaImplCollection.first() is Playlist
-                ) {
-                    TextButton(onClick = { showPlaylistCreation.value = true }) {
-                        NormalText(text = stringResource(id = R.string.create_playlist))
-                    }
-                }
-                MediaSelectionForm(mediaImplCollection = mediaImplCollection)
-            }
+            MediaSelectionForm(mediaImplCollection = mediaImplCollection)
         },
         onDismissRequest = {
             mediaSelectionViewModel.clearAll()

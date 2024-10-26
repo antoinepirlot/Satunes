@@ -38,7 +38,7 @@ class Artist(
 ) : MediaImpl(id = nextId, title = title) {
     private val albumSortedSet: SortedSet<Album> = sortedSetOf()
 
-    val albumSortedMapUpdate: MutableState<Boolean> = mutableStateOf(false)
+    val albumSortedSetUpdate: MutableState<Boolean> = mutableStateOf(false)
 
     companion object {
         var nextId: Long = 1

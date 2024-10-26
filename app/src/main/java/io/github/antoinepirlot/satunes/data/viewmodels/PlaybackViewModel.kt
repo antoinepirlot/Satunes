@@ -34,22 +34,34 @@ import androidx.compose.runtime.getValue
 import androidx.lifecycle.ViewModel
 import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.data.states.PlaybackUiState
 import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.models.ProgressBarLifecycleCallbacks
+import io.github.antoinepirlot.satunes.models.Timer
 import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
 import io.github.antoinepirlot.satunes.ui.utils.showErrorSnackBar
 import io.github.antoinepirlot.satunes.ui.utils.showSnackBar
 import io.github.antoinepirlot.satunes.utils.getMediaTitle
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 
 /**
  * @author Antoine Pirlot on 19/07/2024
  */
 class PlaybackViewModel : ViewModel() {
+
+    companion object {
+        private val _uiState: MutableStateFlow<PlaybackUiState> =
+            MutableStateFlow(PlaybackUiState())
+    }
+
     private val _logger: SatunesLogger = SatunesLogger.getLogger()
     private var _isPlaying: MutableState<Boolean> = PlaybackManager.isPlaying
     private var _musicPlaying: MutableState<Music?> = PlaybackManager.musicPlaying
@@ -60,6 +72,8 @@ class PlaybackViewModel : ViewModel() {
     private var _isLoaded: MutableState<Boolean> = PlaybackManager.isLoaded
     private var _isEnded: MutableState<Boolean> = PlaybackManager.isEnded
 
+    val uiState: StateFlow<PlaybackUiState> = _uiState.asStateFlow()
+
     val isPlaying: Boolean by _isPlaying
     val musicPlaying: Music? by _musicPlaying
     val currentPositionProgression: Float by _currentPositionProgression
@@ -67,6 +81,7 @@ class PlaybackViewModel : ViewModel() {
     val isShuffle: Boolean by _isShuffle
     val isLoaded: Boolean by _isLoaded
     val isEnded: Boolean by _isEnded
+
 
     init {
         // Needed to refresh progress bar
@@ -313,5 +328,84 @@ class PlaybackViewModel : ViewModel() {
     fun stop() {
         _logger.info("Stop")
         PlaybackManager.stop()
+    }
+
+    /**
+     * Set a timer for [minutes] minutes.
+     *
+     * @param scope
+     * @param snackBarHostState
+     * @param minutes the number of minutes as [Int]
+     */
+    fun setTimer(
+        scope: CoroutineScope,
+        snackBarHostState: SnackbarHostState,
+        hours: Int,
+        minutes: Int,
+        seconds: Int
+    ) {
+        if (hours <= 0 && minutes <= 0 && seconds <= 0) return
+        val context: Context = MainActivity.instance.applicationContext
+        try {
+            _uiState.value.timer?.cancel()
+            _uiState.update { currentState: PlaybackUiState ->
+                currentState.copy(
+                    timer = Timer(
+                        function = {
+                            PlaybackManager.pause(context = context)
+                            _uiState.update { currentState: PlaybackUiState ->
+                                currentState.copy(timer = null)
+                            }
+                            showSnackBar(
+                                scope = scope,
+                                snackBarHostState = snackBarHostState,
+                                message = context.getString(R.string.pause_media_timer_snackbar)
+                            )
+                        },
+                        hours = hours,
+                        minutes = minutes,
+                        seconds = seconds
+                    )
+                )
+            }
+        } catch (e: Throwable) {
+            _logger.severe(e.message)
+            showErrorSnackBar(
+                scope = scope,
+                snackBarHostState = snackBarHostState,
+                action = {
+                    this.setTimer(
+                        scope = scope,
+                        snackBarHostState = snackBarHostState,
+                        hours = hours,
+                        minutes = minutes,
+                        seconds = seconds
+                    )
+                }
+            )
+        }
+    }
+
+    fun cancelTimer(scope: CoroutineScope, snackBarHostState: SnackbarHostState) {
+        try {
+            _uiState.value.timer?.cancel()
+            _uiState.update { currentState: PlaybackUiState ->
+                currentState.copy(timer = null)
+            }
+            showSnackBar(
+                scope = scope,
+                snackBarHostState = snackBarHostState,
+                message = MainActivity.instance.getString(R.string.timer_cancelled_snackbar_content)
+            )
+        } catch (e: Throwable) {
+            _logger.severe(e.message)
+            showErrorSnackBar(
+                scope = scope,
+                snackBarHostState = snackBarHostState,
+                action = {
+                    this.cancelTimer(scope = scope, snackBarHostState = snackBarHostState)
+                }
+            )
+        }
     }
 }

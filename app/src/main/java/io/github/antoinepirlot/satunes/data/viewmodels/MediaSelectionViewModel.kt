@@ -26,18 +26,29 @@
 package io.github.antoinepirlot.satunes.data.viewmodels
 
 import androidx.lifecycle.ViewModel
+import io.github.antoinepirlot.satunes.data.states.MediaSelectionUiState
+import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 
 /**
  * @author Antoine Pirlot on 30/03/2024
  */
 internal class MediaSelectionViewModel : ViewModel() {
+    private val _uiState: MutableStateFlow<MediaSelectionUiState> = MutableStateFlow(
+        MediaSelectionUiState()
+    )
     /**
-     * List of checked playlists' ids to know where to add music from form
+     * List of checked playlists to know where to add music from form
      */
     private val _checkedPlaylistWithMusics: MutableList<Playlist> = mutableListOf()
     private val _checkedMusics: MutableList<Music> = mutableListOf()
+
+    val uiState: StateFlow<MediaSelectionUiState> = _uiState.asStateFlow()
 
     fun clearAll() {
         this.clearCheckedMusics()
@@ -78,5 +89,19 @@ internal class MediaSelectionViewModel : ViewModel() {
 
     fun clearCheckedMusics() {
         _checkedMusics.clear()
+    }
+
+    fun setShowPlaylistCreation(value: Boolean) {
+        _uiState.update { currentState: MediaSelectionUiState ->
+            currentState.copy(showPlaylistCreation = value)
+        }
+    }
+
+    fun isChecked(mediaImpl: MediaImpl): Boolean {
+        return when (mediaImpl) {
+            is Music -> this._checkedMusics.contains(element = mediaImpl)
+            is Playlist -> this._checkedPlaylistWithMusics.contains(element = mediaImpl)
+            else -> throw IllegalArgumentException("The media is not a music or playlist")
+        }
     }
 }

@@ -39,6 +39,7 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import io.github.antoinepirlot.satunes.car.playback.SatunesCarCallBack.ACTIONS_ON_PAUSE
 import io.github.antoinepirlot.satunes.car.playback.SatunesCarCallBack.ACTIONS_ON_PLAY
+import io.github.antoinepirlot.satunes.car.playback.SatunesCarCallBack.ACTION_LIKE
 import io.github.antoinepirlot.satunes.car.playback.SatunesCarCallBack.ACTION_REPEAT
 import io.github.antoinepirlot.satunes.car.playback.SatunesCarCallBack.ACTION_SHUFFLE
 import io.github.antoinepirlot.satunes.database.models.Music
@@ -121,7 +122,12 @@ internal object SatunesPlaybackListener : PlaybackListener() {
                 else -> R.drawable.repeat_off
             }
         ).build()
+        val likeAction = CustomAction.Builder(
+            ACTION_LIKE, "Like",
+            if (musicPlaying.liked.value) R.drawable.favorite else R.drawable.unfavorite
+        ).build()
         val playbackState: PlaybackStateCompat = PlaybackStateCompat.Builder()
+            .addCustomAction(likeAction)
             .addCustomAction(shuffleAction)
             .addCustomAction(repeatAction)
             .setState(state, currentPosition, 1F)

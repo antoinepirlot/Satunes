@@ -6,4 +6,5 @@
     android:description="@string/classic_widget_description"
     android:initialLayout="@layout/glance_default_loading_layout"
     android:resizeMode="horizontal"
+    android:updatePeriodMillis="3600"
     android:previewImage="@drawable/widget_preview" />

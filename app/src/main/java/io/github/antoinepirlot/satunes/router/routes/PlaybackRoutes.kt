@@ -30,12 +30,13 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
+import io.github.antoinepirlot.satunes.data.local.LocalNavController
+import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.router.utils.openMedia
-import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
-import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.ui.views.LoadingView
 import io.github.antoinepirlot.satunes.ui.views.playback.PlaybackView
 import io.github.antoinepirlot.satunes.ui.views.playback.common.PlaybackQueueView
@@ -45,7 +46,6 @@ import io.github.antoinepirlot.satunes.ui.views.playback.common.PlaybackQueueVie
  */
 
 internal fun NavGraphBuilder.playbackRoutes(
-    navController: NavHostController,
     satunesViewModel: SatunesViewModel,
     playbackViewModel: PlaybackViewModel,
     onStart: AnimatedContentScope.(NavBackStackEntry) -> Unit,
@@ -56,8 +56,8 @@ internal fun NavGraphBuilder.playbackRoutes(
         if (satunesViewModel.isLoadingData || !satunesViewModel.isDataLoaded) {
             LoadingView()
         } else {
+            val navController: NavHostController = LocalNavController.current
             PlaybackView(
-                navController = navController,
                 onAlbumClick = { album: Album? ->
                     if (album != null) {
                         openMedia(
@@ -80,6 +80,6 @@ internal fun NavGraphBuilder.playbackRoutes(
 
     composable(Destination.PLAYBACK_QUEUE.link) {
         onStart(it)
-        PlaybackQueueView(navController = navController)
+        PlaybackQueueView()
     }
 }

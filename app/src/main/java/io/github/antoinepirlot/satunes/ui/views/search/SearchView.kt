@@ -47,9 +47,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SearchViewModel
@@ -72,11 +72,11 @@ import kotlinx.coroutines.launch
 @Composable
 internal fun SearchView(
     modifier: Modifier = Modifier,
-    navController: NavHostController,
     dataViewModel: DataViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
     searchViewModel: SearchViewModel = viewModel(),
 ) {
+    val navController: NavHostController = LocalNavController.current
     val query: String = searchViewModel.query
     val mediaImplList: Set<MediaImpl> = searchViewModel.mediaImplSet
     val selectedSearchChips: List<SearchChips> = searchViewModel.selectedSearchChips
@@ -123,7 +123,6 @@ internal fun SearchView(
         Spacer(modifier = Modifier.size(16.dp))
         MediaChipList()
         MediaListView(
-            navController = navController,
             mediaImplCollection = mediaImplList,
             openMedia = { mediaImpl: MediaImpl ->
                 if (mediaImpl is Music) {
@@ -152,6 +151,5 @@ internal fun SearchView(
 @Preview
 @Composable
 private fun SearchViewPreview() {
-    val navController: NavHostController = rememberNavController()
-    SearchView(navController = navController)
+    SearchView()
 }

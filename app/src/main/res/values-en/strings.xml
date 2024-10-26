@@ -109,4 +109,12 @@
     <string name="clean_playlist_button_text">Clean</string>
     <string name="cleaning_snack_message">Cleaning… 🧹</string>
     <string name="cleaned_snackbar_text">Cleaned 🧹</string>
+    <string name="timer_settings_title">Timer</string>
+    <string name="minutes_text_field_label">Minutes</string>
+    <string name="remaining_time_content">Remaining time: %1$s</string>
+    <string name="start_timer_button_content">Start</string>
+    <string name="timer_cancelled_snackbar_content">Timer cancelled</string>
+    <string name="pause_media_timer_snackbar">The timer paused the music</string>
+    <string name="seconds_text_field_label">Seconds</string>
+    <string name="hours_text_field_label">Hours</string>
 </resources>

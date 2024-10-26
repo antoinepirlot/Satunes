@@ -193,4 +193,30 @@ internal class Playlist(musicSet: Set<Music>) {
         this.musicList.remove(element = music)
         return oldIndex
     }
+
+    /**
+     * Checks if this playlist is the same as [originalMusicMediaItemMap]'s keys.
+     * True means it's the same playlist otherwise false.
+     *
+     * @return true if [originalMusicMediaItemMap] contains all [musicSet]'s musics as keys false otherwise
+     */
+    internal fun hasPlaylistMusicSet(musicSet: Set<Music>): Boolean {
+        if (this.musicCount() != musicSet.size) return false
+        for (music in musicSet)
+            if (!this.originalMusicMediaItemMap.contains(key = music)) return false
+        return true
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Playlist) return false
+
+        if (originalMusicMediaItemMap != other.originalMusicMediaItemMap) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        return originalMusicMediaItemMap.hashCode()
+    }
 }

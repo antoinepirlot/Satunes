@@ -35,6 +35,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -50,11 +51,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.jetpack_libs.components.models.ScreenSizes
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.jetpack_libs.components.texts.Subtitle
+import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
@@ -66,13 +66,9 @@ import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.ui.components.cards.ListItem
-import io.github.antoinepirlot.satunes.ui.components.dialog.album.AlbumOptionsDialog
-import io.github.antoinepirlot.satunes.ui.components.dialog.artist.ArtistOptionsDialog
-import io.github.antoinepirlot.satunes.ui.components.dialog.folder.FolderOptionsDialog
-import io.github.antoinepirlot.satunes.ui.components.dialog.genre.GenreOptionsDialog
-import io.github.antoinepirlot.satunes.ui.components.dialog.music.MusicOptionsDialog
-import io.github.antoinepirlot.satunes.ui.components.dialog.playlist.PlaylistOptionsDialog
+import io.github.antoinepirlot.satunes.ui.components.dialog.media.MediaOptionsDialog
 import io.github.antoinepirlot.satunes.ui.components.images.MediaArtwork
 import io.github.antoinepirlot.satunes.ui.utils.getRootFolderName
 import io.github.antoinepirlot.satunes.database.R as RDb
@@ -85,13 +81,15 @@ import io.github.antoinepirlot.satunes.database.R as RDb
 @Composable
 internal fun MediaCard(
     modifier: Modifier = Modifier,
-    navController: NavHostController,
     satunesViewModel: SatunesViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
     media: MediaImpl,
-    onClick: () -> Unit,
+    onClick: (() -> Unit)?,
+    enableExtraOptions: Boolean = true,
     openedPlaylist: Playlist?,
 ) {
+    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+
     val haptics: HapticFeedback = LocalHapticFeedback.current
     var showMediaOption: Boolean by remember { mutableStateOf(false) }
 
@@ -104,20 +102,23 @@ internal fun MediaCard(
             media.title
         }
     val screenWidthDp: Int = LocalConfiguration.current.screenWidthDp
-    Box(
-        modifier = modifier.combinedClickable(
+    val boxModifier: Modifier = if (onClick != null) {
+        modifier.combinedClickable(
             onClick = {
                 if (!showMediaOption) {
-                    onClick()
+                    onClick.invoke()
                 }
             },
-            onLongClick = {
-                haptics.performHapticFeedback(HapticFeedbackType.LongPress)
-                showMediaOption = true
-                satunesViewModel.mediaOptionsIsOpen()
-            }
-        ),
-    ) {
+            onLongClick = if (enableExtraOptions) {
+                {
+                    haptics.performHapticFeedback(HapticFeedbackType.LongPress)
+                    showMediaOption = true
+                    satunesViewModel.mediaOptionsIsOpen()
+                }
+            } else null
+        )
+    } else modifier
+    Box(modifier = boxModifier) {
         ListItem(
             leadingContent = {
                 val boxSize: Dp = if (screenWidthDp < ScreenSizes.VERY_VERY_SMALL)
@@ -146,7 +147,11 @@ internal fun MediaCard(
             },
             headlineContent = {
                 Column {
-                    NormalText(text = title)
+                    if (satunesUiState.currentDestination == Destination.ALBUMS && media is Music && media.cdTrackNumber != null) {
+                        NormalText(text = media.cdTrackNumber.toString() + " - " + title)
+                    } else {
+                        NormalText(text = title)
+                    }
                     //Use these as for the same thing the builder doesn't like in one
                     if (media is Album) {
                         Subtitle(text = media.artist.title)
@@ -171,72 +176,15 @@ internal fun MediaCard(
     }
     HorizontalDivider(modifier = modifier)
 
-    // Music options dialog
-    if (showMediaOption && media is Music) {
-        MusicOptionsDialog(
-            navController = navController,
-            music = media,
-            playlist = openedPlaylist,
+    // Media option dialog
+    if (showMediaOption) {
+        MediaOptionsDialog(
+            media = media,
+            openedPlaylist = openedPlaylist,
             onDismissRequest = {
                 showMediaOption = false
                 satunesViewModel.mediaOptionsIsClosed()
             }
-        )
-    }
-
-    // Playlist option dialog
-    if (showMediaOption && media is Playlist) {
-        PlaylistOptionsDialog(
-            playlist = media,
-            onDismissRequest = {
-                showMediaOption = false
-                satunesViewModel.mediaOptionsIsClosed()
-            }
-        )
-    }
-
-    // Artist option dialog
-    if (showMediaOption && media is Artist) {
-        ArtistOptionsDialog(
-            artist = media,
-            onDismissRequest = {
-                showMediaOption = false
-                satunesViewModel.mediaOptionsIsClosed()
-            }
-        )
-    }
-
-    // Album option dialog
-    if (showMediaOption && media is Album) {
-        AlbumOptionsDialog(
-            navController = navController,
-            album = media,
-            onDismissRequest = {
-                showMediaOption = false
-                satunesViewModel.mediaOptionsIsClosed()
-            }
-        )
-    }
-
-    // Genre option dialog
-    if (showMediaOption && media is Genre) {
-        GenreOptionsDialog(
-            genre = media,
-            onDismissRequest = {
-                showMediaOption = false
-                satunesViewModel.mediaOptionsIsClosed()
-            }
-        )
-    }
-
-    // Folder option dialog
-    if (showMediaOption && media is Folder) {
-        FolderOptionsDialog(
-            folder = media,
-            onDismissRequest = {
-                showMediaOption = false
-                satunesViewModel.mediaOptionsIsClosed()
-            },
         )
     }
 }
@@ -249,18 +197,16 @@ private fun CardPreview() {
         id = 1,
         title = "",
         displayName = "Il avait les mots",
+        absolutePath = "absolute path",
         duration = 2,
         size = 2,
         folder = Folder(title = "Folder"),
-        album = Album(title = "Album Title", artist = artist),
         artist = artist,
+        album = Album(title = "Album Title", artist = artist),
         genre = Genre(title = "Genre Title"),
-        absolutePath = "absolute path",
     )
-    val navController: NavHostController = rememberNavController()
     MediaCard(
         modifier = Modifier.fillMaxSize(),
-        navController = navController,
         media = music,
         onClick = {},
         openedPlaylist = null

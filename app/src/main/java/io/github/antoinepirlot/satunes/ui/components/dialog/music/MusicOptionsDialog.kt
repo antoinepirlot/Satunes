@@ -31,7 +31,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.database.models.Music
@@ -54,10 +53,9 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.music.options.Remove
 @Composable
 internal fun MusicOptionsDialog(
     modifier: Modifier = Modifier,
-    navController: NavHostController,
     playbackViewModel: PlaybackViewModel = viewModel(),
     music: Music,
-    playlist: Playlist? = null,
+    playlist: Playlist? = null, //TODO move that in satunes view model or using current route
     onDismissRequest: () -> Unit,
 ) {
     AlertDialog(
@@ -117,10 +115,10 @@ internal fun MusicOptionsDialog(
                 /**
                  * Redirections
                  */
-                NavigateToMediaMusicOption(navController = navController, mediaImpl = music.album)
-                NavigateToMediaMusicOption(navController = navController, mediaImpl = music.artist)
-                NavigateToMediaMusicOption(navController = navController, mediaImpl = music.genre)
-                NavigateToMediaMusicOption(navController = navController, mediaImpl = music.folder)
+                NavigateToMediaMusicOption(mediaImpl = music.album)
+                NavigateToMediaMusicOption(mediaImpl = music.artist)
+                NavigateToMediaMusicOption(mediaImpl = music.genre)
+                NavigateToMediaMusicOption(mediaImpl = music.folder)
             }
         },
         onDismissRequest = { onDismissRequest() },

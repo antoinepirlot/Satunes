@@ -43,11 +43,11 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.jetpack_libs.components.models.ScreenSizes
 import io.github.antoinepirlot.jetpack_libs.components.texts.Subtitle
 import io.github.antoinepirlot.jetpack_libs.components.texts.Title
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
@@ -67,10 +67,10 @@ import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 @Composable
 internal fun AlbumView(
     modifier: Modifier = Modifier,
-    navController: NavHostController,
     playbackViewModel: PlaybackViewModel = viewModel(),
     album: Album,
 ) {
+    val navController: NavHostController = LocalNavController.current
     val musicSet: Set<Music> = album.getMusicSet()
 
     //Recompose if data changed
@@ -82,7 +82,6 @@ internal fun AlbumView(
 
     MediaListView(
         modifier = modifier,
-        navController = navController,
         mediaImplCollection = musicSet,
         openMedia = { clickedMediaImpl: MediaImpl ->
             playbackViewModel.loadMusic(
@@ -102,7 +101,7 @@ internal fun AlbumView(
             )
         },
         header = {
-            Header(navController = navController, album = album)
+            Header(album = album)
         },
         extraButtons = {
             if (album.getMusicSet().isNotEmpty()) {
@@ -133,9 +132,10 @@ internal fun AlbumView(
 private fun Header(
     modifier: Modifier = Modifier,
     playbackViewModel: PlaybackViewModel = viewModel(),
-    navController: NavHostController,
     album: Album
 ) {
+    val navController: NavHostController = LocalNavController.current
+
     Column(modifier = modifier.padding(vertical = 16.dp)) {
         val screenWidthDp = LocalConfiguration.current.screenWidthDp
         val albumSize: Dp = if (screenWidthDp < ScreenSizes.VERY_VERY_SMALL)
@@ -163,7 +163,7 @@ private fun Header(
                         navController = navController
                     )
                 },
-            text = album.artist.title
+            text = if (album.year != null) "${album.artist.title} - ${album.year}" else album.artist.title
         )
     }
 }
@@ -171,9 +171,7 @@ private fun Header(
 @Preview
 @Composable
 private fun AlbumViewPreview() {
-    val navController: NavHostController = rememberNavController()
     AlbumView(
-        navController = navController,
         album = Album(
             title = "Album title",
             artist = Artist(title = "Artist Title"),

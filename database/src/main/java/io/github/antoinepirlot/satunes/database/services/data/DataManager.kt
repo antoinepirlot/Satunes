@@ -167,7 +167,7 @@ object DataManager {
      * Remove folder and its subfolder from data
      */
     fun removeFolder(folder: Folder) {
-        folder.getSubFolderMap().forEach {
+        folder.getSubFolderSet().forEach {
             this.removeFolder(folder = it)
         }
         rootFolderSortedSet.remove(folder)

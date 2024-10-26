@@ -1,13 +1,67 @@
 # Releases (🇬🇧)
 Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
+## 2.4 (Android 5.1.1 Lollipop and later)
+
+### 2.4.0
+
+New features:
+
+* Ability to like music in Android Auto
+* Timer that can pause music (maximum for 8 hours)
+
+Improvements, optimizations and troubleshooting:
+
+* Playing the current music from the same loaded playlist does not reload the playback
+* Music is sorted by track number in albums and then, otherwise, alphabetically
+* The name of the exported playlist file and logs contains a date and time
+* Improved widget refresh
+* The year of the album is displayed, if it exists
+* Update buttons are put in a column to improve their visibility on some screens
+* Like button in Android Auto has been swapped with shuffle button
+* Fixed track switching to previous under certain conditions
+
+Removed features:
+
+* Removed the playlist visualization in Android Auto to avoid distractions
+
+### 2.4.0-preview-1
+
+Improvements, optimizations and troubleshooting:
+
+* Fix v2.4.0-beta-1 issues
+  * Playing music crash in certain conditions
+  * Add music into playlists
+  * Show missing remove music from playlist
+  * Android Q and less crash at launching
+
+### 2.4.0-beta-1
+
+New features:
+
+* Ability to like music in Android Auto
+* Timer that can pause music (maximum for 8 hours)
+
+Improvements, optimizations and troubleshooting:
+
+* Playing the current music from the same loaded playlist does not reload the playback
+* Music is sorted by track number in albums and then, otherwise, alphabetically
+* The name of the exported playlist file and logs contains a date and time
+* Improved widget refresh
+* The year of the album is displayed, if it exists
+* Update buttons are put in a column to improve their visibility on some screens
+
+Removed features:
+
+* Removed the playlist visualization in Android Auto to avoid distractions
+
 ## 2.3 (Android 5.1.1 Lollipop and later)
 
 ### 2.3.3
 
 Improvements, optimizations and troubleshooting:
 
-* Fix Android 15 unintended ui issues by rolling back targetSdk to 14
+* Fix Android 15 unintended ui issues by rolling back targetSdk to Android 14
 
 ### 2.3.2
 

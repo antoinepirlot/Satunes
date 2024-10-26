@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import io.github.antoinepirlot.jetpack_libs.components.texts.Title
+import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.database.R
 import io.github.antoinepirlot.satunes.database.models.Album
@@ -53,10 +54,11 @@ import io.github.antoinepirlot.satunes.ui.components.cards.albums.AlbumGrid
 internal fun MediaWithAlbumsHeaderView(
     modifier: Modifier = Modifier,
     playbackViewModel: PlaybackViewModel = viewModel(),
-    navController: NavHostController,
     mediaImpl: MediaImpl,
     albumCollection: Collection<Album>,
 ) {
+    val navController: NavHostController = LocalNavController.current
+
     Column(modifier = modifier) {
         Title(text = mediaImpl.title)
         AlbumGrid(

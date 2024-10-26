@@ -59,13 +59,13 @@ import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.ui.components.bars.MusicControlBar
-import io.github.antoinepirlot.satunes.ui.components.buttons.playback.custom_actions.PlaybackCustomActionsBar
+import io.github.antoinepirlot.satunes.ui.components.bars.playback.MusicControlBar
+import io.github.antoinepirlot.satunes.ui.components.bars.playback.PlaybackCustomActionsBar
 import io.github.antoinepirlot.satunes.ui.components.dialog.artist.ArtistOptionsDialog
 import io.github.antoinepirlot.satunes.ui.components.images.MusicPlayingAlbumArtwork
 
 /**
- * @author Antoine Pirlot on 25/01/24
+ * @author Antoine Pirlot on 25/01/2024
  */
 
 @OptIn(ExperimentalFoundationApi::class)

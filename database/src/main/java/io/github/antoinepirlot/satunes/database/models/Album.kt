@@ -25,6 +25,9 @@
 
 package io.github.antoinepirlot.satunes.database.models
 
+import io.github.antoinepirlot.satunes.database.models.comparators.MusicInAlbumComparator
+import java.util.SortedSet
+
 /**
  * @author Antoine Pirlot on 27/03/2024
  */
@@ -32,13 +35,16 @@ package io.github.antoinepirlot.satunes.database.models
 class Album(
     title: String,
     var artist: Artist,
-    var isCompilation: Boolean = false
+    var isCompilation: Boolean = false,
+    year: Int? = null
 ) : MediaImpl(id = nextId, title = title) {
 
     companion object {
         var nextId: Long = 1
     }
 
+    override val musicSortedSet: SortedSet<Music> = sortedSetOf(MusicInAlbumComparator)
+    val year: Int? = if (year != null && year < 1) null else year
     init {
         nextId++
     }

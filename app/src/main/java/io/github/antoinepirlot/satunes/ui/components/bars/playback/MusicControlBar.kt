@@ -23,7 +23,7 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.bars
+package io.github.antoinepirlot.satunes.ui.components.bars.playback
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.ScrollState

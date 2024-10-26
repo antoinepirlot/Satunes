@@ -37,9 +37,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.local.LocalMainScope
+import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
@@ -62,10 +62,10 @@ internal fun PlaylistListView(
     modifier: Modifier = Modifier,
     dataViewModel: DataViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
-    navController: NavHostController,
 ) {
     val scope: CoroutineScope = LocalMainScope.current
     val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
+    val navController: NavHostController = LocalNavController.current
     var openAlertDialog by remember { mutableStateOf(false) }
 
     Column(modifier = modifier) {
@@ -80,7 +80,6 @@ internal fun PlaylistListView(
 
         MediaListView(
             mediaImplCollection = playlistSet,
-            navController = navController,
             openMedia = { clickedMediaImpl: MediaImpl ->
                 openMedia(
                     playbackViewModel = playbackViewModel,
@@ -134,6 +133,5 @@ internal fun PlaylistListView(
 @Preview
 @Composable
 private fun PlaylistListViewPreview() {
-    val navController: NavHostController = rememberNavController()
-    PlaylistListView(navController = navController)
+    PlaylistListView()
 }

@@ -54,6 +54,7 @@ import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.ui.utils.showErrorSnackBar
 import io.github.antoinepirlot.satunes.ui.utils.showSnackBar
+import io.github.antoinepirlot.satunes.utils.getNow
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -92,16 +93,19 @@ class DataViewModel : ViewModel() {
     fun getAlbum(id: Long): Album = DataManager.getAlbum(id = id)!!
     fun getGenre(id: Long): Genre = DataManager.getGenre(id = id)!!
     fun getPlaylist(id: Long): Playlist = DataManager.getPlaylist(id = id)!!
+    fun getPlaylist(title: String): Playlist = DataManager.getPlaylist(title = title)!!
 
     fun addOnePlaylist(
         scope: CoroutineScope,
         snackBarHostState: SnackbarHostState,
-        playlistTitle: String
+        playlistTitle: String,
+        onPlaylistAdded: ((playlist: Playlist) -> Unit)? = null,
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             val context: Context = MainActivity.instance.applicationContext
             try {
-                _db.addOnePlaylist(playlistTitle = playlistTitle)
+                val playlist: Playlist = _db.addOnePlaylist(playlistTitle = playlistTitle)
+                onPlaylistAdded?.invoke(playlist)
                 showSnackBar(
                     scope = scope,
                     snackBarHostState = snackBarHostState,
@@ -626,8 +630,8 @@ class DataViewModel : ViewModel() {
             DatabaseManager.exportingPlaylist = false
             return
         }
-
-        MainActivity.instance.createFileToExportPlaylists(defaultFileName = "Satunes")
+        val fileName = "Satunes_${getNow()}"
+        MainActivity.instance.createFileToExportPlaylists(defaultFileName = fileName)
     }
 
     fun resetAllData() {

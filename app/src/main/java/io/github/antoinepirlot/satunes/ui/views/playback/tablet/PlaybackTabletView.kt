@@ -34,8 +34,6 @@ import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.ui.views.playback.common.MusicPlayingControlView
@@ -48,7 +46,6 @@ import io.github.antoinepirlot.satunes.ui.views.playback.common.PlaybackQueueVie
 @Composable
 internal fun PlaybackTabletView(
     modifier: Modifier = Modifier,
-    navController: NavHostController,
     onAlbumClick: (album: Album?) -> Unit,
     onArtistClick: (artist: Artist) -> Unit,
 ) {
@@ -65,7 +62,7 @@ internal fun PlaybackTabletView(
         }
         VerticalDivider()
         Box(modifier = Modifier.fillMaxHeight()) {
-            PlaybackQueueView(navController = navController)
+            PlaybackQueueView()
         }
     }
 }
@@ -73,6 +70,5 @@ internal fun PlaybackTabletView(
 @Preview
 @Composable
 private fun PlaybackViewPreview() {
-    val navController: NavHostController = rememberNavController()
-    PlaybackTabletView(navController = navController, onAlbumClick = {}, onArtistClick = {})
+    PlaybackTabletView(onAlbumClick = {}, onArtistClick = {})
 }

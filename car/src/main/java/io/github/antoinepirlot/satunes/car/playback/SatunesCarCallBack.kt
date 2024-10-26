@@ -41,7 +41,6 @@ import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 /**
@@ -55,8 +54,7 @@ internal object SatunesCarCallBack : MediaSessionCompat.Callback() {
 
     internal const val ACTION_SHUFFLE = "ACTION_SHUFFLE"
     internal const val ACTION_REPEAT = "ACTION_REPEAT"
-
-    private lateinit var _job: Job
+    internal const val ACTION_LIKE = "ACTION_LIKE"
 
     override fun onPlay() {
 
@@ -116,6 +114,7 @@ internal object SatunesCarCallBack : MediaSessionCompat.Callback() {
         when (action) {
             ACTION_SHUFFLE -> switchShuffleMode()
             ACTION_REPEAT -> switchRepeatMode()
+            ACTION_LIKE -> likePlayingMusic()
         }
         //Update playback state from here as no listener function is called for this action.
         val state: Int =
@@ -123,6 +122,12 @@ internal object SatunesCarCallBack : MediaSessionCompat.Callback() {
         val actions: Long =
             if (PlaybackManager.isPlaying.value) ACTIONS_ON_PLAY else ACTIONS_ON_PAUSE
         SatunesPlaybackListener.updatePlaybackState(state = state, actions = actions)
+    }
+
+    private fun likePlayingMusic() {
+        CoroutineScope(Dispatchers.IO).launch {
+            PlaybackManager.musicPlaying.value!!.switchLike(context = SatunesCarMusicService.instance.applicationContext)
+        }
     }
 
     private fun switchShuffleMode() {
@@ -161,19 +166,5 @@ internal object SatunesCarCallBack : MediaSessionCompat.Callback() {
             shuffleMode = RouteManager.isShuffleButtonSelected(),
             musicToPlay = musicToPlay
         )
-        loadInQueue(musicSet = musicSet)
-    }
-
-    private fun loadInQueue(musicSet: Set<Music>) {
-        if (this::_job.isInitialized) {
-            _job.cancel()
-        }
-        _job = CoroutineScope(Dispatchers.IO).launch {
-            SatunesCarMusicService.resetQueue()
-            musicSet.forEach { music: Music ->
-                SatunesCarMusicService.addToQueue(media = music)
-            }
-            SatunesCarMusicService.updateQueue()
-        }
     }
 }

@@ -3,6 +3,30 @@ You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
 ## 2.4 (Android 5.1.1 Lollipop et ultérieur)
 
+### 2.4.0
+
+Nouvelles fonctionnalités:
+
+* Possibilité de liker la music dans Android Auto
+* Minuteur pouvant mettre la musique en pause (maximum pendant 8h)
+
+Améliorations, optimisations et dépannage:
+
+* La lecture de la musique en cours depuis la même playlist chargée ne recharge pas la lecture
+* Les musiques sont triées par numéro de piste dans les albums puis, sinon, par ordre alphabétique
+* Le nom de l'exportation du fichier de playlist et logs contiennent une date et une heure
+* Amélioration du refresh du widget
+* L'année de l'album est affichée, si elle existe
+* Les boutons de mises à jours sont mit en colonne pour améliorer leur visibilité sur certains
+  écrans
+* Le bouton like dans Android Auto a été échangé avec le bouton shuffle
+* Correction du changement de piste vers la précédente dans certaines conditions
+
+Fonctionnalités supprimées:
+
+* Suppression de la visualisation de la liste de lecture dans Android Auto pour éviter les
+  distractions
+
 ### v2.4.0-preview-1
 
 Améliorations, optimisations et dépannage:
@@ -18,16 +42,14 @@ Améliorations, optimisations et dépannage:
 Nouvelles fonctionnalités:
 
 * Possibilité de liker la music dans Android Auto
-* Minuteur pouvant mettre la musique ne pause (maximum pendant 8h)
+* Minuteur pouvant mettre la musique en pause (maximum pendant 8h)
 
 Améliorations, optimisations et dépannage:
 
-* La lecture de la musique en cours depuis la meme playlist chargée ne recharge pas la lecture
+* La lecture de la musique en cours depuis la même playlist chargée ne recharge pas la lecture
 * Les musiques sont triées par numéro de piste dans les albums puis, sinon, par ordre alphabétique
 * Le nom de l'exportation du fichier de playlist et logs contiennent une date et une heure
 * Amélioration du refresh du widget
-* Suppression de la visualisation de la liste de lecture dans Android Auto pour éviter les
-  distractions
 * L'année de l'album est affichée, si elle existe
 * Les boutons de mises à jours sont mit en colonne pour améliorer leur visibilité sur certains
   écrans

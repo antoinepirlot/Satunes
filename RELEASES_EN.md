@@ -3,6 +3,28 @@ Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
 ## 2.4 (Android 5.1.1 Lollipop and later)
 
+### 2.4.0
+
+New features:
+
+* Ability to like music in Android Auto
+* Timer that can pause music (maximum for 8 hours)
+
+Improvements, optimizations and troubleshooting:
+
+* Playing the current music from the same loaded playlist does not reload the playback
+* Music is sorted by track number in albums and then, otherwise, alphabetically
+* The name of the exported playlist file and logs contains a date and time
+* Improved widget refresh
+* The year of the album is displayed, if it exists
+* Update buttons are put in a column to improve their visibility on some screens
+* Like button in Android Auto has been swapped with shuffle button
+* Fixed track switching to previous under certain conditions
+
+Removed features:
+
+* Removed the playlist visualization in Android Auto to avoid distractions
+
 ### 2.4.0-preview-1
 
 Improvements, optimizations and troubleshooting:

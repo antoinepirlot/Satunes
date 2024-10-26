@@ -127,9 +127,9 @@ internal object SatunesPlaybackListener : PlaybackListener() {
             if (musicPlaying.liked.value) R.drawable.favorite else R.drawable.unfavorite
         ).build()
         val playbackState: PlaybackStateCompat = PlaybackStateCompat.Builder()
+            .addCustomAction(likeAction)
             .addCustomAction(shuffleAction)
             .addCustomAction(repeatAction)
-            .addCustomAction(likeAction)
             .setState(state, currentPosition, 1F)
             .setActions(actions)
             .setActiveQueueItemId(musicPlaying.id)

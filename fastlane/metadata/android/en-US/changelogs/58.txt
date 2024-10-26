@@ -1,0 +1,16 @@
+New features:
+
+* Ability to like music in Android Auto
+* Timer that can pause music (maximum for 8 hours)
+
+Améliorations, optimisations et dépannage:
+
+* Music is sorted by track number in albums and then, otherwise, alphabetically
+* The year of the album is displayed, if it exists
+* Like button in Android Auto has been swapped with shuffle button
+
+Removed features:
+
+* Removed the playlist visualization in Android Auto to avoid distractions
+
+More details on GitHub.

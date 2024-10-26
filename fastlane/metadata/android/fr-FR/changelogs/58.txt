@@ -1,0 +1,16 @@
+Nouveautés:
+
+* Possibilité de liker la music dans Android Auto
+* Minuteur pouvant mettre la musique en pause (maximum pendant 8h)
+
+Améliorations:
+
+* Les musiques sont triées par numéro de piste dans les albums puis par ordre alphabétique
+* L'année de l'album est affichée, si elle existe
+* Le bouton like dans Android Auto a été échangé avec le bouton shuffle
+
+Suppressions:
+
+* Suppression de la visualisation de la liste de lecture dans Android Auto
+
+Plus d'info sur GitHub.

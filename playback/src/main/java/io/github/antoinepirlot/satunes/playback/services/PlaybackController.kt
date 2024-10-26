@@ -399,7 +399,6 @@ internal class PlaybackController private constructor(
     fun loadMusics(playlist: Playlist) {
         this.isLoading = true
         this.playlist = playlist
-        PlaybackManager.playlist = playlist
 
         this.mediaController.clearMediaItems()
         this.mediaController.addMediaItems(this.playlist!!.mediaItemList)

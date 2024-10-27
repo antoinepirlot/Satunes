@@ -158,8 +158,10 @@ private fun MediaSelectionDialogList(
         },
         confirmButton = {
             TextButton(onClick = {
-                onConfirm()
-                mediaSelectionViewModel.clearAll()
+                cancel(
+                    mediaSelectionViewModel = mediaSelectionViewModel,
+                    onDismissRequest = onDismissRequest
+                )
             }) {
                 if (mediaImplCollection.isNotEmpty()) {
                     NormalText(text = stringResource(id = R.string.add))
@@ -167,11 +169,21 @@ private fun MediaSelectionDialogList(
             }
         },
         dismissButton = {
-            TextButton(onClick = onDismissRequest) {
+            TextButton(onClick = {
+                cancel(
+                    mediaSelectionViewModel = mediaSelectionViewModel,
+                    onDismissRequest = onDismissRequest
+                )
+            }) {
                 NormalText(text = stringResource(id = R.string.cancel))
             }
         }
     )
+}
+
+private fun cancel(mediaSelectionViewModel: MediaSelectionViewModel, onDismissRequest: () -> Unit) {
+    mediaSelectionViewModel.clearAll()
+    onDismissRequest()
 }
 
 @Preview

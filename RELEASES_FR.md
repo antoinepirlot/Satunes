@@ -7,7 +7,7 @@ You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
 Nouvelles fonctionnalités:
 
-* Possibilité de liker la music dans Android Auto
+* Possibilité de liker la musique dans Android Auto
 * Minuteur pouvant mettre la musique en pause (maximum pendant 8h)
 
 Améliorations, optimisations et dépannage:

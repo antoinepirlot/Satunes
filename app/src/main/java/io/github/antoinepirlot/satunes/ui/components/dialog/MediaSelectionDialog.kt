@@ -153,16 +153,13 @@ private fun MediaSelectionDialogList(
             MediaSelectionForm(mediaImplCollection = mediaImplCollection)
         },
         onDismissRequest = {
-            mediaSelectionViewModel.clearAll()
-            onDismissRequest()
+            cancel(
+                mediaSelectionViewModel = mediaSelectionViewModel,
+                onDismissRequest = onDismissRequest
+            )
         },
         confirmButton = {
-            TextButton(onClick = {
-                cancel(
-                    mediaSelectionViewModel = mediaSelectionViewModel,
-                    onDismissRequest = onDismissRequest
-                )
-            }) {
+            TextButton(onClick = onConfirm) {
                 if (mediaImplCollection.isNotEmpty()) {
                     NormalText(text = stringResource(id = R.string.add))
                 }

@@ -3,6 +3,12 @@ Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
 ## 2.4 (Android 5.1.1 Lollipop and later)
 
+### 2.4.2
+
+Improvements, optimizations and troubleshooting:
+
+* Add musics to playlists works again
+
 ### 2.4.1
 
 Improvements, optimizations and troubleshooting:

@@ -3,6 +3,13 @@ Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
 ## 2.4 (Android 5.1.1 Lollipop and later)
 
+### 2.4.1
+
+Improvements, optimizations and troubleshooting:
+
+* When canceling media selection, the selected media are no longer saved
+* When selecting the default menu bar, the application no longer redirects to the new menu
+
 ### 2.4.0
 
 New features:

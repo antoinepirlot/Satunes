@@ -3,6 +3,13 @@ You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
 ## 2.4 (Android 5.1.1 Lollipop et ultérieur)
 
+### 2.4.1
+
+Améliorations, optimisations et dépannage:
+
+* Lors de l'annulation de la sélection des médias, ceux sélectionné ne sont plus enregistrés
+* Lors de la sélection du menu bar défaut, l'application ne redirige plus vers le nouveau menu
+
 ### 2.4.0
 
 Nouvelles fonctionnalités:

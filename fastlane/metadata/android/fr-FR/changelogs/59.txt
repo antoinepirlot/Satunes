@@ -1,0 +1,4 @@
+Améliorations, optimisations et dépannage:
+
+* Lors de l'annulation de la sélection des médias, ceux sélectionné ne sont plus enregistrés
+* Lors de la sélection du menu bar défaut, l'application ne redirige plus vers le nouveau menu

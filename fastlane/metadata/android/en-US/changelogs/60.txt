@@ -1,0 +1,3 @@
+Improvements, optimizations and troubleshooting:
+
+* Add musics to playlists works again

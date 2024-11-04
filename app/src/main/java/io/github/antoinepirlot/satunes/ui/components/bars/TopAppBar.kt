@@ -152,8 +152,8 @@ private fun onSearchButtonClick(uiState: SatunesUiState, navController: NavHostC
 private fun onPlaybackQueueButtonClick(uiState: SatunesUiState, navController: NavHostController) {
     when (uiState.currentDestination) {
         Destination.PLAYBACK -> navController.navigate(Destination.PLAYBACK_QUEUE.link)
-        Destination.PLAYBACK_QUEUE -> navController.navigate(Destination.PLAYBACK.link)
-        else -> return
+        Destination.PLAYBACK_QUEUE -> navController.popBackStack()
+        else -> throw UnsupportedOperationException("Not available when current destination is: ${uiState.currentDestination}")
     }
 }
 

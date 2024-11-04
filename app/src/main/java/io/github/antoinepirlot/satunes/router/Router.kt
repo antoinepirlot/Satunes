@@ -43,14 +43,12 @@ import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
-import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.router.routes.mediaRoutes
 import io.github.antoinepirlot.satunes.router.routes.playbackRoutes
 import io.github.antoinepirlot.satunes.router.routes.searchRoutes
 import io.github.antoinepirlot.satunes.router.routes.settingsRoutes
 import io.github.antoinepirlot.satunes.router.utils.getNavBarSectionDestination
-import io.github.antoinepirlot.satunes.ui.components.bars.backToRoot
 import io.github.antoinepirlot.satunes.utils.loadSatunesData
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 
@@ -91,22 +89,14 @@ internal fun Router(
             satunesViewModel = satunesViewModel,
             dataViewModel = dataViewModel,
             onStart = {
-                checkIfAllowed(
-                    isAudioAllowed = isAudioAllowed,
-                    satunesUiState = satunesUiState,
-                    navController = navController
-                )
+                checkIfAllowed(isAudioAllowed = isAudioAllowed, navController = navController)
                 satunesViewModel.setCurrentDestination(destination = it.destination.route!!)
             }
         )
         searchRoutes(
             satunesViewModel = satunesViewModel,
             onStart = {
-                checkIfAllowed(
-                    isAudioAllowed = isAudioAllowed,
-                    satunesUiState = satunesUiState,
-                    navController = navController
-                )
+                checkIfAllowed(isAudioAllowed = isAudioAllowed, navController = navController)
                 satunesViewModel.setCurrentDestination(destination = it.destination.route!!)
             }
         )
@@ -114,11 +104,7 @@ internal fun Router(
             satunesViewModel = satunesViewModel,
             playbackViewModel = playbackViewModel,
             onStart = {
-                checkIfAllowed(
-                    isAudioAllowed = isAudioAllowed,
-                    satunesUiState = satunesUiState,
-                    navController = navController
-                )
+                checkIfAllowed(isAudioAllowed = isAudioAllowed, navController = navController)
                 satunesViewModel.setCurrentDestination(destination = it.destination.route!!)
             }
         )
@@ -138,20 +124,14 @@ internal fun Router(
  * If isAudioAllowed is false, then force the user to go to permission view
  *
  * @param isAudioAllowed true if the permission has been allowed, otherwise false
+ * @param navController the [NavHostController] to navigate
  */
 private fun checkIfAllowed(
     isAudioAllowed: Boolean,
-    satunesUiState: SatunesUiState,
     navController: NavHostController
 ) {
     if (!isAudioAllowed) {
         navController.popBackStack()
         navController.navigate(Destination.PERMISSIONS_SETTINGS.link)
-    } else {
-        val currentDestinationAsNavBarSection: NavBarSection? =
-            Destination.mediaMainRoutesMap.get(key = satunesUiState.currentDestination)
-        if (currentDestinationAsNavBarSection != null && !currentDestinationAsNavBarSection.isEnabled) {
-            backToRoot(rootRoute = Destination.MUSICS.link, navController = navController)
-        }
     }
 }

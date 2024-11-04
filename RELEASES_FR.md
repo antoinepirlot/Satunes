@@ -3,6 +3,16 @@ You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
 ## 2.4 (Android 5.1.1 Lollipop et ultérieur)
 
+### 2.4.3
+
+Améliorations, optimisations et dépannage:
+
+* Le bouton pour afficher la liste de lecture est agit comme un switch (comme le bouton paramètre)
+* Correction du problème empêchant l'accès à une vue d'un média lorsque le bouton de la barre de
+  navigation correspondant est désactivé
+* Le widget peut être redimensionné verticalement mais est limité (cela empêche des problème
+  d'affichage avec certain launcher)
+
 ### 2.4.2
 
 Améliorations, optimisations et dépannage:

@@ -3,6 +3,15 @@ Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
 ## 2.4 (Android 5.1.1 Lollipop and later)
 
+### 2.4.3
+
+Improvements, optimizations and troubleshooting:
+
+* The queue list button is now a switch like the setting button
+* Fix issue when nav bar section is disabled, it doesn't prevent user to go on its views
+* The widget is now resizable vertically but is limited (it fix wrong layout in certain launcher by
+  allowing user to resize it)
+
 ### 2.4.2
 
 Improvements, optimizations and troubleshooting:

@@ -3,6 +3,14 @@ You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
 ## 2.4 (Android 5.1.1 Lollipop et ultérieur)
 
+### 2.4.4
+
+Améliorations, optimisations et dépannage:
+
+* Suppression de l'exclusion des bibliothèques open source
+* Désactivation de l'inclusion des métadonnées de dépendances dans les APK et Bundle car ce n'est
+  pas une méthode compatible avec l'open source
+
 ### 2.4.3
 
 Améliorations, optimisations et dépannage:

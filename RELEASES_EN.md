@@ -3,6 +3,13 @@ Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
 ## 2.4 (Android 5.1.1 Lollipop and later)
 
+### 2.4.4
+
+Improvements, optimizations and troubleshooting:
+
+* Remove exclusion of FOSS libraries
+* Disable the inclusion dependency metadata in APK and Bundle as it's not FOSS compatible
+
 ### 2.4.3
 
 Improvements, optimizations and troubleshooting:

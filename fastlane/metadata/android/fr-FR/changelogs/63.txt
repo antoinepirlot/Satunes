@@ -1,0 +1,3 @@
+Améliorations, optimisations et dépannage:
+
+* Correction du bogue d'Android Auto qui ne lit pas la musique séléctionnée et qui ne respecte pas le mode aléatoire par défaut

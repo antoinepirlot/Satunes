@@ -3,6 +3,12 @@ Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
 ## 2.4 (Android 5.1.1 Lollipop and later)
 
+### 2.4.5
+
+Improvements, optimizations and troubleshooting:
+
+* Fix Android Auto not playing the selected music and not respecting the default shuffle mode
+
 ### 2.4.4
 
 Improvements, optimizations and troubleshooting:

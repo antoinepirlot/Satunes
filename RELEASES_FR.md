@@ -3,6 +3,13 @@ You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
 ## 2.4 (Android 5.1.1 Lollipop et ultérieur)
 
+### 2.4.5
+
+Améliorations, optimisations et dépannage:
+
+* Correction du bogue d'Android Auto qui ne lit pas la musique séléctionnée et qui ne respecte pas
+  le mode aléatoire par défaut
+
 ### 2.4.4
 
 Améliorations, optimisations et dépannage:

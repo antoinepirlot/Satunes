@@ -3,6 +3,41 @@ Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
 ## 2.4 (Android 5.1.1 Lollipop and later)
 
+### 2.4.5
+
+Improvements, optimizations and troubleshooting:
+
+* Fix Android Auto not playing the selected music and not respecting the default shuffle mode
+
+### 2.4.4
+
+Improvements, optimizations and troubleshooting:
+
+* Remove exclusion of FOSS libraries
+* Disable the inclusion dependency metadata in APK and Bundle as it's not FOSS compatible
+
+### 2.4.3
+
+Improvements, optimizations and troubleshooting:
+
+* The queue list button is now a switch like the setting button
+* Fix issue when nav bar section is disabled, it doesn't prevent user to go on its views
+* The widget is now resizable vertically but is limited (it fix wrong layout in certain launcher by
+  allowing user to resize it)
+
+### 2.4.2
+
+Improvements, optimizations and troubleshooting:
+
+* Add musics to playlists works again
+
+### 2.4.1
+
+Improvements, optimizations and troubleshooting:
+
+* When canceling media selection, the selected media are no longer saved
+* When selecting the default menu bar, the application no longer redirects to the new menu
+
 ### 2.4.0
 
 New features:

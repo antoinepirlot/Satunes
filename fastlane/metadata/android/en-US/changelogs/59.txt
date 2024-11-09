@@ -1,0 +1,4 @@
+Improvements, optimizations and troubleshooting:
+
+* When canceling media selection, the selected media are no longer saved
+* When selecting the default menu bar, the application no longer redirects to the new menu

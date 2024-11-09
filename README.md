@@ -44,11 +44,11 @@ Tu as le droit de réutiliser mon code pour créer une nouvelle application dér
 
 # Fonctionnalités
 
-* Lire la musique sur le téléphone
+* Lire la musique sur le téléphone et sur Android Auto
 * Voir les artistes et leurs albums et musiques
 * Voir les genres et leurs albums et musiques
-* Lire la musique en fonction des dossiers, albums, genres et artists
-* Playlists
+* Lire la musique en fonction des dossiers, albums, genres et artistes
+* Système de playlists
 * Exportation et importation des playlists
 * Personnalisation de l'expérience:
   * Arrrêter ou continuer la lecture si l'application est fermée
@@ -57,7 +57,11 @@ Tu as le droit de réutiliser mon code pour créer une nouvelle application dér
     * Les écouteurs sont débranchés (bluetooth et câble)
   * Choix de la vitesse du rafraichissement de la barre de progresssion
   * Choix des modes de lectures par défaut
+  * et d'autres encore.
 * Choisir les dossiers à inclure ou exclure
+* Mettre la musique en pause après un certain temps
+* Partager les fichiers musicaux avec les autres
+* Faire une recherche dans ta bibliothèque
 * Mises à jour au sein de l'application
 
 # Installation

@@ -83,13 +83,12 @@ internal object SatunesCarCallBack : MediaSessionCompat.Callback() {
     }
 
     override fun onPlayFromMediaId(mediaId: String, extras: Bundle?) {
+        var musicToPlay: Music? = null
         if (mediaId == SatunesCarMusicService.SHUFFLE_ID)
             RouteManager.setShuffleButtonSelected(selected = true)
-        val musicToPlay: Music = DataManager.getMusic(id = mediaId.toLong())
-        if (!RouteManager.isShuffleButtonSelected())
-            loadMusic(musicToPlay = musicToPlay)
         else
-            loadMusic()
+            musicToPlay = DataManager.getMusic(id = mediaId.toLong())
+        loadMusic(musicToPlay = musicToPlay)
         PlaybackManager.start(
             context = SatunesCarMusicService.instance.applicationContext,
             musicToPlay = musicToPlay

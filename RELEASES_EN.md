@@ -3,6 +3,63 @@ Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
 ## 2.4 (Android 5.1.1 Lollipop and later)
 
+### 2.4.5
+
+Improvements, optimizations and troubleshooting:
+
+* Fix Android Auto not playing the selected music and not respecting the default shuffle mode
+
+### 2.4.4
+
+Improvements, optimizations and troubleshooting:
+
+* Remove exclusion of FOSS libraries
+* Disable the inclusion dependency metadata in APK and Bundle as it's not FOSS compatible
+
+### 2.4.3
+
+Improvements, optimizations and troubleshooting:
+
+* The queue list button is now a switch like the setting button
+* Fix issue when nav bar section is disabled, it doesn't prevent user to go on its views
+* The widget is now resizable vertically but is limited (it fix wrong layout in certain launcher by
+  allowing user to resize it)
+
+### 2.4.2
+
+Improvements, optimizations and troubleshooting:
+
+* Add musics to playlists works again
+
+### 2.4.1
+
+Improvements, optimizations and troubleshooting:
+
+* When canceling media selection, the selected media are no longer saved
+* When selecting the default menu bar, the application no longer redirects to the new menu
+
+### 2.4.0
+
+New features:
+
+* Ability to like music in Android Auto
+* Timer that can pause music (maximum for 8 hours)
+
+Improvements, optimizations and troubleshooting:
+
+* Playing the current music from the same loaded playlist does not reload the playback
+* Music is sorted by track number in albums and then, otherwise, alphabetically
+* The name of the exported playlist file and logs contains a date and time
+* Improved widget refresh
+* The year of the album is displayed, if it exists
+* Update buttons are put in a column to improve their visibility on some screens
+* Like button in Android Auto has been swapped with shuffle button
+* Fixed track switching to previous under certain conditions
+
+Removed features:
+
+* Removed the playlist visualization in Android Auto to avoid distractions
+
 ### 2.4.0-preview-1
 
 Improvements, optimizations and troubleshooting:

@@ -33,8 +33,6 @@ import android.os.Environment
 import android.provider.DocumentsContract
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.media3.session.MediaController
-import com.google.common.util.concurrent.ListenableFuture
 import io.github.antoinepirlot.satunes.data.viewmodels.utils.isAudioAllowed
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
@@ -76,8 +74,6 @@ internal class MainActivity : ComponentActivity() {
     }
 
     private lateinit var _logger: SatunesLogger
-    private lateinit var _mediaControllerFuture: ListenableFuture<MediaController>
-    private lateinit var _mediaController: MediaController
     private var _playlistToExport: Playlist? = null
 
     override fun onStart() {

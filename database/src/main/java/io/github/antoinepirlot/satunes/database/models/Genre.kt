@@ -38,7 +38,7 @@ class Genre(
 ) : MediaImpl(id = nextId, title = title) {
     private val _albumSortedSet: SortedSet<Album> = sortedSetOf()
 
-    val albumSortedMapUpdate: MutableState<Boolean> = mutableStateOf(false)
+    val albumSortedSetUpdate: MutableState<Boolean> = mutableStateOf(false)
 
     companion object {
         var nextId: Long = 1
@@ -55,7 +55,7 @@ class Genre(
     fun addAlbum(album: Album) {
         if (!this._albumSortedSet.contains(element = album)) {
             this._albumSortedSet.add(element = album)
-            this.albumSortedMapUpdate.value = true
+            this.albumSortedSetUpdate.value = true
         }
     }
 

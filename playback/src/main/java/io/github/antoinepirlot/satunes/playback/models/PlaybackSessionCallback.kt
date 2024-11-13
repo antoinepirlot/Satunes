@@ -36,7 +36,6 @@ import androidx.media3.session.SessionResult
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
-import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 
 /**
@@ -107,12 +106,6 @@ object PlaybackSessionCallback : MediaSession.Callback {
         controller: MediaSession.ControllerInfo
     ): ListenableFuture<MediaSession.MediaItemsWithStartPosition> {
         _logger.info("onPlaybackResumption called")
-        return Futures.immediateFuture(
-            MediaSession.MediaItemsWithStartPosition(
-                PlaybackManager.playlist?.mediaItemList ?: listOf(),
-                0,
-                0
-            )
-        )
+        return super.onPlaybackResumption(mediaSession, controller)
     }
 }

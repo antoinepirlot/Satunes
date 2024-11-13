@@ -3,6 +3,68 @@ You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
 ## 2.4 (Android 5.1.1 Lollipop et ultérieur)
 
+### 2.4.5
+
+Améliorations, optimisations et dépannage:
+
+* Correction du bogue d'Android Auto qui ne lit pas la musique séléctionnée et qui ne respecte pas
+  le mode aléatoire par défaut
+
+### 2.4.4
+
+Améliorations, optimisations et dépannage:
+
+* Suppression de l'exclusion des bibliothèques open source
+* Désactivation de l'inclusion des métadonnées de dépendances dans les APK et Bundle car ce n'est
+  pas une méthode compatible avec l'open source
+
+### 2.4.3
+
+Améliorations, optimisations et dépannage:
+
+* Le bouton pour afficher la liste de lecture est agit comme un switch (comme le bouton paramètre)
+* Correction du problème empêchant l'accès à une vue d'un média lorsque le bouton de la barre de
+  navigation correspondant est désactivé
+* Le widget peut être redimensionné verticalement mais est limité (cela empêche des problème
+  d'affichage avec certain launcher)
+
+### 2.4.2
+
+Améliorations, optimisations et dépannage:
+
+* L'ajout de musiques dans les playlists fonctionne à nouveau
+
+### 2.4.1
+
+Améliorations, optimisations et dépannage:
+
+* Lors de l'annulation de la sélection des médias, ceux sélectionné ne sont plus enregistrés
+* Lors de la sélection du menu bar défaut, l'application ne redirige plus vers le nouveau menu
+
+### 2.4.0
+
+Nouvelles fonctionnalités:
+
+* Possibilité de liker la musique dans Android Auto
+* Minuteur pouvant mettre la musique en pause (maximum pendant 8h)
+
+Améliorations, optimisations et dépannage:
+
+* La lecture de la musique en cours depuis la même playlist chargée ne recharge pas la lecture
+* Les musiques sont triées par numéro de piste dans les albums puis, sinon, par ordre alphabétique
+* Le nom de l'exportation du fichier de playlist et logs contiennent une date et une heure
+* Amélioration du refresh du widget
+* L'année de l'album est affichée, si elle existe
+* Les boutons de mises à jours sont mit en colonne pour améliorer leur visibilité sur certains
+  écrans
+* Le bouton like dans Android Auto a été échangé avec le bouton shuffle
+* Correction du changement de piste vers la précédente dans certaines conditions
+
+Fonctionnalités supprimées:
+
+* Suppression de la visualisation de la liste de lecture dans Android Auto pour éviter les
+  distractions
+
 ### v2.4.0-preview-1
 
 Améliorations, optimisations et dépannage:
@@ -18,16 +80,14 @@ Améliorations, optimisations et dépannage:
 Nouvelles fonctionnalités:
 
 * Possibilité de liker la music dans Android Auto
-* Minuteur pouvant mettre la musique ne pause (maximum pendant 8h)
+* Minuteur pouvant mettre la musique en pause (maximum pendant 8h)
 
 Améliorations, optimisations et dépannage:
 
-* La lecture de la musique en cours depuis la meme playlist chargée ne recharge pas la lecture
+* La lecture de la musique en cours depuis la même playlist chargée ne recharge pas la lecture
 * Les musiques sont triées par numéro de piste dans les albums puis, sinon, par ordre alphabétique
 * Le nom de l'exportation du fichier de playlist et logs contiennent une date et une heure
 * Amélioration du refresh du widget
-* Suppression de la visualisation de la liste de lecture dans Android Auto pour éviter les
-  distractions
 * L'année de l'album est affichée, si elle existe
 * Les boutons de mises à jours sont mit en colonne pour améliorer leur visibilité sur certains
   écrans

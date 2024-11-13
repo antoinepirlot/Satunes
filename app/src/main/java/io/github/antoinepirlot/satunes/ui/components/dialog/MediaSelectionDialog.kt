@@ -153,25 +153,34 @@ private fun MediaSelectionDialogList(
             MediaSelectionForm(mediaImplCollection = mediaImplCollection)
         },
         onDismissRequest = {
-            mediaSelectionViewModel.clearAll()
-            onDismissRequest()
+            cancel(
+                mediaSelectionViewModel = mediaSelectionViewModel,
+                onDismissRequest = onDismissRequest
+            )
         },
         confirmButton = {
-            TextButton(onClick = {
-                onConfirm()
-                mediaSelectionViewModel.clearAll()
-            }) {
+            TextButton(onClick = onConfirm) {
                 if (mediaImplCollection.isNotEmpty()) {
                     NormalText(text = stringResource(id = R.string.add))
                 }
             }
         },
         dismissButton = {
-            TextButton(onClick = onDismissRequest) {
+            TextButton(onClick = {
+                cancel(
+                    mediaSelectionViewModel = mediaSelectionViewModel,
+                    onDismissRequest = onDismissRequest
+                )
+            }) {
                 NormalText(text = stringResource(id = R.string.cancel))
             }
         }
     )
+}
+
+private fun cancel(mediaSelectionViewModel: MediaSelectionViewModel, onDismissRequest: () -> Unit) {
+    mediaSelectionViewModel.clearAll()
+    onDismissRequest()
 }
 
 @Preview

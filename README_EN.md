@@ -45,7 +45,7 @@ You can reuse my code but you will have to redistribute it. This allows free sof
 
 # Features
 
-* Play music on phone
+* Play music on phone and on Android Auto
 * View artists and their albums and music
 * View genres and their albums and music
 * Playlists
@@ -58,7 +58,11 @@ You can reuse my code but you will have to redistribute it. This allows free sof
         * Headphones are unplugged (bluetooth and cable)
     * Choice of progress bar refresh speed
     * Choice of default playback modes
+    * And more
 * Choose folders to exclude or include
+* Puse music after a moment
+* Share your music's files with others
+* Search into your library
 * In-app updates
 
 # Installation

@@ -75,7 +75,7 @@ class Folder(
      *
      * @return a list of subfolder and each subfolder is a Folder object
      */
-    fun getSubFolderMap(): Set<Folder> {
+    fun getSubFolderSet(): Set<Folder> {
         return this.subFolderSortedSet
     }
 

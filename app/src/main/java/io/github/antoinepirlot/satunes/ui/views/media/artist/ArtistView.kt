@@ -94,7 +94,7 @@ internal fun ArtistView(
         header = if (albumSet.isNotEmpty()) {
             {
                 //Recompose if data changed
-                var albumMapChanged: Boolean by remember { artist.albumSortedMapUpdate }
+                var albumMapChanged: Boolean by remember { artist.albumSortedSetUpdate }
                 if (albumMapChanged) {
                     albumMapChanged = false
                 }

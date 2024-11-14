@@ -1,3 +1,1 @@
-Improvements, optimizations and troubleshooting:
-
-* Fix Android Auto not playing the selected music and not respecting the default shuffle mode
+Nothing new, issue happened while updating

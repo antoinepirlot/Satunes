@@ -23,11 +23,14 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.buttons.playback.custom_actions
+package io.github.antoinepirlot.satunes.ui.components.buttons.playback
 
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.data.local.LocalMainScope
 import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
@@ -39,7 +42,7 @@ import kotlinx.coroutines.CoroutineScope
  * @author Antoine Pirlot on 15/11/2024
  */
 @Composable
-fun ForwardXSeconds(
+internal fun RewindXSecondsButton(
     modifier: Modifier = Modifier,
     playbackViewModel: PlaybackViewModel = viewModel(),
     seconds: Long
@@ -47,15 +50,24 @@ fun ForwardXSeconds(
     val scope: CoroutineScope = LocalMainScope.current
     val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
 
-    CustomActionButton(
+    IconButton(
         modifier = modifier,
-        icon = SatunesIcons.FORWARD,
         onClick = {
-            playbackViewModel.forward(
+            playbackViewModel.rewind(
                 scope = scope,
                 snackBarHostState = snackBarHostState,
                 seconds = seconds
             )
-        }
+        },
+        content = {
+            val icon: SatunesIcons = SatunesIcons.REWIND
+            Icon(imageVector = icon.imageVector, contentDescription = icon.description)
+        },
     )
+}
+
+@Preview
+@Composable
+private fun RewindXSecondsButtonPreview() {
+    RewindXSecondsButton(seconds = 5)
 }

@@ -41,8 +41,6 @@ import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.ui.components.buttons.playback.custom_actions.AddToPlaylistCustomAction
 import io.github.antoinepirlot.satunes.ui.components.buttons.playback.custom_actions.FavoriteCustomAction
-import io.github.antoinepirlot.satunes.ui.components.buttons.playback.custom_actions.ForwardXSeconds
-import io.github.antoinepirlot.satunes.ui.components.buttons.playback.custom_actions.RewindXSeconds
 import io.github.antoinepirlot.satunes.ui.components.buttons.playback.custom_actions.ShareCustomAction
 import io.github.antoinepirlot.satunes.ui.components.buttons.playback.custom_actions.TimerCustomAction
 
@@ -66,13 +64,6 @@ internal fun PlaybackCustomActionsBar(
 
         Spacer(modifier = Modifier.size(spacerSize))
         FavoriteCustomAction(music = musicPlaying)
-        Spacer(modifier = Modifier.size(spacerSize))
-
-        //TODO move forward and rewind to controller bar not in custom actions
-        ForwardXSeconds(seconds = 5) // TODO add setting to choose seconds
-        Spacer(modifier = Modifier.size(spacerSize))
-
-        RewindXSeconds(seconds = 5) // TODO add setting to choose seconds
         Spacer(modifier = Modifier.size(spacerSize))
 
         AddToPlaylistCustomAction(music = musicPlaying)

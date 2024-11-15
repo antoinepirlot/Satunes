@@ -43,10 +43,12 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.antoinepirlot.jetpack_libs.components.models.ScreenSizes
+import io.github.antoinepirlot.satunes.ui.components.buttons.playback.ForwardXSecondsButton
 import io.github.antoinepirlot.satunes.ui.components.buttons.playback.NextMusicButton
 import io.github.antoinepirlot.satunes.ui.components.buttons.playback.PlayPauseMusicButton
 import io.github.antoinepirlot.satunes.ui.components.buttons.playback.PreviousMusicButton
 import io.github.antoinepirlot.satunes.ui.components.buttons.playback.RepeatMusicButton
+import io.github.antoinepirlot.satunes.ui.components.buttons.playback.RewindXSecondsButton
 import io.github.antoinepirlot.satunes.ui.components.buttons.playback.ShuffleMusicButton
 
 /**
@@ -88,7 +90,13 @@ internal fun MusicControlBar(
             PreviousMusicButton()
             Spacer(modifier = Modifier.width(spaceSize))
 
+            RewindXSecondsButton(seconds = 5) // TODO add setting to choose seconds
+            Spacer(modifier = Modifier.width(spaceSize))
+
             PlayPauseMusicButton(modifier = Modifier.size(playPauseButtonSize))
+            Spacer(modifier = Modifier.width(spaceSize))
+
+            ForwardXSecondsButton(seconds = 5) // TODO add setting to choose seconds
             Spacer(modifier = Modifier.width(spaceSize))
 
             NextMusicButton()

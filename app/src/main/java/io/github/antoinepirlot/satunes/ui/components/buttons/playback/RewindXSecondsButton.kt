@@ -25,12 +25,15 @@
 
 package io.github.antoinepirlot.satunes.ui.components.buttons.playback
 
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.data.local.LocalMainScope
 import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
@@ -50,8 +53,9 @@ internal fun RewindXSecondsButton(
     val scope: CoroutineScope = LocalMainScope.current
     val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
 
+    val size: Dp = 45.dp
     IconButton(
-        modifier = modifier,
+        modifier = modifier.size(size = size),
         onClick = {
             playbackViewModel.rewind(
                 scope = scope,
@@ -61,7 +65,11 @@ internal fun RewindXSecondsButton(
         },
         content = {
             val icon: SatunesIcons = SatunesIcons.REWIND
-            Icon(imageVector = icon.imageVector, contentDescription = icon.description)
+            Icon(
+                modifier = modifier.size(size = size),
+                imageVector = icon.imageVector,
+                contentDescription = icon.description
+            )
         },
     )
 }

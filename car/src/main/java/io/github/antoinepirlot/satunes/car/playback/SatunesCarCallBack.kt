@@ -35,8 +35,13 @@ import android.support.v4.media.session.PlaybackStateCompat.ACTION_SKIP_TO_PREVI
 import android.support.v4.media.session.PlaybackStateCompat.STATE_PAUSED
 import android.support.v4.media.session.PlaybackStateCompat.STATE_PLAYING
 import io.github.antoinepirlot.satunes.car.pages.ScreenPages
+import io.github.antoinepirlot.satunes.database.models.Album
+import io.github.antoinepirlot.satunes.database.models.Artist
+import io.github.antoinepirlot.satunes.database.models.Folder
+import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
 import kotlinx.coroutines.CoroutineScope
@@ -83,14 +88,12 @@ internal object SatunesCarCallBack : MediaSessionCompat.Callback() {
     }
 
     override fun onPlayFromMediaId(mediaId: String, extras: Bundle?) {
-        RouteManager.setShuffleButtonSelected(selected = true)
-        val shuffleMode: Boolean = RouteManager.isShuffleButtonSelected()
-        loadMusic()
-        RouteManager.setShuffleButtonSelected(selected = false)
         var musicToPlay: Music? = null
-        if (!shuffleMode) {
+        if (mediaId == SatunesCarMusicService.SHUFFLE_ID)
+            RouteManager.setShuffleButtonSelected(selected = true)
+        else
             musicToPlay = DataManager.getMusic(id = mediaId.toLong())
-        }
+        loadMusic(musicToPlay = musicToPlay)
         PlaybackManager.start(
             context = SatunesCarMusicService.instance.applicationContext,
             musicToPlay = musicToPlay
@@ -141,11 +144,10 @@ internal object SatunesCarCallBack : MediaSessionCompat.Callback() {
     /**
      * Load music from the last route deque route.
      */
-    private fun loadMusic() {
+    private fun loadMusic(musicToPlay: Music? = null) {
         val selectedTab: ScreenPages = RouteManager.getSelectedTab()
-        var musicToPlay: Music? = null
         val selectedMediaImpl: MediaImpl? = RouteManager.getSelectedMediaImpl()
-        var musicSet: Set<Music> = DataManager.getMusicSet()
+        var musicSet: Set<Music>
         if (selectedMediaImpl != null) {
             musicSet = when (selectedTab) {
                 ScreenPages.ALL_FOLDERS -> selectedMediaImpl.getMusicSet()
@@ -153,18 +155,50 @@ internal object SatunesCarCallBack : MediaSessionCompat.Callback() {
                 ScreenPages.ALL_ARTISTS -> selectedMediaImpl.getMusicSet()
                 ScreenPages.ALL_GENRES -> selectedMediaImpl.getMusicSet()
                 ScreenPages.ALL_PLAYLISTS -> selectedMediaImpl.getMusicSet()
-                ScreenPages.ALL_MUSICS -> DataManager.getMusicSet()
-                else -> {
-                    musicToPlay = selectedMediaImpl as Music
-                    musicSet
-                }
+                else -> throw UnsupportedOperationException()
             }
+        } else {
+            val musics: MutableSet<Music> = mutableSetOf()
+            when (RouteManager.getSelectedTab()) {
+                ScreenPages.ALL_FOLDERS -> DataManager.getFolderSet().forEach { folder: Folder ->
+                    musics.addAll(elements = folder.getMusicSet())
+                }
+
+                ScreenPages.ALL_ARTISTS ->
+                    DataManager.getArtistSet().forEach { artist: Artist ->
+                        musics.addAll(elements = artist.getMusicSet())
+                    }
+
+                ScreenPages.ALL_ALBUMS ->
+                    DataManager.getAlbumSet().forEach { album: Album ->
+                        musics.addAll(elements = album.getMusicSet())
+                    }
+
+                ScreenPages.ALL_GENRES -> DataManager.getGenreSet().forEach { genre: Genre ->
+                    musics.addAll(elements = genre.getMusicSet())
+                }
+
+                ScreenPages.ALL_PLAYLISTS -> DataManager.getPlaylistSet()
+                    .forEach { playlist: Playlist ->
+                        musics.addAll(elements = playlist.getMusicSet())
+                    }
+
+                else -> throw UnsupportedOperationException()
+            }
+            musicSet = musics.toSet()
         }
-        PlaybackManager.loadMusics(
-            context = SatunesCarMusicService.instance.applicationContext,
-            musicSet = musicSet,
-            shuffleMode = RouteManager.isShuffleButtonSelected(),
-            musicToPlay = musicToPlay
-        )
+        if (RouteManager.isShuffleButtonSelected())
+            PlaybackManager.loadMusics(
+                context = SatunesCarMusicService.instance.applicationContext,
+                musicSet = musicSet,
+                shuffleMode = RouteManager.isShuffleButtonSelected(),
+                musicToPlay = musicToPlay
+            )
+        else
+            PlaybackManager.loadMusics(
+                context = SatunesCarMusicService.instance.applicationContext,
+                musicSet = musicSet,
+                musicToPlay = musicToPlay
+            )
     }
 }

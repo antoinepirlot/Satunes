@@ -46,7 +46,7 @@ internal fun OutlinedNumberField(
     modifier: Modifier = Modifier,
     value: MutableIntState,
     label: String,
-    maxValue: Int,
+    maxValue: Int? = null,
 ) {
     val keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
     OutlinedTextField(
@@ -56,7 +56,7 @@ internal fun OutlinedNumberField(
         onValueChange = {
             if (it.isBlank()) {
                 value.intValue = 0
-            } else if (it.isDigitsOnly()) {
+            } else if (maxValue != null && it.isDigitsOnly()) {
                 val itAsInt: Int = it.toInt()
                 if (itAsInt <= maxValue) {
                     value.intValue = it.toInt()

@@ -30,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.ui.components.buttons.settings.playback.ForwardRewindRadioButtons
 import io.github.antoinepirlot.satunes.ui.components.buttons.settings.playback.RepeatModeRadioButtons
 import io.github.antoinepirlot.satunes.ui.components.buttons.settings.playback.ShuffleModeRadioButtons
 import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
@@ -49,6 +50,7 @@ internal fun PlaybackModesSubSettings(
     ) {
         ShuffleModeRadioButtons()
         RepeatModeRadioButtons()
+        ForwardRewindRadioButtons()
     }
 }
 

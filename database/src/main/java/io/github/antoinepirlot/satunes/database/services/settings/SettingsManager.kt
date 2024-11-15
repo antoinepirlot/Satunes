@@ -27,7 +27,9 @@ package io.github.antoinepirlot.satunes.database.services.settings
 
 import android.content.Context
 import android.net.Uri
+import androidx.compose.runtime.MutableLongState
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.MutablePreferences
@@ -193,10 +195,8 @@ object SettingsManager {
     var artistReplacement: Boolean = DEFAULT_ARTISTS_REPLACEMENT
         private set
 
-    var forwardMs: Long = DEFAULT_FORWARD_MS
-        private set
-    var rewindMs: Long = DEFAULT_REWIND_MS
-        private set
+    val forwardMs: MutableLongState = mutableLongStateOf(DEFAULT_FORWARD_MS)
+    val rewindMs: MutableLongState = mutableLongStateOf(DEFAULT_REWIND_MS)
 
     suspend fun loadSettings(context: Context) {
         if (_isLoaded) {
@@ -256,8 +256,8 @@ object SettingsManager {
 
             artistReplacement = preferences[ARTISTS_REPLACEMENT_KEY] ?: DEFAULT_ARTISTS_REPLACEMENT
 
-            forwardMs = preferences[FORWARD_MS_KEY] ?: DEFAULT_FORWARD_MS
-            rewindMs = preferences[REWIND_MS_KEY] ?: DEFAULT_REWIND_MS
+            forwardMs.value = preferences[FORWARD_MS_KEY] ?: DEFAULT_FORWARD_MS
+            rewindMs.value = preferences[REWIND_MS_KEY] ?: DEFAULT_REWIND_MS
 
             DataLoader.loadFoldersPaths()
 
@@ -588,15 +588,15 @@ object SettingsManager {
 
     suspend fun setForwardMs(context: Context, seconds: Long) {
         context.dataStore.edit { preferences: MutablePreferences ->
-            this.forwardMs = seconds * 1000
-            preferences[FORWARD_MS_KEY] = this.forwardMs
+            this.forwardMs.value = seconds * 1000
+            preferences[FORWARD_MS_KEY] = this.forwardMs.value
         }
     }
 
     suspend fun setRewindMs(context: Context, seconds: Long) {
         context.dataStore.edit { preferences: MutablePreferences ->
-            this.rewindMs = seconds * 1000
-            preferences[REWIND_MS_KEY] = this.rewindMs
+            this.rewindMs.value = seconds * 1000
+            preferences[REWIND_MS_KEY] = this.rewindMs.value
         }
     }
 }

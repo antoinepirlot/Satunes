@@ -28,6 +28,7 @@ package io.github.antoinepirlot.satunes.playback.services
 import android.content.ComponentName
 import android.content.Context
 import androidx.annotation.OptIn
+import androidx.compose.runtime.MutableLongState
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
@@ -147,8 +148,8 @@ internal class PlaybackController private constructor(
 
         private var _instance: PlaybackController? = null
         private val _logger: SatunesLogger = SatunesLogger.getLogger()
-        private val _forwardMs: Long = SettingsManager.forwardMs
-        private val _rewindMs: Long = SettingsManager.rewindMs
+        private val _forwardMs: MutableLongState = SettingsManager.forwardMs
+        private val _rewindMs: MutableLongState = SettingsManager.rewindMs
 
         /**
          * Return only one instance of MediaController. If there's no instance already created
@@ -771,11 +772,11 @@ internal class PlaybackController private constructor(
     }
 
     fun forward() {
-        forwardRewind(microSeconds = _forwardMs)
+        forwardRewind(microSeconds = _forwardMs.value)
     }
 
     fun rewind() {
-        forwardRewind(microSeconds = -_rewindMs)
+        forwardRewind(microSeconds = -_rewindMs.value)
     }
 
     private fun forwardRewind(microSeconds: Long) {

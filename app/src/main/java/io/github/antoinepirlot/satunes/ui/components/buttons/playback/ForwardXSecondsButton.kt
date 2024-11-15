@@ -48,7 +48,6 @@ import kotlinx.coroutines.CoroutineScope
 internal fun ForwardXSecondsButton(
     modifier: Modifier = Modifier,
     playbackViewModel: PlaybackViewModel = viewModel(),
-    seconds: Long
 ) {
     val scope: CoroutineScope = LocalMainScope.current
     val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
@@ -59,8 +58,7 @@ internal fun ForwardXSecondsButton(
         onClick = {
             playbackViewModel.forward(
                 scope = scope,
-                snackBarHostState = snackBarHostState,
-                seconds = seconds
+                snackBarHostState = snackBarHostState
             )
         },
         content = {
@@ -77,5 +75,5 @@ internal fun ForwardXSecondsButton(
 @Preview
 @Composable
 private fun ForwardXSecondsButtonPreview() {
-    ForwardXSecondsButton(seconds = 5)
+    ForwardXSecondsButton()
 }

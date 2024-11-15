@@ -409,12 +409,9 @@ class PlaybackViewModel : ViewModel() {
         }
     }
 
-    fun forward(scope: CoroutineScope, snackBarHostState: SnackbarHostState, seconds: Long) {
+    fun forward(scope: CoroutineScope, snackBarHostState: SnackbarHostState) {
         try {
-            PlaybackManager.forward(
-                context = MainActivity.instance.applicationContext,
-                seconds = seconds
-            )
+            PlaybackManager.forward(context = MainActivity.instance.applicationContext)
         } catch (e: Exception) {
             _logger.severe(e.message)
             showErrorSnackBar(
@@ -423,20 +420,16 @@ class PlaybackViewModel : ViewModel() {
                 action = {
                     this.forward(
                         scope = scope,
-                        snackBarHostState = snackBarHostState,
-                        seconds = seconds
+                        snackBarHostState = snackBarHostState
                     )
                 }
             )
         }
     }
 
-    fun rewind(scope: CoroutineScope, snackBarHostState: SnackbarHostState, seconds: Long) {
+    fun rewind(scope: CoroutineScope, snackBarHostState: SnackbarHostState) {
         try {
-            PlaybackManager.rewind(
-                context = MainActivity.instance.applicationContext,
-                seconds = seconds
-            )
+            PlaybackManager.rewind(context = MainActivity.instance.applicationContext)
         } catch (e: Exception) {
             _logger.severe(e.message)
             showErrorSnackBar(scope = scope,
@@ -445,7 +438,6 @@ class PlaybackViewModel : ViewModel() {
                     this.rewind(
                         scope = scope,
                         snackBarHostState = snackBarHostState,
-                        seconds = seconds
                     )
                 }
             )

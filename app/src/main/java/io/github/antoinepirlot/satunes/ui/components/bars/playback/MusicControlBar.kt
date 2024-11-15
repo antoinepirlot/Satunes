@@ -93,19 +93,13 @@ internal fun MusicControlBar(
             PreviousMusicButton(modifier = Modifier.size(size = nextPreviousSize))
             Spacer(modifier = Modifier.width(spaceSize))
 
-            RewindXSecondsButton(
-                modifier = Modifier.size(size = rewindForwardSize),
-                seconds = 5
-            ) // TODO add setting to choose seconds
+            RewindXSecondsButton(modifier = Modifier.size(size = rewindForwardSize))
             Spacer(modifier = Modifier.width(spaceSize))
 
             PlayPauseMusicButton(modifier = Modifier.size(playPauseButtonSize))
             Spacer(modifier = Modifier.width(spaceSize))
 
-            ForwardXSecondsButton(
-                modifier = Modifier.size(size = rewindForwardSize),
-                seconds = 5
-            ) // TODO add setting to choose seconds
+            ForwardXSecondsButton(modifier = Modifier.size(size = rewindForwardSize))
             Spacer(modifier = Modifier.width(spaceSize))
 
             NextMusicButton(Modifier.size(size = nextPreviousSize))

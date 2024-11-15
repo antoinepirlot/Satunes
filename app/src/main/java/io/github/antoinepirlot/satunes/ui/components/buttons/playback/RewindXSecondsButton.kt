@@ -48,7 +48,6 @@ import kotlinx.coroutines.CoroutineScope
 internal fun RewindXSecondsButton(
     modifier: Modifier = Modifier,
     playbackViewModel: PlaybackViewModel = viewModel(),
-    seconds: Long
 ) {
     val scope: CoroutineScope = LocalMainScope.current
     val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
@@ -59,8 +58,7 @@ internal fun RewindXSecondsButton(
         onClick = {
             playbackViewModel.rewind(
                 scope = scope,
-                snackBarHostState = snackBarHostState,
-                seconds = seconds
+                snackBarHostState = snackBarHostState
             )
         },
         content = {
@@ -77,5 +75,5 @@ internal fun RewindXSecondsButton(
 @Preview
 @Composable
 private fun RewindXSecondsButtonPreview() {
-    RewindXSecondsButton(seconds = 5)
+    RewindXSecondsButton()
 }

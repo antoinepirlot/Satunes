@@ -36,6 +36,7 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.floatPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
@@ -53,6 +54,7 @@ import kotlinx.coroutines.flow.map
  */
 
 object SettingsManager {
+
     /**
      * DEFAULT VALUES
      */
@@ -82,6 +84,8 @@ object SettingsManager {
     private val DEFAULT_SELECTED_PATHS: Set<String> = setOf("/0/Music/%")
     private const val DEFAULT_COMPILATION_MUSIC: Boolean = false
     private const val DEFAULT_ARTISTS_REPLACEMENT: Boolean = true
+    private const val DEFAULT_FORWARD_MS: Long = 5000L
+    private const val DEFAULT_REWIND_MS: Long = DEFAULT_FORWARD_MS
 
     /**
      * KEYS
@@ -121,6 +125,8 @@ object SettingsManager {
         booleanPreferencesKey("compilation_music")
     private val ARTISTS_REPLACEMENT_KEY: Preferences.Key<Boolean> =
         booleanPreferencesKey("artist_replacement")
+    private val FORWARD_MS_KEY: Preferences.Key<Long> = longPreferencesKey("forward_ms")
+    private val REWIND_MS_KEY: Preferences.Key<Long> = longPreferencesKey("rewind_ms")
 
     /**
      * VARIABLES
@@ -183,7 +189,14 @@ object SettingsManager {
      * This setting is true if the compilation's music has to be added to compilation's artist's music list
      */
     var compilationMusic: Boolean = DEFAULT_COMPILATION_MUSIC
+        private set
     var artistReplacement: Boolean = DEFAULT_ARTISTS_REPLACEMENT
+        private set
+
+    var forwardMs: Long = DEFAULT_FORWARD_MS
+        private set
+    var rewindMs: Long = DEFAULT_REWIND_MS
+        private set
 
     suspend fun loadSettings(context: Context) {
         if (_isLoaded) {
@@ -242,6 +255,9 @@ object SettingsManager {
             compilationMusic = preferences[COMPILATION_MUSIC_KEY] ?: DEFAULT_COMPILATION_MUSIC
 
             artistReplacement = preferences[ARTISTS_REPLACEMENT_KEY] ?: DEFAULT_ARTISTS_REPLACEMENT
+
+            forwardMs = preferences[FORWARD_MS_KEY] ?: DEFAULT_FORWARD_MS
+            rewindMs = preferences[REWIND_MS_KEY] ?: DEFAULT_REWIND_MS
 
             DataLoader.loadFoldersPaths()
 
@@ -567,6 +583,20 @@ object SettingsManager {
         context.dataStore.edit { preferences: MutablePreferences ->
             this.artistReplacement = !this.artistReplacement
             preferences[ARTISTS_REPLACEMENT_KEY] = this.artistReplacement
+        }
+    }
+
+    suspend fun setForwardMs(context: Context, seconds: Long) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            this.forwardMs = seconds * 1000
+            preferences[FORWARD_MS_KEY] = this.forwardMs
+        }
+    }
+
+    suspend fun setRewindMs(context: Context, seconds: Long) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            this.rewindMs = seconds * 1000
+            preferences[REWIND_MS_KEY] = this.rewindMs
         }
     }
 }

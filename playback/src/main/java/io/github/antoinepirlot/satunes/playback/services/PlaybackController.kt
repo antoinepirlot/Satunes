@@ -769,9 +769,17 @@ internal class PlaybackController private constructor(
     }
 
     fun forward(seconds: Long) {
+        forwardRewind(seconds = seconds)
+    }
+
+    fun rewind(seconds: Long) {
+        forwardRewind(seconds = -seconds)
+    }
+
+    fun forwardRewind(seconds: Long) {
         if (this.musicPlaying == null) return
         val newPosition = this.getCurrentPosition() + seconds * 1000
-        if (newPosition <= this.musicPlaying!!.duration)
+        if (newPosition >= 0 && newPosition <= this.musicPlaying!!.duration)
             this.seekTo(positionMs = newPosition)
     }
 }

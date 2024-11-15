@@ -234,6 +234,12 @@ object PlaybackManager {
         this._playbackController!!.forward(seconds = seconds)
     }
 
+    fun rewind(context: Context, seconds: Long) {
+        _logger.info("Rewind $seconds")
+        checkPlaybackController(context = context)
+        this._playbackController!!.rewind(seconds = seconds)
+    }
+
     fun seekTo(context: Context, positionMs: Long) {
         _logger.info("Seek to with position ms")
         checkPlaybackController(context = context)

@@ -430,4 +430,25 @@ class PlaybackViewModel : ViewModel() {
             )
         }
     }
+
+    fun rewind(scope: CoroutineScope, snackBarHostState: SnackbarHostState, seconds: Long) {
+        try {
+            PlaybackManager.rewind(
+                context = MainActivity.instance.applicationContext,
+                seconds = seconds
+            )
+        } catch (e: Exception) {
+            _logger.severe(e.message)
+            showErrorSnackBar(scope = scope,
+                snackBarHostState = snackBarHostState,
+                action = {
+                    this.rewind(
+                        scope = scope,
+                        snackBarHostState = snackBarHostState,
+                        seconds = seconds
+                    )
+                }
+            )
+        }
+    }
 }

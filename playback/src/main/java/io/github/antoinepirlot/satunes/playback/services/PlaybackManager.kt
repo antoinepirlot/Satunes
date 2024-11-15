@@ -228,6 +228,12 @@ object PlaybackManager {
         this._playbackController!!.playPrevious()
     }
 
+    fun forward(context: Context, seconds: Long) {
+        _logger.info("Forward $seconds ahead")
+        checkPlaybackController(context = context)
+        this._playbackController!!.forward(seconds = seconds)
+    }
+
     fun seekTo(context: Context, positionMs: Long) {
         _logger.info("Seek to with position ms")
         checkPlaybackController(context = context)

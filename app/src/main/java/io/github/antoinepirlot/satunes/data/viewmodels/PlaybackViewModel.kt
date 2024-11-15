@@ -408,4 +408,26 @@ class PlaybackViewModel : ViewModel() {
             )
         }
     }
+
+    fun forward(scope: CoroutineScope, snackBarHostState: SnackbarHostState, seconds: Long) {
+        try {
+            PlaybackManager.forward(
+                context = MainActivity.instance.applicationContext,
+                seconds = seconds
+            )
+        } catch (e: Exception) {
+            _logger.severe(e.message)
+            showErrorSnackBar(
+                scope = scope,
+                snackBarHostState = snackBarHostState,
+                action = {
+                    this.forward(
+                        scope = scope,
+                        snackBarHostState = snackBarHostState,
+                        seconds = seconds
+                    )
+                }
+            )
+        }
+    }
 }

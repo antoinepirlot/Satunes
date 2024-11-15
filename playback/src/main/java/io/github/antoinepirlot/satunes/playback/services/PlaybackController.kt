@@ -767,4 +767,11 @@ internal class PlaybackController private constructor(
             this.playlist!!.getMusic(musicIndex = this.musicPlayingIndex + 1)
         }
     }
+
+    fun forward(seconds: Long) {
+        if (this.musicPlaying == null) return
+        val newPosition = this.getCurrentPosition() + seconds * 1000
+        if (newPosition <= this.musicPlaying!!.duration)
+            this.seekTo(positionMs = newPosition)
+    }
 }

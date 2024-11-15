@@ -43,6 +43,7 @@ import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.DirectionsCar
 import androidx.compose.material.icons.rounded.Done
 import androidx.compose.material.icons.rounded.Download
+import androidx.compose.material.icons.rounded.FastForward
 import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material.icons.rounded.FavoriteBorder
 import androidx.compose.material.icons.rounded.Folder
@@ -174,4 +175,5 @@ enum class SatunesIcons(
     ),
     REMOVE_ICON(imageVector = Icons.Rounded.Delete, description = "Remove Icon"),
     WARNING(imageVector = Icons.Rounded.Warning, description = "Warning Icon"),
+    FORWARD(imageVector = Icons.Rounded.FastForward, description = "Seek to Ahead Icon"),
 }

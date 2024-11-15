@@ -68,6 +68,7 @@ internal fun PlaybackCustomActionsBar(
         FavoriteCustomAction(music = musicPlaying)
         Spacer(modifier = Modifier.size(spacerSize))
 
+        //TODO move forward and rewind to controller bar not in custom actions
         ForwardXSeconds(seconds = 5) // TODO add setting to choose seconds
         Spacer(modifier = Modifier.size(spacerSize))
 

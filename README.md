@@ -81,7 +81,7 @@ Sinon, tu peux également suivre les étapes suivantes:
 5) Une fois le téléchargement terminé, ouvre le fichier
 6) Autorise l'installation d'application inconnue. (C'est nécéssaire car l'application n'est dépployée sur le Play Store).
 7) Installe l'application (il est probable que tu doives recommencer l'étape 5).
-8) Je te recommande te désactiver l'installation d'applis inconnue de l'application depuis laquelle tu as ouvert le fichier.
+8) Je te recommande de désactiver l'installation d'applis inconnue de l'application depuis laquelle tu as ouvert le fichier.
 9) Profite de ta musique en toute liberté :D
 
 ## Android Auto
@@ -91,10 +91,10 @@ Sinon, tu peux également suivre les étapes suivantes:
 3) Va dans les paramètres développeurs en cliquant sur les 3 boutons en haut à droite et active le paramètre "Sources Inconnues" car mon application n'est pas publiée dans le Google Play Store.
 4) Clique sur les 3 boutons comme au point 3, mais clique sur "Quitter le mode développeur" le paramètre que tu viens d'activer sera enregistré.
 5) Il n'y a plus qu'à ajouter l'application au lanceur d'application de Android Auto dans le menu "
-   Personnaliser le lanceur"
+   Personnaliser le lanceur" et le tour est joué.
 6) Bonne écoute et bon voyage ;)
 
-##
+## Soutien
 
 Si l'application te plait et que tu as envie de me soutenir, n'hésite pas à le faire [ici](https://fr.tipeee.com/antoinepirlot).
 

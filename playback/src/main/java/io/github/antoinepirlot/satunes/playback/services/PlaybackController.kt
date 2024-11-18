@@ -771,15 +771,10 @@ internal class PlaybackController private constructor(
         }
     }
 
-    fun forward() {
-        forwardRewind(microSeconds = _forwardMs.value)
-    }
+    fun forward() = movePoisitionOf(microSeconds = _forwardMs.value)
+    fun rewind() = movePoisitionOf(microSeconds = -_rewindMs.value)
 
-    fun rewind() {
-        forwardRewind(microSeconds = -_rewindMs.value)
-    }
-
-    private fun forwardRewind(microSeconds: Long) {
+    private fun movePoisitionOf(microSeconds: Long) {
         if (this.musicPlaying == null) return
         val newPosition = this.getCurrentPosition() + microSeconds
         if (newPosition >= 0 && newPosition <= this.musicPlaying!!.duration)

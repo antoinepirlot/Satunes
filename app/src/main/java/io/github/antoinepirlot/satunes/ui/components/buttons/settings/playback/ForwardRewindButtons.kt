@@ -49,7 +49,7 @@ import io.github.antoinepirlot.satunes.ui.components.forms.OutlinedNumberField
  * @author Antoine Pirlot on 15/11/2024
  */
 @Composable
-internal fun ForwardRewindRadioButtons(modifier: Modifier = Modifier) {
+internal fun ForwardRewindButtons(modifier: Modifier = Modifier) {
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -89,5 +89,5 @@ private fun RewindSection() {
 @Preview
 @Composable
 private fun ForwardRewindRadioButtonsPreview() {
-    ForwardRewindRadioButtons()
+    ForwardRewindButtons()
 }

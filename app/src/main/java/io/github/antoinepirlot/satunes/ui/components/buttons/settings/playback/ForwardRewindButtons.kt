@@ -28,9 +28,11 @@ package io.github.antoinepirlot.satunes.ui.components.buttons.settings.playback
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.mutableIntStateOf
@@ -59,33 +61,41 @@ internal fun ForwardRewindButtons(
     val forwardSeconds: Int = (forwardMs / 1000).toInt()
     val rewindMs: Long = playbackViewModel.forwardMs
     val rewindSeconds: Int = (rewindMs / 1000).toInt()
-    Row(
+    Column(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+        verticalArrangement = Arrangement.SpaceBetween,
     ) {
-        ForwardRewindSection(seconds = forwardSeconds)
-        ForwardRewindSection(seconds = rewindSeconds)
+        ForwardRewindSection(
+            text = stringResource(R.string.forward),
+            seconds = forwardSeconds
+        )
+        ForwardRewindSection(
+            text = stringResource(R.string.rewind),
+            seconds = rewindSeconds
+        )
     }
 }
 
 @Composable
 private fun ForwardRewindSection(
     modifier: Modifier = Modifier,
+    text: String,
     seconds: Int
 ) {
     Box(modifier = modifier) {
         Row(
+            modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center,
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
             val mutableSeconds: MutableIntState = rememberSaveable { mutableIntStateOf(seconds) }
-            NormalText(text = stringResource(R.string.forward) + ": ")
+            NormalText(text = "$text: ")
             OutlinedNumberField(
+                modifier = Modifier.width(150.dp),
                 value = mutableSeconds,
-                label = stringResource(R.string.forward),
+                label = text,
                 maxValue = null
             )
         }

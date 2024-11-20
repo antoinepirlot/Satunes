@@ -66,7 +66,7 @@ internal fun ForwardRewindButtons(
 
     val forwardMs: Long = playbackViewModel.forwardMs
     val forwardSeconds: Int = (forwardMs / 1000).toInt()
-    val rewindMs: Long = playbackViewModel.forwardMs
+    val rewindMs: Long = playbackViewModel.rewindMs
     val rewindSeconds: Int = (rewindMs / 1000).toInt()
 
     Column(

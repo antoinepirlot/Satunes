@@ -46,7 +46,8 @@ internal fun OutlinedNumberField(
     modifier: Modifier = Modifier,
     value: MutableIntState,
     label: String,
-    maxValue: Int,
+    maxValue: Int? = null,
+    onValueChanged: ((newValue: Int) -> Unit)? = null,
 ) {
     val keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
     OutlinedTextField(
@@ -57,9 +58,19 @@ internal fun OutlinedNumberField(
             if (it.isBlank()) {
                 value.intValue = 0
             } else if (it.isDigitsOnly()) {
-                val itAsInt: Int = it.toInt()
-                if (itAsInt <= maxValue) {
-                    value.intValue = it.toInt()
+                try {
+                    val itAsInt: Int = it.toInt()
+                    if (maxValue != null) {
+                        if (itAsInt <= maxValue) {
+                            value.intValue = itAsInt
+                            onValueChanged?.invoke(itAsInt)
+                        }
+                    } else {
+                        value.intValue = itAsInt
+                        onValueChanged?.invoke(itAsInt)
+                    }
+                } catch (e: NumberFormatException) {
+                    /*It's not a int but a long or something else, so do nothing*/
                 }
             }
         },

@@ -122,4 +122,5 @@
     <string name="hours_text_field_label">Hours</string>
     <string name="forward">Forward</string>
     <string name="rewind">Rewind</string>
+    <string name="reset_settings">Reset</string>
 </resources>

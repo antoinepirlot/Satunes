@@ -117,4 +117,6 @@
     <string name="pause_media_timer_snackbar">Le minuteur a mit la musique en pause</string>
     <string name="seconds_text_field_label">Secondes</string>
     <string name="hours_text_field_label">Heures</string>
+    <string name="forward">Avancer</string>
+    <string name="rewind">Retour en arrière</string>
 </resources>

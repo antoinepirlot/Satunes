@@ -228,6 +228,18 @@ object PlaybackManager {
         this._playbackController!!.playPrevious()
     }
 
+    fun forward(context: Context) {
+        _logger.info("Forward")
+        checkPlaybackController(context = context)
+        this._playbackController!!.forward()
+    }
+
+    fun rewind(context: Context) {
+        _logger.info("Rewind")
+        checkPlaybackController(context = context)
+        this._playbackController!!.rewind()
+    }
+
     fun seekTo(context: Context, positionMs: Long) {
         _logger.info("Seek to with position ms")
         checkPlaybackController(context = context)

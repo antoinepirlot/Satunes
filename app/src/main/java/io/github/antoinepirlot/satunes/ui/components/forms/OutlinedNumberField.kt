@@ -56,9 +56,12 @@ internal fun OutlinedNumberField(
         onValueChange = {
             if (it.isBlank()) {
                 value.intValue = 0
-            } else if (maxValue != null && it.isDigitsOnly()) {
+            } else if (it.isDigitsOnly()) {
                 val itAsInt: Int = it.toInt()
-                if (itAsInt <= maxValue) {
+                if (maxValue != null) {
+                    if (itAsInt <= maxValue)
+                        value.intValue = it.toInt()
+                } else {
                     value.intValue = it.toInt()
                 }
             }

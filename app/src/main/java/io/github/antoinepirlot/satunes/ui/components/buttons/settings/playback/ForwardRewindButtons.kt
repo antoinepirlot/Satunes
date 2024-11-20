@@ -34,6 +34,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -48,8 +49,16 @@ import io.github.antoinepirlot.satunes.ui.components.forms.OutlinedNumberField
 /**
  * @author Antoine Pirlot on 15/11/2024
  */
+@SuppressLint("UnrememberedMutableState")
 @Composable
-internal fun ForwardRewindButtons(modifier: Modifier = Modifier) {
+internal fun ForwardRewindButtons(
+    modifier: Modifier = Modifier,
+    playbackViewModel: PlaybackViewModel = viewModel(),
+) {
+    val forwardMs: Long = playbackViewModel.forwardMs
+    val forwardSeconds: Int = (forwardMs / 1000).toInt()
+    val rewindMs: Long = playbackViewModel.forwardMs
+    val rewindSeconds: Int = (rewindMs / 1000).toInt()
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -57,33 +66,30 @@ internal fun ForwardRewindButtons(modifier: Modifier = Modifier) {
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        ForwardSection()
-        RewindSection()
+        ForwardRewindSection(seconds = forwardSeconds)
+        ForwardRewindSection(seconds = rewindSeconds)
     }
 }
 
-@SuppressLint("UnrememberedMutableState")
 @Composable
-private fun ForwardSection(
+private fun ForwardRewindSection(
     modifier: Modifier = Modifier,
-    playbackViewModel: PlaybackViewModel = viewModel()
+    seconds: Int
 ) {
-    var forwardMs: Long = playbackViewModel.forwardMs
-    val forwardSeconds: MutableIntState = mutableIntStateOf((forwardMs / 1000).toInt())
     Box(modifier = modifier) {
-        NormalText(text = stringResource(R.string.forward))
-        OutlinedNumberField(
-            value = forwardSeconds,
-            label = stringResource(R.string.forward),
-            maxValue = null
-        )
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center,
+        ) {
+            val mutableSeconds: MutableIntState = rememberSaveable { mutableIntStateOf(seconds) }
+            NormalText(text = stringResource(R.string.forward) + ": ")
+            OutlinedNumberField(
+                value = mutableSeconds,
+                label = stringResource(R.string.forward),
+                maxValue = null
+            )
+        }
     }
-}
-
-@Composable
-private fun RewindSection() {
-    NormalText(text = stringResource(R.string.rewind))
-
 }
 
 @Preview

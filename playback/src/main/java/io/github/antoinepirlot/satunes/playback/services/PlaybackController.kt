@@ -777,7 +777,8 @@ internal class PlaybackController private constructor(
     private fun movePoisitionOf(microSeconds: Long) {
         if (this.musicPlaying == null) return
         val newPosition = this.getCurrentPosition() + microSeconds
-        if (newPosition >= 0 && newPosition <= this.musicPlaying!!.duration)
-            this.seekTo(positionMs = newPosition)
+        if (newPosition > this.musicPlaying!!.duration) this.playNext()
+        else if (newPosition < 0) this.seekTo(positionMs = 0)
+        else this.seekTo(positionMs = newPosition)
     }
 }

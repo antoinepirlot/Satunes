@@ -586,16 +586,16 @@ object SettingsManager {
         }
     }
 
-    suspend fun setForwardMs(context: Context, seconds: Long) {
+    suspend fun updateForwardMs(context: Context, seconds: Int) {
         context.dataStore.edit { preferences: MutablePreferences ->
-            this.forwardMs.value = seconds * 1000
+            this.forwardMs.value = seconds.toLong() * 1000L
             preferences[FORWARD_MS_KEY] = this.forwardMs.value
         }
     }
 
-    suspend fun setRewindMs(context: Context, seconds: Long) {
+    suspend fun updateRewindMs(context: Context, seconds: Int) {
         context.dataStore.edit { preferences: MutablePreferences ->
-            this.rewindMs.value = seconds * 1000
+            this.rewindMs.value = seconds.toLong() * 1000L
             preferences[REWIND_MS_KEY] = this.rewindMs.value
         }
     }

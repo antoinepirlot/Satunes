@@ -33,6 +33,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.mutableIntStateOf
@@ -45,8 +46,11 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.data.local.LocalMainScope
+import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.ui.components.forms.OutlinedNumberField
+import kotlinx.coroutines.CoroutineScope
 
 /**
  * @author Antoine Pirlot on 15/11/2024
@@ -57,10 +61,14 @@ internal fun ForwardRewindButtons(
     modifier: Modifier = Modifier,
     playbackViewModel: PlaybackViewModel = viewModel(),
 ) {
+    val scope: CoroutineScope = LocalMainScope.current
+    val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
+
     val forwardMs: Long = playbackViewModel.forwardMs
     val forwardSeconds: Int = (forwardMs / 1000).toInt()
     val rewindMs: Long = playbackViewModel.forwardMs
     val rewindSeconds: Int = (rewindMs / 1000).toInt()
+
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -70,12 +78,26 @@ internal fun ForwardRewindButtons(
         ForwardRewindSection(
             text = stringResource(R.string.forward),
             label = stringResource(R.string.seconds_text_field_label),
-            seconds = forwardSeconds
+            seconds = forwardSeconds,
+            onValueChanged = {
+                playbackViewModel.updateForward(
+                    scope = scope,
+                    snackBarHostState = snackBarHostState,
+                    seconds = it,
+                )
+            }
         )
         ForwardRewindSection(
             text = stringResource(R.string.rewind),
             label = stringResource(R.string.seconds_text_field_label),
-            seconds = rewindSeconds
+            seconds = rewindSeconds,
+            onValueChanged = {
+                playbackViewModel.updateRewind(
+                    scope = scope,
+                    snackBarHostState = snackBarHostState,
+                    seconds = it
+                )
+            }
         )
     }
 }
@@ -85,7 +107,8 @@ private fun ForwardRewindSection(
     modifier: Modifier = Modifier,
     text: String,
     label: String,
-    seconds: Int
+    seconds: Int,
+    onValueChanged: (value: Int) -> Unit,
 ) {
     Box(modifier = modifier) {
         Row(
@@ -99,7 +122,8 @@ private fun ForwardRewindSection(
                 modifier = Modifier.width(150.dp),
                 value = mutableSeconds,
                 label = label,
-                maxValue = null
+                maxValue = null,
+                onValueChanged = onValueChanged
             )
         }
     }

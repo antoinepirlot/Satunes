@@ -52,6 +52,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.runBlocking
 
 /**
  * @author Antoine Pirlot on 19/07/2024
@@ -443,6 +444,52 @@ class PlaybackViewModel : ViewModel() {
                     this.rewind(
                         scope = scope,
                         snackBarHostState = snackBarHostState,
+                    )
+                }
+            )
+        }
+    }
+
+    fun updateForward(scope: CoroutineScope, snackBarHostState: SnackbarHostState, seconds: Int) {
+        try {
+            runBlocking {
+                SettingsManager.updateForwardMs(
+                    context = MainActivity.instance.applicationContext,
+                    seconds = seconds
+                )
+            }
+        } catch (e: Exception) {
+            showErrorSnackBar(
+                scope = scope,
+                snackBarHostState = snackBarHostState,
+                action = {
+                    this.updateForward(
+                        scope = scope,
+                        snackBarHostState = snackBarHostState,
+                        seconds = seconds
+                    )
+                }
+            )
+        }
+    }
+
+    fun updateRewind(scope: CoroutineScope, snackBarHostState: SnackbarHostState, seconds: Int) {
+        try {
+            runBlocking {
+                SettingsManager.updateRewindMs(
+                    context = MainActivity.instance.applicationContext,
+                    seconds = seconds
+                )
+            }
+        } catch (e: Exception) {
+            showErrorSnackBar(
+                scope = scope,
+                snackBarHostState = snackBarHostState,
+                action = {
+                    this.updateForward(
+                        scope = scope,
+                        snackBarHostState = snackBarHostState,
+                        seconds = seconds
                     )
                 }
             )

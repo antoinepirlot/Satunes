@@ -69,10 +69,12 @@ internal fun ForwardRewindButtons(
     ) {
         ForwardRewindSection(
             text = stringResource(R.string.forward),
+            label = stringResource(R.string.seconds_text_field_label),
             seconds = forwardSeconds
         )
         ForwardRewindSection(
             text = stringResource(R.string.rewind),
+            label = stringResource(R.string.seconds_text_field_label),
             seconds = rewindSeconds
         )
     }
@@ -82,6 +84,7 @@ internal fun ForwardRewindButtons(
 private fun ForwardRewindSection(
     modifier: Modifier = Modifier,
     text: String,
+    label: String,
     seconds: Int
 ) {
     Box(modifier = modifier) {
@@ -95,7 +98,7 @@ private fun ForwardRewindSection(
             OutlinedNumberField(
                 modifier = Modifier.width(150.dp),
                 value = mutableSeconds,
-                label = text,
+                label = label,
                 maxValue = null
             )
         }

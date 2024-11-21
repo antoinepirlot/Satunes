@@ -23,29 +23,28 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.views.settings.reset
+package io.github.antoinepirlot.satunes.ui.components.settings.reset
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.glance.layout.Column
-import io.github.antoinepirlot.jetpack_libs.components.texts.Title
-import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.ui.components.settings.library.reset.LibrarySubSettings
 
 /**
- * @author Antoine Pirlot on 20/11/2024
+ * @author Antoine Pirlot on 21/11/2024
  */
-@Composable
-internal fun ResetSettingsView(modifier: Modifier = Modifier) {
-    Column {
-        Title(text = stringResource(R.string.reset_settings))
 
+@Composable
+internal fun AllResetSubSettings(modifier: Modifier = Modifier) {
+    //TODO
+    Column(modifier = modifier) {
+        LibrarySubSettings()
     }
 }
 
 @Preview
 @Composable
-private fun ResetSettingsViewPreview() {
-    ResetSettingsView()
+private fun AllResetSubSettingsPreview() {
+    AllResetSubSettings()
 }

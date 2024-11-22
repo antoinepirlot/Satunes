@@ -622,4 +622,18 @@ object SettingsManager {
             preferences[AUDIO_OFFLOAD_CHECKED_KEY] = this.audioOffloadChecked
         }
     }
+
+    suspend fun resetPlaybackBehaviorSettings(context: Context) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            this.playbackWhenClosedChecked = DEFAULT_PLAYBACK_WHEN_CLOSED_CHECKED
+            this.pauseIfNoisyChecked = DEFAULT_PAUSE_IF_NOISY
+            this.pauseIfAnotherPlayback = DEFAULT_PAUSE_IF_ANOTHER_PLAYBACK_CHECKED
+            this.barSpeed = DEFAULT_BAR_SPEED_VALUE
+            preferences[PLAYBACK_WHEN_CLOSED_CHECKED_PREFERENCES_KEY] =
+                this.playbackWhenClosedChecked
+            preferences[PAUSE_IF_NOISY_PREFERENCES_KEY] = this.pauseIfNoisyChecked
+            preferences[PAUSE_IF_ANOTHER_PLAYBACK_KEY] = this.pauseIfAnotherPlayback
+            preferences[BAR_SPEED_KEY] = this.barSpeed.speed
+        }
+    }
 }

@@ -121,4 +121,5 @@
     <string name="rewind">Rewind</string>
     <string name="reset_settings">Reset</string>
     <string name="reset_text">Reset</string>
+    <string name="playback_behavior_settings">Behavior</string>
 </resources>

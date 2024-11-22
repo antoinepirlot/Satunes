@@ -818,4 +818,23 @@ class DataViewModel : ViewModel() {
             )
         }
     }
+
+    fun resetPlaybackBehaviorSettings(scope: CoroutineScope, snackBarHostState: SnackbarHostState) {
+        try {
+            runBlocking {
+                SettingsManager.resetPlaybackBehaviorSettings(context = MainActivity.instance.applicationContext)
+            }
+        } catch (e: Exception) {
+            showErrorSnackBar(
+                scope = scope,
+                snackBarHostState = snackBarHostState,
+                action = {
+                    resetPlaybackBehaviorSettings(
+                        scope = scope,
+                        snackBarHostState = snackBarHostState
+                    )
+                }
+            )
+        }
+    }
 }

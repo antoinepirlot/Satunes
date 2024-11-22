@@ -23,36 +23,31 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.settings.reset
+package io.github.antoinepirlot.satunes.ui.components.settings.reset.playback
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import io.github.antoinepirlot.jetpack_libs.components.texts.Title
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.ui.components.settings.reset.battery.ResetBatterySettings
-import io.github.antoinepirlot.satunes.ui.components.settings.reset.library.ResetLibrarySubSettings
-import io.github.antoinepirlot.satunes.ui.components.settings.reset.playback.ResetPlaybackSubSettings
+import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
 
 /**
- * @author Antoine Pirlot on 21/11/2024
+ * @author Antoine Pirlot on 23/11/2024
  */
 
 @Composable
-internal fun AllResetSettings(modifier: Modifier = Modifier) {
-    //TODO
-    Column(modifier = modifier) {
-        Title(text = stringResource(R.string.reset_settings))
-        ResetPlaybackSubSettings()
-        ResetLibrarySubSettings()
-        ResetBatterySettings()
+internal fun ResetPlaybackSubSettings(modifier: Modifier = Modifier) {
+    SubSettings(
+        modifier = modifier,
+        title = stringResource(R.string.playback_settings)
+    ) {
+        ResetPlaybackBehaviorSettings()
     }
 }
 
 @Preview
 @Composable
-private fun AllResetSubSettingsPreview() {
-    AllResetSettings()
+private fun ResetPlaybackSubSettingsPreview() {
+    ResetPlaybackSubSettings()
 }

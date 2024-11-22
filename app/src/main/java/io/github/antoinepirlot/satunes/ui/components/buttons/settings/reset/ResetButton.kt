@@ -23,29 +23,37 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.settings.library.reset
+package io.github.antoinepirlot.satunes.ui.components.buttons.settings.reset
 
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import io.github.antoinepirlot.satunes.ui.components.buttons.ButtonWithIcon
 
 /**
- * @author Antoine Pirlot on 21/11/2024
+ * @author Antoine Pirlot on 22/11/2024
  */
 
 @Composable
-internal fun LibrarySubSettings(modifier: Modifier = Modifier) {
-    //TODO
-    Column {
-        ResetFoldersSettings()
-        ResetLoadingLogicSubSettings()
-        ResetPlaylistSubSettings()
-    }
+internal fun ResetButton(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit,
+) {
+    ButtonWithIcon(
+        modifier = modifier.width(width = 170.dp),
+        icon = SatunesIcons.RESET_SETTINGS,
+        onClick = onClick,
+        text = stringResource(R.string.reset_text)
+    )
 }
 
 @Preview
 @Composable
-private fun LibrarySubSettingsPreview() {
-    LibrarySubSettings()
+private fun ResetButtonPreview() {
+    ResetButton(onClick = {})
 }

@@ -599,4 +599,11 @@ object SettingsManager {
             preferences[REWIND_MS_KEY] = this.rewindMs.value
         }
     }
+
+    suspend fun resetFoldersSettings(context: Context) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            this.foldersPathsSelectedSet.value = DEFAULT_SELECTED_PATHS
+            preferences[SELECTED_PATHS_KEY] = this.foldersPathsSelectedSet.value
+        }
+    }
 }

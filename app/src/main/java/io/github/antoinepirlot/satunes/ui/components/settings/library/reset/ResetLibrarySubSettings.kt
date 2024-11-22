@@ -23,28 +23,34 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.settings.reset
+package io.github.antoinepirlot.satunes.ui.components.settings.library.reset
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import io.github.antoinepirlot.satunes.ui.components.settings.library.reset.LibrarySubSettings
+import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
 
 /**
  * @author Antoine Pirlot on 21/11/2024
  */
 
 @Composable
-internal fun AllResetSubSettings(modifier: Modifier = Modifier) {
+internal fun ResetLibrarySubSettings(modifier: Modifier = Modifier) {
     //TODO
-    Column(modifier = modifier) {
-        LibrarySubSettings()
+    SubSettings(
+        modifier = modifier,
+        title = stringResource(R.string.library_settings)
+    ) {
+        ResetFoldersSettings()
+        ResetLoadingLogicSubSettings()
+        ResetPlaylistSubSettings()
     }
 }
 
 @Preview
 @Composable
-private fun AllResetSubSettingsPreview() {
-    AllResetSubSettings()
+private fun LibrarySubSettingsPreview() {
+    ResetLibrarySubSettings()
 }

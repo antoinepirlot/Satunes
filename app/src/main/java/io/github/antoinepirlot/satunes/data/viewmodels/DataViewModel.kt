@@ -52,6 +52,7 @@ import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
+import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.ui.utils.showErrorSnackBar
 import io.github.antoinepirlot.satunes.ui.utils.showSnackBar
 import io.github.antoinepirlot.satunes.utils.getNow
@@ -59,6 +60,7 @@ import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import io.github.antoinepirlot.satunes.database.R as RDb
 
 /**
@@ -765,6 +767,22 @@ class DataViewModel : ViewModel() {
                     }
                 )
             }
+        }
+    }
+
+    fun resetFoldersSettings(scope: CoroutineScope, snackBarHostState: SnackbarHostState) {
+        try {
+            runBlocking {
+                SettingsManager.resetFoldersSettings(context = MainActivity.instance.applicationContext)
+            }
+        } catch (e: Exception) {
+            showErrorSnackBar(
+                scope = scope,
+                snackBarHostState = snackBarHostState,
+                action = {
+                    resetFoldersSettings(scope = scope, snackBarHostState = snackBarHostState)
+                }
+            )
         }
     }
 }

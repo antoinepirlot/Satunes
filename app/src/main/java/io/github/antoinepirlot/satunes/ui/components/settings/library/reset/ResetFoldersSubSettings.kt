@@ -25,14 +25,47 @@
 
 package io.github.antoinepirlot.satunes.ui.components.settings.library.reset
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
+import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.data.local.LocalMainScope
+import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
+import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
+import io.github.antoinepirlot.satunes.ui.components.buttons.settings.reset.ResetButton
+import kotlinx.coroutines.CoroutineScope
 
 /**
  * @author Antoine Pirlot on 21/11/2024
  */
 
 @Composable
-internal fun ResetFoldersSettings(modifier: Modifier = Modifier) {
-    //TODO
+internal fun ResetFoldersSettings(
+    modifier: Modifier = Modifier,
+    dataViewModel: DataViewModel = viewModel(),
+) {
+    val scope: CoroutineScope = LocalMainScope.current
+    val snackBarHostState = LocalSnackBarHostState.current
+
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        NormalText(text = stringResource(R.string.reset_folders_settings_title))
+        ResetButton(
+            onClick = {
+                dataViewModel.resetFoldersSettings(
+                    scope = scope,
+                    snackBarHostState = snackBarHostState
+                )
+            }
+        )
+    }
 }

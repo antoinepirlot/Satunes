@@ -23,7 +23,7 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.settings.library.reset
+package io.github.antoinepirlot.satunes.ui.components.settings.reset.library
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -32,6 +32,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.R
@@ -46,7 +47,7 @@ import kotlinx.coroutines.CoroutineScope
  */
 
 @Composable
-internal fun ResetFoldersSettings(
+internal fun ResetLoadingLogicSettings(
     modifier: Modifier = Modifier,
     dataViewModel: DataViewModel = viewModel(),
 ) {
@@ -58,14 +59,20 @@ internal fun ResetFoldersSettings(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        NormalText(text = stringResource(R.string.folders_settings))
+        NormalText(text = stringResource(R.string.data_loading_settings_title))
         ResetButton(
             onClick = {
-                dataViewModel.resetFoldersSettings(
+                dataViewModel.resetLoadingLogicSettings(
                     scope = scope,
                     snackBarHostState = snackBarHostState
                 )
             }
         )
     }
+}
+
+@Preview
+@Composable
+private fun ResetLoadingLogicSettings() {
+
 }

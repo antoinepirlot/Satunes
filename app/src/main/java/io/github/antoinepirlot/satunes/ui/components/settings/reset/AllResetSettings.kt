@@ -32,8 +32,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.jetpack_libs.components.texts.Title
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.ui.components.settings.battery.reset.ResetBatterySettings
-import io.github.antoinepirlot.satunes.ui.components.settings.library.reset.ResetLibrarySubSettings
+import io.github.antoinepirlot.satunes.ui.components.settings.reset.battery.ResetBatterySettings
+import io.github.antoinepirlot.satunes.ui.components.settings.reset.library.ResetLibrarySubSettings
 
 /**
  * @author Antoine Pirlot on 21/11/2024

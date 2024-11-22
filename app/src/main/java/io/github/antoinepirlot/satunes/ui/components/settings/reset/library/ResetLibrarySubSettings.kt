@@ -23,7 +23,7 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.settings.library.reset
+package io.github.antoinepirlot.satunes.ui.components.settings.reset.library
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
@@ -49,7 +49,7 @@ internal fun ResetLibrarySubSettings(modifier: Modifier = Modifier) {
     ) {
         ResetFoldersSettings()
         Spacer(modifier = Modifier.size(size = size))
-        ResetLoadingLogicSubSettings()
+        ResetLoadingLogicSettings()
     }
 }
 

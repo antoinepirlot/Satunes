@@ -23,7 +23,7 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.settings.battery.reset
+package io.github.antoinepirlot.satunes.ui.components.settings.reset.battery
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier

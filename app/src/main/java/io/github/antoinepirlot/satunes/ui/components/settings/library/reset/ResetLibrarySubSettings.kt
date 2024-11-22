@@ -43,7 +43,6 @@ val size = 5.dp
 
 @Composable
 internal fun ResetLibrarySubSettings(modifier: Modifier = Modifier) {
-    //TODO
     SubSettings(
         modifier = modifier,
         title = stringResource(R.string.library_settings),

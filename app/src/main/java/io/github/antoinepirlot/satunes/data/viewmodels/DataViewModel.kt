@@ -659,6 +659,7 @@ class DataViewModel : ViewModel() {
                 }
 
                 else -> {
+                    @Suppress("NAME_SHADOWING")
                     media.getMusicSet().forEach { media: Music ->
                         paths += media.absolutePath
                     }

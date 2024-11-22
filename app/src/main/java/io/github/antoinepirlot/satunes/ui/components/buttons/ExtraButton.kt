@@ -55,7 +55,6 @@ internal fun ExtraButton(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
     icon: SatunesIcons,
-    description: String? = null,
     onClick: () -> Unit,
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()

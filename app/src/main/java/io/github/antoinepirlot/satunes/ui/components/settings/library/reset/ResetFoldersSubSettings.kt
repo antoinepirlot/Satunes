@@ -58,7 +58,7 @@ internal fun ResetFoldersSettings(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        NormalText(text = stringResource(R.string.reset_folders_settings_title))
+        NormalText(text = stringResource(R.string.folders_settings))
         ResetButton(
             onClick = {
                 dataViewModel.resetFoldersSettings(

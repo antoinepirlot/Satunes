@@ -120,6 +120,5 @@
     <string name="forward">Avancer</string>
     <string name="rewind">Retour en arrière</string>
     <string name="reset_settings">Réinitialisation</string>
-    <string name="reset_folders_settings_title">Dossiers</string>
     <string name="reset_text">Réinitialiser</string>
 </resources>

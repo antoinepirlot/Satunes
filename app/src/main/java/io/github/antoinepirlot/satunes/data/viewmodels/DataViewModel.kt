@@ -785,4 +785,20 @@ class DataViewModel : ViewModel() {
             )
         }
     }
+
+    fun resetLoadingLogicSettings(scope: CoroutineScope, snackBarHostState: SnackbarHostState) {
+        try {
+            runBlocking {
+                SettingsManager.resetLoadingLogicSettings(context = MainActivity.instance.applicationContext)
+            }
+        } catch (e: Exception) {
+            showErrorSnackBar(
+                scope = scope,
+                snackBarHostState = snackBarHostState,
+                action = {
+                    resetLoadingLogicSettings(scope = scope, snackBarHostState = snackBarHostState)
+                }
+            )
+        }
+    }
 }

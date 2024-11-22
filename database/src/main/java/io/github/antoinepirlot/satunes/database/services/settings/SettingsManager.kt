@@ -606,4 +606,13 @@ object SettingsManager {
             preferences[SELECTED_PATHS_KEY] = this.foldersPathsSelectedSet.value
         }
     }
+
+    suspend fun resetLoadingLogicSettings(context: Context) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            this.compilationMusic = DEFAULT_COMPILATION_MUSIC
+            this.artistReplacement = DEFAULT_ARTISTS_REPLACEMENT
+            preferences[COMPILATION_MUSIC_KEY] = this.compilationMusic
+            preferences[ARTISTS_REPLACEMENT_KEY] = this.artistReplacement
+        }
+    }
 }

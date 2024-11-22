@@ -25,10 +25,13 @@
 
 package io.github.antoinepirlot.satunes.ui.components.settings.library.reset
 
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
 
@@ -36,15 +39,19 @@ import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
  * @author Antoine Pirlot on 21/11/2024
  */
 
+val size = 5.dp
+
 @Composable
 internal fun ResetLibrarySubSettings(modifier: Modifier = Modifier) {
     //TODO
     SubSettings(
         modifier = modifier,
-        title = stringResource(R.string.library_settings)
+        title = stringResource(R.string.library_settings),
     ) {
         ResetFoldersSettings()
+        Spacer(modifier = Modifier.size(size = size))
         ResetLoadingLogicSubSettings()
+        Spacer(modifier = Modifier.size(size = size))
         ResetPlaylistSubSettings()
     }
 }

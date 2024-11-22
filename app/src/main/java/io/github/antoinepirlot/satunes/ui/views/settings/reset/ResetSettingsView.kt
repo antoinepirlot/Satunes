@@ -41,7 +41,8 @@ import io.github.antoinepirlot.satunes.ui.components.settings.reset.AllResetSett
 internal fun ResetSettingsView(modifier: Modifier = Modifier) {
     Column(modifier = modifier
         .fillMaxSize()
-        .padding(horizontal = 16.dp)) {
+        .padding(horizontal = 16.dp)
+    ) {
         AllResetSettings()
     }
 }

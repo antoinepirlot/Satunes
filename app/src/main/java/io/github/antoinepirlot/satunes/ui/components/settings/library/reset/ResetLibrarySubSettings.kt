@@ -51,8 +51,6 @@ internal fun ResetLibrarySubSettings(modifier: Modifier = Modifier) {
         ResetFoldersSettings()
         Spacer(modifier = Modifier.size(size = size))
         ResetLoadingLogicSubSettings()
-        Spacer(modifier = Modifier.size(size = size))
-        ResetPlaylistSubSettings()
     }
 }
 

@@ -25,32 +25,40 @@
 
 package io.github.antoinepirlot.satunes.ui.components.settings.reset
 
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import io.github.antoinepirlot.jetpack_libs.components.texts.Title
-import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.ui.components.settings.battery.reset.ResetBatterySettings
-import io.github.antoinepirlot.satunes.ui.components.settings.library.reset.ResetLibrarySubSettings
+import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
+import io.github.antoinepirlot.satunes.ui.components.buttons.settings.reset.ResetButton
 
 /**
- * @author Antoine Pirlot on 21/11/2024
+ * @author Antoine Pirlot on 22/11/2024
  */
 
 @Composable
-internal fun AllResetSettings(modifier: Modifier = Modifier) {
-    //TODO
-    Column(modifier = modifier) {
-        Title(text = stringResource(R.string.reset_settings))
-        ResetLibrarySubSettings()
-        ResetBatterySettings()
+internal fun ResetSettings(
+    modifier: Modifier = Modifier,
+    text: String,
+    onClick: () -> Unit
+) {
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        NormalText(text = text)
+        ResetButton(
+            onClick = onClick
+        )
     }
 }
 
 @Preview
 @Composable
-private fun AllResetSubSettingsPreview() {
-    AllResetSettings()
+private fun ResetSettingsPreview() {
+    ResetSettings(text = "Reset", onClick = {})
 }

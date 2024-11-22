@@ -23,34 +23,50 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.settings.reset
+package io.github.antoinepirlot.satunes.ui.components.settings.battery.reset
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import io.github.antoinepirlot.jetpack_libs.components.texts.Title
+import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.ui.components.settings.battery.reset.ResetBatterySettings
-import io.github.antoinepirlot.satunes.ui.components.settings.library.reset.ResetLibrarySubSettings
+import io.github.antoinepirlot.satunes.data.local.LocalMainScope
+import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
+import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
+import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
+import io.github.antoinepirlot.satunes.ui.components.settings.reset.ResetSettings
+import kotlinx.coroutines.CoroutineScope
 
 /**
- * @author Antoine Pirlot on 21/11/2024
+ * @author Antoine Pirlot on 22/11/2024
  */
 
 @Composable
-internal fun AllResetSettings(modifier: Modifier = Modifier) {
-    //TODO
-    Column(modifier = modifier) {
-        Title(text = stringResource(R.string.reset_settings))
-        ResetLibrarySubSettings()
-        ResetBatterySettings()
+internal fun ResetBatterySettings(
+    modifier: Modifier = Modifier,
+    dataViewModel: DataViewModel = viewModel(),
+) {
+    val scope: CoroutineScope = LocalMainScope.current
+    val snackBarHostState = LocalSnackBarHostState.current
+    SubSettings(
+        modifier = modifier,
+        title = stringResource(R.string.battery_settings)
+    ) {
+        ResetSettings(
+            text = stringResource(R.string.audio_offload),
+            onClick = {
+                dataViewModel.resetBatterySettings(
+                    scope = scope,
+                    snackBarHostState = snackBarHostState
+                )
+            }
+        )
     }
 }
 
 @Preview
 @Composable
-private fun AllResetSubSettingsPreview() {
-    AllResetSettings()
+private fun ResetBatterySettingsPreview() {
+    ResetBatterySettings()
 }

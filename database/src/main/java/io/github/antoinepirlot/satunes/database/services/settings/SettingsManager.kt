@@ -615,4 +615,11 @@ object SettingsManager {
             preferences[ARTISTS_REPLACEMENT_KEY] = this.artistReplacement
         }
     }
+
+    suspend fun resetBatterySettings(context: Context) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            this.audioOffloadChecked = DEFAULT_AUDIO_OFFLOAD_CHECKED
+            preferences[AUDIO_OFFLOAD_CHECKED_KEY] = this.audioOffloadChecked
+        }
+    }
 }

@@ -802,4 +802,20 @@ class DataViewModel : ViewModel() {
             )
         }
     }
+
+    fun resetBatterySettings(scope: CoroutineScope, snackBarHostState: SnackbarHostState) {
+        try {
+            runBlocking {
+                SettingsManager.resetBatterySettings(context = MainActivity.instance.applicationContext)
+            }
+        } catch (e: Exception) {
+            showErrorSnackBar(
+                scope = scope,
+                snackBarHostState = snackBarHostState,
+                action = {
+                    resetBatterySettings(scope = scope, snackBarHostState = snackBarHostState)
+                }
+            )
+        }
+    }
 }

@@ -34,6 +34,7 @@ import io.github.antoinepirlot.jetpack_libs.components.texts.Title
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.ui.components.settings.reset.battery.ResetBatterySettings
 import io.github.antoinepirlot.satunes.ui.components.settings.reset.library.ResetLibrarySubSettings
+import io.github.antoinepirlot.satunes.ui.components.settings.reset.navigation_bar.ResetNavigationBarSubSettings
 import io.github.antoinepirlot.satunes.ui.components.settings.reset.playback.ResetPlaybackSubSettings
 import io.github.antoinepirlot.satunes.ui.components.settings.reset.search.ResetSearchSubSettings
 
@@ -46,6 +47,7 @@ internal fun AllResetSettings(modifier: Modifier = Modifier) {
     //TODO
     Column(modifier = modifier) {
         Title(text = stringResource(R.string.reset_settings))
+        ResetNavigationBarSubSettings()
         ResetPlaybackSubSettings()
         ResetSearchSubSettings()
         ResetLibrarySubSettings()

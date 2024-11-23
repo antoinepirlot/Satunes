@@ -67,7 +67,7 @@ internal fun SettingsView(
                 }
             )
             SettingButton(
-                text = stringResource(id = R.string.bottom_bar),
+                text = stringResource(id = R.string.navigation_bar_settings_title),
                 icon = SatunesIcons.BOTTOM_BAR,
                 onClick = {
                     navController.navigate(Destination.BOTTOM_BAR_SETTINGS.link)

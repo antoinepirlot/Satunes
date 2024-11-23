@@ -42,15 +42,15 @@ import io.github.antoinepirlot.satunes.ui.components.buttons.settings.reset.Rese
 @Composable
 internal fun ResetSettings(
     modifier: Modifier = Modifier,
-    text: String,
+    text: String?,
     onClick: () -> Unit
 ) {
     Row(
         modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = if (text != null) Arrangement.SpaceBetween else Arrangement.Center
     ) {
-        NormalText(text = text)
+        if (text != null) NormalText(text = text)
         ResetButton(
             onClick = onClick
         )

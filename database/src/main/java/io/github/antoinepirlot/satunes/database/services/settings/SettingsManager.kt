@@ -666,4 +666,21 @@ object SettingsManager {
             preferences[PLAYLISTS_FILTER_KEY] = this.playlistsFilter
         }
     }
+
+    suspend fun resetNavigationBarSettings(context: Context) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            this.foldersChecked.value = DEFAULT_FOLDERS_CHECKED
+            this.artistsChecked.value = DEFAULT_ARTISTS_CHECKED
+            this.albumsChecked.value = DEFAULT_ALBUMS_CHECKED
+            this.genresChecked.value = DEFAULT_GENRE_CHECKED
+            this.playlistsChecked.value = DEFAULT_PLAYLIST_CHECKED
+            this.defaultNavBarSection = DEFAULT_DEFAULT_NAV_BAR_SECTION
+            preferences[FOLDERS_CHECKED_PREFERENCES_KEY] = DEFAULT_FOLDERS_CHECKED
+            preferences[ARTISTS_CHECKED_PREFERENCES_KEY] = DEFAULT_ARTISTS_CHECKED
+            preferences[ALBUMS_CHECKED_PREFERENCES_KEY] = DEFAULT_ALBUMS_CHECKED
+            preferences[GENRE_CHECKED_PREFERENCES_KEY] = DEFAULT_GENRE_CHECKED
+            preferences[PLAYLISTS_CHECKED_PREFERENCES_KEY] = DEFAULT_PLAYLIST_CHECKED
+            preferences[DEFAULT_NAV_BAR_SECTION_KEY] = DEFAULT_DEFAULT_NAV_BAR_SECTION.id
+        }
+    }
 }

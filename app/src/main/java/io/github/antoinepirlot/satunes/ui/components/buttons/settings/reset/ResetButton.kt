@@ -23,43 +23,47 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.buttons
+package io.github.antoinepirlot.satunes.ui.components.buttons.settings.reset
 
-import androidx.compose.foundation.clickable
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.ui.components.cards.ListItem
+import io.github.antoinepirlot.satunes.ui.components.buttons.ButtonWithIcon
 
 /**
- * @author Antoine Pirlot on 20/04/2024
+ * @author Antoine Pirlot on 22/11/2024
  */
 
 @Composable
-internal fun ClickableListItem(
+internal fun ResetButton(
     modifier: Modifier = Modifier,
-    text: String,
-    icon: SatunesIcons,
+    text: String? = null,
     onClick: () -> Unit,
 ) {
-    ListItem(
-        modifier = modifier.clickable {
+    var icon: SatunesIcons by rememberSaveable { mutableStateOf(SatunesIcons.RESET_SETTINGS) }
+
+    ButtonWithIcon(
+        modifier = modifier.width(width = 190.dp),
+        icon = icon,
+        onClick = {
             onClick()
+            icon = SatunesIcons.DONE
         },
-        leadingContent = {
-            Icon(imageVector = icon.imageVector, contentDescription = icon.description)
-        },
-        headlineContent = {
-            Text(text = text)
-        }
+        text = if (icon == SatunesIcons.DONE) null else text ?: stringResource(R.string.reset_text)
     )
 }
 
 @Preview
 @Composable
-private fun ClickableListItemPreview() {
-    ClickableListItem(text = "Hello World!", icon = SatunesIcons.SETTINGS, onClick = {})
+private fun ResetButtonPreview() {
+    ResetButton(onClick = {})
 }

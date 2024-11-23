@@ -23,43 +23,39 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.buttons
+package io.github.antoinepirlot.satunes.ui.components.settings.reset.playback
 
-import androidx.compose.foundation.clickable
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.ui.components.cards.ListItem
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
 
 /**
- * @author Antoine Pirlot on 20/04/2024
+ * @author Antoine Pirlot on 23/11/2024
  */
 
+val spacerSize: Dp = 5.dp
+
 @Composable
-internal fun ClickableListItem(
-    modifier: Modifier = Modifier,
-    text: String,
-    icon: SatunesIcons,
-    onClick: () -> Unit,
-) {
-    ListItem(
-        modifier = modifier.clickable {
-            onClick()
-        },
-        leadingContent = {
-            Icon(imageVector = icon.imageVector, contentDescription = icon.description)
-        },
-        headlineContent = {
-            Text(text = text)
-        }
-    )
+internal fun ResetPlaybackSubSettings(modifier: Modifier = Modifier) {
+    SubSettings(
+        modifier = modifier,
+        title = stringResource(R.string.playback_settings)
+    ) {
+        ResetPlaybackBehaviorSettings()
+        Spacer(modifier = Modifier.size(size = spacerSize))
+        ResetPlaybackModesSettings()
+    }
 }
 
 @Preview
 @Composable
-private fun ClickableListItemPreview() {
-    ClickableListItem(text = "Hello World!", icon = SatunesIcons.SETTINGS, onClick = {})
+private fun ResetPlaybackSubSettingsPreview() {
+    ResetPlaybackSubSettings()
 }

@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name" translatable="false">Satunes</string>
     <string name="play_all">Shuffle All Musics</string>
-    <string name="bottom_bar">Navigation Bar</string>
+    <string name="navigation_bar_settings_title">Navigation Bar</string>
     <string name="this_device">This Device</string>
     <string name="external_storage">External Storage</string>
     <string name="playback_settings">Playback</string>
@@ -122,4 +122,8 @@
     <string name="hours_text_field_label">Hours</string>
     <string name="forward">Forward</string>
     <string name="rewind">Rewind</string>
+    <string name="reset_settings">Reset</string>
+    <string name="reset_text">Reset</string>
+    <string name="playback_behavior_settings">Behavior</string>
+    <string name="reset_all_settings">Reset All</string>
 </resources>

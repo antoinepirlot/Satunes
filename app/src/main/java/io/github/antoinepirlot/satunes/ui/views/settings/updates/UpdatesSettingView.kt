@@ -36,7 +36,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -46,8 +45,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.jetpack_libs.components.texts.Title
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.data.local.LocalMainScope
-import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.internet.updates.UpdateAvailableStatus
 import io.github.antoinepirlot.satunes.internet.updates.UpdateAvailableStatus.AVAILABLE
@@ -57,7 +54,6 @@ import io.github.antoinepirlot.satunes.internet.updates.UpdateAvailableStatus.UP
 import io.github.antoinepirlot.satunes.ui.components.LoadingCircle
 import io.github.antoinepirlot.satunes.ui.components.buttons.updates.CheckUpdateButton
 import io.github.antoinepirlot.satunes.ui.components.settings.updates.UpdateAvailable
-import kotlinx.coroutines.CoroutineScope
 
 /**
  * @author Antoine Pirlot on 11/04/2024
@@ -71,8 +67,6 @@ internal fun UpdatesSettingView(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
 ) {
-    val scope: CoroutineScope = LocalMainScope.current
-    val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
     val currentVersion: String = satunesViewModel.getCurrentVersion()
     val isCheckingUpdate: Boolean = satunesViewModel.isCheckingUpdate
     val updateAvailable: UpdateAvailableStatus = satunesViewModel.updateAvailableStatus

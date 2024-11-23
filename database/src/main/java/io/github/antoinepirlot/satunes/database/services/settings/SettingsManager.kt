@@ -675,6 +675,7 @@ object SettingsManager {
             this.genresChecked.value = DEFAULT_GENRE_CHECKED
             this.playlistsChecked.value = DEFAULT_PLAYLIST_CHECKED
             this.defaultNavBarSection = DEFAULT_DEFAULT_NAV_BAR_SECTION
+            NavBarSection.enableAll()
             preferences[FOLDERS_CHECKED_PREFERENCES_KEY] = DEFAULT_FOLDERS_CHECKED
             preferences[ARTISTS_CHECKED_PREFERENCES_KEY] = DEFAULT_ARTISTS_CHECKED
             preferences[ALBUMS_CHECKED_PREFERENCES_KEY] = DEFAULT_ALBUMS_CHECKED

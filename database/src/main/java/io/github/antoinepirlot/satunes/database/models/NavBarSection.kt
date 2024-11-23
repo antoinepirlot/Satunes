@@ -41,5 +41,16 @@ enum class NavBarSection(
     MUSICS(id = 2, stringId = R.string.musics),
     ALBUMS(id = 3, stringId = R.string.albums),
     GENRES(id = 4, stringId = R.string.genres),
-    PLAYLISTS(id = 5, stringId = R.string.playlists)
+    PLAYLISTS(id = 5, stringId = R.string.playlists);
+
+    companion object {
+        fun enableAll() {
+            FOLDERS.isEnabled = true
+            ARTISTS.isEnabled = true
+            MUSICS.isEnabled = true
+            ALBUMS.isEnabled = true
+            GENRES.isEnabled = true
+            PLAYLISTS.isEnabled = true
+        }
+    }
 }

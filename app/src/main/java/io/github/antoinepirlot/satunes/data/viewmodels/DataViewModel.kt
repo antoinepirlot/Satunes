@@ -882,7 +882,6 @@ class DataViewModel : ViewModel() {
     fun resetNavigationBarSettings(scope: CoroutineScope, snackBarHostState: SnackbarHostState) {
         try {
             runBlocking {
-                //todo fix list of default sections not updated
                 SettingsManager.resetNavigationBarSettings(context = MainActivity.instance.applicationContext)
             }
         } catch (e: Exception) {

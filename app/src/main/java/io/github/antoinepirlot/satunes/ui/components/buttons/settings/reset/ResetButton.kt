@@ -27,6 +27,10 @@ package io.github.antoinepirlot.satunes.ui.components.buttons.settings.reset
 
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -44,11 +48,16 @@ internal fun ResetButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
 ) {
+    var icon: SatunesIcons by rememberSaveable { mutableStateOf(SatunesIcons.RESET_SETTINGS) }
+
     ButtonWithIcon(
         modifier = modifier.width(width = 170.dp),
-        icon = SatunesIcons.RESET_SETTINGS,
-        onClick = onClick,
-        text = stringResource(R.string.reset_text)
+        icon = icon,
+        onClick = {
+            onClick()
+            icon = SatunesIcons.DONE
+        },
+        text = if (icon == SatunesIcons.DONE) null else stringResource(R.string.reset_text)
     )
 }
 

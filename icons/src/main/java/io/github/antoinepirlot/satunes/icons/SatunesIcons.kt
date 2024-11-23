@@ -104,6 +104,7 @@ enum class SatunesIcons(
         imageVector = Icons.Rounded.ArrowDropDown,
         description = "Close dropdown menu icon"
     ),
+    DONE(imageVector = Icons.Rounded.Done, description = "Done Icon"),
     EXPORT(imageVector = Icons.Rounded.Upload, description = "Export Icon"),
     FORWARD(imageVector = Icons.Rounded.FastForward, description = "Forward Icon"),
     IMPORT(imageVector = Icons.Rounded.Download, description = "Import Icon"),

@@ -856,4 +856,26 @@ class DataViewModel : ViewModel() {
             )
         }
     }
+
+    fun resetDefaultSearchFiltersSettings(
+        scope: CoroutineScope,
+        snackBarHostState: SnackbarHostState
+    ) {
+        try {
+            runBlocking {
+                SettingsManager.resetDefaultSearchFiltersSettings(context = MainActivity.instance.applicationContext)
+            }
+        } catch (e: Exception) {
+            showErrorSnackBar(
+                scope = scope,
+                snackBarHostState = snackBarHostState,
+                action = {
+                    resetDefaultSearchFiltersSettings(
+                        scope = scope,
+                        snackBarHostState = snackBarHostState
+                    )
+                }
+            )
+        }
+    }
 }

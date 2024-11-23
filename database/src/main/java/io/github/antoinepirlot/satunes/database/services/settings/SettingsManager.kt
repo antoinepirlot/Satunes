@@ -649,4 +649,21 @@ object SettingsManager {
             preferences[REWIND_MS_KEY] = this.rewindMs.value
         }
     }
+
+    suspend fun resetDefaultSearchFiltersSettings(context: Context) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            this.musicsFilter = DEFAULT_MUSICS_FILTER
+            this.albumsFilter = DEFAULT_ALBUMS_FILTER
+            this.artistsFilter = DEFAULT_ARTISTS_FILTER
+            this.genresFilter = DEFAULT_GENRES_FILTER
+            this.foldersFilter = DEFAULT_FOLDERS_FILTER
+            this.playlistsFilter = DEFAULT_PLAYLISTS_FILTER
+            preferences[MUSICS_FILTER_KEY] = this.musicsFilter
+            preferences[ALBUMS_FILTER_KEY] = this.albumsFilter
+            preferences[ARTISTS_FILTER_KEY] = this.artistsFilter
+            preferences[GENRES_FILTER_KEY] = this.genresFilter
+            preferences[FOLDERS_FILTER_KEY] = this.foldersFilter
+            preferences[PLAYLISTS_FILTER_KEY] = this.playlistsFilter
+        }
+    }
 }

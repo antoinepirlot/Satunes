@@ -23,38 +23,47 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.settings.reset
+package io.github.antoinepirlot.satunes.ui.components.settings.reset.search
 
-import androidx.compose.foundation.layout.Column
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import io.github.antoinepirlot.jetpack_libs.components.texts.Title
+import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.ui.components.settings.reset.battery.ResetBatterySettings
-import io.github.antoinepirlot.satunes.ui.components.settings.reset.library.ResetLibrarySubSettings
-import io.github.antoinepirlot.satunes.ui.components.settings.reset.playback.ResetPlaybackSubSettings
-import io.github.antoinepirlot.satunes.ui.components.settings.reset.search.ResetSearchSubSettings
+import io.github.antoinepirlot.satunes.data.local.LocalMainScope
+import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
+import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
+import io.github.antoinepirlot.satunes.ui.components.settings.reset.ResetSettings
+import kotlinx.coroutines.CoroutineScope
 
 /**
- * @author Antoine Pirlot on 21/11/2024
+ * @author Antoine Pirlot on 23/11/2024
  */
 
 @Composable
-internal fun AllResetSettings(modifier: Modifier = Modifier) {
-    //TODO
-    Column(modifier = modifier) {
-        Title(text = stringResource(R.string.reset_settings))
-        ResetPlaybackSubSettings()
-        ResetSearchSubSettings()
-        ResetLibrarySubSettings()
-        ResetBatterySettings()
-    }
+internal fun ResetDefaultSearchFiltersSettings(
+    modifier: Modifier = Modifier,
+    dataViewModel: DataViewModel = viewModel(),
+) {
+    val scope: CoroutineScope = LocalMainScope.current
+    val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
+
+    ResetSettings(
+        modifier = modifier,
+        text = stringResource(R.string.default_filter_setting_title),
+        onClick = {
+            dataViewModel.resetDefaultSearchFiltersSettings(
+                scope = scope,
+                snackBarHostState = snackBarHostState
+            )
+        }
+    )
 }
 
 @Preview
 @Composable
-private fun AllResetSubSettingsPreview() {
-    AllResetSettings()
+private fun ResetDefaultSearchFiltersSettingsPreview() {
+    ResetDefaultSearchFiltersSettings()
 }

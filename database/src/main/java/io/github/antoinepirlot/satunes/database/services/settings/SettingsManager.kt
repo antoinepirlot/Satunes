@@ -71,7 +71,7 @@ object SettingsManager {
     private const val DEFAULT_PAUSE_IF_NOISY = true
     private val DEFAULT_BAR_SPEED_VALUE: BarSpeed = BarSpeed.NORMAL
     private const val DEFAULT_REPEAT_MODE: Int = Player.REPEAT_MODE_OFF
-    private const val DEFAULT_SHUFFLE_MODE_CHECKED: Boolean = false
+    private const val DEFAULT_SHUFFLE_MODE: Boolean = false
     private const val DEFAULT_PAUSE_IF_ANOTHER_PLAYBACK_CHECKED: Boolean = true
     private const val DEFAULT_AUDIO_OFFLOAD_CHECKED: Boolean = false
     private const val DEFAULT_WHATS_NEW_SEEN: Boolean = false
@@ -156,7 +156,7 @@ object SettingsManager {
         private set
     var repeatMode: Int = DEFAULT_REPEAT_MODE
         private set
-    var shuffleMode: Boolean = DEFAULT_SHUFFLE_MODE_CHECKED
+    var shuffleMode: Boolean = DEFAULT_SHUFFLE_MODE
         private set
     var pauseIfAnotherPlayback: Boolean = DEFAULT_PAUSE_IF_ANOTHER_PLAYBACK_CHECKED
         private set
@@ -238,7 +238,7 @@ object SettingsManager {
             repeatMode = preferences[REPEAT_MODE_KEY] ?: DEFAULT_REPEAT_MODE
 
             shuffleMode =
-                preferences[SHUFFLE_MODE_KEY] ?: DEFAULT_SHUFFLE_MODE_CHECKED
+                preferences[SHUFFLE_MODE_KEY] ?: DEFAULT_SHUFFLE_MODE
 
             pauseIfAnotherPlayback = preferences[PAUSE_IF_ANOTHER_PLAYBACK_KEY]
                 ?: DEFAULT_PAUSE_IF_ANOTHER_PLAYBACK_CHECKED
@@ -634,6 +634,19 @@ object SettingsManager {
             preferences[PAUSE_IF_NOISY_PREFERENCES_KEY] = this.pauseIfNoisyChecked
             preferences[PAUSE_IF_ANOTHER_PLAYBACK_KEY] = this.pauseIfAnotherPlayback
             preferences[BAR_SPEED_KEY] = this.barSpeed.speed
+        }
+    }
+
+    suspend fun resetPlaybackModesSettings(context: Context) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            this.shuffleMode = DEFAULT_SHUFFLE_MODE
+            this.repeatMode = DEFAULT_REPEAT_MODE
+            this.forwardMs.value = DEFAULT_FORWARD_MS
+            this.rewindMs.value = DEFAULT_REWIND_MS
+            preferences[SHUFFLE_MODE_KEY] = this.shuffleMode
+            preferences[REPEAT_MODE_KEY] = this.repeatMode
+            preferences[FORWARD_MS_KEY] = this.forwardMs.value
+            preferences[REWIND_MS_KEY] = this.rewindMs.value
         }
     }
 }

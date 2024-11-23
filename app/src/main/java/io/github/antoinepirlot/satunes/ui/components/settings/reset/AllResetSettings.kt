@@ -25,7 +25,10 @@
 
 package io.github.antoinepirlot.satunes.ui.components.settings.reset
 
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -44,8 +47,8 @@ import io.github.antoinepirlot.satunes.ui.components.settings.reset.search.Reset
 
 @Composable
 internal fun AllResetSettings(modifier: Modifier = Modifier) {
-    //TODO
-    Column(modifier = modifier) {
+    val scrollState: ScrollState = rememberScrollState()
+    Column(modifier = modifier.verticalScroll(state = scrollState)) {
         Title(text = stringResource(R.string.reset_settings))
         ResetNavigationBarSubSettings()
         ResetPlaybackSubSettings()

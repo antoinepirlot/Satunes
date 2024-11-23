@@ -118,15 +118,15 @@ internal fun SettingsView(
             }
 
             SettingButton(
-                text = stringResource(id = R.string.logs_settings),
-                icon = SatunesIcons.SETTING_LOGS,
-                onClick = { navController.navigate(Destination.LOGS_SETTINGS.link) }
-            )
-
-            SettingButton(
                 text = stringResource(id = R.string.reset_settings),
                 icon = SatunesIcons.RESET_SETTINGS,
                 onClick = { navController.navigate(Destination.RESET_SETTINGS.link) }
+            )
+
+            SettingButton(
+                text = stringResource(id = R.string.logs_settings),
+                icon = SatunesIcons.SETTING_LOGS,
+                onClick = { navController.navigate(Destination.LOGS_SETTINGS.link) }
             )
 
             AboutSettings(modifier.padding(bottom = 16.dp)) // Bottom padding for a little space

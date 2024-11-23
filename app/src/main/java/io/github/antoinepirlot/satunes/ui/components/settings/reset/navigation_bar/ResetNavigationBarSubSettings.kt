@@ -47,15 +47,17 @@ internal fun ResetNavigationBarSubSettings(
     modifier: Modifier = Modifier,
     dataViewModel: DataViewModel = viewModel(),
 ) {
+    val text: String = stringResource(id = R.string.navigation_bar_settings_title)
+
     SubSettings(
         modifier = modifier,
-        title = stringResource(id = R.string.navigation_bar_settings_title)
+        title = text
     ) {
         val scope: CoroutineScope = LocalMainScope.current
         val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
 
         ResetSettings(
-            text = null,
+            text = text,
             onClick = {
                 dataViewModel.resetNavigationBarSettings(
                     scope = scope,

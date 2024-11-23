@@ -897,4 +897,20 @@ class DataViewModel : ViewModel() {
             )
         }
     }
+
+    fun resetAllSettings(scope: CoroutineScope, snackBarHostState: SnackbarHostState) {
+        try {
+            runBlocking {
+                SettingsManager.resetAll(context = MainActivity.instance.applicationContext)
+            }
+        } catch (e: Exception) {
+            showErrorSnackBar(
+                scope = scope,
+                snackBarHostState = snackBarHostState,
+                action = {
+                    resetAllSettings(scope = scope, snackBarHostState = snackBarHostState)
+                }
+            )
+        }
+    }
 }

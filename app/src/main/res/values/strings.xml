@@ -125,4 +125,5 @@
     <string name="reset_settings">Reset</string>
     <string name="reset_text">Reset</string>
     <string name="playback_behavior_settings">Behavior</string>
+    <string name="reset_all_settings">Reset All</string>
 </resources>

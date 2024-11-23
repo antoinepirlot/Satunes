@@ -46,18 +46,19 @@ import io.github.antoinepirlot.satunes.ui.components.buttons.ButtonWithIcon
 @Composable
 internal fun ResetButton(
     modifier: Modifier = Modifier,
+    text: String? = null,
     onClick: () -> Unit,
 ) {
     var icon: SatunesIcons by rememberSaveable { mutableStateOf(SatunesIcons.RESET_SETTINGS) }
 
     ButtonWithIcon(
-        modifier = modifier.width(width = 170.dp),
+        modifier = modifier.width(width = 190.dp),
         icon = icon,
         onClick = {
             onClick()
             icon = SatunesIcons.DONE
         },
-        text = if (icon == SatunesIcons.DONE) null else stringResource(R.string.reset_text)
+        text = if (icon == SatunesIcons.DONE) null else text ?: stringResource(R.string.reset_text)
     )
 }
 

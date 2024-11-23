@@ -122,4 +122,5 @@
     <string name="reset_settings">Réinitialisation</string>
     <string name="reset_text">Réinitialiser</string>
     <string name="playback_behavior_settings">Comportement</string>
+    <string name="reset_all_settings">Tout Réinitialiser</string>
 </resources>

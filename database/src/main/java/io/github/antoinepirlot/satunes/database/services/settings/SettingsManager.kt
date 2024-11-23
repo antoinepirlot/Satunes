@@ -684,4 +684,14 @@ object SettingsManager {
             preferences[DEFAULT_NAV_BAR_SECTION_KEY] = DEFAULT_DEFAULT_NAV_BAR_SECTION.id
         }
     }
+
+    suspend fun resetAll(context: Context) {
+        this.resetFoldersSettings(context = context)
+        this.resetLoadingLogicSettings(context = context)
+        this.resetBatterySettings(context = context)
+        this.resetPlaybackBehaviorSettings(context = context)
+        this.resetPlaybackModesSettings(context = context)
+        this.resetDefaultSearchFiltersSettings(context = context)
+        this.resetNavigationBarSettings(context = context)
+    }
 }

@@ -51,6 +51,7 @@ import io.github.antoinepirlot.jetpack_libs.components.models.ScreenSizes
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
+import io.github.antoinepirlot.satunes.data.mediaListViews
 import io.github.antoinepirlot.satunes.data.playbackViews
 import io.github.antoinepirlot.satunes.data.settingsDestinations
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
@@ -84,22 +85,22 @@ internal fun TopAppBar(
         ),
         navigationIcon = {
             val screenWidth: Int = LocalConfiguration.current.screenWidthDp
-            if (currentDestination !in playbackViews || screenWidth >= ScreenSizes.LARGE) {
-                return@CenterAlignedTopAppBar
-            }
-
-            // Here, the user is in the playback view
-            IconButton(onClick = {
-                onPlaybackQueueButtonClick(
-                    uiState = uiState,
-                    navController = navController
-                )
-            }) {
-                val playbackQueueIcon: SatunesIcons = SatunesIcons.PLAYBACK
-                Icon(
-                    imageVector = playbackQueueIcon.imageVector,
-                    contentDescription = playbackQueueIcon.description
-                )
+            if (currentDestination in playbackViews && screenWidth < ScreenSizes.LARGE) {
+                //TODO extract this to a sub component
+                // Here, the user is in the playback view
+                IconButton(onClick = {
+                    onPlaybackQueueButtonClick(
+                        uiState = uiState,
+                        navController = navController
+                    )
+                }) {
+                    val playbackQueueIcon: SatunesIcons = SatunesIcons.PLAYBACK
+                    Icon(
+                        imageVector = playbackQueueIcon.imageVector,
+                        contentDescription = playbackQueueIcon.description
+                    )
+                }
+            } else if (currentDestination in mediaListViews) {
             }
         },
         title = {

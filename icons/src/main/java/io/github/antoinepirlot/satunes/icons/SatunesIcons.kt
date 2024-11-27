@@ -29,6 +29,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.PlaylistAdd
 import androidx.compose.material.icons.automirrored.rounded.PlaylistPlay
 import androidx.compose.material.icons.automirrored.rounded.QueueMusic
+import androidx.compose.material.icons.automirrored.rounded.Sort
 import androidx.compose.material.icons.rounded.AccountCircle
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.AddToQueue
@@ -170,6 +171,7 @@ enum class SatunesIcons(
         imageProvider = ImageProvider(resId = R.drawable.skip_previous),
         description = "Skip Previous Icon"
     ),
+    SORT(imageVector = Icons.AutoMirrored.Rounded.Sort, description = "Sort Icon"),
     TIMER(imageVector = Icons.Rounded.Timer, description = "Timer Icon"),
     UNLIKED(imageVector = Icons.Rounded.FavoriteBorder, description = "Unliked Icon"),
     REFRESH(imageVector = Icons.Rounded.Refresh, description = "Refresh Icon"),

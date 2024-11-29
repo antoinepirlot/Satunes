@@ -66,5 +66,5 @@ internal data class SatunesUiState(
      */
     val compilationMusic: Boolean = SettingsManager.compilationMusic,
     val artistReplacement: Boolean = SettingsManager.artistReplacement,
-    val showSortModal: Boolean = false
+    val showSortDialog: Boolean = false
 )

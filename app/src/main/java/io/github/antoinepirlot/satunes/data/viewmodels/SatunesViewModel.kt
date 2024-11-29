@@ -623,9 +623,9 @@ internal class SatunesViewModel : ViewModel() {
         }
     }
 
-    fun showSortModal() {
+    fun showSortDialog() {
         _uiState.update { currentState: SatunesUiState ->
-            currentState.copy(showSortModal = true)
+            currentState.copy(showSortDialog = true)
         }
     }
 }

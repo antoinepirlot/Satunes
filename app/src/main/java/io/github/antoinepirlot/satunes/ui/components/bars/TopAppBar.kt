@@ -97,7 +97,7 @@ internal fun TopAppBar(
             } else if (currentDestination in mediaListViews) {
                 IconButton(
                     icon = SatunesIcons.SORT,
-                    onClick = { satunesViewModel.showSortModal() }
+                    onClick = { satunesViewModel.showSortDialog() }
                 )
             }
         },

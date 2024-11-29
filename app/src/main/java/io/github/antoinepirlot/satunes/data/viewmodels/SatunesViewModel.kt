@@ -628,4 +628,10 @@ internal class SatunesViewModel : ViewModel() {
             currentState.copy(showSortDialog = true)
         }
     }
+
+    fun hideSortDialog() {
+        _uiState.update { currentState: SatunesUiState ->
+            currentState.copy(showSortDialog = false)
+        }
+    }
 }

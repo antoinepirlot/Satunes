@@ -30,11 +30,15 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Folder
@@ -45,6 +49,7 @@ import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.ui.components.EmptyView
 import io.github.antoinepirlot.satunes.ui.components.bars.ShowCurrentMusicButton
 import io.github.antoinepirlot.satunes.ui.components.cards.media.MediaCardList
+import io.github.antoinepirlot.satunes.ui.components.dialog.SortListDialog
 
 /**
  * @author Antoine Pirlot on 01/02/24
@@ -54,6 +59,7 @@ import io.github.antoinepirlot.satunes.ui.components.cards.media.MediaCardList
 @Composable
 internal fun MediaListView(
     modifier: Modifier = Modifier,
+    satunesViewModel: SatunesViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
     mediaImplCollection: Collection<MediaImpl>,
     openMedia: (mediaImpl: MediaImpl) -> Unit,
@@ -63,6 +69,8 @@ internal fun MediaListView(
     extraButtons: (@Composable () -> Unit)? = null,
     emptyViewText: String
 ) {
+    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+
     Scaffold(
         modifier = modifier,
         floatingActionButton = { //TODO move it to first scaffold for Android 15 targeting
@@ -77,6 +85,7 @@ internal fun MediaListView(
         },
         floatingActionButtonPosition = FabPosition.End
     ) { _ ->
+        if (satunesUiState.showSortDialog) SortListDialog()
         if (mediaImplCollection.isNotEmpty()) {
             MediaCardList(
                 modifier = Modifier,

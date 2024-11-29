@@ -30,8 +30,6 @@ import android.os.Build
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
@@ -58,6 +56,7 @@ import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.models.Destination
+import io.github.antoinepirlot.satunes.ui.components.buttons.IconButton
 
 /**
  * @author Antoine Pirlot on 16/01/24
@@ -86,20 +85,15 @@ internal fun TopAppBar(
         navigationIcon = {
             val screenWidth: Int = LocalConfiguration.current.screenWidthDp
             if (currentDestination in playbackViews && screenWidth < ScreenSizes.LARGE) {
-                //TODO extract this to a sub component
-                // Here, the user is in the playback view
-                IconButton(onClick = {
-                    onPlaybackQueueButtonClick(
-                        uiState = uiState,
-                        navController = navController
-                    )
-                }) {
-                    val playbackQueueIcon: SatunesIcons = SatunesIcons.PLAYBACK
-                    Icon(
-                        imageVector = playbackQueueIcon.imageVector,
-                        contentDescription = playbackQueueIcon.description
-                    )
-                }
+                IconButton(
+                    icon = SatunesIcons.PLAYBACK,
+                    onClick = {
+                        onPlaybackQueueButtonClick(
+                            uiState = uiState,
+                            navController = navController
+                        )
+                    }
+                )
             } else if (currentDestination in mediaListViews) {
             }
         },
@@ -113,31 +107,28 @@ internal fun TopAppBar(
         actions = {
             if (currentDestination !in settingsDestinations) {
                 // Search Button
-                IconButton(onClick = {
-                    onSearchButtonClick(
-                        uiState = uiState,
-                        navController = navController
-                    )
-                }) {
-                    val icon: SatunesIcons = SatunesIcons.SEARCH
-                    Icon(imageVector = icon.imageVector, contentDescription = icon.description)
-                }
+                IconButton(
+                    icon = SatunesIcons.SEARCH,
+                    onClick = {
+                        onSearchButtonClick(
+                            uiState = uiState,
+                            navController = navController
+                        )
+                    }
+                )
             }
 
             //Setting Button
-            IconButton(onClick = {
-                onSettingButtonClick(
-                    uiState = uiState,
-                    satunesViewModel = satunesViewModel,
-                    navController = navController
-                )
-            }) {
-                val settingsIcon: SatunesIcons = SatunesIcons.SETTINGS
-                Icon(
-                    imageVector = settingsIcon.imageVector,
-                    contentDescription = settingsIcon.description
-                )
-            }
+            IconButton(
+                icon = SatunesIcons.SETTINGS,
+                onClick = {
+                    onSettingButtonClick(
+                        uiState = uiState,
+                        satunesViewModel = satunesViewModel,
+                        navController = navController
+                    )
+                }
+            )
         },
         scrollBehavior = scrollBehavior,
     )

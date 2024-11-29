@@ -60,7 +60,7 @@ internal fun MediaListView(
     openedPlaylistWithMusics: Playlist? = null,
     onFABClick: () -> Unit,
     header: (@Composable () -> Unit)? = null,
-    extraButtons: @Composable () -> Unit = { /*By default there's no extra buttons*/ },
+    extraButtons: (@Composable () -> Unit)? = null,
     emptyViewText: String
 ) {
     Scaffold(
@@ -69,7 +69,7 @@ internal fun MediaListView(
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                extraButtons()
+                extraButtons?.invoke()
                 if (playbackViewModel.musicPlaying != null) {
                     ShowCurrentMusicButton(onClick = onFABClick)
                 }

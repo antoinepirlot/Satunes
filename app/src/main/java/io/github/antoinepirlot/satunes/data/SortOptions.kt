@@ -25,14 +25,14 @@
 
 package io.github.antoinepirlot.satunes.data
 
-import io.github.antoinepirlot.satunes.models.radio_buttons.SortRadioButtons
+import io.github.antoinepirlot.satunes.models.radio_buttons.SortOptions
 
 /**
  * @author Antoine Pirlot on 30/11/2024
  */
 
-internal val sortRadioButtons: List<SortRadioButtons> = listOf(
-    SortRadioButtons.TITLE,
-    SortRadioButtons.ARTIST,
-    SortRadioButtons.ALBUM
+internal val sortOptions: List<SortOptions> = listOf(
+    SortOptions.TITLE,
+    SortOptions.ARTIST,
+    SortOptions.ALBUM
 )

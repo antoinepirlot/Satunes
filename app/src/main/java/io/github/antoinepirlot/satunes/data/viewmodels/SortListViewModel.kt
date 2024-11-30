@@ -30,8 +30,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import io.github.antoinepirlot.satunes.data.sortRadioButtons
-import io.github.antoinepirlot.satunes.models.radio_buttons.SortRadioButtons
+import io.github.antoinepirlot.satunes.data.sortOptions
+import io.github.antoinepirlot.satunes.models.radio_buttons.SortOptions
 
 /**
  * @author Antoine Pirlot on 30/11/2024
@@ -41,29 +41,29 @@ internal class SortListViewModel : ViewModel() {
     /**
      * Used to remember the radio button before user change in list.
      */
-    private var _currentSelectedRadioButton: SortRadioButtons = sortRadioButtons.first()
+    private var _currentSelectedSortOption: SortOptions = sortOptions.first()
 
     /**
      * The current selected radio button.
      */
-    private val _selectedSortRadioButton: MutableState<SortRadioButtons> =
-        mutableStateOf(_currentSelectedRadioButton)
+    private val _selectedSortOption: MutableState<SortOptions> =
+        mutableStateOf(_currentSelectedSortOption)
 
     /**
      * The current selected radio button.
      */
-    var selectedSortRadioButton: SortRadioButtons by _selectedSortRadioButton
+    var selectedSortOption: SortOptions by _selectedSortOption
         private set
 
-    fun selectSortRadioButton(sortRadioButton: SortRadioButtons) {
-        this.selectedSortRadioButton = sortRadioButton
+    fun selectSortOption(sortRadioButton: SortOptions) {
+        this.selectedSortOption = sortRadioButton
     }
 
     fun applySorting() {
-        this._currentSelectedRadioButton = this.selectedSortRadioButton
+        this._currentSelectedSortOption = this.selectedSortOption
     }
 
     fun cancelSorting() {
-        this.selectedSortRadioButton = this._currentSelectedRadioButton
+        this.selectedSortOption = this._currentSelectedSortOption
     }
 }

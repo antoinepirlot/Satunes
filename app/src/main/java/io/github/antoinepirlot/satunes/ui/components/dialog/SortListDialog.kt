@@ -33,11 +33,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.data.sortRadioButtons
+import io.github.antoinepirlot.satunes.data.sortOptions
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SortListViewModel
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.models.radio_buttons.SortRadioButtons
+import io.github.antoinepirlot.satunes.models.radio_buttons.SortOptions
 import io.github.antoinepirlot.satunes.ui.components.buttons.RadioButton
 
 /**
@@ -50,7 +50,7 @@ internal fun SortListDialog(
     satunesViewModel: SatunesViewModel = viewModel(),
     sortListViewModel: SortListViewModel = viewModel(),
 ) {
-    val selectedRadioButton: SortRadioButtons = sortListViewModel.selectedSortRadioButton
+    val selectedSortOption: SortOptions = sortListViewModel.selectedSortOption
     Dialog(
         modifier = modifier,
         icon = SatunesIcons.SORT,
@@ -67,12 +67,12 @@ internal fun SortListDialog(
         dismissText = stringResource(R.string.cancel),
     ) {
         Column(modifier = Modifier.selectableGroup()) {
-            for (radioButton: SortRadioButtons in sortRadioButtons) {
+            for (sortOption: SortOptions in sortOptions) {
                 RadioButton(
-                    selected = selectedRadioButton == radioButton,
-                    onClick = { sortListViewModel.selectSortRadioButton(sortRadioButton = radioButton) },
-                    icon = radioButton.icon,
-                    text = stringResource(radioButton.stringId),
+                    selected = selectedSortOption == sortOption,
+                    onClick = { sortListViewModel.selectSortOption(sortRadioButton = sortOption) },
+                    icon = sortOption.icon,
+                    text = stringResource(sortOption.stringId),
                 )
             }
         }

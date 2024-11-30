@@ -71,7 +71,7 @@ object SettingsManager {
     private const val DEFAULT_PAUSE_IF_NOISY = true
     private val DEFAULT_BAR_SPEED_VALUE: BarSpeed = BarSpeed.NORMAL
     private const val DEFAULT_REPEAT_MODE: Int = Player.REPEAT_MODE_OFF
-    private const val DEFAULT_SHUFFLE_MODE_CHECKED: Boolean = false
+    private const val DEFAULT_SHUFFLE_MODE: Boolean = false
     private const val DEFAULT_PAUSE_IF_ANOTHER_PLAYBACK_CHECKED: Boolean = true
     private const val DEFAULT_AUDIO_OFFLOAD_CHECKED: Boolean = false
     private const val DEFAULT_WHATS_NEW_SEEN: Boolean = false
@@ -156,7 +156,7 @@ object SettingsManager {
         private set
     var repeatMode: Int = DEFAULT_REPEAT_MODE
         private set
-    var shuffleMode: Boolean = DEFAULT_SHUFFLE_MODE_CHECKED
+    var shuffleMode: Boolean = DEFAULT_SHUFFLE_MODE
         private set
     var pauseIfAnotherPlayback: Boolean = DEFAULT_PAUSE_IF_ANOTHER_PLAYBACK_CHECKED
         private set
@@ -238,7 +238,7 @@ object SettingsManager {
             repeatMode = preferences[REPEAT_MODE_KEY] ?: DEFAULT_REPEAT_MODE
 
             shuffleMode =
-                preferences[SHUFFLE_MODE_KEY] ?: DEFAULT_SHUFFLE_MODE_CHECKED
+                preferences[SHUFFLE_MODE_KEY] ?: DEFAULT_SHUFFLE_MODE
 
             pauseIfAnotherPlayback = preferences[PAUSE_IF_ANOTHER_PLAYBACK_KEY]
                 ?: DEFAULT_PAUSE_IF_ANOTHER_PLAYBACK_CHECKED
@@ -598,5 +598,100 @@ object SettingsManager {
             this.rewindMs.value = seconds.toLong() * 1000L
             preferences[REWIND_MS_KEY] = this.rewindMs.value
         }
+    }
+
+    suspend fun resetFoldersSettings(context: Context) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            this.foldersPathsSelectedSet.value = DEFAULT_SELECTED_PATHS
+            preferences[SELECTED_PATHS_KEY] = this.foldersPathsSelectedSet.value
+        }
+    }
+
+    suspend fun resetLoadingLogicSettings(context: Context) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            this.compilationMusic = DEFAULT_COMPILATION_MUSIC
+            this.artistReplacement = DEFAULT_ARTISTS_REPLACEMENT
+            preferences[COMPILATION_MUSIC_KEY] = this.compilationMusic
+            preferences[ARTISTS_REPLACEMENT_KEY] = this.artistReplacement
+        }
+    }
+
+    suspend fun resetBatterySettings(context: Context) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            this.audioOffloadChecked = DEFAULT_AUDIO_OFFLOAD_CHECKED
+            preferences[AUDIO_OFFLOAD_CHECKED_KEY] = this.audioOffloadChecked
+        }
+    }
+
+    suspend fun resetPlaybackBehaviorSettings(context: Context) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            this.playbackWhenClosedChecked = DEFAULT_PLAYBACK_WHEN_CLOSED_CHECKED
+            this.pauseIfNoisyChecked = DEFAULT_PAUSE_IF_NOISY
+            this.pauseIfAnotherPlayback = DEFAULT_PAUSE_IF_ANOTHER_PLAYBACK_CHECKED
+            this.barSpeed = DEFAULT_BAR_SPEED_VALUE
+            preferences[PLAYBACK_WHEN_CLOSED_CHECKED_PREFERENCES_KEY] =
+                this.playbackWhenClosedChecked
+            preferences[PAUSE_IF_NOISY_PREFERENCES_KEY] = this.pauseIfNoisyChecked
+            preferences[PAUSE_IF_ANOTHER_PLAYBACK_KEY] = this.pauseIfAnotherPlayback
+            preferences[BAR_SPEED_KEY] = this.barSpeed.speed
+        }
+    }
+
+    suspend fun resetPlaybackModesSettings(context: Context) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            this.shuffleMode = DEFAULT_SHUFFLE_MODE
+            this.repeatMode = DEFAULT_REPEAT_MODE
+            this.forwardMs.value = DEFAULT_FORWARD_MS
+            this.rewindMs.value = DEFAULT_REWIND_MS
+            preferences[SHUFFLE_MODE_KEY] = this.shuffleMode
+            preferences[REPEAT_MODE_KEY] = this.repeatMode
+            preferences[FORWARD_MS_KEY] = this.forwardMs.value
+            preferences[REWIND_MS_KEY] = this.rewindMs.value
+        }
+    }
+
+    suspend fun resetDefaultSearchFiltersSettings(context: Context) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            this.musicsFilter = DEFAULT_MUSICS_FILTER
+            this.albumsFilter = DEFAULT_ALBUMS_FILTER
+            this.artistsFilter = DEFAULT_ARTISTS_FILTER
+            this.genresFilter = DEFAULT_GENRES_FILTER
+            this.foldersFilter = DEFAULT_FOLDERS_FILTER
+            this.playlistsFilter = DEFAULT_PLAYLISTS_FILTER
+            preferences[MUSICS_FILTER_KEY] = this.musicsFilter
+            preferences[ALBUMS_FILTER_KEY] = this.albumsFilter
+            preferences[ARTISTS_FILTER_KEY] = this.artistsFilter
+            preferences[GENRES_FILTER_KEY] = this.genresFilter
+            preferences[FOLDERS_FILTER_KEY] = this.foldersFilter
+            preferences[PLAYLISTS_FILTER_KEY] = this.playlistsFilter
+        }
+    }
+
+    suspend fun resetNavigationBarSettings(context: Context) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            this.foldersChecked.value = DEFAULT_FOLDERS_CHECKED
+            this.artistsChecked.value = DEFAULT_ARTISTS_CHECKED
+            this.albumsChecked.value = DEFAULT_ALBUMS_CHECKED
+            this.genresChecked.value = DEFAULT_GENRE_CHECKED
+            this.playlistsChecked.value = DEFAULT_PLAYLIST_CHECKED
+            this.defaultNavBarSection = DEFAULT_DEFAULT_NAV_BAR_SECTION
+            NavBarSection.enableAll()
+            preferences[FOLDERS_CHECKED_PREFERENCES_KEY] = DEFAULT_FOLDERS_CHECKED
+            preferences[ARTISTS_CHECKED_PREFERENCES_KEY] = DEFAULT_ARTISTS_CHECKED
+            preferences[ALBUMS_CHECKED_PREFERENCES_KEY] = DEFAULT_ALBUMS_CHECKED
+            preferences[GENRE_CHECKED_PREFERENCES_KEY] = DEFAULT_GENRE_CHECKED
+            preferences[PLAYLISTS_CHECKED_PREFERENCES_KEY] = DEFAULT_PLAYLIST_CHECKED
+            preferences[DEFAULT_NAV_BAR_SECTION_KEY] = DEFAULT_DEFAULT_NAV_BAR_SECTION.id
+        }
+    }
+
+    suspend fun resetAll(context: Context) {
+        this.resetFoldersSettings(context = context)
+        this.resetLoadingLogicSettings(context = context)
+        this.resetBatterySettings(context = context)
+        this.resetPlaybackBehaviorSettings(context = context)
+        this.resetPlaybackModesSettings(context = context)
+        this.resetDefaultSearchFiltersSettings(context = context)
+        this.resetNavigationBarSettings(context = context)
     }
 }

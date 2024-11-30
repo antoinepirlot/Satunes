@@ -68,7 +68,7 @@ internal fun BottomNavigationBarSettingsView(
 
     val scrollState: ScrollState = rememberScrollState()
     Column(modifier = modifier.verticalScroll(scrollState)) {
-        Title(text = stringResource(id = R.string.bottom_bar))
+        Title(text = stringResource(id = R.string.navigation_bar_settings_title))
         SubSettings {
             SettingsSwitchList(checkedMap = navBarSectionSettingsChecked)
             DefaultNavBarSectionSetting(modifier = Modifier.padding(horizontal = 16.dp))

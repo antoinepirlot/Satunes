@@ -52,6 +52,7 @@ import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
+import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.ui.utils.showErrorSnackBar
 import io.github.antoinepirlot.satunes.ui.utils.showSnackBar
 import io.github.antoinepirlot.satunes.utils.getNow
@@ -59,6 +60,7 @@ import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import io.github.antoinepirlot.satunes.database.R as RDb
 
 /**
@@ -657,6 +659,7 @@ class DataViewModel : ViewModel() {
                 }
 
                 else -> {
+                    @Suppress("NAME_SHADOWING")
                     media.getMusicSet().forEach { media: Music ->
                         paths += media.absolutePath
                     }
@@ -765,6 +768,149 @@ class DataViewModel : ViewModel() {
                     }
                 )
             }
+        }
+    }
+
+    fun resetFoldersSettings(scope: CoroutineScope, snackBarHostState: SnackbarHostState) {
+        try {
+            runBlocking {
+                SettingsManager.resetFoldersSettings(context = MainActivity.instance.applicationContext)
+            }
+        } catch (e: Exception) {
+            showErrorSnackBar(
+                scope = scope,
+                snackBarHostState = snackBarHostState,
+                action = {
+                    resetFoldersSettings(scope = scope, snackBarHostState = snackBarHostState)
+                }
+            )
+        }
+    }
+
+    fun resetLoadingLogicSettings(scope: CoroutineScope, snackBarHostState: SnackbarHostState) {
+        try {
+            runBlocking {
+                SettingsManager.resetLoadingLogicSettings(context = MainActivity.instance.applicationContext)
+            }
+        } catch (e: Exception) {
+            showErrorSnackBar(
+                scope = scope,
+                snackBarHostState = snackBarHostState,
+                action = {
+                    resetLoadingLogicSettings(scope = scope, snackBarHostState = snackBarHostState)
+                }
+            )
+        }
+    }
+
+    fun resetBatterySettings(scope: CoroutineScope, snackBarHostState: SnackbarHostState) {
+        try {
+            runBlocking {
+                SettingsManager.resetBatterySettings(context = MainActivity.instance.applicationContext)
+            }
+        } catch (e: Exception) {
+            showErrorSnackBar(
+                scope = scope,
+                snackBarHostState = snackBarHostState,
+                action = {
+                    resetBatterySettings(scope = scope, snackBarHostState = snackBarHostState)
+                }
+            )
+        }
+    }
+
+    fun resetPlaybackBehaviorSettings(scope: CoroutineScope, snackBarHostState: SnackbarHostState) {
+        try {
+            runBlocking {
+                SettingsManager.resetPlaybackBehaviorSettings(context = MainActivity.instance.applicationContext)
+            }
+        } catch (e: Exception) {
+            showErrorSnackBar(
+                scope = scope,
+                snackBarHostState = snackBarHostState,
+                action = {
+                    resetPlaybackBehaviorSettings(
+                        scope = scope,
+                        snackBarHostState = snackBarHostState
+                    )
+                }
+            )
+        }
+    }
+
+    fun resetPlaybackModesSettings(scope: CoroutineScope, snackBarHostState: SnackbarHostState) {
+        try {
+            runBlocking {
+                SettingsManager.resetPlaybackModesSettings(context = MainActivity.instance.applicationContext)
+            }
+        } catch (e: Exception) {
+            showErrorSnackBar(
+                scope = scope,
+                snackBarHostState = snackBarHostState,
+                action = {
+                    resetPlaybackModesSettings(
+                        scope = scope,
+                        snackBarHostState = snackBarHostState
+                    )
+                }
+            )
+        }
+    }
+
+    fun resetDefaultSearchFiltersSettings(
+        scope: CoroutineScope,
+        snackBarHostState: SnackbarHostState
+    ) {
+        try {
+            runBlocking {
+                SettingsManager.resetDefaultSearchFiltersSettings(context = MainActivity.instance.applicationContext)
+            }
+        } catch (e: Exception) {
+            showErrorSnackBar(
+                scope = scope,
+                snackBarHostState = snackBarHostState,
+                action = {
+                    resetDefaultSearchFiltersSettings(
+                        scope = scope,
+                        snackBarHostState = snackBarHostState
+                    )
+                }
+            )
+        }
+    }
+
+    fun resetNavigationBarSettings(scope: CoroutineScope, snackBarHostState: SnackbarHostState) {
+        try {
+            runBlocking {
+                SettingsManager.resetNavigationBarSettings(context = MainActivity.instance.applicationContext)
+            }
+        } catch (e: Exception) {
+            showErrorSnackBar(
+                scope = scope,
+                snackBarHostState = snackBarHostState,
+                action = {
+                    resetNavigationBarSettings(
+                        scope = scope,
+                        snackBarHostState = snackBarHostState
+                    )
+                }
+            )
+        }
+    }
+
+    fun resetAllSettings(scope: CoroutineScope, snackBarHostState: SnackbarHostState) {
+        try {
+            runBlocking {
+                SettingsManager.resetAll(context = MainActivity.instance.applicationContext)
+            }
+        } catch (e: Exception) {
+            showErrorSnackBar(
+                scope = scope,
+                snackBarHostState = snackBarHostState,
+                action = {
+                    resetAllSettings(scope = scope, snackBarHostState = snackBarHostState)
+                }
+            )
         }
     }
 }

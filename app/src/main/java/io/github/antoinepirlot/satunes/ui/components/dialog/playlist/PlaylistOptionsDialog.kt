@@ -49,6 +49,7 @@ import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToPlaylistMediaOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToQueueDialogOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.PlayNextMediaOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.RemoveFromQueueOption
@@ -103,6 +104,8 @@ internal fun PlaylistOptionsDialog(
         text = {
             Column {
                 ExportPlaylistOption(playlist = playlist)
+                //TODO refactor in v3.0.0 and remove the current playlist from list
+                AddToPlaylistMediaOption(mediaImpl = playlist, onFinished = onDismissRequest)
                 RemovePlaylistOption(
                     playlistToRemove = playlist,
                     onDismissRequest = onDismissRequest

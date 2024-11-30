@@ -23,43 +23,42 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.buttons
+package io.github.antoinepirlot.satunes.ui.components.settings.reset
 
-import androidx.compose.foundation.clickable
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.ui.components.cards.ListItem
+import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
+import io.github.antoinepirlot.satunes.ui.components.buttons.settings.reset.ResetButton
 
 /**
- * @author Antoine Pirlot on 20/04/2024
+ * @author Antoine Pirlot on 22/11/2024
  */
 
 @Composable
-internal fun ClickableListItem(
+internal fun ResetSettings(
     modifier: Modifier = Modifier,
-    text: String,
-    icon: SatunesIcons,
-    onClick: () -> Unit,
+    text: String?,
+    onClick: () -> Unit
 ) {
-    ListItem(
-        modifier = modifier.clickable {
-            onClick()
-        },
-        leadingContent = {
-            Icon(imageVector = icon.imageVector, contentDescription = icon.description)
-        },
-        headlineContent = {
-            Text(text = text)
-        }
-    )
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = if (text != null) Arrangement.SpaceBetween else Arrangement.Center
+    ) {
+        if (text != null) NormalText(modifier = Modifier.fillMaxWidth(0.5f), text = text)
+        ResetButton(
+            onClick = onClick
+        )
+    }
 }
 
 @Preview
 @Composable
-private fun ClickableListItemPreview() {
-    ClickableListItem(text = "Hello World!", icon = SatunesIcons.SETTINGS, onClick = {})
+private fun ResetSettingsPreview() {
+    ResetSettings(text = "Reset", onClick = {})
 }

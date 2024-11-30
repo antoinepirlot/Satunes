@@ -45,6 +45,7 @@ import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 internal fun OutlinedNumberField(
     modifier: Modifier = Modifier,
     value: MutableIntState,
+    enabled: Boolean = true,
     label: String,
     maxValue: Int? = null,
     onValueChanged: ((newValue: Int) -> Unit)? = null,
@@ -52,6 +53,7 @@ internal fun OutlinedNumberField(
     val keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
     OutlinedTextField(
         modifier = modifier,
+        enabled = enabled,
         value = if (value.intValue > 0) value.intValue.toString() else "",
         label = { NormalText(text = label) },
         onValueChange = {

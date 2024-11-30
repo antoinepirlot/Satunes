@@ -76,7 +76,7 @@ internal fun PlaybackSettingsView(
     val scrollState: ScrollState = rememberScrollState()
     Column(modifier = modifier.verticalScroll(scrollState)) {
         Title(text = stringResource(id = R.string.playback_settings))
-        SubSettings {
+        SubSettings(title = stringResource(R.string.playback_behavior_settings)) {
             SettingsSwitchList(checkedMap = playbackSettingsChecked) //Contains list item so always padding horizontal 16.dp
             BarSpeedSetting(modifier = Modifier.padding(horizontal = 16.dp))
         }

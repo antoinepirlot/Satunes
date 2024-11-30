@@ -23,43 +23,46 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.buttons
+package io.github.antoinepirlot.satunes.ui.components.settings.reset.playback
 
-import androidx.compose.foundation.clickable
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.ui.components.cards.ListItem
+import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.data.local.LocalMainScope
+import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
+import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
+import io.github.antoinepirlot.satunes.ui.components.settings.reset.ResetSettings
+import kotlinx.coroutines.CoroutineScope
 
 /**
- * @author Antoine Pirlot on 20/04/2024
+ * @author Antoine Pirlot on 23/11/2024
  */
 
 @Composable
-internal fun ClickableListItem(
+fun ResetPlaybackBehaviorSettings(
     modifier: Modifier = Modifier,
-    text: String,
-    icon: SatunesIcons,
-    onClick: () -> Unit,
+    dataViewModel: DataViewModel = viewModel(),
 ) {
-    ListItem(
-        modifier = modifier.clickable {
-            onClick()
-        },
-        leadingContent = {
-            Icon(imageVector = icon.imageVector, contentDescription = icon.description)
-        },
-        headlineContent = {
-            Text(text = text)
+    val scope: CoroutineScope = LocalMainScope.current
+    val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
+
+    ResetSettings(
+        text = stringResource(R.string.playback_behavior_settings),
+        onClick = {
+            dataViewModel.resetPlaybackBehaviorSettings(
+                scope = scope,
+                snackBarHostState = snackBarHostState
+            )
         }
     )
 }
 
 @Preview
 @Composable
-private fun ClickableListItemPreview() {
-    ClickableListItem(text = "Hello World!", icon = SatunesIcons.SETTINGS, onClick = {})
+private fun ResetPlaybackBehaviorSettingsPreview() {
+    ResetPlaybackBehaviorSettings()
 }

@@ -23,19 +23,38 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.utils
+package io.github.antoinepirlot.satunes.ui.components.settings.reset.library
+
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.size
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
 
 /**
- * @author Antoine Pirlot on 23/02/24
+ * @author Antoine Pirlot on 21/11/2024
  */
 
-internal fun getMillisToTimeText(milliseconds: Long): String {
-    val seconds = (milliseconds / 1000L) % 60
-    val minutes = (milliseconds / 1000L / 60L) % 60
-    val hours = (milliseconds / 1000L / 60L / 60L)
-    var toReturn = if (hours > 0) "$hours:" else ""
-    if (minutes < 10) toReturn += "0"
-    toReturn += "$minutes:"
-    if (seconds < 10) toReturn += "0"
-    return toReturn + "$seconds"
+val size = 5.dp
+
+@Composable
+internal fun ResetLibrarySubSettings(modifier: Modifier = Modifier) {
+    SubSettings(
+        modifier = modifier,
+        title = stringResource(R.string.library_settings),
+    ) {
+        ResetFoldersSettings()
+        Spacer(modifier = Modifier.size(size = size))
+        ResetLoadingLogicSettings()
+    }
+}
+
+@Preview
+@Composable
+private fun LibrarySubSettingsPreview() {
+    ResetLibrarySubSettings()
 }

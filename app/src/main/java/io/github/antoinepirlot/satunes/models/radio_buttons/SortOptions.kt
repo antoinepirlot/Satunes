@@ -32,7 +32,7 @@ import io.github.antoinepirlot.satunes.database.R as RDb
 /**
  * @author Antoine Pirlot on 30/11/2024
  */
-internal enum class SortOptions(val icon: SatunesIcons, val stringId: Int) {
+enum class SortOptions(val icon: SatunesIcons, val stringId: Int) {
     ARTIST(icon = SatunesIcons.ARTIST, stringId = RDb.string.artists),
     ALBUM(icon = SatunesIcons.ALBUM, stringId = RDb.string.albums),
     TITLE(icon = SatunesIcons.TITLE, stringId = R.string.title),

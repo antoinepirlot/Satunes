@@ -36,7 +36,7 @@ import io.github.antoinepirlot.satunes.models.radio_buttons.SortOptions
 /**
  * @author Antoine Pirlot on 30/11/2024
  */
-internal class SortListViewModel : ViewModel() {
+class SortListViewModel : ViewModel() {
 
     /**
      * Used to remember the radio button before user change in list.

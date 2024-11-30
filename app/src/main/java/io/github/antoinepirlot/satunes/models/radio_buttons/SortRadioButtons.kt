@@ -33,4 +33,5 @@ import io.github.antoinepirlot.satunes.database.R as RDb
  */
 internal enum class SortRadioButtons(val icon: SatunesIcons, val stringId: Int) {
     ARTIST(icon = SatunesIcons.ARTIST, stringId = RDb.string.artists),
+    ALBUM(icon = SatunesIcons.ALBUM, stringId = RDb.string.albums),
 }

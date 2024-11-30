@@ -100,6 +100,14 @@ internal fun MediaCardList(
     }
 }
 
+/**
+ * Sort the list by sortOption.
+ *
+ * @param list a [List] of [MediaImpl] to sort.
+ * @param sortOption the option to sort the [List] of [MediaImpl] with the [SortOptions].
+ *
+ * @return the sorted list by [SortOptions]
+ */
 fun sortListBy(list: List<MediaImpl>, sortOption: SortOptions): List<MediaImpl> {
     return list.sortedBy { mediaImpl: MediaImpl ->
         when (sortOption) {

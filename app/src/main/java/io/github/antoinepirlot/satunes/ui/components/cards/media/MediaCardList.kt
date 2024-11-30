@@ -39,6 +39,7 @@ import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
+import io.github.antoinepirlot.satunes.exceptions.NotSortableException
 import io.github.antoinepirlot.satunes.models.radio_buttons.SortOptions
 
 /**
@@ -106,28 +107,32 @@ internal fun MediaCardList(
  * @param list a [List] of [MediaImpl] to sort.
  * @param sortOption the option to sort the [List] of [MediaImpl] with the [SortOptions].
  *
- * @return the sorted list by [SortOptions]
+ * @return the sorted list by [SortOptions] or the list if it can't be sorted (for example sorting list of Genre by Album).
  */
 fun sortListBy(list: List<MediaImpl>, sortOption: SortOptions): List<MediaImpl> {
     //TODO for v3.0.0 move the list into a view model
-    return list.sortedBy { mediaImpl: MediaImpl ->
-        when (sortOption) {
-            SortOptions.TITLE -> mediaImpl.title
-            SortOptions.ARTIST -> {
-                when (mediaImpl) {
-                    is Music -> mediaImpl.artist.title
-                    is Album -> mediaImpl.artist.title
-                    else -> mediaImpl.title
+    return try {
+        list.sortedBy { mediaImpl: MediaImpl ->
+            when (sortOption) {
+                SortOptions.TITLE -> mediaImpl.title
+                SortOptions.ARTIST -> {
+                    when (mediaImpl) {
+                        is Music -> mediaImpl.artist.title
+                        is Album -> mediaImpl.artist.title
+                        else -> throw NotSortableException()
+                    }
                 }
-            }
 
-            SortOptions.ALBUM -> {
-                when (mediaImpl) {
-                    is Music -> mediaImpl.album.title
-                    else -> mediaImpl.title
+                SortOptions.ALBUM -> {
+                    when (mediaImpl) {
+                        is Music -> mediaImpl.album.title
+                        else -> throw NotSortableException()
+                    }
                 }
             }
         }
+    } catch (_: NotSortableException) {
+        list
     }
 }
 

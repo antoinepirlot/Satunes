@@ -25,14 +25,20 @@
 
 package io.github.antoinepirlot.satunes.ui.components.dialog
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.data.sortRadioButtons
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.SortListViewModel
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import io.github.antoinepirlot.satunes.models.radio_buttons.SortRadioButtons
+import io.github.antoinepirlot.satunes.ui.components.buttons.RadioButton
 
 /**
  * @author Antoine Pirlot on 29/11/2024
@@ -42,7 +48,9 @@ import io.github.antoinepirlot.satunes.icons.SatunesIcons
 internal fun SortListDialog(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
+    sortListViewModel: SortListViewModel = viewModel(),
 ) {
+    val selectedRadioButton: SortRadioButtons = sortListViewModel.selectedSortRadioButton
     Dialog(
         modifier = modifier,
         icon = SatunesIcons.SORT,
@@ -52,7 +60,16 @@ internal fun SortListDialog(
         confirmText = stringResource(R.string.ok),
         dismissText = stringResource(R.string.cancel),
     ) {
-        //TODO
+        Column(modifier = Modifier.selectableGroup()) {
+            for (radioButton: SortRadioButtons in sortRadioButtons) {
+                RadioButton(
+                    selected = selectedRadioButton == radioButton,
+                    onClick = { sortListViewModel.selectSortRadioButton(sortRadioButton = radioButton) },
+                    icon = radioButton.icon,
+                    text = stringResource(radioButton.stringId),
+                )
+            }
+        }
     }
 }
 

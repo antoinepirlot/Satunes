@@ -88,7 +88,6 @@ class PlaybackViewModel : ViewModel() {
     val forwardMs: Long by _forwardMs
     val rewindMs: Long by _rewindMs
 
-
     init {
         // Needed to refresh progress bar
         ProgressBarLifecycleCallbacks.playbackViewModel = this
@@ -414,6 +413,8 @@ class PlaybackViewModel : ViewModel() {
             )
         }
     }
+
+    fun isTimerRunning() = uiState.value.timer != null
 
     fun forward(scope: CoroutineScope, snackBarHostState: SnackbarHostState) {
         try {

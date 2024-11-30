@@ -72,6 +72,7 @@ internal fun CreateTimerForm(
     onFinished: (() -> Unit)? = null,
 ) {
     val playbackUiState: PlaybackUiState by playbackViewModel.uiState.collectAsState()
+    val isTimerRunning = playbackUiState.timer != null
 
     Column(
         modifier = modifier
@@ -95,6 +96,7 @@ internal fun CreateTimerForm(
             ) {
                 OutlinedNumberField(
                     modifier = Modifier.fillMaxWidth(fraction = 0.30f),
+                    enabled = !isTimerRunning,
                     value = hoursIntField,
                     label = stringResource(R.string.hours_text_field_label),
                     maxValue = MAX_HOURS
@@ -102,6 +104,7 @@ internal fun CreateTimerForm(
                 Spacer(modifier = Modifier.size(16.dp))
                 OutlinedNumberField(
                     modifier = Modifier.fillMaxWidth(fraction = 0.49f),
+                    enabled = !isTimerRunning,
                     value = minutesIntField,
                     label = stringResource(R.string.minutes_text_field_label),
                     maxValue = MAX_MINUTES
@@ -109,6 +112,7 @@ internal fun CreateTimerForm(
                 Spacer(modifier = Modifier.size(16.dp))
                 OutlinedNumberField(
                     modifier = Modifier.fillMaxWidth(),
+                    enabled = !isTimerRunning,
                     value = secondsIntField,
                     label = stringResource(R.string.seconds_text_field_label),
                     maxValue = MAX_SECONDS
@@ -120,7 +124,7 @@ internal fun CreateTimerForm(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center
         ) {
-            if (playbackUiState.timer != null) {
+            if (isTimerRunning) {
                 Button(
                     onClick = {
                         playbackViewModel.cancelTimer(

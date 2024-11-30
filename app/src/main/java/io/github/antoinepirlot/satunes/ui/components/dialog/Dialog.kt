@@ -61,9 +61,7 @@ internal fun Dialog(
         title = {
             NormalText(text = title)
         },
-        text = {
-            content()
-        },
+        text = content,
         onDismissRequest = onDismissRequest,
         confirmButton = {
             if (confirmText != null) {

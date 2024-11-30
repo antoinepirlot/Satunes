@@ -25,18 +25,23 @@
 
 package io.github.antoinepirlot.satunes.ui.components.buttons
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.RadioButtonColors
 import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
@@ -45,6 +50,8 @@ import io.github.antoinepirlot.satunes.ui.components.images.Icon
 /**
  * @author Antoine Pirlot on 30/11/2024
  */
+
+val spacerSize: Dp = 5.dp
 
 @Composable
 internal fun RadioButton(
@@ -57,8 +64,12 @@ internal fun RadioButton(
     icon: SatunesIcons? = null,
     text: String? = null
 ) {
+
     Row(
-        modifier = modifier,
+        modifier = modifier
+            .clip(shape = CircleShape)
+            .clickable(onClick = onClick)
+            .padding(end = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         androidx.compose.material3.RadioButton(
@@ -69,7 +80,7 @@ internal fun RadioButton(
             interactionSource = interactionSource
         )
         if (icon != null) Icon(icon = icon)
-        if (icon != null && text != null) Spacer(modifier = Modifier.size(size = 5.dp))
+        if (icon != null && text != null) Spacer(modifier = Modifier.size(size = spacerSize))
         if (text != null) NormalText(text = text)
     }
 }

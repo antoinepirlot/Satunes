@@ -25,6 +25,7 @@
 
 package io.github.antoinepirlot.satunes.models.radio_buttons
 
+import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.database.R as RDb
 
@@ -34,4 +35,5 @@ import io.github.antoinepirlot.satunes.database.R as RDb
 internal enum class SortRadioButtons(val icon: SatunesIcons, val stringId: Int) {
     ARTIST(icon = SatunesIcons.ARTIST, stringId = RDb.string.artists),
     ALBUM(icon = SatunesIcons.ALBUM, stringId = RDb.string.albums),
+    TITLE(icon = SatunesIcons.TITLE, stringId = R.string.title),
 }

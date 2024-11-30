@@ -72,6 +72,7 @@ import androidx.compose.material.icons.rounded.Shuffle
 import androidx.compose.material.icons.rounded.SkipNext
 import androidx.compose.material.icons.rounded.SkipPrevious
 import androidx.compose.material.icons.rounded.Timer
+import androidx.compose.material.icons.rounded.Title
 import androidx.compose.material.icons.rounded.Update
 import androidx.compose.material.icons.rounded.Upload
 import androidx.compose.material.icons.rounded.Warning
@@ -183,4 +184,5 @@ enum class SatunesIcons(
     RESET_SETTINGS(imageVector = Icons.Rounded.Emergency, description = "Reset Icon"),
     REWIND(imageVector = Icons.Rounded.FastRewind, description = "Rewind Icon"),
     WARNING(imageVector = Icons.Rounded.Warning, description = "Warning Icon"),
+    TITLE(imageVector = Icons.Rounded.Title, description = "Title Icon"),
 }

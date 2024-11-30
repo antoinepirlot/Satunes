@@ -32,6 +32,7 @@ import io.github.antoinepirlot.satunes.models.radio_buttons.SortRadioButtons
  */
 
 internal val sortRadioButtons: List<SortRadioButtons> = listOf(
+    SortRadioButtons.TITLE,
     SortRadioButtons.ARTIST,
     SortRadioButtons.ALBUM
 )

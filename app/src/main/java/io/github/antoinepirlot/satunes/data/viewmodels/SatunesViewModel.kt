@@ -23,7 +23,7 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.data.viewmodels
+package io.github.antoinepirlot.satunes.data.viewmodels         
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -76,7 +76,9 @@ import io.github.antoinepirlot.satunes.internet.R as RInternet
 @SuppressLint("NewApi")
 internal class SatunesViewModel : ViewModel() {
     //TODO move it to object and find a way to prevent refresh when changing default destination
-    private val _uiState: MutableStateFlow<SatunesUiState> = MutableStateFlow(SatunesUiState())
+    companion object {
+        private val _uiState: MutableStateFlow<SatunesUiState> = MutableStateFlow(SatunesUiState())
+    }
 
     private val _logger: SatunesLogger = SatunesLogger.getLogger()
     private val _isLoadingData: MutableState<Boolean> = DataLoader.isLoading

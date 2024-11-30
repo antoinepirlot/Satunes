@@ -34,8 +34,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.SortListViewModel
+import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
+import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
+import io.github.antoinepirlot.satunes.models.radio_buttons.SortOptions
 
 /**
  * @author Antoine Pirlot on 16/01/24
@@ -45,24 +49,25 @@ import io.github.antoinepirlot.satunes.database.models.Playlist
 internal fun MediaCardList(
     modifier: Modifier = Modifier,
     playbackViewModel: PlaybackViewModel = viewModel(),
+    sortListViewModel: SortListViewModel = viewModel(),
     header: @Composable (() -> Unit)? = null,
     mediaImplCollection: Collection<MediaImpl>,
     openMedia: (mediaImpl: MediaImpl) -> Unit,
     openedPlaylist: Playlist? = null,
     scrollToMusicPlaying: Boolean = false,
 ) {
+    if (mediaImplCollection.isEmpty()) return // It fixes issue while accessing last folder in chain
+
     val lazyListState = rememberLazyListState()
-    val mediaListToLoad: List<MediaImpl> =
+    var mediaListToLoad: List<MediaImpl> =
         try {
             mediaImplCollection as List<MediaImpl>
         } catch (_: ClassCastException) {
             mediaImplCollection.toList()
         }
 
-    if (mediaImplCollection.isEmpty()) {
-        // It fixes issue while accessing last folder in chain
-        return
-    }
+    mediaListToLoad =
+        sortListBy(list = mediaListToLoad, sortOption = sortListViewModel.selectedSortOption)
 
     LazyColumn(
         modifier = modifier,
@@ -91,6 +96,28 @@ internal fun MediaCardList(
             lazyListState.scrollToItem(
                 playbackViewModel.getMusicPlayingIndexPosition()
             )
+        }
+    }
+}
+
+fun sortListBy(list: List<MediaImpl>, sortOption: SortOptions): List<MediaImpl> {
+    return list.sortedBy { mediaImpl: MediaImpl ->
+        when (sortOption) {
+            SortOptions.TITLE -> mediaImpl.title
+            SortOptions.ARTIST -> {
+                when (mediaImpl) {
+                    is Music -> mediaImpl.artist.title
+                    is Album -> mediaImpl.artist.title
+                    else -> mediaImpl.title
+                }
+            }
+
+            SortOptions.ALBUM -> {
+                when (mediaImpl) {
+                    is Music -> mediaImpl.album.title
+                    else -> mediaImpl.title
+                }
+            }
         }
     }
 }

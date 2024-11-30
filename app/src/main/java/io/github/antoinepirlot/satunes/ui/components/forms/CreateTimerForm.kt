@@ -56,7 +56,10 @@ import io.github.antoinepirlot.satunes.data.states.PlaybackUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.models.Timer
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 /**
  * @author Antoine Pirlot on 14/10/2024
@@ -82,12 +85,16 @@ internal fun CreateTimerForm(
     val minutesIntField: MutableIntState = rememberSaveable { mutableIntStateOf(0) }
     val hoursIntField: MutableIntState = rememberSaveable { mutableIntStateOf(0) }
 
+    var job: Job? = null
     LaunchedEffect(remainingTime) {
         secondsIntField.intValue = (timer?.getRemainingSeconds() ?: 0) % 60
         minutesIntField.intValue = (timer?.getRemainingMinutes() ?: 0) % 60
         hoursIntField.intValue = timer?.getRemainingHours() ?: 0
-        delay(1000) //prevent system refreshing each ms for better performance
-        playbackViewModel.refreshRemainingTime()
+        job?.cancel()
+        job = CoroutineScope(Dispatchers.IO).launch {
+            delay(1000) //prevent system refreshing each ms for better performance
+            playbackViewModel.refreshRemainingTime()
+        }
     }
 
     Column(

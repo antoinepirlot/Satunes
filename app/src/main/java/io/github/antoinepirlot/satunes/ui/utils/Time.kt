@@ -25,28 +25,17 @@
 
 package io.github.antoinepirlot.satunes.ui.utils
 
-import java.util.concurrent.TimeUnit
-
 /**
  * @author Antoine Pirlot on 23/02/24
  */
 
 internal fun getMillisToTimeText(milliseconds: Long): String {
-    var toReturn = ""
-    val hours = TimeUnit.MILLISECONDS.toHours(milliseconds)
-    if (hours > 0) {
-        toReturn += "$hours:"
-    }
-    var minutes = TimeUnit.MILLISECONDS.toMinutes(milliseconds)
-    minutes -= hours * 60
-    if (minutes < 10) {
-        toReturn += "0"
-    }
+    val seconds = (milliseconds / 1000L) % 60
+    val minutes = (milliseconds / 1000L / 60L) % 60
+    val hours = (milliseconds / 1000L / 60L / 60L)
+    var toReturn = if (hours > 0) "$hours:" else ""
+    if (minutes < 10) toReturn += "0"
     toReturn += "$minutes:"
-    var seconds = TimeUnit.MILLISECONDS.toSeconds(milliseconds)
-    seconds -= hours * 60 * 60 + minutes * 60
-    if (seconds < 10) {
-        toReturn += "0"
-    }
+    if (seconds < 10) toReturn += "0"
     return toReturn + "$seconds"
 }

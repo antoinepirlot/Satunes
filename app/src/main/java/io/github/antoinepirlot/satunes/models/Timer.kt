@@ -59,9 +59,10 @@ class Timer(
         _timer.cancel()
     }
 
-    fun getRemainingTime(): Long {
-        return _delayMillis - (System.currentTimeMillis() - _createdTimeMillis)
-    }
+    fun getRemainingTime(): Long = _delayMillis - (System.currentTimeMillis() - _createdTimeMillis)
+    fun getRemainingSeconds(): Int = (getRemainingTime() / 1000L).toInt()
+    fun getRemainingMinutes(): Int = getRemainingSeconds() / 60
+    fun getRemainingHours(): Int = getRemainingMinutes() / 60
 
     private inner class Task(private val function: () -> Unit) : TimerTask() {
         override fun run() {

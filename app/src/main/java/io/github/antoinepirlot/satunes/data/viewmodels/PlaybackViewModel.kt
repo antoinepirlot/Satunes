@@ -351,26 +351,28 @@ class PlaybackViewModel : ViewModel() {
     ) {
         if (hours <= 0 && minutes <= 0 && seconds <= 0) return
         val context: Context = MainActivity.instance.applicationContext
+        val timer = Timer(
+            function = {
+                PlaybackManager.pause(context = context)
+                _uiState.update { currentState: PlaybackUiState ->
+                    currentState.copy(timer = null, timerRemainingTime = 0L)
+                }
+                showSnackBar(
+                    scope = scope,
+                    snackBarHostState = snackBarHostState,
+                    message = context.getString(R.string.pause_media_timer_snackbar)
+                )
+            },
+            hours = hours,
+            minutes = minutes,
+            seconds = seconds
+        )
         try {
             _uiState.value.timer?.cancel()
             _uiState.update { currentState: PlaybackUiState ->
                 currentState.copy(
-                    timer = Timer(
-                        function = {
-                            PlaybackManager.pause(context = context)
-                            _uiState.update { currentState: PlaybackUiState ->
-                                currentState.copy(timer = null)
-                            }
-                            showSnackBar(
-                                scope = scope,
-                                snackBarHostState = snackBarHostState,
-                                message = context.getString(R.string.pause_media_timer_snackbar)
-                            )
-                        },
-                        hours = hours,
-                        minutes = minutes,
-                        seconds = seconds
-                    )
+                    timer = timer,
+                    timerRemainingTime = timer.getRemainingTime()
                 )
             }
         } catch (e: Throwable) {
@@ -395,7 +397,7 @@ class PlaybackViewModel : ViewModel() {
         try {
             _uiState.value.timer?.cancel()
             _uiState.update { currentState: PlaybackUiState ->
-                currentState.copy(timer = null)
+                currentState.copy(timer = null, timerRemainingTime = 0L)
             }
             showSnackBar(
                 scope = scope,
@@ -494,6 +496,15 @@ class PlaybackViewModel : ViewModel() {
                     )
                 }
             )
+        }
+    }
+
+    fun refreshRemainingTime() {
+        val timer: Timer? = _uiState.value.timer
+        if (timer != null) {
+            _uiState.update { currentState: PlaybackUiState ->
+                currentState.copy(timerRemainingTime = timer.getRemainingTime())
+            }
         }
     }
 }

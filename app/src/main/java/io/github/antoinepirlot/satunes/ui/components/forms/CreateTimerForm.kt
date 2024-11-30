@@ -36,6 +36,7 @@ import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material3.Button
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -53,8 +54,9 @@ import io.github.antoinepirlot.satunes.data.local.LocalMainScope
 import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.data.states.PlaybackUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
-import io.github.antoinepirlot.satunes.ui.components.settings.playback.timer.TimerRemainingTime
+import io.github.antoinepirlot.satunes.models.Timer
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
 
 /**
  * @author Antoine Pirlot on 14/10/2024
@@ -72,7 +74,21 @@ internal fun CreateTimerForm(
     onFinished: (() -> Unit)? = null,
 ) {
     val playbackUiState: PlaybackUiState by playbackViewModel.uiState.collectAsState()
-    val isTimerRunning = playbackUiState.timer != null
+    val timer: Timer? = playbackUiState.timer
+    val isTimerRunning = timer != null
+    val remainingTime: Long = playbackUiState.timerRemainingTime
+
+    val secondsIntField: MutableIntState = rememberSaveable { mutableIntStateOf(0) }
+    val minutesIntField: MutableIntState = rememberSaveable { mutableIntStateOf(0) }
+    val hoursIntField: MutableIntState = rememberSaveable { mutableIntStateOf(0) }
+
+    LaunchedEffect(remainingTime) {
+        secondsIntField.intValue = (timer?.getRemainingSeconds() ?: 0) % 60
+        minutesIntField.intValue = (timer?.getRemainingMinutes() ?: 0) % 60
+        hoursIntField.intValue = timer?.getRemainingHours() ?: 0
+        delay(1000) //prevent system refreshing each ms for better performance
+        playbackViewModel.refreshRemainingTime()
+    }
 
     Column(
         modifier = modifier
@@ -80,12 +96,9 @@ internal fun CreateTimerForm(
             .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        val scope: CoroutineScope = LocalMainScope.current
-        val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
 
-        val secondsIntField: MutableIntState = rememberSaveable { mutableIntStateOf(0) }
-        val minutesIntField: MutableIntState = rememberSaveable { mutableIntStateOf(0) }
-        val hoursIntField: MutableIntState = rememberSaveable { mutableIntStateOf(0) }
+    val scope: CoroutineScope = LocalMainScope.current
+        val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
 
         Box(
             modifier = Modifier.fillMaxWidth(),
@@ -119,7 +132,6 @@ internal fun CreateTimerForm(
                 )
             }
         }
-        TimerRemainingTime()
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center

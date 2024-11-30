@@ -51,7 +51,7 @@ internal fun MediaCardList(
     playbackViewModel: PlaybackViewModel = viewModel(),
     sortListViewModel: SortListViewModel = viewModel(),
     header: @Composable (() -> Unit)? = null,
-    mediaImplCollection: Collection<MediaImpl>,
+    mediaImplCollection: Collection<MediaImpl>, //TODO for v3.0.0 move the list into a view model
     openMedia: (mediaImpl: MediaImpl) -> Unit,
     openedPlaylist: Playlist? = null,
     scrollToMusicPlaying: Boolean = false,
@@ -109,6 +109,7 @@ internal fun MediaCardList(
  * @return the sorted list by [SortOptions]
  */
 fun sortListBy(list: List<MediaImpl>, sortOption: SortOptions): List<MediaImpl> {
+    //TODO for v3.0.0 move the list into a view model
     return list.sortedBy { mediaImpl: MediaImpl ->
         when (sortOption) {
             SortOptions.TITLE -> mediaImpl.title

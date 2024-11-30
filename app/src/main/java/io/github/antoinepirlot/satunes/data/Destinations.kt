@@ -46,6 +46,7 @@ private fun getSettingsDestinationsDynamically(): List<Destination> {
         Destination.SEARCH_SETTINGS,
         Destination.LOGS_SETTINGS,
         Destination.BATTERY_SETTINGS,
+        Destination.RESET_SETTINGS,
     )
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
         list.add(element = Destination.UPDATES_SETTINGS)

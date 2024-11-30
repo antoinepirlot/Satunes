@@ -23,39 +23,33 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.settings.playback
+package io.github.antoinepirlot.satunes.ui.views.settings.reset
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.ui.components.buttons.settings.playback.ForwardRewindButtons
-import io.github.antoinepirlot.satunes.ui.components.buttons.settings.playback.RepeatModeRadioButtons
-import io.github.antoinepirlot.satunes.ui.components.buttons.settings.playback.ShuffleModeRadioButtons
-import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
+import androidx.compose.ui.unit.dp
+import io.github.antoinepirlot.satunes.ui.components.settings.reset.AllResetSettings
 
 /**
- * @author Antoine Pirlot on 13/05/2024
+ * @author Antoine Pirlot on 20/11/2024
  */
-
-
 @Composable
-internal fun PlaybackModesSubSettings(
-    modifier: Modifier = Modifier,
-) {
-    SubSettings(
-        modifier = modifier,
-        title = stringResource(id = R.string.playback_mode_settings)
+internal fun ResetSettingsView(modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(horizontal = 16.dp),
     ) {
-        ShuffleModeRadioButtons()
-        RepeatModeRadioButtons()
-        ForwardRewindButtons()
+        AllResetSettings()
     }
 }
 
 @Preview
 @Composable
-private fun PlaybackModesSwitchesPreview() {
-    PlaybackModesSubSettings()
+private fun ResetSettingsViewPreview() {
+    ResetSettingsView()
 }

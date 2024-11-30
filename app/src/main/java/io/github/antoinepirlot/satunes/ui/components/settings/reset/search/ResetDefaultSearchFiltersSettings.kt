@@ -23,39 +23,47 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.settings.playback
+package io.github.antoinepirlot.satunes.ui.components.settings.reset.search
 
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.ui.components.buttons.settings.playback.ForwardRewindButtons
-import io.github.antoinepirlot.satunes.ui.components.buttons.settings.playback.RepeatModeRadioButtons
-import io.github.antoinepirlot.satunes.ui.components.buttons.settings.playback.ShuffleModeRadioButtons
-import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
+import io.github.antoinepirlot.satunes.data.local.LocalMainScope
+import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
+import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
+import io.github.antoinepirlot.satunes.ui.components.settings.reset.ResetSettings
+import kotlinx.coroutines.CoroutineScope
 
 /**
- * @author Antoine Pirlot on 13/05/2024
+ * @author Antoine Pirlot on 23/11/2024
  */
 
-
 @Composable
-internal fun PlaybackModesSubSettings(
+internal fun ResetDefaultSearchFiltersSettings(
     modifier: Modifier = Modifier,
+    dataViewModel: DataViewModel = viewModel(),
 ) {
-    SubSettings(
+    val scope: CoroutineScope = LocalMainScope.current
+    val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
+
+    ResetSettings(
         modifier = modifier,
-        title = stringResource(id = R.string.playback_mode_settings)
-    ) {
-        ShuffleModeRadioButtons()
-        RepeatModeRadioButtons()
-        ForwardRewindButtons()
-    }
+        text = stringResource(R.string.default_filter_setting_title),
+        onClick = {
+            dataViewModel.resetDefaultSearchFiltersSettings(
+                scope = scope,
+                snackBarHostState = snackBarHostState
+            )
+        }
+    )
 }
 
 @Preview
 @Composable
-private fun PlaybackModesSwitchesPreview() {
-    PlaybackModesSubSettings()
+private fun ResetDefaultSearchFiltersSettingsPreview() {
+    ResetDefaultSearchFiltersSettings()
 }

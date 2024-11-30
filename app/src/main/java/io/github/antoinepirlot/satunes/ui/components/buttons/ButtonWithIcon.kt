@@ -27,6 +27,8 @@ package io.github.antoinepirlot.satunes.ui.components.buttons
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -67,7 +69,7 @@ internal fun ButtonWithIcon(
     border: BorderStroke? = null,
     contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
-    text: String,
+    text: String?,
 ) {
     val widthSize: Dp = 150.dp
     val heightSize: Dp = 40.dp
@@ -86,6 +88,7 @@ internal fun ButtonWithIcon(
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
         ) {
             if (isLoading) {
                 LoadingCircle(modifier = Modifier.size(20.dp))
@@ -94,12 +97,14 @@ internal fun ButtonWithIcon(
                     imageVector = icon.imageVector,
                     contentDescription = icon.description
                 )
-                Spacer(modifier = Modifier.size(10.dp))
-                NormalText(
-                    modifier = Modifier.fillMaxWidth(),
-                    textAlign = TextAlign.Center,
-                    text = text
-                )
+                if (text != null) {
+                    Spacer(modifier = Modifier.size(10.dp))
+                    NormalText(
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Center,
+                        text = text
+                    )
+                }
             }
         }
     }
@@ -108,10 +113,18 @@ internal fun ButtonWithIcon(
 @Preview
 @Composable
 private fun ButtonWithIconPreview() {
-    ButtonWithIcon(
-        modifier = Modifier.fillMaxWidth(),
-        icon = SatunesIcons.REMOVE_ICON,
-        onClick = {},
-        text = "Hello World !"
-    )
+    Column {
+        ButtonWithIcon(
+            modifier = Modifier.fillMaxWidth(),
+            icon = SatunesIcons.REMOVE_ICON,
+            onClick = {},
+            text = "Hello World !"
+        )
+        ButtonWithIcon(
+            modifier = Modifier.fillMaxWidth(),
+            icon = SatunesIcons.TIMER,
+            onClick = {},
+            text = null
+        )
+    }
 }

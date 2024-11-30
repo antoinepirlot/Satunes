@@ -23,39 +23,42 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.settings.playback
+package io.github.antoinepirlot.satunes.ui.components.settings.reset
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.ui.components.buttons.settings.playback.ForwardRewindButtons
-import io.github.antoinepirlot.satunes.ui.components.buttons.settings.playback.RepeatModeRadioButtons
-import io.github.antoinepirlot.satunes.ui.components.buttons.settings.playback.ShuffleModeRadioButtons
-import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
+import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
+import io.github.antoinepirlot.satunes.ui.components.buttons.settings.reset.ResetButton
 
 /**
- * @author Antoine Pirlot on 13/05/2024
+ * @author Antoine Pirlot on 22/11/2024
  */
 
-
 @Composable
-internal fun PlaybackModesSubSettings(
+internal fun ResetSettings(
     modifier: Modifier = Modifier,
+    text: String?,
+    onClick: () -> Unit
 ) {
-    SubSettings(
-        modifier = modifier,
-        title = stringResource(id = R.string.playback_mode_settings)
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = if (text != null) Arrangement.SpaceBetween else Arrangement.Center
     ) {
-        ShuffleModeRadioButtons()
-        RepeatModeRadioButtons()
-        ForwardRewindButtons()
+        if (text != null) NormalText(modifier = Modifier.fillMaxWidth(0.5f), text = text)
+        ResetButton(
+            onClick = onClick
+        )
     }
 }
 
 @Preview
 @Composable
-private fun PlaybackModesSwitchesPreview() {
-    PlaybackModesSubSettings()
+private fun ResetSettingsPreview() {
+    ResetSettings(text = "Reset", onClick = {})
 }

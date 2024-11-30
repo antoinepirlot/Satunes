@@ -67,7 +67,7 @@ internal fun SettingsView(
                 }
             )
             SettingButton(
-                text = stringResource(id = R.string.bottom_bar),
+                text = stringResource(id = R.string.navigation_bar_settings_title),
                 icon = SatunesIcons.BOTTOM_BAR,
                 onClick = {
                     navController.navigate(Destination.BOTTOM_BAR_SETTINGS.link)
@@ -116,6 +116,12 @@ internal fun SettingsView(
                     onClick = { navController.navigate(Destination.UPDATES_SETTINGS.link) }
                 )
             }
+
+            SettingButton(
+                text = stringResource(id = R.string.reset_settings),
+                icon = SatunesIcons.RESET_SETTINGS,
+                onClick = { navController.navigate(Destination.RESET_SETTINGS.link) }
+            )
 
             SettingButton(
                 text = stringResource(id = R.string.logs_settings),

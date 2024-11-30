@@ -43,16 +43,19 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.antoinepirlot.jetpack_libs.components.models.ScreenSizes
+import io.github.antoinepirlot.satunes.ui.components.buttons.playback.ForwardXSecondsButton
 import io.github.antoinepirlot.satunes.ui.components.buttons.playback.NextMusicButton
 import io.github.antoinepirlot.satunes.ui.components.buttons.playback.PlayPauseMusicButton
 import io.github.antoinepirlot.satunes.ui.components.buttons.playback.PreviousMusicButton
 import io.github.antoinepirlot.satunes.ui.components.buttons.playback.RepeatMusicButton
+import io.github.antoinepirlot.satunes.ui.components.buttons.playback.RewindXSecondsButton
 import io.github.antoinepirlot.satunes.ui.components.buttons.playback.ShuffleMusicButton
 
 /**
  * @author Antoine Pirlot on 25/01/24
  */
 
+//TODO refactor how it is composed on different screen sizes
 @Composable
 internal fun MusicControlBar(
     modifier: Modifier = Modifier,
@@ -62,15 +65,17 @@ internal fun MusicControlBar(
     val screenWidthDp = LocalConfiguration.current.screenWidthDp
     val ratio: Float =
         if (screenWidthDp >= (ScreenSizes.VERY_VERY_SMALL - 1) && screenWidthDp < ScreenSizes.VERY_SMALL) {
-            0.8f
+            0.7f
         } else if (screenWidthDp < ScreenSizes.VERY_VERY_SMALL) {
-            0.6f
+            0.5f
         } else { // Normal
             1f
         }
-    val spaceSize = (20f * ratio).dp
-    val playPauseButtonSize = (80f * ratio).dp
-    val optionButtonSize = (35f * ratio).dp
+    val spaceSize = (10f * ratio).dp
+    val playPauseButtonSize = (70f * ratio).dp
+    val nextPreviousSize = (45f * ratio).dp
+    val rewindForwardSize = nextPreviousSize
+    val optionButtonSize = (30f * ratio).dp
 
     Column(modifier = modifier) {
         MusicPositionBar()
@@ -85,16 +90,22 @@ internal fun MusicControlBar(
             ShuffleMusicButton(modifier = Modifier.size(optionButtonSize))
             Spacer(modifier = Modifier.width(spaceSize))
 
-            PreviousMusicButton()
+            PreviousMusicButton(modifier = Modifier.size(size = nextPreviousSize))
+            Spacer(modifier = Modifier.width(spaceSize))
+
+            RewindXSecondsButton(modifier = Modifier.size(size = rewindForwardSize))
             Spacer(modifier = Modifier.width(spaceSize))
 
             PlayPauseMusicButton(modifier = Modifier.size(playPauseButtonSize))
             Spacer(modifier = Modifier.width(spaceSize))
 
-            NextMusicButton()
+            ForwardXSecondsButton(modifier = Modifier.size(size = rewindForwardSize))
             Spacer(modifier = Modifier.width(spaceSize))
 
-            RepeatMusicButton(modifier = Modifier.size(optionButtonSize))
+            NextMusicButton(Modifier.size(size = nextPreviousSize))
+            Spacer(modifier = Modifier.width(spaceSize))
+
+            RepeatMusicButton(modifier = Modifier.size(size = optionButtonSize))
         }
     }
 }

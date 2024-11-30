@@ -29,6 +29,7 @@ import android.content.Context
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.MutableFloatState
 import androidx.compose.runtime.MutableIntState
+import androidx.compose.runtime.MutableLongState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.ViewModel
@@ -51,6 +52,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.runBlocking
 
 /**
  * @author Antoine Pirlot on 19/07/2024
@@ -71,6 +73,8 @@ class PlaybackViewModel : ViewModel() {
     private var _isShuffle: MutableState<Boolean> = PlaybackManager.isShuffle
     private var _isLoaded: MutableState<Boolean> = PlaybackManager.isLoaded
     private var _isEnded: MutableState<Boolean> = PlaybackManager.isEnded
+    private val _forwardMs: MutableLongState = SettingsManager.forwardMs
+    private val _rewindMs: MutableLongState = SettingsManager.rewindMs
 
     val uiState: StateFlow<PlaybackUiState> = _uiState.asStateFlow()
 
@@ -81,7 +85,8 @@ class PlaybackViewModel : ViewModel() {
     val isShuffle: Boolean by _isShuffle
     val isLoaded: Boolean by _isLoaded
     val isEnded: Boolean by _isEnded
-
+    val forwardMs: Long by _forwardMs
+    val rewindMs: Long by _rewindMs
 
     init {
         // Needed to refresh progress bar
@@ -346,26 +351,28 @@ class PlaybackViewModel : ViewModel() {
     ) {
         if (hours <= 0 && minutes <= 0 && seconds <= 0) return
         val context: Context = MainActivity.instance.applicationContext
+        val timer = Timer(
+            function = {
+                PlaybackManager.pause(context = context)
+                _uiState.update { currentState: PlaybackUiState ->
+                    currentState.copy(timer = null, timerRemainingTime = 0L)
+                }
+                showSnackBar(
+                    scope = scope,
+                    snackBarHostState = snackBarHostState,
+                    message = context.getString(R.string.pause_media_timer_snackbar)
+                )
+            },
+            hours = hours,
+            minutes = minutes,
+            seconds = seconds
+        )
         try {
             _uiState.value.timer?.cancel()
             _uiState.update { currentState: PlaybackUiState ->
                 currentState.copy(
-                    timer = Timer(
-                        function = {
-                            PlaybackManager.pause(context = context)
-                            _uiState.update { currentState: PlaybackUiState ->
-                                currentState.copy(timer = null)
-                            }
-                            showSnackBar(
-                                scope = scope,
-                                snackBarHostState = snackBarHostState,
-                                message = context.getString(R.string.pause_media_timer_snackbar)
-                            )
-                        },
-                        hours = hours,
-                        minutes = minutes,
-                        seconds = seconds
-                    )
+                    timer = timer,
+                    timerRemainingTime = timer.getRemainingTime()
                 )
             }
         } catch (e: Throwable) {
@@ -390,7 +397,7 @@ class PlaybackViewModel : ViewModel() {
         try {
             _uiState.value.timer?.cancel()
             _uiState.update { currentState: PlaybackUiState ->
-                currentState.copy(timer = null)
+                currentState.copy(timer = null, timerRemainingTime = 0L)
             }
             showSnackBar(
                 scope = scope,
@@ -406,6 +413,98 @@ class PlaybackViewModel : ViewModel() {
                     this.cancelTimer(scope = scope, snackBarHostState = snackBarHostState)
                 }
             )
+        }
+    }
+
+    fun isTimerRunning() = uiState.value.timer != null
+
+    fun forward(scope: CoroutineScope, snackBarHostState: SnackbarHostState) {
+        try {
+            PlaybackManager.forward(context = MainActivity.instance.applicationContext)
+        } catch (e: Exception) {
+            _logger.severe(e.message)
+            showErrorSnackBar(
+                scope = scope,
+                snackBarHostState = snackBarHostState,
+                action = {
+                    this.forward(
+                        scope = scope,
+                        snackBarHostState = snackBarHostState
+                    )
+                }
+            )
+        }
+    }
+
+    fun rewind(scope: CoroutineScope, snackBarHostState: SnackbarHostState) {
+        try {
+            PlaybackManager.rewind(context = MainActivity.instance.applicationContext)
+        } catch (e: Exception) {
+            _logger.severe(e.message)
+            showErrorSnackBar(scope = scope,
+                snackBarHostState = snackBarHostState,
+                action = {
+                    this.rewind(
+                        scope = scope,
+                        snackBarHostState = snackBarHostState,
+                    )
+                }
+            )
+        }
+    }
+
+    fun updateForward(scope: CoroutineScope, snackBarHostState: SnackbarHostState, seconds: Int) {
+        try {
+            runBlocking {
+                SettingsManager.updateForwardMs(
+                    context = MainActivity.instance.applicationContext,
+                    seconds = seconds
+                )
+            }
+        } catch (e: Exception) {
+            showErrorSnackBar(
+                scope = scope,
+                snackBarHostState = snackBarHostState,
+                action = {
+                    this.updateForward(
+                        scope = scope,
+                        snackBarHostState = snackBarHostState,
+                        seconds = seconds
+                    )
+                }
+            )
+        }
+    }
+
+    fun updateRewind(scope: CoroutineScope, snackBarHostState: SnackbarHostState, seconds: Int) {
+        try {
+            runBlocking {
+                SettingsManager.updateRewindMs(
+                    context = MainActivity.instance.applicationContext,
+                    seconds = seconds
+                )
+            }
+        } catch (e: Exception) {
+            showErrorSnackBar(
+                scope = scope,
+                snackBarHostState = snackBarHostState,
+                action = {
+                    this.updateForward(
+                        scope = scope,
+                        snackBarHostState = snackBarHostState,
+                        seconds = seconds
+                    )
+                }
+            )
+        }
+    }
+
+    fun refreshRemainingTime() {
+        val timer: Timer? = _uiState.value.timer
+        if (timer != null) {
+            _uiState.update { currentState: PlaybackUiState ->
+                currentState.copy(timerRemainingTime = timer.getRemainingTime())
+            }
         }
     }
 }

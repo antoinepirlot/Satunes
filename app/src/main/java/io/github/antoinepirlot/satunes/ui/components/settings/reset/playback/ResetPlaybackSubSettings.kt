@@ -23,39 +23,39 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.settings.playback
+package io.github.antoinepirlot.satunes.ui.components.settings.reset.playback
 
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.ui.components.buttons.settings.playback.ForwardRewindButtons
-import io.github.antoinepirlot.satunes.ui.components.buttons.settings.playback.RepeatModeRadioButtons
-import io.github.antoinepirlot.satunes.ui.components.buttons.settings.playback.ShuffleModeRadioButtons
 import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
 
 /**
- * @author Antoine Pirlot on 13/05/2024
+ * @author Antoine Pirlot on 23/11/2024
  */
 
+val spacerSize: Dp = 5.dp
 
 @Composable
-internal fun PlaybackModesSubSettings(
-    modifier: Modifier = Modifier,
-) {
+internal fun ResetPlaybackSubSettings(modifier: Modifier = Modifier) {
     SubSettings(
         modifier = modifier,
-        title = stringResource(id = R.string.playback_mode_settings)
+        title = stringResource(R.string.playback_settings)
     ) {
-        ShuffleModeRadioButtons()
-        RepeatModeRadioButtons()
-        ForwardRewindButtons()
+        ResetPlaybackBehaviorSettings()
+        Spacer(modifier = Modifier.size(size = spacerSize))
+        ResetPlaybackModesSettings()
     }
 }
 
 @Preview
 @Composable
-private fun PlaybackModesSwitchesPreview() {
-    PlaybackModesSubSettings()
+private fun ResetPlaybackSubSettingsPreview() {
+    ResetPlaybackSubSettings()
 }

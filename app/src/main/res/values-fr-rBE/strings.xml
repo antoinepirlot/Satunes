@@ -2,7 +2,7 @@
 
 <resources>
     <string name="play_all">Lire en mode aléatoire</string>
-    <string name="bottom_bar">Barre de navigation</string>
+    <string name="navigation_bar_settings_title">Barre de navigation</string>
     <string name="this_device">Cet Appareil</string>
     <string name="external_storage">Stockage Externe</string>
     <string name="playback_settings">Lecture</string>
@@ -41,7 +41,7 @@
     <string name="ask_permission">Autoriser</string>
     <string name="read_external_storage_permission">Lire le stockage</string>
     <string name="repeat_mode">"Mode de relecture: "</string>
-    <string name="playback_mode_settings">Mode de Lecture par Défaut</string>
+    <string name="playback_mode_settings">Mode de lecture par défaut</string>
     <string name="pause_if_another_playback">Pause si un autre application est en cours de lecture</string>
     <string name="update_title">Changer de nom</string>
     <string name="title">Titre</string>
@@ -117,4 +117,10 @@
     <string name="pause_media_timer_snackbar">Le minuteur a mit la musique en pause</string>
     <string name="seconds_text_field_label">Secondes</string>
     <string name="hours_text_field_label">Heures</string>
+    <string name="forward">Avancer</string>
+    <string name="rewind">Retour en arrière</string>
+    <string name="reset_settings">Réinitialisation</string>
+    <string name="reset_text">Réinitialiser</string>
+    <string name="playback_behavior_settings">Comportement</string>
+    <string name="reset_all_settings">Tout Réinitialiser</string>
 </resources>

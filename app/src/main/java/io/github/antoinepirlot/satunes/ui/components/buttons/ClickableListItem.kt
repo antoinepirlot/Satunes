@@ -30,7 +30,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.cards.ListItem
@@ -46,7 +45,6 @@ internal fun ClickableListItem(
     icon: SatunesIcons,
     onClick: () -> Unit,
 ) {
-    val screenWidthDp: Int = LocalConfiguration.current.screenWidthDp
     ListItem(
         modifier = modifier.clickable {
             onClick()

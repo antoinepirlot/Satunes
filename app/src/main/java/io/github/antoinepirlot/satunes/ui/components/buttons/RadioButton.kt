@@ -50,7 +50,7 @@ import io.github.antoinepirlot.satunes.ui.components.images.Icon
 internal fun RadioButton(
     modifier: Modifier = Modifier,
     selected: Boolean,
-    onClicked: () -> Unit,
+    onClick: () -> Unit,
     enabled: Boolean = true,
     colors: RadioButtonColors = RadioButtonDefaults.colors(),
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
@@ -63,7 +63,7 @@ internal fun RadioButton(
     ) {
         androidx.compose.material3.RadioButton(
             selected = selected,
-            onClick = onClicked,
+            onClick = onClick,
             enabled = enabled,
             colors = colors,
             interactionSource = interactionSource
@@ -78,13 +78,13 @@ internal fun RadioButton(
 @Composable
 private fun RadioButtonPreview() {
     Column {
-        RadioButton(selected = true, onClicked = {})
-        RadioButton(icon = SatunesIcons.SORT, selected = false, onClicked = {})
-        RadioButton(text = "Hello RadioButton!", selected = false, onClicked = {})
+        RadioButton(selected = true, onClick = {})
+        RadioButton(icon = SatunesIcons.SORT, selected = false, onClick = {})
+        RadioButton(text = "Hello RadioButton!", selected = false, onClick = {})
         RadioButton(
             icon = SatunesIcons.SORT,
             text = "Hello RadioButtonWithIcon",
             selected = true,
-            onClicked = {})
+            onClick = {})
     }
 }

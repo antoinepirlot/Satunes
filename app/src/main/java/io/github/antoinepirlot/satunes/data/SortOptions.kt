@@ -34,5 +34,6 @@ import io.github.antoinepirlot.satunes.models.radio_buttons.SortOptions
 internal val sortOptions: List<SortOptions> = listOf(
     SortOptions.TITLE,
     SortOptions.ARTIST,
-    SortOptions.ALBUM
+    SortOptions.ALBUM,
+    SortOptions.GENRE
 )

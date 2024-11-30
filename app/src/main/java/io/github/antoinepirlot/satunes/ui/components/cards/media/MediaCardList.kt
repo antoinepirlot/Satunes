@@ -129,6 +129,13 @@ fun sortListBy(list: List<MediaImpl>, sortOption: SortOptions): List<MediaImpl> 
                         else -> throw NotSortableException()
                     }
                 }
+
+                SortOptions.GENRE -> {
+                    when (mediaImpl) {
+                        is Music -> mediaImpl.genre.title
+                        else -> throw NotSortableException()
+                    }
+                }
             }
         }
     } catch (_: NotSortableException) {

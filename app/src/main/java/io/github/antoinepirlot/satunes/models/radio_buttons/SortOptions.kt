@@ -36,4 +36,5 @@ enum class SortOptions(val icon: SatunesIcons, val stringId: Int) {
     ARTIST(icon = SatunesIcons.ARTIST, stringId = RDb.string.artists),
     ALBUM(icon = SatunesIcons.ALBUM, stringId = RDb.string.albums),
     TITLE(icon = SatunesIcons.TITLE, stringId = R.string.title),
+    GENRE(icon = SatunesIcons.GENRES, stringId = RDb.string.genres)
 }

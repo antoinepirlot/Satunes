@@ -1,6 +1,21 @@
 # Versions (🇫🇷)
 You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
+## 2.5 (Android 5.1.1 Lollipop et ultérieur)
+
+### 2.5.0
+
+Nouvelles fonctionnalités:
+
+* Ajout des musiques d'une playlist vers une autre
+* Avancer ou reculer dans une musique
+* Réinitialiser les paramètres
+
+Améliorations, optimisations et dépannage:
+
+* La vue du minuteur montre le temps restant dans les champs.
+* Quelques optimizations mineures
+
 ## 2.4 (Android 5.1.1 Lollipop et ultérieur)
 
 ### 2.4.6

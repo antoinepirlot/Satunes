@@ -1,6 +1,21 @@
 # Releases (🇬🇧)
 Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
+## 2.5 (Android 5.1.1 Lollipop and later)
+
+### 2.5.0
+
+New features:
+
+* Add playlist's musics to another playlist
+* Jump back/ahead in music playback
+* Reset Settings
+
+Improvements, optimizations and troubleshooting:
+
+* Timer setting will show remaining time inside the number fields
+* Few minor optimization
+
 ## 2.4 (Android 5.1.1 Lollipop and later)
 
 ### 2.4.6

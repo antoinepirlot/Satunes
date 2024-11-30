@@ -86,7 +86,7 @@ internal fun CreateTimerForm(
     val hoursIntField: MutableIntState = rememberSaveable { mutableIntStateOf(0) }
 
     var job: Job? = null
-    LaunchedEffect(remainingTime) {
+    LaunchedEffect(remainingTime, timer) {
         secondsIntField.intValue = (timer?.getRemainingSeconds() ?: 0) % 60
         minutesIntField.intValue = (timer?.getRemainingMinutes() ?: 0) % 60
         hoursIntField.intValue = timer?.getRemainingHours() ?: 0

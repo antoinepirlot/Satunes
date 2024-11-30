@@ -41,13 +41,13 @@ class SortListViewModel : ViewModel() {
     /**
      * Used to remember the radio button before user change in list.
      */
-    private var _currentSelectedSortOption: SortOptions = sortOptions.first()
+    private val _currentSortOption: MutableState<SortOptions> = mutableStateOf(sortOptions.first())
 
     /**
      * The current selected radio button.
      */
     private val _selectedSortOption: MutableState<SortOptions> =
-        mutableStateOf(_currentSelectedSortOption)
+        mutableStateOf(_currentSortOption.value)
 
     /**
      * The current selected radio button.
@@ -55,15 +55,21 @@ class SortListViewModel : ViewModel() {
     var selectedSortOption: SortOptions by _selectedSortOption
         private set
 
+    /**
+     * The current confirmed selected radio button (used to refresh the list)
+     */
+    var currentSortOption: SortOptions by _currentSortOption
+        private set
+
     fun selectSortOption(sortRadioButton: SortOptions) {
         this.selectedSortOption = sortRadioButton
     }
 
     fun applySorting() {
-        this._currentSelectedSortOption = this.selectedSortOption
+        this.currentSortOption = this.selectedSortOption
     }
 
     fun cancelSorting() {
-        this.selectedSortOption = this._currentSelectedSortOption
+        this.selectedSortOption = this.currentSortOption
     }
 }

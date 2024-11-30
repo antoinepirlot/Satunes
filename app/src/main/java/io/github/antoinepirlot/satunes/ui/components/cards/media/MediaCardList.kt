@@ -67,7 +67,7 @@ internal fun MediaCardList(
         }
 
     mediaListToLoad =
-        sortListBy(list = mediaListToLoad, sortOption = sortListViewModel.selectedSortOption)
+        sortListBy(list = mediaListToLoad, sortOption = sortListViewModel.currentSortOption)
 
     LazyColumn(
         modifier = modifier,

@@ -55,8 +55,14 @@ internal fun SortListDialog(
         modifier = modifier,
         icon = SatunesIcons.SORT,
         title = stringResource(R.string.sort_list_title),
-        onDismissRequest = { satunesViewModel.hideSortDialog() },
-        onConfirmRequest = { applySort(satunesViewModel = satunesViewModel) },
+        onDismissRequest = {
+            satunesViewModel.hideSortDialog()
+            sortListViewModel.cancelSorting()
+        },
+        onConfirmRequest = {
+            satunesViewModel.hideSortDialog()
+            sortListViewModel.applySorting()
+        },
         confirmText = stringResource(R.string.ok),
         dismissText = stringResource(R.string.cancel),
     ) {
@@ -71,11 +77,6 @@ internal fun SortListDialog(
             }
         }
     }
-}
-
-private fun applySort(satunesViewModel: SatunesViewModel) {
-
-    satunesViewModel.hideSortDialog()
 }
 
 @Preview

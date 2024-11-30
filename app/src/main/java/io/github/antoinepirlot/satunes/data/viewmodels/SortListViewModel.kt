@@ -37,13 +37,33 @@ import io.github.antoinepirlot.satunes.models.radio_buttons.SortRadioButtons
  * @author Antoine Pirlot on 30/11/2024
  */
 internal class SortListViewModel : ViewModel() {
-    private val _selectedSortRadioButton: MutableState<SortRadioButtons> =
-        mutableStateOf(sortRadioButtons.first())
 
+    /**
+     * Used to remember the radio button before user change in list.
+     */
+    private var _currentSelectedRadioButton: SortRadioButtons = sortRadioButtons.first()
+
+    /**
+     * The current selected radio button.
+     */
+    private val _selectedSortRadioButton: MutableState<SortRadioButtons> =
+        mutableStateOf(_currentSelectedRadioButton)
+
+    /**
+     * The current selected radio button.
+     */
     var selectedSortRadioButton: SortRadioButtons by _selectedSortRadioButton
         private set
 
     fun selectSortRadioButton(sortRadioButton: SortRadioButtons) {
         this.selectedSortRadioButton = sortRadioButton
+    }
+
+    fun applySorting() {
+        this._currentSelectedRadioButton = this.selectedSortRadioButton
+    }
+
+    fun cancelSorting() {
+        this.selectedSortRadioButton = this._currentSelectedRadioButton
     }
 }

@@ -31,14 +31,16 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Slider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
@@ -55,10 +57,20 @@ internal fun MusicPositionBar(
     modifier: Modifier = Modifier,
     playbackViewModel: PlaybackViewModel = viewModel(),
 ) {
+    val lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current
+    var newPositionPercentage: Float by remember { mutableFloatStateOf(0f) }
+    var isUpdating: Boolean by remember { mutableStateOf(false) }
     val musicPlaying: Music? = playbackViewModel.musicPlaying
-    var newPositionPercentage: Float by rememberSaveable { mutableFloatStateOf(0f) }
-    var isUpdating: Boolean by rememberSaveable { mutableStateOf(false) }
+    val isPlaying: Boolean = playbackViewModel.isPlaying
     val currentPositionPercentage: Float = playbackViewModel.currentPositionProgression
+
+    LaunchedEffect(key1 = Unit) {
+        lifecycleOwner.lifecycle.addObserver(ProgressBarLifecycleCallbacks)
+        ProgressBarLifecycleCallbacks.updateCurrentPosition()
+    }
+
+    if (isPlaying && !ProgressBarLifecycleCallbacks.isUpdatingPosition)
+        ProgressBarLifecycleCallbacks.startUpdatingCurrentPosition()
 
     Column(modifier = modifier) {
         Slider(
@@ -84,12 +96,6 @@ internal fun MusicPositionBar(
             NormalText(text = currentPositionTimeText)
             NormalText(text = getMillisToTimeText(maxDuration))
         }
-    }
-
-    val isPlaying: Boolean = playbackViewModel.isPlaying
-    LocalLifecycleOwner.current.lifecycle.addObserver(ProgressBarLifecycleCallbacks)
-    if (isPlaying && !ProgressBarLifecycleCallbacks.isUpdatingPosition) {
-        ProgressBarLifecycleCallbacks.startUpdatingCurrentPosition()
     }
 }
 

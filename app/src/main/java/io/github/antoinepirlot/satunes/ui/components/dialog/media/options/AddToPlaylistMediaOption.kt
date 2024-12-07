@@ -39,7 +39,6 @@ import io.github.antoinepirlot.satunes.data.local.LocalMainScope
 import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.MediaSelectionViewModel
-import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
@@ -106,24 +105,18 @@ private fun insertMediaToPlaylist(
     mediaSelectionViewModel: MediaSelectionViewModel,
     mediaImpl: MediaImpl
 ) {
-    if (mediaImpl is Music) {
-        dataViewModel.insertMusicToPlaylists(
+    when (mediaImpl) {
+        is Music -> dataViewModel.insertMusicToPlaylists(
             scope = scope,
             snackBarHostState = snackBarHostState,
             music = mediaImpl,
             playlists = mediaSelectionViewModel.getCheckedPlaylistWithMusics()
         )
-    } else {
-        val musicList: Set<Music> = if (mediaImpl is Folder) {
-            mediaImpl.getAllMusic()
-        } else {
-            mediaImpl.getMusicSet()
-        }
 
-        dataViewModel.insertMusicsToPlaylists(
+        else -> dataViewModel.insertMusicsToPlaylists(
             scope = scope,
             snackBarHostState = snackBarHostState,
-            musics = musicList,
+            mediaImpl = mediaImpl,
             playlists = mediaSelectionViewModel.getCheckedPlaylistWithMusics()
         )
     }

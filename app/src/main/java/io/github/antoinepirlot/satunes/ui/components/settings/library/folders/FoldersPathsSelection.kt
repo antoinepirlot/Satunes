@@ -54,10 +54,8 @@ internal fun FoldersPathsSelection(
     ) {
         for (path: String in satunesViewModel.foldersPathsSelectedSet.toList()) {
             FolderPathRow(path = path)
-
-            if (path == satunesViewModel.foldersPathsSelectedSet.last()) {
+            if (path == satunesViewModel.foldersPathsSelectedSet.last())
                 FoldersPathButtons()
-            }
         }
     }
     if (satunesViewModel.foldersPathsSelectedSet.isEmpty()) {

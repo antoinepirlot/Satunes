@@ -11,6 +11,8 @@ Improvements, optimizations and troubleshooting:
 * La snack bar ne montre plus le caractère '%' lors de la suppression d'un chemin de dossier
 * La barre de contrôle de la musique est toujours à jour même en quittant et en revenant dans la
   page lors de la lecture
+* Si la nouvelle valeur pour avancer ou revenir en arrière est <= 0, alors la valeur n'est pas
+  changée
 
 ### 2.5.0
 

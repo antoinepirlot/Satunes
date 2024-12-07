@@ -11,6 +11,7 @@ Improvements, optimizations and troubleshooting:
 * Fix snack bar not showing '%' on folder's path removed
 * Fix Music control bar time when leaving and going back to the screen after a moment when playing
 * Fix if forward rewind new value is <= 0 then old value is kept
+* Show info dialog if setting need reload library
 
 ### 2.5.0
 

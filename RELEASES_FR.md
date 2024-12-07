@@ -13,6 +13,7 @@ Improvements, optimizations and troubleshooting:
   page lors de la lecture
 * Si la nouvelle valeur pour avancer ou revenir en arrière est <= 0, alors la valeur n'est pas
   changée
+* Une popup d'information est montrée si le paramètre nécessite un rechargement de la bibliothèque
 
 ### 2.5.0
 

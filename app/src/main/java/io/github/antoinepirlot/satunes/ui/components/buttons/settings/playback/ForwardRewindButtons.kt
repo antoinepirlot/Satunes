@@ -123,7 +123,9 @@ private fun ForwardRewindSection(
                 value = mutableSeconds,
                 label = label,
                 maxValue = null,
-                onValueChanged = onValueChanged
+                onValueChanged = {
+                    if (it > 0) onValueChanged(it)
+                }
             )
         }
     }

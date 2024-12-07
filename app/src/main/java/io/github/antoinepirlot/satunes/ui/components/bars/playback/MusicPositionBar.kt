@@ -61,11 +61,12 @@ internal fun MusicPositionBar(
     var newPositionPercentage: Float by remember { mutableFloatStateOf(0f) }
     var isUpdating: Boolean by remember { mutableStateOf(false) }
     val musicPlaying: Music? = playbackViewModel.musicPlaying
-    val currentPositionPercentage: Float = playbackViewModel.currentPositionProgression
     val isPlaying: Boolean = playbackViewModel.isPlaying
+    val currentPositionPercentage: Float = playbackViewModel.currentPositionProgression
 
     LaunchedEffect(key1 = Unit) {
         lifecycleOwner.lifecycle.addObserver(ProgressBarLifecycleCallbacks)
+        ProgressBarLifecycleCallbacks.updateCurrentPosition()
     }
 
     if (isPlaying && !ProgressBarLifecycleCallbacks.isUpdatingPosition)

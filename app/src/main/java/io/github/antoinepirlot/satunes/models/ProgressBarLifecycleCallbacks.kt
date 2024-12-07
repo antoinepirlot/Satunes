@@ -99,7 +99,7 @@ internal object ProgressBarLifecycleCallbacks : DefaultLifecycleObserver {
         }
     }
 
-    private fun updateCurrentPosition(log: Boolean = true) {
+    fun updateCurrentPosition(log: Boolean = true) {
         if (playbackViewModel.isEnded) {
             // It means the music has reached the end of playlistDB and the music is finished
             return

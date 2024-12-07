@@ -3,6 +3,13 @@ Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
 ## 2.5 (Android 5.1.1 Lollipop and later)
 
+### 2.5.1
+
+Improvements, optimizations and troubleshooting:
+
+* Add "Developed in Europe 🇪🇺" at the end of About settings section
+* Fix snack bar not showing '%' on folder's path removed
+
 ### 2.5.0
 
 New features:

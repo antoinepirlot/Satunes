@@ -1,0 +1,4 @@
+Improvements, optimizations and troubleshooting:
+
+* Add "Developed in Europe 🇪🇺" at the end of About settings section
+* Fix snack bar not showing '%' on folder's path removed

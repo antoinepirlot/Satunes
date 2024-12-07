@@ -554,7 +554,7 @@ internal class SatunesViewModel : ViewModel() {
                 snackBarHostState = snackBarHostState,
                 message = MainActivity.instance.applicationContext.getString(
                     R.string.path_removed,
-                    path
+                    path.removeSuffix("%")
                 ),
                 actionLabel = MainActivity.instance.applicationContext.getString(R.string.cancel),
                 action = {

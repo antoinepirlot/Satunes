@@ -5,7 +5,7 @@ You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
 ### 2.5.1
 
-Improvements, optimizations and troubleshooting:
+Améliorations, optimisations et dépannage:
 
 * Ajout du text "Développé en Europe 🇪🇺" à la fin de la section à propos dans les paramètres
 * La snack bar ne montre plus le caractère '%' lors de la suppression d'un chemin de dossier

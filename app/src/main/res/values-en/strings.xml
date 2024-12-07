@@ -124,4 +124,5 @@
     <string name="playback_behavior_settings">Behavior</string>
     <string name="reset_all_settings">Reset All</string>
     <string name="made_in_europe">Developed in Europe 🇪🇺</string>
+    <string name="reload_library_required">Reload library required</string>
 </resources>

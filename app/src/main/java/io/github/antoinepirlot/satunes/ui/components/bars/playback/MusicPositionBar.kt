@@ -34,7 +34,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
@@ -56,8 +56,8 @@ internal fun MusicPositionBar(
     playbackViewModel: PlaybackViewModel = viewModel(),
 ) {
     val musicPlaying: Music? = playbackViewModel.musicPlaying
-    var newPositionPercentage: Float by rememberSaveable { mutableFloatStateOf(0f) }
-    var isUpdating: Boolean by rememberSaveable { mutableStateOf(false) }
+    var newPositionPercentage: Float by remember { mutableFloatStateOf(0f) }
+    var isUpdating: Boolean by remember { mutableStateOf(false) }
     val currentPositionPercentage: Float = playbackViewModel.currentPositionProgression
 
     Column(modifier = modifier) {

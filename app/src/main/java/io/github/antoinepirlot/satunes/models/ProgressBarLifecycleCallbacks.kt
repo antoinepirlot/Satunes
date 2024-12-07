@@ -32,6 +32,7 @@ import io.github.antoinepirlot.satunes.database.services.settings.SettingsManage
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -40,6 +41,7 @@ import kotlinx.coroutines.launch
  */
 internal object ProgressBarLifecycleCallbacks : DefaultLifecycleObserver {
     private val _logger: SatunesLogger = SatunesLogger.getLogger()
+    private var _updatingJob: Job? = null;
     var isUpdatingPosition: Boolean = false
     private var stopRefresh: Boolean = false
     private var resumed: Boolean = false // used to avoid refresh when widget is used (optimization)
@@ -85,15 +87,14 @@ internal object ProgressBarLifecycleCallbacks : DefaultLifecycleObserver {
         }
         isUpdatingPosition = true
         _logger.info("Update current position")
-        CoroutineScope(Dispatchers.Main).launch {
+        _updatingJob?.cancel()
+        _updatingJob = CoroutineScope(Dispatchers.Main).launch {
             updateCurrentPosition()
             while (playbackViewModel.isPlaying && !stopRefresh) {
                 updateCurrentPosition(log = false)
-//TODO do it outside function
                 val timeMillis: Long = (SettingsManager.barSpeed.speed * 1000f).toLong()
                 delay(timeMillis) // Wait one second to avoid refreshing all the time
             }
-
             isUpdatingPosition = false
         }
     }

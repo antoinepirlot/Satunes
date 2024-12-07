@@ -66,7 +66,9 @@ internal fun LoadingLogicSubSettings(
         SettingWithSwitch(
             setting = SwitchSettings.COMPILATION_MUSIC,
             checked = satunesUiState.compilationMusic,
-            onCheckedChange = { satunesViewModel.switchCompilationMusic() }
+            onCheckedChange = {
+                satunesViewModel.switchCompilationMusic()
+            }
         )
         Spacer(modifier = Modifier.size(size = 16.dp))
 

@@ -51,6 +51,11 @@ internal val switchSettingsNeedRestarts: List<SwitchSettings> = listOf(
     SwitchSettings.PAUSE_IF_NOISY,
 )
 
+internal val switchSettingsNeedReloadLibrary: List<SwitchSettings> = listOf(
+    SwitchSettings.COMPILATION_MUSIC,
+    SwitchSettings.ARTIST_REPLACEMENT
+)
+
 internal val allFoldersSelections: List<FoldersSelection> = listOf(
     FoldersSelection.INCLUDE,
     FoldersSelection.EXCLUDE

@@ -2,3 +2,4 @@ Improvements, optimizations and troubleshooting:
 
 * Ajout du text "Développé en Europe 🇪🇺" à la fin de la section à propos dans les paramètres
 * La snack bar ne montre plus le caractère '%' lors de la suppression d'un chemin de dossier
+* La barre de contrôle de la musique est toujours à jour même en quittant et en revenant dans la page lors de la lecture

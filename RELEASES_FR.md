@@ -3,6 +3,13 @@ You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
 ## 2.5 (Android 5.1.1 Lollipop et ultérieur)
 
+### 2.5.1
+
+Improvements, optimizations and troubleshooting:
+
+* Ajout du text "Développé en Europe 🇪🇺" à la fin de la section à propos dans les paramètres
+* La snack bar ne montre plus le caractère '%' lors de la suppression d'un chemin de dossier
+
 ### 2.5.0
 
 Nouvelles fonctionnalités:

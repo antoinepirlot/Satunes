@@ -33,6 +33,7 @@ import android.provider.DocumentsContract
 import androidx.annotation.RequiresApi
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -620,6 +621,18 @@ internal class SatunesViewModel : ViewModel() {
                     )
                 }
             )
+        }
+    }
+
+    fun replaceExtraButtons(extraButtons: @Composable () -> Unit) {
+        this._uiState.update { currentState: SatunesUiState ->
+            currentState.copy(extraButtons = extraButtons)
+        }
+    }
+
+    fun clearExtraButtons() {
+        this._uiState.update { currentState: SatunesUiState ->
+            currentState.copy(extraButtons = null)
         }
     }
 }

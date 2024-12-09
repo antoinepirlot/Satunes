@@ -43,6 +43,7 @@ import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
@@ -59,6 +60,7 @@ import kotlinx.coroutines.CoroutineScope
 @Composable
 internal fun PlaylistListView(
     modifier: Modifier = Modifier,
+    satunesViewModel: SatunesViewModel = viewModel(),
     dataViewModel: DataViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
 ) {
@@ -66,6 +68,23 @@ internal fun PlaylistListView(
     val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
     val navController: NavHostController = LocalNavController.current
     var openAlertDialog by remember { mutableStateOf(false) }
+
+    satunesViewModel.replaceExtraButtons {
+        ExtraButton(
+            icon = SatunesIcons.EXPORT,
+            onClick = {
+                dataViewModel.exportPlaylists(
+                    scope = scope,
+                    snackBarHostState = snackBarHostState
+                )
+            }
+        )
+        ExtraButton(
+            icon = SatunesIcons.IMPORT,
+            onClick = { dataViewModel.importPlaylists() }
+        )
+        ExtraButton(icon = SatunesIcons.PLAYLIST_ADD, onClick = { openAlertDialog = true })
+    }
 
     Column(modifier = modifier) {
         val playlistSet: Set<Playlist> = dataViewModel.getPlaylistSet()
@@ -85,22 +104,6 @@ internal fun PlaylistListView(
                     media = clickedMediaImpl,
                     navController = navController
                 )
-            },
-            extraButtons = {
-                ExtraButton(
-                    icon = SatunesIcons.EXPORT,
-                    onClick = {
-                        dataViewModel.exportPlaylists(
-                            scope = scope,
-                            snackBarHostState = snackBarHostState
-                        )
-                    }
-                )
-                ExtraButton(
-                    icon = SatunesIcons.IMPORT,
-                    onClick = { dataViewModel.importPlaylists() }
-                )
-                ExtraButton(icon = SatunesIcons.PLAYLIST_ADD, onClick = { openAlertDialog = true })
             },
             emptyViewText = stringResource(id = R.string.no_playlists)
         )

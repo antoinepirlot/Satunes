@@ -26,11 +26,7 @@
 package io.github.antoinepirlot.satunes.ui.views.media
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.FabPosition
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -43,7 +39,6 @@ import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.ui.components.EmptyView
-import io.github.antoinepirlot.satunes.ui.components.bars.ShowCurrentMusicButton
 import io.github.antoinepirlot.satunes.ui.components.cards.media.MediaCardList
 
 /**
@@ -59,23 +54,22 @@ internal fun MediaListView(
     openMedia: (mediaImpl: MediaImpl) -> Unit,
     openedPlaylistWithMusics: Playlist? = null,
     header: (@Composable () -> Unit)? = null,
-    extraButtons: @Composable () -> Unit = { /*By default there's no extra buttons*/ },
     emptyViewText: String
 ) {
-    Scaffold(
-        modifier = modifier,
-        floatingActionButton = { //TODO move it to first scaffold for Android 15 targeting
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                extraButtons()
-                if (playbackViewModel.musicPlaying != null) {
-                    ShowCurrentMusicButton()
-                }
-            }
-        },
-        floatingActionButtonPosition = FabPosition.End
-    ) { _ ->
+//    Scaffold(
+//        modifier = modifier,
+//        floatingActionButton = { //TODO move it to first scaffold for Android 15 targeting
+//            Column(
+//                horizontalAlignment = Alignment.CenterHorizontally
+//            ) {
+//                extraButtons()
+//                if (playbackViewModel.musicPlaying != null) {
+//                    ShowCurrentMusicButton()
+//                }
+//            }
+//        },
+//        floatingActionButtonPosition = FabPosition.End
+//    ) { _ ->
         if (mediaImplCollection.isNotEmpty()) {
             MediaCardList(
                 modifier = Modifier,
@@ -94,7 +88,7 @@ internal fun MediaListView(
                 )
             }
         }
-    }
+//    }
 }
 
 @Composable

@@ -52,7 +52,6 @@ import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.EmptyView
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
@@ -115,12 +114,6 @@ internal fun PlaylistView(
             )
         },
         openedPlaylistWithMusics = playlist,
-        onFABClick = {
-            openCurrentMusic(
-                playbackViewModel = playbackViewModel,
-                navController = navController
-            )
-        },
         header = {
             val title: String = if (playlist.title == LIKES_PLAYLIST_TITLE) {
                 stringResource(id = RDb.string.likes_playlist_title)

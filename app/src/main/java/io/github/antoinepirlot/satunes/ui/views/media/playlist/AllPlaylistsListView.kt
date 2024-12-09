@@ -46,7 +46,6 @@ import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
 import io.github.antoinepirlot.satunes.ui.components.forms.PlaylistCreationForm
@@ -84,12 +83,6 @@ internal fun PlaylistListView(
                 openMedia(
                     playbackViewModel = playbackViewModel,
                     media = clickedMediaImpl,
-                    navController = navController
-                )
-            },
-            onFABClick = {
-                openCurrentMusic(
-                    playbackViewModel = playbackViewModel,
                     navController = navController
                 )
             },

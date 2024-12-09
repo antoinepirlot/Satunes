@@ -38,7 +38,6 @@ import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.router.utils.openMediaFromFolder
 import io.github.antoinepirlot.satunes.ui.components.bars.FolderPath
@@ -65,12 +64,6 @@ internal fun FolderView(
             openMedia = { clickedMediaImpl: MediaImpl ->
                 openMediaFromFolder(
                     media = clickedMediaImpl,
-                    playbackViewModel = playbackViewModel,
-                    navController = navController
-                )
-            },
-            onFABClick = {
-                openCurrentMusic(
                     playbackViewModel = playbackViewModel,
                     navController = navController
                 )

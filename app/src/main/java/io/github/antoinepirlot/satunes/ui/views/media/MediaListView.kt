@@ -58,7 +58,6 @@ internal fun MediaListView(
     mediaImplCollection: Collection<MediaImpl>,
     openMedia: (mediaImpl: MediaImpl) -> Unit,
     openedPlaylistWithMusics: Playlist? = null,
-    onFABClick: () -> Unit,
     header: (@Composable () -> Unit)? = null,
     extraButtons: @Composable () -> Unit = { /*By default there's no extra buttons*/ },
     emptyViewText: String
@@ -71,7 +70,7 @@ internal fun MediaListView(
             ) {
                 extraButtons()
                 if (playbackViewModel.musicPlaying != null) {
-                    ShowCurrentMusicButton(onClick = onFABClick)
+                    ShowCurrentMusicButton()
                 }
             }
         },
@@ -118,7 +117,6 @@ private fun MediaListViewPreview() {
     MediaListView(
         mediaImplCollection = map,
         openMedia = {},
-        onFABClick = {},
         openedPlaylistWithMusics = null,
         emptyViewText = "No data"
     )

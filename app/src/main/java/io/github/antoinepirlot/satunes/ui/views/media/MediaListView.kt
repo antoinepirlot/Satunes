@@ -56,39 +56,24 @@ internal fun MediaListView(
     header: (@Composable () -> Unit)? = null,
     emptyViewText: String
 ) {
-//    Scaffold(
-//        modifier = modifier,
-//        floatingActionButton = { //TODO move it to first scaffold for Android 15 targeting
-//            Column(
-//                horizontalAlignment = Alignment.CenterHorizontally
-//            ) {
-//                extraButtons()
-//                if (playbackViewModel.musicPlaying != null) {
-//                    ShowCurrentMusicButton()
-//                }
-//            }
-//        },
-//        floatingActionButtonPosition = FabPosition.End
-//    ) { _ ->
-        if (mediaImplCollection.isNotEmpty()) {
-            MediaCardList(
-                modifier = Modifier,
-                header = header,
-                mediaImplCollection = mediaImplCollection,
-                openMedia = openMedia,
-                openedPlaylist = openedPlaylistWithMusics
-            )
+    if (mediaImplCollection.isNotEmpty()) {
+        MediaCardList(
+            modifier = Modifier,
+            header = header,
+            mediaImplCollection = mediaImplCollection,
+            openMedia = openMedia,
+            openedPlaylist = openedPlaylistWithMusics
+        )
+    } else {
+        if (header != null) {
+            header()
         } else {
-            if (header != null) {
-                header()
-            } else {
-                EmptyView(
-                    modifier = Modifier,
-                    text = emptyViewText
-                )
-            }
+            EmptyView(
+                modifier = Modifier,
+                text = emptyViewText
+            )
         }
-//    }
+    }
 }
 
 @Composable

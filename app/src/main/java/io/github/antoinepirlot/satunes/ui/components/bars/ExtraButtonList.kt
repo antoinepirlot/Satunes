@@ -18,7 +18,7 @@ import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
  * Extra Button list to show on scaffold.
  *
  * On click, it will load the playback with the set.
- * The [musicSet] or the [MediaImplSet] must not be null. Both can't be null and both can't be define, only one is null!
+ * The [musicSet] or the [mediaImplSet] must not be null. Both can't be null and both can't be define, only one is null!
  *
  * @param modifier the [Modifier].
  * @param playbackViewModel the [PlaybackViewModel] initialized by default.

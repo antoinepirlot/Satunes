@@ -256,8 +256,8 @@ object SettingsManager {
 
             artistReplacement = preferences[ARTISTS_REPLACEMENT_KEY] ?: DEFAULT_ARTISTS_REPLACEMENT
 
-            forwardMs.value = preferences[FORWARD_MS_KEY] ?: DEFAULT_FORWARD_MS
-            rewindMs.value = preferences[REWIND_MS_KEY] ?: DEFAULT_REWIND_MS
+            forwardMs.longValue = preferences[FORWARD_MS_KEY] ?: DEFAULT_FORWARD_MS
+            rewindMs.longValue = preferences[REWIND_MS_KEY] ?: DEFAULT_REWIND_MS
 
             DataLoader.loadFoldersPaths()
 
@@ -588,15 +588,15 @@ object SettingsManager {
 
     suspend fun updateForwardMs(context: Context, seconds: Int) {
         context.dataStore.edit { preferences: MutablePreferences ->
-            this.forwardMs.value = seconds.toLong() * 1000L
-            preferences[FORWARD_MS_KEY] = this.forwardMs.value
+            this.forwardMs.longValue = seconds.toLong() * 1000L
+            preferences[FORWARD_MS_KEY] = this.forwardMs.longValue
         }
     }
 
     suspend fun updateRewindMs(context: Context, seconds: Int) {
         context.dataStore.edit { preferences: MutablePreferences ->
-            this.rewindMs.value = seconds.toLong() * 1000L
-            preferences[REWIND_MS_KEY] = this.rewindMs.value
+            this.rewindMs.longValue = seconds.toLong() * 1000L
+            preferences[REWIND_MS_KEY] = this.rewindMs.longValue
         }
     }
 
@@ -641,12 +641,12 @@ object SettingsManager {
         context.dataStore.edit { preferences: MutablePreferences ->
             this.shuffleMode = DEFAULT_SHUFFLE_MODE
             this.repeatMode = DEFAULT_REPEAT_MODE
-            this.forwardMs.value = DEFAULT_FORWARD_MS
-            this.rewindMs.value = DEFAULT_REWIND_MS
+            this.forwardMs.longValue = DEFAULT_FORWARD_MS
+            this.rewindMs.longValue = DEFAULT_REWIND_MS
             preferences[SHUFFLE_MODE_KEY] = this.shuffleMode
             preferences[REPEAT_MODE_KEY] = this.repeatMode
-            preferences[FORWARD_MS_KEY] = this.forwardMs.value
-            preferences[REWIND_MS_KEY] = this.rewindMs.value
+            preferences[FORWARD_MS_KEY] = this.forwardMs.longValue
+            preferences[REWIND_MS_KEY] = this.rewindMs.longValue
         }
     }
 

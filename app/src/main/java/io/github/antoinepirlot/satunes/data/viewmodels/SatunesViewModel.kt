@@ -76,7 +76,6 @@ import io.github.antoinepirlot.satunes.internet.R as RInternet
  */
 @SuppressLint("NewApi")
 internal class SatunesViewModel : ViewModel() {
-    //TODO move it to object and find a way to prevent refresh when changing default destination
     companion object {
         private val _uiState: MutableStateFlow<SatunesUiState> = MutableStateFlow(SatunesUiState())
     }

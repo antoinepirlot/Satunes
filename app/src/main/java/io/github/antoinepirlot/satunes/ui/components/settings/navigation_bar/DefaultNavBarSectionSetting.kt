@@ -33,7 +33,6 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -46,7 +45,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.allNavBarSections
-import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
@@ -61,10 +59,8 @@ internal fun DefaultNavBarSectionSetting(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
 ) {
-    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
-
     var expanded: Boolean by remember { mutableStateOf(false) }
-    val selectedSection: NavBarSection = satunesUiState.defaultNavBarSection
+    val selectedSection: NavBarSection = satunesViewModel.defaultNavBarSection
 
     Row(
         modifier = modifier.fillMaxWidth(),

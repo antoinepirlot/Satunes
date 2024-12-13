@@ -25,8 +25,10 @@
 
 package io.github.antoinepirlot.satunes.ui.views.search
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -56,7 +58,6 @@ import io.github.antoinepirlot.satunes.data.viewmodels.SearchViewModel
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.models.SearchChips
-import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.chips.MediaChipList
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
@@ -105,10 +106,12 @@ internal fun SearchView(
 
     Column(
         modifier = modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Top,
     ) {
         SearchBar(
             modifier = Modifier.focusRequester(focusRequester),
+            windowInsets = WindowInsets(top = 0.dp), //Remove top padding of search bar introduced in API 35 (Android 15 Vanilla Ice Cream)
             query = query,
             onQueryChange = { searchViewModel.updateQuery(value = it) },
             onSearch = {
@@ -134,12 +137,6 @@ internal fun SearchView(
                 openMedia(
                     playbackViewModel = playbackViewModel,
                     media = mediaImpl,
-                    navController = navController
-                )
-            },
-            onFABClick = {
-                openCurrentMusic(
-                    playbackViewModel = playbackViewModel,
                     navController = navController
                 )
             },

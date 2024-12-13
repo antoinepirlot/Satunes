@@ -35,13 +35,12 @@ import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
-import io.github.antoinepirlot.satunes.router.utils.openMedia
+import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.router.utils.openMediaFromFolder
-import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
+import io.github.antoinepirlot.satunes.ui.components.bars.ExtraButtonList
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 
 /**
@@ -51,11 +50,26 @@ import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 @Composable
 internal fun RootFolderView(
     modifier: Modifier = Modifier,
+    satunesViewModel: SatunesViewModel = viewModel(),
     dataViewModel: DataViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
 ) {
     val navController: NavHostController = LocalNavController.current
     val rootFolderSet: Set<Folder> = dataViewModel.getRootFolderSet()
+
+    if (rootFolderSet.isNotEmpty()) {
+        val musicSet: MutableSet<Music> = mutableSetOf()
+        rootFolderSet.forEach { folder: Folder ->
+            musicSet.addAll(folder.getAllMusic())
+        }
+        satunesViewModel.replaceExtraButtons(extraButtons = {
+            ExtraButtonList(
+                musicSet = musicSet,
+                mediaImplSet = null
+            )
+        })
+    } else
+        satunesViewModel.clearExtraButtons()
 
     MediaListView(
         modifier = modifier,
@@ -66,27 +80,6 @@ internal fun RootFolderView(
                 playbackViewModel = playbackViewModel,
                 navController = navController
             )
-        },
-        onFABClick = {
-            openCurrentMusic(
-                playbackViewModel = playbackViewModel,
-                navController = navController
-            )
-        },
-        extraButtons = {
-            if (rootFolderSet.isNotEmpty()) {
-                ExtraButton(icon = SatunesIcons.PLAY, onClick = {
-                    playbackViewModel.loadMusicFromFolders(folders = rootFolderSet)
-                    openMedia(playbackViewModel = playbackViewModel, navController = navController)
-                })
-                ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
-                    playbackViewModel.loadMusicFromFolders(
-                        folders = rootFolderSet,
-                        shuffleMode = true
-                    )
-                    openMedia(playbackViewModel = playbackViewModel, navController = navController)
-                })
-            }
         },
         emptyViewText = stringResource(id = R.string.no_folder)
     )

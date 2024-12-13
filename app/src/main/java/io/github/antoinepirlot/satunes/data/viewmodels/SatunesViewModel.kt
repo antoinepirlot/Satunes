@@ -33,6 +33,7 @@ import android.provider.DocumentsContract
 import androidx.annotation.RequiresApi
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -75,13 +76,15 @@ import io.github.antoinepirlot.satunes.internet.R as RInternet
  */
 @SuppressLint("NewApi")
 internal class SatunesViewModel : ViewModel() {
-    //TODO move it to object and find a way to prevent refresh when changing default destination
-    private val _uiState: MutableStateFlow<SatunesUiState> = MutableStateFlow(SatunesUiState())
+    companion object {
+        private val _uiState: MutableStateFlow<SatunesUiState> = MutableStateFlow(SatunesUiState())
+    }
 
     private val _logger: SatunesLogger = SatunesLogger.getLogger()
     private val _isLoadingData: MutableState<Boolean> = DataLoader.isLoading
     private val _isDataLoaded: MutableState<Boolean> = DataLoader.isLoaded
-
+    private val _defaultNavBarSection: MutableState<NavBarSection> =
+        mutableStateOf(_uiState.value.defaultNavBarSection)
     //Use this only for nav bar items as it won't refresh if uiState is updated, idk why.
     private val _foldersChecked: MutableState<Boolean> = SettingsManager.foldersChecked
     private val _artistsChecked: MutableState<Boolean> = SettingsManager.artistsChecked
@@ -100,6 +103,8 @@ internal class SatunesViewModel : ViewModel() {
         SettingsManager.foldersPathsSelectedSet
 
     val uiState: StateFlow<SatunesUiState> = _uiState.asStateFlow()
+    var defaultNavBarSection: NavBarSection by _defaultNavBarSection
+        private set
 
     val isLoadingData: Boolean by _isLoadingData
     val isDataLoaded: Boolean by _isDataLoaded
@@ -222,7 +227,7 @@ internal class SatunesViewModel : ViewModel() {
                     navBarSection = navBarSection
                 )
                 if (
-                    this@SatunesViewModel.uiState.value.defaultNavBarSection == navBarSection
+                    this@SatunesViewModel.defaultNavBarSection == navBarSection
                     && !navBarSection.isEnabled
                 ) {
                     selectDefaultNavBarSection(navBarSection = NavBarSection.MUSICS)
@@ -577,9 +582,7 @@ internal class SatunesViewModel : ViewModel() {
                     navBarSection = navBarSection
                 )
             }
-            _uiState.update { currentState: SatunesUiState ->
-                currentState.copy(defaultNavBarSection = SettingsManager.defaultNavBarSection)
-            }
+            this.defaultNavBarSection = SettingsManager.defaultNavBarSection
         } catch (e: Throwable) {
             _logger.severe("Error while selecting new default nav bar section: ${navBarSection.name}")
         }
@@ -620,6 +623,18 @@ internal class SatunesViewModel : ViewModel() {
                     )
                 }
             )
+        }
+    }
+
+    fun replaceExtraButtons(extraButtons: @Composable () -> Unit) {
+        _uiState.update { currentState: SatunesUiState ->
+            currentState.copy(extraButtons = extraButtons)
+        }
+    }
+
+    fun clearExtraButtons() {
+        _uiState.update { currentState: SatunesUiState ->
+            currentState.copy(extraButtons = null)
         }
     }
 }

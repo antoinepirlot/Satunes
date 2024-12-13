@@ -7,7 +7,7 @@ val nameSpace: String = "io.github.antoinepirlot.satunes"
 
 android {
     namespace = nameSpace
-    compileSdk = 34
+    compileSdk = 35
 
     androidResources {
         generateLocaleConfig = true
@@ -17,7 +17,7 @@ android {
     defaultConfig {
         applicationId = nameSpace
         minSdk = 22
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 66
         versionName = "2.5.1"
 

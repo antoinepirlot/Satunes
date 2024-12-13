@@ -52,9 +52,9 @@ import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.EmptyView
+import io.github.antoinepirlot.satunes.ui.components.bars.ExtraButtonList
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
 import io.github.antoinepirlot.satunes.ui.components.dialog.MediaSelectionDialog
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
@@ -100,6 +100,19 @@ internal fun PlaylistView(
     }
     //
 
+    if (musicSet.isNotEmpty())
+        satunesViewModel.replaceExtraButtons(
+            extraButtons = {
+                //It's in a column
+                ExtraButtonList(musicSet = musicSet, mediaImplSet = null)
+                ExtraButton(
+                    icon = SatunesIcons.EXPORT,
+                    onClick = { dataViewModel.exportPlaylist(playlist = playlist) }
+                )
+            })
+    else
+        satunesViewModel.clearExtraButtons()
+
     MediaListView(
         modifier = modifier,
         mediaImplCollection = musicSet,
@@ -115,12 +128,6 @@ internal fun PlaylistView(
             )
         },
         openedPlaylistWithMusics = playlist,
-        onFABClick = {
-            openCurrentMusic(
-                playbackViewModel = playbackViewModel,
-                navController = navController
-            )
-        },
         header = {
             val title: String = if (playlist.title == LIKES_PLAYLIST_TITLE) {
                 stringResource(id = RDb.string.likes_playlist_title)
@@ -130,25 +137,6 @@ internal fun PlaylistView(
             Title(text = title)
             if (playlist.isEmpty()) //TODO reformat how it is implemented
                 EmptyView(text = stringResource(R.string.no_music_in_playlist))
-        },
-        extraButtons = {
-            ExtraButton(
-                icon = SatunesIcons.EXPORT,
-                onClick = { dataViewModel.exportPlaylist(playlist = playlist) })
-            ExtraButton(icon = SatunesIcons.ADD, onClick = { openAddMusicsDialog = true })
-            if (playlist.getMusicSet().isNotEmpty()) {
-                ExtraButton(icon = SatunesIcons.PLAY, onClick = {
-                    playbackViewModel.loadMusic(musicSet = musicSet)
-                    openMedia(playbackViewModel = playbackViewModel, navController = navController)
-                })
-                ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
-                    playbackViewModel.loadMusic(
-                        musicSet = musicSet,
-                        shuffleMode = true
-                    )
-                    openMedia(playbackViewModel = playbackViewModel, navController = navController)
-                })
-            }
         },
         emptyViewText = stringResource(id = R.string.no_music_in_playlist)
     )

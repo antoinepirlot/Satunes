@@ -25,9 +25,11 @@
 
 package io.github.antoinepirlot.satunes
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FabPosition
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -41,6 +43,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
@@ -50,10 +53,13 @@ import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.data.local.LocalMainScope
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
+import io.github.antoinepirlot.satunes.data.mediaListViews
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
+import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.router.Router
 import io.github.antoinepirlot.satunes.ui.components.bars.BottomAppBar
+import io.github.antoinepirlot.satunes.ui.components.bars.ShowCurrentMusicButton
 import io.github.antoinepirlot.satunes.ui.components.bars.TopAppBar
 import io.github.antoinepirlot.satunes.ui.components.dialog.WhatsNewDialog
 import io.github.antoinepirlot.satunes.ui.theme.SatunesTheme
@@ -68,7 +74,8 @@ import kotlinx.coroutines.CoroutineScope
 @Composable
 internal fun Satunes(
     modifier: Modifier = Modifier,
-    satunesViewModel: SatunesViewModel = viewModel()
+    satunesViewModel: SatunesViewModel = viewModel(),
+    playbackViewModel: PlaybackViewModel = viewModel(),
 ) {
     SatunesLogger.getLogger().info("Satunes Composable")
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
@@ -98,7 +105,20 @@ internal fun Satunes(
                     topBar = {
                         TopAppBar(scrollBehavior = scrollBehavior)
                     },
-                    bottomBar = { BottomAppBar() }
+                    bottomBar = { BottomAppBar() },
+                    floatingActionButton = {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            val isInMediaListViews: Boolean =
+                                satunesUiState.currentDestination in mediaListViews
+                            if (isInMediaListViews)
+                                satunesUiState.extraButtons?.invoke()
+                            if (isInMediaListViews && playbackViewModel.musicPlaying != null)
+                                ShowCurrentMusicButton()
+                        }
+                    },
+                    floatingActionButtonPosition = FabPosition.End
                 ) { innerPadding ->
                     Router(modifier = Modifier.padding(innerPadding))
 

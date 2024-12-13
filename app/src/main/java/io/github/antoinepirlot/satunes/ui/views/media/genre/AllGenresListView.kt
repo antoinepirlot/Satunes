@@ -35,12 +35,11 @@ import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.router.utils.openMedia
-import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
+import io.github.antoinepirlot.satunes.ui.components.bars.ExtraButtonList
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 
 /**
@@ -50,11 +49,22 @@ import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 @Composable
 internal fun AllGenresListView(
     modifier: Modifier = Modifier,
+    satunesViewModel: SatunesViewModel = viewModel(),
     dataViewModel: DataViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
 ) {
     val navController: NavHostController = LocalNavController.current
     val genreSet: Set<Genre> = dataViewModel.getGenreSet()
+
+    if (genreSet.isNotEmpty())
+        satunesViewModel.replaceExtraButtons(extraButtons = {
+            ExtraButtonList(
+                musicSet = null,
+                mediaImplSet = genreSet
+            )
+        })
+    else
+        satunesViewModel.clearExtraButtons()
 
     MediaListView(
         modifier = modifier,
@@ -65,28 +75,6 @@ internal fun AllGenresListView(
                 media = clickedMediaImpl,
                 navController = navController
             )
-        },
-        onFABClick = {
-            openCurrentMusic(
-                playbackViewModel = playbackViewModel,
-                navController = navController
-            )
-        },
-        extraButtons = {
-            if (genreSet.isNotEmpty()) {
-                ExtraButton(icon = SatunesIcons.PLAY, onClick = {
-                    playbackViewModel.loadMusicFromMedias(medias = genreSet)
-                    openMedia(playbackViewModel = playbackViewModel, navController = navController)
-                })
-                ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
-
-                    playbackViewModel.loadMusicFromMedias(
-                        medias = genreSet,
-                        shuffleMode = true
-                    )
-                    openMedia(playbackViewModel = playbackViewModel, navController = navController)
-                })
-            }
         },
         emptyViewText = stringResource(id = R.string.no_genre)
     )

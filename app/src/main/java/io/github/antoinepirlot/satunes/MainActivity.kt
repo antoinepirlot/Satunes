@@ -95,6 +95,7 @@ internal class MainActivity : ComponentActivity() {
         WidgetPlaybackManager.refreshWidgets()
 
         setContent {
+            //App UI Entry Point
             Satunes()
         }
     }

@@ -84,8 +84,7 @@ internal class SatunesViewModel : ViewModel() {
     private val _isLoadingData: MutableState<Boolean> = DataLoader.isLoading
     private val _isDataLoaded: MutableState<Boolean> = DataLoader.isLoaded
     private val _defaultNavBarSection: MutableState<NavBarSection> =
-        mutableStateOf(_uiState.value.defaultNavBarSection);
-
+        mutableStateOf(_uiState.value.defaultNavBarSection)
     //Use this only for nav bar items as it won't refresh if uiState is updated, idk why.
     private val _foldersChecked: MutableState<Boolean> = SettingsManager.foldersChecked
     private val _artistsChecked: MutableState<Boolean> = SettingsManager.artistsChecked
@@ -105,7 +104,7 @@ internal class SatunesViewModel : ViewModel() {
 
     val uiState: StateFlow<SatunesUiState> = _uiState.asStateFlow()
     var defaultNavBarSection: NavBarSection by _defaultNavBarSection
-        private set;
+        private set
 
     val isLoadingData: Boolean by _isLoadingData
     val isDataLoaded: Boolean by _isDataLoaded
@@ -583,7 +582,7 @@ internal class SatunesViewModel : ViewModel() {
                     navBarSection = navBarSection
                 )
             }
-            this.defaultNavBarSection = SettingsManager.defaultNavBarSection;
+            this.defaultNavBarSection = SettingsManager.defaultNavBarSection
         } catch (e: Throwable) {
             _logger.severe("Error while selecting new default nav bar section: ${navBarSection.name}")
         }

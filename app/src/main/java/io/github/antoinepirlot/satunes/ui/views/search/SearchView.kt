@@ -25,8 +25,10 @@
 
 package io.github.antoinepirlot.satunes.ui.views.search
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -104,10 +106,12 @@ internal fun SearchView(
 
     Column(
         modifier = modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Top,
     ) {
         SearchBar(
             modifier = Modifier.focusRequester(focusRequester),
+            windowInsets = WindowInsets(top = 0.dp), //Remove top padding of search bar introduced in API 35 (Android 15 Vanilla Ice Cream)
             query = query,
             onQueryChange = { searchViewModel.updateQuery(value = it) },
             onSearch = {

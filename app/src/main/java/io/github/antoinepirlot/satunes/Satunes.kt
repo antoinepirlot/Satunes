@@ -53,6 +53,7 @@ import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.data.local.LocalMainScope
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
+import io.github.antoinepirlot.satunes.data.mediaListViews
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
@@ -109,10 +110,12 @@ internal fun Satunes(
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            satunesUiState.extraButtons?.invoke()
-                            if (playbackViewModel.musicPlaying != null) {
+                            val isInMediaListViews: Boolean =
+                                satunesUiState.currentDestination in mediaListViews
+                            if (isInMediaListViews)
+                                satunesUiState.extraButtons?.invoke()
+                            if (isInMediaListViews && playbackViewModel.musicPlaying != null)
                                 ShowCurrentMusicButton()
-                            }
                         }
                     },
                     floatingActionButtonPosition = FabPosition.End

@@ -327,7 +327,7 @@ object SettingsManager {
         if (whatsNewSeen) {
             val packageManager = context.packageManager
             val packageInfo = packageManager.getPackageInfo(context.packageName, 0)
-            val versionName = 'v' + packageInfo.versionName
+            val versionName = 'v' + packageInfo.versionName!!
             if (whatsNewVersionSeen != versionName) {
                 this.unSeeWhatsNew(context = context)
             }
@@ -453,7 +453,7 @@ object SettingsManager {
             preferences[WHATS_NEW_SEEN_KEY] = whatsNewSeen
             val packageManager = context.packageManager
             val packageInfo = packageManager.getPackageInfo(context.packageName, 0)
-            val versionName = 'v' + packageInfo.versionName
+            val versionName = 'v' + packageInfo.versionName!!
             preferences[WHATS_NEW_VERSION_SEEN_KEY] = versionName
             whatsNewVersionSeen = versionName
         }

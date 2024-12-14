@@ -115,6 +115,6 @@ private fun onClick(
 
 @Preview
 @Composable
-private fun PlaylistSelectionCheckboxPreview() {
+private fun MediaSelectionCheckboxPreview() {
     MediaSelectionCheckbox(mediaImpl = Playlist(id = 0, title = ""))
 }

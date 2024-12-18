@@ -160,25 +160,27 @@ internal fun CreateTimerForm(
                 }
 
                 Spacer(modifier = Modifier.size(5.dp))
-            }
-            Button(
-                onClick = {
-                    computeTime(
-                        secondsIntField = secondsIntField,
-                        minutesIntField = minutesIntField,
-                        hoursIntField = hoursIntField
-                    )
-                    playbackViewModel.setTimer(
-                        scope = scope,
-                        snackBarHostState = snackBarHostState,
-                        hours = hoursIntField.intValue,
-                        minutes = minutesIntField.intValue,
-                        seconds = secondsIntField.intValue
-                    )
-                    onFinished?.invoke()
+            } else {
+                Button(
+                    onClick = {
+                        computeTime(
+                            secondsIntField = secondsIntField,
+                            minutesIntField = minutesIntField,
+                            hoursIntField = hoursIntField
+                        )
+                        playbackViewModel.setTimer(
+                            scope = scope,
+                            snackBarHostState = snackBarHostState,
+                            hours = hoursIntField.intValue,
+                            minutes = minutesIntField.intValue,
+                            seconds = secondsIntField.intValue
+                        )
+                        onFinished?.invoke()
+                    }
+                ) {
+
+                    NormalText(text = stringResource(R.string.start_timer_button_content))
                 }
-            ) {
-                NormalText(text = stringResource(R.string.start_timer_button_content))
             }
         }
     }

@@ -37,3 +37,5 @@ internal val sortOptions: List<SortOptions> = listOf(
     SortOptions.ALBUM,
     SortOptions.GENRE
 )
+
+internal val defaultSortingOptions: SortOptions = SortOptions.TITLE

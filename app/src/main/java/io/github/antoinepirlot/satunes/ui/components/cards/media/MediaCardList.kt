@@ -26,6 +26,7 @@
 package io.github.antoinepirlot.satunes.ui.components.cards.media
 
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
@@ -41,6 +42,9 @@ import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SortListViewModel
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Playlist
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 /**
  * @author Antoine Pirlot on 16/01/24
@@ -49,20 +53,25 @@ import io.github.antoinepirlot.satunes.database.models.Playlist
 @Composable
 internal fun MediaCardList(
     modifier: Modifier = Modifier,
-//    lazyListState: LazyListState = rememberLazyListState(),
+    lazyListState: LazyListState = rememberLazyListState(),
     dataViewModel: DataViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
     sortListViewModel: SortListViewModel = viewModel(),
     header: @Composable (() -> Unit)? = null,
-    mediaImplCollection: Collection<MediaImpl>, //TODO for v3.0.0 move the list into a view model
     openMedia: (mediaImpl: MediaImpl) -> Unit,
     openedPlaylist: Playlist? = null,
     scrollToMusicPlaying: Boolean = false,
 ) {
     val dataUiState: DataUiState by dataViewModel.uiState.collectAsState()
     if (dataUiState.mediaImplList.isEmpty()) return // It fixes issue while accessing last folder in chain
-    val lazyListState = rememberLazyListState()
-    dataViewModel.sortMediaImplListBy(sortOption = sortListViewModel.currentSortOption)
+    if (sortListViewModel.currentSortOption != dataViewModel.currentSortOption)
+        dataViewModel.sortMediaImplListBy(sortOption = sortListViewModel.currentSortOption)
+
+    LaunchedEffect(key1 = dataViewModel.currentSortOption) {
+        CoroutineScope(Dispatchers.Main).launch {
+            lazyListState.scrollToItem(0)
+        }
+    }
 
     LazyColumn(
         modifier = modifier,

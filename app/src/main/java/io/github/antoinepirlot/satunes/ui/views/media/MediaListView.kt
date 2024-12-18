@@ -26,15 +26,16 @@
 package io.github.antoinepirlot.satunes.ui.views.media
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
-import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
@@ -64,16 +65,19 @@ internal fun MediaListView(
     emptyViewText: String
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
-//    val lazyListState = rememberLazyListState()
-    dataViewModel.updateListToShow(mediaImplCollection = mediaImplCollection)
+    val lazyListState = rememberLazyListState()
+
+    LaunchedEffect(key1 = Unit) {
+        dataViewModel.updateListToShow(mediaImplCollection = mediaImplCollection)
+    }
 
     if (satunesUiState.showSortDialog) SortListDialog()
 
     if (mediaImplCollection.isNotEmpty()) {
         MediaCardList(
             modifier = modifier,
+            lazyListState = lazyListState,
             header = header,
-            mediaImplCollection = mediaImplCollection,
             openMedia = openMedia,
             openedPlaylist = openedPlaylistWithMusics
         )

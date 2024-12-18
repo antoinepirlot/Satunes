@@ -38,6 +38,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.data.defaultSortingOptions
 import io.github.antoinepirlot.satunes.data.states.DataUiState
 import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.exceptions.BlankStringException
@@ -89,6 +90,9 @@ class DataViewModel : ViewModel() {
         private set
 
     var isSharingLoading: Boolean by mutableStateOf(false)
+        private set
+
+    var currentSortOption: SortOptions by mutableStateOf(defaultSortingOptions)
         private set
 
     fun playlistSetUpdated() {
@@ -1018,6 +1022,8 @@ class DataViewModel : ViewModel() {
             } catch (_: NotSortableException) {
                 currentState.mediaImplList
             }
+            if (sortedMediaImplList !== currentState.mediaImplList)
+                this.currentSortOption = sortOption
             currentState.copy(mediaImplList = sortedMediaImplList)
         }
     }

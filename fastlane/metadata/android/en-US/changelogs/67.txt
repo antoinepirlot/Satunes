@@ -1,0 +1,3 @@
+Improvements, optimizations and troubleshooting:
+
+* Hide start timer if the timer is running

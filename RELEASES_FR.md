@@ -3,6 +3,12 @@ You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
 ## 2.5 (Android 5.1.1 Lollipop et ultérieur)
 
+### 2.5.2
+
+Améliorations, optimisations et dépannage:
+
+* Le bouton démarrer le minuteur est masqué lorsque le minuteur fonctionne
+
 ### 2.5.1
 
 Améliorations, optimisations et dépannage:

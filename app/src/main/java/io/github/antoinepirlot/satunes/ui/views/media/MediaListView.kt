@@ -56,6 +56,7 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.SortListDialog
 internal fun MediaListView(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
+    dataViewModel: DataViewModel = viewModel(),
     mediaImplCollection: Collection<MediaImpl>,
     openMedia: (mediaImpl: MediaImpl) -> Unit,
     openedPlaylistWithMusics: Playlist? = null,
@@ -63,6 +64,8 @@ internal fun MediaListView(
     emptyViewText: String
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+//    val lazyListState = rememberLazyListState()
+    dataViewModel.updateListToShow(mediaImplCollection = mediaImplCollection)
 
     if (satunesUiState.showSortDialog) SortListDialog()
 

@@ -38,6 +38,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.data.states.DataUiState
 import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.exceptions.BlankStringException
 import io.github.antoinepirlot.satunes.database.exceptions.LikesPlaylistCreationException
@@ -53,12 +54,18 @@ import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
+import io.github.antoinepirlot.satunes.exceptions.NotSortableException
+import io.github.antoinepirlot.satunes.models.radio_buttons.SortOptions
 import io.github.antoinepirlot.satunes.ui.utils.showErrorSnackBar
 import io.github.antoinepirlot.satunes.ui.utils.showSnackBar
 import io.github.antoinepirlot.satunes.utils.getNow
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import io.github.antoinepirlot.satunes.database.R as RDb
@@ -67,10 +74,16 @@ import io.github.antoinepirlot.satunes.database.R as RDb
  * @author Antoine Pirlot on 19/07/2024
  */
 class DataViewModel : ViewModel() {
+    companion object {
+        private val _uiState: MutableStateFlow<DataUiState> = MutableStateFlow(DataUiState())
+    }
+
     private val _logger: SatunesLogger = SatunesLogger.getLogger()
     private val _playlistSetUpdated: MutableState<Boolean> = DataManager.playlistsMapUpdated
     private val _db: DatabaseManager =
         DatabaseManager.initInstance(context = MainActivity.instance.applicationContext)
+
+    val uiState: StateFlow<DataUiState> = _uiState.asStateFlow()
 
     var playlistSetUpdated: Boolean by _playlistSetUpdated
         private set
@@ -96,6 +109,17 @@ class DataViewModel : ViewModel() {
     fun getGenre(id: Long): Genre = DataManager.getGenre(id = id)!!
     fun getPlaylist(id: Long): Playlist = DataManager.getPlaylist(id = id)!!
     fun getPlaylist(title: String): Playlist = DataManager.getPlaylist(title = title)!!
+
+    fun updateListToShow(mediaImplCollection: Collection<MediaImpl>) {
+        val mediaImplList: List<MediaImpl> = try {
+            mediaImplCollection as List<MediaImpl>
+        } catch (_: ClassCastException) {
+            mediaImplCollection.toList()
+        }
+        _uiState.update { currentState: DataUiState ->
+            currentState.copy(mediaImplList = mediaImplList)
+        }
+    }
 
     fun addOnePlaylist(
         scope: CoroutineScope,
@@ -954,6 +978,47 @@ class DataViewModel : ViewModel() {
                     resetAllSettings(scope = scope, snackBarHostState = snackBarHostState)
                 }
             )
+        }
+    }
+
+    /**
+     * Sort the media impl list by sortOption.
+     *
+     * @param sortOption the option to sort the [List] of [MediaImpl] with the [SortOptions].
+     */
+    fun sortMediaImplListBy(sortOption: SortOptions) {
+        _uiState.update { currentState: DataUiState ->
+            val sortedMediaImplList: List<MediaImpl> = try {
+                currentState.mediaImplList.sortedBy { mediaImpl: MediaImpl ->
+                    when (sortOption) {
+                        SortOptions.TITLE -> mediaImpl.title
+                        SortOptions.ARTIST -> {
+                            when (mediaImpl) {
+                                is Music -> mediaImpl.artist.title
+                                is Album -> mediaImpl.artist.title
+                                else -> throw NotSortableException()
+                            }
+                        }
+
+                        SortOptions.ALBUM -> {
+                            when (mediaImpl) {
+                                is Music -> mediaImpl.album.title
+                                else -> throw NotSortableException()
+                            }
+                        }
+
+                        SortOptions.GENRE -> {
+                            when (mediaImpl) {
+                                is Music -> mediaImpl.genre.title
+                                else -> throw NotSortableException()
+                            }
+                        }
+                    }
+                }
+            } catch (_: NotSortableException) {
+                currentState.mediaImplList
+            }
+            currentState.copy(mediaImplList = sortedMediaImplList)
         }
     }
 }

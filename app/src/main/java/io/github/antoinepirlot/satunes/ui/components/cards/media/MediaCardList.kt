@@ -30,17 +30,17 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.antoinepirlot.satunes.data.states.DataUiState
+import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SortListViewModel
-import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
-import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
-import io.github.antoinepirlot.satunes.exceptions.NotSortableException
-import io.github.antoinepirlot.satunes.models.radio_buttons.SortOptions
 
 /**
  * @author Antoine Pirlot on 16/01/24
@@ -49,6 +49,8 @@ import io.github.antoinepirlot.satunes.models.radio_buttons.SortOptions
 @Composable
 internal fun MediaCardList(
     modifier: Modifier = Modifier,
+//    lazyListState: LazyListState = rememberLazyListState(),
+    dataViewModel: DataViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
     sortListViewModel: SortListViewModel = viewModel(),
     header: @Composable (() -> Unit)? = null,
@@ -57,28 +59,20 @@ internal fun MediaCardList(
     openedPlaylist: Playlist? = null,
     scrollToMusicPlaying: Boolean = false,
 ) {
-    if (mediaImplCollection.isEmpty()) return // It fixes issue while accessing last folder in chain
-
+    val dataUiState: DataUiState by dataViewModel.uiState.collectAsState()
+    if (dataUiState.mediaImplList.isEmpty()) return // It fixes issue while accessing last folder in chain
     val lazyListState = rememberLazyListState()
-    var mediaListToLoad: List<MediaImpl> =
-        try {
-            mediaImplCollection as List<MediaImpl>
-        } catch (_: ClassCastException) {
-            mediaImplCollection.toList()
-        }
-
-    mediaListToLoad =
-        sortListBy(list = mediaListToLoad, sortOption = sortListViewModel.currentSortOption)
+    dataViewModel.sortMediaImplListBy(sortOption = sortListViewModel.currentSortOption)
 
     LazyColumn(
         modifier = modifier,
         state = lazyListState
     ) {
         items(
-            items = mediaListToLoad,
+            items = dataUiState.mediaImplList,
             key = { it.javaClass.name + '-' + it.id }
         ) { media: MediaImpl ->
-            if (media == mediaImplCollection.first()) {
+            if (media == dataUiState.mediaImplList.first()) {
                 if (header != null) {
                     header()
                 }
@@ -101,54 +95,11 @@ internal fun MediaCardList(
     }
 }
 
-/**
- * Sort the list by sortOption.
- *
- * @param list a [List] of [MediaImpl] to sort.
- * @param sortOption the option to sort the [List] of [MediaImpl] with the [SortOptions].
- *
- * @return the sorted list by [SortOptions] or the list if it can't be sorted (for example sorting list of Genre by Album).
- */
-fun sortListBy(list: List<MediaImpl>, sortOption: SortOptions): List<MediaImpl> {
-    //TODO for v3.0.0 move the list into a view model
-    return try {
-        list.sortedBy { mediaImpl: MediaImpl ->
-            when (sortOption) {
-                SortOptions.TITLE -> mediaImpl.title
-                SortOptions.ARTIST -> {
-                    when (mediaImpl) {
-                        is Music -> mediaImpl.artist.title
-                        is Album -> mediaImpl.artist.title
-                        else -> throw NotSortableException()
-                    }
-                }
-
-                SortOptions.ALBUM -> {
-                    when (mediaImpl) {
-                        is Music -> mediaImpl.album.title
-                        else -> throw NotSortableException()
-                    }
-                }
-
-                SortOptions.GENRE -> {
-                    when (mediaImpl) {
-                        is Music -> mediaImpl.genre.title
-                        else -> throw NotSortableException()
-                    }
-                }
-            }
-        }
-    } catch (_: NotSortableException) {
-        list
-    }
-}
-
 @Composable
 @Preview
 private fun CardListPreview() {
     MediaCardList(
         header = {},
-        mediaImplCollection = listOf(),
         openMedia = {},
         openedPlaylist = null,
         scrollToMusicPlaying = false

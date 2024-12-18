@@ -12,7 +12,7 @@ room {
 
 android {
     namespace = "io.github.antoinepirlot.satunes.database"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 22

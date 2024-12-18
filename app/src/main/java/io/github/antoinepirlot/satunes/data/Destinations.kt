@@ -64,5 +64,6 @@ internal val mediaListViews: List<Destination> = listOf(
     Destination.FOLDERS,
     Destination.ARTISTS,
     Destination.GENRES,
-    Destination.PLAYLISTS
+    Destination.PLAYLISTS,
+    Destination.SEARCH
 )

@@ -26,9 +26,6 @@
 package io.github.antoinepirlot.satunes.ui.views.media
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.FabPosition
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -47,7 +44,6 @@ import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.ui.components.EmptyView
-import io.github.antoinepirlot.satunes.ui.components.bars.ShowCurrentMusicButton
 import io.github.antoinepirlot.satunes.ui.components.cards.media.MediaCardList
 import io.github.antoinepirlot.satunes.ui.components.dialog.SortListDialog
 
@@ -60,49 +56,32 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.SortListDialog
 internal fun MediaListView(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
-    playbackViewModel: PlaybackViewModel = viewModel(),
     mediaImplCollection: Collection<MediaImpl>,
     openMedia: (mediaImpl: MediaImpl) -> Unit,
     openedPlaylistWithMusics: Playlist? = null,
-    onFABClick: () -> Unit,
     header: (@Composable () -> Unit)? = null,
-    extraButtons: (@Composable () -> Unit)? = null,
     emptyViewText: String
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
 
-    Scaffold(
-        modifier = modifier,
-        floatingActionButton = { //TODO move it to first scaffold for Android 15 targeting
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                extraButtons?.invoke()
-                if (playbackViewModel.musicPlaying != null) {
-                    ShowCurrentMusicButton(onClick = onFABClick)
-                }
-            }
-        },
-        floatingActionButtonPosition = FabPosition.End
-    ) { _ ->
-        if (satunesUiState.showSortDialog) SortListDialog()
-        if (mediaImplCollection.isNotEmpty()) {
-            MediaCardList(
-                modifier = Modifier,
-                header = header,
-                mediaImplCollection = mediaImplCollection,
-                openMedia = openMedia,
-                openedPlaylist = openedPlaylistWithMusics
-            )
+    if (satunesUiState.showSortDialog) SortListDialog()
+
+    if (mediaImplCollection.isNotEmpty()) {
+        MediaCardList(
+            modifier = modifier,
+            header = header,
+            mediaImplCollection = mediaImplCollection,
+            openMedia = openMedia,
+            openedPlaylist = openedPlaylistWithMusics
+        )
+    } else {
+        if (header != null) {
+            header()
         } else {
-            if (header != null) {
-                header()
-            } else {
-                EmptyView(
-                    modifier = Modifier,
-                    text = emptyViewText
-                )
-            }
+            EmptyView(
+                modifier = modifier,
+                text = emptyViewText
+            )
         }
     }
 }
@@ -127,7 +106,6 @@ private fun MediaListViewPreview() {
     MediaListView(
         mediaImplCollection = map,
         openMedia = {},
-        onFABClick = {},
         openedPlaylistWithMusics = null,
         emptyViewText = "No data"
     )

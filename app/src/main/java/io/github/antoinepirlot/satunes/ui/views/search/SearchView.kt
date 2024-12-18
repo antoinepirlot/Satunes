@@ -25,12 +25,15 @@
 
 package io.github.antoinepirlot.satunes.ui.views.search
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SearchBar
+import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -56,13 +59,13 @@ import io.github.antoinepirlot.satunes.data.viewmodels.SearchViewModel
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.models.SearchChips
-import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.chips.MediaChipList
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.util.SortedSet
 
 /**
  * @author Antoine Pirlot on 27/06/2024
@@ -78,7 +81,8 @@ internal fun SearchView(
 ) {
     val navController: NavHostController = LocalNavController.current
     val query: String = searchViewModel.query
-    val mediaImplList: Set<MediaImpl> = searchViewModel.mediaImplSet
+    val mediaImplList: SortedSet<MediaImpl> = searchViewModel.mediaImplSet
+    if (searchViewModel.mediaImplSetHasChanged) searchViewModel.mediaImplChangeUpdated() //Used to recompose
     val selectedSearchChips: List<SearchChips> = searchViewModel.selectedSearchChips
 
     val searchCoroutine: CoroutineScope = rememberCoroutineScope()
@@ -105,20 +109,29 @@ internal fun SearchView(
 
     Column(
         modifier = modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Top,
     ) {
         SearchBar(
             modifier = Modifier.focusRequester(focusRequester),
-            query = query,
-            onQueryChange = { searchViewModel.updateQuery(value = it) },
-            onSearch = {
-                searchViewModel.updateQuery(value = it)
-                keyboard?.hide()
+            inputField = {
+                SearchBarDefaults.InputField(
+                    modifier = Modifier.focusRequester(focusRequester),
+                    query = query,
+                    onQueryChange = { searchViewModel.updateQuery(value = it) },
+                    onSearch = {
+                        searchViewModel.updateQuery(value = it)
+                        keyboard?.hide()
+                    },
+                    placeholder = { NormalText(text = stringResource(id = R.string.search_placeholder)) },
+                    expanded = false,
+                    onExpandedChange = { /* Do not use expanded mode */ },
+                )
             },
-            active = false,
-            onActiveChange = { /* Do not use active mode */ },
-            placeholder = { NormalText(text = stringResource(id = R.string.search_placeholder)) },
-            content = { /* Content if active is true but never used */ }
+            expanded = false,
+            onExpandedChange = { /* Do not use expanded mode */ },
+            windowInsets = WindowInsets(top = 0.dp), //Remove top padding of search bar introduced in API 35 (Android 15 Vanilla Ice Cream)
+            content = { /* Content if expanded is true but never used */ }
         )
         Spacer(modifier = Modifier.size(16.dp))
         MediaChipList()
@@ -134,12 +147,6 @@ internal fun SearchView(
                 openMedia(
                     playbackViewModel = playbackViewModel,
                     media = mediaImpl,
-                    navController = navController
-                )
-            },
-            onFABClick = {
-                openCurrentMusic(
-                    playbackViewModel = playbackViewModel,
                     navController = navController
                 )
             },

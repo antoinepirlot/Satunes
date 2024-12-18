@@ -28,15 +28,19 @@ package io.github.antoinepirlot.satunes.ui.components.settings.about
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
+import io.github.antoinepirlot.jetpack_libs.components.texts.Subtitle
 import io.github.antoinepirlot.jetpack_libs.components.texts.Title
 import io.github.antoinepirlot.satunes.R
 
@@ -48,7 +52,10 @@ import io.github.antoinepirlot.satunes.R
 internal fun AboutSettings(
     modifier: Modifier = Modifier
 ) {
-    Column(modifier.padding(horizontal = 16.dp)) {
+    Column(
+        modifier.padding(horizontal = 16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         Title(text = stringResource(id = R.string.about), fontSize = 25.sp)
         NormalText(
             text = stringResource(id = R.string.about_content),
@@ -62,6 +69,8 @@ internal fun AboutSettings(
             Fdroid()
             GitHub()
         }
+        Spacer(modifier = Modifier.size(size = 16.dp))
+        Subtitle(text = stringResource(id = R.string.made_in_europe))
     }
 }
 

@@ -1,6 +1,39 @@
 # Versions (🇫🇷)
 You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
+## 2.5 (Android 5.1.1 Lollipop et ultérieur)
+
+### 2.5.2
+
+Améliorations, optimisations et dépannage:
+
+* Le bouton démarrer le minuteur est masqué lorsque le minuteur fonctionne
+
+### 2.5.1
+
+Améliorations, optimisations et dépannage:
+
+* Ajout du text "Développé en Europe 🇪🇺" à la fin de la section à propos dans les paramètres
+* La snack bar ne montre plus le caractère '%' lors de la suppression d'un chemin de dossier
+* La barre de contrôle de la musique est toujours à jour même en quittant et en revenant dans la
+  page lors de la lecture
+* Si la nouvelle valeur pour avancer ou revenir en arrière est <= 0, alors la valeur n'est pas
+  changée
+* Une popup d'information est montrée si le paramètre nécessite un rechargement de la bibliothèque
+
+### 2.5.0
+
+Nouvelles fonctionnalités:
+
+* Ajout des musiques d'une playlist vers une autre
+* Avancer ou reculer dans une musique
+* Réinitialiser les paramètres
+
+Améliorations, optimisations et dépannage:
+
+* La vue du minuteur montre le temps restant dans les champs.
+* Quelques optimizations mineures
+
 ## 2.4 (Android 5.1.1 Lollipop et ultérieur)
 
 ### 2.4.6

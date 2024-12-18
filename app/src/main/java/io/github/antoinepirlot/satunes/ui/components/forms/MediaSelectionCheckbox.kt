@@ -81,7 +81,7 @@ internal fun MediaSelectionCheckbox(
                 checked = checked.value,
                 onCheckedChange = null
             )
-            Spacer(modifier = modifier.size(10.dp))
+            Spacer(modifier = Modifier.size(10.dp))
             MediaCard(
                 media = mediaImpl,
                 onClick = null,
@@ -115,6 +115,6 @@ private fun onClick(
 
 @Preview
 @Composable
-private fun PlaylistSelectionCheckboxPreview() {
+private fun MediaSelectionCheckboxPreview() {
     MediaSelectionCheckbox(mediaImpl = Playlist(id = 0, title = ""))
 }

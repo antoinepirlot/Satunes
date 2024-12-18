@@ -31,5 +31,6 @@ import io.github.antoinepirlot.satunes.models.Timer
  * @author Antoine Pirlot on 13/10/2024
  */
 data class PlaybackUiState(
-    val timer: Timer? = null
+    val timer: Timer? = null,
+    val timerRemainingTime: Long = timer?.getRemainingTime() ?: 0L
 )

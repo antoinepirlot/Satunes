@@ -1,0 +1,8 @@
+New features:
+* Add playlist's musics to another playlist
+* Jump back/ahead in music playback
+* Reset Settings
+
+Improvements, optimizations and troubleshooting:
+* Timer setting will show remaining time inside the number fields
+* Few minor optimization

@@ -65,7 +65,7 @@ internal fun NavGraphBuilder.mediaRoutes(
         if (satunesViewModel.isLoadingData || !satunesViewModel.isDataLoaded) {
             LoadingView()
         } else {
-            RootFolderView()
+            RootFolderView(satunesViewModel = satunesViewModel) //(for all all media list) send view model needed to avoid not showing extra buttons on first launch
         }
     }
 
@@ -87,7 +87,7 @@ internal fun NavGraphBuilder.mediaRoutes(
         if (satunesViewModel.isLoadingData || !satunesViewModel.isDataLoaded) {
             LoadingView()
         } else {
-            AllArtistsListView()
+            AllArtistsListView(satunesViewModel = satunesViewModel)
         }
     }
 
@@ -109,7 +109,7 @@ internal fun NavGraphBuilder.mediaRoutes(
         if (satunesViewModel.isLoadingData || !satunesViewModel.isDataLoaded) {
             LoadingView()
         } else {
-            AllAlbumsListView()
+            AllAlbumsListView(satunesViewModel = satunesViewModel)
         }
     }
 
@@ -131,7 +131,7 @@ internal fun NavGraphBuilder.mediaRoutes(
         if (satunesViewModel.isLoadingData || !satunesViewModel.isDataLoaded) {
             LoadingView()
         } else {
-            AllGenresListView()
+            AllGenresListView(satunesViewModel = satunesViewModel)
         }
     }
 
@@ -153,7 +153,7 @@ internal fun NavGraphBuilder.mediaRoutes(
         if (satunesViewModel.isLoadingData || !satunesViewModel.isDataLoaded) {
             LoadingView()
         } else {
-            PlaylistListView()
+            PlaylistListView(satunesViewModel = satunesViewModel)
         }
     }
 
@@ -175,7 +175,7 @@ internal fun NavGraphBuilder.mediaRoutes(
         if (satunesViewModel.isLoadingData || !satunesViewModel.isDataLoaded) {
             LoadingView()
         } else {
-            AllMusicsListView()
+            AllMusicsListView(satunesViewModel = satunesViewModel)
         }
     }
 }

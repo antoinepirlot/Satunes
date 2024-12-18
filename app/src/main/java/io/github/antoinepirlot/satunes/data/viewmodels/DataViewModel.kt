@@ -993,6 +993,7 @@ class DataViewModel : ViewModel() {
     fun sortMediaImplListBy(sortOption: SortOptions) {
         _uiState.update { currentState: DataUiState ->
             val sortedMediaImplList: List<MediaImpl> = try {
+                //TODO use string comparator as to sort by sortOption then by title
                 currentState.mediaImplList.sortedBy { mediaImpl: MediaImpl ->
                     when (sortOption) {
                         SortOptions.TITLE -> mediaImpl.title

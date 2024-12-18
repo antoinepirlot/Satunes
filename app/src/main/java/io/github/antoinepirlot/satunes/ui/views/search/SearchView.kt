@@ -65,6 +65,7 @@ import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.util.SortedSet
 
 /**
  * @author Antoine Pirlot on 27/06/2024
@@ -80,7 +81,8 @@ internal fun SearchView(
 ) {
     val navController: NavHostController = LocalNavController.current
     val query: String = searchViewModel.query
-    val mediaImplList: Set<MediaImpl> = searchViewModel.mediaImplSet
+    val mediaImplList: SortedSet<MediaImpl> = searchViewModel.mediaImplSet
+    if (searchViewModel.mediaImplSetHasChanged) searchViewModel.mediaImplChangeUpdated() //Used to recompose
     val selectedSearchChips: List<SearchChips> = searchViewModel.selectedSearchChips
 
     val searchCoroutine: CoroutineScope = rememberCoroutineScope()

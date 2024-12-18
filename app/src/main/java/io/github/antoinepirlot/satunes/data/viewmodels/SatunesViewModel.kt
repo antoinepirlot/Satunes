@@ -25,7 +25,6 @@
 
 package io.github.antoinepirlot.satunes.data.viewmodels
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -74,7 +73,6 @@ import io.github.antoinepirlot.satunes.internet.R as RInternet
 /**
  * @author Antoine Pirlot on 19/07/2024
  */
-@SuppressLint("NewApi")
 internal class SatunesViewModel : ViewModel() {
     companion object {
         private val _uiState: MutableStateFlow<SatunesUiState> = MutableStateFlow(SatunesUiState())
@@ -118,13 +116,15 @@ internal class SatunesViewModel : ViewModel() {
     var isAudioAllowed: Boolean by mutableStateOf(_uiState.value.isAudioAllowed)
         private set
 
+    @delegate:RequiresApi(Build.VERSION_CODES.M)
     var updateAvailableStatus: UpdateAvailableStatus by _updateAvailableStatus
         private set
 
-    @get:RequiresApi(Build.VERSION_CODES.M)
+    @delegate:RequiresApi(Build.VERSION_CODES.M)
     var isCheckingUpdate: Boolean by mutableStateOf(false)
         private set
 
+    @delegate:RequiresApi(Build.VERSION_CODES.M)
     var downloadStatus: APKDownloadStatus by _downloadStatus
         private set
 
@@ -402,12 +402,14 @@ internal class SatunesViewModel : ViewModel() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     fun resetUpdatesStatus() {
         if (updateAvailableStatus != UpdateAvailableStatus.AVAILABLE) {
             updateAvailableStatus = UpdateAvailableStatus.UNDEFINED
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     fun checkUpdate(scope: CoroutineScope, snackBarHostState: SnackbarHostState) {
         isCheckingUpdate = true
         CoroutineScope(Dispatchers.IO).launch {
@@ -466,6 +468,7 @@ internal class SatunesViewModel : ViewModel() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     fun getCurrentVersion(): String {
         try {
             return UpdateCheckManager.getCurrentVersion(context = MainActivity.instance.applicationContext)

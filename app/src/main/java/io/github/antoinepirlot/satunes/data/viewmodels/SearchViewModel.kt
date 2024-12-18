@@ -74,7 +74,11 @@ class SearchViewModel : ViewModel() {
     var query: String by mutableStateOf("")
         private set
 
-    val mediaImplSet: Set<MediaImpl> = sortedSetOf()
+    val mediaImplSet: SortedSet<MediaImpl> = sortedSetOf()
+
+    //Used to recompose
+    var mediaImplSetHasChanged: Boolean by mutableStateOf(false)
+        private set
 
     init {
         selectedSearchChips.addAll(_filtersList.filter { it.value }.keys)
@@ -147,74 +151,75 @@ class SearchViewModel : ViewModel() {
         dataViewModel: DataViewModel,
         selectedSearchChips: List<SearchChips>,
     ) {
-        try {
-            mediaImplSet as SortedSet
-            mediaImplSet.clear()
-            if (this.query.isBlank()) {
-                // Prevent loop if string is "" or " "
-                return
-            }
+        mediaImplSet.clear()
+        if (this.query.isBlank()) {
+            // Prevent loop if string is "" or " "
+            mediaImplSetHasChanged = true
+            return
+        }
 
-            val query: String = this.query.trim().lowercase()
+        val query: String = this.query.trim().lowercase()
 
-            for (searchChip: SearchChips in selectedSearchChips) {
-                when (searchChip) {
-                    SearchChips.MUSICS -> {
-                        dataViewModel.getMusicSet().forEach { music: Music ->
-                            if (music.title.lowercase().contains(query)) {
-                                mediaImplSet.add(element = music)
-                            }
+        for (searchChip: SearchChips in selectedSearchChips) {
+            when (searchChip) {
+                SearchChips.MUSICS -> {
+                    dataViewModel.getMusicSet().forEach { music: Music ->
+                        if (music.title.lowercase().contains(query)) {
+                            mediaImplSet.add(element = music)
                         }
                     }
+                }
 
-                    SearchChips.ARTISTS -> {
-                        dataViewModel.getArtistSet().forEach { artist: Artist ->
-                            if (artist.title.lowercase().contains(query)) {
-                                mediaImplSet.add(element = artist)
-                            }
+                SearchChips.ARTISTS -> {
+                    dataViewModel.getArtistSet().forEach { artist: Artist ->
+                        if (artist.title.lowercase().contains(query)) {
+                            mediaImplSet.add(element = artist)
                         }
                     }
+                }
 
-                    SearchChips.ALBUMS -> {
-                        dataViewModel.getAlbumSet().forEach { album: Album ->
-                            if (album.title.lowercase().contains(query)) {
-                                mediaImplSet.add(element = album)
-                            }
+                SearchChips.ALBUMS -> {
+                    dataViewModel.getAlbumSet().forEach { album: Album ->
+                        if (album.title.lowercase().contains(query)) {
+                            mediaImplSet.add(element = album)
                         }
                     }
+                }
 
-                    SearchChips.GENRES -> {
-                        dataViewModel.getGenreSet().forEach { genre: Genre ->
-                            if (genre.title.lowercase().contains(query)) {
-                                mediaImplSet.add(element = genre)
-                            }
+                SearchChips.GENRES -> {
+                    dataViewModel.getGenreSet().forEach { genre: Genre ->
+                        if (genre.title.lowercase().contains(query)) {
+                            mediaImplSet.add(element = genre)
                         }
                     }
+                }
 
-                    SearchChips.FOLDERS -> {
-                        dataViewModel.getFolderSet().forEach { folder: Folder ->
-                            if (folder.title.lowercase().contains(query)) {
-                                mediaImplSet.add(element = folder)
-                            }
+                SearchChips.FOLDERS -> {
+                    dataViewModel.getFolderSet().forEach { folder: Folder ->
+                        if (folder.title.lowercase().contains(query)) {
+                            mediaImplSet.add(element = folder)
                         }
                     }
+                }
 
-                    SearchChips.PLAYLISTS -> {
-                        dataViewModel.getPlaylistSet().forEach { playlist: Playlist ->
-                            val context = MainActivity.instance.applicationContext
-                            if (playlist.title == LIKES_PLAYLIST_TITLE) {
-                                playlist.title = context.getString(R.string.likes_playlist_title)
-                            }
-                            if (playlist.title.lowercase().contains(query)) {
-                                mediaImplSet.add(element = playlist)
-                            }
+                SearchChips.PLAYLISTS -> {
+                    dataViewModel.getPlaylistSet().forEach { playlist: Playlist ->
+                        val context = MainActivity.instance.applicationContext
+                        if (playlist.title == LIKES_PLAYLIST_TITLE) {
+                            playlist.title = context.getString(R.string.likes_playlist_title)
+                        }
+                        if (playlist.title.lowercase().contains(query)) {
+                            mediaImplSet.add(element = playlist)
                         }
                     }
                 }
             }
-        } catch (e: Throwable) {
-            _logger.severe(e.message)
-            throw e
         }
+        mediaImplSetHasChanged = true
+    }
+
+    //Used to recompose
+    fun mediaImplChangeUpdated() {
+        mediaImplSetHasChanged = false
     }
 }

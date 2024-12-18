@@ -89,23 +89,35 @@ internal fun Router(
             satunesViewModel = satunesViewModel,
             dataViewModel = dataViewModel,
             onStart = {
-                checkIfAllowed(isAudioAllowed = isAudioAllowed, navController = navController)
-                satunesViewModel.setCurrentDestination(destination = it.destination.route!!)
+                if (checkIfAllowed(
+                        satunesUiState = satunesUiState,
+                        isAudioAllowed = isAudioAllowed,
+                        navController = navController
+                    )
+                ) satunesViewModel.setCurrentDestination(destination = it.destination.route!!)
             }
         )
         searchRoutes(
             satunesViewModel = satunesViewModel,
             onStart = {
-                checkIfAllowed(isAudioAllowed = isAudioAllowed, navController = navController)
-                satunesViewModel.setCurrentDestination(destination = it.destination.route!!)
+                if (checkIfAllowed(
+                        satunesUiState = satunesUiState,
+                        isAudioAllowed = isAudioAllowed,
+                        navController = navController
+                    )
+                ) satunesViewModel.setCurrentDestination(destination = it.destination.route!!)
             }
         )
         playbackRoutes(
             satunesViewModel = satunesViewModel,
             playbackViewModel = playbackViewModel,
             onStart = {
-                checkIfAllowed(isAudioAllowed = isAudioAllowed, navController = navController)
-                satunesViewModel.setCurrentDestination(destination = it.destination.route!!)
+                if (checkIfAllowed(
+                        satunesUiState = satunesUiState,
+                        isAudioAllowed = isAudioAllowed,
+                        navController = navController
+                    )
+                ) satunesViewModel.setCurrentDestination(destination = it.destination.route!!)
             }
         )
         settingsRoutes(
@@ -125,13 +137,18 @@ internal fun Router(
  *
  * @param isAudioAllowed true if the permission has been allowed, otherwise false
  * @param navController the [NavHostController] to navigate
+ *
+ * @return true if it is allowed, false otherwise
  */
 private fun checkIfAllowed(
+    satunesUiState: SatunesUiState,
     isAudioAllowed: Boolean,
     navController: NavHostController
-) {
-    if (!isAudioAllowed) {
+): Boolean {
+    if (!isAudioAllowed && satunesUiState.currentDestination != Destination.PERMISSIONS_SETTINGS) {
         navController.popBackStack()
         navController.navigate(Destination.PERMISSIONS_SETTINGS.link)
+        return false
     }
+    return true
 }

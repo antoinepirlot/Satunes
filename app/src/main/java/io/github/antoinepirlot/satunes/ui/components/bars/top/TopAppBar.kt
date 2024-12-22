@@ -48,6 +48,7 @@ import androidx.navigation.NavHostController
 import io.github.antoinepirlot.jetpack_libs.components.models.ScreenSizes
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.data.getSortOptions
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.mediaListViews
 import io.github.antoinepirlot.satunes.data.playbackViews
@@ -69,12 +70,12 @@ internal fun TopAppBar(
     scrollBehavior: TopAppBarScrollBehavior,
     satunesViewModel: SatunesViewModel = viewModel(),
 ) {
-    val uiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     val navController: NavHostController = LocalNavController.current
     val screenWidthDp = LocalConfiguration.current.screenWidthDp
     val barModifier: Modifier =
         if (screenWidthDp < ScreenSizes.VERY_VERY_SMALL) modifier.fillMaxHeight(0.11f) else modifier
-    val currentDestination: Destination = uiState.currentDestination
+    val currentDestination: Destination = satunesUiState.currentDestination
 
     CenterAlignedTopAppBar(
         modifier = barModifier,
@@ -89,12 +90,12 @@ internal fun TopAppBar(
                     icon = SatunesIcons.PLAYBACK,
                     onClick = {
                         onPlaybackQueueButtonClick(
-                            uiState = uiState,
+                            uiState = satunesUiState,
                             navController = navController
                         )
                     }
                 )
-            } else if (currentDestination in mediaListViews) {
+            } else if (currentDestination in mediaListViews && getSortOptions(destination = satunesUiState.currentDestination).size > 1) {
                 IconButton(
                     icon = SatunesIcons.SORT,
                     onClick = { satunesViewModel.showSortDialog() }
@@ -115,7 +116,7 @@ internal fun TopAppBar(
                     icon = SatunesIcons.SEARCH,
                     onClick = {
                         onSearchButtonClick(
-                            uiState = uiState,
+                            uiState = satunesUiState,
                             navController = navController
                         )
                     }
@@ -127,7 +128,7 @@ internal fun TopAppBar(
                 icon = SatunesIcons.SETTINGS,
                 onClick = {
                     onSettingButtonClick(
-                        uiState = uiState,
+                        uiState = satunesUiState,
                         satunesViewModel = satunesViewModel,
                         navController = navController
                     )

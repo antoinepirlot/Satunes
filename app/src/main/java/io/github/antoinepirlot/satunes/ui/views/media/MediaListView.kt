@@ -71,7 +71,8 @@ internal fun MediaListView(
         dataViewModel.updateListToShow(mediaImplCollection = mediaImplCollection)
     }
 
-    if (satunesUiState.showSortDialog) SortListDialog()
+    if (satunesUiState.showSortDialog)
+        SortListDialog()
 
     if (mediaImplCollection.isNotEmpty()) {
         MediaCardList(

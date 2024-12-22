@@ -25,7 +25,9 @@
 
 package io.github.antoinepirlot.satunes
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -47,6 +49,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -99,29 +102,35 @@ internal fun Satunes(
             ) {
                 Scaffold(
                     modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-                    snackbarHost = {
-                        SnackbarHost(hostState = snackBarHostState)
-                    },
                     topBar = {
                         TopAppBar(scrollBehavior = scrollBehavior)
                     },
                     bottomBar = { BottomAppBar() },
                     floatingActionButton = {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally
+                        Box(
+                            contentAlignment = Alignment.BottomEnd,
                         ) {
-                            val isInMediaListViews: Boolean =
-                                satunesUiState.currentDestination in mediaListViews
-                            if (isInMediaListViews)
-                                satunesUiState.extraButtons?.invoke()
-                            if (isInMediaListViews && playbackViewModel.musicPlaying != null)
-                                ShowCurrentMusicButton()
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                val isInMediaListViews: Boolean =
+                                    satunesUiState.currentDestination in mediaListViews
+                                if (isInMediaListViews)
+                                    satunesUiState.extraButtons?.invoke()
+                                if (isInMediaListViews && playbackViewModel.musicPlaying != null)
+                                    ShowCurrentMusicButton()
+                            }
+                            SnackbarHost(
+                                //Mandatory as for Google a snackbar is on top of FAB icons and does not overlay it.
+                                // So the UI is ugly without that modifier
+                                modifier = Modifier.padding(start = 30.dp),
+                                hostState = snackBarHostState
+                            )
                         }
                     },
                     floatingActionButtonPosition = FabPosition.End
-                ) { innerPadding ->
+                ) { innerPadding: PaddingValues ->
                     Router(modifier = Modifier.padding(innerPadding))
-
                     if (!satunesUiState.whatsNewSeen) {
                         WhatsNewDialog(
                             onConfirm = {

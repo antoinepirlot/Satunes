@@ -105,7 +105,8 @@ internal fun MediaCardList(
             }
             if (media == letterMediaImplMap.getValue(key = charToCompare)) {
                 Title(
-                    modifier = Modifier.padding(start = 5.dp),
+                    modifier = Modifier.padding(start = 34.dp),
+                    bottomPadding = 0.dp,
                     fontSize = 30.sp,
                     textAlign = TextAlign.Left,
                     text = charToCompare.toString()

@@ -35,17 +35,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.data.albumSortOptions
-import io.github.antoinepirlot.satunes.data.artistSortOptions
-import io.github.antoinepirlot.satunes.data.folderSortOptions
-import io.github.antoinepirlot.satunes.data.genreSortOptions
-import io.github.antoinepirlot.satunes.data.musicSortOptions
-import io.github.antoinepirlot.satunes.data.playlistSortOptions
+import io.github.antoinepirlot.satunes.data.getSortOptions
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SortListViewModel
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.models.radio_buttons.SortOptions
 import io.github.antoinepirlot.satunes.ui.components.buttons.RadioButton
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
@@ -78,18 +72,12 @@ internal fun SortListDialog(
         dismissText = stringResource(R.string.cancel),
     ) {
         Column(modifier = Modifier.selectableGroup()) {
-            val sortOptions: List<SortOptions> = when (satunesUiState.currentDestination) {
-                Destination.MUSICS -> musicSortOptions
-                Destination.ALBUMS -> albumSortOptions
-                Destination.ARTISTS -> artistSortOptions
-                Destination.FOLDERS -> folderSortOptions
-                Destination.GENRES -> genreSortOptions
-                Destination.PLAYLISTS -> playlistSortOptions
-                else -> {
-                    val message = "Can't sort in ${satunesUiState.currentDestination.link}"
-                    SatunesLogger.getLogger().severe(message)
-                    throw UnsupportedOperationException(message)
-                }
+            val sortOptions: List<SortOptions>? =
+                getSortOptions(destination = satunesUiState.currentDestination)
+            if (sortOptions == null) {
+                val message = "Can't sort in ${satunesUiState.currentDestination.link}"
+                SatunesLogger.getLogger().severe(message)
+                throw UnsupportedOperationException(message)
             }
             for (sortOption: SortOptions in sortOptions) {
                 RadioButton(

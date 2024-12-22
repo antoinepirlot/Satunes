@@ -25,6 +25,7 @@
 
 package io.github.antoinepirlot.satunes.data
 
+import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.models.radio_buttons.SortOptions
 
 /**
@@ -40,30 +41,50 @@ internal val sortOptions: List<SortOptions> = listOf(
 
 internal val defaultSortingOptions: SortOptions = SortOptions.TITLE
 
-val albumSortOptions: List<SortOptions> = listOf(
+private val albumSortOptions: List<SortOptions> = listOf(
     SortOptions.TITLE,
     SortOptions.ARTIST
 )
 
-val artistSortOptions: List<SortOptions> = listOf(
+private val artistSortOptions: List<SortOptions> = listOf(
     SortOptions.TITLE,
 )
 
-val folderSortOptions: List<SortOptions> = listOf(
+private val folderSortOptions: List<SortOptions> = listOf(
     SortOptions.TITLE,
 )
 
-val genreSortOptions: List<SortOptions> = listOf(
+private val genreSortOptions: List<SortOptions> = listOf(
     SortOptions.TITLE,
 )
 
-val musicSortOptions: List<SortOptions> = listOf(
+private val musicSortOptions: List<SortOptions> = listOf(
     SortOptions.TITLE,
     SortOptions.ALBUM,
     SortOptions.ARTIST,
     SortOptions.GENRE
 )
 
-val playlistSortOptions: List<SortOptions> = listOf(
+private val playlistSortOptions: List<SortOptions> = listOf(
     SortOptions.TITLE,
 )
+
+/**
+ * Get the sortOptions list for the specified [Destination].
+ * If there's no sort options list matching the [Destination] then returns null.
+ *
+ * @param destination a [Destination] to get the matching [SortOptions] list.
+ *
+ * @return the [SortOptions] list or null if there's no [SortOptions] list matching [Destination].
+ */
+internal fun getSortOptions(destination: Destination): List<SortOptions>? {
+    return when (destination) {
+        Destination.MUSICS -> musicSortOptions
+        Destination.ALBUMS -> albumSortOptions
+        Destination.ARTISTS -> artistSortOptions
+        Destination.FOLDERS -> folderSortOptions
+        Destination.GENRES -> genreSortOptions
+        Destination.PLAYLISTS -> playlistSortOptions
+        else -> null
+    }
+}

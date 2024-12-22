@@ -72,9 +72,9 @@ internal fun SortListDialog(
         dismissText = stringResource(R.string.cancel),
     ) {
         Column(modifier = Modifier.selectableGroup()) {
-            val sortOptions: List<SortOptions>? =
+            val sortOptions: List<SortOptions> =
                 getSortOptions(destination = satunesUiState.currentDestination)
-            if (sortOptions == null) {
+            if (sortOptions.isEmpty()) {
                 val message = "Can't sort in ${satunesUiState.currentDestination.link}"
                 SatunesLogger.getLogger().severe(message)
                 throw UnsupportedOperationException(message)

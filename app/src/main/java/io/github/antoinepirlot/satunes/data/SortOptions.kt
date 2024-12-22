@@ -75,9 +75,9 @@ private val playlistSortOptions: List<SortOptions> = listOf(
  *
  * @param destination a [Destination] to get the matching [SortOptions] list.
  *
- * @return the [SortOptions] list or null if there's no [SortOptions] list matching [Destination].
+ * @return the [SortOptions] list or an empty list if there's no [SortOptions] list matching [Destination].
  */
-internal fun getSortOptions(destination: Destination): List<SortOptions>? {
+internal fun getSortOptions(destination: Destination): List<SortOptions> {
     return when (destination) {
         Destination.MUSICS -> musicSortOptions
         Destination.ALBUMS -> albumSortOptions
@@ -85,6 +85,6 @@ internal fun getSortOptions(destination: Destination): List<SortOptions>? {
         Destination.FOLDERS -> folderSortOptions
         Destination.GENRES -> genreSortOptions
         Destination.PLAYLISTS -> playlistSortOptions
-        else -> null
+        else -> listOf()
     }
 }

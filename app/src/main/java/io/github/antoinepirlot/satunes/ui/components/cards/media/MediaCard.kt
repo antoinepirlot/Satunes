@@ -150,7 +150,7 @@ internal fun MediaCard(
             },
             headlineContent = {
                 Column {
-                    if (satunesUiState.currentDestination == Destination.ALBUMS && media is Music && media.cdTrackNumber != null) {
+                    if (satunesUiState.currentDestination == Destination.ALBUM && media is Music && media.cdTrackNumber != null) {
                         NormalText(text = media.cdTrackNumber.toString() + " - " + title)
                     } else {
                         NormalText(text = title)

@@ -79,7 +79,7 @@ private val playlistsSortOptions: List<SortOptions> = listOf(
  */
 internal fun getSortOptions(destination: Destination): List<SortOptions> {
     return when (destination) {
-        Destination.MUSICS -> musicsSortOptions
+        Destination.MUSICS, Destination.ALBUM -> musicsSortOptions
         Destination.ALBUMS -> albumsSortOptions
         Destination.ARTISTS -> artistsSortOptions
         Destination.FOLDERS -> foldersSortOptions

@@ -69,7 +69,7 @@ internal fun NavGraphBuilder.mediaRoutes(
         }
     }
 
-    composable("${Destination.FOLDERS.link}/{id}") {
+    composable(Destination.FOLDER.link) {
         onStart(it)
 
         if (satunesViewModel.isLoadingData || !satunesViewModel.isDataLoaded) {
@@ -91,7 +91,7 @@ internal fun NavGraphBuilder.mediaRoutes(
         }
     }
 
-    composable("${Destination.ARTISTS.link}/{id}") {
+    composable(Destination.ARTIST.link) {
         onStart(it)
 
         if (satunesViewModel.isLoadingData || !satunesViewModel.isDataLoaded) {
@@ -113,7 +113,7 @@ internal fun NavGraphBuilder.mediaRoutes(
         }
     }
 
-    composable("${Destination.ALBUMS.link}/{id}") {
+    composable(Destination.ALBUM.link) {
         onStart(it)
 
         if (satunesViewModel.isLoadingData || !satunesViewModel.isDataLoaded) {
@@ -135,7 +135,7 @@ internal fun NavGraphBuilder.mediaRoutes(
         }
     }
 
-    composable("${Destination.GENRES.link}/{id}") {
+    composable(Destination.GENRE.link) {
         onStart(it)
 
         if (satunesViewModel.isLoadingData || !satunesViewModel.isDataLoaded) {
@@ -157,7 +157,7 @@ internal fun NavGraphBuilder.mediaRoutes(
         }
     }
 
-    composable("${Destination.PLAYLISTS.link}/{id}") {
+    composable(Destination.PLAYLIST.link) {
         onStart(it)
 
         if (satunesViewModel.isLoadingData || !satunesViewModel.isDataLoaded) {

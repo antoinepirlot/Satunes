@@ -58,9 +58,9 @@ import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.router.Router
-import io.github.antoinepirlot.satunes.ui.components.bars.BottomAppBar
-import io.github.antoinepirlot.satunes.ui.components.bars.ShowCurrentMusicButton
-import io.github.antoinepirlot.satunes.ui.components.bars.TopAppBar
+import io.github.antoinepirlot.satunes.ui.components.bars.bottom.BottomAppBar
+import io.github.antoinepirlot.satunes.ui.components.bars.bottom.ShowCurrentMusicButton
+import io.github.antoinepirlot.satunes.ui.components.bars.top.TopAppBar
 import io.github.antoinepirlot.satunes.ui.components.dialog.WhatsNewDialog
 import io.github.antoinepirlot.satunes.ui.theme.SatunesTheme
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger

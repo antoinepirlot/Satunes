@@ -1,4 +1,4 @@
-package io.github.antoinepirlot.satunes.ui.components.bars
+package io.github.antoinepirlot.satunes.ui.components.bars.bottom
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable

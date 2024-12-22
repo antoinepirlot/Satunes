@@ -54,7 +54,7 @@ import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.EmptyView
-import io.github.antoinepirlot.satunes.ui.components.bars.ExtraButtonList
+import io.github.antoinepirlot.satunes.ui.components.bars.bottom.ExtraButtonList
 import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
 import io.github.antoinepirlot.satunes.ui.components.dialog.MediaSelectionDialog
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
@@ -76,7 +76,7 @@ internal fun PlaylistView(
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     val navController: NavHostController = LocalNavController.current
-    val maineScope: CoroutineScope = LocalMainScope.current
+    val mainScope: CoroutineScope = LocalMainScope.current
     val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
 
     //TODO try using nav controller instead try to remember it in an object if possible
@@ -146,7 +146,7 @@ internal fun PlaylistView(
             onDismissRequest = { openAddMusicsDialog = false },
             onConfirm = {
                 dataViewModel.insertMusicsToPlaylist(
-                    scope = maineScope,
+                    scope = mainScope,
                     snackBarHostState = snackBarHostState,
                     musics = mediaSelectionViewModel.getCheckedMusics(),
                     playlist = playlist

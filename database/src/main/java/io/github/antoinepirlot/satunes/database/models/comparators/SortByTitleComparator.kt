@@ -31,7 +31,7 @@ import io.github.antoinepirlot.satunes.database.models.MediaImpl
  * @author Antoine Pirlot on 22/12/2024
  */
 object SortByTitleComparator : Comparator<MediaImpl> {
-    override fun compare(o1: MediaImpl?, o2: MediaImpl?): Int {
-        TODO("Not yet implemented")
+    override fun compare(mediaImpl1: MediaImpl, mediaImpl2: MediaImpl): Int {
+        return StringComparator.compare(mediaImpl1.title, mediaImpl2.title)
     }
 }

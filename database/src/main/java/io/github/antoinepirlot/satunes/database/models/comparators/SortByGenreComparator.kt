@@ -43,7 +43,12 @@ object SortByGenreComparator : Comparator<MediaImpl> {
         return when (mediaImpl1) {
             is Music -> {
                 when (mediaImpl2) {
-                    is Music -> mediaImpl1.genre.compareTo(mediaImpl2.genre)
+                    is Music -> {
+                        val cmp: Int =
+                            mediaImpl1.genre.compareTo(mediaImpl2.genre)
+                        if (cmp == 0) SortByTitleComparator.compare(mediaImpl1, mediaImpl2)
+                        else cmp
+                    }
                     else -> 1 // mediaImpl2 is not a music, so the mediaImpl2 goes to the end
                 }
             }

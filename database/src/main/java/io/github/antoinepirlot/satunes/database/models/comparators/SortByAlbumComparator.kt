@@ -43,7 +43,12 @@ object SortByAlbumComparator : Comparator<MediaImpl> {
         return when (mediaImpl1) {
             is Music -> {
                 when (mediaImpl2) {
-                    is Music -> mediaImpl1.album.compareTo(mediaImpl2.album)
+                    is Music -> {
+                        val cmp: Int =
+                            mediaImpl1.album.compareTo(mediaImpl2.album)
+                        if (cmp == 0) SortByTitleComparator.compare(mediaImpl1, mediaImpl2)
+                        else cmp
+                    }
                     else -> 1 // mediaImpl2 is not a music, so the mediaImpl2 goes to the end
                 }
             }

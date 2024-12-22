@@ -327,36 +327,38 @@ class DataViewModel : ViewModel() {
         musics: Collection<Music>,
         playlist: Playlist,
     ) {
-        val context: Context = MainActivity.instance.applicationContext
-        try {
-            _db.insertMusicsToPlaylist(musics = musics, playlist = playlist)
-            showSnackBar(
-                scope = scope,
-                snackBarHostState = snackBarHostState,
-                message = context.getString(R.string.insert_musics_to_playlist_success) + ' ' + if (playlist.title == LIKES_PLAYLIST_TITLE) context.getString(
-                    RDb.string.likes_playlist_title
+        CoroutineScope(Dispatchers.IO).launch {
+            val context: Context = MainActivity.instance.applicationContext
+            try {
+                _db.insertMusicsToPlaylist(musics = musics, playlist = playlist)
+                showSnackBar(
+                    scope = scope,
+                    snackBarHostState = snackBarHostState,
+                    message = context.getString(R.string.insert_musics_to_playlist_success) + ' ' + if (playlist.title == LIKES_PLAYLIST_TITLE) context.getString(
+                        RDb.string.likes_playlist_title
+                    )
+                    else playlist.title,
+                    actionLabel = context.getString(R.string.cancel),
+                    action = {
+                        removeMusicsFromPlaylist(
+                            scope = scope,
+                            snackBarHostState = snackBarHostState,
+                            musics = musics,
+                            playlist = playlist
+                        )
+                    }
                 )
-                else playlist.title,
-                actionLabel = context.getString(R.string.cancel),
-                action = {
-                    removeMusicsFromPlaylist(
+            } catch (e: Throwable) {
+                _logger.warning(e.message)
+                showErrorSnackBar(scope = scope, snackBarHostState = snackBarHostState, action = {
+                    insertMusicsToPlaylist(
                         scope = scope,
                         snackBarHostState = snackBarHostState,
                         musics = musics,
                         playlist = playlist
                     )
-                }
-            )
-        } catch (e: Throwable) {
-            _logger.warning(e.message)
-            showErrorSnackBar(scope = scope, snackBarHostState = snackBarHostState, action = {
-                insertMusicsToPlaylist(
-                    scope = scope,
-                    snackBarHostState = snackBarHostState,
-                    musics = musics,
-                    playlist = playlist
-                )
-            })
+                })
+            }
         }
     }
 

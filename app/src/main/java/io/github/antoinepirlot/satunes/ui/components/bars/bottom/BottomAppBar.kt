@@ -23,7 +23,7 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.bars
+package io.github.antoinepirlot.satunes.ui.components.bars.bottom
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -38,6 +38,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.models.ScreenSizes
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
+import io.github.antoinepirlot.satunes.ui.components.bars.MediaNavBarSelection
 
 /**
  * @author Antoine Pirlot on 03/02/24

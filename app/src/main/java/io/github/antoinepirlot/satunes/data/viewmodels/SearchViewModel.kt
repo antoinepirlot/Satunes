@@ -74,12 +74,6 @@ class SearchViewModel : ViewModel() {
     var query: String by mutableStateOf("")
         private set
 
-    val mediaImplSet: SortedSet<MediaImpl> = sortedSetOf()
-
-    //Used to recompose
-    var mediaImplSetHasChanged: Boolean by mutableStateOf(false)
-        private set
-
     init {
         selectedSearchChips.addAll(_filtersList.filter { it.value }.keys)
     }
@@ -151,12 +145,8 @@ class SearchViewModel : ViewModel() {
         dataViewModel: DataViewModel,
         selectedSearchChips: List<SearchChips>,
     ) {
-        mediaImplSet.clear()
-        if (this.query.isBlank()) {
-            // Prevent loop if string is "" or " "
-            mediaImplSetHasChanged = true
-            return
-        }
+        val mediaImplSet: SortedSet<MediaImpl> = sortedSetOf()
+        if (this.query.isBlank()) return // Prevent loop if string is "" or " "
 
         val query: String = this.query.trim().lowercase()
 
@@ -215,11 +205,8 @@ class SearchViewModel : ViewModel() {
                 }
             }
         }
-        mediaImplSetHasChanged = true
-    }
-
-    //Used to recompose
-    fun mediaImplChangeUpdated() {
-        mediaImplSetHasChanged = false
+        this._uiState.update { currentState: SearchUiState ->
+            currentState.copy(mediaImplSet = mediaImplSet)
+        }
     }
 }

@@ -45,6 +45,7 @@ import io.github.antoinepirlot.satunes.data.states.DataUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SortListViewModel
+import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
@@ -163,12 +164,30 @@ private fun FirstMediaImpl(
     mediaImpl: MediaImpl,
     sortOption: SortOptions
 ) {
-    mediaImpl as Music
     val mediaImplToCompare: MediaImpl = when (sortOption) {
-        SortOptions.GENRE -> mediaImpl.genre
-        SortOptions.ARTIST -> mediaImpl.artist
-        SortOptions.ALBUM -> mediaImpl.album
-        else -> throw UnsupportedOperationException("${sortOption.name} couldn't be use for first media impl.")
+        SortOptions.GENRE -> {
+            when (mediaImpl) {
+                is Music -> mediaImpl.genre
+                else -> return
+            }
+        }
+
+        SortOptions.ARTIST -> {
+            when (mediaImpl) {
+                is Music -> mediaImpl.artist
+                is Album -> mediaImpl.artist
+                else -> return
+            }
+        }
+
+        SortOptions.ALBUM -> {
+            when (mediaImpl) {
+                is Music -> mediaImpl.album
+                else -> return
+            }
+        }
+
+        else -> return
     }
     if (!map.contains(mediaImplToCompare)) map[mediaImplToCompare] = mediaImpl
     if (mediaImpl == map.getValue(key = mediaImplToCompare)) {

@@ -67,7 +67,7 @@ internal fun MediaListView(
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     val lazyListState = rememberLazyListState()
 
-    LaunchedEffect(key1 = Unit) {
+    LaunchedEffect(key1 = mediaImplCollection) {
         dataViewModel.updateListToShow(mediaImplCollection = mediaImplCollection)
     }
 

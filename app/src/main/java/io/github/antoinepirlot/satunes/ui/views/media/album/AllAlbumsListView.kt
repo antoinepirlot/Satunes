@@ -69,7 +69,6 @@ internal fun AllAlbumsListView(
     MediaListView(
         modifier = modifier,
         mediaImplCollection = albumSet,
-
         openMedia = { clickedMediaImpl: MediaImpl ->
             openMedia(
                 playbackViewModel = playbackViewModel,

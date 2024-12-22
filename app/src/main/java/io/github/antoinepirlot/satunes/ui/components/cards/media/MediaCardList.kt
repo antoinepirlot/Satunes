@@ -25,6 +25,7 @@
 
 package io.github.antoinepirlot.satunes.ui.components.cards.media
 
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
@@ -34,17 +35,23 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.antoinepirlot.jetpack_libs.components.texts.Title
 import io.github.antoinepirlot.satunes.data.states.DataUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SortListViewModel
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Playlist
+import io.github.antoinepirlot.satunes.models.radio_buttons.SortOptions
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.text.Normalizer
 
 /**
  * @author Antoine Pirlot on 16/01/24
@@ -63,8 +70,10 @@ internal fun MediaCardList(
     scrollToMusicPlaying: Boolean = false,
 ) {
     val dataUiState: DataUiState by dataViewModel.uiState.collectAsState()
-    if (dataUiState.mediaImplList.isEmpty()) return // It fixes issue while accessing last folder in chain
-    if (sortListViewModel.currentSortOption != dataViewModel.currentSortOption)
+    val mediaImplList: List<MediaImpl> = dataUiState.mediaImplList
+    if (mediaImplList.isEmpty()) return // It fixes issue while accessing last folder in chain
+    val sortOption: SortOptions = dataViewModel.currentSortOption
+    if (sortListViewModel.currentSortOption != sortOption)
         dataViewModel.sortMediaImplListBy(sortOption = sortListViewModel.currentSortOption)
 
     LaunchedEffect(key1 = dataViewModel.currentSortOption) {
@@ -77,15 +86,32 @@ internal fun MediaCardList(
         modifier = modifier,
         state = lazyListState
     ) {
+        val letterMediaImplMap: MutableMap<Char, MediaImpl> = mutableMapOf()
         items(
-            items = dataUiState.mediaImplList,
+            items = mediaImplList,
             key = { it.javaClass.name + '-' + it.id }
         ) { media: MediaImpl ->
-            if (media == dataUiState.mediaImplList.first()) {
-                if (header != null) {
-                    header()
+            if (media == mediaImplList.first()) header?.invoke()
+
+            val charToCompare: Char =
+                Normalizer.normalize(media.title.first().uppercase(), Normalizer.Form.NFD).first()
+            if (!letterMediaImplMap.contains(charToCompare)) {
+                letterMediaImplMap[charToCompare] = mediaImplList.first {
+                    Normalizer.normalize(
+                        it.title.first().uppercase(),
+                        Normalizer.Form.NFD
+                    ).first() == charToCompare
                 }
             }
+            if (media == letterMediaImplMap.getValue(key = charToCompare)) {
+                Title(
+                    modifier = Modifier.padding(start = 5.dp),
+                    fontSize = 30.sp,
+                    textAlign = TextAlign.Left,
+                    text = charToCompare.toString()
+                )
+            }
+
             MediaCard(
                 modifier = modifier,
                 media = media,
@@ -94,7 +120,6 @@ internal fun MediaCardList(
             )
         }
     }
-
     if (scrollToMusicPlaying) {
         LaunchedEffect(key1 = Unit) {
             lazyListState.scrollToItem(

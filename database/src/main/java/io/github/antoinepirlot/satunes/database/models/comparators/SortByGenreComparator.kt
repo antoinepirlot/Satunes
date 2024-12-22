@@ -50,8 +50,8 @@ object SortByGenreComparator : Comparator<MediaImpl> {
 
             else ->
                 when (mediaImpl2) {
-                    is Music -> -1
-                    else -> throw NotSupportedException("Can't sort ${mediaImpl1.javaClass.name} by genre.")
+                    is Music -> -1 // mediaImpl1 is not a music, so the mediaImpl1 goes to the end
+                    else -> throw NotSupportedException("Can't sort ${mediaImpl1.javaClass.name} and ${mediaImpl2.javaClass.name} and ${mediaImpl2.javaClass.name} by genre.")
                 }
         }
     }

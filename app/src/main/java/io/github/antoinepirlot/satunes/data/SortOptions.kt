@@ -39,3 +39,31 @@ internal val sortOptions: List<SortOptions> = listOf(
 )
 
 internal val defaultSortingOptions: SortOptions = SortOptions.TITLE
+
+val albumSortOptions: List<SortOptions> = listOf(
+    SortOptions.TITLE,
+    SortOptions.ARTIST
+)
+
+val artistSortOptions: List<SortOptions> = listOf(
+    SortOptions.TITLE,
+)
+
+val folderSortOptions: List<SortOptions> = listOf(
+    SortOptions.TITLE,
+)
+
+val genreSortOptions: List<SortOptions> = listOf(
+    SortOptions.TITLE,
+)
+
+val musicSortOptions: List<SortOptions> = listOf(
+    SortOptions.TITLE,
+    SortOptions.ALBUM,
+    SortOptions.ARTIST,
+    SortOptions.GENRE
+)
+
+val playlistSortOptions: List<SortOptions> = listOf(
+    SortOptions.TITLE,
+)

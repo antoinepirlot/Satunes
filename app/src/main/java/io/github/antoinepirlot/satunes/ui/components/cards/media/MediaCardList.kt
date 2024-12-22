@@ -132,16 +132,13 @@ internal fun MediaCardList(
  *
  * @param map the map containing the Char as key and the [MediaImpl] as the value.
  * @param mediaImpl the [MediaImpl] used to be checked
- * @param mediaImplList the [List] of [MediaImpl] where to check the first occurrence
  */
 @Composable
 private fun FirstLetter(map: MutableMap<Any, MediaImpl>, mediaImpl: MediaImpl) {
     val charToCompare: Char =
         Normalizer.normalize(mediaImpl.title.first().uppercase(), Normalizer.Form.NFD)
             .first()
-    if (!map.contains(charToCompare)) {
-        map[charToCompare] = mediaImpl
-    }
+    if (!map.contains(charToCompare)) map[charToCompare] = mediaImpl
     if (mediaImpl == map.getValue(key = charToCompare)) {
         Title(
             modifier = Modifier.padding(start = 34.dp),
@@ -174,7 +171,6 @@ private fun FirstMediaImpl(
         else -> throw UnsupportedOperationException("${sortOption.name} couldn't be use for first media impl.")
     }
     if (!map.contains(mediaImplToCompare)) map[mediaImplToCompare] = mediaImpl
-
     if (mediaImpl == map.getValue(key = mediaImplToCompare)) {
         Title(
             modifier = Modifier.padding(start = 34.dp),

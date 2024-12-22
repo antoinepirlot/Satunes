@@ -41,31 +41,31 @@ internal val sortOptions: List<SortOptions> = listOf(
 
 internal val defaultSortingOptions: SortOptions = SortOptions.TITLE
 
-private val albumSortOptions: List<SortOptions> = listOf(
+private val albumsSortOptions: List<SortOptions> = listOf(
     SortOptions.TITLE,
     SortOptions.ARTIST
 )
 
-private val artistSortOptions: List<SortOptions> = listOf(
+private val artistsSortOptions: List<SortOptions> = listOf(
     SortOptions.TITLE,
 )
 
-private val folderSortOptions: List<SortOptions> = listOf(
+private val foldersSortOptions: List<SortOptions> = listOf(
     SortOptions.TITLE,
 )
 
-private val genreSortOptions: List<SortOptions> = listOf(
+private val genresSortOptions: List<SortOptions> = listOf(
     SortOptions.TITLE,
 )
 
-private val musicSortOptions: List<SortOptions> = listOf(
+private val musicsSortOptions: List<SortOptions> = listOf(
     SortOptions.TITLE,
     SortOptions.ALBUM,
     SortOptions.ARTIST,
     SortOptions.GENRE
 )
 
-private val playlistSortOptions: List<SortOptions> = listOf(
+private val playlistsSortOptions: List<SortOptions> = listOf(
     SortOptions.TITLE,
 )
 
@@ -79,12 +79,12 @@ private val playlistSortOptions: List<SortOptions> = listOf(
  */
 internal fun getSortOptions(destination: Destination): List<SortOptions> {
     return when (destination) {
-        Destination.MUSICS -> musicSortOptions
-        Destination.ALBUMS -> albumSortOptions
-        Destination.ARTISTS -> artistSortOptions
-        Destination.FOLDERS -> folderSortOptions
-        Destination.GENRES -> genreSortOptions
-        Destination.PLAYLISTS -> playlistSortOptions
+        Destination.MUSICS -> musicsSortOptions
+        Destination.ALBUMS -> albumsSortOptions
+        Destination.ARTISTS -> artistsSortOptions
+        Destination.FOLDERS -> foldersSortOptions
+        Destination.GENRES -> genresSortOptions
+        Destination.PLAYLISTS -> playlistsSortOptions
         else -> listOf()
     }
 }

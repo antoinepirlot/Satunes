@@ -30,7 +30,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import io.github.antoinepirlot.satunes.data.sortOptions
+import io.github.antoinepirlot.satunes.data.defaultSortingOptions
 import io.github.antoinepirlot.satunes.models.radio_buttons.SortOptions
 
 /**
@@ -41,7 +41,8 @@ class SortListViewModel : ViewModel() {
     /**
      * Used to remember the radio button before user change in list.
      */
-    private val _currentSortOption: MutableState<SortOptions> = mutableStateOf(sortOptions.first())
+    private val _currentSortOption: MutableState<SortOptions> =
+        mutableStateOf(defaultSortingOptions)
 
     /**
      * The current selected radio button.

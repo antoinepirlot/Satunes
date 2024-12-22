@@ -25,14 +25,31 @@
 
 package io.github.antoinepirlot.satunes.database.models.comparators
 
+import com.mpatric.mp3agic.NotSupportedException
+import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
+import io.github.antoinepirlot.satunes.database.models.Music
 
 /**
  * @author Antoine Pirlot on 22/12/2024
  */
 object SortByArtistComparator : Comparator<MediaImpl> {
-    override fun compare(o1: MediaImpl?, o2: MediaImpl?): Int {
-        TODO("Not yet implemented")
+    override fun compare(mediaImpl1: MediaImpl, mediaImpl2: MediaImpl): Int {
+        return when (mediaImpl1) {
+            is Music -> {
+                when (mediaImpl2) {
+                    is Music -> mediaImpl1.artist.compareTo(mediaImpl2.artist)
+                    is Album -> mediaImpl1.artist.compareTo(mediaImpl2.artist)
+                    else -> 1 // mediaImpl2 is not a music or album, so the mediaImpl2 goes to the end
+                }
+            }
+
+            else ->
+                when (mediaImpl2) {
+                    is Music, is Album -> -1 // mediaImpl1 is not a music or album, so the mediaImpl1 goes to the end
+                    else -> throw NotSupportedException("Can't sort ${mediaImpl1.javaClass.name} and ${mediaImpl2.javaClass.name} by artist.")
+                }
+        }
     }
 
 }

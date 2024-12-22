@@ -32,7 +32,7 @@ import io.github.antoinepirlot.satunes.database.models.Music
 
 /**
  * Compare [MediaImpl] by [Genre].
- * If it is the same [Genre] then compare by [MediaImpl]'s title.
+ * If it is the same [Genre] then compares by [MediaImpl]'s title.
  *
  * @throws NotSupportedException if both element doesn't have a genre.
  *

@@ -102,16 +102,11 @@ internal fun MediaCardList(
 
             if (showFirstElement) {
                 when (sortOption) {
-                    SortOptions.TITLE -> FirstLetter(
-                        map = charMediaImplMap!!,
-                        mediaImpl = media,
-                        mediaImplList = mediaImplList
-                    )
-
+                    SortOptions.TITLE -> FirstLetter(map = charMediaImplMap!!, mediaImpl = media)
                     else -> FirstMediaImpl(
                         map = mediaImplMediaImplMap!!,
                         mediaImpl = media,
-                        sortOption = sortOption,
+                        sortOption = sortOption
                     )
                 }
             }
@@ -140,21 +135,12 @@ internal fun MediaCardList(
  * @param mediaImplList the [List] of [MediaImpl] where to check the first occurrence
  */
 @Composable
-private fun FirstLetter(
-    map: MutableMap<Any, MediaImpl>,
-    mediaImpl: MediaImpl,
-    mediaImplList: List<MediaImpl>
-) {
+private fun FirstLetter(map: MutableMap<Any, MediaImpl>, mediaImpl: MediaImpl) {
     val charToCompare: Char =
         Normalizer.normalize(mediaImpl.title.first().uppercase(), Normalizer.Form.NFD)
             .first()
     if (!map.contains(charToCompare)) {
-        map[charToCompare] = mediaImplList.first {
-            Normalizer.normalize(
-                it.title.first().uppercase(),
-                Normalizer.Form.NFD
-            ).first() == charToCompare
-        }
+        map[charToCompare] = mediaImpl
     }
     if (mediaImpl == map.getValue(key = charToCompare)) {
         Title(

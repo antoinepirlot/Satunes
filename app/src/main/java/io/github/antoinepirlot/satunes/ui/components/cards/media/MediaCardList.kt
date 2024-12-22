@@ -68,6 +68,7 @@ internal fun MediaCardList(
     openMedia: (mediaImpl: MediaImpl) -> Unit,
     openedPlaylist: Playlist? = null,
     scrollToMusicPlaying: Boolean = false,
+    showFirstLetter: Boolean = true,
 ) {
     val dataUiState: DataUiState by dataViewModel.uiState.collectAsState()
     val mediaImplList: List<MediaImpl> = dataUiState.mediaImplList
@@ -95,24 +96,27 @@ internal fun MediaCardList(
             if (media == mediaImplList.first()) header?.invoke()
 
             /* Show the letter of the first mediaImpl containing it */
-            val charToCompare: Char =
-                Normalizer.normalize(media.title.first().uppercase(), Normalizer.Form.NFD).first()
-            if (!letterMediaImplMap.contains(charToCompare)) {
-                letterMediaImplMap[charToCompare] = mediaImplList.first {
-                    Normalizer.normalize(
-                        it.title.first().uppercase(),
-                        Normalizer.Form.NFD
-                    ).first() == charToCompare
+            if (showFirstLetter) {
+                val charToCompare: Char =
+                    Normalizer.normalize(media.title.first().uppercase(), Normalizer.Form.NFD)
+                        .first()
+                if (!letterMediaImplMap.contains(charToCompare)) {
+                    letterMediaImplMap[charToCompare] = mediaImplList.first {
+                        Normalizer.normalize(
+                            it.title.first().uppercase(),
+                            Normalizer.Form.NFD
+                        ).first() == charToCompare
+                    }
                 }
-            }
-            if (media == letterMediaImplMap.getValue(key = charToCompare)) {
-                Title(
-                    modifier = Modifier.padding(start = 34.dp),
-                    bottomPadding = 0.dp,
-                    fontSize = 30.sp,
-                    textAlign = TextAlign.Left,
-                    text = charToCompare.toString()
-                )
+                if (media == letterMediaImplMap.getValue(key = charToCompare)) {
+                    Title(
+                        modifier = Modifier.padding(start = 34.dp),
+                        bottomPadding = 0.dp,
+                        fontSize = 30.sp,
+                        textAlign = TextAlign.Left,
+                        text = charToCompare.toString()
+                    )
+                }
             }
             /* End of first letter */
 

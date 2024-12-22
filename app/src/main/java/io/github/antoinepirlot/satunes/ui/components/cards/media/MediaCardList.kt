@@ -46,6 +46,7 @@ import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SortListViewModel
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
+import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.models.radio_buttons.SortOptions
 import kotlinx.coroutines.CoroutineScope
@@ -68,7 +69,7 @@ internal fun MediaCardList(
     openMedia: (mediaImpl: MediaImpl) -> Unit,
     openedPlaylist: Playlist? = null,
     scrollToMusicPlaying: Boolean = false,
-    showFirstLetter: Boolean = true,
+    showFirstElement: Boolean = true,
 ) {
     val dataUiState: DataUiState by dataViewModel.uiState.collectAsState()
     val mediaImplList: List<MediaImpl> = dataUiState.mediaImplList
@@ -88,38 +89,32 @@ internal fun MediaCardList(
         state = lazyListState
     ) {
         //Use to store dynamically the first media impl linked to the first occurrence of a letter.
-        val letterMediaImplMap: MutableMap<Char, MediaImpl> = mutableMapOf()
+        val charMediaImplMap: MutableMap<Any, MediaImpl>? =
+            if (showFirstElement && sortOption == SortOptions.TITLE) mutableMapOf() else null
+        val mediaImplMediaImplMap: MutableMap<Any, MediaImpl>? =
+            if (showFirstElement && sortOption != SortOptions.TITLE) mutableMapOf() else null
+
         items(
             items = mediaImplList,
             key = { it.javaClass.name + '-' + it.id }
         ) { media: MediaImpl ->
             if (media == mediaImplList.first()) header?.invoke()
 
-            /* Show the letter of the first mediaImpl containing it */
-            if (showFirstLetter) {
-                val charToCompare: Char =
-                    Normalizer.normalize(media.title.first().uppercase(), Normalizer.Form.NFD)
-                        .first()
-                if (!letterMediaImplMap.contains(charToCompare)) {
-                    letterMediaImplMap[charToCompare] = mediaImplList.first {
-                        Normalizer.normalize(
-                            it.title.first().uppercase(),
-                            Normalizer.Form.NFD
-                        ).first() == charToCompare
-                    }
-                }
-                if (media == letterMediaImplMap.getValue(key = charToCompare)) {
-                    Title(
-                        modifier = Modifier.padding(start = 34.dp),
-                        bottomPadding = 0.dp,
-                        fontSize = 30.sp,
-                        textAlign = TextAlign.Left,
-                        text = charToCompare.toString()
+            if (showFirstElement) {
+                when (sortOption) {
+                    SortOptions.TITLE -> FirstLetter(
+                        map = charMediaImplMap!!,
+                        mediaImpl = media,
+                        mediaImplList = mediaImplList
+                    )
+
+                    else -> FirstMediaImpl(
+                        map = mediaImplMediaImplMap!!,
+                        mediaImpl = media,
+                        sortOption = sortOption,
                     )
                 }
             }
-            /* End of first letter */
-
             MediaCard(
                 modifier = modifier,
                 media = media,
@@ -134,6 +129,74 @@ internal fun MediaCardList(
                 playbackViewModel.getMusicPlayingIndexPosition()
             )
         }
+    }
+}
+
+/**
+ * Show the first letter of the media if it is the first occurrence in the list.
+ *
+ * @param map the map containing the Char as key and the [MediaImpl] as the value.
+ * @param mediaImpl the [MediaImpl] used to be checked
+ * @param mediaImplList the [List] of [MediaImpl] where to check the first occurrence
+ */
+@Composable
+private fun FirstLetter(
+    map: MutableMap<Any, MediaImpl>,
+    mediaImpl: MediaImpl,
+    mediaImplList: List<MediaImpl>
+) {
+    val charToCompare: Char =
+        Normalizer.normalize(mediaImpl.title.first().uppercase(), Normalizer.Form.NFD)
+            .first()
+    if (!map.contains(charToCompare)) {
+        map[charToCompare] = mediaImplList.first {
+            Normalizer.normalize(
+                it.title.first().uppercase(),
+                Normalizer.Form.NFD
+            ).first() == charToCompare
+        }
+    }
+    if (mediaImpl == map.getValue(key = charToCompare)) {
+        Title(
+            modifier = Modifier.padding(start = 34.dp),
+            bottomPadding = 0.dp,
+            fontSize = 30.sp,
+            textAlign = TextAlign.Left,
+            text = charToCompare.toString()
+        )
+    }
+}
+
+/**
+ * Show the first [MediaImpl]'s title of the [MediaImpl] if it is the first occurrence in the list.
+ *
+ * @param map the map containing the [MediaImpl] as key and the [MediaImpl] as the value.
+ * @param mediaImpl the [MediaImpl] used to be checked
+ * @param sortOption the [SortOptions] to determine which mediaImpl must be the key of map
+ */
+@Composable
+private fun FirstMediaImpl(
+    map: MutableMap<Any, MediaImpl>,
+    mediaImpl: MediaImpl,
+    sortOption: SortOptions
+) {
+    mediaImpl as Music
+    val mediaImplToCompare: MediaImpl = when (sortOption) {
+        SortOptions.GENRE -> mediaImpl.genre
+        SortOptions.ARTIST -> mediaImpl.artist
+        SortOptions.ALBUM -> mediaImpl.album
+        else -> throw UnsupportedOperationException("${sortOption.name} couldn't be use for first media impl.")
+    }
+    if (!map.contains(mediaImplToCompare)) map[mediaImplToCompare] = mediaImpl
+
+    if (mediaImpl == map.getValue(key = mediaImplToCompare)) {
+        Title(
+            modifier = Modifier.padding(start = 34.dp),
+            bottomPadding = 0.dp,
+            fontSize = 30.sp,
+            textAlign = TextAlign.Center,
+            text = mediaImplToCompare.title
+        )
     }
 }
 

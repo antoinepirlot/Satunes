@@ -55,7 +55,6 @@ import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
-import io.github.antoinepirlot.satunes.exceptions.NotSortableException
 import io.github.antoinepirlot.satunes.models.radio_buttons.SortOptions
 import io.github.antoinepirlot.satunes.ui.utils.showErrorSnackBar
 import io.github.antoinepirlot.satunes.ui.utils.showSnackBar
@@ -994,37 +993,38 @@ class DataViewModel : ViewModel() {
      */
     fun sortMediaImplListBy(sortOption: SortOptions) {
         _uiState.update { currentState: DataUiState ->
-            val sortedMediaImplList: List<MediaImpl> = try {
+            val sortedMediaImplList: List<MediaImpl> = //try {
                 //TODO use string comparator as to sort by sortOption then by title
-                currentState.mediaImplList.sortedBy { mediaImpl: MediaImpl ->
-                    when (sortOption) {
-                        SortOptions.TITLE -> mediaImpl.title
-                        SortOptions.ARTIST -> {
-                            when (mediaImpl) {
-                                is Music -> mediaImpl.artist.title
-                                is Album -> mediaImpl.artist.title
-                                else -> throw NotSortableException()
-                            }
-                        }
-
-                        SortOptions.ALBUM -> {
-                            when (mediaImpl) {
-                                is Music -> mediaImpl.album.title
-                                else -> throw NotSortableException()
-                            }
-                        }
-
-                        SortOptions.GENRE -> {
-                            when (mediaImpl) {
-                                is Music -> mediaImpl.genre.title
-                                else -> throw NotSortableException()
-                            }
-                        }
-                    }
-                }
-            } catch (_: NotSortableException) {
-                currentState.mediaImplList
-            }
+                currentState.mediaImplList.sortedWith(sortOption.comparator)
+//                currentState.mediaImplList.sortedBy { mediaImpl: MediaImpl ->
+//                    when (sortOption) {
+//                        SortOptions.TITLE -> mediaImpl.title
+//                        SortOptions.ARTIST -> {
+//                            when (mediaImpl) {
+//                                is Music -> mediaImpl.artist.title
+//                                is Album -> mediaImpl.artist.title
+//                                else -> throw NotSortableException()
+//                            }
+//                        }
+//
+//                        SortOptions.ALBUM -> {
+//                            when (mediaImpl) {
+//                                is Music -> mediaImpl.album.title
+//                                else -> throw NotSortableException()
+//                            }
+//                        }
+//
+//                        SortOptions.GENRE -> {
+//                            when (mediaImpl) {
+//                                is Music -> mediaImpl.genre.title
+//                                else -> throw NotSortableException()
+//                            }
+//                        }
+//                    }
+//                }
+//            } catch (_: NotSortableException) {
+//                currentState.mediaImplList
+//            }
             if (sortedMediaImplList !== currentState.mediaImplList)
                 this.currentSortOption = sortOption
             currentState.copy(mediaImplList = sortedMediaImplList)

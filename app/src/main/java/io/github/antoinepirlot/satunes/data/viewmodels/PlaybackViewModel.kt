@@ -93,22 +93,6 @@ class PlaybackViewModel : ViewModel() {
         ProgressBarLifecycleCallbacks.playbackViewModel = this
     }
 
-    fun loadMusicFromFolders(
-        folders: Collection<Folder>,
-        shuffleMode: Boolean = SettingsManager.shuffleMode,
-        musicToPlay: Music? = null
-    ) {
-        val musicSet: MutableSet<Music> = mutableSetOf()
-        folders.forEach { folder: Folder ->
-            musicSet.addAll(elements = folder.getAllMusic())
-        }
-        this.loadMusics(
-            musics = musicSet,
-            shuffleMode = shuffleMode,
-            musicToPlay = musicToPlay
-        )
-    }
-
     fun loadMusicFromMedia(
         media: MediaImpl,
         shuffleMode: Boolean = SettingsManager.shuffleMode,
@@ -138,7 +122,11 @@ class PlaybackViewModel : ViewModel() {
     ) {
         val musicSet: MutableSet<Music> = mutableSetOf()
         medias.forEach { mediaImpl: MediaImpl ->
-            musicSet.addAll(mediaImpl.getMusicSet())
+            if (mediaImpl is Folder) {
+                musicSet.addAll(mediaImpl.getAllMusic())
+            } else {
+                musicSet.addAll(mediaImpl.getMusicSet())
+            }
         }
         this.loadMusics(
             musics = musicSet,

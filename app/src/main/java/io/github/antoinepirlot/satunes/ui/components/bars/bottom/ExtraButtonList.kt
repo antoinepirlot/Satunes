@@ -10,8 +10,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.states.DataUiState
+import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.router.utils.openMedia
@@ -28,9 +30,11 @@ import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
 @Composable
 internal fun ExtraButtonList(
     modifier: Modifier = Modifier,
+    satunesViewModel: SatunesViewModel = viewModel(),
     dataViewModel: DataViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
 ) {
+    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     val dataUiState: DataUiState by dataViewModel.uiState.collectAsState()
     val navController: NavHostController = LocalNavController.current
     val mediaImplCollection: Collection<MediaImpl> = dataUiState.mediaImplList
@@ -49,18 +53,22 @@ internal fun ExtraButtonList(
                 )
             }
         )
-        ExtraButton(
-            icon = SatunesIcons.SHUFFLE,
-            onClick = {
-                playbackViewModel.loadMusicFromMedias(
-                    medias = mediaImplCollection,
-                    shuffleMode = true
-                )
-                openMedia(
-                    playbackViewModel = playbackViewModel,
-                    navController = navController
-                )
-            }
-        )
+
+        if (!satunesUiState.shuffleMode) {
+            //The shuffle mode is always activated by default and don't need to be shown
+            ExtraButton(
+                icon = SatunesIcons.SHUFFLE,
+                onClick = {
+                    playbackViewModel.loadMusicFromMedias(
+                        medias = mediaImplCollection,
+                        shuffleMode = true
+                    )
+                    openMedia(
+                        playbackViewModel = playbackViewModel,
+                        navController = navController
+                    )
+                }
+            )
+        }
     }
 }

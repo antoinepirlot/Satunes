@@ -29,8 +29,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedback
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
@@ -39,10 +37,7 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.models.ScreenSizes
-import io.github.antoinepirlot.satunes.data.states.SatunesUiState
-import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.images.Icon
 
@@ -53,16 +48,10 @@ import io.github.antoinepirlot.satunes.ui.components.images.Icon
 @Composable
 internal fun ExtraButton(
     modifier: Modifier = Modifier,
-    satunesViewModel: SatunesViewModel = viewModel(),
     icon: SatunesIcons,
     onClick: () -> Unit,
 ) {
-    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     val haptics: HapticFeedback = LocalHapticFeedback.current
-
-    //TODO move it to extra button list as it's weird to do it here
-    if (icon == SatunesIcons.SHUFFLE && satunesUiState.shuffleMode)
-        return //The shuffle mode is always activated by default and don't need to be shown
     val screenWidthDp: Int = LocalConfiguration.current.screenWidthDp
     val buttonSize: Dp = if (screenWidthDp < ScreenSizes.VERY_VERY_SMALL)
         50.dp

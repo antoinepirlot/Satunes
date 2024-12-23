@@ -154,7 +154,7 @@ object PlaybackManager {
                     this.playlist == null
                     || (this.playlist!!.musicCount() == 0 && DataManager.getMusicSet().isNotEmpty())
                 ) {
-                    this._playbackController!!.loadMusics(musicSet = DataManager.getMusicSet())
+                    this._playbackController!!.loadMusics(musics = DataManager.getMusicSet())
                 }
             }
         }
@@ -272,18 +272,18 @@ object PlaybackManager {
 
     fun loadMusics(
         context: Context,
-        musicSet: Set<Music>,
+        musics: Collection<Music>,
         shuffleMode: Boolean = SettingsManager.shuffleMode,
         musicToPlay: Music? = null,
     ) {
         _logger.info("Load musics")
-        if (this.playlist?.hasPlaylistMusicSet(musicSet = musicSet) == true && this.musicPlaying.value == musicToPlay) {
+        if (this.playlist?.hasPlaylistMusicCollection(musics = musics) == true && this.musicPlaying.value == musicToPlay) {
             _logger.info("MusicSet is already loaded.")
             return
         }
         checkPlaybackController(context = context, loadAllMusics = false)
         this._playbackController!!.loadMusics(
-            musicSet = musicSet,
+            musics = musics,
             shuffleMode = shuffleMode,
             musicToPlay = musicToPlay
         )

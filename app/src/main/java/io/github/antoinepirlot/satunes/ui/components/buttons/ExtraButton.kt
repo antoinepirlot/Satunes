@@ -60,6 +60,7 @@ internal fun ExtraButton(
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     val haptics: HapticFeedback = LocalHapticFeedback.current
 
+    //TODO move it to extra button list as it's weird to do it here
     if (icon == SatunesIcons.SHUFFLE && satunesUiState.shuffleMode)
         return //The shuffle mode is always activated by default and don't need to be shown
     val screenWidthDp: Int = LocalConfiguration.current.screenWidthDp

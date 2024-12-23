@@ -59,10 +59,7 @@ internal fun AllMusicsListView(
 
     if (musicSet.isNotEmpty())
         satunesViewModel.replaceExtraButtons(extraButtons = {
-            ExtraButtonList(
-                musicSet = musicSet,
-                mediaImplSet = null
-            )
+            ExtraButtonList()
         })
     else
         satunesViewModel.clearExtraButtons()
@@ -71,8 +68,8 @@ internal fun AllMusicsListView(
         modifier = modifier,
         mediaImplCollection = musicSet,
         openMedia = { clickedMediaImpl: MediaImpl ->
-            playbackViewModel.loadMusic(
-                musicSet = musicSet,
+            playbackViewModel.loadMusics(
+                musics = musicSet,
                 musicToPlay = clickedMediaImpl as Music
             )
             openMedia(

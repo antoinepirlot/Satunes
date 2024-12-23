@@ -245,7 +245,7 @@ internal class PlaybackController private constructor(
                     mediaController = mediaControllerFuture.get()
                     PlaybackManager.isInitialized.value = true
                     if (loadAllMusics) {
-                        this.loadMusics(musicSet = DataManager.getMusicSet())
+                        this.loadMusics(musics = DataManager.getMusicSet())
                     }
                 },
                 MoreExecutors.directExecutor()
@@ -376,18 +376,18 @@ internal class PlaybackController private constructor(
      * Add all music from musicMap to the mediaController in the same order.
      * If the shuffle mode is true then shuffle the playlist
      *
-     * @param musicSet the music Set to load
+     * @param musics the [Music] [Collection] to load
      * @param shuffleMode indicate if the playlistDB has to be started in shuffle mode by default false
      * @param musicToPlay the music to play
      *
      */
     fun loadMusics(
-        musicSet: Set<Music>,
+        musics: Collection<Music>,
         shuffleMode: Boolean = SettingsManager.shuffleMode,
         musicToPlay: Music? = null,
     ) {
         this.isLoading = true
-        val playlist = Playlist(musicSet = musicSet)
+        val playlist = Playlist(musics = musics)
         if (shuffleMode) {
             if (musicToPlay == null) {
                 playlist.shuffle()

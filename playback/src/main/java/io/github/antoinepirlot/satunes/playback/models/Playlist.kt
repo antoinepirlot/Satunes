@@ -36,7 +36,7 @@ import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
  */
 
 //TODO refactor and clarify the usage of original map
-internal class Playlist(musicSet: Set<Music>) {
+internal class Playlist(musics: Collection<Music>) {
     private val originalMusicMediaItemMap: MutableMap<Music, MediaItem> = mutableMapOf()
     val musicList: SnapshotStateList<Music> = SnapshotStateList()
     val mediaItemList: MutableList<MediaItem> = mutableListOf()
@@ -46,7 +46,7 @@ internal class Playlist(musicSet: Set<Music>) {
 
 
     init {
-        musicSet.forEach { music: Music ->
+        musics.forEach { music: Music ->
             this.musicList.add(element = music)
             this.mediaItemList.add(element = music.mediaItem)
             this.originalMusicMediaItemMap[music] = music.mediaItem
@@ -198,11 +198,11 @@ internal class Playlist(musicSet: Set<Music>) {
      * Checks if this playlist is the same as [originalMusicMediaItemMap]'s keys.
      * True means it's the same playlist otherwise false.
      *
-     * @return true if [originalMusicMediaItemMap] contains all [musicSet]'s musics as keys false otherwise
+     * @return true if [originalMusicMediaItemMap] contains all [musics]'s musics as keys false otherwise
      */
-    internal fun hasPlaylistMusicSet(musicSet: Set<Music>): Boolean {
-        if (this.musicCount() != musicSet.size) return false
-        for (music in musicSet)
+    internal fun hasPlaylistMusicCollection(musics: Collection<Music>): Boolean {
+        if (this.musicCount() != musics.size) return false
+        for (music in musics)
             if (!this.originalMusicMediaItemMap.contains(key = music)) return false
         return true
     }

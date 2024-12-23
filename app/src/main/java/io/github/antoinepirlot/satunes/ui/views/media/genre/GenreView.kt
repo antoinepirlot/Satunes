@@ -71,10 +71,7 @@ internal fun GenreView(
 
     if (albumSet.isNotEmpty())
         satunesViewModel.replaceExtraButtons(extraButtons = {
-            ExtraButtonList(
-                musicSet = null,
-                mediaImplSet = albumSet
-            )
+            ExtraButtonList()
         })
     else
         satunesViewModel.clearExtraButtons()
@@ -83,8 +80,8 @@ internal fun GenreView(
         modifier = modifier,
         mediaImplCollection = musicMap,
         openMedia = { clickedMediaImpl: MediaImpl ->
-            playbackViewModel.loadMusic(
-                musicSet = genre.getMusicSet(),
+            playbackViewModel.loadMusics(
+                musics = genre.getMusicSet(),
                 musicToPlay = clickedMediaImpl as Music
             )
             openMedia(

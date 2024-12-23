@@ -94,7 +94,7 @@ class PlaybackViewModel : ViewModel() {
     }
 
     fun loadMusicFromFolders(
-        folders: Set<Folder>,
+        folders: Collection<Folder>,
         shuffleMode: Boolean = SettingsManager.shuffleMode,
         musicToPlay: Music? = null
     ) {
@@ -102,8 +102,8 @@ class PlaybackViewModel : ViewModel() {
         folders.forEach { folder: Folder ->
             musicSet.addAll(elements = folder.getAllMusic())
         }
-        this.loadMusic(
-            musicSet = musicSet,
+        this.loadMusics(
+            musics = musicSet,
             shuffleMode = shuffleMode,
             musicToPlay = musicToPlay
         )
@@ -124,15 +124,15 @@ class PlaybackViewModel : ViewModel() {
                 }
                 musicSet
             }
-        this.loadMusic(
-            musicSet = musicSet,
+        this.loadMusics(
+            musics = musicSet,
             shuffleMode = shuffleMode,
             musicToPlay = musicToPlay
         )
     }
 
     fun loadMusicFromMedias(
-        medias: Set<MediaImpl>,
+        medias: Collection<MediaImpl>,
         shuffleMode: Boolean = SettingsManager.shuffleMode,
         musicToPlay: Music? = null,
     ) {
@@ -140,21 +140,21 @@ class PlaybackViewModel : ViewModel() {
         medias.forEach { mediaImpl: MediaImpl ->
             musicSet.addAll(mediaImpl.getMusicSet())
         }
-        this.loadMusic(
-            musicSet = musicSet,
+        this.loadMusics(
+            musics = musicSet,
             shuffleMode = shuffleMode,
             musicToPlay = musicToPlay
         )
     }
 
-    fun loadMusic(
-        musicSet: Set<Music>,
+    fun loadMusics(
+        musics: Collection<Music>,
         shuffleMode: Boolean = SettingsManager.shuffleMode,
         musicToPlay: Music? = null,
     ) {
         PlaybackManager.loadMusics(
             context = MainActivity.instance.applicationContext,
-            musicSet = musicSet,
+            musics = musics,
             shuffleMode = shuffleMode,
             musicToPlay = musicToPlay
         )

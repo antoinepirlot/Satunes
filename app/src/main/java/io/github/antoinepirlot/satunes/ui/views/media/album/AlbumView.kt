@@ -82,10 +82,7 @@ internal fun AlbumView(
 
     if (album.getMusicSet().isNotEmpty())
         satunesViewModel.replaceExtraButtons(extraButtons = {
-            ExtraButtonList(
-                musicSet = album.getMusicSet(),
-                mediaImplSet = null
-            )
+            ExtraButtonList()
         })
     else
         satunesViewModel.clearExtraButtons()
@@ -94,8 +91,8 @@ internal fun AlbumView(
         modifier = modifier,
         mediaImplCollection = musicSet,
         openMedia = { clickedMediaImpl: MediaImpl ->
-            playbackViewModel.loadMusic(
-                musicSet = album.getMusicSet(),
+            playbackViewModel.loadMusics(
+                musics = album.getMusicSet(),
                 musicToPlay = clickedMediaImpl as Music
             )
             openMedia(

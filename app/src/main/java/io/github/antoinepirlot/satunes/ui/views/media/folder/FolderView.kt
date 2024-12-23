@@ -59,10 +59,7 @@ internal fun FolderView(
 
     if (folder.isNotEmpty())
         satunesViewModel.replaceExtraButtons(extraButtons = {
-            ExtraButtonList(
-                musicSet = folder.getAllMusic(),
-                mediaImplSet = null
-            )
+            ExtraButtonList()
         })
     else
         satunesViewModel.clearExtraButtons()

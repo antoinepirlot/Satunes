@@ -58,10 +58,7 @@ internal fun AllGenresListView(
 
     if (genreSet.isNotEmpty())
         satunesViewModel.replaceExtraButtons(extraButtons = {
-            ExtraButtonList(
-                musicSet = null,
-                mediaImplSet = genreSet
-            )
+            ExtraButtonList()
         })
     else
         satunesViewModel.clearExtraButtons()

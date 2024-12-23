@@ -95,7 +95,7 @@ internal fun PlaylistView(
         satunesViewModel.replaceExtraButtons(
             extraButtons = {
                 //It's in a column
-                ExtraButtonList(musicSet = musicSet, mediaImplSet = null)
+                ExtraButtonList()
                 PlaylistExtraButtonList(playlist = playlist)
             }
         )
@@ -110,8 +110,8 @@ internal fun PlaylistView(
         modifier = modifier,
         mediaImplCollection = musicSet,
         openMedia = { clickedMediaImpl: MediaImpl ->
-            playbackViewModel.loadMusic(
-                musicSet = playlist.getMusicSet(),
+            playbackViewModel.loadMusics(
+                musics = playlist.getMusicSet(),
                 musicToPlay = clickedMediaImpl as Music
             )
             openMedia(

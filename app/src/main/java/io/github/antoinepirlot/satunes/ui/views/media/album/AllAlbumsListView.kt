@@ -26,6 +26,8 @@
 package io.github.antoinepirlot.satunes.ui.views.media.album
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -33,6 +35,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
+import io.github.antoinepirlot.satunes.data.states.DataUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
@@ -53,15 +56,13 @@ internal fun AllAlbumsListView(
     dataViewModel: DataViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
 ) {
+    val dataUiState: DataUiState by dataViewModel.uiState.collectAsState()
     val navController: NavHostController = LocalNavController.current
     val albumSet: Set<Album> = dataViewModel.getAlbumSet()
 
     if (albumSet.isNotEmpty())
         satunesViewModel.replaceExtraButtons(extraButtons = {
-            ExtraButtonList(
-                musicSet = null,
-                mediaImplSet = albumSet
-            )
+            ExtraButtonList()
         })
     else
         satunesViewModel.clearExtraButtons()

@@ -58,10 +58,7 @@ internal fun AllArtistsListView(
 
     if (artistSet.isNotEmpty())
         satunesViewModel.replaceExtraButtons(extraButtons = {
-            ExtraButtonList(
-                musicSet = null,
-                mediaImplSet = artistSet
-            )
+            ExtraButtonList()
         })
     else
         satunesViewModel.clearExtraButtons()

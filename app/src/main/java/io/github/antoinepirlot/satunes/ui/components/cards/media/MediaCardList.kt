@@ -45,6 +45,7 @@ import io.github.antoinepirlot.satunes.data.states.DataUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SortListViewModel
+import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
@@ -100,19 +101,21 @@ internal fun MediaCardList(
             if (media == mediaImplList.first()) header?.invoke()
 
             if (showGroupIndication) {
-                when (sortOption) {
-                    SortOptions.TITLE -> FirstLetter(
+                if (sortOption == SortOptions.GENRE) {
+                    if (media is Music) {
+                        FirstGenre(
+                            map = groupMap!!,
+                            mediaImpl = media,
+                            mediaImplList = mediaImplList,
+                        )
+                    }
+                } else {
+                    FirstLetter(
                         map = groupMap!!,
                         mediaImpl = media,
-                        mediaImplList = mediaImplList
-                    )
-                    SortOptions.GENRE -> FirstGenre(
-                        map = groupMap!!,
-                        mediaImpl = media as Music,
                         mediaImplList = mediaImplList,
+                        sortOption = sortOption
                     )
-
-                    else -> throw UnsupportedOperationException("Can't show group for sort: ${sortOption.name}.")
                 }
             }
             MediaCard(
@@ -139,19 +142,25 @@ internal fun MediaCardList(
  * @param mediaImpl the [MediaImpl] used to be checked
  * @param mediaImplList the [List] of [MediaImpl] where to check the first occurrence.
  */
+@Suppress("NAME_SHADOWING")
 @Composable
 private fun FirstLetter(
     map: MutableMap<Any, MediaImpl>,
     mediaImpl: MediaImpl,
-    mediaImplList: List<MediaImpl>
+    mediaImplList: List<MediaImpl>,
+    sortOption: SortOptions
 ) {
+    val titleToCompare: String =
+        getTitleToCompare(mediaImpl = mediaImpl, sortOption = sortOption) ?: return
     val charToCompare: Char = Normalizer
-        .normalize(mediaImpl.title.first().uppercase(), Normalizer.Form.NFD)
-            .first()
-    if (!map.contains(charToCompare)) {
-        map[charToCompare] = mediaImplList.first {
+        .normalize(titleToCompare.first().uppercase(), Normalizer.Form.NFD)
+        .first()
+    if (!map.containsKey(charToCompare)) {
+        map[charToCompare] = mediaImplList.first { mediaImpl: MediaImpl ->
+            val itTitle: String =
+                getTitleToCompare(mediaImpl = mediaImpl, sortOption = sortOption) ?: return
             Normalizer.normalize(
-                it.title.first().uppercase(),
+                itTitle.first().uppercase(),
                 Normalizer.Form.NFD
             ).first() == charToCompare
         }
@@ -164,6 +173,20 @@ private fun FirstLetter(
             textAlign = TextAlign.Left,
             text = charToCompare.toString()
         )
+    }
+}
+
+private fun getTitleToCompare(mediaImpl: MediaImpl, sortOption: SortOptions): String? {
+    return when (sortOption) {
+        SortOptions.TITLE -> mediaImpl.title
+        SortOptions.ALBUM -> if (mediaImpl is Music) mediaImpl.album.title else null
+        SortOptions.ARTIST -> when (mediaImpl) {
+            is Music -> mediaImpl.artist.title
+            is Album -> mediaImpl.artist.title
+            else -> null
+        }
+
+        else -> null
     }
 }
 
@@ -181,7 +204,7 @@ private fun FirstGenre(
     mediaImplList: List<MediaImpl>
 ) {
     val mediaImplToCompare: Genre = mediaImpl.genre
-    if (!map.contains(mediaImplToCompare))
+    if (!map.containsKey(mediaImplToCompare))
         map[mediaImplToCompare] = mediaImplList.first { (it as Music).genre == mediaImplToCompare }
     if (mediaImpl == map[mediaImplToCompare]) {
         Title(

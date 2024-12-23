@@ -40,7 +40,7 @@ import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.router.utils.openMediaFromFolder
 import io.github.antoinepirlot.satunes.ui.components.bars.FolderPath
-import io.github.antoinepirlot.satunes.ui.components.bars.bottom.ExtraButtonList
+import io.github.antoinepirlot.satunes.ui.components.buttons.fab.ExtraButtonList
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 
 /**

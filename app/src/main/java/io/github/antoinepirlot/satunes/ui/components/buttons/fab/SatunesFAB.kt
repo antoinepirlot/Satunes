@@ -23,66 +23,67 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.views.media.album
+package io.github.antoinepirlot.satunes.ui.components.buttons.fab
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
-import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.data.local.LocalNavController
+import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
+import io.github.antoinepirlot.satunes.data.mediaListViews
 import io.github.antoinepirlot.satunes.data.states.DataUiState
+import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
-import io.github.antoinepirlot.satunes.database.models.Album
-import io.github.antoinepirlot.satunes.database.models.MediaImpl
-import io.github.antoinepirlot.satunes.router.utils.openMedia
-import io.github.antoinepirlot.satunes.ui.components.buttons.fab.ExtraButtonList
-import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
+import io.github.antoinepirlot.satunes.ui.components.bars.bottom.ShowCurrentMusicButton
 
 /**
- * @author Antoine Pirlot on 01/04/2024
+ * @author Antoine Pirlot on 23/12/2024
  */
-
 @Composable
-internal fun AllAlbumsListView(
+internal fun SatunesFAB(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
     dataViewModel: DataViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
 ) {
+    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     val dataUiState: DataUiState by dataViewModel.uiState.collectAsState()
-    val navController: NavHostController = LocalNavController.current
-    val albumSet: Set<Album> = dataViewModel.getAlbumSet()
+    val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
 
-    if (albumSet.isNotEmpty())
-        satunesViewModel.replaceExtraButtons(extraButtons = {
-            ExtraButtonList()
-        })
-    else
-        satunesViewModel.clearExtraButtons()
-
-    MediaListView(
+    Box(
         modifier = modifier,
-        mediaImplCollection = albumSet,
-        openMedia = { clickedMediaImpl: MediaImpl ->
-            openMedia(
-                playbackViewModel = playbackViewModel,
-                navController = navController,
-                media = clickedMediaImpl
-            )
-        },
-        emptyViewText = stringResource(id = R.string.no_album)
-    )
+        contentAlignment = Alignment.BottomEnd,
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            val isInMediaListViews: Boolean = satunesUiState.currentDestination in mediaListViews
+            if (isInMediaListViews) satunesUiState.extraButtons?.invoke()
+            if (isInMediaListViews && playbackViewModel.musicPlaying != null)
+                ShowCurrentMusicButton()
+        }
+        SnackbarHost(
+            //Mandatory as for Google a snackbar is on top of FAB icons and does not overlay it.
+            // So the UI is ugly without that modifier
+            modifier = Modifier.padding(start = 30.dp),
+            hostState = snackBarHostState
+        )
+    }
 }
 
 @Preview
 @Composable
-private fun AllAlbumsListViewPreview() {
-    AllAlbumsListView()
+private fun SatunesFABPreview() {
+    SatunesFAB()
 }

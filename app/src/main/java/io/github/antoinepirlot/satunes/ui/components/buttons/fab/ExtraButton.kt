@@ -23,7 +23,7 @@
  *  PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.buttons
+package io.github.antoinepirlot.satunes.ui.components.buttons.fab
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size

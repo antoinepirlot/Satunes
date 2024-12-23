@@ -70,7 +70,7 @@ internal fun MediaCardList(
     openMedia: (mediaImpl: MediaImpl) -> Unit,
     openedPlaylist: Playlist? = null,
     scrollToMusicPlaying: Boolean = false,
-    showFirstElement: Boolean = true,
+    showGroupIndication: Boolean = true,
 ) {
     val dataUiState: DataUiState by dataViewModel.uiState.collectAsState()
     val mediaImplList: List<MediaImpl> = dataUiState.mediaImplList
@@ -89,11 +89,9 @@ internal fun MediaCardList(
         modifier = modifier,
         state = lazyListState
     ) {
-        //Use to store dynamically the first media impl linked to the first occurrence of a letter.
-        val charMediaImplMap: MutableMap<Any, MediaImpl>? =
-            if (showFirstElement && sortOption == SortOptions.TITLE) mutableMapOf() else null
-        val mediaImplMediaImplMap: MutableMap<Any, MediaImpl>? =
-            if (showFirstElement && sortOption != SortOptions.TITLE) mutableMapOf() else null
+        //Use to store dynamically the first media impl linked to the first occurrence of a letter or media impl.
+        val groupMap: MutableMap<Any, MediaImpl>? =
+            if (showGroupIndication) mutableMapOf() else null
 
         items(
             items = mediaImplList,
@@ -101,12 +99,17 @@ internal fun MediaCardList(
         ) { media: MediaImpl ->
             if (media == mediaImplList.first()) header?.invoke()
 
-            if (showFirstElement) {
+            if (showGroupIndication) {
                 when (sortOption) {
-                    SortOptions.TITLE -> FirstLetter(map = charMediaImplMap!!, mediaImpl = media)
-                    else -> FirstMediaImpl(
-                        map = mediaImplMediaImplMap!!,
+                    SortOptions.TITLE -> FirstLetter(
+                        map = groupMap!!,
                         mediaImpl = media,
+                        mediaImplList = mediaImplList
+                    )
+                    else -> FirstMediaImpl(
+                        map = groupMap!!,
+                        mediaImpl = media,
+                        mediaImplList = mediaImplList,
                         sortOption = sortOption
                     )
                 }
@@ -133,14 +136,26 @@ internal fun MediaCardList(
  *
  * @param map the map containing the Char as key and the [MediaImpl] as the value.
  * @param mediaImpl the [MediaImpl] used to be checked
+ * @param mediaImplList the [List] of [MediaImpl] where to check the first occurrence.
  */
 @Composable
-private fun FirstLetter(map: MutableMap<Any, MediaImpl>, mediaImpl: MediaImpl) {
+private fun FirstLetter(
+    map: MutableMap<Any, MediaImpl>,
+    mediaImpl: MediaImpl,
+    mediaImplList: List<MediaImpl>
+) {
     val charToCompare: Char =
         Normalizer.normalize(mediaImpl.title.first().uppercase(), Normalizer.Form.NFD)
             .first()
-    if (!map.contains(charToCompare)) map[charToCompare] = mediaImpl
-    if (mediaImpl == map.getValue(key = charToCompare)) {
+    if (!map.contains(charToCompare)) {
+        map[charToCompare] = mediaImplList.first {
+            Normalizer.normalize(
+                it.title.first().uppercase(),
+                Normalizer.Form.NFD
+            ).first() == charToCompare
+        }
+    }
+    if (mediaImpl == map[charToCompare]) {
         Title(
             modifier = Modifier.padding(start = 34.dp),
             bottomPadding = 0.dp,
@@ -156,12 +171,14 @@ private fun FirstLetter(map: MutableMap<Any, MediaImpl>, mediaImpl: MediaImpl) {
  *
  * @param map the map containing the [MediaImpl] as key and the [MediaImpl] as the value.
  * @param mediaImpl the [MediaImpl] used to be checked
+ * @param mediaImplList the [List] of [MediaImpl] where to check the first occurrence
  * @param sortOption the [SortOptions] to determine which mediaImpl must be the key of map
  */
 @Composable
 private fun FirstMediaImpl(
     map: MutableMap<Any, MediaImpl>,
     mediaImpl: MediaImpl,
+    mediaImplList: List<MediaImpl>,
     sortOption: SortOptions
 ) {
     val mediaImplToCompare: MediaImpl = when (sortOption) {
@@ -189,7 +206,24 @@ private fun FirstMediaImpl(
 
         else -> return
     }
-    if (!map.contains(mediaImplToCompare)) map[mediaImplToCompare] = mediaImpl
+    if (!map.contains(mediaImplToCompare)) {
+        map[mediaImplToCompare] = mediaImplList.first {
+            when (sortOption) {
+                SortOptions.GENRE -> (it as Music).genre == mediaImplToCompare
+                SortOptions.ARTIST -> {
+                    when (it) {
+                        is Music -> it.artist == mediaImplToCompare
+                        is Album -> it.artist == mediaImplToCompare
+                        else -> return
+                    }
+                }
+
+                SortOptions.ALBUM -> (it as Music).album == mediaImplToCompare
+                else -> return
+            }
+
+        }
+    }
     if (mediaImpl == map.getValue(key = mediaImplToCompare)) {
         Title(
             modifier = Modifier.padding(start = 34.dp),

@@ -62,7 +62,7 @@ internal fun PlaybackQueueView(
                 navController = null
             )
         },
-        showFirstElement = false
+        showGroupIndication = false
     )
 }
 

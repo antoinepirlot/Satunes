@@ -62,7 +62,7 @@ internal fun MediaListView(
     openMedia: (mediaImpl: MediaImpl) -> Unit,
     openedPlaylistWithMusics: Playlist? = null,
     header: (@Composable () -> Unit)? = null,
-    emptyViewText: String
+    emptyViewText: String,
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     val lazyListState = rememberLazyListState()
@@ -80,7 +80,7 @@ internal fun MediaListView(
             lazyListState = lazyListState,
             header = header,
             openMedia = openMedia,
-            openedPlaylist = openedPlaylistWithMusics
+            openedPlaylist = openedPlaylistWithMusics,
         )
     } else {
         if (header != null) {

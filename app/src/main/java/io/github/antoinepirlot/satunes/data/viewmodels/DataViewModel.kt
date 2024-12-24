@@ -979,36 +979,5 @@ class DataViewModel : ViewModel() {
                 //TODO use string comparator as to sort by sortOption then by title
         this.currentSortOption = sortOption
         return mediaImplList.sortedWith(sortOption.comparator)
-//              TODO remove  currentState.mediaImplList.sortedBy { mediaImpl: MediaImpl ->
-//                    when (sortOption) {
-//                        SortOptions.TITLE -> mediaImpl.title
-//                        SortOptions.ARTIST -> {
-//                            when (mediaImpl) {
-//                                is Music -> mediaImpl.artist.title
-//                                is Album -> mediaImpl.artist.title
-//                                else -> throw NotSortableException()
-//                            }
-//                        }
-//
-//                        SortOptions.ALBUM -> {
-//                            when (mediaImpl) {
-//                                is Music -> mediaImpl.album.title
-//                                else -> throw NotSortableException()
-//                            }
-//                        }
-//
-//                        SortOptions.GENRE -> {
-//                            when (mediaImpl) {
-//                                is Music -> mediaImpl.genre.title
-//                                else -> throw NotSortableException()
-//                            }
-//                        }
-//                    }
-//                }
-//            } catch (_: NotSortableException) {
-//                currentState.mediaImplList
-//            }
-//            if (sortedMediaImplList !== currentState.mediaImplList)
-//            currentState.copy(mediaImplList = sortedMediaImplList)
     }
 }

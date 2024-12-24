@@ -27,7 +27,6 @@ package io.github.antoinepirlot.satunes.ui.views.media
 
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -65,10 +64,6 @@ internal fun MediaListView(
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     val lazyListState = rememberLazyListState()
 
-    LaunchedEffect(key1 = mediaImplCollection) {
-        dataViewModel.updateListToShow(mediaImplCollection = mediaImplCollection)
-    }
-
     if (satunesUiState.showSortDialog)
         SortListDialog()
 
@@ -76,6 +71,7 @@ internal fun MediaListView(
         MediaCardList(
             modifier = modifier,
             lazyListState = lazyListState,
+            mediaImplCollection = mediaImplCollection,
             header = header,
             openMedia = openMedia,
             openedPlaylist = openedPlaylistWithMusics,

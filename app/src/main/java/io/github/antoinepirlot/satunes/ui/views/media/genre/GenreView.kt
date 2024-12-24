@@ -59,7 +59,7 @@ internal fun GenreView(
     genre: Genre,
 ) {
     val navController: NavHostController = LocalNavController.current
-    val musicMap: Set<Music> = genre.getMusicSet()
+    val musicSet: Set<Music> = genre.getMusicSet()
     val albumSet: Set<Album> = genre.getAlbumSet()
 
     //Recompose if data changed
@@ -69,16 +69,16 @@ internal fun GenreView(
     }
     //
 
-    if (albumSet.isNotEmpty())
+    if (musicSet.isNotEmpty())
         satunesViewModel.replaceExtraButtons(extraButtons = {
-            ExtraButtonList()
+            ExtraButtonList(mediaImplCollection = musicSet)
         })
     else
         satunesViewModel.clearExtraButtons()
 
     MediaListView(
         modifier = modifier,
-        mediaImplCollection = musicMap,
+        mediaImplCollection = musicSet,
         openMedia = { clickedMediaImpl: MediaImpl ->
             playbackViewModel.loadMusics(
                 musics = genre.getMusicSet(),

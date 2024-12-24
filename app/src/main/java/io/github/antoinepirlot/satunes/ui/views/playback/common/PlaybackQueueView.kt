@@ -32,7 +32,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.texts.Title
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.router.utils.openMedia
@@ -45,13 +44,11 @@ import io.github.antoinepirlot.satunes.ui.components.cards.media.MediaCardList
 @Composable
 internal fun PlaybackQueueView(
     modifier: Modifier = Modifier,
-    dataViewModel: DataViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
 ) {
-    dataViewModel.updateListToShow(playbackViewModel.getPlaylist())
-
     MediaCardList(
         modifier = modifier,
+        mediaImplCollection = playbackViewModel.getPlaylist(),
         scrollToMusicPlaying = true,
         header = { Title(text = stringResource(id = R.string.playback_queue)) },
         openMedia = { mediaImpl: MediaImpl ->

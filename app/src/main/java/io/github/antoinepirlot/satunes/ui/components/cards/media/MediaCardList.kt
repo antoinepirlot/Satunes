@@ -32,8 +32,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -41,7 +39,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.texts.Title
-import io.github.antoinepirlot.satunes.data.states.DataUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SortListViewModel
@@ -67,18 +64,25 @@ internal fun MediaCardList(
     dataViewModel: DataViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
     sortListViewModel: SortListViewModel = viewModel(),
+    mediaImplCollection: Collection<MediaImpl>,
     header: @Composable (() -> Unit)? = null,
     openMedia: (mediaImpl: MediaImpl) -> Unit,
     openedPlaylist: Playlist? = null,
     scrollToMusicPlaying: Boolean = false,
     showGroupIndication: Boolean = true,
 ) {
-    val dataUiState: DataUiState by dataViewModel.uiState.collectAsState()
-    val mediaImplList: List<MediaImpl> = dataUiState.mediaImplList
+    var mediaImplList: List<MediaImpl> = try {
+        mediaImplCollection as List<MediaImpl>
+    } catch (_: ClassCastException) {
+        mediaImplCollection.toList()
+    }
     if (mediaImplList.isEmpty()) return // It fixes issue while accessing last folder in chain
     val sortOption: SortOptions = dataViewModel.currentSortOption
     if (sortListViewModel.currentSortOption != sortOption)
-        dataViewModel.sortMediaImplListBy(sortOption = sortListViewModel.currentSortOption)
+        mediaImplList = dataViewModel.sortMediaImplListBy(
+            sortOption = sortListViewModel.currentSortOption,
+            mediaImplList
+        )
 
     LaunchedEffect(key1 = dataViewModel.currentSortOption) {
         CoroutineScope(Dispatchers.Main).launch {
@@ -221,6 +225,7 @@ private fun FirstGenre(
 @Preview
 private fun CardListPreview() {
     MediaCardList(
+        mediaImplCollection = listOf(),
         header = {},
         openMedia = {},
         openedPlaylist = null,

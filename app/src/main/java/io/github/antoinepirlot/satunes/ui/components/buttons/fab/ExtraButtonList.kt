@@ -34,9 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
-import io.github.antoinepirlot.satunes.data.states.DataUiState
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
-import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
@@ -50,18 +48,17 @@ import io.github.antoinepirlot.satunes.router.utils.openMedia
  *
  * @param modifier the [Modifier].
  * @param playbackViewModel the [PlaybackViewModel] initialized by default.
+ * @param mediaImplCollection the [Collection] of [MediaImpl] to load and play.
  */
 @Composable
 internal fun ExtraButtonList(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
-    dataViewModel: DataViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
+    mediaImplCollection: Collection<MediaImpl>
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
-    val dataUiState: DataUiState by dataViewModel.uiState.collectAsState()
     val navController: NavHostController = LocalNavController.current
-    val mediaImplCollection: Collection<MediaImpl> = dataUiState.mediaImplList
 
     Column(
         modifier = modifier,

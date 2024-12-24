@@ -63,7 +63,7 @@ internal fun RootFolderView(
             musicSet.addAll(folder.getAllMusic())
         }
         satunesViewModel.replaceExtraButtons(extraButtons = {
-            ExtraButtonList()
+            ExtraButtonList(mediaImplCollection = musicSet)
         })
     } else
         satunesViewModel.clearExtraButtons()

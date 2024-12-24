@@ -39,7 +39,6 @@ import androidx.lifecycle.ViewModel
 import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.defaultSortingOptions
-import io.github.antoinepirlot.satunes.data.states.DataUiState
 import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.exceptions.BlankStringException
 import io.github.antoinepirlot.satunes.database.exceptions.LikesPlaylistCreationException
@@ -62,10 +61,6 @@ import io.github.antoinepirlot.satunes.utils.getNow
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import io.github.antoinepirlot.satunes.database.R as RDb
@@ -74,16 +69,10 @@ import io.github.antoinepirlot.satunes.database.R as RDb
  * @author Antoine Pirlot on 19/07/2024
  */
 class DataViewModel : ViewModel() {
-    companion object {
-        private val _uiState: MutableStateFlow<DataUiState> = MutableStateFlow(DataUiState())
-    }
-
     private val _logger: SatunesLogger = SatunesLogger.getLogger()
     private val _playlistSetUpdated: MutableState<Boolean> = DataManager.playlistsMapUpdated
     private val _db: DatabaseManager =
         DatabaseManager.initInstance(context = MainActivity.instance.applicationContext)
-
-    val uiState: StateFlow<DataUiState> = _uiState.asStateFlow()
 
     var playlistSetUpdated: Boolean by _playlistSetUpdated
         private set
@@ -112,17 +101,6 @@ class DataViewModel : ViewModel() {
     fun getGenre(id: Long): Genre = DataManager.getGenre(id = id)!!
     fun getPlaylist(id: Long): Playlist = DataManager.getPlaylist(id = id)!!
     fun getPlaylist(title: String): Playlist = DataManager.getPlaylist(title = title)!!
-
-    fun updateListToShow(mediaImplCollection: Collection<MediaImpl>) {
-        val mediaImplList: List<MediaImpl> = try {
-            mediaImplCollection as List<MediaImpl>
-        } catch (_: ClassCastException) {
-            mediaImplCollection.toList()
-        }
-        _uiState.update { currentState: DataUiState ->
-            currentState.copy(mediaImplList = mediaImplList)
-        }
-    }
 
     fun addOnePlaylist(
         scope: CoroutineScope,
@@ -990,13 +968,18 @@ class DataViewModel : ViewModel() {
      * Sort the media impl list by sortOption.
      *
      * @param sortOption the option to sort the [List] of [MediaImpl] with the [SortOptions].
+     * @param mediaImplList the [List] of [MediaImpl] to sort
+     *
+     * @return the sorted [List] of [MediaImpl]
      */
-    fun sortMediaImplListBy(sortOption: SortOptions) {
-        _uiState.update { currentState: DataUiState ->
-            val sortedMediaImplList: List<MediaImpl> = //try {
+    fun sortMediaImplListBy(
+        sortOption: SortOptions,
+        mediaImplList: List<MediaImpl>
+    ): List<MediaImpl> {
                 //TODO use string comparator as to sort by sortOption then by title
-                currentState.mediaImplList.sortedWith(sortOption.comparator)
-//                currentState.mediaImplList.sortedBy { mediaImpl: MediaImpl ->
+        this.currentSortOption = sortOption
+        return mediaImplList.sortedWith(sortOption.comparator)
+//              TODO remove  currentState.mediaImplList.sortedBy { mediaImpl: MediaImpl ->
 //                    when (sortOption) {
 //                        SortOptions.TITLE -> mediaImpl.title
 //                        SortOptions.ARTIST -> {
@@ -1025,9 +1008,7 @@ class DataViewModel : ViewModel() {
 //            } catch (_: NotSortableException) {
 //                currentState.mediaImplList
 //            }
-            if (sortedMediaImplList !== currentState.mediaImplList)
-                this.currentSortOption = sortOption
-            currentState.copy(mediaImplList = sortedMediaImplList)
-        }
+//            if (sortedMediaImplList !== currentState.mediaImplList)
+//            currentState.copy(mediaImplList = sortedMediaImplList)
     }
 }

@@ -976,7 +976,6 @@ class DataViewModel : ViewModel() {
         sortOption: SortOptions,
         mediaImplList: List<MediaImpl>
     ): List<MediaImpl> {
-                //TODO use string comparator as to sort by sortOption then by title
         this.currentSortOption = sortOption
         return mediaImplList.sortedWith(sortOption.comparator)
     }

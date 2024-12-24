@@ -49,6 +49,8 @@ import io.github.antoinepirlot.satunes.router.utils.openMedia
  * @param modifier the [Modifier].
  * @param playbackViewModel the [PlaybackViewModel] initialized by default.
  * @param mediaImplCollection the [Collection] of [MediaImpl] to load and play.
+ *
+ * @author Antoine Pirlot on 11/12/2024
  */
 @Composable
 internal fun ExtraButtonList(

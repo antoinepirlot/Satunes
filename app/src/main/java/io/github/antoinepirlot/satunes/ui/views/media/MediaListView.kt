@@ -25,7 +25,6 @@
 
 package io.github.antoinepirlot.satunes.ui.views.media
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -52,7 +51,6 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.SortListDialog
  * @author Antoine Pirlot on 01/02/24
  */
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 internal fun MediaListView(
     modifier: Modifier = Modifier,

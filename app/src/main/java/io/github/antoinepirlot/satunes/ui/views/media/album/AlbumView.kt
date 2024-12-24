@@ -80,7 +80,7 @@ internal fun AlbumView(
     }
     //
 
-    if (album.getMusicSet().isNotEmpty())
+    if (musicSet.isNotEmpty())
         satunesViewModel.replaceExtraButtons(extraButtons = {
             ExtraButtonList()
         })

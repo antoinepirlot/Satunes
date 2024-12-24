@@ -99,35 +99,41 @@ internal fun Router(
             satunesViewModel = satunesViewModel,
             dataViewModel = dataViewModel,
             onStart = {
-                if (checkIfAllowed(
+                if (
+                    checkIfAllowed(
                         satunesUiState = satunesUiState,
                         isAudioAllowed = isAudioAllowed,
                         navController = navController
                     )
-                ) satunesViewModel.setCurrentDestination(destination = it.destination.route!!)
+                )
+                    satunesViewModel.setCurrentDestination(destination = it.destination.route!!)
             }
         )
         searchRoutes(
             satunesViewModel = satunesViewModel,
             onStart = {
-                if (checkIfAllowed(
+                if (
+                    checkIfAllowed(
                         satunesUiState = satunesUiState,
                         isAudioAllowed = isAudioAllowed,
                         navController = navController
                     )
-                ) satunesViewModel.setCurrentDestination(destination = it.destination.route!!)
+                )
+                    satunesViewModel.setCurrentDestination(destination = it.destination.route!!)
             }
         )
         playbackRoutes(
             satunesViewModel = satunesViewModel,
             playbackViewModel = playbackViewModel,
             onStart = {
-                if (checkIfAllowed(
+                if (
+                    checkIfAllowed(
                         satunesUiState = satunesUiState,
                         isAudioAllowed = isAudioAllowed,
                         navController = navController
                     )
-                ) satunesViewModel.setCurrentDestination(destination = it.destination.route!!)
+                )
+                    satunesViewModel.setCurrentDestination(destination = it.destination.route!!)
             }
         )
         settingsRoutes(

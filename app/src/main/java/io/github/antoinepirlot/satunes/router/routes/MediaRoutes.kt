@@ -26,6 +26,7 @@
 package io.github.antoinepirlot.satunes.router.routes
 
 import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -61,7 +62,10 @@ internal fun NavGraphBuilder.mediaRoutes(
 ) {
     composable(Destination.FOLDERS.link) {
         // /!\ This route prevent back gesture to exit the app
-        onStart(it)
+        LaunchedEffect(key1 = Unit) {
+            onStart(it)
+        }
+
         if (satunesViewModel.isLoadingData || !satunesViewModel.isDataLoaded) {
             LoadingView()
         } else {
@@ -70,7 +74,9 @@ internal fun NavGraphBuilder.mediaRoutes(
     }
 
     composable(Destination.FOLDER.link) {
-        onStart(it)
+        LaunchedEffect(key1 = Unit) {
+            onStart(it)
+        }
 
         if (satunesViewModel.isLoadingData || !satunesViewModel.isDataLoaded) {
             LoadingView()
@@ -82,7 +88,9 @@ internal fun NavGraphBuilder.mediaRoutes(
     }
 
     composable(Destination.ARTISTS.link) {
-        onStart(it)
+        LaunchedEffect(key1 = Unit) {
+            onStart(it)
+        }
 
         if (satunesViewModel.isLoadingData || !satunesViewModel.isDataLoaded) {
             LoadingView()
@@ -92,7 +100,9 @@ internal fun NavGraphBuilder.mediaRoutes(
     }
 
     composable(Destination.ARTIST.link) {
-        onStart(it)
+        LaunchedEffect(key1 = Unit) {
+            onStart(it)
+        }
 
         if (satunesViewModel.isLoadingData || !satunesViewModel.isDataLoaded) {
             LoadingView()
@@ -104,7 +114,9 @@ internal fun NavGraphBuilder.mediaRoutes(
     }
 
     composable(Destination.ALBUMS.link) {
-        onStart(it)
+        LaunchedEffect(key1 = Unit) {
+            onStart(it)
+        }
 
         if (satunesViewModel.isLoadingData || !satunesViewModel.isDataLoaded) {
             LoadingView()
@@ -114,7 +126,9 @@ internal fun NavGraphBuilder.mediaRoutes(
     }
 
     composable(Destination.ALBUM.link) {
-        onStart(it)
+        LaunchedEffect(key1 = Unit) {
+            onStart(it)
+        }
 
         if (satunesViewModel.isLoadingData || !satunesViewModel.isDataLoaded) {
             LoadingView()
@@ -126,7 +140,9 @@ internal fun NavGraphBuilder.mediaRoutes(
     }
 
     composable(Destination.GENRES.link) {
-        onStart(it)
+        LaunchedEffect(key1 = Unit) {
+            onStart(it)
+        }
 
         if (satunesViewModel.isLoadingData || !satunesViewModel.isDataLoaded) {
             LoadingView()
@@ -136,7 +152,9 @@ internal fun NavGraphBuilder.mediaRoutes(
     }
 
     composable(Destination.GENRE.link) {
-        onStart(it)
+        LaunchedEffect(key1 = Unit) {
+            onStart(it)
+        }
 
         if (satunesViewModel.isLoadingData || !satunesViewModel.isDataLoaded) {
             LoadingView()
@@ -148,7 +166,9 @@ internal fun NavGraphBuilder.mediaRoutes(
     }
 
     composable(Destination.PLAYLISTS.link) {
-        onStart(it)
+        LaunchedEffect(key1 = Unit) {
+            onStart(it)
+        }
 
         if (satunesViewModel.isLoadingData || !satunesViewModel.isDataLoaded) {
             LoadingView()
@@ -158,7 +178,9 @@ internal fun NavGraphBuilder.mediaRoutes(
     }
 
     composable(Destination.PLAYLIST.link) {
-        onStart(it)
+        LaunchedEffect(key1 = Unit) {
+            onStart(it)
+        }
 
         if (satunesViewModel.isLoadingData || !satunesViewModel.isDataLoaded) {
             LoadingView()
@@ -170,7 +192,9 @@ internal fun NavGraphBuilder.mediaRoutes(
     }
 
     composable(Destination.MUSICS.link) {
-        onStart(it)
+        LaunchedEffect(key1 = Unit) {
+            onStart(it)
+        }
 
         if (satunesViewModel.isLoadingData || !satunesViewModel.isDataLoaded) {
             LoadingView()

@@ -65,7 +65,6 @@ internal fun MediaListView(
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     val lazyListState = rememberLazyListState()
 
-    //TODO remove launch effect to fix list not refreshing after back navigation 
     LaunchedEffect(key1 = mediaImplCollection) {
         dataViewModel.updateListToShow(mediaImplCollection = mediaImplCollection)
     }

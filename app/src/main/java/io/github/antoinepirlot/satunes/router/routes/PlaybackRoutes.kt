@@ -26,6 +26,7 @@
 package io.github.antoinepirlot.satunes.router.routes
 
 import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -51,7 +52,9 @@ internal fun NavGraphBuilder.playbackRoutes(
     onStart: AnimatedContentScope.(NavBackStackEntry) -> Unit,
 ) {
     composable(Destination.PLAYBACK.link) {
-        onStart(it)
+        LaunchedEffect(key1 = Unit) {
+            onStart(it)
+        }
 
         if (satunesViewModel.isLoadingData || !satunesViewModel.isDataLoaded) {
             LoadingView()
@@ -79,7 +82,9 @@ internal fun NavGraphBuilder.playbackRoutes(
     }
 
     composable(Destination.PLAYBACK_QUEUE.link) {
-        onStart(it)
+        LaunchedEffect(key1 = Unit) {
+            onStart(it)
+        }
         PlaybackQueueView()
     }
 }

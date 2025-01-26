@@ -91,7 +91,7 @@ internal fun MediaCardList(
         modifier = modifier,
         state = lazyListState
     ) {
-        //Use to store dynamically the first media impl linked to the first occurrence of a letter or media impl.
+        //Used to store dynamically the first media impl linked to the first occurrence of a letter or media impl.
         val groupMap: MutableMap<Any, MediaImpl>? =
             if (showGroupIndication) mutableMapOf() else null
 
@@ -168,10 +168,10 @@ private fun FirstLetter(
     }
     if (mediaImpl == map[charToCompare]) {
         Title(
-            modifier = Modifier.padding(start = 34.dp),
+            modifier = Modifier.padding(vertical = 15.dp),
             bottomPadding = 0.dp,
             fontSize = 30.sp,
-            textAlign = TextAlign.Left,
+            textAlign = TextAlign.Center,
             text = charToCompare.toString()
         )
     }

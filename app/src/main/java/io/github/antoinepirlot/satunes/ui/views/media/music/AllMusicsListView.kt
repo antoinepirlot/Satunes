@@ -23,6 +23,7 @@
 package io.github.antoinepirlot.satunes.ui.views.media.music
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -54,12 +55,14 @@ internal fun AllMusicsListView(
     //Find a way to do something more aesthetic but it works
     val musicSet: Set<Music> = dataViewModel.getMusicSet()
 
-    if (musicSet.isNotEmpty())
-        satunesViewModel.replaceExtraButtons(extraButtons = {
-            ExtraButtonList(mediaImplCollection = musicSet)
-        })
-    else
-        satunesViewModel.clearExtraButtons()
+    LaunchedEffect(key1 = dataViewModel.isLoaded) {
+        if (musicSet.isNotEmpty())
+            satunesViewModel.replaceExtraButtons(extraButtons = {
+                ExtraButtonList(mediaImplCollection = musicSet)
+            })
+        else
+            satunesViewModel.clearExtraButtons()
+    }
 
     MediaListView(
         modifier = modifier,

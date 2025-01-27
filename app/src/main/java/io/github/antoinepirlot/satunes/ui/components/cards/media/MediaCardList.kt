@@ -68,20 +68,15 @@ internal fun MediaCardList(
     scrollToMusicPlaying: Boolean = false,
     showGroupIndication: Boolean = true,
 ) {
-    var mediaImplList: List<MediaImpl> = try {
-        mediaImplCollection as List<MediaImpl>
-    } catch (_: ClassCastException) {
-        mediaImplCollection.toList()
-    }
-    if (mediaImplList.isEmpty()) return // It fixes issue while accessing last folder in chain
-    val sortOption: SortOptions = dataViewModel.currentSortOption
-    if (sortListViewModel.currentSortOption != sortOption)
-        mediaImplList = dataViewModel.sortMediaImplListBy(
-            sortOption = sortListViewModel.currentSortOption,
-            mediaImplList
-        )
+    if (mediaImplCollection.isEmpty()) return // It fixes issue while accessing last folder in chain
 
-    LaunchedEffect(key1 = dataViewModel.currentSortOption) {
+    val sortOption: SortOptions = sortListViewModel.currentSortOption
+    var mediaImplList: List<MediaImpl> = dataViewModel.sortMediaImplListBy(
+        sortOption = sortOption,
+        mediaImplList = mediaImplCollection
+    )
+
+    LaunchedEffect(key1 = sortListViewModel.currentSortOption) {
         CoroutineScope(Dispatchers.Main).launch {
             lazyListState.scrollToItem(0)
         }

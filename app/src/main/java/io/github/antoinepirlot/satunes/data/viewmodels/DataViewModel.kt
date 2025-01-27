@@ -971,7 +971,7 @@ class DataViewModel : ViewModel() {
      */
     fun sortMediaImplListBy(
         sortOption: SortOptions,
-        mediaImplList: List<MediaImpl>
+        mediaImplList: Collection<MediaImpl>
     ): List<MediaImpl> {
         this.currentSortOption = sortOption
         return mediaImplList.sortedWith(sortOption.comparator)

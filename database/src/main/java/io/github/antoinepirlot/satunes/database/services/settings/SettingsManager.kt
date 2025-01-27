@@ -1,26 +1,23 @@
 /*
  * This file is part of Satunes.
  *
- *  Satunes is free software: you can redistribute it and/or modify it under
- *  the terms of the GNU General Public License as published by the Free Software Foundation,
- *  either version 3 of the License, or (at your option) any later version.
+ * Satunes is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later version.
+ * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License along with Satunes.
+ * If not, see <https://www.gnu.org/licenses/>.
  *
- *  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- *  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *  See the GNU General Public License for more details.
+ * *** INFORMATION ABOUT THE AUTHOR *****
+ * The author of this file is Antoine Pirlot, the owner of this project.
+ * You find this original project on github.
  *
- *  You should have received a copy of the GNU General Public License along with Satunes.
- *  If not, see <https://www.gnu.org/licenses/>.
+ * My github link is: https://github.com/antoinepirlot
+ * This current project's link is: https://github.com/antoinepirlot/Satunes
  *
- *  **** INFORMATIONS ABOUT THE AUTHOR *****
- *  The author of this file is Antoine Pirlot, the owner of this project.
- *  You find this original project on github.
- *
- *  My github link is: https://github.com/antoinepirlot
- *  This current project's link is: https://github.com/antoinepirlot/Satunes
- *
- *  You can contact me via my email: pirlot.antoine@outlook.com
- *  PS: I don't answer quickly.
+ * PS: I don't answer quickly.
  */
 
 package io.github.antoinepirlot.satunes.database.services.settings
@@ -88,6 +85,7 @@ object SettingsManager {
     private const val DEFAULT_ARTISTS_REPLACEMENT: Boolean = true
     private const val DEFAULT_FORWARD_MS: Long = 5000L
     private const val DEFAULT_REWIND_MS: Long = DEFAULT_FORWARD_MS
+    private const val DEFAULT_SHOW_FIRST_LETTER = true
 
     /**
      * KEYS
@@ -129,6 +127,8 @@ object SettingsManager {
         booleanPreferencesKey("artist_replacement")
     private val FORWARD_MS_KEY: Preferences.Key<Long> = longPreferencesKey("forward_ms")
     private val REWIND_MS_KEY: Preferences.Key<Long> = longPreferencesKey("rewind_ms")
+    private val SHOW_FIRST_LETTER_KEY: Preferences.Key<Boolean> =
+        booleanPreferencesKey("show_first_letter")
 
     /**
      * VARIABLES
@@ -197,10 +197,12 @@ object SettingsManager {
 
     val forwardMs: MutableLongState = mutableLongStateOf(DEFAULT_FORWARD_MS)
     val rewindMs: MutableLongState = mutableLongStateOf(DEFAULT_REWIND_MS)
+    var showFirstLetter: Boolean = DEFAULT_SHOW_FIRST_LETTER
+        private set
 
     suspend fun loadSettings(context: Context) {
         if (_isLoaded) {
-            _logger.info("Settings already loaded")
+            _logger?.info("Settings already loaded")
             return
         }
         context.dataStore.data.map { preferences: Preferences ->
@@ -258,6 +260,7 @@ object SettingsManager {
 
             forwardMs.longValue = preferences[FORWARD_MS_KEY] ?: DEFAULT_FORWARD_MS
             rewindMs.longValue = preferences[REWIND_MS_KEY] ?: DEFAULT_REWIND_MS
+            showFirstLetter = preferences[SHOW_FIRST_LETTER_KEY] ?: DEFAULT_SHOW_FIRST_LETTER
 
             DataLoader.loadFoldersPaths()
 
@@ -600,6 +603,13 @@ object SettingsManager {
         }
     }
 
+    suspend fun switchShowFirstLetter(context: Context) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            this.showFirstLetter = !this.showFirstLetter
+            preferences[SHOW_FIRST_LETTER_KEY] = this.showFirstLetter
+        }
+    }
+
     suspend fun resetFoldersSettings(context: Context) {
         context.dataStore.edit { preferences: MutablePreferences ->
             this.foldersPathsSelectedSet.value = DEFAULT_SELECTED_PATHS
@@ -611,8 +621,10 @@ object SettingsManager {
         context.dataStore.edit { preferences: MutablePreferences ->
             this.compilationMusic = DEFAULT_COMPILATION_MUSIC
             this.artistReplacement = DEFAULT_ARTISTS_REPLACEMENT
+            this.showFirstLetter = DEFAULT_SHOW_FIRST_LETTER
             preferences[COMPILATION_MUSIC_KEY] = this.compilationMusic
             preferences[ARTISTS_REPLACEMENT_KEY] = this.artistReplacement
+            preferences[SHOW_FIRST_LETTER_KEY] = this.showFirstLetter
         }
     }
 

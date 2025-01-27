@@ -45,9 +45,18 @@ android {
 dependencies {
 
     implementation(libs.material)
+    implementation(libs.junit.junit)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+
+    /**
+     * Mockito
+     */
+    testImplementation(libs.mockito.kotlin)
+    testImplementation(libs.androidx.core)
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.mockk)
 
     /**
      * Serialization to JSON

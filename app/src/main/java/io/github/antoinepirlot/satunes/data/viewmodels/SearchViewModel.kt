@@ -1,26 +1,23 @@
 /*
  * This file is part of Satunes.
  *
- *  Satunes is free software: you can redistribute it and/or modify it under
- *  the terms of the GNU General Public License as published by the Free Software Foundation,
- *  either version 3 of the License, or (at your option) any later version.
+ * Satunes is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later version.
+ * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License along with Satunes.
+ * If not, see <https://www.gnu.org/licenses/>.
  *
- *  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- *  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *  See the GNU General Public License for more details.
+ * *** INFORMATION ABOUT THE AUTHOR *****
+ * The author of this file is Antoine Pirlot, the owner of this project.
+ * You find this original project on github.
  *
- *  You should have received a copy of the GNU General Public License along with Satunes.
- *  If not, see <https://www.gnu.org/licenses/>.
+ * My github link is: https://github.com/antoinepirlot
+ * This current project's link is: https://github.com/antoinepirlot/Satunes
  *
- *  **** INFORMATIONS ABOUT THE AUTHOR *****
- *  The author of this file is Antoine Pirlot, the owner of this project.
- *  You find this original project on github.
- *
- *  My github link is: https://github.com/antoinepirlot
- *  This current project's link is: https://github.com/antoinepirlot/Satunes
- *
- *  You can contact me via my email: pirlot.antoine@outlook.com
- *  PS: I don't answer quickly.
+ * PS: I don't answer quickly.
  */
 
 package io.github.antoinepirlot.satunes.data.viewmodels
@@ -57,7 +54,7 @@ import java.util.SortedSet
  */
 class SearchViewModel : ViewModel() {
     private val _uiState: MutableStateFlow<SearchUiState> = MutableStateFlow(SearchUiState())
-    private val _logger: SatunesLogger = SatunesLogger.getLogger()
+    private val _logger: SatunesLogger? = SatunesLogger.getLogger()
     private val _filtersList: MutableMap<SearchChips, Boolean> = mutableMapOf(
         Pair(SearchChips.MUSICS, SettingsManager.musicsFilter),
         Pair(SearchChips.ALBUMS, SettingsManager.albumsFilter),
@@ -72,12 +69,6 @@ class SearchViewModel : ViewModel() {
     val selectedSearchChips: MutableList<SearchChips> = mutableStateListOf()
 
     var query: String by mutableStateOf("")
-        private set
-
-    val mediaImplSet: SortedSet<MediaImpl> = sortedSetOf()
-
-    //Used to recompose
-    var mediaImplSetHasChanged: Boolean by mutableStateOf(false)
         private set
 
     init {
@@ -106,7 +97,7 @@ class SearchViewModel : ViewModel() {
                 }
             }
         } catch (e: Throwable) {
-            _logger.severe(e.message)
+            _logger?.severe(e.message)
             throw e
         }
     }
@@ -142,7 +133,7 @@ class SearchViewModel : ViewModel() {
                 }
             }
         } catch (e: Throwable) {
-            _logger.severe(e.message)
+            _logger?.severe(e.message)
             throw e
         }
     }
@@ -151,12 +142,8 @@ class SearchViewModel : ViewModel() {
         dataViewModel: DataViewModel,
         selectedSearchChips: List<SearchChips>,
     ) {
-        mediaImplSet.clear()
-        if (this.query.isBlank()) {
-            // Prevent loop if string is "" or " "
-            mediaImplSetHasChanged = true
-            return
-        }
+        val mediaImplSet: SortedSet<MediaImpl> = sortedSetOf()
+        if (this.query.isBlank()) return // Prevent loop if string is "" or " "
 
         val query: String = this.query.trim().lowercase()
 
@@ -215,11 +202,8 @@ class SearchViewModel : ViewModel() {
                 }
             }
         }
-        mediaImplSetHasChanged = true
-    }
-
-    //Used to recompose
-    fun mediaImplChangeUpdated() {
-        mediaImplSetHasChanged = false
+        this._uiState.update { currentState: SearchUiState ->
+            currentState.copy(mediaImplSet = mediaImplSet)
+        }
     }
 }

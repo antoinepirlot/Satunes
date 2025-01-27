@@ -1,26 +1,23 @@
 /*
  * This file is part of Satunes.
  *
- *  Satunes is free software: you can redistribute it and/or modify it under
- *  the terms of the GNU General Public License as published by the Free Software Foundation,
- *  either version 3 of the License, or (at your option) any later version.
+ * Satunes is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later version.
+ * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License along with Satunes.
+ * If not, see <https://www.gnu.org/licenses/>.
  *
- *  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- *  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *  See the GNU General Public License for more details.
+ * *** INFORMATION ABOUT THE AUTHOR *****
+ * The author of this file is Antoine Pirlot, the owner of this project.
+ * You find this original project on github.
  *
- *  You should have received a copy of the GNU General Public License along with Satunes.
- *  If not, see <https://www.gnu.org/licenses/>.
+ * My github link is: https://github.com/antoinepirlot
+ * This current project's link is: https://github.com/antoinepirlot/Satunes
  *
- *  **** INFORMATIONS ABOUT THE AUTHOR *****
- *  The author of this file is Antoine Pirlot, the owner of this project.
- *  You find this original project on github.
- *
- *  My github link is: https://github.com/antoinepirlot
- *  This current project's link is: https://github.com/antoinepirlot/Satunes
- *
- *  You can contact me via my email: pirlot.antoine@outlook.com
- *  PS: I don't answer quickly.
+ * PS: I don't answer quickly.
  */
 
 package io.github.antoinepirlot.satunes.router
@@ -33,6 +30,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -63,14 +63,21 @@ internal fun Router(
     dataViewModel: DataViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
 ) {
-    SatunesLogger.getLogger().info("Router Composable")
+    SatunesLogger.getLogger()?.info("Router Composable")
 
     val context: Context = LocalContext.current
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     val navController: NavHostController = LocalNavController.current
     val isAudioAllowed: Boolean = satunesViewModel.isAudioAllowed
-    val defaultDestination: Destination =
-        getNavBarSectionDestination(navBarSection = satunesUiState.defaultNavBarSection)
+    var defaultDestination: Destination? by rememberSaveable { mutableStateOf(null) }
+
+
+    LaunchedEffect(key1 = Unit) {
+        defaultDestination =
+            getNavBarSectionDestination(navBarSection = satunesUiState.defaultNavBarSection)
+    }
+
+    if (defaultDestination == null) return
 
     LaunchedEffect(key1 = isAudioAllowed) {
         if (isAudioAllowed) {
@@ -81,7 +88,7 @@ internal fun Router(
     NavHost(
         modifier = modifier,
         navController = navController,
-        startDestination = defaultDestination.link,
+        startDestination = defaultDestination!!.link,
         enterTransition = { fadeIn(animationSpec = tween(500)) },
         exitTransition = { fadeOut(animationSpec = tween(0)) },
     ) {
@@ -89,35 +96,41 @@ internal fun Router(
             satunesViewModel = satunesViewModel,
             dataViewModel = dataViewModel,
             onStart = {
-                if (checkIfAllowed(
+                if (
+                    checkIfAllowed(
                         satunesUiState = satunesUiState,
                         isAudioAllowed = isAudioAllowed,
                         navController = navController
                     )
-                ) satunesViewModel.setCurrentDestination(destination = it.destination.route!!)
+                )
+                    satunesViewModel.setCurrentDestination(destination = it.destination.route!!)
             }
         )
         searchRoutes(
             satunesViewModel = satunesViewModel,
             onStart = {
-                if (checkIfAllowed(
+                if (
+                    checkIfAllowed(
                         satunesUiState = satunesUiState,
                         isAudioAllowed = isAudioAllowed,
                         navController = navController
                     )
-                ) satunesViewModel.setCurrentDestination(destination = it.destination.route!!)
+                )
+                    satunesViewModel.setCurrentDestination(destination = it.destination.route!!)
             }
         )
         playbackRoutes(
             satunesViewModel = satunesViewModel,
             playbackViewModel = playbackViewModel,
             onStart = {
-                if (checkIfAllowed(
+                if (
+                    checkIfAllowed(
                         satunesUiState = satunesUiState,
                         isAudioAllowed = isAudioAllowed,
                         navController = navController
                     )
-                ) satunesViewModel.setCurrentDestination(destination = it.destination.route!!)
+                )
+                    satunesViewModel.setCurrentDestination(destination = it.destination.route!!)
             }
         )
         settingsRoutes(

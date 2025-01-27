@@ -57,7 +57,7 @@
     <string name="no_result">Aucun résultat trouvé</string>
     <string name="add_to_likes">J\'aime</string>
     <string name="remove_from_likes">J\'aime plus</string>
-    <string name="whats_new_text">Génial! Tu viens d\'installer une nouvelle version de Satunes.\n\nJ\'espère que celle-ci te conviendra.\n\nSi jamais tu remarques des problèmes ou si tu veux faire des suggestions, tu peux m\'envoyer un mail à l\'adresse: pirlot.antoine@outlook.com.\n\nMerci de ton aide! 😊\n\nJe te souhaite une bonne écoute 🎧🎵</string>
+    <string name="whats_new_text">Génial! Tu viens d\'installer une nouvelle version de Satunes.\n\nJ\'espère que celle-ci te conviendra.\n\nSi jamais tu remarques des problèmes ou si tu veux faire des suggestions, tu peux m\'envoyer un mail à l\'adresse: antoinepirlot@proton.me.\n\nMerci de ton aide! 😊\n\nJe te souhaite une bonne écoute 🎧🎵</string>
     <string name="click_here">clique ici</string>
     <string name="search_setting_title">Recherche</string>
     <string name="default_filter_setting_title">Filtres par défaut</string>
@@ -65,7 +65,7 @@
     <string name="remove_submit">Supprimer</string>
     <string name="see_on_fdroid">Ouvrir dans F-Droid</string>
     <string name="logs_settings">Logs</string>
-    <string name="logs_settings_content">Tu peux exporter les logs pour me les envoyer par e-mail à l\'adresse: pirlot.antoine@outlook.com.\n\nGrâce à ces logs, je peux mieux comprendre ce qui ne va pas avec l\'application.\n\nLes fichiers logs contiennent des informations sur ce que fait l\'application et son état.\nCes informations incluent : \n- Dates\n- Processus\n- Etat de l\'application\n\nDans ces logs, il n\'y a pas d\'informations confidentielles comme des informations musicales ou des données permettant de t\'identifier.\n\nSi tu n\'es pas convaincu, tu peux choisir de me décrire le problème mais il sera plus difficile pour moi de le résoudre.</string>
+    <string name="logs_settings_content">Tu peux exporter les logs pour me les envoyer par e-mail à l\'adresse: antoinepirlot@proton.me.\n\nGrâce à ces logs, je peux mieux comprendre ce qui ne va pas avec l\'application.\n\nLes fichiers logs contiennent des informations sur ce que fait l\'application et son état.\nCes informations incluent : \n- Dates\n- Processus\n- Etat de l\'application\n\nDans ces logs, il n\'y a pas d\'informations confidentielles comme des informations musicales ou des données permettant de t\'identifier.\n\nSi tu n\'es pas convaincu, tu peux choisir de me décrire le problème mais il sera plus difficile pour moi de le résoudre.</string>
     <string name="update_modal_permanently">Tu ne verras plus cette modal jusqu\'à la prochaine mise à jour</string>
     <string name="canceled">Annulé</string>
     <string name="insert_music_to_playlists_success">a été ajoutée à/aux playlist(s)</string>
@@ -125,4 +125,6 @@
     <string name="reset_all_settings">Tout Réinitialiser</string>
     <string name="made_in_europe">Développé en Europe 🇪🇺</string>
     <string name="reload_library_required">Rechargement de la bibliothèque requis</string>
+    <string name="sort_list_title">Trier</string>
+    <string name="show_first_letter_setting_content">Montrer la première lettre</string>
 </resources>

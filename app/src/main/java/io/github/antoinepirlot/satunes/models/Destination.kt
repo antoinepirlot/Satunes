@@ -1,26 +1,23 @@
 /*
  * This file is part of Satunes.
  *
- *  Satunes is free software: you can redistribute it and/or modify it under
- *  the terms of the GNU General Public License as published by the Free Software Foundation,
- *  either version 3 of the License, or (at your option) any later version.
+ * Satunes is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later version.
+ * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License along with Satunes.
+ * If not, see <https://www.gnu.org/licenses/>.
  *
- *  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- *  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *  See the GNU General Public License for more details.
+ * *** INFORMATION ABOUT THE AUTHOR *****
+ * The author of this file is Antoine Pirlot, the owner of this project.
+ * You find this original project on github.
  *
- *  You should have received a copy of the GNU General Public License along with Satunes.
- *  If not, see <https://www.gnu.org/licenses/>.
+ * My github link is: https://github.com/antoinepirlot
+ * This current project's link is: https://github.com/antoinepirlot/Satunes
  *
- *  **** INFORMATIONS ABOUT THE AUTHOR *****
- *  The author of this file is Antoine Pirlot, the owner of this project.
- *  You find this original project on github.
- *
- *  My github link is: https://github.com/antoinepirlot
- *  This current project's link is: https://github.com/antoinepirlot/Satunes
- *
- *  You can contact me via my email: pirlot.antoine@outlook.com
- *  PS: I don't answer quickly.
+ * PS: I don't answer quickly.
  */
 
 package io.github.antoinepirlot.satunes.models
@@ -37,13 +34,17 @@ import io.github.antoinepirlot.satunes.router.utils.getNavBarSectionDestination
 
 internal enum class Destination(val link: String) {
     ALBUMS(link = "/albums"),
+    ALBUM(link = ALBUMS.link + "/{id}"),
     ANDROID_AUTO_SETTINGS(link = "/android_auto_setting"),
     ARTISTS(link = "/artists"),
+    ARTIST(link = ARTISTS.link + "/{id}"),
     BATTERY_SETTINGS(link = "/battery_settings"),
     BOTTOM_BAR_SETTINGS(link = "/navbar_settings"),
     LIBRARY_SETTINGS(link = "/library_settings"),
     FOLDERS(link = "/folders"),
+    FOLDER(link = FOLDERS.link + "/{id}"),
     GENRES(link = "/genres"),
+    GENRE(link = GENRES.link + "/{id}"),
     LOGS_SETTINGS(link = "/logs_settings"),
     MUSICS(link = "/musics"),
     PERMISSIONS_SETTINGS(link = "/permissions_settings"),
@@ -51,6 +52,7 @@ internal enum class Destination(val link: String) {
     PLAYBACK_QUEUE(link = "/playback_queue"),
     PLAYBACK_SETTINGS(link = "/playback_settings"),
     PLAYLISTS(link = "/playlists"),
+    PLAYLIST(link = PLAYLISTS.link + "/{id}"),
     RESET_SETTINGS(link = "/reset_settings"),
     SEARCH(link = "/search"),
     SEARCH_SETTINGS("/search_settings"),
@@ -62,13 +64,17 @@ internal enum class Destination(val link: String) {
     companion object {
         private val destinationsMap: MutableMap<String, Destination> = mutableMapOf(
             Pair(first = ALBUMS.link, second = ALBUMS),
+            Pair(first = ALBUM.link, second = ALBUM),
             Pair(first = ANDROID_AUTO_SETTINGS.link, second = ANDROID_AUTO_SETTINGS),
             Pair(first = ARTISTS.link, second = ARTISTS),
+            Pair(first = ARTIST.link, second = ARTIST),
             Pair(first = BATTERY_SETTINGS.link, second = BATTERY_SETTINGS),
             Pair(first = BOTTOM_BAR_SETTINGS.link, second = BOTTOM_BAR_SETTINGS),
             Pair(first = LIBRARY_SETTINGS.link, second = LIBRARY_SETTINGS),
             Pair(first = FOLDERS.link, second = FOLDERS),
+            Pair(first = FOLDER.link, second = FOLDER),
             Pair(first = GENRES.link, second = GENRES),
+            Pair(first = GENRE.link, second = GENRE),
             Pair(first = LOGS_SETTINGS.link, second = LOGS_SETTINGS),
             Pair(first = MUSICS.link, second = MUSICS),
             Pair(first = PERMISSIONS_SETTINGS.link, second = PERMISSIONS_SETTINGS),
@@ -76,6 +82,7 @@ internal enum class Destination(val link: String) {
             Pair(first = PLAYBACK_QUEUE.link, second = PLAYBACK_QUEUE),
             Pair(first = PLAYBACK_SETTINGS.link, second = PLAYBACK_SETTINGS),
             Pair(first = PLAYLISTS.link, second = PLAYLISTS),
+            Pair(first = PLAYLIST.link, second = PLAYLIST),
             Pair(first = RESET_SETTINGS.link, second = RESET_SETTINGS),
             Pair(first = SEARCH.link, second = SEARCH),
             Pair(first = SEARCH_SETTINGS.link, second = SEARCH_SETTINGS),
@@ -98,7 +105,7 @@ internal enum class Destination(val link: String) {
         }
 
         fun getDestination(destination: String): Destination {
-            return this.destinationsMap["/${destination.split("/")[1]}"] // don't care of id
+            return this.destinationsMap[destination]
                 ?: getNavBarSectionDestination(navBarSection = SettingsManager.defaultNavBarSection)
         }
     }

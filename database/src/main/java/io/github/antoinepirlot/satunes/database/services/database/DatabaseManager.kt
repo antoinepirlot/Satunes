@@ -1,26 +1,23 @@
 /*
  * This file is part of Satunes.
  *
- *  Satunes is free software: you can redistribute it and/or modify it under
- *  the terms of the GNU General Public License as published by the Free Software Foundation,
- *  either version 3 of the License, or (at your option) any later version.
+ * Satunes is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later version.
+ * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License along with Satunes.
+ * If not, see <https://www.gnu.org/licenses/>.
  *
- *  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- *  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *  See the GNU General Public License for more details.
+ * *** INFORMATION ABOUT THE AUTHOR *****
+ * The author of this file is Antoine Pirlot, the owner of this project.
+ * You find this original project on github.
  *
- *  You should have received a copy of the GNU General Public License along with Satunes.
- *  If not, see <https://www.gnu.org/licenses/>.
+ * My github link is: https://github.com/antoinepirlot
+ * This current project's link is: https://github.com/antoinepirlot/Satunes
  *
- *  **** INFORMATIONS ABOUT THE AUTHOR *****
- *  The author of this file is Antoine Pirlot, the owner of this project.
- *  You find this original project on github.
- *
- *  My github link is: https://github.com/antoinepirlot
- *  This current project's link is: https://github.com/antoinepirlot/Satunes
- *
- *  You can contact me via my email: pirlot.antoine@outlook.com
- *  PS: I don't answer quickly.
+ * PS: I don't answer quickly.
  */
 
 package io.github.antoinepirlot.satunes.database.services.database
@@ -64,7 +61,7 @@ class DatabaseManager private constructor(context: Context) {
     private val musicDao: MusicDAO = database.musicDao()
     private val playlistDao: PlaylistDAO = database.playlistDao()
     private val musicsPlaylistsRelDAO: MusicsPlaylistsRelDAO = database.musicsPlaylistsRelDao()
-    private val _logger = SatunesLogger.getLogger()
+    private val _logger: SatunesLogger? = SatunesLogger.getLogger()
 
     companion object {
         private lateinit var _instance: DatabaseManager
@@ -107,7 +104,7 @@ class DatabaseManager private constructor(context: Context) {
                 }
             }
         } catch (e: Throwable) {
-            _logger.warning(e.message)
+            _logger?.warning(e.message)
             throw e
         }
     }
@@ -171,7 +168,7 @@ class DatabaseManager private constructor(context: Context) {
         try {
             playlistDao.update(playlistDB = playlistDB)
         } catch (e: SQLiteConstraintException) {
-            _logger.warning(e.message)
+            _logger?.warning(e.message)
             throw e
         }
     }
@@ -187,12 +184,12 @@ class DatabaseManager private constructor(context: Context) {
             try {
                 musicDao.insert(MusicDB(id = music.id, absolutePath = music.absolutePath))
             } catch (e: SQLiteConstraintException) {
-                _logger.warning(e.message)
+                _logger?.warning(e.message)
                 // Do nothing
             }
             playlist.addMusic(music = music)
         } catch (e: SQLiteConstraintException) {
-            _logger.warning(e.message)
+            _logger?.warning(e.message)
             // Do nothing
         }
         if (playlist.title == LIKES_PLAYLIST_TITLE) {
@@ -305,7 +302,7 @@ class DatabaseManager private constructor(context: Context) {
                 )
             }
         } catch (e: Throwable) {
-            _logger.severe(e.message)
+            _logger?.severe(e.message)
             throw e
         }
     }
@@ -352,7 +349,7 @@ class DatabaseManager private constructor(context: Context) {
                     message = context.getString(R.string.importing_missed_musics, e.id)
                 )
             } catch (e: Throwable) {
-                logger.severe(e.message)
+                logger?.severe(e.message)
                 throw e
             } finally {
                 importingPlaylist = false
@@ -404,7 +401,7 @@ class DatabaseManager private constructor(context: Context) {
             }
             insertMusicToPlaylist(music = music, playlist = likesPlaylist.playlistDB.playlist!!)
         } catch (e: Throwable) {
-            _logger.severe(e.message)
+            _logger?.severe(e.message)
             throw e
         }
     }
@@ -420,7 +417,7 @@ class DatabaseManager private constructor(context: Context) {
             )
             musicDao.unlike(musicId = music.id)
         } catch (e: Throwable) {
-            _logger.severe(e.message)
+            _logger?.severe(e.message)
             throw e
         }
     }
@@ -432,16 +429,16 @@ class DatabaseManager private constructor(context: Context) {
      * from playlists.
      */
     suspend fun cleanPlaylists() {
-        _logger.info("Cleaning playlists")
+        _logger?.info("Cleaning playlists")
         val musicsPlaylistsRelList: List<Long> = musicsPlaylistsRelDAO.getAllMusicIds()
         for (musicId: Long in musicsPlaylistsRelList) {
             val musicDB: MusicDB? = musicDao.get(id = musicId)
             if (musicDB == null) {
-                _logger.warning("Not musicDB matching with id in relation (it's weird)")
+                _logger?.warning("Not musicDB matching with id in relation (it's weird)")
                 musicsPlaylistsRelDAO.removeAll(musicId = musicId)
                 musicDao.delete(musicId = musicId)
             } else if (musicDB.music == null) {
-                _logger.info("Removing not loaded music")
+                _logger?.info("Removing not loaded music")
                 musicsPlaylistsRelDAO.removeAll(musicId = musicId)
                 musicDao.delete(musicId = musicId)
             }

@@ -30,7 +30,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
-import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
@@ -38,7 +37,6 @@ import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.ui.components.EmptyView
 import io.github.antoinepirlot.satunes.ui.components.cards.media.MediaCardList
 import io.github.antoinepirlot.satunes.ui.components.dialog.SortListDialog
@@ -51,10 +49,8 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.SortListDialog
 internal fun MediaListView(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
-    dataViewModel: DataViewModel = viewModel(),
     mediaImplCollection: Collection<MediaImpl>,
     openMedia: (mediaImpl: MediaImpl) -> Unit,
-    openedPlaylistWithMusics: Playlist? = null,
     header: (@Composable () -> Unit)? = null,
     emptyViewText: String,
 ) {
@@ -71,7 +67,6 @@ internal fun MediaListView(
             mediaImplCollection = mediaImplCollection,
             header = header,
             openMedia = openMedia,
-            openedPlaylist = openedPlaylistWithMusics,
         )
     } else {
         if (header != null) {
@@ -105,7 +100,6 @@ private fun MediaListViewPreview() {
     MediaListView(
         mediaImplCollection = map,
         openMedia = {},
-        openedPlaylistWithMusics = null,
         emptyViewText = "No data"
     )
 }

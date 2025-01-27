@@ -30,9 +30,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
-import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
@@ -60,11 +58,10 @@ internal fun MusicOptionsDialog(
     satunesViewModel: SatunesViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
     music: Music,
-    playlist: Playlist? = null, //TODO move that in satunes view model or using current route
     onDismissRequest: () -> Unit,
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
-    val navController: NavHostController = LocalNavController.current
+    val currentMediaImpl: MediaImpl? = satunesUiState.currentMediaImpl
 
     AlertDialog(
         modifier = modifier,
@@ -83,10 +80,10 @@ internal fun MusicOptionsDialog(
                 LikeUnlikeMusicOption(music = music)
                 AddToPlaylistMediaOption(mediaImpl = music, onFinished = onDismissRequest)
 
-                if (playlist != null) {
+                if (currentMediaImpl is Playlist) {
                     RemoveFromPlaylistMusicOption(
                         music = music,
-                        playlist = playlist,
+                        playlist = currentMediaImpl,
                         onFinished = onDismissRequest
                     )
                 }

@@ -46,14 +46,12 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.playlist.PlaylistOpt
 internal fun MediaOptionsDialog(
     modifier: Modifier = Modifier,
     media: MediaImpl,
-    openedPlaylist: Playlist? = null,
     onDismissRequest: () -> Unit
 ) {
     when (media) {
         is Music -> MusicOptionsDialog(
             modifier = modifier,
             music = media,
-            playlist = openedPlaylist,
             onDismissRequest = onDismissRequest
         )
 

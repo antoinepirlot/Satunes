@@ -43,6 +43,7 @@ import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.utils.isAudioAllowed
 import io.github.antoinepirlot.satunes.database.models.BarSpeed
 import io.github.antoinepirlot.satunes.database.models.FoldersSelection
+import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
@@ -648,6 +649,18 @@ internal class SatunesViewModel : ViewModel() {
     fun hideSortDialog() {
         _uiState.update { currentState: SatunesUiState ->
             currentState.copy(showSortDialog = false)
+        }
+    }
+
+    fun setCurrentMediaImpl(mediaImpl: MediaImpl) {
+        _uiState.update { currentState: SatunesUiState ->
+            currentState.copy(currentMediaImpl = mediaImpl)
+        }
+    }
+
+    fun clearCurrentMediaImpl() {
+        _uiState.update { currentState: SatunesUiState ->
+            currentState.copy(currentMediaImpl = null)
         }
     }
 }

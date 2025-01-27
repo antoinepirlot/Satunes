@@ -102,8 +102,10 @@ internal fun Router(
                         isAudioAllowed = isAudioAllowed,
                         navController = navController
                     )
-                )
+                ) {
                     satunesViewModel.setCurrentDestination(destination = it.destination.route!!)
+                    satunesViewModel.clearCurrentMediaImpl()
+                }
             }
         )
         searchRoutes(
@@ -115,8 +117,10 @@ internal fun Router(
                         isAudioAllowed = isAudioAllowed,
                         navController = navController
                     )
-                )
+                ) {
                     satunesViewModel.setCurrentDestination(destination = it.destination.route!!)
+                    satunesViewModel.clearCurrentMediaImpl()
+                }
             }
         )
         playbackRoutes(
@@ -129,14 +133,17 @@ internal fun Router(
                         isAudioAllowed = isAudioAllowed,
                         navController = navController
                     )
-                )
+                ) {
                     satunesViewModel.setCurrentDestination(destination = it.destination.route!!)
+                    satunesViewModel.clearCurrentMediaImpl()
+                }
             }
         )
         settingsRoutes(
             satunesViewModel = satunesViewModel, // Pass it as param to fix no recomposition when permission granted
             onStart = {
                 satunesViewModel.setCurrentDestination(destination = it.destination.route!!)
+                satunesViewModel.clearCurrentMediaImpl()
             }
         )
     }

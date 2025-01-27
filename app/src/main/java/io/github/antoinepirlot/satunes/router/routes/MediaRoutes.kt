@@ -80,6 +80,9 @@ internal fun NavGraphBuilder.mediaRoutes(
         } else {
             val folderId = it.arguments!!.getString("id")!!.toLong()
             val folder: Folder = dataViewModel.getFolder(id = folderId)
+            LaunchedEffect(key1 = Unit) {
+                satunesViewModel.setCurrentMediaImpl(mediaImpl = folder)
+            }
             FolderView(folder = folder)
         }
     }
@@ -106,6 +109,9 @@ internal fun NavGraphBuilder.mediaRoutes(
         } else {
             val artistId: Long = it.arguments!!.getString("id")!!.toLong()
             val artist: Artist = dataViewModel.getArtist(id = artistId)
+            LaunchedEffect(key1 = Unit) {
+                satunesViewModel.setCurrentMediaImpl(mediaImpl = artist)
+            }
             ArtistView(artist = artist)
         }
     }
@@ -132,6 +138,9 @@ internal fun NavGraphBuilder.mediaRoutes(
         } else {
             val albumId: Long = it.arguments!!.getString("id")!!.toLong()
             val album: Album = dataViewModel.getAlbum(albumId)
+            LaunchedEffect(key1 = Unit) {
+                satunesViewModel.setCurrentMediaImpl(mediaImpl = album)
+            }
             AlbumView(album = album)
         }
     }
@@ -158,6 +167,9 @@ internal fun NavGraphBuilder.mediaRoutes(
         } else {
             val genreId: Long = it.arguments!!.getString("id")!!.toLong()
             val genre: Genre = dataViewModel.getGenre(id = genreId)
+            LaunchedEffect(key1 = Unit) {
+                satunesViewModel.setCurrentMediaImpl(mediaImpl = genre)
+            }
             GenreView(genre = genre)
         }
     }
@@ -184,6 +196,9 @@ internal fun NavGraphBuilder.mediaRoutes(
         } else {
             val playlistId: Long = it.arguments!!.getString("id")!!.toLong()
             val playlist: Playlist = dataViewModel.getPlaylist(id = playlistId)
+            LaunchedEffect(key1 = Unit) {
+                satunesViewModel.setCurrentMediaImpl(mediaImpl = playlist)
+            }
             PlaylistView(playlist = playlist)
         }
     }

@@ -119,10 +119,10 @@ class PlaybackViewModel : ViewModel() {
     ) {
         val musicSet: MutableSet<Music> = mutableSetOf()
         medias.forEach { mediaImpl: MediaImpl ->
-            if (mediaImpl is Folder) {
-                musicSet.addAll(mediaImpl.getAllMusic())
-            } else {
-                musicSet.addAll(mediaImpl.getMusicSet())
+            when (mediaImpl) {
+                is Music -> musicSet.add(mediaImpl)
+                is Folder -> musicSet.addAll(mediaImpl.getAllMusic())
+                else -> musicSet.addAll(mediaImpl.getMusicSet())
             }
         }
         this.loadMusics(

@@ -67,14 +67,10 @@ internal class Playlist(musics: Collection<Music>) {
 
         val shuffledMusicList: List<Music> = this.musicList.shuffled()
         this.musicList.clear()
-        if (musicMoving != null) {
-            this.musicList.add(musicMoving)
-        }
+        if (musicMoving != null) this.musicList.add(musicMoving)
         this.musicList.addAll(shuffledMusicList)
         this.mediaItemList.clear()
-        this.musicList.forEach { music: Music ->
-            this.mediaItemList.add(music.mediaItem)
-        }
+        this.musicList.forEach { music: Music -> this.mediaItemList.add(music.mediaItem) }
         this.isShuffle = true
     }
 

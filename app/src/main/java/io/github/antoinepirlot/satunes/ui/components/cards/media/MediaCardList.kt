@@ -68,15 +68,20 @@ internal fun MediaCardList(
     openedPlaylist: Playlist? = null,
     scrollToMusicPlaying: Boolean = false,
     showGroupIndication: Boolean = true,
+    sort: Boolean = true
 ) {
     if (mediaImplCollection.isEmpty()) return // It fixes issue while accessing last folder in chain
     val dataUiState: DataUiState by dataViewModel.uiState.collectAsState()
 
     val sortOption: SortOptions = dataViewModel.sortOption
-    val mediaImplList: List<MediaImpl> = dataViewModel.sortMediaImplListBy(
+    val mediaImplList: List<MediaImpl> = if (sort) dataViewModel.sortMediaImplListBy(
         sortOption = sortOption,
         mediaImplList = mediaImplCollection
-    )
+    ) else try {
+        mediaImplCollection as List<MediaImpl>
+    } catch (e: ClassCastException) {
+        mediaImplCollection.toList()
+    }
     val showFirstLetter: Boolean = dataUiState.showFirstLetter
 
     LaunchedEffect(key1 = dataViewModel.sortOption) {

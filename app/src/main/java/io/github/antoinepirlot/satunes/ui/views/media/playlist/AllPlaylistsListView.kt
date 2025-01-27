@@ -102,7 +102,9 @@ internal fun PlaylistListView(
                     navController = navController
                 )
             },
-            emptyViewText = stringResource(id = R.string.no_playlists)
+            emptyViewText = stringResource(id = R.string.no_playlists),
+            showGroupIndication = false,
+            sort = false,
         )
 
         when {

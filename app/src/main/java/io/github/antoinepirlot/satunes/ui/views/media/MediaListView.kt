@@ -53,6 +53,8 @@ internal fun MediaListView(
     openMedia: (mediaImpl: MediaImpl) -> Unit,
     header: (@Composable () -> Unit)? = null,
     emptyViewText: String,
+    showGroupIndication: Boolean = true,
+    sort: Boolean = true,
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     val lazyListState = rememberLazyListState()
@@ -67,6 +69,8 @@ internal fun MediaListView(
             mediaImplCollection = mediaImplCollection,
             header = header,
             openMedia = openMedia,
+            showGroupIndication = showGroupIndication,
+            sort = sort
         )
     } else {
         if (header != null) {

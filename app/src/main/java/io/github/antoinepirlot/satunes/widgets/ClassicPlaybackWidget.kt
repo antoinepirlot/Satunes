@@ -50,7 +50,7 @@ import kotlinx.coroutines.launch
 
 class ClassicPlaybackWidget : GlanceAppWidget() {
 
-    private lateinit var _logger: SatunesLogger
+    private var _logger: SatunesLogger? = null
 
     companion object {
         fun setRefreshWidget(context: Context) {
@@ -67,7 +67,7 @@ class ClassicPlaybackWidget : GlanceAppWidget() {
         SatunesLogger.DOCUMENTS_PATH =
             context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)!!.path
         _logger = SatunesLogger.getLogger()
-        _logger.info("ClassicPlaybackWidget Starting")
+        _logger?.info("ClassicPlaybackWidget Starting")
         setRefreshWidget(context = context)
         WidgetPlaybackManager.refreshWidgets()
 

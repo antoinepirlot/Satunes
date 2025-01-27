@@ -42,7 +42,7 @@ import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 @UnstableApi
 object PlaybackSessionCallback : MediaSession.Callback {
 
-    private val _logger: SatunesLogger = SatunesLogger.getLogger()
+    private val _logger: SatunesLogger? = SatunesLogger.getLogger()
     internal val SHUFFLE_COMMAND: SessionCommand = SessionCommand("SHUFFLE_COMMAND", Bundle.EMPTY)
     internal val REPEAT_COMMAND: SessionCommand = SessionCommand("REPEAT_COMMAND", Bundle.EMPTY)
 
@@ -74,25 +74,25 @@ object PlaybackSessionCallback : MediaSession.Callback {
     }
 
     private fun shuffleCommand(): ListenableFuture<SessionResult> {
-        _logger.info("Shuffle from notification")
+        _logger?.info("Shuffle from notification")
         return try {
             val playbackController: PlaybackController = PlaybackController.getInstance()
             playbackController.switchShuffleMode()
             Futures.immediateFuture(SessionResult(SessionResult.RESULT_SUCCESS))
         } catch (e: Throwable) {
-            _logger.severe(e.message)
+            _logger?.severe(e.message)
             Futures.immediateFuture(SessionResult(SessionError.ERROR_INVALID_STATE))
         }
     }
 
     private fun repeatCommand(): ListenableFuture<SessionResult> {
-        _logger.info("Repeat from notification")
+        _logger?.info("Repeat from notification")
         return try {
             val playbackController: PlaybackController = PlaybackController.getInstance()
             playbackController.switchRepeatMode()
             Futures.immediateFuture(SessionResult(SessionResult.RESULT_SUCCESS))
         } catch (e: Throwable) {
-            _logger.severe(e.message)
+            _logger?.severe(e.message)
             Futures.immediateFuture(SessionResult(SessionError.ERROR_INVALID_STATE))
         }
 
@@ -102,7 +102,7 @@ object PlaybackSessionCallback : MediaSession.Callback {
         mediaSession: MediaSession,
         controller: MediaSession.ControllerInfo
     ): ListenableFuture<MediaSession.MediaItemsWithStartPosition> {
-        _logger.info("onPlaybackResumption called")
+        _logger?.info("onPlaybackResumption called")
         return super.onPlaybackResumption(mediaSession, controller)
     }
 }

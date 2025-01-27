@@ -66,7 +66,7 @@ import io.github.antoinepirlot.satunes.database.R as RDb
  * @author Antoine Pirlot on 19/07/2024
  */
 class DataViewModel : ViewModel() {
-    private val _logger: SatunesLogger = SatunesLogger.getLogger()
+    private val _logger: SatunesLogger? = SatunesLogger.getLogger()
     private val _playlistSetUpdated: MutableState<Boolean> = DataManager.playlistsMapUpdated
     private val _db: DatabaseManager =
         DatabaseManager.initInstance(context = MainActivity.instance.applicationContext)
@@ -135,7 +135,7 @@ class DataViewModel : ViewModel() {
                         message = message
                     )
                 } else {
-                    _logger.warning(e.message)
+                    _logger?.warning(e.message)
                     showErrorSnackBar(
                         scope = scope,
                         snackBarHostState = snackBarHostState,
@@ -228,7 +228,7 @@ class DataViewModel : ViewModel() {
                     message = message,
                 )
             } catch (e: Throwable) {
-                _logger.warning(e.message)
+                _logger?.warning(e.message)
                 showErrorSnackBar(
                     scope = scope,
                     snackBarHostState = snackBarHostState,
@@ -277,7 +277,7 @@ class DataViewModel : ViewModel() {
                     }
                 )
             } catch (e: Throwable) {
-                _logger.warning(e.message)
+                _logger?.warning(e.message)
                 showErrorSnackBar(scope = scope, snackBarHostState = snackBarHostState, action = {
                     insertMusicToPlaylist(
                         scope = scope,
@@ -323,7 +323,7 @@ class DataViewModel : ViewModel() {
                     }
                 )
             } catch (e: Throwable) {
-                _logger.warning(e.message)
+                _logger?.warning(e.message)
                 showErrorSnackBar(scope = scope, snackBarHostState = snackBarHostState, action = {
                     insertMusicsToPlaylist(
                         scope = scope,
@@ -382,7 +382,7 @@ class DataViewModel : ViewModel() {
                     }
                 )
             } catch (e: Throwable) {
-                _logger.warning(e.message)
+                _logger?.warning(e.message)
                 showErrorSnackBar(scope = scope, snackBarHostState = snackBarHostState, action = {
                     insertMusicToPlaylists(
                         scope = scope,
@@ -425,7 +425,7 @@ class DataViewModel : ViewModel() {
                     }
                 )
             } catch (e: Throwable) {
-                _logger.warning(e.message)
+                _logger?.warning(e.message)
                 showErrorSnackBar(scope = scope, snackBarHostState = snackBarHostState, action = {
                     insertMusicsToPlaylists(
                         scope = scope,
@@ -467,7 +467,7 @@ class DataViewModel : ViewModel() {
                     }
                 )
             } catch (e: Throwable) {
-                _logger.warning(e.message)
+                _logger?.warning(e.message)
                 showErrorSnackBar(scope = scope, snackBarHostState = snackBarHostState, action = {
                     removeMusicFromPlaylist(
                         scope = scope,
@@ -510,7 +510,7 @@ class DataViewModel : ViewModel() {
                     }
                 )
             } catch (e: Throwable) {
-                _logger.warning(e.message)
+                _logger?.warning(e.message)
                 showErrorSnackBar(scope = scope, snackBarHostState = snackBarHostState, action = {
                     removeMusicsFromPlaylist(
                         scope = scope,
@@ -567,7 +567,7 @@ class DataViewModel : ViewModel() {
                     }
                 )
             } catch (e: Throwable) {
-                _logger.warning(e.message)
+                _logger?.warning(e.message)
                 showErrorSnackBar(scope = scope, snackBarHostState = snackBarHostState, action = {
                     removeMusicFromPlaylists(
                         scope = scope,
@@ -606,7 +606,7 @@ class DataViewModel : ViewModel() {
                     }
                 )
             } catch (e: Throwable) {
-                _logger.warning(e.message)
+                _logger?.warning(e.message)
                 showErrorSnackBar(scope = scope, snackBarHostState = snackBarHostState, action = {
                     removeMusicsFromPlaylists(
                         scope = scope,
@@ -692,7 +692,7 @@ class DataViewModel : ViewModel() {
         snackBarHostState: SnackbarHostState,
         media: MediaImpl
     ) {
-        _logger.info("Sharing media type: ${media::class.java}")
+        _logger?.info("Sharing media type: ${media::class.java}")
         isSharingLoading = true
         try {
             var paths: Array<String> = arrayOf()
@@ -777,7 +777,7 @@ class DataViewModel : ViewModel() {
         } catch (e: NotImplementedError) {
             return
         } catch (e: Throwable) {
-            _logger.severe(e.message)
+            _logger?.severe(e.message)
         }
     }
 

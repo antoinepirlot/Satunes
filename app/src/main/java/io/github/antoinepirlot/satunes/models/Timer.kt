@@ -37,7 +37,7 @@ class Timer(
     minutes: Int,
     seconds: Int
 ) {
-    private val _logger: SatunesLogger = SatunesLogger.getLogger()
+    private val _logger: SatunesLogger? = SatunesLogger.getLogger()
     private val _task: TimerTask = Task(function = function)
     private val _delayMillis: Long =
         (hours.toLong() * 3600L + minutes.toLong() * 60L + seconds.toLong()) * 1000L
@@ -45,14 +45,14 @@ class Timer(
     private val _timer = Timer()
 
     init {
-        _logger.info("Create Timer")
+        _logger?.info("Create Timer")
         if (minutes < 0 || seconds < 0)
             throw IllegalArgumentException("Minutes is: $minutes and seconds is: $seconds.")
         _timer.schedule(_task, _delayMillis)
     }
 
     fun cancel() {
-        _logger.info("Cancel Timer")
+        _logger?.info("Cancel Timer")
         _timer.cancel()
     }
 
@@ -63,7 +63,7 @@ class Timer(
 
     private inner class Task(private val function: () -> Unit) : TimerTask() {
         override fun run() {
-            _logger.info("Run Timer Task")
+            _logger?.info("Run Timer Task")
             runBlocking(Dispatchers.Main) {
                 function()
             }

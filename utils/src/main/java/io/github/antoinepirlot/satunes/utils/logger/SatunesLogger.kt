@@ -41,13 +41,15 @@ class SatunesLogger private constructor(
 ) : Logger(name, resourceBundleName) {
 
     companion object {
+        var enabled: Boolean = true
         private const val MAX_BYTES = 5242880 // 5MB
         private const val MAX_FILES = 1
         lateinit var DOCUMENTS_PATH: String
         private lateinit var LOGS_PATH: String
         private lateinit var _logger: SatunesLogger
 
-        fun getLogger(): SatunesLogger {
+        fun getLogger(): SatunesLogger? {
+            if (!enabled) return null
             if (!this::_logger.isInitialized) {
                 _logger = SatunesLogger(this::class.java.name)
             }

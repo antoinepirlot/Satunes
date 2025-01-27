@@ -61,7 +61,7 @@ class DatabaseManager private constructor(context: Context) {
     private val musicDao: MusicDAO = database.musicDao()
     private val playlistDao: PlaylistDAO = database.playlistDao()
     private val musicsPlaylistsRelDAO: MusicsPlaylistsRelDAO = database.musicsPlaylistsRelDao()
-    private val _logger = SatunesLogger.getLogger()
+    private val _logger: SatunesLogger? = SatunesLogger.getLogger()
 
     companion object {
         private lateinit var _instance: DatabaseManager
@@ -104,7 +104,7 @@ class DatabaseManager private constructor(context: Context) {
                 }
             }
         } catch (e: Throwable) {
-            _logger.warning(e.message)
+            _logger?.warning(e.message)
             throw e
         }
     }
@@ -168,7 +168,7 @@ class DatabaseManager private constructor(context: Context) {
         try {
             playlistDao.update(playlistDB = playlistDB)
         } catch (e: SQLiteConstraintException) {
-            _logger.warning(e.message)
+            _logger?.warning(e.message)
             throw e
         }
     }
@@ -184,12 +184,12 @@ class DatabaseManager private constructor(context: Context) {
             try {
                 musicDao.insert(MusicDB(id = music.id, absolutePath = music.absolutePath))
             } catch (e: SQLiteConstraintException) {
-                _logger.warning(e.message)
+                _logger?.warning(e.message)
                 // Do nothing
             }
             playlist.addMusic(music = music)
         } catch (e: SQLiteConstraintException) {
-            _logger.warning(e.message)
+            _logger?.warning(e.message)
             // Do nothing
         }
         if (playlist.title == LIKES_PLAYLIST_TITLE) {
@@ -302,7 +302,7 @@ class DatabaseManager private constructor(context: Context) {
                 )
             }
         } catch (e: Throwable) {
-            _logger.severe(e.message)
+            _logger?.severe(e.message)
             throw e
         }
     }
@@ -349,7 +349,7 @@ class DatabaseManager private constructor(context: Context) {
                     message = context.getString(R.string.importing_missed_musics, e.id)
                 )
             } catch (e: Throwable) {
-                logger.severe(e.message)
+                logger?.severe(e.message)
                 throw e
             } finally {
                 importingPlaylist = false
@@ -401,7 +401,7 @@ class DatabaseManager private constructor(context: Context) {
             }
             insertMusicToPlaylist(music = music, playlist = likesPlaylist.playlistDB.playlist!!)
         } catch (e: Throwable) {
-            _logger.severe(e.message)
+            _logger?.severe(e.message)
             throw e
         }
     }
@@ -417,7 +417,7 @@ class DatabaseManager private constructor(context: Context) {
             )
             musicDao.unlike(musicId = music.id)
         } catch (e: Throwable) {
-            _logger.severe(e.message)
+            _logger?.severe(e.message)
             throw e
         }
     }
@@ -429,16 +429,16 @@ class DatabaseManager private constructor(context: Context) {
      * from playlists.
      */
     suspend fun cleanPlaylists() {
-        _logger.info("Cleaning playlists")
+        _logger?.info("Cleaning playlists")
         val musicsPlaylistsRelList: List<Long> = musicsPlaylistsRelDAO.getAllMusicIds()
         for (musicId: Long in musicsPlaylistsRelList) {
             val musicDB: MusicDB? = musicDao.get(id = musicId)
             if (musicDB == null) {
-                _logger.warning("Not musicDB matching with id in relation (it's weird)")
+                _logger?.warning("Not musicDB matching with id in relation (it's weird)")
                 musicsPlaylistsRelDAO.removeAll(musicId = musicId)
                 musicDao.delete(musicId = musicId)
             } else if (musicDB.music == null) {
-                _logger.info("Removing not loaded music")
+                _logger?.info("Removing not loaded music")
                 musicsPlaylistsRelDAO.removeAll(musicId = musicId)
                 musicDao.delete(musicId = musicId)
             }

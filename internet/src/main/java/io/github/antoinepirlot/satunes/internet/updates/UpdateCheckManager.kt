@@ -50,7 +50,7 @@ import okhttp3.Response
 
 @RequiresApi(Build.VERSION_CODES.M)
 object UpdateCheckManager {
-    private val _logger = SatunesLogger.getLogger()
+    private val _logger: SatunesLogger? = SatunesLogger.getLogger()
 
     val updateAvailableStatus: MutableState<UpdateAvailableStatus> =
         mutableStateOf(UpdateAvailableStatus.UNDEFINED)
@@ -78,7 +78,7 @@ object UpdateCheckManager {
                 .build()
             httpClient.newCall(req).execute()
         } catch (e: Throwable) {
-            _logger.warning(e.message)
+            _logger?.warning(e.message)
             null
         }
     }
@@ -114,7 +114,7 @@ object UpdateCheckManager {
             //Don't crash the app if an error occurred internet connection
             //Don't care of internet
             updateAvailableStatus.value = UpdateAvailableStatus.CANNOT_CHECK
-            _logger.severe(e.message)
+            _logger?.severe(e.message)
             throw e
         }
     }
@@ -145,7 +145,7 @@ object UpdateCheckManager {
         } else {
             val message =
                 "No update url found. Latest version is $latestVersion & currentVersion is $currentVersion"
-            _logger.warning(message)
+            _logger?.warning(message)
             null
         }
     }
@@ -154,7 +154,7 @@ object UpdateCheckManager {
         val versionName: String = try {
             context.packageManager.getPackageInfo(context.packageName, 0).versionName!!
         } catch (e: PackageManager.NameNotFoundException) {
-            _logger.severe(e.message)
+            _logger?.severe(e.message)
             throw e
         }
 

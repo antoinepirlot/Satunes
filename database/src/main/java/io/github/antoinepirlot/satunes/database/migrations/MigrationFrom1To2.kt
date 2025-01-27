@@ -30,13 +30,13 @@ import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
  * @author Antoine Pirlot on 28/06/2024
  */
 internal object MigrationFrom1To2 : Migration(1, 2) {
-    private val _logger: SatunesLogger = SatunesLogger.getLogger()
+    private val _logger: SatunesLogger? = SatunesLogger.getLogger()
 
     override fun migrate(db: SupportSQLiteDatabase) {
         try {
             db.execSQL("ALTER TABLE musics ADD COLUMN liked INTEGER NOT NULL DEFAULT 0;")
         } catch (e: Throwable) {
-            _logger.severe(e.message)
+            _logger?.severe(e.message)
             throw e
         }
     }

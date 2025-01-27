@@ -71,7 +71,7 @@ internal fun Satunes(
     satunesViewModel: SatunesViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
 ) {
-    SatunesLogger.getLogger().info("Satunes Composable")
+    SatunesLogger.getLogger()?.info("Satunes Composable")
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     SatunesTheme {
         Surface(

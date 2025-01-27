@@ -197,7 +197,7 @@ object SettingsManager {
 
     suspend fun loadSettings(context: Context) {
         if (_isLoaded) {
-            _logger.info("Settings already loaded")
+            _logger?.info("Settings already loaded")
             return
         }
         context.dataStore.data.map { preferences: Preferences ->

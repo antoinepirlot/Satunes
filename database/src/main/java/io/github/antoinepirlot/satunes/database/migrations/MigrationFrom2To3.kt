@@ -33,7 +33,7 @@ import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
  */
 
 internal object MigrationFrom2To3 : Migration(2, 3) {
-    private val _logger: SatunesLogger = SatunesLogger.getLogger()
+    private val _logger: SatunesLogger? = SatunesLogger.getLogger()
 
     override fun migrate(db: SupportSQLiteDatabase) {
         try {
@@ -46,7 +46,7 @@ internal object MigrationFrom2To3 : Migration(2, 3) {
                 )
             }
         } catch (e: Throwable) {
-            _logger.severe(e.message)
+            _logger?.severe(e.message)
             throw e
         }
     }

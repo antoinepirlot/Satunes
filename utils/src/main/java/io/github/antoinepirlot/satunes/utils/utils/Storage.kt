@@ -42,7 +42,7 @@ import java.io.InputStreamReader
  */
 @Throws(IOException::class)
 fun readTextFromUri(context: Context, uri: Uri, showToast: Boolean = false): String? {
-    val logger = SatunesLogger.getLogger()
+    val logger: SatunesLogger? = SatunesLogger.getLogger()
     return try {
         val stringBuilder = StringBuilder()
         context.contentResolver.openInputStream(uri)?.use { inputStream ->
@@ -56,12 +56,12 @@ fun readTextFromUri(context: Context, uri: Uri, showToast: Boolean = false): Str
         }
         stringBuilder.toString()
     } catch (e: FileNotFoundException) {
-        logger.warning(e.message)
+        logger?.warning(e.message)
         showToastOnUiThread(context = context, message = context.getString(R.string.file_not_found))
         e.printStackTrace()
         null
     } catch (e: SecurityException) {
-        logger.warning(e.message)
+        logger?.warning(e.message)
         showToastOnUiThread(
             context = context,
             message = context.getString(R.string.file_security_exception)
@@ -69,7 +69,7 @@ fun readTextFromUri(context: Context, uri: Uri, showToast: Boolean = false): Str
         e.printStackTrace()
         null
     } catch (e: Throwable) {
-        logger.severe(e.message)
+        logger?.severe(e.message)
         throw e
     }
 }
@@ -88,12 +88,12 @@ fun writeToUri(context: Context, uri: Uri, string: String): Boolean {
             }
         true
     } catch (e: FileNotFoundException) {
-        logger.warning(e.message)
+        logger?.warning(e.message)
         showToastOnUiThread(context = context, message = context.getString(R.string.file_not_found))
         e.printStackTrace()
         false
     } catch (e: SecurityException) {
-        logger.warning(e.message)
+        logger?.warning(e.message)
         showToastOnUiThread(
             context = context,
             message = context.getString(R.string.file_security_exception)
@@ -101,7 +101,7 @@ fun writeToUri(context: Context, uri: Uri, string: String): Boolean {
         e.printStackTrace()
         false
     } catch (e: Throwable) {
-        logger.severe(e.message)
+        logger?.severe(e.message)
         throw e
     }
 }

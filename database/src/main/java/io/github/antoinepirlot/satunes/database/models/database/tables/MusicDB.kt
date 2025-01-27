@@ -48,7 +48,7 @@ internal data class MusicDB(
 ) : Media {
     @Transient
     @Ignore
-    private val _logger: SatunesLogger = SatunesLogger.getLogger()
+    private val _logger: SatunesLogger? = SatunesLogger.getLogger()
 
     @Ignore
     @Transient
@@ -74,7 +74,7 @@ internal data class MusicDB(
             }
         } catch (e: Throwable) {
             val message = "An error occurred while getting music in musicDB"
-            _logger.severe(message)
+            _logger?.severe(message)
             throw e
         }
 }

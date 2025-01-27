@@ -54,7 +54,7 @@ import java.util.SortedSet
  */
 class SearchViewModel : ViewModel() {
     private val _uiState: MutableStateFlow<SearchUiState> = MutableStateFlow(SearchUiState())
-    private val _logger: SatunesLogger = SatunesLogger.getLogger()
+    private val _logger: SatunesLogger? = SatunesLogger.getLogger()
     private val _filtersList: MutableMap<SearchChips, Boolean> = mutableMapOf(
         Pair(SearchChips.MUSICS, SettingsManager.musicsFilter),
         Pair(SearchChips.ALBUMS, SettingsManager.albumsFilter),
@@ -97,7 +97,7 @@ class SearchViewModel : ViewModel() {
                 }
             }
         } catch (e: Throwable) {
-            _logger.severe(e.message)
+            _logger?.severe(e.message)
             throw e
         }
     }
@@ -133,7 +133,7 @@ class SearchViewModel : ViewModel() {
                 }
             }
         } catch (e: Throwable) {
-            _logger.severe(e.message)
+            _logger?.severe(e.message)
             throw e
         }
     }

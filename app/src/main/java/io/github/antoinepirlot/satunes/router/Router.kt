@@ -63,7 +63,7 @@ internal fun Router(
     dataViewModel: DataViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
 ) {
-    SatunesLogger.getLogger().info("Router Composable")
+    SatunesLogger.getLogger()?.info("Router Composable")
 
     val context: Context = LocalContext.current
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()

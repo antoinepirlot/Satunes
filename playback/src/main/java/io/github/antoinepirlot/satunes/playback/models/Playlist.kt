@@ -39,7 +39,7 @@ internal class Playlist(musics: Collection<Music>) {
     val mediaItemList: MutableList<MediaItem> = mutableListOf()
     internal var isShuffle: Boolean = false
         private set
-    private val logger = SatunesLogger.getLogger()
+    private val _logger: SatunesLogger? = SatunesLogger.getLogger()
 
 
     init {
@@ -57,7 +57,7 @@ internal class Playlist(musics: Collection<Music>) {
     fun shuffle(musicIndex: Int = -1) {
         if (musicIndex > this.musicList.lastIndex) {
             val message = "The music index is greater than last index of the list"
-            logger.severe(message)
+            _logger?.severe(message)
             throw IllegalArgumentException(message)
         }
         var musicMoving: Music? = null
@@ -99,7 +99,7 @@ internal class Playlist(musics: Collection<Music>) {
         try {
             return this.musicList[musicIndex]
         } catch (e: Throwable) {
-            logger.severe(e.message)
+            _logger?.severe(e.message)
             throw e
         }
     }
@@ -137,7 +137,7 @@ internal class Playlist(musics: Collection<Music>) {
         val fromIndex = if (fromIndex < 0) 0 else fromIndex
         if (fromIndex > toIndex) {
             val message = "The fromIndex has to be lower than toIndex"
-            logger.severe(message)
+            _logger?.severe(message)
             throw IllegalArgumentException(message)
         }
         return mediaItemList.subList(fromIndex = fromIndex, toIndex = toIndex + 1)
@@ -159,7 +159,7 @@ internal class Playlist(musics: Collection<Music>) {
 
     private fun checkMusicIsInPlaylist(music: Music) {
         if (isMusicInQueue(music = music)) {
-            logger.severe("this.originalMusicMediaItemMap[music] != null")
+            _logger?.severe("this.originalMusicMediaItemMap[music] != null")
             throw AlreadyInPlaybackException()
         }
     }

@@ -76,7 +76,7 @@ internal fun SortListDialog(
                 getSortOptions(destination = satunesUiState.currentDestination)
             if (sortOptions.isEmpty()) {
                 val message = "Can't sort in ${satunesUiState.currentDestination.link}"
-                SatunesLogger.getLogger().severe(message)
+                SatunesLogger.getLogger()?.severe(message)
                 throw UnsupportedOperationException(message)
             }
             for (sortOption: SortOptions in sortOptions) {

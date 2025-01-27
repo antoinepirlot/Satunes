@@ -38,11 +38,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.texts.Title
-import io.github.antoinepirlot.satunes.data.states.SatunesUiState
+import io.github.antoinepirlot.satunes.data.states.DataUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
-import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
-import io.github.antoinepirlot.satunes.data.viewmodels.SortListViewModel
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
@@ -62,10 +60,8 @@ import java.text.Normalizer
 internal fun MediaCardList(
     modifier: Modifier = Modifier,
     lazyListState: LazyListState = rememberLazyListState(),
-    satunesViewModel: SatunesViewModel = viewModel(),
     dataViewModel: DataViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
-    sortListViewModel: SortListViewModel = viewModel(),
     mediaImplCollection: Collection<MediaImpl>,
     header: @Composable (() -> Unit)? = null,
     openMedia: (mediaImpl: MediaImpl) -> Unit,
@@ -74,14 +70,14 @@ internal fun MediaCardList(
     showGroupIndication: Boolean = true,
 ) {
     if (mediaImplCollection.isEmpty()) return // It fixes issue while accessing last folder in chain
-    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+    val dataUiState: DataUiState by dataViewModel.uiState.collectAsState()
 
     val sortOption: SortOptions = dataViewModel.sortOption
-    var mediaImplList: List<MediaImpl> = dataViewModel.sortMediaImplListBy(
+    val mediaImplList: List<MediaImpl> = dataViewModel.sortMediaImplListBy(
         sortOption = sortOption,
         mediaImplList = mediaImplCollection
     )
-    val showFirstLetter: Boolean = satunesUiState.showFirstLetter
+    val showFirstLetter: Boolean = dataUiState.showFirstLetter
 
     LaunchedEffect(key1 = dataViewModel.sortOption) {
         CoroutineScope(Dispatchers.Main).launch {

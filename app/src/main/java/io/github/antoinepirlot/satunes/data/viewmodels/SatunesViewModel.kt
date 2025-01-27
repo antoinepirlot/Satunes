@@ -650,29 +650,4 @@ internal class SatunesViewModel : ViewModel() {
             currentState.copy(showSortDialog = false)
         }
     }
-
-    fun switchShowFirstLetter(
-        scope: CoroutineScope,
-        snackBarHostState: SnackbarHostState
-    ) {
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                SettingsManager.switchShowFirstLetter(context = MainActivity.instance.applicationContext)
-                _uiState.update { currentState: SatunesUiState ->
-                    currentState.copy(showFirstLetter = !currentState.showFirstLetter)
-                }
-            } catch (e: Throwable) {
-                showErrorSnackBar(
-                    scope = scope,
-                    snackBarHostState = snackBarHostState,
-                    action = {
-                        switchShowFirstLetter(
-                            scope = scope,
-                            snackBarHostState = snackBarHostState
-                        )
-                    }
-                )
-            }
-        }
-    }
 }

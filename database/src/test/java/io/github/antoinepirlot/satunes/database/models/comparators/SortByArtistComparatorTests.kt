@@ -83,7 +83,7 @@ class SortByArtistComparatorTests {
             val cmp: Int = SortByArtistComparator.compare(currentMusic, lastMusic)
             println("cmp is: $cmp")
             if (currentMusic.artist == lastMusic.artist) {
-                val titleCmp: Int = currentMusic.title.compareTo(lastMusic.title)
+                val titleCmp: Int = StringComparator.compare(currentMusic.title, lastMusic.title)
                 if (titleCmp == 0) assertEquals(0, cmp)
                 else {
                     println("titleCmp is: $titleCmp")
@@ -92,7 +92,7 @@ class SortByArtistComparatorTests {
                 }
             } else {
                 val artistTitleCmp: Int =
-                    currentMusic.artist.title.compareTo(lastMusic.artist.title)
+                    StringComparator.compare(currentMusic.artist.title, lastMusic.artist.title)
                 println("artistTitleCmp is: $artistTitleCmp")
                 if (artistTitleCmp == 0) assertEquals(0, cmp)
                 else if (artistTitleCmp > 0) assertTrue(cmp > 0)

@@ -120,7 +120,6 @@ internal fun MusicOptionsDialog(
                 /**
                  * Redirections
                  */
-                val currentMediaImpl: MediaImpl? = satunesUiState.currentMediaImpl
                 if (currentMediaImpl != music.album)
                     NavigateToMediaMusicOption(mediaImpl = music.album)
                 if (currentMediaImpl != music.artist)

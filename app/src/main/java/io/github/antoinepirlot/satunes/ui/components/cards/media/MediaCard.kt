@@ -85,7 +85,6 @@ internal fun MediaCard(
     media: MediaImpl,
     onClick: (() -> Unit)?,
     enableExtraOptions: Boolean = true,
-    openedPlaylist: Playlist?,
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
 
@@ -180,7 +179,6 @@ internal fun MediaCard(
     if (showMediaOption) {
         MediaOptionsDialog(
             media = media,
-            openedPlaylist = openedPlaylist,
             onDismissRequest = {
                 showMediaOption = false
                 satunesViewModel.mediaOptionsIsClosed()
@@ -209,6 +207,5 @@ private fun CardPreview() {
         modifier = Modifier.fillMaxSize(),
         media = music,
         onClick = {},
-        openedPlaylist = null
     )
 }

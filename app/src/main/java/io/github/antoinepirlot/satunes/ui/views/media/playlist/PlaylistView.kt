@@ -110,7 +110,6 @@ internal fun PlaylistView(
                 navController = navController
             )
         },
-        openedPlaylistWithMusics = playlist,
         header = {
             val title: String = if (playlist.title == LIKES_PLAYLIST_TITLE) {
                 stringResource(id = RDb.string.likes_playlist_title)

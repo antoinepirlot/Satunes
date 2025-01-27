@@ -77,7 +77,7 @@ class SortByArtistComparatorTests {
     fun sortTest() {
         val sortedList: List<Music> = _musics.sortedWith(SortByArtistComparator)
 
-        val lastMusic: Music = sortedList[0]
+        var lastMusic: Music = sortedList[0]
         for (i: Int in 1..<sortedList.size) {
             val currentMusic: Music = sortedList[i]
             val cmp: Int = SortByArtistComparator.compare(currentMusic, lastMusic)
@@ -98,6 +98,7 @@ class SortByArtistComparatorTests {
                 else if (artistTitleCmp > 0) assertTrue(cmp > 0)
                 else assertTrue(cmp < 0)
             }
+            lastMusic = currentMusic
         }
     }
 }

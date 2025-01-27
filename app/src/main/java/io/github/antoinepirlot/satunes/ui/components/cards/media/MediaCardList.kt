@@ -45,7 +45,6 @@ import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.models.radio_buttons.SortOptions
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -65,7 +64,6 @@ internal fun MediaCardList(
     mediaImplCollection: Collection<MediaImpl>,
     header: @Composable (() -> Unit)? = null,
     openMedia: (mediaImpl: MediaImpl) -> Unit,
-    openedPlaylist: Playlist? = null,
     scrollToMusicPlaying: Boolean = false,
     showGroupIndication: Boolean = true,
     sort: Boolean = true
@@ -126,7 +124,6 @@ internal fun MediaCardList(
                 modifier = modifier,
                 media = media,
                 onClick = { openMedia(media) },
-                openedPlaylist = openedPlaylist,
             )
         }
     }
@@ -228,7 +225,6 @@ private fun CardListPreview() {
         mediaImplCollection = listOf(),
         header = {},
         openMedia = {},
-        openedPlaylist = null,
         scrollToMusicPlaying = false
     )
 }

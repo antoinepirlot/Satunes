@@ -26,10 +26,15 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
+import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
+import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
@@ -50,11 +55,14 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.music.options.Remove
 @Composable
 internal fun MusicOptionsDialog(
     modifier: Modifier = Modifier,
+    satunesViewModel: SatunesViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
     music: Music,
-    playlist: Playlist? = null, //TODO move that in satunes view model or using current route
     onDismissRequest: () -> Unit,
 ) {
+    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+    val currentMediaImpl: MediaImpl? = satunesUiState.currentMediaImpl
+
     AlertDialog(
         modifier = modifier,
         icon = {
@@ -72,10 +80,10 @@ internal fun MusicOptionsDialog(
                 LikeUnlikeMusicOption(music = music)
                 AddToPlaylistMediaOption(mediaImpl = music, onFinished = onDismissRequest)
 
-                if (playlist != null) {
+                if (currentMediaImpl is Playlist) {
                     RemoveFromPlaylistMusicOption(
                         music = music,
-                        playlist = playlist,
+                        playlist = currentMediaImpl,
                         onFinished = onDismissRequest
                     )
                 }
@@ -112,10 +120,14 @@ internal fun MusicOptionsDialog(
                 /**
                  * Redirections
                  */
-                NavigateToMediaMusicOption(mediaImpl = music.album)
-                NavigateToMediaMusicOption(mediaImpl = music.artist)
-                NavigateToMediaMusicOption(mediaImpl = music.genre)
-                NavigateToMediaMusicOption(mediaImpl = music.folder)
+                if (currentMediaImpl != music.album)
+                    NavigateToMediaMusicOption(mediaImpl = music.album)
+                if (currentMediaImpl != music.artist)
+                    NavigateToMediaMusicOption(mediaImpl = music.artist)
+                if (currentMediaImpl != music.genre)
+                    NavigateToMediaMusicOption(mediaImpl = music.genre)
+                if (currentMediaImpl != music.folder)
+                    NavigateToMediaMusicOption(mediaImpl = music.folder)
             }
         },
         onDismissRequest = { onDismissRequest() },

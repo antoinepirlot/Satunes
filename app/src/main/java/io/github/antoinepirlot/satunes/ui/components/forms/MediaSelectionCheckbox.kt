@@ -83,7 +83,6 @@ internal fun MediaSelectionCheckbox(
                 media = mediaImpl,
                 onClick = null,
                 enableExtraOptions = false,
-                openedPlaylist = null,
             )
         }
     }

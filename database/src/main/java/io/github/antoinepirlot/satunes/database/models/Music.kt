@@ -190,9 +190,7 @@ class Music(
 
     override fun compareTo(other: MediaImpl): Int {
         var compared: Int = super.compareTo(other)
-        if (compared == 0 && this != other) {
-            compared = 1
-        }
+        if (compared == 0 && this != other) return 1
         return compared
     }
 }

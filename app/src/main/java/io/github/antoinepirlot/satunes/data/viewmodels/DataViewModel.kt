@@ -48,6 +48,7 @@ import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
+import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
@@ -78,6 +79,7 @@ class DataViewModel : ViewModel() {
     private val _playlistSetUpdated: MutableState<Boolean> = DataManager.playlistsMapUpdated
     private val _db: DatabaseManager =
         DatabaseManager.initInstance(context = MainActivity.instance.applicationContext)
+    private val _isLoaded: MutableState<Boolean> = DataLoader.isLoaded
 
     var playlistSetUpdated: Boolean by _playlistSetUpdated
         private set
@@ -87,6 +89,8 @@ class DataViewModel : ViewModel() {
 
     var sortOption: SortOptions by mutableStateOf(defaultSortingOptions)
         private set
+
+    val isLoaded: Boolean by _isLoaded
 
     val uiState: StateFlow<DataUiState> = _uiState.asStateFlow()
 

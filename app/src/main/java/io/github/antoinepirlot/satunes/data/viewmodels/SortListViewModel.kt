@@ -39,16 +39,10 @@ import io.github.antoinepirlot.satunes.models.radio_buttons.SortOptions
 class SortListViewModel : ViewModel() {
 
     /**
-     * Used to remember the radio button before user change in list.
-     */
-    private val _currentSortOption: MutableState<SortOptions> =
-        mutableStateOf(defaultSortingOptions)
-
-    /**
      * The current selected radio button.
      */
     private val _selectedSortOption: MutableState<SortOptions> =
-        mutableStateOf(_currentSortOption.value)
+        mutableStateOf(defaultSortingOptions)
 
     /**
      * The current selected radio button.
@@ -56,21 +50,7 @@ class SortListViewModel : ViewModel() {
     var selectedSortOption: SortOptions by _selectedSortOption
         private set
 
-    /**
-     * The current confirmed selected radio button (used to refresh the list)
-     */
-    var currentSortOption: SortOptions by _currentSortOption
-        private set
-
     fun selectSortOption(sortRadioButton: SortOptions) {
         this.selectedSortOption = sortRadioButton
-    }
-
-    fun applySorting() {
-        this.currentSortOption = this.selectedSortOption
-    }
-
-    fun cancelSorting() {
-        this.selectedSortOption = this.currentSortOption
     }
 }

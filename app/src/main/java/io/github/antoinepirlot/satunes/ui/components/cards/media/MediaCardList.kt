@@ -29,6 +29,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -36,9 +38,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.texts.Title
+import io.github.antoinepirlot.satunes.data.states.DataUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
-import io.github.antoinepirlot.satunes.data.viewmodels.SortListViewModel
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
@@ -60,7 +62,6 @@ internal fun MediaCardList(
     lazyListState: LazyListState = rememberLazyListState(),
     dataViewModel: DataViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
-    sortListViewModel: SortListViewModel = viewModel(),
     mediaImplCollection: Collection<MediaImpl>,
     header: @Composable (() -> Unit)? = null,
     openMedia: (mediaImpl: MediaImpl) -> Unit,
@@ -69,14 +70,16 @@ internal fun MediaCardList(
     showGroupIndication: Boolean = true,
 ) {
     if (mediaImplCollection.isEmpty()) return // It fixes issue while accessing last folder in chain
+    val dataUiState: DataUiState by dataViewModel.uiState.collectAsState()
 
-    val sortOption: SortOptions = sortListViewModel.currentSortOption
-    var mediaImplList: List<MediaImpl> = dataViewModel.sortMediaImplListBy(
+    val sortOption: SortOptions = dataViewModel.sortOption
+    val mediaImplList: List<MediaImpl> = dataViewModel.sortMediaImplListBy(
         sortOption = sortOption,
         mediaImplList = mediaImplCollection
     )
+    val showFirstLetter: Boolean = dataUiState.showFirstLetter
 
-    LaunchedEffect(key1 = sortListViewModel.currentSortOption) {
+    LaunchedEffect(key1 = dataViewModel.sortOption) {
         CoroutineScope(Dispatchers.Main).launch {
             lazyListState.scrollToItem(0)
         }
@@ -96,7 +99,7 @@ internal fun MediaCardList(
         ) { media: MediaImpl ->
             if (media == mediaImplList.first()) header?.invoke()
 
-            if (showGroupIndication) {
+            if (showFirstLetter && showGroupIndication) {
                 if (sortOption == SortOptions.GENRE) {
                     if (media is Music) {
                         FirstGenre(

@@ -80,6 +80,7 @@ internal class SatunesViewModel : ViewModel() {
     private val _isDataLoaded: MutableState<Boolean> = DataLoader.isLoaded
     private val _defaultNavBarSection: MutableState<NavBarSection> =
         mutableStateOf(_uiState.value.defaultNavBarSection)
+
     //Use this only for nav bar items as it won't refresh if uiState is updated, idk why.
     private val _foldersChecked: MutableState<Boolean> = SettingsManager.foldersChecked
     private val _artistsChecked: MutableState<Boolean> = SettingsManager.artistsChecked

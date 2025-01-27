@@ -37,6 +37,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.getSortOptions
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
+import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SortListViewModel
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
@@ -52,6 +53,7 @@ import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 internal fun SortListDialog(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
+    dataViewModel: DataViewModel = viewModel(),
     sortListViewModel: SortListViewModel = viewModel(),
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
@@ -62,11 +64,11 @@ internal fun SortListDialog(
         title = stringResource(R.string.sort_list_title),
         onDismissRequest = {
             satunesViewModel.hideSortDialog()
-            sortListViewModel.cancelSorting()
+//            dataViewModel.cancelSorting()
         },
         onConfirmRequest = {
             satunesViewModel.hideSortDialog()
-            sortListViewModel.applySorting()
+            dataViewModel.setSorting(sortOption = selectedSortOption)
         },
         confirmText = stringResource(R.string.ok),
         dismissText = stringResource(R.string.cancel),

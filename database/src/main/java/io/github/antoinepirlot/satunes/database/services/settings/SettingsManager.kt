@@ -85,6 +85,7 @@ object SettingsManager {
     private const val DEFAULT_ARTISTS_REPLACEMENT: Boolean = true
     private const val DEFAULT_FORWARD_MS: Long = 5000L
     private const val DEFAULT_REWIND_MS: Long = DEFAULT_FORWARD_MS
+    private const val DEFAULT_SHOW_FIRST_LETTER = true
 
     /**
      * KEYS
@@ -126,6 +127,8 @@ object SettingsManager {
         booleanPreferencesKey("artist_replacement")
     private val FORWARD_MS_KEY: Preferences.Key<Long> = longPreferencesKey("forward_ms")
     private val REWIND_MS_KEY: Preferences.Key<Long> = longPreferencesKey("rewind_ms")
+    private val SHOW_FIRST_LETTER_KEY: Preferences.Key<Boolean> =
+        booleanPreferencesKey("show_first_letter")
 
     /**
      * VARIABLES
@@ -194,6 +197,8 @@ object SettingsManager {
 
     val forwardMs: MutableLongState = mutableLongStateOf(DEFAULT_FORWARD_MS)
     val rewindMs: MutableLongState = mutableLongStateOf(DEFAULT_REWIND_MS)
+    var showFirstLetter: Boolean = DEFAULT_SHOW_FIRST_LETTER
+        private set
 
     suspend fun loadSettings(context: Context) {
         if (_isLoaded) {
@@ -255,6 +260,7 @@ object SettingsManager {
 
             forwardMs.longValue = preferences[FORWARD_MS_KEY] ?: DEFAULT_FORWARD_MS
             rewindMs.longValue = preferences[REWIND_MS_KEY] ?: DEFAULT_REWIND_MS
+            showFirstLetter = preferences[SHOW_FIRST_LETTER_KEY] ?: DEFAULT_SHOW_FIRST_LETTER
 
             DataLoader.loadFoldersPaths()
 
@@ -594,6 +600,13 @@ object SettingsManager {
         context.dataStore.edit { preferences: MutablePreferences ->
             this.rewindMs.longValue = seconds.toLong() * 1000L
             preferences[REWIND_MS_KEY] = this.rewindMs.longValue
+        }
+    }
+
+    suspend fun switchShowFirstLetter(context: Context) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            this.showFirstLetter = !this.showFirstLetter
+            preferences[SHOW_FIRST_LETTER_KEY] = this.showFirstLetter
         }
     }
 

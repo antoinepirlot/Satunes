@@ -80,6 +80,7 @@ internal class SatunesViewModel : ViewModel() {
     private val _isDataLoaded: MutableState<Boolean> = DataLoader.isLoaded
     private val _defaultNavBarSection: MutableState<NavBarSection> =
         mutableStateOf(_uiState.value.defaultNavBarSection)
+
     //Use this only for nav bar items as it won't refresh if uiState is updated, idk why.
     private val _foldersChecked: MutableState<Boolean> = SettingsManager.foldersChecked
     private val _artistsChecked: MutableState<Boolean> = SettingsManager.artistsChecked
@@ -647,6 +648,31 @@ internal class SatunesViewModel : ViewModel() {
     fun hideSortDialog() {
         _uiState.update { currentState: SatunesUiState ->
             currentState.copy(showSortDialog = false)
+        }
+    }
+
+    fun switchShowFirstLetter(
+        scope: CoroutineScope,
+        snackBarHostState: SnackbarHostState
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                SettingsManager.switchShowFirstLetter(context = MainActivity.instance.applicationContext)
+                _uiState.update { currentState: SatunesUiState ->
+                    currentState.copy(showFirstLetter = !currentState.showFirstLetter)
+                }
+            } catch (e: Throwable) {
+                showErrorSnackBar(
+                    scope = scope,
+                    snackBarHostState = snackBarHostState,
+                    action = {
+                        switchShowFirstLetter(
+                            scope = scope,
+                            snackBarHostState = snackBarHostState
+                        )
+                    }
+                )
+            }
         }
     }
 }

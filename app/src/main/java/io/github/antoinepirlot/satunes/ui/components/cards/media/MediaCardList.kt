@@ -29,6 +29,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -36,8 +38,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.texts.Title
+import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SortListViewModel
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Genre
@@ -58,6 +62,7 @@ import java.text.Normalizer
 internal fun MediaCardList(
     modifier: Modifier = Modifier,
     lazyListState: LazyListState = rememberLazyListState(),
+    satunesViewModel: SatunesViewModel = viewModel(),
     dataViewModel: DataViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
     sortListViewModel: SortListViewModel = viewModel(),
@@ -69,12 +74,14 @@ internal fun MediaCardList(
     showGroupIndication: Boolean = true,
 ) {
     if (mediaImplCollection.isEmpty()) return // It fixes issue while accessing last folder in chain
+    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
 
     val sortOption: SortOptions = sortListViewModel.currentSortOption
     var mediaImplList: List<MediaImpl> = dataViewModel.sortMediaImplListBy(
         sortOption = sortOption,
         mediaImplList = mediaImplCollection
     )
+    val showFirstLetter: Boolean = satunesUiState.showFirstLetter
 
     LaunchedEffect(key1 = sortListViewModel.currentSortOption) {
         CoroutineScope(Dispatchers.Main).launch {
@@ -96,7 +103,7 @@ internal fun MediaCardList(
         ) { media: MediaImpl ->
             if (media == mediaImplList.first()) header?.invoke()
 
-            if (showGroupIndication) {
+            if (showFirstLetter && showGroupIndication) {
                 if (sortOption == SortOptions.GENRE) {
                     if (media is Music) {
                         FirstGenre(

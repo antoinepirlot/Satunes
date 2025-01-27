@@ -76,14 +76,14 @@ internal fun MediaCardList(
     if (mediaImplCollection.isEmpty()) return // It fixes issue while accessing last folder in chain
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
 
-    val sortOption: SortOptions = sortListViewModel.currentSortOption
+    val sortOption: SortOptions = dataViewModel.sortOption
     var mediaImplList: List<MediaImpl> = dataViewModel.sortMediaImplListBy(
         sortOption = sortOption,
         mediaImplList = mediaImplCollection
     )
     val showFirstLetter: Boolean = satunesUiState.showFirstLetter
 
-    LaunchedEffect(key1 = sortListViewModel.currentSortOption) {
+    LaunchedEffect(key1 = dataViewModel.sortOption) {
         CoroutineScope(Dispatchers.Main).launch {
             lazyListState.scrollToItem(0)
         }

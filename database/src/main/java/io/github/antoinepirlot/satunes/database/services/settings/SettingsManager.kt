@@ -621,8 +621,10 @@ object SettingsManager {
         context.dataStore.edit { preferences: MutablePreferences ->
             this.compilationMusic = DEFAULT_COMPILATION_MUSIC
             this.artistReplacement = DEFAULT_ARTISTS_REPLACEMENT
+            this.showFirstLetter = DEFAULT_SHOW_FIRST_LETTER
             preferences[COMPILATION_MUSIC_KEY] = this.compilationMusic
             preferences[ARTISTS_REPLACEMENT_KEY] = this.artistReplacement
+            preferences[SHOW_FIRST_LETTER_KEY] = this.showFirstLetter
         }
     }
 

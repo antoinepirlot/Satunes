@@ -20,19 +20,10 @@
  * PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.database
+package io.github.antoinepirlot.satunes.data.states
 
-import org.junit.Assert.assertEquals
-import org.junit.Test
+import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 
-/**
- * Example local unit test, which will execute on the development machine (host).
- *
- * See [testing documentation](http://d.android.com/tools/testing).
- */
-class ExampleUnitTest {
-    @Test
-    fun addition_isCorrect() {
-        assertEquals(4, 2 + 2)
-    }
-}
+data class DataUiState(
+    val showFirstLetter: Boolean = SettingsManager.showFirstLetter
+)

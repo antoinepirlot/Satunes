@@ -33,10 +33,11 @@ import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -50,6 +51,7 @@ import androidx.navigation.NavHostController
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
+import io.github.antoinepirlot.satunes.data.states.SearchUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SearchViewModel
@@ -62,13 +64,12 @@ import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import java.util.SortedSet
 
 /**
  * @author Antoine Pirlot on 27/06/2024
  */
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun SearchView(
     modifier: Modifier = Modifier,
@@ -76,10 +77,9 @@ internal fun SearchView(
     playbackViewModel: PlaybackViewModel = viewModel(),
     searchViewModel: SearchViewModel = viewModel(),
 ) {
+    val searchUiState: SearchUiState by searchViewModel.uiState.collectAsState()
     val navController: NavHostController = LocalNavController.current
     val query: String = searchViewModel.query
-    val mediaImplList: SortedSet<MediaImpl> = searchViewModel.mediaImplSet
-    if (searchViewModel.mediaImplSetHasChanged) searchViewModel.mediaImplChangeUpdated() //Used to recompose
     val selectedSearchChips: List<SearchChips> = searchViewModel.selectedSearchChips
 
     val searchCoroutine: CoroutineScope = rememberCoroutineScope()
@@ -133,11 +133,11 @@ internal fun SearchView(
         Spacer(modifier = Modifier.size(16.dp))
         MediaChipList()
         MediaListView(
-            mediaImplCollection = mediaImplList,
+            mediaImplCollection = searchUiState.mediaImplSet,
             openMedia = { mediaImpl: MediaImpl ->
                 if (mediaImpl is Music) {
-                    playbackViewModel.loadMusic(
-                        musicSet = dataViewModel.getMusicSet(),
+                    playbackViewModel.loadMusics(
+                        musics = dataViewModel.getMusicSet(),
                         musicToPlay = mediaImpl
                     )
                 }

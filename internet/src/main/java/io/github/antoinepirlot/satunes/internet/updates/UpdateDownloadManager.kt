@@ -54,7 +54,7 @@ import okhttp3.Response
 object UpdateDownloadManager {
     private var downloadId: Long = -1
     private const val MIME_TYPE = "application/vnd.android.package-archive"
-    private val logger = SatunesLogger.getLogger()
+    private val _logger: SatunesLogger? = SatunesLogger.getLogger()
 
     fun downloadUpdateApk(context: Context) {
         if (UpdateCheckManager.downloadStatus.value == APKDownloadStatus.CHECKING || UpdateCheckManager.downloadStatus.value == APKDownloadStatus.DOWNLOADING) {
@@ -69,7 +69,7 @@ object UpdateDownloadManager {
                     context = context,
                     message = context.getString(R.string.download_not_found)
                 )
-                logger.warning("UpdateCheckManager.updateAvailableStatus.value != UpdateAvailableStatus.AVAILABLE")
+                _logger?.warning("UpdateCheckManager.updateAvailableStatus.value != UpdateAvailableStatus.AVAILABLE")
                 return
             }
             val downloadUrl: String = getDownloadUrl(context = context) ?: return
@@ -90,7 +90,7 @@ object UpdateDownloadManager {
             UpdateCheckManager.downloadStatus.value = APKDownloadStatus.DOWNLOADING
         } catch (e: Throwable) {
             UpdateCheckManager.downloadStatus.value = APKDownloadStatus.FAILED
-            logger.severe(e.message)
+            _logger?.severe(e.message)
             UpdateCheckManager.updateAvailableStatus.value = UpdateAvailableStatus.UNDEFINED
             throw e
         }
@@ -121,7 +121,7 @@ object UpdateDownloadManager {
                 context = context,
                 message = context.getString(R.string.download_not_found)
             )
-            logger.warning("HTTP code: ${res.code}")
+            _logger?.warning("HTTP code: ${res.code}")
             return null
         }
         val page: String = res.body!!.string()
@@ -136,7 +136,7 @@ object UpdateDownloadManager {
                 context = context,
                 message = context.getString(R.string.download_not_found)
             )
-            logger.warning("apkFileName is null")
+            _logger?.warning("apkFileName is null")
             return null
         }
 
@@ -173,7 +173,7 @@ object UpdateDownloadManager {
             install.data = contentUri
             context.startActivity(install)
         } catch (e: Throwable) {
-            logger.severe(e.message)
+            _logger?.severe(e.message)
             throw e
         }
     }

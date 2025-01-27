@@ -29,36 +29,42 @@ import io.github.antoinepirlot.satunes.models.Destination
  * @author Antoine Pirlot on 26/07/2024
  */
 
-internal val settingsDestinations: List<Destination> =
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        listOf(
-            Destination.SETTINGS, Destination.BOTTOM_BAR_SETTINGS,
-            Destination.ANDROID_AUTO_SETTINGS, Destination.PLAYBACK_SETTINGS,
-            Destination.LIBRARY_SETTINGS, Destination.PERMISSIONS_SETTINGS,
-            Destination.UPDATES_SETTINGS, Destination.SEARCH_SETTINGS,
-            Destination.LOGS_SETTINGS, Destination.BATTERY_SETTINGS
-        )
-    } else {
-        // Without UPDATES_SETTINGS
-        listOf(
-            Destination.SETTINGS, Destination.BOTTOM_BAR_SETTINGS,
-            Destination.ANDROID_AUTO_SETTINGS, Destination.PLAYBACK_SETTINGS,
-            Destination.LIBRARY_SETTINGS, Destination.PERMISSIONS_SETTINGS,
-            Destination.SEARCH_SETTINGS, Destination.LOGS_SETTINGS,
-            Destination.BATTERY_SETTINGS,
-        )
-    }
+internal val settingsDestinations: List<Destination> = getSettingsDestinationsDynamically()
+
+private fun getSettingsDestinationsDynamically(): List<Destination> {
+    //It's executed once at launch
+    val list: MutableList<Destination> = mutableListOf(
+        Destination.SETTINGS,
+        Destination.BOTTOM_BAR_SETTINGS,
+        Destination.ANDROID_AUTO_SETTINGS,
+        Destination.PLAYBACK_SETTINGS,
+        Destination.LIBRARY_SETTINGS,
+        Destination.PERMISSIONS_SETTINGS,
+        Destination.SEARCH_SETTINGS,
+        Destination.LOGS_SETTINGS,
+        Destination.BATTERY_SETTINGS,
+        Destination.RESET_SETTINGS,
+    )
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+        list.add(element = Destination.UPDATES_SETTINGS)
+    return list.toList()
+}
 
 internal val playbackViews: List<Destination> = listOf(
-    Destination.PLAYBACK, Destination.PLAYBACK_QUEUE
+    Destination.PLAYBACK,
+    Destination.PLAYBACK_QUEUE
 )
 
 internal val mediaListViews: List<Destination> = listOf(
-    Destination.FOLDERS,
-    Destination.ARTISTS,
-    Destination.ALBUMS,
-    Destination.GENRES,
     Destination.MUSICS,
+    Destination.ALBUMS,
+    Destination.ALBUM,
+    Destination.FOLDERS,
+    Destination.ARTIST,
+    Destination.ARTISTS,
+    Destination.GENRES,
+    Destination.GENRE,
     Destination.PLAYLISTS,
+    Destination.PLAYLIST,
     Destination.SEARCH
 )

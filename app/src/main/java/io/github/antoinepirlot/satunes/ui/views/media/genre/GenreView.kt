@@ -40,7 +40,7 @@ import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.router.utils.openMedia
-import io.github.antoinepirlot.satunes.ui.components.bars.bottom.ExtraButtonList
+import io.github.antoinepirlot.satunes.ui.components.buttons.fab.ExtraButtonList
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 import io.github.antoinepirlot.satunes.ui.views.media.MediaWithAlbumsHeaderView
 
@@ -56,7 +56,7 @@ internal fun GenreView(
     genre: Genre,
 ) {
     val navController: NavHostController = LocalNavController.current
-    val musicMap: Set<Music> = genre.getMusicSet()
+    val musicSet: Set<Music> = genre.getMusicSet()
     val albumSet: Set<Album> = genre.getAlbumSet()
 
     //Recompose if data changed
@@ -66,22 +66,19 @@ internal fun GenreView(
     }
     //
 
-    if (albumSet.isNotEmpty())
+    if (musicSet.isNotEmpty())
         satunesViewModel.replaceExtraButtons(extraButtons = {
-            ExtraButtonList(
-                musicSet = null,
-                mediaImplSet = albumSet
-            )
+            ExtraButtonList(mediaImplCollection = musicSet)
         })
     else
         satunesViewModel.clearExtraButtons()
 
     MediaListView(
         modifier = modifier,
-        mediaImplCollection = musicMap,
+        mediaImplCollection = musicSet,
         openMedia = { clickedMediaImpl: MediaImpl ->
-            playbackViewModel.loadMusic(
-                musicSet = genre.getMusicSet(),
+            playbackViewModel.loadMusics(
+                musics = genre.getMusicSet(),
                 musicToPlay = clickedMediaImpl as Music
             )
             openMedia(

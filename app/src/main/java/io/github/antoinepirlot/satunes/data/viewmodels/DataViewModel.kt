@@ -35,6 +35,8 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.data.defaultSortingOptions
+import io.github.antoinepirlot.satunes.data.states.DataUiState
 import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.exceptions.BlankStringException
 import io.github.antoinepirlot.satunes.database.exceptions.LikesPlaylistCreationException
@@ -46,16 +48,20 @@ import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
-import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
+import io.github.antoinepirlot.satunes.models.radio_buttons.SortOptions
 import io.github.antoinepirlot.satunes.ui.utils.showErrorSnackBar
 import io.github.antoinepirlot.satunes.ui.utils.showSnackBar
 import io.github.antoinepirlot.satunes.utils.getNow
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import io.github.antoinepirlot.satunes.database.R as RDb
@@ -64,7 +70,11 @@ import io.github.antoinepirlot.satunes.database.R as RDb
  * @author Antoine Pirlot on 19/07/2024
  */
 class DataViewModel : ViewModel() {
-    private val _logger: SatunesLogger = SatunesLogger.getLogger()
+    companion object {
+        private val _uiState: MutableStateFlow<DataUiState> = MutableStateFlow(DataUiState())
+    }
+
+    private val _logger: SatunesLogger? = SatunesLogger.getLogger()
     private val _playlistSetUpdated: MutableState<Boolean> = DataManager.playlistsMapUpdated
     private val _db: DatabaseManager =
         DatabaseManager.initInstance(context = MainActivity.instance.applicationContext)
@@ -74,6 +84,11 @@ class DataViewModel : ViewModel() {
 
     var isSharingLoading: Boolean by mutableStateOf(false)
         private set
+
+    var sortOption: SortOptions by mutableStateOf(defaultSortingOptions)
+        private set
+
+    val uiState: StateFlow<DataUiState> = _uiState.asStateFlow()
 
     fun playlistSetUpdated() {
         this._playlistSetUpdated.value = false
@@ -130,7 +145,7 @@ class DataViewModel : ViewModel() {
                         message = message
                     )
                 } else {
-                    _logger.warning(e.message)
+                    _logger?.warning(e.message)
                     showErrorSnackBar(
                         scope = scope,
                         snackBarHostState = snackBarHostState,
@@ -223,7 +238,7 @@ class DataViewModel : ViewModel() {
                     message = message,
                 )
             } catch (e: Throwable) {
-                _logger.warning(e.message)
+                _logger?.warning(e.message)
                 showErrorSnackBar(
                     scope = scope,
                     snackBarHostState = snackBarHostState,
@@ -272,7 +287,7 @@ class DataViewModel : ViewModel() {
                     }
                 )
             } catch (e: Throwable) {
-                _logger.warning(e.message)
+                _logger?.warning(e.message)
                 showErrorSnackBar(scope = scope, snackBarHostState = snackBarHostState, action = {
                     insertMusicToPlaylist(
                         scope = scope,
@@ -318,7 +333,7 @@ class DataViewModel : ViewModel() {
                     }
                 )
             } catch (e: Throwable) {
-                _logger.warning(e.message)
+                _logger?.warning(e.message)
                 showErrorSnackBar(scope = scope, snackBarHostState = snackBarHostState, action = {
                     insertMusicsToPlaylist(
                         scope = scope,
@@ -377,7 +392,7 @@ class DataViewModel : ViewModel() {
                     }
                 )
             } catch (e: Throwable) {
-                _logger.warning(e.message)
+                _logger?.warning(e.message)
                 showErrorSnackBar(scope = scope, snackBarHostState = snackBarHostState, action = {
                     insertMusicToPlaylists(
                         scope = scope,
@@ -420,7 +435,7 @@ class DataViewModel : ViewModel() {
                     }
                 )
             } catch (e: Throwable) {
-                _logger.warning(e.message)
+                _logger?.warning(e.message)
                 showErrorSnackBar(scope = scope, snackBarHostState = snackBarHostState, action = {
                     insertMusicsToPlaylists(
                         scope = scope,
@@ -462,7 +477,7 @@ class DataViewModel : ViewModel() {
                     }
                 )
             } catch (e: Throwable) {
-                _logger.warning(e.message)
+                _logger?.warning(e.message)
                 showErrorSnackBar(scope = scope, snackBarHostState = snackBarHostState, action = {
                     removeMusicFromPlaylist(
                         scope = scope,
@@ -505,7 +520,7 @@ class DataViewModel : ViewModel() {
                     }
                 )
             } catch (e: Throwable) {
-                _logger.warning(e.message)
+                _logger?.warning(e.message)
                 showErrorSnackBar(scope = scope, snackBarHostState = snackBarHostState, action = {
                     removeMusicsFromPlaylist(
                         scope = scope,
@@ -562,7 +577,7 @@ class DataViewModel : ViewModel() {
                     }
                 )
             } catch (e: Throwable) {
-                _logger.warning(e.message)
+                _logger?.warning(e.message)
                 showErrorSnackBar(scope = scope, snackBarHostState = snackBarHostState, action = {
                     removeMusicFromPlaylists(
                         scope = scope,
@@ -601,7 +616,7 @@ class DataViewModel : ViewModel() {
                     }
                 )
             } catch (e: Throwable) {
-                _logger.warning(e.message)
+                _logger?.warning(e.message)
                 showErrorSnackBar(scope = scope, snackBarHostState = snackBarHostState, action = {
                     removeMusicsFromPlaylists(
                         scope = scope,
@@ -678,16 +693,12 @@ class DataViewModel : ViewModel() {
         MainActivity.instance.createFileToExportPlaylists(defaultFileName = fileName)
     }
 
-    fun resetAllData() {
-        DataLoader.resetAllData()
-    }
-
     fun share(
         scope: CoroutineScope,
         snackBarHostState: SnackbarHostState,
         media: MediaImpl
     ) {
-        _logger.info("Sharing media type: ${media::class.java}")
+        _logger?.info("Sharing media type: ${media::class.java}")
         isSharingLoading = true
         try {
             var paths: Array<String> = arrayOf()
@@ -772,7 +783,7 @@ class DataViewModel : ViewModel() {
         } catch (e: NotImplementedError) {
             return
         } catch (e: Throwable) {
-            _logger.severe(e.message)
+            _logger?.severe(e.message)
         }
     }
 
@@ -833,6 +844,7 @@ class DataViewModel : ViewModel() {
         try {
             runBlocking {
                 SettingsManager.resetLoadingLogicSettings(context = MainActivity.instance.applicationContext)
+                updateShowFirstLetter()
             }
         } catch (e: Exception) {
             showErrorSnackBar(
@@ -944,6 +956,7 @@ class DataViewModel : ViewModel() {
         try {
             runBlocking {
                 SettingsManager.resetAll(context = MainActivity.instance.applicationContext)
+                updateShowFirstLetter()
             }
         } catch (e: Exception) {
             showErrorSnackBar(
@@ -953,6 +966,54 @@ class DataViewModel : ViewModel() {
                     resetAllSettings(scope = scope, snackBarHostState = snackBarHostState)
                 }
             )
+        }
+    }
+
+    /**
+     * Sort the media impl list by sortOption.
+     *
+     * @param sortOption the option to sort the [List] of [MediaImpl] with the [SortOptions].
+     * @param mediaImplList the [List] of [MediaImpl] to sort
+     *
+     * @return the sorted [List] of [MediaImpl]
+     */
+    fun sortMediaImplListBy(
+        sortOption: SortOptions,
+        mediaImplList: Collection<MediaImpl>
+    ): List<MediaImpl> {
+        return mediaImplList.sortedWith(sortOption.comparator)
+    }
+
+    fun setSorting(sortOption: SortOptions) {
+        this.sortOption = sortOption
+    }
+
+    fun switchShowFirstLetter(
+        scope: CoroutineScope,
+        snackBarHostState: SnackbarHostState
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                SettingsManager.switchShowFirstLetter(context = MainActivity.instance.applicationContext)
+                updateShowFirstLetter()
+            } catch (e: Throwable) {
+                showErrorSnackBar(
+                    scope = scope,
+                    snackBarHostState = snackBarHostState,
+                    action = {
+                        switchShowFirstLetter(
+                            scope = scope,
+                            snackBarHostState = snackBarHostState
+                        )
+                    }
+                )
+            }
+        }
+    }
+
+    private fun updateShowFirstLetter() {
+        _uiState.update { currentState: DataUiState ->
+            currentState.copy(showFirstLetter = SettingsManager.showFirstLetter)
         }
     }
 }

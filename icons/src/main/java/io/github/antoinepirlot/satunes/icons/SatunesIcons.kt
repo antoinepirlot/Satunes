@@ -26,6 +26,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.PlaylistAdd
 import androidx.compose.material.icons.automirrored.rounded.PlaylistPlay
 import androidx.compose.material.icons.automirrored.rounded.QueueMusic
+import androidx.compose.material.icons.automirrored.rounded.Sort
 import androidx.compose.material.icons.rounded.AccountCircle
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.AddToQueue
@@ -68,6 +69,7 @@ import androidx.compose.material.icons.rounded.Shuffle
 import androidx.compose.material.icons.rounded.SkipNext
 import androidx.compose.material.icons.rounded.SkipPrevious
 import androidx.compose.material.icons.rounded.Timer
+import androidx.compose.material.icons.rounded.Title
 import androidx.compose.material.icons.rounded.Update
 import androidx.compose.material.icons.rounded.Upload
 import androidx.compose.material.icons.rounded.Warning
@@ -167,6 +169,7 @@ enum class SatunesIcons(
         imageProvider = ImageProvider(resId = R.drawable.skip_previous),
         description = "Skip Previous Icon"
     ),
+    SORT(imageVector = Icons.AutoMirrored.Rounded.Sort, description = "Sort Icon"),
     TIMER(imageVector = Icons.Rounded.Timer, description = "Timer Icon"),
     UNLIKED(imageVector = Icons.Rounded.FavoriteBorder, description = "Unliked Icon"),
     REFRESH(imageVector = Icons.Rounded.Refresh, description = "Refresh Icon"),
@@ -178,4 +181,5 @@ enum class SatunesIcons(
     RESET_SETTINGS(imageVector = Icons.Rounded.Emergency, description = "Reset Icon"),
     REWIND(imageVector = Icons.Rounded.FastRewind, description = "Rewind Icon"),
     WARNING(imageVector = Icons.Rounded.Warning, description = "Warning Icon"),
+    TITLE(imageVector = Icons.Rounded.Title, description = "Title Icon"),
 }

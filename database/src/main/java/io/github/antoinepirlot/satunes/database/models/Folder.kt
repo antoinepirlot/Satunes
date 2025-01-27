@@ -58,23 +58,14 @@ class Folder(
         }
     }
 
-    override fun isNotEmpty(): Boolean {
-        return super.isNotEmpty() || try {
-            this.subFolderSortedSet.first { it.isNotEmpty() }
-            true
-        } catch (_: NoSuchElementException) {
-            false
-        }
-    }
+    override fun isNotEmpty(): Boolean = !isEmpty()
 
     /**
      * Get the list of subfolder
      *
      * @return a list of subfolder and each subfolder is a Folder object
      */
-    fun getSubFolderSet(): Set<Folder> {
-        return this.subFolderSortedSet
-    }
+    fun getSubFolderSet(): Set<Folder> = this.subFolderSortedSet
 
     /**
      * Create a list containing sub folders then this folder musics.

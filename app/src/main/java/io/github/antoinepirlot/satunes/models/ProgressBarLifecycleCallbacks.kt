@@ -37,7 +37,7 @@ import kotlinx.coroutines.launch
  * @author Antoine Pirlot on 02/05/2024
  */
 internal object ProgressBarLifecycleCallbacks : DefaultLifecycleObserver {
-    private val _logger: SatunesLogger = SatunesLogger.getLogger()
+    private val _logger: SatunesLogger? = SatunesLogger.getLogger()
     private var _updatingJob: Job? = null;
     var isUpdatingPosition: Boolean = false
     private var stopRefresh: Boolean = false
@@ -83,7 +83,7 @@ internal object ProgressBarLifecycleCallbacks : DefaultLifecycleObserver {
             return
         }
         isUpdatingPosition = true
-        _logger.info("Update current position")
+        _logger?.info("Update current position")
         _updatingJob?.cancel()
         _updatingJob = CoroutineScope(Dispatchers.Main).launch {
             updateCurrentPosition()

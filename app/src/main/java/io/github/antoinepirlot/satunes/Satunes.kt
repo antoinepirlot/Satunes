@@ -22,8 +22,6 @@
 
 package io.github.antoinepirlot.satunes
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -31,7 +29,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBarDefaults
@@ -42,25 +39,22 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.data.local.LocalMainScope
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
-import io.github.antoinepirlot.satunes.data.mediaListViews
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.router.Router
 import io.github.antoinepirlot.satunes.ui.components.bars.bottom.BottomAppBar
-import io.github.antoinepirlot.satunes.ui.components.bars.bottom.ShowCurrentMusicButton
 import io.github.antoinepirlot.satunes.ui.components.bars.top.TopAppBar
+import io.github.antoinepirlot.satunes.ui.components.buttons.fab.SatunesFAB
 import io.github.antoinepirlot.satunes.ui.components.dialog.WhatsNewDialog
 import io.github.antoinepirlot.satunes.ui.theme.SatunesTheme
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
@@ -77,7 +71,7 @@ internal fun Satunes(
     satunesViewModel: SatunesViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
 ) {
-    SatunesLogger.getLogger().info("Satunes Composable")
+    SatunesLogger.getLogger()?.info("Satunes Composable")
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     SatunesTheme {
         Surface(
@@ -103,28 +97,7 @@ internal fun Satunes(
                         TopAppBar(scrollBehavior = scrollBehavior)
                     },
                     bottomBar = { BottomAppBar() },
-                    floatingActionButton = {
-                        Box(
-                            contentAlignment = Alignment.BottomEnd,
-                        ) {
-                            Column(
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ) {
-                                val isInMediaListViews: Boolean =
-                                    satunesUiState.currentDestination in mediaListViews
-                                if (isInMediaListViews)
-                                    satunesUiState.extraButtons?.invoke()
-                                if (isInMediaListViews && playbackViewModel.musicPlaying != null)
-                                    ShowCurrentMusicButton()
-                            }
-                            SnackbarHost(
-                                //Mandatory as for Google a snackbar is on top of FAB icons and does not overlay it.
-                                // So the UI is ugly without that modifier
-                                modifier = Modifier.padding(start = 30.dp),
-                                hostState = snackBarHostState
-                            )
-                        }
-                    },
+                    floatingActionButton = { SatunesFAB() },
                     floatingActionButtonPosition = FabPosition.End
                 ) { innerPadding: PaddingValues ->
                     Router(modifier = Modifier.padding(innerPadding))

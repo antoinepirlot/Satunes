@@ -27,8 +27,6 @@ import android.os.Build
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
@@ -47,13 +45,16 @@ import androidx.navigation.NavHostController
 import io.github.antoinepirlot.jetpack_libs.components.models.ScreenSizes
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.data.getSortOptions
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
+import io.github.antoinepirlot.satunes.data.mediaListViews
 import io.github.antoinepirlot.satunes.data.playbackViews
 import io.github.antoinepirlot.satunes.data.settingsDestinations
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.models.Destination
+import io.github.antoinepirlot.satunes.ui.components.buttons.IconButton
 
 /**
  * @author Antoine Pirlot on 16/01/24
@@ -66,12 +67,12 @@ internal fun TopAppBar(
     scrollBehavior: TopAppBarScrollBehavior,
     satunesViewModel: SatunesViewModel = viewModel(),
 ) {
-    val uiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     val navController: NavHostController = LocalNavController.current
     val screenWidthDp = LocalConfiguration.current.screenWidthDp
     val barModifier: Modifier =
         if (screenWidthDp < ScreenSizes.VERY_VERY_SMALL) modifier.fillMaxHeight(0.11f) else modifier
-    val currentDestination: Destination = uiState.currentDestination
+    val currentDestination: Destination = satunesUiState.currentDestination
 
     CenterAlignedTopAppBar(
         modifier = barModifier,
@@ -81,21 +82,20 @@ internal fun TopAppBar(
         ),
         navigationIcon = {
             val screenWidth: Int = LocalConfiguration.current.screenWidthDp
-            if (currentDestination !in playbackViews || screenWidth >= ScreenSizes.LARGE) {
-                return@CenterAlignedTopAppBar
-            }
-
-            // Here, the user is in the playback view
-            IconButton(onClick = {
-                onPlaybackQueueButtonClick(
-                    uiState = uiState,
-                    navController = navController
+            if (currentDestination in playbackViews && screenWidth < ScreenSizes.LARGE) {
+                IconButton(
+                    icon = SatunesIcons.PLAYBACK,
+                    onClick = {
+                        onPlaybackQueueButtonClick(
+                            uiState = satunesUiState,
+                            navController = navController
+                        )
+                    }
                 )
-            }) {
-                val playbackQueueIcon: SatunesIcons = SatunesIcons.PLAYBACK
-                Icon(
-                    imageVector = playbackQueueIcon.imageVector,
-                    contentDescription = playbackQueueIcon.description
+            } else if (currentDestination in mediaListViews && getSortOptions(destination = satunesUiState.currentDestination).size > 1) {
+                IconButton(
+                    icon = SatunesIcons.SORT,
+                    onClick = { satunesViewModel.showSortDialog() }
                 )
             }
         },
@@ -109,31 +109,28 @@ internal fun TopAppBar(
         actions = {
             if (currentDestination !in settingsDestinations) {
                 // Search Button
-                IconButton(onClick = {
-                    onSearchButtonClick(
-                        uiState = uiState,
-                        navController = navController
-                    )
-                }) {
-                    val icon: SatunesIcons = SatunesIcons.SEARCH
-                    Icon(imageVector = icon.imageVector, contentDescription = icon.description)
-                }
+                IconButton(
+                    icon = SatunesIcons.SEARCH,
+                    onClick = {
+                        onSearchButtonClick(
+                            uiState = satunesUiState,
+                            navController = navController
+                        )
+                    }
+                )
             }
 
             //Setting Button
-            IconButton(onClick = {
-                onSettingButtonClick(
-                    uiState = uiState,
-                    satunesViewModel = satunesViewModel,
-                    navController = navController
-                )
-            }) {
-                val settingsIcon: SatunesIcons = SatunesIcons.SETTINGS
-                Icon(
-                    imageVector = settingsIcon.imageVector,
-                    contentDescription = settingsIcon.description
-                )
-            }
+            IconButton(
+                icon = SatunesIcons.SETTINGS,
+                onClick = {
+                    onSettingButtonClick(
+                        uiState = satunesUiState,
+                        satunesViewModel = satunesViewModel,
+                        navController = navController
+                    )
+                }
+            )
         },
         scrollBehavior = scrollBehavior,
     )

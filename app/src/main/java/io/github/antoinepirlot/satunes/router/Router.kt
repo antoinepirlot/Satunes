@@ -30,6 +30,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -60,14 +63,21 @@ internal fun Router(
     dataViewModel: DataViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
 ) {
-    SatunesLogger.getLogger().info("Router Composable")
+    SatunesLogger.getLogger()?.info("Router Composable")
 
     val context: Context = LocalContext.current
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     val navController: NavHostController = LocalNavController.current
     val isAudioAllowed: Boolean = satunesViewModel.isAudioAllowed
-    val defaultDestination: Destination =
-        getNavBarSectionDestination(navBarSection = satunesUiState.defaultNavBarSection)
+    var defaultDestination: Destination? by rememberSaveable { mutableStateOf(null) }
+
+
+    LaunchedEffect(key1 = Unit) {
+        defaultDestination =
+            getNavBarSectionDestination(navBarSection = satunesUiState.defaultNavBarSection)
+    }
+
+    if (defaultDestination == null) return
 
     LaunchedEffect(key1 = isAudioAllowed) {
         if (isAudioAllowed) {
@@ -78,7 +88,7 @@ internal fun Router(
     NavHost(
         modifier = modifier,
         navController = navController,
-        startDestination = defaultDestination.link,
+        startDestination = defaultDestination!!.link,
         enterTransition = { fadeIn(animationSpec = tween(500)) },
         exitTransition = { fadeOut(animationSpec = tween(0)) },
     ) {
@@ -86,35 +96,41 @@ internal fun Router(
             satunesViewModel = satunesViewModel,
             dataViewModel = dataViewModel,
             onStart = {
-                if (checkIfAllowed(
+                if (
+                    checkIfAllowed(
                         satunesUiState = satunesUiState,
                         isAudioAllowed = isAudioAllowed,
                         navController = navController
                     )
-                ) satunesViewModel.setCurrentDestination(destination = it.destination.route!!)
+                )
+                    satunesViewModel.setCurrentDestination(destination = it.destination.route!!)
             }
         )
         searchRoutes(
             satunesViewModel = satunesViewModel,
             onStart = {
-                if (checkIfAllowed(
+                if (
+                    checkIfAllowed(
                         satunesUiState = satunesUiState,
                         isAudioAllowed = isAudioAllowed,
                         navController = navController
                     )
-                ) satunesViewModel.setCurrentDestination(destination = it.destination.route!!)
+                )
+                    satunesViewModel.setCurrentDestination(destination = it.destination.route!!)
             }
         )
         playbackRoutes(
             satunesViewModel = satunesViewModel,
             playbackViewModel = playbackViewModel,
             onStart = {
-                if (checkIfAllowed(
+                if (
+                    checkIfAllowed(
                         satunesUiState = satunesUiState,
                         isAudioAllowed = isAudioAllowed,
                         navController = navController
                     )
-                ) satunesViewModel.setCurrentDestination(destination = it.destination.route!!)
+                )
+                    satunesViewModel.setCurrentDestination(destination = it.destination.route!!)
             }
         )
         settingsRoutes(

@@ -59,13 +59,14 @@ class Music(
     val artist: Artist,
     val album: Album,
     val genre: Genre,
+    val uri: Uri? = Uri.parse(encode(absolutePath)) // Must be init before media item
 ) : MediaImpl(id = id, title = title.ifBlank { displayName }) {
-    private val _logger: SatunesLogger = SatunesLogger.getLogger()
+    private val _logger: SatunesLogger? = SatunesLogger.getLogger()
     private var displayName: String = displayName
         set(displayName) {
             if (displayName.isBlank()) {
                 val message = "Display name must not be blank"
-                _logger.warning(message)
+                _logger?.warning(message)
                 throw IllegalArgumentException(message)
             }
             field = displayName
@@ -73,8 +74,7 @@ class Music(
     val cdTrackNumber: Int?
     var liked: MutableState<Boolean> = mutableStateOf(false)
         private set
-    var uri: Uri = Uri.parse(encode(absolutePath)) // Must be init before media item
-        private set
+
     val mediaItem: MediaItem = getMediaMetadata()
 
     init {
@@ -92,6 +92,7 @@ class Music(
         folder.addMusic(music = this)
     }
 
+    //TODO remove context param as it is unused
     fun switchLike(context: Context) {
         this.liked.value = !this.liked.value
         val db = DatabaseManager.getInstance()
@@ -169,7 +170,7 @@ class Music(
             if (artwork == null) null
             else BitmapFactory.decodeByteArray(artwork, 0, artwork.size)
         } catch (e: Throwable) {
-            _logger.warning(e.message)
+            _logger?.warning(e.message)
             null
         }
     }
@@ -189,9 +190,7 @@ class Music(
 
     override fun compareTo(other: MediaImpl): Int {
         var compared: Int = super.compareTo(other)
-        if (compared == 0 && this != other) {
-            compared = 1
-        }
+        if (compared == 0 && this != other) return 1
         return compared
     }
 }

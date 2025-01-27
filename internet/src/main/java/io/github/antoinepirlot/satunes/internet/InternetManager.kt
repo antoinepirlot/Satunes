@@ -40,13 +40,13 @@ internal class InternetManager(context: Context) : Application() {
         context.getSystemService(ConnectivityManager::class.java)
 
     private val currentNetwork: Network? = connectivityManager.activeNetwork
-    private val logger = SatunesLogger.getLogger()
+    private val logger: SatunesLogger? = SatunesLogger.getLogger()
 
     internal fun isConnected(): Boolean {
         return if (currentNetwork != null) {
             isConnected(capabilities = connectivityManager.getNetworkCapabilities(currentNetwork))
         } else {
-            logger.warning("Current network is null")
+            logger?.warning("Current network is null")
             false
         }
     }

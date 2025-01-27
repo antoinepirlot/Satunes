@@ -22,12 +22,16 @@
 
 package io.github.antoinepirlot.satunes.ui.views.media
 
-import android.annotation.SuppressLint
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
-import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
+import io.github.antoinepirlot.satunes.data.states.SatunesUiState
+import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Folder
@@ -37,36 +41,44 @@ import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.ui.components.EmptyView
 import io.github.antoinepirlot.satunes.ui.components.cards.media.MediaCardList
+import io.github.antoinepirlot.satunes.ui.components.dialog.SortListDialog
 
 /**
  * @author Antoine Pirlot on 01/02/24
  */
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 internal fun MediaListView(
     modifier: Modifier = Modifier,
-    playbackViewModel: PlaybackViewModel = viewModel(),
+    satunesViewModel: SatunesViewModel = viewModel(),
+    dataViewModel: DataViewModel = viewModel(),
     mediaImplCollection: Collection<MediaImpl>,
     openMedia: (mediaImpl: MediaImpl) -> Unit,
     openedPlaylistWithMusics: Playlist? = null,
     header: (@Composable () -> Unit)? = null,
-    emptyViewText: String
+    emptyViewText: String,
 ) {
+    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+    val lazyListState = rememberLazyListState()
+
+    if (satunesUiState.showSortDialog)
+        SortListDialog()
+
     if (mediaImplCollection.isNotEmpty()) {
         MediaCardList(
-            modifier = Modifier,
-            header = header,
+            modifier = modifier,
+            lazyListState = lazyListState,
             mediaImplCollection = mediaImplCollection,
+            header = header,
             openMedia = openMedia,
-            openedPlaylist = openedPlaylistWithMusics
+            openedPlaylist = openedPlaylistWithMusics,
         )
     } else {
         if (header != null) {
             header()
         } else {
             EmptyView(
-                modifier = Modifier,
+                modifier = modifier,
                 text = emptyViewText
             )
         }

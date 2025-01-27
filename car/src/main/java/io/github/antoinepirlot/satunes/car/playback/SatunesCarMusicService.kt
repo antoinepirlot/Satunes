@@ -52,7 +52,7 @@ import io.github.antoinepirlot.satunes.icons.R as RIcons
  */
 internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
 
-    private lateinit var _logger: SatunesLogger
+    private var _logger: SatunesLogger? = null
 
     companion object {
         internal lateinit var instance: SatunesCarMusicService
@@ -67,7 +67,7 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
         SatunesLogger.DOCUMENTS_PATH =
             applicationContext.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)!!.path
         _logger = SatunesLogger.getLogger()
-        _logger.info("Android Auto is Starting")
+        _logger?.info("Android Auto is Starting")
         val className: String = this.javaClass.name.split(".").last()
         session = MediaSessionCompat(this, className)
         sessionToken = session.sessionToken
@@ -91,7 +91,7 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
 
         if (!DataLoader.isLoaded.value) {
             val message = "Data has not been loaded"
-            _logger.severe(message)
+            _logger?.severe(message)
             throw IllegalStateException(message)
         }
 

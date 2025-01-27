@@ -61,7 +61,7 @@ class PlaybackViewModel : ViewModel() {
             MutableStateFlow(PlaybackUiState())
     }
 
-    private val _logger: SatunesLogger = SatunesLogger.getLogger()
+    private val _logger: SatunesLogger? = SatunesLogger.getLogger()
     private var _isPlaying: MutableState<Boolean> = PlaybackManager.isPlaying
     private var _musicPlaying: MutableState<Music?> = PlaybackManager.musicPlaying
     private var _currentPositionProgression: MutableFloatState =
@@ -90,22 +90,6 @@ class PlaybackViewModel : ViewModel() {
         ProgressBarLifecycleCallbacks.playbackViewModel = this
     }
 
-    fun loadMusicFromFolders(
-        folders: Set<Folder>,
-        shuffleMode: Boolean = SettingsManager.shuffleMode,
-        musicToPlay: Music? = null
-    ) {
-        val musicSet: MutableSet<Music> = mutableSetOf()
-        folders.forEach { folder: Folder ->
-            musicSet.addAll(elements = folder.getAllMusic())
-        }
-        this.loadMusic(
-            musicSet = musicSet,
-            shuffleMode = shuffleMode,
-            musicToPlay = musicToPlay
-        )
-    }
-
     fun loadMusicFromMedia(
         media: MediaImpl,
         shuffleMode: Boolean = SettingsManager.shuffleMode,
@@ -121,37 +105,41 @@ class PlaybackViewModel : ViewModel() {
                 }
                 musicSet
             }
-        this.loadMusic(
-            musicSet = musicSet,
+        this.loadMusics(
+            musics = musicSet,
             shuffleMode = shuffleMode,
             musicToPlay = musicToPlay
         )
     }
 
     fun loadMusicFromMedias(
-        medias: Set<MediaImpl>,
+        medias: Collection<MediaImpl>,
         shuffleMode: Boolean = SettingsManager.shuffleMode,
         musicToPlay: Music? = null,
     ) {
         val musicSet: MutableSet<Music> = mutableSetOf()
         medias.forEach { mediaImpl: MediaImpl ->
-            musicSet.addAll(mediaImpl.getMusicSet())
+            if (mediaImpl is Folder) {
+                musicSet.addAll(mediaImpl.getAllMusic())
+            } else {
+                musicSet.addAll(mediaImpl.getMusicSet())
+            }
         }
-        this.loadMusic(
-            musicSet = musicSet,
+        this.loadMusics(
+            musics = musicSet,
             shuffleMode = shuffleMode,
             musicToPlay = musicToPlay
         )
     }
 
-    fun loadMusic(
-        musicSet: Set<Music>,
+    fun loadMusics(
+        musics: Collection<Music>,
         shuffleMode: Boolean = SettingsManager.shuffleMode,
         musicToPlay: Music? = null,
     ) {
         PlaybackManager.loadMusics(
             context = MainActivity.instance.applicationContext,
-            musicSet = musicSet,
+            musics = musics,
             shuffleMode = shuffleMode,
             musicToPlay = musicToPlay
         )
@@ -196,7 +184,7 @@ class PlaybackViewModel : ViewModel() {
         return try {
             PlaybackManager.getNextMusic(context = MainActivity.instance.applicationContext)
         } catch (e: Throwable) {
-            _logger.severe("Can't get the next music in queue")
+            _logger?.severe("Can't get the next music in queue")
             null
         }
     }
@@ -218,7 +206,7 @@ class PlaybackViewModel : ViewModel() {
                 message = mediaImpl.title + ' ' + context.getString(R.string.add_to_queue_success),
             )
         } catch (e: Throwable) {
-            _logger.warning(e.message)
+            _logger?.warning(e.message)
             showErrorSnackBar(
                 scope = scope,
                 snackBarHostState = snackBarHostState,
@@ -253,7 +241,7 @@ class PlaybackViewModel : ViewModel() {
                 ),
             )
         } catch (e: Throwable) {
-            _logger.warning(e.message)
+            _logger?.warning(e.message)
             showErrorSnackBar(
                 scope = scope,
                 snackBarHostState = snackBarHostState,
@@ -285,7 +273,7 @@ class PlaybackViewModel : ViewModel() {
                 message = mediaImpl.title + ' ' + context.getString(R.string.play_next_success)
             )
         } catch (e: Throwable) {
-            _logger.warning(e.message)
+            _logger?.warning(e.message)
             showErrorSnackBar(
                 scope = scope,
                 snackBarHostState = snackBarHostState,
@@ -322,13 +310,13 @@ class PlaybackViewModel : ViewModel() {
     }
 
     fun release() {
-        _logger.info("Release")
+        _logger?.info("Release")
         PlaybackManager.release()
         onCleared()
     }
 
     fun stop() {
-        _logger.info("Stop")
+        _logger?.info("Stop")
         PlaybackManager.stop()
     }
 
@@ -373,7 +361,7 @@ class PlaybackViewModel : ViewModel() {
                 )
             }
         } catch (e: Throwable) {
-            _logger.severe(e.message)
+            _logger?.severe(e.message)
             showErrorSnackBar(
                 scope = scope,
                 snackBarHostState = snackBarHostState,
@@ -402,7 +390,7 @@ class PlaybackViewModel : ViewModel() {
                 message = MainActivity.instance.getString(R.string.timer_cancelled_snackbar_content)
             )
         } catch (e: Throwable) {
-            _logger.severe(e.message)
+            _logger?.severe(e.message)
             showErrorSnackBar(
                 scope = scope,
                 snackBarHostState = snackBarHostState,
@@ -419,7 +407,7 @@ class PlaybackViewModel : ViewModel() {
         try {
             PlaybackManager.forward(context = MainActivity.instance.applicationContext)
         } catch (e: Exception) {
-            _logger.severe(e.message)
+            _logger?.severe(e.message)
             showErrorSnackBar(
                 scope = scope,
                 snackBarHostState = snackBarHostState,
@@ -437,7 +425,7 @@ class PlaybackViewModel : ViewModel() {
         try {
             PlaybackManager.rewind(context = MainActivity.instance.applicationContext)
         } catch (e: Exception) {
-            _logger.severe(e.message)
+            _logger?.severe(e.message)
             showErrorSnackBar(scope = scope,
                 snackBarHostState = snackBarHostState,
                 action = {

@@ -23,6 +23,7 @@
 package io.github.antoinepirlot.satunes.router.routes
 
 import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -58,7 +59,10 @@ internal fun NavGraphBuilder.mediaRoutes(
 ) {
     composable(Destination.FOLDERS.link) {
         // /!\ This route prevent back gesture to exit the app
-        onStart(it)
+        LaunchedEffect(key1 = Unit) {
+            onStart(it)
+        }
+
         if (satunesViewModel.isLoadingData || !satunesViewModel.isDataLoaded) {
             LoadingView()
         } else {
@@ -66,8 +70,10 @@ internal fun NavGraphBuilder.mediaRoutes(
         }
     }
 
-    composable("${Destination.FOLDERS.link}/{id}") {
-        onStart(it)
+    composable(Destination.FOLDER.link) {
+        LaunchedEffect(key1 = Unit) {
+            onStart(it)
+        }
 
         if (satunesViewModel.isLoadingData || !satunesViewModel.isDataLoaded) {
             LoadingView()
@@ -79,7 +85,9 @@ internal fun NavGraphBuilder.mediaRoutes(
     }
 
     composable(Destination.ARTISTS.link) {
-        onStart(it)
+        LaunchedEffect(key1 = Unit) {
+            onStart(it)
+        }
 
         if (satunesViewModel.isLoadingData || !satunesViewModel.isDataLoaded) {
             LoadingView()
@@ -88,8 +96,10 @@ internal fun NavGraphBuilder.mediaRoutes(
         }
     }
 
-    composable("${Destination.ARTISTS.link}/{id}") {
-        onStart(it)
+    composable(Destination.ARTIST.link) {
+        LaunchedEffect(key1 = Unit) {
+            onStart(it)
+        }
 
         if (satunesViewModel.isLoadingData || !satunesViewModel.isDataLoaded) {
             LoadingView()
@@ -101,7 +111,9 @@ internal fun NavGraphBuilder.mediaRoutes(
     }
 
     composable(Destination.ALBUMS.link) {
-        onStart(it)
+        LaunchedEffect(key1 = Unit) {
+            onStart(it)
+        }
 
         if (satunesViewModel.isLoadingData || !satunesViewModel.isDataLoaded) {
             LoadingView()
@@ -110,8 +122,10 @@ internal fun NavGraphBuilder.mediaRoutes(
         }
     }
 
-    composable("${Destination.ALBUMS.link}/{id}") {
-        onStart(it)
+    composable(Destination.ALBUM.link) {
+        LaunchedEffect(key1 = Unit) {
+            onStart(it)
+        }
 
         if (satunesViewModel.isLoadingData || !satunesViewModel.isDataLoaded) {
             LoadingView()
@@ -123,7 +137,9 @@ internal fun NavGraphBuilder.mediaRoutes(
     }
 
     composable(Destination.GENRES.link) {
-        onStart(it)
+        LaunchedEffect(key1 = Unit) {
+            onStart(it)
+        }
 
         if (satunesViewModel.isLoadingData || !satunesViewModel.isDataLoaded) {
             LoadingView()
@@ -132,8 +148,10 @@ internal fun NavGraphBuilder.mediaRoutes(
         }
     }
 
-    composable("${Destination.GENRES.link}/{id}") {
-        onStart(it)
+    composable(Destination.GENRE.link) {
+        LaunchedEffect(key1 = Unit) {
+            onStart(it)
+        }
 
         if (satunesViewModel.isLoadingData || !satunesViewModel.isDataLoaded) {
             LoadingView()
@@ -145,7 +163,9 @@ internal fun NavGraphBuilder.mediaRoutes(
     }
 
     composable(Destination.PLAYLISTS.link) {
-        onStart(it)
+        LaunchedEffect(key1 = Unit) {
+            onStart(it)
+        }
 
         if (satunesViewModel.isLoadingData || !satunesViewModel.isDataLoaded) {
             LoadingView()
@@ -154,8 +174,10 @@ internal fun NavGraphBuilder.mediaRoutes(
         }
     }
 
-    composable("${Destination.PLAYLISTS.link}/{id}") {
-        onStart(it)
+    composable(Destination.PLAYLIST.link) {
+        LaunchedEffect(key1 = Unit) {
+            onStart(it)
+        }
 
         if (satunesViewModel.isLoadingData || !satunesViewModel.isDataLoaded) {
             LoadingView()
@@ -167,7 +189,9 @@ internal fun NavGraphBuilder.mediaRoutes(
     }
 
     composable(Destination.MUSICS.link) {
-        onStart(it)
+        LaunchedEffect(key1 = Unit) {
+            onStart(it)
+        }
 
         if (satunesViewModel.isLoadingData || !satunesViewModel.isDataLoaded) {
             LoadingView()

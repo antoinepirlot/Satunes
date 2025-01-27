@@ -47,11 +47,11 @@ import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 class PlaybackService : MediaSessionService() {
 
     companion object {
-        private lateinit var _logger: SatunesLogger
+        private var _logger: SatunesLogger? = null
         var mediaSession: MediaSession? = null
 
         internal fun updateCustomCommands() {
-            _logger.info("Updating custom commands for notification")
+            _logger?.info("Updating custom commands for notification")
             try {
                 val playbackController: PlaybackController = PlaybackController.getInstance()
                 val commands: MutableList<CommandButton> = mutableListOf()
@@ -67,7 +67,7 @@ class PlaybackService : MediaSessionService() {
                 }
                 mediaSession!!.setCustomLayout(commands.toList())
             } catch (e: Throwable) {
-                _logger.severe(e.message)
+                _logger?.severe(e.message)
             }
         }
     }

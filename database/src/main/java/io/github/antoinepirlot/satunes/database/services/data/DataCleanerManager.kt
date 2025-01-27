@@ -31,7 +31,7 @@ import java.io.File
  * @author Antoine Pirlot on 14/04/2024
  */
 object DataCleanerManager {
-    private val logger = SatunesLogger.getLogger()
+    private val logger: SatunesLogger? = SatunesLogger.getLogger()
 
     fun removeApkFiles(context: Context) {
         try {
@@ -41,7 +41,7 @@ object DataCleanerManager {
                 file.deleteRecursively()
             }
         } catch (e: Throwable) {
-            logger.warning(e.message)
+            logger?.warning(e.message)
             e.printStackTrace()
         }
     }

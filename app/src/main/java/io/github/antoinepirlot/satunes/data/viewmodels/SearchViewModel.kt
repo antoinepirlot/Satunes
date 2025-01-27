@@ -54,7 +54,7 @@ import java.util.SortedSet
  */
 class SearchViewModel : ViewModel() {
     private val _uiState: MutableStateFlow<SearchUiState> = MutableStateFlow(SearchUiState())
-    private val _logger: SatunesLogger = SatunesLogger.getLogger()
+    private val _logger: SatunesLogger? = SatunesLogger.getLogger()
     private val _filtersList: MutableMap<SearchChips, Boolean> = mutableMapOf(
         Pair(SearchChips.MUSICS, SettingsManager.musicsFilter),
         Pair(SearchChips.ALBUMS, SettingsManager.albumsFilter),
@@ -69,12 +69,6 @@ class SearchViewModel : ViewModel() {
     val selectedSearchChips: MutableList<SearchChips> = mutableStateListOf()
 
     var query: String by mutableStateOf("")
-        private set
-
-    val mediaImplSet: SortedSet<MediaImpl> = sortedSetOf()
-
-    //Used to recompose
-    var mediaImplSetHasChanged: Boolean by mutableStateOf(false)
         private set
 
     init {
@@ -103,7 +97,7 @@ class SearchViewModel : ViewModel() {
                 }
             }
         } catch (e: Throwable) {
-            _logger.severe(e.message)
+            _logger?.severe(e.message)
             throw e
         }
     }
@@ -139,7 +133,7 @@ class SearchViewModel : ViewModel() {
                 }
             }
         } catch (e: Throwable) {
-            _logger.severe(e.message)
+            _logger?.severe(e.message)
             throw e
         }
     }
@@ -148,12 +142,8 @@ class SearchViewModel : ViewModel() {
         dataViewModel: DataViewModel,
         selectedSearchChips: List<SearchChips>,
     ) {
-        mediaImplSet.clear()
-        if (this.query.isBlank()) {
-            // Prevent loop if string is "" or " "
-            mediaImplSetHasChanged = true
-            return
-        }
+        val mediaImplSet: SortedSet<MediaImpl> = sortedSetOf()
+        if (this.query.isBlank()) return // Prevent loop if string is "" or " "
 
         val query: String = this.query.trim().lowercase()
 
@@ -212,11 +202,8 @@ class SearchViewModel : ViewModel() {
                 }
             }
         }
-        mediaImplSetHasChanged = true
-    }
-
-    //Used to recompose
-    fun mediaImplChangeUpdated() {
-        mediaImplSetHasChanged = false
+        this._uiState.update { currentState: SearchUiState ->
+            currentState.copy(mediaImplSet = mediaImplSet)
+        }
     }
 }

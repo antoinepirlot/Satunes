@@ -24,6 +24,7 @@ package io.github.antoinepirlot.satunes.router.routes
 
 import android.os.Build
 import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -50,60 +51,82 @@ internal fun NavGraphBuilder.settingsRoutes(
     onStart: AnimatedContentScope.(NavBackStackEntry) -> Unit
 ) {
     composable(Destination.SETTINGS.link) {
-        onStart(it)
+        LaunchedEffect(key1 = Unit) {
+            onStart(it)
+        }
         SettingsView()
     }
 
     composable(Destination.BOTTOM_BAR_SETTINGS.link) {
-        onStart(it)
+        LaunchedEffect(key1 = Unit) {
+            onStart(it)
+        }
         BottomNavigationBarSettingsView()
     }
 
     composable(Destination.PLAYBACK_SETTINGS.link) {
-        onStart(it)
+        LaunchedEffect(key1 = Unit) {
+            onStart(it)
+        }
         PlaybackSettingsView()
     }
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
         composable(Destination.UPDATES_SETTINGS.link) {
-            onStart(it)
+            LaunchedEffect(key1 = Unit) {
+                onStart(it)
+            }
             UpdatesSettingView()
         }
     }
 
     composable(Destination.LIBRARY_SETTINGS.link) {
-        onStart(it)
+        LaunchedEffect(key1 = Unit) {
+            onStart(it)
+        }
         LibrarySettingsView()
     }
 
     composable(Destination.PERMISSIONS_SETTINGS.link) {
-        onStart(it)
+        LaunchedEffect(key1 = Unit) {
+            onStart(it)
+        }
         // Pass it as param to fix no recomposition when permission granted
         PermissionsSettingsView(satunesViewModel = satunesViewModel)
     }
 
     composable(Destination.ANDROID_AUTO_SETTINGS.link) {
-        onStart(it)
+        LaunchedEffect(key1 = Unit) {
+            onStart(it)
+        }
         AndroidAutoSettingsView()
     }
 
     composable(Destination.BATTERY_SETTINGS.link) {
-        onStart(it)
+        LaunchedEffect(key1 = Unit) {
+            onStart(it)
+        }
         BatterySettingsView()
     }
 
     composable(Destination.SEARCH_SETTINGS.link) {
-        onStart(it)
+        LaunchedEffect(key1 = Unit) {
+            onStart(it)
+        }
         SearchSettingsView()
     }
 
     composable(Destination.LOGS_SETTINGS.link) {
-        onStart(it)
+        LaunchedEffect(key1 = Unit) {
+            onStart(it)
+        }
         LogsSettingsView()
     }
 
     composable(Destination.RESET_SETTINGS.link) {
-        onStart(it)
+        LaunchedEffect(key1 = Unit) {
+            onStart(it)
+        }
         ResetSettingsView()
     }
 }

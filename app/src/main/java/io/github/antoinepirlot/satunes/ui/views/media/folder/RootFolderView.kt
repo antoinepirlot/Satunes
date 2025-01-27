@@ -37,7 +37,7 @@ import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.router.utils.openMediaFromFolder
-import io.github.antoinepirlot.satunes.ui.components.bars.bottom.ExtraButtonList
+import io.github.antoinepirlot.satunes.ui.components.buttons.fab.ExtraButtonList
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 
 /**
@@ -60,10 +60,7 @@ internal fun RootFolderView(
             musicSet.addAll(folder.getAllMusic())
         }
         satunesViewModel.replaceExtraButtons(extraButtons = {
-            ExtraButtonList(
-                musicSet = musicSet,
-                mediaImplSet = null
-            )
+            ExtraButtonList(mediaImplCollection = musicSet)
         })
     } else
         satunesViewModel.clearExtraButtons()

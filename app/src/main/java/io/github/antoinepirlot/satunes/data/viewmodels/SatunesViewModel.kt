@@ -75,11 +75,12 @@ internal class SatunesViewModel : ViewModel() {
         private val _uiState: MutableStateFlow<SatunesUiState> = MutableStateFlow(SatunesUiState())
     }
 
-    private val _logger: SatunesLogger = SatunesLogger.getLogger()
+    private val _logger: SatunesLogger? = SatunesLogger.getLogger()
     private val _isLoadingData: MutableState<Boolean> = DataLoader.isLoading
     private val _isDataLoaded: MutableState<Boolean> = DataLoader.isLoaded
     private val _defaultNavBarSection: MutableState<NavBarSection> =
         mutableStateOf(_uiState.value.defaultNavBarSection)
+
     //Use this only for nav bar items as it won't refresh if uiState is updated, idk why.
     private val _foldersChecked: MutableState<Boolean> = SettingsManager.foldersChecked
     private val _artistsChecked: MutableState<Boolean> = SettingsManager.artistsChecked
@@ -134,7 +135,7 @@ internal class SatunesViewModel : ViewModel() {
                 _uiState.update { SatunesUiState() }
             }
         } catch (e: Throwable) {
-            _logger.severe(e.message)
+            _logger?.severe(e.message)
             throw e
         }
     }
@@ -174,7 +175,7 @@ internal class SatunesViewModel : ViewModel() {
         _uiState.update { currentState: SatunesUiState ->
             @Suppress("NAME_SHADOWING")
             val destination: Destination = Destination.getDestination(destination = destination)
-            _logger.info("Going to destination: ${destination.name}")
+            _logger?.info("Going to destination: ${destination.name}")
             currentState.copy(currentDestination = destination)
         }
     }
@@ -240,7 +241,7 @@ internal class SatunesViewModel : ViewModel() {
                 )
             }
         } catch (e: Throwable) {
-            _logger.warning(e.message)
+            _logger?.warning(e.message)
         }
     }
 
@@ -255,7 +256,7 @@ internal class SatunesViewModel : ViewModel() {
                 }
             }
         } catch (e: Throwable) {
-            _logger.warning(e.message)
+            _logger?.warning(e.message)
         }
     }
 
@@ -270,7 +271,7 @@ internal class SatunesViewModel : ViewModel() {
                 }
             }
         } catch (e: Throwable) {
-            _logger.warning(e.message)
+            _logger?.warning(e.message)
         }
     }
 
@@ -285,7 +286,7 @@ internal class SatunesViewModel : ViewModel() {
                 }
             }
         } catch (e: Throwable) {
-            _logger.warning(e.message)
+            _logger?.warning(e.message)
         }
     }
 
@@ -300,7 +301,7 @@ internal class SatunesViewModel : ViewModel() {
                 }
             }
         } catch (e: Throwable) {
-            _logger.warning(e.message)
+            _logger?.warning(e.message)
         }
     }
 
@@ -315,7 +316,7 @@ internal class SatunesViewModel : ViewModel() {
                 }
             }
         } catch (e: Throwable) {
-            _logger.warning(e.message)
+            _logger?.warning(e.message)
         }
     }
 
@@ -333,12 +334,12 @@ internal class SatunesViewModel : ViewModel() {
                         )
                     }
                 } catch (e: Throwable) {
-                    _logger.severe(e.message)
+                    _logger?.severe(e.message)
                     throw e
                 }
             }
         } catch (e: Throwable) {
-            _logger.warning(e.message)
+            _logger?.warning(e.message)
         }
     }
 
@@ -353,7 +354,7 @@ internal class SatunesViewModel : ViewModel() {
                 }
             }
         } catch (e: Throwable) {
-            _logger.warning(e.message)
+            _logger?.warning(e.message)
         }
     }
 
@@ -375,7 +376,7 @@ internal class SatunesViewModel : ViewModel() {
                 }
             }
         } catch (e: Throwable) {
-            _logger.warning(e.message)
+            _logger?.warning(e.message)
             showErrorSnackBar(
                 scope = scope,
                 snackBarHostState = snackBarHostState,
@@ -394,7 +395,7 @@ internal class SatunesViewModel : ViewModel() {
         try {
             return availableSpeeds[floor(speed).toInt()]
         } catch (e: Throwable) {
-            _logger.severe(e.message)
+            _logger?.severe(e.message)
             throw e
         }
     }
@@ -448,7 +449,7 @@ internal class SatunesViewModel : ViewModel() {
                     }
                 }
             } catch (e: Throwable) {
-                _logger.warning(e.message)
+                _logger?.warning(e.message)
                 showErrorSnackBar(
                     scope = scope,
                     snackBarHostState = snackBarHostState,
@@ -470,7 +471,7 @@ internal class SatunesViewModel : ViewModel() {
         try {
             return UpdateCheckManager.getCurrentVersion(context = MainActivity.instance.applicationContext)
         } catch (e: Throwable) {
-            _logger.severe(e.message)
+            _logger?.severe(e.message)
             throw e
         }
     }
@@ -515,7 +516,7 @@ internal class SatunesViewModel : ViewModel() {
                     )
                 }
             } catch (e: Throwable) {
-                _logger.warning(e.message)
+                _logger?.warning(e.message)
                 showErrorSnackBar(
                     scope = scope,
                     snackBarHostState = snackBarHostState,
@@ -584,7 +585,7 @@ internal class SatunesViewModel : ViewModel() {
             }
             this.defaultNavBarSection = SettingsManager.defaultNavBarSection
         } catch (e: Throwable) {
-            _logger.severe("Error while selecting new default nav bar section: ${navBarSection.name}")
+            _logger?.severe("Error while selecting new default nav bar section: ${navBarSection.name}")
         }
     }
 
@@ -597,7 +598,7 @@ internal class SatunesViewModel : ViewModel() {
                 }
             }
         } catch (e: Throwable) {
-            _logger.severe("Error while switching compilation music setting")
+            _logger?.severe("Error while switching compilation music setting")
         }
     }
 
@@ -635,6 +636,18 @@ internal class SatunesViewModel : ViewModel() {
     fun clearExtraButtons() {
         _uiState.update { currentState: SatunesUiState ->
             currentState.copy(extraButtons = null)
+        }
+    }
+
+    fun showSortDialog() {
+        _uiState.update { currentState: SatunesUiState ->
+            currentState.copy(showSortDialog = true)
+        }
+    }
+
+    fun hideSortDialog() {
+        _uiState.update { currentState: SatunesUiState ->
+            currentState.copy(showSortDialog = false)
         }
     }
 }

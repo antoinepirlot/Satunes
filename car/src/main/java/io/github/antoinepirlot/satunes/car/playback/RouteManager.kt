@@ -32,7 +32,7 @@ import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
  */
 internal object RouteManager {
     private const val DEFAULT_IS_SHUFFLE_BUTTON_SELECTED: Boolean = false
-    private val _logger: SatunesLogger = SatunesLogger.getLogger()
+    private val _logger: SatunesLogger? = SatunesLogger.getLogger()
     private var _selectedTab: ScreenPages? = null
     private var _selectedMediaImpl: MediaImpl? = null
     private var _isShuffleButtonSelected: Boolean = DEFAULT_IS_SHUFFLE_BUTTON_SELECTED
@@ -96,7 +96,7 @@ internal object RouteManager {
                 }
             }
         } catch (e: Throwable) {
-            _logger.severe(e.message ?: "An error occurred while getting selected media impl.")
+            _logger?.severe(e.message ?: "An error occurred while getting selected media impl.")
             throw e
         }
     }

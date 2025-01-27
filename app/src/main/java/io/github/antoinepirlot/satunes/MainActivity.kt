@@ -70,7 +70,7 @@ internal class MainActivity : ComponentActivity() {
         }
     }
 
-    private lateinit var _logger: SatunesLogger
+    private var _logger: SatunesLogger? = null
     private var _playlistToExport: Playlist? = null
 
     override fun onStart() {
@@ -85,7 +85,7 @@ internal class MainActivity : ComponentActivity() {
         SatunesLogger.DOCUMENTS_PATH =
             applicationContext.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)!!.path
         _logger = SatunesLogger.getLogger()
-        _logger.info("Satunes started on API: ${Build.VERSION.SDK_INT}")
+        _logger?.info("Satunes started on API: ${Build.VERSION.SDK_INT}")
         instance = this
 
         ClassicPlaybackWidget.setRefreshWidget(context = baseContext)
@@ -136,7 +136,7 @@ internal class MainActivity : ComponentActivity() {
                         }
 
                         if (requestCode == EXPORT_LOGS_CODE) {
-                            _logger.exportLogs(context = this, uri = uri)
+                            _logger?.exportLogs(context = this, uri = uri)
                         } else {
                             CoroutineScope(Dispatchers.IO).launch {
                                 if (requestCode == EXPORT_ALL_PLAYLISTS_CODE) {

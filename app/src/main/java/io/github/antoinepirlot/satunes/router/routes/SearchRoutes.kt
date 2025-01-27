@@ -23,6 +23,7 @@
 package io.github.antoinepirlot.satunes.router.routes
 
 import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -40,7 +41,9 @@ internal fun NavGraphBuilder.searchRoutes(
     onStart: AnimatedContentScope.(NavBackStackEntry) -> Unit
 ) {
     composable(Destination.SEARCH.link) {
-        onStart(it)
+        LaunchedEffect(key1 = Unit) {
+            onStart(it)
+        }
 
         if (satunesViewModel.isLoadingData || !satunesViewModel.isDataLoaded) {
             LoadingView()

@@ -36,7 +36,7 @@ import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.router.utils.openMedia
-import io.github.antoinepirlot.satunes.ui.components.bars.bottom.ExtraButtonList
+import io.github.antoinepirlot.satunes.ui.components.buttons.fab.ExtraButtonList
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 
 /**
@@ -55,10 +55,7 @@ internal fun AllAlbumsListView(
 
     if (albumSet.isNotEmpty())
         satunesViewModel.replaceExtraButtons(extraButtons = {
-            ExtraButtonList(
-                musicSet = null,
-                mediaImplSet = albumSet
-            )
+            ExtraButtonList(mediaImplCollection = albumSet)
         })
     else
         satunesViewModel.clearExtraButtons()
@@ -66,7 +63,6 @@ internal fun AllAlbumsListView(
     MediaListView(
         modifier = modifier,
         mediaImplCollection = albumSet,
-
         openMedia = { clickedMediaImpl: MediaImpl ->
             openMedia(
                 playbackViewModel = playbackViewModel,

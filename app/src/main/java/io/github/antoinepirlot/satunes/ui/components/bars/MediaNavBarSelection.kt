@@ -105,6 +105,7 @@ internal fun backToRoot(
     navController: NavHostController
 ) {
     var currentRoute: String? = navController.currentBackStackEntry?.destination?.route
+    if (currentRoute == rootRoute) return
     while (currentRoute != null) {
         navController.popBackStack()
         currentRoute = navController.currentBackStackEntry?.destination?.route

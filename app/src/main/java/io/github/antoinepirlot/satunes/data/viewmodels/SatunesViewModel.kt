@@ -169,14 +169,6 @@ internal class SatunesViewModel : ViewModel() {
         }
     }
 
-    fun selectNavBarSection(navBarSection: NavBarSection) {
-        _uiState.update { currentState: SatunesUiState ->
-            currentState.copy(
-                selectedNavBarSection = navBarSection
-            )
-        }
-    }
-
     fun loadAllData() {
         CoroutineScope(Dispatchers.IO).launch {
             DataLoader.loadAllData(context = MainActivity.instance.applicationContext)

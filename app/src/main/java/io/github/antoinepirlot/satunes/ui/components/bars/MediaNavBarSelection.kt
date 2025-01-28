@@ -64,7 +64,6 @@ internal fun RowScope.MediaNavBarSelection(
         },
         selected = selectedCanBeShown && currentDestination.navBarSection == navBarSection,
         onClick = {
-            satunesViewModel.selectNavBarSection(navBarSection = navBarSection)
             val rootRoute: Destination = when (navBarSection) {
                 NavBarSection.FOLDERS -> Destination.FOLDERS
                 NavBarSection.ARTISTS -> Destination.ARTISTS

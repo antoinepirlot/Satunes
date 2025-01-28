@@ -23,6 +23,7 @@
 package io.github.antoinepirlot.satunes.ui.views.media.folder
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -54,16 +55,18 @@ internal fun RootFolderView(
     val navController: NavHostController = LocalNavController.current
     val rootFolderSet: Set<Folder> = dataViewModel.getRootFolderSet()
 
-    if (rootFolderSet.isNotEmpty()) {
-        val musicSet: MutableSet<Music> = mutableSetOf()
-        rootFolderSet.forEach { folder: Folder ->
-            musicSet.addAll(folder.getAllMusic())
-        }
-        satunesViewModel.replaceExtraButtons(extraButtons = {
-            ExtraButtonList(mediaImplCollection = musicSet)
-        })
-    } else
-        satunesViewModel.clearExtraButtons()
+    LaunchedEffect(key1 = dataViewModel.isLoaded) {
+        if (rootFolderSet.isNotEmpty()) {
+            val musicSet: MutableSet<Music> = mutableSetOf()
+            rootFolderSet.forEach { folder: Folder ->
+                musicSet.addAll(folder.getAllMusic())
+            }
+            satunesViewModel.replaceExtraButtons(extraButtons = {
+                ExtraButtonList(mediaImplCollection = musicSet)
+            })
+        } else
+            satunesViewModel.clearExtraButtons()
+    }
 
     MediaListView(
         modifier = modifier,

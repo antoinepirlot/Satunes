@@ -23,6 +23,7 @@
 package io.github.antoinepirlot.satunes.ui.views.media.genre
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -53,12 +54,14 @@ internal fun AllGenresListView(
     val navController: NavHostController = LocalNavController.current
     val genreSet: Set<Genre> = dataViewModel.getGenreSet()
 
-    if (genreSet.isNotEmpty())
-        satunesViewModel.replaceExtraButtons(extraButtons = {
-            ExtraButtonList(mediaImplCollection = genreSet)
-        })
-    else
-        satunesViewModel.clearExtraButtons()
+    LaunchedEffect(key1 = dataViewModel.isLoaded) {
+        if (genreSet.isNotEmpty())
+            satunesViewModel.replaceExtraButtons(extraButtons = {
+                ExtraButtonList(mediaImplCollection = genreSet)
+            })
+        else
+            satunesViewModel.clearExtraButtons()
+    }
 
     MediaListView(
         modifier = modifier,

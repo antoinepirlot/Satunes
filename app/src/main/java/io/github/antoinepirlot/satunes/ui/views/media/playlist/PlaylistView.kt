@@ -23,6 +23,7 @@
 package io.github.antoinepirlot.satunes.ui.views.media.playlist
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -36,6 +37,7 @@ import io.github.antoinepirlot.jetpack_libs.components.texts.Title
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
+import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
@@ -57,6 +59,7 @@ import io.github.antoinepirlot.satunes.database.R as RDb
 internal fun PlaylistView(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
+    dataViewModel: DataViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
     playlist: Playlist,
 ) {
@@ -81,20 +84,22 @@ internal fun PlaylistView(
     }
     //
 
-    if (musicSet.isNotEmpty())
-        satunesViewModel.replaceExtraButtons(
-            extraButtons = {
-                //It's in a column
-                ExtraButtonList(mediaImplCollection = musicSet)
-                PlaylistExtraButtonList(playlist = playlist)
-            }
-        )
-    else
-        satunesViewModel.replaceExtraButtons(
-            extraButtons = {
-                PlaylistExtraButtonList(playlist = playlist)
-            }
-        )
+    LaunchedEffect(key1 = dataViewModel.isLoaded) {
+        if (musicSet.isNotEmpty())
+            satunesViewModel.replaceExtraButtons(
+                extraButtons = {
+                    //It's in a column
+                    ExtraButtonList(mediaImplCollection = musicSet)
+                    PlaylistExtraButtonList(playlist = playlist)
+                }
+            )
+        else
+            satunesViewModel.replaceExtraButtons(
+                extraButtons = {
+                    PlaylistExtraButtonList(playlist = playlist)
+                }
+            )
+    }
 
     MediaListView(
         modifier = modifier,

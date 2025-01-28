@@ -29,8 +29,10 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -38,6 +40,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.currentBackStackEntryAsState
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
@@ -49,6 +52,7 @@ import io.github.antoinepirlot.satunes.router.routes.playbackRoutes
 import io.github.antoinepirlot.satunes.router.routes.searchRoutes
 import io.github.antoinepirlot.satunes.router.routes.settingsRoutes
 import io.github.antoinepirlot.satunes.router.utils.getNavBarSectionDestination
+import io.github.antoinepirlot.satunes.ui.components.bars.backToRoot
 import io.github.antoinepirlot.satunes.utils.loadSatunesData
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 
@@ -70,14 +74,26 @@ internal fun Router(
     val navController: NavHostController = LocalNavController.current
     val isAudioAllowed: Boolean = satunesViewModel.isAudioAllowed
     var defaultDestination: Destination? by rememberSaveable { mutableStateOf(null) }
-
-
     LaunchedEffect(key1 = Unit) {
         defaultDestination =
             getNavBarSectionDestination(navBarSection = satunesUiState.defaultNavBarSection)
     }
-
     if (defaultDestination == null) return
+
+    // Start handle destination change
+    val currentBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute by remember {
+        derivedStateOf {
+            currentBackStackEntry?.destination?.route ?: defaultDestination!!.link
+        }
+    }
+
+    LaunchedEffect(key1 = currentRoute) {
+        satunesViewModel.setCurrentDestination(destination = currentRoute)
+        satunesViewModel.clearCurrentMediaImpl()
+    }
+
+    // End handle destination change
 
     LaunchedEffect(key1 = isAudioAllowed) {
         if (isAudioAllowed) {
@@ -96,55 +112,37 @@ internal fun Router(
             satunesViewModel = satunesViewModel,
             dataViewModel = dataViewModel,
             onStart = {
-                if (
-                    checkIfAllowed(
-                        satunesUiState = satunesUiState,
-                        isAudioAllowed = isAudioAllowed,
-                        navController = navController
-                    )
-                ) {
-                    satunesViewModel.setCurrentDestination(destination = it.destination.route!!)
-                    satunesViewModel.clearCurrentMediaImpl()
-                }
+                checkIfAllowed(
+                    satunesUiState = satunesUiState,
+                    isAudioAllowed = isAudioAllowed,
+                    navController = navController
+                )
             }
         )
         searchRoutes(
             satunesViewModel = satunesViewModel,
             onStart = {
-                if (
-                    checkIfAllowed(
-                        satunesUiState = satunesUiState,
-                        isAudioAllowed = isAudioAllowed,
-                        navController = navController
-                    )
-                ) {
-                    satunesViewModel.setCurrentDestination(destination = it.destination.route!!)
-                    satunesViewModel.clearCurrentMediaImpl()
-                }
+                checkIfAllowed(
+                    satunesUiState = satunesUiState,
+                    isAudioAllowed = isAudioAllowed,
+                    navController = navController
+                )
             }
         )
         playbackRoutes(
             satunesViewModel = satunesViewModel,
             playbackViewModel = playbackViewModel,
             onStart = {
-                if (
-                    checkIfAllowed(
-                        satunesUiState = satunesUiState,
-                        isAudioAllowed = isAudioAllowed,
-                        navController = navController
-                    )
-                ) {
-                    satunesViewModel.setCurrentDestination(destination = it.destination.route!!)
-                    satunesViewModel.clearCurrentMediaImpl()
-                }
+                checkIfAllowed(
+                    satunesUiState = satunesUiState,
+                    isAudioAllowed = isAudioAllowed,
+                    navController = navController
+                )
             }
         )
         settingsRoutes(
             satunesViewModel = satunesViewModel, // Pass it as param to fix no recomposition when permission granted
-            onStart = {
-                satunesViewModel.setCurrentDestination(destination = it.destination.route!!)
-                satunesViewModel.clearCurrentMediaImpl()
-            }
+            onStart = { /* Nothing */ }
         )
     }
 }
@@ -166,8 +164,7 @@ private fun checkIfAllowed(
     navController: NavHostController
 ): Boolean {
     if (!isAudioAllowed && satunesUiState.currentDestination != Destination.PERMISSIONS_SETTINGS) {
-        navController.popBackStack()
-        navController.navigate(Destination.PERMISSIONS_SETTINGS.link)
+        backToRoot(rootRoute = Destination.PERMISSIONS_SETTINGS, navController = navController)
         return false
     }
     return true

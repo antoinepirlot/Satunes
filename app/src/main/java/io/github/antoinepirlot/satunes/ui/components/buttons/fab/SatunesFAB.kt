@@ -39,10 +39,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
-import io.github.antoinepirlot.satunes.data.mediaListViews
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
+import io.github.antoinepirlot.satunes.models.DestinationCategory
 import io.github.antoinepirlot.satunes.ui.components.bars.bottom.ShowCurrentMusicButton
 
 /**
@@ -64,7 +64,8 @@ internal fun SatunesFAB(
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            val isInMediaListViews: Boolean = satunesUiState.currentDestination in mediaListViews
+            val isInMediaListViews: Boolean =
+                satunesUiState.currentDestination.category == DestinationCategory.MEDIA
             if (isInMediaListViews) satunesUiState.extraButtons?.invoke()
             if (isInMediaListViews && playbackViewModel.musicPlaying != null)
                 ShowCurrentMusicButton()

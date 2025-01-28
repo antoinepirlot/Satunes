@@ -32,27 +32,75 @@ import io.github.antoinepirlot.satunes.router.utils.getNavBarSectionDestination
  * @author Antoine Pirlot on 24-01-24
  */
 
-internal enum class Destination(val link: String, val category: DestinationCategory) {
-    ALBUMS(link = "/albums", category = DestinationCategory.MEDIA),
-    ALBUM(link = ALBUMS.link + "/{id}", category = DestinationCategory.MEDIA),
+internal enum class Destination(
+    val link: String,
+    val category: DestinationCategory,
+    val navBarSection: NavBarSection? = null
+) {
+    ALBUMS(
+        link = "/albums",
+        category = DestinationCategory.MEDIA,
+        navBarSection = NavBarSection.ALBUMS
+    ),
+    ALBUM(
+        link = ALBUMS.link + "/{id}",
+        category = DestinationCategory.MEDIA,
+        navBarSection = NavBarSection.ALBUMS
+    ),
     ANDROID_AUTO_SETTINGS(link = "/android_auto_setting", category = DestinationCategory.SETTING),
-    ARTISTS(link = "/artists", category = DestinationCategory.MEDIA),
-    ARTIST(link = ARTISTS.link + "/{id}", category = DestinationCategory.MEDIA),
+    ARTISTS(
+        link = "/artists",
+        category = DestinationCategory.MEDIA,
+        navBarSection = NavBarSection.ARTISTS
+    ),
+    ARTIST(
+        link = ARTISTS.link + "/{id}",
+        category = DestinationCategory.MEDIA,
+        navBarSection = NavBarSection.ARTISTS
+    ),
     BATTERY_SETTINGS(link = "/battery_settings", category = DestinationCategory.SETTING),
     BOTTOM_BAR_SETTINGS(link = "/navbar_settings", category = DestinationCategory.SETTING),
     LIBRARY_SETTINGS(link = "/library_settings", category = DestinationCategory.SETTING),
-    FOLDERS(link = "/folders", category = DestinationCategory.MEDIA),
-    FOLDER(link = FOLDERS.link + "/{id}", category = DestinationCategory.MEDIA),
-    GENRES(link = "/genres", category = DestinationCategory.MEDIA),
-    GENRE(link = GENRES.link + "/{id}", category = DestinationCategory.MEDIA),
+    FOLDERS(
+        link = "/folders",
+        category = DestinationCategory.MEDIA,
+        navBarSection = NavBarSection.FOLDERS
+    ),
+    FOLDER(
+        link = FOLDERS.link + "/{id}",
+        category = DestinationCategory.MEDIA,
+        navBarSection = NavBarSection.FOLDERS
+    ),
+    GENRES(
+        link = "/genres",
+        category = DestinationCategory.MEDIA,
+        navBarSection = NavBarSection.GENRES
+    ),
+    GENRE(
+        link = GENRES.link + "/{id}",
+        category = DestinationCategory.MEDIA,
+        navBarSection = NavBarSection.GENRES
+    ),
     LOGS_SETTINGS(link = "/logs_settings", category = DestinationCategory.SETTING),
-    MUSICS(link = "/musics", category = DestinationCategory.MEDIA),
+    MUSICS(
+        link = "/musics",
+        category = DestinationCategory.MEDIA,
+        navBarSection = NavBarSection.MUSICS
+    ),
     PERMISSIONS_SETTINGS(link = "/permissions_settings", category = DestinationCategory.SETTING),
     PLAYBACK(link = "/playback", category = DestinationCategory.PLAYBACK),
     PLAYBACK_QUEUE(link = "/playback_queue", category = DestinationCategory.PLAYBACK),
     PLAYBACK_SETTINGS(link = "/playback_settings", category = DestinationCategory.SETTING),
-    PLAYLISTS(link = "/playlists", category = DestinationCategory.MEDIA),
-    PLAYLIST(link = PLAYLISTS.link + "/{id}", category = DestinationCategory.MEDIA),
+    PLAYLISTS(
+        link = "/playlists",
+        category = DestinationCategory.MEDIA,
+        navBarSection = NavBarSection.PLAYLISTS
+    ),
+    PLAYLIST(
+        link = PLAYLISTS.link + "/{id}",
+        category = DestinationCategory.MEDIA,
+        navBarSection = NavBarSection.PLAYLISTS
+    ),
     RESET_SETTINGS(link = "/reset_settings", category = DestinationCategory.SETTING),
     SEARCH(link = "/search", category = DestinationCategory.MEDIA),
     SEARCH_SETTINGS("/search_settings", category = DestinationCategory.SETTING),

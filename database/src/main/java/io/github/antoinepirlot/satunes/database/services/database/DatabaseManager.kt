@@ -34,6 +34,7 @@ import io.github.antoinepirlot.satunes.database.exceptions.BlankStringException
 import io.github.antoinepirlot.satunes.database.exceptions.LikesPlaylistCreationException
 import io.github.antoinepirlot.satunes.database.exceptions.MusicNotFoundException
 import io.github.antoinepirlot.satunes.database.exceptions.PlaylistAlreadyExistsException
+import io.github.antoinepirlot.satunes.database.exceptions.PlaylistNotFoundException
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.database.models.SatunesDatabase
@@ -157,7 +158,7 @@ class DatabaseManager private constructor(context: Context) {
             throw IllegalArgumentException("string contains spaces or tabulations")
     }
 
-    fun updatePlaylist(playlist: Playlist) {
+    fun updatePlaylistTitle(playlist: Playlist) {
         checkString(playlist.title)
         playlist.title = playlist.title.trim()
         val playlistDB = PlaylistDB(id = playlist.id, title = playlist.title)
@@ -169,6 +170,32 @@ class DatabaseManager private constructor(context: Context) {
             playlistDao.update(playlistDB = playlistDB)
         } catch (e: SQLiteConstraintException) {
             _logger?.warning(e.message)
+            throw e
+        }
+    }
+
+    /**
+     * Update the list of music of playlist.
+     *
+     * @param playlist is the playlist with the old music list
+     * @param newMusicCollection the new collection of [Music]
+     *
+     */
+    fun updatePlaylistMusics(playlist: Playlist, newMusicCollection: Collection<Music>) {
+        if (!playlistDao.exists(title = playlist.title)) throw PlaylistNotFoundException(playlist.id)
+        try {
+            val oldMusicCollection: Collection<Music> = playlist.getMusicSet()
+            val newMusicSet: MutableCollection<Music> = newMusicCollection.toMutableSet()
+            val removedMusic: MutableCollection<Music> = mutableListOf()
+            for (music: Music in oldMusicCollection)
+                if (!newMusicCollection.contains(music))
+                    removedMusic.add(element = music)
+                else newMusicSet.remove(element = music)
+
+            removeMusicsFromPlaylist(musics = removedMusic, playlist = playlist)
+            insertMusicsToPlaylist(musics = newMusicSet, playlist = playlist)
+        } catch (e: Throwable) {
+            _logger?.severe(e.message)
             throw e
         }
     }

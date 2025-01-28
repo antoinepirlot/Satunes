@@ -59,6 +59,11 @@ abstract class MediaImpl(
         return this.musicSortedSet
     }
 
+    fun clearMusicSet() {
+        this.musicSortedSet.clear()
+        this.musicSetUpdated.value = true
+    }
+
     fun contains(music: Music): Boolean {
         return this.getMusicSet().contains(music)
     }
@@ -68,6 +73,11 @@ abstract class MediaImpl(
             this.musicSortedSet.add(element = music)
             this.musicSetUpdated.value = true
         }
+    }
+
+    fun addMusics(musics: Collection<Music>) {
+        this.musicSortedSet.addAll(musics)
+        this.musicSetUpdated.value = true
     }
 
     fun removeMusic(music: Music) {

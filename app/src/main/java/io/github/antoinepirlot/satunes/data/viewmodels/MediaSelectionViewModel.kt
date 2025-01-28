@@ -35,7 +35,7 @@ import kotlinx.coroutines.flow.update
 /**
  * @author Antoine Pirlot on 30/03/2024
  */
-internal class MediaSelectionViewModel : ViewModel() {
+class MediaSelectionViewModel : ViewModel() {
     private val _uiState: MutableStateFlow<MediaSelectionUiState> = MutableStateFlow(
         MediaSelectionUiState()
     )

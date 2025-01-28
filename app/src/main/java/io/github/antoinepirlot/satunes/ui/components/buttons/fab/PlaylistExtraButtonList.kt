@@ -70,7 +70,7 @@ internal fun PlaylistExtraButtonList(
         MediaSelectionDialog(
             onDismissRequest = { openAddMusicsDialog = false },
             onConfirm = {
-                dataViewModel.insertMusicsToPlaylist(
+                dataViewModel.updatePlaylistMusics(
                     scope = scope,
                     snackBarHostState = snackbarHostState,
                     musics = mediaSelectionViewModel.getCheckedMusics(),

@@ -47,13 +47,11 @@ import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.getSortOptions
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
-import io.github.antoinepirlot.satunes.data.mediaListViews
-import io.github.antoinepirlot.satunes.data.playbackViews
-import io.github.antoinepirlot.satunes.data.settingsDestinations
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.models.Destination
+import io.github.antoinepirlot.satunes.models.DestinationCategory
 import io.github.antoinepirlot.satunes.ui.components.buttons.IconButton
 
 /**
@@ -82,7 +80,7 @@ internal fun TopAppBar(
         ),
         navigationIcon = {
             val screenWidth: Int = LocalConfiguration.current.screenWidthDp
-            if (currentDestination in playbackViews && screenWidth < ScreenSizes.LARGE) {
+            if (currentDestination.category == DestinationCategory.PLAYBACK && screenWidth < ScreenSizes.LARGE) {
                 IconButton(
                     icon = SatunesIcons.PLAYBACK,
                     onClick = {
@@ -92,7 +90,10 @@ internal fun TopAppBar(
                         )
                     }
                 )
-            } else if (currentDestination in mediaListViews && getSortOptions(destination = satunesUiState.currentDestination).size > 1) {
+            } else if (currentDestination.category == DestinationCategory.MEDIA && getSortOptions(
+                    destination = satunesUiState.currentDestination
+                ).size > 1
+            ) {
                 IconButton(
                     icon = SatunesIcons.SORT,
                     onClick = { satunesViewModel.showSortDialog() }
@@ -107,7 +108,7 @@ internal fun TopAppBar(
             )
         },
         actions = {
-            if (currentDestination !in settingsDestinations) {
+            if (currentDestination.category != DestinationCategory.SETTING) {
                 // Search Button
                 IconButton(
                     icon = SatunesIcons.SEARCH,
@@ -163,21 +164,19 @@ private fun onSettingButtonClick(
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
         satunesViewModel.resetUpdatesStatus()
     }
-
-    when (val currentDestination: Destination = uiState.currentDestination) {
-        in settingsDestinations -> {
-            if (currentDestination == Destination.PERMISSIONS_SETTINGS && !uiState.isAudioAllowed) {
-                return
-            } else {
-                navController.popBackStack()
-                if (navController.currentBackStackEntry == null) {
-                    navController.navigate(Destination.FOLDERS.link)
-                    navController.navigate(Destination.SETTINGS.link)
-                }
+    val currentDestination: Destination = uiState.currentDestination
+    if (currentDestination.category == DestinationCategory.SETTING) {
+        if (currentDestination == Destination.PERMISSIONS_SETTINGS && !uiState.isAudioAllowed) {
+            return
+        } else {
+            navController.popBackStack()
+            if (navController.currentBackStackEntry == null) {
+                navController.navigate(Destination.FOLDERS.link)
+                navController.navigate(Destination.SETTINGS.link)
             }
         }
-
-        else -> navController.navigate(Destination.SETTINGS.link)
+    } else {
+        navController.navigate(Destination.SETTINGS.link)
     }
 }
 

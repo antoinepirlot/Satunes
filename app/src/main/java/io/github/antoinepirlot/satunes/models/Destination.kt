@@ -32,34 +32,34 @@ import io.github.antoinepirlot.satunes.router.utils.getNavBarSectionDestination
  * @author Antoine Pirlot on 24-01-24
  */
 
-internal enum class Destination(val link: String) {
-    ALBUMS(link = "/albums"),
-    ALBUM(link = ALBUMS.link + "/{id}"),
-    ANDROID_AUTO_SETTINGS(link = "/android_auto_setting"),
-    ARTISTS(link = "/artists"),
-    ARTIST(link = ARTISTS.link + "/{id}"),
-    BATTERY_SETTINGS(link = "/battery_settings"),
-    BOTTOM_BAR_SETTINGS(link = "/navbar_settings"),
-    LIBRARY_SETTINGS(link = "/library_settings"),
-    FOLDERS(link = "/folders"),
-    FOLDER(link = FOLDERS.link + "/{id}"),
-    GENRES(link = "/genres"),
-    GENRE(link = GENRES.link + "/{id}"),
-    LOGS_SETTINGS(link = "/logs_settings"),
-    MUSICS(link = "/musics"),
-    PERMISSIONS_SETTINGS(link = "/permissions_settings"),
-    PLAYBACK(link = "/playback"),
-    PLAYBACK_QUEUE(link = "/playback_queue"),
-    PLAYBACK_SETTINGS(link = "/playback_settings"),
-    PLAYLISTS(link = "/playlists"),
-    PLAYLIST(link = PLAYLISTS.link + "/{id}"),
-    RESET_SETTINGS(link = "/reset_settings"),
-    SEARCH(link = "/search"),
-    SEARCH_SETTINGS("/search_settings"),
-    SETTINGS(link = "/settings"),
+internal enum class Destination(val link: String, val category: DestinationCategory) {
+    ALBUMS(link = "/albums", category = DestinationCategory.MEDIA),
+    ALBUM(link = ALBUMS.link + "/{id}", category = DestinationCategory.MEDIA),
+    ANDROID_AUTO_SETTINGS(link = "/android_auto_setting", category = DestinationCategory.SETTING),
+    ARTISTS(link = "/artists", category = DestinationCategory.MEDIA),
+    ARTIST(link = ARTISTS.link + "/{id}", category = DestinationCategory.MEDIA),
+    BATTERY_SETTINGS(link = "/battery_settings", category = DestinationCategory.SETTING),
+    BOTTOM_BAR_SETTINGS(link = "/navbar_settings", category = DestinationCategory.SETTING),
+    LIBRARY_SETTINGS(link = "/library_settings", category = DestinationCategory.SETTING),
+    FOLDERS(link = "/folders", category = DestinationCategory.MEDIA),
+    FOLDER(link = FOLDERS.link + "/{id}", category = DestinationCategory.MEDIA),
+    GENRES(link = "/genres", category = DestinationCategory.MEDIA),
+    GENRE(link = GENRES.link + "/{id}", category = DestinationCategory.MEDIA),
+    LOGS_SETTINGS(link = "/logs_settings", category = DestinationCategory.SETTING),
+    MUSICS(link = "/musics", category = DestinationCategory.MEDIA),
+    PERMISSIONS_SETTINGS(link = "/permissions_settings", category = DestinationCategory.SETTING),
+    PLAYBACK(link = "/playback", category = DestinationCategory.PLAYBACK),
+    PLAYBACK_QUEUE(link = "/playback_queue", category = DestinationCategory.PLAYBACK),
+    PLAYBACK_SETTINGS(link = "/playback_settings", category = DestinationCategory.SETTING),
+    PLAYLISTS(link = "/playlists", category = DestinationCategory.MEDIA),
+    PLAYLIST(link = PLAYLISTS.link + "/{id}", category = DestinationCategory.MEDIA),
+    RESET_SETTINGS(link = "/reset_settings", category = DestinationCategory.SETTING),
+    SEARCH(link = "/search", category = DestinationCategory.MEDIA),
+    SEARCH_SETTINGS("/search_settings", category = DestinationCategory.SETTING),
+    SETTINGS(link = "/settings", category = DestinationCategory.SETTING),
 
     @RequiresApi(Build.VERSION_CODES.M)
-    UPDATES_SETTINGS(link = "/updates");
+    UPDATES_SETTINGS(link = "/updates", category = DestinationCategory.SETTING);
 
     companion object {
         private val destinationsMap: MutableMap<String, Destination> = mutableMapOf(

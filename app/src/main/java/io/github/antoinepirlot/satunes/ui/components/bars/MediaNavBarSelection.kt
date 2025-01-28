@@ -35,12 +35,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
-import io.github.antoinepirlot.satunes.data.playbackViews
-import io.github.antoinepirlot.satunes.data.settingsDestinations
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.models.Destination
+import io.github.antoinepirlot.satunes.models.DestinationCategory
 import io.github.antoinepirlot.satunes.ui.utils.getRightIconAndDescription
 
 /**
@@ -59,8 +58,8 @@ internal fun RowScope.MediaNavBarSelection(
     val selectedNavBarSection: NavBarSection = satunesUiState.selectedNavBarSection
     val currentDestination: Destination = satunesUiState.currentDestination
 
-    val selectedCanBeShown: Boolean = currentDestination !in settingsDestinations
-            && currentDestination !in playbackViews
+    val selectedCanBeShown: Boolean = currentDestination.category != DestinationCategory.SETTING
+            && currentDestination.category != DestinationCategory.PLAYBACK
             && currentDestination != Destination.SEARCH
 
     NavigationBarItem(

@@ -231,10 +231,18 @@ class DatabaseManager private constructor(context: Context) {
         }
     }
 
-    fun insertMusicToPlaylists(music: Music, playlists: Collection<Playlist>) {
-        playlists.forEach { playlist: Playlist ->
-            insertMusicToPlaylist(music = music, playlist = playlist)
+    fun updateMusicToPlaylists(music: Music, newPlaylistsCollection: Collection<Playlist>) {
+        val oldPlaylistCollection: Collection<Long> =
+            musicsPlaylistsRelDAO.getAll(musicId = music.id)
+        val newPlaylists: MutableCollection<Playlist> = newPlaylistsCollection.toMutableSet()
+        val removedPlaylist: MutableCollection<Playlist> = mutableSetOf()
+        for (oldPlaylistId: Long in oldPlaylistCollection) {
+            val playlist: Playlist = DataManager.getPlaylist(id = oldPlaylistId)!!
+            if (!newPlaylistsCollection.contains(element = playlist)) removedPlaylist.add(element = playlist)
+            else newPlaylists.remove(element = playlist)
         }
+        removeMusicFromPlaylists(music = music, playlists = removedPlaylist)
+        insertMusicsToPlaylists(musics = listOf(music), playlists = newPlaylists)
     }
 
     fun insertMusicsToPlaylists(musics: Collection<Music>, playlists: Collection<Playlist>) {

@@ -100,7 +100,7 @@ private fun addMusicPlayingToPlaylist(
     checkedPlaylists: List<Playlist>,
     music: Music,
 ) {
-    dataViewModel.insertMusicToPlaylists(
+    dataViewModel.updateMusicPlaylist(
         scope = scope,
         snackBarHostState = snackBarHostState,
         music = music,

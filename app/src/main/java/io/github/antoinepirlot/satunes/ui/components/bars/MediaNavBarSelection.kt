@@ -80,7 +80,6 @@ internal fun RowScope.MediaNavBarSelection(
 
             }
             backToRoot(rootRoute = rootRoute, navController = navController)
-            println("Current dest is: ${satunesUiState.currentDestination}")
         },
         icon = {
             val pair = getRightIconAndDescription(navBarSection = navBarSection)

@@ -58,9 +58,7 @@ internal fun RowScope.MediaNavBarSelection(
     val selectedNavBarSection: NavBarSection = satunesUiState.selectedNavBarSection
     val currentDestination: Destination = satunesUiState.currentDestination
 
-    val selectedCanBeShown: Boolean = currentDestination.category != DestinationCategory.SETTING
-            && currentDestination.category != DestinationCategory.PLAYBACK
-            && currentDestination != Destination.SEARCH
+    val selectedCanBeShown: Boolean = currentDestination.category == DestinationCategory.MEDIA
 
     NavigationBarItem(
         modifier = modifier,

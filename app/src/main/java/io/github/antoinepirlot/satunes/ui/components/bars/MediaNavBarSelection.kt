@@ -81,6 +81,7 @@ internal fun RowScope.MediaNavBarSelection(
 
             }
             backToRoot(rootRoute = rootRoute, navController = navController)
+            println("Current dest is: ${satunesUiState.currentDestination}")
         },
         icon = {
             val pair = getRightIconAndDescription(navBarSection = navBarSection)
@@ -104,15 +105,11 @@ internal fun backToRoot(
     navController: NavHostController
 ) {
     var currentRoute: String? = navController.currentBackStackEntry?.destination?.route
-    if (currentRoute != rootRoute) {
-        while (currentRoute != null && currentRoute != rootRoute) {
-            navController.popBackStack()
-            currentRoute = navController.currentBackStackEntry?.destination?.route
-        }
-        if (currentRoute == null) {
-            navController.navigate(rootRoute)
-        }
+    while (currentRoute != null) {
+        navController.popBackStack()
+        currentRoute = navController.currentBackStackEntry?.destination?.route
     }
+    navController.navigate(rootRoute)
 }
 
 @Preview

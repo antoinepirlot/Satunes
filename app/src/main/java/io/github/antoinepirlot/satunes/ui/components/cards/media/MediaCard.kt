@@ -82,7 +82,7 @@ internal fun MediaCard(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
-    media: MediaImpl,
+    mediaImpl: MediaImpl,
     onClick: (() -> Unit)?,
     enableExtraOptions: Boolean = true,
 ) {
@@ -92,12 +92,12 @@ internal fun MediaCard(
     var showMediaOption: Boolean by remember { mutableStateOf(false) }
 
     val title: String =
-        if (media is Folder && media.parentFolder == null) {
-            getRootFolderName(title = media.title)
-        } else if (media is Playlist && media.title == LIKES_PLAYLIST_TITLE) {
+        if (mediaImpl is Folder && mediaImpl.parentFolder == null) {
+            getRootFolderName(title = mediaImpl.title)
+        } else if (mediaImpl is Playlist && mediaImpl.title == LIKES_PLAYLIST_TITLE) {
             stringResource(id = RDb.string.likes_playlist_title)
         } else {
-            media.title
+            mediaImpl.title
         }
     val screenWidthDp: Int = LocalConfiguration.current.screenWidthDp
     val boxModifier: Modifier = if (onClick != null) {
@@ -132,7 +132,7 @@ internal fun MediaCard(
                     val imageModifier: Modifier = Modifier
                         .fillMaxSize()
                         .align(Alignment.Center)
-                    if (media == playbackViewModel.musicPlaying) {
+                    if (mediaImpl == playbackViewModel.musicPlaying) {
                         val playingIcon: SatunesIcons = SatunesIcons.MUSIC_PLAYING
                         Icon(
                             modifier = imageModifier,
@@ -140,28 +140,28 @@ internal fun MediaCard(
                             contentDescription = playingIcon.description
                         )
                     } else {
-                        MediaArtwork(mediaImpl = media)
+                        MediaArtwork(mediaImpl = mediaImpl)
                     }
                 }
             },
             headlineContent = {
                 Column {
-                    if (satunesUiState.currentDestination == Destination.ALBUM && media is Music && media.cdTrackNumber != null) {
-                        NormalText(text = media.cdTrackNumber.toString() + " - " + title)
+                    if (satunesUiState.currentDestination == Destination.ALBUM && mediaImpl is Music && mediaImpl.cdTrackNumber != null) {
+                        NormalText(text = mediaImpl.cdTrackNumber.toString() + " - " + title)
                     } else {
                         NormalText(text = title)
                     }
                     //Use these as for the same thing the builder doesn't like in one
-                    if (media is Album) {
-                        Subtitle(text = media.artist.title)
-                    } else if (media is Music) {
-                        Subtitle(text = media.album.title + " - " + media.artist.title)
+                    if (mediaImpl is Album) {
+                        Subtitle(text = mediaImpl.artist.title)
+                    } else if (mediaImpl is Music) {
+                        Subtitle(text = mediaImpl.album.title + " - " + mediaImpl.artist.title)
                     }
                 }
             },
             trailingContent = {
-                if (media is Music) {
-                    val liked: Boolean by media.liked
+                if (mediaImpl is Music) {
+                    val liked: Boolean by mediaImpl.liked
                     if (liked) {
                         val likedIcon: SatunesIcons = SatunesIcons.LIKED
                         Icon(
@@ -178,7 +178,7 @@ internal fun MediaCard(
     // Media option dialog
     if (showMediaOption) {
         MediaOptionsDialog(
-            media = media,
+            mediaImpl = mediaImpl,
             onDismissRequest = {
                 showMediaOption = false
                 satunesViewModel.mediaOptionsIsClosed()
@@ -205,7 +205,7 @@ private fun CardPreview() {
     )
     MediaCard(
         modifier = Modifier.fillMaxSize(),
-        media = music,
+        mediaImpl = music,
         onClick = {},
     )
 }

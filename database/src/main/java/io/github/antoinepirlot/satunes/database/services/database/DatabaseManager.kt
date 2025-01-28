@@ -34,6 +34,9 @@ import io.github.antoinepirlot.satunes.database.exceptions.BlankStringException
 import io.github.antoinepirlot.satunes.database.exceptions.LikesPlaylistCreationException
 import io.github.antoinepirlot.satunes.database.exceptions.MusicNotFoundException
 import io.github.antoinepirlot.satunes.database.exceptions.PlaylistAlreadyExistsException
+import io.github.antoinepirlot.satunes.database.exceptions.PlaylistNotFoundException
+import io.github.antoinepirlot.satunes.database.models.Folder
+import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.database.models.SatunesDatabase
@@ -157,7 +160,7 @@ class DatabaseManager private constructor(context: Context) {
             throw IllegalArgumentException("string contains spaces or tabulations")
     }
 
-    fun updatePlaylist(playlist: Playlist) {
+    fun updatePlaylistTitle(playlist: Playlist) {
         checkString(playlist.title)
         playlist.title = playlist.title.trim()
         val playlistDB = PlaylistDB(id = playlist.id, title = playlist.title)
@@ -170,6 +173,57 @@ class DatabaseManager private constructor(context: Context) {
         } catch (e: SQLiteConstraintException) {
             _logger?.warning(e.message)
             throw e
+        }
+    }
+
+    /**
+     * Update the list of music of playlist.
+     *
+     * @param playlist is the playlist with the old music list
+     * @param newMusicCollection the new collection of [Music]
+     *
+     */
+    fun updatePlaylistMusics(playlist: Playlist, newMusicCollection: Collection<Music>) {
+        if (!playlistDao.exists(title = playlist.title)) throw PlaylistNotFoundException(playlist.id)
+        try {
+            val oldMusicCollection: Collection<Music> = playlist.getMusicSet()
+            val newMusicSet: MutableCollection<Music> = newMusicCollection.toMutableSet()
+            val removedMusic: MutableCollection<Music> = mutableListOf()
+            for (music: Music in oldMusicCollection)
+                if (!newMusicCollection.contains(music))
+                    removedMusic.add(element = music)
+                else newMusicSet.remove(element = music)
+
+            removeMusicsFromPlaylist(musics = removedMusic, playlist = playlist)
+            insertMusicsToPlaylist(musics = newMusicSet, playlist = playlist)
+        } catch (e: Throwable) {
+            _logger?.severe(e.message)
+            throw e
+        }
+    }
+
+    fun updateMediaToPlaylists(mediaImpl: MediaImpl, playlists: Collection<Playlist>) {
+        val musics: Set<Music> = if (mediaImpl is Folder) {
+            mediaImpl.getAllMusic()
+        } else {
+            mediaImpl.getMusicSet()
+        }
+        val allPlaylists: Collection<Playlist> = DataManager.getPlaylistSet()
+        for (playlist: Playlist in allPlaylists) {
+            val newMusicCollection: MutableCollection<Music> = playlist.getMusicSet().toMutableSet()
+            if (playlists.contains(element = playlist)) {
+                //Playlist has been checked
+                newMusicCollection.addAll(elements = playlist.getMusicSet().toMutableSet())
+                newMusicCollection.addAll(elements = musics)
+                this.updatePlaylistMusics(playlist = playlist, newMusicCollection)
+            } else {
+                //Playlist has been unchecked (only remove if all of its music was inside)
+                if (playlist.getMusicSet().containsAll(musics)) {
+                    newMusicCollection.addAll(elements = playlist.getMusicSet().toMutableSet())
+                    newMusicCollection.removeAll(elements = musics)
+                    this.updatePlaylistMusics(playlist = playlist, newMusicCollection)
+                }
+            }
         }
     }
 
@@ -204,10 +258,18 @@ class DatabaseManager private constructor(context: Context) {
         }
     }
 
-    fun insertMusicToPlaylists(music: Music, playlists: Collection<Playlist>) {
-        playlists.forEach { playlist: Playlist ->
-            insertMusicToPlaylist(music = music, playlist = playlist)
+    fun updateMusicToPlaylists(music: Music, newPlaylistsCollection: Collection<Playlist>) {
+        val oldPlaylistCollection: Collection<Long> =
+            musicsPlaylistsRelDAO.getAll(musicId = music.id)
+        val newPlaylists: MutableCollection<Playlist> = newPlaylistsCollection.toMutableSet()
+        val removedPlaylist: MutableCollection<Playlist> = mutableSetOf()
+        for (oldPlaylistId: Long in oldPlaylistCollection) {
+            val playlist: Playlist = DataManager.getPlaylist(id = oldPlaylistId)!!
+            if (!newPlaylistsCollection.contains(element = playlist)) removedPlaylist.add(element = playlist)
+            else newPlaylists.remove(element = playlist)
         }
+        removeMusicFromPlaylists(music = music, playlists = removedPlaylist)
+        insertMusicsToPlaylists(musics = listOf(music), playlists = newPlaylists)
     }
 
     fun insertMusicsToPlaylists(musics: Collection<Music>, playlists: Collection<Playlist>) {

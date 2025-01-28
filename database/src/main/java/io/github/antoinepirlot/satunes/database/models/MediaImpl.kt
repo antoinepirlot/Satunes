@@ -59,11 +59,29 @@ abstract class MediaImpl(
         return this.musicSortedSet
     }
 
+    fun clearMusicSet() {
+        this.musicSortedSet.clear()
+        this.musicSetUpdated.value = true
+    }
+
+    fun contains(mediaImpl: MediaImpl): Boolean {
+        return when (mediaImpl) {
+            is Music -> this.getMusicSet().contains(mediaImpl)
+            is Folder -> this.getMusicSet().containsAll(elements = mediaImpl.getAllMusic())
+            else -> this.getMusicSet().containsAll(elements = mediaImpl.getMusicSet())
+        }
+    }
+
     fun addMusic(music: Music) {
         if (!this.musicSortedSet.contains(element = music)) {
             this.musicSortedSet.add(element = music)
             this.musicSetUpdated.value = true
         }
+    }
+
+    fun addMusics(musics: Collection<Music>) {
+        this.musicSortedSet.addAll(musics)
+        this.musicSetUpdated.value = true
     }
 
     fun removeMusic(music: Music) {

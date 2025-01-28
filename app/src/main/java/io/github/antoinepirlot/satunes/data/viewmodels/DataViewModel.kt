@@ -177,7 +177,7 @@ class DataViewModel : ViewModel() {
             val oldTitle: String = playlist.title
             playlist.title = newTitle
             try {
-                _db.updatePlaylist(playlist = playlist)
+                _db.updatePlaylistTitle(playlist = playlist)
                 showSnackBar(
                     scope = scope,
                     snackBarHostState = snackBarHostState,
@@ -217,6 +217,40 @@ class DataViewModel : ViewModel() {
                         }
                     )
                 }
+            }
+        }
+    }
+
+    fun updatePlaylistMusics(
+        scope: CoroutineScope,
+        snackBarHostState: SnackbarHostState,
+        musics: Collection<Music>,
+        playlist: Playlist,
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val context: Context = MainActivity.instance.applicationContext
+            try {
+                _db.updatePlaylistMusics(playlist = playlist, newMusicCollection = musics)
+                playlist.clearMusicSet()
+                playlist.addMusics(musics = musics)
+                showSnackBar(
+                    scope = scope,
+                    snackBarHostState = snackBarHostState,
+                    message = context.getString(R.string.update_playlist_success, playlist)
+                )
+            } catch (e: Throwable) {
+                showErrorSnackBar(
+                    scope = scope,
+                    snackBarHostState = snackBarHostState,
+                    action = {
+                        updatePlaylistMusics(
+                            scope = scope,
+                            snackBarHostState = snackBarHostState,
+                            musics = musics,
+                            playlist = playlist
+                        )
+                    }
+                )
             }
         }
     }
@@ -367,7 +401,7 @@ class DataViewModel : ViewModel() {
         }
     }
 
-    fun insertMusicToPlaylists(
+    fun updateMusicPlaylist(
         scope: CoroutineScope,
         snackBarHostState: SnackbarHostState,
         music: Music,
@@ -376,11 +410,8 @@ class DataViewModel : ViewModel() {
         CoroutineScope(Dispatchers.IO).launch {
             val context: Context = MainActivity.instance.applicationContext
 
-            @Suppress("NAME_SHADOWING")
-            val playlists: List<Playlist> = playlists.toList()
-
             try {
-                _db.insertMusicToPlaylists(music = music, playlists = playlists)
+                _db.updateMusicToPlaylists(music = music, newPlaylistsCollection = playlists)
                 showSnackBar(
                     scope = scope,
                     snackBarHostState = snackBarHostState,
@@ -398,7 +429,7 @@ class DataViewModel : ViewModel() {
             } catch (e: Throwable) {
                 _logger?.warning(e.message)
                 showErrorSnackBar(scope = scope, snackBarHostState = snackBarHostState, action = {
-                    insertMusicToPlaylists(
+                    updateMusicPlaylist(
                         scope = scope,
                         snackBarHostState = snackBarHostState,
                         music = music,
@@ -409,20 +440,15 @@ class DataViewModel : ViewModel() {
         }
     }
 
-    fun insertMusicsToPlaylists(
+    fun updateMusicsToPlaylists(
         scope: CoroutineScope,
         snackBarHostState: SnackbarHostState,
         mediaImpl: MediaImpl,
         playlists: Collection<Playlist>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
-            val musics: Set<Music> = if (mediaImpl is Folder) {
-                mediaImpl.getAllMusic()
-            } else {
-                mediaImpl.getMusicSet()
-            }
             try {
-                _db.insertMusicsToPlaylists(musics = musics, playlists = playlists)
+                _db.updateMediaToPlaylists(mediaImpl = mediaImpl, playlists = playlists)
                 val context: Context = MainActivity.instance.applicationContext
                 showSnackBar(
                     scope = scope,
@@ -441,7 +467,7 @@ class DataViewModel : ViewModel() {
             } catch (e: Throwable) {
                 _logger?.warning(e.message)
                 showErrorSnackBar(scope = scope, snackBarHostState = snackBarHostState, action = {
-                    insertMusicsToPlaylists(
+                    updateMusicsToPlaylists(
                         scope = scope,
                         snackBarHostState = snackBarHostState,
                         mediaImpl = mediaImpl,
@@ -572,7 +598,7 @@ class DataViewModel : ViewModel() {
                     ).lowercase(),
                     actionLabel = context.getString(R.string.cancel),
                     action = {
-                        insertMusicToPlaylists(
+                        updateMusicPlaylist(
                             scope = scope,
                             snackBarHostState = snackBarHostState,
                             music = music,
@@ -611,7 +637,7 @@ class DataViewModel : ViewModel() {
                     message = context.getString(R.string.add_musics_to_playlists_success),
                     actionLabel = context.getString(R.string.cancel),
                     action = {
-                        insertMusicsToPlaylists(
+                        updateMusicsToPlaylists(
                             scope = scope,
                             snackBarHostState = snackBarHostState,
                             mediaImpl = mediaImpl,

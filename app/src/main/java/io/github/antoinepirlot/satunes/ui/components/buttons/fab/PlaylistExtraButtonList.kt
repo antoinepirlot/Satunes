@@ -20,7 +20,7 @@
  * PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.bars.bottom
+package io.github.antoinepirlot.satunes.ui.components.buttons.fab
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.SnackbarHostState
@@ -38,7 +38,6 @@ import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.MediaSelectionViewModel
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.ui.components.buttons.fab.ExtraButton
 import io.github.antoinepirlot.satunes.ui.components.dialog.MediaSelectionDialog
 import kotlinx.coroutines.CoroutineScope
 
@@ -71,7 +70,7 @@ internal fun PlaylistExtraButtonList(
         MediaSelectionDialog(
             onDismissRequest = { openAddMusicsDialog = false },
             onConfirm = {
-                dataViewModel.insertMusicsToPlaylist(
+                dataViewModel.updatePlaylistMusics(
                     scope = scope,
                     snackBarHostState = snackbarHostState,
                     musics = mediaSelectionViewModel.getCheckedMusics(),
@@ -81,6 +80,7 @@ internal fun PlaylistExtraButtonList(
             },
             mediaImplCollection = dataViewModel.getMusicSet(),
             icon = SatunesIcons.PLAYLIST_ADD,
+            mediaDestination = playlist,
             playlistTitle = playlist.title
         )
     }

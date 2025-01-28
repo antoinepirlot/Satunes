@@ -122,7 +122,7 @@ internal fun MediaCardList(
             }
             MediaCard(
                 modifier = modifier,
-                media = media,
+                mediaImpl = media,
                 onClick = { openMedia(media) },
             )
         }

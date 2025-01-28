@@ -80,7 +80,7 @@ internal fun AddToPlaylistMediaOption(
                 showDialog = false
             },
             onConfirm = {
-                insertMediaToPlaylist(
+                updateMediaPlaylists(
                     scope = scope,
                     snackBarHostState = snackBarHostState,
                     dataViewModel = dataViewModel,
@@ -90,12 +90,13 @@ internal fun AddToPlaylistMediaOption(
                 onFinished()
             },
             mediaImplCollection = playlistSet,
+            mediaDestination = mediaImpl,
             icon = SatunesIcons.PLAYLIST_ADD,
         )
     }
 }
 
-private fun insertMediaToPlaylist(
+private fun updateMediaPlaylists(
     dataViewModel: DataViewModel,
     scope: CoroutineScope,
     snackBarHostState: SnackbarHostState,
@@ -103,14 +104,14 @@ private fun insertMediaToPlaylist(
     mediaImpl: MediaImpl
 ) {
     when (mediaImpl) {
-        is Music -> dataViewModel.insertMusicToPlaylists(
+        is Music -> dataViewModel.updateMusicPlaylist(
             scope = scope,
             snackBarHostState = snackBarHostState,
             music = mediaImpl,
             playlists = mediaSelectionViewModel.getCheckedPlaylistWithMusics()
         )
 
-        else -> dataViewModel.insertMusicsToPlaylists(
+        else -> dataViewModel.updateMusicsToPlaylists(
             scope = scope,
             snackBarHostState = snackBarHostState,
             mediaImpl = mediaImpl,

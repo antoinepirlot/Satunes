@@ -45,43 +45,43 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.playlist.PlaylistOpt
 @Composable
 internal fun MediaOptionsDialog(
     modifier: Modifier = Modifier,
-    media: MediaImpl,
+    mediaImpl: MediaImpl,
     onDismissRequest: () -> Unit
 ) {
-    when (media) {
+    when (mediaImpl) {
         is Music -> MusicOptionsDialog(
             modifier = modifier,
-            music = media,
+            music = mediaImpl,
             onDismissRequest = onDismissRequest
         )
 
         is Artist -> ArtistOptionsDialog(
             modifier = modifier,
-            artist = media,
+            artist = mediaImpl,
             onDismissRequest = onDismissRequest
         )
 
         is Album -> AlbumOptionsDialog(
             modifier = modifier,
-            album = media,
+            album = mediaImpl,
             onDismissRequest = onDismissRequest
         )
 
         is Genre -> GenreOptionsDialog(
             modifier = modifier,
-            genre = media,
+            genre = mediaImpl,
             onDismissRequest = onDismissRequest
         )
 
         is Playlist -> PlaylistOptionsDialog(
             modifier = modifier,
-            playlist = media,
+            playlist = mediaImpl,
             onDismissRequest = onDismissRequest
         )
 
         is Folder -> FolderOptionsDialog(
             modifier = modifier,
-            folder = media,
+            folder = mediaImpl,
             onDismissRequest = onDismissRequest
         )
     }

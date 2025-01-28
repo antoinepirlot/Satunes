@@ -33,6 +33,8 @@ import io.github.antoinepirlot.satunes.database.models.database.tables.MusicsPla
 
 @Dao
 internal interface MusicsPlaylistsRelDAO {
+    @Query("SELECT playlist_id FROM musics_playlists_rel WHERE music_id = :musicId")
+    fun getAll(musicId: Long): List<Long>
 
     @Query("SELECT music_id FROM musics_playlists_rel GROUP BY music_id")
     fun getAllMusicIds(): List<Long>

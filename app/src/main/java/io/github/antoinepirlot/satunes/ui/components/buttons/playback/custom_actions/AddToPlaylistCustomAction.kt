@@ -87,6 +87,7 @@ internal fun AddToPlaylistCustomAction(
                 showForm = false
             },
             mediaImplCollection = playlistMap,
+            mediaDestination = music,
             icon = SatunesIcons.PLAYLIST_ADD
         )
     }
@@ -99,7 +100,7 @@ private fun addMusicPlayingToPlaylist(
     checkedPlaylists: List<Playlist>,
     music: Music,
 ) {
-    dataViewModel.insertMusicToPlaylists(
+    dataViewModel.updateMusicPlaylist(
         scope = scope,
         snackBarHostState = snackBarHostState,
         music = music,

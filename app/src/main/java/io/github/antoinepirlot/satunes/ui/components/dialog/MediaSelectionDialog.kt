@@ -164,7 +164,7 @@ private fun MediaSelectionDialogList(
         confirmButton = {
             TextButton(onClick = onConfirm) {
                 if (mediaImplCollection.isNotEmpty()) {
-                    NormalText(text = stringResource(id = R.string.add))
+                    NormalText(text = stringResource(id = R.string.update))
                 }
             }
         },

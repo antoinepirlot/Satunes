@@ -119,6 +119,7 @@ class MediaSelectionViewModel : ViewModel() {
 
             is Playlist -> {
                 //Check for selected music
+                //TODO apply modifications for all medias (Genre, Album, Artist, etc.)
                 if (mediaImpl.contains(music = _currentMediaImpl as Music)) {
                     this.addPlaylist(playlist = mediaImpl)
                     true

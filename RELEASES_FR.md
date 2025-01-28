@@ -1,6 +1,25 @@
 # Versions (🇫🇷)
 You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
+## 3.0 (Android 5.1.1 Lollipop et ultérieur)
+
+### 3.0.0-alpha-1
+
+Nouvelles fonctionnalités:
+
+* Possibilité de trier les médias par artistes, album et/ou genre en fonction de la page
+* Affichage de la première lettre par ordre alphabétique au dessus du premier média (ayant cette
+  lettre) dans la liste (désactivable dans les paramètres de librairies)
+
+Améliorations, optimisations et dépannage:
+
+* Support pour Android 15 (Vanilla Ice Cream)
+* Problèmes de chargement de la musique causant des crash dans certaines conditions corrigé (
+  Concurrent Modification)
+* Mise à jour des libraries qui implique un léger changement de design de certains éléments (commme
+  la barre de progression)
+* Autres optimisations et corrections indirectes
+
 ## 2.5 (Android 5.1.1 Lollipop et ultérieur)
 
 ### 2.5.2

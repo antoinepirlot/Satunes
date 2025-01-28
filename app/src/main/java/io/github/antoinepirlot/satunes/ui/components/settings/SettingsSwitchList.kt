@@ -50,12 +50,12 @@ internal fun SettingsSwitchList(
 ) {
     val searchUiState: SearchUiState by searchViewModel.uiState.collectAsState()
     Column(modifier = modifier) {
-        for (setting: SwitchSettings in checkedMap.keys) {
+        for ((setting: SwitchSettings, checked: Boolean) in checkedMap) {
             ListItem( //Has always horizontal padding of 16.dp
                 headlineContent = {
                     SettingWithSwitch(
                         setting = setting,
-                        checked = checkedMap[setting]!!,
+                        checked = checked,
                         onCheckedChange = {
                             switchSetting(
                                 satunesViewModel = satunesViewModel,
@@ -69,6 +69,19 @@ internal fun SettingsSwitchList(
             )
         }
     }
+}
+
+@Composable
+internal fun SettingsSwitchList(
+    modifier: Modifier = Modifier,
+    navbarMap: Map<SwitchSettings, NavBarSection>
+) {
+    val checkedMap: MutableMap<SwitchSettings, Boolean> = mutableMapOf()
+    for ((setting: SwitchSettings, navbarSection: NavBarSection) in navbarMap) {
+        val isEnabled by navbarSection.isEnabled
+        checkedMap[setting] = isEnabled
+    }
+    SettingsSwitchList(modifier = modifier, checkedMap = checkedMap.toMap())
 }
 
 @Composable

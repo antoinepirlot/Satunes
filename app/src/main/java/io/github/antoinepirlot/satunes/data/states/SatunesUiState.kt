@@ -48,11 +48,6 @@ internal data class SatunesUiState(
     //Use this in UiSate and ViewModel as it is a particular value. It could change but most of the time it won't change
     val isAudioAllowed: Boolean = isAudioAllowed(context = MainActivity.instance.applicationContext),
 
-    val foldersNavbar: Boolean = SettingsManager.foldersNavbar.value,
-    val artistsNavbar: Boolean = SettingsManager.artistsNavbar.value,
-    val albumsNavbar: Boolean = SettingsManager.albumsNavbar.value,
-    val genresNavbar: Boolean = SettingsManager.genresNavbar.value,
-    val playlistsNavbar: Boolean = SettingsManager.playlistsNavbar.value,
     val defaultNavBarSection: NavBarSection = SettingsManager.defaultNavBarSection,
     val selectedNavBarSection: NavBarSection = defaultNavBarSection,
 

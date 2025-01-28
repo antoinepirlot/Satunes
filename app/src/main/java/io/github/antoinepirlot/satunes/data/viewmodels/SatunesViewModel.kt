@@ -82,13 +82,6 @@ internal class SatunesViewModel : ViewModel() {
     private val _defaultNavBarSection: MutableState<NavBarSection> =
         mutableStateOf(_uiState.value.defaultNavBarSection)
 
-    //Use this only for nav bar items as it won't refresh if uiState is updated, idk why.
-    private val _foldersChecked: MutableState<Boolean> = SettingsManager.foldersNavbar
-    private val _artistsChecked: MutableState<Boolean> = SettingsManager.artistsNavbar
-    private val _albumsChecked: MutableState<Boolean> = SettingsManager.albumsNavbar
-    private val _genresChecked: MutableState<Boolean> = SettingsManager.genresNavbar
-    private val _playlistsChecked: MutableState<Boolean> = SettingsManager.playlistsNavbar
-
     @RequiresApi(Build.VERSION_CODES.M)
     private val _updateAvailableStatus: MutableState<UpdateAvailableStatus> =
         UpdateCheckManager.updateAvailableStatus
@@ -105,11 +98,6 @@ internal class SatunesViewModel : ViewModel() {
 
     val isLoadingData: Boolean by _isLoadingData
     val isDataLoaded: Boolean by _isDataLoaded
-    val foldersChecked: Boolean by _foldersChecked
-    val artistsChecked: Boolean by _artistsChecked
-    val albumsChecked: Boolean by _albumsChecked
-    val genresChecked: Boolean by _genresChecked
-    val playlistsChecked: Boolean by _playlistsChecked
 
     //Use this in UiSate and ViewModel as it is a particular value. It could change but most of the time it won't change
     var isAudioAllowed: Boolean by mutableStateOf(_uiState.value.isAudioAllowed)
@@ -227,19 +215,10 @@ internal class SatunesViewModel : ViewModel() {
                 )
                 if (
                     this@SatunesViewModel.defaultNavBarSection == navBarSection
-                    && !navBarSection.isEnabled
+                    && !navBarSection.isEnabled.value
                 ) {
                     selectDefaultNavBarSection(navBarSection = NavBarSection.MUSICS)
                 }
-            }
-            _uiState.update { currentState: SatunesUiState ->
-                currentState.copy(
-                    foldersNavbar = SettingsManager.foldersNavbar.value,
-                    artistsNavbar = SettingsManager.artistsNavbar.value,
-                    albumsNavbar = SettingsManager.albumsNavbar.value,
-                    genresNavbar = SettingsManager.genresNavbar.value,
-                    playlistsNavbar = SettingsManager.playlistsNavbar.value,
-                )
             }
         } catch (e: Throwable) {
             _logger?.warning(e.message)

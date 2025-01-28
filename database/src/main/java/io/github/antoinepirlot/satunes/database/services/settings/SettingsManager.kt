@@ -94,7 +94,7 @@ object SettingsManager {
     private val FOLDERS_NAVBAR_PREFERENCES_KEY = booleanPreferencesKey("folders_navbar")
     private val ARTISTS_NAVBAR_PREFERENCES_KEY = booleanPreferencesKey("artist_navbar")
     private val ALBUMS_NAVBAR_PREFERENCES_KEY = booleanPreferencesKey("albums_navbar")
-    private val GENRE_NAVBAR_PREFERENCES_KEY = booleanPreferencesKey("genres_navbar")
+    private val GENRES_NAVBAR_PREFERENCES_KEY = booleanPreferencesKey("genres_navbar")
     private val PLAYLISTS_NAVBAR_PREFERENCES_KEY = booleanPreferencesKey("playlists_navbar")
     private val DEFAULT_NAV_BAR_SECTION_KEY: Preferences.Key<Int> =
         intPreferencesKey("default_nav_bar_section")
@@ -137,16 +137,6 @@ object SettingsManager {
     private val Context.dataStore: DataStore<Preferences> by PREFERENCES_DATA_STORE
     private var _isLoaded: Boolean = false
 
-    var foldersNavbar: MutableState<Boolean> = mutableStateOf(DEFAULT_FOLDERS_NAVBAR)
-        private set
-    var artistsNavbar: MutableState<Boolean> = mutableStateOf(DEFAULT_ARTISTS_NAVBAR)
-        private set
-    var albumsNavbar: MutableState<Boolean> = mutableStateOf(DEFAULT_ALBUMS_NAVBAR)
-        private set
-    var genresNavbar: MutableState<Boolean> = mutableStateOf(DEFAULT_GENRE_NAVBAR)
-        private set
-    var playlistsNavbar: MutableState<Boolean> = mutableStateOf(DEFAULT_PLAYLIST_NAVBAR)
-        private set
     var defaultNavBarSection: NavBarSection = DEFAULT_DEFAULT_NAV_BAR_SECTION
     var playbackWhenClosedChecked: Boolean = DEFAULT_PLAYBACK_WHEN_CLOSED_CHECKED
         private set
@@ -206,25 +196,16 @@ object SettingsManager {
             return
         }
         context.dataStore.data.map { preferences: Preferences ->
-            foldersNavbar.value =
+            NavBarSection.FOLDERS.isEnabled.value =
                 preferences[FOLDERS_NAVBAR_PREFERENCES_KEY] ?: DEFAULT_FOLDERS_NAVBAR
-            NavBarSection.FOLDERS.isEnabled = foldersNavbar.value
-
-            artistsNavbar.value =
+            NavBarSection.ARTISTS.isEnabled.value =
                 preferences[ARTISTS_NAVBAR_PREFERENCES_KEY] ?: DEFAULT_ARTISTS_NAVBAR
-            NavBarSection.ARTISTS.isEnabled = artistsNavbar.value
-
-            albumsNavbar.value =
+            NavBarSection.ALBUMS.isEnabled.value =
                 preferences[ALBUMS_NAVBAR_PREFERENCES_KEY] ?: DEFAULT_ALBUMS_NAVBAR
-            NavBarSection.ALBUMS.isEnabled = albumsNavbar.value
-
-            genresNavbar.value =
-                preferences[GENRE_NAVBAR_PREFERENCES_KEY] ?: DEFAULT_GENRE_NAVBAR
-            NavBarSection.GENRES.isEnabled = genresNavbar.value
-
-            playlistsNavbar.value =
+            NavBarSection.GENRES.isEnabled.value =
+                preferences[GENRES_NAVBAR_PREFERENCES_KEY] ?: DEFAULT_GENRE_NAVBAR
+            NavBarSection.PLAYLISTS.isEnabled.value =
                 preferences[PLAYLISTS_NAVBAR_PREFERENCES_KEY] ?: DEFAULT_PLAYLIST_NAVBAR
-            NavBarSection.PLAYLISTS.isEnabled = playlistsNavbar.value
 
             defaultNavBarSection = getNavBarSection(preferences[DEFAULT_NAV_BAR_SECTION_KEY])
 
@@ -281,7 +262,7 @@ object SettingsManager {
             5 -> NavBarSection.PLAYLISTS
             else -> DEFAULT_DEFAULT_NAV_BAR_SECTION
         }
-        if (!navBarSection.isEnabled) {
+        if (!navBarSection.isEnabled.value) {
             navBarSection = DEFAULT_DEFAULT_NAV_BAR_SECTION
         }
         return navBarSection
@@ -341,41 +322,42 @@ object SettingsManager {
         when (navBarSection) {
             NavBarSection.FOLDERS -> {
                 context.dataStore.edit { preferences: MutablePreferences ->
-                    foldersNavbar.value = !foldersNavbar.value
-                    preferences[FOLDERS_NAVBAR_PREFERENCES_KEY] = foldersNavbar.value
-                    NavBarSection.FOLDERS.isEnabled = foldersNavbar.value
+                    NavBarSection.FOLDERS.isEnabled.value = !NavBarSection.FOLDERS.isEnabled.value
+                    preferences[FOLDERS_NAVBAR_PREFERENCES_KEY] =
+                        NavBarSection.FOLDERS.isEnabled.value
                 }
             }
 
             NavBarSection.ARTISTS -> {
                 context.dataStore.edit { preferences: MutablePreferences ->
-                    artistsNavbar.value = !artistsNavbar.value
-                    preferences[ARTISTS_NAVBAR_PREFERENCES_KEY] = artistsNavbar.value
-                    NavBarSection.ARTISTS.isEnabled = artistsNavbar.value
+                    NavBarSection.ARTISTS.isEnabled.value = !NavBarSection.ARTISTS.isEnabled.value
+                    preferences[ARTISTS_NAVBAR_PREFERENCES_KEY] =
+                        NavBarSection.ARTISTS.isEnabled.value
                 }
             }
 
             NavBarSection.ALBUMS -> {
                 context.dataStore.edit { preferences: MutablePreferences ->
-                    albumsNavbar.value = !albumsNavbar.value
-                    preferences[ALBUMS_NAVBAR_PREFERENCES_KEY] = albumsNavbar.value
-                    NavBarSection.ALBUMS.isEnabled = albumsNavbar.value
+                    NavBarSection.ALBUMS.isEnabled.value = !NavBarSection.ALBUMS.isEnabled.value
+                    preferences[ALBUMS_NAVBAR_PREFERENCES_KEY] =
+                        NavBarSection.ALBUMS.isEnabled.value
                 }
             }
 
             NavBarSection.GENRES -> {
                 context.dataStore.edit { preferences: MutablePreferences ->
-                    genresNavbar.value = !genresNavbar.value
-                    preferences[GENRE_NAVBAR_PREFERENCES_KEY] = genresNavbar.value
-                    NavBarSection.GENRES.isEnabled = genresNavbar.value
+                    NavBarSection.GENRES.isEnabled.value = !NavBarSection.GENRES.isEnabled.value
+                    preferences[GENRES_NAVBAR_PREFERENCES_KEY] =
+                        NavBarSection.GENRES.isEnabled.value
                 }
             }
 
             NavBarSection.PLAYLISTS -> {
                 context.dataStore.edit { preferences: MutablePreferences ->
-                    playlistsNavbar.value = !playlistsNavbar.value
-                    preferences[PLAYLISTS_NAVBAR_PREFERENCES_KEY] = playlistsNavbar.value
-                    NavBarSection.PLAYLISTS.isEnabled = playlistsNavbar.value
+                    NavBarSection.PLAYLISTS.isEnabled.value =
+                        !NavBarSection.PLAYLISTS.isEnabled.value
+                    preferences[PLAYLISTS_NAVBAR_PREFERENCES_KEY] =
+                        NavBarSection.PLAYLISTS.isEnabled.value
                 }
             }
 
@@ -681,17 +663,12 @@ object SettingsManager {
 
     suspend fun resetNavigationBarSettings(context: Context) {
         context.dataStore.edit { preferences: MutablePreferences ->
-            this.foldersNavbar.value = DEFAULT_FOLDERS_NAVBAR
-            this.artistsNavbar.value = DEFAULT_ARTISTS_NAVBAR
-            this.albumsNavbar.value = DEFAULT_ALBUMS_NAVBAR
-            this.genresNavbar.value = DEFAULT_GENRE_NAVBAR
-            this.playlistsNavbar.value = DEFAULT_PLAYLIST_NAVBAR
             this.defaultNavBarSection = DEFAULT_DEFAULT_NAV_BAR_SECTION
             NavBarSection.enableAll()
             preferences[FOLDERS_NAVBAR_PREFERENCES_KEY] = DEFAULT_FOLDERS_NAVBAR
             preferences[ARTISTS_NAVBAR_PREFERENCES_KEY] = DEFAULT_ARTISTS_NAVBAR
             preferences[ALBUMS_NAVBAR_PREFERENCES_KEY] = DEFAULT_ALBUMS_NAVBAR
-            preferences[GENRE_NAVBAR_PREFERENCES_KEY] = DEFAULT_GENRE_NAVBAR
+            preferences[GENRES_NAVBAR_PREFERENCES_KEY] = DEFAULT_GENRE_NAVBAR
             preferences[PLAYLISTS_NAVBAR_PREFERENCES_KEY] = DEFAULT_PLAYLIST_NAVBAR
             preferences[DEFAULT_NAV_BAR_SECTION_KEY] = DEFAULT_DEFAULT_NAV_BAR_SECTION.id
         }

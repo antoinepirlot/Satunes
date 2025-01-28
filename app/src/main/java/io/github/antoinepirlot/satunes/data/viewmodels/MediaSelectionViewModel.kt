@@ -75,7 +75,7 @@ internal class MediaSelectionViewModel : ViewModel() {
         _checkedPlaylistWithMusics.remove(playlist)
     }
 
-    fun clearCheckedPlaylistWithMusics() {
+    private fun clearCheckedPlaylistWithMusics() {
         _checkedPlaylistWithMusics.clear()
     }
 
@@ -93,7 +93,7 @@ internal class MediaSelectionViewModel : ViewModel() {
         _checkedMusics.remove(music)
     }
 
-    fun clearCheckedMusics() {
+    private fun clearCheckedMusics() {
         _checkedMusics.clear()
     }
 

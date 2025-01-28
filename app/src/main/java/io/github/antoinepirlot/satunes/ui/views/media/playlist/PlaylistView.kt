@@ -122,10 +122,10 @@ internal fun PlaylistView(
                 playlist.title
             }
             Title(text = title)
-            if (playlist.isEmpty()) //TODO reformat how it is implemented
+            if (playlist.isEmpty())
                 EmptyView(text = stringResource(R.string.no_music_in_playlist))
         },
-        emptyViewText = stringResource(id = R.string.no_music_in_playlist)
+        emptyViewText = null
     )
 }
 

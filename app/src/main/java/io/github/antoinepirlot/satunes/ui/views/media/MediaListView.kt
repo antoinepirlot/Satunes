@@ -52,7 +52,7 @@ internal fun MediaListView(
     mediaImplCollection: Collection<MediaImpl>,
     openMedia: (mediaImpl: MediaImpl) -> Unit,
     header: (@Composable () -> Unit)? = null,
-    emptyViewText: String,
+    emptyViewText: String?,
     showGroupIndication: Boolean = true,
     sort: Boolean = true,
 ) {
@@ -75,7 +75,7 @@ internal fun MediaListView(
     } else {
         if (header != null) {
             header()
-        } else {
+        } else if (emptyViewText != null) {
             EmptyView(
                 modifier = modifier,
                 text = emptyViewText

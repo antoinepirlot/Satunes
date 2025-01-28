@@ -111,7 +111,7 @@ private fun updateMediaPlaylists(
             playlists = mediaSelectionViewModel.getCheckedPlaylistWithMusics()
         )
 
-        else -> dataViewModel.insertMusicsToPlaylists(
+        else -> dataViewModel.updateMusicsToPlaylists(
             scope = scope,
             snackBarHostState = snackBarHostState,
             mediaImpl = mediaImpl,

@@ -35,6 +35,8 @@ import io.github.antoinepirlot.satunes.database.exceptions.LikesPlaylistCreation
 import io.github.antoinepirlot.satunes.database.exceptions.MusicNotFoundException
 import io.github.antoinepirlot.satunes.database.exceptions.PlaylistAlreadyExistsException
 import io.github.antoinepirlot.satunes.database.exceptions.PlaylistNotFoundException
+import io.github.antoinepirlot.satunes.database.models.Folder
+import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.database.models.SatunesDatabase
@@ -197,6 +199,31 @@ class DatabaseManager private constructor(context: Context) {
         } catch (e: Throwable) {
             _logger?.severe(e.message)
             throw e
+        }
+    }
+
+    fun updateMediaToPlaylists(mediaImpl: MediaImpl, playlists: Collection<Playlist>) {
+        val musics: Set<Music> = if (mediaImpl is Folder) {
+            mediaImpl.getAllMusic()
+        } else {
+            mediaImpl.getMusicSet()
+        }
+        val allPlaylists: Collection<Playlist> = DataManager.getPlaylistSet()
+        for (playlist: Playlist in allPlaylists) {
+            val newMusicCollection: MutableCollection<Music> = playlist.getMusicSet().toMutableSet()
+            if (playlists.contains(element = playlist)) {
+                //Playlist has been checked
+                newMusicCollection.addAll(elements = playlist.getMusicSet().toMutableSet())
+                newMusicCollection.addAll(elements = musics)
+                this.updatePlaylistMusics(playlist = playlist, newMusicCollection)
+            } else {
+                //Playlist has been unchecked (only remove if all of its music was inside)
+                if (playlist.getMusicSet().containsAll(musics)) {
+                    newMusicCollection.addAll(elements = playlist.getMusicSet().toMutableSet())
+                    newMusicCollection.removeAll(elements = musics)
+                    this.updatePlaylistMusics(playlist = playlist, newMusicCollection)
+                }
+            }
         }
     }
 

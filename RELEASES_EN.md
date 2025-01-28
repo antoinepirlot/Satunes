@@ -1,6 +1,24 @@
 # Releases (🇬🇧)
 Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
+## 3.0 (Android 5.1.1 Lollipop and later)
+
+### 3.0.0-alpha-1
+
+New features:
+
+* Ability to sort media by artist, album and/or genre based on page
+* Display of the first letter in alphabetical order above the first media (with this letter) in the
+  list (can be disabled in library settings)
+
+Improvements, optimizations and troubleshooting:
+
+* Support for Android 15 (Vanilla Ice Cream)
+* Music loading issues causing crashes under some conditions fixed (Concurrent Modification)
+* Satunes's libraries update that involve a slight design change of some elements (like the progress
+  bar)
+* Other indirect optimizations and corrections
+
 ## 2.5 (Android 5.1.1 Lollipop and later)
 
 ### 2.5.2

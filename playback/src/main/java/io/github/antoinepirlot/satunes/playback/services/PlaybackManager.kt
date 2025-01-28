@@ -122,6 +122,7 @@ object PlaybackManager {
             }
             this.initPlayback(context = context, listener = listener, loadAllMusics = true)
         } else {
+            if (this.isLoading.value) return
             if (this.playlist != null) {
                 this.initPlayback(context = context, listener = listener, loadAllMusics = false)
                 this._playbackController!!.loadMusics(playlist = playlist!!)
@@ -145,6 +146,7 @@ object PlaybackManager {
                 this.initPlayback(context = context, listener = listener)
             }
         } else {
+            if (this.isLoading.value) return
             PlaybackController.updateListener(listener = listener)
             if (loadAllMusics) {
                 if (
@@ -278,6 +280,7 @@ object PlaybackManager {
             _logger?.info("MusicSet is already loaded.")
             return
         }
+        if (this.isLoading.value) return
         checkPlaybackController(context = context, loadAllMusics = false)
         this._playbackController!!.loadMusics(
             musics = musics,

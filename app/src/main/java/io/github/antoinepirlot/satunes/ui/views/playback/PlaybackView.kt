@@ -55,7 +55,7 @@ internal fun PlaybackView(
 
     if (playbackViewModel.musicPlaying == null) {
         backToRoot(
-            rootRoute = getNavBarSectionDestination(navBarSection = satunesViewModel.defaultNavBarSection).link,
+            rootRoute = getNavBarSectionDestination(navBarSection = satunesViewModel.defaultNavBarSection),
             navController = navController
         )
         return

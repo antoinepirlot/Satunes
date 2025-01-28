@@ -28,17 +28,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.texts.Title
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.data.states.SatunesUiState
-import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
+import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.models.SwitchSettings
 import io.github.antoinepirlot.satunes.ui.components.settings.SettingsSwitchList
 import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
@@ -50,24 +46,22 @@ import io.github.antoinepirlot.satunes.ui.components.settings.navigation_bar.Def
 
 @Composable
 internal fun BottomNavigationBarSettingsView(
-    modifier: Modifier = Modifier,
-    satunesViewModel: SatunesViewModel = viewModel(),
+    modifier: Modifier = Modifier
 ) {
-    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
 
-    val navBarSectionSettingsChecked: Map<SwitchSettings, Boolean> = mapOf(
-        Pair(first = SwitchSettings.FOLDERS_CHECKED, second = satunesUiState.foldersChecked),
-        Pair(first = SwitchSettings.ARTISTS_CHECKED, second = satunesUiState.artistsChecked),
-        Pair(first = SwitchSettings.ALBUMS_CHECKED, second = satunesUiState.albumsChecked),
-        Pair(first = SwitchSettings.GENRES_CHECKED, second = satunesUiState.genresChecked),
-        Pair(first = SwitchSettings.PLAYLISTS_CHECKED, second = satunesUiState.playlistsChecked),
+    val navBarSectionSettingsChecked: Map<SwitchSettings, NavBarSection> = mapOf(
+        Pair(first = SwitchSettings.FOLDERS_NAVBAR, second = NavBarSection.FOLDERS),
+        Pair(first = SwitchSettings.ARTISTS_NAVBAR, second = NavBarSection.ARTISTS),
+        Pair(first = SwitchSettings.ALBUMS_NAVBAR, second = NavBarSection.ALBUMS),
+        Pair(first = SwitchSettings.GENRES_NAVBAR, second = NavBarSection.GENRES),
+        Pair(first = SwitchSettings.PLAYLISTS_NAVBAR, second = NavBarSection.PLAYLISTS)
     )
 
     val scrollState: ScrollState = rememberScrollState()
     Column(modifier = modifier.verticalScroll(scrollState)) {
         Title(text = stringResource(id = R.string.navigation_bar_settings_title))
         SubSettings {
-            SettingsSwitchList(checkedMap = navBarSectionSettingsChecked)
+            SettingsSwitchList(navbarMap = navBarSectionSettingsChecked)
             DefaultNavBarSectionSetting(modifier = Modifier.padding(horizontal = 16.dp))
         }
     }

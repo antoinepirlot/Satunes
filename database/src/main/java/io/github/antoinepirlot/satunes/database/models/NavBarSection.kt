@@ -22,6 +22,8 @@
 
 package io.github.antoinepirlot.satunes.database.models
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import io.github.antoinepirlot.satunes.database.R
 
 /**
@@ -31,7 +33,7 @@ import io.github.antoinepirlot.satunes.database.R
 enum class NavBarSection(
     internal val id: Int,
     open val stringId: Int,
-    var isEnabled: Boolean = true
+    var isEnabled: MutableState<Boolean> = mutableStateOf(true)
 ) {
     FOLDERS(id = 0, stringId = R.string.folders),
     ARTISTS(id = 1, stringId = R.string.artists),
@@ -42,12 +44,12 @@ enum class NavBarSection(
 
     companion object {
         fun enableAll() {
-            FOLDERS.isEnabled = true
-            ARTISTS.isEnabled = true
-            MUSICS.isEnabled = true
-            ALBUMS.isEnabled = true
-            GENRES.isEnabled = true
-            PLAYLISTS.isEnabled = true
+            FOLDERS.isEnabled.value = true
+            ARTISTS.isEnabled.value = true
+            MUSICS.isEnabled.value = true
+            ALBUMS.isEnabled.value = true
+            GENRES.isEnabled.value = true
+            PLAYLISTS.isEnabled.value = true
         }
     }
 }

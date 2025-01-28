@@ -35,12 +35,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
-import io.github.antoinepirlot.satunes.data.playbackViews
-import io.github.antoinepirlot.satunes.data.settingsDestinations
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.models.Destination
+import io.github.antoinepirlot.satunes.models.DestinationCategory
 import io.github.antoinepirlot.satunes.ui.utils.getRightIconAndDescription
 
 /**
@@ -59,8 +58,8 @@ internal fun RowScope.MediaNavBarSelection(
     val selectedNavBarSection: NavBarSection = satunesUiState.selectedNavBarSection
     val currentDestination: Destination = satunesUiState.currentDestination
 
-    val selectedCanBeShown: Boolean = currentDestination !in settingsDestinations
-            && currentDestination !in playbackViews
+    val selectedCanBeShown: Boolean = currentDestination.category != DestinationCategory.SETTING
+            && currentDestination.category != DestinationCategory.PLAYBACK
             && currentDestination != Destination.SEARCH
 
     NavigationBarItem(
@@ -71,16 +70,17 @@ internal fun RowScope.MediaNavBarSelection(
         selected = selectedCanBeShown && selectedNavBarSection == navBarSection,
         onClick = {
             satunesViewModel.selectNavBarSection(navBarSection = navBarSection)
-            val rootRoute: String = when (navBarSection) {
-                NavBarSection.FOLDERS -> Destination.FOLDERS.link
-                NavBarSection.ARTISTS -> Destination.ARTISTS.link
-                NavBarSection.ALBUMS -> Destination.ALBUMS.link
-                NavBarSection.GENRES -> Destination.GENRES.link
-                NavBarSection.PLAYLISTS -> Destination.PLAYLISTS.link
-                NavBarSection.MUSICS -> Destination.MUSICS.link
+            val rootRoute: Destination = when (navBarSection) {
+                NavBarSection.FOLDERS -> Destination.FOLDERS
+                NavBarSection.ARTISTS -> Destination.ARTISTS
+                NavBarSection.ALBUMS -> Destination.ALBUMS
+                NavBarSection.GENRES -> Destination.GENRES
+                NavBarSection.PLAYLISTS -> Destination.PLAYLISTS
+                NavBarSection.MUSICS -> Destination.MUSICS
 
             }
             backToRoot(rootRoute = rootRoute, navController = navController)
+            println("Current dest is: ${satunesUiState.currentDestination}")
         },
         icon = {
             val pair = getRightIconAndDescription(navBarSection = navBarSection)
@@ -100,19 +100,16 @@ internal fun RowScope.MediaNavBarSelection(
  * @param rootRoute the root route to go
  */
 internal fun backToRoot(
-    rootRoute: String,
+    rootRoute: Destination,
     navController: NavHostController
 ) {
     var currentRoute: String? = navController.currentBackStackEntry?.destination?.route
-    if (currentRoute != rootRoute) {
-        while (currentRoute != null && currentRoute != rootRoute) {
-            navController.popBackStack()
-            currentRoute = navController.currentBackStackEntry?.destination?.route
-        }
-        if (currentRoute == null) {
-            navController.navigate(rootRoute)
-        }
+    if (currentRoute == rootRoute.link) return
+    while (currentRoute != null) {
+        navController.popBackStack()
+        currentRoute = navController.currentBackStackEntry?.destination?.route
     }
+    navController.navigate(rootRoute.link)
 }
 
 @Preview

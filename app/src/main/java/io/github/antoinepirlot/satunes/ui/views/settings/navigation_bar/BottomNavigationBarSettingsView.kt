@@ -56,11 +56,11 @@ internal fun BottomNavigationBarSettingsView(
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
 
     val navBarSectionSettingsChecked: Map<SwitchSettings, Boolean> = mapOf(
-        Pair(first = SwitchSettings.FOLDERS_CHECKED, second = satunesUiState.foldersChecked),
-        Pair(first = SwitchSettings.ARTISTS_CHECKED, second = satunesUiState.artistsChecked),
-        Pair(first = SwitchSettings.ALBUMS_CHECKED, second = satunesUiState.albumsChecked),
-        Pair(first = SwitchSettings.GENRES_CHECKED, second = satunesUiState.genresChecked),
-        Pair(first = SwitchSettings.PLAYLISTS_CHECKED, second = satunesUiState.playlistsChecked),
+        Pair(first = SwitchSettings.FOLDERS_NAVBAR, second = satunesUiState.foldersNavbar),
+        Pair(first = SwitchSettings.ARTISTS_NAVBAR, second = satunesUiState.artistsNavbar),
+        Pair(first = SwitchSettings.ALBUMS_NAVBAR, second = satunesUiState.albumsNavbar),
+        Pair(first = SwitchSettings.GENRES_NAVBAR, second = satunesUiState.genresNavbar),
+        Pair(first = SwitchSettings.PLAYLISTS_NAVBAR, second = satunesUiState.playlistsNavbar),
     )
 
     val scrollState: ScrollState = rememberScrollState()

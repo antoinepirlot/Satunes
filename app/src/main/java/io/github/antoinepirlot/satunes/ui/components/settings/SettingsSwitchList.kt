@@ -85,31 +85,31 @@ private fun switchSetting(
     setting: SwitchSettings
 ) {
     when (setting) {
-        SwitchSettings.FOLDERS_CHECKED -> {
+        SwitchSettings.FOLDERS_NAVBAR -> {
             satunesViewModel.switchNavBarSection(
                 navBarSection = NavBarSection.FOLDERS
             )
         }
 
-        SwitchSettings.ARTISTS_CHECKED -> {
+        SwitchSettings.ARTISTS_NAVBAR -> {
             satunesViewModel.switchNavBarSection(
                 navBarSection = NavBarSection.ARTISTS
             )
         }
 
-        SwitchSettings.ALBUMS_CHECKED -> {
+        SwitchSettings.ALBUMS_NAVBAR -> {
             satunesViewModel.switchNavBarSection(
                 navBarSection = NavBarSection.ALBUMS
             )
         }
 
-        SwitchSettings.GENRES_CHECKED -> {
+        SwitchSettings.GENRES_NAVBAR -> {
             satunesViewModel.switchNavBarSection(
                 navBarSection = NavBarSection.GENRES
             )
         }
 
-        SwitchSettings.PLAYLISTS_CHECKED -> {
+        SwitchSettings.PLAYLISTS_NAVBAR -> {
             satunesViewModel.switchNavBarSection(
                 navBarSection = NavBarSection.PLAYLISTS
             )

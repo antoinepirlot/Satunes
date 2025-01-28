@@ -83,11 +83,11 @@ internal class SatunesViewModel : ViewModel() {
         mutableStateOf(_uiState.value.defaultNavBarSection)
 
     //Use this only for nav bar items as it won't refresh if uiState is updated, idk why.
-    private val _foldersChecked: MutableState<Boolean> = SettingsManager.foldersChecked
-    private val _artistsChecked: MutableState<Boolean> = SettingsManager.artistsChecked
-    private val _albumsChecked: MutableState<Boolean> = SettingsManager.albumsChecked
-    private val _genresChecked: MutableState<Boolean> = SettingsManager.genresChecked
-    private val _playlistsChecked: MutableState<Boolean> = SettingsManager.playlistsChecked
+    private val _foldersChecked: MutableState<Boolean> = SettingsManager.foldersNavbar
+    private val _artistsChecked: MutableState<Boolean> = SettingsManager.artistsNavbar
+    private val _albumsChecked: MutableState<Boolean> = SettingsManager.albumsNavbar
+    private val _genresChecked: MutableState<Boolean> = SettingsManager.genresNavbar
+    private val _playlistsChecked: MutableState<Boolean> = SettingsManager.playlistsNavbar
 
     @RequiresApi(Build.VERSION_CODES.M)
     private val _updateAvailableStatus: MutableState<UpdateAvailableStatus> =
@@ -234,11 +234,11 @@ internal class SatunesViewModel : ViewModel() {
             }
             _uiState.update { currentState: SatunesUiState ->
                 currentState.copy(
-                    foldersChecked = SettingsManager.foldersChecked.value,
-                    artistsChecked = SettingsManager.artistsChecked.value,
-                    albumsChecked = SettingsManager.albumsChecked.value,
-                    genresChecked = SettingsManager.genresChecked.value,
-                    playlistsChecked = SettingsManager.playlistsChecked.value,
+                    foldersNavbar = SettingsManager.foldersNavbar.value,
+                    artistsNavbar = SettingsManager.artistsNavbar.value,
+                    albumsNavbar = SettingsManager.albumsNavbar.value,
+                    genresNavbar = SettingsManager.genresNavbar.value,
+                    playlistsNavbar = SettingsManager.playlistsNavbar.value,
                 )
             }
         } catch (e: Throwable) {

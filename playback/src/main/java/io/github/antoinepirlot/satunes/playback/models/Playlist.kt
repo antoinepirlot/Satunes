@@ -32,7 +32,6 @@ import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
  * @author Antoine Pirlot on 18/02/24
  */
 
-//TODO refactor and clarify the usage of original map
 internal class Playlist(musics: Collection<Music>) {
     private val originalMusicMediaItemMap: MutableMap<Music, MediaItem> = mutableMapOf()
     val musicList: SnapshotStateList<Music> = SnapshotStateList()

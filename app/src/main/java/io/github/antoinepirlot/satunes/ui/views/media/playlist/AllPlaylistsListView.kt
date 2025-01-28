@@ -25,6 +25,7 @@ package io.github.antoinepirlot.satunes.ui.views.media.playlist
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -66,21 +67,23 @@ internal fun PlaylistListView(
     val navController: NavHostController = LocalNavController.current
     var openAlertDialog by remember { mutableStateOf(false) }
 
-    satunesViewModel.replaceExtraButtons {
-        ExtraButton(
-            icon = SatunesIcons.EXPORT,
-            onClick = {
-                dataViewModel.exportPlaylists(
-                    scope = scope,
-                    snackBarHostState = snackBarHostState
-                )
-            }
-        )
-        ExtraButton(
-            icon = SatunesIcons.IMPORT,
-            onClick = { dataViewModel.importPlaylists() }
-        )
-        ExtraButton(icon = SatunesIcons.PLAYLIST_ADD, onClick = { openAlertDialog = true })
+    LaunchedEffect(key1 = dataViewModel.isLoaded) {
+        satunesViewModel.replaceExtraButtons {
+            ExtraButton(
+                icon = SatunesIcons.EXPORT,
+                onClick = {
+                    dataViewModel.exportPlaylists(
+                        scope = scope,
+                        snackBarHostState = snackBarHostState
+                    )
+                }
+            )
+            ExtraButton(
+                icon = SatunesIcons.IMPORT,
+                onClick = { dataViewModel.importPlaylists() }
+            )
+            ExtraButton(icon = SatunesIcons.PLAYLIST_ADD, onClick = { openAlertDialog = true })
+        }
     }
 
     Column(modifier = modifier) {

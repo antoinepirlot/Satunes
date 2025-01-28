@@ -23,6 +23,7 @@
 package io.github.antoinepirlot.satunes.ui.views.media.album
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -53,12 +54,14 @@ internal fun AllAlbumsListView(
     val navController: NavHostController = LocalNavController.current
     val albumSet: Set<Album> = dataViewModel.getAlbumSet()
 
-    if (albumSet.isNotEmpty())
-        satunesViewModel.replaceExtraButtons(extraButtons = {
-            ExtraButtonList(mediaImplCollection = albumSet)
-        })
-    else
-        satunesViewModel.clearExtraButtons()
+    LaunchedEffect(key1 = dataViewModel.isLoaded) {
+        if (albumSet.isNotEmpty())
+            satunesViewModel.replaceExtraButtons(extraButtons = {
+                ExtraButtonList(mediaImplCollection = albumSet)
+            })
+        else
+            satunesViewModel.clearExtraButtons()
+    }
 
     MediaListView(
         modifier = modifier,

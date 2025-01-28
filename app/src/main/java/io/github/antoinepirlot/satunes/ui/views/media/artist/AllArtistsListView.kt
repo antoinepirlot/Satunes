@@ -23,6 +23,7 @@
 package io.github.antoinepirlot.satunes.ui.views.media.artist
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -53,12 +54,14 @@ internal fun AllArtistsListView(
     val navController: NavHostController = LocalNavController.current
     val artistSet: Set<Artist> = dataViewModel.getArtistSet()
 
-    if (artistSet.isNotEmpty())
-        satunesViewModel.replaceExtraButtons(extraButtons = {
-            ExtraButtonList(mediaImplCollection = artistSet)
-        })
-    else
-        satunesViewModel.clearExtraButtons()
+    LaunchedEffect(key1 = dataViewModel.isLoaded) {
+        if (artistSet.isNotEmpty())
+            satunesViewModel.replaceExtraButtons(extraButtons = {
+                ExtraButtonList(mediaImplCollection = artistSet)
+            })
+        else
+            satunesViewModel.clearExtraButtons()
+    }
 
     MediaListView(
         modifier = modifier,

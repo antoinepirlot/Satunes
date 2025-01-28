@@ -46,8 +46,8 @@ import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.EmptyView
-import io.github.antoinepirlot.satunes.ui.components.bars.bottom.PlaylistExtraButtonList
 import io.github.antoinepirlot.satunes.ui.components.buttons.fab.ExtraButtonList
+import io.github.antoinepirlot.satunes.ui.components.buttons.fab.PlaylistExtraButtonList
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 import io.github.antoinepirlot.satunes.database.R as RDb
 

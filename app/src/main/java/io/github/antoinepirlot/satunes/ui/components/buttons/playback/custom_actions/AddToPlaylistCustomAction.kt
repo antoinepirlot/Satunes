@@ -87,6 +87,7 @@ internal fun AddToPlaylistCustomAction(
                 showForm = false
             },
             mediaImplCollection = playlistMap,
+            mediaDestination = music,
             icon = SatunesIcons.PLAYLIST_ADD
         )
     }

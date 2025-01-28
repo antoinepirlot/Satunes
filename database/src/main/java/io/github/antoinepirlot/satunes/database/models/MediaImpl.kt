@@ -59,6 +59,10 @@ abstract class MediaImpl(
         return this.musicSortedSet
     }
 
+    fun contains(music: Music): Boolean {
+        return this.getMusicSet().contains(music)
+    }
+
     fun addMusic(music: Music) {
         if (!this.musicSortedSet.contains(element = music)) {
             this.musicSortedSet.add(element = music)

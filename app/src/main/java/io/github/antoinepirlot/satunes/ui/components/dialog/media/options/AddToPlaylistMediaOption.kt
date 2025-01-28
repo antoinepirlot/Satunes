@@ -90,6 +90,7 @@ internal fun AddToPlaylistMediaOption(
                 onFinished()
             },
             mediaImplCollection = playlistSet,
+            mediaDestination = mediaImpl,
             icon = SatunesIcons.PLAYLIST_ADD,
         )
     }

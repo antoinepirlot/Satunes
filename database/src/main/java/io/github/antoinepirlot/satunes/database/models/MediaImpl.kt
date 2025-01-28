@@ -64,8 +64,12 @@ abstract class MediaImpl(
         this.musicSetUpdated.value = true
     }
 
-    fun contains(music: Music): Boolean {
-        return this.getMusicSet().contains(music)
+    fun contains(mediaImpl: MediaImpl): Boolean {
+        return when (mediaImpl) {
+            is Music -> this.getMusicSet().contains(mediaImpl)
+            is Folder -> this.getMusicSet().containsAll(elements = mediaImpl.getAllMusic())
+            else -> this.getMusicSet().containsAll(elements = mediaImpl.getMusicSet())
+        }
     }
 
     fun addMusic(music: Music) {

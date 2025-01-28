@@ -103,18 +103,26 @@ class MediaSelectionViewModel : ViewModel() {
         }
     }
 
+    /**
+     * Checks if the mediaImpl is selected. If it was already present in the [_currentMediaImpl]
+     * then it add it to [_checkedMusics] or [_checkedPlaylistWithMusics].
+     */
     fun isChecked(mediaImpl: MediaImpl): Boolean {
         return when (mediaImpl) {
             is Music -> {
                 //Check in playlist
-                (_currentMediaImpl as Playlist).contains(mediaImpl) ||
-                        this._checkedMusics.contains(element = mediaImpl)
+                if ((_currentMediaImpl as Playlist).contains(music = mediaImpl)) {
+                    this.addMusic(music = mediaImpl)
+                    true
+                } else this._checkedMusics.contains(element = mediaImpl)
             }
 
             is Playlist -> {
                 //Check for selected music
-                mediaImpl.contains(_currentMediaImpl as Music) ||
-                        this._checkedPlaylistWithMusics.contains(element = mediaImpl)
+                if (mediaImpl.contains(music = _currentMediaImpl as Music)) {
+                    this.addPlaylist(playlist = mediaImpl)
+                    true
+                } else this._checkedPlaylistWithMusics.contains(element = mediaImpl)
             }
 
             else -> throw IllegalArgumentException("The media is not a music or playlist")

@@ -93,7 +93,8 @@ private fun Menu(
         onDismissRequest = onDismissRequest
     ) {
         for (navBarSection: NavBarSection in allNavBarSections) {
-            if (navBarSection.isEnabled) {
+            val isEnabled: Boolean by navBarSection.isEnabled
+            if (isEnabled) {
                 DropdownMenuItem(
                     text = { NormalText(text = stringResource(id = navBarSection.stringId)) },
                     onClick = {

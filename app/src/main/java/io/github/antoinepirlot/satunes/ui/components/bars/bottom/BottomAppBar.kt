@@ -27,13 +27,12 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.NavigationBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.models.ScreenSizes
-import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.ui.components.bars.MediaNavBarSelection
 
@@ -43,8 +42,7 @@ import io.github.antoinepirlot.satunes.ui.components.bars.MediaNavBarSelection
 
 @Composable
 internal fun BottomAppBar(
-    modifier: Modifier = Modifier,
-    satunesViewModel: SatunesViewModel = viewModel(),
+    modifier: Modifier = Modifier
 ) {
     val screenWidthDp = LocalConfiguration.current.screenWidthDp
     val navigationModifier: Modifier =
@@ -52,18 +50,19 @@ internal fun BottomAppBar(
     val navigationItemModifier: Modifier =
         if (screenWidthDp < ScreenSizes.VERY_VERY_SMALL) Modifier.size(16.dp) else Modifier
 
-    val navBarSections: Map<NavBarSection, Boolean> = mapOf(
-        Pair(NavBarSection.FOLDERS, satunesViewModel.foldersChecked),
-        Pair(NavBarSection.ARTISTS, satunesViewModel.artistsChecked),
-        Pair(NavBarSection.ALBUMS, satunesViewModel.albumsChecked),
-        Pair(NavBarSection.GENRES, satunesViewModel.genresChecked),
-        Pair(NavBarSection.MUSICS, true), // Music is always checked
-        Pair(NavBarSection.PLAYLISTS, satunesViewModel.playlistsChecked)
+    val navBarSections: List<NavBarSection> = listOf(
+        NavBarSection.FOLDERS,
+        NavBarSection.ARTISTS,
+        NavBarSection.ALBUMS,
+        NavBarSection.GENRES,
+        NavBarSection.MUSICS,
+        NavBarSection.PLAYLISTS,
     )
 
     NavigationBar(modifier = navigationModifier) {
-        for ((navBarSection: NavBarSection, visible: Boolean) in navBarSections) {
-            if (visible) {
+        for (navBarSection: NavBarSection in navBarSections) {
+            val isEnabled: Boolean by navBarSection.isEnabled
+            if (isEnabled) {
                 MediaNavBarSelection(
                     modifier = navigationItemModifier,
                     navBarSection = navBarSection

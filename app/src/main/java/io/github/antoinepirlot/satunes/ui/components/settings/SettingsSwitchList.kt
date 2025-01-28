@@ -50,12 +50,12 @@ internal fun SettingsSwitchList(
 ) {
     val searchUiState: SearchUiState by searchViewModel.uiState.collectAsState()
     Column(modifier = modifier) {
-        for (setting: SwitchSettings in checkedMap.keys) {
+        for ((setting: SwitchSettings, checked: Boolean) in checkedMap) {
             ListItem( //Has always horizontal padding of 16.dp
                 headlineContent = {
                     SettingWithSwitch(
                         setting = setting,
-                        checked = checkedMap[setting]!!,
+                        checked = checked,
                         onCheckedChange = {
                             switchSetting(
                                 satunesViewModel = satunesViewModel,
@@ -72,6 +72,19 @@ internal fun SettingsSwitchList(
 }
 
 @Composable
+internal fun SettingsSwitchList(
+    modifier: Modifier = Modifier,
+    navbarMap: Map<SwitchSettings, NavBarSection>
+) {
+    val checkedMap: MutableMap<SwitchSettings, Boolean> = mutableMapOf()
+    for ((setting: SwitchSettings, navbarSection: NavBarSection) in navbarMap) {
+        val isEnabled by navbarSection.isEnabled
+        checkedMap[setting] = isEnabled
+    }
+    SettingsSwitchList(modifier = modifier, checkedMap = checkedMap.toMap())
+}
+
+@Composable
 @Preview
 private fun SettingsSwitchListPreview() {
     SettingsSwitchList(checkedMap = mapOf())
@@ -85,31 +98,31 @@ private fun switchSetting(
     setting: SwitchSettings
 ) {
     when (setting) {
-        SwitchSettings.FOLDERS_CHECKED -> {
+        SwitchSettings.FOLDERS_NAVBAR -> {
             satunesViewModel.switchNavBarSection(
                 navBarSection = NavBarSection.FOLDERS
             )
         }
 
-        SwitchSettings.ARTISTS_CHECKED -> {
+        SwitchSettings.ARTISTS_NAVBAR -> {
             satunesViewModel.switchNavBarSection(
                 navBarSection = NavBarSection.ARTISTS
             )
         }
 
-        SwitchSettings.ALBUMS_CHECKED -> {
+        SwitchSettings.ALBUMS_NAVBAR -> {
             satunesViewModel.switchNavBarSection(
                 navBarSection = NavBarSection.ALBUMS
             )
         }
 
-        SwitchSettings.GENRES_CHECKED -> {
+        SwitchSettings.GENRES_NAVBAR -> {
             satunesViewModel.switchNavBarSection(
                 navBarSection = NavBarSection.GENRES
             )
         }
 
-        SwitchSettings.PLAYLISTS_CHECKED -> {
+        SwitchSettings.PLAYLISTS_NAVBAR -> {
             satunesViewModel.switchNavBarSection(
                 navBarSection = NavBarSection.PLAYLISTS
             )

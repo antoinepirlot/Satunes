@@ -31,6 +31,11 @@ class Playlist(
     id: Long, // Managed by Database
     title: String
 ) : MediaImpl(id = id, title = title) {
+
+    fun contains(music: Music): Boolean {
+        return this.getMusicSet().contains(music)
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

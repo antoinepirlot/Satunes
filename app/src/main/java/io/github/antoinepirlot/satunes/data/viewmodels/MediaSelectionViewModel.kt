@@ -24,6 +24,7 @@ package io.github.antoinepirlot.satunes.data.viewmodels
 
 import androidx.lifecycle.ViewModel
 import io.github.antoinepirlot.satunes.data.states.MediaSelectionUiState
+import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
@@ -94,9 +95,14 @@ internal class MediaSelectionViewModel : ViewModel() {
         }
     }
 
-    fun isChecked(mediaImpl: MediaImpl): Boolean {
+    fun isChecked(satunesUiState: SatunesUiState, mediaImpl: MediaImpl): Boolean {
         return when (mediaImpl) {
-            is Music -> this._checkedMusics.contains(element = mediaImpl)
+            is Music -> {
+                //Check in playlist
+                val currentPlaylist: Playlist? = satunesUiState.currentMediaImpl as Playlist?
+                if (currentPlaylist != null && currentPlaylist.contains(mediaImpl)) true
+                else this._checkedMusics.contains(element = mediaImpl)
+            }
             is Playlist -> this._checkedPlaylistWithMusics.contains(element = mediaImpl)
             else -> throw IllegalArgumentException("The media is not a music or playlist")
         }

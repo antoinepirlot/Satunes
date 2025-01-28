@@ -71,13 +71,13 @@ internal fun RowScope.MediaNavBarSelection(
         selected = selectedCanBeShown && selectedNavBarSection == navBarSection,
         onClick = {
             satunesViewModel.selectNavBarSection(navBarSection = navBarSection)
-            val rootRoute: String = when (navBarSection) {
-                NavBarSection.FOLDERS -> Destination.FOLDERS.link
-                NavBarSection.ARTISTS -> Destination.ARTISTS.link
-                NavBarSection.ALBUMS -> Destination.ALBUMS.link
-                NavBarSection.GENRES -> Destination.GENRES.link
-                NavBarSection.PLAYLISTS -> Destination.PLAYLISTS.link
-                NavBarSection.MUSICS -> Destination.MUSICS.link
+            val rootRoute: Destination = when (navBarSection) {
+                NavBarSection.FOLDERS -> Destination.FOLDERS
+                NavBarSection.ARTISTS -> Destination.ARTISTS
+                NavBarSection.ALBUMS -> Destination.ALBUMS
+                NavBarSection.GENRES -> Destination.GENRES
+                NavBarSection.PLAYLISTS -> Destination.PLAYLISTS
+                NavBarSection.MUSICS -> Destination.MUSICS
 
             }
             backToRoot(rootRoute = rootRoute, navController = navController)
@@ -101,16 +101,16 @@ internal fun RowScope.MediaNavBarSelection(
  * @param rootRoute the root route to go
  */
 internal fun backToRoot(
-    rootRoute: String,
+    rootRoute: Destination,
     navController: NavHostController
 ) {
     var currentRoute: String? = navController.currentBackStackEntry?.destination?.route
-    if (currentRoute == rootRoute) return
+    if (currentRoute == rootRoute.link) return
     while (currentRoute != null) {
         navController.popBackStack()
         currentRoute = navController.currentBackStackEntry?.destination?.route
     }
-    navController.navigate(rootRoute)
+    navController.navigate(rootRoute.link)
 }
 
 @Preview

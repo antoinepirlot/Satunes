@@ -32,12 +32,14 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.texts.Title
+import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.states.DataUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
@@ -93,7 +95,7 @@ internal fun MediaCardList(
         state = lazyListState
     ) {
         //Used to store dynamically the first media impl linked to the first occurrence of a letter or media impl.
-        val groupMap: MutableMap<Any, MediaImpl>? =
+        val groupMap: MutableMap<Any?, MediaImpl>? =
             if (showGroupIndication) mutableMapOf() else null
 
         items(
@@ -103,21 +105,31 @@ internal fun MediaCardList(
             if (media == mediaImplList.first()) header?.invoke()
 
             if (showFirstLetter && showGroupIndication) {
-                if (sortOption == SortOptions.GENRE) {
-                    if (media is Music) {
-                        FirstGenre(
+                when (sortOption) {
+                    SortOptions.GENRE -> {
+                        if (media is Music) {
+                            FirstGenre(
+                                map = groupMap!!,
+                                mediaImpl = media,
+                                mediaImplList = mediaImplList,
+                            )
+                        }
+                    }
+
+                    SortOptions.YEAR -> FirstYear(
+                        map = groupMap!!,
+                        mediaImpl = media,
+                        mediaImplList = mediaImplList
+                    )
+
+                    else -> {
+                        FirstLetter(
                             map = groupMap!!,
                             mediaImpl = media,
                             mediaImplList = mediaImplList,
+                            sortOption = sortOption
                         )
                     }
-                } else {
-                    FirstLetter(
-                        map = groupMap!!,
-                        mediaImpl = media,
-                        mediaImplList = mediaImplList,
-                        sortOption = sortOption
-                    )
                 }
             }
             MediaCard(
@@ -146,7 +158,7 @@ internal fun MediaCardList(
 @Suppress("NAME_SHADOWING")
 @Composable
 private fun FirstLetter(
-    map: MutableMap<Any, MediaImpl>,
+    map: MutableMap<Any?, MediaImpl>,
     mediaImpl: MediaImpl,
     mediaImplList: List<MediaImpl>,
     sortOption: SortOptions
@@ -200,7 +212,7 @@ private fun getTitleToCompare(mediaImpl: MediaImpl, sortOption: SortOptions): St
  */
 @Composable
 private fun FirstGenre(
-    map: MutableMap<Any, MediaImpl>,
+    map: MutableMap<Any?, MediaImpl>,
     mediaImpl: Music,
     mediaImplList: List<MediaImpl>
 ) {
@@ -214,6 +226,36 @@ private fun FirstGenre(
             fontSize = 30.sp,
             textAlign = TextAlign.Center,
             text = mediaImplToCompare.title
+        )
+    }
+}
+
+@Composable
+private fun FirstYear(
+    map: MutableMap<Any?, MediaImpl>,
+    mediaImpl: MediaImpl,
+    mediaImplList: List<MediaImpl>
+) {
+    val yearToCompare: Int? = when (mediaImpl) {
+        is Music -> mediaImpl.year
+        is Album -> mediaImpl.year
+        else -> throw UnsupportedOperationException()
+    }
+    if (!map.containsKey(key = yearToCompare))
+        map[yearToCompare] = mediaImplList.first {
+            when (it) {
+                is Music -> it.year == yearToCompare
+                is Album -> it.year == yearToCompare
+                else -> false
+            }
+        }
+    if (mediaImpl == map[yearToCompare]) {
+        Title(
+            modifier = Modifier.padding(start = 34.dp),
+            bottomPadding = 0.dp,
+            fontSize = 30.sp,
+            textAlign = TextAlign.Center,
+            text = yearToCompare?.toString() ?: stringResource(R.string.unknown_year)
         )
     }
 }

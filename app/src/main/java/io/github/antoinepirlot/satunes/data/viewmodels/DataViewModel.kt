@@ -1055,21 +1055,4 @@ class DataViewModel : ViewModel() {
             currentState.copy(mediaImplListToShow = mediaImplListToShow)
         }
     }
-
-    /**
-     * Sort the media impl list by sortOption.
-     *
-     * @param sortOption the option to sort the [List] of [MediaImpl] with the [SortOptions].
-     *
-     */
-    private fun sortMediaImplListToShowBy(
-        sortOption: SortOptions,
-    ) {
-        _uiState.update { currentState: DataUiState ->
-            currentState.copy(
-                mediaImplListToShow = currentState
-                    .mediaImplListToShow.sortedWith(comparator = sortOption.comparator!!)
-            )
-        }
-    }
 }

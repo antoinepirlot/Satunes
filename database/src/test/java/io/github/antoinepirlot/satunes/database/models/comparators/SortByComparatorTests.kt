@@ -32,11 +32,12 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
-class SortByArtistComparatorTests {
-    private val _musics: MutableCollection<Music> = mutableSetOf()
+class SortByComparatorTests {
+    private val _musics: Collection<Music>
 
     init {
         SatunesLogger.enabled = false
+        val collection: MutableCollection<Music> = mutableSetOf()
         for (i: Long in 0L..1000L) {
 
             val artist = Artist(getRandomWord())
@@ -47,6 +48,7 @@ class SortByArtistComparatorTests {
                 getRandomPath(),
                 (1L..9000L).random(),
                 (1..9000).random(),
+                if ((0..30).random() == (0..30).random()) null else (1900..2025).random(),
                 null,
                 Folder(getRandomWord()),
                 artist,
@@ -54,8 +56,9 @@ class SortByArtistComparatorTests {
                 Genre(getRandomWord()),
                 uri = null
             )
-            _musics.add(music)
+            collection.add(music)
         }
+        _musics = collection.toSet()
     }
 
     private fun getRandomWord(): String {
@@ -74,7 +77,7 @@ class SortByArtistComparatorTests {
     }
 
     @Test
-    fun sortTest() {
+    fun sortByArtistsTest() {
         val sortedList: List<Music> = _musics.sortedWith(SortByArtistComparator)
 
         var lastMusic: Music = sortedList[0]
@@ -98,6 +101,21 @@ class SortByArtistComparatorTests {
                 else if (artistTitleCmp > 0) assertTrue(cmp > 0)
                 else assertTrue(cmp < 0)
             }
+            lastMusic = currentMusic
+        }
+    }
+
+    @Test
+    fun sortByYearTest() {
+        val sortedList: List<Music> = _musics.sortedWith(SortByYearComparator)
+
+        var lastMusic: Music = sortedList[0]
+        for (i: Int in 1..<sortedList.size) {
+            val currentMusic: Music = sortedList[i]
+            val lastMusicYear: Int? = lastMusic.year
+            val currentMusicYear: Int? = currentMusic.year
+            if (lastMusicYear == null) assertTrue(currentMusicYear == null)
+            else if (currentMusicYear != null) assertTrue(lastMusicYear >= currentMusicYear)
             lastMusic = currentMusic
         }
     }

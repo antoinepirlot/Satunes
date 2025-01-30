@@ -23,6 +23,7 @@
 package io.github.antoinepirlot.satunes.router.utils
 
 import androidx.navigation.NavHostController
+import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
@@ -50,22 +51,16 @@ import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
  * @param media the mediaImpl to open
  */
 internal fun openMedia(
+    satunesUiState: SatunesUiState,
     playbackViewModel: PlaybackViewModel,
     media: MediaImpl? = null,
-    navigate: Boolean = true,
-    navController: NavHostController?,
+    navController: NavHostController,
 ) {
     if (media == null || media is Music) {
         startMusic(playbackViewModel = playbackViewModel, mediaToPlay = media)
     }
-    if (navigate) {
-        if (navController == null) {
-            val message = "navController can't be null if you navigate"
-            SatunesLogger.getLogger()?.severe(message)
-            throw IllegalArgumentException(message)
-        }
+    if (satunesUiState.currentDestination != Destination.PLAYBACK)
         navController.navigate(getDestinationOf(media))
-    }
 }
 
 /**
@@ -75,9 +70,10 @@ internal fun openMedia(
  *      Folder: navigate to the folder's view
  */
 internal fun openMediaFromFolder(
-    media: MediaImpl,
+    satunesUiState: SatunesUiState,
     playbackViewModel: PlaybackViewModel,
-    navController: NavHostController
+    navController: NavHostController,
+    media: MediaImpl,
 ) {
     when (media) {
         is Music -> {
@@ -86,9 +82,10 @@ internal fun openMediaFromFolder(
                 musicToPlay = media
             )
             openMedia(
+                satunesUiState = satunesUiState,
                 playbackViewModel = playbackViewModel,
                 media = media,
-                navController = navController
+                navController = navController,
             )
         }
 

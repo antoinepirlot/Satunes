@@ -1003,15 +1003,17 @@ class DataViewModel : ViewModel() {
      * Sort the media impl list by sortOption.
      *
      * @param sortOption the option to sort the [List] of [MediaImpl] with the [SortOptions].
-     * @param mediaImplList the [List] of [MediaImpl] to sort
      *
-     * @return the sorted [List] of [MediaImpl]
      */
-    fun sortMediaImplListBy(
+    fun sortMediaImplListToShowBy(
         sortOption: SortOptions,
-        mediaImplList: Collection<MediaImpl>
-    ): List<MediaImpl> {
-        return mediaImplList.sortedWith(sortOption.comparator!!)
+    ) {
+        _uiState.update { currentState: DataUiState ->
+            currentState.copy(
+                mediaImplListToShow = currentState
+                    .mediaImplListToShow.sortedWith(comparator = sortOption.comparator!!)
+            )
+        }
     }
 
     fun setSorting(sortOption: SortOptions) {
@@ -1044,6 +1046,17 @@ class DataViewModel : ViewModel() {
     private fun updateShowFirstLetter() {
         _uiState.update { currentState: DataUiState ->
             currentState.copy(showFirstLetter = SettingsManager.showFirstLetter)
+        }
+    }
+
+    fun setMediaImplListToShow(mediaImplCollectionToShow: Collection<MediaImpl>) {
+        val mediaImplListToShow: List<MediaImpl> = try {
+            mediaImplCollectionToShow as List<MediaImpl>
+        } catch (e: ClassCastException) {
+            mediaImplCollectionToShow.toList()
+        }
+        _uiState.update { currentState: DataUiState ->
+            currentState.copy(mediaImplListToShow = mediaImplListToShow)
         }
     }
 }

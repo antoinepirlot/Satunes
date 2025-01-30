@@ -24,18 +24,18 @@ package io.github.antoinepirlot.satunes.ui.components.buttons.playback.custom_ac
 
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
+import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.MediaSelectionViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
@@ -49,22 +49,23 @@ import kotlinx.coroutines.CoroutineScope
 @Composable
 internal fun AddToPlaylistCustomAction(
     modifier: Modifier = Modifier,
+    satunesViewModel: SatunesViewModel = viewModel(),
     dataViewModel: DataViewModel = viewModel(),
     mediaSelectionViewModel: MediaSelectionViewModel = viewModel(),
     music: Music,
 ) {
+    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
     val scope: CoroutineScope = rememberCoroutineScope()
-    var showForm: Boolean by rememberSaveable { mutableStateOf(false) }
 
     CustomActionButton(
         modifier = modifier,
         icon = SatunesIcons.PLAYLIST_ADD,
         text = stringResource(id = R.string.add_to_playlist),
-        onClick = { showForm = true }
+        onClick = { satunesViewModel.showMediaSelectionDialog() }
     )
 
-    if (showForm) {
+    if (satunesUiState.showMediaSelectionDialog) {
         val playlistMap: Set<Playlist> = dataViewModel.getPlaylistSet()
 
         //Recompose if data changed
@@ -75,7 +76,7 @@ internal fun AddToPlaylistCustomAction(
         //
 
         MediaSelectionDialog(
-            onDismissRequest = { showForm = false },
+            onDismissRequest = { satunesViewModel.hideMediaSelectionDialog() },
             onConfirm = {
                 addMusicPlayingToPlaylist(
                     scope = scope,
@@ -84,7 +85,7 @@ internal fun AddToPlaylistCustomAction(
                     checkedPlaylists = mediaSelectionViewModel.getCheckedPlaylistWithMusics(),
                     music = music
                 )
-                showForm = false
+                satunesViewModel.hideMediaSelectionDialog()
             },
             mediaImplCollection = playlistMap,
             mediaDestination = music,

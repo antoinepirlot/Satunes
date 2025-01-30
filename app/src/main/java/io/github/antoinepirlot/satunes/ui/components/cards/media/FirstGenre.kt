@@ -45,7 +45,7 @@ import io.github.antoinepirlot.satunes.database.models.Music
 fun FirstGenre(
     map: MutableMap<Any?, MediaImpl>,
     mediaImpl: Music,
-    mediaImplList: List<MediaImpl>
+    mediaImplList: Collection<MediaImpl>
 ) {
     val mediaImplToCompare: Genre = mediaImpl.genre
     if (!map.containsKey(mediaImplToCompare))

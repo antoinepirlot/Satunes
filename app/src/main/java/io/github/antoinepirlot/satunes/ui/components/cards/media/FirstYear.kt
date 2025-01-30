@@ -47,7 +47,7 @@ import io.github.antoinepirlot.satunes.database.models.Music
 fun FirstYear(
     map: MutableMap<Any?, MediaImpl>,
     mediaImpl: MediaImpl,
-    mediaImplList: List<MediaImpl>
+    mediaImplList: Collection<MediaImpl>
 ) {
     val yearToCompare: Int? = when (mediaImpl) {
         is Music -> mediaImpl.getYear()

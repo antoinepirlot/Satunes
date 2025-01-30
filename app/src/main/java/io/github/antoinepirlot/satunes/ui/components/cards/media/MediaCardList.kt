@@ -53,27 +53,18 @@ internal fun MediaCardList(
     lazyListState: LazyListState = rememberLazyListState(),
     dataViewModel: DataViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
-    mediaImplCollection: Collection<MediaImpl>,
     header: @Composable (() -> Unit)? = null,
-    openMedia: (mediaImpl: MediaImpl) -> Unit,
     scrollToMusicPlaying: Boolean = false,
     showGroupIndication: Boolean = true,
     sort: Boolean = true
 ) {
-    if (mediaImplCollection.isEmpty()) return // It fixes issue while accessing last folder in chain
     val dataUiState: DataUiState by dataViewModel.uiState.collectAsState()
-
-    //TODO add onClick action with list in call back or something like this to make sort effective on play
-    val sortOption: SortOptions = dataViewModel.sortOption
-    val mediaImplList: List<MediaImpl> = if (sort) dataViewModel.sortMediaImplListBy(
-        sortOption = sortOption,
-        mediaImplList = mediaImplCollection
-    ) else try {
-        mediaImplCollection as List<MediaImpl>
-    } catch (e: ClassCastException) {
-        mediaImplCollection.toList()
-    }
+    val mediaImplList: List<MediaImpl> = dataUiState.mediaImplListToShow
+    if (mediaImplList.isEmpty()) return // It fixes issue while accessing last folder in chain
     val showFirstLetter: Boolean = dataUiState.showFirstLetter
+    val sortOption: SortOptions = dataViewModel.sortOption
+
+    if (sort) dataViewModel.sortMediaImplListToShowBy(sortOption = sortOption)
 
     LaunchedEffect(key1 = dataViewModel.sortOption) {
         CoroutineScope(Dispatchers.Main).launch {
@@ -123,11 +114,7 @@ internal fun MediaCardList(
                     }
                 }
             }
-            MediaCard(
-                modifier = modifier,
-                mediaImpl = media,
-                onClick = { openMedia(media) },
-            )
+            MediaCard(modifier = modifier, mediaImpl = media)
         }
     }
     if (scrollToMusicPlaying) {
@@ -142,10 +129,5 @@ internal fun MediaCardList(
 @Composable
 @Preview
 private fun CardListPreview() {
-    MediaCardList(
-        mediaImplCollection = listOf(),
-        header = {},
-        openMedia = {},
-        scrollToMusicPlaying = false
-    )
+    MediaCardList(header = {}, scrollToMusicPlaying = false)
 }

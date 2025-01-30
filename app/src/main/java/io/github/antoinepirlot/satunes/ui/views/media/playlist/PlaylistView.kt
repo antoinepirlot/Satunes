@@ -32,19 +32,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
 import io.github.antoinepirlot.jetpack_libs.components.texts.Title
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
-import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
-import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
-import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.EmptyView
 import io.github.antoinepirlot.satunes.ui.components.buttons.fab.ExtraButtonList
 import io.github.antoinepirlot.satunes.ui.components.buttons.fab.PlaylistExtraButtonList
@@ -60,17 +55,15 @@ internal fun PlaylistView(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
     dataViewModel: DataViewModel = viewModel(),
-    playbackViewModel: PlaybackViewModel = viewModel(),
     playlist: Playlist,
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
-    val navController: NavHostController = LocalNavController.current
     val musicSet: Set<Music> = playlist.getMusicSet()
 
     //Recompose if data changed
     if (playlist.title == LIKES_PLAYLIST_TITLE) {
         //This prevent the modal of music option closing after unlike press because the music is removed from the playlist
-        if (!satunesUiState.isMediaOptionsOpened) {
+        if (!satunesUiState.showMediaOptions) {
             var mapChanged: Boolean by rememberSaveable { playlist.musicSetUpdated }
             if (mapChanged) {
                 mapChanged = false
@@ -104,17 +97,6 @@ internal fun PlaylistView(
     MediaListView(
         modifier = modifier,
         mediaImplCollection = musicSet,
-        openMedia = { clickedMediaImpl: MediaImpl ->
-            playbackViewModel.loadMusics(
-                musics = playlist.getMusicSet(),
-                musicToPlay = clickedMediaImpl as Music
-            )
-            openMedia(
-                playbackViewModel = playbackViewModel,
-                media = clickedMediaImpl,
-                navController = navController
-            )
-        },
         header = {
             val title: String = if (playlist.title == LIKES_PLAYLIST_TITLE) {
                 stringResource(id = RDb.string.likes_playlist_title)

@@ -28,15 +28,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
-import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
-import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.buttons.fab.ExtraButtonList
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 
@@ -49,9 +44,7 @@ internal fun AllMusicsListView(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
     dataViewModel: DataViewModel = viewModel(),
-    playbackViewModel: PlaybackViewModel = viewModel(),
 ) {
-    val navController: NavHostController = LocalNavController.current
     //Find a way to do something more aesthetic but it works
     val musicSet: Set<Music> = dataViewModel.getMusicSet()
 
@@ -67,17 +60,6 @@ internal fun AllMusicsListView(
     MediaListView(
         modifier = modifier,
         mediaImplCollection = musicSet,
-        openMedia = { clickedMediaImpl: MediaImpl ->
-            playbackViewModel.loadMusics(
-                musics = musicSet,
-                musicToPlay = clickedMediaImpl as Music
-            )
-            openMedia(
-                playbackViewModel = playbackViewModel,
-                clickedMediaImpl,
-                navController = navController
-            )
-        },
         emptyViewText = stringResource(id = R.string.no_music)
     )
 }

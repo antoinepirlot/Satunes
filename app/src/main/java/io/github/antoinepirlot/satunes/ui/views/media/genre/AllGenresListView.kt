@@ -28,15 +28,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
-import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.Genre
-import io.github.antoinepirlot.satunes.database.models.MediaImpl
-import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.buttons.fab.ExtraButtonList
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 
@@ -49,9 +44,7 @@ internal fun AllGenresListView(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
     dataViewModel: DataViewModel = viewModel(),
-    playbackViewModel: PlaybackViewModel = viewModel(),
 ) {
-    val navController: NavHostController = LocalNavController.current
     val genreSet: Set<Genre> = dataViewModel.getGenreSet()
 
     LaunchedEffect(key1 = dataViewModel.isLoaded) {
@@ -66,13 +59,6 @@ internal fun AllGenresListView(
     MediaListView(
         modifier = modifier,
         mediaImplCollection = genreSet,
-        openMedia = { clickedMediaImpl: MediaImpl ->
-            openMedia(
-                playbackViewModel = playbackViewModel,
-                media = clickedMediaImpl,
-                navController = navController
-            )
-        },
         emptyViewText = stringResource(id = R.string.no_genre)
     )
 }

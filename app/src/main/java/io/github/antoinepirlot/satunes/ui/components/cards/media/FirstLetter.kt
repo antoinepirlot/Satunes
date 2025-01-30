@@ -47,7 +47,7 @@ import java.text.Normalizer
 fun FirstLetter(
     map: MutableMap<Any?, MediaImpl>,
     mediaImpl: MediaImpl,
-    mediaImplList: List<MediaImpl>,
+    mediaImplList: Collection<MediaImpl>,
     sortOption: SortOptions
 ) {
     val titleToCompare: String =

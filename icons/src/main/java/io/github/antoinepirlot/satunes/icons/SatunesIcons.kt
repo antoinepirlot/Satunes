@@ -37,6 +37,7 @@ import androidx.compose.material.icons.rounded.BatterySaver
 import androidx.compose.material.icons.rounded.Category
 import androidx.compose.material.icons.rounded.CleaningServices
 import androidx.compose.material.icons.rounded.Close
+import androidx.compose.material.icons.rounded.DateRange
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.DirectionsCar
 import androidx.compose.material.icons.rounded.Done
@@ -51,6 +52,7 @@ import androidx.compose.material.icons.rounded.GraphicEq
 import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.LibraryMusic
 import androidx.compose.material.icons.rounded.LogoDev
+import androidx.compose.material.icons.rounded.MoreTime
 import androidx.compose.material.icons.rounded.MusicNote
 import androidx.compose.material.icons.rounded.Navigation
 import androidx.compose.material.icons.rounded.PauseCircle
@@ -89,6 +91,7 @@ enum class SatunesIcons(
         imageVector = Icons.Rounded.AddToQueue,
         description = "Add to queue Icon"
     ),
+    ADDED_DATE(imageVector = Icons.Rounded.MoreTime, description = "Added Date Icon"),
     ALBUM(imageVector = Icons.Rounded.Album, description = "Album Icon"),
     ANDROID_AUTO(
         imageVector = Icons.Rounded.DirectionsCar,
@@ -182,4 +185,5 @@ enum class SatunesIcons(
     REWIND(imageVector = Icons.Rounded.FastRewind, description = "Rewind Icon"),
     WARNING(imageVector = Icons.Rounded.Warning, description = "Warning Icon"),
     TITLE(imageVector = Icons.Rounded.Title, description = "Title Icon"),
+    YEARS(imageVector = Icons.Rounded.DateRange, description = "Years Icon"),
 }

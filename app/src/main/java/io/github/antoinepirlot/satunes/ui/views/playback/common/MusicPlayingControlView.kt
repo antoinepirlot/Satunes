@@ -122,7 +122,7 @@ internal fun MusicPlayingControlView(
                         },
                         onLongClick = {
                             haptics.performHapticFeedback(HapticFeedbackType.LongPress)
-                            satunesViewModel.mediaOptionsIsOpen()
+                            satunesViewModel.showMediaOptions()
                             showArtistOptions = true
                         }
                     ),
@@ -139,7 +139,7 @@ internal fun MusicPlayingControlView(
             ArtistOptionsDialog(
                 artist = musicPlaying.artist,
                 onDismissRequest = {
-                    satunesViewModel.mediaOptionsIsClosed()
+                    satunesViewModel.hideMediaOptions()
                     showArtistOptions = false
                 }
             )

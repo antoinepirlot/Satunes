@@ -20,12 +20,20 @@
  * PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.data.states
+package io.github.antoinepirlot.satunes.database.models.comparators
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
-import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
+import io.github.antoinepirlot.satunes.database.models.Music
 
-data class DataUiState(
-    val mediaImplListToShow: List<MediaImpl> = listOf(),
-    val showFirstLetter: Boolean = SettingsManager.showFirstLetter
-)
+/**
+ * @author Antoine Pirlot 30/01/2025
+ */
+@RequiresApi(Build.VERSION_CODES.O)
+object SortMusicsByAddedDateComparator : Comparator<MediaImpl> {
+    override fun compare(o1: MediaImpl, o2: MediaImpl): Int {
+        if (o1 !is Music || o2 !is Music) throw UnsupportedOperationException("Can't sort non music medias by added date.")
+        return -o1.addedDate.compareTo(o2.addedDate)
+    }
+}

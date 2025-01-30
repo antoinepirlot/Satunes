@@ -448,15 +448,15 @@ internal class SatunesViewModel : ViewModel() {
         }
     }
 
-    fun mediaOptionsIsOpen() {
+    fun showMediaOptions() {
         _uiState.update { currentState: SatunesUiState ->
-            currentState.copy(isMediaOptionsOpened = true)
+            currentState.copy(showMediaOptions = true)
         }
     }
 
-    fun mediaOptionsIsClosed() {
+    fun hideMediaOptions() {
         _uiState.update { currentState: SatunesUiState ->
-            currentState.copy(isMediaOptionsOpened = false)
+            currentState.copy(showMediaOptions = false)
         }
     }
 
@@ -632,6 +632,18 @@ internal class SatunesViewModel : ViewModel() {
     fun clearCurrentMediaImpl() {
         _uiState.update { currentState: SatunesUiState ->
             currentState.copy(currentMediaImpl = null)
+        }
+    }
+
+    fun showMediaSelectionDialog() {
+        _uiState.update { currentState: SatunesUiState ->
+            currentState.copy(showMediaSelectionDialog = true)
+        }
+    }
+
+    fun hideMediaSelectionDialog() {
+        _uiState.update { currentState: SatunesUiState ->
+            currentState.copy(showMediaSelectionDialog = false)
         }
     }
 }

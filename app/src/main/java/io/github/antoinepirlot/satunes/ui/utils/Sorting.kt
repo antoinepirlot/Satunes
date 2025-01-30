@@ -20,12 +20,26 @@
  * PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.data.states
+package io.github.antoinepirlot.satunes.ui.utils
 
+import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
-import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
+import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.models.radio_buttons.SortOptions
 
-data class DataUiState(
-    val mediaImplListToShow: List<MediaImpl> = listOf(),
-    val showFirstLetter: Boolean = SettingsManager.showFirstLetter
-)
+/**
+ * @author Antoine Pirlot 30/01/2025
+ */
+fun getTitleToCompare(mediaImpl: MediaImpl, sortOption: SortOptions): String? {
+    return when (sortOption) {
+        SortOptions.TITLE -> mediaImpl.title
+        SortOptions.ALBUM -> if (mediaImpl is Music) mediaImpl.album.title else null
+        SortOptions.ARTIST -> when (mediaImpl) {
+            is Music -> mediaImpl.artist.title
+            is Album -> mediaImpl.artist.title
+            else -> null
+        }
+
+        else -> null
+    }
+}

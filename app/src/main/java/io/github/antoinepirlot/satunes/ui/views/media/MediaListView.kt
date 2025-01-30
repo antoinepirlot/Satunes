@@ -29,7 +29,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.antoinepirlot.satunes.data.states.DataUiState
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
+import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
@@ -49,28 +51,31 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.SortListDialog
 internal fun MediaListView(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
+    dataViewModel: DataViewModel = viewModel(),
     mediaImplCollection: Collection<MediaImpl>,
-    openMedia: (mediaImpl: MediaImpl) -> Unit,
     header: (@Composable () -> Unit)? = null,
     emptyViewText: String?,
     showGroupIndication: Boolean = true,
     sort: Boolean = true,
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+    val dataUiState: DataUiState by dataViewModel.uiState.collectAsState()
     val lazyListState = rememberLazyListState()
+
+    dataViewModel.setMediaImplListToShow(
+        mediaImplCollectionToShow = mediaImplCollection,
+        sort = sort
+    )
 
     if (satunesUiState.showSortDialog)
         SortListDialog()
 
-    if (mediaImplCollection.isNotEmpty()) {
+    if (dataUiState.mediaImplListToShow.isNotEmpty()) {
         MediaCardList(
             modifier = modifier,
             lazyListState = lazyListState,
-            mediaImplCollection = mediaImplCollection,
             header = header,
-            openMedia = openMedia,
             showGroupIndication = showGroupIndication,
-            sort = sort
         )
     } else {
         if (header != null) {
@@ -103,7 +108,6 @@ private fun MediaListViewPreview() {
     )
     MediaListView(
         mediaImplCollection = map,
-        openMedia = {},
         emptyViewText = "No data"
     )
 }

@@ -47,18 +47,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.states.SearchUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
-import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SearchViewModel
-import io.github.antoinepirlot.satunes.database.models.MediaImpl
-import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.models.SearchChips
-import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.chips.MediaChipList
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 import kotlinx.coroutines.CoroutineScope
@@ -74,11 +68,9 @@ import kotlinx.coroutines.launch
 internal fun SearchView(
     modifier: Modifier = Modifier,
     dataViewModel: DataViewModel = viewModel(),
-    playbackViewModel: PlaybackViewModel = viewModel(),
     searchViewModel: SearchViewModel = viewModel(),
 ) {
     val searchUiState: SearchUiState by searchViewModel.uiState.collectAsState()
-    val navController: NavHostController = LocalNavController.current
     val query: String = searchViewModel.query
     val selectedSearchChips: List<SearchChips> = searchViewModel.selectedSearchChips
 
@@ -134,19 +126,6 @@ internal fun SearchView(
         MediaChipList()
         MediaListView(
             mediaImplCollection = searchUiState.mediaImplSet,
-            openMedia = { mediaImpl: MediaImpl ->
-                if (mediaImpl is Music) {
-                    playbackViewModel.loadMusics(
-                        musics = dataViewModel.getMusicSet(),
-                        musicToPlay = mediaImpl
-                    )
-                }
-                openMedia(
-                    playbackViewModel = playbackViewModel,
-                    media = mediaImpl,
-                    navController = navController
-                )
-            },
             emptyViewText = stringResource(id = R.string.no_result)
         )
     }

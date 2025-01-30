@@ -34,7 +34,9 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
+import io.github.antoinepirlot.satunes.data.states.DataUiState
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
+import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
@@ -48,7 +50,6 @@ import io.github.antoinepirlot.satunes.router.utils.openMedia
  *
  * @param modifier the [Modifier].
  * @param playbackViewModel the [PlaybackViewModel] initialized by default.
- * @param mediaImplCollection the [Collection] of [MediaImpl] to load and play.
  *
  * @author Antoine Pirlot on 11/12/2024
  */
@@ -57,10 +58,12 @@ internal fun ExtraButtonList(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
-    mediaImplCollection: Collection<MediaImpl>
+    dataViewModel: DataViewModel = viewModel()
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+    val dataUiState: DataUiState by dataViewModel.uiState.collectAsState()
     val navController: NavHostController = LocalNavController.current
+    val mediaImplCollection: Collection<MediaImpl> = dataUiState.mediaImplListToShow
 
     Column(
         modifier = modifier,
@@ -71,6 +74,7 @@ internal fun ExtraButtonList(
             onClick = {
                 playbackViewModel.loadMusicFromMedias(medias = mediaImplCollection)
                 openMedia(
+                    satunesUiState = satunesUiState,
                     playbackViewModel = playbackViewModel,
                     navController = navController
                 )
@@ -87,6 +91,7 @@ internal fun ExtraButtonList(
                         shuffleMode = true
                     )
                     openMedia(
+                        satunesUiState = satunesUiState,
                         playbackViewModel = playbackViewModel,
                         navController = navController
                     )

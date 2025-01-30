@@ -58,11 +58,12 @@ internal data class SatunesUiState(
     val repeatMode: Int = SettingsManager.repeatMode,
     val audioOffloadChecked: Boolean = SettingsManager.audioOffloadChecked,
     val barSpeed: BarSpeed = SettingsManager.barSpeed,
-    val isMediaOptionsOpened: Boolean = false, // TODO only used for favorite action, check to simplify it
+    val showMediaOptions: Boolean = false,
     /**
      * This setting is true if the compilation's music has to be added to compilation's artist's music list
      */
     val compilationMusic: Boolean = SettingsManager.compilationMusic,
     val artistReplacement: Boolean = SettingsManager.artistReplacement,
-    val showSortDialog: Boolean = false
+    val showSortDialog: Boolean = false,
+    val showMediaSelectionDialog: Boolean = false,
 )

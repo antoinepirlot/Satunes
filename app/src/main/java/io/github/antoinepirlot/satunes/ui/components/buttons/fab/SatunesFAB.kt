@@ -43,7 +43,7 @@ import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.models.DestinationCategory
-import io.github.antoinepirlot.satunes.ui.components.bars.bottom.ShowCurrentMusicButton
+import io.github.antoinepirlot.satunes.ui.components.buttons.bars.bottom.ShowCurrentMusicButton
 
 /**
  * @author Antoine Pirlot on 23/12/2024

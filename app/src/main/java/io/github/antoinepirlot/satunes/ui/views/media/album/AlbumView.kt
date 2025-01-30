@@ -29,6 +29,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -46,12 +47,12 @@ import io.github.antoinepirlot.jetpack_libs.components.texts.Subtitle
 import io.github.antoinepirlot.jetpack_libs.components.texts.Title
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
+import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
-import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.buttons.fab.ExtraButtonList
@@ -67,23 +68,21 @@ internal fun AlbumView(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
     dataViewModel: DataViewModel = viewModel(),
-    playbackViewModel: PlaybackViewModel = viewModel(),
     album: Album,
 ) {
-    val navController: NavHostController = LocalNavController.current
     val musicSet: Set<Music> = album.getMusicSet()
 
     //Recompose if data changed
-    var mapChanged: Boolean by rememberSaveable { album.musicSetUpdated }
-    if (mapChanged) {
-        mapChanged = false
+    var setChanged: Boolean by rememberSaveable { album.musicSetUpdated }
+    if (setChanged) {
+        setChanged = false
     }
     //
 
     LaunchedEffect(key1 = dataViewModel.isLoaded) {
         if (musicSet.isNotEmpty())
             satunesViewModel.replaceExtraButtons(extraButtons = {
-                ExtraButtonList(mediaImplCollection = musicSet)
+                ExtraButtonList()
             })
         else
             satunesViewModel.clearExtraButtons()
@@ -92,17 +91,6 @@ internal fun AlbumView(
     MediaListView(
         modifier = modifier,
         mediaImplCollection = musicSet,
-        openMedia = { clickedMediaImpl: MediaImpl ->
-            playbackViewModel.loadMusics(
-                musics = album.getMusicSet(),
-                musicToPlay = clickedMediaImpl as Music
-            )
-            openMedia(
-                playbackViewModel = playbackViewModel,
-                media = clickedMediaImpl,
-                navController = navController
-            )
-        },
         header = {
             Header(album = album)
         },
@@ -113,9 +101,11 @@ internal fun AlbumView(
 @Composable
 private fun Header(
     modifier: Modifier = Modifier,
+    satunesViewModel: SatunesViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
     album: Album
 ) {
+    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     val navController: NavHostController = LocalNavController.current
 
     Column(modifier = modifier.padding(vertical = 16.dp)) {
@@ -140,6 +130,7 @@ private fun Header(
                 .align(Alignment.CenterHorizontally)
                 .clickable {
                     openMedia(
+                        satunesUiState = satunesUiState,
                         playbackViewModel = playbackViewModel,
                         media = album.artist,
                         navController = navController

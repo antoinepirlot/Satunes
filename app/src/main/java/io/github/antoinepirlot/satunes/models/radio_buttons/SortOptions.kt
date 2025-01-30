@@ -25,12 +25,16 @@
 
 package io.github.antoinepirlot.satunes.models.radio_buttons
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.comparators.SortByAlbumComparator
 import io.github.antoinepirlot.satunes.database.models.comparators.SortByArtistComparator
 import io.github.antoinepirlot.satunes.database.models.comparators.SortByGenreComparator
 import io.github.antoinepirlot.satunes.database.models.comparators.SortByTitleComparator
+import io.github.antoinepirlot.satunes.database.models.comparators.SortByYearsComparator
+import io.github.antoinepirlot.satunes.database.models.comparators.SortMusicsByAddedDateComparator
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.database.R as RDb
 
@@ -40,18 +44,35 @@ import io.github.antoinepirlot.satunes.database.R as RDb
 enum class SortOptions(
     val icon: SatunesIcons,
     val stringId: Int,
-    val comparator: Comparator<MediaImpl>
+    val comparator: Comparator<MediaImpl>?
 ) {
-    ARTIST(icon = SatunesIcons.ARTIST, stringId = RDb.string.artists, SortByArtistComparator),
     ALBUM(
         icon = SatunesIcons.ALBUM,
         stringId = RDb.string.albums,
         comparator = SortByAlbumComparator
     ),
-    TITLE(icon = SatunesIcons.TITLE, stringId = R.string.title, comparator = SortByTitleComparator),
+    ARTIST(
+        icon = SatunesIcons.ARTIST,
+        stringId = RDb.string.artists,
+        comparator = SortByArtistComparator
+    ),
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    DATE_ADDED(
+        icon = SatunesIcons.ADDED_DATE,
+        stringId = RDb.string.added_date,
+        comparator = SortMusicsByAddedDateComparator
+    ),
     GENRE(
         icon = SatunesIcons.GENRES,
         stringId = RDb.string.genres,
         comparator = SortByGenreComparator
-    )
+    ),
+    PLAYLIST_ADDED_DATE(
+        icon = SatunesIcons.ADDED_DATE,
+        stringId = RDb.string.added_date,
+        comparator = null
+    ),
+    TITLE(icon = SatunesIcons.TITLE, stringId = R.string.title, comparator = SortByTitleComparator),
+    YEAR(icon = SatunesIcons.YEARS, stringId = RDb.string.years, comparator = SortByYearsComparator)
 }

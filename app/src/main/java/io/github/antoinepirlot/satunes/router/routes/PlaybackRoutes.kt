@@ -24,11 +24,14 @@ package io.github.antoinepirlot.satunes.router.routes
 
 import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
+import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.Album
@@ -56,19 +59,22 @@ internal fun NavGraphBuilder.playbackRoutes(
         if (satunesViewModel.isLoadingData || !satunesViewModel.isDataLoaded) {
             LoadingView()
         } else {
+            val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
             val navController: NavHostController = LocalNavController.current
             PlaybackView(
                 onAlbumClick = { album: Album? ->
                     if (album != null) {
                         openMedia(
+                            satunesUiState = satunesUiState,
                             playbackViewModel = playbackViewModel,
                             media = album,
-                            navController = navController
+                            navController = navController,
                         )
                     }
                 },
                 onArtistClick = { artist: Artist ->
                     openMedia(
+                        satunesUiState = satunesUiState,
                         playbackViewModel = playbackViewModel,
                         media = artist,
                         navController = navController

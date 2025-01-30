@@ -113,7 +113,6 @@ internal fun MediaCard(
                             musicToPlay = mediaImpl
                         )
                     openMedia(
-                        satunesUiState = satunesUiState,
                         playbackViewModel = playbackViewModel,
                         media = mediaImpl,
                         navController = navController

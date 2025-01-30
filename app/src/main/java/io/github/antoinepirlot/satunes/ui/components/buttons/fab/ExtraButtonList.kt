@@ -74,7 +74,6 @@ internal fun ExtraButtonList(
             onClick = {
                 playbackViewModel.loadMusicFromMedias(medias = mediaImplCollection)
                 openMedia(
-                    satunesUiState = satunesUiState,
                     playbackViewModel = playbackViewModel,
                     navController = navController
                 )
@@ -91,7 +90,6 @@ internal fun ExtraButtonList(
                         shuffleMode = true
                     )
                     openMedia(
-                        satunesUiState = satunesUiState,
                         playbackViewModel = playbackViewModel,
                         navController = navController
                     )

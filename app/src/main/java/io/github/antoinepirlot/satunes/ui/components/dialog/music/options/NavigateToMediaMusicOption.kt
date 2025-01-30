@@ -23,16 +23,12 @@
 package io.github.antoinepirlot.satunes.ui.components.dialog.music.options
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
-import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
-import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Folder
@@ -49,18 +45,15 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.options.DialogOption
 @Composable
 internal fun NavigateToMediaMusicOption(
     modifier: Modifier = Modifier,
-    satunesViewModel: SatunesViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
     mediaImpl: MediaImpl,
 ) {
-    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     val navController: NavHostController = LocalNavController.current
 
     DialogOption(
         modifier = modifier,
         onClick = {
             openMedia(
-                satunesUiState = satunesUiState,
                 playbackViewModel = playbackViewModel,
                 media = mediaImpl,
                 navController = navController

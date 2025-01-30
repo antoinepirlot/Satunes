@@ -23,7 +23,6 @@
 package io.github.antoinepirlot.satunes.router.utils
 
 import androidx.navigation.NavHostController
-import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
@@ -51,47 +50,13 @@ import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
  * @param media the mediaImpl to open
  */
 internal fun openMedia(
-    satunesUiState: SatunesUiState,
     playbackViewModel: PlaybackViewModel,
     media: MediaImpl? = null,
     navController: NavHostController,
 ) {
-    if (media == null || media is Music) {
+    if (media == null || media is Music)
         startMusic(playbackViewModel = playbackViewModel, mediaToPlay = media)
-    }
-    if (satunesUiState.currentDestination != Destination.PLAYBACK)
-        navController.navigate(getDestinationOf(media))
-}
-
-/**
- * Open mediaImpl from folders' views if the mediaImpl is:
- *      Music: It loads folder's musics data to playback and open the mediaImpl that is music.
- *
- *      Folder: navigate to the folder's view
- */
-internal fun openMediaFromFolder(
-    satunesUiState: SatunesUiState,
-    playbackViewModel: PlaybackViewModel,
-    navController: NavHostController,
-    media: MediaImpl,
-) {
-    when (media) {
-        is Music -> {
-            playbackViewModel.loadMusicFromMedia(
-                media = media.folder,
-                musicToPlay = media
-            )
-            openMedia(
-                satunesUiState = satunesUiState,
-                playbackViewModel = playbackViewModel,
-                media = media,
-                navController = navController,
-            )
-        }
-
-        is Folder -> navController.navigate(getDestinationOf(media))
-    }
-
+    navController.navigate(getDestinationOf(media))
 }
 
 /**

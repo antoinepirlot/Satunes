@@ -27,8 +27,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -38,9 +36,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import io.github.antoinepirlot.jetpack_libs.components.texts.Title
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
-import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
-import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.R
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
@@ -54,12 +50,10 @@ import io.github.antoinepirlot.satunes.ui.components.cards.albums.AlbumGrid
 @Composable
 internal fun MediaWithAlbumsHeaderView(
     modifier: Modifier = Modifier,
-    satunesViewModel: SatunesViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
     mediaImpl: MediaImpl,
     albumCollection: Collection<Album>,
 ) {
-    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     val navController: NavHostController = LocalNavController.current
 
     Column(modifier = modifier) {
@@ -68,7 +62,6 @@ internal fun MediaWithAlbumsHeaderView(
             albumCollection = albumCollection,
             onClick = { album: Album? ->
                 openMedia(
-                    satunesUiState = satunesUiState,
                     playbackViewModel = playbackViewModel,
                     media = album,
                     navController = navController

@@ -31,7 +31,7 @@ import io.github.antoinepirlot.satunes.database.models.Music
  * @author Antoine Pirlot 30/01/2025
  */
 @RequiresApi(Build.VERSION_CODES.O)
-object SortByAddedDateComparator : Comparator<MediaImpl> {
+object SortMusicsByAddedDateComparator : Comparator<MediaImpl> {
     override fun compare(o1: MediaImpl, o2: MediaImpl): Int {
         if (o1 !is Music || o2 !is Music) throw UnsupportedOperationException("Can't sort musics by added date.")
         return -o1.addedDate.compareTo(o2.addedDate)

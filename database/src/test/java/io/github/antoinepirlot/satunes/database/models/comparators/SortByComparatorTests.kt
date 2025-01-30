@@ -126,7 +126,7 @@ class SortByComparatorTests {
 
     @Test
     fun musicsSortedByAddedDate() {
-        val sortedList: List<Music> = _musics.sortedWith(SortByAddedDateComparator)
+        val sortedList: List<Music> = _musics.sortedWith(SortMusicsByAddedDateComparator)
         var lastMusic: Music = sortedList[0]
 
         for (i: Int in 1..<sortedList.size) {

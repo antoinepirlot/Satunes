@@ -57,15 +57,6 @@ class Music(
     val uri: Uri? = Uri.parse(encode(absolutePath)) // Must be init before media item
 ) : MediaImpl(id = id, title = title.ifBlank { displayName }) {
     private val _logger: SatunesLogger? = SatunesLogger.getLogger()
-    private var displayName: String = displayName
-        set(displayName) {
-            if (displayName.isBlank()) {
-                val message = "Display name must not be blank"
-                _logger?.warning(message)
-                throw IllegalArgumentException(message)
-            }
-            field = displayName
-        }
     val year: Int? = year
         get() {
             return field ?: this.album.year

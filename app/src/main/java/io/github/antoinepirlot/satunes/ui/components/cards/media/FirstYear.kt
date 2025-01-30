@@ -50,14 +50,14 @@ fun FirstYear(
     mediaImplList: List<MediaImpl>
 ) {
     val yearToCompare: Int? = when (mediaImpl) {
-        is Music -> mediaImpl.year
+        is Music -> mediaImpl.getYear()
         is Album -> mediaImpl.year
         else -> throw UnsupportedOperationException()
     }
     if (!map.containsKey(key = yearToCompare))
         map[yearToCompare] = mediaImplList.first {
             when (it) {
-                is Music -> it.year == yearToCompare
+                is Music -> it.getYear() == yearToCompare
                 is Album -> it.year == yearToCompare
                 else -> false
             }

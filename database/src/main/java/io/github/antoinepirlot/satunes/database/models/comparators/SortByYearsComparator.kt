@@ -42,12 +42,12 @@ object SortByYearsComparator : Comparator<MediaImpl> {
      */
     override fun compare(o1: MediaImpl, o2: MediaImpl): Int {
         val year1: Int? = when (o1) {
-            is Music -> o1.year
+            is Music -> o1.getYear()
             is Album -> o1.year
             else -> throw UnsupportedOperationException("Only Musics and Albums can be sorted by year")
         }
         val year2: Int? = when (o2) {
-            is Music -> o2.year
+            is Music -> o2.getYear()
             is Album -> o2.year
             else -> throw UnsupportedOperationException("Only Musics and Albums can be sorted by year")
         }

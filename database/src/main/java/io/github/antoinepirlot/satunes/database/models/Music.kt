@@ -28,6 +28,8 @@ import android.graphics.BitmapFactory
 import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.net.Uri.encode
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.media3.common.MediaItem
@@ -36,6 +38,7 @@ import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
+import java.util.Date
 
 /**
  * @author Antoine Pirlot on 27/03/2024
@@ -48,7 +51,6 @@ class Music(
     val absolutePath: String,
     val duration: Long = 0,
     val size: Int = 0,
-    year: Int? = null,
     cdTrackNumber: Int? = null,
     var folder: Folder,
     val artist: Artist,
@@ -57,11 +59,11 @@ class Music(
     val uri: Uri? = Uri.parse(encode(absolutePath)) // Must be init before media item
 ) : MediaImpl(id = id, title = title.ifBlank { displayName }) {
     private val _logger: SatunesLogger? = SatunesLogger.getLogger()
-    val year: Int? = year
-        get() {
-            return field ?: this.album.year
-        }
     val cdTrackNumber: Int?
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    lateinit var addedDate: Date
+        internal set
     var liked: MutableState<Boolean> = mutableStateOf(false)
         private set
 
@@ -90,6 +92,10 @@ class Music(
         } else {
             db.unlike(music = this)
         }
+    }
+
+    fun getYear(): Int? {
+        return this.album.year
     }
 
     private fun getMediaMetadata(): MediaItem {

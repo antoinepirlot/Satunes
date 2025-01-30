@@ -31,6 +31,7 @@ import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import java.util.Date
 
 class SortByComparatorTests {
     private val _musics: Collection<Music>
@@ -48,7 +49,6 @@ class SortByComparatorTests {
                 getRandomPath(),
                 (1L..9000L).random(),
                 (1..9000).random(),
-                if ((0..30).random() == (0..30).random()) null else (1900..2025).random(),
                 null,
                 Folder(getRandomWord()),
                 artist,
@@ -56,6 +56,7 @@ class SortByComparatorTests {
                 Genre(getRandomWord()),
                 uri = null
             )
+            music.addedDate = Date(((1L * 13L)..(9L * 13L)).random())
             collection.add(music)
         }
         _musics = collection.toSet()
@@ -79,8 +80,8 @@ class SortByComparatorTests {
     @Test
     fun sortByArtistsTest() {
         val sortedList: List<Music> = _musics.sortedWith(SortByArtistComparator)
-
         var lastMusic: Music = sortedList[0]
+
         for (i: Int in 1..<sortedList.size) {
             val currentMusic: Music = sortedList[i]
             val cmp: Int = SortByArtistComparator.compare(currentMusic, lastMusic)
@@ -108,17 +109,29 @@ class SortByComparatorTests {
     @Test
     fun musicsSortByYearTest() {
         val sortedList: List<Music> = _musics.sortedWith(SortByYearsComparator)
-
         var lastMusic: Music = sortedList[0]
+
         for (i: Int in 1..<sortedList.size) {
             val currentMusic: Music = sortedList[i]
-            val lastMusicYear: Int? = lastMusic.year
-            val currentMusicYear: Int? = currentMusic.year
+            val lastMusicYear: Int? = lastMusic.getYear()
+            val currentMusicYear: Int? = currentMusic.getYear()
             if (lastMusicYear == null) assertTrue(currentMusicYear == null)
             else if (lastMusicYear == currentMusicYear)
             //Check by title
                 assertTrue(lastMusic <= currentMusic)
             else if (currentMusicYear != null) assertTrue(lastMusicYear >= currentMusicYear)
+            lastMusic = currentMusic
+        }
+    }
+
+    @Test
+    fun musicsSortedByAddedDate() {
+        val sortedList: List<Music> = _musics.sortedWith(SortByAddedDateComparator)
+        var lastMusic: Music = sortedList[0]
+
+        for (i: Int in 1..<sortedList.size) {
+            val currentMusic: Music = sortedList[i]
+            assertTrue(lastMusic.addedDate >= currentMusic.addedDate)
             lastMusic = currentMusic
         }
     }

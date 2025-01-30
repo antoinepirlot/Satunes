@@ -44,7 +44,7 @@ import io.github.antoinepirlot.satunes.icons.SatunesIcons.MUSIC
 import io.github.antoinepirlot.satunes.icons.SatunesIcons.PLAYLIST
 
 /**
- * @author Antoine Pirlot on 27/01/24
+ * @author Antoine Pirlot on 27/01/2024
  */
 
 /**

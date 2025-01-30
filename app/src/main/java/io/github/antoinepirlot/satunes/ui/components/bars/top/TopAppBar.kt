@@ -80,7 +80,10 @@ internal fun TopAppBar(
         ),
         navigationIcon = {
             val screenWidth: Int = LocalConfiguration.current.screenWidthDp
-            if (currentDestination.category == DestinationCategory.PLAYBACK && screenWidth < ScreenSizes.LARGE) {
+            if (
+                currentDestination.category == DestinationCategory.PLAYBACK &&
+                screenWidth < ScreenSizes.LARGE
+            ) {
                 IconButton(
                     icon = SatunesIcons.PLAYBACK,
                     onClick = {
@@ -90,9 +93,9 @@ internal fun TopAppBar(
                         )
                     }
                 )
-            } else if (currentDestination.category == DestinationCategory.MEDIA && getSortOptions(
-                    destination = satunesUiState.currentDestination
-                ).size > 1
+            } else if (
+                currentDestination.category == DestinationCategory.MEDIA &&
+                getSortOptions(destination = satunesUiState.currentDestination).size > 1
             ) {
                 IconButton(
                     icon = SatunesIcons.SORT,

@@ -73,16 +73,16 @@ internal fun AlbumView(
     val musicSet: Set<Music> = album.getMusicSet()
 
     //Recompose if data changed
-    var mapChanged: Boolean by rememberSaveable { album.musicSetUpdated }
-    if (mapChanged) {
-        mapChanged = false
+    var setChanged: Boolean by rememberSaveable { album.musicSetUpdated }
+    if (setChanged) {
+        setChanged = false
     }
     //
 
     LaunchedEffect(key1 = dataViewModel.isLoaded) {
         if (musicSet.isNotEmpty())
             satunesViewModel.replaceExtraButtons(extraButtons = {
-                ExtraButtonList(mediaImplCollection = musicSet)
+                ExtraButtonList()
             })
         else
             satunesViewModel.clearExtraButtons()

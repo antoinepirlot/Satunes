@@ -53,12 +53,12 @@ internal fun ArtistView(
     dataViewModel: DataViewModel = viewModel(),
     artist: Artist,
 ) {
-    val musicMap: Set<Music> = artist.getMusicSet()
+    val musicSet: Set<Music> = artist.getMusicSet()
 
     //Recompose if data changed
-    var musicMapChanged: Boolean by rememberSaveable { artist.musicSetUpdated }
-    if (musicMapChanged) {
-        musicMapChanged = false
+    var musicSetChanged: Boolean by rememberSaveable { artist.musicSetUpdated }
+    if (musicSetChanged) {
+        musicSetChanged = false
     }
     //
 
@@ -67,7 +67,7 @@ internal fun ArtistView(
     LaunchedEffect(key1 = dataViewModel.isLoaded) {
         if (albumSet.isNotEmpty())
             satunesViewModel.replaceExtraButtons(extraButtons = {
-                ExtraButtonList(mediaImplCollection = musicMap)
+                ExtraButtonList()
             })
         else
             satunesViewModel.clearExtraButtons()
@@ -75,7 +75,7 @@ internal fun ArtistView(
 
     MediaListView(
         modifier = modifier,
-        mediaImplCollection = musicMap,
+        mediaImplCollection = musicSet,
         header = if (albumSet.isNotEmpty()) {
             {
                 //Recompose if data changed

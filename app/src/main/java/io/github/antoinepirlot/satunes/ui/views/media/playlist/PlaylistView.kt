@@ -82,7 +82,7 @@ internal fun PlaylistView(
             satunesViewModel.replaceExtraButtons(
                 extraButtons = {
                     //It's in a column
-                    ExtraButtonList(mediaImplCollection = musicSet)
+                    ExtraButtonList()
                     PlaylistExtraButtonList(playlist = playlist)
                 }
             )

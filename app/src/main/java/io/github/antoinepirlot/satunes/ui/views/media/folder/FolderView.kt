@@ -52,7 +52,7 @@ internal fun FolderView(
     LaunchedEffect(key1 = dataViewModel.isLoaded) {
         if (folder.isNotEmpty())
             satunesViewModel.replaceExtraButtons(extraButtons = {
-                ExtraButtonList(mediaImplCollection = folder.getAllMusic())
+                ExtraButtonList()
             })
         else
             satunesViewModel.clearExtraButtons()

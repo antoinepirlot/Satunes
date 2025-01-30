@@ -50,7 +50,7 @@ internal fun AllAlbumsListView(
     LaunchedEffect(key1 = dataViewModel.isLoaded) {
         if (albumSet.isNotEmpty())
             satunesViewModel.replaceExtraButtons(extraButtons = {
-                ExtraButtonList(mediaImplCollection = albumSet)
+                ExtraButtonList()
             })
         else
             satunesViewModel.clearExtraButtons()

@@ -51,7 +51,7 @@ internal fun AllMusicsListView(
     LaunchedEffect(key1 = dataViewModel.isLoaded) {
         if (musicSet.isNotEmpty())
             satunesViewModel.replaceExtraButtons(extraButtons = {
-                ExtraButtonList(mediaImplCollection = musicSet)
+                ExtraButtonList()
             })
         else
             satunesViewModel.clearExtraButtons()

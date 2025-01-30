@@ -50,7 +50,7 @@ internal fun AllGenresListView(
     LaunchedEffect(key1 = dataViewModel.isLoaded) {
         if (genreSet.isNotEmpty())
             satunesViewModel.replaceExtraButtons(extraButtons = {
-                ExtraButtonList(mediaImplCollection = genreSet)
+                ExtraButtonList()
             })
         else
             satunesViewModel.clearExtraButtons()

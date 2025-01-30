@@ -78,7 +78,7 @@ object DataLoader {
     private var genreNameColumnId: Int? = null
 
     private const val UNKNOWN_ARTIST = "<unknown>"
-    private const val UNKNOWN_ALBUM = "Unknown Album"
+    private const val UNKNOWN_ALBUM = "<unknown>"
     private const val UNKNOWN_GENRE = "<unknown>"
 
     private var projection: Array<String> = arrayOf(

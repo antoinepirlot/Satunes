@@ -24,6 +24,7 @@ package io.github.antoinepirlot.satunes.ui.views.media
 
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -62,10 +63,12 @@ internal fun MediaListView(
     val dataUiState: DataUiState by dataViewModel.uiState.collectAsState()
     val lazyListState = rememberLazyListState()
 
-    dataViewModel.setMediaImplListToShow(
-        mediaImplCollectionToShow = mediaImplCollection,
-        sort = sort
-    )
+    LaunchedEffect(key1 = dataViewModel.sortOption) {
+        dataViewModel.setMediaImplListToShow(
+            mediaImplCollectionToShow = mediaImplCollection,
+            sort = sort
+        )
+    }
 
     if (satunesUiState.showSortDialog)
         SortListDialog()

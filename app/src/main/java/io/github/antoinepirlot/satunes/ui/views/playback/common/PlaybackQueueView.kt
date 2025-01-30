@@ -23,6 +23,7 @@
 package io.github.antoinepirlot.satunes.ui.views.playback.common
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -43,10 +44,13 @@ internal fun PlaybackQueueView(
     dataViewModel: DataViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
 ) {
-    dataViewModel.setMediaImplListToShow(
-        mediaImplCollectionToShow = playbackViewModel.getPlaylist(),
-        sort = false
-    )
+    LaunchedEffect(key1 = Unit) {
+        dataViewModel.setMediaImplListToShow(
+            mediaImplCollectionToShow = playbackViewModel.getPlaylist(),
+            sort = false
+        )
+    }
+
     MediaCardList(
         modifier = modifier,
         scrollToMusicPlaying = true,

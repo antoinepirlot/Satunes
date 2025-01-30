@@ -126,7 +126,7 @@ internal object SatunesCarCallBack : MediaSessionCompat.Callback() {
 
     private fun likePlayingMusic() {
         CoroutineScope(Dispatchers.IO).launch {
-            PlaybackManager.musicPlaying.value!!.switchLike(context = SatunesCarMusicService.instance.applicationContext)
+            PlaybackManager.musicPlaying.value!!.switchLike()
         }
     }
 

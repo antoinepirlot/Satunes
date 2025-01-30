@@ -667,7 +667,7 @@ class DataViewModel : ViewModel() {
         CoroutineScope(Dispatchers.IO).launch {
             val context: Context = MainActivity.instance.applicationContext
             try {
-                music.switchLike(context = context)
+                music.switchLike()
             } catch (e: Throwable) {
                 if (e is LikesPlaylistCreationException) {
                     showSnackBar(

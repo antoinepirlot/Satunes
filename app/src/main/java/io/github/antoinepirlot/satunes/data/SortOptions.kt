@@ -25,6 +25,8 @@
 
 package io.github.antoinepirlot.satunes.data
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.models.radio_buttons.SortOptions
 
@@ -52,12 +54,22 @@ private val genresSortOptions: List<SortOptions> = listOf(
     SortOptions.TITLE,
 )
 
-private val musicsSortOptions: List<SortOptions> = listOf(
+private val musicsSortOptionsBeforeAndroidO: List<SortOptions> = listOf(
     SortOptions.TITLE,
     SortOptions.ALBUM,
     SortOptions.ARTIST,
     SortOptions.GENRE,
     SortOptions.YEAR
+)
+
+@RequiresApi(Build.VERSION_CODES.O)
+private val musicsSortOptions: List<SortOptions> = listOf(
+    SortOptions.TITLE,
+    SortOptions.ALBUM,
+    SortOptions.ARTIST,
+    SortOptions.GENRE,
+    SortOptions.YEAR,
+    SortOptions.DATE_ADDED
 )
 
 private val playlistsSortOptions: List<SortOptions> = listOf(
@@ -74,7 +86,10 @@ private val playlistsSortOptions: List<SortOptions> = listOf(
  */
 internal fun getSortOptions(destination: Destination): List<SortOptions> {
     return when (destination) {
-        Destination.MUSICS, Destination.ALBUM -> musicsSortOptions
+        Destination.MUSICS, Destination.ALBUM ->
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) musicsSortOptions
+            else musicsSortOptionsBeforeAndroidO
+
         Destination.ALBUMS -> albumsSortOptions
         Destination.ARTISTS -> artistsSortOptions
         Destination.FOLDERS -> foldersSortOptions

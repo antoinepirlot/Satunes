@@ -63,6 +63,7 @@ internal fun MediaCardList(
     if (mediaImplCollection.isEmpty()) return // It fixes issue while accessing last folder in chain
     val dataUiState: DataUiState by dataViewModel.uiState.collectAsState()
 
+    //TODO add onClick action with list in call back or something like this to make sort effective on play
     val sortOption: SortOptions = dataViewModel.sortOption
     val mediaImplList: List<MediaImpl> = if (sort) dataViewModel.sortMediaImplListBy(
         sortOption = sortOption,

@@ -54,7 +54,7 @@ class Music(
     val absolutePath: String,
     val duration: Long = 0,
     val size: Int = 0,
-    val year: Int? = null,
+    year: Int? = null,
     cdTrackNumber: Int? = null,
     var folder: Folder,
     val artist: Artist,
@@ -71,6 +71,10 @@ class Music(
                 throw IllegalArgumentException(message)
             }
             field = displayName
+        }
+    val year: Int? = year
+        get() {
+            return field ?: this.album.year
         }
     val cdTrackNumber: Int?
     var liked: MutableState<Boolean> = mutableStateOf(false)

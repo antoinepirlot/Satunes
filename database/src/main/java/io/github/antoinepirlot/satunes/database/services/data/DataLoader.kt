@@ -41,6 +41,9 @@ import io.github.antoinepirlot.satunes.database.services.database.DatabaseManage
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.database.services.widgets.WidgetDatabaseManager
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.nio.file.attribute.BasicFileAttributes
@@ -336,8 +339,10 @@ object DataLoader {
             folder = folder,
             genre = genre,
         )
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-            music.addedDate = Date(getCreationDate(path = absolutePath))
+        CoroutineScope(Dispatchers.IO).launch {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                music.addedDate = Date(getCreationDate(path = absolutePath))
+        }
         return music
     }
 

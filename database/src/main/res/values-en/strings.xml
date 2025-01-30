@@ -30,4 +30,5 @@
     <string name="include">Include</string>
     <string name="exclude">Exclude</string>
     <string name="various_artists">Various Artists</string>
+    <string name="years">Years</string>
 </resources>

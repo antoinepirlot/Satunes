@@ -29,7 +29,7 @@ import io.github.antoinepirlot.satunes.database.models.Music
 /**
  * @author Antoine Pirlot 30/01/2025
  */
-object SortByYearComparator : Comparator<MediaImpl> {
+object SortByYearsComparator : Comparator<MediaImpl> {
 
     /**
      * Sort o1 and o2 by dates.

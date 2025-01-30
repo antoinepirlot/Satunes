@@ -107,7 +107,7 @@ class SortByComparatorTests {
 
     @Test
     fun musicsSortByYearTest() {
-        val sortedList: List<Music> = _musics.sortedWith(SortByYearComparator)
+        val sortedList: List<Music> = _musics.sortedWith(SortByYearsComparator)
 
         var lastMusic: Music = sortedList[0]
         for (i: Int in 1..<sortedList.size) {

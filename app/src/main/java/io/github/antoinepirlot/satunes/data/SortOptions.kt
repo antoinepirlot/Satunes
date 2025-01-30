@@ -36,7 +36,8 @@ internal val defaultSortingOptions: SortOptions = SortOptions.TITLE
 
 private val albumsSortOptions: List<SortOptions> = listOf(
     SortOptions.TITLE,
-    SortOptions.ARTIST
+    SortOptions.ARTIST,
+    SortOptions.YEAR
 )
 
 private val artistsSortOptions: List<SortOptions> = listOf(
@@ -55,7 +56,8 @@ private val musicsSortOptions: List<SortOptions> = listOf(
     SortOptions.TITLE,
     SortOptions.ALBUM,
     SortOptions.ARTIST,
-    SortOptions.GENRE
+    SortOptions.GENRE,
+    SortOptions.YEAR
 )
 
 private val playlistsSortOptions: List<SortOptions> = listOf(

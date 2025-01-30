@@ -37,6 +37,7 @@ import androidx.compose.material.icons.rounded.BatterySaver
 import androidx.compose.material.icons.rounded.Category
 import androidx.compose.material.icons.rounded.CleaningServices
 import androidx.compose.material.icons.rounded.Close
+import androidx.compose.material.icons.rounded.DateRange
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.DirectionsCar
 import androidx.compose.material.icons.rounded.Done
@@ -182,4 +183,5 @@ enum class SatunesIcons(
     REWIND(imageVector = Icons.Rounded.FastRewind, description = "Rewind Icon"),
     WARNING(imageVector = Icons.Rounded.Warning, description = "Warning Icon"),
     TITLE(imageVector = Icons.Rounded.Title, description = "Title Icon"),
+    YEARS(imageVector = Icons.Rounded.DateRange, description = "Years Icon"),
 }

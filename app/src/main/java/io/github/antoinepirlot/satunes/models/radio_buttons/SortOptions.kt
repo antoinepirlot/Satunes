@@ -31,6 +31,7 @@ import io.github.antoinepirlot.satunes.database.models.comparators.SortByAlbumCo
 import io.github.antoinepirlot.satunes.database.models.comparators.SortByArtistComparator
 import io.github.antoinepirlot.satunes.database.models.comparators.SortByGenreComparator
 import io.github.antoinepirlot.satunes.database.models.comparators.SortByTitleComparator
+import io.github.antoinepirlot.satunes.database.models.comparators.SortByYearsComparator
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.database.R as RDb
 
@@ -53,5 +54,6 @@ enum class SortOptions(
         icon = SatunesIcons.GENRES,
         stringId = RDb.string.genres,
         comparator = SortByGenreComparator
-    )
+    ),
+    YEAR(icon = SatunesIcons.YEARS, stringId = RDb.string.years, comparator = SortByYearsComparator)
 }

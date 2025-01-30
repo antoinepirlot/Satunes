@@ -1011,7 +1011,7 @@ class DataViewModel : ViewModel() {
         sortOption: SortOptions,
         mediaImplList: Collection<MediaImpl>
     ): List<MediaImpl> {
-        return mediaImplList.sortedWith(sortOption.comparator)
+        return mediaImplList.sortedWith(sortOption.comparator!!)
     }
 
     fun setSorting(sortOption: SortOptions) {

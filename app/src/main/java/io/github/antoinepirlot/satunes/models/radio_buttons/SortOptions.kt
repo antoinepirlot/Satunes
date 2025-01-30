@@ -44,7 +44,7 @@ import io.github.antoinepirlot.satunes.database.R as RDb
 enum class SortOptions(
     val icon: SatunesIcons,
     val stringId: Int,
-    val comparator: Comparator<MediaImpl>
+    val comparator: Comparator<MediaImpl>?
 ) {
     ALBUM(
         icon = SatunesIcons.ALBUM,
@@ -67,6 +67,11 @@ enum class SortOptions(
         icon = SatunesIcons.GENRES,
         stringId = RDb.string.genres,
         comparator = SortByGenreComparator
+    ),
+    PLAYLIST_ADDED_DATE(
+        icon = SatunesIcons.ADDED_DATE,
+        stringId = RDb.string.added_date,
+        comparator = null
     ),
     TITLE(icon = SatunesIcons.TITLE, stringId = R.string.title, comparator = SortByTitleComparator),
     YEAR(icon = SatunesIcons.YEARS, stringId = RDb.string.years, comparator = SortByYearsComparator)

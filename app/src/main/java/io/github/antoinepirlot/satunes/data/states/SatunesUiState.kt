@@ -58,7 +58,11 @@ internal data class SatunesUiState(
     val repeatMode: Int = SettingsManager.repeatMode,
     val audioOffloadChecked: Boolean = SettingsManager.audioOffloadChecked,
     val barSpeed: BarSpeed = SettingsManager.barSpeed,
-    val showMediaOptions: Boolean = false,
+    /**
+     * Show the media's options dialog if not null.
+     * If not null, it represent from which media the options have to be shown on the screen.
+     */
+    val mediaToShowOptions: MediaImpl? = null,
     /**
      * This setting is true if the compilation's music has to be added to compilation's artist's music list
      */

@@ -63,7 +63,7 @@ internal fun PlaylistView(
     //Recompose if data changed
     if (playlist.title == LIKES_PLAYLIST_TITLE) {
         //This prevent the modal of music option closing after unlike press because the music is removed from the playlist
-        if (!satunesUiState.showMediaOptions) {
+        if (satunesUiState.mediaToShowOptions != null) {
             var mapChanged: Boolean by rememberSaveable { playlist.musicSetUpdated }
             if (mapChanged) {
                 mapChanged = false

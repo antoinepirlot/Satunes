@@ -448,15 +448,15 @@ internal class SatunesViewModel : ViewModel() {
         }
     }
 
-    fun showMediaOptions() {
+    fun showMediaOptionsOf(mediaImpl: MediaImpl) {
         _uiState.update { currentState: SatunesUiState ->
-            currentState.copy(showMediaOptions = true)
+            currentState.copy(mediaToShowOptions = mediaImpl)
         }
     }
 
     fun hideMediaOptions() {
         _uiState.update { currentState: SatunesUiState ->
-            currentState.copy(showMediaOptions = false)
+            currentState.copy(mediaToShowOptions = null)
         }
     }
 

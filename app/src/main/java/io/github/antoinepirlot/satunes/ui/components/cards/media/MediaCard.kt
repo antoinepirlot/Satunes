@@ -93,6 +93,7 @@ internal fun MediaCard(
     val navController: NavHostController = LocalNavController.current
     val haptics: HapticFeedback = LocalHapticFeedback.current
 
+    val showMediaOptions: Boolean = satunesUiState.mediaToShowOptions == mediaImpl
     val title: String =
         if (mediaImpl is Folder && mediaImpl.parentFolder == null) {
             getRootFolderName(title = mediaImpl.title)
@@ -105,7 +106,7 @@ internal fun MediaCard(
     val boxModifier: Modifier = if (!satunesUiState.showMediaSelectionDialog) {
         modifier.combinedClickable(
             onClick = {
-                if (!satunesUiState.showMediaOptions) {
+                if (!showMediaOptions) {
                     if (mediaImpl is Music)
                         playbackViewModel.loadMusicFromMedias(
                             medias = dataUiState.mediaImplListToShow,
@@ -122,7 +123,7 @@ internal fun MediaCard(
             onLongClick = if (enableExtraOptions) {
                 {
                     haptics.performHapticFeedback(HapticFeedbackType.LongPress)
-                    satunesViewModel.showMediaOptions()
+                    satunesViewModel.showMediaOptionsOf(mediaImpl = mediaImpl)
                 }
             } else null
         )
@@ -187,7 +188,7 @@ internal fun MediaCard(
     HorizontalDivider(modifier = modifier)
 
     // Media option dialog
-    if (satunesUiState.showMediaOptions) {
+    if (showMediaOptions) {
         MediaOptionsDialog(
             mediaImpl = mediaImpl,
             onDismissRequest = { satunesViewModel.hideMediaOptions() }

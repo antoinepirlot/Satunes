@@ -122,7 +122,7 @@ internal fun MusicPlayingControlView(
                         },
                         onLongClick = {
                             haptics.performHapticFeedback(HapticFeedbackType.LongPress)
-                            satunesViewModel.showMediaOptions()
+                            satunesViewModel.showMediaOptionsOf(mediaImpl = musicPlaying.artist)
                             showArtistOptions = true
                         }
                     ),

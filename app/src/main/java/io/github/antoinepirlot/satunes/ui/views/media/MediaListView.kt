@@ -61,7 +61,11 @@ internal fun MediaListView(
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     val dataUiState: DataUiState by dataViewModel.uiState.collectAsState()
     val lazyListState = rememberLazyListState()
-    dataViewModel.setMediaImplListToShow(mediaImplCollectionToShow = mediaImplCollection)
+
+    dataViewModel.setMediaImplListToShow(
+        mediaImplCollectionToShow = mediaImplCollection,
+        sort = sort
+    )
 
     if (satunesUiState.showSortDialog)
         SortListDialog()
@@ -72,7 +76,6 @@ internal fun MediaListView(
             lazyListState = lazyListState,
             header = header,
             showGroupIndication = showGroupIndication,
-            sort = sort
         )
     } else {
         if (header != null) {

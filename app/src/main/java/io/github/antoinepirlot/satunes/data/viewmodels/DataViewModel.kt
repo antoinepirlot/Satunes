@@ -999,23 +999,6 @@ class DataViewModel : ViewModel() {
         }
     }
 
-    /**
-     * Sort the media impl list by sortOption.
-     *
-     * @param sortOption the option to sort the [List] of [MediaImpl] with the [SortOptions].
-     *
-     */
-    fun sortMediaImplListToShowBy(
-        sortOption: SortOptions,
-    ) {
-        _uiState.update { currentState: DataUiState ->
-            currentState.copy(
-                mediaImplListToShow = currentState
-                    .mediaImplListToShow.sortedWith(comparator = sortOption.comparator!!)
-            )
-        }
-    }
-
     fun setSorting(sortOption: SortOptions) {
         this.sortOption = sortOption
     }
@@ -1049,14 +1032,44 @@ class DataViewModel : ViewModel() {
         }
     }
 
-    fun setMediaImplListToShow(mediaImplCollectionToShow: Collection<MediaImpl>) {
-        val mediaImplListToShow: List<MediaImpl> = try {
-            mediaImplCollectionToShow as List<MediaImpl>
-        } catch (e: ClassCastException) {
-            mediaImplCollectionToShow.toList()
-        }
+    /**
+     * Set the mediaImpl list to show on screen
+     *
+     * @param mediaImplCollectionToShow the list to show on screen
+     * @param sort true if the sort options has to be applied false otherwise
+     */
+    fun setMediaImplListToShow(
+        mediaImplCollectionToShow: Collection<MediaImpl>,
+        sort: Boolean
+    ) {
+        val mediaImplListToShow: List<MediaImpl> =
+            if (sort && this.sortOption.comparator != null)
+                mediaImplCollectionToShow.sortedWith(comparator = this.sortOption.comparator!!)
+            else
+                try {
+                    mediaImplCollectionToShow as List<MediaImpl>
+                } catch (e: ClassCastException) {
+                    mediaImplCollectionToShow.toList()
+                }
         _uiState.update { currentState: DataUiState ->
             currentState.copy(mediaImplListToShow = mediaImplListToShow)
+        }
+    }
+
+    /**
+     * Sort the media impl list by sortOption.
+     *
+     * @param sortOption the option to sort the [List] of [MediaImpl] with the [SortOptions].
+     *
+     */
+    private fun sortMediaImplListToShowBy(
+        sortOption: SortOptions,
+    ) {
+        _uiState.update { currentState: DataUiState ->
+            currentState.copy(
+                mediaImplListToShow = currentState
+                    .mediaImplListToShow.sortedWith(comparator = sortOption.comparator!!)
+            )
         }
     }
 }

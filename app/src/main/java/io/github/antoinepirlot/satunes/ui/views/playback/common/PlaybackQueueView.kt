@@ -43,13 +43,15 @@ internal fun PlaybackQueueView(
     dataViewModel: DataViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
 ) {
-    dataViewModel.setMediaImplListToShow(mediaImplCollectionToShow = playbackViewModel.getPlaylist())
+    dataViewModel.setMediaImplListToShow(
+        mediaImplCollectionToShow = playbackViewModel.getPlaylist(),
+        sort = false
+    )
     MediaCardList(
         modifier = modifier,
         scrollToMusicPlaying = true,
         header = { Title(text = stringResource(id = R.string.playback_queue)) },
         showGroupIndication = false,
-        sort = false
     )
 }
 

@@ -106,7 +106,7 @@ class SortByComparatorTests {
     }
 
     @Test
-    fun sortByYearTest() {
+    fun musicsSortByYearTest() {
         val sortedList: List<Music> = _musics.sortedWith(SortByYearComparator)
 
         var lastMusic: Music = sortedList[0]
@@ -115,6 +115,9 @@ class SortByComparatorTests {
             val lastMusicYear: Int? = lastMusic.year
             val currentMusicYear: Int? = currentMusic.year
             if (lastMusicYear == null) assertTrue(currentMusicYear == null)
+            else if (lastMusicYear == currentMusicYear)
+            //Check by title
+                assertTrue(lastMusic <= currentMusic)
             else if (currentMusicYear != null) assertTrue(lastMusicYear >= currentMusicYear)
             lastMusic = currentMusic
         }

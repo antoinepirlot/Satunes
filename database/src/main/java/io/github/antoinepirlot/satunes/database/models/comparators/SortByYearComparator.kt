@@ -51,7 +51,10 @@ object SortByYearComparator : Comparator<MediaImpl> {
             is Album -> o2.year
             else -> throw UnsupportedOperationException("Only Musics and Albums can be sorted by year")
         }
-        return if (year1 == year2) 0
+        return if (year1 == year2) {
+            if (year1 == null) 0
+            else o1.compareTo(o2)
+        }
         else if (year1 == null)
             1
         else if (year2 == null)

@@ -56,7 +56,6 @@ internal fun MediaCardList(
     showGroupIndication: Boolean = true,
 ) {
     val dataUiState: DataUiState by dataViewModel.uiState.collectAsState()
-    if (mediaImplList.isEmpty()) return // It fixes issue while accessing last folder in chain
     val showFirstLetter: Boolean = dataUiState.showFirstLetter
     val sortOption: SortOptions = dataViewModel.sortOption
 

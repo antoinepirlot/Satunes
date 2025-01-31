@@ -89,6 +89,9 @@ class DataViewModel : ViewModel() {
 
     var sortOption: SortOptions by mutableStateOf(defaultSortingOptions)
         private set
+    var lastSortOption: SortOptions by mutableStateOf(defaultSortingOptions)
+        private set
+
 
     val isLoaded: Boolean by _isLoaded
 
@@ -1000,6 +1003,7 @@ class DataViewModel : ViewModel() {
     }
 
     fun setSorting(sortOption: SortOptions) {
+        this.lastSortOption = this.sortOption
         this.sortOption = sortOption
     }
 
@@ -1033,26 +1037,15 @@ class DataViewModel : ViewModel() {
     }
 
     /**
-     * Set the mediaImpl list to show on screen
+     * Set the mediaImpl list shown on screen in the uiState
      *
-     * @param mediaImplCollectionToShow the list to show on screen
-     * @param sort true if the sort options has to be applied false otherwise
+     * @param mediaImplCollection the list of mediaImpl shown on screen
      */
     fun setMediaImplListToShow(
-        mediaImplCollectionToShow: Collection<MediaImpl>,
-        sort: Boolean
+        mediaImplCollection: Collection<MediaImpl>,
     ) {
-        val mediaImplListToShow: List<MediaImpl> =
-            if (sort && this.sortOption.comparator != null)
-                mediaImplCollectionToShow.sortedWith(comparator = this.sortOption.comparator!!)
-            else
-                try {
-                    mediaImplCollectionToShow as List<MediaImpl>
-                } catch (e: ClassCastException) {
-                    mediaImplCollectionToShow.toList()
-                }
         _uiState.update { currentState: DataUiState ->
-            currentState.copy(mediaImplListToShow = mediaImplListToShow)
+            currentState.copy(mediaImplListOnScreen = mediaImplCollection)
         }
     }
 }

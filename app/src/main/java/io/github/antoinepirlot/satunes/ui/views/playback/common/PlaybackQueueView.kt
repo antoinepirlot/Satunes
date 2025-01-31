@@ -32,6 +32,7 @@ import io.github.antoinepirlot.jetpack_libs.components.texts.Title
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
+import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.ui.components.cards.media.MediaCardList
 
 /**
@@ -44,15 +45,14 @@ internal fun PlaybackQueueView(
     dataViewModel: DataViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
 ) {
+    val musicsQueue: List<Music> = playbackViewModel.getPlaylist()
     LaunchedEffect(key1 = Unit) {
-        dataViewModel.setMediaImplListToShow(
-            mediaImplCollectionToShow = playbackViewModel.getPlaylist(),
-            sort = false
-        )
+        dataViewModel.setMediaImplListToShow(mediaImplCollection = musicsQueue)
     }
 
     MediaCardList(
         modifier = modifier,
+        mediaImplList = musicsQueue,
         scrollToMusicPlaying = true,
         header = { Title(text = stringResource(id = R.string.playback_queue)) },
         showGroupIndication = false,

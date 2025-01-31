@@ -27,6 +27,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -40,6 +43,7 @@ import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.models.radio_buttons.SortOptions
 import io.github.antoinepirlot.satunes.ui.components.EmptyView
 import io.github.antoinepirlot.satunes.ui.components.cards.media.MediaCardList
 import io.github.antoinepirlot.satunes.ui.components.dialog.SortListDialog
@@ -62,20 +66,28 @@ internal fun MediaListView(
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     val dataUiState: DataUiState by dataViewModel.uiState.collectAsState()
     val lazyListState = rememberLazyListState()
+    val sortOption: SortOptions = dataViewModel.sortOption
+    var mediaImplListToShow: List<MediaImpl> by rememberSaveable { mutableStateOf(listOf()) }
 
-    LaunchedEffect(key1 = dataViewModel.sortOption) {
-        dataViewModel.setMediaImplListToShow(
-            mediaImplCollectionToShow = mediaImplCollection,
-            sort = sort
-        )
+    LaunchedEffect(key1 = sortOption) {
+        mediaImplListToShow = if (sort && sortOption.comparator != null)
+            mediaImplCollection.sortedWith(comparator = sortOption.comparator)
+        else
+            try {
+                mediaImplCollection as List<MediaImpl>
+            } catch (e: ClassCastException) {
+                mediaImplCollection.toList()
+            }
+        dataViewModel.setMediaImplListToShow(mediaImplCollection = mediaImplListToShow)
     }
 
     if (satunesUiState.showSortDialog)
         SortListDialog()
 
-    if (dataUiState.mediaImplListToShow.isNotEmpty()) {
+    if (dataUiState.mediaImplListOnScreen.isNotEmpty()) {
         MediaCardList(
             modifier = modifier,
+            mediaImplList = mediaImplListToShow,
             lazyListState = lazyListState,
             header = header,
             showGroupIndication = showGroupIndication,

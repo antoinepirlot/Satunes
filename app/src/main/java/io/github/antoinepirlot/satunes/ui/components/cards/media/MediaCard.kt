@@ -109,7 +109,7 @@ internal fun MediaCard(
                 if (!showMediaOptions) {
                     if (mediaImpl is Music)
                         playbackViewModel.loadMusicFromMedias(
-                            medias = dataUiState.mediaImplListToShow,
+                            medias = dataUiState.mediaImplListOnScreen,
                             musicToPlay = mediaImpl
                         )
                     openMedia(

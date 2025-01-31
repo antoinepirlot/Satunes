@@ -26,6 +26,6 @@ import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 
 data class DataUiState(
-    val mediaImplListToShow: List<MediaImpl> = listOf(),
+    val mediaImplListOnScreen: Collection<MediaImpl> = listOf(),
     val showFirstLetter: Boolean = SettingsManager.showFirstLetter
 )

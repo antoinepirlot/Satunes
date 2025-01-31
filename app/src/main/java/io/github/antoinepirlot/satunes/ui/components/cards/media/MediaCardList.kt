@@ -39,9 +39,6 @@ import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.models.radio_buttons.SortOptions
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 /**
  * @author Antoine Pirlot on 16/01/2024
@@ -53,21 +50,15 @@ internal fun MediaCardList(
     lazyListState: LazyListState = rememberLazyListState(),
     dataViewModel: DataViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
+    mediaImplList: List<MediaImpl>,
     header: @Composable (() -> Unit)? = null,
     scrollToMusicPlaying: Boolean = false,
     showGroupIndication: Boolean = true,
 ) {
     val dataUiState: DataUiState by dataViewModel.uiState.collectAsState()
-    val mediaImplList: List<MediaImpl> = dataUiState.mediaImplListToShow
     if (mediaImplList.isEmpty()) return // It fixes issue while accessing last folder in chain
     val showFirstLetter: Boolean = dataUiState.showFirstLetter
     val sortOption: SortOptions = dataViewModel.sortOption
-
-    LaunchedEffect(key1 = dataViewModel.sortOption) {
-        CoroutineScope(Dispatchers.Main).launch {
-            lazyListState.scrollToItem(0)
-        }
-    }
 
     LazyColumn(
         modifier = modifier,
@@ -126,5 +117,5 @@ internal fun MediaCardList(
 @Composable
 @Preview
 private fun CardListPreview() {
-    MediaCardList(header = {}, scrollToMusicPlaying = false)
+    MediaCardList(mediaImplList = listOf(), header = {}, scrollToMusicPlaying = false)
 }

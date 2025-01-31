@@ -1,7 +1,23 @@
 # Releases (🇬🇧)
 Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
-## 3.0 (Android 5.1.1 Lollipop and later)
+## 3.0 (Android 5.1.1 Lollipop and later
+
+### 3.0.0-alpha-2
+
+New features:
+
+* Added sorting by year and last added for music (in some views at the moment)
+* Adding media to playlists now removes them if they are present (entirely for those who are not
+  music)
+
+Improvements, optimizations and troubleshooting:
+
+* Startup optimization
+* When the list is sorted, the list loaded in playback corresponds to the sort
+* When the user changes the view from one media type to another, the navigation bar refelcts the
+  changement
+* Other indirect optimizations and improvements
 
 ### 3.0.0-alpha-1
 

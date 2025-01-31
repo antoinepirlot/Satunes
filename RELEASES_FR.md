@@ -3,6 +3,22 @@ You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
 ## 3.0 (Android 5.1.1 Lollipop et ultérieur)
 
+### 3.0.0-alpha-2
+
+Nouvelles fonctionnalités:
+
+* Ajout du tri par années et dernier ajout pour les musiques (dans certaines vues pour le moment)
+* L'ajout des médias dans les playlists permet maintenant de les supprimer s'il y sont présents (
+  entièrement pour ceux qui ne sont pas des musiques)
+
+Améliorations, optimisations et dépannage:
+
+* Optimisation du démarrage
+* Lorsque la liste es triée, la liste chargée en playback correspond au tri
+* Lorsque l'utilisateur change de vue d'un type de média à un autre, la barre de navigation reflète
+  le changement
+* Autres optimisations et améliorations indirects
+
 ### 3.0.0-alpha-1
 
 Nouvelles fonctionnalités:

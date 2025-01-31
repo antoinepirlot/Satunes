@@ -100,25 +100,18 @@ internal fun MediaListView(
                     val playlist: Playlist = satunesUiState.currentMediaImpl as Playlist
                     mediaImplListToShow.addAll(
                         mediaImplCollection.sortedBy { mediaImpl: MediaImpl ->
-                            (mediaImpl as Music).getOrder(
-                                playlist = playlist
-                            )
+                            -(mediaImpl as Music).getOrder(playlist = playlist)
                         }
                     )
                 } else if (sortOption.comparator != null) {
                     mediaImplListToShow.addAll(mediaImplCollection.sortedWith(comparator = sortOption.comparator))
                 }
             } else {
-                //TODO I don't understand why both cases for this sort as it's exactly the same code
                 if (sortOption == SortOptions.PLAYLIST_ADDED_DATE) {
                     val playlist: Playlist = satunesUiState.currentMediaImpl as Playlist
-                    mediaImplListToShow.addAll(
-                        mediaImplCollection.sortedBy { mediaImpl: MediaImpl ->
-                            (mediaImpl as Music).getOrder(
-                                playlist = playlist
-                            )
-                        }
-                    )
+                    mediaImplListToShow.sortBy { mediaImpl: MediaImpl ->
+                        -(mediaImpl as Music).getOrder(playlist = playlist)
+                    }
                 } else if (sortOption.comparator != null) {
                     mediaImplListToShow.sortWith(comparator = sortOption.comparator)
                 }

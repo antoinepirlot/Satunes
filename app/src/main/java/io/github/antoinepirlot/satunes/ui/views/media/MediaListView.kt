@@ -28,7 +28,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -72,7 +75,21 @@ internal fun MediaListView(
     //Plus this system insure the list can be scrolled correctly to the first item of the list (copying a new list make it not working as expected)
     val mediaImplListToShow: MutableList<MediaImpl> = remember { mutableStateListOf() }
 
-    LaunchedEffect(key1 = sortOption, key2 = mediaImplCollection, key3 = mediaImplCollection.size) {
+    /**
+     * Used to know when the mediaImplListToShow must be cleared
+     */
+    var reset: Boolean by rememberSaveable { mutableStateOf(false) }
+
+    LaunchedEffect(key1 = mediaImplListToShow, key2 = mediaImplCollection.size) {
+        reset = true
+    }
+
+    LaunchedEffect(key1 = sortOption, key2 = reset) {
+        if (reset) {
+            mediaImplListToShow.clear()
+            reset = false
+        }
+
         if (sort) {
             if (mediaImplListToShow.isEmpty()) {
                 if (sortOption == SortOptions.PLAYLIST_ADDED_DATE) {

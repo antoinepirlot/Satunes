@@ -22,6 +22,7 @@
 
 package io.github.antoinepirlot.satunes.ui.views.media
 
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -95,28 +96,13 @@ internal fun MediaListView(
         }
 
         if (sort) {
-            if (mediaImplListToShow.isEmpty()) {
-                if (sortOption == SortOptions.PLAYLIST_ADDED_DATE) {
-                    val playlist: Playlist = satunesUiState.currentMediaImpl as Playlist
-                    mediaImplListToShow.addAll(
-                        mediaImplCollection.sortedBy { mediaImpl: MediaImpl ->
-                            -(mediaImpl as Music).getOrder(playlist = playlist)
-                        }
-                    )
-                } else if (sortOption.comparator != null) {
-                    mediaImplListToShow.addAll(mediaImplCollection.sortedWith(comparator = sortOption.comparator))
-                }
-            } else {
-                if (sortOption == SortOptions.PLAYLIST_ADDED_DATE) {
-                    val playlist: Playlist = satunesUiState.currentMediaImpl as Playlist
-                    mediaImplListToShow.sortBy { mediaImpl: MediaImpl ->
-                        -(mediaImpl as Music).getOrder(playlist = playlist)
-                    }
-                } else if (sortOption.comparator != null) {
-                    mediaImplListToShow.sortWith(comparator = sortOption.comparator)
-                }
-                lazyListState.scrollToItem(0)
-            }
+            sort(
+                satunesUiState = satunesUiState,
+                lazyListState = lazyListState,
+                source = mediaImplCollection,
+                destination = mediaImplListToShow,
+                sortOption = sortOption
+            )
         } else {
             mediaImplListToShow.addAll(elements = mediaImplCollection)
         }
@@ -143,6 +129,37 @@ internal fun MediaListView(
                 text = emptyViewText
             )
         }
+    }
+}
+
+private suspend fun sort(
+    satunesUiState: SatunesUiState,
+    lazyListState: LazyListState,
+    source: Collection<MediaImpl>,
+    destination: MutableList<MediaImpl>,
+    sortOption: SortOptions
+) {
+    if (destination.isEmpty()) {
+        if (sortOption == SortOptions.PLAYLIST_ADDED_DATE) {
+            val playlist: Playlist = satunesUiState.currentMediaImpl as Playlist
+            destination.addAll(
+                source.sortedBy { mediaImpl: MediaImpl ->
+                    -(mediaImpl as Music).getOrder(playlist = playlist)
+                }
+            )
+        } else if (sortOption.comparator != null) {
+            destination.addAll(source.sortedWith(comparator = sortOption.comparator))
+        }
+    } else {
+        if (sortOption == SortOptions.PLAYLIST_ADDED_DATE) {
+            val playlist: Playlist = satunesUiState.currentMediaImpl as Playlist
+            destination.sortBy { mediaImpl: MediaImpl ->
+                -(mediaImpl as Music).getOrder(playlist = playlist)
+            }
+        } else if (sortOption.comparator != null) {
+            destination.sortWith(comparator = sortOption.comparator)
+        }
+        lazyListState.scrollToItem(0)
     }
 }
 

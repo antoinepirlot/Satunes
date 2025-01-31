@@ -72,7 +72,7 @@ internal fun MediaListView(
     //Plus this system insure the list can be scrolled correctly to the first item of the list (copying a new list make it not working as expected)
     val mediaImplListToShow: MutableList<MediaImpl> = remember { mutableStateListOf() }
 
-    LaunchedEffect(key1 = sortOption) {
+    LaunchedEffect(key1 = sortOption, key2 = mediaImplCollection, key3 = mediaImplCollection.size) {
         if (sort) {
             if (mediaImplListToShow.isEmpty()) {
                 if (sortOption == SortOptions.PLAYLIST_ADDED_DATE) {

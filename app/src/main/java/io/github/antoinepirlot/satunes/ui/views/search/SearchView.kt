@@ -53,8 +53,8 @@ import io.github.antoinepirlot.satunes.data.states.SearchUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SearchViewModel
 import io.github.antoinepirlot.satunes.models.SearchChips
+import io.github.antoinepirlot.satunes.ui.components.cards.media.MediaCardList
 import io.github.antoinepirlot.satunes.ui.components.chips.MediaChipList
-import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -124,9 +124,9 @@ internal fun SearchView(
         )
         Spacer(modifier = Modifier.size(16.dp))
         MediaChipList()
-        MediaListView(
-            mediaImplCollection = searchUiState.mediaImplSet,
-            emptyViewText = stringResource(id = R.string.no_result)
+        MediaCardList(
+            mediaImplList = searchUiState.mediaImplSet.toList(),
+//            emptyViewText = stringResource(id = R.string.no_result)
         )
     }
 }

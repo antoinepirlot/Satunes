@@ -73,7 +73,7 @@ internal fun MediaListView(
     val mediaImplListToShow: MutableList<MediaImpl> = remember { mutableStateListOf() }
 
     LaunchedEffect(key1 = sortOption) {
-        if (sort && sortOption.comparator != null) {
+        if (sort) {
             if (mediaImplListToShow.isEmpty()) {
                 if (sortOption == SortOptions.PLAYLIST_ADDED_DATE) {
                     val playlist: Playlist = satunesUiState.currentMediaImpl as Playlist
@@ -84,7 +84,7 @@ internal fun MediaListView(
                             )
                         }
                     )
-                } else {
+                } else if (sortOption.comparator != null) {
                     mediaImplListToShow.addAll(mediaImplCollection.sortedWith(comparator = sortOption.comparator))
                 }
             } else {
@@ -97,17 +97,13 @@ internal fun MediaListView(
                             )
                         }
                     )
-                } else {
+                } else if (sortOption.comparator != null) {
                     mediaImplListToShow.sortWith(comparator = sortOption.comparator)
                 }
                 lazyListState.scrollToItem(0)
             }
         } else {
-            try {
-                mediaImplCollection as List<MediaImpl>
-            } catch (e: ClassCastException) {
-                mediaImplCollection.toList()
-            }
+            mediaImplListToShow.addAll(elements = mediaImplCollection)
         }
         dataViewModel.setMediaImplListToShow(mediaImplCollection = mediaImplListToShow)
     }

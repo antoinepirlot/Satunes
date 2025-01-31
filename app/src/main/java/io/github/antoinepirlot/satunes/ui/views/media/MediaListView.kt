@@ -80,13 +80,14 @@ internal fun MediaListView(
      * Used to know when the mediaImplListToShow must be cleared
      */
     var reset: Boolean by rememberSaveable { mutableStateOf(true) }
+    val isMediaOptionsOpened: Boolean = satunesUiState.mediaToShowOptions != null
 
     LaunchedEffect(key1 = mediaImplListToShow, key2 = mediaImplCollection.size) {
         reset = true
     }
 
-    LaunchedEffect(key1 = sortOption, key2 = reset) {
-        if (reset) {
+    LaunchedEffect(key1 = sortOption, key2 = reset, key3 = isMediaOptionsOpened) {
+        if (!isMediaOptionsOpened && reset) {
             if (mediaImplListToShow.isNotEmpty()) {
                 lazyListState.scrollToItem(0)
                 mediaImplListToShow.clear()

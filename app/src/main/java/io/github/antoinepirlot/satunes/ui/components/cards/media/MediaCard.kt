@@ -190,7 +190,9 @@ internal fun MediaCard(
     if (showMediaOptions) {
         MediaOptionsDialog(
             mediaImpl = mediaImpl,
-            onDismissRequest = { satunesViewModel.hideMediaOptions() }
+            onDismissRequest = {
+                satunesViewModel.hideMediaOptions()
+            }
         )
     }
 }

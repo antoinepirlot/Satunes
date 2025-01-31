@@ -59,6 +59,12 @@ class Music(
     val uri: Uri? = Uri.parse(encode(absolutePath)) // Must be init before media item
 ) : MediaImpl(id = id, title = title.ifBlank { displayName }) {
     private val _logger: SatunesLogger? = SatunesLogger.getLogger()
+
+    /**
+     * Remember in which order music has been added to playlists
+     */
+    private val _playlistsOrderMap: MutableMap<Playlist, Long> = mutableMapOf()
+
     val cdTrackNumber: Int?
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -124,6 +130,43 @@ class Music(
             _logger?.warning(e.message)
             null
         }
+    }
+
+    /**
+     * Link this [Music] to [Playlist] with its order in the [Playlist].
+     *
+     * @param playlist a [Playlist] where this [Music] has been added.
+     * @param order [Long] value indicating the position in the playlist.
+     *
+     * @throws IllegalArgumentException if the [Playlist] has already been added.
+     */
+    fun setOrderInPlaylist(playlist: Playlist, order: Long) {
+        if (this._playlistsOrderMap.containsKey(key = playlist))
+            throw IllegalArgumentException(
+                "$playlist already exist with the order: ${_playlistsOrderMap[playlist]}"
+            )
+        this._playlistsOrderMap[playlist] = order
+    }
+
+    /**
+     * Remove the link between this [Music] and the [Playlist].
+     *
+     * @param playlist the [Playlist] to remove the link.
+     */
+    fun removeOrderInPlaylist(playlist: Playlist) {
+        this._playlistsOrderMap.remove(key = playlist)
+    }
+
+    /**
+     * Returns the order of this [Music] in the [Playlist]
+     * or -1 if there's no link between this [Music] and the [Playlist].
+     *
+     * @param playlist the [Playlist] where this [Music] should be.
+     *
+     * @return a [Long] value representing the order of this [Music] in the [Playlist] otherwise -1.
+     */
+    fun getOrder(playlist: Playlist): Long {
+        return this._playlistsOrderMap[playlist] ?: -1
     }
 
     override fun equals(other: Any?): Boolean {

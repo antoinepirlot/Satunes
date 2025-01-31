@@ -42,6 +42,7 @@ import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.models.radio_buttons.SortOptions
 import io.github.antoinepirlot.satunes.ui.components.EmptyView
 import io.github.antoinepirlot.satunes.ui.components.cards.media.MediaCardList
@@ -72,19 +73,42 @@ internal fun MediaListView(
     val mediaImplListToShow: MutableList<MediaImpl> = remember { mutableStateListOf() }
 
     LaunchedEffect(key1 = sortOption) {
-        if (sort && sortOption.comparator != null)
-            if (mediaImplListToShow.isEmpty())
-                mediaImplListToShow.addAll(mediaImplCollection.sortedWith(comparator = sortOption.comparator))
-            else {
-                mediaImplListToShow.sortWith(comparator = sortOption.comparator)
+        if (sort && sortOption.comparator != null) {
+            if (mediaImplListToShow.isEmpty()) {
+                if (sortOption == SortOptions.PLAYLIST_ADDED_DATE) {
+                    val playlist: Playlist = satunesUiState.currentMediaImpl as Playlist
+                    mediaImplListToShow.addAll(
+                        mediaImplCollection.sortedBy { mediaImpl: MediaImpl ->
+                            (mediaImpl as Music).getOrder(
+                                playlist = playlist
+                            )
+                        }
+                    )
+                } else {
+                    mediaImplListToShow.addAll(mediaImplCollection.sortedWith(comparator = sortOption.comparator))
+                }
+            } else {
+                if (sortOption == SortOptions.PLAYLIST_ADDED_DATE) {
+                    val playlist: Playlist = satunesUiState.currentMediaImpl as Playlist
+                    mediaImplListToShow.addAll(
+                        mediaImplCollection.sortedBy { mediaImpl: MediaImpl ->
+                            (mediaImpl as Music).getOrder(
+                                playlist = playlist
+                            )
+                        }
+                    )
+                } else {
+                    mediaImplListToShow.sortWith(comparator = sortOption.comparator)
+                }
                 lazyListState.scrollToItem(0)
             }
-        else
+        } else {
             try {
                 mediaImplCollection as List<MediaImpl>
             } catch (e: ClassCastException) {
                 mediaImplCollection.toList()
             }
+        }
         dataViewModel.setMediaImplListToShow(mediaImplCollection = mediaImplListToShow)
     }
 

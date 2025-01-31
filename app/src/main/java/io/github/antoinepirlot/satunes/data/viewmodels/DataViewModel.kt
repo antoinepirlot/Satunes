@@ -89,9 +89,6 @@ class DataViewModel : ViewModel() {
 
     var sortOption: SortOptions by mutableStateOf(defaultSortingOptions)
         private set
-    var lastSortOption: SortOptions by mutableStateOf(defaultSortingOptions)
-        private set
-
 
     val isLoaded: Boolean by _isLoaded
 
@@ -1003,7 +1000,6 @@ class DataViewModel : ViewModel() {
     }
 
     fun setSorting(sortOption: SortOptions) {
-        this.lastSortOption = this.sortOption
         this.sortOption = sortOption
     }
 

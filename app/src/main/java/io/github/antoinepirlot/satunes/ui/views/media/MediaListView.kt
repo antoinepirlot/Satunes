@@ -27,9 +27,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -67,11 +66,19 @@ internal fun MediaListView(
     val dataUiState: DataUiState by dataViewModel.uiState.collectAsState()
     val lazyListState = rememberLazyListState()
     val sortOption: SortOptions = dataViewModel.sortOption
-    var mediaImplListToShow: List<MediaImpl> by rememberSaveable { mutableStateOf(listOf()) }
+
+    //Do not put the list to show in ui state as it will reset list scroll when user goes back to the last page
+    //Plus this system insure the list can be scrolled correctly to the first item of the list (copying a new list make it not working as expected)
+    val mediaImplListToShow: MutableList<MediaImpl> = remember { mutableStateListOf() }
 
     LaunchedEffect(key1 = sortOption) {
-        mediaImplListToShow = if (sort && sortOption.comparator != null)
-            mediaImplCollection.sortedWith(comparator = sortOption.comparator)
+        if (sort && sortOption.comparator != null)
+            if (mediaImplListToShow.isEmpty())
+                mediaImplListToShow.addAll(mediaImplCollection.sortedWith(comparator = sortOption.comparator))
+            else {
+                mediaImplListToShow.sortWith(comparator = sortOption.comparator)
+                lazyListState.scrollToItem(0)
+            }
         else
             try {
                 mediaImplCollection as List<MediaImpl>

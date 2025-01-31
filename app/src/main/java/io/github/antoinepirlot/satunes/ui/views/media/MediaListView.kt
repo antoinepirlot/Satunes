@@ -78,7 +78,7 @@ internal fun MediaListView(
     /**
      * Used to know when the mediaImplListToShow must be cleared
      */
-    var reset: Boolean by rememberSaveable { mutableStateOf(false) }
+    var reset: Boolean by rememberSaveable { mutableStateOf(true) }
 
     LaunchedEffect(key1 = mediaImplListToShow, key2 = mediaImplCollection.size) {
         reset = true
@@ -86,8 +86,12 @@ internal fun MediaListView(
 
     LaunchedEffect(key1 = sortOption, key2 = reset) {
         if (reset) {
-            mediaImplListToShow.clear()
+            if (mediaImplListToShow.isNotEmpty()) {
+                lazyListState.scrollToItem(0)
+                mediaImplListToShow.clear()
+            }
             reset = false
+            return@LaunchedEffect //As this LaunchedEffect will be recalled when reset will be changed to false
         }
 
         if (sort) {

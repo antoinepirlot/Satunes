@@ -37,7 +37,6 @@ import androidx.media3.common.MediaMetadata
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
-import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import java.util.Date
 
 /**
@@ -58,7 +57,6 @@ class Music(
     val genre: Genre,
     val uri: Uri? = Uri.parse(encode(absolutePath)) // Must be init before media item
 ) : MediaImpl(id = id, title = title.ifBlank { displayName }) {
-    private val _logger: SatunesLogger? = SatunesLogger.getLogger()
 
     /**
      * Remember in which order music has been added to playlists

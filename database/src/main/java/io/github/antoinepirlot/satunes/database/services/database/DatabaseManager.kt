@@ -44,6 +44,7 @@ import io.github.antoinepirlot.satunes.database.models.database.relations.Playli
 import io.github.antoinepirlot.satunes.database.models.database.tables.MusicDB
 import io.github.antoinepirlot.satunes.database.models.database.tables.MusicsPlaylistsRel
 import io.github.antoinepirlot.satunes.database.models.database.tables.PlaylistDB
+import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import io.github.antoinepirlot.satunes.utils.utils.readTextFromUri
@@ -231,7 +232,8 @@ class DatabaseManager private constructor(context: Context) {
         val musicsPlaylistsRel =
             MusicsPlaylistsRel(
                 musicId = music.id,
-                playlistId = playlist.id
+                playlistId = playlist.id,
+                addedDateMs = System.currentTimeMillis()
             )
         try {
             musicsPlaylistsRelDAO.insert(musicsPlaylistsRel)
@@ -260,7 +262,7 @@ class DatabaseManager private constructor(context: Context) {
 
     fun updateMusicToPlaylists(music: Music, newPlaylistsCollection: Collection<Playlist>) {
         val oldPlaylistCollection: Collection<Long> =
-            musicsPlaylistsRelDAO.getAll(musicId = music.id)
+            musicsPlaylistsRelDAO.getAllPlaylistsIdsOf(musicId = music.id)
         val newPlaylists: MutableCollection<Playlist> = newPlaylistsCollection.toMutableSet()
         val removedPlaylist: MutableCollection<Playlist> = mutableSetOf()
         for (oldPlaylistId: Long in oldPlaylistCollection) {
@@ -505,5 +507,14 @@ class DatabaseManager private constructor(context: Context) {
                 musicDao.delete(musicId = musicId)
             }
         }
+    }
+
+    suspend fun getOrder(playlist: Playlist, music: Music): Long {
+        if (!DataLoader.isLoading.value) _logger?.info("Get Order") // It will reduce startup speed if executed
+        val musicsPlaylistsRelList: List<MusicsPlaylistsRel> =
+            musicsPlaylistsRelDAO.getAllFromPlaylist(playlistId = playlist.id)
+        val musicsPlaylistsRel: MusicsPlaylistsRel =
+            musicsPlaylistsRelList.first { it.musicId == music.id }
+        return musicsPlaylistsRel.addedDateMs
     }
 }

@@ -35,5 +35,6 @@ import androidx.room.Entity
 )
 internal data class MusicsPlaylistsRel(
     @ColumnInfo(name = "playlist_id") val playlistId: Long,
-    @ColumnInfo(name = "music_id") val musicId: Long
+    @ColumnInfo(name = "music_id") val musicId: Long,
+    @ColumnInfo(name = "added_date_ms") val addedDateMs: Long
 )

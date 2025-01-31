@@ -109,6 +109,7 @@ internal fun MediaListView(
                     mediaImplListToShow.addAll(mediaImplCollection.sortedWith(comparator = sortOption.comparator))
                 }
             } else {
+                //TODO I don't understand why both cases for this sort as it's exactly the same code
                 if (sortOption == SortOptions.PLAYLIST_ADDED_DATE) {
                     val playlist: Playlist = satunesUiState.currentMediaImpl as Playlist
                     mediaImplListToShow.addAll(

@@ -35,5 +35,5 @@ data class SearchUiState(
     val genresFilter: Boolean = SettingsManager.genresFilter,
     val foldersFilter: Boolean = SettingsManager.foldersFilter,
     val playlistsFilter: Boolean = SettingsManager.playlistsFilter,
-    val mediaImplSet: Set<MediaImpl> = setOf()
+    val mediaImplSet: Collection<MediaImpl> = listOf()
 )

@@ -41,6 +41,9 @@ import io.github.antoinepirlot.satunes.database.services.database.DatabaseManage
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.database.services.widgets.WidgetDatabaseManager
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.nio.file.attribute.BasicFileAttributes
@@ -78,7 +81,7 @@ object DataLoader {
     private var genreNameColumnId: Int? = null
 
     private const val UNKNOWN_ARTIST = "<unknown>"
-    private const val UNKNOWN_ALBUM = "Unknown Album"
+    private const val UNKNOWN_ALBUM = "<unknown>"
     private const val UNKNOWN_GENRE = "<unknown>"
 
     private var projection: Array<String> = arrayOf(
@@ -336,8 +339,10 @@ object DataLoader {
             folder = folder,
             genre = genre,
         )
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-            music.addedDate = Date(getCreationDate(path = absolutePath))
+        CoroutineScope(Dispatchers.IO).launch {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                music.addedDate = Date(getCreationDate(path = absolutePath))
+        }
         return music
     }
 

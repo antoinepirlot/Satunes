@@ -45,7 +45,6 @@ android {
 dependencies {
 
     implementation(libs.material)
-    implementation(libs.junit.junit)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
@@ -84,6 +83,8 @@ dependencies {
      */
     implementation(libs.androidx.room.runtime)
     annotationProcessor(libs.androidx.room.compiler)
+    // To use Coroutine
+    implementation(libs.androidx.room.ktx)
     // To use Kotlin Symbol Processing (KSP)
     ksp(libs.androidx.room.compiler)
 

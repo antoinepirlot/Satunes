@@ -28,6 +28,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import io.github.antoinepirlot.satunes.database.models.comparators.StringComparator
+import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import java.util.SortedSet
 
 /**
@@ -37,6 +38,8 @@ abstract class MediaImpl(
     id: Long,
     title: String
 ) : Media, Comparable<MediaImpl> {
+    protected val _logger: SatunesLogger? = SatunesLogger.getLogger()
+
     override var id: Long = id
         internal set
     override var title: String by mutableStateOf(value = title)
@@ -72,19 +75,19 @@ abstract class MediaImpl(
         }
     }
 
-    fun addMusic(music: Music) {
+    open fun addMusic(music: Music) {
         if (!this.musicSortedSet.contains(element = music)) {
             this.musicSortedSet.add(element = music)
             this.musicSetUpdated.value = true
         }
     }
 
-    fun addMusics(musics: Collection<Music>) {
+    open fun addMusics(musics: Collection<Music>) {
         this.musicSortedSet.addAll(musics)
         this.musicSetUpdated.value = true
     }
 
-    fun removeMusic(music: Music) {
+    open fun removeMusic(music: Music) {
         if (this.musicSortedSet.contains(element = music)) {
             this.musicSortedSet.remove(music)
             this.musicSetUpdated.value = true
@@ -95,9 +98,9 @@ abstract class MediaImpl(
         if (this == other) return 0
         var compared: Int = StringComparator.compare(o1 = this.title, o2 = other.title)
         if (compared == 0 && this.javaClass != other.javaClass) {
-            compared = when(this) {
+            compared = when (this) {
                 is Music -> -1
-                is Album -> if (other is Music)  1 else -1
+                is Album -> if (other is Music) 1 else -1
                 is Artist -> if (other is Music || other is Album) 1 else -1
                 is Genre -> if (other is Folder || other is Playlist) -1 else 1
                 is Playlist -> if (other !is Playlist && other is Folder) -1 else 1

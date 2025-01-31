@@ -22,11 +22,17 @@
 
 package io.github.antoinepirlot.satunes.ui.views.media
 
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -40,6 +46,8 @@ import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.database.models.Playlist
+import io.github.antoinepirlot.satunes.models.radio_buttons.SortOptions
 import io.github.antoinepirlot.satunes.ui.components.EmptyView
 import io.github.antoinepirlot.satunes.ui.components.cards.media.MediaCardList
 import io.github.antoinepirlot.satunes.ui.components.dialog.SortListDialog
@@ -62,20 +70,53 @@ internal fun MediaListView(
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     val dataUiState: DataUiState by dataViewModel.uiState.collectAsState()
     val lazyListState = rememberLazyListState()
+    val sortOption: SortOptions = dataViewModel.sortOption
 
-    LaunchedEffect(key1 = dataViewModel.sortOption) {
-        dataViewModel.setMediaImplListToShow(
-            mediaImplCollectionToShow = mediaImplCollection,
-            sort = sort
-        )
+    //Do not put the list to show in ui state as it will reset list scroll when user goes back to the last page
+    //Plus this system insure the list can be scrolled correctly to the first item of the list (copying a new list make it not working as expected)
+    val mediaImplListToShow: MutableList<MediaImpl> = remember { mutableStateListOf() }
+
+    /**
+     * Used to know when the mediaImplListToShow must be cleared
+     */
+    var reset: Boolean by rememberSaveable { mutableStateOf(true) }
+    val isMediaOptionsOpened: Boolean = satunesUiState.mediaToShowOptions != null
+
+    LaunchedEffect(key1 = mediaImplListToShow, key2 = mediaImplCollection.size) {
+        reset = true
+    }
+
+    LaunchedEffect(key1 = sortOption, key2 = reset, key3 = isMediaOptionsOpened) {
+        if (!isMediaOptionsOpened && reset) {
+            if (mediaImplListToShow.isNotEmpty()) {
+                lazyListState.scrollToItem(0)
+                mediaImplListToShow.clear()
+            }
+            reset = false
+            return@LaunchedEffect //As this LaunchedEffect will be recalled when reset will be changed to false
+        }
+
+        if (sort) {
+            sort(
+                satunesUiState = satunesUiState,
+                lazyListState = lazyListState,
+                source = mediaImplCollection,
+                destination = mediaImplListToShow,
+                sortOption = sortOption
+            )
+        } else {
+            mediaImplListToShow.addAll(elements = mediaImplCollection)
+        }
+        dataViewModel.setMediaImplListToShow(mediaImplCollection = mediaImplListToShow)
     }
 
     if (satunesUiState.showSortDialog)
         SortListDialog()
 
-    if (dataUiState.mediaImplListToShow.isNotEmpty()) {
+    if (dataUiState.mediaImplListOnScreen.isNotEmpty()) {
         MediaCardList(
             modifier = modifier,
+            mediaImplList = mediaImplListToShow,
             lazyListState = lazyListState,
             header = header,
             showGroupIndication = showGroupIndication,
@@ -89,6 +130,37 @@ internal fun MediaListView(
                 text = emptyViewText
             )
         }
+    }
+}
+
+private suspend fun sort(
+    satunesUiState: SatunesUiState,
+    lazyListState: LazyListState,
+    source: Collection<MediaImpl>,
+    destination: MutableList<MediaImpl>,
+    sortOption: SortOptions
+) {
+    if (destination.isEmpty()) {
+        if (sortOption == SortOptions.PLAYLIST_ADDED_DATE) {
+            val playlist: Playlist = satunesUiState.currentMediaImpl as Playlist
+            destination.addAll(
+                source.sortedBy { mediaImpl: MediaImpl ->
+                    -(mediaImpl as Music).getOrder(playlist = playlist)
+                }
+            )
+        } else if (sortOption.comparator != null) {
+            destination.addAll(source.sortedWith(comparator = sortOption.comparator))
+        }
+    } else {
+        if (sortOption == SortOptions.PLAYLIST_ADDED_DATE) {
+            val playlist: Playlist = satunesUiState.currentMediaImpl as Playlist
+            destination.sortBy { mediaImpl: MediaImpl ->
+                -(mediaImpl as Music).getOrder(playlist = playlist)
+            }
+        } else if (sortOption.comparator != null) {
+            destination.sortWith(comparator = sortOption.comparator)
+        }
+        lazyListState.scrollToItem(0)
     }
 }
 

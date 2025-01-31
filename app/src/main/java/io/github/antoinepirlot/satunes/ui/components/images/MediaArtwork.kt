@@ -99,7 +99,7 @@ internal fun MediaArtwork(
                 },
                 onLongClick = {
                     haptics.performHapticFeedback(HapticFeedbackType.LongPress)
-                    satunesViewModel.showMediaOptions()
+                    satunesViewModel.showMediaOptionsOf(mediaImpl = album as MediaImpl)
                     showAlbumDialog = true
                 }
             )

@@ -24,7 +24,6 @@ package io.github.antoinepirlot.satunes.ui.views.media.playlist
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -34,7 +33,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.texts.Title
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
@@ -57,23 +55,12 @@ internal fun PlaylistView(
     dataViewModel: DataViewModel = viewModel(),
     playlist: Playlist,
 ) {
-    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     val musicSet: Set<Music> = playlist.getMusicSet()
 
     //Recompose if data changed
-    if (playlist.title == LIKES_PLAYLIST_TITLE) {
-        //This prevent the modal of music option closing after unlike press because the music is removed from the playlist
-        if (!satunesUiState.showMediaOptions) {
-            var mapChanged: Boolean by rememberSaveable { playlist.musicSetUpdated }
-            if (mapChanged) {
-                mapChanged = false
-            }
-        }
-    } else {
-        var mapChanged: Boolean by rememberSaveable { playlist.musicSetUpdated }
-        if (mapChanged) {
-            mapChanged = false
-        }
+    var mapChanged: Boolean by rememberSaveable { playlist.musicSetUpdated }
+    if (mapChanged) {
+        mapChanged = false
     }
     //
 

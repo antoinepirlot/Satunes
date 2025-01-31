@@ -63,7 +63,7 @@ internal fun ExtraButtonList(
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     val dataUiState: DataUiState by dataViewModel.uiState.collectAsState()
     val navController: NavHostController = LocalNavController.current
-    val mediaImplCollection: Collection<MediaImpl> = dataUiState.mediaImplListToShow
+    val mediaImplCollection: Collection<MediaImpl> = dataUiState.mediaImplListOnScreen
 
     Column(
         modifier = modifier,
@@ -74,7 +74,6 @@ internal fun ExtraButtonList(
             onClick = {
                 playbackViewModel.loadMusicFromMedias(medias = mediaImplCollection)
                 openMedia(
-                    satunesUiState = satunesUiState,
                     playbackViewModel = playbackViewModel,
                     navController = navController
                 )
@@ -91,7 +90,6 @@ internal fun ExtraButtonList(
                         shuffleMode = true
                     )
                     openMedia(
-                        satunesUiState = satunesUiState,
                         playbackViewModel = playbackViewModel,
                         navController = navController
                     )

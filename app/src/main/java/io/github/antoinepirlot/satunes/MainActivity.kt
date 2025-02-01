@@ -189,11 +189,13 @@ internal class MainActivity : ComponentActivity() {
 
                 UPDATE_MUSIC_CODE -> {
                     CoroutineScope(Dispatchers.IO).launch {
-                        DataViewModel.updateMusic(
-                            context = applicationContext,
-                            updatedMusic = updatedMusic!!,
-                            uri = uriToUpdate!!
-                        )
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                            DataViewModel.updateMusic(
+                                context = applicationContext,
+                                updatedMusic = updatedMusic!!,
+                                uri = uriToUpdate!!
+                            )
+                        }
                         uriToUpdate = null
                     }
                 }

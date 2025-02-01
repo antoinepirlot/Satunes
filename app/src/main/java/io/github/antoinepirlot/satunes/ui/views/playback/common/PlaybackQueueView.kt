@@ -47,7 +47,7 @@ internal fun PlaybackQueueView(
 ) {
     val musicsQueue: List<Music> = playbackViewModel.getPlaylist()
     LaunchedEffect(key1 = Unit) {
-        dataViewModel.setMediaImplListToShow(mediaImplCollection = musicsQueue)
+        dataViewModel.setMediaImplListOnScreen(mediaImplCollection = musicsQueue)
     }
 
     MediaCardList(

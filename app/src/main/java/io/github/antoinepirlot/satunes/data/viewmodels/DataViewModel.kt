@@ -1037,7 +1037,7 @@ class DataViewModel : ViewModel() {
      *
      * @param mediaImplCollection the list of mediaImpl shown on screen
      */
-    fun setMediaImplListToShow(
+    fun setMediaImplListOnScreen(
         mediaImplCollection: Collection<MediaImpl>,
     ) {
         _uiState.update { currentState: DataUiState ->

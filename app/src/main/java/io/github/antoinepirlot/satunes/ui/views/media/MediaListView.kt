@@ -107,7 +107,7 @@ internal fun MediaListView(
         } else {
             mediaImplListToShow.addAll(elements = mediaImplCollection)
         }
-        dataViewModel.setMediaImplListToShow(mediaImplCollection = mediaImplListToShow)
+        dataViewModel.setMediaImplListOnScreen(mediaImplCollection = mediaImplListToShow)
     }
 
     if (satunesUiState.showSortDialog)

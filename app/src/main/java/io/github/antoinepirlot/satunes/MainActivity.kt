@@ -1,26 +1,23 @@
 /*
  * This file is part of Satunes.
  *
- *  Satunes is free software: you can redistribute it and/or modify it under
- *  the terms of the GNU General Public License as published by the Free Software Foundation,
- *  either version 3 of the License, or (at your option) any later version.
+ * Satunes is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later version.
+ * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License along with Satunes.
+ * If not, see <https://www.gnu.org/licenses/>.
  *
- *  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- *  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *  See the GNU General Public License for more details.
+ * *** INFORMATION ABOUT THE AUTHOR *****
+ * The author of this file is Antoine Pirlot, the owner of this project.
+ * You find this original project on github.
  *
- *  You should have received a copy of the GNU General Public License along with Satunes.
- *  If not, see <https://www.gnu.org/licenses/>.
+ * My github link is: https://github.com/antoinepirlot
+ * This current project's link is: https://github.com/antoinepirlot/Satunes
  *
- *  **** INFORMATIONS ABOUT THE AUTHOR *****
- *  The author of this file is Antoine Pirlot, the owner of this project.
- *  You find this original project on github.
- *
- *  My github link is: https://github.com/antoinepirlot
- *  This current project's link is: https://github.com/antoinepirlot/Satunes
- *
- *  You can contact me via my email: pirlot.antoine@outlook.com
- *  PS: I don't answer quickly.
+ * PS: I don't answer quickly.
  */
 
 package io.github.antoinepirlot.satunes
@@ -34,7 +31,9 @@ import android.provider.DocumentsContract
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
+//TODO MERGE CONFLICT
 import androidx.media3.session.MediaController
+//TODO MERGE CONFLICT
 import com.google.common.util.concurrent.ListenableFuture
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.utils.isAudioAllowed
@@ -42,9 +41,12 @@ import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
+import io.github.antoinepirlot.satunes.playback.services.WidgetPlaybackManager
+import io.github.antoinepirlot.satunes.utils.getNow
 import io.github.antoinepirlot.satunes.utils.initSatunes
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import io.github.antoinepirlot.satunes.utils.utils.showToastOnUiThread
+import io.github.antoinepirlot.satunes.widgets.ClassicPlaybackWidget
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -82,9 +84,7 @@ internal class MainActivity : ComponentActivity() {
         }
     }
 
-    private lateinit var _logger: SatunesLogger
-    private lateinit var _mediaControllerFuture: ListenableFuture<MediaController>
-    private lateinit var _mediaController: MediaController
+    private var _logger: SatunesLogger? = null
     private var _playlistToExport: Playlist? = null
 
     override fun onStart() {
@@ -99,10 +99,14 @@ internal class MainActivity : ComponentActivity() {
         SatunesLogger.DOCUMENTS_PATH =
             applicationContext.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)!!.path
         _logger = SatunesLogger.getLogger()
-        _logger.info("Satunes started on API: ${Build.VERSION.SDK_INT}")
+        _logger?.info("Satunes started on API: ${Build.VERSION.SDK_INT}")
         instance = this
 
+        ClassicPlaybackWidget.setRefreshWidget(context = baseContext)
+        WidgetPlaybackManager.refreshWidgets()
+
         setContent {
+            //App UI Entry Point
             Satunes()
         }
     }
@@ -125,7 +129,7 @@ internal class MainActivity : ComponentActivity() {
     }
 
     fun exportLogs() {
-        createFileIntent.putExtra(Intent.EXTRA_TITLE, "Satunes_logs")
+        createFileIntent.putExtra(Intent.EXTRA_TITLE, "Satunes_logs_${getNow()}.txt")
         createFileIntent.type = MIME_TEXT
         startActivityForResult(createFileIntent, EXPORT_LOGS_CODE)
     }
@@ -146,7 +150,7 @@ internal class MainActivity : ComponentActivity() {
                         }
 
                         if (requestCode == EXPORT_LOGS_CODE) {
-                            _logger.exportLogs(context = this, uri = uri)
+                            _logger?.exportLogs(context = this, uri = uri)
                         } else {
                             CoroutineScope(Dispatchers.IO).launch {
                                 if (requestCode == EXPORT_ALL_PLAYLISTS_CODE) {
@@ -202,5 +206,10 @@ internal class MainActivity : ComponentActivity() {
         createFileIntent.putExtra(Intent.EXTRA_TITLE, defaultFileName)
         createFileIntent.type = MIME_JSON
         startActivityForResult(createFileIntent, EXPORT_PLAYLIST_CODE)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        WidgetPlaybackManager.refreshWidgets()
     }
 }

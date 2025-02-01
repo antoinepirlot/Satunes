@@ -1,26 +1,23 @@
 /*
  * This file is part of Satunes.
  *
- *  Satunes is free software: you can redistribute it and/or modify it under
- *  the terms of the GNU General Public License as published by the Free Software Foundation,
- *  either version 3 of the License, or (at your option) any later version.
+ * Satunes is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later version.
+ * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License along with Satunes.
+ * If not, see <https://www.gnu.org/licenses/>.
  *
- *  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- *  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *  See the GNU General Public License for more details.
+ * *** INFORMATION ABOUT THE AUTHOR *****
+ * The author of this file is Antoine Pirlot, the owner of this project.
+ * You find this original project on github.
  *
- *  You should have received a copy of the GNU General Public License along with Satunes.
- *  If not, see <https://www.gnu.org/licenses/>.
+ * My github link is: https://github.com/antoinepirlot
+ * This current project's link is: https://github.com/antoinepirlot/Satunes
  *
- *  **** INFORMATIONS ABOUT THE AUTHOR *****
- *  The author of this file is Antoine Pirlot, the owner of this project.
- *  You find this original project on github.
- *
- *  My github link is: https://github.com/antoinepirlot
- *  This current project's link is: https://github.com/antoinepirlot/Satunes
- *
- *  You can contact me via my email: pirlot.antoine@outlook.com
- *  PS: I don't answer quickly.
+ * PS: I don't answer quickly.
  */
 
 package io.github.antoinepirlot.satunes.car.playback
@@ -31,7 +28,6 @@ import android.os.Bundle
 import android.os.Environment
 import android.support.v4.media.MediaBrowserCompat.MediaItem
 import android.support.v4.media.session.MediaSessionCompat
-import android.support.v4.media.session.MediaSessionCompat.QueueItem
 import android.support.v4.media.session.PlaybackStateCompat.STATE_PAUSED
 import android.support.v4.media.session.PlaybackStateCompat.STATE_PLAYING
 import androidx.core.graphics.drawable.toBitmap
@@ -56,38 +52,13 @@ import io.github.antoinepirlot.satunes.icons.R as RIcons
  */
 internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
 
-    private lateinit var _logger: SatunesLogger
+    private var _logger: SatunesLogger? = null
 
     companion object {
         internal lateinit var instance: SatunesCarMusicService
-        private const val MAX_SIZE: Int = 300
         lateinit var session: MediaSessionCompat
 
-        private val loadedQueueItemList: MutableList<QueueItem> = mutableListOf()
-
         const val SHUFFLE_ID: String = "shuffle"
-
-        fun updateQueue() {
-            session.setQueue(loadedQueueItemList)
-        }
-
-        fun resetQueue() {
-            loadedQueueItemList.clear()
-        }
-
-        /**
-         * Add the mediaImpl to the queue by creating a mediaImpl item.
-         *
-         * @return the newly created mediaImpl item.
-         */
-        internal fun addToQueue(media: MediaImpl): MediaItem {
-            val mediaItem: MediaItem = buildMediaItem(media = media)
-            if (media is Music) {
-                val queueItem = QueueItem(mediaItem.description, media.id)
-                loadedQueueItemList.add(queueItem)
-            }
-            return mediaItem
-        }
     }
 
     override fun onCreate() {
@@ -96,7 +67,7 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
         SatunesLogger.DOCUMENTS_PATH =
             applicationContext.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)!!.path
         _logger = SatunesLogger.getLogger()
-        _logger.info("Android Auto is Starting")
+        _logger?.info("Android Auto is Starting")
         val className: String = this.javaClass.name.split(".").last()
         session = MediaSessionCompat(this, className)
         sessionToken = session.sessionToken
@@ -120,7 +91,7 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
 
         if (!DataLoader.isLoaded.value) {
             val message = "Data has not been loaded"
-            _logger.severe(message)
+            _logger?.severe(message)
             throw IllegalStateException(message)
         }
 
@@ -243,14 +214,10 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
         }
         mediaItemList.add(getShuffleButton())
         for (media: MediaImpl in mediaList) {
-            if (mediaItemList.size >= MAX_SIZE) {
-                break // Do not add more than 300 media as it could make android auto bugging
+            if (media is Music || media.getMusicSet().isNotEmpty()) {
+                val mediaItem: MediaItem = buildMediaItem(media = media)
+                mediaItemList.add(mediaItem)
             }
-            if (media !is Music && (media.getMusicSet().isEmpty())) {
-                continue
-            }
-            val mediaItem: MediaItem = buildMediaItem(media = media)
-            mediaItemList.add(mediaItem)
         }
         return mediaItemList
     }

@@ -18,8 +18,8 @@ android {
         applicationId = nameSpace
         minSdk = 22
         targetSdk = 35
-        versionCode = 51
-        versionName = "2.2.4"
+        versionCode = 69
+        versionName = "3.0.0-alpha-2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -61,10 +61,12 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
-    packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
+
+    dependenciesInfo {
+        // Disables dependency metadata when building APKs.
+        includeInApk = false
+        // Disables dependency metadata when building Android App Bundles.
+        includeInBundle = false
     }
 }
 
@@ -97,7 +99,6 @@ dependencies {
     /**
      * Media
      */
-
     implementation(libs.androidx.media3.common)
     implementation(libs.androidx.media3.session)
 

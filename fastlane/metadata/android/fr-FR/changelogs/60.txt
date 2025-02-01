@@ -1,0 +1,3 @@
+Améliorations, optimisations et dépannage:
+
+* L'ajout de musiques dans les playlists fonctionne à nouveau

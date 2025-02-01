@@ -1,26 +1,23 @@
 /*
  * This file is part of Satunes.
  *
- *  Satunes is free software: you can redistribute it and/or modify it under
- *  the terms of the GNU General Public License as published by the Free Software Foundation,
- *  either version 3 of the License, or (at your option) any later version.
+ * Satunes is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later version.
+ * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License along with Satunes.
+ * If not, see <https://www.gnu.org/licenses/>.
  *
- *  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- *  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *  See the GNU General Public License for more details.
+ * *** INFORMATION ABOUT THE AUTHOR *****
+ * The author of this file is Antoine Pirlot, the owner of this project.
+ * You find this original project on github.
  *
- *  You should have received a copy of the GNU General Public License along with Satunes.
- *  If not, see <https://www.gnu.org/licenses/>.
+ * My github link is: https://github.com/antoinepirlot
+ * This current project's link is: https://github.com/antoinepirlot/Satunes
  *
- *  **** INFORMATIONS ABOUT THE AUTHOR *****
- *  The author of this file is Antoine Pirlot, the owner of this project.
- *  You find this original project on github.
- *
- *  My github link is: https://github.com/antoinepirlot
- *  This current project's link is: https://github.com/antoinepirlot/Satunes
- *
- *  You can contact me via my email: pirlot.antoine@outlook.com
- *  PS: I don't answer quickly.
+ * PS: I don't answer quickly.
  */
 
 package io.github.antoinepirlot.satunes.ui.components.dialog.playlist
@@ -49,6 +46,7 @@ import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToPlaylistMediaOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToQueueDialogOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.PlayNextMediaOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.RemoveFromQueueOption
@@ -103,6 +101,8 @@ internal fun PlaylistOptionsDialog(
         text = {
             Column {
                 ExportPlaylistOption(playlist = playlist)
+                //TODO refactor in v3.0.0 and remove the current playlist from list
+                AddToPlaylistMediaOption(mediaImpl = playlist, onFinished = onDismissRequest)
                 RemovePlaylistOption(
                     playlistToRemove = playlist,
                     onDismissRequest = onDismissRequest
@@ -128,20 +128,13 @@ internal fun PlaylistOptionsDialog(
         onDismissRequest = onDismissRequest,
         confirmButton = {
             TextButton(onClick = {
-                val oldTitle: String = playlist.title
-                playlist.title = playlistTitle
-                try {
-                    dataViewModel.updatePlaylistTitle(
-                        scope = scope,
-                        snackBarHostState = snackBarHostState,
-                        playlist = playlist
-                    )
-                } catch (_: Exception) {
-                    playlist.title = oldTitle
-                } finally {
-
-                    onDismissRequest()
-                }
+                dataViewModel.updatePlaylistTitle(
+                    scope = scope,
+                    snackBarHostState = snackBarHostState,
+                    newTitle = playlistTitle,
+                    playlist = playlist
+                )
+                onDismissRequest()
             }) {
                 NormalText(text = stringResource(id = R.string.ok))
             }

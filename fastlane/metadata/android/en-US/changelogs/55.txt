@@ -1,0 +1,3 @@
+Improvements, optimizations and troubleshooting:
+
+* Fix Android 15 unintended ui issues by rolling back targetSdk to Android 14

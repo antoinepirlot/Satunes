@@ -1,26 +1,23 @@
 /*
  * This file is part of Satunes.
  *
- *  Satunes is free software: you can redistribute it and/or modify it under
- *  the terms of the GNU General Public License as published by the Free Software Foundation,
- *  either version 3 of the License, or (at your option) any later version.
+ * Satunes is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later version.
+ * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License along with Satunes.
+ * If not, see <https://www.gnu.org/licenses/>.
  *
- *  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- *  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *  See the GNU General Public License for more details.
+ * *** INFORMATION ABOUT THE AUTHOR *****
+ * The author of this file is Antoine Pirlot, the owner of this project.
+ * You find this original project on github.
  *
- *  You should have received a copy of the GNU General Public License along with Satunes.
- *  If not, see <https://www.gnu.org/licenses/>.
+ * My github link is: https://github.com/antoinepirlot
+ * This current project's link is: https://github.com/antoinepirlot/Satunes
  *
- *  **** INFORMATIONS ABOUT THE AUTHOR *****
- *  The author of this file is Antoine Pirlot, the owner of this project.
- *  You find this original project on github.
- *
- *  My github link is: https://github.com/antoinepirlot
- *  This current project's link is: https://github.com/antoinepirlot/Satunes
- *
- *  You can contact me via my email: pirlot.antoine@outlook.com
- *  PS: I don't answer quickly.
+ * PS: I don't answer quickly.
  */
 
 package io.github.antoinepirlot.satunes.ui.components.settings
@@ -42,6 +39,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.data.switchSettingsNeedReloadLibrary
 import io.github.antoinepirlot.satunes.data.switchSettingsNeedRestarts
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.models.SwitchSettings
@@ -60,6 +58,7 @@ internal fun SettingWithSwitch(
     onCheckedChange: () -> Unit
 ) {
     val isRestartNeeded: Boolean = switchSettingsNeedRestarts.contains(setting)
+    val isReloadLibraryNeeded: Boolean = switchSettingsNeedReloadLibrary.contains(setting)
     var showInfo: Boolean by rememberSaveable { mutableStateOf(false) }
 
     Row(
@@ -76,7 +75,7 @@ internal fun SettingWithSwitch(
         if (icon != null) {
             Icon(imageVector = icon.imageVector, contentDescription = icon.description)
         } else {
-            if (isRestartNeeded) {
+            if (isRestartNeeded || isReloadLibraryNeeded) {
                 @Suppress("NAME_SHADOWING")
                 val icon = SatunesIcons.INFO
                 Icon(imageVector = icon.imageVector, contentDescription = icon.description)
@@ -85,7 +84,7 @@ internal fun SettingWithSwitch(
         Switch(
             checked = checked,
             onCheckedChange = {
-                if (isRestartNeeded) {
+                if (isRestartNeeded || isReloadLibraryNeeded) {
                     showInfo = true
                 } else {
                     onCheckedChange()
@@ -96,7 +95,11 @@ internal fun SettingWithSwitch(
 
     if (showInfo) {
         InformationDialog(
-            title = stringResource(id = R.string.restart_required),
+            title = stringResource(
+                id = if (isRestartNeeded) R.string.restart_required
+                else if (isReloadLibraryNeeded) R.string.reload_library_required
+                else throw UnsupportedOperationException("Can't show if no restart nor reload is needed.")
+            ),
             onDismissRequest = { showInfo = false },
             onConfirm = {
                 onCheckedChange()

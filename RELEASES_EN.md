@@ -1,6 +1,220 @@
 # Releases (🇬🇧)
 Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
+## 3.0 (Android 5.1.1 Lollipop and later
+
+### 3.0.0-alpha-2
+
+New features:
+
+* Added sorting by year and last added for music (in some views at the moment)
+* Adding media to playlists now removes them if they are present (entirely for those who are not
+  music)
+
+Improvements, optimizations and troubleshooting:
+
+* Startup optimization
+* When the list is sorted, the list loaded in playback corresponds to the sort
+* When the user changes the view from one media type to another, the navigation bar refelcts the
+  changement
+* Other indirect optimizations and improvements
+
+### 3.0.0-alpha-1
+
+New features:
+
+* Ability to sort media by artist, album and/or genre based on page
+* Display of the first letter in alphabetical order above the first media (with this letter) in the
+  list (can be disabled in library settings)
+
+Improvements, optimizations and troubleshooting:
+
+* Support for Android 15 (Vanilla Ice Cream)
+* Music loading issues causing crashes under some conditions fixed (Concurrent Modification)
+* Satunes's libraries update that involve a slight design change of some elements (like the progress
+  bar)
+* Other indirect optimizations and corrections
+
+## 2.5 (Android 5.1.1 Lollipop and later)
+
+### 2.5.2
+
+Improvements, optimizations and troubleshooting:
+
+* Hide start timer if the timer is running
+
+### 2.5.1
+
+Improvements, optimizations and troubleshooting:
+
+* Add "Developed in Europe 🇪🇺" at the end of About settings section
+* Fix snack bar not showing '%' on folder's path removed
+* Fix Music control bar time when leaving and going back to the screen after a moment when playing
+* Fix if forward rewind new value is <= 0 then old value is kept
+* Show info dialog if setting need reload library
+
+### 2.5.0
+
+New features:
+
+* Add playlist's musics to another playlist
+* Jump back/ahead in music playback
+* Reset Settings
+
+Improvements, optimizations and troubleshooting:
+
+* Timer setting will show remaining time inside the number fields
+* Few minor optimization
+
+## 2.4 (Android 5.1.1 Lollipop and later)
+
+### 2.4.6
+
+Improvements, optimizations and troubleshooting:
+
+* Fix Android Auto not playing the selected music and not respecting the default shuffle mode
+
+### 2.4.5
+
+Nothing new, issue happened while updating
+
+### 2.4.4
+
+Improvements, optimizations and troubleshooting:
+
+* Remove exclusion of FOSS libraries
+* Disable the inclusion dependency metadata in APK and Bundle as it's not FOSS compatible
+
+### 2.4.3
+
+Improvements, optimizations and troubleshooting:
+
+* The queue list button is now a switch like the setting button
+* Fix issue when nav bar section is disabled, it doesn't prevent user to go on its views
+* The widget is now resizable vertically but is limited (it fix wrong layout in certain launcher by
+  allowing user to resize it)
+
+### 2.4.2
+
+Improvements, optimizations and troubleshooting:
+
+* Add musics to playlists works again
+
+### 2.4.1
+
+Improvements, optimizations and troubleshooting:
+
+* When canceling media selection, the selected media are no longer saved
+* When selecting the default menu bar, the application no longer redirects to the new menu
+
+### 2.4.0
+
+New features:
+
+* Ability to like music in Android Auto
+* Timer that can pause music (maximum for 8 hours)
+
+Improvements, optimizations and troubleshooting:
+
+* Playing the current music from the same loaded playlist does not reload the playback
+* Music is sorted by track number in albums and then, otherwise, alphabetically
+* The name of the exported playlist file and logs contains a date and time
+* Improved widget refresh
+* The year of the album is displayed, if it exists
+* Update buttons are put in a column to improve their visibility on some screens
+* Like button in Android Auto has been swapped with shuffle button
+* Fixed track switching to previous under certain conditions
+
+Removed features:
+
+* Removed the playlist visualization in Android Auto to avoid distractions
+
+### 2.4.0-preview-1
+
+Improvements, optimizations and troubleshooting:
+
+* Fix v2.4.0-beta-1 issues
+  * Playing music crash in certain conditions
+  * Add music into playlists
+  * Show missing remove music from playlist
+  * Android Q and less crash at launching
+
+### 2.4.0-beta-1
+
+New features:
+
+* Ability to like music in Android Auto
+* Timer that can pause music (maximum for 8 hours)
+
+Improvements, optimizations and troubleshooting:
+
+* Playing the current music from the same loaded playlist does not reload the playback
+* Music is sorted by track number in albums and then, otherwise, alphabetically
+* The name of the exported playlist file and logs contains a date and time
+* Improved widget refresh
+* The year of the album is displayed, if it exists
+* Update buttons are put in a column to improve their visibility on some screens
+
+Removed features:
+
+* Removed the playlist visualization in Android Auto to avoid distractions
+
+## 2.3 (Android 5.1.1 Lollipop and later)
+
+### 2.3.3
+
+Improvements, optimizations and troubleshooting:
+
+* Fix Android 15 unintended ui issues by rolling back targetSdk to Android 14
+
+### 2.3.2
+
+Improvements, optimizations and troubleshooting:
+
+* Widget refreshing has been improved
+* Bring back horizontal padding on playback view for texts
+
+### 2.3.1
+
+Improvements, optimizations and troubleshooting:
+
+* Remove Android Auto limit
+* By default Satunes load music's artist if there's no album's artist
+* Loading library won't show warning modal
+* "Clean playlists" will show warning modal
+* Change some text
+* Playlist's title won't accept backlines or tabulations
+* Buttons rows scrolling zone is no more cut
+* Log file size is max 5MB and when Satunes update the current position in playback view, no more
+  logs to optimize battery
+* Fix wrong repeat mode after reloading library
+* Make search setting view scrollable
+* Fix playing next music in certain conditions
+
+### 2.3.0
+
+New features:
+
+* Be able to shuffle and change repeat mode with notification
+* Share medias files
+* Long click on album artwork opens the album's options
+* Long click on artist text in playback view opens the artist's options
+* Be able to load music's artist if the album's artist is unknown (library settings)
+* Clean playlists to removed saved music if they don't exists in loaded musics instead of cleaning
+  automatically
+
+Improvements, optimizations and troubleshooting:
+
+* Fix importing single playlist
+* Fix importing playlist when it already exists
+* Some optimizations
+* Add Fdroid button in about setting's section
+* Playlist settings have been moved to Library settings
+* Fix play next in certain conditions
+* Fix remove from queue in certain conditions
+* Fix crash while launching on Android 9 and earlier if read external storage permission is not
+  allowed
+
 ## 2.2 (Android 5.1.1 Lollipop and later)
 
 ### 2.2.4
@@ -587,7 +801,7 @@ Fix issues:
 Features:
 
 * Android Auto support
-  * To activate Android Auto you can find instructions [here](README-EN.md)
+  * To activate Android Auto you can find instructions [here](README_EN)
 
 Fix issues:
 

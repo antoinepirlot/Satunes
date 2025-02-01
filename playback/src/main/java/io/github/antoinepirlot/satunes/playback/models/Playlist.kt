@@ -1,26 +1,23 @@
 /*
  * This file is part of Satunes.
  *
- *  Satunes is free software: you can redistribute it and/or modify it under
- *  the terms of the GNU General Public License as published by the Free Software Foundation,
- *  either version 3 of the License, or (at your option) any later version.
+ * Satunes is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later version.
+ * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License along with Satunes.
+ * If not, see <https://www.gnu.org/licenses/>.
  *
- *  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- *  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *  See the GNU General Public License for more details.
+ * *** INFORMATION ABOUT THE AUTHOR *****
+ * The author of this file is Antoine Pirlot, the owner of this project.
+ * You find this original project on github.
  *
- *  You should have received a copy of the GNU General Public License along with Satunes.
- *  If not, see <https://www.gnu.org/licenses/>.
+ * My github link is: https://github.com/antoinepirlot
+ * This current project's link is: https://github.com/antoinepirlot/Satunes
  *
- *  **** INFORMATIONS ABOUT THE AUTHOR *****
- *  The author of this file is Antoine Pirlot, the owner of this project.
- *  You find this original project on github.
- *
- *  My github link is: https://github.com/antoinepirlot
- *  This current project's link is: https://github.com/antoinepirlot/Satunes
- *
- *  You can contact me via my email: pirlot.antoine@outlook.com
- *  PS: I don't answer quickly.
+ * PS: I don't answer quickly.
  */
 
 package io.github.antoinepirlot.satunes.playback.models
@@ -35,17 +32,17 @@ import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
  * @author Antoine Pirlot on 18/02/24
  */
 
-internal class Playlist(musicSet: Set<Music>) {
+internal class Playlist(musics: Collection<Music>) {
     private val originalMusicMediaItemMap: MutableMap<Music, MediaItem> = mutableMapOf()
     val musicList: SnapshotStateList<Music> = SnapshotStateList()
     val mediaItemList: MutableList<MediaItem> = mutableListOf()
     internal var isShuffle: Boolean = false
         private set
-    private val logger = SatunesLogger.getLogger()
+    private val _logger: SatunesLogger? = SatunesLogger.getLogger()
 
 
     init {
-        musicSet.forEach { music: Music ->
+        musics.forEach { music: Music ->
             this.musicList.add(element = music)
             this.mediaItemList.add(element = music.mediaItem)
             this.originalMusicMediaItemMap[music] = music.mediaItem
@@ -59,7 +56,7 @@ internal class Playlist(musicSet: Set<Music>) {
     fun shuffle(musicIndex: Int = -1) {
         if (musicIndex > this.musicList.lastIndex) {
             val message = "The music index is greater than last index of the list"
-            logger.severe(message)
+            _logger?.severe(message)
             throw IllegalArgumentException(message)
         }
         var musicMoving: Music? = null
@@ -69,14 +66,10 @@ internal class Playlist(musicSet: Set<Music>) {
 
         val shuffledMusicList: List<Music> = this.musicList.shuffled()
         this.musicList.clear()
-        if (musicMoving != null) {
-            this.musicList.add(musicMoving)
-        }
+        if (musicMoving != null) this.musicList.add(musicMoving)
         this.musicList.addAll(shuffledMusicList)
         this.mediaItemList.clear()
-        this.musicList.forEach { music: Music ->
-            this.mediaItemList.add(music.mediaItem)
-        }
+        this.musicList.forEach { music: Music -> this.mediaItemList.add(music.mediaItem) }
         this.isShuffle = true
     }
 
@@ -101,7 +94,7 @@ internal class Playlist(musicSet: Set<Music>) {
         try {
             return this.musicList[musicIndex]
         } catch (e: Throwable) {
-            logger.severe(e.message)
+            _logger?.severe(e.message)
             throw e
         }
     }
@@ -139,7 +132,7 @@ internal class Playlist(musicSet: Set<Music>) {
         val fromIndex = if (fromIndex < 0) 0 else fromIndex
         if (fromIndex > toIndex) {
             val message = "The fromIndex has to be lower than toIndex"
-            logger.severe(message)
+            _logger?.severe(message)
             throw IllegalArgumentException(message)
         }
         return mediaItemList.subList(fromIndex = fromIndex, toIndex = toIndex + 1)
@@ -161,7 +154,7 @@ internal class Playlist(musicSet: Set<Music>) {
 
     private fun checkMusicIsInPlaylist(music: Music) {
         if (isMusicInQueue(music = music)) {
-            logger.severe("this.originalMusicMediaItemMap[music] != null")
+            _logger?.severe("this.originalMusicMediaItemMap[music] != null")
             throw AlreadyInPlaybackException()
         }
     }
@@ -179,7 +172,7 @@ internal class Playlist(musicSet: Set<Music>) {
     }
 
     fun isMusicInQueue(music: Music): Boolean {
-        return this.originalMusicMediaItemMap[music] != null
+        return this.musicList.contains(music) //TODO optimize by using map to access music from queue
     }
 
     /**
@@ -191,5 +184,31 @@ internal class Playlist(musicSet: Set<Music>) {
         val oldIndex: Int = this.getMusicIndex(music = music)
         this.musicList.remove(element = music)
         return oldIndex
+    }
+
+    /**
+     * Checks if this playlist is the same as [originalMusicMediaItemMap]'s keys.
+     * True means it's the same playlist otherwise false.
+     *
+     * @return true if [originalMusicMediaItemMap] contains all [musics]'s musics as keys false otherwise
+     */
+    internal fun hasPlaylistMusicCollection(musics: Collection<Music>): Boolean {
+        if (this.musicCount() != musics.size) return false
+        for (music in musics)
+            if (!this.originalMusicMediaItemMap.contains(key = music)) return false
+        return true
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Playlist) return false
+
+        if (originalMusicMediaItemMap != other.originalMusicMediaItemMap) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        return originalMusicMediaItemMap.hashCode()
     }
 }

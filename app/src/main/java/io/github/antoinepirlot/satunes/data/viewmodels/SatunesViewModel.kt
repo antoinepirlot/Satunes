@@ -1,31 +1,27 @@
 /*
  * This file is part of Satunes.
  *
- *  Satunes is free software: you can redistribute it and/or modify it under
- *  the terms of the GNU General Public License as published by the Free Software Foundation,
- *  either version 3 of the License, or (at your option) any later version.
+ * Satunes is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later version.
+ * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License along with Satunes.
+ * If not, see <https://www.gnu.org/licenses/>.
  *
- *  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- *  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *  See the GNU General Public License for more details.
+ * *** INFORMATION ABOUT THE AUTHOR *****
+ * The author of this file is Antoine Pirlot, the owner of this project.
+ * You find this original project on github.
  *
- *  You should have received a copy of the GNU General Public License along with Satunes.
- *  If not, see <https://www.gnu.org/licenses/>.
+ * My github link is: https://github.com/antoinepirlot
+ * This current project's link is: https://github.com/antoinepirlot/Satunes
  *
- *  **** INFORMATIONS ABOUT THE AUTHOR *****
- *  The author of this file is Antoine Pirlot, the owner of this project.
- *  You find this original project on github.
- *
- *  My github link is: https://github.com/antoinepirlot
- *  This current project's link is: https://github.com/antoinepirlot/Satunes
- *
- *  You can contact me via my email: pirlot.antoine@outlook.com
- *  PS: I don't answer quickly.
+ * PS: I don't answer quickly.
  */
 
 package io.github.antoinepirlot.satunes.data.viewmodels
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -33,6 +29,7 @@ import android.provider.DocumentsContract
 import androidx.annotation.RequiresApi
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -46,6 +43,7 @@ import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.utils.isAudioAllowed
 import io.github.antoinepirlot.satunes.database.models.BarSpeed
 import io.github.antoinepirlot.satunes.database.models.FoldersSelection
+import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
@@ -73,19 +71,16 @@ import io.github.antoinepirlot.satunes.internet.R as RInternet
 /**
  * @author Antoine Pirlot on 19/07/2024
  */
-@SuppressLint("NewApi")
 internal class SatunesViewModel : ViewModel() {
-    private val _logger: SatunesLogger = SatunesLogger.getLogger()
-    private val _uiState: MutableStateFlow<SatunesUiState> = MutableStateFlow(SatunesUiState())
+    companion object {
+        private val _uiState: MutableStateFlow<SatunesUiState> = MutableStateFlow(SatunesUiState())
+    }
+
+    private val _logger: SatunesLogger? = SatunesLogger.getLogger()
     private val _isLoadingData: MutableState<Boolean> = DataLoader.isLoading
     private val _isDataLoaded: MutableState<Boolean> = DataLoader.isLoaded
-
-    //Use this only for nav bar items as it won't refresh if uiState is updated, idk why.
-    private val _foldersChecked: MutableState<Boolean> = SettingsManager.foldersChecked
-    private val _artistsChecked: MutableState<Boolean> = SettingsManager.artistsChecked
-    private val _albumsChecked: MutableState<Boolean> = SettingsManager.albumsChecked
-    private val _genresChecked: MutableState<Boolean> = SettingsManager.genresChecked
-    private val _playlistsChecked: MutableState<Boolean> = SettingsManager.playlistsChecked
+    private val _defaultNavBarSection: MutableState<NavBarSection> =
+        mutableStateOf(_uiState.value.defaultNavBarSection)
 
     @RequiresApi(Build.VERSION_CODES.M)
     private val _updateAvailableStatus: MutableState<UpdateAvailableStatus> =
@@ -98,26 +93,25 @@ internal class SatunesViewModel : ViewModel() {
         SettingsManager.foldersPathsSelectedSet
 
     val uiState: StateFlow<SatunesUiState> = _uiState.asStateFlow()
+    var defaultNavBarSection: NavBarSection by _defaultNavBarSection
+        private set
 
     val isLoadingData: Boolean by _isLoadingData
     val isDataLoaded: Boolean by _isDataLoaded
-    val foldersChecked: Boolean by _foldersChecked
-    val artistsChecked: Boolean by _artistsChecked
-    val albumsChecked: Boolean by _albumsChecked
-    val genresChecked: Boolean by _genresChecked
-    val playlistsChecked: Boolean by _playlistsChecked
 
     //Use this in UiSate and ViewModel as it is a particular value. It could change but most of the time it won't change
     var isAudioAllowed: Boolean by mutableStateOf(_uiState.value.isAudioAllowed)
         private set
 
+    @delegate:RequiresApi(Build.VERSION_CODES.M)
     var updateAvailableStatus: UpdateAvailableStatus by _updateAvailableStatus
         private set
 
-    @get:RequiresApi(Build.VERSION_CODES.M)
+    @delegate:RequiresApi(Build.VERSION_CODES.M)
     var isCheckingUpdate: Boolean by mutableStateOf(false)
         private set
 
+    @delegate:RequiresApi(Build.VERSION_CODES.M)
     var downloadStatus: APKDownloadStatus by _downloadStatus
         private set
 
@@ -130,7 +124,7 @@ internal class SatunesViewModel : ViewModel() {
                 _uiState.update { SatunesUiState() }
             }
         } catch (e: Throwable) {
-            _logger.severe(e.message)
+            _logger?.severe(e.message)
             throw e
         }
     }
@@ -170,16 +164,8 @@ internal class SatunesViewModel : ViewModel() {
         _uiState.update { currentState: SatunesUiState ->
             @Suppress("NAME_SHADOWING")
             val destination: Destination = Destination.getDestination(destination = destination)
-            _logger.info("Going to destination: ${destination.name}")
+            _logger?.info("Going to destination: ${destination.name}")
             currentState.copy(currentDestination = destination)
-        }
-    }
-
-    fun selectNavBarSection(navBarSection: NavBarSection) {
-        _uiState.update { currentState: SatunesUiState ->
-            currentState.copy(
-                selectedNavBarSection = navBarSection
-            )
         }
     }
 
@@ -205,8 +191,8 @@ internal class SatunesViewModel : ViewModel() {
 
     internal fun updateIsAudioAllowed() {
         this.isAudioAllowed = isAudioAllowed(context = MainActivity.instance.applicationContext)
-        if (this.isAudioAllowed != this._uiState.value.isAudioAllowed) {
-            this._uiState.update { currentState: SatunesUiState ->
+        if (this.isAudioAllowed != _uiState.value.isAudioAllowed) {
+            _uiState.update { currentState: SatunesUiState ->
                 currentState.copy(isAudioAllowed = this.isAudioAllowed)
             }
         }
@@ -220,23 +206,14 @@ internal class SatunesViewModel : ViewModel() {
                     navBarSection = navBarSection
                 )
                 if (
-                    this@SatunesViewModel.uiState.value.defaultNavBarSection == navBarSection
-                    && !navBarSection.isEnabled
+                    this@SatunesViewModel.defaultNavBarSection == navBarSection
+                    && !navBarSection.isEnabled.value
                 ) {
                     selectDefaultNavBarSection(navBarSection = NavBarSection.MUSICS)
                 }
             }
-            _uiState.update { currentState: SatunesUiState ->
-                currentState.copy(
-                    foldersChecked = SettingsManager.foldersChecked.value,
-                    artistsChecked = SettingsManager.artistsChecked.value,
-                    albumsChecked = SettingsManager.albumsChecked.value,
-                    genresChecked = SettingsManager.genresChecked.value,
-                    playlistsChecked = SettingsManager.playlistsChecked.value,
-                )
-            }
         } catch (e: Throwable) {
-            _logger.warning(e.message)
+            _logger?.warning(e.message)
         }
     }
 
@@ -251,7 +228,7 @@ internal class SatunesViewModel : ViewModel() {
                 }
             }
         } catch (e: Throwable) {
-            _logger.warning(e.message)
+            _logger?.warning(e.message)
         }
     }
 
@@ -266,7 +243,7 @@ internal class SatunesViewModel : ViewModel() {
                 }
             }
         } catch (e: Throwable) {
-            _logger.warning(e.message)
+            _logger?.warning(e.message)
         }
     }
 
@@ -281,7 +258,7 @@ internal class SatunesViewModel : ViewModel() {
                 }
             }
         } catch (e: Throwable) {
-            _logger.warning(e.message)
+            _logger?.warning(e.message)
         }
     }
 
@@ -296,7 +273,7 @@ internal class SatunesViewModel : ViewModel() {
                 }
             }
         } catch (e: Throwable) {
-            _logger.warning(e.message)
+            _logger?.warning(e.message)
         }
     }
 
@@ -311,7 +288,7 @@ internal class SatunesViewModel : ViewModel() {
                 }
             }
         } catch (e: Throwable) {
-            _logger.warning(e.message)
+            _logger?.warning(e.message)
         }
     }
 
@@ -329,12 +306,12 @@ internal class SatunesViewModel : ViewModel() {
                         )
                     }
                 } catch (e: Throwable) {
-                    _logger.severe(e.message)
+                    _logger?.severe(e.message)
                     throw e
                 }
             }
         } catch (e: Throwable) {
-            _logger.warning(e.message)
+            _logger?.warning(e.message)
         }
     }
 
@@ -349,7 +326,7 @@ internal class SatunesViewModel : ViewModel() {
                 }
             }
         } catch (e: Throwable) {
-            _logger.warning(e.message)
+            _logger?.warning(e.message)
         }
     }
 
@@ -371,7 +348,7 @@ internal class SatunesViewModel : ViewModel() {
                 }
             }
         } catch (e: Throwable) {
-            _logger.warning(e.message)
+            _logger?.warning(e.message)
             showErrorSnackBar(
                 scope = scope,
                 snackBarHostState = snackBarHostState,
@@ -390,17 +367,19 @@ internal class SatunesViewModel : ViewModel() {
         try {
             return availableSpeeds[floor(speed).toInt()]
         } catch (e: Throwable) {
-            _logger.severe(e.message)
+            _logger?.severe(e.message)
             throw e
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     fun resetUpdatesStatus() {
         if (updateAvailableStatus != UpdateAvailableStatus.AVAILABLE) {
             updateAvailableStatus = UpdateAvailableStatus.UNDEFINED
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     fun checkUpdate(scope: CoroutineScope, snackBarHostState: SnackbarHostState) {
         isCheckingUpdate = true
         CoroutineScope(Dispatchers.IO).launch {
@@ -442,7 +421,7 @@ internal class SatunesViewModel : ViewModel() {
                     }
                 }
             } catch (e: Throwable) {
-                _logger.warning(e.message)
+                _logger?.warning(e.message)
                 showErrorSnackBar(
                     scope = scope,
                     snackBarHostState = snackBarHostState,
@@ -459,24 +438,25 @@ internal class SatunesViewModel : ViewModel() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     fun getCurrentVersion(): String {
         try {
             return UpdateCheckManager.getCurrentVersion(context = MainActivity.instance.applicationContext)
         } catch (e: Throwable) {
-            _logger.severe(e.message)
+            _logger?.severe(e.message)
             throw e
         }
     }
 
-    fun mediaOptionsIsOpen() {
+    fun showMediaOptionsOf(mediaImpl: MediaImpl) {
         _uiState.update { currentState: SatunesUiState ->
-            currentState.copy(isMediaOptionsOpened = true)
+            currentState.copy(mediaToShowOptions = mediaImpl)
         }
     }
 
-    fun mediaOptionsIsClosed() {
+    fun hideMediaOptions() {
         _uiState.update { currentState: SatunesUiState ->
-            currentState.copy(isMediaOptionsOpened = false)
+            currentState.copy(mediaToShowOptions = null)
         }
     }
 
@@ -508,7 +488,7 @@ internal class SatunesViewModel : ViewModel() {
                     )
                 }
             } catch (e: Throwable) {
-                _logger.warning(e.message)
+                _logger?.warning(e.message)
                 showErrorSnackBar(
                     scope = scope,
                     snackBarHostState = snackBarHostState,
@@ -552,7 +532,7 @@ internal class SatunesViewModel : ViewModel() {
                 snackBarHostState = snackBarHostState,
                 message = MainActivity.instance.applicationContext.getString(
                     R.string.path_removed,
-                    path
+                    path.removeSuffix("%")
                 ),
                 actionLabel = MainActivity.instance.applicationContext.getString(R.string.cancel),
                 action = {
@@ -575,11 +555,9 @@ internal class SatunesViewModel : ViewModel() {
                     navBarSection = navBarSection
                 )
             }
-            _uiState.update { currentState: SatunesUiState ->
-                currentState.copy(defaultNavBarSection = SettingsManager.defaultNavBarSection)
-            }
+            this.defaultNavBarSection = SettingsManager.defaultNavBarSection
         } catch (e: Throwable) {
-            _logger.severe("Error while selecting new default nav bar section: ${navBarSection.name}")
+            _logger?.severe("Error while selecting new default nav bar section: ${navBarSection.name}")
         }
     }
 
@@ -592,7 +570,7 @@ internal class SatunesViewModel : ViewModel() {
                 }
             }
         } catch (e: Throwable) {
-            _logger.severe("Error while switching compilation music setting")
+            _logger?.severe("Error while switching compilation music setting")
         }
     }
 
@@ -618,6 +596,54 @@ internal class SatunesViewModel : ViewModel() {
                     )
                 }
             )
+        }
+    }
+
+    fun replaceExtraButtons(extraButtons: @Composable () -> Unit) {
+        _uiState.update { currentState: SatunesUiState ->
+            currentState.copy(extraButtons = extraButtons)
+        }
+    }
+
+    fun clearExtraButtons() {
+        _uiState.update { currentState: SatunesUiState ->
+            currentState.copy(extraButtons = null)
+        }
+    }
+
+    fun showSortDialog() {
+        _uiState.update { currentState: SatunesUiState ->
+            currentState.copy(showSortDialog = true)
+        }
+    }
+
+    fun hideSortDialog() {
+        _uiState.update { currentState: SatunesUiState ->
+            currentState.copy(showSortDialog = false)
+        }
+    }
+
+    fun setCurrentMediaImpl(mediaImpl: MediaImpl) {
+        _uiState.update { currentState: SatunesUiState ->
+            currentState.copy(currentMediaImpl = mediaImpl)
+        }
+    }
+
+    fun clearCurrentMediaImpl() {
+        _uiState.update { currentState: SatunesUiState ->
+            currentState.copy(currentMediaImpl = null)
+        }
+    }
+
+    fun showMediaSelectionDialog() {
+        _uiState.update { currentState: SatunesUiState ->
+            currentState.copy(showMediaSelectionDialog = true)
+        }
+    }
+
+    fun hideMediaSelectionDialog() {
+        _uiState.update { currentState: SatunesUiState ->
+            currentState.copy(showMediaSelectionDialog = false)
         }
     }
 }

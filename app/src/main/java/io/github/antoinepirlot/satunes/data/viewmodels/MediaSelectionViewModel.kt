@@ -1,47 +1,64 @@
 /*
  * This file is part of Satunes.
  *
- *  Satunes is free software: you can redistribute it and/or modify it under
- *  the terms of the GNU General Public License as published by the Free Software Foundation,
- *  either version 3 of the License, or (at your option) any later version.
+ * Satunes is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later version.
+ * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License along with Satunes.
+ * If not, see <https://www.gnu.org/licenses/>.
  *
- *  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- *  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *  See the GNU General Public License for more details.
+ * *** INFORMATION ABOUT THE AUTHOR *****
+ * The author of this file is Antoine Pirlot, the owner of this project.
+ * You find this original project on github.
  *
- *  You should have received a copy of the GNU General Public License along with Satunes.
- *  If not, see <https://www.gnu.org/licenses/>.
+ * My github link is: https://github.com/antoinepirlot
+ * This current project's link is: https://github.com/antoinepirlot/Satunes
  *
- *  **** INFORMATIONS ABOUT THE AUTHOR *****
- *  The author of this file is Antoine Pirlot, the owner of this project.
- *  You find this original project on github.
- *
- *  My github link is: https://github.com/antoinepirlot
- *  This current project's link is: https://github.com/antoinepirlot/Satunes
- *
- *  You can contact me via my email: pirlot.antoine@outlook.com
- *  PS: I don't answer quickly.
+ * PS: I don't answer quickly.
  */
 
 package io.github.antoinepirlot.satunes.data.viewmodels
 
 import androidx.lifecycle.ViewModel
+import io.github.antoinepirlot.satunes.data.states.MediaSelectionUiState
+import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 
 /**
  * @author Antoine Pirlot on 30/03/2024
  */
-internal class MediaSelectionViewModel : ViewModel() {
+class MediaSelectionViewModel : ViewModel() {
+    private val _uiState: MutableStateFlow<MediaSelectionUiState> = MutableStateFlow(
+        MediaSelectionUiState()
+    )
+
     /**
-     * List of checked playlists' ids to know where to add music from form
+     * List of checked playlists to know where to add music from form
      */
     private val _checkedPlaylistWithMusics: MutableList<Playlist> = mutableListOf()
     private val _checkedMusics: MutableList<Music> = mutableListOf()
 
+    /**
+     * Use to know from where the selection is running.
+     * If the user add multiple [Music] to a single [Playlist], then it must be a [Playlist]
+     * If the user add a single [Music] to multiple [Playlist] then it must be a [Music]
+     */
+    private var _currentMediaImpl: MediaImpl? = null
+
+    val uiState: StateFlow<MediaSelectionUiState> = _uiState.asStateFlow()
+
     fun clearAll() {
         this.clearCheckedMusics()
         this.clearCheckedPlaylistWithMusics()
+        this._currentMediaImpl = null
     }
 
     fun getCheckedPlaylistWithMusics(): List<Playlist> {
@@ -58,7 +75,7 @@ internal class MediaSelectionViewModel : ViewModel() {
         _checkedPlaylistWithMusics.remove(playlist)
     }
 
-    fun clearCheckedPlaylistWithMusics() {
+    private fun clearCheckedPlaylistWithMusics() {
         _checkedPlaylistWithMusics.clear()
     }
 
@@ -76,7 +93,43 @@ internal class MediaSelectionViewModel : ViewModel() {
         _checkedMusics.remove(music)
     }
 
-    fun clearCheckedMusics() {
+    private fun clearCheckedMusics() {
         _checkedMusics.clear()
+    }
+
+    fun setShowPlaylistCreation(value: Boolean) {
+        _uiState.update { currentState: MediaSelectionUiState ->
+            currentState.copy(showPlaylistCreation = value)
+        }
+    }
+
+    /**
+     * Checks if the mediaImpl is selected. If it was already present in the [_currentMediaImpl]
+     * then it add it to [_checkedMusics] or [_checkedPlaylistWithMusics].
+     */
+    fun isChecked(mediaImpl: MediaImpl): Boolean {
+        return when (mediaImpl) {
+            is Music -> {
+                //Check in playlist
+                if ((_currentMediaImpl as Playlist).contains(mediaImpl = mediaImpl)) {
+                    this.addMusic(music = mediaImpl)
+                    true
+                } else this._checkedMusics.contains(element = mediaImpl)
+            }
+
+            is Playlist -> {
+                //Check for selected media
+                if (mediaImpl.contains(mediaImpl = _currentMediaImpl!!)) {
+                    this.addPlaylist(playlist = mediaImpl)
+                    true
+                } else this._checkedPlaylistWithMusics.contains(element = mediaImpl)
+            }
+
+            else -> throw IllegalArgumentException("The media is not a music or playlist")
+        }
+    }
+
+    fun setCurrentMediaImpl(mediaImpl: MediaImpl) {
+        this._currentMediaImpl = mediaImpl
     }
 }

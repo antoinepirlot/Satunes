@@ -1,26 +1,23 @@
 /*
  * This file is part of Satunes.
  *
- *  Satunes is free software: you can redistribute it and/or modify it under
- *  the terms of the GNU General Public License as published by the Free Software Foundation,
- *  either version 3 of the License, or (at your option) any later version.
+ * Satunes is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later version.
+ * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License along with Satunes.
+ * If not, see <https://www.gnu.org/licenses/>.
  *
- *  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- *  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *  See the GNU General Public License for more details.
+ * *** INFORMATION ABOUT THE AUTHOR *****
+ * The author of this file is Antoine Pirlot, the owner of this project.
+ * You find this original project on github.
  *
- *  You should have received a copy of the GNU General Public License along with Satunes.
- *  If not, see <https://www.gnu.org/licenses/>.
+ * My github link is: https://github.com/antoinepirlot
+ * This current project's link is: https://github.com/antoinepirlot/Satunes
  *
- *  **** INFORMATIONS ABOUT THE AUTHOR *****
- *  The author of this file is Antoine Pirlot, the owner of this project.
- *  You find this original project on github.
- *
- *  My github link is: https://github.com/antoinepirlot
- *  This current project's link is: https://github.com/antoinepirlot/Satunes
- *
- *  You can contact me via my email: pirlot.antoine@outlook.com
- *  PS: I don't answer quickly.
+ * PS: I don't answer quickly.
  */
 
 package io.github.antoinepirlot.satunes.ui.views.media.album
@@ -31,6 +28,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -43,20 +41,19 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.jetpack_libs.components.models.ScreenSizes
 import io.github.antoinepirlot.jetpack_libs.components.texts.Subtitle
 import io.github.antoinepirlot.jetpack_libs.components.texts.Title
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.data.local.LocalNavController
+import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
-import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.router.utils.openMedia
-import io.github.antoinepirlot.satunes.ui.components.buttons.ExtraButton
+import io.github.antoinepirlot.satunes.ui.components.buttons.fab.ExtraButtonList
 import io.github.antoinepirlot.satunes.ui.components.images.MediaArtwork
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 
@@ -67,63 +64,33 @@ import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 @Composable
 internal fun AlbumView(
     modifier: Modifier = Modifier,
-    navController: NavHostController,
-    playbackViewModel: PlaybackViewModel = viewModel(),
+    satunesViewModel: SatunesViewModel = viewModel(),
+    dataViewModel: DataViewModel = viewModel(),
     album: Album,
 ) {
     val musicSet: Set<Music> = album.getMusicSet()
 
     //Recompose if data changed
-    var mapChanged: Boolean by rememberSaveable { album.musicSetUpdated }
-    if (mapChanged) {
-        mapChanged = false
+    var setChanged: Boolean by rememberSaveable { album.musicSetUpdated }
+    if (setChanged) {
+        setChanged = false
     }
     //
 
+    LaunchedEffect(key1 = dataViewModel.isLoaded) {
+        if (musicSet.isNotEmpty())
+            satunesViewModel.replaceExtraButtons(extraButtons = {
+                ExtraButtonList()
+            })
+        else
+            satunesViewModel.clearExtraButtons()
+    }
+
     MediaListView(
         modifier = modifier,
-        navController = navController,
         mediaImplCollection = musicSet,
-        openMedia = { clickedMediaImpl: MediaImpl ->
-            playbackViewModel.loadMusic(
-                musicSet = album.getMusicSet(),
-                musicToPlay = clickedMediaImpl as Music
-            )
-            openMedia(
-                playbackViewModel = playbackViewModel,
-                media = clickedMediaImpl,
-                navController = navController
-            )
-        },
-        onFABClick = {
-            openCurrentMusic(
-                playbackViewModel = playbackViewModel,
-                navController = navController
-            )
-        },
         header = {
-            Header(navController = navController, album = album)
-        },
-        extraButtons = {
-            if (album.getMusicSet().isNotEmpty()) {
-                ExtraButton(icon = SatunesIcons.PLAY, onClick = {
-                    playbackViewModel.loadMusic(album.getMusicSet())
-                    openMedia(
-                        playbackViewModel = playbackViewModel,
-                        navController = navController
-                    )
-                })
-                ExtraButton(icon = SatunesIcons.SHUFFLE, onClick = {
-                    playbackViewModel.loadMusic(
-                        musicSet = album.getMusicSet(),
-                        shuffleMode = true
-                    )
-                    openMedia(
-                        playbackViewModel = playbackViewModel,
-                        navController = navController
-                    )
-                })
-            }
+            Header(album = album)
         },
         emptyViewText = stringResource(id = R.string.no_music)
     )
@@ -133,9 +100,10 @@ internal fun AlbumView(
 private fun Header(
     modifier: Modifier = Modifier,
     playbackViewModel: PlaybackViewModel = viewModel(),
-    navController: NavHostController,
     album: Album
 ) {
+    val navController: NavHostController = LocalNavController.current
+
     Column(modifier = modifier.padding(vertical = 16.dp)) {
         val screenWidthDp = LocalConfiguration.current.screenWidthDp
         val albumSize: Dp = if (screenWidthDp < ScreenSizes.VERY_VERY_SMALL)
@@ -163,7 +131,7 @@ private fun Header(
                         navController = navController
                     )
                 },
-            text = album.artist.title
+            text = if (album.year != null) "${album.artist.title} - ${album.year}" else album.artist.title
         )
     }
 }
@@ -171,9 +139,7 @@ private fun Header(
 @Preview
 @Composable
 private fun AlbumViewPreview() {
-    val navController: NavHostController = rememberNavController()
     AlbumView(
-        navController = navController,
         album = Album(
             title = "Album title",
             artist = Artist(title = "Artist Title"),

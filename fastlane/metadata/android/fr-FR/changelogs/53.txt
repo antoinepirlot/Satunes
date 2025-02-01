@@ -1,0 +1,10 @@
+Améliorations, optimisations et dépannage:
+
+* Suppression de la limite d'Android Auto
+* Le chargement de la bibliothèque n'affichera pas de message d'avertissement
+* Le nettoyage des playlists affichera un message d'avertissement
+* La zone de défilement des rangées de boutons n'est plus coupée
+* Correction du mauvais mode de répétition après le rechargement de la bibliothèque
+* Correction de la lecture de la musique suivante dans certaines conditions
+
+Plus de détails sur GitHub.

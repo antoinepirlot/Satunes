@@ -1,33 +1,32 @@
 /*
  * This file is part of Satunes.
  *
- *  Satunes is free software: you can redistribute it and/or modify it under
- *  the terms of the GNU General Public License as published by the Free Software Foundation,
- *  either version 3 of the License, or (at your option) any later version.
+ * Satunes is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later version.
+ * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License along with Satunes.
+ * If not, see <https://www.gnu.org/licenses/>.
  *
- *  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- *  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *  See the GNU General Public License for more details.
+ * *** INFORMATION ABOUT THE AUTHOR *****
+ * The author of this file is Antoine Pirlot, the owner of this project.
+ * You find this original project on github.
  *
- *  You should have received a copy of the GNU General Public License along with Satunes.
- *  If not, see <https://www.gnu.org/licenses/>.
+ * My github link is: https://github.com/antoinepirlot
+ * This current project's link is: https://github.com/antoinepirlot/Satunes
  *
- *  **** INFORMATIONS ABOUT THE AUTHOR *****
- *  The author of this file is Antoine Pirlot, the owner of this project.
- *  You find this original project on github.
- *
- *  My github link is: https://github.com/antoinepirlot
- *  This current project's link is: https://github.com/antoinepirlot/Satunes
- *
- *  You can contact me via my email: pirlot.antoine@outlook.com
- *  PS: I don't answer quickly.
+ * PS: I don't answer quickly.
  */
 
 package io.github.antoinepirlot.satunes.database.services.settings
 
 import android.content.Context
 import android.net.Uri
+import androidx.compose.runtime.MutableLongState
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.MutablePreferences
@@ -36,6 +35,7 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.floatPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
@@ -53,21 +53,22 @@ import kotlinx.coroutines.flow.map
  */
 
 object SettingsManager {
+
     /**
      * DEFAULT VALUES
      */
-    private const val DEFAULT_FOLDERS_CHECKED = true
-    private const val DEFAULT_ARTISTS_CHECKED = true
-    private const val DEFAULT_ALBUMS_CHECKED = true
-    private const val DEFAULT_GENRE_CHECKED = true
-    private const val DEFAULT_PLAYLIST_CHECKED = true
+    private const val DEFAULT_FOLDERS_NAVBAR = true
+    private const val DEFAULT_ARTISTS_NAVBAR = true
+    private const val DEFAULT_ALBUMS_NAVBAR = true
+    private const val DEFAULT_GENRE_NAVBAR = true
+    private const val DEFAULT_PLAYLIST_NAVBAR = true
     private val DEFAULT_DEFAULT_NAV_BAR_SECTION = NavBarSection.MUSICS
     private const val DEFAULT_PLAYBACK_WHEN_CLOSED_CHECKED =
         false //App stop after removed app from multi-task if false
     private const val DEFAULT_PAUSE_IF_NOISY = true
     private val DEFAULT_BAR_SPEED_VALUE: BarSpeed = BarSpeed.NORMAL
     private const val DEFAULT_REPEAT_MODE: Int = Player.REPEAT_MODE_OFF
-    private const val DEFAULT_SHUFFLE_MODE_CHECKED: Boolean = false
+    private const val DEFAULT_SHUFFLE_MODE: Boolean = false
     private const val DEFAULT_PAUSE_IF_ANOTHER_PLAYBACK_CHECKED: Boolean = true
     private const val DEFAULT_AUDIO_OFFLOAD_CHECKED: Boolean = false
     private const val DEFAULT_WHATS_NEW_SEEN: Boolean = false
@@ -81,17 +82,20 @@ object SettingsManager {
     private val DEFAULT_FOLDERS_SELECTION_SELECTED: FoldersSelection = FoldersSelection.INCLUDE
     private val DEFAULT_SELECTED_PATHS: Set<String> = setOf("/0/Music/%")
     private const val DEFAULT_COMPILATION_MUSIC: Boolean = false
-    private const val DEFAULT_ARTISTS_REPLACEMENT: Boolean = false
+    private const val DEFAULT_ARTISTS_REPLACEMENT: Boolean = true
+    private const val DEFAULT_FORWARD_MS: Long = 5000L
+    private const val DEFAULT_REWIND_MS: Long = DEFAULT_FORWARD_MS
+    private const val DEFAULT_SHOW_FIRST_LETTER = true
 
     /**
      * KEYS
      */
     private val PREFERENCES_DATA_STORE = preferencesDataStore("settings")
-    private val FOLDERS_CHECKED_PREFERENCES_KEY = booleanPreferencesKey("folders_checked")
-    private val ARTISTS_CHECKED_PREFERENCES_KEY = booleanPreferencesKey("artist_checked")
-    private val ALBUMS_CHECKED_PREFERENCES_KEY = booleanPreferencesKey("albums_checked")
-    private val GENRE_CHECKED_PREFERENCES_KEY = booleanPreferencesKey("genres_checked")
-    private val PLAYLISTS_CHECKED_PREFERENCES_KEY = booleanPreferencesKey("playlists_checked")
+    private val FOLDERS_NAVBAR_PREFERENCES_KEY = booleanPreferencesKey("folders_navbar")
+    private val ARTISTS_NAVBAR_PREFERENCES_KEY = booleanPreferencesKey("artist_navbar")
+    private val ALBUMS_NAVBAR_PREFERENCES_KEY = booleanPreferencesKey("albums_navbar")
+    private val GENRES_NAVBAR_PREFERENCES_KEY = booleanPreferencesKey("genres_navbar")
+    private val PLAYLISTS_NAVBAR_PREFERENCES_KEY = booleanPreferencesKey("playlists_navbar")
     private val DEFAULT_NAV_BAR_SECTION_KEY: Preferences.Key<Int> =
         intPreferencesKey("default_nav_bar_section")
     private val PLAYBACK_WHEN_CLOSED_CHECKED_PREFERENCES_KEY =
@@ -121,6 +125,10 @@ object SettingsManager {
         booleanPreferencesKey("compilation_music")
     private val ARTISTS_REPLACEMENT_KEY: Preferences.Key<Boolean> =
         booleanPreferencesKey("artist_replacement")
+    private val FORWARD_MS_KEY: Preferences.Key<Long> = longPreferencesKey("forward_ms")
+    private val REWIND_MS_KEY: Preferences.Key<Long> = longPreferencesKey("rewind_ms")
+    private val SHOW_FIRST_LETTER_KEY: Preferences.Key<Boolean> =
+        booleanPreferencesKey("show_first_letter")
 
     /**
      * VARIABLES
@@ -129,16 +137,6 @@ object SettingsManager {
     private val Context.dataStore: DataStore<Preferences> by PREFERENCES_DATA_STORE
     private var _isLoaded: Boolean = false
 
-    var foldersChecked: MutableState<Boolean> = mutableStateOf(DEFAULT_FOLDERS_CHECKED)
-        private set
-    var artistsChecked: MutableState<Boolean> = mutableStateOf(DEFAULT_ARTISTS_CHECKED)
-        private set
-    var albumsChecked: MutableState<Boolean> = mutableStateOf(DEFAULT_ALBUMS_CHECKED)
-        private set
-    var genresChecked: MutableState<Boolean> = mutableStateOf(DEFAULT_GENRE_CHECKED)
-        private set
-    var playlistsChecked: MutableState<Boolean> = mutableStateOf(DEFAULT_PLAYLIST_CHECKED)
-        private set
     var defaultNavBarSection: NavBarSection = DEFAULT_DEFAULT_NAV_BAR_SECTION
     var playbackWhenClosedChecked: Boolean = DEFAULT_PLAYBACK_WHEN_CLOSED_CHECKED
         private set
@@ -148,7 +146,7 @@ object SettingsManager {
         private set
     var repeatMode: Int = DEFAULT_REPEAT_MODE
         private set
-    var shuffleMode: Boolean = DEFAULT_SHUFFLE_MODE_CHECKED
+    var shuffleMode: Boolean = DEFAULT_SHUFFLE_MODE
         private set
     var pauseIfAnotherPlayback: Boolean = DEFAULT_PAUSE_IF_ANOTHER_PLAYBACK_CHECKED
         private set
@@ -183,33 +181,31 @@ object SettingsManager {
      * This setting is true if the compilation's music has to be added to compilation's artist's music list
      */
     var compilationMusic: Boolean = DEFAULT_COMPILATION_MUSIC
+        private set
     var artistReplacement: Boolean = DEFAULT_ARTISTS_REPLACEMENT
+        private set
+
+    val forwardMs: MutableLongState = mutableLongStateOf(DEFAULT_FORWARD_MS)
+    val rewindMs: MutableLongState = mutableLongStateOf(DEFAULT_REWIND_MS)
+    var showFirstLetter: Boolean = DEFAULT_SHOW_FIRST_LETTER
+        private set
 
     suspend fun loadSettings(context: Context) {
         if (_isLoaded) {
-            _logger.info("Settings already loaded")
+            _logger?.info("Settings already loaded")
             return
         }
         context.dataStore.data.map { preferences: Preferences ->
-            foldersChecked.value =
-                preferences[FOLDERS_CHECKED_PREFERENCES_KEY] ?: DEFAULT_FOLDERS_CHECKED
-            NavBarSection.FOLDERS.isEnabled = foldersChecked.value
-
-            artistsChecked.value =
-                preferences[ARTISTS_CHECKED_PREFERENCES_KEY] ?: DEFAULT_ARTISTS_CHECKED
-            NavBarSection.ARTISTS.isEnabled = artistsChecked.value
-
-            albumsChecked.value =
-                preferences[ALBUMS_CHECKED_PREFERENCES_KEY] ?: DEFAULT_ALBUMS_CHECKED
-            NavBarSection.ALBUMS.isEnabled = albumsChecked.value
-
-            genresChecked.value =
-                preferences[GENRE_CHECKED_PREFERENCES_KEY] ?: DEFAULT_GENRE_CHECKED
-            NavBarSection.GENRES.isEnabled = genresChecked.value
-
-            playlistsChecked.value =
-                preferences[PLAYLISTS_CHECKED_PREFERENCES_KEY] ?: DEFAULT_PLAYLIST_CHECKED
-            NavBarSection.PLAYLISTS.isEnabled = playlistsChecked.value
+            NavBarSection.FOLDERS.isEnabled.value =
+                preferences[FOLDERS_NAVBAR_PREFERENCES_KEY] ?: DEFAULT_FOLDERS_NAVBAR
+            NavBarSection.ARTISTS.isEnabled.value =
+                preferences[ARTISTS_NAVBAR_PREFERENCES_KEY] ?: DEFAULT_ARTISTS_NAVBAR
+            NavBarSection.ALBUMS.isEnabled.value =
+                preferences[ALBUMS_NAVBAR_PREFERENCES_KEY] ?: DEFAULT_ALBUMS_NAVBAR
+            NavBarSection.GENRES.isEnabled.value =
+                preferences[GENRES_NAVBAR_PREFERENCES_KEY] ?: DEFAULT_GENRE_NAVBAR
+            NavBarSection.PLAYLISTS.isEnabled.value =
+                preferences[PLAYLISTS_NAVBAR_PREFERENCES_KEY] ?: DEFAULT_PLAYLIST_NAVBAR
 
             defaultNavBarSection = getNavBarSection(preferences[DEFAULT_NAV_BAR_SECTION_KEY])
 
@@ -225,7 +221,7 @@ object SettingsManager {
             repeatMode = preferences[REPEAT_MODE_KEY] ?: DEFAULT_REPEAT_MODE
 
             shuffleMode =
-                preferences[SHUFFLE_MODE_KEY] ?: DEFAULT_SHUFFLE_MODE_CHECKED
+                preferences[SHUFFLE_MODE_KEY] ?: DEFAULT_SHUFFLE_MODE
 
             pauseIfAnotherPlayback = preferences[PAUSE_IF_ANOTHER_PLAYBACK_KEY]
                 ?: DEFAULT_PAUSE_IF_ANOTHER_PLAYBACK_CHECKED
@@ -242,6 +238,10 @@ object SettingsManager {
             compilationMusic = preferences[COMPILATION_MUSIC_KEY] ?: DEFAULT_COMPILATION_MUSIC
 
             artistReplacement = preferences[ARTISTS_REPLACEMENT_KEY] ?: DEFAULT_ARTISTS_REPLACEMENT
+
+            forwardMs.longValue = preferences[FORWARD_MS_KEY] ?: DEFAULT_FORWARD_MS
+            rewindMs.longValue = preferences[REWIND_MS_KEY] ?: DEFAULT_REWIND_MS
+            showFirstLetter = preferences[SHOW_FIRST_LETTER_KEY] ?: DEFAULT_SHOW_FIRST_LETTER
 
             DataLoader.loadFoldersPaths()
 
@@ -262,7 +262,7 @@ object SettingsManager {
             5 -> NavBarSection.PLAYLISTS
             else -> DEFAULT_DEFAULT_NAV_BAR_SECTION
         }
-        if (!navBarSection.isEnabled) {
+        if (!navBarSection.isEnabled.value) {
             navBarSection = DEFAULT_DEFAULT_NAV_BAR_SECTION
         }
         return navBarSection
@@ -311,7 +311,7 @@ object SettingsManager {
         if (whatsNewSeen) {
             val packageManager = context.packageManager
             val packageInfo = packageManager.getPackageInfo(context.packageName, 0)
-            val versionName = 'v' + packageInfo.versionName
+            val versionName = 'v' + packageInfo.versionName!!
             if (whatsNewVersionSeen != versionName) {
                 this.unSeeWhatsNew(context = context)
             }
@@ -322,41 +322,42 @@ object SettingsManager {
         when (navBarSection) {
             NavBarSection.FOLDERS -> {
                 context.dataStore.edit { preferences: MutablePreferences ->
-                    foldersChecked.value = !foldersChecked.value
-                    preferences[FOLDERS_CHECKED_PREFERENCES_KEY] = foldersChecked.value
-                    NavBarSection.FOLDERS.isEnabled = foldersChecked.value
+                    NavBarSection.FOLDERS.isEnabled.value = !NavBarSection.FOLDERS.isEnabled.value
+                    preferences[FOLDERS_NAVBAR_PREFERENCES_KEY] =
+                        NavBarSection.FOLDERS.isEnabled.value
                 }
             }
 
             NavBarSection.ARTISTS -> {
                 context.dataStore.edit { preferences: MutablePreferences ->
-                    artistsChecked.value = !artistsChecked.value
-                    preferences[ARTISTS_CHECKED_PREFERENCES_KEY] = artistsChecked.value
-                    NavBarSection.ARTISTS.isEnabled = artistsChecked.value
+                    NavBarSection.ARTISTS.isEnabled.value = !NavBarSection.ARTISTS.isEnabled.value
+                    preferences[ARTISTS_NAVBAR_PREFERENCES_KEY] =
+                        NavBarSection.ARTISTS.isEnabled.value
                 }
             }
 
             NavBarSection.ALBUMS -> {
                 context.dataStore.edit { preferences: MutablePreferences ->
-                    albumsChecked.value = !albumsChecked.value
-                    preferences[ALBUMS_CHECKED_PREFERENCES_KEY] = albumsChecked.value
-                    NavBarSection.ALBUMS.isEnabled = albumsChecked.value
+                    NavBarSection.ALBUMS.isEnabled.value = !NavBarSection.ALBUMS.isEnabled.value
+                    preferences[ALBUMS_NAVBAR_PREFERENCES_KEY] =
+                        NavBarSection.ALBUMS.isEnabled.value
                 }
             }
 
             NavBarSection.GENRES -> {
                 context.dataStore.edit { preferences: MutablePreferences ->
-                    genresChecked.value = !genresChecked.value
-                    preferences[GENRE_CHECKED_PREFERENCES_KEY] = genresChecked.value
-                    NavBarSection.GENRES.isEnabled = genresChecked.value
+                    NavBarSection.GENRES.isEnabled.value = !NavBarSection.GENRES.isEnabled.value
+                    preferences[GENRES_NAVBAR_PREFERENCES_KEY] =
+                        NavBarSection.GENRES.isEnabled.value
                 }
             }
 
             NavBarSection.PLAYLISTS -> {
                 context.dataStore.edit { preferences: MutablePreferences ->
-                    playlistsChecked.value = !playlistsChecked.value
-                    preferences[PLAYLISTS_CHECKED_PREFERENCES_KEY] = playlistsChecked.value
-                    NavBarSection.PLAYLISTS.isEnabled = playlistsChecked.value
+                    NavBarSection.PLAYLISTS.isEnabled.value =
+                        !NavBarSection.PLAYLISTS.isEnabled.value
+                    preferences[PLAYLISTS_NAVBAR_PREFERENCES_KEY] =
+                        NavBarSection.PLAYLISTS.isEnabled.value
                 }
             }
 
@@ -437,7 +438,7 @@ object SettingsManager {
             preferences[WHATS_NEW_SEEN_KEY] = whatsNewSeen
             val packageManager = context.packageManager
             val packageInfo = packageManager.getPackageInfo(context.packageName, 0)
-            val versionName = 'v' + packageInfo.versionName
+            val versionName = 'v' + packageInfo.versionName!!
             preferences[WHATS_NEW_VERSION_SEEN_KEY] = versionName
             whatsNewVersionSeen = versionName
         }
@@ -568,5 +569,118 @@ object SettingsManager {
             this.artistReplacement = !this.artistReplacement
             preferences[ARTISTS_REPLACEMENT_KEY] = this.artistReplacement
         }
+    }
+
+    suspend fun updateForwardMs(context: Context, seconds: Int) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            this.forwardMs.longValue = seconds.toLong() * 1000L
+            preferences[FORWARD_MS_KEY] = this.forwardMs.longValue
+        }
+    }
+
+    suspend fun updateRewindMs(context: Context, seconds: Int) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            this.rewindMs.longValue = seconds.toLong() * 1000L
+            preferences[REWIND_MS_KEY] = this.rewindMs.longValue
+        }
+    }
+
+    suspend fun switchShowFirstLetter(context: Context) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            this.showFirstLetter = !this.showFirstLetter
+            preferences[SHOW_FIRST_LETTER_KEY] = this.showFirstLetter
+        }
+    }
+
+    suspend fun resetFoldersSettings(context: Context) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            this.foldersPathsSelectedSet.value = DEFAULT_SELECTED_PATHS
+            preferences[SELECTED_PATHS_KEY] = this.foldersPathsSelectedSet.value
+        }
+    }
+
+    suspend fun resetLoadingLogicSettings(context: Context) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            this.compilationMusic = DEFAULT_COMPILATION_MUSIC
+            this.artistReplacement = DEFAULT_ARTISTS_REPLACEMENT
+            this.showFirstLetter = DEFAULT_SHOW_FIRST_LETTER
+            preferences[COMPILATION_MUSIC_KEY] = this.compilationMusic
+            preferences[ARTISTS_REPLACEMENT_KEY] = this.artistReplacement
+            preferences[SHOW_FIRST_LETTER_KEY] = this.showFirstLetter
+        }
+    }
+
+    suspend fun resetBatterySettings(context: Context) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            this.audioOffloadChecked = DEFAULT_AUDIO_OFFLOAD_CHECKED
+            preferences[AUDIO_OFFLOAD_CHECKED_KEY] = this.audioOffloadChecked
+        }
+    }
+
+    suspend fun resetPlaybackBehaviorSettings(context: Context) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            this.playbackWhenClosedChecked = DEFAULT_PLAYBACK_WHEN_CLOSED_CHECKED
+            this.pauseIfNoisyChecked = DEFAULT_PAUSE_IF_NOISY
+            this.pauseIfAnotherPlayback = DEFAULT_PAUSE_IF_ANOTHER_PLAYBACK_CHECKED
+            this.barSpeed = DEFAULT_BAR_SPEED_VALUE
+            preferences[PLAYBACK_WHEN_CLOSED_CHECKED_PREFERENCES_KEY] =
+                this.playbackWhenClosedChecked
+            preferences[PAUSE_IF_NOISY_PREFERENCES_KEY] = this.pauseIfNoisyChecked
+            preferences[PAUSE_IF_ANOTHER_PLAYBACK_KEY] = this.pauseIfAnotherPlayback
+            preferences[BAR_SPEED_KEY] = this.barSpeed.speed
+        }
+    }
+
+    suspend fun resetPlaybackModesSettings(context: Context) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            this.shuffleMode = DEFAULT_SHUFFLE_MODE
+            this.repeatMode = DEFAULT_REPEAT_MODE
+            this.forwardMs.longValue = DEFAULT_FORWARD_MS
+            this.rewindMs.longValue = DEFAULT_REWIND_MS
+            preferences[SHUFFLE_MODE_KEY] = this.shuffleMode
+            preferences[REPEAT_MODE_KEY] = this.repeatMode
+            preferences[FORWARD_MS_KEY] = this.forwardMs.longValue
+            preferences[REWIND_MS_KEY] = this.rewindMs.longValue
+        }
+    }
+
+    suspend fun resetDefaultSearchFiltersSettings(context: Context) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            this.musicsFilter = DEFAULT_MUSICS_FILTER
+            this.albumsFilter = DEFAULT_ALBUMS_FILTER
+            this.artistsFilter = DEFAULT_ARTISTS_FILTER
+            this.genresFilter = DEFAULT_GENRES_FILTER
+            this.foldersFilter = DEFAULT_FOLDERS_FILTER
+            this.playlistsFilter = DEFAULT_PLAYLISTS_FILTER
+            preferences[MUSICS_FILTER_KEY] = this.musicsFilter
+            preferences[ALBUMS_FILTER_KEY] = this.albumsFilter
+            preferences[ARTISTS_FILTER_KEY] = this.artistsFilter
+            preferences[GENRES_FILTER_KEY] = this.genresFilter
+            preferences[FOLDERS_FILTER_KEY] = this.foldersFilter
+            preferences[PLAYLISTS_FILTER_KEY] = this.playlistsFilter
+        }
+    }
+
+    suspend fun resetNavigationBarSettings(context: Context) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            this.defaultNavBarSection = DEFAULT_DEFAULT_NAV_BAR_SECTION
+            NavBarSection.enableAll()
+            preferences[FOLDERS_NAVBAR_PREFERENCES_KEY] = DEFAULT_FOLDERS_NAVBAR
+            preferences[ARTISTS_NAVBAR_PREFERENCES_KEY] = DEFAULT_ARTISTS_NAVBAR
+            preferences[ALBUMS_NAVBAR_PREFERENCES_KEY] = DEFAULT_ALBUMS_NAVBAR
+            preferences[GENRES_NAVBAR_PREFERENCES_KEY] = DEFAULT_GENRE_NAVBAR
+            preferences[PLAYLISTS_NAVBAR_PREFERENCES_KEY] = DEFAULT_PLAYLIST_NAVBAR
+            preferences[DEFAULT_NAV_BAR_SECTION_KEY] = DEFAULT_DEFAULT_NAV_BAR_SECTION.id
+        }
+    }
+
+    suspend fun resetAll(context: Context) {
+        this.resetFoldersSettings(context = context)
+        this.resetLoadingLogicSettings(context = context)
+        this.resetBatterySettings(context = context)
+        this.resetPlaybackBehaviorSettings(context = context)
+        this.resetPlaybackModesSettings(context = context)
+        this.resetDefaultSearchFiltersSettings(context = context)
+        this.resetNavigationBarSettings(context = context)
     }
 }

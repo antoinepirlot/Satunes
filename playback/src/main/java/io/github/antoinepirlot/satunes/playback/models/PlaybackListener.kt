@@ -1,26 +1,23 @@
 /*
  * This file is part of Satunes.
  *
- *  Satunes is free software: you can redistribute it and/or modify it under
- *  the terms of the GNU General Public License as published by the Free Software Foundation,
- *  either version 3 of the License, or (at your option) any later version.
+ * Satunes is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later version.
+ * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License along with Satunes.
+ * If not, see <https://www.gnu.org/licenses/>.
  *
- *  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- *  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *  See the GNU General Public License for more details.
+ * *** INFORMATION ABOUT THE AUTHOR *****
+ * The author of this file is Antoine Pirlot, the owner of this project.
+ * You find this original project on github.
  *
- *  You should have received a copy of the GNU General Public License along with Satunes.
- *  If not, see <https://www.gnu.org/licenses/>.
+ * My github link is: https://github.com/antoinepirlot
+ * This current project's link is: https://github.com/antoinepirlot/Satunes
  *
- *  **** INFORMATIONS ABOUT THE AUTHOR *****
- *  The author of this file is Antoine Pirlot, the owner of this project.
- *  You find this original project on github.
- *
- *  My github link is: https://github.com/antoinepirlot
- *  This current project's link is: https://github.com/antoinepirlot/Satunes
- *
- *  You can contact me via my email: pirlot.antoine@outlook.com
- *  PS: I don't answer quickly.
+ * PS: I don't answer quickly.
  */
 
 
@@ -32,7 +29,6 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
-import io.github.antoinepirlot.satunes.playback.services.WidgetPlaybackManager
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 
 /**
@@ -40,7 +36,7 @@ import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
  */
 open class PlaybackListener : Player.Listener {
 
-    private val logger = SatunesLogger.getLogger()
+    private val _logger: SatunesLogger? = SatunesLogger.getLogger()
 
     override fun onPlaybackStateChanged(playbackState: Int) {
         super.onPlaybackStateChanged(playbackState)
@@ -67,7 +63,6 @@ open class PlaybackListener : Player.Listener {
 
         playbackController.isPlaying = isPlaying
         playbackController.isEnded = PlaybackController.DEFAULT_IS_ENDED
-        WidgetPlaybackManager.refreshWidgets()
     }
 
     /**
@@ -76,9 +71,9 @@ open class PlaybackListener : Player.Listener {
     @OptIn(UnstableApi::class)
     override fun onEvents(player: Player, events: Player.Events) {
         super.onEvents(player, events)
-        val playbackController: PlaybackController = PlaybackController.getInstance()
 
         if (events.contains(Player.EVENT_POSITION_DISCONTINUITY)) {
+            val playbackController: PlaybackController = PlaybackController.getInstance()
             playbackController.updateCurrentPosition()
         }
 
@@ -90,12 +85,13 @@ open class PlaybackListener : Player.Listener {
         }
 
         if (events.contains(Player.EVENT_PLAYER_ERROR)) {
+            val playbackController: PlaybackController = PlaybackController.getInstance()
             val message = """
                 An error happens with the player. 
                 Here's the status of playback Controller:
                 $playbackController
             """.trimIndent()
-            logger.warning(message)
+            _logger?.warning(message)
         }
     }
 

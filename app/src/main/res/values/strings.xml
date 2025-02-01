@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name" translatable="false">Satunes</string>
     <string name="play_all">Shuffle All Musics</string>
-    <string name="bottom_bar">Navigation Bar</string>
+    <string name="navigation_bar_settings_title">Navigation Bar</string>
     <string name="this_device">This Device</string>
     <string name="external_storage">External Storage</string>
     <string name="playback_settings">Playback</string>
@@ -13,7 +13,7 @@
     <string name="cancel">Cancel</string>
     <string name="create">Create</string>
     <string name="add_to_playlist">Add to playlist</string>
-    <string name="add">Add</string>
+    <string name="update">Update</string>
     <string name="remove_from_playlist">Remove from playlist</string>
     <string name="remove_playlist">Remove playlist</string>
     <string name="settings">Settings</string>
@@ -48,7 +48,7 @@
     <string name="update_title">Update Name</string>
     <string name="title">Title</string>
     <string name="playlists_settings_content">You can export/import your playlists.\n\nYou can move the file into a new folder or replace it (it must have the same file name), in these case Satunes will detect the modification and apply it to existing data.\n\nBut, if you both replace and move the file in another folder, then, Satunes won\'t be able to detect the modification and remove it from playlist(s).</string>
-    <string name="android_auto_content">To activate Android Auto you must carry out the following steps:\n\n1) Go to Android Auto settings.\n\n2) Multiple click on \"Version\" to activate dev mode.\n\n3) Go to Dev\'s settings and activate \"Unknown sources\" as this app is not published on Google Play Store.\n\n4) Click on the 3 buttons as in point 3, but click on \"Exit developer mode\" the setting you just activated will be saved.\n\n5) Add app in launcher.\n\n6) Enjoy\n\n⚠ Keep in mind that Android Auto has not been designed to load a lot of data and can bug if you have too much musics for Android Auto.</string>
+    <string name="android_auto_content">To activate Android Auto you must carry out the following steps:\n\n1) Go to Android Auto settings.\n\n2) Multiple click on \"Version\" to activate dev mode.\n\n3) Go to Dev\'s settings and activate \"Unknown sources\" as this app is not published on Google Play Store.\n\n4) Click on the 3 buttons as in point 3, but click on \"Exit developer mode\" the setting you just activated will be saved.\n\n5) Add app in launcher.\n\n6) Enjoy</string>
     <string name="battery_settings">Battery</string>
     <string name="audio_offload" translatable="false">Audio Offload</string>
     <string name="audio_offload_info">This parameter allows you to send audio treatment to a dedicated process.\nThis reduces energy consumption.\n\nHowever, in the Media 3 library used in Satunes, this can cause compatibility issues which results in audio cuts. A known issue is that the music is stopping during playback or after the end of a song.\n\nBy activating this parameter, you reduce energy consumption and increase the  battery life but you are likely to meet audio cuts.\n\nI hope that in a nearby future, the problem will be resolved by Google which holds the Media3 and Exoplayer libraries. In the meantime, I try to find viable solutions to reduce energy consumption by Satunes.</string>
@@ -60,7 +60,7 @@
     <string name="no_result">No result found</string>
     <string name="add_to_likes">Like</string>
     <string name="remove_from_likes">Unlike</string>
-    <string name="whats_new_text">Yay! You have just installed a new version of Satunes.\n\nI hope this version is better than the older one.\n\nIf you ever notice any problems or want to make suggestions, you can send me an email at: pirlot.antoine@outlook.com.\n\nThank you for your help! 😊\n\nI wish you good listening 🎧🎵</string>
+    <string name="whats_new_text">Yay! You have just installed a new version of Satunes.\n\nI hope this version is better than the older one.\n\nIf you ever notice any problems or want to make suggestions, you can send me an email at: antoinepirlot@proton.me.\n\nThank you for your help! 😊\n\nI wish you good listening 🎧🎵</string>
     <string name="click_here">click here</string>
     <string name="search_setting_title">Search</string>
     <string name="default_filter_setting_title">Default filters</string>
@@ -68,7 +68,7 @@
     <string name="remove_submit">Delete</string>
     <string name="see_on_fdroid">Open in F-Droid</string>
     <string name="logs_settings">Logs</string>
-    <string name="logs_settings_content">You can export logs to send me them by email at: pirlot.antoine@outlook.com.\n\nWith these logs I can understand more about what\'s wrong with the app.\n\nLogs files contain informations about what the app does and its state.\nThese informations include:\n- Dates\n- Process\n- App state\n\nIn these logs, there\'s not confidential informations as musics information or data that can identify you.\n\nIf you\'re not convinced, you can choose to describe me the problem but it will be more difficult for me to fix it.</string>
+    <string name="logs_settings_content">You can export logs to send me them by email at: antoinepirlot@proton.me.\n\nWith these logs I can understand more about what\'s wrong with the app.\n\nLogs files contain informations about what the app does and its state.\nThese informations include:\n- Dates\n- Process\n- App state\n\nIn these logs, there\'s not confidential informations as musics information or data that can identify you.\n\nIf you\'re not convinced, you can choose to describe me the problem but it will be more difficult for me to fix it.</string>
     <string name="update_modal_permanently">You won\'t see this modal again until the next update</string>
     <string name="canceled">Canceled</string>
     <string name="insert_music_to_playlists_success">has been added to the playlist(s)</string>
@@ -91,7 +91,7 @@
     <string name="add_musics_to_playlists_success">Musics have been added to playlists</string>
     <string name="remove_from_queue_option">Remove from queue</string>
     <string name="remove_from_queue_success">%1$s has been remove from queue.</string>
-    <string name="export_all_dialog_content">If you changed the paths, I advise you to export your playlists.\nSome music might be permanently deleted from the playlists.\n\nWould you like to export your playlists?</string>
+    <string name="clean_playlists_dialog_content">Cleaning playlists result in removing all not loaded musics from database.\n\nIf you changed the paths, I advise you to export your playlists.\nSome music might be permanently deleted from the playlists.\n\nWould you like to export your playlists?</string>
     <string name="warning">Warning</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
@@ -116,4 +116,23 @@
     <string name="confirm">Save</string>
     <string name="updating_snack">Updating…</string>
     <string name="access_media_location_permission">Photos and videos</string>
+    <string name="timer_settings_title">Timer</string>
+    <string name="minutes_text_field_label">Minutes</string>
+    <string name="remaining_time_content">Remaining time: %1$s</string>
+    <string name="start_timer_button_content">Start</string>
+    <string name="timer_cancelled_snackbar_content">Timer cancelled</string>
+    <string name="pause_media_timer_snackbar">The timer paused the music</string>
+    <string name="seconds_text_field_label">Seconds</string>
+    <string name="hours_text_field_label">Hours</string>
+    <string name="forward">Forward</string>
+    <string name="rewind">Rewind</string>
+    <string name="reset_settings">Reset</string>
+    <string name="reset_text">Reset</string>
+    <string name="playback_behavior_settings">Behavior</string>
+    <string name="reset_all_settings">Reset All</string>
+    <string name="made_in_europe">Developed in Europe 🇪🇺</string>
+    <string name="reload_library_required">Reload library required</string>
+    <string name="sort_list_title">Sort</string>
+    <string name="show_first_letter_setting_content">Show first letter</string>
+    <string name="unknown_year">Unknown Year</string>
 </resources>

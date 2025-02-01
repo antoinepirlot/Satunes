@@ -1,26 +1,23 @@
 /*
  * This file is part of Satunes.
  *
- *  Satunes is free software: you can redistribute it and/or modify it under
- *  the terms of the GNU General Public License as published by the Free Software Foundation,
- *  either version 3 of the License, or (at your option) any later version.
+ * Satunes is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later version.
+ * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License along with Satunes.
+ * If not, see <https://www.gnu.org/licenses/>.
  *
- *  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- *  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *  See the GNU General Public License for more details.
+ * *** INFORMATION ABOUT THE AUTHOR *****
+ * The author of this file is Antoine Pirlot, the owner of this project.
+ * You find this original project on github.
  *
- *  You should have received a copy of the GNU General Public License along with Satunes.
- *  If not, see <https://www.gnu.org/licenses/>.
+ * My github link is: https://github.com/antoinepirlot
+ * This current project's link is: https://github.com/antoinepirlot/Satunes
  *
- *  **** INFORMATIONS ABOUT THE AUTHOR *****
- *  The author of this file is Antoine Pirlot, the owner of this project.
- *  You find this original project on github.
- *
- *  My github link is: https://github.com/antoinepirlot
- *  This current project's link is: https://github.com/antoinepirlot/Satunes
- *
- *  You can contact me via my email: pirlot.antoine@outlook.com
- *  PS: I don't answer quickly.
+ * PS: I don't answer quickly.
  */
 
 package io.github.antoinepirlot.satunes.icons
@@ -29,6 +26,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.PlaylistAdd
 import androidx.compose.material.icons.automirrored.rounded.PlaylistPlay
 import androidx.compose.material.icons.automirrored.rounded.QueueMusic
+import androidx.compose.material.icons.automirrored.rounded.Sort
 import androidx.compose.material.icons.rounded.AccountCircle
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.AddToQueue
@@ -39,10 +37,14 @@ import androidx.compose.material.icons.rounded.BatterySaver
 import androidx.compose.material.icons.rounded.Category
 import androidx.compose.material.icons.rounded.CleaningServices
 import androidx.compose.material.icons.rounded.Close
+import androidx.compose.material.icons.rounded.DateRange
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.DirectionsCar
 import androidx.compose.material.icons.rounded.Done
 import androidx.compose.material.icons.rounded.Download
+import androidx.compose.material.icons.rounded.Emergency
+import androidx.compose.material.icons.rounded.FastForward
+import androidx.compose.material.icons.rounded.FastRewind
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material.icons.rounded.FavoriteBorder
@@ -51,6 +53,7 @@ import androidx.compose.material.icons.rounded.GraphicEq
 import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.LibraryMusic
 import androidx.compose.material.icons.rounded.LogoDev
+import androidx.compose.material.icons.rounded.MoreTime
 import androidx.compose.material.icons.rounded.MusicNote
 import androidx.compose.material.icons.rounded.Navigation
 import androidx.compose.material.icons.rounded.PauseCircle
@@ -68,6 +71,8 @@ import androidx.compose.material.icons.rounded.Share
 import androidx.compose.material.icons.rounded.Shuffle
 import androidx.compose.material.icons.rounded.SkipNext
 import androidx.compose.material.icons.rounded.SkipPrevious
+import androidx.compose.material.icons.rounded.Timer
+import androidx.compose.material.icons.rounded.Title
 import androidx.compose.material.icons.rounded.Update
 import androidx.compose.material.icons.rounded.Upload
 import androidx.compose.material.icons.rounded.Warning
@@ -87,6 +92,7 @@ enum class SatunesIcons(
         imageVector = Icons.Rounded.AddToQueue,
         description = "Add to queue Icon"
     ),
+    ADDED_DATE(imageVector = Icons.Rounded.MoreTime, description = "Added Date Icon"),
     ALBUM(imageVector = Icons.Rounded.Album, description = "Album Icon"),
     ANDROID_AUTO(
         imageVector = Icons.Rounded.DirectionsCar,
@@ -101,8 +107,10 @@ enum class SatunesIcons(
         imageVector = Icons.Rounded.ArrowDropDown,
         description = "Close dropdown menu icon"
     ),
+    DONE(imageVector = Icons.Rounded.Done, description = "Done Icon"),
     EDIT(imageVector = Icons.Rounded.Edit, description = "Edit Icon"),
     EXPORT(imageVector = Icons.Rounded.Upload, description = "Export Icon"),
+    FORWARD(imageVector = Icons.Rounded.FastForward, description = "Forward Icon"),
     IMPORT(imageVector = Icons.Rounded.Download, description = "Import Icon"),
     INFO(imageVector = Icons.Rounded.Info, description = "Info Icon"),
     LIKED(imageVector = Icons.Rounded.Favorite, description = "Liked Icon"),
@@ -166,6 +174,8 @@ enum class SatunesIcons(
         imageProvider = ImageProvider(resId = R.drawable.skip_previous),
         description = "Skip Previous Icon"
     ),
+    SORT(imageVector = Icons.AutoMirrored.Rounded.Sort, description = "Sort Icon"),
+    TIMER(imageVector = Icons.Rounded.Timer, description = "Timer Icon"),
     UNLIKED(imageVector = Icons.Rounded.FavoriteBorder, description = "Unliked Icon"),
     REFRESH(imageVector = Icons.Rounded.Refresh, description = "Refresh Icon"),
     REMOVE_FROM_QUEUE(
@@ -173,5 +183,9 @@ enum class SatunesIcons(
         description = "Remove from queue Icon"
     ),
     REMOVE_ICON(imageVector = Icons.Rounded.Delete, description = "Remove Icon"),
+    RESET_SETTINGS(imageVector = Icons.Rounded.Emergency, description = "Reset Icon"),
+    REWIND(imageVector = Icons.Rounded.FastRewind, description = "Rewind Icon"),
     WARNING(imageVector = Icons.Rounded.Warning, description = "Warning Icon"),
+    TITLE(imageVector = Icons.Rounded.Title, description = "Title Icon"),
+    YEARS(imageVector = Icons.Rounded.DateRange, description = "Years Icon"),
 }

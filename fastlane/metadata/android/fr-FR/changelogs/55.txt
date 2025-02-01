@@ -1,0 +1,3 @@
+Améliorations, optimisations et dépannage:
+
+* Correction du bug d'affichage innatendu causé par Android 15 en rétrogradant targetSdk vers Android 14

@@ -38,7 +38,6 @@ import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
-import io.github.antoinepirlot.satunes.ui.components.EmptyView
 import io.github.antoinepirlot.satunes.ui.components.buttons.fab.ExtraButtonList
 import io.github.antoinepirlot.satunes.ui.components.buttons.fab.PlaylistExtraButtonList
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
@@ -91,10 +90,8 @@ internal fun PlaylistView(
                 playlist.title
             }
             Title(text = title)
-            if (playlist.isEmpty())
-                EmptyView(text = stringResource(R.string.no_music_in_playlist))
         },
-        emptyViewText = null
+        emptyViewText = stringResource(R.string.no_music_in_playlist)
     )
 }
 

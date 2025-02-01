@@ -22,12 +22,15 @@
 
 package io.github.antoinepirlot.satunes
 
+import android.app.PendingIntent
+import android.content.ContentUris
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.DocumentsContract
+import android.provider.MediaStore
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
@@ -47,6 +50,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+
 /**
  * @author Antoine Pirlot on 18/01/24
  */
@@ -61,6 +65,7 @@ internal class MainActivity : ComponentActivity() {
         private const val EXPORT_LOGS_CODE: Int = 4
         const val SELECT_FOLDER_TREE_CODE: Int = 5
         const val UPDATE_MUSIC_CODE: Int = 6
+        private var uriToUpdate: Uri? = null
 
         /**
          * Todo mode to a specific object
@@ -182,12 +187,14 @@ internal class MainActivity : ComponentActivity() {
                 }
 
 
-                UPDATE_MUSIC_CODE -> @RequiresApi(Build.VERSION_CODES.Q) {
+                UPDATE_MUSIC_CODE -> {
                     CoroutineScope(Dispatchers.IO).launch {
                         DataViewModel.updateMusic(
                             context = applicationContext,
-                            updatedMusic = updatedMusic!!
+                            updatedMusic = updatedMusic!!,
+                            uri = uriToUpdate!!
                         )
+                        uriToUpdate = null
                     }
                 }
             }
@@ -202,6 +209,19 @@ internal class MainActivity : ComponentActivity() {
         createFileIntent.putExtra(Intent.EXTRA_TITLE, defaultFileName)
         createFileIntent.type = MIME_JSON
         startActivityForResult(createFileIntent, EXPORT_PLAYLIST_CODE)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.R)
+    fun editMusicFileRequest(updatedMusic: Music) {
+        MainActivity.updatedMusic = updatedMusic
+        uriToUpdate =
+            ContentUris.withAppendedId(
+                MediaStore.Audio.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY),
+                updatedMusic.id
+            )
+        val pendingIntent: PendingIntent =
+            MediaStore.createWriteRequest(applicationContext.contentResolver, listOf(uriToUpdate))
+        startIntentSenderForResult(pendingIntent.intentSender, UPDATE_MUSIC_CODE, null, 0, 0, 0)
     }
 
     override fun onDestroy() {

@@ -165,4 +165,9 @@ dependencies {
      * Utils
      */
     implementation(project(":utils"))
+
+    /**
+     * ID3 tags TODO REMOVE IT FROM HERE AND USE IT IN DATABASE MODULE
+     */
+    implementation(libs.mp3agic)
 }

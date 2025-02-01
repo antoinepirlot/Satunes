@@ -22,8 +22,6 @@
 
 package io.github.antoinepirlot.satunes.database.services.data
 
-import android.content.ContentResolver
-import android.content.ContentUris
 import android.content.ContentValues
 import android.content.Context
 import android.net.Uri
@@ -106,38 +104,22 @@ object DataManager {
      *
      * @throws IllegalArgumentException if the [updatedMusic] is not valid.
      */
-//    @RequiresApi(Build.VERSION_CODES.Q)
-    suspend fun updateMusic(context: Context, updatedMusic: Music) {
-        checkMusicValues(music = updatedMusic)
-        val currentMusic: Music = this.getMusic(id = updatedMusic.id)
+    fun updateMusic(context: Context, updatedMusic: Music, uri: Uri) {
+        val resolver = context.contentResolver
 
-        val contentResolver: ContentResolver = context.contentResolver
-        val contentValues = ContentValues().apply {
+        val songDetails = ContentValues().apply {
             put(MediaStore.Audio.Media.TITLE, updatedMusic.title)
+            put(MediaStore.Audio.Media.IS_PENDING, 1)
         }
-        val uri: Uri =
-            ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, updatedMusic.id)
 
-        contentValues.put(MediaStore.Audio.Media.IS_PENDING, 1)
-        contentResolver.update(
-            uri,
-            contentValues,
-            null,
-            null
-        )
-        contentValues.clear()
+        val selection = "${MediaStore.Audio.Media._ID} = ?"
+        val selectionArgs = arrayOf(updatedMusic.id.toString())
 
-        contentValues.put(MediaStore.Audio.Media.IS_PENDING, 0)
-        contentValues.put(MediaStore.Audio.Media.TITLE, updatedMusic.title)
-        val rowsUpdated: Int = contentResolver.update(
-            uri,
-            contentValues,
-            null,
-            null,
-        )
-        contentValues.clear()
-        if (rowsUpdated == 0) throw IllegalAccessError("The audio file has not been updated")
-        currentMusic.title = updatedMusic.title
+        resolver.update(uri, songDetails, selection, selectionArgs)
+
+        songDetails.clear()
+        songDetails.put(MediaStore.Audio.Media.IS_PENDING, 0)
+        resolver.update(uri, songDetails, selection, selectionArgs)
     }
 
     /**

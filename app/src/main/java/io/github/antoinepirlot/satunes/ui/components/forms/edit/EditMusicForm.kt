@@ -81,12 +81,14 @@ internal fun EditMusicForm(
             Spacer(Modifier.size(8.dp))
             ConfirmButton(
                 onConfirm = {
-                    dataViewModel.updateMusic(
-                        scope = scope,
-                        snackBarHostState = snackBarHostState,
-                        updatedMusic = updatedMusic,
-                        onFinish = { placeholder = music.title }
-                    )
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                        dataViewModel.updateMusic(
+                            scope = scope,
+                            snackBarHostState = snackBarHostState,
+                            updatedMusic = updatedMusic,
+                            onFinish = { placeholder = music.title }
+                        )
+                    }
                 }
             )
         }

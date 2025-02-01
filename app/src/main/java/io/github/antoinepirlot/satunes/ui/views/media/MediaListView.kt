@@ -22,15 +22,13 @@
 
 package io.github.antoinepirlot.satunes.ui.views.media
 
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -73,61 +71,64 @@ internal fun MediaListView(
     //Do not put the list to show in ui state as it will reset list scroll when user goes back to the last page
     //Plus this system insure the list can be scrolled correctly to the first item of the list (copying a new list make it not working as expected)
     var initialisation: Boolean by rememberSaveable { mutableStateOf(true) }
-    var listMustBeUpdated: Boolean by rememberSaveable { mutableStateOf(initialisation) }
-    val mediaImplListToShow: MutableList<MediaImpl> = remember { mutableStateListOf() }
-    var scrollToFirstIndex: Boolean by rememberSaveable { mutableStateOf(false) }
+    var sortOptionChanged: Boolean by rememberSaveable { mutableStateOf(initialisation) }
+    var destinationChanged: Boolean by rememberSaveable { mutableStateOf(initialisation) }
+    val mediaImplListToShow: MutableState<List<MediaImpl>> =
+        rememberSaveable { mutableStateOf(listOf()) }
     val isMediaOptionsOpened: Boolean = satunesUiState.mediaToShowOptions != null
 
-    LaunchedEffect(key1 = mediaImplCollection, key2 = mediaImplCollection.size, key3 = sortOption) {
+
+    /**
+     * WARNING do not touch the next LaunchedEffect as they works perfectly and took me a lot of times to find the fix.
+     * To look for better code make HUGE testing on the feature (navigation, changing sort, position on the list, etc.)
+     */
+    LaunchedEffect(key1 = sortOption) {
         if (initialisation) return@LaunchedEffect
-        listMustBeUpdated = true
+        if (!destinationChanged) sortOptionChanged = true
     }
 
-    LaunchedEffect(key1 = scrollToFirstIndex) {
+    LaunchedEffect(key1 = satunesUiState.currentDestination) {
         if (initialisation) return@LaunchedEffect
-        if (!scrollToFirstIndex) return@LaunchedEffect
-        lazyListState.scrollToItem(index = 0)
-        scrollToFirstIndex = false
+        destinationChanged = true
     }
 
     LaunchedEffect(key1 = sortOption, key2 = isMediaOptionsOpened) {
         if (isMediaOptionsOpened) return@LaunchedEffect
-        if (!listMustBeUpdated) return@LaunchedEffect
+        if (!sortOptionChanged) return@LaunchedEffect
         if (initialisation) {
             if (sort)
                 sort(
                     satunesUiState = satunesUiState,
-                    lazyListState = lazyListState,
                     source = mediaImplCollection,
                     destination = mediaImplListToShow,
                     sortOption = sortOption
                 )
             else
-                mediaImplListToShow.addAll(elements = mediaImplCollection)
+                mediaImplListToShow.value = mediaImplCollection.toList()
             initialisation = false
         } else {
             if (sort) {
                 sort(
                     satunesUiState = satunesUiState,
-                    lazyListState = lazyListState,
                     source = mediaImplCollection,
                     destination = mediaImplListToShow,
                     sortOption = sortOption
                 )
-                scrollToFirstIndex = true
+                lazyListState.requestScrollToItem(0)
             }
         }
-        listMustBeUpdated = false
-        dataViewModel.setMediaImplListOnScreen(mediaImplCollection = mediaImplListToShow)
+        dataViewModel.setMediaImplListOnScreen(mediaImplCollection = mediaImplListToShow.value)
+        sortOptionChanged = false
+        destinationChanged = false
     }
 
     if (satunesUiState.showSortDialog)
         SortListDialog()
 
-    if (mediaImplListToShow.isNotEmpty()) {
+    if (mediaImplListToShow.value.isNotEmpty()) {
         MediaCardList(
             modifier = modifier,
-            mediaImplList = mediaImplListToShow,
+            mediaImplList = mediaImplListToShow.value,
             lazyListState = lazyListState,
             header = header,
             showGroupIndication = showGroupIndication,
@@ -141,34 +142,19 @@ internal fun MediaListView(
     }
 }
 
-private suspend fun sort(
+private fun sort(
     satunesUiState: SatunesUiState,
-    lazyListState: LazyListState,
     source: Collection<MediaImpl>,
-    destination: MutableList<MediaImpl>,
+    destination: MutableState<List<MediaImpl>>,
     sortOption: SortOptions
 ) {
-    if (destination.isEmpty()) {
-        if (sortOption == SortOptions.PLAYLIST_ADDED_DATE) {
-            val playlist: Playlist = satunesUiState.currentMediaImpl as Playlist
-            destination.addAll(
-                source.sortedBy { mediaImpl: MediaImpl ->
-                    -(mediaImpl as Music).getOrder(playlist = playlist)
-                }
-            )
-        } else if (sortOption.comparator != null) {
-            destination.addAll(source.sortedWith(comparator = sortOption.comparator))
+    if (sortOption == SortOptions.PLAYLIST_ADDED_DATE) {
+        val playlist: Playlist = satunesUiState.currentMediaImpl as Playlist
+        destination.value = source.sortedBy { mediaImpl: MediaImpl ->
+            -(mediaImpl as Music).getOrder(playlist = playlist)
         }
-    } else {
-        if (sortOption == SortOptions.PLAYLIST_ADDED_DATE) {
-            val playlist: Playlist = satunesUiState.currentMediaImpl as Playlist
-            destination.sortBy { mediaImpl: MediaImpl ->
-                -(mediaImpl as Music).getOrder(playlist = playlist)
-            }
-        } else if (sortOption.comparator != null) {
-            destination.sortWith(comparator = sortOption.comparator)
-        }
-        lazyListState.scrollToItem(0)
+    } else if (sortOption.comparator != null) {
+        destination.value = source.sortedWith(comparator = sortOption.comparator)
     }
 }
 

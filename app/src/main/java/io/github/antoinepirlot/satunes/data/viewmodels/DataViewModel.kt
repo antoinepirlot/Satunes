@@ -78,6 +78,35 @@ import io.github.antoinepirlot.satunes.database.R as RDb
 class DataViewModel : ViewModel() {
     companion object {
         private val _uiState: MutableStateFlow<DataUiState> = MutableStateFlow(DataUiState())
+
+        @RequiresApi(Build.VERSION_CODES.Q)
+        fun updateMusic(context: Context, updatedMusic: Music) {
+            MediaScannerConnection.scanFile(
+                context,
+                arrayOf(updatedMusic.absolutePath),
+                arrayOf("audio/*")
+            ) { _: String, contentUri: Uri ->
+                try {
+                    runBlocking {
+                        DataManager.updateMusic(
+                            context = context,
+                            updatedMusic = updatedMusic,
+                        )
+                    }
+                } catch (e: SecurityException) {
+                    val recoverableSecurityException =
+                        e as? RecoverableSecurityException ?: throw RuntimeException(
+                            e.message,
+                            e
+                        )
+                    val intentSender: IntentSender =
+                        recoverableSecurityException.userAction.actionIntent.intentSender
+                    MainActivity.instance.startIntentSenderForResult(
+                        intentSender, UPDATE_MUSIC_CODE, null, 0, 0, 0, null
+                    )
+                }
+            }
+        }
     }
 
     private val _logger: SatunesLogger? = SatunesLogger.getLogger()
@@ -118,37 +147,6 @@ class DataViewModel : ViewModel() {
     fun getMusic(id: Long): Music = DataManager.getMusic(id = id)
     fun getPlaylist(id: Long): Playlist = DataManager.getPlaylist(id = id)!!
     fun getPlaylist(title: String): Playlist = DataManager.getPlaylist(title = title)!!
-
-    companion object {
-        @RequiresApi(Build.VERSION_CODES.Q)
-        fun updateMusic(context: Context, updatedMusic: Music) {
-            MediaScannerConnection.scanFile(
-                context,
-                arrayOf(updatedMusic.absolutePath),
-                arrayOf("audio/*")
-            ) { _: String, contentUri: Uri ->
-                try {
-                    runBlocking {
-                        DataManager.updateMusic(
-                            context = context,
-                            updatedMusic = updatedMusic,
-                        )
-                    }
-                } catch (e: SecurityException) {
-                    val recoverableSecurityException =
-                        e as? RecoverableSecurityException ?: throw RuntimeException(
-                            e.message,
-                            e
-                        )
-                    val intentSender: IntentSender =
-                        recoverableSecurityException.userAction.actionIntent.intentSender
-                    MainActivity.instance.startIntentSenderForResult(
-                        intentSender, UPDATE_MUSIC_CODE, null, 0, 0, 0, null
-                    )
-                }
-            }
-        }
-    }
 
     fun addOnePlaylist(
         scope: CoroutineScope,
@@ -1090,7 +1088,7 @@ class DataViewModel : ViewModel() {
         updatedMusic: Music,
         onFinish: () -> Unit
     ) {
-        _logger.info("Updating music")
+        _logger?.info("Updating music")
         val context: Context = MainActivity.instance.applicationContext
         showSnackBar(
             scope = scope,
@@ -1103,7 +1101,7 @@ class DataViewModel : ViewModel() {
                 Companion.updateMusic(context = context, updatedMusic = updatedMusic)
             } catch (e: Throwable) {
                 e.printStackTrace()
-                _logger.warning(e.message)
+                _logger?.warning(e.message)
                 showErrorSnackBar(
                     scope = scope,
                     snackBarHostState = snackBarHostState,

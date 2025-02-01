@@ -44,7 +44,7 @@ abstract class MediaImpl(
     id: Long,
     title: String
 ) : Media, Comparable<MediaImpl>, Cloneable {
-    protected val _logger: SatunesLogger? = SatunesLogger.getLogger()
+    protected val logger: SatunesLogger? = SatunesLogger.getLogger()
     override var id: Long = id
         internal set
     override var title: String by mutableStateOf(value = title)
@@ -86,12 +86,10 @@ abstract class MediaImpl(
         }
     }
 
-    open fun addMusic(vararg music: Music) {
-        music.forEach {
-            if (!this.musicSortedSet.contains(element = it)) {
-                this.musicSortedSet.add(element = it)
-                this.musicSetUpdated.value = true
-            }
+    open fun addMusic(music: Music) {
+        if (!this.musicSortedSet.contains(element = music)) {
+            this.musicSortedSet.add(element = music)
+            this.musicSetUpdated.value = true
         }
     }
 

@@ -47,7 +47,7 @@ class Playlist(
                     order = order
                 )
             } catch (e: Throwable) {
-                _logger?.severe(e.message)
+                logger?.severe(e.message)
                 throw e
             }
         }

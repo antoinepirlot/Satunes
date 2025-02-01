@@ -25,5 +25,6 @@ package io.github.antoinepirlot.satunes.models
 enum class DestinationCategory {
     MEDIA,
     SETTING,
-    PLAYBACK
+    PLAYBACK,
+    EDIT
 }

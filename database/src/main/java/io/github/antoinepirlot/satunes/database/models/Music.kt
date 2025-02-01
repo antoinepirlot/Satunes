@@ -133,7 +133,7 @@ class Music(
             if (artwork == null) null
             else BitmapFactory.decodeByteArray(artwork, 0, artwork.size)
         } catch (e: Throwable) {
-            _logger?.warning(e.message)
+            logger?.warning(e.message)
             null
         }
     }

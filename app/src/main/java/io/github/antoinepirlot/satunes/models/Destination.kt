@@ -60,7 +60,7 @@ internal enum class Destination(
     ),
     BATTERY_SETTINGS(link = "/battery_settings", category = DestinationCategory.SETTING),
     BOTTOM_BAR_SETTINGS(link = "/navbar_settings", category = DestinationCategory.SETTING),
-    EDIT(link = "/edit"),
+    EDIT(link = "/edit", category = DestinationCategory.EDIT),
     LIBRARY_SETTINGS(link = "/library_settings", category = DestinationCategory.SETTING),
     FOLDERS(
         link = "/folders",

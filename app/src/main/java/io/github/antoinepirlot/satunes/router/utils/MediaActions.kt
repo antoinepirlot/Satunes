@@ -56,20 +56,10 @@ internal fun openMedia(
 ) {
     if (media == null || media is Music)
         startMusic(playbackViewModel = playbackViewModel, mediaToPlay = media)
-    navController.navigate(getDestinationOf(media))
-//TODO merge conflict
-//    if (navigate) {
-//        if (navController == null) {
-//            val message = "navController can't be null if you navigate"
-//            val logger = SatunesLogger.getLogger()
-//            logger.severe(message)
-//            throw IllegalArgumentException(message)
-//        }
-//        if (media is Music)
-//            navController.navigate(getDestinationOf(media = null))
-//        else
-//            navController.navigate(getDestinationOf(media = media))
-//    }
+    if (media is Music)
+        navController.navigate(getDestinationOf(media = null))
+    else
+        navController.navigate(getDestinationOf(media = media))
 }
 
 /**
@@ -117,6 +107,5 @@ internal fun openCurrentMusic(
         SatunesLogger.getLogger()?.severe(message)
         throw IllegalStateException(message)
     }
-
-    navController.navigate(getDestinationOf(musicPlaying))
+    navController.navigate(getDestinationOf(media = null))
 }

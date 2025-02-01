@@ -31,10 +31,6 @@ import android.provider.DocumentsContract
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
-//TODO MERGE CONFLICT
-import androidx.media3.session.MediaController
-//TODO MERGE CONFLICT
-import com.google.common.util.concurrent.ListenableFuture
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.utils.isAudioAllowed
 import io.github.antoinepirlot.satunes.database.models.Music

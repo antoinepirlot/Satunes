@@ -25,7 +25,6 @@
 
 package io.github.antoinepirlot.satunes.data
 
-import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
 import io.github.antoinepirlot.satunes.models.Destination
@@ -47,7 +46,11 @@ private val artistsSortOptions: List<SortOptions> = listOf(
     SortOptions.TITLE,
 )
 
-@SuppressLint("NewApi")
+private val foldersSortOptionsBeforeAndroidO: List<SortOptions> = listOf(
+    SortOptions.TITLE
+)
+
+@RequiresApi(Build.VERSION_CODES.O)
 private val foldersSortOptions: List<SortOptions> = listOf(
     SortOptions.TITLE,
     SortOptions.DATE_ADDED
@@ -100,7 +103,10 @@ internal fun getSortOptions(destination: Destination): List<SortOptions> {
 
         Destination.ALBUMS -> albumsSortOptions
         Destination.ARTISTS -> artistsSortOptions
-        Destination.FOLDERS, Destination.FOLDER -> foldersSortOptions
+        Destination.FOLDERS, Destination.FOLDER ->
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) foldersSortOptions
+            else foldersSortOptionsBeforeAndroidO
+
         Destination.GENRES -> genresSortOptions
         Destination.PLAYLISTS -> playlistsSortOptions
         Destination.PLAYLIST -> singlePlaylistSortOptions

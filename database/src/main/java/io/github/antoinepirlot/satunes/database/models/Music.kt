@@ -37,6 +37,9 @@ import androidx.media3.common.MediaMetadata
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.util.Date
 
 /**
@@ -66,8 +69,8 @@ class Music(
     val cdTrackNumber: Int?
 
     @RequiresApi(Build.VERSION_CODES.O)
-    lateinit var addedDate: Date
-        internal set
+    public override var addedDate: Date? = null
+
     var liked: MutableState<Boolean> = mutableStateOf(false)
         private set
 
@@ -86,6 +89,10 @@ class Music(
         artist.addMusic(music = this)
         genre.addMusic(music = this)
         folder.addMusic(music = this)
+        CoroutineScope(Dispatchers.IO).launch {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                this@Music.addedDate = Date(this@Music.getCreationDate(path = absolutePath))
+        }
     }
 
     fun switchLike() {

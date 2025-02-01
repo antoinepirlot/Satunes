@@ -24,6 +24,7 @@ package io.github.antoinepirlot.satunes.database.models.comparators
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 
@@ -31,9 +32,26 @@ import io.github.antoinepirlot.satunes.database.models.Music
  * @author Antoine Pirlot 30/01/2025
  */
 @RequiresApi(Build.VERSION_CODES.O)
-object SortMusicsByAddedDateComparator : Comparator<MediaImpl> {
+object SortByAddedDateComparator : Comparator<MediaImpl> {
     override fun compare(o1: MediaImpl, o2: MediaImpl): Int {
-        if (o1 !is Music || o2 !is Music) throw UnsupportedOperationException("Can't sort non music medias by added date.")
-        return -o1.addedDate.compareTo(o2.addedDate)
+        val cmp: Int =
+            when (o1) {
+                is Music -> when (o2) {
+                    is Music -> -o1.addedDate!!.compareTo(o2.addedDate!!)
+                    is Folder -> -o1.addedDate!!.compareTo(o2.addedDate!!)
+                    else -> throw UnsupportedOperationException("Can't sort non music or folder medias by added date.")
+                }
+
+                is Folder -> {
+                    when (o2) {
+                        is Music -> -o1.addedDate!!.compareTo(o2.addedDate!!)
+                        is Folder -> -o1.addedDate!!.compareTo(o2.addedDate!!)
+                        else -> throw UnsupportedOperationException("Can't sort non music or folder medias by added date.")
+                    }
+                }
+
+                else -> throw UnsupportedOperationException("Can't sort non music or folder medias by added date.")
+            }
+        return if (cmp == 0) o1.compareTo(o2) else cmp
     }
 }

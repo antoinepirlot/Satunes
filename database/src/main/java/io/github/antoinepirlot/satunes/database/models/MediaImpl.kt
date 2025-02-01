@@ -23,12 +23,18 @@
 package io.github.antoinepirlot.satunes.database.models
 
 import android.graphics.Bitmap
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import io.github.antoinepirlot.satunes.database.models.comparators.StringComparator
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
+import java.nio.file.Files
+import java.nio.file.Paths
+import java.nio.file.attribute.BasicFileAttributes
+import java.util.Date
 import java.util.SortedSet
 
 /**
@@ -46,6 +52,12 @@ abstract class MediaImpl(
 
     var artwork: Bitmap? by mutableStateOf(null)
         internal set
+
+    /**
+     * Declared in concrete classes (Music and Folder)
+     */
+    @RequiresApi(Build.VERSION_CODES.O)
+    protected open var addedDate: Date? = null
 
     protected open val musicSortedSet: SortedSet<Music> = sortedSetOf()
     val musicSetUpdated: MutableState<Boolean> = mutableStateOf(false)
@@ -92,6 +104,13 @@ abstract class MediaImpl(
             this.musicSortedSet.remove(music)
             this.musicSetUpdated.value = true
         }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    protected fun getCreationDate(path: String): Long {
+        val filePath = Paths.get(path)
+        val attrs = Files.readAttributes(filePath, BasicFileAttributes::class.java)
+        return attrs.creationTime().toMillis()
     }
 
     override fun compareTo(other: MediaImpl): Int {

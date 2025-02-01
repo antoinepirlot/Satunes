@@ -22,7 +22,13 @@
 
 package io.github.antoinepirlot.satunes.database.models
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.util.Date
 import java.util.SortedSet
 
 /**
@@ -41,12 +47,22 @@ class Folder(
         parentFolder!!.absolutePath + "/$title"
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    public override var addedDate: Date? = null
+
     companion object {
         var nextId: Long = 1
     }
 
     init {
         nextId++
+        CoroutineScope(Dispatchers.IO).launch {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val realAbsolutePath =
+                    "/storage/emulated$absolutePath" //Otherwise the system indicates it does not exist
+                this@Folder.addedDate = Date(this@Folder.getCreationDate(path = realAbsolutePath))
+            }
+        }
     }
 
     override fun isEmpty(): Boolean {

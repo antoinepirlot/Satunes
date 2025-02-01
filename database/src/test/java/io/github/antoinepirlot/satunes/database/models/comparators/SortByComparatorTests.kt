@@ -126,12 +126,12 @@ class SortByComparatorTests {
 
     @Test
     fun musicsSortedByAddedDate() {
-        val sortedList: List<Music> = _musics.sortedWith(SortMusicsByAddedDateComparator)
+        val sortedList: List<Music> = _musics.sortedWith(SortByAddedDateComparator)
         var lastMusic: Music = sortedList[0]
 
         for (i: Int in 1..<sortedList.size) {
             val currentMusic: Music = sortedList[i]
-            assertTrue(lastMusic.addedDate >= currentMusic.addedDate)
+            assertTrue(lastMusic.addedDate!! >= currentMusic.addedDate!!)
             lastMusic = currentMusic
         }
     }

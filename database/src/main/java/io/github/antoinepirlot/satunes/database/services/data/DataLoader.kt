@@ -27,7 +27,6 @@ import android.database.Cursor
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
-import androidx.annotation.RequiresApi
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import io.github.antoinepirlot.satunes.database.R
@@ -41,13 +40,6 @@ import io.github.antoinepirlot.satunes.database.services.database.DatabaseManage
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.database.services.widgets.WidgetDatabaseManager
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import java.nio.file.Files
-import java.nio.file.Paths
-import java.nio.file.attribute.BasicFileAttributes
-import java.util.Date
 
 /**
  * @author Antoine Pirlot on 22/02/24
@@ -339,18 +331,7 @@ object DataLoader {
             folder = folder,
             genre = genre,
         )
-        CoroutineScope(Dispatchers.IO).launch {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-                music.addedDate = Date(getCreationDate(path = absolutePath))
-        }
         return music
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun getCreationDate(path: String): Long {
-        val filePath = Paths.get(path)
-        val attrs = Files.readAttributes(filePath, BasicFileAttributes::class.java)
-        return attrs.creationTime().toMillis()
     }
 
     /**

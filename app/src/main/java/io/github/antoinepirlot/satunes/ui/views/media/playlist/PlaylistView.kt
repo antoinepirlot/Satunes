@@ -93,7 +93,6 @@ internal fun PlaylistView(
         },
         emptyViewText = stringResource(R.string.no_music_in_playlist)
     )
-//        emptyView = { EmptyView(text =  }
 }
 
 @Preview

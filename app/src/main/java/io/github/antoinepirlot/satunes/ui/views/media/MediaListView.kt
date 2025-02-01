@@ -29,14 +29,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
-import io.github.antoinepirlot.satunes.data.states.DataUiState
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
@@ -63,12 +59,11 @@ internal fun MediaListView(
     dataViewModel: DataViewModel = viewModel(),
     mediaImplCollection: Collection<MediaImpl>,
     header: (@Composable () -> Unit)? = null,
-    emptyViewText: String?,
+    emptyViewText: String,
     showGroupIndication: Boolean = true,
     sort: Boolean = true,
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
-    val dataUiState: DataUiState by dataViewModel.uiState.collectAsState()
     val lazyListState = rememberLazyListState()
     val sortOption: SortOptions = dataViewModel.sortOption
 
@@ -76,24 +71,15 @@ internal fun MediaListView(
     //Plus this system insure the list can be scrolled correctly to the first item of the list (copying a new list make it not working as expected)
     val mediaImplListToShow: MutableList<MediaImpl> = remember { mutableStateListOf() }
 
-    /**
-     * Used to know when the mediaImplListToShow must be cleared
-     */
-    var reset: Boolean by rememberSaveable { mutableStateOf(true) }
     val isMediaOptionsOpened: Boolean = satunesUiState.mediaToShowOptions != null
 
-    LaunchedEffect(key1 = mediaImplListToShow, key2 = mediaImplCollection.size) {
-        reset = true
-    }
-
-    LaunchedEffect(key1 = sortOption, key2 = reset, key3 = isMediaOptionsOpened) {
-        if (!isMediaOptionsOpened && reset) {
+    LaunchedEffect(key1 = sortOption, key2 = isMediaOptionsOpened) {
+        if (isMediaOptionsOpened) return@LaunchedEffect
+        else {
             if (mediaImplListToShow.isNotEmpty()) {
                 lazyListState.scrollToItem(0)
                 mediaImplListToShow.clear()
             }
-            reset = false
-            return@LaunchedEffect //As this LaunchedEffect will be recalled when reset will be changed to false
         }
 
         if (sort) {
@@ -113,7 +99,7 @@ internal fun MediaListView(
     if (satunesUiState.showSortDialog)
         SortListDialog()
 
-    if (dataUiState.mediaImplListOnScreen.isNotEmpty()) {
+    if (mediaImplListToShow.isNotEmpty()) {
         MediaCardList(
             modifier = modifier,
             mediaImplList = mediaImplListToShow,
@@ -122,14 +108,11 @@ internal fun MediaListView(
             showGroupIndication = showGroupIndication,
         )
     } else {
-        if (header != null) {
-            header()
-        } else if (emptyViewText != null) {
-            EmptyView(
-                modifier = modifier,
-                text = emptyViewText
-            )
-        }
+        EmptyView(
+            modifier = modifier,
+            header = header,
+            text = emptyViewText
+        )
     }
 }
 

@@ -22,15 +22,20 @@
 
 package io.github.antoinepirlot.satunes
 
+import android.app.PendingIntent
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.DocumentsContract
+import android.provider.MediaStore
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
+import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.utils.isAudioAllowed
+import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
@@ -57,10 +62,13 @@ internal class MainActivity : ComponentActivity() {
         private const val EXPORT_PLAYLIST_CODE: Int = 3
         private const val EXPORT_LOGS_CODE: Int = 4
         const val SELECT_FOLDER_TREE_CODE: Int = 5
+        const val UPDATE_MUSIC_CODE = 6
         const val MIME_JSON: String = "application/json"
         private const val MIME_TEXT: String = "application/text"
         val DEFAULT_URI: Uri =
             Uri.parse(Environment.getExternalStorageDirectory().path + '/' + Environment.DIRECTORY_DOCUMENTS)
+
+        private var updatedMusic: Music? = null
 
         private val createFileIntent: Intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
             addCategory(Intent.CATEGORY_OPENABLE)
@@ -77,6 +85,9 @@ internal class MainActivity : ComponentActivity() {
         super.onStart()
         if (isAudioAllowed(context = applicationContext)) {
             initSatunes(context = applicationContext, satunesViewModel = null)
+            //Uncomment to show MANAGE_DATA setting view but comment once it's done. Just used for debug at this time
+//            val intent: Intent = Intent(ACTION_REQUEST_MANAGE_MEDIA)
+//            startActivity(intent)
         }
     }
 
@@ -170,6 +181,17 @@ internal class MainActivity : ComponentActivity() {
                         }
                     }
                 }
+
+                UPDATE_MUSIC_CODE -> {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                        CoroutineScope(Dispatchers.IO).launch {
+                            DataViewModel.updateMusic(
+                                context = applicationContext,
+                                updatedMusic = updatedMusic!!,
+                            )
+                        }
+                    }
+                }
             }
         }
     }
@@ -182,6 +204,22 @@ internal class MainActivity : ComponentActivity() {
         createFileIntent.putExtra(Intent.EXTRA_TITLE, defaultFileName)
         createFileIntent.type = MIME_JSON
         startActivityForResult(createFileIntent, EXPORT_PLAYLIST_CODE)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.R)
+    fun editMusicFileRequest(updatedMusic: Music) {
+        MainActivity.updatedMusic = updatedMusic
+//        uriToUpdate =
+//            ContentUris.withAppendedId(
+//                MediaStore.Audio.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY),
+//                updatedMusic.id
+//            )
+        val pendingIntent: PendingIntent =
+            MediaStore.createWriteRequest(
+                applicationContext.contentResolver,
+                listOf(updatedMusic.uri)
+            )
+        startIntentSenderForResult(pendingIntent.intentSender, UPDATE_MUSIC_CODE, null, 0, 0, 0)
     }
 
     override fun onDestroy() {

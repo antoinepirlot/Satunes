@@ -27,7 +27,6 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.media.MediaMetadataRetriever
 import android.net.Uri
-import android.net.Uri.encode
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.MutableState
@@ -58,7 +57,7 @@ class Music(
     val artist: Artist,
     val album: Album,
     val genre: Genre,
-    val uri: Uri? = Uri.parse(encode(absolutePath)) // Must be init before media item
+    val uri: Uri // Must be init before media item
 ) : MediaImpl(id = id, title = title.ifBlank { displayName }) {
 
     /**

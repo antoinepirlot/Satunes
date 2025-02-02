@@ -22,6 +22,7 @@
 
 package io.github.antoinepirlot.satunes.ui.views.media
 
+import android.net.Uri
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
@@ -160,8 +161,12 @@ private fun MediaListViewPreview() {
             size = 0,
             folder = Folder(title = "Folder"),
             artist = Artist(title = "Artist Title"),
-            album = Album(title = "Album Title", artist = Artist(title = "Artist Title")),
+            album = Album(
+                title = "Album Title",
+                artist = Artist(title = "Artist Title")
+            ),
             genre = Genre(title = "Genre Title"),
+            uri = Uri.parse("")
         )
     )
     MediaListView(

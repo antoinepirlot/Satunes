@@ -22,6 +22,10 @@
 
 package io.github.antoinepirlot.satunes.database.services.data
 
+import android.content.ContentValues
+import android.content.Context
+import android.net.Uri
+import android.provider.MediaStore
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import io.github.antoinepirlot.satunes.database.exceptions.MusicNotFoundException
@@ -34,6 +38,7 @@ import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import java.util.SortedMap
 import java.util.SortedSet
+
 
 /**
  * @author Antoine Pirlot on 07/03/2024
@@ -239,4 +244,33 @@ object DataManager {
         playlistsSortedMap.clear()
         playlistsMapUpdated.value = true
     }
+
+    /**
+     * Updates the matching music with new modifiable values and apply these modifications
+     * in audio file.
+     *
+     * @param updatedMusic a [Music] containing the new values to apply to the current music.
+     *
+     * @throws IllegalArgumentException if the [updatedMusic] is not valid.
+     */
+    fun updateMusic(context: Context, updatedMusic: Music, onError: (() -> Unit)?) {
+        val uri: Uri = updatedMusic.uri
+        val resolver = context.contentResolver
+
+        val songDetails = ContentValues().apply {
+            put(MediaStore.Audio.Media.IS_PENDING, 1)
+            put(MediaStore.Audio.Media.TITLE, updatedMusic.title)
+            put(MediaStore.Audio.Media.ARTIST, updatedMusic.title)
+        }
+
+        val selection = "${MediaStore.Audio.Media._ID} = ${updatedMusic.id}"
+//        val selectionArgs = arrayOf()
+
+        resolver.update(uri, songDetails, selection, null)
+
+        songDetails.clear()
+        songDetails.put(MediaStore.Audio.Media.IS_PENDING, 0)
+        resolver.update(uri, songDetails, selection, null)
+    }
+
 }

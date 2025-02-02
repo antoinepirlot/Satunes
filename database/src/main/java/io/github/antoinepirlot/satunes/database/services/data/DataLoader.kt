@@ -22,6 +22,7 @@
 
 package io.github.antoinepirlot.satunes.database.services.data
 
+import android.content.ContentUris
 import android.content.Context
 import android.database.Cursor
 import android.net.Uri
@@ -330,6 +331,10 @@ object DataLoader {
             artist = artist,
             folder = folder,
             genre = genre,
+            uri = ContentUris.withAppendedId(
+                MediaStore.Audio.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY),
+                id
+            )
         )
         return music
     }

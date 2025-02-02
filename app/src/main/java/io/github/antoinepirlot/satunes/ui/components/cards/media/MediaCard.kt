@@ -22,6 +22,8 @@
 
 package io.github.antoinepirlot.satunes.ui.components.cards.media
 
+import android.net.Uri
+import android.os.Build
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
@@ -67,7 +69,6 @@ import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.models.Destination
-import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.cards.ListItem
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.MediaOptionsDialog
 import io.github.antoinepirlot.satunes.ui.components.images.MediaArtwork
@@ -106,17 +107,21 @@ internal fun MediaCard(
     val boxModifier: Modifier = if (!satunesUiState.showMediaSelectionDialog) {
         modifier.combinedClickable(
             onClick = {
-                if (!showMediaOptions) {
-                    if (mediaImpl is Music)
-                        playbackViewModel.loadMusicFromMedias(
-                            medias = dataUiState.mediaImplListOnScreen,
-                            musicToPlay = mediaImpl
-                        )
-                    openMedia(
-                        playbackViewModel = playbackViewModel,
-                        media = mediaImpl,
-                        navController = navController
-                    )
+//                if (!showMediaOptions) {
+//                    if (mediaImpl is Music)
+//                        playbackViewModel.loadMusicFromMedias(
+//                            medias = dataUiState.mediaImplListOnScreen,
+//                            musicToPlay = mediaImpl
+//                        )
+//                    openMedia(
+//                        playbackViewModel = playbackViewModel,
+//                        media = mediaImpl,
+//                        navController = navController
+//                    )
+//                }
+                mediaImpl.title = "Hello"
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    dataViewModel.updateMusic(updatedMusic = mediaImpl as Music)
                 }
             },
             onLongClick = if (enableExtraOptions) {
@@ -212,6 +217,7 @@ private fun CardPreview() {
         artist = artist,
         album = Album(title = "Album Title", artist = artist),
         genre = Genre(title = "Genre Title"),
+        uri = Uri.parse("")
     )
     MediaCard(
         modifier = Modifier.fillMaxSize(),

@@ -22,11 +22,15 @@
 
 package io.github.antoinepirlot.satunes.data.viewmodels
 
+import android.app.RecoverableSecurityException
 import android.content.Context
 import android.content.Intent
+import android.content.IntentSender
 import android.media.MediaScannerConnection
 import android.net.Uri
+import android.os.Build
 import android.webkit.MimeTypeMap
+import androidx.annotation.RequiresApi
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
@@ -34,6 +38,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import io.github.antoinepirlot.satunes.MainActivity
+import io.github.antoinepirlot.satunes.MainActivity.Companion.UPDATE_MUSIC_CODE
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.defaultSortingOptions
 import io.github.antoinepirlot.satunes.data.states.DataUiState
@@ -73,6 +78,32 @@ import io.github.antoinepirlot.satunes.database.R as RDb
 class DataViewModel : ViewModel() {
     companion object {
         private val _uiState: MutableStateFlow<DataUiState> = MutableStateFlow(DataUiState())
+        private val _logger: SatunesLogger? = SatunesLogger.getLogger()
+
+        @RequiresApi(Build.VERSION_CODES.R)
+        fun updateMusic(context: Context, updatedMusic: Music?) {
+            try {
+                runBlocking {
+                    DataManager.updateMusic(
+                        context = context,
+                        updatedMusic = updatedMusic!!,
+                        onError = { MainActivity.instance.editMusicFileRequest(updatedMusic = updatedMusic) }
+                    )
+                }
+            } catch (e: SecurityException) {
+                _logger?.warning(e.message)
+                val recoverableSecurityException =
+                    e as? RecoverableSecurityException ?: throw RuntimeException(
+                        e.message,
+                        e
+                    )
+                val intentSender: IntentSender =
+                    recoverableSecurityException.userAction.actionIntent.intentSender
+                MainActivity.instance.startIntentSenderForResult(
+                    intentSender, UPDATE_MUSIC_CODE, null, 0, 0, 0, null
+                )
+            }
+        }
     }
 
     private val _logger: SatunesLogger? = SatunesLogger.getLogger()
@@ -1043,5 +1074,12 @@ class DataViewModel : ViewModel() {
         _uiState.update { currentState: DataUiState ->
             currentState.copy(mediaImplListOnScreen = mediaImplCollection)
         }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.R)
+    fun updateMusic(
+        updatedMusic: Music,
+    ) {
+        MainActivity.instance.editMusicFileRequest(updatedMusic)
     }
 }

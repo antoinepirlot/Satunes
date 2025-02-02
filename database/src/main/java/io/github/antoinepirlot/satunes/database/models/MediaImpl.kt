@@ -24,6 +24,8 @@ package io.github.antoinepirlot.satunes.database.models
 
 import android.graphics.Bitmap
 import android.os.Build
+import android.os.Parcel
+import android.os.Parcelable
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
@@ -43,7 +45,7 @@ import java.util.SortedSet
 abstract class MediaImpl(
     id: Long,
     title: String
-) : Media, Comparable<MediaImpl>, Cloneable {
+) : Media, Comparable<MediaImpl>, Cloneable, Parcelable {
     protected val logger: SatunesLogger? = SatunesLogger.getLogger()
     override var id: Long = id
         internal set
@@ -133,4 +135,22 @@ abstract class MediaImpl(
     }
 
     fun musicCount(): Int = this.musicSortedSet.size
+
+    override fun describeContents(): Int {
+        TODO("Not yet implemented")
+    }
+
+    override fun writeToParcel(dest: Parcel, flags: Int) {
+        dest.writeString("test")
+    }
+
+    companion object CREATOR : Parcelable.Creator<Music> {
+        override fun createFromParcel(parcel: Parcel): Music {
+            return Music(parcel)
+        }
+
+        override fun newArray(size: Int): Array<Music?> {
+            return arrayOfNulls(size)
+        }
+    }
 }

@@ -29,6 +29,7 @@ import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.net.Uri.encode
 import android.os.Build
+import android.os.Parcel
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -76,6 +77,23 @@ class Music(
 
     var mediaItem: MediaItem = getMediaMetadata()
         private set
+
+    constructor(parcel: Parcel) : this(
+        TODO("id"),
+        TODO("title"),
+        TODO("displayName"),
+        parcel.readString()!!,
+        parcel.readLong(),
+        parcel.readInt(),
+        TODO("cdTrackNumber"),
+        parcel.readParcelable(Folder::class.java.classLoader)!!,
+        parcel.readParcelable(Artist::class.java.classLoader)!!,
+        parcel.readParcelable(Album::class.java.classLoader)!!,
+        parcel.readParcelable(Genre::class.java.classLoader)!!,
+        parcel.readParcelable(Uri::class.java.classLoader)
+    ) {
+        TODO("Not yet implemented")
+    }
 
     init {
         if (cdTrackNumber != null && cdTrackNumber < 1)

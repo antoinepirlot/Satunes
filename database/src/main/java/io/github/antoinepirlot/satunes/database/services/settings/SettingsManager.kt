@@ -25,20 +25,18 @@ package io.github.antoinepirlot.satunes.database.services.settings
 import android.content.Context
 import android.net.Uri
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.MutablePreferences
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
-import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import io.github.antoinepirlot.satunes.database.models.BarSpeed
 import io.github.antoinepirlot.satunes.database.models.FoldersSelection
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.database.services.data.DataLoader
+import io.github.antoinepirlot.satunes.database.services.settings.library.LibrarySettings
 import io.github.antoinepirlot.satunes.database.services.settings.navigation_bar.NavBarSettings
 import io.github.antoinepirlot.satunes.database.services.settings.playback.PlaybackSettings
 import io.github.antoinepirlot.satunes.database.services.settings.search.SearchSettings
@@ -56,27 +54,13 @@ object SettingsManager {
 
     private const val DEFAULT_WHATS_NEW_SEEN: Boolean = false
     private const val DEFAULT_WHATS_NEW_VERSION_SEEN: String = ""
-    private val DEFAULT_FOLDERS_SELECTION_SELECTED: FoldersSelection = FoldersSelection.INCLUDE
-    private val DEFAULT_SELECTED_PATHS: Set<String> = setOf("/0/Music/%")
-    private const val DEFAULT_COMPILATION_MUSIC: Boolean = false
-    private const val DEFAULT_ARTISTS_REPLACEMENT: Boolean = true
-    private const val DEFAULT_SHOW_FIRST_LETTER = true
 
     // KEYS
 
     private val PREFERENCES_DATA_STORE = preferencesDataStore("settings")
     private val WHATS_NEW_SEEN_KEY = booleanPreferencesKey("whats_new_seen")
     private val WHATS_NEW_VERSION_SEEN_KEY = stringPreferencesKey("whats_new_version_seen")
-    private val FOLDERS_SELECTION_SELECTED_KEY: Preferences.Key<Int> =
-        intPreferencesKey("folders_selection")
-    private val SELECTED_PATHS_KEY: Preferences.Key<Set<String>> =
-        stringSetPreferencesKey("selected_paths_set")
-    private val COMPILATION_MUSIC_KEY: Preferences.Key<Boolean> =
-        booleanPreferencesKey("compilation_music")
-    private val ARTISTS_REPLACEMENT_KEY: Preferences.Key<Boolean> =
-        booleanPreferencesKey("artist_replacement")
-    private val SHOW_FIRST_LETTER_KEY: Preferences.Key<Boolean> =
-        booleanPreferencesKey("show_first_letter")
+
 
     // VARIABLES
 
@@ -127,21 +111,21 @@ object SettingsManager {
     val musicsFilter: Boolean
         get() = SearchSettings.musicsFilter
 
-    var foldersSelectionSelected: FoldersSelection = DEFAULT_FOLDERS_SELECTION_SELECTED
+    var foldersSelectionSelected: FoldersSelection = LibrarySettings.foldersSelectionSelected
         private set
 
-    var foldersPathsSelectedSet: MutableState<Set<String>> = mutableStateOf(DEFAULT_SELECTED_PATHS)
+    var foldersPathsSelectedSet: MutableState<Set<String>> = LibrarySettings.foldersPathsSelectedSet
         private set
 
     /**
      * This setting is true if the compilation's music has to be added to compilation's artist's music list
      */
-    var compilationMusic: Boolean = DEFAULT_COMPILATION_MUSIC
+    var compilationMusic: Boolean = LibrarySettings.compilationMusic
         private set
-    var artistReplacement: Boolean = DEFAULT_ARTISTS_REPLACEMENT
+    var artistReplacement: Boolean = LibrarySettings.artistReplacement
         private set
 
-    var showFirstLetter: Boolean = DEFAULT_SHOW_FIRST_LETTER
+    var showFirstLetter: Boolean = LibrarySettings.showFirstLetter
         private set
 
     suspend fun loadSettings(context: Context) {
@@ -153,36 +137,11 @@ object SettingsManager {
             NavBarSettings.loadSettings(context = context)
             PlaybackSettings.loadSettings(context = context)
             loadFilters(context = context)
-
-            foldersSelectionSelected =
-                getFoldersSelection(preferences[FOLDERS_SELECTION_SELECTED_KEY])
-
-            foldersPathsSelectedSet.value =
-                preferences[SELECTED_PATHS_KEY] ?: DEFAULT_SELECTED_PATHS
-
-            compilationMusic = preferences[COMPILATION_MUSIC_KEY] ?: DEFAULT_COMPILATION_MUSIC
-
-            artistReplacement = preferences[ARTISTS_REPLACEMENT_KEY] ?: DEFAULT_ARTISTS_REPLACEMENT
-            showFirstLetter = preferences[SHOW_FIRST_LETTER_KEY] ?: DEFAULT_SHOW_FIRST_LETTER
-
+            LibrarySettings.loadSettings(context = context)
             DataLoader.loadFoldersPaths()
-
             loadWhatsNew(context = context, preferences = preferences)
         }.first()
         _isLoaded = true
-    }
-
-    private fun getFoldersSelection(id: Int?): FoldersSelection {
-        if (id == null) {
-            return DEFAULT_FOLDERS_SELECTION_SELECTED
-        }
-        // Warning, be sure the id is correct
-        return when (id) {
-            1 -> FoldersSelection.INCLUDE
-            2 -> FoldersSelection.EXCLUDE
-
-            else -> DEFAULT_FOLDERS_SELECTION_SELECTED
-        }
     }
 
     fun loadFilters(context: Context) {
@@ -263,10 +222,10 @@ object SettingsManager {
     }
 
     suspend fun selectFoldersSelection(context: Context, foldersSelection: FoldersSelection) {
-        context.dataStore.edit { preferences: MutablePreferences ->
-            foldersSelectionSelected = foldersSelection
-            preferences[FOLDERS_SELECTION_SELECTED_KEY] = foldersSelectionSelected.id
-        }
+        LibrarySettings.selectFoldersSelection(
+            context = context,
+            foldersSelection = foldersSelection
+        )
     }
 
     /**
@@ -286,33 +245,11 @@ object SettingsManager {
      * @param path the selected path as string
      */
     suspend fun addPath(context: Context, path: String) {
-        val formattedPath: String = getFormattedPath(path = path)
-        context.dataStore.edit { preferences: MutablePreferences ->
-            val newSet: MutableSet<String> = foldersPathsSelectedSet.value.toMutableSet()
-            newSet.add(formattedPath)
-            foldersPathsSelectedSet.value = newSet.toSet()
-            preferences[SELECTED_PATHS_KEY] = foldersPathsSelectedSet.value
-        }
-    }
-
-    private fun getFormattedPath(path: String): String {
-        val formattedPath: String = Uri.decode(path)
-        val splitList: List<String> = formattedPath.split(":")
-        if (splitList.size == 1) return path
-        var storage: String = splitList[0].split("/").last()
-        if (storage == "primary") {
-            storage = "0"
-        }
-        return '/' + storage + '/' + splitList[1] + "/%"
+        LibrarySettings.addPath(context = context, path = path)
     }
 
     suspend fun removePath(context: Context, path: String) {
-        context.dataStore.edit { preferences: MutablePreferences ->
-            val newSet: MutableSet<String> = foldersPathsSelectedSet.value.toMutableSet()
-            newSet.remove(path)
-            foldersPathsSelectedSet.value = newSet.toSet()
-            preferences[SELECTED_PATHS_KEY] = foldersPathsSelectedSet.value
-        }
+        LibrarySettings.removePath(context = context, path = path)
     }
 
     suspend fun selectDefaultNavBarSection(context: Context, navBarSection: NavBarSection) {
@@ -320,17 +257,11 @@ object SettingsManager {
     }
 
     suspend fun switchCompilationMusic(context: Context) {
-        context.dataStore.edit { preferences: MutablePreferences ->
-            this.compilationMusic = !this.compilationMusic
-            preferences[COMPILATION_MUSIC_KEY] = this.compilationMusic
-        }
+        LibrarySettings.switchCompilationMusic(context = context)
     }
 
     suspend fun switchArtistReplacement(context: Context) {
-        context.dataStore.edit { preferences: MutablePreferences ->
-            this.artistReplacement = !this.artistReplacement
-            preferences[ARTISTS_REPLACEMENT_KEY] = this.artistReplacement
-        }
+        LibrarySettings.switchArtistReplacement(context = context)
     }
 
     suspend fun updateForwardMs(context: Context, seconds: Int) {
@@ -342,28 +273,15 @@ object SettingsManager {
     }
 
     suspend fun switchShowFirstLetter(context: Context) {
-        context.dataStore.edit { preferences: MutablePreferences ->
-            this.showFirstLetter = !this.showFirstLetter
-            preferences[SHOW_FIRST_LETTER_KEY] = this.showFirstLetter
-        }
+        LibrarySettings.switchShowFirstLetter(context = context)
     }
 
     suspend fun resetFoldersSettings(context: Context) {
-        context.dataStore.edit { preferences: MutablePreferences ->
-            this.foldersPathsSelectedSet.value = DEFAULT_SELECTED_PATHS
-            preferences[SELECTED_PATHS_KEY] = this.foldersPathsSelectedSet.value
-        }
+        LibrarySettings.resetFoldersSettings(context = context)
     }
 
     suspend fun resetLoadingLogicSettings(context: Context) {
-        context.dataStore.edit { preferences: MutablePreferences ->
-            this.compilationMusic = DEFAULT_COMPILATION_MUSIC
-            this.artistReplacement = DEFAULT_ARTISTS_REPLACEMENT
-            this.showFirstLetter = DEFAULT_SHOW_FIRST_LETTER
-            preferences[COMPILATION_MUSIC_KEY] = this.compilationMusic
-            preferences[ARTISTS_REPLACEMENT_KEY] = this.artistReplacement
-            preferences[SHOW_FIRST_LETTER_KEY] = this.showFirstLetter
-        }
+        LibrarySettings.resetLoadingLogicSettings(context = context)
     }
 
     suspend fun resetBatterySettings(context: Context) {

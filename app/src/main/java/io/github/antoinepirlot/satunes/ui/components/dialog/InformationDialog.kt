@@ -55,7 +55,7 @@ internal fun InformationDialog(
             Icon(icon = SatunesIcons.INFO)
         },
         title = {
-            Title(text = title, fontSize = 25.sp)
+            Title(text = title, fontSize = 25.sp, maxLines = 2)
         },
         text = {
             if (text != null) {

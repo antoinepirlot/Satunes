@@ -108,12 +108,12 @@ object SettingsManager {
             _logger?.info("Settings already loaded")
             return
         }
+        SatunesSettings.loadSettings(context = context)
         NavBarSettings.loadSettings(context = context)
         PlaybackSettings.loadSettings(context = context)
         loadFilters(context = context)
         LibrarySettings.loadSettings(context = context)
         DataLoader.loadFoldersPaths()
-        SatunesSettings.loadSettings(context = context)
         _isLoaded = true
     }
 

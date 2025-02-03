@@ -25,11 +25,7 @@ package io.github.antoinepirlot.satunes.database.services.settings
 import android.content.Context
 import android.net.Uri
 import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.MutablePreferences
 import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.booleanPreferencesKey
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import io.github.antoinepirlot.satunes.database.models.BarSpeed
 import io.github.antoinepirlot.satunes.database.models.FoldersSelection
@@ -40,32 +36,19 @@ import io.github.antoinepirlot.satunes.database.services.settings.navigation_bar
 import io.github.antoinepirlot.satunes.database.services.settings.playback.PlaybackSettings
 import io.github.antoinepirlot.satunes.database.services.settings.search.SearchSettings
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
 
 /**
  * @author Antoine Pirlot on 02-03-24
  */
 
 object SettingsManager {
-
-    // DEFAULT VALUES
-
-    private const val DEFAULT_WHATS_NEW_SEEN: Boolean = false
-    private const val DEFAULT_WHATS_NEW_VERSION_SEEN: String = ""
-
-    // KEYS
-
     private val PREFERENCES_DATA_STORE = preferencesDataStore("settings")
-    private val WHATS_NEW_SEEN_KEY = booleanPreferencesKey("whats_new_seen")
-    private val WHATS_NEW_VERSION_SEEN_KEY = stringPreferencesKey("whats_new_version_seen")
-
-
-    // VARIABLES
-
     private val _logger = SatunesLogger.getLogger()
     internal val Context.dataStore: DataStore<Preferences> by PREFERENCES_DATA_STORE
     private var _isLoaded: Boolean = false
+
+    // Satunes Settings
+    val whatsNewSeen: Boolean = SatunesSettings.whatsNewSeen
 
     // NavBarSettings
     val defaultNavBarSection: NavBarSection
@@ -91,11 +74,6 @@ object SettingsManager {
     val rewindMs: Long
         get() = PlaybackSettings.rewindMs
 
-    var whatsNewSeen: Boolean = DEFAULT_WHATS_NEW_SEEN
-        private set
-
-    private var whatsNewVersionSeen: String = DEFAULT_WHATS_NEW_VERSION_SEEN
-
     // Search Settings
     val foldersFilter: Boolean
         get() = SearchSettings.foldersFilter
@@ -110,11 +88,9 @@ object SettingsManager {
     val musicsFilter: Boolean
         get() = SearchSettings.musicsFilter
 
-    var foldersSelectionSelected: FoldersSelection = LibrarySettings.foldersSelectionSelected
-        private set
-
-    var foldersPathsSelectedSet: Collection<String> = LibrarySettings.foldersPathsSelectedCollection
-        private set
+    // Library Settings
+    val foldersSelectionSelected: FoldersSelection = LibrarySettings.foldersSelectionSelected
+    val foldersPathsSelectedSet: Collection<String> = LibrarySettings.foldersPathsSelectedCollection
 
     /**
      * This setting is true if the compilation's music has to be added to compilation's artist's music list
@@ -132,33 +108,17 @@ object SettingsManager {
             _logger?.info("Settings already loaded")
             return
         }
-        context.dataStore.data.map { preferences: Preferences ->
-            NavBarSettings.loadSettings(context = context)
-            PlaybackSettings.loadSettings(context = context)
-            loadFilters(context = context)
-            LibrarySettings.loadSettings(context = context)
-            DataLoader.loadFoldersPaths()
-            loadWhatsNew(context = context, preferences = preferences)
-        }.first()
+        NavBarSettings.loadSettings(context = context)
+        PlaybackSettings.loadSettings(context = context)
+        loadFilters(context = context)
+        LibrarySettings.loadSettings(context = context)
+        DataLoader.loadFoldersPaths()
+        SatunesSettings.loadSettings(context = context)
         _isLoaded = true
     }
 
     fun loadFilters(context: Context) {
         SearchSettings.loadSettings(context = context)
-    }
-
-    private suspend fun loadWhatsNew(context: Context, preferences: Preferences) {
-        whatsNewSeen = preferences[WHATS_NEW_SEEN_KEY] ?: DEFAULT_WHATS_NEW_SEEN
-        whatsNewVersionSeen =
-            preferences[WHATS_NEW_VERSION_SEEN_KEY] ?: DEFAULT_WHATS_NEW_VERSION_SEEN
-        if (whatsNewSeen) {
-            val packageManager = context.packageManager
-            val packageInfo = packageManager.getPackageInfo(context.packageName, 0)
-            val versionName = 'v' + packageInfo.versionName!!
-            if (whatsNewVersionSeen != versionName) {
-                this.unSeeWhatsNew(context = context)
-            }
-        }
     }
 
     suspend fun switchNavBarSection(context: Context, navBarSection: NavBarSection) {
@@ -198,22 +158,11 @@ object SettingsManager {
     }
 
     suspend fun seeWhatsNew(context: Context) {
-        context.dataStore.edit { preferences: MutablePreferences ->
-            whatsNewSeen = true
-            preferences[WHATS_NEW_SEEN_KEY] = whatsNewSeen
-            val packageManager = context.packageManager
-            val packageInfo = packageManager.getPackageInfo(context.packageName, 0)
-            val versionName = 'v' + packageInfo.versionName!!
-            preferences[WHATS_NEW_VERSION_SEEN_KEY] = versionName
-            whatsNewVersionSeen = versionName
-        }
+        SatunesSettings.seeWhatsNew(context = context)
     }
 
     suspend fun unSeeWhatsNew(context: Context) {
-        context.dataStore.edit { preferences: MutablePreferences ->
-            whatsNewSeen = false
-            preferences[WHATS_NEW_SEEN_KEY] = whatsNewSeen
-        }
+        SatunesSettings.unSeeWhatsNew(context = context)
     }
 
     suspend fun switchFilter(context: Context, filterSetting: NavBarSection) {

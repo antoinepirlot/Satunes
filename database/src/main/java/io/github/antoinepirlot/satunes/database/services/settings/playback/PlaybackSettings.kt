@@ -41,7 +41,7 @@ import kotlinx.coroutines.flow.map
 /**
  * @author Antoine Pirlot 03/02/2025
  */
-object PlaybackSettings {
+internal object PlaybackSettings {
     // DEFAULT VALUES
 
     //App stop after removed app from multi-task if false

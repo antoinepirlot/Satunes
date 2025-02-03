@@ -41,6 +41,7 @@ import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.database.services.settings.navigation_bar.NavBarSettings
 import io.github.antoinepirlot.satunes.database.services.settings.playback.PlaybackSettings
+import io.github.antoinepirlot.satunes.database.services.settings.search.SearchSettings
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -55,12 +56,6 @@ object SettingsManager {
 
     private const val DEFAULT_WHATS_NEW_SEEN: Boolean = false
     private const val DEFAULT_WHATS_NEW_VERSION_SEEN: String = ""
-    private const val DEFAULT_MUSICS_FILTER: Boolean = true
-    private const val DEFAULT_ARTISTS_FILTER: Boolean = false
-    private const val DEFAULT_ALBUMS_FILTER: Boolean = false
-    private const val DEFAULT_GENRES_FILTER: Boolean = false
-    private const val DEFAULT_FOLDERS_FILTER: Boolean = false
-    private const val DEFAULT_PLAYLISTS_FILTER: Boolean = false
     private val DEFAULT_FOLDERS_SELECTION_SELECTED: FoldersSelection = FoldersSelection.INCLUDE
     private val DEFAULT_SELECTED_PATHS: Set<String> = setOf("/0/Music/%")
     private const val DEFAULT_COMPILATION_MUSIC: Boolean = false
@@ -68,18 +63,10 @@ object SettingsManager {
     private const val DEFAULT_SHOW_FIRST_LETTER = true
 
     // KEYS
+
     private val PREFERENCES_DATA_STORE = preferencesDataStore("settings")
     private val WHATS_NEW_SEEN_KEY = booleanPreferencesKey("whats_new_seen")
     private val WHATS_NEW_VERSION_SEEN_KEY = stringPreferencesKey("whats_new_version_seen")
-    private val MUSICS_FILTER_KEY: Preferences.Key<Boolean> = booleanPreferencesKey("musics_filter")
-    private val ARTISTS_FILTER_KEY: Preferences.Key<Boolean> =
-        booleanPreferencesKey("artists_filter")
-    private val ALBUMS_FILTER_KEY: Preferences.Key<Boolean> = booleanPreferencesKey("albums_filter")
-    private val GENRES_FILTER_KEY: Preferences.Key<Boolean> = booleanPreferencesKey("genres_filter")
-    private val FOLDERS_FILTER_KEY: Preferences.Key<Boolean> =
-        booleanPreferencesKey("folders_filter")
-    private val PLAYLISTS_FILTER_KEY: Preferences.Key<Boolean> =
-        booleanPreferencesKey("playlists_filter")
     private val FOLDERS_SELECTION_SELECTED_KEY: Preferences.Key<Int> =
         intPreferencesKey("folders_selection")
     private val SELECTED_PATHS_KEY: Preferences.Key<Set<String>> =
@@ -92,6 +79,7 @@ object SettingsManager {
         booleanPreferencesKey("show_first_letter")
 
     // VARIABLES
+
     private val _logger = SatunesLogger.getLogger()
     internal val Context.dataStore: DataStore<Preferences> by PREFERENCES_DATA_STORE
     private var _isLoaded: Boolean = false
@@ -125,18 +113,19 @@ object SettingsManager {
 
     private var whatsNewVersionSeen: String = DEFAULT_WHATS_NEW_VERSION_SEEN
 
-    var foldersFilter: Boolean = DEFAULT_FOLDERS_FILTER
-        private set
-    var artistsFilter: Boolean = DEFAULT_ARTISTS_FILTER
-        private set
-    var albumsFilter: Boolean = DEFAULT_ALBUMS_FILTER
-        private set
-    var genresFilter: Boolean = DEFAULT_GENRES_FILTER
-        private set
-    var playlistsFilter: Boolean = DEFAULT_PLAYLISTS_FILTER
-        private set
-    var musicsFilter: Boolean = DEFAULT_MUSICS_FILTER
-        private set
+    // Search Settings
+    val foldersFilter: Boolean
+        get() = SearchSettings.foldersFilter
+    val artistsFilter: Boolean
+        get() = SearchSettings.artistsFilter
+    val albumsFilter: Boolean
+        get() = SearchSettings.albumsFilter
+    val genresFilter: Boolean
+        get() = SearchSettings.genresFilter
+    val playlistsFilter: Boolean
+        get() = SearchSettings.playlistsFilter
+    val musicsFilter: Boolean
+        get() = SearchSettings.musicsFilter
 
     var foldersSelectionSelected: FoldersSelection = DEFAULT_FOLDERS_SELECTION_SELECTED
         private set
@@ -163,7 +152,7 @@ object SettingsManager {
         context.dataStore.data.map { preferences: Preferences ->
             NavBarSettings.loadSettings(context = context)
             PlaybackSettings.loadSettings(context = context)
-
+            loadFilters(context = context)
 
             foldersSelectionSelected =
                 getFoldersSelection(preferences[FOLDERS_SELECTION_SELECTED_KEY])
@@ -179,8 +168,6 @@ object SettingsManager {
             DataLoader.loadFoldersPaths()
 
             loadWhatsNew(context = context, preferences = preferences)
-
-            loadFilters(context = context)
         }.first()
         _isLoaded = true
     }
@@ -198,16 +185,8 @@ object SettingsManager {
         }
     }
 
-    suspend fun loadFilters(context: Context) {
-        context.dataStore.edit { preferences: MutablePreferences ->
-            foldersFilter = preferences[FOLDERS_FILTER_KEY] ?: DEFAULT_FOLDERS_FILTER
-            artistsFilter = preferences[ARTISTS_FILTER_KEY] ?: DEFAULT_ARTISTS_FILTER
-            albumsFilter = preferences[ALBUMS_FILTER_KEY] ?: DEFAULT_ALBUMS_FILTER
-            genresFilter = preferences[GENRES_FILTER_KEY] ?: DEFAULT_GENRES_FILTER
-            playlistsFilter =
-                preferences[PLAYLISTS_FILTER_KEY] ?: DEFAULT_PLAYLISTS_FILTER
-            musicsFilter = preferences[MUSICS_FILTER_KEY] ?: DEFAULT_MUSICS_FILTER
-        }
+    fun loadFilters(context: Context) {
+        SearchSettings.loadSettings(context = context)
     }
 
     private suspend fun loadWhatsNew(context: Context, preferences: Preferences) {
@@ -280,49 +259,7 @@ object SettingsManager {
     }
 
     suspend fun switchFilter(context: Context, filterSetting: NavBarSection) {
-        when (filterSetting) {
-            NavBarSection.MUSICS -> {
-                context.dataStore.edit { preferences: MutablePreferences ->
-                    musicsFilter = !musicsFilter
-                    preferences[MUSICS_FILTER_KEY] = musicsFilter
-                }
-            }
-
-            NavBarSection.ARTISTS -> {
-                context.dataStore.edit { preferences: MutablePreferences ->
-                    artistsFilter = !artistsFilter
-                    preferences[ARTISTS_FILTER_KEY] = artistsFilter
-                }
-            }
-
-            NavBarSection.ALBUMS -> {
-                context.dataStore.edit { preferences: MutablePreferences ->
-                    albumsFilter = !albumsFilter
-                    preferences[ALBUMS_FILTER_KEY] = albumsFilter
-                }
-            }
-
-            NavBarSection.GENRES -> {
-                context.dataStore.edit { preferences: MutablePreferences ->
-                    genresFilter = !genresFilter
-                    preferences[GENRES_FILTER_KEY] = genresFilter
-                }
-            }
-
-            NavBarSection.FOLDERS -> {
-                context.dataStore.edit { preferences: MutablePreferences ->
-                    foldersFilter = !foldersFilter
-                    preferences[FOLDERS_FILTER_KEY] = foldersFilter
-                }
-            }
-
-            NavBarSection.PLAYLISTS -> {
-                context.dataStore.edit { preferences: MutablePreferences ->
-                    playlistsFilter = !playlistsFilter
-                    preferences[PLAYLISTS_FILTER_KEY] = playlistsFilter
-                }
-            }
-        }
+        SearchSettings.switchFilter(context = context, filterSetting = filterSetting)
     }
 
     suspend fun selectFoldersSelection(context: Context, foldersSelection: FoldersSelection) {
@@ -442,20 +379,7 @@ object SettingsManager {
     }
 
     suspend fun resetDefaultSearchFiltersSettings(context: Context) {
-        context.dataStore.edit { preferences: MutablePreferences ->
-            this.musicsFilter = DEFAULT_MUSICS_FILTER
-            this.albumsFilter = DEFAULT_ALBUMS_FILTER
-            this.artistsFilter = DEFAULT_ARTISTS_FILTER
-            this.genresFilter = DEFAULT_GENRES_FILTER
-            this.foldersFilter = DEFAULT_FOLDERS_FILTER
-            this.playlistsFilter = DEFAULT_PLAYLISTS_FILTER
-            preferences[MUSICS_FILTER_KEY] = this.musicsFilter
-            preferences[ALBUMS_FILTER_KEY] = this.albumsFilter
-            preferences[ARTISTS_FILTER_KEY] = this.artistsFilter
-            preferences[GENRES_FILTER_KEY] = this.genresFilter
-            preferences[FOLDERS_FILTER_KEY] = this.foldersFilter
-            preferences[PLAYLISTS_FILTER_KEY] = this.playlistsFilter
-        }
+        SearchSettings.resetDefaultSearchFiltersSettings(context = context)
     }
 
     suspend fun resetNavigationBarSettings(context: Context) {

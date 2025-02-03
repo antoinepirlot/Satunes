@@ -24,7 +24,6 @@ package io.github.antoinepirlot.satunes.database.services.settings
 
 import android.content.Context
 import android.net.Uri
-import androidx.compose.runtime.MutableLongState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.datastore.core.DataStore
@@ -116,8 +115,10 @@ object SettingsManager {
         get() = PlaybackSettings.pauseIfAnotherPlayback
     val audioOffloadChecked: Boolean
         get() = PlaybackSettings.audioOffloadChecked
-    val forwardMs: MutableLongState = PlaybackSettings.forwardMs
-    val rewindMs: MutableLongState = PlaybackSettings.rewindMs
+    val forwardMs: Long
+        get() = PlaybackSettings.forwardMs
+    val rewindMs: Long
+        get() = PlaybackSettings.rewindMs
 
     var whatsNewSeen: Boolean = DEFAULT_WHATS_NEW_SEEN
         private set

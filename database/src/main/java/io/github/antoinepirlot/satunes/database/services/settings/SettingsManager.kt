@@ -55,9 +55,7 @@ import kotlinx.coroutines.flow.map
 
 object SettingsManager {
 
-    /**
-     * DEFAULT VALUES
-     */
+    // DEFAULT VALUES
     private const val DEFAULT_PLAYBACK_WHEN_CLOSED_CHECKED =
         false //App stop after removed app from multi-task if false
     private const val DEFAULT_PAUSE_IF_NOISY = true
@@ -82,9 +80,7 @@ object SettingsManager {
     private const val DEFAULT_REWIND_MS: Long = DEFAULT_FORWARD_MS
     private const val DEFAULT_SHOW_FIRST_LETTER = true
 
-    /**
-     * KEYS
-     */
+    // KEYS
     private val PREFERENCES_DATA_STORE = preferencesDataStore("settings")
     private val PLAYBACK_WHEN_CLOSED_CHECKED_PREFERENCES_KEY =
         booleanPreferencesKey("playback_when_closed_checked")
@@ -118,9 +114,7 @@ object SettingsManager {
     private val SHOW_FIRST_LETTER_KEY: Preferences.Key<Boolean> =
         booleanPreferencesKey("show_first_letter")
 
-    /**
-     * VARIABLES
-     */
+    // VARIABLES
     private val _logger = SatunesLogger.getLogger()
     internal val Context.dataStore: DataStore<Preferences> by PREFERENCES_DATA_STORE
     private var _isLoaded: Boolean = false

@@ -37,9 +37,7 @@ import kotlinx.coroutines.flow.map
  * @author Antoine Pirlot 03/02/2025
  */
 internal object NavBarSettings {
-    /**
-     * DEFAULT VALUES
-     */
+    // DEFAULT VALUES
     private const val DEFAULT_FOLDERS_NAVBAR: Boolean = true
     private const val DEFAULT_ARTISTS_NAVBAR: Boolean = true
     private const val DEFAULT_ALBUMS_NAVBAR: Boolean = true
@@ -47,9 +45,7 @@ internal object NavBarSettings {
     private const val DEFAULT_PLAYLIST_NAVBAR: Boolean = true
     internal val DEFAULT_DEFAULT_NAV_BAR_SECTION: NavBarSection = NavBarSection.MUSICS
 
-    /**
-     * KEYS
-     */
+    // KEYS
     private val FOLDERS_NAVBAR_PREFERENCES_KEY: Preferences.Key<Boolean> =
         booleanPreferencesKey("folders_navbar")
     private val ARTISTS_NAVBAR_PREFERENCES_KEY: Preferences.Key<Boolean> =
@@ -63,9 +59,7 @@ internal object NavBarSettings {
     private val DEFAULT_NAV_BAR_SECTION_KEY: Preferences.Key<Int> =
         intPreferencesKey("default_nav_bar_section")
 
-    /**
-     * VARIABLES
-     */
+    // VARIABLES
     var defaultNavBarSection: NavBarSection = DEFAULT_DEFAULT_NAV_BAR_SECTION
         private set
 

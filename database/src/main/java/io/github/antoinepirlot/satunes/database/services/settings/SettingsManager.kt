@@ -26,25 +26,22 @@ import android.content.Context
 import android.net.Uri
 import androidx.compose.runtime.MutableLongState
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.MutablePreferences
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.floatPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
-import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
-import androidx.media3.common.Player
 import io.github.antoinepirlot.satunes.database.models.BarSpeed
 import io.github.antoinepirlot.satunes.database.models.FoldersSelection
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.database.services.settings.navigation_bar.NavBarSettings
+import io.github.antoinepirlot.satunes.database.services.settings.playback.PlaybackSettings
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -56,14 +53,7 @@ import kotlinx.coroutines.flow.map
 object SettingsManager {
 
     // DEFAULT VALUES
-    private const val DEFAULT_PLAYBACK_WHEN_CLOSED_CHECKED =
-        false //App stop after removed app from multi-task if false
-    private const val DEFAULT_PAUSE_IF_NOISY = true
-    private val DEFAULT_BAR_SPEED_VALUE: BarSpeed = BarSpeed.NORMAL
-    private const val DEFAULT_REPEAT_MODE: Int = Player.REPEAT_MODE_OFF
-    private const val DEFAULT_SHUFFLE_MODE: Boolean = false
-    private const val DEFAULT_PAUSE_IF_ANOTHER_PLAYBACK_CHECKED: Boolean = true
-    private const val DEFAULT_AUDIO_OFFLOAD_CHECKED: Boolean = false
+
     private const val DEFAULT_WHATS_NEW_SEEN: Boolean = false
     private const val DEFAULT_WHATS_NEW_VERSION_SEEN: String = ""
     private const val DEFAULT_MUSICS_FILTER: Boolean = true
@@ -76,20 +66,10 @@ object SettingsManager {
     private val DEFAULT_SELECTED_PATHS: Set<String> = setOf("/0/Music/%")
     private const val DEFAULT_COMPILATION_MUSIC: Boolean = false
     private const val DEFAULT_ARTISTS_REPLACEMENT: Boolean = true
-    private const val DEFAULT_FORWARD_MS: Long = 5000L
-    private const val DEFAULT_REWIND_MS: Long = DEFAULT_FORWARD_MS
     private const val DEFAULT_SHOW_FIRST_LETTER = true
 
     // KEYS
     private val PREFERENCES_DATA_STORE = preferencesDataStore("settings")
-    private val PLAYBACK_WHEN_CLOSED_CHECKED_PREFERENCES_KEY =
-        booleanPreferencesKey("playback_when_closed_checked")
-    private val PAUSE_IF_NOISY_PREFERENCES_KEY = booleanPreferencesKey("pause_if_noisy")
-    private val BAR_SPEED_KEY = floatPreferencesKey("bar_speed")
-    private val REPEAT_MODE_KEY = intPreferencesKey("repeat_mode")
-    private val SHUFFLE_MODE_KEY = booleanPreferencesKey("shuffle_mode")
-    private val PAUSE_IF_ANOTHER_PLAYBACK_KEY = booleanPreferencesKey("pause_if_another_playback")
-    private val AUDIO_OFFLOAD_CHECKED_KEY = booleanPreferencesKey("audio_offload_checked")
     private val WHATS_NEW_SEEN_KEY = booleanPreferencesKey("whats_new_seen")
     private val WHATS_NEW_VERSION_SEEN_KEY = stringPreferencesKey("whats_new_version_seen")
     private val MUSICS_FILTER_KEY: Preferences.Key<Boolean> = booleanPreferencesKey("musics_filter")
@@ -109,8 +89,6 @@ object SettingsManager {
         booleanPreferencesKey("compilation_music")
     private val ARTISTS_REPLACEMENT_KEY: Preferences.Key<Boolean> =
         booleanPreferencesKey("artist_replacement")
-    private val FORWARD_MS_KEY: Preferences.Key<Long> = longPreferencesKey("forward_ms")
-    private val REWIND_MS_KEY: Preferences.Key<Long> = longPreferencesKey("rewind_ms")
     private val SHOW_FIRST_LETTER_KEY: Preferences.Key<Boolean> =
         booleanPreferencesKey("show_first_letter")
 
@@ -119,23 +97,27 @@ object SettingsManager {
     internal val Context.dataStore: DataStore<Preferences> by PREFERENCES_DATA_STORE
     private var _isLoaded: Boolean = false
 
+    // NavBarSettings
     val defaultNavBarSection: NavBarSection
         get() = NavBarSettings.defaultNavBarSection
 
-    var playbackWhenClosedChecked: Boolean = DEFAULT_PLAYBACK_WHEN_CLOSED_CHECKED
-        private set
-    var pauseIfNoisyChecked: Boolean = DEFAULT_PAUSE_IF_NOISY
-        private set
-    var barSpeed: BarSpeed = DEFAULT_BAR_SPEED_VALUE
-        private set
-    var repeatMode: Int = DEFAULT_REPEAT_MODE
-        private set
-    var shuffleMode: Boolean = DEFAULT_SHUFFLE_MODE
-        private set
-    var pauseIfAnotherPlayback: Boolean = DEFAULT_PAUSE_IF_ANOTHER_PLAYBACK_CHECKED
-        private set
-    var audioOffloadChecked: Boolean = DEFAULT_AUDIO_OFFLOAD_CHECKED
-        private set
+    // Playback Settings
+    val playbackWhenClosedChecked: Boolean
+        get() = PlaybackSettings.playbackWhenClosedChecked
+    val pauseIfNoisyChecked: Boolean
+        get() = PlaybackSettings.pauseIfNoisyChecked
+    val barSpeed: BarSpeed
+        get() = PlaybackSettings.barSpeed
+    val repeatMode: Int
+        get() = PlaybackSettings.repeatMode
+    val shuffleMode: Boolean
+        get() = PlaybackSettings.shuffleMode
+    val pauseIfAnotherPlayback: Boolean
+        get() = PlaybackSettings.pauseIfAnotherPlayback
+    val audioOffloadChecked: Boolean
+        get() = PlaybackSettings.audioOffloadChecked
+    val forwardMs: MutableLongState = PlaybackSettings.forwardMs
+    val rewindMs: MutableLongState = PlaybackSettings.rewindMs
 
     var whatsNewSeen: Boolean = DEFAULT_WHATS_NEW_SEEN
         private set
@@ -169,8 +151,6 @@ object SettingsManager {
     var artistReplacement: Boolean = DEFAULT_ARTISTS_REPLACEMENT
         private set
 
-    val forwardMs: MutableLongState = mutableLongStateOf(DEFAULT_FORWARD_MS)
-    val rewindMs: MutableLongState = mutableLongStateOf(DEFAULT_REWIND_MS)
     var showFirstLetter: Boolean = DEFAULT_SHOW_FIRST_LETTER
         private set
 
@@ -181,26 +161,8 @@ object SettingsManager {
         }
         context.dataStore.data.map { preferences: Preferences ->
             NavBarSettings.loadSettings(context = context)
+            PlaybackSettings.loadSettings(context = context)
 
-            playbackWhenClosedChecked =
-                preferences[PLAYBACK_WHEN_CLOSED_CHECKED_PREFERENCES_KEY]
-                    ?: DEFAULT_PLAYBACK_WHEN_CLOSED_CHECKED
-
-            pauseIfNoisyChecked =
-                preferences[PAUSE_IF_NOISY_PREFERENCES_KEY] ?: DEFAULT_PAUSE_IF_NOISY
-
-            barSpeed = getBarSpeed(preferences[BAR_SPEED_KEY])
-
-            repeatMode = preferences[REPEAT_MODE_KEY] ?: DEFAULT_REPEAT_MODE
-
-            shuffleMode =
-                preferences[SHUFFLE_MODE_KEY] ?: DEFAULT_SHUFFLE_MODE
-
-            pauseIfAnotherPlayback = preferences[PAUSE_IF_ANOTHER_PLAYBACK_KEY]
-                ?: DEFAULT_PAUSE_IF_ANOTHER_PLAYBACK_CHECKED
-
-            audioOffloadChecked =
-                preferences[AUDIO_OFFLOAD_CHECKED_KEY] ?: DEFAULT_AUDIO_OFFLOAD_CHECKED
 
             foldersSelectionSelected =
                 getFoldersSelection(preferences[FOLDERS_SELECTION_SELECTED_KEY])
@@ -211,9 +173,6 @@ object SettingsManager {
             compilationMusic = preferences[COMPILATION_MUSIC_KEY] ?: DEFAULT_COMPILATION_MUSIC
 
             artistReplacement = preferences[ARTISTS_REPLACEMENT_KEY] ?: DEFAULT_ARTISTS_REPLACEMENT
-
-            forwardMs.longValue = preferences[FORWARD_MS_KEY] ?: DEFAULT_FORWARD_MS
-            rewindMs.longValue = preferences[REWIND_MS_KEY] ?: DEFAULT_REWIND_MS
             showFirstLetter = preferences[SHOW_FIRST_LETTER_KEY] ?: DEFAULT_SHOW_FIRST_LETTER
 
             DataLoader.loadFoldersPaths()
@@ -223,17 +182,6 @@ object SettingsManager {
             loadFilters(context = context)
         }.first()
         _isLoaded = true
-    }
-
-    private fun getBarSpeed(speed: Float?): BarSpeed {
-        return when (speed) {
-            BarSpeed.REAL_TIME.speed -> BarSpeed.REAL_TIME
-            BarSpeed.FAST.speed -> BarSpeed.FAST
-            BarSpeed.NORMAL.speed -> BarSpeed.NORMAL
-            BarSpeed.SLOW.speed -> BarSpeed.SLOW
-            BarSpeed.VERY_SLOW.speed -> BarSpeed.VERY_SLOW
-            else -> DEFAULT_BAR_SPEED_VALUE
-        }
     }
 
     private fun getFoldersSelection(id: Int?): FoldersSelection {
@@ -280,68 +228,35 @@ object SettingsManager {
     }
 
     suspend fun switchPlaybackWhenClosedChecked(context: Context) {
-        context.dataStore.edit { preferences: MutablePreferences ->
-            playbackWhenClosedChecked = !playbackWhenClosedChecked
-            preferences[PLAYBACK_WHEN_CLOSED_CHECKED_PREFERENCES_KEY] =
-                playbackWhenClosedChecked
-        }
+        PlaybackSettings.switchPlaybackWhenClosedChecked(context = context)
     }
 
     suspend fun switchPauseIfNoisy(context: Context) {
-        context.dataStore.edit { preferences: MutablePreferences ->
-            pauseIfNoisyChecked = !pauseIfNoisyChecked
-            preferences[PAUSE_IF_NOISY_PREFERENCES_KEY] = pauseIfNoisyChecked
-        }
+        PlaybackSettings.switchPauseIfNoisy(context = context)
     }
 
     suspend fun updateBarSpeed(context: Context, newSpeedBar: BarSpeed) {
-        context.dataStore.edit { preferences: MutablePreferences ->
-            barSpeed = newSpeedBar
-            preferences[BAR_SPEED_KEY] = barSpeed.speed
-        }
+        PlaybackSettings.updateBarSpeed(context = context, newSpeedBar = newSpeedBar)
     }
 
     suspend fun updateRepeatMode(context: Context, newValue: Int) {
-        if (newValue !in listOf(
-                Player.REPEAT_MODE_OFF,
-                Player.REPEAT_MODE_ALL,
-                Player.REPEAT_MODE_ONE
-            )
-        ) {
-            throw IllegalArgumentException("Update repeat mode must be 0, 1 or 2. $newValue has been received.")
-        }
-        context.dataStore.edit { preferences: MutablePreferences ->
-            repeatMode = newValue
-            preferences[REPEAT_MODE_KEY] = repeatMode
-        }
+        PlaybackSettings.updateRepeatMode(context = context, newValue = newValue)
     }
 
     suspend fun setShuffleModeOn(context: Context) {
-        context.dataStore.edit { preferences: MutablePreferences ->
-            shuffleMode = true
-            preferences[SHUFFLE_MODE_KEY] = true
-        }
+        PlaybackSettings.setShuffleModeOn(context = context)
     }
 
     suspend fun setShuffleModeOff(context: Context) {
-        context.dataStore.edit { preferences: MutablePreferences ->
-            shuffleMode = false
-            preferences[SHUFFLE_MODE_KEY] = false
-        }
+        PlaybackSettings.setShuffleModeOff(context = context)
     }
 
     suspend fun switchPauseIfAnotherPlayback(context: Context) {
-        context.dataStore.edit { preferences: MutablePreferences ->
-            pauseIfAnotherPlayback = !pauseIfAnotherPlayback
-            preferences[PAUSE_IF_ANOTHER_PLAYBACK_KEY] = pauseIfAnotherPlayback
-        }
+        PlaybackSettings.switchPauseIfAnotherPlayback(context = context)
     }
 
     suspend fun switchAudioOffload(context: Context) {
-        context.dataStore.edit { preferences: MutablePreferences ->
-            audioOffloadChecked = !audioOffloadChecked
-            preferences[AUDIO_OFFLOAD_CHECKED_KEY] = audioOffloadChecked
-        }
+        PlaybackSettings.switchAudioOffload(context = context)
     }
 
     suspend fun seeWhatsNew(context: Context) {
@@ -481,17 +396,11 @@ object SettingsManager {
     }
 
     suspend fun updateForwardMs(context: Context, seconds: Int) {
-        context.dataStore.edit { preferences: MutablePreferences ->
-            this.forwardMs.longValue = seconds.toLong() * 1000L
-            preferences[FORWARD_MS_KEY] = this.forwardMs.longValue
-        }
+        PlaybackSettings.updateForwardMs(context = context, seconds = seconds)
     }
 
     suspend fun updateRewindMs(context: Context, seconds: Int) {
-        context.dataStore.edit { preferences: MutablePreferences ->
-            this.rewindMs.longValue = seconds.toLong() * 1000L
-            preferences[REWIND_MS_KEY] = this.rewindMs.longValue
-        }
+        PlaybackSettings.updateRewindMs(context = context, seconds = seconds)
     }
 
     suspend fun switchShowFirstLetter(context: Context) {
@@ -520,37 +429,15 @@ object SettingsManager {
     }
 
     suspend fun resetBatterySettings(context: Context) {
-        context.dataStore.edit { preferences: MutablePreferences ->
-            this.audioOffloadChecked = DEFAULT_AUDIO_OFFLOAD_CHECKED
-            preferences[AUDIO_OFFLOAD_CHECKED_KEY] = this.audioOffloadChecked
-        }
+        PlaybackSettings.resetBatterySettings(context = context)
     }
 
     suspend fun resetPlaybackBehaviorSettings(context: Context) {
-        context.dataStore.edit { preferences: MutablePreferences ->
-            this.playbackWhenClosedChecked = DEFAULT_PLAYBACK_WHEN_CLOSED_CHECKED
-            this.pauseIfNoisyChecked = DEFAULT_PAUSE_IF_NOISY
-            this.pauseIfAnotherPlayback = DEFAULT_PAUSE_IF_ANOTHER_PLAYBACK_CHECKED
-            this.barSpeed = DEFAULT_BAR_SPEED_VALUE
-            preferences[PLAYBACK_WHEN_CLOSED_CHECKED_PREFERENCES_KEY] =
-                this.playbackWhenClosedChecked
-            preferences[PAUSE_IF_NOISY_PREFERENCES_KEY] = this.pauseIfNoisyChecked
-            preferences[PAUSE_IF_ANOTHER_PLAYBACK_KEY] = this.pauseIfAnotherPlayback
-            preferences[BAR_SPEED_KEY] = this.barSpeed.speed
-        }
+        PlaybackSettings.resetPlaybackBehaviorSettings(context = context)
     }
 
     suspend fun resetPlaybackModesSettings(context: Context) {
-        context.dataStore.edit { preferences: MutablePreferences ->
-            this.shuffleMode = DEFAULT_SHUFFLE_MODE
-            this.repeatMode = DEFAULT_REPEAT_MODE
-            this.forwardMs.longValue = DEFAULT_FORWARD_MS
-            this.rewindMs.longValue = DEFAULT_REWIND_MS
-            preferences[SHUFFLE_MODE_KEY] = this.shuffleMode
-            preferences[REPEAT_MODE_KEY] = this.repeatMode
-            preferences[FORWARD_MS_KEY] = this.forwardMs.longValue
-            preferences[REWIND_MS_KEY] = this.rewindMs.longValue
-        }
+        PlaybackSettings.resetPlaybackModesSettings(context = context)
     }
 
     suspend fun resetDefaultSearchFiltersSettings(context: Context) {

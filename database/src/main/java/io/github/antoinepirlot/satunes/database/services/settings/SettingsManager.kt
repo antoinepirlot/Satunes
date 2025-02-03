@@ -44,6 +44,7 @@ import io.github.antoinepirlot.satunes.database.models.BarSpeed
 import io.github.antoinepirlot.satunes.database.models.FoldersSelection
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.database.services.data.DataLoader
+import io.github.antoinepirlot.satunes.database.services.settings.navigation_bar.NavBarSettings
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -57,12 +58,6 @@ object SettingsManager {
     /**
      * DEFAULT VALUES
      */
-    private const val DEFAULT_FOLDERS_NAVBAR = true
-    private const val DEFAULT_ARTISTS_NAVBAR = true
-    private const val DEFAULT_ALBUMS_NAVBAR = true
-    private const val DEFAULT_GENRE_NAVBAR = true
-    private const val DEFAULT_PLAYLIST_NAVBAR = true
-    private val DEFAULT_DEFAULT_NAV_BAR_SECTION = NavBarSection.MUSICS
     private const val DEFAULT_PLAYBACK_WHEN_CLOSED_CHECKED =
         false //App stop after removed app from multi-task if false
     private const val DEFAULT_PAUSE_IF_NOISY = true
@@ -91,13 +86,6 @@ object SettingsManager {
      * KEYS
      */
     private val PREFERENCES_DATA_STORE = preferencesDataStore("settings")
-    private val FOLDERS_NAVBAR_PREFERENCES_KEY = booleanPreferencesKey("folders_navbar")
-    private val ARTISTS_NAVBAR_PREFERENCES_KEY = booleanPreferencesKey("artist_navbar")
-    private val ALBUMS_NAVBAR_PREFERENCES_KEY = booleanPreferencesKey("albums_navbar")
-    private val GENRES_NAVBAR_PREFERENCES_KEY = booleanPreferencesKey("genres_navbar")
-    private val PLAYLISTS_NAVBAR_PREFERENCES_KEY = booleanPreferencesKey("playlists_navbar")
-    private val DEFAULT_NAV_BAR_SECTION_KEY: Preferences.Key<Int> =
-        intPreferencesKey("default_nav_bar_section")
     private val PLAYBACK_WHEN_CLOSED_CHECKED_PREFERENCES_KEY =
         booleanPreferencesKey("playback_when_closed_checked")
     private val PAUSE_IF_NOISY_PREFERENCES_KEY = booleanPreferencesKey("pause_if_noisy")
@@ -134,10 +122,12 @@ object SettingsManager {
      * VARIABLES
      */
     private val _logger = SatunesLogger.getLogger()
-    private val Context.dataStore: DataStore<Preferences> by PREFERENCES_DATA_STORE
+    internal val Context.dataStore: DataStore<Preferences> by PREFERENCES_DATA_STORE
     private var _isLoaded: Boolean = false
 
-    var defaultNavBarSection: NavBarSection = DEFAULT_DEFAULT_NAV_BAR_SECTION
+    val defaultNavBarSection: NavBarSection
+        get() = NavBarSettings.defaultNavBarSection
+
     var playbackWhenClosedChecked: Boolean = DEFAULT_PLAYBACK_WHEN_CLOSED_CHECKED
         private set
     var pauseIfNoisyChecked: Boolean = DEFAULT_PAUSE_IF_NOISY
@@ -196,18 +186,7 @@ object SettingsManager {
             return
         }
         context.dataStore.data.map { preferences: Preferences ->
-            NavBarSection.FOLDERS.isEnabled.value =
-                preferences[FOLDERS_NAVBAR_PREFERENCES_KEY] ?: DEFAULT_FOLDERS_NAVBAR
-            NavBarSection.ARTISTS.isEnabled.value =
-                preferences[ARTISTS_NAVBAR_PREFERENCES_KEY] ?: DEFAULT_ARTISTS_NAVBAR
-            NavBarSection.ALBUMS.isEnabled.value =
-                preferences[ALBUMS_NAVBAR_PREFERENCES_KEY] ?: DEFAULT_ALBUMS_NAVBAR
-            NavBarSection.GENRES.isEnabled.value =
-                preferences[GENRES_NAVBAR_PREFERENCES_KEY] ?: DEFAULT_GENRE_NAVBAR
-            NavBarSection.PLAYLISTS.isEnabled.value =
-                preferences[PLAYLISTS_NAVBAR_PREFERENCES_KEY] ?: DEFAULT_PLAYLIST_NAVBAR
-
-            defaultNavBarSection = getNavBarSection(preferences[DEFAULT_NAV_BAR_SECTION_KEY])
+            NavBarSettings.loadSettings(context = context)
 
             playbackWhenClosedChecked =
                 preferences[PLAYBACK_WHEN_CLOSED_CHECKED_PREFERENCES_KEY]
@@ -250,22 +229,6 @@ object SettingsManager {
             loadFilters(context = context)
         }.first()
         _isLoaded = true
-    }
-
-    private fun getNavBarSection(id: Int?): NavBarSection {
-        var navBarSection: NavBarSection = when (id) {
-            0 -> NavBarSection.FOLDERS
-            1 -> NavBarSection.ARTISTS
-            2 -> NavBarSection.MUSICS
-            3 -> NavBarSection.ALBUMS
-            4 -> NavBarSection.GENRES
-            5 -> NavBarSection.PLAYLISTS
-            else -> DEFAULT_DEFAULT_NAV_BAR_SECTION
-        }
-        if (!navBarSection.isEnabled.value) {
-            navBarSection = DEFAULT_DEFAULT_NAV_BAR_SECTION
-        }
-        return navBarSection
     }
 
     private fun getBarSpeed(speed: Float?): BarSpeed {
@@ -319,52 +282,7 @@ object SettingsManager {
     }
 
     suspend fun switchNavBarSection(context: Context, navBarSection: NavBarSection) {
-        when (navBarSection) {
-            NavBarSection.FOLDERS -> {
-                context.dataStore.edit { preferences: MutablePreferences ->
-                    NavBarSection.FOLDERS.isEnabled.value = !NavBarSection.FOLDERS.isEnabled.value
-                    preferences[FOLDERS_NAVBAR_PREFERENCES_KEY] =
-                        NavBarSection.FOLDERS.isEnabled.value
-                }
-            }
-
-            NavBarSection.ARTISTS -> {
-                context.dataStore.edit { preferences: MutablePreferences ->
-                    NavBarSection.ARTISTS.isEnabled.value = !NavBarSection.ARTISTS.isEnabled.value
-                    preferences[ARTISTS_NAVBAR_PREFERENCES_KEY] =
-                        NavBarSection.ARTISTS.isEnabled.value
-                }
-            }
-
-            NavBarSection.ALBUMS -> {
-                context.dataStore.edit { preferences: MutablePreferences ->
-                    NavBarSection.ALBUMS.isEnabled.value = !NavBarSection.ALBUMS.isEnabled.value
-                    preferences[ALBUMS_NAVBAR_PREFERENCES_KEY] =
-                        NavBarSection.ALBUMS.isEnabled.value
-                }
-            }
-
-            NavBarSection.GENRES -> {
-                context.dataStore.edit { preferences: MutablePreferences ->
-                    NavBarSection.GENRES.isEnabled.value = !NavBarSection.GENRES.isEnabled.value
-                    preferences[GENRES_NAVBAR_PREFERENCES_KEY] =
-                        NavBarSection.GENRES.isEnabled.value
-                }
-            }
-
-            NavBarSection.PLAYLISTS -> {
-                context.dataStore.edit { preferences: MutablePreferences ->
-                    NavBarSection.PLAYLISTS.isEnabled.value =
-                        !NavBarSection.PLAYLISTS.isEnabled.value
-                    preferences[PLAYLISTS_NAVBAR_PREFERENCES_KEY] =
-                        NavBarSection.PLAYLISTS.isEnabled.value
-                }
-            }
-
-            NavBarSection.MUSICS -> {
-                /* DO NOTHING */
-            }
-        }
+        NavBarSettings.switchNavBarSection(context = context, navBarSection = navBarSection)
     }
 
     suspend fun switchPlaybackWhenClosedChecked(context: Context) {
@@ -551,10 +469,7 @@ object SettingsManager {
     }
 
     suspend fun selectDefaultNavBarSection(context: Context, navBarSection: NavBarSection) {
-        context.dataStore.edit { preferences: MutablePreferences ->
-            this.defaultNavBarSection = navBarSection
-            preferences[DEFAULT_NAV_BAR_SECTION_KEY] = this.defaultNavBarSection.id
-        }
+        NavBarSettings.selectDefaultNavBarSection(context = context, navBarSection = navBarSection)
     }
 
     suspend fun switchCompilationMusic(context: Context) {
@@ -662,16 +577,7 @@ object SettingsManager {
     }
 
     suspend fun resetNavigationBarSettings(context: Context) {
-        context.dataStore.edit { preferences: MutablePreferences ->
-            this.defaultNavBarSection = DEFAULT_DEFAULT_NAV_BAR_SECTION
-            NavBarSection.enableAll()
-            preferences[FOLDERS_NAVBAR_PREFERENCES_KEY] = DEFAULT_FOLDERS_NAVBAR
-            preferences[ARTISTS_NAVBAR_PREFERENCES_KEY] = DEFAULT_ARTISTS_NAVBAR
-            preferences[ALBUMS_NAVBAR_PREFERENCES_KEY] = DEFAULT_ALBUMS_NAVBAR
-            preferences[GENRES_NAVBAR_PREFERENCES_KEY] = DEFAULT_GENRE_NAVBAR
-            preferences[PLAYLISTS_NAVBAR_PREFERENCES_KEY] = DEFAULT_PLAYLIST_NAVBAR
-            preferences[DEFAULT_NAV_BAR_SECTION_KEY] = DEFAULT_DEFAULT_NAV_BAR_SECTION.id
-        }
+        NavBarSettings.resetNavigationBarSettings(context = context)
     }
 
     suspend fun resetAll(context: Context) {

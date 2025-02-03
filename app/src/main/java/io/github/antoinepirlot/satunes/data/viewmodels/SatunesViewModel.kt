@@ -89,9 +89,6 @@ internal class SatunesViewModel : ViewModel() {
     @RequiresApi(Build.VERSION_CODES.M)
     private val _downloadStatus: MutableState<APKDownloadStatus> = UpdateCheckManager.downloadStatus
 
-    private val _foldersPathsSelectedSet: MutableState<Set<String>> =
-        SettingsManager.foldersPathsSelectedSet
-
     val uiState: StateFlow<SatunesUiState> = _uiState.asStateFlow()
     var defaultNavBarSection: NavBarSection by _defaultNavBarSection
         private set
@@ -115,7 +112,7 @@ internal class SatunesViewModel : ViewModel() {
     var downloadStatus: APKDownloadStatus by _downloadStatus
         private set
 
-    val foldersPathsSelectedSet: Set<String> by _foldersPathsSelectedSet
+    val foldersPathsSelectedSet: Collection<String> = SettingsManager.foldersPathsSelectedSet
 
     fun loadSettings() {
         try {

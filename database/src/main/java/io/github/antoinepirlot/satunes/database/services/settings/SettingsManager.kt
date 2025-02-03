@@ -24,7 +24,6 @@ package io.github.antoinepirlot.satunes.database.services.settings
 
 import android.content.Context
 import android.net.Uri
-import androidx.compose.runtime.MutableState
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.MutablePreferences
 import androidx.datastore.preferences.core.Preferences
@@ -114,7 +113,7 @@ object SettingsManager {
     var foldersSelectionSelected: FoldersSelection = LibrarySettings.foldersSelectionSelected
         private set
 
-    var foldersPathsSelectedSet: MutableState<Set<String>> = LibrarySettings.foldersPathsSelectedSet
+    var foldersPathsSelectedSet: Collection<String> = LibrarySettings.foldersPathsSelectedCollection
         private set
 
     /**

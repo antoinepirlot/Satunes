@@ -49,7 +49,7 @@ internal fun FoldersPathsSelection(
         modifier = modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        for (path: String in satunesViewModel.foldersPathsSelectedSet.toList()) {
+        for (path: String in satunesViewModel.foldersPathsSelectedSet) {
             FolderPathRow(path = path)
             if (path == satunesViewModel.foldersPathsSelectedSet.last())
                 FoldersPathButtons()

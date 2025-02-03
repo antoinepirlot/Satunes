@@ -57,8 +57,8 @@ internal fun InformationDialog(
         title = {
             Title(text = title, fontSize = 25.sp, maxLines = 2)
         },
-        text = {
-            if (text != null) {
+        text = if (text != null) {
+            {
                 val scrollState = rememberScrollState()
                 NormalText(
                     modifier = Modifier.verticalScroll(scrollState),
@@ -66,7 +66,7 @@ internal fun InformationDialog(
                     maxLines = Int.MAX_VALUE
                 )
             }
-        },
+        } else null,
         onDismissRequest = onDismissRequest,
         confirmButton = {
             TextButton(onClick = onConfirm ?: onDismissRequest) {

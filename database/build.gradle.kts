@@ -91,7 +91,8 @@ dependencies {
     /**
      * ID3 tags
      */
-    implementation(libs.mp3agic)
+//    implementation(libs.mp3agic)
+    implementation(libs.jaudiotagger)
 
     /**
      * Icons

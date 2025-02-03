@@ -22,10 +22,8 @@
 
 package io.github.antoinepirlot.satunes.database.services.data
 
-import android.content.ContentValues
+import android.content.ContentResolver
 import android.content.Context
-import android.net.Uri
-import android.provider.MediaStore
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import io.github.antoinepirlot.satunes.database.exceptions.MusicNotFoundException
@@ -36,6 +34,12 @@ import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
+import org.jaudiotagger.audio.AudioFileIO
+import org.jaudiotagger.audio.mp3.MP3File
+import org.jaudiotagger.tag.FieldKey
+import org.jaudiotagger.tag.id3.ID3v1Tag
+import java.io.File
+import java.io.InputStream
 import java.util.SortedMap
 import java.util.SortedSet
 
@@ -254,23 +258,28 @@ object DataManager {
      * @throws IllegalArgumentException if the [updatedMusic] is not valid.
      */
     fun updateMusic(context: Context, updatedMusic: Music, onError: (() -> Unit)?) {
-        val uri: Uri = updatedMusic.uri
-        val resolver = context.contentResolver
-
-        val songDetails = ContentValues().apply {
-            put(MediaStore.Audio.Media.IS_PENDING, 1)
-            put(MediaStore.Audio.Media.TITLE, updatedMusic.title)
-            put(MediaStore.Audio.Media.ARTIST, updatedMusic.title)
-        }
-
-        val selection = "${MediaStore.Audio.Media._ID} = ${updatedMusic.id}"
-//        val selectionArgs = arrayOf()
-
-        resolver.update(uri, songDetails, selection, null)
-
-        songDetails.clear()
-        songDetails.put(MediaStore.Audio.Media.IS_PENDING, 0)
-        resolver.update(uri, songDetails, selection, null)
+        val resolver: ContentResolver = context.contentResolver
+        val outputFile = File(updatedMusic.absolutePath)
+        resolver.openInputStream(updatedMusic.uri)
+            ?.use { stream -> outputFile.copyInputStreamToFile(stream, updatedMusic) }
+//        val mp3File = Mp3File(updatedMusic.absolutePath)
+//        if(mp3File.hasId3v2Tag()) {
+//            mp3File.id3v2Tag.title = updatedMusic.title
+//        }
+//        context.contentResolver.openOutputStream(updatedMusic.uri, "w")?.use { stream ->
+//            stream.write(outputFile.readBytes())
+//        }
     }
 
+    private fun File.copyInputStreamToFile(inputStream: InputStream?, updatedMusic: Music) {
+        this.outputStream().use { fileOut ->
+            inputStream?.copyTo(fileOut)
+            val mp3File: MP3File = AudioFileIO.read(this) as MP3File
+            val tags: ID3v1Tag = mp3File.iD3v1Tag
+            println(tags.title)
+            tags.setField(FieldKey.TITLE, updatedMusic.title)
+            mp3File.commit()
+            fileOut.close()
+        }
+    }
 }

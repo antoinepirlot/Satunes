@@ -23,9 +23,6 @@
 package io.github.antoinepirlot.satunes.database.services.settings.playback
 
 import android.content.Context
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableLongStateOf
-import androidx.compose.runtime.setValue
 import androidx.datastore.preferences.core.MutablePreferences
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -93,9 +90,9 @@ internal object PlaybackSettings {
         private set
     var audioOffloadChecked: Boolean = DEFAULT_AUDIO_OFFLOAD_CHECKED
         private set
-    var forwardMs: Long by mutableLongStateOf(DEFAULT_FORWARD_MS)
+    var forwardMs: Long = DEFAULT_FORWARD_MS
         private set
-    var rewindMs: Long by mutableLongStateOf(DEFAULT_REWIND_MS)
+    var rewindMs: Long = DEFAULT_REWIND_MS
         private set
 
     suspend fun loadSettings(context: Context) {

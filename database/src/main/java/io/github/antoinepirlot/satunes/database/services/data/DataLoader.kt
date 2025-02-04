@@ -122,8 +122,8 @@ object DataLoader {
         this.selection_args = arrayOf()
 
         val foldersSelection: FoldersSelection = SettingsManager.foldersSelectionSelected
-        for (path: String in SettingsManager.foldersPathsSelectedSet.value) {
-            if (path != SettingsManager.foldersPathsSelectedSet.value.first()) {
+        for (path: String in SettingsManager.foldersPathsSelectedSet) {
+            if (path != SettingsManager.foldersPathsSelectedSet.first()) {
                 this.selection += foldersSelection.andOrQueryAttribute + ' '
             }
             this.selection += "${MediaStore.Audio.Media.DATA} "

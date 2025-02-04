@@ -130,4 +130,5 @@
     <string name="sort_list_title">Sort</string>
     <string name="show_first_letter_setting_content">Show first letter</string>
     <string name="unknown_year">Unknown Year</string>
+    <string name="playback_ui_settings_title">Interface</string>
 </resources>

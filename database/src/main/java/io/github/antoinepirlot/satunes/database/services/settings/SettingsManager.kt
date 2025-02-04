@@ -48,7 +48,8 @@ object SettingsManager {
     private var _isLoaded: Boolean = false
 
     // Satunes Settings
-    val whatsNewSeen: Boolean = SatunesSettings.whatsNewSeen
+    val whatsNewSeen: Boolean
+        get() = SatunesSettings.whatsNewSeen
 
     // NavBarSettings
     val defaultNavBarSection: NavBarSection

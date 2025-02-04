@@ -31,8 +31,10 @@ import androidx.compose.material.icons.rounded.AccountCircle
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.AddToQueue
 import androidx.compose.material.icons.rounded.Album
+import androidx.compose.material.icons.rounded.ArrowDownward
 import androidx.compose.material.icons.rounded.ArrowDropDown
 import androidx.compose.material.icons.rounded.ArrowDropUp
+import androidx.compose.material.icons.rounded.ArrowUpward
 import androidx.compose.material.icons.rounded.BatterySaver
 import androidx.compose.material.icons.rounded.Category
 import androidx.compose.material.icons.rounded.CleaningServices
@@ -186,4 +188,6 @@ enum class SatunesIcons(
     WARNING(imageVector = Icons.Rounded.Warning, description = "Warning Icon"),
     TITLE(imageVector = Icons.Rounded.Title, description = "Title Icon"),
     YEARS(imageVector = Icons.Rounded.DateRange, description = "Years Icon"),
+    MOVE_UP(imageVector = Icons.Rounded.ArrowUpward, description = "Move Up Icon"),
+    MOVE_DOWN(imageVector = Icons.Rounded.ArrowDownward, description = "Move Down Icon")
 }

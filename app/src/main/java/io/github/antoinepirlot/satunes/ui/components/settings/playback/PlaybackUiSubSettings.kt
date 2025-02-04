@@ -28,6 +28,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
+import io.github.antoinepirlot.satunes.ui.components.settings.playback.custom_actions.CustomActionsSettings
 
 /**
  * @author Antoine Pirlot 04/02/2025
@@ -38,7 +39,7 @@ fun PlaybackUiSubSettings(modifier: Modifier = Modifier) {
         modifier = modifier,
         title = stringResource(R.string.playback_ui_settings_title)
     ) {
-        //TODO
+        CustomActionsSettings()
     }
 }
 

@@ -35,6 +35,7 @@ import io.github.antoinepirlot.satunes.data.states.PlaybackUiState
 import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.database.models.custom_action.CustomActions
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.models.ProgressBarLifecycleCallbacks
 import io.github.antoinepirlot.satunes.models.Timer
@@ -81,6 +82,7 @@ class PlaybackViewModel : ViewModel() {
     val isEnded: Boolean by _isEnded
     val forwardMs: Long = SettingsManager.forwardMs
     val rewindMs: Long = SettingsManager.rewindMs
+    val customActionsOrder: Collection<CustomActions> = SettingsManager.customActionsOrder
 
     init {
         // Needed to refresh progress bar

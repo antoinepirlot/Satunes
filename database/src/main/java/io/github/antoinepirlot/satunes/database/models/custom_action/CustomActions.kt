@@ -22,6 +22,8 @@
 
 package io.github.antoinepirlot.satunes.database.models.custom_action
 
+import io.github.antoinepirlot.satunes.database.R
+import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import kotlinx.serialization.Serializable
 
 
@@ -29,9 +31,12 @@ import kotlinx.serialization.Serializable
  * @author Antoine Pirlot 04/02/2025
  */
 @Serializable
-enum class CustomActions {
-    LIKE,
-    ADD_TO_PLAYLIST,
-    SHARE,
-    TIMER,
+enum class CustomActions(val stringId: Int? = null, val icon: SatunesIcons) {
+    LIKE(icon = SatunesIcons.LIKED),
+    ADD_TO_PLAYLIST(
+        stringId = R.string.custom_action_add_to_playlist,
+        icon = SatunesIcons.PLAYLIST_ADD
+    ),
+    SHARE(icon = SatunesIcons.SHARE),
+    TIMER(icon = SatunesIcons.TIMER),
 }

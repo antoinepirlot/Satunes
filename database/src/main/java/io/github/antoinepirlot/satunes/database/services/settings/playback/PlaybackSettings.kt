@@ -30,11 +30,15 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.floatPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.longPreferencesKey
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.media3.common.Player
 import io.github.antoinepirlot.satunes.database.models.BarSpeed
+import io.github.antoinepirlot.satunes.database.models.custom_action.CustomActions
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager.dataStore
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 /**
  * @author Antoine Pirlot 03/02/2025
@@ -52,6 +56,12 @@ internal object PlaybackSettings {
     private const val DEFAULT_AUDIO_OFFLOAD_CHECKED: Boolean = false
     private const val DEFAULT_FORWARD_MS: Long = 5000L
     private const val DEFAULT_REWIND_MS: Long = DEFAULT_FORWARD_MS
+    private val DEFAULT_CUSTOM_ACTIONS_ORDER: Collection<CustomActions> = setOf(
+        CustomActions.LIKE,
+        CustomActions.ADD_TO_PLAYLIST,
+        CustomActions.SHARE,
+        CustomActions.TIMER
+    )
 
     // KEYS
 
@@ -73,6 +83,8 @@ internal object PlaybackSettings {
         longPreferencesKey("forward_ms")
     private val REWIND_MS_KEY: Preferences.Key<Long> =
         longPreferencesKey("rewind_ms")
+    private val CUSTOM_ACTIONS_ORDER_KEY: Preferences.Key<String> =
+        stringPreferencesKey("custom_actions_order")
 
     // VARIABLES
 
@@ -94,6 +106,7 @@ internal object PlaybackSettings {
         private set
     var rewindMs: Long = DEFAULT_REWIND_MS
         private set
+    var customActionsOrder: Collection<CustomActions> = DEFAULT_CUSTOM_ACTIONS_ORDER
 
     suspend fun loadSettings(context: Context) {
         context.dataStore.data.map { preferences: Preferences ->
@@ -120,6 +133,11 @@ internal object PlaybackSettings {
 
             forwardMs = preferences[FORWARD_MS_KEY] ?: DEFAULT_FORWARD_MS
             rewindMs = preferences[REWIND_MS_KEY] ?: DEFAULT_REWIND_MS
+
+            customActionsOrder = if (preferences[CUSTOM_ACTIONS_ORDER_KEY] != null)
+                Json.decodeFromString(preferences[CUSTOM_ACTIONS_ORDER_KEY]!!)
+            else DEFAULT_CUSTOM_ACTIONS_ORDER
+
         }.first() //Without .first() settings are not loaded correctly
     }
 
@@ -244,6 +262,16 @@ internal object PlaybackSettings {
             preferences[REPEAT_MODE_KEY] = this.repeatMode
             preferences[FORWARD_MS_KEY] = this.forwardMs
             preferences[REWIND_MS_KEY] = this.rewindMs
+        }
+    }
+
+    suspend fun updateCustomActionsOrder(
+        context: Context,
+        newCustomActions: Collection<CustomActions>
+    ) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            this.customActionsOrder = newCustomActions.toSet()
+            preferences[CUSTOM_ACTIONS_ORDER_KEY] = Json.encodeToString(this.customActionsOrder)
         }
     }
 }

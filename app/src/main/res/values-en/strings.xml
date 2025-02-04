@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <resources>
     <string name="play_all">Shuffle All Musics</string>
     <string name="navigation_bar_settings_title">Navigation Bar</string>
     <string name="this_device">This Device</string>
     <string name="external_storage">External Storage</string>
     <string name="playback_settings">Playback</string>
-    <string name="playback_when_paused">Playback if the app is closed</string>
+    <string name="playback_when_paused">Playback if the Satunes is closed</string>
     <string name="pause_if_noisy">Pause if headset is unplugged</string>
     <string name="playlist_form">Playlist Name</string>
     <string name="create_playlist">Create a new playlist</string>
@@ -38,16 +37,19 @@
     <string name="_import">Import</string>
     <string name="no_file_created">No file created</string>
     <string name="read_audio_permission">Music and audio</string>
+    <string name="permissions" translatable="false">Permissions</string>
     <string name="ask_permission">Allow</string>
     <string name="read_external_storage_permission">Read Storage</string>
+    <string name="ok" translatable="false">OK</string>
     <string name="repeat_mode">"Repeat Mode: "</string>
     <string name="playback_mode_settings">Default Playback Modes</string>
     <string name="pause_if_another_playback">Pause if another app is playing</string>
     <string name="update_title">Update Name</string>
     <string name="title">Title</string>
-    <string name="playlists_settings_content">You can export/import your playlists.\n\nYou can move the file into a new folder or replace it (it must have the same file name), in these case Satunes will detect the modification and apply it to existing data.\n\nBut, if you both replace and move the file in another folder, then, Satunes won\'t be able to detect the modification and remove it from playlist(s).</string>
-    <string name="android_auto_content">To activate Android Auto you must carry out the following steps:\n\n1) Go to Android Auto settings.\n\n2) Multiple click on \"Version\" to activate dev mode.\n\n3) Go to Dev\'s settings and activate \"Unknown sources\" as this app is not published on Google Play Store.\n\n4) Click on the 3 buttons as in point 3, but click on \"Exit developer mode\" the setting you just activated will be saved.\n\n5) Add app in launcher.\n\n6) Enjoy</string>
+    <string name="playlists_settings_content">You can export/import your playlists.\n\nYou can move the file into a new folder or replace it (it must have the same file name), in these case Satunes will detect the modification and apply it to existing data.\n\nBut, if you both replace and move the file in another folder, then, Satunes won\'t be able to detect the modification.</string>
+    <string name="android_auto_content">To activate Android Auto you must carry out the following steps:\n\n1) Go to Android Auto settings.\n\n2) Multiple click on \"Version\" to activate dev mode.\n\n3) Go to Dev\'s settings and activate \"Unknown sources\" as Satunes is not published on Google Play Store.\n\n4) Click on the 3 buttons as in point 3, but click on \"Exit developer mode\" the setting you just activated will be saved.\n\n5) Add Satunes in launcher.\n\n6) Enjoy</string>
     <string name="battery_settings">Battery</string>
+    <string name="audio_offload" translatable="false">Audio Offload</string>
     <string name="audio_offload_info">This parameter allows you to send audio treatment to a dedicated process.\nThis reduces energy consumption.\n\nHowever, in the Media 3 library used in Satunes, this can cause compatibility issues which results in audio cuts. A known issue is that the music is stopping during playback or after the end of a song.\n\nBy activating this parameter, you reduce energy consumption and increase the  battery life but you are likely to meet audio cuts.\n\nI hope that in a nearby future, the problem will be resolved by Google which holds the Media3 and Exoplayer libraries. In the meantime, I try to find viable solutions to reduce energy consumption by Satunes.</string>
     <string name="restart_required">Restart required</string>
     <string name="add_to_queue">Add to queue</string>
@@ -61,11 +63,11 @@
     <string name="click_here">click here</string>
     <string name="search_setting_title">Search</string>
     <string name="default_filter_setting_title">Default filters</string>
-    <string name="remove_dialog_title">Removing Confirmation</string>
+    <string name="remove_dialog_title">You can export logs to send me them by email.  With these logs I can understand more about what\'s wrong with Satunes.  Logs files contain informations about what Satunes does and its state. These informations includes: - Dates - Process - Satunes\' states  In these logs, there\'s not confidential informations as music informations or data that can identify you.  If you\'re not convinced, you can choose to describe me the problem but it will be more difficult to fix issues.</string>
     <string name="remove_submit">Delete</string>
     <string name="see_on_fdroid">Open in F-Droid</string>
     <string name="logs_settings">Logs</string>
-    <string name="logs_settings_content">You can export logs to send me them by email.\n\nWith these logs I can understand more about what\'s wrong with the app.\n\nLogs files contain informations about what the app does and its state.\nThese informations includes:\n- Dates\n- Process\n- App state\n\nIn these logs, there\'s not confidential informations as music informations or data that can identify you.\n\nIf you\'re not convinced, you can choose to describe me the problem but it will be more difficult to fix issues.</string>
+    <string name="logs_settings_content">You can export logs to send me them by email at: antoinepirlot@proton.me.\n\nWith these logs I can understand more about what\'s wrong with Satunes.\n\nLogs files contain informations about what Satunes does and its state.\nThese informations include:\n- Dates\n- Process\n- Satunes state\n\nIn these logs, there\'s not confidential informations as musics information or data that can identify you.\n\nIf you\'re not convinced, you can choose to describe me the problem but it will be more difficult for me to fix it.</string>
     <string name="update_modal_permanently">You won\'t see this modal again until the next update</string>
     <string name="canceled">Canceled</string>
     <string name="insert_music_to_playlists_success">has been added to the playlist(s)</string>
@@ -76,7 +78,7 @@
     <string name="add_to_queue_success">has been added at the end of the current playback queue.</string>
     <string name="remove_from_playlist_success">has been removed from</string>
     <string name="remove_playlist_success">has been removed.</string>
-    <string name="remove_from_likes_success">You don\'t like %1$s anymore.</string>
+    <string name="remove_from_likes_success">ou don\'t like %1$s anymore.</string>
     <string name="update_playlist_success">%1$s has been updated.</string>
     <string name="bar_speed_label">Speed</string>
     <string name="update_modal_not_permanently">The modal will still be shown at next launch.</string>

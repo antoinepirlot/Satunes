@@ -117,7 +117,7 @@ object SettingsManager {
         _isLoaded = true
     }
 
-    fun loadFilters(context: Context) {
+    suspend fun loadFilters(context: Context) {
         SearchSettings.loadSettings(context = context)
     }
 

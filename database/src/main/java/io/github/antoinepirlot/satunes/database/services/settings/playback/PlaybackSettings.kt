@@ -36,6 +36,7 @@ import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.media3.common.Player
 import io.github.antoinepirlot.satunes.database.models.BarSpeed
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager.dataStore
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
 /**
@@ -97,7 +98,7 @@ internal object PlaybackSettings {
     var rewindMs: Long by mutableLongStateOf(DEFAULT_REWIND_MS)
         private set
 
-    fun loadSettings(context: Context) {
+    suspend fun loadSettings(context: Context) {
         context.dataStore.data.map { preferences: Preferences ->
 
             playbackWhenClosedChecked =
@@ -122,7 +123,7 @@ internal object PlaybackSettings {
 
             forwardMs = preferences[FORWARD_MS_KEY] ?: DEFAULT_FORWARD_MS
             rewindMs = preferences[REWIND_MS_KEY] ?: DEFAULT_REWIND_MS
-        }
+        }.first() //Without .first() settings are not loaded correctly
     }
 
     private fun getBarSpeed(speed: Float?): BarSpeed {

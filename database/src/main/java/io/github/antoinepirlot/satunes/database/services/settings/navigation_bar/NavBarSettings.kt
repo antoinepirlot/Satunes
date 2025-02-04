@@ -31,6 +31,7 @@ import androidx.datastore.preferences.core.intPreferencesKey
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager.dataStore
 import io.github.antoinepirlot.satunes.database.utils.getNavBarSection
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
 /**
@@ -63,9 +64,8 @@ internal object NavBarSettings {
     var defaultNavBarSection: NavBarSection = DEFAULT_DEFAULT_NAV_BAR_SECTION
         private set
 
-    internal fun loadSettings(context: Context) {
+    internal suspend fun loadSettings(context: Context) {
         context.dataStore.data.map { preferences: Preferences ->
-
             NavBarSection.FOLDERS.isEnabled.value =
                 preferences[FOLDERS_NAVBAR_PREFERENCES_KEY] ?: DEFAULT_FOLDERS_NAVBAR
             NavBarSection.ARTISTS.isEnabled.value =
@@ -78,7 +78,7 @@ internal object NavBarSettings {
                 preferences[PLAYLISTS_NAVBAR_PREFERENCES_KEY] ?: DEFAULT_PLAYLIST_NAVBAR
 
             defaultNavBarSection = getNavBarSection(preferences[DEFAULT_NAV_BAR_SECTION_KEY])
-        }
+        }.first() //Without .first() settings are not loaded correctly
     }
 
     internal suspend fun switchNavBarSection(context: Context, navBarSection: NavBarSection) {

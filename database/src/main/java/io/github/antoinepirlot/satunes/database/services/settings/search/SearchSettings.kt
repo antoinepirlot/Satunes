@@ -29,6 +29,7 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager.dataStore
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
 /**
@@ -74,7 +75,7 @@ internal object SearchSettings {
     var musicsFilter: Boolean = DEFAULT_MUSICS_FILTER
         private set
 
-    fun loadSettings(context: Context) {
+    suspend fun loadSettings(context: Context) {
         context.dataStore.data.map { preferences: Preferences ->
             this.foldersFilter = preferences[FOLDERS_FILTER_KEY] ?: DEFAULT_FOLDERS_FILTER
             this.artistsFilter = preferences[ARTISTS_FILTER_KEY] ?: DEFAULT_ARTISTS_FILTER
@@ -83,7 +84,7 @@ internal object SearchSettings {
             this.playlistsFilter =
                 preferences[PLAYLISTS_FILTER_KEY] ?: DEFAULT_PLAYLISTS_FILTER
             this.musicsFilter = preferences[MUSICS_FILTER_KEY] ?: DEFAULT_MUSICS_FILTER
-        }
+        }.first() //Without .first() settings are not loaded correctly
     }
 
     suspend fun switchFilter(context: Context, filterSetting: NavBarSection) {

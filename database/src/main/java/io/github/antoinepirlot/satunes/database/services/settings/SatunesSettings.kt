@@ -29,6 +29,7 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager.dataStore
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
 /**
@@ -66,13 +67,13 @@ internal object SatunesSettings {
                     this@SatunesSettings.unSeeWhatsNew(context = context)
                 }
             }
-        }
+        }.first() //Without .first() settings are not loaded correctly
     }
 
     suspend fun seeWhatsNew(context: Context) {
         context.dataStore.edit { preferences: MutablePreferences ->
             this.whatsNewSeen = true
-            preferences[WHATS_NEW_SEEN_KEY] = this.whatsNewSeen
+            preferences[WHATS_NEW_SEEN_KEY] = true
             val packageManager = context.packageManager
             val packageInfo = packageManager.getPackageInfo(context.packageName, 0)
             val versionName = 'v' + packageInfo.versionName!!

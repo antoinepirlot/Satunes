@@ -33,6 +33,7 @@ import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import io.github.antoinepirlot.satunes.database.models.FoldersSelection
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager.dataStore
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
 /**
@@ -79,7 +80,7 @@ internal object LibrarySettings {
     var showFirstLetter: Boolean = DEFAULT_SHOW_FIRST_LETTER
         private set
 
-    fun loadSettings(context: Context) {
+    suspend fun loadSettings(context: Context) {
         context.dataStore.data.map { preferences: Preferences ->
             foldersSelectionSelected =
                 getFoldersSelection(preferences[FOLDERS_SELECTION_SELECTED_KEY])
@@ -93,7 +94,7 @@ internal object LibrarySettings {
 
             artistReplacement = preferences[ARTISTS_REPLACEMENT_KEY] ?: DEFAULT_ARTISTS_REPLACEMENT
             showFirstLetter = preferences[SHOW_FIRST_LETTER_KEY] ?: DEFAULT_SHOW_FIRST_LETTER
-        }
+        }.first() //Without .first() settings are not loaded correctly
     }
 
     private fun getFoldersSelection(id: Int?): FoldersSelection {

@@ -36,7 +36,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
+import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.database.models.custom_action.CustomActions
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.buttons.IconButton
@@ -48,6 +50,7 @@ import io.github.antoinepirlot.satunes.ui.components.images.Icon
 @Composable
 fun CustomActionSettingRow(
     modifier: Modifier = Modifier,
+    playbackViewModel: PlaybackViewModel = viewModel(),
     customAction: CustomActions
 ) {
     Row(
@@ -69,8 +72,14 @@ fun CustomActionSettingRow(
             }
         }
         Column {
-            IconButton(icon = SatunesIcons.MOVE_UP, onClick = {})
-            IconButton(icon = SatunesIcons.MOVE_DOWN, onClick = {})
+            if (playbackViewModel.customActionsOrder.first() != customAction)
+                IconButton(
+                    icon = SatunesIcons.MOVE_UP,
+                    onClick = { playbackViewModel.moveUp(customAction = customAction) })
+            if (playbackViewModel.customActionsOrder.last() != customAction)
+                IconButton(
+                    icon = SatunesIcons.MOVE_DOWN,
+                    onClick = { playbackViewModel.moveDown(customAction = customAction) })
         }
     }
 }

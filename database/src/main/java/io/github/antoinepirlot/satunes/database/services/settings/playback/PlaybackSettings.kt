@@ -23,6 +23,7 @@
 package io.github.antoinepirlot.satunes.database.services.settings.playback
 
 import android.content.Context
+import androidx.compose.runtime.mutableStateListOf
 import androidx.datastore.preferences.core.MutablePreferences
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -56,7 +57,7 @@ internal object PlaybackSettings {
     private const val DEFAULT_AUDIO_OFFLOAD_CHECKED: Boolean = false
     private const val DEFAULT_FORWARD_MS: Long = 5000L
     private const val DEFAULT_REWIND_MS: Long = DEFAULT_FORWARD_MS
-    private val DEFAULT_CUSTOM_ACTIONS_ORDER: Collection<CustomActions> = setOf(
+    private val DEFAULT_CUSTOM_ACTIONS_ORDER: MutableList<CustomActions> = mutableStateListOf(
         CustomActions.LIKE,
         CustomActions.ADD_TO_PLAYLIST,
         CustomActions.SHARE,
@@ -106,7 +107,7 @@ internal object PlaybackSettings {
         private set
     var rewindMs: Long = DEFAULT_REWIND_MS
         private set
-    var customActionsOrder: Collection<CustomActions> = DEFAULT_CUSTOM_ACTIONS_ORDER
+    var customActionsOrder: MutableList<CustomActions> = DEFAULT_CUSTOM_ACTIONS_ORDER
 
     suspend fun loadSettings(context: Context) {
         context.dataStore.data.map { preferences: Preferences ->
@@ -265,12 +266,22 @@ internal object PlaybackSettings {
         }
     }
 
-    suspend fun updateCustomActionsOrder(
-        context: Context,
-        newCustomActions: Collection<CustomActions>
-    ) {
+    suspend fun moveUp(context: Context, customAction: CustomActions) {
         context.dataStore.edit { preferences: MutablePreferences ->
-            this.customActionsOrder = newCustomActions.toSet()
+            val newIndex: Int = this.customActionsOrder.indexOf(customAction) - 1
+            if (newIndex < 0) return@edit //prevent crash if too fast
+            this.customActionsOrder.remove(element = customAction)
+            this.customActionsOrder.add(index = newIndex, element = customAction)
+            preferences[CUSTOM_ACTIONS_ORDER_KEY] = Json.encodeToString(this.customActionsOrder)
+        }
+    }
+
+    suspend fun moveDown(context: Context, customAction: CustomActions) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            val newIndex: Int = this.customActionsOrder.indexOf(customAction) + 1
+            if (newIndex > this.customActionsOrder.size) return@edit //prevent crash if too fast
+            this.customActionsOrder.remove(element = customAction)
+            this.customActionsOrder.add(index = newIndex, element = customAction)
             preferences[CUSTOM_ACTIONS_ORDER_KEY] = Json.encodeToString(this.customActionsOrder)
         }
     }

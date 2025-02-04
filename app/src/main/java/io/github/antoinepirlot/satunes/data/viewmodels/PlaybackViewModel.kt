@@ -45,10 +45,12 @@ import io.github.antoinepirlot.satunes.ui.utils.showSnackBar
 import io.github.antoinepirlot.satunes.utils.getMediaTitle
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 /**
@@ -489,6 +491,26 @@ class PlaybackViewModel : ViewModel() {
             _uiState.update { currentState: PlaybackUiState ->
                 currentState.copy(timerRemainingTime = timer.getRemainingTime())
             }
+        }
+    }
+
+    fun moveUp(customAction: CustomActions) {
+        //TODO use the new error handler system (implementation later)
+        CoroutineScope(Dispatchers.IO).launch {
+            SettingsManager.moveUp(
+                context = MainActivity.instance.applicationContext,
+                customAction = customAction
+            )
+        }
+    }
+
+    fun moveDown(customAction: CustomActions) {
+        //TODO use the new error handler system (implementation later)
+        CoroutineScope(Dispatchers.IO).launch {
+            SettingsManager.moveDown(
+                context = MainActivity.instance.applicationContext,
+                customAction = customAction
+            )
         }
     }
 }

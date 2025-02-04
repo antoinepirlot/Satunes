@@ -75,8 +75,7 @@ object SettingsManager {
         get() = PlaybackSettings.forwardMs
     val rewindMs: Long
         get() = PlaybackSettings.rewindMs
-    val customActionsOrder: Collection<CustomActions>
-        get() = PlaybackSettings.customActionsOrder
+    val customActionsOrder: Collection<CustomActions> = PlaybackSettings.customActionsOrder
 
     // Search Settings
     val foldersFilter: Boolean
@@ -256,14 +255,12 @@ object SettingsManager {
         NavBarSettings.resetNavigationBarSettings(context = context)
     }
 
-    suspend fun updateCustomActionsOrder(
-        context: Context,
-        newCustomActions: Collection<CustomActions>
-    ) {
-        PlaybackSettings.updateCustomActionsOrder(
-            context = context,
-            newCustomActions = newCustomActions
-        )
+    suspend fun moveUp(context: Context, customAction: CustomActions) {
+        PlaybackSettings.moveUp(context = context, customAction = customAction)
+    }
+
+    suspend fun moveDown(context: Context, customAction: CustomActions) {
+        PlaybackSettings.moveDown(context = context, customAction = customAction)
     }
 
     suspend fun resetAll(context: Context) {

@@ -135,9 +135,10 @@ internal object PlaybackSettings {
             forwardMs = preferences[FORWARD_MS_KEY] ?: DEFAULT_FORWARD_MS
             rewindMs = preferences[REWIND_MS_KEY] ?: DEFAULT_REWIND_MS
 
-            customActionsOrder = if (preferences[CUSTOM_ACTIONS_ORDER_KEY] != null)
-                Json.decodeFromString(preferences[CUSTOM_ACTIONS_ORDER_KEY]!!)
-            else DEFAULT_CUSTOM_ACTIONS_ORDER
+            if (preferences[CUSTOM_ACTIONS_ORDER_KEY] != null) {
+                this.customActionsOrder.clear()
+                this.customActionsOrder.addAll(Json.decodeFromString(preferences[CUSTOM_ACTIONS_ORDER_KEY]!!))
+            }
 
         }.first() //Without .first() settings are not loaded correctly
     }

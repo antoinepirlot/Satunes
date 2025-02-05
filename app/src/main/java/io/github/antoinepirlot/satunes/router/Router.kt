@@ -78,7 +78,15 @@ internal fun Router(
         defaultDestination =
             getNavBarSectionDestination(navBarSection = satunesUiState.defaultNavBarSection)
     }
+
     if (defaultDestination == null) return
+
+    LaunchedEffect(key1 = Unit) {
+        if (satunesUiState.defaultPlaylist != null) {
+            navController.navigate(Destination.PLAYLISTS.link)
+            navController.navigate(Destination.PLAYLISTS.link + "/${satunesUiState.defaultPlaylist!!.id}")
+        }
+    }
 
     // Start handle destination change
     val currentBackStackEntry by navController.currentBackStackEntryAsState()

@@ -27,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.database.models.custom_action.CustomActions
@@ -44,6 +45,7 @@ fun CustomActionsSubSettings(
         modifier = modifier,
         title = stringResource(R.string.custom_actions_sub_settings_title)
     ) {
+        NormalText(text = stringResource(id = R.string.custom_actions_sub_settings_content))
         for (customAction: CustomActions in playbackViewModel.customActionsOrder)
             CustomActionSettingRow(customAction = customAction)
     }

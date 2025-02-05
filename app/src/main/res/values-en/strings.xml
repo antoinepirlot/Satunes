@@ -129,4 +129,5 @@
     <string name="unknown_year">Unknown Year</string>
     <string name="design_setting_title">Interface</string>
     <string name="custom_actions_sub_settings_title">Quick Actions</string>
+    <string name="custom_actions_sub_settings_content">This reorder the list of buttons in the playback view.</string>
 </resources>

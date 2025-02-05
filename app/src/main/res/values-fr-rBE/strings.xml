@@ -130,4 +130,5 @@
     <string name="unknown_year">Année Inconnue</string>
     <string name="design_setting_title">Interface</string>
     <string name="custom_actions_sub_settings_title">Actions Personalisées</string>
+    <string name="custom_actions_sub_settings_content">Ce paramètre permet de réorganiser la liste des boutons dans la page de lecture.</string>
 </resources>

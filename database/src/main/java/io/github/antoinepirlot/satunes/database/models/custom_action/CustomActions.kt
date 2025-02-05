@@ -38,5 +38,5 @@ enum class CustomActions(val stringId: Int? = null, val icon: SatunesIcons) {
         icon = SatunesIcons.PLAYLIST_ADD
     ),
     SHARE(icon = SatunesIcons.SHARE),
-    TIMER(icon = SatunesIcons.TIMER),
+    TIMER(icon = SatunesIcons.TIMER);
 }

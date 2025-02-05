@@ -33,6 +33,7 @@ import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.database.models.custom_action.CustomActions
 import io.github.antoinepirlot.satunes.database.services.data.DataLoader
+import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.settings.library.LibrarySettings
 import io.github.antoinepirlot.satunes.database.services.settings.navigation_bar.NavBarSettings
 import io.github.antoinepirlot.satunes.database.services.settings.playback.PlaybackSettings
@@ -57,7 +58,7 @@ object SettingsManager {
     val defaultNavBarSection: NavBarSection
         get() = NavBarSettings.defaultNavBarSection
     val defaultPlaylist: Playlist?
-        get() = NavBarSettings.defaultPlaylist
+        get() = DataManager.getPlaylist(id = NavBarSettings.defaultPlaylistId)
 
     // Playback Settings
     val playbackWhenClosedChecked: Boolean

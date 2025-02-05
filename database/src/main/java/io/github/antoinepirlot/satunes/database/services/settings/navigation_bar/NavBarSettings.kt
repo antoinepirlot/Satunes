@@ -31,7 +31,6 @@ import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.longPreferencesKey
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.database.models.Playlist
-import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager.dataStore
 import io.github.antoinepirlot.satunes.database.utils.getNavBarSection
 import kotlinx.coroutines.flow.first
@@ -48,7 +47,7 @@ internal object NavBarSettings {
     private const val DEFAULT_GENRE_NAVBAR: Boolean = true
     private const val DEFAULT_PLAYLIST_NAVBAR: Boolean = true
     internal val DEFAULT_DEFAULT_NAV_BAR_SECTION: NavBarSection = NavBarSection.MUSICS
-    private val DEFAULT_PLAYLIST: Playlist? = null
+    private val DEFAULT_PLAYLIST_ID: Long = -1
 
     // KEYS
     private val FOLDERS_NAVBAR_PREFERENCES_KEY: Preferences.Key<Boolean> =
@@ -63,13 +62,13 @@ internal object NavBarSettings {
         booleanPreferencesKey("playlists_navbar")
     private val DEFAULT_NAV_BAR_SECTION_KEY: Preferences.Key<Int> =
         intPreferencesKey("default_nav_bar_section")
-    private val DEFAULT_PLAYLIST_KEY: Preferences.Key<Long> =
+    private val DEFAULT_PLAYLIST_ID_KEY: Preferences.Key<Long> =
         longPreferencesKey("default_playlist_id_key")
 
     // VARIABLES
     var defaultNavBarSection: NavBarSection = DEFAULT_DEFAULT_NAV_BAR_SECTION
         private set
-    var defaultPlaylist: Playlist? = DEFAULT_PLAYLIST
+    var defaultPlaylistId: Long = DEFAULT_PLAYLIST_ID
         private set
 
     internal suspend fun loadSettings(context: Context) {
@@ -86,13 +85,8 @@ internal object NavBarSettings {
                 preferences[PLAYLISTS_NAVBAR_PREFERENCES_KEY] ?: DEFAULT_PLAYLIST_NAVBAR
 
             defaultNavBarSection = getNavBarSection(preferences[DEFAULT_NAV_BAR_SECTION_KEY])
-            defaultPlaylist = getPlaylist(id = preferences[DEFAULT_PLAYLIST_KEY] ?: -1)
+            defaultPlaylistId = preferences[DEFAULT_PLAYLIST_ID_KEY] ?: DEFAULT_PLAYLIST_ID
         }.first() //Without .first() settings are not loaded correctly
-    }
-
-    private fun getPlaylist(id: Long): Playlist? {
-        if (id < 0) return DEFAULT_PLAYLIST
-        return DataManager.getPlaylist(id = id)
     }
 
     internal suspend fun switchNavBarSection(context: Context, navBarSection: NavBarSection) {
@@ -165,8 +159,8 @@ internal object NavBarSettings {
 
     suspend fun selectDefaultPlaylist(context: Context, playlist: Playlist?) {
         context.dataStore.edit { preferences: MutablePreferences ->
-            this.defaultPlaylist = playlist
-            preferences[DEFAULT_PLAYLIST_KEY] = playlist?.id ?: -1
+            this.defaultPlaylistId = playlist?.id ?: DEFAULT_PLAYLIST_ID
+            preferences[DEFAULT_PLAYLIST_ID_KEY] = playlist?.id ?: DEFAULT_PLAYLIST_ID
         }
     }
 }

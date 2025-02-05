@@ -56,7 +56,7 @@ import androidx.compose.material.icons.rounded.LibraryMusic
 import androidx.compose.material.icons.rounded.LogoDev
 import androidx.compose.material.icons.rounded.MoreTime
 import androidx.compose.material.icons.rounded.MusicNote
-import androidx.compose.material.icons.rounded.Navigation
+import androidx.compose.material.icons.rounded.Palette
 import androidx.compose.material.icons.rounded.PauseCircle
 import androidx.compose.material.icons.rounded.PlayCircle
 import androidx.compose.material.icons.rounded.PlaylistRemove
@@ -101,7 +101,6 @@ enum class SatunesIcons(
     ),
     ARTIST(imageVector = Icons.Rounded.AccountCircle, description = "Artist Icon"),
     BATTERY(imageVector = Icons.Rounded.BatterySaver, description = "Battery Icon"),
-    BOTTOM_BAR(imageVector = Icons.Rounded.Navigation, description = "Bottom Bar Setting Icon"),
     CHIP_SELECTED(imageVector = Icons.Rounded.Done, description = "Chip Selected icon"),
     CLEANING(imageVector = Icons.Rounded.CleaningServices, description = "Cleaning Icon"),
     CLOSE_DROPDOWN_MENU(
@@ -116,6 +115,8 @@ enum class SatunesIcons(
     LIKED(imageVector = Icons.Rounded.Favorite, description = "Liked Icon"),
     FOLDER(imageVector = Icons.Rounded.Folder, description = "Folder Icon"),
     GENRES(imageVector = Icons.Rounded.Category, description = "Genre Icon"),
+    MOVE_DOWN(imageVector = Icons.Rounded.ArrowDownward, description = "Move Down Icon"),
+    MOVE_UP(imageVector = Icons.Rounded.ArrowUpward, description = "Move Up Icon"),
     MUSIC(imageVector = Icons.Rounded.MusicNote, description = "Music Icon"),
     MUSIC_PLAYING(imageVector = Icons.Rounded.GraphicEq, description = "Music Playing Icon"),
     OPEN_DROPDOWN_MENU(
@@ -148,10 +149,19 @@ enum class SatunesIcons(
         imageVector = Icons.Rounded.PlaylistRemove,
         description = "Playlist Remove Icon"
     ),
+    REFRESH(imageVector = Icons.Rounded.Refresh, description = "Refresh Icon"),
+    REMOVE_FROM_QUEUE(
+        imageVector = Icons.Rounded.RemoveFromQueue,
+        description = "Remove from queue Icon"
+    ),
+    REMOVE_ICON(imageVector = Icons.Rounded.Delete, description = "Remove Icon"),
     REPEAT(imageVector = Icons.Rounded.Repeat, description = "Repeat Icon"),
     REPEAT_ONE(imageVector = Icons.Rounded.RepeatOne, description = "Repeat One On Icon"),
+    RESET_SETTINGS(imageVector = Icons.Rounded.Emergency, description = "Reset Icon"),
+    REWIND(imageVector = Icons.Rounded.FastRewind, description = "Rewind Icon"),
     SEARCH(imageVector = Icons.Rounded.Search, description = "Search Icon"),
     SETTINGS(imageVector = Icons.Rounded.Settings, description = "Settings Icon"),
+    SETTING_INTERFACE(imageVector = Icons.Rounded.Palette, description = "Interface Setting"),
     SETTING_LIBRARY(
         imageVector = Icons.Rounded.LibraryMusic,
         description = "Library Setting Icon"
@@ -176,18 +186,8 @@ enum class SatunesIcons(
     ),
     SORT(imageVector = Icons.AutoMirrored.Rounded.Sort, description = "Sort Icon"),
     TIMER(imageVector = Icons.Rounded.Timer, description = "Timer Icon"),
-    UNLIKED(imageVector = Icons.Rounded.FavoriteBorder, description = "Unliked Icon"),
-    REFRESH(imageVector = Icons.Rounded.Refresh, description = "Refresh Icon"),
-    REMOVE_FROM_QUEUE(
-        imageVector = Icons.Rounded.RemoveFromQueue,
-        description = "Remove from queue Icon"
-    ),
-    REMOVE_ICON(imageVector = Icons.Rounded.Delete, description = "Remove Icon"),
-    RESET_SETTINGS(imageVector = Icons.Rounded.Emergency, description = "Reset Icon"),
-    REWIND(imageVector = Icons.Rounded.FastRewind, description = "Rewind Icon"),
-    WARNING(imageVector = Icons.Rounded.Warning, description = "Warning Icon"),
     TITLE(imageVector = Icons.Rounded.Title, description = "Title Icon"),
+    UNLIKED(imageVector = Icons.Rounded.FavoriteBorder, description = "Unliked Icon"),
+    WARNING(imageVector = Icons.Rounded.Warning, description = "Warning Icon"),
     YEARS(imageVector = Icons.Rounded.DateRange, description = "Years Icon"),
-    MOVE_UP(imageVector = Icons.Rounded.ArrowUpward, description = "Move Up Icon"),
-    MOVE_DOWN(imageVector = Icons.Rounded.ArrowDownward, description = "Move Down Icon")
 }

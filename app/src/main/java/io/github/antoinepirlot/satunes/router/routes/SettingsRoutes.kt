@@ -33,9 +33,9 @@ import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.ui.views.settings.SettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.android_auto.AndroidAutoSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.battery.BatterySettingsView
+import io.github.antoinepirlot.satunes.ui.views.settings.design.DesignSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.library.LibrarySettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.logs.LogsSettingsView
-import io.github.antoinepirlot.satunes.ui.views.settings.navigation_bar.BottomNavigationBarSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.permissions.PermissionsSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.playback.PlaybackSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.reset.ResetSettingsView
@@ -57,11 +57,11 @@ internal fun NavGraphBuilder.settingsRoutes(
         SettingsView()
     }
 
-    composable(Destination.BOTTOM_BAR_SETTINGS.link) {
+    composable(Destination.DESIGN_SETTINGS.link) {
         LaunchedEffect(key1 = Unit) {
             onStart(it)
         }
-        BottomNavigationBarSettingsView()
+        DesignSettingsView()
     }
 
     composable(Destination.PLAYBACK_SETTINGS.link) {

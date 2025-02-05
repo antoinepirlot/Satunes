@@ -20,7 +20,7 @@
  * PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.views.settings.navigation_bar
+package io.github.antoinepirlot.satunes.ui.views.settings.design
 
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Column
@@ -34,41 +34,29 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.antoinepirlot.jetpack_libs.components.texts.Title
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.database.models.NavBarSection
-import io.github.antoinepirlot.satunes.models.SwitchSettings
-import io.github.antoinepirlot.satunes.ui.components.settings.SettingsSwitchList
-import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
-import io.github.antoinepirlot.satunes.ui.components.settings.navigation_bar.DefaultNavBarSectionSetting
+import io.github.antoinepirlot.satunes.ui.components.settings.design.navigation_bar.NavigationBarSubSettings
+import io.github.antoinepirlot.satunes.ui.components.settings.design.playback.PlaybackDesignSubSettings
 
 /**
  *   @author Antoine Pirlot 06/03/2024
  */
 
 @Composable
-internal fun BottomNavigationBarSettingsView(
+internal fun DesignSettingsView(
     modifier: Modifier = Modifier
 ) {
-
-    val navBarSectionSettingsChecked: Map<SwitchSettings, NavBarSection> = mapOf(
-        Pair(first = SwitchSettings.FOLDERS_NAVBAR, second = NavBarSection.FOLDERS),
-        Pair(first = SwitchSettings.ARTISTS_NAVBAR, second = NavBarSection.ARTISTS),
-        Pair(first = SwitchSettings.ALBUMS_NAVBAR, second = NavBarSection.ALBUMS),
-        Pair(first = SwitchSettings.GENRES_NAVBAR, second = NavBarSection.GENRES),
-        Pair(first = SwitchSettings.PLAYLISTS_NAVBAR, second = NavBarSection.PLAYLISTS)
-    )
-
     val scrollState: ScrollState = rememberScrollState()
-    Column(modifier = modifier.verticalScroll(scrollState)) {
-        Title(text = stringResource(id = R.string.navigation_bar_settings_title))
-        SubSettings {
-            SettingsSwitchList(navbarMap = navBarSectionSettingsChecked)
-            DefaultNavBarSectionSetting(modifier = Modifier.padding(horizontal = 16.dp))
-        }
+    Column(modifier = modifier
+        .verticalScroll(scrollState)
+        .padding(horizontal = 16.dp)) {
+        Title(text = stringResource(id = R.string.design_setting_title))
+        NavigationBarSubSettings()
+        PlaybackDesignSubSettings()
     }
 }
 
 @Composable
 @Preview
 private fun BottomNavigationBarSettingsViewPreview() {
-    BottomNavigationBarSettingsView()
+    DesignSettingsView()
 }

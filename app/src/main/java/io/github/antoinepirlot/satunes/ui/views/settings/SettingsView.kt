@@ -64,10 +64,10 @@ internal fun SettingsView(
                 }
             )
             SettingButton(
-                text = stringResource(id = R.string.navigation_bar_settings_title),
-                icon = SatunesIcons.BOTTOM_BAR,
+                text = stringResource(id = R.string.design_setting_title),
+                icon = SatunesIcons.SETTING_INTERFACE,
                 onClick = {
-                    navController.navigate(Destination.BOTTOM_BAR_SETTINGS.link)
+                    navController.navigate(Destination.DESIGN_SETTINGS.link)
                 }
             )
             SettingButton(

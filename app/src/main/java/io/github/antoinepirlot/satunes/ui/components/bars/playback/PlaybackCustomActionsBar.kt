@@ -34,12 +34,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.antoinepirlot.satunes.data.customActionsMap
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.ui.components.buttons.playback.custom_actions.AddToPlaylistCustomAction
-import io.github.antoinepirlot.satunes.ui.components.buttons.playback.custom_actions.FavoriteCustomAction
-import io.github.antoinepirlot.satunes.ui.components.buttons.playback.custom_actions.ShareCustomAction
-import io.github.antoinepirlot.satunes.ui.components.buttons.playback.custom_actions.TimerCustomAction
+import io.github.antoinepirlot.satunes.database.models.custom_action.CustomActions
 
 /**
  * @author Antoine Pirlot on 01/06/2024
@@ -60,17 +58,21 @@ internal fun PlaybackCustomActionsBar(
         val spacerSize: Dp = 8.dp
 
         Spacer(modifier = Modifier.size(spacerSize))
-        FavoriteCustomAction(music = musicPlaying)
-        Spacer(modifier = Modifier.size(spacerSize))
-
-        AddToPlaylistCustomAction(music = musicPlaying)
-        Spacer(modifier = Modifier.size(spacerSize))
-
-        ShareCustomAction(music = musicPlaying)
-        Spacer(modifier = Modifier.size(spacerSize))
-
-        TimerCustomAction()
-        Spacer(modifier = Modifier.size(spacerSize))
+        for (customAction: CustomActions in playbackViewModel.customActionsOrder) {
+            customActionsMap[customAction]!!.invoke(musicPlaying)
+            Spacer(modifier = Modifier.size(size = spacerSize))
+        }
+//        FavoriteCustomAction(music = musicPlaying)
+//        Spacer(modifier = Modifier.size(spacerSize))
+//
+//        AddToPlaylistCustomAction(music = musicPlaying)
+//        Spacer(modifier = Modifier.size(spacerSize))
+//
+//        ShareCustomAction(music = musicPlaying)
+//        Spacer(modifier = Modifier.size(spacerSize))
+//
+//        TimerCustomAction()
+//        Spacer(modifier = Modifier.size(spacerSize))
     }
 }
 

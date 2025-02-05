@@ -59,7 +59,7 @@ internal enum class Destination(
         navBarSection = NavBarSection.ARTISTS
     ),
     BATTERY_SETTINGS(link = "/battery_settings", category = DestinationCategory.SETTING),
-    BOTTOM_BAR_SETTINGS(link = "/navbar_settings", category = DestinationCategory.SETTING),
+    DESIGN_SETTINGS(link = "/design_settings", category = DestinationCategory.SETTING),
     LIBRARY_SETTINGS(link = "/library_settings", category = DestinationCategory.SETTING),
     FOLDERS(
         link = "/folders",
@@ -117,12 +117,12 @@ internal enum class Destination(
             Pair(first = ARTISTS.link, second = ARTISTS),
             Pair(first = ARTIST.link, second = ARTIST),
             Pair(first = BATTERY_SETTINGS.link, second = BATTERY_SETTINGS),
-            Pair(first = BOTTOM_BAR_SETTINGS.link, second = BOTTOM_BAR_SETTINGS),
             Pair(first = LIBRARY_SETTINGS.link, second = LIBRARY_SETTINGS),
             Pair(first = FOLDERS.link, second = FOLDERS),
             Pair(first = FOLDER.link, second = FOLDER),
             Pair(first = GENRES.link, second = GENRES),
             Pair(first = GENRE.link, second = GENRE),
+            Pair(first = DESIGN_SETTINGS.link, second = DESIGN_SETTINGS),
             Pair(first = LOGS_SETTINGS.link, second = LOGS_SETTINGS),
             Pair(first = MUSICS.link, second = MUSICS),
             Pair(first = PERMISSIONS_SETTINGS.link, second = PERMISSIONS_SETTINGS),
@@ -135,15 +135,6 @@ internal enum class Destination(
             Pair(first = SEARCH.link, second = SEARCH),
             Pair(first = SEARCH_SETTINGS.link, second = SEARCH_SETTINGS),
             Pair(first = SETTINGS.link, second = SETTINGS),
-        )
-
-        val mediaMainRoutesMap: Map<Destination, NavBarSection> = mapOf(
-            Pair(first = FOLDERS, second = NavBarSection.FOLDERS),
-            Pair(first = ARTISTS, second = NavBarSection.ARTISTS),
-            Pair(first = ALBUMS, second = NavBarSection.ALBUMS),
-            Pair(first = GENRES, second = NavBarSection.GENRES),
-            Pair(first = MUSICS, second = NavBarSection.MUSICS),
-            Pair(first = PLAYLISTS, second = NavBarSection.PLAYLISTS)
         )
 
         init {

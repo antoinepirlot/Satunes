@@ -37,10 +37,8 @@
     <string name="_import">Import</string>
     <string name="no_file_created">No file created</string>
     <string name="read_audio_permission">Music and audio</string>
-    <string name="permissions" translatable="false">Permissions</string>
     <string name="ask_permission">Allow</string>
     <string name="read_external_storage_permission">Read Storage</string>
-    <string name="ok" translatable="false">OK</string>
     <string name="repeat_mode">"Repeat Mode: "</string>
     <string name="playback_mode_settings">Default Playback Modes</string>
     <string name="pause_if_another_playback">Pause if another app is playing</string>
@@ -49,7 +47,6 @@
     <string name="playlists_settings_content">You can export/import your playlists.\n\nYou can move the file into a new folder or replace it (it must have the same file name), in these case Satunes will detect the modification and apply it to existing data.\n\nBut, if you both replace and move the file in another folder, then, Satunes won\'t be able to detect the modification.</string>
     <string name="android_auto_content">To activate Android Auto you must carry out the following steps:\n\n1) Go to Android Auto settings.\n\n2) Multiple click on \"Version\" to activate dev mode.\n\n3) Go to Dev\'s settings and activate \"Unknown sources\" as Satunes is not published on Google Play Store.\n\n4) Click on the 3 buttons as in point 3, but click on \"Exit developer mode\" the setting you just activated will be saved.\n\n5) Add Satunes in launcher.\n\n6) Enjoy</string>
     <string name="battery_settings">Battery</string>
-    <string name="audio_offload" translatable="false">Audio Offload</string>
     <string name="audio_offload_info">This parameter allows you to send audio treatment to a dedicated process.\nThis reduces energy consumption.\n\nHowever, in the Media 3 library used in Satunes, this can cause compatibility issues which results in audio cuts. A known issue is that the music is stopping during playback or after the end of a song.\n\nBy activating this parameter, you reduce energy consumption and increase the  battery life but you are likely to meet audio cuts.\n\nI hope that in a nearby future, the problem will be resolved by Google which holds the Media3 and Exoplayer libraries. In the meantime, I try to find viable solutions to reduce energy consumption by Satunes.</string>
     <string name="restart_required">Restart required</string>
     <string name="add_to_queue">Add to queue</string>
@@ -130,4 +127,7 @@
     <string name="sort_list_title">Sort</string>
     <string name="show_first_letter_setting_content">Show first letter</string>
     <string name="unknown_year">Unknown Year</string>
+    <string name="design_setting_title">Interface</string>
+    <string name="custom_actions_sub_settings_title">Quick Actions</string>
+    <string name="custom_actions_sub_settings_content">This reorder the list of buttons in the playback view.</string>
 </resources>

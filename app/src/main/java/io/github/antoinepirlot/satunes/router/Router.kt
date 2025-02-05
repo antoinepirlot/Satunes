@@ -82,6 +82,7 @@ internal fun Router(
     if (defaultDestination == null) return
 
     LaunchedEffect(key1 = Unit) {
+        //TODO fix it by using DataLoader.isLoaded
         if (satunesUiState.defaultPlaylist != null) {
             navController.navigate(Destination.PLAYLISTS.link)
             navController.navigate(Destination.PLAYLISTS.link + "/${satunesUiState.defaultPlaylist!!.id}")

@@ -32,7 +32,7 @@ import io.github.antoinepirlot.satunes.ui.components.settings.design.playback.cu
  */
 @Composable
 fun PlaybackDesignSubSettings(modifier: Modifier = Modifier) {
-    CustomActionsSubSettings()
+    CustomActionsSubSettings(modifier = modifier)
 }
 
 @Preview

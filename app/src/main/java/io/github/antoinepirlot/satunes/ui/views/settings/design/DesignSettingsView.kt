@@ -43,9 +43,6 @@ import io.github.antoinepirlot.satunes.ui.components.settings.design.playback.Pl
 internal fun DesignSettingsView(
     modifier: Modifier = Modifier
 ) {
-
-
-
     val scrollState: ScrollState = rememberScrollState()
     Column(modifier = modifier.verticalScroll(scrollState)) {
         Title(text = stringResource(id = R.string.design_setting_title))

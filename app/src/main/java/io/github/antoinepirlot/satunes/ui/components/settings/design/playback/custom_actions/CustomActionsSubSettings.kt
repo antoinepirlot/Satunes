@@ -20,45 +20,37 @@
  * PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.settings.design
+package io.github.antoinepirlot.satunes.ui.components.settings.design.playback.custom_actions
 
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.database.models.NavBarSection
-import io.github.antoinepirlot.satunes.models.SwitchSettings
-import io.github.antoinepirlot.satunes.ui.components.settings.SettingsSwitchList
+import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
+import io.github.antoinepirlot.satunes.database.models.custom_action.CustomActions
 import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
 
 /**
- * @author Antoine Pirlot 05/02/2025
+ * @author Antoine Pirlot 04/02/2025
  */
-
-private val navBarSectionSettingsChecked: Map<SwitchSettings, NavBarSection> = mapOf(
-    Pair(first = SwitchSettings.FOLDERS_NAVBAR, second = NavBarSection.FOLDERS),
-    Pair(first = SwitchSettings.ARTISTS_NAVBAR, second = NavBarSection.ARTISTS),
-    Pair(first = SwitchSettings.ALBUMS_NAVBAR, second = NavBarSection.ALBUMS),
-    Pair(first = SwitchSettings.GENRES_NAVBAR, second = NavBarSection.GENRES),
-    Pair(first = SwitchSettings.PLAYLISTS_NAVBAR, second = NavBarSection.PLAYLISTS)
-)
-
 @Composable
-fun NavigationBarSettings(modifier: Modifier = Modifier) {
+fun CustomActionsSubSettings(
+    modifier: Modifier = Modifier,
+    playbackViewModel: PlaybackViewModel = viewModel()
+) {
     SubSettings(
         modifier = modifier,
-        title = stringResource(id = R.string.navigation_bar_settings_title)
+        title = stringResource(R.string.custom_actions_sub_settings_title)
     ) {
-        SettingsSwitchList(navbarMap = navBarSectionSettingsChecked)
-        DefaultNavBarSectionSetting(modifier = Modifier.padding(horizontal = 16.dp))
+        for (customAction: CustomActions in playbackViewModel.customActionsOrder)
+            CustomActionSettingRow(customAction = customAction)
     }
 }
 
 @Preview
 @Composable
-private fun NavigationBarSettingsPreview(modifier: Modifier = Modifier) {
-    NavigationBarSettings()
+private fun CustomActionsSubSettingsPreview(modifier: Modifier = Modifier) {
+    CustomActionsSubSettings()
 }

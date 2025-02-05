@@ -32,7 +32,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.jetpack_libs.components.texts.Title
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.ui.components.settings.design.NavigationBarSettings
+import io.github.antoinepirlot.satunes.ui.components.settings.design.navigation_bar.NavigationBarSubSettings
+import io.github.antoinepirlot.satunes.ui.components.settings.design.playback.PlaybackDesignSubSettings
 
 /**
  *   @author Antoine Pirlot 06/03/2024
@@ -48,7 +49,8 @@ internal fun DesignSettingsView(
     val scrollState: ScrollState = rememberScrollState()
     Column(modifier = modifier.verticalScroll(scrollState)) {
         Title(text = stringResource(id = R.string.design_setting_title))
-        NavigationBarSettings()
+        NavigationBarSubSettings()
+        PlaybackDesignSubSettings()
     }
 }
 

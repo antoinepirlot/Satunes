@@ -20,7 +20,7 @@
  * PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.settings.playback.custom_actions
+package io.github.antoinepirlot.satunes.ui.components.settings.design.playback.custom_actions
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box

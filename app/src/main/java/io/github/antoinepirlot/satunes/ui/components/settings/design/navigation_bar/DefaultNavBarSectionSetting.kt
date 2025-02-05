@@ -20,7 +20,7 @@
  * PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.settings.design
+package io.github.antoinepirlot.satunes.ui.components.settings.design.navigation_bar
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box

@@ -128,6 +128,6 @@
     <string name="sort_list_title">Trier</string>
     <string name="show_first_letter_setting_content">Montrer la première lettre</string>
     <string name="unknown_year">Année Inconnue</string>
-    <string name="playback_ui_settings_title">Interface</string>
     <string name="design_setting_title">Interface</string>
+    <string name="custom_actions_sub_settings_title">Actions Personalisées</string>
 </resources>

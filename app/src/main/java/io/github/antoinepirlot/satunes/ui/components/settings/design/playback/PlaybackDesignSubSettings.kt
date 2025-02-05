@@ -20,38 +20,23 @@
  * PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.settings.playback.custom_actions
+package io.github.antoinepirlot.satunes.ui.components.settings.design.playback
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.viewmodel.compose.viewModel
-import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
-import io.github.antoinepirlot.satunes.database.models.custom_action.CustomActions
+import io.github.antoinepirlot.satunes.ui.components.settings.design.playback.custom_actions.CustomActionsSubSettings
 
 /**
  * @author Antoine Pirlot 04/02/2025
  */
 @Composable
-fun CustomActionsSettings(
-    modifier: Modifier = Modifier,
-    playbackViewModel: PlaybackViewModel = viewModel()
-) {
-    Column(
-        modifier = modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        for (customAction: CustomActions in playbackViewModel.customActionsOrder) {
-            CustomActionSettingRow(customAction = customAction)
-        }
-    }
+fun PlaybackDesignSubSettings(modifier: Modifier = Modifier) {
+    CustomActionsSubSettings()
 }
 
 @Preview
 @Composable
-fun CustomActionsSettingsPreview(modifier: Modifier = Modifier) {
-    CustomActionsSettings()
+private fun PlaybackUiSubSettingsPreview(modifier: Modifier = Modifier) {
+    PlaybackDesignSubSettings()
 }

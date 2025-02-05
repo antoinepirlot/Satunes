@@ -1,0 +1,132 @@
+/*
+ * This file is part of Satunes.
+ *
+ * Satunes is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later version.
+ * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License along with Satunes.
+ * If not, see <https://www.gnu.org/licenses/>.
+ *
+ * *** INFORMATION ABOUT THE AUTHOR *****
+ * The author of this file is Antoine Pirlot, the owner of this project.
+ * You find this original project on github.
+ *
+ * My github link is: https://github.com/antoinepirlot
+ * This current project's link is: https://github.com/antoinepirlot/Satunes
+ *
+ * PS: I don't answer quickly.
+ */
+
+package io.github.antoinepirlot.satunes.ui.components.settings.design.navigation_bar
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
+import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.data.states.SatunesUiState
+import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
+import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
+import io.github.antoinepirlot.satunes.database.models.Playlist
+import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import io.github.antoinepirlot.satunes.ui.components.images.Icon
+import io.github.antoinepirlot.satunes.database.R as RDb
+
+/**
+ * @author Antoine Pirlot 05/02/2025
+ */
+@Composable
+internal fun DefaultPlaylistSection(
+    modifier: Modifier = Modifier,
+    satunesViewModel: SatunesViewModel = viewModel()
+) {
+    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+    var expanded: Boolean by remember { mutableStateOf(false) }
+    val selectedPlaylist: Playlist? = satunesUiState.defaultPlaylist
+
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
+    ) {
+        NormalText(text = stringResource(id = R.string.default_playlist_section_setting_content))
+        Box {
+            TextButton(onClick = { expanded = true }) {
+                Row {
+                    Icon(
+                        icon = if (expanded) SatunesIcons.CLOSE_DROPDOWN_MENU
+                        else SatunesIcons.OPEN_DROPDOWN_MENU
+                    )
+                    val text: String =
+                        if (selectedPlaylist == null) stringResource(id = R.string.no_playlist_selected)
+                        else if (selectedPlaylist.title == LIKES_PLAYLIST_TITLE) stringResource(id = RDb.string.likes_playlist_title)
+                        else selectedPlaylist.title
+                    NormalText(text = text)
+                }
+            }
+            Menu(expanded = expanded, onDismissRequest = { expanded = false })
+        }
+    }
+}
+
+@Composable
+private fun Menu(
+    modifier: Modifier = Modifier,
+    satunesViewModel: SatunesViewModel = viewModel(),
+    dataViewModel: DataViewModel = viewModel(),
+    expanded: Boolean,
+    onDismissRequest: () -> Unit
+) {
+    DropdownMenu(
+        modifier = modifier,
+        expanded = expanded,
+        onDismissRequest = onDismissRequest
+    ) {
+        DropdownMenuItem(
+            text = { NormalText(text = stringResource(id = R.string.no_playlist_selected)) },
+            onClick = {
+                satunesViewModel.selectDefaultPlaylist(playlist = null)
+                onDismissRequest()
+            }
+        )
+        for (playlist: Playlist in dataViewModel.getPlaylistSet()) {
+            val text: String =
+                if (playlist.title == LIKES_PLAYLIST_TITLE)
+                    stringResource(id = RDb.string.likes_playlist_title)
+                else
+                    playlist.title
+            DropdownMenuItem(
+                text = { NormalText(text = text) },
+                onClick = {
+                    satunesViewModel.selectDefaultPlaylist(playlist = playlist)
+                    onDismissRequest()
+                }
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun DefaultPlaylistSectionPreview() {
+    DefaultPlaylistSection()
+}

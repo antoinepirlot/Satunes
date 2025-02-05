@@ -45,6 +45,7 @@ import io.github.antoinepirlot.satunes.database.models.BarSpeed
 import io.github.antoinepirlot.satunes.database.models.FoldersSelection
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
+import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
@@ -641,6 +642,23 @@ internal class SatunesViewModel : ViewModel() {
     fun hideMediaSelectionDialog() {
         _uiState.update { currentState: SatunesUiState ->
             currentState.copy(showMediaSelectionDialog = false)
+        }
+    }
+
+    fun selectDefaultPlaylist(playlist: Playlist?) {
+        try {
+            runBlocking {
+                SettingsManager.selectDefaultPlaylist(
+                    context = MainActivity.instance.applicationContext,
+                    playlist = playlist
+                )
+            }
+            _uiState.update { currentState: SatunesUiState ->
+                currentState.copy(defaultPlaylist = SettingsManager.defaultPlaylist)
+            }
+        } catch (e: Throwable) {
+            _logger?.severe("Error while selecting new default playlist")
+            throw e
         }
     }
 }

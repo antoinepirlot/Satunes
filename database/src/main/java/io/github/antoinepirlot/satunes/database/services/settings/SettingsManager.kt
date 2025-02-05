@@ -30,6 +30,7 @@ import androidx.datastore.preferences.preferencesDataStore
 import io.github.antoinepirlot.satunes.database.models.BarSpeed
 import io.github.antoinepirlot.satunes.database.models.FoldersSelection
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
+import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.database.models.custom_action.CustomActions
 import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.database.services.settings.library.LibrarySettings
@@ -55,6 +56,8 @@ object SettingsManager {
     // NavBarSettings
     val defaultNavBarSection: NavBarSection
         get() = NavBarSettings.defaultNavBarSection
+    val defaultPlaylist: Playlist?
+        get() = NavBarSettings.defaultPlaylist
 
     // Playback Settings
     val playbackWhenClosedChecked: Boolean
@@ -261,6 +264,10 @@ object SettingsManager {
 
     suspend fun moveDown(context: Context, customAction: CustomActions) {
         PlaybackSettings.moveDown(context = context, customAction = customAction)
+    }
+
+    suspend fun selectDefaultPlaylist(context: Context, playlist: Playlist?) {
+        NavBarSettings.selectDefaultPlaylist(context = context, playlist = playlist)
     }
 
     suspend fun resetAll(context: Context) {

@@ -31,6 +31,7 @@ import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.longPreferencesKey
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.database.models.Playlist
+import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager.dataStore
 import io.github.antoinepirlot.satunes.database.utils.getNavBarSection
 import kotlinx.coroutines.flow.first
@@ -86,6 +87,10 @@ internal object NavBarSettings {
 
             defaultNavBarSection = getNavBarSection(preferences[DEFAULT_NAV_BAR_SECTION_KEY])
             defaultPlaylistId = preferences[DEFAULT_PLAYLIST_ID_KEY] ?: DEFAULT_PLAYLIST_ID
+            if (DataManager.getPlaylist(id = defaultPlaylistId) == null) {
+                selectDefaultPlaylist(context = context, playlist = null)
+                defaultPlaylistId = DEFAULT_PLAYLIST_ID
+            }
         }.first() //Without .first() settings are not loaded correctly
     }
 

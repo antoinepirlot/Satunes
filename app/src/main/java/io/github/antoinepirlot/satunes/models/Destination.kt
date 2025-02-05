@@ -137,15 +137,6 @@ internal enum class Destination(
             Pair(first = SETTINGS.link, second = SETTINGS),
         )
 
-        val mediaMainRoutesMap: Map<Destination, NavBarSection> = mapOf(
-            Pair(first = FOLDERS, second = NavBarSection.FOLDERS),
-            Pair(first = ARTISTS, second = NavBarSection.ARTISTS),
-            Pair(first = ALBUMS, second = NavBarSection.ALBUMS),
-            Pair(first = GENRES, second = NavBarSection.GENRES),
-            Pair(first = MUSICS, second = NavBarSection.MUSICS),
-            Pair(first = PLAYLISTS, second = NavBarSection.PLAYLISTS)
-        )
-
         init {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 this.destinationsMap[UPDATES_SETTINGS.link] = UPDATES_SETTINGS

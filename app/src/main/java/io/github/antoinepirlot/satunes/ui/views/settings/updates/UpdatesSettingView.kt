@@ -87,7 +87,6 @@ internal fun UpdatesSettingView(
 
             when (updateAvailable) {
                 UNDEFINED, CANNOT_CHECK, UP_TO_DATE -> {
-                    Spacer(modifier = Modifier.size(SIZE)) // To align with text and not have a vertical cut
                     CheckUpdateButton()
                 }
 

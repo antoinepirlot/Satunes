@@ -23,6 +23,7 @@
 package io.github.antoinepirlot.satunes.ui.components.forms
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -30,6 +31,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -61,16 +63,17 @@ internal fun MediaSelectionForm(
         } catch (_: ClassCastException) {
             mediaImplCollection.toList()
         }
-    Column {
-        if (satunesUiState.currentDestination != Destination.PLAYLISTS) {
-            TextButton(onClick = { mediaSelectionViewModel.setShowPlaylistCreation(value = true) }) {
+    Column(
+        modifier = modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        if (satunesUiState.currentDestination != Destination.PLAYLISTS)
+            TextButton(
+                modifier = modifier,
+                onClick = { mediaSelectionViewModel.setShowPlaylistCreation(value = true) }) {
                 NormalText(text = stringResource(id = R.string.create_playlist))
             }
-        }
-        LazyColumn(
-            modifier = modifier,
-            state = lazyState
-        ) {
+        LazyColumn(state = lazyState) {
             items(
                 items = mediaList,
                 key = { it.id }

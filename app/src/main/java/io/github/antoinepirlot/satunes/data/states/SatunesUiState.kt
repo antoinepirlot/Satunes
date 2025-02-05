@@ -50,6 +50,7 @@ internal data class SatunesUiState(
     val isAudioAllowed: Boolean = isAudioAllowed(context = MainActivity.instance.applicationContext),
 
     val defaultNavBarSection: NavBarSection = SettingsManager.defaultNavBarSection,
+    val defaultPlaylist: Playlist? = SettingsManager.defaultPlaylist,
     val foldersSelectionSelected: FoldersSelection = SettingsManager.foldersSelectionSelected,
 
     val playbackWhenClosedChecked: Boolean = SettingsManager.playbackWhenClosedChecked,
@@ -71,5 +72,4 @@ internal data class SatunesUiState(
     val artistReplacement: Boolean = SettingsManager.artistReplacement,
     val showSortDialog: Boolean = false,
     val showMediaSelectionDialog: Boolean = false,
-    val defaultPlaylist: Playlist? = SettingsManager.defaultPlaylist
 )

@@ -80,8 +80,6 @@ internal class SatunesViewModel : ViewModel() {
     private val _logger: SatunesLogger? = SatunesLogger.getLogger()
     private val _isLoadingData: MutableState<Boolean> = DataLoader.isLoading
     private val _isDataLoaded: MutableState<Boolean> = DataLoader.isLoaded
-    private val _defaultNavBarSection: MutableState<NavBarSection> =
-        mutableStateOf(_uiState.value.defaultNavBarSection)
 
     @RequiresApi(Build.VERSION_CODES.M)
     private val _updateAvailableStatus: MutableState<UpdateAvailableStatus> =
@@ -91,8 +89,6 @@ internal class SatunesViewModel : ViewModel() {
     private val _downloadStatus: MutableState<APKDownloadStatus> = UpdateCheckManager.downloadStatus
 
     val uiState: StateFlow<SatunesUiState> = _uiState.asStateFlow()
-    var defaultNavBarSection: NavBarSection by _defaultNavBarSection
-        private set
 
     val isLoadingData: Boolean by _isLoadingData
     val isDataLoaded: Boolean by _isDataLoaded
@@ -204,7 +200,7 @@ internal class SatunesViewModel : ViewModel() {
                     navBarSection = navBarSection
                 )
                 if (
-                    this@SatunesViewModel.defaultNavBarSection == navBarSection
+                    _uiState.value.defaultNavBarSection == navBarSection
                     && !navBarSection.isEnabled.value
                 ) {
                     selectDefaultNavBarSection(navBarSection = NavBarSection.MUSICS)
@@ -553,7 +549,9 @@ internal class SatunesViewModel : ViewModel() {
                     navBarSection = navBarSection
                 )
             }
-            this.defaultNavBarSection = SettingsManager.defaultNavBarSection
+            _uiState.update { currentState: SatunesUiState ->
+                currentState.copy(defaultNavBarSection = SettingsManager.defaultNavBarSection)
+            }
         } catch (e: Throwable) {
             _logger?.severe("Error while selecting new default nav bar section: ${navBarSection.name}")
         }

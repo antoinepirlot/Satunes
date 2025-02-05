@@ -122,6 +122,7 @@ internal enum class Destination(
             Pair(first = FOLDER.link, second = FOLDER),
             Pair(first = GENRES.link, second = GENRES),
             Pair(first = GENRE.link, second = GENRE),
+            Pair(first = DESIGN_SETTINGS.link, second = DESIGN_SETTINGS),
             Pair(first = LOGS_SETTINGS.link, second = LOGS_SETTINGS),
             Pair(first = MUSICS.link, second = MUSICS),
             Pair(first = PERMISSIONS_SETTINGS.link, second = PERMISSIONS_SETTINGS),

@@ -35,7 +35,6 @@ import io.github.antoinepirlot.satunes.data.viewmodels.SearchViewModel
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.models.SearchChips
 import io.github.antoinepirlot.satunes.models.SwitchSettings
-import io.github.antoinepirlot.satunes.ui.components.cards.ListItem
 
 /**
  *   @author Antoine Pirlot 06/03/2024
@@ -51,19 +50,15 @@ internal fun SettingsSwitchList(
     val searchUiState: SearchUiState by searchViewModel.uiState.collectAsState()
     Column(modifier = modifier) {
         for ((setting: SwitchSettings, checked: Boolean) in checkedMap) {
-            ListItem( //Has always horizontal padding of 16.dp
-                headlineContent = {
-                    SettingWithSwitch(
-                        setting = setting,
-                        checked = checked,
-                        onCheckedChange = {
-                            switchSetting(
-                                satunesViewModel = satunesViewModel,
-                                searchViewModel = searchViewModel,
-                                searchUiState = searchUiState,
-                                setting = setting
-                            )
-                        }
+            SettingWithSwitch(
+                setting = setting,
+                checked = checked,
+                onCheckedChange = {
+                    switchSetting(
+                        satunesViewModel = satunesViewModel,
+                        searchViewModel = searchViewModel,
+                        searchUiState = searchUiState,
+                        setting = setting
                     )
                 }
             )

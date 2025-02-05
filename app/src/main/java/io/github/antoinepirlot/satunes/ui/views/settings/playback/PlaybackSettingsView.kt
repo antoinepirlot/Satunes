@@ -24,7 +24,6 @@ package io.github.antoinepirlot.satunes.ui.views.settings.playback
 
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
@@ -33,7 +32,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.texts.Title
 import io.github.antoinepirlot.satunes.R
@@ -75,14 +73,11 @@ internal fun PlaybackSettingsView(
         Title(text = stringResource(id = R.string.playback_settings))
         SubSettings(title = stringResource(R.string.playback_behavior_settings)) {
             SettingsSwitchList(checkedMap = playbackSettingsChecked) //Contains list item so always padding horizontal 16.dp
-            BarSpeedSetting(modifier = Modifier.padding(horizontal = 16.dp))
+            BarSpeedSetting()
         }
         PlaybackModesSubSettings() //Contains list item so always padding horizontal 16.dp
-        TimerSubSetting(modifier.padding(horizontal = 16.dp))
-        SubSettings(
-            modifier = Modifier.padding(horizontal = 16.dp),
-            title = stringResource(id = R.string.battery_settings)
-        ) {
+        TimerSubSetting()
+        SubSettings(title = stringResource(id = R.string.battery_settings)) {
             AudioOffloadSetting() //Contains list item so always padding horizontal 16.dp
         }
     }

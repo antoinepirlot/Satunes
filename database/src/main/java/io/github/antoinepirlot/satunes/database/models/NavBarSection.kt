@@ -33,7 +33,7 @@ import io.github.antoinepirlot.satunes.database.R
 enum class NavBarSection(
     internal val id: Int,
     open val stringId: Int,
-    var isEnabled: MutableState<Boolean> = mutableStateOf(true)
+    var isEnabled: MutableState<Boolean> = mutableStateOf(true),
 ) {
     FOLDERS(id = 0, stringId = R.string.folders),
     ARTISTS(id = 1, stringId = R.string.artists),

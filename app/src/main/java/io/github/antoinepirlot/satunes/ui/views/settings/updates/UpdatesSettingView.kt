@@ -25,15 +25,16 @@ package io.github.antoinepirlot.satunes.ui.views.settings.updates
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -56,7 +57,7 @@ import io.github.antoinepirlot.satunes.ui.components.settings.updates.UpdateAvai
  * @author Antoine Pirlot on 11/04/2024
  */
 
-private val PADDING = 16.dp
+private val SIZE = 16.dp
 
 @RequiresApi(Build.VERSION_CODES.M)
 @Composable
@@ -70,28 +71,23 @@ internal fun UpdatesSettingView(
     val scrollState: ScrollState = rememberScrollState()
 
     Column(
-        modifier = modifier.verticalScroll(scrollState)
+        modifier = modifier.verticalScroll(scrollState),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Title(
-            modifier = Modifier.padding(horizontal = PADDING),
-            text = stringResource(id = R.string.version)
-        )
-        NormalText(
-            modifier = Modifier.padding(horizontal = PADDING),
-            text = stringResource(id = R.string.current_version) + currentVersion
-        )
-        Row(modifier = Modifier.fillMaxWidth()) {
+        Title(text = stringResource(id = R.string.version))
+        NormalText(text = stringResource(id = R.string.current_version) + currentVersion)
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
 
             //Check update is done when pressing setting button in top app bar
             if (isCheckingUpdate) {
-                Spacer(modifier = Modifier.size(PADDING)) // To align with text and not have a vertical cut
+                Spacer(modifier = Modifier.size(SIZE)) // To align with text and not have a vertical cut
                 LoadingCircle()
                 return
             }
 
             when (updateAvailable) {
                 UNDEFINED, CANNOT_CHECK, UP_TO_DATE -> {
-                    Spacer(modifier = Modifier.size(PADDING)) // To align with text and not have a vertical cut
+                    Spacer(modifier = Modifier.size(SIZE)) // To align with text and not have a vertical cut
                     CheckUpdateButton()
                 }
 

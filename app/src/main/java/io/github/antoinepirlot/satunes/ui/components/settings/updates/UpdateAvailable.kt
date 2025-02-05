@@ -64,6 +64,7 @@ internal fun UpdateAvailable(
 ) {
     Column(
         modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
         NormalText(

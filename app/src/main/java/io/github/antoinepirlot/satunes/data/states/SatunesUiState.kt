@@ -29,6 +29,7 @@ import io.github.antoinepirlot.satunes.database.models.BarSpeed
 import io.github.antoinepirlot.satunes.database.models.FoldersSelection
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
+import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.router.utils.getNavBarSectionDestination
@@ -49,6 +50,7 @@ internal data class SatunesUiState(
     val isAudioAllowed: Boolean = isAudioAllowed(context = MainActivity.instance.applicationContext),
 
     val defaultNavBarSection: NavBarSection = SettingsManager.defaultNavBarSection,
+    val defaultPlaylist: Playlist? = SettingsManager.defaultPlaylist,
     val foldersSelectionSelected: FoldersSelection = SettingsManager.foldersSelectionSelected,
 
     val playbackWhenClosedChecked: Boolean = SettingsManager.playbackWhenClosedChecked,

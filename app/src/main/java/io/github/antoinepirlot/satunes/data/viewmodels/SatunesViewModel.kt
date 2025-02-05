@@ -45,6 +45,7 @@ import io.github.antoinepirlot.satunes.database.models.BarSpeed
 import io.github.antoinepirlot.satunes.database.models.FoldersSelection
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
+import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
@@ -79,8 +80,6 @@ internal class SatunesViewModel : ViewModel() {
     private val _logger: SatunesLogger? = SatunesLogger.getLogger()
     private val _isLoadingData: MutableState<Boolean> = DataLoader.isLoading
     private val _isDataLoaded: MutableState<Boolean> = DataLoader.isLoaded
-    private val _defaultNavBarSection: MutableState<NavBarSection> =
-        mutableStateOf(_uiState.value.defaultNavBarSection)
 
     @RequiresApi(Build.VERSION_CODES.M)
     private val _updateAvailableStatus: MutableState<UpdateAvailableStatus> =
@@ -90,8 +89,6 @@ internal class SatunesViewModel : ViewModel() {
     private val _downloadStatus: MutableState<APKDownloadStatus> = UpdateCheckManager.downloadStatus
 
     val uiState: StateFlow<SatunesUiState> = _uiState.asStateFlow()
-    var defaultNavBarSection: NavBarSection by _defaultNavBarSection
-        private set
 
     val isLoadingData: Boolean by _isLoadingData
     val isDataLoaded: Boolean by _isDataLoaded
@@ -203,7 +200,7 @@ internal class SatunesViewModel : ViewModel() {
                     navBarSection = navBarSection
                 )
                 if (
-                    this@SatunesViewModel.defaultNavBarSection == navBarSection
+                    _uiState.value.defaultNavBarSection == navBarSection
                     && !navBarSection.isEnabled.value
                 ) {
                     selectDefaultNavBarSection(navBarSection = NavBarSection.MUSICS)
@@ -552,7 +549,9 @@ internal class SatunesViewModel : ViewModel() {
                     navBarSection = navBarSection
                 )
             }
-            this.defaultNavBarSection = SettingsManager.defaultNavBarSection
+            _uiState.update { currentState: SatunesUiState ->
+                currentState.copy(defaultNavBarSection = SettingsManager.defaultNavBarSection)
+            }
         } catch (e: Throwable) {
             _logger?.severe("Error while selecting new default nav bar section: ${navBarSection.name}")
         }
@@ -641,6 +640,23 @@ internal class SatunesViewModel : ViewModel() {
     fun hideMediaSelectionDialog() {
         _uiState.update { currentState: SatunesUiState ->
             currentState.copy(showMediaSelectionDialog = false)
+        }
+    }
+
+    fun selectDefaultPlaylist(playlist: Playlist?) {
+        try {
+            runBlocking {
+                SettingsManager.selectDefaultPlaylist(
+                    context = MainActivity.instance.applicationContext,
+                    playlist = playlist
+                )
+            }
+            _uiState.update { currentState: SatunesUiState ->
+                currentState.copy(defaultPlaylist = SettingsManager.defaultPlaylist)
+            }
+        } catch (e: Throwable) {
+            _logger?.severe("Error while selecting new default playlist")
+            throw e
         }
     }
 }

@@ -45,7 +45,10 @@ fun CustomActionsSubSettings(
         modifier = modifier,
         title = stringResource(R.string.custom_actions_sub_settings_title)
     ) {
-        NormalText(text = stringResource(id = R.string.custom_actions_sub_settings_content))
+        NormalText(
+            text = stringResource(id = R.string.custom_actions_sub_settings_content),
+            maxLines = Int.MAX_VALUE
+        )
         for (customAction: CustomActions in playbackViewModel.customActionsOrder)
             CustomActionSettingRow(customAction = customAction)
     }

@@ -25,6 +25,7 @@ package io.github.antoinepirlot.satunes.database.services.settings
 import android.content.Context
 import android.net.Uri
 import androidx.compose.runtime.MutableLongState
+import androidx.compose.runtime.MutableState
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
@@ -55,8 +56,7 @@ object SettingsManager {
         get() = SatunesSettings.whatsNewSeen
 
     // NavBarSettings
-    val defaultNavBarSection: NavBarSection
-        get() = DesignSettings.defaultNavBarSection
+    val defaultNavBarSection: MutableState<NavBarSection> = DesignSettings.defaultNavBarSection
     val defaultPlaylistId: MutableLongState = DesignSettings.defaultPlaylistId
 
     // Playback Settings

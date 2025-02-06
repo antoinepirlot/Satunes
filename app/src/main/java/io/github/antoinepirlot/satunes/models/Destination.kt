@@ -145,7 +145,7 @@ internal enum class Destination(
 
         fun getDestination(destination: String): Destination {
             return this.destinationsMap[destination]
-                ?: getNavBarSectionDestination(navBarSection = SettingsManager.defaultNavBarSection)
+                ?: getNavBarSectionDestination(navBarSection = SettingsManager.defaultNavBarSection.value)
         }
     }
 }

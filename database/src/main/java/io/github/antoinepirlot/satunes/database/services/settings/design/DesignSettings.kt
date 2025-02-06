@@ -24,8 +24,10 @@ package io.github.antoinepirlot.satunes.database.services.settings.design
 
 import android.content.Context
 import androidx.compose.runtime.MutableLongState
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.datastore.preferences.core.MutablePreferences
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -85,10 +87,10 @@ internal object DesignSettings {
         stringPreferencesKey("custom_actions_order")
 
     // VARIABLES
-    var defaultNavBarSection: NavBarSection = DEFAULT_DEFAULT_NAV_BAR_SECTION
+    var defaultNavBarSection: MutableState<NavBarSection> =
+        mutableStateOf(DEFAULT_DEFAULT_NAV_BAR_SECTION)
         private set
-    var defaultPlaylistId: MutableLongState = mutableLongStateOf(DEFAULT_PLAYLIST_ID)
-        private set
+    val defaultPlaylistId: MutableLongState = mutableLongStateOf(DEFAULT_PLAYLIST_ID)
     var showFirstLetter: Boolean = DEFAULT_SHOW_FIRST_LETTER
         private set
     val customActionsOrder: MutableList<CustomActions> = mutableStateListOf()
@@ -109,7 +111,7 @@ internal object DesignSettings {
             showFirstLetter = preferences[SHOW_FIRST_LETTER_KEY] ?: DEFAULT_SHOW_FIRST_LETTER
 
 
-            defaultNavBarSection = getNavBarSection(preferences[DEFAULT_NAV_BAR_SECTION_KEY])
+            defaultNavBarSection.value = getNavBarSection(preferences[DEFAULT_NAV_BAR_SECTION_KEY])
             defaultPlaylistId.longValue =
                 preferences[DEFAULT_PLAYLIST_ID_KEY] ?: DEFAULT_PLAYLIST_ID
 
@@ -170,14 +172,15 @@ internal object DesignSettings {
 
     suspend fun selectDefaultNavBarSection(context: Context, navBarSection: NavBarSection) {
         context.dataStore.edit { preferences: MutablePreferences ->
-            this.defaultNavBarSection = navBarSection
-            preferences[DEFAULT_NAV_BAR_SECTION_KEY] = this.defaultNavBarSection.id
+            this.defaultNavBarSection.value = navBarSection
+            preferences[DEFAULT_NAV_BAR_SECTION_KEY] = this.defaultNavBarSection.value.id
         }
     }
 
     suspend fun resetNavigationBarSettings(context: Context) {
         context.dataStore.edit { preferences: MutablePreferences ->
-            this.defaultNavBarSection = DEFAULT_DEFAULT_NAV_BAR_SECTION
+            this.defaultNavBarSection.value = DEFAULT_DEFAULT_NAV_BAR_SECTION
+            this.defaultPlaylistId.longValue = DEFAULT_PLAYLIST_ID
             NavBarSection.enableAll()
             preferences[FOLDERS_NAVBAR_PREFERENCES_KEY] = DEFAULT_FOLDERS_NAVBAR
             preferences[ARTISTS_NAVBAR_PREFERENCES_KEY] = DEFAULT_ARTISTS_NAVBAR
@@ -185,6 +188,7 @@ internal object DesignSettings {
             preferences[GENRES_NAVBAR_PREFERENCES_KEY] = DEFAULT_GENRE_NAVBAR
             preferences[PLAYLISTS_NAVBAR_PREFERENCES_KEY] = DEFAULT_PLAYLIST_NAVBAR
             preferences[DEFAULT_NAV_BAR_SECTION_KEY] = DEFAULT_DEFAULT_NAV_BAR_SECTION.id
+            preferences[DEFAULT_PLAYLIST_ID_KEY] = DEFAULT_PLAYLIST_ID
         }
     }
 
@@ -249,8 +253,8 @@ internal object DesignSettings {
     }
 
     suspend fun resetAll(context: Context) {
-        this.resetListsSettings(context = context)
         this.resetNavigationBarSettings(context = context)
+        this.resetListsSettings(context = context)
         this.resetCustomActions(context = context)
     }
 }

@@ -23,14 +23,11 @@
 package io.github.antoinepirlot.satunes.ui.components.settings.design.navigation_bar
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.models.SwitchSettings
@@ -54,14 +51,13 @@ internal fun NavigationBarSubSettings(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
 ) {
-    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     SubSettings(
         modifier = modifier,
         title = stringResource(id = R.string.navigation_bar_settings_title)
     ) {
         SettingsSwitchList(navbarMap = navBarSectionSettingsChecked)
         DefaultNavBarSectionSetting()
-        if (satunesUiState.defaultNavBarSection == NavBarSection.PLAYLISTS)
+        if (satunesViewModel.defaultNavBarSection == NavBarSection.PLAYLISTS)
             DefaultPlaylistSection()
     }
 }

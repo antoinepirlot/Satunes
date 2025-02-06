@@ -46,6 +46,7 @@ import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
+import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.router.routes.mediaRoutes
 import io.github.antoinepirlot.satunes.router.routes.playbackRoutes
@@ -53,6 +54,7 @@ import io.github.antoinepirlot.satunes.router.routes.searchRoutes
 import io.github.antoinepirlot.satunes.router.routes.settingsRoutes
 import io.github.antoinepirlot.satunes.router.utils.getNavBarSectionDestination
 import io.github.antoinepirlot.satunes.ui.components.bars.backToRoot
+import io.github.antoinepirlot.satunes.utils.checkDefaultPlaylistSetting
 import io.github.antoinepirlot.satunes.utils.loadSatunesData
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 
@@ -81,11 +83,21 @@ internal fun Router(
 
     if (defaultDestination == null) return
 
-    LaunchedEffect(key1 = Unit) {
-        //TODO fix it by using DataLoader.isLoaded
-        if (satunesUiState.defaultPlaylist != null) {
-            navController.navigate(Destination.PLAYLISTS.link)
-            navController.navigate(Destination.PLAYLISTS.link + "/${satunesUiState.defaultPlaylist!!.id}")
+    LaunchedEffect(key1 = dataViewModel.isLoaded) {
+//        if(satunesUiState.currentDestination == Destination.DESIGN_SETTINGS) return@LaunchedEffect //Prevents navigating while changing the setting.
+        if (
+            defaultDestination == Destination.PLAYLISTS &&
+            dataViewModel.isLoaded
+        ) {
+            checkDefaultPlaylistSetting(context = context)
+            if (satunesViewModel.defaultPlaylistId >= 0) {
+                val playlist: Playlist =
+                    dataViewModel.getPlaylist(id = satunesViewModel.defaultPlaylistId)!!
+                if (satunesUiState.currentDestination == Destination.PLAYLISTS)
+                    navController.navigate(
+                        route = Destination.PLAYLISTS.link + "/${playlist.id}"
+                    )
+            }
         }
     }
 

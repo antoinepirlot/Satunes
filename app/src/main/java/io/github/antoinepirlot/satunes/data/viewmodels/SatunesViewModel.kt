@@ -30,6 +30,7 @@ import androidx.annotation.RequiresApi
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableLongState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -80,6 +81,7 @@ internal class SatunesViewModel : ViewModel() {
     private val _logger: SatunesLogger? = SatunesLogger.getLogger()
     private val _isLoadingData: MutableState<Boolean> = DataLoader.isLoading
     private val _isDataLoaded: MutableState<Boolean> = DataLoader.isLoaded
+    private val _defaultPlaylistId: MutableLongState = SettingsManager.defaultPlaylistId
 
     @RequiresApi(Build.VERSION_CODES.M)
     private val _updateAvailableStatus: MutableState<UpdateAvailableStatus> =
@@ -110,6 +112,8 @@ internal class SatunesViewModel : ViewModel() {
         private set
 
     val foldersPathsSelectedSet: Collection<String> = SettingsManager.foldersPathsSelectedSet
+
+    val defaultPlaylistId: Long by this._defaultPlaylistId
 
     fun loadSettings() {
         try {
@@ -650,9 +654,6 @@ internal class SatunesViewModel : ViewModel() {
                     context = MainActivity.instance.applicationContext,
                     playlist = playlist
                 )
-            }
-            _uiState.update { currentState: SatunesUiState ->
-                currentState.copy(defaultPlaylist = SettingsManager.defaultPlaylist)
             }
         } catch (e: Throwable) {
             _logger?.severe("Error while selecting new default playlist")

@@ -24,6 +24,7 @@ package io.github.antoinepirlot.satunes.database.services.settings
 
 import android.content.Context
 import android.net.Uri
+import androidx.compose.runtime.MutableLongState
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
@@ -33,7 +34,6 @@ import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.database.models.custom_action.CustomActions
 import io.github.antoinepirlot.satunes.database.services.data.DataLoader
-import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.settings.library.LibrarySettings
 import io.github.antoinepirlot.satunes.database.services.settings.navigation_bar.NavBarSettings
 import io.github.antoinepirlot.satunes.database.services.settings.playback.PlaybackSettings
@@ -57,8 +57,7 @@ object SettingsManager {
     // NavBarSettings
     val defaultNavBarSection: NavBarSection
         get() = NavBarSettings.defaultNavBarSection
-    val defaultPlaylist: Playlist?
-        get() = DataManager.getPlaylist(id = NavBarSettings.defaultPlaylistId)
+    val defaultPlaylistId: MutableLongState = NavBarSettings.defaultPlaylistId
 
     // Playback Settings
     val playbackWhenClosedChecked: Boolean
@@ -279,5 +278,13 @@ object SettingsManager {
         this.resetPlaybackModesSettings(context = context)
         this.resetDefaultSearchFiltersSettings(context = context)
         this.resetNavigationBarSettings(context = context)
+    }
+
+    /**
+     * Check if the default playlist is correct.
+     * If the value stored is > 0 but the matching playlist is null. Then reset the value.
+     */
+    suspend fun checkDefaultPlaylistSetting(context: Context) {
+        NavBarSettings.checkDefaultPlaylistSetting(context = context)
     }
 }

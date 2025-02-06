@@ -56,6 +56,10 @@ internal fun initSatunes(
     removeSatunesDownloadedApkFiles(context = context)
 }
 
+fun checkDefaultPlaylistSetting(context: Context) {
+    runBlocking { SettingsManager.checkDefaultPlaylistSetting(context = context) }
+}
+
 internal fun loadSatunesData(
     context: Context,
     satunesViewModel: SatunesViewModel?

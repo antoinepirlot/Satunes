@@ -133,4 +133,5 @@
     <string name="custom_actions_sub_settings_content">Ce paramètre permet de réorganiser la liste des boutons dans la page de lecture.</string>
     <string name="default_playlist_section_setting_content">Playlist par défault</string>
     <string name="no_playlist_selected">Aucune</string>
+    <string name="list_sub_settings_title">Listes</string>
 </resources>

@@ -20,26 +20,35 @@
  * PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.database.utils
+package io.github.antoinepirlot.satunes.ui.components.settings.reset.navigation_bar
 
-import io.github.antoinepirlot.satunes.database.models.NavBarSection
-import io.github.antoinepirlot.satunes.database.services.settings.design.DesignSettings.DEFAULT_DEFAULT_NAV_BAR_SECTION
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
+import io.github.antoinepirlot.satunes.ui.components.settings.reset.design.ResetListsSettings
+import io.github.antoinepirlot.satunes.ui.components.settings.reset.design.ResetNavigationBarSettings
 
 /**
- * @author Antoine Pirlot 03/02/2025
+ * @author Antoine Pirlot on 23/11/2024
  */
-internal fun getNavBarSection(id: Int?): NavBarSection {
-    var navBarSection: NavBarSection = when (id) {
-        0 -> NavBarSection.FOLDERS
-        1 -> NavBarSection.ARTISTS
-        2 -> NavBarSection.MUSICS
-        3 -> NavBarSection.ALBUMS
-        4 -> NavBarSection.GENRES
-        5 -> NavBarSection.PLAYLISTS
-        else -> DEFAULT_DEFAULT_NAV_BAR_SECTION
+@Composable
+internal fun ResetInterfaceSubSettings(
+    modifier: Modifier = Modifier,
+) {
+    SubSettings(
+        modifier = modifier,
+        title = stringResource(id = R.string.design_setting_title)
+    ) {
+        ResetNavigationBarSettings()
+        ResetListsSettings()
     }
-    if (!navBarSection.isEnabled.value) {
-        navBarSection = DEFAULT_DEFAULT_NAV_BAR_SECTION
-    }
-    return navBarSection
+}
+
+@Preview
+@Composable
+private fun ResetInterfaceSubSettingsPreview() {
+    ResetInterfaceSubSettings()
 }

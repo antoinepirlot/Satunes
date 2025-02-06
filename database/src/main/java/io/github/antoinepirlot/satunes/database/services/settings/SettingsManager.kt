@@ -34,8 +34,8 @@ import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.database.models.custom_action.CustomActions
 import io.github.antoinepirlot.satunes.database.services.data.DataLoader
+import io.github.antoinepirlot.satunes.database.services.settings.design.DesignSettings
 import io.github.antoinepirlot.satunes.database.services.settings.library.LibrarySettings
-import io.github.antoinepirlot.satunes.database.services.settings.navigation_bar.NavBarSettings
 import io.github.antoinepirlot.satunes.database.services.settings.playback.PlaybackSettings
 import io.github.antoinepirlot.satunes.database.services.settings.search.SearchSettings
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
@@ -56,8 +56,8 @@ object SettingsManager {
 
     // NavBarSettings
     val defaultNavBarSection: NavBarSection
-        get() = NavBarSettings.defaultNavBarSection
-    val defaultPlaylistId: MutableLongState = NavBarSettings.defaultPlaylistId
+        get() = DesignSettings.defaultNavBarSection
+    val defaultPlaylistId: MutableLongState = DesignSettings.defaultPlaylistId
 
     // Playback Settings
     val playbackWhenClosedChecked: Boolean
@@ -108,7 +108,7 @@ object SettingsManager {
         get() = LibrarySettings.artistReplacement
 
     val showFirstLetter: Boolean
-        get() = LibrarySettings.showFirstLetter
+        get() = DesignSettings.showFirstLetter
 
     suspend fun loadSettings(context: Context) {
         if (_isLoaded) {
@@ -116,7 +116,7 @@ object SettingsManager {
             return
         }
         SatunesSettings.loadSettings(context = context)
-        NavBarSettings.loadSettings(context = context)
+        DesignSettings.loadSettings(context = context)
         PlaybackSettings.loadSettings(context = context)
         loadFilters(context = context)
         LibrarySettings.loadSettings(context = context)
@@ -129,7 +129,7 @@ object SettingsManager {
     }
 
     suspend fun switchNavBarSection(context: Context, navBarSection: NavBarSection) {
-        NavBarSettings.switchNavBarSection(context = context, navBarSection = navBarSection)
+        DesignSettings.switchNavBarSection(context = context, navBarSection = navBarSection)
     }
 
     suspend fun switchPlaybackWhenClosedChecked(context: Context) {
@@ -208,7 +208,7 @@ object SettingsManager {
     }
 
     suspend fun selectDefaultNavBarSection(context: Context, navBarSection: NavBarSection) {
-        NavBarSettings.selectDefaultNavBarSection(context = context, navBarSection = navBarSection)
+        DesignSettings.selectDefaultNavBarSection(context = context, navBarSection = navBarSection)
     }
 
     suspend fun switchCompilationMusic(context: Context) {
@@ -228,7 +228,7 @@ object SettingsManager {
     }
 
     suspend fun switchShowFirstLetter(context: Context) {
-        LibrarySettings.switchShowFirstLetter(context = context)
+        DesignSettings.switchShowFirstLetter(context = context)
     }
 
     suspend fun resetFoldersSettings(context: Context) {
@@ -256,7 +256,7 @@ object SettingsManager {
     }
 
     suspend fun resetNavigationBarSettings(context: Context) {
-        NavBarSettings.resetNavigationBarSettings(context = context)
+        DesignSettings.resetNavigationBarSettings(context = context)
     }
 
     suspend fun moveUp(context: Context, customAction: CustomActions) {
@@ -268,7 +268,7 @@ object SettingsManager {
     }
 
     suspend fun selectDefaultPlaylist(context: Context, playlist: Playlist?) {
-        NavBarSettings.selectDefaultPlaylist(context = context, playlist = playlist)
+        DesignSettings.selectDefaultPlaylist(context = context, playlist = playlist)
     }
 
     suspend fun resetAll(context: Context) {
@@ -278,7 +278,7 @@ object SettingsManager {
         this.resetPlaybackBehaviorSettings(context = context)
         this.resetPlaybackModesSettings(context = context)
         this.resetDefaultSearchFiltersSettings(context = context)
-        this.resetNavigationBarSettings(context = context)
+        DesignSettings.resetAll(context = context)
     }
 
     /**
@@ -286,6 +286,10 @@ object SettingsManager {
      * If the value stored is > 0 but the matching playlist is null. Then reset the value.
      */
     suspend fun checkDefaultPlaylistSetting(context: Context) {
-        NavBarSettings.checkDefaultPlaylistSetting(context = context)
+        DesignSettings.checkDefaultPlaylistSetting(context = context)
+    }
+
+    suspend fun resetListsSettings(context: Context) {
+        DesignSettings.resetListsSettings(context = context)
     }
 }

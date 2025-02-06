@@ -20,7 +20,7 @@
  * PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.database.services.settings.navigation_bar
+package io.github.antoinepirlot.satunes.database.services.settings.design
 
 import android.content.Context
 import androidx.compose.runtime.MutableLongState
@@ -42,7 +42,7 @@ import kotlinx.coroutines.flow.map
 /**
  * @author Antoine Pirlot 03/02/2025
  */
-internal object NavBarSettings {
+internal object DesignSettings {
     // DEFAULT VALUES
     private const val DEFAULT_FOLDERS_NAVBAR: Boolean = true
     private const val DEFAULT_ARTISTS_NAVBAR: Boolean = true
@@ -50,7 +50,8 @@ internal object NavBarSettings {
     private const val DEFAULT_GENRE_NAVBAR: Boolean = true
     private const val DEFAULT_PLAYLIST_NAVBAR: Boolean = true
     internal val DEFAULT_DEFAULT_NAV_BAR_SECTION: NavBarSection = NavBarSection.MUSICS
-    private val DEFAULT_PLAYLIST_ID: Long = -1
+    private const val DEFAULT_PLAYLIST_ID: Long = -1
+    private const val DEFAULT_SHOW_FIRST_LETTER = true
 
     // KEYS
     private val FOLDERS_NAVBAR_PREFERENCES_KEY: Preferences.Key<Boolean> =
@@ -67,12 +68,17 @@ internal object NavBarSettings {
         intPreferencesKey("default_nav_bar_section")
     private val DEFAULT_PLAYLIST_ID_KEY: Preferences.Key<Long> =
         longPreferencesKey("default_playlist_id_key")
+    private val SHOW_FIRST_LETTER_KEY: Preferences.Key<Boolean> =
+        booleanPreferencesKey("show_first_letter")
 
     // VARIABLES
     var defaultNavBarSection: NavBarSection = DEFAULT_DEFAULT_NAV_BAR_SECTION
         private set
     var defaultPlaylistId: MutableLongState = mutableLongStateOf(DEFAULT_PLAYLIST_ID)
         private set
+    var showFirstLetter: Boolean = DEFAULT_SHOW_FIRST_LETTER
+        private set
+
 
     internal suspend fun loadSettings(context: Context) {
         context.dataStore.data.map { preferences: Preferences ->
@@ -86,6 +92,7 @@ internal object NavBarSettings {
                 preferences[GENRES_NAVBAR_PREFERENCES_KEY] ?: DEFAULT_GENRE_NAVBAR
             NavBarSection.PLAYLISTS.isEnabled.value =
                 preferences[PLAYLISTS_NAVBAR_PREFERENCES_KEY] ?: DEFAULT_PLAYLIST_NAVBAR
+            showFirstLetter = preferences[SHOW_FIRST_LETTER_KEY] ?: DEFAULT_SHOW_FIRST_LETTER
 
             defaultNavBarSection = getNavBarSection(preferences[DEFAULT_NAV_BAR_SECTION_KEY])
             defaultPlaylistId.longValue =
@@ -177,5 +184,24 @@ internal object NavBarSettings {
             selectDefaultPlaylist(context = context, playlist = null)
             defaultPlaylistId.longValue = DEFAULT_PLAYLIST_ID
         }
+    }
+
+    suspend fun switchShowFirstLetter(context: Context) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            this.showFirstLetter = !this.showFirstLetter
+            preferences[SHOW_FIRST_LETTER_KEY] = this.showFirstLetter
+        }
+    }
+
+    suspend fun resetListsSettings(context: Context) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            this.showFirstLetter = DEFAULT_SHOW_FIRST_LETTER
+            preferences[SHOW_FIRST_LETTER_KEY] = this.showFirstLetter
+        }
+    }
+
+    suspend fun resetAll(context: Context) {
+        this.resetListsSettings(context = context)
+        this.resetNavigationBarSettings(context = context)
     }
 }

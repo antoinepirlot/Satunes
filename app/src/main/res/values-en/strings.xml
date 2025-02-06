@@ -132,4 +132,5 @@
     <string name="custom_actions_sub_settings_content">This reorder the list of buttons in the playback view.</string>
     <string name="default_playlist_section_setting_content">Default Playlist</string>
     <string name="no_playlist_selected">None</string>
+    <string name="list_sub_settings_title">Lists</string>
 </resources>

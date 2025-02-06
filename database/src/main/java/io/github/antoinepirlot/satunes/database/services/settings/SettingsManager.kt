@@ -101,13 +101,14 @@ object SettingsManager {
     /**
      * This setting is true if the compilation's music has to be added to compilation's artist's music list
      */
-    var compilationMusic: Boolean = LibrarySettings.compilationMusic
-        private set
-    var artistReplacement: Boolean = LibrarySettings.artistReplacement
-        private set
+    val compilationMusic: Boolean
+        get() = LibrarySettings.compilationMusic
 
-    var showFirstLetter: Boolean = LibrarySettings.showFirstLetter
-        private set
+    val artistReplacement: Boolean
+        get() = LibrarySettings.artistReplacement
+
+    val showFirstLetter: Boolean
+        get() = LibrarySettings.showFirstLetter
 
     suspend fun loadSettings(context: Context) {
         if (_isLoaded) {

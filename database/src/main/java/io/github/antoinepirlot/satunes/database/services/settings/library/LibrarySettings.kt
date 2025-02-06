@@ -47,7 +47,6 @@ internal object LibrarySettings {
     private const val DEFAULT_SELECTED_PATH: String = "/0/Music/%"
     private const val DEFAULT_COMPILATION_MUSIC: Boolean = false
     private const val DEFAULT_ARTISTS_REPLACEMENT: Boolean = true
-    private const val DEFAULT_SHOW_FIRST_LETTER = true
 
     // KEYS
 
@@ -59,8 +58,6 @@ internal object LibrarySettings {
         booleanPreferencesKey("compilation_music")
     private val ARTISTS_REPLACEMENT_KEY: Preferences.Key<Boolean> =
         booleanPreferencesKey("artist_replacement")
-    private val SHOW_FIRST_LETTER_KEY: Preferences.Key<Boolean> =
-        booleanPreferencesKey("show_first_letter")
 
     // VARIABLES
 
@@ -77,8 +74,6 @@ internal object LibrarySettings {
         private set
     var artistReplacement: Boolean = DEFAULT_ARTISTS_REPLACEMENT
         private set
-    var showFirstLetter: Boolean = DEFAULT_SHOW_FIRST_LETTER
-        private set
 
     suspend fun loadSettings(context: Context) {
         context.dataStore.data.map { preferences: Preferences ->
@@ -93,7 +88,6 @@ internal object LibrarySettings {
             compilationMusic = preferences[COMPILATION_MUSIC_KEY] ?: DEFAULT_COMPILATION_MUSIC
 
             artistReplacement = preferences[ARTISTS_REPLACEMENT_KEY] ?: DEFAULT_ARTISTS_REPLACEMENT
-            showFirstLetter = preferences[SHOW_FIRST_LETTER_KEY] ?: DEFAULT_SHOW_FIRST_LETTER
         }.first() //Without .first() settings are not loaded correctly
     }
 
@@ -169,13 +163,6 @@ internal object LibrarySettings {
         }
     }
 
-    suspend fun switchShowFirstLetter(context: Context) {
-        context.dataStore.edit { preferences: MutablePreferences ->
-            this.showFirstLetter = !this.showFirstLetter
-            preferences[SHOW_FIRST_LETTER_KEY] = this.showFirstLetter
-        }
-    }
-
     suspend fun resetFoldersSettings(context: Context) {
         context.dataStore.edit { preferences: MutablePreferences ->
             (this.foldersPathsSelectedCollection as MutableCollection<String>).clear()
@@ -189,10 +176,8 @@ internal object LibrarySettings {
         context.dataStore.edit { preferences: MutablePreferences ->
             this.compilationMusic = DEFAULT_COMPILATION_MUSIC
             this.artistReplacement = DEFAULT_ARTISTS_REPLACEMENT
-            this.showFirstLetter = DEFAULT_SHOW_FIRST_LETTER
             preferences[COMPILATION_MUSIC_KEY] = this.compilationMusic
             preferences[ARTISTS_REPLACEMENT_KEY] = this.artistReplacement
-            preferences[SHOW_FIRST_LETTER_KEY] = this.showFirstLetter
         }
     }
 }

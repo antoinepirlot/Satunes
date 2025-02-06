@@ -81,6 +81,8 @@ internal class SatunesViewModel : ViewModel() {
     private val _logger: SatunesLogger? = SatunesLogger.getLogger()
     private val _isLoadingData: MutableState<Boolean> = DataLoader.isLoading
     private val _isDataLoaded: MutableState<Boolean> = DataLoader.isLoaded
+    private val _defaultNavBarSection: MutableState<NavBarSection> =
+        SettingsManager.defaultNavBarSection
     private val _defaultPlaylistId: MutableLongState = SettingsManager.defaultPlaylistId
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -113,6 +115,7 @@ internal class SatunesViewModel : ViewModel() {
 
     val foldersPathsSelectedSet: Collection<String> = SettingsManager.foldersPathsSelectedSet
 
+    val defaultNavBarSection: NavBarSection by this._defaultNavBarSection
     val defaultPlaylistId: Long by this._defaultPlaylistId
 
     fun loadSettings() {
@@ -204,7 +207,7 @@ internal class SatunesViewModel : ViewModel() {
                     navBarSection = navBarSection
                 )
                 if (
-                    _uiState.value.defaultNavBarSection == navBarSection
+                    defaultNavBarSection == navBarSection
                     && !navBarSection.isEnabled.value
                 ) {
                     selectDefaultNavBarSection(navBarSection = NavBarSection.MUSICS)
@@ -553,9 +556,6 @@ internal class SatunesViewModel : ViewModel() {
                     navBarSection = navBarSection
                 )
             }
-            _uiState.update { currentState: SatunesUiState ->
-                currentState.copy(defaultNavBarSection = SettingsManager.defaultNavBarSection)
-            }
         } catch (e: Throwable) {
             _logger?.severe("Error while selecting new default nav bar section: ${navBarSection.name}")
         }
@@ -658,6 +658,25 @@ internal class SatunesViewModel : ViewModel() {
         } catch (e: Throwable) {
             _logger?.severe("Error while selecting new default playlist")
             throw e
+        }
+    }
+
+    fun resetCustomActions(scope: CoroutineScope, snackBarHostState: SnackbarHostState) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                SettingsManager.resetCustomActions(context = MainActivity.instance.applicationContext)
+            } catch (e: Throwable) {
+                showErrorSnackBar(
+                    scope = scope,
+                    snackBarHostState = snackBarHostState,
+                    action = {
+                        resetCustomActions(
+                            scope = scope,
+                            snackBarHostState = snackBarHostState
+                        )
+                    }
+                )
+            }
         }
     }
 }

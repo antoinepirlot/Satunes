@@ -20,50 +20,46 @@
  * PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.settings.design.navigation_bar
+package io.github.antoinepirlot.satunes.ui.components.settings.reset.design
 
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.data.local.LocalMainScope
+import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
-import io.github.antoinepirlot.satunes.database.models.NavBarSection
-import io.github.antoinepirlot.satunes.models.SwitchSettings
-import io.github.antoinepirlot.satunes.ui.components.settings.SettingsSwitchList
-import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
+import io.github.antoinepirlot.satunes.ui.components.settings.reset.ResetSettings
+import kotlinx.coroutines.CoroutineScope
 
 /**
- * @author Antoine Pirlot 05/02/2025
+ * @author Antoine Pirlot 06/02/2025
  */
-
-private val navBarSectionSettingsChecked: Map<SwitchSettings, NavBarSection> = mapOf(
-    Pair(first = SwitchSettings.FOLDERS_NAVBAR, second = NavBarSection.FOLDERS),
-    Pair(first = SwitchSettings.ARTISTS_NAVBAR, second = NavBarSection.ARTISTS),
-    Pair(first = SwitchSettings.ALBUMS_NAVBAR, second = NavBarSection.ALBUMS),
-    Pair(first = SwitchSettings.GENRES_NAVBAR, second = NavBarSection.GENRES),
-    Pair(first = SwitchSettings.PLAYLISTS_NAVBAR, second = NavBarSection.PLAYLISTS)
-)
-
 @Composable
-internal fun NavigationBarSubSettings(
+internal fun ResetCustomActionsSettings(
     modifier: Modifier = Modifier,
-    satunesViewModel: SatunesViewModel = viewModel(),
+    satunesViewModel: SatunesViewModel = viewModel()
 ) {
-    SubSettings(
+    val scope: CoroutineScope = LocalMainScope.current
+    val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
+
+    ResetSettings(
         modifier = modifier,
-        title = stringResource(id = R.string.navigation_bar_settings_title)
-    ) {
-        SettingsSwitchList(navbarMap = navBarSectionSettingsChecked)
-        DefaultNavBarSectionSetting()
-        if (satunesViewModel.defaultNavBarSection == NavBarSection.PLAYLISTS)
-            DefaultPlaylistSection()
-    }
+        text = stringResource(id = R.string.custom_actions_sub_settings_title),
+        onClick = {
+            satunesViewModel.resetCustomActions(
+                scope = scope,
+                snackBarHostState = snackBarHostState
+            )
+        }
+    )
 }
 
 @Preview
 @Composable
-private fun NavigationBarSubSettingsPreview(modifier: Modifier = Modifier) {
-    NavigationBarSubSettings()
+private fun ResetCustomActionsSettingsPreview() {
+    ResetCustomActionsSettings()
 }

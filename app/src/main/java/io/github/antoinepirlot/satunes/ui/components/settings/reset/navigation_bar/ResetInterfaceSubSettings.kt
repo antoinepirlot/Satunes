@@ -20,7 +20,7 @@
  * PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.settings.reset.playback
+package io.github.antoinepirlot.satunes.ui.components.settings.reset.navigation_bar
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
@@ -32,6 +32,9 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
+import io.github.antoinepirlot.satunes.ui.components.settings.reset.design.ResetCustomActionsSettings
+import io.github.antoinepirlot.satunes.ui.components.settings.reset.design.ResetListsSettings
+import io.github.antoinepirlot.satunes.ui.components.settings.reset.design.ResetNavigationBarSettings
 
 /**
  * @author Antoine Pirlot on 23/11/2024
@@ -40,19 +43,23 @@ import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
 private val spacerSize: Dp = 5.dp
 
 @Composable
-internal fun ResetPlaybackSubSettings(modifier: Modifier = Modifier) {
+internal fun ResetInterfaceSubSettings(
+    modifier: Modifier = Modifier,
+) {
     SubSettings(
         modifier = modifier,
-        title = stringResource(R.string.playback_settings)
+        title = stringResource(id = R.string.design_setting_title)
     ) {
-        ResetPlaybackBehaviorSettings()
+        ResetNavigationBarSettings()
         Spacer(modifier = Modifier.size(size = spacerSize))
-        ResetPlaybackModesSettings()
+        ResetCustomActionsSettings()
+        Spacer(modifier = Modifier.size(size = spacerSize))
+        ResetListsSettings()
     }
 }
 
 @Preview
 @Composable
-private fun ResetPlaybackSubSettingsPreview() {
-    ResetPlaybackSubSettings()
+private fun ResetInterfaceSubSettingsPreview() {
+    ResetInterfaceSubSettings()
 }

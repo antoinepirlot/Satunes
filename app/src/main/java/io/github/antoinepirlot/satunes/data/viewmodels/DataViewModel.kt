@@ -1010,4 +1010,20 @@ class DataViewModel : ViewModel() {
             currentState.copy(mediaImplListOnScreen = mediaImplCollection)
         }
     }
+
+    fun resetListsSettings(scope: CoroutineScope, snackBarHostState: SnackbarHostState) {
+        try {
+            CoroutineScope(Dispatchers.IO).launch {
+                SettingsManager.resetListsSettings(context = MainActivity.instance.applicationContext)
+            }
+        } catch (e: Exception) {
+            showErrorSnackBar(
+                scope = scope,
+                snackBarHostState = snackBarHostState,
+                action = {
+                    resetListsSettings(scope = scope, snackBarHostState = snackBarHostState)
+                }
+            )
+        }
+    }
 }

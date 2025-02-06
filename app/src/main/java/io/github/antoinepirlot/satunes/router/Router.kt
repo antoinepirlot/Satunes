@@ -78,7 +78,7 @@ internal fun Router(
     var defaultDestination: Destination? by rememberSaveable { mutableStateOf(null) }
     LaunchedEffect(key1 = Unit) {
         defaultDestination =
-            getNavBarSectionDestination(navBarSection = satunesUiState.defaultNavBarSection)
+            getNavBarSectionDestination(navBarSection = satunesViewModel.defaultNavBarSection)
     }
 
     if (defaultDestination == null) return

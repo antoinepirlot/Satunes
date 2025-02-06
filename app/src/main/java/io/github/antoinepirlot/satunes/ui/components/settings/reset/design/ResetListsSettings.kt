@@ -20,39 +20,46 @@
  * PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.settings.reset.playback
+package io.github.antoinepirlot.satunes.ui.components.settings.reset.design
 
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.size
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
+import io.github.antoinepirlot.satunes.data.local.LocalMainScope
+import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
+import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
+import io.github.antoinepirlot.satunes.ui.components.settings.reset.ResetSettings
+import kotlinx.coroutines.CoroutineScope
 
 /**
- * @author Antoine Pirlot on 23/11/2024
+ * @author Antoine Pirlot 06/02/2025
  */
-
-private val spacerSize: Dp = 5.dp
-
 @Composable
-internal fun ResetPlaybackSubSettings(modifier: Modifier = Modifier) {
-    SubSettings(
+fun ResetListsSettings(
+    modifier: Modifier = Modifier,
+    dataViewModel: DataViewModel = viewModel()
+) {
+    val scope: CoroutineScope = LocalMainScope.current
+    val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
+
+    ResetSettings(
         modifier = modifier,
-        title = stringResource(R.string.playback_settings)
-    ) {
-        ResetPlaybackBehaviorSettings()
-        Spacer(modifier = Modifier.size(size = spacerSize))
-        ResetPlaybackModesSettings()
-    }
+        text = stringResource(id = R.string.list_sub_settings_title),
+        onClick = {
+            dataViewModel.resetListsSettings(
+                scope = scope,
+                snackBarHostState = snackBarHostState
+            )
+        }
+    )
 }
 
 @Preview
 @Composable
-private fun ResetPlaybackSubSettingsPreview() {
-    ResetPlaybackSubSettings()
+private fun ResetListsSettingsPreview() {
+    ResetListsSettings()
 }

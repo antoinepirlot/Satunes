@@ -23,8 +23,6 @@
 package io.github.antoinepirlot.satunes.ui.views.playback
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
@@ -32,7 +30,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import io.github.antoinepirlot.jetpack_libs.components.models.ScreenSizes
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
-import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.Album
@@ -54,12 +51,11 @@ internal fun PlaybackView(
     onAlbumClick: (album: Album?) -> Unit,
     onArtistClick: (artist: Artist) -> Unit,
 ) {
-    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     val navController: NavHostController = LocalNavController.current
 
     if (playbackViewModel.musicPlaying == null) {
         backToRoot(
-            rootRoute = getNavBarSectionDestination(navBarSection = satunesUiState.defaultNavBarSection),
+            rootRoute = getNavBarSectionDestination(navBarSection = satunesViewModel.defaultNavBarSection),
             navController = navController
         )
         return

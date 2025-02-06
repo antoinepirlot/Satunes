@@ -20,29 +20,36 @@
  * PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.database.services.settings.navigation_bar
+package io.github.antoinepirlot.satunes.database.services.settings.design
 
 import android.content.Context
 import androidx.compose.runtime.MutableLongState
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.datastore.preferences.core.MutablePreferences
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.longPreferencesKey
+import androidx.datastore.preferences.core.stringPreferencesKey
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.database.models.Playlist
+import io.github.antoinepirlot.satunes.database.models.custom_action.CustomActions
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager.dataStore
 import io.github.antoinepirlot.satunes.database.utils.getNavBarSection
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 /**
  * @author Antoine Pirlot 03/02/2025
  */
-internal object NavBarSettings {
+internal object DesignSettings {
     // DEFAULT VALUES
     private const val DEFAULT_FOLDERS_NAVBAR: Boolean = true
     private const val DEFAULT_ARTISTS_NAVBAR: Boolean = true
@@ -50,7 +57,14 @@ internal object NavBarSettings {
     private const val DEFAULT_GENRE_NAVBAR: Boolean = true
     private const val DEFAULT_PLAYLIST_NAVBAR: Boolean = true
     internal val DEFAULT_DEFAULT_NAV_BAR_SECTION: NavBarSection = NavBarSection.MUSICS
-    private val DEFAULT_PLAYLIST_ID: Long = -1
+    private const val DEFAULT_PLAYLIST_ID: Long = -1
+    private const val DEFAULT_SHOW_FIRST_LETTER = true
+    private val DEFAULT_CUSTOM_ACTIONS_ORDER: Collection<CustomActions> = setOf(
+        CustomActions.LIKE,
+        CustomActions.ADD_TO_PLAYLIST,
+        CustomActions.SHARE,
+        CustomActions.TIMER
+    )
 
     // KEYS
     private val FOLDERS_NAVBAR_PREFERENCES_KEY: Preferences.Key<Boolean> =
@@ -67,12 +81,20 @@ internal object NavBarSettings {
         intPreferencesKey("default_nav_bar_section")
     private val DEFAULT_PLAYLIST_ID_KEY: Preferences.Key<Long> =
         longPreferencesKey("default_playlist_id_key")
+    private val SHOW_FIRST_LETTER_KEY: Preferences.Key<Boolean> =
+        booleanPreferencesKey("show_first_letter")
+    private val CUSTOM_ACTIONS_ORDER_KEY: Preferences.Key<String> =
+        stringPreferencesKey("custom_actions_order")
 
     // VARIABLES
-    var defaultNavBarSection: NavBarSection = DEFAULT_DEFAULT_NAV_BAR_SECTION
+    var defaultNavBarSection: MutableState<NavBarSection> =
+        mutableStateOf(DEFAULT_DEFAULT_NAV_BAR_SECTION)
         private set
-    var defaultPlaylistId: MutableLongState = mutableLongStateOf(DEFAULT_PLAYLIST_ID)
+    val defaultPlaylistId: MutableLongState = mutableLongStateOf(DEFAULT_PLAYLIST_ID)
+    var showFirstLetter: Boolean = DEFAULT_SHOW_FIRST_LETTER
         private set
+    val customActionsOrder: MutableList<CustomActions> = mutableStateListOf()
+
 
     internal suspend fun loadSettings(context: Context) {
         context.dataStore.data.map { preferences: Preferences ->
@@ -86,10 +108,17 @@ internal object NavBarSettings {
                 preferences[GENRES_NAVBAR_PREFERENCES_KEY] ?: DEFAULT_GENRE_NAVBAR
             NavBarSection.PLAYLISTS.isEnabled.value =
                 preferences[PLAYLISTS_NAVBAR_PREFERENCES_KEY] ?: DEFAULT_PLAYLIST_NAVBAR
+            showFirstLetter = preferences[SHOW_FIRST_LETTER_KEY] ?: DEFAULT_SHOW_FIRST_LETTER
 
-            defaultNavBarSection = getNavBarSection(preferences[DEFAULT_NAV_BAR_SECTION_KEY])
+
+            defaultNavBarSection.value = getNavBarSection(preferences[DEFAULT_NAV_BAR_SECTION_KEY])
             defaultPlaylistId.longValue =
                 preferences[DEFAULT_PLAYLIST_ID_KEY] ?: DEFAULT_PLAYLIST_ID
+
+            if (preferences[CUSTOM_ACTIONS_ORDER_KEY] != null)
+                this.customActionsOrder.addAll(Json.decodeFromString(preferences[CUSTOM_ACTIONS_ORDER_KEY]!!))
+            else
+                this.customActionsOrder.addAll(elements = DEFAULT_CUSTOM_ACTIONS_ORDER)
         }.first() //Without .first() settings are not loaded correctly
     }
 
@@ -143,14 +172,15 @@ internal object NavBarSettings {
 
     suspend fun selectDefaultNavBarSection(context: Context, navBarSection: NavBarSection) {
         context.dataStore.edit { preferences: MutablePreferences ->
-            this.defaultNavBarSection = navBarSection
-            preferences[DEFAULT_NAV_BAR_SECTION_KEY] = this.defaultNavBarSection.id
+            this.defaultNavBarSection.value = navBarSection
+            preferences[DEFAULT_NAV_BAR_SECTION_KEY] = this.defaultNavBarSection.value.id
         }
     }
 
     suspend fun resetNavigationBarSettings(context: Context) {
         context.dataStore.edit { preferences: MutablePreferences ->
-            this.defaultNavBarSection = DEFAULT_DEFAULT_NAV_BAR_SECTION
+            this.defaultNavBarSection.value = DEFAULT_DEFAULT_NAV_BAR_SECTION
+            this.defaultPlaylistId.longValue = DEFAULT_PLAYLIST_ID
             NavBarSection.enableAll()
             preferences[FOLDERS_NAVBAR_PREFERENCES_KEY] = DEFAULT_FOLDERS_NAVBAR
             preferences[ARTISTS_NAVBAR_PREFERENCES_KEY] = DEFAULT_ARTISTS_NAVBAR
@@ -158,6 +188,7 @@ internal object NavBarSettings {
             preferences[GENRES_NAVBAR_PREFERENCES_KEY] = DEFAULT_GENRE_NAVBAR
             preferences[PLAYLISTS_NAVBAR_PREFERENCES_KEY] = DEFAULT_PLAYLIST_NAVBAR
             preferences[DEFAULT_NAV_BAR_SECTION_KEY] = DEFAULT_DEFAULT_NAV_BAR_SECTION.id
+            preferences[DEFAULT_PLAYLIST_ID_KEY] = DEFAULT_PLAYLIST_ID
         }
     }
 
@@ -177,5 +208,53 @@ internal object NavBarSettings {
             selectDefaultPlaylist(context = context, playlist = null)
             defaultPlaylistId.longValue = DEFAULT_PLAYLIST_ID
         }
+    }
+
+    suspend fun switchShowFirstLetter(context: Context) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            this.showFirstLetter = !this.showFirstLetter
+            preferences[SHOW_FIRST_LETTER_KEY] = this.showFirstLetter
+        }
+    }
+
+    suspend fun moveUp(context: Context, customAction: CustomActions) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            val newIndex: Int = this.customActionsOrder.indexOf(customAction) - 1
+            if (newIndex < 0) return@edit //prevent crash if too fast
+            this.customActionsOrder.remove(element = customAction)
+            this.customActionsOrder.add(index = newIndex, element = customAction)
+            preferences[CUSTOM_ACTIONS_ORDER_KEY] = Json.encodeToString(this.customActionsOrder)
+        }
+    }
+
+    suspend fun moveDown(context: Context, customAction: CustomActions) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            val newIndex: Int = this.customActionsOrder.indexOf(customAction) + 1
+            if (newIndex > this.customActionsOrder.size) return@edit //prevent crash if too fast
+            this.customActionsOrder.remove(element = customAction)
+            this.customActionsOrder.add(index = newIndex, element = customAction)
+            preferences[CUSTOM_ACTIONS_ORDER_KEY] = Json.encodeToString(this.customActionsOrder)
+        }
+    }
+
+    suspend fun resetListsSettings(context: Context) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            this.showFirstLetter = DEFAULT_SHOW_FIRST_LETTER
+            preferences[SHOW_FIRST_LETTER_KEY] = this.showFirstLetter
+        }
+    }
+
+    suspend fun resetCustomActions(context: Context) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            this.customActionsOrder.clear()
+            this.customActionsOrder.addAll(elements = DEFAULT_CUSTOM_ACTIONS_ORDER)
+            preferences[CUSTOM_ACTIONS_ORDER_KEY] = Json.encodeToString(this.customActionsOrder)
+        }
+    }
+
+    suspend fun resetAll(context: Context) {
+        this.resetNavigationBarSettings(context = context)
+        this.resetListsSettings(context = context)
+        this.resetCustomActions(context = context)
     }
 }

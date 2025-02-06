@@ -23,7 +23,7 @@
 package io.github.antoinepirlot.satunes.database.utils
 
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
-import io.github.antoinepirlot.satunes.database.services.settings.navigation_bar.NavBarSettings.DEFAULT_DEFAULT_NAV_BAR_SECTION
+import io.github.antoinepirlot.satunes.database.services.settings.design.DesignSettings.DEFAULT_DEFAULT_NAV_BAR_SECTION
 
 /**
  * @author Antoine Pirlot 03/02/2025

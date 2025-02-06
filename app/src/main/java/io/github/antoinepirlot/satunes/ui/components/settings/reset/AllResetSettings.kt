@@ -42,7 +42,7 @@ import io.github.antoinepirlot.satunes.ui.components.buttons.settings.reset.Rese
 import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
 import io.github.antoinepirlot.satunes.ui.components.settings.reset.battery.ResetBatterySettings
 import io.github.antoinepirlot.satunes.ui.components.settings.reset.library.ResetLibrarySubSettings
-import io.github.antoinepirlot.satunes.ui.components.settings.reset.navigation_bar.ResetNavigationBarSubSettings
+import io.github.antoinepirlot.satunes.ui.components.settings.reset.navigation_bar.ResetInterfaceSubSettings
 import io.github.antoinepirlot.satunes.ui.components.settings.reset.playback.ResetPlaybackSubSettings
 import io.github.antoinepirlot.satunes.ui.components.settings.reset.search.ResetSearchSubSettings
 import kotlinx.coroutines.CoroutineScope
@@ -77,7 +77,7 @@ internal fun AllResetSettings(
                 }
             )
         }
-        ResetNavigationBarSubSettings()
+        ResetInterfaceSubSettings()
         ResetPlaybackSubSettings()
         ResetSearchSubSettings()
         ResetLibrarySubSettings()

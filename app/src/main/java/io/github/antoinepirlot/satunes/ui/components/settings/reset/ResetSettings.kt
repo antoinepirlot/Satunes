@@ -47,7 +47,11 @@ internal fun ResetSettings(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = if (text != null) Arrangement.SpaceBetween else Arrangement.Center
     ) {
-        if (text != null) NormalText(modifier = Modifier.fillMaxWidth(0.5f), text = text)
+        if (text != null) NormalText(
+            modifier = Modifier.fillMaxWidth(0.5f),
+            text = text,
+            maxLines = Int.MAX_VALUE
+        )
         ResetButton(
             onClick = onClick
         )

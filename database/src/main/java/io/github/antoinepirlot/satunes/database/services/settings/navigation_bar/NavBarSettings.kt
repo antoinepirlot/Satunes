@@ -23,6 +23,8 @@
 package io.github.antoinepirlot.satunes.database.services.settings.navigation_bar
 
 import android.content.Context
+import androidx.compose.runtime.MutableLongState
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.datastore.preferences.core.MutablePreferences
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -69,7 +71,7 @@ internal object NavBarSettings {
     // VARIABLES
     var defaultNavBarSection: NavBarSection = DEFAULT_DEFAULT_NAV_BAR_SECTION
         private set
-    var defaultPlaylistId: Long = DEFAULT_PLAYLIST_ID
+    var defaultPlaylistId: MutableLongState = mutableLongStateOf(DEFAULT_PLAYLIST_ID)
         private set
 
     internal suspend fun loadSettings(context: Context) {
@@ -86,11 +88,8 @@ internal object NavBarSettings {
                 preferences[PLAYLISTS_NAVBAR_PREFERENCES_KEY] ?: DEFAULT_PLAYLIST_NAVBAR
 
             defaultNavBarSection = getNavBarSection(preferences[DEFAULT_NAV_BAR_SECTION_KEY])
-            defaultPlaylistId = preferences[DEFAULT_PLAYLIST_ID_KEY] ?: DEFAULT_PLAYLIST_ID
-            if (DataManager.getPlaylist(id = defaultPlaylistId) == null) {
-                selectDefaultPlaylist(context = context, playlist = null)
-                defaultPlaylistId = DEFAULT_PLAYLIST_ID
-            }
+            defaultPlaylistId.longValue =
+                preferences[DEFAULT_PLAYLIST_ID_KEY] ?: DEFAULT_PLAYLIST_ID
         }.first() //Without .first() settings are not loaded correctly
     }
 
@@ -164,8 +163,19 @@ internal object NavBarSettings {
 
     suspend fun selectDefaultPlaylist(context: Context, playlist: Playlist?) {
         context.dataStore.edit { preferences: MutablePreferences ->
-            this.defaultPlaylistId = playlist?.id ?: DEFAULT_PLAYLIST_ID
+            this.defaultPlaylistId.longValue = playlist?.id ?: DEFAULT_PLAYLIST_ID
             preferences[DEFAULT_PLAYLIST_ID_KEY] = playlist?.id ?: DEFAULT_PLAYLIST_ID
+        }
+    }
+
+    /**
+     * Check if the default playlist is correct.
+     * If the value stored is > 0 but the matching playlist is null. Then reset the value.
+     */
+    suspend fun checkDefaultPlaylistSetting(context: Context) {
+        if (DataManager.getPlaylist(id = defaultPlaylistId.longValue) == null) {
+            selectDefaultPlaylist(context = context, playlist = null)
+            defaultPlaylistId.longValue = DEFAULT_PLAYLIST_ID
         }
     }
 }

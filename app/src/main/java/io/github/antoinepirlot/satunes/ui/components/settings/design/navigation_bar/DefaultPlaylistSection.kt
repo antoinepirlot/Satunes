@@ -30,7 +30,6 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -42,7 +41,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
@@ -57,11 +55,12 @@ import io.github.antoinepirlot.satunes.database.R as RDb
 @Composable
 internal fun DefaultPlaylistSection(
     modifier: Modifier = Modifier,
-    satunesViewModel: SatunesViewModel = viewModel()
+    satunesViewModel: SatunesViewModel = viewModel(),
+    dataViewModel: DataViewModel = viewModel(),
 ) {
-    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     var expanded: Boolean by remember { mutableStateOf(false) }
-    val selectedPlaylist: Playlist? = satunesUiState.defaultPlaylist
+    val selectedPlaylistId: Long = satunesViewModel.defaultPlaylistId
+    val selectedPlaylist: Playlist? = dataViewModel.getPlaylist(id = selectedPlaylistId)
 
     Row(
         modifier = modifier.fillMaxWidth(),

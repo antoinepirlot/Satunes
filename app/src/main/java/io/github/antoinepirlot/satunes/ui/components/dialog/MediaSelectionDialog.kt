@@ -109,7 +109,7 @@ private fun CreateNewPlaylistForm(
                 snackBarHostState = snackBarHostState,
                 playlistTitle = playlistTitle,
                 onPlaylistAdded = {
-                    mediaSelectionViewModel.addPlaylist(dataViewModel.getPlaylist(title = playlistTitle))
+                    mediaSelectionViewModel.addPlaylist(dataViewModel.getPlaylist(title = playlistTitle)!!)
                 }
             )
             mediaSelectionViewModel.setShowPlaylistCreation(value = false)

@@ -195,7 +195,7 @@ internal fun NavGraphBuilder.mediaRoutes(
             LoadingView()
         } else {
             val playlistId: Long = it.arguments!!.getString("id")!!.toLong()
-            val playlist: Playlist = dataViewModel.getPlaylist(id = playlistId)
+            val playlist: Playlist = dataViewModel.getPlaylist(id = playlistId)!!
             LaunchedEffect(key1 = Unit) {
                 satunesViewModel.setCurrentMediaImpl(mediaImpl = playlist)
             }

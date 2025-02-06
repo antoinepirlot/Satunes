@@ -37,7 +37,7 @@ import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
  * @author Antoine Pirlot on 23/11/2024
  */
 
-val spacerSize: Dp = 5.dp
+private val spacerSize: Dp = 5.dp
 
 @Composable
 internal fun ResetPlaybackSubSettings(modifier: Modifier = Modifier) {

@@ -78,7 +78,7 @@ object SettingsManager {
         get() = PlaybackSettings.forwardMs
     val rewindMs: Long
         get() = PlaybackSettings.rewindMs
-    val customActionsOrder: Collection<CustomActions> = PlaybackSettings.customActionsOrder
+    val customActionsOrder: Collection<CustomActions> = DesignSettings.customActionsOrder
 
     // Search Settings
     val foldersFilter: Boolean
@@ -260,11 +260,11 @@ object SettingsManager {
     }
 
     suspend fun moveUp(context: Context, customAction: CustomActions) {
-        PlaybackSettings.moveUp(context = context, customAction = customAction)
+        DesignSettings.moveUp(context = context, customAction = customAction)
     }
 
     suspend fun moveDown(context: Context, customAction: CustomActions) {
-        PlaybackSettings.moveDown(context = context, customAction = customAction)
+        DesignSettings.moveDown(context = context, customAction = customAction)
     }
 
     suspend fun selectDefaultPlaylist(context: Context, playlist: Playlist?) {
@@ -291,5 +291,9 @@ object SettingsManager {
 
     suspend fun resetListsSettings(context: Context) {
         DesignSettings.resetListsSettings(context = context)
+    }
+
+    suspend fun resetCustomActions(context: Context) {
+        DesignSettings.resetCustomActions(context = context)
     }
 }

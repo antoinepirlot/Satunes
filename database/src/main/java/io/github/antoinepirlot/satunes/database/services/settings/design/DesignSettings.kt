@@ -25,19 +25,24 @@ package io.github.antoinepirlot.satunes.database.services.settings.design
 import android.content.Context
 import androidx.compose.runtime.MutableLongState
 import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.mutableStateListOf
 import androidx.datastore.preferences.core.MutablePreferences
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.longPreferencesKey
+import androidx.datastore.preferences.core.stringPreferencesKey
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.database.models.Playlist
+import io.github.antoinepirlot.satunes.database.models.custom_action.CustomActions
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager.dataStore
 import io.github.antoinepirlot.satunes.database.utils.getNavBarSection
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 /**
  * @author Antoine Pirlot 03/02/2025
@@ -52,6 +57,12 @@ internal object DesignSettings {
     internal val DEFAULT_DEFAULT_NAV_BAR_SECTION: NavBarSection = NavBarSection.MUSICS
     private const val DEFAULT_PLAYLIST_ID: Long = -1
     private const val DEFAULT_SHOW_FIRST_LETTER = true
+    private val DEFAULT_CUSTOM_ACTIONS_ORDER: Collection<CustomActions> = setOf(
+        CustomActions.LIKE,
+        CustomActions.ADD_TO_PLAYLIST,
+        CustomActions.SHARE,
+        CustomActions.TIMER
+    )
 
     // KEYS
     private val FOLDERS_NAVBAR_PREFERENCES_KEY: Preferences.Key<Boolean> =
@@ -70,6 +81,8 @@ internal object DesignSettings {
         longPreferencesKey("default_playlist_id_key")
     private val SHOW_FIRST_LETTER_KEY: Preferences.Key<Boolean> =
         booleanPreferencesKey("show_first_letter")
+    private val CUSTOM_ACTIONS_ORDER_KEY: Preferences.Key<String> =
+        stringPreferencesKey("custom_actions_order")
 
     // VARIABLES
     var defaultNavBarSection: NavBarSection = DEFAULT_DEFAULT_NAV_BAR_SECTION
@@ -78,6 +91,7 @@ internal object DesignSettings {
         private set
     var showFirstLetter: Boolean = DEFAULT_SHOW_FIRST_LETTER
         private set
+    val customActionsOrder: MutableList<CustomActions> = mutableStateListOf()
 
 
     internal suspend fun loadSettings(context: Context) {
@@ -94,9 +108,15 @@ internal object DesignSettings {
                 preferences[PLAYLISTS_NAVBAR_PREFERENCES_KEY] ?: DEFAULT_PLAYLIST_NAVBAR
             showFirstLetter = preferences[SHOW_FIRST_LETTER_KEY] ?: DEFAULT_SHOW_FIRST_LETTER
 
+
             defaultNavBarSection = getNavBarSection(preferences[DEFAULT_NAV_BAR_SECTION_KEY])
             defaultPlaylistId.longValue =
                 preferences[DEFAULT_PLAYLIST_ID_KEY] ?: DEFAULT_PLAYLIST_ID
+
+            if (preferences[CUSTOM_ACTIONS_ORDER_KEY] != null)
+                this.customActionsOrder.addAll(Json.decodeFromString(preferences[CUSTOM_ACTIONS_ORDER_KEY]!!))
+            else
+                this.customActionsOrder.addAll(elements = DEFAULT_CUSTOM_ACTIONS_ORDER)
         }.first() //Without .first() settings are not loaded correctly
     }
 
@@ -193,6 +213,26 @@ internal object DesignSettings {
         }
     }
 
+    suspend fun moveUp(context: Context, customAction: CustomActions) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            val newIndex: Int = this.customActionsOrder.indexOf(customAction) - 1
+            if (newIndex < 0) return@edit //prevent crash if too fast
+            this.customActionsOrder.remove(element = customAction)
+            this.customActionsOrder.add(index = newIndex, element = customAction)
+            preferences[CUSTOM_ACTIONS_ORDER_KEY] = Json.encodeToString(this.customActionsOrder)
+        }
+    }
+
+    suspend fun moveDown(context: Context, customAction: CustomActions) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            val newIndex: Int = this.customActionsOrder.indexOf(customAction) + 1
+            if (newIndex > this.customActionsOrder.size) return@edit //prevent crash if too fast
+            this.customActionsOrder.remove(element = customAction)
+            this.customActionsOrder.add(index = newIndex, element = customAction)
+            preferences[CUSTOM_ACTIONS_ORDER_KEY] = Json.encodeToString(this.customActionsOrder)
+        }
+    }
+
     suspend fun resetListsSettings(context: Context) {
         context.dataStore.edit { preferences: MutablePreferences ->
             this.showFirstLetter = DEFAULT_SHOW_FIRST_LETTER
@@ -200,8 +240,17 @@ internal object DesignSettings {
         }
     }
 
+    suspend fun resetCustomActions(context: Context) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            this.customActionsOrder.clear()
+            this.customActionsOrder.addAll(elements = DEFAULT_CUSTOM_ACTIONS_ORDER)
+            preferences[CUSTOM_ACTIONS_ORDER_KEY] = Json.encodeToString(this.customActionsOrder)
+        }
+    }
+
     suspend fun resetAll(context: Context) {
         this.resetListsSettings(context = context)
         this.resetNavigationBarSettings(context = context)
+        this.resetCustomActions(context = context)
     }
 }

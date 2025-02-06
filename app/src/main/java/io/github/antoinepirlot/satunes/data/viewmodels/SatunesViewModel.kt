@@ -660,4 +660,23 @@ internal class SatunesViewModel : ViewModel() {
             throw e
         }
     }
+
+    fun resetCustomActions(scope: CoroutineScope, snackBarHostState: SnackbarHostState) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                SettingsManager.resetCustomActions(context = MainActivity.instance.applicationContext)
+            } catch (e: Throwable) {
+                showErrorSnackBar(
+                    scope = scope,
+                    snackBarHostState = snackBarHostState,
+                    action = {
+                        resetCustomActions(
+                            scope = scope,
+                            snackBarHostState = snackBarHostState
+                        )
+                    }
+                )
+            }
+        }
+    }
 }

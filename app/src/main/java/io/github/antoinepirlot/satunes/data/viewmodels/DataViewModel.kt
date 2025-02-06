@@ -384,23 +384,6 @@ class DataViewModel : ViewModel() {
         }
     }
 
-    fun insertMusicsToPlaylist(
-        scope: CoroutineScope,
-        snackBarHostState: SnackbarHostState,
-        mediaImpl: MediaImpl,
-        playlist: Playlist
-    ) {
-        CoroutineScope(Dispatchers.IO).launch {
-            val musics: Collection<Music> = getMediaMusicList(mediaImpl = mediaImpl)
-            insertMusicsToPlaylist(
-                scope = scope,
-                snackBarHostState = snackBarHostState,
-                musics = musics,
-                playlist = playlist
-            )
-        }
-    }
-
     fun updateMusicPlaylist(
         scope: CoroutineScope,
         snackBarHostState: SnackbarHostState,
@@ -560,23 +543,6 @@ class DataViewModel : ViewModel() {
                     )
                 })
             }
-        }
-    }
-
-    fun removeMusicsFromPlaylist(
-        scope: CoroutineScope,
-        snackBarHostState: SnackbarHostState,
-        mediaImpl: MediaImpl,
-        playlist: Playlist
-    ) {
-        CoroutineScope(Dispatchers.IO).launch {
-            val musics: Collection<Music> = getMediaMusicList(mediaImpl = mediaImpl)
-            removeMusicsFromPlaylist(
-                scope = scope,
-                snackBarHostState = snackBarHostState,
-                musics = musics,
-                playlist = playlist
-            )
         }
     }
 

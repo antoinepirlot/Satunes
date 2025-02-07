@@ -102,7 +102,7 @@ internal fun MediaListView(
     if (satunesUiState.showSortDialog)
         SortListDialog()
 
-    if (mediaImplListToShow.isNotEmpty()) {
+    if (mediaImplCollection.isNotEmpty()) { //Prevent showing the empty view if the list is not empty
         MediaCardList(
             modifier = modifier,
             mediaImplList = mediaImplListToShow,

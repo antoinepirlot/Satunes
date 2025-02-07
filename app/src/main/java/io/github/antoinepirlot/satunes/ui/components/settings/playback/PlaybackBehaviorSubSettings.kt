@@ -20,12 +20,8 @@
  * PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.views.settings.playback
+package io.github.antoinepirlot.satunes.ui.components.settings.playback
 
-import androidx.compose.foundation.ScrollState
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -33,41 +29,45 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
-import io.github.antoinepirlot.jetpack_libs.components.texts.Title
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
+import io.github.antoinepirlot.satunes.models.SwitchSettings
+import io.github.antoinepirlot.satunes.ui.components.settings.SettingsSwitchList
 import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
-import io.github.antoinepirlot.satunes.ui.components.settings.battery.AudioOffloadSetting
-import io.github.antoinepirlot.satunes.ui.components.settings.playback.PlaybackBehaviorSubSettings
-import io.github.antoinepirlot.satunes.ui.components.settings.playback.PlaybackModesSubSettings
-import io.github.antoinepirlot.satunes.ui.components.settings.playback.TimerSubSetting
 
 /**
- *   @author Antoine Pirlot 06/03/2024
+ * @author Antoine Pirlot 07/02/2025
  */
 
 @Composable
-internal fun PlaybackSettingsView(
+internal fun PlaybackBehaviorSubSettings(
     modifier: Modifier = Modifier,
-    satunesViewModel: SatunesViewModel = viewModel()
+    satunesViewModel: SatunesViewModel = viewModel(),
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
-
-    val scrollState: ScrollState = rememberScrollState()
-    Column(modifier = modifier.verticalScroll(scrollState)) {
-        Title(text = stringResource(id = R.string.playback_settings))
-        PlaybackBehaviorSubSettings()
-        PlaybackModesSubSettings() //Contains list item so always padding horizontal 16.dp
-        TimerSubSetting()
-        SubSettings(title = stringResource(id = R.string.battery_settings)) {
-            AudioOffloadSetting() //Contains list item so always padding horizontal 16.dp
-        }
+    val playbackSettingsChecked: Map<SwitchSettings, Boolean> = mapOf(
+        Pair(
+            first = SwitchSettings.PLAYBACK_WHEN_CLOSED,
+            second = satunesUiState.playbackWhenClosedChecked
+        ),
+        Pair(first = SwitchSettings.PAUSE_IF_NOISY, second = satunesUiState.pauseIfNoisyChecked),
+        Pair(
+            first = SwitchSettings.PAUSE_IF_ANOTHER_PLAYBACK,
+            second = satunesUiState.pauseIfAnotherPlayback
+        )
+    )
+    SubSettings(
+        modifier = modifier,
+        title = stringResource(R.string.playback_behavior_settings)
+    ) {
+        SettingsSwitchList(checkedMap = playbackSettingsChecked) //Contains list item so always padding horizontal 16.dp
+        BarSpeedSetting()
     }
 }
 
-@Composable
 @Preview
-private fun PlaybackSettingsViewPreview() {
-    PlaybackSettingsView()
+@Composable
+private fun PlaybackBehaviorSubSettingsPreview() {
+    PlaybackBehaviorSubSettings()
 }

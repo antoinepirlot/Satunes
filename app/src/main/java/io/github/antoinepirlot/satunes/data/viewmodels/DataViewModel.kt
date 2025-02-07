@@ -83,6 +83,8 @@ class DataViewModel : ViewModel() {
 
     var playlistSetUpdated: Boolean by _playlistSetUpdated
         private set
+    var listSetUpdatedProcessed: Boolean = true
+        private set
 
     var isSharingLoading: Boolean by mutableStateOf(false)
         private set
@@ -96,6 +98,15 @@ class DataViewModel : ViewModel() {
 
     fun playlistSetUpdated() {
         this._playlistSetUpdated.value = false
+        this.listSetUpdatedProcessed = false
+    }
+
+    fun listSetUpdatedUnprocessed() {
+        this.listSetUpdatedProcessed = false
+    }
+
+    fun listSetUpdatedProcessed() {
+        this.listSetUpdatedProcessed = true
     }
 
     fun getRootFolderSet(): Set<Folder> = DataManager.getRootFolderSet()

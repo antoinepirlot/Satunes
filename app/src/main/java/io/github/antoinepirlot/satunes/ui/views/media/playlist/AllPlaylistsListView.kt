@@ -80,17 +80,24 @@ internal fun PlaylistListView(
     }
 
     Column(modifier = modifier) {
-        val playlistSet: Set<Playlist> = dataViewModel.getPlaylistSet()
+        var playlistSet: Set<Playlist>? by remember { mutableStateOf(null) }
 
         //Recompose if data changed
-        val mapChanged: Boolean = dataViewModel.playlistSetUpdated
-        if (mapChanged) {
+        val setChanged: Boolean = dataViewModel.playlistSetUpdated
+        if (setChanged) {
             dataViewModel.playlistSetUpdated()
+            dataViewModel.listSetUpdatedUnprocessed()
         }
-        //
+
+        LaunchedEffect(key1 = dataViewModel.playlistSetUpdated) {
+            playlistSet = dataViewModel.getPlaylistSet()
+        }
+
+        if (playlistSet == null) return
 
         MediaListView(
-            mediaImplCollection = playlistSet,
+            mediaImplCollection = playlistSet!!,
+            collectionChanged = setChanged,
             emptyViewText = stringResource(id = R.string.no_playlists),
             showGroupIndication = false,
             sort = false,

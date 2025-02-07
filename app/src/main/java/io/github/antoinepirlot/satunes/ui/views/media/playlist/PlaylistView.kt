@@ -57,9 +57,9 @@ internal fun PlaylistView(
     val musicSet: Set<Music> = playlist.getMusicSet()
 
     //Recompose if data changed
-    var mapChanged: Boolean by rememberSaveable { playlist.musicSetUpdated }
-    if (mapChanged) {
-        mapChanged = false
+    var setChanged: Boolean by rememberSaveable { playlist.musicSetUpdated }
+    if (setChanged) {
+        setChanged = false
     }
     //
 
@@ -83,6 +83,7 @@ internal fun PlaylistView(
     MediaListView(
         modifier = modifier,
         mediaImplCollection = musicSet,
+        collectionChanged = setChanged,
         header = {
             val title: String = if (playlist.title == LIKES_PLAYLIST_TITLE) {
                 stringResource(id = RDb.string.likes_playlist_title)

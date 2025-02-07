@@ -72,6 +72,7 @@ internal fun AddToPlaylistCustomAction(
         val mapChanged: Boolean = dataViewModel.playlistSetUpdated
         if (mapChanged) {
             dataViewModel.playlistSetUpdated()
+            dataViewModel.listSetUpdatedUnprocessed()
         }
         //
 

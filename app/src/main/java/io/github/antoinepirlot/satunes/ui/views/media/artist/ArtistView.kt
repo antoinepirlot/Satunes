@@ -76,6 +76,7 @@ internal fun ArtistView(
     MediaListView(
         modifier = modifier,
         mediaImplCollection = musicSet,
+        collectionChanged = musicSetChanged,
         header = if (albumSet.isNotEmpty()) {
             {
                 //Recompose if data changed

@@ -23,7 +23,10 @@
 package io.github.antoinepirlot.satunes.ui.views.media.album
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -32,7 +35,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
@@ -52,8 +54,10 @@ import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.buttons.fab.ExtraButtonList
+import io.github.antoinepirlot.satunes.ui.components.images.Icon
 import io.github.antoinepirlot.satunes.ui.components.images.MediaArtwork
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 
@@ -122,18 +126,24 @@ private fun Header(
             bottomPadding = 0.dp,
             text = album.title
         )
-        Subtitle(
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .clickable {
-                    openMedia(
-                        playbackViewModel = playbackViewModel,
-                        media = album.artist,
-                        navController = navController
-                    )
-                },
-            text = if (album.year != null) "${album.artist.title} - ${album.year}" else album.artist.title
-        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Icon(icon = SatunesIcons.ARTIST)
+            Spacer(modifier = Modifier.size(size = 5.dp))
+            Subtitle(
+                modifier = Modifier
+                    .clickable {
+                        openMedia(
+                            playbackViewModel = playbackViewModel,
+                            media = album.artist,
+                            navController = navController
+                        )
+                    },
+                text = if (album.year != null) "${album.artist.title} - ${album.year}" else album.artist.title
+            )
+        }
     }
 }
 

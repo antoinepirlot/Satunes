@@ -274,10 +274,9 @@ object SettingsManager {
     }
 
     suspend fun resetAll(context: Context) {
-        this.resetFoldersSettings(context = context)
-        this.resetLoadingLogicSettings(context = context)
+        LibrarySettings.resetAll(context = context)
         PlaybackSettings.resetAll(context = context)
-        this.resetDefaultSearchFiltersSettings(context = context)
+        SearchSettings.resetDefaultSearchFiltersSettings(context = context)
         DesignSettings.resetAll(context = context)
     }
 

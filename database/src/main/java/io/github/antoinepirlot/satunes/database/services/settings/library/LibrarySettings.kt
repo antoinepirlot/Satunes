@@ -180,4 +180,9 @@ internal object LibrarySettings {
             preferences[ARTISTS_REPLACEMENT_KEY] = this.artistReplacement
         }
     }
+
+    suspend fun resetAll(context: Context) {
+        this.resetFoldersSettings(context = context)
+        this.resetLoadingLogicSettings(context = context)
+    }
 }

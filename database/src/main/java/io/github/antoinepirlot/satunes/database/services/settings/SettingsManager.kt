@@ -79,6 +79,8 @@ object SettingsManager {
     val rewindMs: Long
         get() = PlaybackSettings.rewindMs
     val customActionsOrder: Collection<CustomActions> = DesignSettings.customActionsOrder
+    val rememberPlayback: Boolean
+        get() = PlaybackSettings.rememberPlayback
 
     // Search Settings
     val foldersFilter: Boolean
@@ -274,9 +276,7 @@ object SettingsManager {
     suspend fun resetAll(context: Context) {
         this.resetFoldersSettings(context = context)
         this.resetLoadingLogicSettings(context = context)
-        this.resetBatterySettings(context = context)
-        this.resetPlaybackBehaviorSettings(context = context)
-        this.resetPlaybackModesSettings(context = context)
+        PlaybackSettings.resetAll(context = context)
         this.resetDefaultSearchFiltersSettings(context = context)
         DesignSettings.resetAll(context = context)
     }

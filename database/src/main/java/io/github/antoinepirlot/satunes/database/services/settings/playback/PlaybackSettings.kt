@@ -52,6 +52,7 @@ internal object PlaybackSettings {
     private const val DEFAULT_AUDIO_OFFLOAD_CHECKED: Boolean = false
     private const val DEFAULT_FORWARD_MS: Long = 5000L
     private const val DEFAULT_REWIND_MS: Long = DEFAULT_FORWARD_MS
+    private const val DEFAULT_REMEMBER_PLAYBACK: Boolean = true
 
     // KEYS
 
@@ -73,6 +74,8 @@ internal object PlaybackSettings {
         longPreferencesKey("forward_ms")
     private val REWIND_MS_KEY: Preferences.Key<Long> =
         longPreferencesKey("rewind_ms")
+    private val REMEMBER_PLAYBACK_KEY: Preferences.Key<Boolean> =
+        booleanPreferencesKey("remember_playback")
 
     // VARIABLES
 
@@ -93,6 +96,8 @@ internal object PlaybackSettings {
     var forwardMs: Long = DEFAULT_FORWARD_MS
         private set
     var rewindMs: Long = DEFAULT_REWIND_MS
+        private set
+    var rememberPlayback: Boolean = DEFAULT_REMEMBER_PLAYBACK
         private set
 
     suspend fun loadSettings(context: Context) {
@@ -120,7 +125,7 @@ internal object PlaybackSettings {
 
             forwardMs = preferences[FORWARD_MS_KEY] ?: DEFAULT_FORWARD_MS
             rewindMs = preferences[REWIND_MS_KEY] ?: DEFAULT_REWIND_MS
-
+            rememberPlayback = preferences[REMEMBER_PLAYBACK_KEY] ?: DEFAULT_REMEMBER_PLAYBACK
         }.first() //Without .first() settings are not loaded correctly
     }
 
@@ -227,11 +232,13 @@ internal object PlaybackSettings {
             this.pauseIfNoisyChecked = DEFAULT_PAUSE_IF_NOISY
             this.pauseIfAnotherPlayback = DEFAULT_PAUSE_IF_ANOTHER_PLAYBACK_CHECKED
             this.barSpeed = DEFAULT_BAR_SPEED_VALUE
+            this.rememberPlayback = DEFAULT_REMEMBER_PLAYBACK
             preferences[PLAYBACK_WHEN_CLOSED_CHECKED_PREFERENCES_KEY] =
                 this.playbackWhenClosedChecked
             preferences[PAUSE_IF_NOISY_PREFERENCES_KEY] = this.pauseIfNoisyChecked
             preferences[PAUSE_IF_ANOTHER_PLAYBACK_KEY] = this.pauseIfAnotherPlayback
             preferences[BAR_SPEED_KEY] = this.barSpeed.speed
+            preferences[REMEMBER_PLAYBACK_KEY] = this.rememberPlayback
         }
     }
 
@@ -245,6 +252,13 @@ internal object PlaybackSettings {
             preferences[REPEAT_MODE_KEY] = this.repeatMode
             preferences[FORWARD_MS_KEY] = this.forwardMs
             preferences[REWIND_MS_KEY] = this.rewindMs
+
         }
+    }
+
+    suspend fun resetAll(context: Context) {
+        this.resetBatterySettings(context = context)
+        this.resetPlaybackBehaviorSettings(context = context)
+        this.resetPlaybackModesSettings(context = context)
     }
 }

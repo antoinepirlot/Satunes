@@ -28,10 +28,13 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -58,9 +61,11 @@ import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.bars.playback.MusicControlBar
 import io.github.antoinepirlot.satunes.ui.components.bars.playback.PlaybackCustomActionsBar
 import io.github.antoinepirlot.satunes.ui.components.dialog.artist.ArtistOptionsDialog
+import io.github.antoinepirlot.satunes.ui.components.images.Icon
 import io.github.antoinepirlot.satunes.ui.components.images.MusicPlayingAlbumArtwork
 
 /**
@@ -114,7 +119,7 @@ internal fun MusicPlayingControlView(
                 text = musicPlaying.title,
                 fontSize = 20.sp
             )
-            Subtitle(
+            Row(
                 modifier = Modifier
                     .padding(horizontal = padding)
                     .clip(shape = CircleShape)
@@ -129,8 +134,13 @@ internal fun MusicPlayingControlView(
                             showArtistOptions = true
                         }
                     ),
-                text = musicPlaying.artist.title
-            )
+            ) {
+                Spacer(modifier = Modifier.size(size = 10.dp)) //Used for press animation larger zone
+                Icon(icon = SatunesIcons.ARTIST)
+                Spacer(modifier = Modifier.size(size = 5.dp))
+                Subtitle(text = musicPlaying.artist.title)
+                Spacer(modifier = Modifier.size(size = 10.dp)) //Used for press animation larger zone
+            }
             PlaybackCustomActionsBar()
             MusicControlBar(modifier = Modifier.padding(horizontal = padding))
         }

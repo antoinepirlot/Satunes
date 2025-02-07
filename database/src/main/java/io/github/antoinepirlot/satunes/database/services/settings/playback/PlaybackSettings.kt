@@ -261,4 +261,11 @@ internal object PlaybackSettings {
         this.resetPlaybackBehaviorSettings(context = context)
         this.resetPlaybackModesSettings(context = context)
     }
+
+    suspend fun switchRememberPlayback(context: Context) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            this.rememberPlayback = !this.rememberPlayback
+            preferences[REMEMBER_PLAYBACK_KEY] = this.rememberPlayback
+        }
+    }
 }

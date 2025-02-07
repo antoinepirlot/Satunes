@@ -23,18 +23,22 @@
 package io.github.antoinepirlot.satunes.ui.components.settings
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.antoinepirlot.satunes.data.local.LocalMainScope
+import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.data.states.SearchUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SearchViewModel
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.models.SearchChips
 import io.github.antoinepirlot.satunes.models.SwitchSettings
+import kotlinx.coroutines.CoroutineScope
 
 /**
  *   @author Antoine Pirlot 06/03/2024
@@ -48,6 +52,8 @@ internal fun SettingsSwitchList(
     checkedMap: Map<SwitchSettings, Boolean>,
 ) {
     val searchUiState: SearchUiState by searchViewModel.uiState.collectAsState()
+    val scope: CoroutineScope = LocalMainScope.current
+    val snackbarHostState: SnackbarHostState = LocalSnackBarHostState.current
     Column(modifier = modifier) {
         for ((setting: SwitchSettings, checked: Boolean) in checkedMap) {
             SettingWithSwitch(
@@ -55,6 +61,8 @@ internal fun SettingsSwitchList(
                 checked = checked,
                 onCheckedChange = {
                     switchSetting(
+                        scope = scope,
+                        snackbarHostState = snackbarHostState,
                         satunesViewModel = satunesViewModel,
                         searchViewModel = searchViewModel,
                         searchUiState = searchUiState,
@@ -85,8 +93,9 @@ private fun SettingsSwitchListPreview() {
     SettingsSwitchList(checkedMap = mapOf())
 }
 
-//TODO remove this way as it adds complexity. Keep things simple
 private fun switchSetting(
+    scope: CoroutineScope,
+    snackbarHostState: SnackbarHostState,
     satunesViewModel: SatunesViewModel,
     searchViewModel: SearchViewModel,
     searchUiState: SearchUiState,
@@ -133,6 +142,13 @@ private fun switchSetting(
 
         SwitchSettings.PAUSE_IF_ANOTHER_PLAYBACK -> {
             satunesViewModel.switchPauseIfAnotherPlayback()
+        }
+
+        SwitchSettings.REMEMBER_PLAYBACK -> {
+            satunesViewModel.switchRememberPlayback(
+                scope = scope,
+                snackbarHostState = snackbarHostState
+            )
         }
 
         SwitchSettings.MUSICS_FILTER -> {

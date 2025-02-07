@@ -352,7 +352,7 @@ internal class SatunesViewModel : ViewModel() {
             _logger?.warning(e.message)
             showErrorSnackBar(
                 scope = scope,
-                snackBarHostState = snackBarHostState,
+                snackbarHostState = snackBarHostState,
                 action = {
                     updateBarSpeed(
                         scope = scope,
@@ -425,7 +425,7 @@ internal class SatunesViewModel : ViewModel() {
                 _logger?.warning(e.message)
                 showErrorSnackBar(
                     scope = scope,
-                    snackBarHostState = snackBarHostState,
+                    snackbarHostState = snackBarHostState,
                     action = {
                         checkUpdate(
                             scope = scope,
@@ -492,7 +492,7 @@ internal class SatunesViewModel : ViewModel() {
                 _logger?.warning(e.message)
                 showErrorSnackBar(
                     scope = scope,
-                    snackBarHostState = snackBarHostState,
+                    snackbarHostState = snackBarHostState,
                     action = {
                         downloadUpdateApk(scope = scope, snackBarHostState = snackBarHostState)
                     }
@@ -588,7 +588,7 @@ internal class SatunesViewModel : ViewModel() {
         } catch (e: Throwable) {
             showErrorSnackBar(
                 scope = scope,
-                snackBarHostState = snackBarHostState,
+                snackbarHostState = snackBarHostState,
                 action = {
                     this.switchArtistReplacement(
                         scope = scope,
@@ -668,11 +668,34 @@ internal class SatunesViewModel : ViewModel() {
             } catch (e: Throwable) {
                 showErrorSnackBar(
                     scope = scope,
-                    snackBarHostState = snackBarHostState,
+                    snackbarHostState = snackBarHostState,
                     action = {
                         resetCustomActions(
                             scope = scope,
                             snackBarHostState = snackBarHostState
+                        )
+                    }
+                )
+            }
+        }
+    }
+
+    fun switchRememberPlayback(scope: CoroutineScope, snackbarHostState: SnackbarHostState) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                SettingsManager.switchRememberPlayback(context = MainActivity.instance.applicationContext)
+                _uiState.update { currentState: SatunesUiState ->
+                    currentState.copy(rememberPlayback = SettingsManager.rememberPlayback)
+                }
+            } catch (e: Throwable) {
+                _logger?.severe(e.message)
+                showErrorSnackBar(
+                    scope = scope,
+                    snackbarHostState = snackbarHostState,
+                    action = {
+                        switchRememberPlayback(
+                            scope = scope,
+                            snackbarHostState = snackbarHostState
                         )
                     }
                 )

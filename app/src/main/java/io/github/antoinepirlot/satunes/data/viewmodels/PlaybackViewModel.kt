@@ -210,7 +210,7 @@ class PlaybackViewModel : ViewModel() {
             _logger?.warning(e.message)
             showErrorSnackBar(
                 scope = scope,
-                snackBarHostState = snackBarHostState,
+                snackbarHostState = snackBarHostState,
                 action = {
                     addToQueue(
                         scope = scope,
@@ -245,7 +245,7 @@ class PlaybackViewModel : ViewModel() {
             _logger?.warning(e.message)
             showErrorSnackBar(
                 scope = scope,
-                snackBarHostState = snackBarHostState,
+                snackbarHostState = snackBarHostState,
                 action = {
                     removeFromQueue(
                         scope = scope,
@@ -277,7 +277,7 @@ class PlaybackViewModel : ViewModel() {
             _logger?.warning(e.message)
             showErrorSnackBar(
                 scope = scope,
-                snackBarHostState = snackBarHostState,
+                snackbarHostState = snackBarHostState,
                 action = {
                     addNext(
                         scope = scope,
@@ -365,7 +365,7 @@ class PlaybackViewModel : ViewModel() {
             _logger?.severe(e.message)
             showErrorSnackBar(
                 scope = scope,
-                snackBarHostState = snackBarHostState,
+                snackbarHostState = snackBarHostState,
                 action = {
                     this.setTimer(
                         scope = scope,
@@ -394,7 +394,7 @@ class PlaybackViewModel : ViewModel() {
             _logger?.severe(e.message)
             showErrorSnackBar(
                 scope = scope,
-                snackBarHostState = snackBarHostState,
+                snackbarHostState = snackBarHostState,
                 action = {
                     this.cancelTimer(scope = scope, snackBarHostState = snackBarHostState)
                 }
@@ -411,7 +411,7 @@ class PlaybackViewModel : ViewModel() {
             _logger?.severe(e.message)
             showErrorSnackBar(
                 scope = scope,
-                snackBarHostState = snackBarHostState,
+                snackbarHostState = snackBarHostState,
                 action = {
                     this.forward(
                         scope = scope,
@@ -428,7 +428,7 @@ class PlaybackViewModel : ViewModel() {
         } catch (e: Exception) {
             _logger?.severe(e.message)
             showErrorSnackBar(scope = scope,
-                snackBarHostState = snackBarHostState,
+                snackbarHostState = snackBarHostState,
                 action = {
                     this.rewind(
                         scope = scope,
@@ -450,7 +450,7 @@ class PlaybackViewModel : ViewModel() {
         } catch (e: Exception) {
             showErrorSnackBar(
                 scope = scope,
-                snackBarHostState = snackBarHostState,
+                snackbarHostState = snackBarHostState,
                 action = {
                     this.updateForward(
                         scope = scope,
@@ -473,7 +473,7 @@ class PlaybackViewModel : ViewModel() {
         } catch (e: Exception) {
             showErrorSnackBar(
                 scope = scope,
-                snackBarHostState = snackBarHostState,
+                snackbarHostState = snackBarHostState,
                 action = {
                     this.updateForward(
                         scope = scope,

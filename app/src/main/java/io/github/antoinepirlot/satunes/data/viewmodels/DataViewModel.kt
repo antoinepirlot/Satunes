@@ -163,7 +163,7 @@ class DataViewModel : ViewModel() {
                     _logger?.warning(e.message)
                     showErrorSnackBar(
                         scope = scope,
-                        snackBarHostState = snackBarHostState,
+                        snackbarHostState = snackBarHostState,
                         action = {
                             addOnePlaylist(
                                 scope = scope,
@@ -217,7 +217,7 @@ class DataViewModel : ViewModel() {
                 } else {
                     showErrorSnackBar(
                         scope = scope,
-                        snackBarHostState = snackBarHostState,
+                        snackbarHostState = snackBarHostState,
                         action = {
                             updatePlaylistTitle(
                                 scope = scope,
@@ -252,7 +252,7 @@ class DataViewModel : ViewModel() {
             } catch (e: Throwable) {
                 showErrorSnackBar(
                     scope = scope,
-                    snackBarHostState = snackBarHostState,
+                    snackbarHostState = snackBarHostState,
                     action = {
                         updatePlaylistMusics(
                             scope = scope,
@@ -290,7 +290,7 @@ class DataViewModel : ViewModel() {
                 _logger?.warning(e.message)
                 showErrorSnackBar(
                     scope = scope,
-                    snackBarHostState = snackBarHostState,
+                    snackbarHostState = snackBarHostState,
                     action = {
                         removePlaylist(
                             scope = scope,
@@ -337,7 +337,7 @@ class DataViewModel : ViewModel() {
                 )
             } catch (e: Throwable) {
                 _logger?.warning(e.message)
-                showErrorSnackBar(scope = scope, snackBarHostState = snackBarHostState, action = {
+                showErrorSnackBar(scope = scope, snackbarHostState = snackBarHostState, action = {
                     insertMusicToPlaylist(
                         scope = scope,
                         snackBarHostState = snackBarHostState,
@@ -383,7 +383,7 @@ class DataViewModel : ViewModel() {
                 )
             } catch (e: Throwable) {
                 _logger?.warning(e.message)
-                showErrorSnackBar(scope = scope, snackBarHostState = snackBarHostState, action = {
+                showErrorSnackBar(scope = scope, snackbarHostState = snackBarHostState, action = {
                     insertMusicsToPlaylist(
                         scope = scope,
                         snackBarHostState = snackBarHostState,
@@ -422,7 +422,7 @@ class DataViewModel : ViewModel() {
                 )
             } catch (e: Throwable) {
                 _logger?.warning(e.message)
-                showErrorSnackBar(scope = scope, snackBarHostState = snackBarHostState, action = {
+                showErrorSnackBar(scope = scope, snackbarHostState = snackBarHostState, action = {
                     updateMusicPlaylist(
                         scope = scope,
                         snackBarHostState = snackBarHostState,
@@ -460,7 +460,7 @@ class DataViewModel : ViewModel() {
                 )
             } catch (e: Throwable) {
                 _logger?.warning(e.message)
-                showErrorSnackBar(scope = scope, snackBarHostState = snackBarHostState, action = {
+                showErrorSnackBar(scope = scope, snackbarHostState = snackBarHostState, action = {
                     updateMusicsToPlaylists(
                         scope = scope,
                         snackBarHostState = snackBarHostState,
@@ -502,7 +502,7 @@ class DataViewModel : ViewModel() {
                 )
             } catch (e: Throwable) {
                 _logger?.warning(e.message)
-                showErrorSnackBar(scope = scope, snackBarHostState = snackBarHostState, action = {
+                showErrorSnackBar(scope = scope, snackbarHostState = snackBarHostState, action = {
                     removeMusicFromPlaylist(
                         scope = scope,
                         snackBarHostState = snackBarHostState,
@@ -545,7 +545,7 @@ class DataViewModel : ViewModel() {
                 )
             } catch (e: Throwable) {
                 _logger?.warning(e.message)
-                showErrorSnackBar(scope = scope, snackBarHostState = snackBarHostState, action = {
+                showErrorSnackBar(scope = scope, snackbarHostState = snackBarHostState, action = {
                     removeMusicsFromPlaylist(
                         scope = scope,
                         snackBarHostState = snackBarHostState,
@@ -585,7 +585,7 @@ class DataViewModel : ViewModel() {
                 )
             } catch (e: Throwable) {
                 _logger?.warning(e.message)
-                showErrorSnackBar(scope = scope, snackBarHostState = snackBarHostState, action = {
+                showErrorSnackBar(scope = scope, snackbarHostState = snackBarHostState, action = {
                     removeMusicFromPlaylists(
                         scope = scope,
                         snackBarHostState = snackBarHostState,
@@ -624,7 +624,7 @@ class DataViewModel : ViewModel() {
                 )
             } catch (e: Throwable) {
                 _logger?.warning(e.message)
-                showErrorSnackBar(scope = scope, snackBarHostState = snackBarHostState, action = {
+                showErrorSnackBar(scope = scope, snackbarHostState = snackBarHostState, action = {
                     removeMusicsFromPlaylists(
                         scope = scope,
                         snackBarHostState = snackBarHostState,
@@ -658,7 +658,7 @@ class DataViewModel : ViewModel() {
                 } else {
                     showErrorSnackBar(
                         scope = scope,
-                        snackBarHostState = snackBarHostState,
+                        snackbarHostState = snackBarHostState,
                         action = {
                             switchLike(
                                 scope = scope,
@@ -819,7 +819,7 @@ class DataViewModel : ViewModel() {
             } catch (e: Throwable) {
                 showErrorSnackBar(
                     scope = scope,
-                    snackBarHostState = snackBarHostState,
+                    snackbarHostState = snackBarHostState,
                     action = {
                         cleanPlaylists(
                             scope = scope,
@@ -839,7 +839,7 @@ class DataViewModel : ViewModel() {
         } catch (e: Exception) {
             showErrorSnackBar(
                 scope = scope,
-                snackBarHostState = snackBarHostState,
+                snackbarHostState = snackBarHostState,
                 action = {
                     resetFoldersSettings(scope = scope, snackBarHostState = snackBarHostState)
                 }
@@ -856,7 +856,7 @@ class DataViewModel : ViewModel() {
         } catch (e: Exception) {
             showErrorSnackBar(
                 scope = scope,
-                snackBarHostState = snackBarHostState,
+                snackbarHostState = snackBarHostState,
                 action = {
                     resetLoadingLogicSettings(scope = scope, snackBarHostState = snackBarHostState)
                 }
@@ -872,7 +872,7 @@ class DataViewModel : ViewModel() {
         } catch (e: Exception) {
             showErrorSnackBar(
                 scope = scope,
-                snackBarHostState = snackBarHostState,
+                snackbarHostState = snackBarHostState,
                 action = {
                     resetBatterySettings(scope = scope, snackBarHostState = snackBarHostState)
                 }
@@ -888,7 +888,7 @@ class DataViewModel : ViewModel() {
         } catch (e: Exception) {
             showErrorSnackBar(
                 scope = scope,
-                snackBarHostState = snackBarHostState,
+                snackbarHostState = snackBarHostState,
                 action = {
                     resetPlaybackBehaviorSettings(
                         scope = scope,
@@ -907,7 +907,7 @@ class DataViewModel : ViewModel() {
         } catch (e: Exception) {
             showErrorSnackBar(
                 scope = scope,
-                snackBarHostState = snackBarHostState,
+                snackbarHostState = snackBarHostState,
                 action = {
                     resetPlaybackModesSettings(
                         scope = scope,
@@ -929,7 +929,7 @@ class DataViewModel : ViewModel() {
         } catch (e: Exception) {
             showErrorSnackBar(
                 scope = scope,
-                snackBarHostState = snackBarHostState,
+                snackbarHostState = snackBarHostState,
                 action = {
                     resetDefaultSearchFiltersSettings(
                         scope = scope,
@@ -948,7 +948,7 @@ class DataViewModel : ViewModel() {
         } catch (e: Exception) {
             showErrorSnackBar(
                 scope = scope,
-                snackBarHostState = snackBarHostState,
+                snackbarHostState = snackBarHostState,
                 action = {
                     resetNavigationBarSettings(
                         scope = scope,
@@ -968,7 +968,7 @@ class DataViewModel : ViewModel() {
         } catch (e: Exception) {
             showErrorSnackBar(
                 scope = scope,
-                snackBarHostState = snackBarHostState,
+                snackbarHostState = snackBarHostState,
                 action = {
                     resetAllSettings(scope = scope, snackBarHostState = snackBarHostState)
                 }
@@ -991,7 +991,7 @@ class DataViewModel : ViewModel() {
             } catch (e: Throwable) {
                 showErrorSnackBar(
                     scope = scope,
-                    snackBarHostState = snackBarHostState,
+                    snackbarHostState = snackBarHostState,
                     action = {
                         switchShowFirstLetter(
                             scope = scope,
@@ -1030,7 +1030,7 @@ class DataViewModel : ViewModel() {
         } catch (e: Exception) {
             showErrorSnackBar(
                 scope = scope,
-                snackBarHostState = snackBarHostState,
+                snackbarHostState = snackBarHostState,
                 action = {
                     resetListsSettings(scope = scope, snackBarHostState = snackBarHostState)
                 }

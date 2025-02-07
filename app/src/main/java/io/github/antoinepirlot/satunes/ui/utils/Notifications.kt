@@ -36,13 +36,13 @@ import kotlinx.coroutines.launch
  */
 internal fun showErrorSnackBar(
     scope: CoroutineScope,
-    snackBarHostState: SnackbarHostState,
+    snackbarHostState: SnackbarHostState,
     action: () -> Unit,
 ) {
     val context: Context = MainActivity.instance.applicationContext
     showSnackBar(
         scope = scope,
-        snackBarHostState = snackBarHostState,
+        snackBarHostState = snackbarHostState,
         message = context.getString(R.string.error_occurred),
         actionLabel = context.getString(R.string.retry),
         action = action,

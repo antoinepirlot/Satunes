@@ -55,7 +55,8 @@ internal fun PlaybackBehaviorSubSettings(
         Pair(
             first = SwitchSettings.PAUSE_IF_ANOTHER_PLAYBACK,
             second = satunesUiState.pauseIfAnotherPlayback
-        )
+        ),
+        Pair(first = SwitchSettings.REMEMBER_PLAYBACK, second = satunesUiState.rememberPlayback)
     )
     SubSettings(
         modifier = modifier,

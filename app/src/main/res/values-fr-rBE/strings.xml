@@ -135,4 +135,5 @@
     <string name="no_playlist_selected">Aucune</string>
     <string name="list_sub_settings_title">Listes</string>
     <string name="optimisation_sub_settings">Optimisation</string>
+    <string name="remember_playback_setting_content">Se souvenir de la lecture actuelle</string>
 </resources>

@@ -295,4 +295,8 @@ object SettingsManager {
     suspend fun resetCustomActions(context: Context) {
         DesignSettings.resetCustomActions(context = context)
     }
+
+    suspend fun switchRememberPlayback(context: Context) {
+        PlaybackSettings.switchRememberPlayback(context = context)
+    }
 }

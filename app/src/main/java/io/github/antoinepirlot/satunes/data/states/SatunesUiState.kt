@@ -68,4 +68,5 @@ internal data class SatunesUiState(
     val artistReplacement: Boolean = SettingsManager.artistReplacement,
     val showSortDialog: Boolean = false,
     val showMediaSelectionDialog: Boolean = false,
+    val rememberPlayback: Boolean = SettingsManager.rememberPlayback
 )

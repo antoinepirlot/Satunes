@@ -336,9 +336,9 @@ object PlaybackManager {
         this._playbackController?.stop()
     }
 
-    fun release() {
+    internal fun release(context: Context) {
         _logger?.info("Release")
-        this._playbackController?.release()
+        this._playbackController?.release(context = context)
         this._playbackController = null
     }
 

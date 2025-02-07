@@ -310,12 +310,6 @@ class PlaybackViewModel : ViewModel() {
         )
     }
 
-    fun release() {
-        _logger?.info("Release")
-        PlaybackManager.release()
-        onCleared()
-    }
-
     fun stop() {
         _logger?.info("Stop")
         PlaybackManager.stop()

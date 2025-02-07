@@ -299,4 +299,8 @@ object SettingsManager {
     suspend fun switchRememberPlayback(context: Context) {
         PlaybackSettings.switchRememberPlayback(context = context)
     }
+
+    fun savePlaybackState(context: Context) { //playbackState: PlaybackState) {
+
+    }
 }

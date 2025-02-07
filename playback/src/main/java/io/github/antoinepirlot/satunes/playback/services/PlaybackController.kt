@@ -44,6 +44,7 @@ import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 /**
  * @author Antoine Pirlot on 31/01/24
@@ -711,7 +712,7 @@ internal class PlaybackController private constructor(
         }
     }
 
-    fun release() {
+    fun release(context: Context) {
         _logger?.info("Releasing $this")
         PlaybackManager.isInitialized.value = false
         if (_instance != null) {
@@ -719,6 +720,7 @@ internal class PlaybackController private constructor(
             if (this::mediaController.isInitialized) {
                 this.mediaController.release()
             }
+            if (SettingsManager.rememberPlayback) this.saveState(context = context)
             _instance = null
         }
         _logger?.info("PlaybackController released")
@@ -776,5 +778,11 @@ internal class PlaybackController private constructor(
         if (newPosition > this.musicPlaying!!.duration) this.playNext()
         else if (newPosition < 0) this.seekTo(positionMs = 0)
         else this.seekTo(positionMs = newPosition)
+    }
+
+    private fun saveState(context: Context) {
+        runBlocking {
+            SettingsManager.savePlaybackState(context = context)
+        }
     }
 }

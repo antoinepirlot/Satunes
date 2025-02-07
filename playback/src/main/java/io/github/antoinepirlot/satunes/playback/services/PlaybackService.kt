@@ -115,7 +115,7 @@ class PlaybackService : MediaSessionService() {
             || !PlaybackManager.isInitialized.value
             || !PlaybackManager.isPlaying.value
         ) {
-            PlaybackManager.release()
+            PlaybackManager.release(context = this.applicationContext)
             stopSelf()
         }
     }

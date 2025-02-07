@@ -56,9 +56,9 @@ internal fun GenreView(
     val albumSet: Set<Album> = genre.getAlbumSet()
 
     //Recompose if data changed
-    var mapChanged: Boolean by rememberSaveable { genre.musicSetUpdated }
-    if (mapChanged) {
-        mapChanged = false
+    var setChanged: Boolean by rememberSaveable { genre.musicSetUpdated }
+    if (setChanged) {
+        setChanged = false
     }
     //
 
@@ -74,6 +74,7 @@ internal fun GenreView(
     MediaListView(
         modifier = modifier,
         mediaImplCollection = musicSet,
+        collectionChanged = setChanged,
         header = if (albumSet.isNotEmpty()) {
             {
                 MediaWithAlbumsHeaderView(

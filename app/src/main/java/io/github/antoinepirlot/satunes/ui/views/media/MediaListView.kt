@@ -58,6 +58,7 @@ internal fun MediaListView(
     satunesViewModel: SatunesViewModel = viewModel(),
     dataViewModel: DataViewModel = viewModel(),
     mediaImplCollection: Collection<MediaImpl>,
+    collectionChanged: Boolean = false,
     header: (@Composable () -> Unit)? = null,
     emptyViewText: String,
     showGroupIndication: Boolean = true,
@@ -73,13 +74,15 @@ internal fun MediaListView(
 
     val isMediaOptionsOpened: Boolean = satunesUiState.mediaToShowOptions != null
 
-    LaunchedEffect(key1 = sortOption, key2 = isMediaOptionsOpened) {
+    LaunchedEffect(key1 = sortOption, key2 = isMediaOptionsOpened, key3 = collectionChanged) {
         if (isMediaOptionsOpened) return@LaunchedEffect
-        else {
-            if (mediaImplListToShow.isNotEmpty()) {
-                lazyListState.scrollToItem(0)
-                mediaImplListToShow.clear()
-            }
+        else if (collectionChanged) mediaImplListToShow.clear()
+        else if (!dataViewModel.listSetUpdatedProcessed) {
+            mediaImplListToShow.clear()
+            dataViewModel.listSetUpdatedProcessed()
+        } else if (mediaImplListToShow.isNotEmpty()) {
+            lazyListState.scrollToItem(0)
+            mediaImplListToShow.clear()
         }
 
         if (sort) {
@@ -99,7 +102,7 @@ internal fun MediaListView(
     if (satunesUiState.showSortDialog)
         SortListDialog()
 
-    if (mediaImplListToShow.isNotEmpty()) {
+    if (mediaImplCollection.isNotEmpty()) { //Prevent showing the empty view if the list is not empty
         MediaCardList(
             modifier = modifier,
             mediaImplList = mediaImplListToShow,
@@ -166,6 +169,7 @@ private fun MediaListViewPreview() {
     )
     MediaListView(
         mediaImplCollection = map,
+        collectionChanged = false,
         emptyViewText = "No data"
     )
 }

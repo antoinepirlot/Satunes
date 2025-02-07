@@ -20,36 +20,27 @@
  * PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.views.settings.battery
+package io.github.antoinepirlot.satunes.ui.components.settings.optimisation
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import io.github.antoinepirlot.jetpack_libs.components.texts.Title
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.ui.components.settings.optimisation.OptimisationSubSettings
+import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
 
 /**
- * @author Antoine Pirlot on 27/05/2024
+ * @author Antoine Pirlot 07/02/2025
  */
 @Composable
-internal fun BatterySettingsView(
-    modifier: Modifier = Modifier,
-) {
-    val scrollState = rememberScrollState()
-
-    Column(modifier = modifier.verticalScroll(scrollState)) {
-        Title(text = stringResource(id = R.string.battery_settings))
-        OptimisationSubSettings()
+fun OptimisationSubSettings(modifier: Modifier = Modifier) {
+    SubSettings(title = stringResource(id = R.string.optimisation_sub_settings)) {
+        AudioOffloadSetting() //Contains list item so always padding horizontal 16.dp
     }
 }
 
 @Preview
 @Composable
-private fun BatterySettingsViewPreview() {
-    BatterySettingsView()
+private fun BatterySubSettingsPreview(modifier: Modifier = Modifier) {
+    OptimisationSubSettings()
 }

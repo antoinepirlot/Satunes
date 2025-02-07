@@ -20,7 +20,7 @@
  * PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.settings.battery
+package io.github.antoinepirlot.satunes.ui.components.settings.optimisation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState

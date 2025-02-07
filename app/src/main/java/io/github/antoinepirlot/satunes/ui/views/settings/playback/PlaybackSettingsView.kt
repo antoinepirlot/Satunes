@@ -37,8 +37,7 @@ import io.github.antoinepirlot.jetpack_libs.components.texts.Title
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
-import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
-import io.github.antoinepirlot.satunes.ui.components.settings.battery.AudioOffloadSetting
+import io.github.antoinepirlot.satunes.ui.components.settings.optimisation.OptimisationSubSettings
 import io.github.antoinepirlot.satunes.ui.components.settings.playback.PlaybackBehaviorSubSettings
 import io.github.antoinepirlot.satunes.ui.components.settings.playback.PlaybackModesSubSettings
 import io.github.antoinepirlot.satunes.ui.components.settings.playback.TimerSubSetting
@@ -60,9 +59,7 @@ internal fun PlaybackSettingsView(
         PlaybackBehaviorSubSettings()
         PlaybackModesSubSettings() //Contains list item so always padding horizontal 16.dp
         TimerSubSetting()
-        SubSettings(title = stringResource(id = R.string.battery_settings)) {
-            AudioOffloadSetting() //Contains list item so always padding horizontal 16.dp
-        }
+        OptimisationSubSettings()
     }
 }
 

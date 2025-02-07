@@ -134,4 +134,5 @@
     <string name="default_playlist_section_setting_content">Playlist par défault</string>
     <string name="no_playlist_selected">Aucune</string>
     <string name="list_sub_settings_title">Listes</string>
+    <string name="optimisation_sub_settings">Optimisation</string>
 </resources>

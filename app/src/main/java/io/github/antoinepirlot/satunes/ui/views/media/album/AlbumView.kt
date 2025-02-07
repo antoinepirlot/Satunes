@@ -30,12 +30,14 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -127,22 +129,27 @@ private fun Header(
             text = album.title
         )
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth(),
             horizontalArrangement = Arrangement.Center
         ) {
-            Icon(icon = SatunesIcons.ARTIST)
-            Spacer(modifier = Modifier.size(size = 5.dp))
-            Subtitle(
+            Row(
                 modifier = Modifier
+                    .clip(shape = CircleShape)
                     .clickable {
                         openMedia(
                             playbackViewModel = playbackViewModel,
                             media = album.artist,
                             navController = navController
                         )
-                    },
-                text = if (album.year != null) "${album.artist.title} - ${album.year}" else album.artist.title
-            )
+                    }
+            ) {
+                Spacer(modifier = Modifier.size(size = 10.dp)) //Used for press animation larger zone
+                Icon(icon = SatunesIcons.ARTIST)
+                Spacer(modifier = Modifier.size(size = 5.dp))
+                Subtitle(text = if (album.year != null) "${album.artist.title} - ${album.year}" else album.artist.title)
+                Spacer(modifier = Modifier.size(size = 10.dp)) //Used for press animation larger zone
+            }
         }
     }
 }

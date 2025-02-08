@@ -3,6 +3,23 @@ You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
 ## 3.0 (Android 5.1.1 Lollipop et ultérieur)
 
+### 3.0.0-beta-1
+
+Nouvelles fonctionnalités :
+
+* Il est possible de déplacer des positions d'actions personnalisées
+* Une playlist peut être sélectionnée comme onglet par défaut.
+
+Améliorations, optimisations et dépannage :
+
+* Mise à jour des textes
+* Ajout d'une icône artiste à côté du titre de l'artiste dans certaines vues
+* Mise à jour de la position des éléments dans la vue de mise à jour
+* Déplacer les paramètres dédiés à au design dans les paramètre "Design"
+* Mise à jour de la structure du code
+* Correction de certains problèmes d'interface utilisateur depuis la version 3.0.0-alpha-2
+* Autres optimisations et améliorations indirectes
+
 ### 3.0.0-alpha-2
 
 Nouvelles fonctionnalités:

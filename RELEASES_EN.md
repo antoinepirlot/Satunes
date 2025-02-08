@@ -3,6 +3,23 @@ Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
 ## 3.0 (Android 5.1.1 Lollipop and later
 
+### 3.0.0-beta-1
+
+New features:
+
+* It's possible to move custom actions positions
+* A playlist can be selected as the default one
+
+Improvements, optimizations and troubleshooting:
+
+* Update texts
+* Add artist icon next to artist title in certain views
+* Update position of elements in update view
+* Move settings dedicated to design in Design settings menu
+* Update code structure
+* Fix some ui issues from 3.0.0-alpha-2
+* Other indirect optimizations and improvements
+
 ### 3.0.0-alpha-2
 
 New features:
@@ -15,8 +32,8 @@ Improvements, optimizations and troubleshooting:
 
 * Startup optimization
 * When the list is sorted, the list loaded in playback corresponds to the sort
-* When the user changes the view from one media type to another, the navigation bar refelcts the
-  changement
+* When the user changes the view from one media type to another, the navigation bar reflects the
+  modifications
 * Other indirect optimizations and improvements
 
 ### 3.0.0-alpha-1

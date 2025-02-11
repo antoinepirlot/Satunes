@@ -373,7 +373,7 @@ object DataLoader {
 
     private fun loadArtist(context: Context, cursor: Cursor): Artist {
         // Get values of columns for a given artist.
-        var name = try {
+        var name: String = try {
             cursor.getString(artistNameColumnId!!)
         } catch (e: NullPointerException) {
             UNKNOWN_ARTIST
@@ -427,7 +427,7 @@ object DataLoader {
     }
 
     private fun loadAlbum(context: Context, cursor: Cursor): Album {
-        var name = try {
+        var name: String = try {
             cursor.getString(albumNameColumnId!!)
         } catch (e: NullPointerException) {
             UNKNOWN_ALBUM

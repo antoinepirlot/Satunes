@@ -238,8 +238,7 @@ object DataLoader {
      */
     private fun loadData(cursor: Cursor, context: Context) {
         val absolutePath: String = cursor.getString(absolutePathColumnId!!)
-        if (!File(absolutePath).exists())
-            return //In certain cases it could happen
+        if (!File(absolutePath).exists()) return //In certain cases it could happen
         //Load Artist
         val artist: Artist = loadArtist(context = context, cursor = cursor)
 

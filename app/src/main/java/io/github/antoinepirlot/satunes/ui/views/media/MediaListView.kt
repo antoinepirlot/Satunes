@@ -74,12 +74,21 @@ internal fun MediaListView(
 
     val isMediaOptionsOpened: Boolean = satunesUiState.mediaToShowOptions != null
 
-    LaunchedEffect(key1 = sortOption, key2 = isMediaOptionsOpened, key3 = collectionChanged) {
+    LaunchedEffect(
+        listOf(
+            sortOption,
+            isMediaOptionsOpened,
+            collectionChanged,
+            mediaImplCollection
+        )
+    ) {
         if (isMediaOptionsOpened) return@LaunchedEffect
         else if (collectionChanged) mediaImplListToShow.clear()
         else if (!dataViewModel.listSetUpdatedProcessed) {
             mediaImplListToShow.clear()
             dataViewModel.listSetUpdatedProcessed()
+        } else if (mediaImplCollection.isEmpty()) {
+            mediaImplListToShow.clear()
         } else if (mediaImplListToShow.isNotEmpty()) {
             lazyListState.scrollToItem(0)
             mediaImplListToShow.clear()

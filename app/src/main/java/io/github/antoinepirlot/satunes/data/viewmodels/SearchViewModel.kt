@@ -143,7 +143,12 @@ class SearchViewModel : ViewModel() {
         selectedSearchChips: List<SearchChips>,
     ) {
         val mediaImplSet: SortedSet<MediaImpl> = sortedSetOf()
-        if (this.query.isBlank()) return // Prevent loop if string is "" or " "
+        if (this.query.isBlank()) { // Prevent loop if string is "" or " "
+            this._uiState.update { currentState: SearchUiState ->
+                currentState.copy(mediaImplCollection = mediaImplSet)
+            }
+            return
+        }
 
         val query: String = this.query.trim().lowercase()
 
@@ -203,7 +208,7 @@ class SearchViewModel : ViewModel() {
             }
         }
         this._uiState.update { currentState: SearchUiState ->
-            currentState.copy(mediaImplSet = mediaImplSet)
+            currentState.copy(mediaImplCollection = mediaImplSet)
         }
     }
 }

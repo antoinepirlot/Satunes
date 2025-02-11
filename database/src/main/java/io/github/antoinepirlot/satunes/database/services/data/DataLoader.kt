@@ -40,6 +40,7 @@ import io.github.antoinepirlot.satunes.database.services.database.DatabaseManage
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.database.services.widgets.WidgetDatabaseManager
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
+import java.io.File
 
 /**
  * @author Antoine Pirlot on 22/02/24
@@ -236,6 +237,9 @@ object DataLoader {
      * Load data from cursor
      */
     private fun loadData(cursor: Cursor, context: Context) {
+        val absolutePath: String = cursor.getString(absolutePathColumnId!!)
+        if (!File(absolutePath).exists())
+            return //In certain cases it could happen
         //Load Artist
         val artist: Artist = loadArtist(context = context, cursor = cursor)
 
@@ -245,7 +249,6 @@ object DataLoader {
         //Link album to artist if the album doesn't already have the album
         artist.addAlbum(album = album)
 
-        val absolutePath: String = cursor.getString(absolutePathColumnId!!)
 
         //Load Genre
         val genre: Genre = loadGenre(context = context, cursor = cursor, album = album)

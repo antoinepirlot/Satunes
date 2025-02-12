@@ -71,7 +71,6 @@
     <string name="logs_settings_content">You can export logs to send me them by email at: antoinepirlot@proton.me.\n\nWith these logs I can understand more about what\'s wrong with Satunes.\n\nLogs files contain informations about what Satunes does and its state.\nThese informations include:\n- Dates\n- Process\n- Satunes state\n\nIn these logs, there\'s not confidential informations as musics information or data that can identify you.\n\nIf you\'re not convinced, you can choose to describe me the problem but it will be more difficult for me to fix it.</string>
     <string name="update_modal_permanently">You won\'t see this notification again until the next update</string>
     <string name="canceled">Canceled</string>
-    <string name="update_music_to_playlists_success">Successfully updated</string>
     <string name="error_occurred">An error occurred</string>
     <string name="retry">Retry</string>
     <string name="insert_musics_to_playlist_success">Musics have been added to</string>
@@ -88,7 +87,6 @@
     <string name="refresh_data_button">Reload library</string>
     <string name="remove_musics_from_playlist_success">Musics have been remove from %1$s</string>
     <string name="add_music_to_playlist_success">%1$s has been added to %2$s</string>
-    <string name="add_musics_to_playlists_success">Musics have been added to playlists</string>
     <string name="remove_from_queue_option">Remove from queue</string>
     <string name="remove_from_queue_success">%1$s has been remove from queue.</string>
     <string name="clean_playlists_dialog_content">Cleaning playlists result in removing all not loaded musics from database.\n\nIf you changed the paths, I advise you to export your playlists.\nSome music might be permanently deleted from the playlists.\n\nWould you like to export your playlists?</string>
@@ -137,4 +135,5 @@
     <string name="default_playlist_section_setting_content">Default Playlist</string>
     <string name="no_playlist_selected">None</string>
     <string name="list_sub_settings_title">Lists</string>
+    <string name="update_playlists_success">Playlists have been updated</string>
 </resources>

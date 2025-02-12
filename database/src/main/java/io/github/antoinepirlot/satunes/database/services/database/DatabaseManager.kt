@@ -184,7 +184,11 @@ class DatabaseManager private constructor(context: Context) {
      * @param newMusicCollection the new collection of [Music]
      *
      */
-    fun updatePlaylistMusics(playlist: Playlist, newMusicCollection: Collection<Music>) {
+    fun updatePlaylistMusics(
+        playlist: Playlist,
+        newMusicCollection: Collection<Music>,
+        triggerUpdate: Boolean = true
+    ) {
         if (!playlistDao.exists(title = playlist.title)) throw PlaylistNotFoundException(playlist.id)
         try {
             val oldMusicCollection: Collection<Music> = playlist.getMusicSet()
@@ -195,8 +199,16 @@ class DatabaseManager private constructor(context: Context) {
                     removedMusic.add(element = music)
                 else newMusicSet.remove(element = music)
 
-            removeMusicsFromPlaylist(musics = removedMusic, playlist = playlist)
-            insertMusicsToPlaylist(musics = newMusicSet, playlist = playlist)
+            removeMusicsFromPlaylist(
+                musics = removedMusic,
+                playlist = playlist,
+                triggerUpdate = triggerUpdate
+            )
+            insertMusicsToPlaylist(
+                musics = newMusicSet,
+                playlist = playlist,
+                triggerUpdate = triggerUpdate
+            )
         } catch (e: Throwable) {
             _logger?.severe(e.message)
             throw e
@@ -228,7 +240,7 @@ class DatabaseManager private constructor(context: Context) {
         }
     }
 
-    fun insertMusicToPlaylist(music: Music, playlist: Playlist) {
+    fun insertMusicToPlaylist(music: Music, playlist: Playlist, triggerUpdate: Boolean = true) {
         val musicsPlaylistsRel =
             MusicsPlaylistsRel(
                 musicId = music.id,
@@ -243,7 +255,7 @@ class DatabaseManager private constructor(context: Context) {
                 _logger?.warning(e.message)
                 // Do nothing
             }
-            playlist.addMusic(music = music)
+            playlist.addMusic(music = music, triggerUpdate = triggerUpdate)
         } catch (e: SQLiteConstraintException) {
             _logger?.warning(e.message)
             // Do nothing
@@ -254,9 +266,13 @@ class DatabaseManager private constructor(context: Context) {
         }
     }
 
-    fun insertMusicsToPlaylist(musics: Collection<Music>, playlist: Playlist) {
+    fun insertMusicsToPlaylist(
+        musics: Collection<Music>,
+        playlist: Playlist,
+        triggerUpdate: Boolean = true
+    ) {
         musics.forEach { music: Music ->
-            insertMusicToPlaylist(music = music, playlist = playlist)
+            insertMusicToPlaylist(music = music, playlist = playlist, triggerUpdate = triggerUpdate)
         }
     }
 
@@ -280,7 +296,7 @@ class DatabaseManager private constructor(context: Context) {
         }
     }
 
-    fun removeMusicFromPlaylist(music: Music, playlist: Playlist) {
+    fun removeMusicFromPlaylist(music: Music, playlist: Playlist, triggerUpdate: Boolean = true) {
         if (playlist.title == LIKES_PLAYLIST_TITLE) {
             musicDao.unlike(musicId = music.id)
             music.liked.value = false
@@ -289,15 +305,23 @@ class DatabaseManager private constructor(context: Context) {
             musicId = music.id,
             playlistId = playlist.id
         )
-        playlist.removeMusic(music = music)
+        playlist.removeMusic(music = music, triggerUpdate = triggerUpdate)
         if (!musicsPlaylistsRelDAO.isMusicInPlaylist(musicId = music.id)) {
             musicDao.delete(MusicDB(id = music.id, absolutePath = music.absolutePath))
         }
     }
 
-    fun removeMusicsFromPlaylist(musics: Collection<Music>, playlist: Playlist) {
+    fun removeMusicsFromPlaylist(
+        musics: Collection<Music>,
+        playlist: Playlist,
+        triggerUpdate: Boolean = true
+    ) {
         for (music: Music in musics) {
-            this.removeMusicFromPlaylist(music = music, playlist = playlist)
+            this.removeMusicFromPlaylist(
+                music = music,
+                playlist = playlist,
+                triggerUpdate = triggerUpdate
+            )
         }
     }
 

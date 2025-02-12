@@ -58,10 +58,10 @@ internal fun PlaylistView(
 
     //Recompose if data changed
     var setChanged: Boolean by rememberSaveable { playlist.musicSetUpdated }
-    if (setChanged) {
-        setChanged = false
+
+    LaunchedEffect(key1 = setChanged) {
+        if (setChanged) setChanged = false
     }
-    //
 
     LaunchedEffect(key1 = dataViewModel.isLoaded) {
         if (musicSet.isNotEmpty())

@@ -68,7 +68,6 @@
     <string name="logs_settings_content">Tu peux exporter les logs pour me les envoyer par e-mail à l\'adresse: antoinepirlot@proton.me.\n\nGrâce à ces logs, je peux mieux comprendre ce qui ne va pas avec Satunes.\n\nLes fichiers logs contiennent des informations sur ce que fait Satunes et son état.\nCes informations incluent : \n- Dates\n- Processus\n- Etat de Satunes\n\nDans ces logs, il n\'y a pas d\'informations confidentielles comme des informations musicales ou des données permettant de t\'identifier.\n\nSi tu n\'es pas convaincu, tu peux choisir de me décrire le problème mais il sera plus difficile pour moi de le résoudre.</string>
     <string name="update_modal_permanently">Tu ne verras plus cette notification jusqu\'à la prochaine mise à jour</string>
     <string name="canceled">Annulé</string>
-    <string name="update_music_to_playlists_success">Modification réussie</string>
     <string name="error_occurred">Une erreur est survenue</string>
     <string name="retry">Réessayer</string>
     <string name="insert_musics_to_playlist_success">Les musiques ont été ajoutées à</string>
@@ -85,7 +84,6 @@
     <string name="refresh_data_button">Recharger la bibliothèque</string>
     <string name="remove_musics_from_playlist_success">Les musiques ont été supprimées de %1$s</string>
     <string name="add_music_to_playlist_success">%1$s a été ajouté à %2$s</string>
-    <string name="add_musics_to_playlists_success">Les musiques ont été ajoutées aux playlists</string>
     <string name="remove_from_queue_option">Retirer de la file d\'attente</string>
     <string name="remove_from_queue_success">%1$s a été supprimée de la liste d\'attente.</string>
     <string name="clean_playlists_dialog_content">Le nettoyage des playlists entraîne la suppression de toutes les musiques non chargées de la base de données.\n\nSi tu as modifié les chemins, je te conseille d\'exporter tes playlists. \nCertaines musiques peuvent être définitivement supprimées des playlists.\n\nSouhaites-tu exporter tes playlists?</string>
@@ -134,4 +132,5 @@
     <string name="default_playlist_section_setting_content">Playlist par défault</string>
     <string name="no_playlist_selected">Aucune</string>
     <string name="list_sub_settings_title">Listes</string>
+    <string name="update_playlists_success">Les playlists ont été mises à jour</string>
 </resources>

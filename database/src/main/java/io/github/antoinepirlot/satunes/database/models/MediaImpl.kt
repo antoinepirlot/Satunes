@@ -74,9 +74,9 @@ abstract class MediaImpl(
         return this.musicSortedSet
     }
 
-    fun clearMusicSet() {
+    fun clearMusicSet(triggerUpdate: Boolean = true) {
         this.musicSortedSet.clear()
-        this.musicSetUpdated.value = true
+        if (triggerUpdate) this.listUpdated()
     }
 
     fun contains(mediaImpl: MediaImpl): Boolean {
@@ -87,22 +87,22 @@ abstract class MediaImpl(
         }
     }
 
-    open fun addMusic(music: Music) {
+    open fun addMusic(music: Music, triggerUpdate: Boolean = true) {
         if (!this.musicSortedSet.contains(element = music)) {
             this.musicSortedSet.add(element = music)
-            this.musicSetUpdated.value = true
+            if (triggerUpdate) this.listUpdated()
         }
     }
 
-    open fun addMusics(musics: Collection<Music>) {
+    open fun addMusics(musics: Collection<Music>, triggerUpdate: Boolean = true) {
         this.musicSortedSet.addAll(musics)
-        this.musicSetUpdated.value = true
+        if (triggerUpdate) this.listUpdated()
     }
 
-    open fun removeMusic(music: Music) {
+    open fun removeMusic(music: Music, triggerUpdate: Boolean = true) {
         if (this.musicSortedSet.contains(element = music)) {
             this.musicSortedSet.remove(music)
-            this.musicSetUpdated.value = true
+            this.listUpdated()
         }
     }
 
@@ -111,6 +111,11 @@ abstract class MediaImpl(
         val filePath = Paths.get(path)
         val attrs = Files.readAttributes(filePath, BasicFileAttributes::class.java)
         return attrs.creationTime().toMillis()
+    }
+
+    protected fun listUpdated() {
+        if (this.musicSetUpdated.value) this.musicSetUpdated.value = false
+        this.musicSetUpdated.value = true
     }
 
     override fun compareTo(other: MediaImpl): Int {

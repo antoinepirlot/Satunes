@@ -53,15 +53,15 @@ class Playlist(
         }
     }
 
-    override fun addMusics(musics: Collection<Music>) {
+    override fun addMusics(musics: Collection<Music>, triggerUpdate: Boolean) {
         for (music: Music in musics) {
             this.addMusic(music = music, triggerUpdate = false)
         }
-        this.musicSetUpdated.value = true
+        if (triggerUpdate) this.listUpdated()
     }
 
-    override fun removeMusic(music: Music) {
-        super.removeMusic(music)
+    override fun removeMusic(music: Music, triggerUpdate: Boolean) {
+        super.removeMusic(music, triggerUpdate)
         music.removeOrderInPlaylist(playlist = this)
     }
 

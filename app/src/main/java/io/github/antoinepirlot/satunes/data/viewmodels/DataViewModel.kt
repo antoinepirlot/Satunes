@@ -59,6 +59,7 @@ import io.github.antoinepirlot.satunes.utils.getNow
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -80,6 +81,7 @@ class DataViewModel : ViewModel() {
     private val _db: DatabaseManager =
         DatabaseManager.initInstance(context = MainActivity.instance.applicationContext)
     private val _isLoaded: MutableState<Boolean> = DataLoader.isLoaded
+    private var _updatePlaylistMusicsJob: Job? = null
 
     var playlistSetUpdated: Boolean by _playlistSetUpdated
         private set
@@ -238,16 +240,31 @@ class DataViewModel : ViewModel() {
         musics: Collection<Music>,
         playlist: Playlist,
     ) {
-        CoroutineScope(Dispatchers.IO).launch {
+        this._updatePlaylistMusicsJob?.cancel()
+        val oldMusicsSet: Set<Music> = playlist.getMusicSet().toSet()
+        this._updatePlaylistMusicsJob = CoroutineScope(Dispatchers.IO).launch {
             val context: Context = MainActivity.instance.applicationContext
             try {
-                _db.updatePlaylistMusics(playlist = playlist, newMusicCollection = musics)
-                playlist.clearMusicSet()
+                _db.updatePlaylistMusics(
+                    playlist = playlist,
+                    newMusicCollection = musics,
+                    triggerUpdate = false
+                )
+                playlist.clearMusicSet(triggerUpdate = false)
                 playlist.addMusics(musics = musics)
                 showSnackBar(
                     scope = scope,
                     snackBarHostState = snackBarHostState,
-                    message = context.getString(R.string.update_playlist_success, playlist)
+                    message = context.getString(R.string.update_playlist_success, playlist),
+                    actionLabel = context.getString(R.string.cancel),
+                    action = {
+                        updatePlaylistMusics(
+                            scope = scope,
+                            snackBarHostState = snackBarHostState,
+                            musics = oldMusicsSet,
+                            playlist = playlist
+                        )
+                    }
                 )
             } catch (e: Throwable) {
                 showErrorSnackBar(

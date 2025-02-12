@@ -87,10 +87,10 @@ abstract class MediaImpl(
         }
     }
 
-    open fun addMusic(music: Music) {
+    open fun addMusic(music: Music, triggerUpdate: Boolean = true) {
         if (!this.musicSortedSet.contains(element = music)) {
             this.musicSortedSet.add(element = music)
-            this.musicSetUpdated.value = true
+            if (triggerUpdate) this.musicSetUpdated.value = true
         }
     }
 

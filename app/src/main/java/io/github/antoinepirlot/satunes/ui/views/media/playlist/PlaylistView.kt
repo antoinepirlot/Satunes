@@ -68,8 +68,8 @@ internal fun PlaylistView(
             satunesViewModel.replaceExtraButtons(
                 extraButtons = {
                     //It's in a column
-                    ExtraButtonList()
                     PlaylistExtraButtonList(playlist = playlist)
+                    ExtraButtonList()
                 }
             )
         else

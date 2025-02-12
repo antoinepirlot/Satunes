@@ -76,7 +76,7 @@
     <string name="remove_from_playlist_success">has been removed from</string>
     <string name="remove_playlist_success">has been removed.</string>
     <string name="remove_from_likes_success">ou don\'t like %1$s anymore.</string>
-    <string name="update_playlist_success">%1$s has been updated.</string>
+    <string name="update_playlist_success">%1$s has been updated</string>
     <string name="bar_speed_label">Speed</string>
     <string name="update_modal_not_permanently">The modal will still be shown at next launch.</string>
     <string name="add_path_button">Add a folder to %1$s</string>

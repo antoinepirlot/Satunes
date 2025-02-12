@@ -375,52 +375,6 @@ class DataViewModel : ViewModel() {
         }
     }
 
-    private fun getMediaMusicList(mediaImpl: MediaImpl): Collection<Music> = when (mediaImpl) {
-        is Folder -> mediaImpl.getAllMusic()
-        else -> mediaImpl.getMusicSet()
-    }
-
-    fun insertMusicsToPlaylist(
-        scope: CoroutineScope,
-        snackBarHostState: SnackbarHostState,
-        musics: Collection<Music>,
-        playlist: Playlist,
-    ) {
-        CoroutineScope(Dispatchers.IO).launch {
-            val context: Context = MainActivity.instance.applicationContext
-            try {
-                _db.insertMusicsToPlaylist(musics = musics, playlist = playlist)
-                showSnackBar(
-                    scope = scope,
-                    snackBarHostState = snackBarHostState,
-                    message = context.getString(R.string.insert_musics_to_playlist_success) + ' ' + if (playlist.title == LIKES_PLAYLIST_TITLE) context.getString(
-                        RDb.string.likes_playlist_title
-                    )
-                    else playlist.title,
-                    actionLabel = context.getString(R.string.cancel),
-                    action = {
-                        removeMusicsFromPlaylist(
-                            scope = scope,
-                            snackBarHostState = snackBarHostState,
-                            musics = musics,
-                            playlist = playlist
-                        )
-                    }
-                )
-            } catch (e: Throwable) {
-                _logger?.warning(e.message)
-                showErrorSnackBar(scope = scope, snackBarHostState = snackBarHostState, action = {
-                    insertMusicsToPlaylist(
-                        scope = scope,
-                        snackBarHostState = snackBarHostState,
-                        musics = musics,
-                        playlist = playlist
-                    )
-                })
-            }
-        }
-    }
-
     fun updateMusicPlaylist(
         scope: CoroutineScope,
         snackBarHostState: SnackbarHostState,
@@ -533,50 +487,7 @@ class DataViewModel : ViewModel() {
         }
     }
 
-    fun removeMusicsFromPlaylist(
-        scope: CoroutineScope,
-        snackBarHostState: SnackbarHostState,
-        musics: Collection<Music>,
-        playlist: Playlist
-    ) {
-        CoroutineScope(Dispatchers.IO).launch {
-            val context: Context = MainActivity.instance.applicationContext
-            try {
-                _db.removeMusicsFromPlaylist(musics = musics, playlist = playlist)
-                showSnackBar(
-                    scope = scope,
-                    snackBarHostState = snackBarHostState,
-                    message = context.getString(
-                        R.string.remove_musics_from_playlist_success,
-                        if (playlist.title == LIKES_PLAYLIST_TITLE)
-                            context.getString(RDb.string.likes_playlist_title)
-                        else playlist.title
-                    ),
-                    actionLabel = context.getString(R.string.cancel),
-                    action = {
-                        insertMusicsToPlaylist(
-                            scope = scope,
-                            snackBarHostState = snackBarHostState,
-                            musics = musics,
-                            playlist = playlist
-                        )
-                    }
-                )
-            } catch (e: Throwable) {
-                _logger?.warning(e.message)
-                showErrorSnackBar(scope = scope, snackBarHostState = snackBarHostState, action = {
-                    removeMusicsFromPlaylist(
-                        scope = scope,
-                        snackBarHostState = snackBarHostState,
-                        musics = musics,
-                        playlist = playlist
-                    )
-                })
-            }
-        }
-    }
-
-    fun removeMusicFromPlaylists(
+    private fun removeMusicFromPlaylists(
         scope: CoroutineScope,
         snackBarHostState: SnackbarHostState,
         music: Music,
@@ -609,45 +520,6 @@ class DataViewModel : ViewModel() {
                         scope = scope,
                         snackBarHostState = snackBarHostState,
                         music = music,
-                        playlists = playlists
-                    )
-                })
-            }
-        }
-    }
-
-    fun removeMusicsFromPlaylists(
-        scope: CoroutineScope,
-        snackBarHostState: SnackbarHostState,
-        mediaImpl: MediaImpl,
-        playlists: Collection<Playlist>
-    ) {
-        CoroutineScope(Dispatchers.IO).launch {
-            val musics: Collection<Music> = getMediaMusicList(mediaImpl = mediaImpl)
-            try {
-                _db.removeMusicsFromPlaylists(musics = musics, playlists = playlists)
-                val context: Context = MainActivity.instance.applicationContext
-                showSnackBar(
-                    scope = scope,
-                    snackBarHostState = snackBarHostState,
-                    message = context.getString(R.string.update_playlists_success),
-                    actionLabel = context.getString(R.string.cancel),
-                    action = {
-                        updateMusicsToPlaylists(
-                            scope = scope,
-                            snackBarHostState = snackBarHostState,
-                            mediaImpl = mediaImpl,
-                            playlists = playlists
-                        )
-                    }
-                )
-            } catch (e: Throwable) {
-                _logger?.warning(e.message)
-                showErrorSnackBar(scope = scope, snackBarHostState = snackBarHostState, action = {
-                    removeMusicsFromPlaylists(
-                        scope = scope,
-                        snackBarHostState = snackBarHostState,
-                        mediaImpl = mediaImpl,
                         playlists = playlists
                     )
                 })

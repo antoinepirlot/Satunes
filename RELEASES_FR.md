@@ -3,6 +3,21 @@ You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
 ## 3.0 (Android 5.1.1 Lollipop et ultérieur)
 
+### 3.0.0-beta-2
+
+Améliorations, optimisations et dépannage :
+
+* Correction de quelques problèmes d'interface utilisateur
+* Mise à jour des textes
+* Suppression de certaines actions d'annulation lors de la modification des playlists car c'est plus
+  complexe maintenant
+* Correction d'un plantage lors du chargement d'une musique non existante (oui cela peut arriver
+  avec MediaStore lol)
+* Correction de l'ouverture de la playlist par défaut
+* Réinitialisation de l'ancien ordre de la liste des boutons extra dans la vue d'une playlist
+* Correction de la vue recherche
+* Autres optimisations et améliorations indirectes
+
 ### 3.0.0-beta-1
 
 Nouvelles fonctionnalités :

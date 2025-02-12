@@ -81,7 +81,7 @@ class DataViewModel : ViewModel() {
     private val _db: DatabaseManager =
         DatabaseManager.initInstance(context = MainActivity.instance.applicationContext)
     private val _isLoaded: MutableState<Boolean> = DataLoader.isLoaded
-    private var _updatePlaylistMusicsJob: Job? = null
+    private var _updatePlaylistsJob: Job? = null
 
     var playlistSetUpdated: Boolean by _playlistSetUpdated
         private set
@@ -249,9 +249,9 @@ class DataViewModel : ViewModel() {
         musics: Collection<Music>,
         playlist: Playlist,
     ) {
-        this._updatePlaylistMusicsJob?.cancel()
+        this._updatePlaylistsJob?.cancel()
         val oldMusicsSet: Set<Music> = playlist.getMusicSet().toSet()
-        this._updatePlaylistMusicsJob = CoroutineScope(Dispatchers.IO).launch {
+        this._updatePlaylistsJob = CoroutineScope(Dispatchers.IO).launch {
             val context: Context = MainActivity.instance.applicationContext
             try {
                 _db.updatePlaylistMusics(
@@ -329,7 +329,7 @@ class DataViewModel : ViewModel() {
         }
     }
 
-    fun insertMusicToPlaylist(
+    private fun insertMusicToPlaylist(
         scope: CoroutineScope,
         snackBarHostState: SnackbarHostState,
         music: Music,
@@ -466,24 +466,17 @@ class DataViewModel : ViewModel() {
         mediaImpl: MediaImpl,
         playlists: Collection<Playlist>
     ) {
-        CoroutineScope(Dispatchers.IO).launch {
+        this._updatePlaylistsJob?.cancel()
+        this._updatePlaylistsJob = CoroutineScope(Dispatchers.IO).launch {
             try {
                 _db.updateMediaToPlaylists(mediaImpl = mediaImpl, playlists = playlists)
                 val context: Context = MainActivity.instance.applicationContext
                 showSnackBar(
                     scope = scope,
                     snackBarHostState = snackBarHostState,
-                    message = context.getString(R.string.add_musics_to_playlists_success),
-                    actionLabel = context.getString(R.string.cancel),
-                    action = {
-                        removeMusicsFromPlaylists(
-                            scope = scope,
-                            snackBarHostState = snackBarHostState,
-                            mediaImpl = mediaImpl,
-                            playlists = playlists
-                        )
-                    }
+                    message = context.getString(R.string.update_playlists_success)
                 )
+                //Can't cancel easily, to do it easily, add playlist list in each media impl
             } catch (e: Throwable) {
                 _logger?.warning(e.message)
                 showErrorSnackBar(scope = scope, snackBarHostState = snackBarHostState, action = {
@@ -637,7 +630,7 @@ class DataViewModel : ViewModel() {
                 showSnackBar(
                     scope = scope,
                     snackBarHostState = snackBarHostState,
-                    message = context.getString(R.string.add_musics_to_playlists_success),
+                    message = context.getString(R.string.update_playlists_success),
                     actionLabel = context.getString(R.string.cancel),
                     action = {
                         updateMusicsToPlaylists(

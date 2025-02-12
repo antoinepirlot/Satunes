@@ -88,7 +88,6 @@
     <string name="refresh_data_button">Reload library</string>
     <string name="remove_musics_from_playlist_success">Musics have been remove from %1$s</string>
     <string name="add_music_to_playlist_success">%1$s has been added to %2$s</string>
-    <string name="add_musics_to_playlists_success">Musics have been added to playlists</string>
     <string name="remove_from_queue_option">Remove from queue</string>
     <string name="remove_from_queue_success">%1$s has been remove from queue.</string>
     <string name="clean_playlists_dialog_content">Cleaning playlists result in removing all not loaded musics from database.\n\nIf you changed the paths, I advise you to export your playlists.\nSome music might be permanently deleted from the playlists.\n\nWould you like to export your playlists?</string>
@@ -137,4 +136,5 @@
     <string name="default_playlist_section_setting_content">Default Playlist</string>
     <string name="no_playlist_selected">None</string>
     <string name="list_sub_settings_title">Lists</string>
+    <string name="update_playlists_success">Playlists have been updated</string>
 </resources>

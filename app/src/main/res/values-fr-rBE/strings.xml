@@ -85,7 +85,6 @@
     <string name="refresh_data_button">Recharger la bibliothèque</string>
     <string name="remove_musics_from_playlist_success">Les musiques ont été supprimées de %1$s</string>
     <string name="add_music_to_playlist_success">%1$s a été ajouté à %2$s</string>
-    <string name="add_musics_to_playlists_success">Les musiques ont été ajoutées aux playlists</string>
     <string name="remove_from_queue_option">Retirer de la file d\'attente</string>
     <string name="remove_from_queue_success">%1$s a été supprimée de la liste d\'attente.</string>
     <string name="clean_playlists_dialog_content">Le nettoyage des playlists entraîne la suppression de toutes les musiques non chargées de la base de données.\n\nSi tu as modifié les chemins, je te conseille d\'exporter tes playlists. \nCertaines musiques peuvent être définitivement supprimées des playlists.\n\nSouhaites-tu exporter tes playlists?</string>
@@ -134,4 +133,5 @@
     <string name="default_playlist_section_setting_content">Playlist par défault</string>
     <string name="no_playlist_selected">Aucune</string>
     <string name="list_sub_settings_title">Listes</string>
+    <string name="update_playlists_success">Les playlists ont été mises à jour</string>
 </resources>

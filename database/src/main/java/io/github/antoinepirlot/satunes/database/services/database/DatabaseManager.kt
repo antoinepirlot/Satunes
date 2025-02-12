@@ -237,7 +237,13 @@ class DatabaseManager private constructor(context: Context) {
             )
         try {
             musicsPlaylistsRelDAO.insert(musicsPlaylistsRel)
-            musicDao.insert(MusicDB(id = music.id, absolutePath = music.absolutePath))
+            try {
+                musicDao.insert(MusicDB(id = music.id, absolutePath = music.absolutePath))
+            } catch (e: SQLiteConstraintException) {
+                _logger?.warning(e.message)
+                // Do nothing
+            }
+            playlist.addMusic(music = music)
         } catch (e: SQLiteConstraintException) {
             _logger?.warning(e.message)
             // Do nothing

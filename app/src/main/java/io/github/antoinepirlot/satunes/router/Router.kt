@@ -84,7 +84,6 @@ internal fun Router(
     if (defaultDestination == null) return
 
     LaunchedEffect(key1 = dataViewModel.isLoaded) {
-//        if(satunesUiState.currentDestination == Destination.DESIGN_SETTINGS) return@LaunchedEffect //Prevents navigating while changing the setting.
         if (
             defaultDestination == Destination.PLAYLISTS &&
             dataViewModel.isLoaded
@@ -93,10 +92,10 @@ internal fun Router(
             if (satunesViewModel.defaultPlaylistId >= 0) {
                 val playlist: Playlist =
                     dataViewModel.getPlaylist(id = satunesViewModel.defaultPlaylistId)!!
-                if (satunesUiState.currentDestination == Destination.PLAYLISTS)
-                    navController.navigate(
-                        route = Destination.PLAYLISTS.link + "/${playlist.id}"
-                    )
+                backToRoot(rootRoute = defaultDestination!!, navController = navController)
+                navController.navigate(
+                    route = Destination.PLAYLISTS.link + "/${playlist.id}"
+                )
             }
         }
     }

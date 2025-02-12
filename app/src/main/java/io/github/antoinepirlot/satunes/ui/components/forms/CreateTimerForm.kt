@@ -28,6 +28,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material3.Button
@@ -111,25 +112,25 @@ internal fun CreateTimerForm(
             Row(
                 modifier = Modifier.fillMaxWidth(),
             ) {
-                OutlinedNumberField(
-                    modifier = Modifier.fillMaxWidth(fraction = 0.30f),
+                Field(
+                    modifier = Modifier.fillMaxWidth(fraction = 1f / 3f),
                     enabled = !isTimerRunning,
+                    farLeft = true,
                     value = hoursIntField,
                     label = stringResource(R.string.hours_text_field_label),
                     maxValue = MAX_HOURS
                 )
-                Spacer(modifier = Modifier.size(16.dp))
-                OutlinedNumberField(
-                    modifier = Modifier.fillMaxWidth(fraction = 0.49f),
+                Field(
+                    modifier = Modifier.fillMaxWidth(fraction = 1f / 2f),
                     enabled = !isTimerRunning,
                     value = minutesIntField,
                     label = stringResource(R.string.minutes_text_field_label),
                     maxValue = MAX_MINUTES
                 )
-                Spacer(modifier = Modifier.size(16.dp))
-                OutlinedNumberField(
+                Field(
                     modifier = Modifier.fillMaxWidth(),
                     enabled = !isTimerRunning,
+                    farRight = true,
                     value = secondsIntField,
                     label = stringResource(R.string.seconds_text_field_label),
                     maxValue = MAX_SECONDS
@@ -180,6 +181,35 @@ internal fun CreateTimerForm(
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun Field(
+    modifier: Modifier = Modifier,
+    farLeft: Boolean = false,
+    farRight: Boolean = false,
+    enabled: Boolean,
+    value: MutableIntState,
+    label: String,
+    maxValue: Int
+) {
+    val fieldModifier: Modifier =
+        if (farLeft)
+            Modifier.padding(end = 4.dp)
+        else if (farRight)
+            Modifier.padding(start = 4.dp)
+        else
+            Modifier.padding(horizontal = 4.dp)
+
+    Box(modifier = modifier) {
+        OutlinedNumberField(
+            modifier = fieldModifier,
+            enabled = enabled,
+            value = value,
+            label = label,
+            maxValue = maxValue
+        )
     }
 }
 

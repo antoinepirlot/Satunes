@@ -179,6 +179,7 @@ object DataLoader {
             }
         }
         DatabaseManager.initInstance(context = context).loadAllPlaylistsWithMusic()
+
         WidgetDatabaseManager.refreshWidgets()
         isLoaded.value = true
         isLoading.value = false

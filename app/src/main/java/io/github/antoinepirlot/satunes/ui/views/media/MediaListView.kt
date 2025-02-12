@@ -74,6 +74,7 @@ internal fun MediaListView(
 
     val isMediaOptionsOpened: Boolean = satunesUiState.mediaToShowOptions != null
 
+    //TODO is a veritable issue change the behavior
     LaunchedEffect(
         listOf(
             sortOption,

@@ -381,40 +381,15 @@ class DataViewModel : ViewModel() {
         music: Music,
         playlists: Collection<Playlist>
     ) {
-        CoroutineScope(Dispatchers.IO).launch {
-            val context: Context = MainActivity.instance.applicationContext
-
-            try {
-                _db.updateMusicToPlaylists(music = music, newPlaylistsCollection = playlists)
-                showSnackBar(
-                    scope = scope,
-                    snackBarHostState = snackBarHostState,
-                    message = context.getString(R.string.update_music_to_playlists_success),
-                    actionLabel = context.getString(R.string.cancel),
-                    action = {
-                        removeMusicFromPlaylists(
-                            scope = scope,
-                            snackBarHostState = snackBarHostState,
-                            music = music,
-                            playlists = playlists
-                        )
-                    }
-                )
-            } catch (e: Throwable) {
-                _logger?.warning(e.message)
-                showErrorSnackBar(scope = scope, snackBarHostState = snackBarHostState, action = {
-                    updateMusicPlaylist(
-                        scope = scope,
-                        snackBarHostState = snackBarHostState,
-                        music = music,
-                        playlists = playlists
-                    )
-                })
-            }
-        }
+        this.updateMediaImplToPlaylists(
+            scope = scope,
+            snackBarHostState = snackBarHostState,
+            mediaImpl = music,
+            playlists = playlists
+        )
     }
 
-    fun updateMusicsToPlaylists(
+    fun updateMediaImplToPlaylists(
         scope: CoroutineScope,
         snackBarHostState: SnackbarHostState,
         mediaImpl: MediaImpl,
@@ -423,7 +398,13 @@ class DataViewModel : ViewModel() {
         this._updatePlaylistsJob?.cancel()
         this._updatePlaylistsJob = CoroutineScope(Dispatchers.IO).launch {
             try {
-                _db.updateMediaToPlaylists(mediaImpl = mediaImpl, playlists = playlists)
+                if (mediaImpl is Music)
+                    _db.updateMusicToPlaylists(
+                        music = mediaImpl,
+                        newPlaylistsCollection = playlists
+                    )
+                else
+                    _db.updateMediaToPlaylists(mediaImpl = mediaImpl, playlists = playlists)
                 val context: Context = MainActivity.instance.applicationContext
                 showSnackBar(
                     scope = scope,
@@ -434,7 +415,7 @@ class DataViewModel : ViewModel() {
             } catch (e: Throwable) {
                 _logger?.warning(e.message)
                 showErrorSnackBar(scope = scope, snackBarHostState = snackBarHostState, action = {
-                    updateMusicsToPlaylists(
+                    updateMediaImplToPlaylists(
                         scope = scope,
                         snackBarHostState = snackBarHostState,
                         mediaImpl = mediaImpl,
@@ -451,7 +432,8 @@ class DataViewModel : ViewModel() {
         music: Music,
         playlist: Playlist
     ) {
-        CoroutineScope(Dispatchers.IO).launch {
+        this._updatePlaylistsJob?.cancel()
+        this._updatePlaylistsJob = CoroutineScope(Dispatchers.IO).launch {
             try {
                 _db.removeMusicFromPlaylist(music = music, playlist = playlist)
                 val context: Context = MainActivity.instance.applicationContext
@@ -475,54 +457,18 @@ class DataViewModel : ViewModel() {
                 )
             } catch (e: Throwable) {
                 _logger?.warning(e.message)
-                showErrorSnackBar(scope = scope, snackBarHostState = snackBarHostState, action = {
-                    removeMusicFromPlaylist(
-                        scope = scope,
-                        snackBarHostState = snackBarHostState,
-                        music = music,
-                        playlist = playlist
-                    )
-                })
-            }
-        }
-    }
-
-    private fun removeMusicFromPlaylists(
-        scope: CoroutineScope,
-        snackBarHostState: SnackbarHostState,
-        music: Music,
-        playlists: Collection<Playlist>
-    ) {
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                _db.removeMusicFromPlaylists(music = music, playlists = playlists)
-                val context: Context = MainActivity.instance.applicationContext
-                showSnackBar(
+                showErrorSnackBar(
                     scope = scope,
                     snackBarHostState = snackBarHostState,
-                    message = music.title + ' ' + context.getString(R.string.remove_from_playlist_success) + ' ' + context.getString(
-                        RDb.string.playlists
-                    ).lowercase(),
-                    actionLabel = context.getString(R.string.cancel),
                     action = {
-                        updateMusicPlaylist(
+                        removeMusicFromPlaylist(
                             scope = scope,
                             snackBarHostState = snackBarHostState,
                             music = music,
-                            playlists = playlists
+                            playlist = playlist
                         )
                     }
                 )
-            } catch (e: Throwable) {
-                _logger?.warning(e.message)
-                showErrorSnackBar(scope = scope, snackBarHostState = snackBarHostState, action = {
-                    removeMusicFromPlaylists(
-                        scope = scope,
-                        snackBarHostState = snackBarHostState,
-                        music = music,
-                        playlists = playlists
-                    )
-                })
             }
         }
     }

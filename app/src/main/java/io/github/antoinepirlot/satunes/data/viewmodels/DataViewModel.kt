@@ -194,7 +194,16 @@ class DataViewModel : ViewModel() {
                 showSnackBar(
                     scope = scope,
                     snackBarHostState = snackBarHostState,
-                    message = context.getString(R.string.update_playlist_success, playlist)
+                    message = context.getString(R.string.update_playlist_success, playlist),
+                    actionLabel = context.getString(R.string.cancel),
+                    action = {
+                        updatePlaylistTitle(
+                            scope = scope,
+                            snackBarHostState = snackBarHostState,
+                            playlist = playlist,
+                            newTitle = oldTitle
+                        )
+                    }
                 )
             } catch (e: Throwable) {
                 playlist.title = oldTitle

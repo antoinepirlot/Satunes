@@ -237,13 +237,7 @@ class DatabaseManager private constructor(context: Context) {
             )
         try {
             musicsPlaylistsRelDAO.insert(musicsPlaylistsRel)
-            try {
-                musicDao.insert(MusicDB(id = music.id, absolutePath = music.absolutePath))
-            } catch (e: SQLiteConstraintException) {
-                _logger?.warning(e.message)
-                // Do nothing
-            }
-            playlist.addMusic(music = music)
+            musicDao.insert(MusicDB(id = music.id, absolutePath = music.absolutePath))
         } catch (e: SQLiteConstraintException) {
             _logger?.warning(e.message)
             // Do nothing
@@ -311,11 +305,6 @@ class DatabaseManager private constructor(context: Context) {
         for (playlist: Playlist in playlists) {
             this.removeMusicsFromPlaylist(musics = musics, playlist = playlist)
         }
-    }
-
-    fun removeMusic(id: Long) {
-        this.musicDao.delete(musicId = id)
-        this.musicsPlaylistsRelDAO.removeAll(musicId = id)
     }
 
     fun removePlaylist(playlist: Playlist) {

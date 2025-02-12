@@ -146,10 +146,7 @@ class Music(
      * @throws IllegalArgumentException if the [Playlist] has already been added.
      */
     fun setOrderInPlaylist(playlist: Playlist, order: Long) {
-        if (this._playlistsOrderMap.containsKey(key = playlist))
-            throw IllegalArgumentException(
-                "$playlist already exist with the order: ${_playlistsOrderMap[playlist]}"
-            )
+        if (this._playlistsOrderMap.containsKey(key = playlist)) return
         this._playlistsOrderMap[playlist] = order
     }
 

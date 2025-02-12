@@ -36,7 +36,9 @@ class Playlist(
     title: String
 ) : MediaImpl(id = id, title = title) {
 
-    override fun addMusic(music: Music) {
+    override fun addMusic(
+        music: Music
+    ) {
         super.addMusic(music)
         CoroutineScope(Dispatchers.IO).launch {
             try {

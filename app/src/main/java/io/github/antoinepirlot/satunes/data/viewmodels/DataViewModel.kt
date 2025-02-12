@@ -409,7 +409,7 @@ class DataViewModel : ViewModel() {
                 showSnackBar(
                     scope = scope,
                     snackBarHostState = snackBarHostState,
-                    message = music.title + ' ' + context.getString(R.string.update_music_to_playlists_success),
+                    message = context.getString(R.string.update_music_to_playlists_success),
                     actionLabel = context.getString(R.string.cancel),
                     action = {
                         removeMusicFromPlaylists(

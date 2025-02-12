@@ -66,9 +66,9 @@
     <string name="see_on_fdroid">Ouvrir dans F-Droid</string>
     <string name="logs_settings">Logs</string>
     <string name="logs_settings_content">Tu peux exporter les logs pour me les envoyer par e-mail à l\'adresse: antoinepirlot@proton.me.\n\nGrâce à ces logs, je peux mieux comprendre ce qui ne va pas avec Satunes.\n\nLes fichiers logs contiennent des informations sur ce que fait Satunes et son état.\nCes informations incluent : \n- Dates\n- Processus\n- Etat de Satunes\n\nDans ces logs, il n\'y a pas d\'informations confidentielles comme des informations musicales ou des données permettant de t\'identifier.\n\nSi tu n\'es pas convaincu, tu peux choisir de me décrire le problème mais il sera plus difficile pour moi de le résoudre.</string>
-    <string name="update_modal_permanently">Tu ne verras plus cette modal jusqu\'à la prochaine mise à jour</string>
+    <string name="update_modal_permanently">Tu ne verras plus cette notification jusqu\'à la prochaine mise à jour</string>
     <string name="canceled">Annulé</string>
-    <string name="insert_music_to_playlists_success">a été ajoutée à/aux playlist(s)</string>
+    <string name="update_music_to_playlists_success">Modification réussie</string>
     <string name="error_occurred">Une erreur est survenue</string>
     <string name="retry">Réessayer</string>
     <string name="insert_musics_to_playlist_success">Les musiques ont été ajoutées à</string>
@@ -77,7 +77,7 @@
     <string name="remove_from_playlist_success">a été supprimé de</string>
     <string name="remove_playlist_success">a été supprimée.</string>
     <string name="remove_from_likes_success">Tu n\'aimes plus %1$s.</string>
-    <string name="update_playlist_success">%1$s a été mise à jour.</string>
+    <string name="update_playlist_success">%1$s a été mise à jour</string>
     <string name="bar_speed_label">Vitesse</string>
     <string name="update_modal_not_permanently">Le modal sera toujours montré à la prochaine ouverture.</string>
     <string name="add_path_button">Ajouter un dossier à %1$s</string>

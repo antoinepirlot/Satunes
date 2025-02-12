@@ -307,11 +307,6 @@ class DatabaseManager private constructor(context: Context) {
         }
     }
 
-    fun removeMusic(id: Long) {
-        this.musicDao.delete(musicId = id)
-        this.musicsPlaylistsRelDAO.removeAll(musicId = id)
-    }
-
     fun removePlaylist(playlist: Playlist) {
         playlistDao.remove(id = playlist.id)
         playlist.getMusicSet().forEach { music: Music ->

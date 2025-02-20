@@ -4,13 +4,9 @@
 
 <h1 align="center">Satunes (🇫🇷)</h1>
 <p align="center">
-  <a href="https://github.com/antoinepirlot/Satunes/releases/latest">
-    <img src="https://img.shields.io/github/release/antoinepirlot/Satunes.svg?logo=github">
-  </a>
-</p>
-<p align="center">
-  <a href="https://f-droid.org/app/io.github.antoinepirlot.satunes"><img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" width="200"></a>
-  <a href="https://github.com/antoinepirlot/Satunes/releases"><img src="https://raw.githubusercontent.com/NeoApplications/Neo-Backup/034b226cea5c1b30eb4f6a6f313e4dadcbb0ece4/badge_github.png" width="200"></a>
+  <a href="https://f-droid.org/app/io.github.antoinepirlot.satunes"><img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" width="230"></a>
+  </br>
+  <a href="https://github.com/antoinepirlot/Satunes/releases"><img src="https://get-it-on.codeberg.org/get-it-on-blue-on-white.png" width="200"></a>
 </p>
 
 You can find this file in [english 🇬🇧](README_EN.md).
@@ -67,7 +63,9 @@ Tu as le droit de réutiliser mon code pour créer une nouvelle application dér
 # Installation
 Pour installer facilement, tu peux télécharger l'application sur Fdroid en cliquant sur le bouton ci-dessous.
 <p align="center">
-  <a href="https://f-droid.org/app/io.github.antoinepirlot.satunes"><img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" width="150"></a>
+  <a href="https://f-droid.org/app/io.github.antoinepirlot.satunes"><img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" width="230"></a>
+  </br>
+  <a href="https://github.com/antoinepirlot/Satunes/releases"><img src="https://get-it-on.codeberg.org/get-it-on-blue-on-white.png" width="200"></a>
 </p>
 
 Sinon, tu peux également suivre les étapes suivantes:

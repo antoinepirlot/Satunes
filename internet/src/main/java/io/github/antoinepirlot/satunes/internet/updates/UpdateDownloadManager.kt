@@ -62,7 +62,7 @@ object UpdateDownloadManager {
                 _logger?.warning("UpdateCheckManager.updateAvailableStatus.value != UpdateAvailableStatus.AVAILABLE")
                 return
             }
-            val downloadUrl: String = getDownloadUrl() ?: return
+            val downloadUrl: String = getDownloadUrl()
             val appName: String = downloadUrl.split("/").last()
             val downloadManager: DownloadManager = context.getSystemService()!!
             val downloadUri: Uri = Uri.parse(downloadUrl)
@@ -92,7 +92,7 @@ object UpdateDownloadManager {
      *
      * @return the download url or null if not found
      */
-    private fun getDownloadUrl(): String? {
+    private fun getDownloadUrl(): String {
         val latestVersion: String = UpdateCheckManager.latestVersion.value!!
         return "https://codeberg.org/antoinepirlot/Satunes/releases/download/$latestVersion/Satunes_$latestVersion.apk"
     }

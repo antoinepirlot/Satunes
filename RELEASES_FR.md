@@ -3,6 +3,19 @@ You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
 ## 3.0 (Android 5.1.1 Lollipop et ultérieur)
 
+### 3.0.0-preview-1
+
+Améliorations, optimisations et dépannage :
+
+* Correction du problème de la selection de playlist qui s'affichait en allant dans la vue playback
+* Démarrage plus rapide
+* Correction du clique sur la musique dans la liste du playback
+* La liste des media ne retourne pas au premier élément si les options du media se ferment
+* Correction de problème liés à la navigation
+* Centrage de l'icône artiste à côté du nom d'artiste
+* Changement de la source de la mise à jour de GitHub vers Codeberg
+* Remplacement du bouton GitHub par Codeberg
+
 ### 3.0.0-beta-2
 
 Améliorations, optimisations et dépannage :

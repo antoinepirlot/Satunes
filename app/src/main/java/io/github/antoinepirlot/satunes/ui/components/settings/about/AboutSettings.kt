@@ -64,7 +64,7 @@ internal fun AboutSettings(
         ) {
             Tipeee()
             Fdroid()
-            GitHub()
+            Codeberg()
         }
         Spacer(modifier = Modifier.size(size = 16.dp))
         Subtitle(text = stringResource(id = R.string.made_in_europe))

@@ -3,6 +3,19 @@ Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
 ## 3.0 (Android 5.1.1 Lollipop and later
 
+### 3.0.0-preview-1
+
+Improvements, optimisations and troubleshooting:
+
+* Fixed playlist selection being displayed when going to playback view
+* Faster startup
+* Fixed clicking on music in playback list
+* Media list doesn't return to first item if media options close
+* Fixed navigation issues
+* Centered artist icon next to artist name
+* Changed update source from GitHub to Codeberg
+* GitHub button replaced by Codeberg
+
 ### 3.0.0-beta-2
 
 Improvements, optimizations and troubleshooting:

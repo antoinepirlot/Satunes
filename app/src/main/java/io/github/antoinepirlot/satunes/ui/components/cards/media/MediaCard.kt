@@ -67,6 +67,7 @@ import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.models.Destination
+import io.github.antoinepirlot.satunes.models.DestinationCategory
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.cards.ListItem
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.MediaOptionsDialog
@@ -92,6 +93,8 @@ internal fun MediaCard(
     val dataUiState: DataUiState by dataViewModel.uiState.collectAsState()
     val navController: NavHostController = LocalNavController.current
     val haptics: HapticFeedback = LocalHapticFeedback.current
+    val isInPlaybackView: Boolean =
+        satunesUiState.currentDestination.category == DestinationCategory.PLAYBACK
 
     val showMediaOptions: Boolean = satunesUiState.mediaToShowOptions == mediaImpl
     val title: String =
@@ -107,7 +110,7 @@ internal fun MediaCard(
         modifier.combinedClickable(
             onClick = {
                 if (!showMediaOptions) {
-                    if (mediaImpl is Music)
+                    if (mediaImpl is Music && !isInPlaybackView)
                         playbackViewModel.loadMusicFromMedias(
                             medias = dataUiState.mediaImplListOnScreen,
                             musicToPlay = mediaImpl
@@ -115,7 +118,7 @@ internal fun MediaCard(
                     openMedia(
                         playbackViewModel = playbackViewModel,
                         media = mediaImpl,
-                        navController = navController
+                        navController = if (isInPlaybackView) null else navController,
                     )
                 }
             },

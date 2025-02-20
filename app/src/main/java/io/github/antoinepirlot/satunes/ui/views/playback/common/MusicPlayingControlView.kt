@@ -134,6 +134,7 @@ internal fun MusicPlayingControlView(
                             showArtistOptions = true
                         }
                     ),
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Spacer(modifier = Modifier.size(size = 10.dp)) //Used for press animation larger zone
                 Icon(icon = SatunesIcons.ARTIST)

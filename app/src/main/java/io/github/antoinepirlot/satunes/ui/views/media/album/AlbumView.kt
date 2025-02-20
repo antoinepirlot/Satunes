@@ -36,6 +36,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalConfiguration
@@ -142,7 +143,8 @@ private fun Header(
                             media = album.artist,
                             navController = navController
                         )
-                    }
+                    },
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Spacer(modifier = Modifier.size(size = 10.dp)) //Used for press animation larger zone
                 Icon(icon = SatunesIcons.ARTIST)

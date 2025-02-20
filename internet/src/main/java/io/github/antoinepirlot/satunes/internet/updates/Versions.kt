@@ -54,7 +54,7 @@ object Versions {
         Regex("\"/antoinepirlot/.+/releases/tag/v[0-9]+\\.[0-9]+\\.[0-9]+\"")
     internal val RELEASE_APK_REGEX: Regex = Regex(">.*v[0-9]+\\.[0-9]+\\.[0-9]+.apk<")
 
-    const val RELEASES_URL = "https://github.com/antoinepirlot/Satunes/releases"
+    const val RELEASES_URL = "https://codeberg.org/antoinepirlot/Satunes/releases"
 
     internal var versionType: String = "" //Alpha, Beta, Preview or "" for Stable version
 }

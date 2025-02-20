@@ -89,6 +89,7 @@ internal fun AddToPlaylistMediaOption(
                     mediaSelectionViewModel = mediaSelectionViewModel,
                     mediaImpl = mediaImpl
                 )
+                satunesViewModel.hideMediaSelectionDialog()
                 onFinished()
             },
             mediaImplCollection = playlistSet,

@@ -40,6 +40,7 @@ import io.github.antoinepirlot.satunes.database.services.settings.SettingsManage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.nio.file.NoSuchFileException
 import java.util.Date
 
 /**
@@ -91,8 +92,21 @@ class Music(
         folder.addMusic(music = this)
         CoroutineScope(Dispatchers.IO).launch {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-                this@Music.addedDate = Date(this@Music.getCreationDate(path = absolutePath))
+                try {
+                    this@Music.addedDate = Date(this@Music.getCreationDate(path = absolutePath))
+                } catch (_: NoSuchFileException) {
+                    remove()
+                }
         }
+    }
+
+    private fun remove() {
+        this.genre.removeMusic(music = this)
+        this.album.removeMusic(music = this)
+        this.artist.removeMusic(music = this)
+        this.folder.removeMusic(music = this)
+        for (playlist: Playlist in this._playlistsOrderMap.keys) playlist.removeMusic(music = this)
+        DataManager.remove(music = this)
     }
 
     fun switchLike() {

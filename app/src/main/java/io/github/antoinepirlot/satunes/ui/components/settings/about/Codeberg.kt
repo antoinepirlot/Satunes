@@ -34,20 +34,20 @@ import io.github.antoinepirlot.satunes.ui.components.images.ImageWithLink
  */
 
 @Composable
-internal fun GitHub(
+internal fun Codeberg(
     modifier: Modifier = Modifier,
 ) {
-    val gitHubUrl = "https://github.com/antoinepirlot/Satunes"
+    val codebergUrl = "https://codeberg.org/antoinepirlot/Satunes"
     ImageWithLink(
         modifier = modifier,
-        url = gitHubUrl,
-        painterId = R.drawable.github_logo,
+        url = codebergUrl,
+        painterId = R.drawable.codeberg_logo,
         imageBackgroundColor = Color.White
     )
 }
 
 @Preview
 @Composable
-private fun GitHubPreview() {
-    GitHub()
+private fun CodebergPreview() {
+    Codeberg()
 }

@@ -40,7 +40,6 @@ import io.github.antoinepirlot.satunes.database.services.database.DatabaseManage
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.database.services.widgets.WidgetDatabaseManager
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
-import java.io.File
 
 /**
  * @author Antoine Pirlot on 22/02/24
@@ -239,7 +238,9 @@ object DataLoader {
      */
     private fun loadData(cursor: Cursor, context: Context) {
         val absolutePath: String = cursor.getString(absolutePathColumnId!!)
-        if (!File(absolutePath).exists()) return //In certain cases it could happen
+
+        // /!\ Do not check if File exist here as it will slower the loading, it is check in Music constructor
+
         //Load Artist
         val artist: Artist = loadArtist(context = context, cursor = cursor)
 

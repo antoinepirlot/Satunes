@@ -52,11 +52,11 @@ import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 internal fun openMedia(
     playbackViewModel: PlaybackViewModel,
     media: MediaImpl? = null,
-    navController: NavHostController,
+    navController: NavHostController?,
 ) {
     if (media == null || media is Music)
         startMusic(playbackViewModel = playbackViewModel, mediaToPlay = media)
-    navController.navigate(getDestinationOf(media))
+    navController?.navigate(getDestinationOf(media))
 }
 
 /**

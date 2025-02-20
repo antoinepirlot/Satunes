@@ -76,6 +76,7 @@ internal fun Router(
     val navController: NavHostController = LocalNavController.current
     val isAudioAllowed: Boolean = satunesViewModel.isAudioAllowed
     var defaultDestination: Destination? by rememberSaveable { mutableStateOf(null) }
+    var isInitialisation: Boolean by rememberSaveable { mutableStateOf(true) }
     LaunchedEffect(key1 = Unit) {
         defaultDestination =
             getNavBarSectionDestination(navBarSection = satunesViewModel.defaultNavBarSection)
@@ -86,8 +87,10 @@ internal fun Router(
     LaunchedEffect(key1 = dataViewModel.isLoaded) {
         if (
             defaultDestination == Destination.PLAYLISTS &&
-            dataViewModel.isLoaded
+            dataViewModel.isLoaded &&
+            isInitialisation
         ) {
+            isInitialisation = false
             checkDefaultPlaylistSetting(context = context)
             if (satunesViewModel.defaultPlaylistId >= 0) {
                 val playlist: Playlist =

@@ -31,7 +31,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
@@ -69,11 +68,7 @@ internal fun PermissionsSettingsView(
 ) {
     val spacerSize = 16.dp
     val context: Context = LocalContext.current
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(horizontal = 16.dp),
-    ) {
+    Column(modifier = modifier.fillMaxSize()) {
         Title(text = stringResource(id = R.string.permissions))
         for (permission: Permissions in permissionsList) {
             val permissionState: PermissionState =

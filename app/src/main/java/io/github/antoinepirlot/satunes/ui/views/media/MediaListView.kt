@@ -22,14 +22,19 @@
 
 package io.github.antoinepirlot.satunes.ui.views.media
 
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
+import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
@@ -37,6 +42,8 @@ import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.database.models.Playlist
+import io.github.antoinepirlot.satunes.models.radio_buttons.SortOptions
 import io.github.antoinepirlot.satunes.ui.components.EmptyView
 import io.github.antoinepirlot.satunes.ui.components.cards.media.MediaCardList
 import io.github.antoinepirlot.satunes.ui.components.dialog.SortListDialog
@@ -49,8 +56,9 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.SortListDialog
 internal fun MediaListView(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
+    dataViewModel: DataViewModel = viewModel(),
     mediaImplCollection: Collection<MediaImpl>,
-    openMedia: (mediaImpl: MediaImpl) -> Unit,
+    collectionChanged: Boolean = false,
     header: (@Composable () -> Unit)? = null,
     emptyViewText: String,
     showGroupIndication: Boolean = true,
@@ -58,29 +66,97 @@ internal fun MediaListView(
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     val lazyListState = rememberLazyListState()
+    val sortOption: SortOptions = dataViewModel.sortOption
+
+    //Do not put the list to show in ui state as it will reset list scroll when user goes back to the last page
+    //Plus this system insure the list can be scrolled correctly to the first item of the list (copying a new list make it not working as expected)
+    val mediaImplListToShow: MutableList<MediaImpl> = remember { mutableStateListOf() }
+
+    val isMediaOptionsOpened: Boolean = satunesUiState.mediaToShowOptions != null
+
+    //TODO is a veritable issue change the behavior
+    LaunchedEffect(
+        listOf(
+            sortOption,
+            isMediaOptionsOpened,
+            collectionChanged,
+            mediaImplCollection
+        )
+    ) {
+        if (isMediaOptionsOpened) return@LaunchedEffect
+        else if (collectionChanged) mediaImplListToShow.clear()
+        else if (!dataViewModel.listSetUpdatedProcessed) {
+            mediaImplListToShow.clear()
+            dataViewModel.listSetUpdatedProcessed()
+        } else if (mediaImplCollection.isEmpty()) {
+            mediaImplListToShow.clear()
+        } else if (mediaImplListToShow.isNotEmpty()) {
+            lazyListState.scrollToItem(0)
+            mediaImplListToShow.clear()
+        }
+
+        if (sort) {
+            sort(
+                satunesUiState = satunesUiState,
+                lazyListState = lazyListState,
+                source = mediaImplCollection,
+                destination = mediaImplListToShow,
+                sortOption = sortOption
+            )
+        } else {
+            mediaImplListToShow.addAll(elements = mediaImplCollection)
+        }
+        dataViewModel.setMediaImplListOnScreen(mediaImplCollection = mediaImplListToShow)
+    }
 
     if (satunesUiState.showSortDialog)
         SortListDialog()
 
-    if (mediaImplCollection.isNotEmpty()) {
+    if (mediaImplCollection.isNotEmpty()) { //Prevent showing the empty view if the list is not empty
         MediaCardList(
             modifier = modifier,
+            mediaImplList = mediaImplListToShow,
             lazyListState = lazyListState,
-            mediaImplCollection = mediaImplCollection,
             header = header,
-            openMedia = openMedia,
             showGroupIndication = showGroupIndication,
-            sort = sort
         )
     } else {
-        if (header != null) {
-            header()
-        } else {
-            EmptyView(
-                modifier = modifier,
-                text = emptyViewText
+        EmptyView(
+            modifier = modifier,
+            header = header,
+            text = emptyViewText
+        )
+    }
+}
+
+private suspend fun sort(
+    satunesUiState: SatunesUiState,
+    lazyListState: LazyListState,
+    source: Collection<MediaImpl>,
+    destination: MutableList<MediaImpl>,
+    sortOption: SortOptions
+) {
+    if (destination.isEmpty()) {
+        if (sortOption == SortOptions.PLAYLIST_ADDED_DATE) {
+            val playlist: Playlist = satunesUiState.currentMediaImpl as Playlist
+            destination.addAll(
+                source.sortedBy { mediaImpl: MediaImpl ->
+                    -(mediaImpl as Music).getOrder(playlist = playlist)
+                }
             )
+        } else if (sortOption.comparator != null) {
+            destination.addAll(source.sortedWith(comparator = sortOption.comparator))
         }
+    } else {
+        if (sortOption == SortOptions.PLAYLIST_ADDED_DATE) {
+            val playlist: Playlist = satunesUiState.currentMediaImpl as Playlist
+            destination.sortBy { mediaImpl: MediaImpl ->
+                -(mediaImpl as Music).getOrder(playlist = playlist)
+            }
+        } else if (sortOption.comparator != null) {
+            destination.sortWith(comparator = sortOption.comparator)
+        }
+        lazyListState.scrollToItem(0)
     }
 }
 
@@ -103,7 +179,7 @@ private fun MediaListViewPreview() {
     )
     MediaListView(
         mediaImplCollection = map,
-        openMedia = {},
+        collectionChanged = false,
         emptyViewText = "No data"
     )
 }

@@ -23,14 +23,12 @@
 package io.github.antoinepirlot.satunes.ui.views.settings.battery
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import io.github.antoinepirlot.jetpack_libs.components.texts.Title
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
@@ -45,11 +43,7 @@ internal fun BatterySettingsView(
 ) {
     val scrollState = rememberScrollState()
 
-    Column(
-        modifier = modifier
-            .verticalScroll(scrollState)
-            .padding(horizontal = 16.dp)
-    ) {
+    Column(modifier = modifier.verticalScroll(scrollState)) {
         Title(text = stringResource(id = R.string.battery_settings))
         SubSettings(title = stringResource(id = R.string.playback_settings)) {
             AudioOffloadSetting()

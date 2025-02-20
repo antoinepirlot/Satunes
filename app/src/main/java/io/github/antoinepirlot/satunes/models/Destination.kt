@@ -32,27 +32,75 @@ import io.github.antoinepirlot.satunes.router.utils.getNavBarSectionDestination
  * @author Antoine Pirlot on 24-01-24
  */
 
-internal enum class Destination(val link: String, val category: DestinationCategory) {
-    ALBUMS(link = "/albums", category = DestinationCategory.MEDIA),
-    ALBUM(link = ALBUMS.link + "/{id}", category = DestinationCategory.MEDIA),
+internal enum class Destination(
+    val link: String,
+    val category: DestinationCategory,
+    val navBarSection: NavBarSection? = null
+) {
+    ALBUMS(
+        link = "/albums",
+        category = DestinationCategory.MEDIA,
+        navBarSection = NavBarSection.ALBUMS
+    ),
+    ALBUM(
+        link = ALBUMS.link + "/{id}",
+        category = DestinationCategory.MEDIA,
+        navBarSection = NavBarSection.ALBUMS
+    ),
     ANDROID_AUTO_SETTINGS(link = "/android_auto_setting", category = DestinationCategory.SETTING),
-    ARTISTS(link = "/artists", category = DestinationCategory.MEDIA),
-    ARTIST(link = ARTISTS.link + "/{id}", category = DestinationCategory.MEDIA),
+    ARTISTS(
+        link = "/artists",
+        category = DestinationCategory.MEDIA,
+        navBarSection = NavBarSection.ARTISTS
+    ),
+    ARTIST(
+        link = ARTISTS.link + "/{id}",
+        category = DestinationCategory.MEDIA,
+        navBarSection = NavBarSection.ARTISTS
+    ),
     BATTERY_SETTINGS(link = "/battery_settings", category = DestinationCategory.SETTING),
-    BOTTOM_BAR_SETTINGS(link = "/navbar_settings", category = DestinationCategory.SETTING),
+    DESIGN_SETTINGS(link = "/design_settings", category = DestinationCategory.SETTING),
     LIBRARY_SETTINGS(link = "/library_settings", category = DestinationCategory.SETTING),
-    FOLDERS(link = "/folders", category = DestinationCategory.MEDIA),
-    FOLDER(link = FOLDERS.link + "/{id}", category = DestinationCategory.MEDIA),
-    GENRES(link = "/genres", category = DestinationCategory.MEDIA),
-    GENRE(link = GENRES.link + "/{id}", category = DestinationCategory.MEDIA),
+    FOLDERS(
+        link = "/folders",
+        category = DestinationCategory.MEDIA,
+        navBarSection = NavBarSection.FOLDERS
+    ),
+    FOLDER(
+        link = FOLDERS.link + "/{id}",
+        category = DestinationCategory.MEDIA,
+        navBarSection = NavBarSection.FOLDERS
+    ),
+    GENRES(
+        link = "/genres",
+        category = DestinationCategory.MEDIA,
+        navBarSection = NavBarSection.GENRES
+    ),
+    GENRE(
+        link = GENRES.link + "/{id}",
+        category = DestinationCategory.MEDIA,
+        navBarSection = NavBarSection.GENRES
+    ),
     LOGS_SETTINGS(link = "/logs_settings", category = DestinationCategory.SETTING),
-    MUSICS(link = "/musics", category = DestinationCategory.MEDIA),
+    MUSICS(
+        link = "/musics",
+        category = DestinationCategory.MEDIA,
+        navBarSection = NavBarSection.MUSICS
+    ),
     PERMISSIONS_SETTINGS(link = "/permissions_settings", category = DestinationCategory.SETTING),
     PLAYBACK(link = "/playback", category = DestinationCategory.PLAYBACK),
     PLAYBACK_QUEUE(link = "/playback_queue", category = DestinationCategory.PLAYBACK),
     PLAYBACK_SETTINGS(link = "/playback_settings", category = DestinationCategory.SETTING),
-    PLAYLISTS(link = "/playlists", category = DestinationCategory.MEDIA),
-    PLAYLIST(link = PLAYLISTS.link + "/{id}", category = DestinationCategory.MEDIA),
+    PLAYLISTS(
+        link = "/playlists",
+        category = DestinationCategory.MEDIA,
+        navBarSection = NavBarSection.PLAYLISTS
+    ),
+    PLAYLIST(
+        link = PLAYLISTS.link + "/{id}",
+        category = DestinationCategory.MEDIA,
+        navBarSection = NavBarSection.PLAYLISTS
+    ),
     RESET_SETTINGS(link = "/reset_settings", category = DestinationCategory.SETTING),
     SEARCH(link = "/search", category = DestinationCategory.MEDIA),
     SEARCH_SETTINGS("/search_settings", category = DestinationCategory.SETTING),
@@ -69,12 +117,12 @@ internal enum class Destination(val link: String, val category: DestinationCateg
             Pair(first = ARTISTS.link, second = ARTISTS),
             Pair(first = ARTIST.link, second = ARTIST),
             Pair(first = BATTERY_SETTINGS.link, second = BATTERY_SETTINGS),
-            Pair(first = BOTTOM_BAR_SETTINGS.link, second = BOTTOM_BAR_SETTINGS),
             Pair(first = LIBRARY_SETTINGS.link, second = LIBRARY_SETTINGS),
             Pair(first = FOLDERS.link, second = FOLDERS),
             Pair(first = FOLDER.link, second = FOLDER),
             Pair(first = GENRES.link, second = GENRES),
             Pair(first = GENRE.link, second = GENRE),
+            Pair(first = DESIGN_SETTINGS.link, second = DESIGN_SETTINGS),
             Pair(first = LOGS_SETTINGS.link, second = LOGS_SETTINGS),
             Pair(first = MUSICS.link, second = MUSICS),
             Pair(first = PERMISSIONS_SETTINGS.link, second = PERMISSIONS_SETTINGS),
@@ -89,15 +137,6 @@ internal enum class Destination(val link: String, val category: DestinationCateg
             Pair(first = SETTINGS.link, second = SETTINGS),
         )
 
-        val mediaMainRoutesMap: Map<Destination, NavBarSection> = mapOf(
-            Pair(first = FOLDERS, second = NavBarSection.FOLDERS),
-            Pair(first = ARTISTS, second = NavBarSection.ARTISTS),
-            Pair(first = ALBUMS, second = NavBarSection.ALBUMS),
-            Pair(first = GENRES, second = NavBarSection.GENRES),
-            Pair(first = MUSICS, second = NavBarSection.MUSICS),
-            Pair(first = PLAYLISTS, second = NavBarSection.PLAYLISTS)
-        )
-
         init {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 this.destinationsMap[UPDATES_SETTINGS.link] = UPDATES_SETTINGS
@@ -106,7 +145,7 @@ internal enum class Destination(val link: String, val category: DestinationCateg
 
         fun getDestination(destination: String): Destination {
             return this.destinationsMap[destination]
-                ?: getNavBarSectionDestination(navBarSection = SettingsManager.defaultNavBarSection)
+                ?: getNavBarSectionDestination(navBarSection = SettingsManager.defaultNavBarSection.value)
         }
     }
 }

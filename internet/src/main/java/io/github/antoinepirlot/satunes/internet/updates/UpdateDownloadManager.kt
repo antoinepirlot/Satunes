@@ -33,18 +33,8 @@ import android.os.Environment
 import androidx.annotation.RequiresApi
 import androidx.core.content.getSystemService
 import io.github.antoinepirlot.satunes.internet.R
-import io.github.antoinepirlot.satunes.internet.updates.Versions.ALPHA
-import io.github.antoinepirlot.satunes.internet.updates.Versions.ALPHA_APK_REGEX
-import io.github.antoinepirlot.satunes.internet.updates.Versions.BETA
-import io.github.antoinepirlot.satunes.internet.updates.Versions.BETA_APK_REGEX
-import io.github.antoinepirlot.satunes.internet.updates.Versions.PREVIEW
-import io.github.antoinepirlot.satunes.internet.updates.Versions.PREVIEW_APK_REGEX
-import io.github.antoinepirlot.satunes.internet.updates.Versions.RELEASES_URL
-import io.github.antoinepirlot.satunes.internet.updates.Versions.RELEASE_APK_REGEX
-import io.github.antoinepirlot.satunes.internet.updates.Versions.versionType
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import io.github.antoinepirlot.satunes.utils.utils.showToastOnUiThread
-import okhttp3.Response
 
 /**
  * @author Antoine Pirlot on 14/04/2024
@@ -72,7 +62,7 @@ object UpdateDownloadManager {
                 _logger?.warning("UpdateCheckManager.updateAvailableStatus.value != UpdateAvailableStatus.AVAILABLE")
                 return
             }
-            val downloadUrl: String = getDownloadUrl(context = context) ?: return
+            val downloadUrl: String = getDownloadUrl()
             val appName: String = downloadUrl.split("/").last()
             val downloadManager: DownloadManager = context.getSystemService()!!
             val downloadUri: Uri = Uri.parse(downloadUrl)
@@ -102,46 +92,9 @@ object UpdateDownloadManager {
      *
      * @return the download url or null if not found
      */
-    private fun getDownloadUrl(context: Context): String? {
-        val regex: Regex =
-            when (versionType) {
-                ALPHA -> ALPHA_APK_REGEX
-                BETA -> BETA_APK_REGEX
-                PREVIEW -> PREVIEW_APK_REGEX
-                else -> RELEASE_APK_REGEX
-            }
-        val res: Response = UpdateCheckManager.getUrlResponse(
-            context = context,
-            url = "${RELEASES_URL}/expanded_assets/${UpdateCheckManager.latestVersion.value}"
-        )!!
-        if (!res.isSuccessful) {
-            res.close()
-            UpdateCheckManager.downloadStatus.value = APKDownloadStatus.NOT_FOUND
-            showToastOnUiThread(
-                context = context,
-                message = context.getString(R.string.download_not_found)
-            )
-            _logger?.warning("HTTP code: ${res.code}")
-            return null
-        }
-        val page: String = res.body!!.string()
-        res.close()
-        var apkFileName: String? = regex.find(
-            page,
-            0
-        )?.value
-        if (apkFileName == null) {
-            UpdateCheckManager.downloadStatus.value = APKDownloadStatus.NOT_FOUND
-            showToastOnUiThread(
-                context = context,
-                message = context.getString(R.string.download_not_found)
-            )
-            _logger?.warning("apkFileName is null")
-            return null
-        }
-
-        apkFileName = apkFileName.drop(1).dropLast(1) //Avoid > and <
-        return "${RELEASES_URL}/download/${UpdateCheckManager.latestVersion.value}/$apkFileName"
+    private fun getDownloadUrl(): String {
+        val latestVersion: String = UpdateCheckManager.latestVersion.value!!
+        return "https://codeberg.org/antoinepirlot/Satunes/releases/download/$latestVersion/Satunes_$latestVersion.apk"
     }
 
     @SuppressLint("UnspecifiedRegisterReceiverFlag")

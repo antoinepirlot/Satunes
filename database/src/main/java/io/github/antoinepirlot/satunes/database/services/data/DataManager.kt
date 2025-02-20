@@ -239,4 +239,10 @@ object DataManager {
         playlistsSortedMap.clear()
         playlistsMapUpdated.value = true
     }
+
+    fun remove(music: Music) {
+        this.musicMapById.remove(music.id)
+        this.musicMapByAbsolutePath.remove(music.absolutePath)
+        this.musicSortedSet.remove(music)
+    }
 }

@@ -20,7 +20,7 @@
  * PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.settings.reset.navigation_bar
+package io.github.antoinepirlot.satunes.ui.components.settings.reset.design
 
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
@@ -32,41 +32,34 @@ import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.local.LocalMainScope
 import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
-import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
 import io.github.antoinepirlot.satunes.ui.components.settings.reset.ResetSettings
 import kotlinx.coroutines.CoroutineScope
 
 /**
- * @author Antoine Pirlot on 23/11/2024
+ * @author Antoine Pirlot 06/02/2025
  */
 @Composable
-internal fun ResetNavigationBarSubSettings(
+fun ResetNavigationBarSettings(
     modifier: Modifier = Modifier,
-    dataViewModel: DataViewModel = viewModel(),
+    dataViewModel: DataViewModel = viewModel()
 ) {
-    val text: String = stringResource(id = R.string.navigation_bar_settings_title)
+    val scope: CoroutineScope = LocalMainScope.current
+    val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
 
-    SubSettings(
+    ResetSettings(
         modifier = modifier,
-        title = text
-    ) {
-        val scope: CoroutineScope = LocalMainScope.current
-        val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
-
-        ResetSettings(
-            text = text,
-            onClick = {
-                dataViewModel.resetNavigationBarSettings(
-                    scope = scope,
-                    snackBarHostState = snackBarHostState
-                )
-            }
-        )
-    }
+        text = stringResource(id = R.string.navigation_bar_settings_title),
+        onClick = {
+            dataViewModel.resetNavigationBarSettings(
+                scope = scope,
+                snackBarHostState = snackBarHostState
+            )
+        }
+    )
 }
 
 @Preview
 @Composable
-private fun ResetNavigationBarSubSettingsPreview() {
-    ResetNavigationBarSubSettings()
+private fun ResetNavigationBarSettingsPreview() {
+    ResetNavigationBarSettings()
 }

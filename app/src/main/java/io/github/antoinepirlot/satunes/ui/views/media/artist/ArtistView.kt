@@ -32,17 +32,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
-import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
-import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.buttons.fab.ExtraButtonList
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 import io.github.antoinepirlot.satunes.ui.views.media.MediaWithAlbumsHeaderView
@@ -56,16 +51,14 @@ internal fun ArtistView(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
     dataViewModel: DataViewModel = viewModel(),
-    playbackViewModel: PlaybackViewModel = viewModel(),
     artist: Artist,
 ) {
-    val navController: NavHostController = LocalNavController.current
-    val musicMap: Set<Music> = artist.getMusicSet()
+    val musicSet: Set<Music> = artist.getMusicSet()
 
     //Recompose if data changed
-    var musicMapChanged: Boolean by rememberSaveable { artist.musicSetUpdated }
-    if (musicMapChanged) {
-        musicMapChanged = false
+    var musicSetChanged: Boolean by rememberSaveable { artist.musicSetUpdated }
+    if (musicSetChanged) {
+        musicSetChanged = false
     }
     //
 
@@ -74,7 +67,7 @@ internal fun ArtistView(
     LaunchedEffect(key1 = dataViewModel.isLoaded) {
         if (albumSet.isNotEmpty())
             satunesViewModel.replaceExtraButtons(extraButtons = {
-                ExtraButtonList(mediaImplCollection = musicMap)
+                ExtraButtonList()
             })
         else
             satunesViewModel.clearExtraButtons()
@@ -82,18 +75,8 @@ internal fun ArtistView(
 
     MediaListView(
         modifier = modifier,
-        mediaImplCollection = musicMap,
-        openMedia = { clickedMediaImpl: MediaImpl ->
-            playbackViewModel.loadMusics(
-                musics = artist.getMusicSet(),
-                musicToPlay = clickedMediaImpl as Music
-            )
-            openMedia(
-                playbackViewModel = playbackViewModel,
-                media = clickedMediaImpl,
-                navController = navController
-            )
-        },
+        mediaImplCollection = musicSet,
+        collectionChanged = musicSetChanged,
         header = if (albumSet.isNotEmpty()) {
             {
                 //Recompose if data changed

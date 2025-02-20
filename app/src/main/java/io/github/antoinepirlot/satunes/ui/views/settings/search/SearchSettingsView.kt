@@ -43,9 +43,7 @@ internal fun SearchSettingsView(
     modifier: Modifier = Modifier,
 ) {
     val scrollState: ScrollState = rememberScrollState()
-    Column(
-        modifier = modifier.verticalScroll(state = scrollState),
-    ) {
+    Column(modifier = modifier.verticalScroll(state = scrollState)) {
         Title(text = stringResource(id = R.string.search_setting_title))
 
         DefaultSearchFiltersSetting()

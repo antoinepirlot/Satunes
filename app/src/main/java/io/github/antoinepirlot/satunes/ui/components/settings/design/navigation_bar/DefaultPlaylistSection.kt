@@ -20,7 +20,7 @@
  * PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.settings.navigation_bar
+package io.github.antoinepirlot.satunes.ui.components.settings.design.navigation_bar
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -41,30 +41,33 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.data.allNavBarSections
+import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
-import io.github.antoinepirlot.satunes.database.models.NavBarSection
+import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
+import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.images.Icon
+import io.github.antoinepirlot.satunes.database.R as RDb
 
 /**
- * @author Antoine Pirlot on 29/08/2024
+ * @author Antoine Pirlot 05/02/2025
  */
-
 @Composable
-internal fun DefaultNavBarSectionSetting(
+internal fun DefaultPlaylistSection(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
+    dataViewModel: DataViewModel = viewModel(),
 ) {
     var expanded: Boolean by remember { mutableStateOf(false) }
-    val selectedSection: NavBarSection = satunesViewModel.defaultNavBarSection
+    val selectedPlaylistId: Long = satunesViewModel.defaultPlaylistId
+    val selectedPlaylist: Playlist? = dataViewModel.getPlaylist(id = selectedPlaylistId)
 
     Row(
         modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
-        NormalText(text = stringResource(id = R.string.default_section_setting_content))
+        NormalText(text = stringResource(id = R.string.default_playlist_section_setting_content))
         Box {
             TextButton(onClick = { expanded = true }) {
                 Row {
@@ -72,7 +75,11 @@ internal fun DefaultNavBarSectionSetting(
                         icon = if (expanded) SatunesIcons.CLOSE_DROPDOWN_MENU
                         else SatunesIcons.OPEN_DROPDOWN_MENU
                     )
-                    NormalText(text = stringResource(id = selectedSection.stringId))
+                    val text: String =
+                        if (selectedPlaylist == null) stringResource(id = R.string.no_playlist_selected)
+                        else if (selectedPlaylist.title == LIKES_PLAYLIST_TITLE) stringResource(id = RDb.string.likes_playlist_title)
+                        else selectedPlaylist.title
+                    NormalText(text = text)
                 }
             }
             Menu(expanded = expanded, onDismissRequest = { expanded = false })
@@ -84,6 +91,7 @@ internal fun DefaultNavBarSectionSetting(
 private fun Menu(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
+    dataViewModel: DataViewModel = viewModel(),
     expanded: Boolean,
     onDismissRequest: () -> Unit
 ) {
@@ -92,23 +100,32 @@ private fun Menu(
         expanded = expanded,
         onDismissRequest = onDismissRequest
     ) {
-        for (navBarSection: NavBarSection in allNavBarSections) {
-            val isEnabled: Boolean by navBarSection.isEnabled
-            if (isEnabled) {
-                DropdownMenuItem(
-                    text = { NormalText(text = stringResource(id = navBarSection.stringId)) },
-                    onClick = {
-                        satunesViewModel.selectDefaultNavBarSection(navBarSection = navBarSection)
-                        onDismissRequest()
-                    }
-                )
+        DropdownMenuItem(
+            text = { NormalText(text = stringResource(id = R.string.no_playlist_selected)) },
+            onClick = {
+                satunesViewModel.selectDefaultPlaylist(playlist = null)
+                onDismissRequest()
             }
+        )
+        for (playlist: Playlist in dataViewModel.getPlaylistSet()) {
+            val text: String =
+                if (playlist.title == LIKES_PLAYLIST_TITLE)
+                    stringResource(id = RDb.string.likes_playlist_title)
+                else
+                    playlist.title
+            DropdownMenuItem(
+                text = { NormalText(text = text) },
+                onClick = {
+                    satunesViewModel.selectDefaultPlaylist(playlist = playlist)
+                    onDismissRequest()
+                }
+            )
         }
     }
 }
 
 @Preview
 @Composable
-private fun DefaultNavBarSectionSettingPreview() {
-    DefaultNavBarSectionSetting()
+private fun DefaultPlaylistSectionPreview() {
+    DefaultPlaylistSection()
 }

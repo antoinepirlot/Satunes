@@ -18,8 +18,8 @@ android {
         applicationId = nameSpace
         minSdk = 22
         targetSdk = 35
-        versionCode = 68
-        versionName = "3.0.0-alpha-1"
+        versionCode = 71
+        versionName = "3.0.0-beta-2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -99,7 +99,6 @@ dependencies {
     /**
      * Media
      */
-
     implementation(libs.androidx.media3.common)
     implementation(libs.androidx.media3.session)
 

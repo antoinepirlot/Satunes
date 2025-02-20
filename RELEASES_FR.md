@@ -3,6 +3,54 @@ You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
 ## 3.0 (Android 5.1.1 Lollipop et ultérieur)
 
+### 3.0.0-beta-2
+
+Améliorations, optimisations et dépannage :
+
+* Correction de quelques problèmes d'interface utilisateur
+* Mise à jour des textes
+* Suppression de certaines actions d'annulation lors de la modification des playlists car c'est plus
+  complexe maintenant
+* Correction d'un plantage lors du chargement d'une musique non existante (oui cela peut arriver
+  avec MediaStore lol)
+* Correction de l'ouverture de la playlist par défaut
+* Réinitialisation de l'ancien ordre de la liste des boutons extra dans la vue d'une playlist
+* Correction de la vue recherche
+* Autres optimisations et améliorations indirectes
+
+### 3.0.0-beta-1
+
+Nouvelles fonctionnalités :
+
+* Il est possible de déplacer des positions d'actions personnalisées
+* Une playlist peut être sélectionnée comme onglet par défaut.
+
+Améliorations, optimisations et dépannage :
+
+* Mise à jour des textes
+* Ajout d'une icône artiste à côté du titre de l'artiste dans certaines vues
+* Mise à jour de la position des éléments dans la vue de mise à jour
+* Déplacer les paramètres dédiés à au design dans les paramètre "Design"
+* Mise à jour de la structure du code
+* Correction de certains problèmes d'interface utilisateur depuis la version 3.0.0-alpha-2
+* Autres optimisations et améliorations indirectes
+
+### 3.0.0-alpha-2
+
+Nouvelles fonctionnalités:
+
+* Ajout du tri par années et dernier ajout pour les musiques (dans certaines vues pour le moment)
+* L'ajout des médias dans les playlists permet maintenant de les supprimer s'il y sont présents (
+  entièrement pour ceux qui ne sont pas des musiques)
+
+Améliorations, optimisations et dépannage:
+
+* Optimisation du démarrage
+* Lorsque la liste es triée, la liste chargée en playback correspond au tri
+* Lorsque l'utilisateur change de vue d'un type de média à un autre, la barre de navigation reflète
+  le changement
+* Autres optimisations et améliorations indirects
+
 ### 3.0.0-alpha-1
 
 Nouvelles fonctionnalités:

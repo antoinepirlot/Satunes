@@ -20,7 +20,7 @@
  * PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.bars.bottom
+package io.github.antoinepirlot.satunes.ui.components.buttons.bars.bottom
 
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.LargeFloatingActionButton

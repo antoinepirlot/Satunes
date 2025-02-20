@@ -6,14 +6,14 @@
     <string name="this_device">Cet Appareil</string>
     <string name="external_storage">Stockage Externe</string>
     <string name="playback_settings">Lecture</string>
-    <string name="playback_when_paused">Lecture si l\'application est fermée</string>
+    <string name="playback_when_paused">Lecture si Satunes est fermée</string>
     <string name="pause_if_noisy">Pause si le casque est débranché</string>
     <string name="playlist_form">Nom de la playlist</string>
     <string name="create_playlist">Créer une nouvelle playlist</string>
     <string name="cancel">Annuler</string>
     <string name="create">Créer</string>
     <string name="add_to_playlist">Ajouter à une playlist</string>
-    <string name="add">Ajouter</string>
+    <string name="update">Modifier</string>
     <string name="remove_from_playlist">Supprimer de la playlist</string>
     <string name="remove_playlist">Supprimer la playlist</string>
     <string name="settings">Paramètres</string>
@@ -45,8 +45,8 @@
     <string name="pause_if_another_playback">Pause si un autre application est en cours de lecture</string>
     <string name="update_title">Changer de nom</string>
     <string name="title">Titre</string>
-    <string name="playlists_settings_content">Tu peux exporter/importer tes playlists.\n\nTu peux déplacer le fichier dans un nouveau dossier ou le remplacer (il doit avoir le même nom de fichier), dans ce cas Satunes détectera la modification et l\'appliquera aux données existantes.\n\nMais si tu remplaces et déplaces le fichier dans un autre dossier, en même temps, alors Satunes ne pourra pas détecter la modification et supprimera la musique de la ou des playlist(s).</string>
-    <string name="android_auto_content">Pour activer Android Auto tu dois réaliser les étapes suivantes:\n\n1) Va dans les paramètres de Android Auto.\n\n2) Cliques plusieurs fois sur le bouton \"Version\" pour activer les paramètres développeurs.\n\n3) Va dans les paramètres développeurs en cliquant sur les 3 boutons en haut à droite et active le paramètre \"Sources Inconnues\" car mon application n\'est pas publiée dans le Google Play Store.\n\n4) Clique sur les 3 boutons comme au point 3, mais clique sur \"Quitter le mode développeur\" le paramètre que tu viens d\'activer sera enregistré.\n\n5) Il n\'y a plus qu\'à ajouter l\'application au lanceur d\'application de Android Auto dans le menu \"Personnaliser le lanceur\"\n\n6) Bonne écoute et bon voyage ;)</string>
+    <string name="playlists_settings_content">Tu peux exporter/importer tes playlists.\n\nTu peux déplacer le fichier dans un nouveau dossier ou le remplacer (il doit avoir le même nom de fichier), dans ce cas Satunes détectera la modification et l\'appliquera aux données existantes.\n\nMais si tu remplaces et déplaces le fichier dans un autre dossier, en même temps, alors Satunes ne pourra pas détecter la modification.</string>
+    <string name="android_auto_content">Pour activer Android Auto tu dois réaliser les étapes suivantes:\n\n1) Va dans les paramètres de Android Auto.\n\n2) Cliques plusieurs fois sur le bouton \"Version\" pour activer les paramètres développeurs.\n\n3) Va dans les paramètres développeurs en cliquant sur les 3 boutons en haut à droite et active le paramètre \"Sources Inconnues\" car Satunes n\'est pas publiée dans le Google Play Store.\n\n4) Clique sur les 3 boutons comme au point 3, mais clique sur \"Quitter le mode développeur\" le paramètre que tu viens d\'activer sera enregistré.\n\n5) Il n\'y a plus qu\'à ajouter Satunes au lanceur d\'application de Android Auto dans le menu \"Personnaliser le lanceur\"\n\n6) Bonne écoute et bon voyage ;)</string>
     <string name="battery_settings">Batterie</string>
     <string name="audio_offload_info">Ce paramètre permet d\'envoyer le traitement audio vers un processus dédié. Cela permet de réduire la consommation d\'énergie.\n\nCependant, dans la librairie Media 3 utilisée dans Satunes, cela peut causer des problèmes de compatibilité ce qui se traduit par des coupures audio. Un problème connu à ce jour est que la musique s\'arrête en cours de lecture ou après la fin d\'un morceau.\n\nEn activant ce paramètre, tu réduis la consommation d\'énergie et augmente la durée de vie de la batterie mais tu es susceptible de rencontrer des coupures audio.\n\nJ\'espère que dans un futur proche, le problème puisse être réglé par Google qui détient les librairies Media3 et ExoPlayer. En attendant, j\'essaie de trouver des solutions viables pour réduire la consommation d\'énergie par Satunes.</string>
     <string name="restart_required">Redémarrage requis</string>
@@ -65,10 +65,9 @@
     <string name="remove_submit">Supprimer</string>
     <string name="see_on_fdroid">Ouvrir dans F-Droid</string>
     <string name="logs_settings">Logs</string>
-    <string name="logs_settings_content">Tu peux exporter les logs pour me les envoyer par e-mail à l\'adresse: antoinepirlot@proton.me.\n\nGrâce à ces logs, je peux mieux comprendre ce qui ne va pas avec l\'application.\n\nLes fichiers logs contiennent des informations sur ce que fait l\'application et son état.\nCes informations incluent : \n- Dates\n- Processus\n- Etat de l\'application\n\nDans ces logs, il n\'y a pas d\'informations confidentielles comme des informations musicales ou des données permettant de t\'identifier.\n\nSi tu n\'es pas convaincu, tu peux choisir de me décrire le problème mais il sera plus difficile pour moi de le résoudre.</string>
-    <string name="update_modal_permanently">Tu ne verras plus cette modal jusqu\'à la prochaine mise à jour</string>
+    <string name="logs_settings_content">Tu peux exporter les logs pour me les envoyer par e-mail à l\'adresse: antoinepirlot@proton.me.\n\nGrâce à ces logs, je peux mieux comprendre ce qui ne va pas avec Satunes.\n\nLes fichiers logs contiennent des informations sur ce que fait Satunes et son état.\nCes informations incluent : \n- Dates\n- Processus\n- Etat de Satunes\n\nDans ces logs, il n\'y a pas d\'informations confidentielles comme des informations musicales ou des données permettant de t\'identifier.\n\nSi tu n\'es pas convaincu, tu peux choisir de me décrire le problème mais il sera plus difficile pour moi de le résoudre.</string>
+    <string name="update_modal_permanently">Tu ne verras plus cette notification jusqu\'à la prochaine mise à jour</string>
     <string name="canceled">Annulé</string>
-    <string name="insert_music_to_playlists_success">a été ajoutée à/aux playlist(s)</string>
     <string name="error_occurred">Une erreur est survenue</string>
     <string name="retry">Réessayer</string>
     <string name="insert_musics_to_playlist_success">Les musiques ont été ajoutées à</string>
@@ -77,7 +76,7 @@
     <string name="remove_from_playlist_success">a été supprimé de</string>
     <string name="remove_playlist_success">a été supprimée.</string>
     <string name="remove_from_likes_success">Tu n\'aimes plus %1$s.</string>
-    <string name="update_playlist_success">%1$s a été mise à jour.</string>
+    <string name="update_playlist_success">%1$s a été mise à jour</string>
     <string name="bar_speed_label">Vitesse</string>
     <string name="update_modal_not_permanently">Le modal sera toujours montré à la prochaine ouverture.</string>
     <string name="add_path_button">Ajouter un dossier à %1$s</string>
@@ -85,7 +84,6 @@
     <string name="refresh_data_button">Recharger la bibliothèque</string>
     <string name="remove_musics_from_playlist_success">Les musiques ont été supprimées de %1$s</string>
     <string name="add_music_to_playlist_success">%1$s a été ajouté à %2$s</string>
-    <string name="add_musics_to_playlists_success">Les musiques ont été ajoutées aux playlists</string>
     <string name="remove_from_queue_option">Retirer de la file d\'attente</string>
     <string name="remove_from_queue_success">%1$s a été supprimée de la liste d\'attente.</string>
     <string name="clean_playlists_dialog_content">Le nettoyage des playlists entraîne la suppression de toutes les musiques non chargées de la base de données.\n\nSi tu as modifié les chemins, je te conseille d\'exporter tes playlists. \nCertaines musiques peuvent être définitivement supprimées des playlists.\n\nSouhaites-tu exporter tes playlists?</string>
@@ -127,4 +125,12 @@
     <string name="reload_library_required">Rechargement de la bibliothèque requis</string>
     <string name="sort_list_title">Trier</string>
     <string name="show_first_letter_setting_content">Montrer la première lettre</string>
+    <string name="unknown_year">Année Inconnue</string>
+    <string name="design_setting_title">Interface</string>
+    <string name="custom_actions_sub_settings_title">Actions Rapides</string>
+    <string name="custom_actions_sub_settings_content">Ce paramètre permet de réorganiser la liste des boutons dans la page de lecture.</string>
+    <string name="default_playlist_section_setting_content">Playlist par défault</string>
+    <string name="no_playlist_selected">Aucune</string>
+    <string name="list_sub_settings_title">Listes</string>
+    <string name="update_playlists_success">Les playlists ont été mises à jour</string>
 </resources>

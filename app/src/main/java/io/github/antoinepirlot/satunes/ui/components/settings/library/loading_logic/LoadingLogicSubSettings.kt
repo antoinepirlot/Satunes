@@ -37,9 +37,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.local.LocalMainScope
 import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
-import io.github.antoinepirlot.satunes.data.states.DataUiState
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
-import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.models.SwitchSettings
 import io.github.antoinepirlot.satunes.ui.components.settings.SettingWithSwitch
@@ -54,10 +52,8 @@ import kotlinx.coroutines.CoroutineScope
 internal fun LoadingLogicSubSettings(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
-    dataViewModel: DataViewModel = viewModel(),
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
-    val dataUiState: DataUiState by dataViewModel.uiState.collectAsState()
     val scope: CoroutineScope = LocalMainScope.current
     val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
     val spacerSize: Dp = 16.dp
@@ -80,18 +76,6 @@ internal fun LoadingLogicSubSettings(
             checked = satunesUiState.artistReplacement,
             onCheckedChange = {
                 satunesViewModel.switchArtistReplacement(
-                    scope = scope,
-                    snackBarHostState = snackBarHostState
-                )
-            }
-        )
-        Spacer(modifier = Modifier.size(size = spacerSize))
-
-        SettingWithSwitch(
-            setting = SwitchSettings.SHOW_FIRST_LETTER,
-            checked = dataUiState.showFirstLetter,
-            onCheckedChange = {
-                dataViewModel.switchShowFirstLetter(
                     scope = scope,
                     snackBarHostState = snackBarHostState
                 )

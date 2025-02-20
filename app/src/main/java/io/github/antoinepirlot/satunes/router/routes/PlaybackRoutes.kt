@@ -63,7 +63,7 @@ internal fun NavGraphBuilder.playbackRoutes(
                         openMedia(
                             playbackViewModel = playbackViewModel,
                             media = album,
-                            navController = navController
+                            navController = navController,
                         )
                     }
                 },

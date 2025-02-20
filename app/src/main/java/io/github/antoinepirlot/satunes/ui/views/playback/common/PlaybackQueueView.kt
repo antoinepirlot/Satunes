@@ -23,15 +23,16 @@
 package io.github.antoinepirlot.satunes.ui.views.playback.common
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.texts.Title
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
-import io.github.antoinepirlot.satunes.database.models.MediaImpl
-import io.github.antoinepirlot.satunes.router.utils.openMedia
+import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.ui.components.cards.media.MediaCardList
 
 /**
@@ -41,23 +42,20 @@ import io.github.antoinepirlot.satunes.ui.components.cards.media.MediaCardList
 @Composable
 internal fun PlaybackQueueView(
     modifier: Modifier = Modifier,
+    dataViewModel: DataViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
 ) {
+    val musicsQueue: List<Music> = playbackViewModel.getPlaylist()
+    LaunchedEffect(key1 = Unit) {
+        dataViewModel.setMediaImplListOnScreen(mediaImplCollection = musicsQueue)
+    }
+
     MediaCardList(
         modifier = modifier,
-        mediaImplCollection = playbackViewModel.getPlaylist(),
+        mediaImplList = musicsQueue,
         scrollToMusicPlaying = true,
         header = { Title(text = stringResource(id = R.string.playback_queue)) },
-        openMedia = { mediaImpl: MediaImpl ->
-            openMedia(
-                playbackViewModel = playbackViewModel,
-                mediaImpl,
-                navigate = false,
-                navController = null
-            )
-        },
         showGroupIndication = false,
-        sort = false
     )
 }
 

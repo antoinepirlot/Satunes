@@ -64,7 +64,7 @@ object UpdateCheckManager {
      * @param context the context :p
      * @param url the url to get the response
      */
-    internal fun getUrlResponse(context: Context, url: String): Response? {
+    private fun getUrlResponse(context: Context, url: String): Response? {
         return try {
             val internetManager = InternetManager(context = context)
             if (!internetManager.isConnected()) {

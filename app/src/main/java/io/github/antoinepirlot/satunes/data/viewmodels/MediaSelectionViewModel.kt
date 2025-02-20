@@ -35,21 +35,30 @@ import kotlinx.coroutines.flow.update
 /**
  * @author Antoine Pirlot on 30/03/2024
  */
-internal class MediaSelectionViewModel : ViewModel() {
+class MediaSelectionViewModel : ViewModel() {
     private val _uiState: MutableStateFlow<MediaSelectionUiState> = MutableStateFlow(
         MediaSelectionUiState()
     )
+
     /**
      * List of checked playlists to know where to add music from form
      */
     private val _checkedPlaylistWithMusics: MutableList<Playlist> = mutableListOf()
     private val _checkedMusics: MutableList<Music> = mutableListOf()
 
+    /**
+     * Use to know from where the selection is running.
+     * If the user add multiple [Music] to a single [Playlist], then it must be a [Playlist]
+     * If the user add a single [Music] to multiple [Playlist] then it must be a [Music]
+     */
+    private var _currentMediaImpl: MediaImpl? = null
+
     val uiState: StateFlow<MediaSelectionUiState> = _uiState.asStateFlow()
 
     fun clearAll() {
         this.clearCheckedMusics()
         this.clearCheckedPlaylistWithMusics()
+        this._currentMediaImpl = null
     }
 
     fun getCheckedPlaylistWithMusics(): List<Playlist> {
@@ -66,7 +75,7 @@ internal class MediaSelectionViewModel : ViewModel() {
         _checkedPlaylistWithMusics.remove(playlist)
     }
 
-    fun clearCheckedPlaylistWithMusics() {
+    private fun clearCheckedPlaylistWithMusics() {
         _checkedPlaylistWithMusics.clear()
     }
 
@@ -84,7 +93,7 @@ internal class MediaSelectionViewModel : ViewModel() {
         _checkedMusics.remove(music)
     }
 
-    fun clearCheckedMusics() {
+    private fun clearCheckedMusics() {
         _checkedMusics.clear()
     }
 
@@ -94,11 +103,33 @@ internal class MediaSelectionViewModel : ViewModel() {
         }
     }
 
+    /**
+     * Checks if the mediaImpl is selected. If it was already present in the [_currentMediaImpl]
+     * then it add it to [_checkedMusics] or [_checkedPlaylistWithMusics].
+     */
     fun isChecked(mediaImpl: MediaImpl): Boolean {
         return when (mediaImpl) {
-            is Music -> this._checkedMusics.contains(element = mediaImpl)
-            is Playlist -> this._checkedPlaylistWithMusics.contains(element = mediaImpl)
+            is Music -> {
+                //Check in playlist
+                if ((_currentMediaImpl as Playlist).contains(mediaImpl = mediaImpl)) {
+                    this.addMusic(music = mediaImpl)
+                    true
+                } else this._checkedMusics.contains(element = mediaImpl)
+            }
+
+            is Playlist -> {
+                //Check for selected media
+                if (mediaImpl.contains(mediaImpl = _currentMediaImpl!!)) {
+                    this.addPlaylist(playlist = mediaImpl)
+                    true
+                } else this._checkedPlaylistWithMusics.contains(element = mediaImpl)
+            }
+
             else -> throw IllegalArgumentException("The media is not a music or playlist")
         }
+    }
+
+    fun setCurrentMediaImpl(mediaImpl: MediaImpl) {
+        this._currentMediaImpl = mediaImpl
     }
 }

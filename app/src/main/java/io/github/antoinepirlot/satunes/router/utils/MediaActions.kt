@@ -52,49 +52,11 @@ import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 internal fun openMedia(
     playbackViewModel: PlaybackViewModel,
     media: MediaImpl? = null,
-    navigate: Boolean = true,
     navController: NavHostController?,
 ) {
-    if (media == null || media is Music) {
+    if (media == null || media is Music)
         startMusic(playbackViewModel = playbackViewModel, mediaToPlay = media)
-    }
-    if (navigate) {
-        if (navController == null) {
-            val message = "navController can't be null if you navigate"
-            SatunesLogger.getLogger()?.severe(message)
-            throw IllegalArgumentException(message)
-        }
-        navController.navigate(getDestinationOf(media))
-    }
-}
-
-/**
- * Open mediaImpl from folders' views if the mediaImpl is:
- *      Music: It loads folder's musics data to playback and open the mediaImpl that is music.
- *
- *      Folder: navigate to the folder's view
- */
-internal fun openMediaFromFolder(
-    media: MediaImpl,
-    playbackViewModel: PlaybackViewModel,
-    navController: NavHostController
-) {
-    when (media) {
-        is Music -> {
-            playbackViewModel.loadMusicFromMedia(
-                media = media.folder,
-                musicToPlay = media
-            )
-            openMedia(
-                playbackViewModel = playbackViewModel,
-                media = media,
-                navController = navController
-            )
-        }
-
-        is Folder -> navController.navigate(getDestinationOf(media))
-    }
-
+    navController?.navigate(getDestinationOf(media))
 }
 
 /**

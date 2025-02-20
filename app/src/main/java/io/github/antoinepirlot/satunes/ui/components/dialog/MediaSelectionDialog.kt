@@ -43,6 +43,7 @@ import io.github.antoinepirlot.satunes.data.states.MediaSelectionUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.MediaSelectionViewModel
 import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
+import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
@@ -62,10 +63,15 @@ internal fun MediaSelectionDialog(
     onDismissRequest: () -> Unit,
     onConfirm: () -> Unit,
     mediaImplCollection: Collection<MediaImpl>,
+    mediaDestination: MediaImpl,
     playlistTitle: String? = null,
     icon: SatunesIcons,
 ) {
     val mediaSelectionUiState: MediaSelectionUiState by mediaSelectionViewModel.uiState.collectAsState()
+
+    //No LaunchedEffect as it crash because it's run after composition and Satunes needs this modification
+    //on composition
+    mediaSelectionViewModel.setCurrentMediaImpl(mediaImpl = mediaDestination)
     val showPlaylistCreation: Boolean = mediaSelectionUiState.showPlaylistCreation
 
     if (showPlaylistCreation) {
@@ -103,7 +109,7 @@ private fun CreateNewPlaylistForm(
                 snackBarHostState = snackBarHostState,
                 playlistTitle = playlistTitle,
                 onPlaylistAdded = {
-                    mediaSelectionViewModel.addPlaylist(dataViewModel.getPlaylist(title = playlistTitle))
+                    mediaSelectionViewModel.addPlaylist(dataViewModel.getPlaylist(title = playlistTitle)!!)
                 }
             )
             mediaSelectionViewModel.setShowPlaylistCreation(value = false)
@@ -158,7 +164,7 @@ private fun MediaSelectionDialogList(
         confirmButton = {
             TextButton(onClick = onConfirm) {
                 if (mediaImplCollection.isNotEmpty()) {
-                    NormalText(text = stringResource(id = R.string.add))
+                    NormalText(text = stringResource(id = R.string.update))
                 }
             }
         },
@@ -187,6 +193,7 @@ private fun PlaylistSelectionDialogPreview() {
         icon = SatunesIcons.PLAYLIST_ADD,
         onDismissRequest = {},
         onConfirm = {},
+        mediaDestination = Genre(""),
         mediaImplCollection = listOf()
     )
 }

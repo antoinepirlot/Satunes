@@ -28,16 +28,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
-import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.Folder
-import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.router.utils.openMediaFromFolder
 import io.github.antoinepirlot.satunes.ui.components.buttons.fab.ExtraButtonList
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 
@@ -50,9 +45,7 @@ internal fun RootFolderView(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
     dataViewModel: DataViewModel = viewModel(),
-    playbackViewModel: PlaybackViewModel = viewModel(),
 ) {
-    val navController: NavHostController = LocalNavController.current
     val rootFolderSet: Set<Folder> = dataViewModel.getRootFolderSet()
 
     LaunchedEffect(key1 = dataViewModel.isLoaded) {
@@ -62,7 +55,7 @@ internal fun RootFolderView(
                 musicSet.addAll(folder.getAllMusic())
             }
             satunesViewModel.replaceExtraButtons(extraButtons = {
-                ExtraButtonList(mediaImplCollection = musicSet)
+                ExtraButtonList()
             })
         } else
             satunesViewModel.clearExtraButtons()
@@ -71,13 +64,6 @@ internal fun RootFolderView(
     MediaListView(
         modifier = modifier,
         mediaImplCollection = rootFolderSet,
-        openMedia = { clickedMediaImpl: MediaImpl ->
-            openMediaFromFolder(
-                media = clickedMediaImpl,
-                playbackViewModel = playbackViewModel,
-                navController = navController
-            )
-        },
         emptyViewText = stringResource(id = R.string.no_folder)
     )
 }

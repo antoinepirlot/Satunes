@@ -28,7 +28,6 @@ import io.github.antoinepirlot.satunes.data.viewmodels.utils.isAudioAllowed
 import io.github.antoinepirlot.satunes.database.models.BarSpeed
 import io.github.antoinepirlot.satunes.database.models.FoldersSelection
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
-import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.router.utils.getNavBarSectionDestination
@@ -39,7 +38,7 @@ import io.github.antoinepirlot.satunes.router.utils.getNavBarSectionDestination
 internal data class SatunesUiState(
     val whatsNewSeen: Boolean = SettingsManager.whatsNewSeen,
     val extraButtons: (@Composable () -> Unit)? = null,
-    val currentDestination: Destination = getNavBarSectionDestination(navBarSection = SettingsManager.defaultNavBarSection),
+    val currentDestination: Destination = getNavBarSectionDestination(navBarSection = SettingsManager.defaultNavBarSection.value),
     /**
      * The current [MediaImpl] associated to the [currentDestination] if it is a single media destination
      * It's null if the [currentDestination] is not a single media.
@@ -47,9 +46,6 @@ internal data class SatunesUiState(
     val currentMediaImpl: MediaImpl? = null,
     //Use this in UiSate and ViewModel as it is a particular value. It could change but most of the time it won't change
     val isAudioAllowed: Boolean = isAudioAllowed(context = MainActivity.instance.applicationContext),
-
-    val defaultNavBarSection: NavBarSection = SettingsManager.defaultNavBarSection,
-    val selectedNavBarSection: NavBarSection = defaultNavBarSection,
 
     val foldersSelectionSelected: FoldersSelection = SettingsManager.foldersSelectionSelected,
 
@@ -60,11 +56,16 @@ internal data class SatunesUiState(
     val repeatMode: Int = SettingsManager.repeatMode,
     val audioOffloadChecked: Boolean = SettingsManager.audioOffloadChecked,
     val barSpeed: BarSpeed = SettingsManager.barSpeed,
-    val isMediaOptionsOpened: Boolean = false, // TODO only used for favorite action, check to simplify it
+    /**
+     * Show the media's options dialog if not null.
+     * If not null, it represent from which media the options have to be shown on the screen.
+     */
+    val mediaToShowOptions: MediaImpl? = null,
     /**
      * This setting is true if the compilation's music has to be added to compilation's artist's music list
      */
     val compilationMusic: Boolean = SettingsManager.compilationMusic,
     val artistReplacement: Boolean = SettingsManager.artistReplacement,
-    val showSortDialog: Boolean = false
+    val showSortDialog: Boolean = false,
+    val showMediaSelectionDialog: Boolean = false,
 )

@@ -28,10 +28,14 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -39,6 +43,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.hapticfeedback.HapticFeedback
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalConfiguration
@@ -56,9 +61,11 @@ import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.bars.playback.MusicControlBar
 import io.github.antoinepirlot.satunes.ui.components.bars.playback.PlaybackCustomActionsBar
 import io.github.antoinepirlot.satunes.ui.components.dialog.artist.ArtistOptionsDialog
+import io.github.antoinepirlot.satunes.ui.components.images.Icon
 import io.github.antoinepirlot.satunes.ui.components.images.MusicPlayingAlbumArtwork
 
 /**
@@ -112,9 +119,10 @@ internal fun MusicPlayingControlView(
                 text = musicPlaying.title,
                 fontSize = 20.sp
             )
-            Subtitle(
+            Row(
                 modifier = Modifier
                     .padding(horizontal = padding)
+                    .clip(shape = CircleShape)
                     .combinedClickable(
                         onClick = {
                             haptics.performHapticFeedback(HapticFeedbackType.TextHandleMove)
@@ -122,12 +130,18 @@ internal fun MusicPlayingControlView(
                         },
                         onLongClick = {
                             haptics.performHapticFeedback(HapticFeedbackType.LongPress)
-                            satunesViewModel.mediaOptionsIsOpen()
+                            satunesViewModel.showMediaOptionsOf(mediaImpl = musicPlaying.artist)
                             showArtistOptions = true
                         }
                     ),
-                text = musicPlaying.artist.title
-            )
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Spacer(modifier = Modifier.size(size = 10.dp)) //Used for press animation larger zone
+                Icon(icon = SatunesIcons.ARTIST)
+                Spacer(modifier = Modifier.size(size = 5.dp))
+                Subtitle(text = musicPlaying.artist.title)
+                Spacer(modifier = Modifier.size(size = 10.dp)) //Used for press animation larger zone
+            }
             PlaybackCustomActionsBar()
             MusicControlBar(modifier = Modifier.padding(horizontal = padding))
         }
@@ -139,7 +153,7 @@ internal fun MusicPlayingControlView(
             ArtistOptionsDialog(
                 artist = musicPlaying.artist,
                 onDismissRequest = {
-                    satunesViewModel.mediaOptionsIsClosed()
+                    satunesViewModel.hideMediaOptions()
                     showArtistOptions = false
                 }
             )

@@ -54,22 +54,16 @@ internal fun RowScope.MediaNavBarSelection(
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     val navController: NavHostController = LocalNavController.current
-
-    val selectedNavBarSection: NavBarSection = satunesUiState.selectedNavBarSection
     val currentDestination: Destination = satunesUiState.currentDestination
-
-    val selectedCanBeShown: Boolean = currentDestination.category != DestinationCategory.SETTING
-            && currentDestination.category != DestinationCategory.PLAYBACK
-            && currentDestination != Destination.SEARCH
+    val selectedCanBeShown: Boolean = currentDestination.category == DestinationCategory.MEDIA
 
     NavigationBarItem(
         modifier = modifier,
         label = {
             NormalText(text = stringResource(id = navBarSection.stringId))
         },
-        selected = selectedCanBeShown && selectedNavBarSection == navBarSection,
+        selected = selectedCanBeShown && currentDestination.navBarSection == navBarSection,
         onClick = {
-            satunesViewModel.selectNavBarSection(navBarSection = navBarSection)
             val rootRoute: Destination = when (navBarSection) {
                 NavBarSection.FOLDERS -> Destination.FOLDERS
                 NavBarSection.ARTISTS -> Destination.ARTISTS
@@ -80,7 +74,6 @@ internal fun RowScope.MediaNavBarSelection(
 
             }
             backToRoot(rootRoute = rootRoute, navController = navController)
-            println("Current dest is: ${satunesUiState.currentDestination}")
         },
         icon = {
             val pair = getRightIconAndDescription(navBarSection = navBarSection)

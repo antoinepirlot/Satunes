@@ -24,7 +24,10 @@ package io.github.antoinepirlot.satunes.router.routes
 
 import android.os.Build
 import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -33,9 +36,9 @@ import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.ui.views.settings.SettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.android_auto.AndroidAutoSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.battery.BatterySettingsView
+import io.github.antoinepirlot.satunes.ui.views.settings.design.DesignSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.library.LibrarySettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.logs.LogsSettingsView
-import io.github.antoinepirlot.satunes.ui.views.settings.navigation_bar.BottomNavigationBarSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.permissions.PermissionsSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.playback.PlaybackSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.reset.ResetSettingsView
@@ -57,18 +60,25 @@ internal fun NavGraphBuilder.settingsRoutes(
         SettingsView()
     }
 
-    composable(Destination.BOTTOM_BAR_SETTINGS.link) {
+    composable(Destination.ANDROID_AUTO_SETTINGS.link) {
         LaunchedEffect(key1 = Unit) {
             onStart(it)
         }
-        BottomNavigationBarSettingsView()
+        AndroidAutoSettingsView(modifier = Modifier.padding(horizontal = 16.dp))
+    }
+
+    composable(Destination.DESIGN_SETTINGS.link) {
+        LaunchedEffect(key1 = Unit) {
+            onStart(it)
+        }
+        DesignSettingsView(modifier = Modifier.padding(horizontal = 16.dp))
     }
 
     composable(Destination.PLAYBACK_SETTINGS.link) {
         LaunchedEffect(key1 = Unit) {
             onStart(it)
         }
-        PlaybackSettingsView()
+        PlaybackSettingsView(modifier = Modifier.padding(horizontal = 16.dp))
     }
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -76,7 +86,7 @@ internal fun NavGraphBuilder.settingsRoutes(
             LaunchedEffect(key1 = Unit) {
                 onStart(it)
             }
-            UpdatesSettingView()
+            UpdatesSettingView(modifier = Modifier.padding(horizontal = 16.dp))
         }
     }
 
@@ -84,7 +94,7 @@ internal fun NavGraphBuilder.settingsRoutes(
         LaunchedEffect(key1 = Unit) {
             onStart(it)
         }
-        LibrarySettingsView()
+        LibrarySettingsView() //No padding here as it cuts the row of playlists settings
     }
 
     composable(Destination.PERMISSIONS_SETTINGS.link) {
@@ -92,41 +102,37 @@ internal fun NavGraphBuilder.settingsRoutes(
             onStart(it)
         }
         // Pass it as param to fix no recomposition when permission granted
-        PermissionsSettingsView(satunesViewModel = satunesViewModel)
-    }
-
-    composable(Destination.ANDROID_AUTO_SETTINGS.link) {
-        LaunchedEffect(key1 = Unit) {
-            onStart(it)
-        }
-        AndroidAutoSettingsView()
+        PermissionsSettingsView(
+            modifier = Modifier.padding(horizontal = 16.dp),
+            satunesViewModel = satunesViewModel
+        )
     }
 
     composable(Destination.BATTERY_SETTINGS.link) {
         LaunchedEffect(key1 = Unit) {
             onStart(it)
         }
-        BatterySettingsView()
+        BatterySettingsView(modifier = Modifier.padding(horizontal = 16.dp))
     }
 
     composable(Destination.SEARCH_SETTINGS.link) {
         LaunchedEffect(key1 = Unit) {
             onStart(it)
         }
-        SearchSettingsView()
+        SearchSettingsView(modifier = Modifier.padding(horizontal = 16.dp))
     }
 
     composable(Destination.LOGS_SETTINGS.link) {
         LaunchedEffect(key1 = Unit) {
             onStart(it)
         }
-        LogsSettingsView()
+        LogsSettingsView(modifier = Modifier.padding(horizontal = 16.dp))
     }
 
     composable(Destination.RESET_SETTINGS.link) {
         LaunchedEffect(key1 = Unit) {
             onStart(it)
         }
-        ResetSettingsView()
+        ResetSettingsView(modifier = Modifier.padding(horizontal = 16.dp))
     }
 }

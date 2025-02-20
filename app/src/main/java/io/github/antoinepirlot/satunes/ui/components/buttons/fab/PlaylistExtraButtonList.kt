@@ -20,39 +20,39 @@
  * PS: I don't answer quickly.
  */
 
-package io.github.antoinepirlot.satunes.ui.components.bars.bottom
+package io.github.antoinepirlot.satunes.ui.components.buttons.fab
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.data.local.LocalMainScope
 import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
+import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.MediaSelectionViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.ui.components.buttons.fab.ExtraButton
 import io.github.antoinepirlot.satunes.ui.components.dialog.MediaSelectionDialog
 import kotlinx.coroutines.CoroutineScope
 
 @Composable
 internal fun PlaylistExtraButtonList(
     modifier: Modifier = Modifier,
+    satunesViewModel: SatunesViewModel = viewModel(),
     dataViewModel: DataViewModel = viewModel(),
     mediaSelectionViewModel: MediaSelectionViewModel = viewModel(),
     playlist: Playlist,
 ) {
+    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     val scope: CoroutineScope = LocalMainScope.current
     val snackbarHostState: SnackbarHostState = LocalSnackBarHostState.current
 
-    var openAddMusicsDialog: Boolean by rememberSaveable { mutableStateOf(false) }
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -63,24 +63,25 @@ internal fun PlaylistExtraButtonList(
         )
         ExtraButton(
             icon = SatunesIcons.ADD,
-            onClick = { openAddMusicsDialog = true },
+            onClick = { satunesViewModel.showMediaSelectionDialog() },
         )
     }
 
-    if (openAddMusicsDialog) {
+    if (satunesUiState.showMediaSelectionDialog && satunesUiState.mediaToShowOptions == null) {
         MediaSelectionDialog(
-            onDismissRequest = { openAddMusicsDialog = false },
+            onDismissRequest = { satunesViewModel.hideMediaSelectionDialog() },
             onConfirm = {
-                dataViewModel.insertMusicsToPlaylist(
+                dataViewModel.updatePlaylistMusics(
                     scope = scope,
                     snackBarHostState = snackbarHostState,
                     musics = mediaSelectionViewModel.getCheckedMusics(),
                     playlist = playlist
                 )
-                openAddMusicsDialog = false
+                satunesViewModel.hideMediaSelectionDialog()
             },
             mediaImplCollection = dataViewModel.getMusicSet(),
             icon = SatunesIcons.PLAYLIST_ADD,
+            mediaDestination = playlist,
             playlistTitle = playlist.title
         )
     }

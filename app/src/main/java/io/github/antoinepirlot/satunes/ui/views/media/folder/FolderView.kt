@@ -29,15 +29,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
-import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.Folder
-import io.github.antoinepirlot.satunes.database.models.MediaImpl
-import io.github.antoinepirlot.satunes.router.utils.openMediaFromFolder
 import io.github.antoinepirlot.satunes.ui.components.bars.FolderPath
 import io.github.antoinepirlot.satunes.ui.components.buttons.fab.ExtraButtonList
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
@@ -52,15 +47,12 @@ internal fun FolderView(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
     dataViewModel: DataViewModel = viewModel(),
-    playbackViewModel: PlaybackViewModel = viewModel(),
     folder: Folder,
 ) {
-    val navController: NavHostController = LocalNavController.current
-
     LaunchedEffect(key1 = dataViewModel.isLoaded) {
         if (folder.isNotEmpty())
             satunesViewModel.replaceExtraButtons(extraButtons = {
-                ExtraButtonList(mediaImplCollection = folder.getAllMusic())
+                ExtraButtonList()
             })
         else
             satunesViewModel.clearExtraButtons()
@@ -70,13 +62,6 @@ internal fun FolderView(
         FolderPath(folder)
         MediaListView(
             mediaImplCollection = folder.getSubFolderListWithMusics(),
-            openMedia = { clickedMediaImpl: MediaImpl ->
-                openMediaFromFolder(
-                    media = clickedMediaImpl,
-                    playbackViewModel = playbackViewModel,
-                    navController = navController
-                )
-            },
             emptyViewText = stringResource(id = R.string.no_music)
         )
     }

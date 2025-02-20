@@ -26,7 +26,6 @@ import android.content.Context
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.MutableFloatState
 import androidx.compose.runtime.MutableIntState
-import androidx.compose.runtime.MutableLongState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.ViewModel
@@ -36,6 +35,7 @@ import io.github.antoinepirlot.satunes.data.states.PlaybackUiState
 import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.database.models.custom_action.CustomActions
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.models.ProgressBarLifecycleCallbacks
 import io.github.antoinepirlot.satunes.models.Timer
@@ -45,10 +45,12 @@ import io.github.antoinepirlot.satunes.ui.utils.showSnackBar
 import io.github.antoinepirlot.satunes.utils.getMediaTitle
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 /**
@@ -70,8 +72,6 @@ class PlaybackViewModel : ViewModel() {
     private var _isShuffle: MutableState<Boolean> = PlaybackManager.isShuffle
     private var _isLoaded: MutableState<Boolean> = PlaybackManager.isLoaded
     private var _isEnded: MutableState<Boolean> = PlaybackManager.isEnded
-    private val _forwardMs: MutableLongState = SettingsManager.forwardMs
-    private val _rewindMs: MutableLongState = SettingsManager.rewindMs
 
     val uiState: StateFlow<PlaybackUiState> = _uiState.asStateFlow()
 
@@ -82,8 +82,9 @@ class PlaybackViewModel : ViewModel() {
     val isShuffle: Boolean by _isShuffle
     val isLoaded: Boolean by _isLoaded
     val isEnded: Boolean by _isEnded
-    val forwardMs: Long by _forwardMs
-    val rewindMs: Long by _rewindMs
+    val forwardMs: Long = SettingsManager.forwardMs
+    val rewindMs: Long = SettingsManager.rewindMs
+    val customActionsOrder: Collection<CustomActions> = SettingsManager.customActionsOrder
 
     init {
         // Needed to refresh progress bar
@@ -490,6 +491,26 @@ class PlaybackViewModel : ViewModel() {
             _uiState.update { currentState: PlaybackUiState ->
                 currentState.copy(timerRemainingTime = timer.getRemainingTime())
             }
+        }
+    }
+
+    fun moveUp(customAction: CustomActions) {
+        //TODO use the new error handler system (implementation later)
+        CoroutineScope(Dispatchers.IO).launch {
+            SettingsManager.moveUp(
+                context = MainActivity.instance.applicationContext,
+                customAction = customAction
+            )
+        }
+    }
+
+    fun moveDown(customAction: CustomActions) {
+        //TODO use the new error handler system (implementation later)
+        CoroutineScope(Dispatchers.IO).launch {
+            SettingsManager.moveDown(
+                context = MainActivity.instance.applicationContext,
+                customAction = customAction
+            )
         }
     }
 }

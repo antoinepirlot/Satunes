@@ -30,6 +30,7 @@ import androidx.annotation.RequiresApi
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableLongState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -45,6 +46,7 @@ import io.github.antoinepirlot.satunes.database.models.BarSpeed
 import io.github.antoinepirlot.satunes.database.models.FoldersSelection
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
+import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
@@ -80,7 +82,8 @@ internal class SatunesViewModel : ViewModel() {
     private val _isLoadingData: MutableState<Boolean> = DataLoader.isLoading
     private val _isDataLoaded: MutableState<Boolean> = DataLoader.isLoaded
     private val _defaultNavBarSection: MutableState<NavBarSection> =
-        mutableStateOf(_uiState.value.defaultNavBarSection)
+        SettingsManager.defaultNavBarSection
+    private val _defaultPlaylistId: MutableLongState = SettingsManager.defaultPlaylistId
 
     @RequiresApi(Build.VERSION_CODES.M)
     private val _updateAvailableStatus: MutableState<UpdateAvailableStatus> =
@@ -89,12 +92,7 @@ internal class SatunesViewModel : ViewModel() {
     @RequiresApi(Build.VERSION_CODES.M)
     private val _downloadStatus: MutableState<APKDownloadStatus> = UpdateCheckManager.downloadStatus
 
-    private val _foldersPathsSelectedSet: MutableState<Set<String>> =
-        SettingsManager.foldersPathsSelectedSet
-
     val uiState: StateFlow<SatunesUiState> = _uiState.asStateFlow()
-    var defaultNavBarSection: NavBarSection by _defaultNavBarSection
-        private set
 
     val isLoadingData: Boolean by _isLoadingData
     val isDataLoaded: Boolean by _isDataLoaded
@@ -115,7 +113,10 @@ internal class SatunesViewModel : ViewModel() {
     var downloadStatus: APKDownloadStatus by _downloadStatus
         private set
 
-    val foldersPathsSelectedSet: Set<String> by _foldersPathsSelectedSet
+    val foldersPathsSelectedSet: Collection<String> = SettingsManager.foldersPathsSelectedSet
+
+    val defaultNavBarSection: NavBarSection by this._defaultNavBarSection
+    val defaultPlaylistId: Long by this._defaultPlaylistId
 
     fun loadSettings() {
         try {
@@ -169,14 +170,6 @@ internal class SatunesViewModel : ViewModel() {
         }
     }
 
-    fun selectNavBarSection(navBarSection: NavBarSection) {
-        _uiState.update { currentState: SatunesUiState ->
-            currentState.copy(
-                selectedNavBarSection = navBarSection
-            )
-        }
-    }
-
     fun loadAllData() {
         CoroutineScope(Dispatchers.IO).launch {
             DataLoader.loadAllData(context = MainActivity.instance.applicationContext)
@@ -214,7 +207,7 @@ internal class SatunesViewModel : ViewModel() {
                     navBarSection = navBarSection
                 )
                 if (
-                    this@SatunesViewModel.defaultNavBarSection == navBarSection
+                    defaultNavBarSection == navBarSection
                     && !navBarSection.isEnabled.value
                 ) {
                     selectDefaultNavBarSection(navBarSection = NavBarSection.MUSICS)
@@ -456,15 +449,15 @@ internal class SatunesViewModel : ViewModel() {
         }
     }
 
-    fun mediaOptionsIsOpen() {
+    fun showMediaOptionsOf(mediaImpl: MediaImpl) {
         _uiState.update { currentState: SatunesUiState ->
-            currentState.copy(isMediaOptionsOpened = true)
+            currentState.copy(mediaToShowOptions = mediaImpl)
         }
     }
 
-    fun mediaOptionsIsClosed() {
+    fun hideMediaOptions() {
         _uiState.update { currentState: SatunesUiState ->
-            currentState.copy(isMediaOptionsOpened = false)
+            currentState.copy(mediaToShowOptions = null)
         }
     }
 
@@ -563,7 +556,6 @@ internal class SatunesViewModel : ViewModel() {
                     navBarSection = navBarSection
                 )
             }
-            this.defaultNavBarSection = SettingsManager.defaultNavBarSection
         } catch (e: Throwable) {
             _logger?.severe("Error while selecting new default nav bar section: ${navBarSection.name}")
         }
@@ -640,6 +632,51 @@ internal class SatunesViewModel : ViewModel() {
     fun clearCurrentMediaImpl() {
         _uiState.update { currentState: SatunesUiState ->
             currentState.copy(currentMediaImpl = null)
+        }
+    }
+
+    fun showMediaSelectionDialog() {
+        _uiState.update { currentState: SatunesUiState ->
+            currentState.copy(showMediaSelectionDialog = true)
+        }
+    }
+
+    fun hideMediaSelectionDialog() {
+        _uiState.update { currentState: SatunesUiState ->
+            currentState.copy(showMediaSelectionDialog = false)
+        }
+    }
+
+    fun selectDefaultPlaylist(playlist: Playlist?) {
+        try {
+            runBlocking {
+                SettingsManager.selectDefaultPlaylist(
+                    context = MainActivity.instance.applicationContext,
+                    playlist = playlist
+                )
+            }
+        } catch (e: Throwable) {
+            _logger?.severe("Error while selecting new default playlist")
+            throw e
+        }
+    }
+
+    fun resetCustomActions(scope: CoroutineScope, snackBarHostState: SnackbarHostState) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                SettingsManager.resetCustomActions(context = MainActivity.instance.applicationContext)
+            } catch (e: Throwable) {
+                showErrorSnackBar(
+                    scope = scope,
+                    snackBarHostState = snackBarHostState,
+                    action = {
+                        resetCustomActions(
+                            scope = scope,
+                            snackBarHostState = snackBarHostState
+                        )
+                    }
+                )
+            }
         }
     }
 }

@@ -55,12 +55,11 @@ internal fun FolderPathRow(
     val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
 
     Row(
-        modifier = modifier,
+        modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
         NormalText(
-            modifier = Modifier.fillMaxWidth(fraction = 0.8f),
             text = if (path.startsWith("/0/")) {
                 path.replaceFirst(
                     "/0/",

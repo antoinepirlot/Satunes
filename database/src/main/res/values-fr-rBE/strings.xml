@@ -30,4 +30,7 @@
     <string name="include">Inclure</string>
     <string name="exclude">Exclure</string>
     <string name="various_artists">Artistes Varié.e.s</string>
+    <string name="years">Années</string>
+    <string name="added_date">Date d\'ajout</string>
+    <string name="custom_action_add_to_playlist">Ajouter à une playlist</string>
 </resources>

@@ -24,11 +24,9 @@ package io.github.antoinepirlot.satunes.ui.views.settings.reset
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import io.github.antoinepirlot.satunes.ui.components.settings.reset.AllResetSettings
 
 /**
@@ -36,11 +34,7 @@ import io.github.antoinepirlot.satunes.ui.components.settings.reset.AllResetSett
  */
 @Composable
 internal fun ResetSettingsView(modifier: Modifier = Modifier) {
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(horizontal = 16.dp),
-    ) {
+    Column(modifier = modifier.fillMaxSize()) {
         AllResetSettings()
     }
 }

@@ -3,6 +3,32 @@ Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
 ## 3.0 (Android 5.1.1 Lollipop and later
 
+### 3.0.0
+
+New features:
+
+* Ability to sort media by artist, album and/or genre based on page
+* Display of the first letter in alphabetical order above the first media (with this letter) in the
+  list (can be disabled in library settings)
+* Added sorting by year and last added for music (in some views at the moment)
+* Adding media to playlists now removes them if they are present (entirely for those who are not
+  music)
+* It's possible to move custom actions positions
+* A playlist can be selected as the default one
+
+Improvements, optimizations and troubleshooting:
+
+* Support for Android 15 (Vanilla Ice Cream)
+* Update texts
+* When the user changes the view from one media type to another, the navigation bar reflects the
+  modifications
+* Music loading issues causing crashes under some conditions fixed (Concurrent Modification)
+* Satunes's libraries update that involve a slight design change of some elements (like the progress
+  bar)
+* Other indirect optimizations and corrections
+* Changed update source from GitHub to Codeberg
+* GitHub button replaced by Codeberg
+
 ### 3.0.0-preview-1
 
 Improvements, optimisations and troubleshooting:

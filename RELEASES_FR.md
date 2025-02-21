@@ -3,6 +3,33 @@ You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
 ## 3.0 (Android 5.1.1 Lollipop et ultérieur)
 
+### 3.0.0
+
+Nouvelles fonctionnalités :
+
+* Possibilité de trier les médias par artistes, album et/ou genre en fonction de la page
+* Affichage de la première lettre par ordre alphabétique au dessus du premier média (ayant cette
+  lettre) dans la liste (désactivable dans les paramètres de librairies)
+* Ajout du tri par années et dernier ajout pour les musiques (dans certaines vues pour le moment)
+* L'ajout des médias dans les playlists permet maintenant de les supprimer s'ils y sont présents (
+  entièrement pour ceux qui ne sont pas des musiques)
+* Il est possible de déplacer des positions d'actions personnalisées
+* Une playlist peut être sélectionnée comme onglet par défaut
+
+Améliorations, optimisations et dépannage:
+
+* Support pour Android 15 (Vanilla Ice Cream)
+* Problèmes de chargement de la musique causant des crashs dans certaines conditions corrigé (
+  Concurrent Modification)
+* Mise à jour des textes
+* Mise à jour des libraries qui implique un léger changement de design de certains éléments (commme
+  la barre de progression)
+* Lorsque l'utilisateur change de vue d'un type de média à un autre, la barre de navigation reflète
+  le changement
+* Autres optimisations et corrections indirectes
+* Changement de la source de la mise à jour de GitHub vers Codeberg
+* Remplacement du bouton GitHub par Codeberg
+
 ### 3.0.0-preview-1
 
 Améliorations, optimisations et dépannage :
@@ -59,7 +86,7 @@ Nouvelles fonctionnalités:
 Améliorations, optimisations et dépannage:
 
 * Optimisation du démarrage
-* Lorsque la liste es triée, la liste chargée en playback correspond au tri
+* Lorsque la liste est triée, la liste chargée en playback correspond au tri
 * Lorsque l'utilisateur change de vue d'un type de média à un autre, la barre de navigation reflète
   le changement
 * Autres optimisations et améliorations indirects

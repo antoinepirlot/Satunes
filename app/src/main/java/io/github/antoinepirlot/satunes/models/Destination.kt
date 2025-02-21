@@ -30,7 +30,7 @@ import io.github.antoinepirlot.satunes.router.utils.getNavBarSectionDestination
  * @author Antoine Pirlot on 24-01-24
  */
 
-internal enum class Destination(
+enum class Destination(
     val link: String,
     val category: DestinationCategory,
     val navBarSection: NavBarSection? = null

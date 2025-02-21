@@ -111,6 +111,7 @@ internal fun MediaCard(
                     if (mediaImpl is Music && !isInPlaybackView)
                         playbackViewModel.loadMusicFromMedias(
                             medias = dataUiState.mediaImplListOnScreen,
+                            currentDestination = satunesUiState.currentDestination,
                             musicToPlay = mediaImpl
                         )
                     openMedia(

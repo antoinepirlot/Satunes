@@ -72,8 +72,6 @@ Tu as le droit de réutiliser mon code pour créer une nouvelle application dér
 Pour installer facilement, tu peux télécharger l'application sur Fdroid en cliquant sur le bouton ci-dessous.
 <p align="center">
   <a href="https://f-droid.org/app/io.github.antoinepirlot.satunes"><img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" width="230"></a>
-  </br>
-  <a href="https://codeberg.org/antoinepirlot/Satunes/releases"><img src="https://get-it-on.codeberg.org/get-it-on-blue-on-white.png" width="200"></a>
 </p>
 
 Sinon, tu peux également suivre les étapes suivantes:

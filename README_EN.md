@@ -15,9 +15,10 @@
 
 Vous pouvez retrouver ce fichier en [français 🇫🇷](README.md)
 
-<h1>As the United States threatens Ukraine 🇺🇦, the European Union 🇪🇺 and our democracies, I have decided to boycott most American products. <br/><br/>
-I encourage every European citizen to use European products when possible and to create new ones when there are no alternatives.<br/><br/>
-Let's not let them divide us!<br/><br/>
+<h1>Given the current circumstances, the United States has shown that it is a threat to Ukraine 🇺🇦, the European Union 🇪🇺 and our democracies.<br/>
+It is for this reason that I have decided to boycott most products from the United States.
+I encourage every European citizen to use European products whenever possible and to create new ones when there are no alternatives.<br/><br/>
+Europe is united in diversity, let's not let them divide us!<br/><br/>
 Long live the European Union 🇪🇺, Хай живе Україна 🇺🇦 and democracy.</h1>
 
 Satunes is an mp3 player on Android. Use it to listen your music from your audio files stored in your

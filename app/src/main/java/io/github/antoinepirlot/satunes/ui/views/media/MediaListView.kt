@@ -67,20 +67,13 @@ internal fun MediaListView(
     val sortOption: SortOptions = dataViewModel.sortOption
 
     //Do not put the list to show in ui state as it will reset list scroll when user goes back to the last page
-    //Plus this system insure the list can be scrolled correctly to the first item of the list (copying a new list make it not working as expected)
+    //Plus this system ensures the list can be scrolled correctly to the first item of the list (copying a new list make it not working as expected)
     val mediaImplListToShow: MutableList<MediaImpl> = remember { mutableStateListOf() }
 
     val isMediaOptionsOpened: Boolean = satunesUiState.mediaToShowOptions != null
 
     //TODO is a veritable issue change the behavior
-    LaunchedEffect(
-        listOf(
-            sortOption,
-            isMediaOptionsOpened,
-            collectionChanged,
-            mediaImplCollection
-        )
-    ) {
+    LaunchedEffect(key1 = sortOption, key2 = collectionChanged, key3 = mediaImplCollection) {
         if (isMediaOptionsOpened) return@LaunchedEffect
         else if (collectionChanged) mediaImplListToShow.clear()
         else if (!dataViewModel.listSetUpdatedProcessed) {
@@ -89,7 +82,7 @@ internal fun MediaListView(
         } else if (mediaImplCollection.isEmpty()) {
             mediaImplListToShow.clear()
         } else if (mediaImplListToShow.isNotEmpty()) {
-            lazyListState.scrollToItem(0)
+            lazyListState.requestScrollToItem(0)
             mediaImplListToShow.clear()
         }
 

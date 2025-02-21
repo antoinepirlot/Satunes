@@ -71,6 +71,7 @@ You can reuse my code but you will have to redistribute it. This allows free sof
 * Share your music's files with others
 * Search into your library
 * In-app updates
+* ...
 
 # Installation
 

@@ -66,6 +66,7 @@ Tu as le droit de réutiliser mon code pour créer une nouvelle application dér
 * Partager les fichiers musicaux avec les autres
 * Faire une recherche dans ta bibliothèque
 * Mises à jour au sein de l'application
+* ...
 
 # Installation
 Pour installer facilement, tu peux télécharger l'application sur Fdroid en cliquant sur le bouton ci-dessous.

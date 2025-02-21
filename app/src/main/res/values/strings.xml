@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">Satunes</string>
+    <string name="app_name" translatable="false">🇺🇦Satunes🇪🇺</string>
     <string name="play_all">Shuffle All Musics</string>
     <string name="navigation_bar_settings_title">Navigation Bar</string>
     <string name="this_device">This Device</string>

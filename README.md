@@ -6,7 +6,7 @@
 <p align="center">
   <a href="https://f-droid.org/app/io.github.antoinepirlot.satunes"><img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" width="230"></a>
   </br>
-  <a href="https://github.com/antoinepirlot/Satunes/releases"><img src="https://get-it-on.codeberg.org/get-it-on-blue-on-white.png" width="200"></a>
+  <a href="https://codeberg.org/antoinepirlot/Satunes/releases"><img src="https://get-it-on.codeberg.org/get-it-on-blue-on-white.png" width="200"></a>
 </p>
 
 You can find this file in [english 🇬🇧](README_EN.md).
@@ -65,14 +65,14 @@ Pour installer facilement, tu peux télécharger l'application sur Fdroid en cli
 <p align="center">
   <a href="https://f-droid.org/app/io.github.antoinepirlot.satunes"><img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" width="230"></a>
   </br>
-  <a href="https://github.com/antoinepirlot/Satunes/releases"><img src="https://get-it-on.codeberg.org/get-it-on-blue-on-white.png" width="200"></a>
+  <a href="https://codeberg.org/antoinepirlot/Satunes/releases"><img src="https://get-it-on.codeberg.org/get-it-on-blue-on-white.png" width="200"></a>
 </p>
 
 Sinon, tu peux également suivre les étapes suivantes:
 
 ## Application
 
-1) Clique sur [Release](https://github.com/antoinepirlot/Satunes/releases)
+1) Clique sur [Release](https://codeberg.org/antoinepirlot/Satunes/releases)
 2) Choisi ta version
 3) Clique sur "Assets" pour dérouler un menu qui contient le fichier d'installation
 4) Clique sur le fichier Satunes_vx.y.z.apk (Un fichier va se télécharger sur ton appareil)

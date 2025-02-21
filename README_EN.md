@@ -4,13 +4,13 @@
 
 <h1 align="center">Satunes (🇬🇧)</h1>
 <p align="center">
-  <a href="https://github.com/antoinepirlot/Satunes/releases/latest">
+  <a href="https://codeberg.org/antoinepirlot/Satunes/releases/latest">
     <img src="https://img.shields.io/github/release/antoinepirlot/Satunes.svg?logo=github">
   </a>
 </p>
 <p align="center">
   <a href="https://f-droid.org/app/io.github.antoinepirlot.satunes"><img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" width="200"></a>
-  <a href="https://github.com/antoinepirlot/Satunes/releases"><img src="https://raw.githubusercontent.com/NeoApplications/Neo-Backup/034b226cea5c1b30eb4f6a6f313e4dadcbb0ece4/badge_github.png" width="200"></a>
+  <a href="https://codeberg.org/antoinepirlot/Satunes/releases"><img src="https://raw.githubusercontent.com/NeoApplications/Neo-Backup/034b226cea5c1b30eb4f6a6f313e4dadcbb0ece4/badge_github.png" width="200"></a>
 </p>
 
 Vous pouvez retrouver ce fichier en [français 🇫🇷](README.md)
@@ -76,7 +76,7 @@ Otherwise, you can also follow the following steps:
 
 ## Application
 
-1) Click on [Release](https://github.com/antoinepirlot/Satunes/releases)
+1) Click on [Release](https://codeberg.org/antoinepirlot/Satunes/releases)
 2) Choose your version
 3) Click on "Assets" to deploy a menu that contains the installation file.
 4) Click on the file Satunes_vx.y.z.apk (A file will be downloaded on your device).

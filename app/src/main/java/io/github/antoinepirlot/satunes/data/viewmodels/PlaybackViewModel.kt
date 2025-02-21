@@ -12,12 +12,10 @@
  *
  * *** INFORMATION ABOUT THE AUTHOR *****
  * The author of this file is Antoine Pirlot, the owner of this project.
- * You find this original project on github.
+ * You find this original project on Codeberg.
  *
- * My github link is: https://github.com/antoinepirlot
- * This current project's link is: https://github.com/antoinepirlot/Satunes
- *
- * PS: I don't answer quickly.
+ * My Codeberg link is: https://codeberg.org/antoinepirlot
+ * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
 package io.github.antoinepirlot.satunes.data.viewmodels
@@ -37,6 +35,7 @@ import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.custom_action.CustomActions
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
+import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.models.ProgressBarLifecycleCallbacks
 import io.github.antoinepirlot.satunes.models.Timer
 import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
@@ -115,16 +114,24 @@ class PlaybackViewModel : ViewModel() {
 
     fun loadMusicFromMedias(
         medias: Collection<MediaImpl>,
+        currentDestination: Destination,
         shuffleMode: Boolean = SettingsManager.shuffleMode,
         musicToPlay: Music? = null,
     ) {
         val musicSet: MutableSet<Music> = mutableSetOf()
-        medias.forEach { mediaImpl: MediaImpl ->
-            when (mediaImpl) {
-                is Music -> musicSet.add(mediaImpl)
-                is Folder -> musicSet.addAll(mediaImpl.getAllMusic())
-                else -> musicSet.addAll(mediaImpl.getMusicSet())
+        val isInFolderView: Boolean =
+            currentDestination == Destination.FOLDERS || currentDestination == Destination.FOLDER
+        if (isInFolderView)
+            medias.reversed().forEach { media: MediaImpl ->
+                if (media is Music) musicSet.add(media)
+                else return@forEach
             }
+
+        medias.forEach { mediaImpl: MediaImpl ->
+            if (isInFolderView && mediaImpl is Music) return@forEach
+            if (mediaImpl is Music) musicSet.add(mediaImpl)
+            else if (mediaImpl is Folder) musicSet.addAll(mediaImpl.getAllMusic())
+            else musicSet.addAll(mediaImpl.getMusicSet())
         }
         this.loadMusics(
             musics = musicSet,

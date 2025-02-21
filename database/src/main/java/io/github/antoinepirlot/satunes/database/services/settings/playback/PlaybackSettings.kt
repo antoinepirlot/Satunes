@@ -12,12 +12,10 @@
  *
  * *** INFORMATION ABOUT THE AUTHOR *****
  * The author of this file is Antoine Pirlot, the owner of this project.
- * You find this original project on github.
+ * You find this original project on Codeberg.
  *
- * My github link is: https://github.com/antoinepirlot
- * This current project's link is: https://github.com/antoinepirlot/Satunes
- *
- * PS: I don't answer quickly.
+ * My Codeberg link is: https://codeberg.org/antoinepirlot
+ * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
 package io.github.antoinepirlot.satunes.database.services.settings.playback

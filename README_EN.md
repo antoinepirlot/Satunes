@@ -4,20 +4,21 @@
 
 <h1 align="center">Satunes (🇬🇧)</h1>
 <p align="center">
-  <a href="https://github.com/antoinepirlot/Satunes/releases/latest">
+  <a href="https://codeberg.org/antoinepirlot/Satunes/releases/latest">
     <img src="https://img.shields.io/github/release/antoinepirlot/Satunes.svg?logo=github">
   </a>
 </p>
 <p align="center">
   <a href="https://f-droid.org/app/io.github.antoinepirlot.satunes"><img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" width="200"></a>
-  <a href="https://github.com/antoinepirlot/Satunes/releases"><img src="https://raw.githubusercontent.com/NeoApplications/Neo-Backup/034b226cea5c1b30eb4f6a6f313e4dadcbb0ece4/badge_github.png" width="200"></a>
+  <a href="https://codeberg.org/antoinepirlot/Satunes/releases"><img src="https://raw.githubusercontent.com/NeoApplications/Neo-Backup/034b226cea5c1b30eb4f6a6f313e4dadcbb0ece4/badge_github.png" width="200"></a>
 </p>
 
 Vous pouvez retrouver ce fichier en [français 🇫🇷](README.md)
 
-<h1>As the United States threatens Ukraine 🇺🇦, the European Union 🇪🇺 and our democracies, I have decided to boycott most American products. <br/><br/>
-I encourage every European citizen to use European products when possible and to create new ones when there are no alternatives.<br/><br/>
-Let's not let them divide us!<br/><br/>
+<h1>Given the current circumstances, the United States has shown that it is a threat to Ukraine 🇺🇦, the European Union 🇪🇺 and our democracies.<br/>
+It is for this reason that I have decided to boycott most products from the United States.
+I encourage every European citizen to use European products whenever possible and to create new ones when there are no alternatives.<br/><br/>
+Europe is united in diversity, let's not let them divide us!<br/><br/>
 Long live the European Union 🇪🇺, Хай живе Україна 🇺🇦 and democracy.</h1>
 
 Satunes is an mp3 player on Android. Use it to listen your music from your audio files stored in your
@@ -46,6 +47,7 @@ You can reuse my code but you will have to redistribute it. This allows free sof
     <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/13.png" width = "200">
     <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/14.png" width = "200">
     <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/15.png" width = "200">
+    <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/16.png" width = "200">
 </p>
 
 # Features
@@ -69,6 +71,7 @@ You can reuse my code but you will have to redistribute it. This allows free sof
 * Share your music's files with others
 * Search into your library
 * In-app updates
+* ...
 
 # Installation
 
@@ -81,7 +84,7 @@ Otherwise, you can also follow the following steps:
 
 ## Application
 
-1) Click on [Release](https://github.com/antoinepirlot/Satunes/releases)
+1) Click on [Release](https://codeberg.org/antoinepirlot/Satunes/releases)
 2) Choose your version
 3) Click on "Assets" to deploy a menu that contains the installation file.
 4) Click on the file Satunes_vx.y.z.apk (A file will be downloaded on your device).

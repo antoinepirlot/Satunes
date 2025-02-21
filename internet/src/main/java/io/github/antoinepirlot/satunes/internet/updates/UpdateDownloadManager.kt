@@ -1,26 +1,21 @@
 /*
  * This file is part of Satunes.
  *
- *  Satunes is free software: you can redistribute it and/or modify it under
- *  the terms of the GNU General Public License as published by the Free Software Foundation,
- *  either version 3 of the License, or (at your option) any later version.
+ * Satunes is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later version.
+ * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License along with Satunes.
+ * If not, see <https://www.gnu.org/licenses/>.
  *
- *  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- *  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *  See the GNU General Public License for more details.
+ * *** INFORMATION ABOUT THE AUTHOR *****
+ * The author of this file is Antoine Pirlot, the owner of this project.
+ * You find this original project on Codeberg.
  *
- *  You should have received a copy of the GNU General Public License along with Satunes.
- *  If not, see <https://www.gnu.org/licenses/>.
- *
- *  **** INFORMATIONS ABOUT THE AUTHOR *****
- *  The author of this file is Antoine Pirlot, the owner of this project.
- *  You find this original project on github.
- *
- *  My github link is: https://github.com/antoinepirlot
- *  This current project's link is: https://github.com/antoinepirlot/Satunes
- *
- *  You can contact me via my email: pirlot.antoine@outlook.com
- *  PS: I don't answer quickly.
+ * My Codeberg link is: https://codeberg.org/antoinepirlot
+ * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
 package io.github.antoinepirlot.satunes.internet.updates
@@ -36,18 +31,8 @@ import android.os.Environment
 import androidx.annotation.RequiresApi
 import androidx.core.content.getSystemService
 import io.github.antoinepirlot.satunes.internet.R
-import io.github.antoinepirlot.satunes.internet.updates.Versions.ALPHA
-import io.github.antoinepirlot.satunes.internet.updates.Versions.ALPHA_APK_REGEX
-import io.github.antoinepirlot.satunes.internet.updates.Versions.BETA
-import io.github.antoinepirlot.satunes.internet.updates.Versions.BETA_APK_REGEX
-import io.github.antoinepirlot.satunes.internet.updates.Versions.PREVIEW
-import io.github.antoinepirlot.satunes.internet.updates.Versions.PREVIEW_APK_REGEX
-import io.github.antoinepirlot.satunes.internet.updates.Versions.RELEASES_URL
-import io.github.antoinepirlot.satunes.internet.updates.Versions.RELEASE_APK_REGEX
-import io.github.antoinepirlot.satunes.internet.updates.Versions.versionType
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import io.github.antoinepirlot.satunes.utils.utils.showToastOnUiThread
-import okhttp3.Response
 
 /**
  * @author Antoine Pirlot on 14/04/2024
@@ -57,7 +42,7 @@ import okhttp3.Response
 object UpdateDownloadManager {
     private var downloadId: Long = -1
     private const val MIME_TYPE = "application/vnd.android.package-archive"
-    private val logger = SatunesLogger.getLogger()
+    private val _logger: SatunesLogger? = SatunesLogger.getLogger()
 
     fun downloadUpdateApk(context: Context) {
         if (UpdateCheckManager.downloadStatus.value == APKDownloadStatus.CHECKING || UpdateCheckManager.downloadStatus.value == APKDownloadStatus.DOWNLOADING) {
@@ -72,10 +57,10 @@ object UpdateDownloadManager {
                     context = context,
                     message = context.getString(R.string.download_not_found)
                 )
-                logger.warning("UpdateCheckManager.updateAvailableStatus.value != UpdateAvailableStatus.AVAILABLE")
+                _logger?.warning("UpdateCheckManager.updateAvailableStatus.value != UpdateAvailableStatus.AVAILABLE")
                 return
             }
-            val downloadUrl: String = getDownloadUrl(context = context) ?: return
+            val downloadUrl: String = getDownloadUrl()
             val appName: String = downloadUrl.split("/").last()
             val downloadManager: DownloadManager = context.getSystemService()!!
             val downloadUri: Uri = Uri.parse(downloadUrl)
@@ -93,7 +78,7 @@ object UpdateDownloadManager {
             UpdateCheckManager.downloadStatus.value = APKDownloadStatus.DOWNLOADING
         } catch (e: Throwable) {
             UpdateCheckManager.downloadStatus.value = APKDownloadStatus.FAILED
-            logger.severe(e.message)
+            _logger?.severe(e.message)
             UpdateCheckManager.updateAvailableStatus.value = UpdateAvailableStatus.UNDEFINED
             throw e
         }
@@ -105,46 +90,9 @@ object UpdateDownloadManager {
      *
      * @return the download url or null if not found
      */
-    private fun getDownloadUrl(context: Context): String? {
-        val regex: Regex =
-            when (versionType) {
-                ALPHA -> ALPHA_APK_REGEX
-                BETA -> BETA_APK_REGEX
-                PREVIEW -> PREVIEW_APK_REGEX
-                else -> RELEASE_APK_REGEX
-            }
-        val res: Response = UpdateCheckManager.getUrlResponse(
-            context = context,
-            url = "${RELEASES_URL}/expanded_assets/${UpdateCheckManager.latestVersion.value}"
-        )!!
-        if (!res.isSuccessful) {
-            res.close()
-            UpdateCheckManager.downloadStatus.value = APKDownloadStatus.NOT_FOUND
-            showToastOnUiThread(
-                context = context,
-                message = context.getString(R.string.download_not_found)
-            )
-            logger.warning("HTTP code: ${res.code}")
-            return null
-        }
-        val page: String = res.body!!.string()
-        res.close()
-        var apkFileName: String? = regex.find(
-            page,
-            0
-        )?.value
-        if (apkFileName == null) {
-            UpdateCheckManager.downloadStatus.value = APKDownloadStatus.NOT_FOUND
-            showToastOnUiThread(
-                context = context,
-                message = context.getString(R.string.download_not_found)
-            )
-            logger.warning("apkFileName is null")
-            return null
-        }
-
-        apkFileName = apkFileName.drop(1).dropLast(1) //Avoid > and <
-        return "${RELEASES_URL}/download/${UpdateCheckManager.latestVersion.value}/$apkFileName"
+    private fun getDownloadUrl(): String {
+        val latestVersion: String = UpdateCheckManager.latestVersion.value!!
+        return "https://codeberg.org/antoinepirlot/Satunes/releases/download/$latestVersion/Satunes_$latestVersion.apk"
     }
 
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
@@ -176,7 +124,7 @@ object UpdateDownloadManager {
             install.data = contentUri
             context.startActivity(install)
         } catch (e: Throwable) {
-            logger.severe(e.message)
+            _logger?.severe(e.message)
             throw e
         }
     }

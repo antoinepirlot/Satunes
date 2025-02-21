@@ -2,39 +2,38 @@
  * This file is part of Satunes.
  *
  * Satunes is free software: you can redistribute it and/or modify it under
- *  the terms of the GNU General Public License as published by the Free Software Foundation,
+ * the terms of the GNU General Public License as published by the Free Software Foundation,
  * either version 3 of the License, or (at your option) any later version.
- *
  * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License along with Satunes.
  * If not, see <https://www.gnu.org/licenses/>.
  *
- * **** INFORMATIONS ABOUT THE AUTHOR *****
+ * *** INFORMATION ABOUT THE AUTHOR *****
  * The author of this file is Antoine Pirlot, the owner of this project.
- * You find this original project on github.
+ * You find this original project on Codeberg.
  *
- * My github link is: https://github.com/antoinepirlot
- * This current project's link is: https://github.com/antoinepirlot/Satunes
- *
- * You can contact me via my email: pirlot.antoine@outlook.com
- * PS: I don't answer quickly.
+ * My Codeberg link is: https://codeberg.org/antoinepirlot
+ * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
 package io.github.antoinepirlot.satunes.ui.views.media
 
-import android.annotation.SuppressLint
-import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.FabPosition
-import androidx.compose.material3.Scaffold
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
-import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
+import io.github.antoinepirlot.satunes.data.states.SatunesUiState
+import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Folder
@@ -42,59 +41,120 @@ import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
+import io.github.antoinepirlot.satunes.models.radio_buttons.SortOptions
 import io.github.antoinepirlot.satunes.ui.components.EmptyView
-import io.github.antoinepirlot.satunes.ui.components.bars.ShowCurrentMusicButton
 import io.github.antoinepirlot.satunes.ui.components.cards.media.MediaCardList
+import io.github.antoinepirlot.satunes.ui.components.dialog.SortListDialog
 
 /**
  * @author Antoine Pirlot on 01/02/24
  */
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 internal fun MediaListView(
     modifier: Modifier = Modifier,
-    playbackViewModel: PlaybackViewModel = viewModel(),
+    satunesViewModel: SatunesViewModel = viewModel(),
+    dataViewModel: DataViewModel = viewModel(),
     mediaImplCollection: Collection<MediaImpl>,
-    openMedia: (mediaImpl: MediaImpl) -> Unit,
-    openedPlaylistWithMusics: Playlist? = null,
-    onFABClick: () -> Unit,
+    collectionChanged: Boolean = false,
     header: (@Composable () -> Unit)? = null,
-    extraButtons: @Composable () -> Unit = { /*By default there's no extra buttons*/ },
-    emptyViewText: String
+    emptyViewText: String,
+    showGroupIndication: Boolean = true,
+    sort: Boolean = true,
 ) {
-    Scaffold(
-        modifier = modifier,
-        floatingActionButton = { //TODO move it to first scaffold for Android 15 targeting
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                extraButtons()
-                if (playbackViewModel.musicPlaying != null) {
-                    ShowCurrentMusicButton(onClick = onFABClick)
-                }
-            }
-        },
-        floatingActionButtonPosition = FabPosition.End
-    ) { _ ->
-        if (mediaImplCollection.isNotEmpty()) {
-            MediaCardList(
-                modifier = Modifier,
-                header = header,
-                mediaImplCollection = mediaImplCollection,
-                openMedia = openMedia,
-                openedPlaylist = openedPlaylistWithMusics
+    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+    val lazyListState = rememberLazyListState()
+    val sortOption: SortOptions = dataViewModel.sortOption
+
+    //Do not put the list to show in ui state as it will reset list scroll when user goes back to the last page
+    //Plus this system insure the list can be scrolled correctly to the first item of the list (copying a new list make it not working as expected)
+    val mediaImplListToShow: MutableList<MediaImpl> = remember { mutableStateListOf() }
+
+    val isMediaOptionsOpened: Boolean = satunesUiState.mediaToShowOptions != null
+
+    //TODO is a veritable issue change the behavior
+    LaunchedEffect(
+        listOf(
+            sortOption,
+            isMediaOptionsOpened,
+            collectionChanged,
+            mediaImplCollection
+        )
+    ) {
+        if (isMediaOptionsOpened) return@LaunchedEffect
+        else if (collectionChanged) mediaImplListToShow.clear()
+        else if (!dataViewModel.listSetUpdatedProcessed) {
+            mediaImplListToShow.clear()
+            dataViewModel.listSetUpdatedProcessed()
+        } else if (mediaImplCollection.isEmpty()) {
+            mediaImplListToShow.clear()
+        } else if (mediaImplListToShow.isNotEmpty()) {
+            lazyListState.scrollToItem(0)
+            mediaImplListToShow.clear()
+        }
+
+        if (sort) {
+            sort(
+                satunesUiState = satunesUiState,
+                lazyListState = lazyListState,
+                source = mediaImplCollection,
+                destination = mediaImplListToShow,
+                sortOption = sortOption
             )
         } else {
-            if (header != null) {
-                header()
-            } else {
-                EmptyView(
-                    modifier = Modifier,
-                    text = emptyViewText
-                )
-            }
+            mediaImplListToShow.addAll(elements = mediaImplCollection)
         }
+        dataViewModel.setMediaImplListOnScreen(mediaImplCollection = mediaImplListToShow)
+    }
+
+    if (satunesUiState.showSortDialog)
+        SortListDialog()
+
+    if (mediaImplCollection.isNotEmpty()) { //Prevent showing the empty view if the list is not empty
+        MediaCardList(
+            modifier = modifier,
+            mediaImplList = mediaImplListToShow,
+            lazyListState = lazyListState,
+            header = header,
+            showGroupIndication = showGroupIndication,
+        )
+    } else {
+        EmptyView(
+            modifier = modifier,
+            header = header,
+            text = emptyViewText
+        )
+    }
+}
+
+private suspend fun sort(
+    satunesUiState: SatunesUiState,
+    lazyListState: LazyListState,
+    source: Collection<MediaImpl>,
+    destination: MutableList<MediaImpl>,
+    sortOption: SortOptions
+) {
+    if (destination.isEmpty()) {
+        if (sortOption == SortOptions.PLAYLIST_ADDED_DATE) {
+            val playlist: Playlist = satunesUiState.currentMediaImpl as Playlist
+            destination.addAll(
+                source.sortedBy { mediaImpl: MediaImpl ->
+                    -(mediaImpl as Music).getOrder(playlist = playlist)
+                }
+            )
+        } else if (sortOption.comparator != null) {
+            destination.addAll(source.sortedWith(comparator = sortOption.comparator))
+        }
+    } else {
+        if (sortOption == SortOptions.PLAYLIST_ADDED_DATE) {
+            val playlist: Playlist = satunesUiState.currentMediaImpl as Playlist
+            destination.sortBy { mediaImpl: MediaImpl ->
+                -(mediaImpl as Music).getOrder(playlist = playlist)
+            }
+        } else if (sortOption.comparator != null) {
+            destination.sortWith(comparator = sortOption.comparator)
+        }
+        lazyListState.scrollToItem(0)
     }
 }
 
@@ -117,9 +177,7 @@ private fun MediaListViewPreview() {
     )
     MediaListView(
         mediaImplCollection = map,
-        openMedia = {},
-        onFABClick = {},
-        openedPlaylistWithMusics = null,
+        collectionChanged = false,
         emptyViewText = "No data"
     )
 }

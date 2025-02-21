@@ -1,36 +1,32 @@
 /*
  * This file is part of Satunes.
  *
- *  Satunes is free software: you can redistribute it and/or modify it under
- *  the terms of the GNU General Public License as published by the Free Software Foundation,
- *  either version 3 of the License, or (at your option) any later version.
+ * Satunes is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later version.
+ * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License along with Satunes.
+ * If not, see <https://www.gnu.org/licenses/>.
  *
- *  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- *  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *  See the GNU General Public License for more details.
+ * *** INFORMATION ABOUT THE AUTHOR *****
+ * The author of this file is Antoine Pirlot, the owner of this project.
+ * You find this original project on Codeberg.
  *
- *  You should have received a copy of the GNU General Public License along with Satunes.
- *  If not, see <https://www.gnu.org/licenses/>.
- *
- *  **** INFORMATIONS ABOUT THE AUTHOR *****
- *  The author of this file is Antoine Pirlot, the owner of this project.
- *  You find this original project on github.
- *
- *  My github link is: https://github.com/antoinepirlot
- *  This current project's link is: https://github.com/antoinepirlot/Satunes
- *
- *  You can contact me via my email: pirlot.antoine@outlook.com
- *  PS: I don't answer quickly.
+ * My Codeberg link is: https://codeberg.org/antoinepirlot
+ * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
 package io.github.antoinepirlot.satunes
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FabPosition
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBarDefaults
@@ -51,10 +47,12 @@ import io.github.antoinepirlot.satunes.data.local.LocalMainScope
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
+import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.router.Router
-import io.github.antoinepirlot.satunes.ui.components.bars.BottomAppBar
-import io.github.antoinepirlot.satunes.ui.components.bars.TopAppBar
+import io.github.antoinepirlot.satunes.ui.components.bars.bottom.BottomAppBar
+import io.github.antoinepirlot.satunes.ui.components.bars.top.TopAppBar
+import io.github.antoinepirlot.satunes.ui.components.buttons.fab.SatunesFAB
 import io.github.antoinepirlot.satunes.ui.components.dialog.WhatsNewDialog
 import io.github.antoinepirlot.satunes.ui.theme.SatunesTheme
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
@@ -68,9 +66,10 @@ import kotlinx.coroutines.CoroutineScope
 @Composable
 internal fun Satunes(
     modifier: Modifier = Modifier,
-    satunesViewModel: SatunesViewModel = viewModel()
+    satunesViewModel: SatunesViewModel = viewModel(),
+    playbackViewModel: PlaybackViewModel = viewModel(),
 ) {
-    SatunesLogger.getLogger().info("Satunes Composable")
+    SatunesLogger.getLogger()?.info("Satunes Composable")
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     SatunesTheme {
         Surface(
@@ -92,16 +91,14 @@ internal fun Satunes(
             ) {
                 Scaffold(
                     modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-                    snackbarHost = {
-                        SnackbarHost(hostState = snackBarHostState)
-                    },
                     topBar = {
                         TopAppBar(scrollBehavior = scrollBehavior)
                     },
-                    bottomBar = { BottomAppBar() }
-                ) { innerPadding ->
+                    bottomBar = { BottomAppBar() },
+                    floatingActionButton = { SatunesFAB() },
+                    floatingActionButtonPosition = FabPosition.End
+                ) { innerPadding: PaddingValues ->
                     Router(modifier = Modifier.padding(innerPadding))
-
                     if (!satunesUiState.whatsNewSeen) {
                         WhatsNewDialog(
                             onConfirm = {

@@ -1,26 +1,21 @@
 /*
  * This file is part of Satunes.
  *
- *  Satunes is free software: you can redistribute it and/or modify it under
- *  the terms of the GNU General Public License as published by the Free Software Foundation,
- *  either version 3 of the License, or (at your option) any later version.
+ * Satunes is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later version.
+ * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License along with Satunes.
+ * If not, see <https://www.gnu.org/licenses/>.
  *
- *  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- *  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *  See the GNU General Public License for more details.
+ * *** INFORMATION ABOUT THE AUTHOR *****
+ * The author of this file is Antoine Pirlot, the owner of this project.
+ * You find this original project on Codeberg.
  *
- *  You should have received a copy of the GNU General Public License along with Satunes.
- *  If not, see <https://www.gnu.org/licenses/>.
- *
- *  **** INFORMATIONS ABOUT THE AUTHOR *****
- *  The author of this file is Antoine Pirlot, the owner of this project.
- *  You find this original project on github.
- *
- *  My github link is: https://github.com/antoinepirlot
- *  This current project's link is: https://github.com/antoinepirlot/Satunes
- *
- *  You can contact me via my email: pirlot.antoine@outlook.com
- *  PS: I don't answer quickly.
+ * My Codeberg link is: https://codeberg.org/antoinepirlot
+ * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
 package io.github.antoinepirlot.satunes.ui.components.forms
@@ -31,6 +26,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material3.Button
@@ -114,25 +110,25 @@ internal fun CreateTimerForm(
             Row(
                 modifier = Modifier.fillMaxWidth(),
             ) {
-                OutlinedNumberField(
-                    modifier = Modifier.fillMaxWidth(fraction = 0.30f),
+                Field(
+                    modifier = Modifier.fillMaxWidth(fraction = 1f / 3f),
                     enabled = !isTimerRunning,
+                    farLeft = true,
                     value = hoursIntField,
                     label = stringResource(R.string.hours_text_field_label),
                     maxValue = MAX_HOURS
                 )
-                Spacer(modifier = Modifier.size(16.dp))
-                OutlinedNumberField(
-                    modifier = Modifier.fillMaxWidth(fraction = 0.49f),
+                Field(
+                    modifier = Modifier.fillMaxWidth(fraction = 1f / 2f),
                     enabled = !isTimerRunning,
                     value = minutesIntField,
                     label = stringResource(R.string.minutes_text_field_label),
                     maxValue = MAX_MINUTES
                 )
-                Spacer(modifier = Modifier.size(16.dp))
-                OutlinedNumberField(
+                Field(
                     modifier = Modifier.fillMaxWidth(),
                     enabled = !isTimerRunning,
+                    farRight = true,
                     value = secondsIntField,
                     label = stringResource(R.string.seconds_text_field_label),
                     maxValue = MAX_SECONDS
@@ -183,6 +179,35 @@ internal fun CreateTimerForm(
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun Field(
+    modifier: Modifier = Modifier,
+    farLeft: Boolean = false,
+    farRight: Boolean = false,
+    enabled: Boolean,
+    value: MutableIntState,
+    label: String,
+    maxValue: Int
+) {
+    val fieldModifier: Modifier =
+        if (farLeft)
+            Modifier.padding(end = 4.dp)
+        else if (farRight)
+            Modifier.padding(start = 4.dp)
+        else
+            Modifier.padding(horizontal = 4.dp)
+
+    Box(modifier = modifier) {
+        OutlinedNumberField(
+            modifier = fieldModifier,
+            enabled = enabled,
+            value = value,
+            label = label,
+            maxValue = maxValue
+        )
     }
 }
 

@@ -1,26 +1,21 @@
 /*
  * This file is part of Satunes.
  *
- *  Satunes is free software: you can redistribute it and/or modify it under
- *  the terms of the GNU General Public License as published by the Free Software Foundation,
- *  either version 3 of the License, or (at your option) any later version.
+ * Satunes is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later version.
+ * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License along with Satunes.
+ * If not, see <https://www.gnu.org/licenses/>.
  *
- *  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- *  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *  See the GNU General Public License for more details.
+ * *** INFORMATION ABOUT THE AUTHOR *****
+ * The author of this file is Antoine Pirlot, the owner of this project.
+ * You find this original project on Codeberg.
  *
- *  You should have received a copy of the GNU General Public License along with Satunes.
- *  If not, see <https://www.gnu.org/licenses/>.
- *
- *  **** INFORMATIONS ABOUT THE AUTHOR *****
- *  The author of this file is Antoine Pirlot, the owner of this project.
- *  You find this original project on github.
- *
- *  My github link is: https://github.com/antoinepirlot
- *  This current project's link is: https://github.com/antoinepirlot/Satunes
- *
- *  You can contact me via my email: pirlot.antoine@outlook.com
- *  PS: I don't answer quickly.
+ * My Codeberg link is: https://codeberg.org/antoinepirlot
+ * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
 package io.github.antoinepirlot.satunes.ui.views.playback.common
@@ -31,10 +26,14 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -42,6 +41,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.hapticfeedback.HapticFeedback
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalConfiguration
@@ -59,9 +59,11 @@ import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.bars.playback.MusicControlBar
 import io.github.antoinepirlot.satunes.ui.components.bars.playback.PlaybackCustomActionsBar
 import io.github.antoinepirlot.satunes.ui.components.dialog.artist.ArtistOptionsDialog
+import io.github.antoinepirlot.satunes.ui.components.images.Icon
 import io.github.antoinepirlot.satunes.ui.components.images.MusicPlayingAlbumArtwork
 
 /**
@@ -115,9 +117,10 @@ internal fun MusicPlayingControlView(
                 text = musicPlaying.title,
                 fontSize = 20.sp
             )
-            Subtitle(
+            Row(
                 modifier = Modifier
                     .padding(horizontal = padding)
+                    .clip(shape = CircleShape)
                     .combinedClickable(
                         onClick = {
                             haptics.performHapticFeedback(HapticFeedbackType.TextHandleMove)
@@ -125,12 +128,18 @@ internal fun MusicPlayingControlView(
                         },
                         onLongClick = {
                             haptics.performHapticFeedback(HapticFeedbackType.LongPress)
-                            satunesViewModel.mediaOptionsIsOpen()
+                            satunesViewModel.showMediaOptionsOf(mediaImpl = musicPlaying.artist)
                             showArtistOptions = true
                         }
                     ),
-                text = musicPlaying.artist.title
-            )
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Spacer(modifier = Modifier.size(size = 10.dp)) //Used for press animation larger zone
+                Icon(icon = SatunesIcons.ARTIST)
+                Spacer(modifier = Modifier.size(size = 5.dp))
+                Subtitle(text = musicPlaying.artist.title)
+                Spacer(modifier = Modifier.size(size = 10.dp)) //Used for press animation larger zone
+            }
             PlaybackCustomActionsBar()
             MusicControlBar(modifier = Modifier.padding(horizontal = padding))
         }
@@ -142,7 +151,7 @@ internal fun MusicPlayingControlView(
             ArtistOptionsDialog(
                 artist = musicPlaying.artist,
                 onDismissRequest = {
-                    satunesViewModel.mediaOptionsIsClosed()
+                    satunesViewModel.hideMediaOptions()
                     showArtistOptions = false
                 }
             )

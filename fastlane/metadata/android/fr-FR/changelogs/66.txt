@@ -5,4 +5,4 @@ Améliorations, optimisations et dépannage:
 * La barre de contrôle de la musique est toujours à jour même en quittant et en revenant dans la page lors de la lecture
 * Si la nouvelle valeur pour avancer ou revenir en arrière est <= 0, alors la valeur n'est pas changée
 
-Voir plus sur GitHub
+Plus d'info sur Codeberg.

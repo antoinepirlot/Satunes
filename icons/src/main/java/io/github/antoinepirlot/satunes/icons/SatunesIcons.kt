@@ -1,26 +1,21 @@
 /*
  * This file is part of Satunes.
  *
- *  Satunes is free software: you can redistribute it and/or modify it under
- *  the terms of the GNU General Public License as published by the Free Software Foundation,
- *  either version 3 of the License, or (at your option) any later version.
+ * Satunes is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later version.
+ * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License along with Satunes.
+ * If not, see <https://www.gnu.org/licenses/>.
  *
- *  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- *  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *  See the GNU General Public License for more details.
+ * *** INFORMATION ABOUT THE AUTHOR *****
+ * The author of this file is Antoine Pirlot, the owner of this project.
+ * You find this original project on Codeberg.
  *
- *  You should have received a copy of the GNU General Public License along with Satunes.
- *  If not, see <https://www.gnu.org/licenses/>.
- *
- *  **** INFORMATIONS ABOUT THE AUTHOR *****
- *  The author of this file is Antoine Pirlot, the owner of this project.
- *  You find this original project on github.
- *
- *  My github link is: https://github.com/antoinepirlot
- *  This current project's link is: https://github.com/antoinepirlot/Satunes
- *
- *  You can contact me via my email: pirlot.antoine@outlook.com
- *  PS: I don't answer quickly.
+ * My Codeberg link is: https://codeberg.org/antoinepirlot
+ * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
 package io.github.antoinepirlot.satunes.icons
@@ -29,16 +24,20 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.PlaylistAdd
 import androidx.compose.material.icons.automirrored.rounded.PlaylistPlay
 import androidx.compose.material.icons.automirrored.rounded.QueueMusic
+import androidx.compose.material.icons.automirrored.rounded.Sort
 import androidx.compose.material.icons.rounded.AccountCircle
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.AddToQueue
 import androidx.compose.material.icons.rounded.Album
+import androidx.compose.material.icons.rounded.ArrowDownward
 import androidx.compose.material.icons.rounded.ArrowDropDown
 import androidx.compose.material.icons.rounded.ArrowDropUp
+import androidx.compose.material.icons.rounded.ArrowUpward
 import androidx.compose.material.icons.rounded.BatterySaver
 import androidx.compose.material.icons.rounded.Category
 import androidx.compose.material.icons.rounded.CleaningServices
 import androidx.compose.material.icons.rounded.Close
+import androidx.compose.material.icons.rounded.DateRange
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.DirectionsCar
 import androidx.compose.material.icons.rounded.Done
@@ -53,8 +52,9 @@ import androidx.compose.material.icons.rounded.GraphicEq
 import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.LibraryMusic
 import androidx.compose.material.icons.rounded.LogoDev
+import androidx.compose.material.icons.rounded.MoreTime
 import androidx.compose.material.icons.rounded.MusicNote
-import androidx.compose.material.icons.rounded.Navigation
+import androidx.compose.material.icons.rounded.Palette
 import androidx.compose.material.icons.rounded.PauseCircle
 import androidx.compose.material.icons.rounded.PlayCircle
 import androidx.compose.material.icons.rounded.PlaylistRemove
@@ -71,6 +71,7 @@ import androidx.compose.material.icons.rounded.Shuffle
 import androidx.compose.material.icons.rounded.SkipNext
 import androidx.compose.material.icons.rounded.SkipPrevious
 import androidx.compose.material.icons.rounded.Timer
+import androidx.compose.material.icons.rounded.Title
 import androidx.compose.material.icons.rounded.Update
 import androidx.compose.material.icons.rounded.Upload
 import androidx.compose.material.icons.rounded.Warning
@@ -90,6 +91,7 @@ enum class SatunesIcons(
         imageVector = Icons.Rounded.AddToQueue,
         description = "Add to queue Icon"
     ),
+    ADDED_DATE(imageVector = Icons.Rounded.MoreTime, description = "Added Date Icon"),
     ALBUM(imageVector = Icons.Rounded.Album, description = "Album Icon"),
     ANDROID_AUTO(
         imageVector = Icons.Rounded.DirectionsCar,
@@ -97,7 +99,6 @@ enum class SatunesIcons(
     ),
     ARTIST(imageVector = Icons.Rounded.AccountCircle, description = "Artist Icon"),
     BATTERY(imageVector = Icons.Rounded.BatterySaver, description = "Battery Icon"),
-    BOTTOM_BAR(imageVector = Icons.Rounded.Navigation, description = "Bottom Bar Setting Icon"),
     CHIP_SELECTED(imageVector = Icons.Rounded.Done, description = "Chip Selected icon"),
     CLEANING(imageVector = Icons.Rounded.CleaningServices, description = "Cleaning Icon"),
     CLOSE_DROPDOWN_MENU(
@@ -112,6 +113,8 @@ enum class SatunesIcons(
     LIKED(imageVector = Icons.Rounded.Favorite, description = "Liked Icon"),
     FOLDER(imageVector = Icons.Rounded.Folder, description = "Folder Icon"),
     GENRES(imageVector = Icons.Rounded.Category, description = "Genre Icon"),
+    MOVE_DOWN(imageVector = Icons.Rounded.ArrowDownward, description = "Move Down Icon"),
+    MOVE_UP(imageVector = Icons.Rounded.ArrowUpward, description = "Move Up Icon"),
     MUSIC(imageVector = Icons.Rounded.MusicNote, description = "Music Icon"),
     MUSIC_PLAYING(imageVector = Icons.Rounded.GraphicEq, description = "Music Playing Icon"),
     OPEN_DROPDOWN_MENU(
@@ -144,10 +147,19 @@ enum class SatunesIcons(
         imageVector = Icons.Rounded.PlaylistRemove,
         description = "Playlist Remove Icon"
     ),
+    REFRESH(imageVector = Icons.Rounded.Refresh, description = "Refresh Icon"),
+    REMOVE_FROM_QUEUE(
+        imageVector = Icons.Rounded.RemoveFromQueue,
+        description = "Remove from queue Icon"
+    ),
+    REMOVE_ICON(imageVector = Icons.Rounded.Delete, description = "Remove Icon"),
     REPEAT(imageVector = Icons.Rounded.Repeat, description = "Repeat Icon"),
     REPEAT_ONE(imageVector = Icons.Rounded.RepeatOne, description = "Repeat One On Icon"),
+    RESET_SETTINGS(imageVector = Icons.Rounded.Emergency, description = "Reset Icon"),
+    REWIND(imageVector = Icons.Rounded.FastRewind, description = "Rewind Icon"),
     SEARCH(imageVector = Icons.Rounded.Search, description = "Search Icon"),
     SETTINGS(imageVector = Icons.Rounded.Settings, description = "Settings Icon"),
+    SETTING_INTERFACE(imageVector = Icons.Rounded.Palette, description = "Interface Setting"),
     SETTING_LIBRARY(
         imageVector = Icons.Rounded.LibraryMusic,
         description = "Library Setting Icon"
@@ -170,15 +182,10 @@ enum class SatunesIcons(
         imageProvider = ImageProvider(resId = R.drawable.skip_previous),
         description = "Skip Previous Icon"
     ),
+    SORT(imageVector = Icons.AutoMirrored.Rounded.Sort, description = "Sort Icon"),
     TIMER(imageVector = Icons.Rounded.Timer, description = "Timer Icon"),
+    TITLE(imageVector = Icons.Rounded.Title, description = "Title Icon"),
     UNLIKED(imageVector = Icons.Rounded.FavoriteBorder, description = "Unliked Icon"),
-    REFRESH(imageVector = Icons.Rounded.Refresh, description = "Refresh Icon"),
-    REMOVE_FROM_QUEUE(
-        imageVector = Icons.Rounded.RemoveFromQueue,
-        description = "Remove from queue Icon"
-    ),
-    REMOVE_ICON(imageVector = Icons.Rounded.Delete, description = "Remove Icon"),
-    RESET_SETTINGS(imageVector = Icons.Rounded.Emergency, description = "Reset Icon"),
-    REWIND(imageVector = Icons.Rounded.FastRewind, description = "Rewind Icon"),
     WARNING(imageVector = Icons.Rounded.Warning, description = "Warning Icon"),
+    YEARS(imageVector = Icons.Rounded.DateRange, description = "Years Icon"),
 }

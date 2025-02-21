@@ -1,6 +1,113 @@
 # Versions (🇫🇷)
 You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
+## 3.0 (Android 5.1.1 Lollipop et ultérieur)
+
+### 3.0.0
+
+Nouvelles fonctionnalités :
+
+* Possibilité de trier les médias par artistes, album et/ou genre en fonction de la page
+* Affichage de la première lettre par ordre alphabétique au dessus du premier média (ayant cette
+  lettre) dans la liste (désactivable dans les paramètres de librairies)
+* Ajout du tri par années et dernier ajout pour les musiques (dans certaines vues pour le moment)
+* L'ajout des médias dans les playlists permet maintenant de les supprimer s'ils y sont présents (
+  entièrement pour ceux qui ne sont pas des musiques)
+* Il est possible de déplacer des positions d'actions personnalisées
+* Une playlist peut être sélectionnée comme onglet par défaut
+
+Améliorations, optimisations et dépannage:
+
+* Support pour Android 15 (Vanilla Ice Cream)
+* Problèmes de chargement de la musique causant des crashs dans certaines conditions corrigé (
+  Concurrent Modification)
+* Mise à jour des textes
+* Mise à jour des libraries qui implique un léger changement de design de certains éléments (commme
+  la barre de progression)
+* Lorsque l'utilisateur change de vue d'un type de média à un autre, la barre de navigation reflète
+  le changement
+* Autres optimisations et corrections indirectes
+* Changement de la source de la mise à jour de GitHub vers Codeberg
+* Remplacement du bouton GitHub par Codeberg
+
+### 3.0.0-preview-1
+
+Améliorations, optimisations et dépannage :
+
+* Correction du problème de la selection de playlist qui s'affichait en allant dans la vue playback
+* Démarrage plus rapide
+* Correction du clique sur la musique dans la liste du playback
+* La liste des media ne retourne pas au premier élément si les options du media se ferment
+* Correction de problème liés à la navigation
+* Centrage de l'icône artiste à côté du nom d'artiste
+* Changement de la source de la mise à jour de GitHub vers Codeberg
+* Remplacement du bouton GitHub par Codeberg
+
+### 3.0.0-beta-2
+
+Améliorations, optimisations et dépannage :
+
+* Correction de quelques problèmes d'interface utilisateur
+* Mise à jour des textes
+* Suppression de certaines actions d'annulation lors de la modification des playlists car c'est plus
+  complexe maintenant
+* Correction d'un plantage lors du chargement d'une musique non existante (oui cela peut arriver
+  avec MediaStore lol)
+* Correction de l'ouverture de la playlist par défaut
+* Réinitialisation de l'ancien ordre de la liste des boutons extra dans la vue d'une playlist
+* Correction de la vue recherche
+* Autres optimisations et améliorations indirectes
+
+### 3.0.0-beta-1
+
+Nouvelles fonctionnalités :
+
+* Il est possible de déplacer des positions d'actions personnalisées
+* Une playlist peut être sélectionnée comme onglet par défaut.
+
+Améliorations, optimisations et dépannage :
+
+* Mise à jour des textes
+* Ajout d'une icône artiste à côté du titre de l'artiste dans certaines vues
+* Mise à jour de la position des éléments dans la vue de mise à jour
+* Déplacer les paramètres dédiés à au design dans les paramètre "Design"
+* Mise à jour de la structure du code
+* Correction de certains problèmes d'interface utilisateur depuis la version 3.0.0-alpha-2
+* Autres optimisations et améliorations indirectes
+
+### 3.0.0-alpha-2
+
+Nouvelles fonctionnalités:
+
+* Ajout du tri par années et dernier ajout pour les musiques (dans certaines vues pour le moment)
+* L'ajout des médias dans les playlists permet maintenant de les supprimer s'il y sont présents (
+  entièrement pour ceux qui ne sont pas des musiques)
+
+Améliorations, optimisations et dépannage:
+
+* Optimisation du démarrage
+* Lorsque la liste est triée, la liste chargée en playback correspond au tri
+* Lorsque l'utilisateur change de vue d'un type de média à un autre, la barre de navigation reflète
+  le changement
+* Autres optimisations et améliorations indirects
+
+### 3.0.0-alpha-1
+
+Nouvelles fonctionnalités:
+
+* Possibilité de trier les médias par artistes, album et/ou genre en fonction de la page
+* Affichage de la première lettre par ordre alphabétique au dessus du premier média (ayant cette
+  lettre) dans la liste (désactivable dans les paramètres de librairies)
+
+Améliorations, optimisations et dépannage:
+
+* Support pour Android 15 (Vanilla Ice Cream)
+* Problèmes de chargement de la musique causant des crash dans certaines conditions corrigé (
+  Concurrent Modification)
+* Mise à jour des libraries qui implique un léger changement de design de certains éléments (commme
+  la barre de progression)
+* Autres optimisations et corrections indirectes
+
 ## 2.5 (Android 5.1.1 Lollipop et ultérieur)
 
 ### 2.5.2

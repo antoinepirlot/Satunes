@@ -1,26 +1,21 @@
 /*
  * This file is part of Satunes.
  *
- *  Satunes is free software: you can redistribute it and/or modify it under
- *  the terms of the GNU General Public License as published by the Free Software Foundation,
- *  either version 3 of the License, or (at your option) any later version.
+ * Satunes is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later version.
+ * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License along with Satunes.
+ * If not, see <https://www.gnu.org/licenses/>.
  *
- *  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- *  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *  See the GNU General Public License for more details.
+ * *** INFORMATION ABOUT THE AUTHOR *****
+ * The author of this file is Antoine Pirlot, the owner of this project.
+ * You find this original project on Codeberg.
  *
- *  You should have received a copy of the GNU General Public License along with Satunes.
- *  If not, see <https://www.gnu.org/licenses/>.
- *
- *  **** INFORMATIONS ABOUT THE AUTHOR *****
- *  The author of this file is Antoine Pirlot, the owner of this project.
- *  You find this original project on github.
- *
- *  My github link is: https://github.com/antoinepirlot
- *  This current project's link is: https://github.com/antoinepirlot/Satunes
- *
- *  You can contact me via my email: pirlot.antoine@outlook.com
- *  PS: I don't answer quickly.
+ * My Codeberg link is: https://codeberg.org/antoinepirlot
+ * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
 package io.github.antoinepirlot.satunes.ui.components.dialog
@@ -46,6 +41,7 @@ import io.github.antoinepirlot.satunes.data.states.MediaSelectionUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.MediaSelectionViewModel
 import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
+import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
@@ -65,10 +61,15 @@ internal fun MediaSelectionDialog(
     onDismissRequest: () -> Unit,
     onConfirm: () -> Unit,
     mediaImplCollection: Collection<MediaImpl>,
+    mediaDestination: MediaImpl,
     playlistTitle: String? = null,
     icon: SatunesIcons,
 ) {
     val mediaSelectionUiState: MediaSelectionUiState by mediaSelectionViewModel.uiState.collectAsState()
+
+    //No LaunchedEffect as it crash because it's run after composition and Satunes needs this modification
+    //on composition
+    mediaSelectionViewModel.setCurrentMediaImpl(mediaImpl = mediaDestination)
     val showPlaylistCreation: Boolean = mediaSelectionUiState.showPlaylistCreation
 
     if (showPlaylistCreation) {
@@ -106,7 +107,7 @@ private fun CreateNewPlaylistForm(
                 snackBarHostState = snackBarHostState,
                 playlistTitle = playlistTitle,
                 onPlaylistAdded = {
-                    mediaSelectionViewModel.addPlaylist(dataViewModel.getPlaylist(title = playlistTitle))
+                    mediaSelectionViewModel.addPlaylist(dataViewModel.getPlaylist(title = playlistTitle)!!)
                 }
             )
             mediaSelectionViewModel.setShowPlaylistCreation(value = false)
@@ -161,7 +162,7 @@ private fun MediaSelectionDialogList(
         confirmButton = {
             TextButton(onClick = onConfirm) {
                 if (mediaImplCollection.isNotEmpty()) {
-                    NormalText(text = stringResource(id = R.string.add))
+                    NormalText(text = stringResource(id = R.string.update))
                 }
             }
         },
@@ -190,6 +191,7 @@ private fun PlaylistSelectionDialogPreview() {
         icon = SatunesIcons.PLAYLIST_ADD,
         onDismissRequest = {},
         onConfirm = {},
+        mediaDestination = Genre(""),
         mediaImplCollection = listOf()
     )
 }

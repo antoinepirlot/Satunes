@@ -7,4 +7,4 @@ New features:
 * Be able to load music's artist if the album's artist is unknown (library settings)
 * Clean playlists to removed saved music if they don't exists in loaded musics instead of cleaning automatically
 
-More details on GitHub
+More details on Codeberg.

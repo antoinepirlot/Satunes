@@ -8,4 +8,4 @@ Améliorations, optimisations et dépannage:
 * La musique suivante peut être supprimée de la liste de lecture
 * Les genres affichent de nouveau les albums
 
-Plus de détails sur GitHub
+Plus d'info sur Codeberg.

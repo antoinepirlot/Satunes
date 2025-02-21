@@ -7,7 +7,7 @@ val nameSpace: String = "io.github.antoinepirlot.satunes"
 
 android {
     namespace = nameSpace
-    compileSdk = 34
+    compileSdk = 35
 
     androidResources {
         generateLocaleConfig = true
@@ -17,9 +17,9 @@ android {
     defaultConfig {
         applicationId = nameSpace
         minSdk = 22
-        targetSdk = 34
-        versionCode = 67
-        versionName = "2.5.2"
+        targetSdk = 35
+        versionCode = 73
+        versionName = "3.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -99,7 +99,6 @@ dependencies {
     /**
      * Media
      */
-
     implementation(libs.androidx.media3.common)
     implementation(libs.androidx.media3.session)
 

@@ -1,26 +1,21 @@
 /*
  * This file is part of Satunes.
  *
- *  Satunes is free software: you can redistribute it and/or modify it under
- *  the terms of the GNU General Public License as published by the Free Software Foundation,
- *  either version 3 of the License, or (at your option) any later version.
+ * Satunes is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later version.
+ * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License along with Satunes.
+ * If not, see <https://www.gnu.org/licenses/>.
  *
- *  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- *  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *  See the GNU General Public License for more details.
+ * *** INFORMATION ABOUT THE AUTHOR *****
+ * The author of this file is Antoine Pirlot, the owner of this project.
+ * You find this original project on Codeberg.
  *
- *  You should have received a copy of the GNU General Public License along with Satunes.
- *  If not, see <https://www.gnu.org/licenses/>.
- *
- *  **** INFORMATIONS ABOUT THE AUTHOR *****
- *  The author of this file is Antoine Pirlot, the owner of this project.
- *  You find this original project on github.
- *
- *  My github link is: https://github.com/antoinepirlot
- *  This current project's link is: https://github.com/antoinepirlot/Satunes
- *
- *  You can contact me via my email: pirlot.antoine@outlook.com
- *  PS: I don't answer quickly.
+ * My Codeberg link is: https://codeberg.org/antoinepirlot
+ * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
 package io.github.antoinepirlot.satunes.playback.models
@@ -45,7 +40,7 @@ import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 @UnstableApi
 object PlaybackSessionCallback : MediaSession.Callback {
 
-    private val _logger: SatunesLogger = SatunesLogger.getLogger()
+    private val _logger: SatunesLogger? = SatunesLogger.getLogger()
     internal val SHUFFLE_COMMAND: SessionCommand = SessionCommand("SHUFFLE_COMMAND", Bundle.EMPTY)
     internal val REPEAT_COMMAND: SessionCommand = SessionCommand("REPEAT_COMMAND", Bundle.EMPTY)
 
@@ -77,25 +72,25 @@ object PlaybackSessionCallback : MediaSession.Callback {
     }
 
     private fun shuffleCommand(): ListenableFuture<SessionResult> {
-        _logger.info("Shuffle from notification")
+        _logger?.info("Shuffle from notification")
         return try {
             val playbackController: PlaybackController = PlaybackController.getInstance()
             playbackController.switchShuffleMode()
             Futures.immediateFuture(SessionResult(SessionResult.RESULT_SUCCESS))
         } catch (e: Throwable) {
-            _logger.severe(e.message)
+            _logger?.severe(e.message)
             Futures.immediateFuture(SessionResult(SessionError.ERROR_INVALID_STATE))
         }
     }
 
     private fun repeatCommand(): ListenableFuture<SessionResult> {
-        _logger.info("Repeat from notification")
+        _logger?.info("Repeat from notification")
         return try {
             val playbackController: PlaybackController = PlaybackController.getInstance()
             playbackController.switchRepeatMode()
             Futures.immediateFuture(SessionResult(SessionResult.RESULT_SUCCESS))
         } catch (e: Throwable) {
-            _logger.severe(e.message)
+            _logger?.severe(e.message)
             Futures.immediateFuture(SessionResult(SessionError.ERROR_INVALID_STATE))
         }
 
@@ -105,7 +100,7 @@ object PlaybackSessionCallback : MediaSession.Callback {
         mediaSession: MediaSession,
         controller: MediaSession.ControllerInfo
     ): ListenableFuture<MediaSession.MediaItemsWithStartPosition> {
-        _logger.info("onPlaybackResumption called")
+        _logger?.info("onPlaybackResumption called")
         return super.onPlaybackResumption(mediaSession, controller)
     }
 }

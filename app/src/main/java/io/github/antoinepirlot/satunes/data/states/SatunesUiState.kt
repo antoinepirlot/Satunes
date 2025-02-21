@@ -1,35 +1,31 @@
 /*
  * This file is part of Satunes.
  *
- *  Satunes is free software: you can redistribute it and/or modify it under
- *  the terms of the GNU General Public License as published by the Free Software Foundation,
- *  either version 3 of the License, or (at your option) any later version.
+ * Satunes is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later version.
+ * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License along with Satunes.
+ * If not, see <https://www.gnu.org/licenses/>.
  *
- *  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- *  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *  See the GNU General Public License for more details.
+ * *** INFORMATION ABOUT THE AUTHOR *****
+ * The author of this file is Antoine Pirlot, the owner of this project.
+ * You find this original project on Codeberg.
  *
- *  You should have received a copy of the GNU General Public License along with Satunes.
- *  If not, see <https://www.gnu.org/licenses/>.
- *
- *  **** INFORMATIONS ABOUT THE AUTHOR *****
- *  The author of this file is Antoine Pirlot, the owner of this project.
- *  You find this original project on github.
- *
- *  My github link is: https://github.com/antoinepirlot
- *  This current project's link is: https://github.com/antoinepirlot/Satunes
- *
- *  You can contact me via my email: pirlot.antoine@outlook.com
- *  PS: I don't answer quickly.
+ * My Codeberg link is: https://codeberg.org/antoinepirlot
+ * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
 package io.github.antoinepirlot.satunes.data.states
 
+import androidx.compose.runtime.Composable
 import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.data.viewmodels.utils.isAudioAllowed
 import io.github.antoinepirlot.satunes.database.models.BarSpeed
 import io.github.antoinepirlot.satunes.database.models.FoldersSelection
-import io.github.antoinepirlot.satunes.database.models.NavBarSection
+import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.router.utils.getNavBarSectionDestination
@@ -39,17 +35,15 @@ import io.github.antoinepirlot.satunes.router.utils.getNavBarSectionDestination
  */
 internal data class SatunesUiState(
     val whatsNewSeen: Boolean = SettingsManager.whatsNewSeen,
-    val currentDestination: Destination = getNavBarSectionDestination(navBarSection = SettingsManager.defaultNavBarSection),
+    val extraButtons: (@Composable () -> Unit)? = null,
+    val currentDestination: Destination = getNavBarSectionDestination(navBarSection = SettingsManager.defaultNavBarSection.value),
+    /**
+     * The current [MediaImpl] associated to the [currentDestination] if it is a single media destination
+     * It's null if the [currentDestination] is not a single media.
+     */
+    val currentMediaImpl: MediaImpl? = null,
     //Use this in UiSate and ViewModel as it is a particular value. It could change but most of the time it won't change
     val isAudioAllowed: Boolean = isAudioAllowed(context = MainActivity.instance.applicationContext),
-
-    val foldersChecked: Boolean = SettingsManager.foldersChecked.value,
-    val artistsChecked: Boolean = SettingsManager.artistsChecked.value,
-    val albumsChecked: Boolean = SettingsManager.albumsChecked.value,
-    val genresChecked: Boolean = SettingsManager.genresChecked.value,
-    val playlistsChecked: Boolean = SettingsManager.playlistsChecked.value,
-    val defaultNavBarSection: NavBarSection = SettingsManager.defaultNavBarSection,
-    val selectedNavBarSection: NavBarSection = defaultNavBarSection,
 
     val foldersSelectionSelected: FoldersSelection = SettingsManager.foldersSelectionSelected,
 
@@ -60,11 +54,16 @@ internal data class SatunesUiState(
     val repeatMode: Int = SettingsManager.repeatMode,
     val audioOffloadChecked: Boolean = SettingsManager.audioOffloadChecked,
     val barSpeed: BarSpeed = SettingsManager.barSpeed,
-    val isMediaOptionsOpened: Boolean = false, // TODO only used for favorite action, check to simplify it
+    /**
+     * Show the media's options dialog if not null.
+     * If not null, it represent from which media the options have to be shown on the screen.
+     */
+    val mediaToShowOptions: MediaImpl? = null,
     /**
      * This setting is true if the compilation's music has to be added to compilation's artist's music list
      */
     val compilationMusic: Boolean = SettingsManager.compilationMusic,
     val artistReplacement: Boolean = SettingsManager.artistReplacement,
-) {
-}
+    val showSortDialog: Boolean = false,
+    val showMediaSelectionDialog: Boolean = false,
+)

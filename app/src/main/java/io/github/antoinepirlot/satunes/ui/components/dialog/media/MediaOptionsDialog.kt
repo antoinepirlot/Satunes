@@ -1,26 +1,21 @@
 /*
  * This file is part of Satunes.
  *
- *  Satunes is free software: you can redistribute it and/or modify it under
- *  the terms of the GNU General Public License as published by the Free Software Foundation,
- *  either version 3 of the License, or (at your option) any later version.
+ * Satunes is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later version.
+ * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License along with Satunes.
+ * If not, see <https://www.gnu.org/licenses/>.
  *
- *  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- *  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *  See the GNU General Public License for more details.
+ * *** INFORMATION ABOUT THE AUTHOR *****
+ * The author of this file is Antoine Pirlot, the owner of this project.
+ * You find this original project on Codeberg.
  *
- *  You should have received a copy of the GNU General Public License along with Satunes.
- *  If not, see <https://www.gnu.org/licenses/>.
- *
- *  **** INFORMATIONS ABOUT THE AUTHOR *****
- *  The author of this file is Antoine Pirlot, the owner of this project.
- *  You find this original project on github.
- *
- *  My github link is: https://github.com/antoinepirlot
- *  This current project's link is: https://github.com/antoinepirlot/Satunes
- *
- *  You can contact me via my email: pirlot.antoine@outlook.com
- *  PS: I don't answer quickly.
+ * My Codeberg link is: https://codeberg.org/antoinepirlot
+ * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
 package io.github.antoinepirlot.satunes.ui.components.dialog.media
@@ -48,45 +43,43 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.playlist.PlaylistOpt
 @Composable
 internal fun MediaOptionsDialog(
     modifier: Modifier = Modifier,
-    media: MediaImpl,
-    openedPlaylist: Playlist? = null,
+    mediaImpl: MediaImpl,
     onDismissRequest: () -> Unit
 ) {
-    when (media) {
+    when (mediaImpl) {
         is Music -> MusicOptionsDialog(
             modifier = modifier,
-            music = media,
-            playlist = openedPlaylist,
+            music = mediaImpl,
             onDismissRequest = onDismissRequest
         )
 
         is Artist -> ArtistOptionsDialog(
             modifier = modifier,
-            artist = media,
+            artist = mediaImpl,
             onDismissRequest = onDismissRequest
         )
 
         is Album -> AlbumOptionsDialog(
             modifier = modifier,
-            album = media,
+            album = mediaImpl,
             onDismissRequest = onDismissRequest
         )
 
         is Genre -> GenreOptionsDialog(
             modifier = modifier,
-            genre = media,
+            genre = mediaImpl,
             onDismissRequest = onDismissRequest
         )
 
         is Playlist -> PlaylistOptionsDialog(
             modifier = modifier,
-            playlist = media,
+            playlist = mediaImpl,
             onDismissRequest = onDismissRequest
         )
 
         is Folder -> FolderOptionsDialog(
             modifier = modifier,
-            folder = media,
+            folder = mediaImpl,
             onDismissRequest = onDismissRequest
         )
     }

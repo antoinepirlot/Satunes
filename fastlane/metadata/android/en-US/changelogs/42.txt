@@ -5,4 +5,4 @@ This major update brings stabilization and performance improvements.
 * The progress bar will display predefined levels.
 * As you can have multiple media with the same title, they are sorted.
 
-More details on GitHub.
+More details on Codeberg.

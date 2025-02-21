@@ -1,26 +1,21 @@
 /*
  * This file is part of Satunes.
  *
- *  Satunes is free software: you can redistribute it and/or modify it under
- *  the terms of the GNU General Public License as published by the Free Software Foundation,
- *  either version 3 of the License, or (at your option) any later version.
+ * Satunes is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later version.
+ * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License along with Satunes.
+ * If not, see <https://www.gnu.org/licenses/>.
  *
- *  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- *  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *  See the GNU General Public License for more details.
+ * *** INFORMATION ABOUT THE AUTHOR *****
+ * The author of this file is Antoine Pirlot, the owner of this project.
+ * You find this original project on Codeberg.
  *
- *  You should have received a copy of the GNU General Public License along with Satunes.
- *  If not, see <https://www.gnu.org/licenses/>.
- *
- *  **** INFORMATIONS ABOUT THE AUTHOR *****
- *  The author of this file is Antoine Pirlot, the owner of this project.
- *  You find this original project on github.
- *
- *  My github link is: https://github.com/antoinepirlot
- *  This current project's link is: https://github.com/antoinepirlot/Satunes
- *
- *  You can contact me via my email: pirlot.antoine@outlook.com
- *  PS: I don't answer quickly.
+ * My Codeberg link is: https://codeberg.org/antoinepirlot
+ * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
 package io.github.antoinepirlot.satunes.database.services.data
@@ -55,28 +50,28 @@ object DataLoader {
     val isLoading: MutableState<Boolean> = mutableStateOf(false)
 
     // Music variables
-    private var musicIdColumn: Int? = null
-    private var musicNameColumn: Int? = null
-    private var musicTitleColumn: Int? = null
-    private var musicDurationColumn: Int? = null
-    private var musicSizeColumn: Int? = null
+    private var musicIdColumnId: Int? = null
+    private var musicNameColumnId: Int? = null
+    private var musicTitleColumnId: Int? = null
+    private var musicDurationColumnId: Int? = null
+    private var musicSizeColumnId: Int? = null
     private var absolutePathColumnId: Int? = null
 
     // Albums variables
-    private var albumNameColumn: Int? = null
-    private var albumArtistColumn: Int? = null
-    private var albumCompilationColumn: Int? = null
-    private var cdTrackNumberColumn: Int? = null
-    private var albumYearColumn: Int? = null
+    private var albumNameColumnId: Int? = null
+    private var albumArtistColumnId: Int? = null
+    private var albumCompilationColumnId: Int? = null
+    private var cdTrackNumberColumnId: Int? = null
+    private var albumYearColumnId: Int? = null
 
     // Artists variables
-    private var artistNameColumn: Int? = null
+    private var artistNameColumnId: Int? = null
 
     //Genres variables
-    private var genreNameColumn: Int? = null
+    private var genreNameColumnId: Int? = null
 
     private const val UNKNOWN_ARTIST = "<unknown>"
-    private const val UNKNOWN_ALBUM = "Unknown Album"
+    private const val UNKNOWN_ALBUM = "<unknown>"
     private const val UNKNOWN_GENRE = "<unknown>"
 
     private var projection: Array<String> = arrayOf(
@@ -91,7 +86,6 @@ object DataLoader {
         //ALBUMS
         MediaStore.Audio.Albums.ALBUM,
         MediaStore.Audio.Media.ALBUM_ARTIST,
-        //TODO test the next fields for old Android versions
         MediaStore.Audio.Media.YEAR,
 
         //ARTISTS
@@ -104,7 +98,7 @@ object DataLoader {
 
     private lateinit var selection_args: Array<String> //see loadFoldersPaths function
 
-    private val _logger = SatunesLogger.getLogger()
+    private val _logger: SatunesLogger? = SatunesLogger.getLogger()
 
     init {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
@@ -126,8 +120,8 @@ object DataLoader {
         this.selection_args = arrayOf()
 
         val foldersSelection: FoldersSelection = SettingsManager.foldersSelectionSelected
-        for (path: String in SettingsManager.foldersPathsSelectedSet.value) {
-            if (path != SettingsManager.foldersPathsSelectedSet.value.first()) {
+        for (path: String in SettingsManager.foldersPathsSelectedSet) {
+            if (path != SettingsManager.foldersPathsSelectedSet.first()) {
                 this.selection += foldersSelection.andOrQueryAttribute + ' '
             }
             this.selection += "${MediaStore.Audio.Media.DATA} "
@@ -151,7 +145,7 @@ object DataLoader {
     /**
      * Load all Media data from device's storage.
      */
-    suspend fun loadAllData(context: Context) {
+    fun loadAllData(context: Context) {
         if (isLoading.value || (isLoaded.value && DataManager.getMusicSet().isNotEmpty())) return
 
         isLoading.value = true
@@ -174,7 +168,7 @@ object DataLoader {
                 this@DataLoader.selection_args,
                 null
             )?.use {
-                _logger.info("${it.count} musics to load.")
+                _logger?.info("${it.count} musics to load.")
                 loadColumns(cursor = it)
                 while (it.moveToNext()) {
                     loadData(cursor = it, context = context)
@@ -182,6 +176,7 @@ object DataLoader {
             }
         }
         DatabaseManager.initInstance(context = context).loadAllPlaylistsWithMusic()
+
         WidgetDatabaseManager.refreshWidgets()
         isLoaded.value = true
         isLoading.value = false
@@ -192,28 +187,27 @@ object DataLoader {
      */
     private fun loadColumns(cursor: Cursor) {
         // Cache music columns indices.
-        musicIdColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID)
-        musicNameColumn =
+        musicIdColumnId = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID)
+        musicNameColumnId =
             cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DISPLAY_NAME)
-        musicTitleColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE)
-        musicDurationColumn =
+        musicTitleColumnId = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE)
+        musicDurationColumnId =
             cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION)
-        musicSizeColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE)
+        musicSizeColumnId = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE)
 
         absolutePathColumnId = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA)
 
-
         //Cache album columns indices
         try {
-            albumNameColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Albums.ALBUM)
-            albumArtistColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ARTIST)
-            cdTrackNumberColumn =
+            albumNameColumnId = cursor.getColumnIndexOrThrow(MediaStore.Audio.Albums.ALBUM)
+            albumArtistColumnId = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ARTIST)
+            cdTrackNumberColumnId =
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
                     cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.CD_TRACK_NUMBER)
                 else cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TRACK)
-            albumYearColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.YEAR)
+            albumYearColumnId = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.YEAR)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                albumCompilationColumn =
+                albumCompilationColumnId =
                     cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.COMPILATION)
             }
         } catch (_: IllegalArgumentException) {
@@ -222,7 +216,7 @@ object DataLoader {
 
         // Cache artist columns indices.
         try {
-            artistNameColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Artists.ARTIST)
+            artistNameColumnId = cursor.getColumnIndexOrThrow(MediaStore.Audio.Artists.ARTIST)
         } catch (_: IllegalArgumentException) {
             // No artist
         }
@@ -230,7 +224,7 @@ object DataLoader {
         // Cache Genre columns indices.
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                genreNameColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.GENRE)
+                genreNameColumnId = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.GENRE)
             }
         } catch (_: IllegalArgumentException) {
             // No genre
@@ -241,6 +235,10 @@ object DataLoader {
      * Load data from cursor
      */
     private fun loadData(cursor: Cursor, context: Context) {
+        val absolutePath: String = cursor.getString(absolutePathColumnId!!)
+
+        // /!\ Do not check if File exist here as it will slower the loading, it is check in Music constructor
+
         //Load Artist
         val artist: Artist = loadArtist(context = context, cursor = cursor)
 
@@ -250,7 +248,6 @@ object DataLoader {
         //Link album to artist if the album doesn't already have the album
         artist.addAlbum(album = album)
 
-        val absolutePath: String = cursor.getString(absolutePathColumnId!!)
 
         //Load Genre
         val genre: Genre = loadGenre(context = context, cursor = cursor, album = album)
@@ -269,7 +266,7 @@ object DataLoader {
                 absolutePath = absolutePath,
             )
         } catch (e: Throwable) {
-            _logger.warning(e.message)
+            _logger?.warning(e.message)
 
             // No music found
             if (album.isEmpty()) {
@@ -303,27 +300,27 @@ object DataLoader {
         absolutePath: String,
     ): Music {
         // Get values of columns for a given music.
-        val id: Long = cursor.getLong(musicIdColumn!!)
+        val id: Long = cursor.getLong(musicIdColumnId!!)
         if (id < 1) {
             val message = "Id < 1"
-            _logger.severe(message)
+            _logger?.severe(message)
             throw IllegalArgumentException(message)
         }
-        val size = cursor.getInt(musicSizeColumn!!)
+        val size = cursor.getInt(musicSizeColumnId!!)
         if (size <= 0) {
             val message = "Size <= 0"
             throw IllegalArgumentException(message)
         }
-        val duration: Long = cursor.getLong(musicDurationColumn!!)
+        val duration: Long = cursor.getLong(musicDurationColumnId!!)
         if (duration <= 0) {
             val message = "Duration <= 0"
             throw IllegalArgumentException(message)
         }
-        val displayName: String = cursor.getString(musicNameColumn!!)
-        val title: String = cursor.getString(musicTitleColumn!!)
-        val cdTrackNumber: Int = cursor.getInt(cdTrackNumberColumn!!)
+        val displayName: String = cursor.getString(musicNameColumnId!!)
+        val title: String = cursor.getString(musicTitleColumnId!!)
+        val cdTrackNumber: Int = cursor.getInt(cdTrackNumberColumnId!!)
 
-        return Music(
+        val music = Music(
             id = id,
             title = title,
             absolutePath = absolutePath,
@@ -336,6 +333,7 @@ object DataLoader {
             folder = folder,
             genre = genre,
         )
+        return music
     }
 
     /**
@@ -377,8 +375,8 @@ object DataLoader {
 
     private fun loadArtist(context: Context, cursor: Cursor): Artist {
         // Get values of columns for a given artist.
-        var name = try {
-            cursor.getString(artistNameColumn!!)
+        var name: String = try {
+            cursor.getString(artistNameColumnId!!)
         } catch (e: NullPointerException) {
             UNKNOWN_ARTIST
         }
@@ -386,7 +384,7 @@ object DataLoader {
 
         val isCompilation: Boolean =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                cursor.getInt(albumCompilationColumn!!) == 1
+                cursor.getInt(albumCompilationColumnId!!) == 1
             } else {
                 false
             }
@@ -404,14 +402,14 @@ object DataLoader {
 
     private fun loadAlbumArtist(context: Context, cursor: Cursor): Artist {
         var name: String = try {
-            cursor.getString(albumArtistColumn!!)
+            cursor.getString(albumArtistColumnId!!)
         } catch (e: NullPointerException) {
             UNKNOWN_ARTIST
         }
 
         val isCompilation: Boolean =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                cursor.getInt(albumCompilationColumn!!) == 1
+                cursor.getInt(albumCompilationColumnId!!) == 1
             } else {
                 false
             }
@@ -431,15 +429,15 @@ object DataLoader {
     }
 
     private fun loadAlbum(context: Context, cursor: Cursor): Album {
-        var name = try {
-            cursor.getString(albumNameColumn!!)
+        var name: String = try {
+            cursor.getString(albumNameColumnId!!)
         } catch (e: NullPointerException) {
             UNKNOWN_ALBUM
         }
 
         val isCompilation: Boolean =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                cursor.getInt(albumCompilationColumn!!) == 1
+                cursor.getInt(albumCompilationColumnId!!) == 1
             } else {
                 false
             }
@@ -448,7 +446,7 @@ object DataLoader {
             name = context.getString(R.string.unknown_album)
         }
 
-        val year: Int = cursor.getInt(albumYearColumn!!)
+        val year: Int = cursor.getInt(albumYearColumnId!!)
 
         val artist: Artist = loadAlbumArtist(context = context, cursor = cursor)
 
@@ -468,7 +466,7 @@ object DataLoader {
     private fun loadGenre(context: Context, cursor: Cursor, album: Album): Genre {
         var name: String = try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                cursor.getString(genreNameColumn!!)
+                cursor.getString(genreNameColumnId!!)
             } else {
                 getGenreNameForAndroidQAndLess(context = context, cursor = cursor)
             }
@@ -487,7 +485,7 @@ object DataLoader {
     private fun getGenreNameForAndroidQAndLess(context: Context, cursor: Cursor): String {
         val genreProj: Array<String> =
             arrayOf(MediaStore.Audio.Genres._ID, MediaStore.Audio.Genres.NAME)
-        val musicId: Int = cursor.getInt(musicIdColumn!!)
+        val musicId: Int = cursor.getInt(musicIdColumnId!!)
         val genreUri: Uri = MediaStore.Audio.Genres.getContentUriForAudioId("external", musicId)
         val genreCursor: Cursor? =
             context.contentResolver.query(genreUri, genreProj, null, null, null)

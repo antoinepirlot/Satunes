@@ -12,7 +12,7 @@ room {
 
 android {
     namespace = "io.github.antoinepirlot.satunes.database"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 22
@@ -50,6 +50,14 @@ dependencies {
     androidTestImplementation(libs.espresso.core)
 
     /**
+     * Mockito
+     */
+    testImplementation(libs.mockito.kotlin)
+    testImplementation(libs.androidx.core)
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.mockk)
+
+    /**
      * Serialization to JSON
      */
     implementation(libs.kotlinx.serialization.json)
@@ -75,6 +83,8 @@ dependencies {
      */
     implementation(libs.androidx.room.runtime)
     annotationProcessor(libs.androidx.room.compiler)
+    // To use Coroutine
+    implementation(libs.androidx.room.ktx)
     // To use Kotlin Symbol Processing (KSP)
     ksp(libs.androidx.room.compiler)
 

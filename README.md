@@ -4,20 +4,17 @@
 
 <h1 align="center">Satunes (🇫🇷)</h1>
 <p align="center">
-  <a href="https://github.com/antoinepirlot/Satunes/releases/latest">
-    <img src="https://img.shields.io/github/release/antoinepirlot/Satunes.svg?logo=github">
-  </a>
-</p>
-<p align="center">
-  <a href="https://f-droid.org/app/io.github.antoinepirlot.satunes"><img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" width="200"></a>
-  <a href="https://github.com/antoinepirlot/Satunes/releases"><img src="https://raw.githubusercontent.com/NeoApplications/Neo-Backup/034b226cea5c1b30eb4f6a6f313e4dadcbb0ece4/badge_github.png" width="200"></a>
+  <a href="https://f-droid.org/app/io.github.antoinepirlot.satunes"><img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" width="230"></a>
+  </br>
+  <a href="https://codeberg.org/antoinepirlot/Satunes/releases"><img src="https://get-it-on.codeberg.org/get-it-on-blue-on-white.png" width="200"></a>
 </p>
 
 You can find this file in [english 🇬🇧](README_EN.md).
 
-<h1>Comme les Etats-Unis menacent l'Ukraine 🇺🇦, l'Union Européenne 🇪🇺 et nos démocraties, j'ai décidé de boycotter la plupart des produits américains.<br/><br/>
-J'encourage chaque citoyen européen à utiliser des produits européens quand c'est possible et à en créer de nouveaux quand il n'y a pas d'alternatives.<br/><br/>
-Ne les laissons pas nous diviser!<br/><br/>
+<h1>Compte tenu des circonstances actuelles, les Etats-Unis ont montrés qu'ils sont une menace pour l'Ukraine 🇺🇦, l'Union Européenne 🇪🇺 et nos démocraties.<br/>
+C'est pour cette raison que j'ai décidé de boycotter la plupart des produits provenant des Etats-Unis.<br/><br/>
+J'encourage chaque citoyen européen à utiliser des produits européens quand c'est possible et d'en en créer de nouveaux quand il n'y a pas d'alternatives.<br/><br/>
+L'Europe est unie dans la diversité, ne les laissons pas nous diviser!<br/><br/>
 Longue vie à l'Union Européenne 🇪🇺, Хай живе Україна 🇺🇦 et à la démocratie.</h1>
 
 Satunes est un lecteur de musique pour Android. 
@@ -45,6 +42,7 @@ Tu as le droit de réutiliser mon code pour créer une nouvelle application dér
     <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/13.png" width = "200">
     <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/14.png" width = "200">
     <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/15.png" width = "200">
+    <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/16.png" width = "200">
 </p>
 
 # Fonctionnalités
@@ -68,18 +66,21 @@ Tu as le droit de réutiliser mon code pour créer une nouvelle application dér
 * Partager les fichiers musicaux avec les autres
 * Faire une recherche dans ta bibliothèque
 * Mises à jour au sein de l'application
+* ...
 
 # Installation
 Pour installer facilement, tu peux télécharger l'application sur Fdroid en cliquant sur le bouton ci-dessous.
 <p align="center">
-  <a href="https://f-droid.org/app/io.github.antoinepirlot.satunes"><img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" width="150"></a>
+  <a href="https://f-droid.org/app/io.github.antoinepirlot.satunes"><img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" width="230"></a>
+  </br>
+  <a href="https://codeberg.org/antoinepirlot/Satunes/releases"><img src="https://get-it-on.codeberg.org/get-it-on-blue-on-white.png" width="200"></a>
 </p>
 
 Sinon, tu peux également suivre les étapes suivantes:
 
 ## Application
 
-1) Clique sur [Release](https://github.com/antoinepirlot/Satunes/releases)
+1) Clique sur [Release](https://codeberg.org/antoinepirlot/Satunes/releases)
 2) Choisi ta version
 3) Clique sur "Assets" pour dérouler un menu qui contient le fichier d'installation
 4) Clique sur le fichier Satunes_vx.y.z.apk (Un fichier va se télécharger sur ton appareil)

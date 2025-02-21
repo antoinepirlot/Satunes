@@ -1,26 +1,21 @@
 /*
  * This file is part of Satunes.
  *
- *  Satunes is free software: you can redistribute it and/or modify it under
- *  the terms of the GNU General Public License as published by the Free Software Foundation,
- *  either version 3 of the License, or (at your option) any later version.
+ * Satunes is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later version.
+ * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License along with Satunes.
+ * If not, see <https://www.gnu.org/licenses/>.
  *
- *  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- *  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *  See the GNU General Public License for more details.
+ * *** INFORMATION ABOUT THE AUTHOR *****
+ * The author of this file is Antoine Pirlot, the owner of this project.
+ * You find this original project on Codeberg.
  *
- *  You should have received a copy of the GNU General Public License along with Satunes.
- *  If not, see <https://www.gnu.org/licenses/>.
- *
- *  **** INFORMATIONS ABOUT THE AUTHOR *****
- *  The author of this file is Antoine Pirlot, the owner of this project.
- *  You find this original project on github.
- *
- *  My github link is: https://github.com/antoinepirlot
- *  This current project's link is: https://github.com/antoinepirlot/Satunes
- *
- *  You can contact me via my email: pirlot.antoine@outlook.com
- *  PS: I don't answer quickly.
+ * My Codeberg link is: https://codeberg.org/antoinepirlot
+ * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
 package io.github.antoinepirlot.satunes.playback.services
@@ -28,7 +23,6 @@ package io.github.antoinepirlot.satunes.playback.services
 import android.content.ComponentName
 import android.content.Context
 import androidx.annotation.OptIn
-import androidx.compose.runtime.MutableLongState
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
@@ -147,9 +141,9 @@ internal class PlaybackController private constructor(
         internal val DEFAULT_MUSIC_PLAYING = null
 
         private var _instance: PlaybackController? = null
-        private val _logger: SatunesLogger = SatunesLogger.getLogger()
-        private val _forwardMs: MutableLongState = SettingsManager.forwardMs
-        private val _rewindMs: MutableLongState = SettingsManager.rewindMs
+        private val _logger: SatunesLogger? = SatunesLogger.getLogger()
+        private val _forwardMs: Long = SettingsManager.forwardMs
+        private val _rewindMs: Long = SettingsManager.rewindMs
 
         /**
          * Return only one instance of MediaController. If there's no instance already created
@@ -158,12 +152,12 @@ internal class PlaybackController private constructor(
          * @return the instance of MediaController
          */
         fun getInstance(): PlaybackController {
-            _logger.info("Get instance")
+            _logger?.info("Get instance")
             // TODO issues relaunch app happens here
             if (_instance == null) {
                 //TODO find a way to fix crashing app after resume after inactivity
                 val message = "The PlayBackController has not been initialized"
-                _logger.severe(message)
+                _logger?.severe(message)
                 throw IllegalStateException(message)
             }
             return _instance!!
@@ -175,7 +169,7 @@ internal class PlaybackController private constructor(
             listener: Player.Listener? = null,
             loadAllMusics: Boolean = false
         ): PlaybackController {
-            _logger.info("Init instance")
+            _logger?.info("Init instance")
             val isInitializing: Boolean = _instance == null
             if (isInitializing) {
                 val sessionToken =
@@ -200,10 +194,10 @@ internal class PlaybackController private constructor(
         private fun updateListener(isInitializing: Boolean, listener: Player.Listener?) {
             if (!isInitializing) {
                 if (listener != null && listener != this._instance?.listener) {
-                    _logger.info("Update listener")
+                    _logger?.info("Update listener")
 
                     while (!isInitialized()) {
-                        _logger.info("Waiting")
+                        _logger?.info("Waiting")
                         // Wait it is initializing
                     }
                     val wasPlaying: Boolean = _instance!!.isPlaying
@@ -221,7 +215,7 @@ internal class PlaybackController private constructor(
 
             if (listener != null && listener != this._instance?.listener) {
                 _instance!!.listener = listener
-                _logger.info("Listener loaded or changed")
+                _logger?.info("Listener loaded or changed")
             }
         }
 
@@ -230,7 +224,7 @@ internal class PlaybackController private constructor(
     }
 
     init {
-        _logger.info("Init class")
+        _logger?.info("Init class")
 
         if (loadAllMusics) {
             isLoading = true
@@ -245,13 +239,13 @@ internal class PlaybackController private constructor(
                     mediaController = mediaControllerFuture.get()
                     PlaybackManager.isInitialized.value = true
                     if (loadAllMusics) {
-                        this.loadMusics(musicSet = DataManager.getMusicSet())
+                        this.loadMusics(musics = DataManager.getMusicSet())
                     }
                 },
                 MoreExecutors.directExecutor()
             )
         } catch (e: Throwable) {
-            _logger.severe(e.message)
+            _logger?.severe(e.message)
             throw e
         }
     }
@@ -348,7 +342,7 @@ internal class PlaybackController private constructor(
             val message = """"
                 |Impossible to seek while no music is playing 
                 |$this"""".trimMargin()
-            _logger.severe(message)
+            _logger?.severe(message)
             throw IllegalStateException(message)
         }
 
@@ -376,18 +370,18 @@ internal class PlaybackController private constructor(
      * Add all music from musicMap to the mediaController in the same order.
      * If the shuffle mode is true then shuffle the playlist
      *
-     * @param musicSet the music Set to load
+     * @param musics the [Music] [Collection] to load
      * @param shuffleMode indicate if the playlistDB has to be started in shuffle mode by default false
      * @param musicToPlay the music to play
      *
      */
     fun loadMusics(
-        musicSet: Set<Music>,
+        musics: Collection<Music>,
         shuffleMode: Boolean = SettingsManager.shuffleMode,
         musicToPlay: Music? = null,
     ) {
         this.isLoading = true
-        val playlist = Playlist(musicSet = musicSet)
+        val playlist = Playlist(musics = musics)
         if (shuffleMode) {
             if (musicToPlay == null) {
                 playlist.shuffle()
@@ -716,7 +710,7 @@ internal class PlaybackController private constructor(
     }
 
     fun release() {
-        _logger.info("Releasing $this")
+        _logger?.info("Releasing $this")
         PlaybackManager.isInitialized.value = false
         if (_instance != null) {
             this.stop()
@@ -725,7 +719,7 @@ internal class PlaybackController private constructor(
             }
             _instance = null
         }
-        _logger.info("PlaybackController released")
+        _logger?.info("PlaybackController released")
     }
 
     fun getPlaylist(): SnapshotStateList<Music> {
@@ -771,8 +765,8 @@ internal class PlaybackController private constructor(
         }
     }
 
-    fun forward() = movePoisitionOf(microSeconds = _forwardMs.value)
-    fun rewind() = movePoisitionOf(microSeconds = -_rewindMs.value)
+    fun forward() = movePoisitionOf(microSeconds = _forwardMs)
+    fun rewind() = movePoisitionOf(microSeconds = -_rewindMs)
 
     private fun movePoisitionOf(microSeconds: Long) {
         if (this.musicPlaying == null) return

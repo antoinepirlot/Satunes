@@ -13,4 +13,4 @@ Suppressions:
 
 * Suppression de la visualisation de la liste de lecture dans Android Auto
 
-Plus d'info sur GitHub.
+Plus d'info sur Codeberg.

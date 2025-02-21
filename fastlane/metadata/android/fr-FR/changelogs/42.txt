@@ -5,4 +5,4 @@ Cette mise à jour majeure apporte une stabilisation et une amélioration des pe
 * La barre de progression affichera des niveaux prédéfinis.
 * Comme tu peux avoir plusieurs médias avec le même titre, ils sont classés.
 
-Plus de détails sur GitHub.
+Plus d'info sur Codeberg.

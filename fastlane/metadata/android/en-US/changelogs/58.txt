@@ -13,4 +13,4 @@ Removed features:
 
 * Removed the playlist visualization in Android Auto to avoid distractions
 
-More details on GitHub.
+More details on Codeberg.

@@ -1,0 +1,9 @@
+Nouvelles fonctionnalités :
+
+* Possibilité de trier les médias par artistes, album et/ou genre en fonction de la page
+* Affichage de la première lettre par ordre alphabétique au dessus du premier média (ayant cette
+  lettre) dans la liste (désactivable dans les paramètres de librairies)
+* Ajout du tri par années et dernier ajout pour les musiques (dans certaines vues pour le moment)
+* Il est possible de déplacer des positions d'actions personnalisées
+
+Plus d'info sur Codeberg.

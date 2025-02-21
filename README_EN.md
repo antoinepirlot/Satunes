@@ -1,30 +1,32 @@
+# Satunes has moved on [Codeberg](https://codeberg.org/antoinepirlot/Satunes)
 <p align="center">
   <img src="fastlane/metadata/android/en-US/images/icon.png" width="200">
 </p>
 
-<h1 align="center">Satunes (🇫🇷)</h1>
+<h1 align="center">Satunes (🇬🇧)</h1>
 <p align="center">
   <a href="https://f-droid.org/app/io.github.antoinepirlot.satunes"><img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" width="230"></a>
   </br>
   <a href="https://codeberg.org/antoinepirlot/Satunes/releases"><img src="https://get-it-on.codeberg.org/get-it-on-blue-on-white.png" width="200"></a>
 </p>
 
-You can find this file in [english 🇬🇧](README_EN.md).
+Vous pouvez retrouver ce fichier en [français 🇫🇷](README.md)
 
-<h1>Compte tenu des circonstances actuelles, les Etats-Unis ont montrés qu'ils sont une menace pour l'Ukraine 🇺🇦, l'Union Européenne 🇪🇺 et nos démocraties.<br/>
-C'est pour cette raison que j'ai décidé de boycotter la plupart des produits provenant des Etats-Unis.<br/><br/>
-J'encourage chaque citoyen européen à utiliser des produits européens quand c'est possible et d'en en créer de nouveaux quand il n'y a pas d'alternatives.<br/><br/>
-L'Europe est unie dans la diversité, ne les laissons pas nous diviser!<br/><br/>
-Longue vie à l'Union Européenne 🇪🇺, Хай живе Україна 🇺🇦 et à la démocratie.</h1>
+<h1>Given the current circumstances, the United States has shown that it is a threat to Ukraine 🇺🇦, the European Union 🇪🇺 and our democracies.<br/>
+It is for this reason that I have decided to boycott most products from the United States.<br/><br/>
+I encourage every European citizen to use European products whenever possible and to create new ones when there are no alternatives.<br/><br/>
+Europe is united in diversity, let's not let them divide us!<br/><br/>
+Long live the European Union 🇪🇺, Хай живе Україна 🇺🇦 and democracy.</h1>
 
-Satunes est un lecteur de musique pour Android. 
-Tu peux l'utiliser pour écouter ta musique présente sur ton appareil Android. (Android Lollipop 5.1.1 et plus récent).
+Satunes is an mp3 player on Android. Use it to listen your music from your audio files stored in your
+Android phone (Android Lollipop 5.1.1 and later).
 
-L'entierté du projet est sous la licence GNU/GPL v3 et s'applique à toutes les versions de ce projet y compris le code ajouté avant l'introduction de la licence.
+This entire project is under GNU/GPL v3 and it's applied on all versions of this project (even the
+code pushed from the very first commit.).
 
-Tu as le droit de réutiliser mon code pour créer une nouvelle application dérivée mais tu devras impérativement le republier sous la même licence afin de faire prospérer le logiciel libre 🗽.
+You can reuse my code but you will have to redistribute it. This allows free software to prosper 🗽.
 
-# Aperçu
+# Screenshots
 
 <p>
     <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/1.png" width = "200">
@@ -45,62 +47,66 @@ Tu as le droit de réutiliser mon code pour créer une nouvelle application dér
     <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/16.png" width = "200">
 </p>
 
-# Fonctionnalités
+# Features
 
-* Lire la musique sur le téléphone et sur Android Auto
-* Voir les artistes et leurs albums et musiques
-* Voir les genres et leurs albums et musiques
-* Lire la musique en fonction des dossiers, albums, genres et artistes
-* Système de playlists
-* Exportation et importation des playlists
-* Personnalisation de l'expérience:
-  * Arrrêter ou continuer la lecture si l'application est fermée
-  * Mettre sur pause ou non si:
-    * une autre application joue un autre audio
-    * Les écouteurs sont débranchés (bluetooth et câble)
-  * Choix de la vitesse du rafraichissement de la barre de progresssion
-  * Choix des modes de lectures par défaut
-  * et d'autres encore.
-* Choisir les dossiers à inclure ou exclure
-* Mettre la musique en pause après un certain temps
-* Partager les fichiers musicaux avec les autres
-* Faire une recherche dans ta bibliothèque
-* Mises à jour au sein de l'application
+* Play music on phone and on Android Auto
+* View artists and their albums and music
+* View genres and their albums and music
+* Playlists
+* Play music based on folders, albums, genres, artists and playlists
+* Export and import playlists
+* Personalization of the experience:
+    * Stop or continue playing music if the app is closed
+    * Pause or not if:
+        * another app plays another audio
+        * Headphones are unplugged (bluetooth and cable)
+    * Choice of progress bar refresh speed
+    * Choice of default playback modes
+    * And more
+* Choose folders to exclude or include
+* Puse music after a moment
+* Share your music's files with others
+* Search into your library
+* In-app updates
 * ...
 
 # Installation
-Pour installer facilement, tu peux télécharger l'application sur Fdroid en cliquant sur le bouton ci-dessous.
+
+To install easily, you can download the application from Fdroid by clicking on the button below.
 <p align="center">
   <a href="https://f-droid.org/app/io.github.antoinepirlot.satunes"><img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" width="230"></a>
 </p>
 
-Sinon, tu peux également suivre les étapes suivantes:
+Otherwise, you can also follow the following steps:
 
 ## Application
 
-1) Clique sur [Release](https://codeberg.org/antoinepirlot/Satunes/releases)
-2) Choisi ta version
-3) Clique sur "Assets" pour dérouler un menu qui contient le fichier d'installation
-4) Clique sur le fichier Satunes_vx.y.z.apk (Un fichier va se télécharger sur ton appareil)
-5) Une fois le téléchargement terminé, ouvre le fichier
-6) Autorise l'installation d'application inconnue. (C'est nécéssaire car l'application n'est dépployée sur le Play Store).
-7) Installe l'application (il est probable que tu doives recommencer l'étape 5).
-8) Je te recommande de désactiver l'installation d'applis inconnue de l'application depuis laquelle tu as ouvert le fichier.
-9) Profite de ta musique en toute liberté :D
+1) Click on [Release](https://codeberg.org/antoinepirlot/Satunes/releases)
+2) Choose your version
+3) Click on "Assets" to deploy a menu that contains the installation file.
+4) Click on the file Satunes_vx.y.z.apk (A file will be downloaded on your device).
+5) Once the file is downaloded, open it.
+6) Allow the unknwon application installation (It's required as the app is not deployed on the Play
+   Store).
+7) Install the app (it is likely that you will have to start step 5 again).
+9) I recommand you to disable unknown app installation for the app from where you installed the app.
+10) Enjoy you music freely :D
 
 ## Android Auto
 
-1) Va dans les paramètres de Android Auto.
-2) Cliques plusieurs fois sur le bouton "Version" pour activer les paramètres développeurs.
-3) Va dans les paramètres développeurs en cliquant sur les 3 boutons en haut à droite et active le paramètre "Sources Inconnues" car mon application n'est pas publiée dans le Google Play Store.
-4) Clique sur les 3 boutons comme au point 3, mais clique sur "Quitter le mode développeur" le paramètre que tu viens d'activer sera enregistré.
-5) Il n'y a plus qu'à ajouter l'application au lanceur d'application de Android Auto dans le menu "
-   Personnaliser le lanceur" et le tour est joué.
-6) Bonne écoute et bon voyage ;)
+1) Go to Android Auto settings.
+2) Multiple click on "Version" to activate dev mode.
+3) Go to Dev's settings and activate "Unknown sources" as this app is not published on Google Play
+   Store.
+4) Click on the 3 buttons as in point 3, but click on "Exit developer mode" the setting you just
+   activated will be saved.
+5) Add app in launcher.
+6) Enjoy
 
-## Soutien
+##
 
-Si l'application te plait et que tu as envie de me soutenir, n'hésite pas à le faire [ici](https://fr.tipeee.com/antoinepirlot).
+If you like the app and want to support me click [here](https://tipeee.com/antoinepirlot).
 
-# Versions
-Si tu souhaites voir les différentes versions de l'application et ce qu'elles contiennent, [clique ici.](RELEASES_FR.md)
+# Releases
+
+If you want to know about different releases and what they added, [click here.](RELEASES_EN.md)

@@ -1,4 +1,3 @@
-# Satunes has moved on [Codeberg](https://codeberg.org/antoinepirlot/Satunes)
 <p align="center">
   <img src="fastlane/metadata/android/en-US/images/icon.png" width="200">
 </p>

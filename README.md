@@ -11,7 +11,7 @@
 
 You can find this file in [english 🇬🇧](README_EN.md).
 
-<h1>Compte tenu des circonstances actuelles, les Etats-Unis ont montrés qu'ils sont une menace pour l'Ukraine 🇺🇦, l'Union Européenne 🇪🇺 et nos démocraties.
+<h1>Compte tenu des circonstances actuelles, les Etats-Unis ont montrés qu'ils sont une menace pour l'Ukraine 🇺🇦, l'Union Européenne 🇪🇺 et nos démocraties.<br/>
 C'est pour cette raison que j'ai décidé de boycotter la plupart des produits américains.<br/><br/>
 J'encourage chaque citoyen européen à utiliser des produits européens quand c'est possible et à en créer de nouveaux quand il n'y a pas d'alternatives.<br/><br/>
 Ne les laissons pas nous diviser!<br/><br/>

@@ -47,6 +47,7 @@ You can reuse my code but you will have to redistribute it. This allows free sof
     <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/13.png" width = "200">
     <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/14.png" width = "200">
     <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/15.png" width = "200">
+    <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/16.png" width = "200">
 </p>
 
 # Features

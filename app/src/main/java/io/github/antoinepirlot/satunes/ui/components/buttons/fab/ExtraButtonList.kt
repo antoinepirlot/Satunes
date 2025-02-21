@@ -67,7 +67,10 @@ internal fun ExtraButtonList(
         ExtraButton(
             icon = SatunesIcons.PLAY,
             onClick = {
-                playbackViewModel.loadMusicFromMedias(medias = mediaImplCollection)
+                playbackViewModel.loadMusicFromMedias(
+                    medias = mediaImplCollection,
+                    currentDestination = satunesUiState.currentDestination
+                )
                 openMedia(
                     playbackViewModel = playbackViewModel,
                     navController = navController
@@ -82,6 +85,7 @@ internal fun ExtraButtonList(
                 onClick = {
                     playbackViewModel.loadMusicFromMedias(
                         medias = mediaImplCollection,
+                        currentDestination = satunesUiState.currentDestination,
                         shuffleMode = true
                     )
                     openMedia(

@@ -105,7 +105,7 @@ internal fun TopAppBar(
         },
         title = {
             NormalText(
-                text = stringResource(id = R.string.app_name),
+                text = "🇺🇦 " + stringResource(id = R.string.app_name) + " 🇪🇺",
                 fontSize = 20.sp,
                 textAlign = TextAlign.Center
             )

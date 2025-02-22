@@ -21,6 +21,8 @@
 package io.github.antoinepirlot.satunes.ui.components.buttons.updates
 
 import android.content.Context
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.material3.Button
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -40,9 +42,10 @@ private const val FDROID_SATUNES_URL: String =
     "https://f-droid.org/fr/packages/io.github.antoinepirlot.satunes/"
 
 @Composable
+@RequiresApi(Build.VERSION_CODES.M)
 internal fun SeeDetailsButton(
     modifier: Modifier = Modifier,
-    text: String = stringResource(id = R.string.see_on_github),
+    text: String = stringResource(id = R.string.see_on_codeberg),
     onFdroid: Boolean = false
 ) {
     val context: Context = LocalContext.current
@@ -63,6 +66,7 @@ internal fun SeeDetailsButton(
 
 @Preview
 @Composable
+@RequiresApi(Build.VERSION_CODES.M)
 private fun SeeDetailsButtonPreview() {
     SeeDetailsButton()
 }

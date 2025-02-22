@@ -37,7 +37,7 @@ import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.jetpack_libs.components.texts.Title
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.internet.updates.Versions
+import io.github.antoinepirlot.satunes.internet.updates.Versions.TAG_RELEASE_URL
 import io.github.antoinepirlot.satunes.ui.utils.openUrl
 import io.github.antoinepirlot.satunes.internet.R as RInternet
 
@@ -83,10 +83,10 @@ internal fun WhatsNewDialog(
             TextButton(onClick = {
                 openUrl(
                     context = context,
-                    url = Versions.RELEASES_URL + '/' + versionName
+                    url = "$TAG_RELEASE_URL/$versionName"
                 )
             }) {
-                NormalText(text = stringResource(id = RInternet.string.see_on_github))
+                NormalText(text = stringResource(id = RInternet.string.see_on_codeberg))
             }
         },
     )

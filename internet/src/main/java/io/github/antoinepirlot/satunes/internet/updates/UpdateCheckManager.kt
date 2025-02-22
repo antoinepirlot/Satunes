@@ -31,9 +31,9 @@ import io.github.antoinepirlot.satunes.internet.updates.Versions.ALPHA
 import io.github.antoinepirlot.satunes.internet.updates.Versions.ALPHA_REGEX
 import io.github.antoinepirlot.satunes.internet.updates.Versions.BETA
 import io.github.antoinepirlot.satunes.internet.updates.Versions.BETA_REGEX
+import io.github.antoinepirlot.satunes.internet.updates.Versions.LATEST_RELEASE_URL
 import io.github.antoinepirlot.satunes.internet.updates.Versions.PREVIEW
 import io.github.antoinepirlot.satunes.internet.updates.Versions.PREVIEW_REGEX
-import io.github.antoinepirlot.satunes.internet.updates.Versions.RELEASES_URL
 import io.github.antoinepirlot.satunes.internet.updates.Versions.RELEASE_REGEX
 import io.github.antoinepirlot.satunes.internet.updates.Versions.TAG_RELEASE_URL
 import io.github.antoinepirlot.satunes.internet.updates.Versions.versionType
@@ -90,7 +90,7 @@ object UpdateCheckManager {
         //Check update
         try {
             //Get all versions
-            val res: Response = getUrlResponse(context = context, url = RELEASES_URL)!!
+            val res: Response = getUrlResponse(context = context, url = LATEST_RELEASE_URL)!!
             if (!res.isSuccessful) {
                 res.close()
                 UpdateAvailableStatus.CANNOT_CHECK.updateLink = null

@@ -1,0 +1,4 @@
+Improvements, optimizations and troubleshooting:
+
+* Fix crash when an sd card is loaded (an access denied was thrown, now you'll be redirected to
+  manage storage permission to fix the issue)

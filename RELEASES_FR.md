@@ -3,6 +3,13 @@ You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
 ## 3.0 (Android 5.1.1 Lollipop et ultérieur)
 
+### 3.0.1
+
+Améliorations, optimisations et dépannage:
+
+* Correction du crash lorsque une carte SD est chargée (tu seras redirigé vers les paramètres
+  d'accès à tous les fichiers pour régler le problème)
+
 ### 3.0.0
 
 Nouvelles fonctionnalités :

@@ -24,8 +24,10 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.os.Environment
 import android.provider.Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION
 import androidx.annotation.OptIn
+import androidx.annotation.RequiresApi
 import androidx.media3.common.util.UnstableApi
 import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
@@ -49,6 +51,8 @@ internal fun initSatunes(
     satunesViewModel: SatunesViewModel?,
 ) {
     SatunesLogger.getLogger()?.info("Init Satunes")
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && !Environment.isExternalStorageManager())
+        openManageExternalPermissionSetting()
     loadSatunesData(context = context, satunesViewModel = satunesViewModel)
     PlaybackManager.checkPlaybackController(context = context, loadAllMusics = false)
     setNotificationOnClick(context = context)
@@ -106,6 +110,7 @@ internal fun setNotificationOnClick(context: Context) {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.R)
 fun openManageExternalPermissionSetting() {
     val intent = Intent(ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION)
     MainActivity.instance.startActivity(intent)

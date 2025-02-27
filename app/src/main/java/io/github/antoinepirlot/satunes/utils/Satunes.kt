@@ -24,6 +24,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.provider.Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION
 import androidx.annotation.OptIn
 import androidx.media3.common.util.UnstableApi
 import io.github.antoinepirlot.satunes.MainActivity
@@ -103,4 +104,9 @@ internal fun setNotificationOnClick(context: Context) {
         )
         PlaybackService.mediaSession!!.setSessionActivity(pendingIntent)
     }
+}
+
+fun openManageExternalPermissionSetting() {
+    val intent = Intent(ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION)
+    MainActivity.instance.startActivity(intent)
 }

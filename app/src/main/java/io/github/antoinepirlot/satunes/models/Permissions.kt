@@ -20,6 +20,7 @@
 
 package io.github.antoinepirlot.satunes.models
 
+import android.Manifest.permission.MANAGE_EXTERNAL_STORAGE
 import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.Manifest.permission.READ_MEDIA_AUDIO
 import android.os.Build
@@ -36,4 +37,8 @@ internal enum class Permissions(val stringId: Int, val value: String) {
         stringId = R.string.read_external_storage_permission,
         value = READ_EXTERNAL_STORAGE
     ),
+    MANAGE_EXTERNAL_STORAGE_PERMISSION(
+        stringId = R.string.manage_external_storage_permission,
+        value = MANAGE_EXTERNAL_STORAGE
+    )
 }

@@ -32,7 +32,6 @@ import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.permissionsList
 import io.github.antoinepirlot.satunes.models.Permissions
 import io.github.antoinepirlot.satunes.ui.components.settings.permissions.ClassicPermission
-import io.github.antoinepirlot.satunes.ui.components.settings.permissions.ManageExternalStoragePermission
 
 /**
  * @author Antoine Pirlot on 29/04/2024
@@ -43,14 +42,8 @@ import io.github.antoinepirlot.satunes.ui.components.settings.permissions.Manage
 internal fun PermissionsSettingsView(modifier: Modifier = Modifier) {
     Column(modifier = modifier.fillMaxSize()) {
         Title(text = stringResource(id = R.string.permissions))
-        for (permission: Permissions in permissionsList) {
-            when (permission) {
-                Permissions.MANAGE_EXTERNAL_STORAGE_PERMISSION ->
-                    ManageExternalStoragePermission(permission = permission)
-
-                else -> ClassicPermission(permission = permission)
-            }
-        }
+        for (permission: Permissions in permissionsList)
+            ClassicPermission(permission = permission)
     }
 }
 

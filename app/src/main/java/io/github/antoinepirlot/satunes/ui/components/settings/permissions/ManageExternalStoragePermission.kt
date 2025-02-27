@@ -10,7 +10,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.models.Permissions
 import io.github.antoinepirlot.satunes.utils.openManageExternalPermissionSetting
 
@@ -18,14 +17,13 @@ import io.github.antoinepirlot.satunes.utils.openManageExternalPermissionSetting
 @Composable
 internal fun ManageExternalStoragePermission(
     modifier: Modifier = Modifier,
-    permission: Permissions,
-    permissionIcon: SatunesIcons
+    permission: Permissions
 ) {
     val isGranted: Boolean by rememberSaveable { mutableStateOf(Environment.isExternalStorageManager()) }
     Permission(
         modifier = modifier,
         isGranted = isGranted,
-        icon = permissionIcon,
+        icon = permission.icon,
         title = stringResource(permission.stringId),
         onClick = { openManageExternalPermissionSetting() },
     )
@@ -35,8 +33,5 @@ internal fun ManageExternalStoragePermission(
 @Preview
 @Composable
 fun ManageExternalStoragePermissionPreview(modifier: Modifier = Modifier) {
-    ManageExternalStoragePermission(
-        permission = Permissions.MANAGE_EXTERNAL_STORAGE_PERMISSION,
-        permissionIcon = SatunesIcons.FOLDER
-    )
+    ManageExternalStoragePermission(permission = Permissions.MANAGE_EXTERNAL_STORAGE_PERMISSION)
 }

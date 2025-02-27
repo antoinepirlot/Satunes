@@ -17,7 +17,6 @@ import com.google.accompanist.permissions.rememberPermissionState
 import com.google.accompanist.permissions.shouldShowRationale
 import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.models.Permissions
 
 @SuppressLint("NewApi")
@@ -26,8 +25,7 @@ import io.github.antoinepirlot.satunes.models.Permissions
 internal fun ClassicPermission(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
-    permission: Permissions,
-    permissionIcon: SatunesIcons
+    permission: Permissions
 ) {
     val permissionState: PermissionState =
         rememberPermissionState(permission = permission.value)
@@ -37,7 +35,7 @@ internal fun ClassicPermission(
     Permission(
         modifier = modifier,
         isGranted = permissionState.status.isGranted,
-        icon = permissionIcon,
+        icon = permission.icon,
         title = stringResource(id = permission.stringId),
         onClick = { askPermission(permissionState = permissionState) },
     )
@@ -46,10 +44,7 @@ internal fun ClassicPermission(
 @Preview
 @Composable
 private fun ClassicPermissionPreview() {
-    ClassicPermission(
-        permission = Permissions.READ_EXTERNAL_STORAGE_PERMISSION,
-        permissionIcon = SatunesIcons.FOLDER
-    )
+    ClassicPermission(permission = Permissions.READ_EXTERNAL_STORAGE_PERMISSION)
 }
 
 @OptIn(ExperimentalPermissionsApi::class)

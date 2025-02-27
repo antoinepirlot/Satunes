@@ -33,7 +33,6 @@ import io.github.antoinepirlot.jetpack_libs.components.texts.Title
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.permissionsList
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.models.Permissions
 import io.github.antoinepirlot.satunes.ui.components.settings.permissions.ClassicPermission
 import io.github.antoinepirlot.satunes.ui.components.settings.permissions.ManageExternalStoragePermission
@@ -50,20 +49,12 @@ internal fun PermissionsSettingsView(
     Column(modifier = modifier.fillMaxSize()) {
         Title(text = stringResource(id = R.string.permissions))
         for (permission: Permissions in permissionsList) {
-            @SuppressLint("NewApi")
-            val permissionIcon: SatunesIcons = when (permission) {
-                Permissions.READ_AUDIO_PERMISSION -> SatunesIcons.MUSIC
-                Permissions.READ_EXTERNAL_STORAGE_PERMISSION -> SatunesIcons.FOLDER
-                Permissions.MANAGE_EXTERNAL_STORAGE_PERMISSION -> SatunesIcons.FOLDER
-            }
             when (permission) {
                 Permissions.MANAGE_EXTERNAL_STORAGE_PERMISSION ->
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
-                        ManageExternalStoragePermission(
-                            permission = permission,
-                            permissionIcon = permissionIcon
-                        )
-                else -> ClassicPermission(permission = permission, permissionIcon = permissionIcon)
+                        ManageExternalStoragePermission(permission = permission)
+
+                else -> ClassicPermission(permission = permission)
             }
         }
     }

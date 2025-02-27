@@ -20,7 +20,6 @@
 
 package io.github.antoinepirlot.satunes
 
-import android.os.Build
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -48,7 +47,6 @@ import io.github.antoinepirlot.satunes.data.local.LocalMainScope
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
-import io.github.antoinepirlot.satunes.data.viewmodels.ErrorCatcherViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.router.Router
 import io.github.antoinepirlot.satunes.ui.components.bars.bottom.BottomAppBar
@@ -57,7 +55,6 @@ import io.github.antoinepirlot.satunes.ui.components.buttons.fab.SatunesFAB
 import io.github.antoinepirlot.satunes.ui.components.dialog.WhatsNewDialog
 import io.github.antoinepirlot.satunes.ui.theme.SatunesTheme
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
-import io.github.antoinepirlot.satunes.utils.openManageExternalPermissionSetting
 import kotlinx.coroutines.CoroutineScope
 
 /**
@@ -68,15 +65,10 @@ import kotlinx.coroutines.CoroutineScope
 @Composable
 internal fun Satunes(
     modifier: Modifier = Modifier,
-    satunesViewModel: SatunesViewModel = viewModel(),
-    errorCatcherViewModel: ErrorCatcherViewModel = viewModel()
+    satunesViewModel: SatunesViewModel = viewModel()
 ) {
     SatunesLogger.getLogger()?.info("Satunes Composable")
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
-    val needManageExternalStoragePermission: Boolean =
-        errorCatcherViewModel.needManageExternalStoragePermission
-    if (needManageExternalStoragePermission && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
-        openManageExternalPermissionSetting()
     SatunesTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
@@ -97,9 +89,7 @@ internal fun Satunes(
             ) {
                 Scaffold(
                     modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-                    topBar = {
-                        TopAppBar(scrollBehavior = scrollBehavior)
-                    },
+                    topBar = { TopAppBar(scrollBehavior = scrollBehavior) },
                     bottomBar = { BottomAppBar() },
                     floatingActionButton = { SatunesFAB() },
                     floatingActionButtonPosition = FabPosition.End

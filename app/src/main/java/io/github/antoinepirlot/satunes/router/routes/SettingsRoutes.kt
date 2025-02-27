@@ -100,10 +100,7 @@ internal fun NavGraphBuilder.settingsRoutes(
             onStart(it)
         }
         // Pass it as param to fix no recomposition when permission granted
-        PermissionsSettingsView(
-            modifier = Modifier.padding(horizontal = 16.dp),
-            satunesViewModel = satunesViewModel
-        )
+        PermissionsSettingsView(modifier = Modifier.padding(horizontal = 16.dp))
     }
 
     composable(Destination.BATTERY_SETTINGS.link) {

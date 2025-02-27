@@ -20,20 +20,32 @@
 
 package io.github.antoinepirlot.satunes.models
 
+import android.Manifest.permission.MANAGE_EXTERNAL_STORAGE
 import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.Manifest.permission.READ_MEDIA_AUDIO
 import android.os.Build
 import androidx.annotation.RequiresApi
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.icons.SatunesIcons
 
 /**
  * @author Antoine Pirlot on 29/04/2024
  */
-internal enum class Permissions(val stringId: Int, val value: String) {
+internal enum class Permissions(val stringId: Int, val value: String, val icon: SatunesIcons) {
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-    READ_AUDIO_PERMISSION(R.string.read_audio_permission, value = READ_MEDIA_AUDIO),
+    READ_AUDIO_PERMISSION(
+        R.string.read_audio_permission,
+        value = READ_MEDIA_AUDIO,
+        icon = SatunesIcons.MUSIC
+    ),
     READ_EXTERNAL_STORAGE_PERMISSION(
         stringId = R.string.read_external_storage_permission,
-        value = READ_EXTERNAL_STORAGE
+        value = READ_EXTERNAL_STORAGE,
+        icon = SatunesIcons.FOLDER
     ),
+    MANAGE_EXTERNAL_STORAGE_PERMISSION(
+        stringId = R.string.manage_external_storage_permission,
+        value = MANAGE_EXTERNAL_STORAGE,
+        icon = SatunesIcons.FOLDER
+    )
 }

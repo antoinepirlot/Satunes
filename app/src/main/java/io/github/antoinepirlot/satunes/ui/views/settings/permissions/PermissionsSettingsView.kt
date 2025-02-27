@@ -21,6 +21,7 @@
 package io.github.antoinepirlot.satunes.ui.views.settings.permissions
 
 import android.annotation.SuppressLint
+import android.os.Build
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -28,7 +29,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import io.github.antoinepirlot.jetpack_libs.components.texts.Title
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.permissionsList
@@ -36,14 +36,12 @@ import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.models.Permissions
 import io.github.antoinepirlot.satunes.ui.components.settings.permissions.ClassicPermission
+import io.github.antoinepirlot.satunes.ui.components.settings.permissions.ManageExternalStoragePermission
 
 /**
  * @author Antoine Pirlot on 29/04/2024
  */
 
-//TODO refactor to use manage external storage and do not have poor code with permissionState
-@SuppressLint("NewApi")
-@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 internal fun PermissionsSettingsView(
     modifier: Modifier = Modifier,
@@ -56,9 +54,15 @@ internal fun PermissionsSettingsView(
             val permissionIcon: SatunesIcons = when (permission) {
                 Permissions.READ_AUDIO_PERMISSION -> SatunesIcons.MUSIC
                 Permissions.READ_EXTERNAL_STORAGE_PERMISSION -> SatunesIcons.FOLDER
-                else -> throw UnsupportedOperationException("Wrong permission")
+                Permissions.MANAGE_EXTERNAL_STORAGE_PERMISSION -> SatunesIcons.FOLDER
             }
             when (permission) {
+                Permissions.MANAGE_EXTERNAL_STORAGE_PERMISSION ->
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
+                        ManageExternalStoragePermission(
+                            permission = permission,
+                            permissionIcon = permissionIcon
+                        )
                 else -> ClassicPermission(permission = permission, permissionIcon = permissionIcon)
             }
         }

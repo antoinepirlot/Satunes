@@ -10,7 +10,7 @@ object ErrorCatcher {
 
     @RequiresApi(Build.VERSION_CODES.R)
     val needManageExternalStoragePermission: MutableState<Boolean> =
-        mutableStateOf(Environment.isExternalStorageManager())
+        mutableStateOf(!Environment.isExternalStorageManager())
 
     @RequiresApi(Build.VERSION_CODES.R)
     fun manageExternalStoragePermissionNeeded() {

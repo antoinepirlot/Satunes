@@ -1,0 +1,4 @@
+Améliorations, optimisations et dépannage:
+
+* Correction du crash lorsque une carte SD est chargée (tu seras redirigé vers les paramètres
+  d'accès à tous les fichiers pour régler le problème)

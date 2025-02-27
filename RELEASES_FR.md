@@ -7,8 +7,8 @@ You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
 Améliorations, optimisations et dépannage:
 
-* Correction du crash lorsque une carte SD est chargée (tu seras redirigé vers les paramètres
-  d'accès à tous les fichiers pour régler le problème)
+* Correction d'un crash lors du chargement d'une carte SD. Le tri par date de dernier ajout est
+  temporairement indisponible pour les fichiers stockés sur des cartes SD.
 
 ### 3.0.0
 

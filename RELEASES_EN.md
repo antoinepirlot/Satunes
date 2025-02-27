@@ -7,8 +7,8 @@ Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
 Improvements, optimizations and troubleshooting:
 
-* Fix crash when an sd card is loaded (an access denied was thrown, now you'll be redirected to
-  manage storage permission to fix the issue)
+* Fix crash when an sd card is loaded. Sorting by last added date temporarily unavailable for files
+  stored in sd cards.
 
 ### 3.0.0
 

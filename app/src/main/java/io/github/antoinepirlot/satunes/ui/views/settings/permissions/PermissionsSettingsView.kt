@@ -21,18 +21,15 @@
 package io.github.antoinepirlot.satunes.ui.views.settings.permissions
 
 import android.annotation.SuppressLint
-import android.os.Build
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.texts.Title
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.permissionsList
-import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.models.Permissions
 import io.github.antoinepirlot.satunes.ui.components.settings.permissions.ClassicPermission
 import io.github.antoinepirlot.satunes.ui.components.settings.permissions.ManageExternalStoragePermission
@@ -41,18 +38,15 @@ import io.github.antoinepirlot.satunes.ui.components.settings.permissions.Manage
  * @author Antoine Pirlot on 29/04/2024
  */
 
+@SuppressLint("NewApi")
 @Composable
-internal fun PermissionsSettingsView(
-    modifier: Modifier = Modifier,
-    satunesViewModel: SatunesViewModel = viewModel()
-) {
+internal fun PermissionsSettingsView(modifier: Modifier = Modifier) {
     Column(modifier = modifier.fillMaxSize()) {
         Title(text = stringResource(id = R.string.permissions))
         for (permission: Permissions in permissionsList) {
             when (permission) {
                 Permissions.MANAGE_EXTERNAL_STORAGE_PERMISSION ->
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
-                        ManageExternalStoragePermission(permission = permission)
+                    ManageExternalStoragePermission(permission = permission)
 
                 else -> ClassicPermission(permission = permission)
             }

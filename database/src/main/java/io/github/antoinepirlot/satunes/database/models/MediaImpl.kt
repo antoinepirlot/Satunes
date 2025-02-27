@@ -28,7 +28,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import io.github.antoinepirlot.satunes.database.models.comparators.StringComparator
+import io.github.antoinepirlot.satunes.database.services.data.ErrorCatcher
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
+import java.nio.file.AccessDeniedException
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.nio.file.attribute.BasicFileAttributes
@@ -106,9 +108,16 @@ abstract class MediaImpl(
 
     @RequiresApi(Build.VERSION_CODES.O)
     protected fun getCreationDate(path: String): Long {
-        val filePath = Paths.get(path)
-        val attrs = Files.readAttributes(filePath, BasicFileAttributes::class.java)
-        return attrs.creationTime().toMillis()
+        try {
+            val filePath = Paths.get(path)
+            val attrs = Files.readAttributes(filePath, BasicFileAttributes::class.java)
+            return attrs.creationTime().toMillis()
+        } catch (_: AccessDeniedException) {
+            //TODO create a modal that informs the user why it is required
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
+                ErrorCatcher.manageExternalStoragePermissionNeeded()
+            return 0
+        }
     }
 
     protected fun listUpdated() {

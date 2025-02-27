@@ -3,6 +3,13 @@ Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
 ## 3.0 (Android 5.1.1 Lollipop and later
 
+### 3.0.1
+
+Improvements, optimizations and troubleshooting:
+
+* Fix crash when an sd card is loaded (an access denied was thrown, now you'll be redirected to
+  manage storage permission to fix the issue)
+
 ### 3.0.0
 
 New features:

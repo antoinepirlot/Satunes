@@ -94,7 +94,7 @@ internal fun PlaylistListView(
         if (playlistSet == null) return
 
         MediaListView(
-            mediaImplCollection = playlistSet!!,
+            mediaImplList = playlistSet!!.toMutableList(),
             collectionChanged = setChanged,
             emptyViewText = stringResource(id = R.string.no_playlists),
             showGroupIndication = false,

@@ -71,7 +71,7 @@ internal fun GenreView(
 
     MediaListView(
         modifier = modifier,
-        mediaImplCollection = musicSet,
+        mediaImplList = musicSet.toMutableList(),
         collectionChanged = setChanged,
         header = if (albumSet.isNotEmpty()) {
             {

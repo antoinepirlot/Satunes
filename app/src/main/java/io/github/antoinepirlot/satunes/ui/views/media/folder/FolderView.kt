@@ -59,7 +59,7 @@ internal fun FolderView(
     Column(modifier = modifier) {
         FolderPath(folder)
         MediaListView(
-            mediaImplCollection = folder.getSubFolderListWithMusics(),
+            mediaImplList = folder.getSubFolderListWithMusics().toMutableList(),
             emptyViewText = stringResource(id = R.string.no_music)
         )
     }

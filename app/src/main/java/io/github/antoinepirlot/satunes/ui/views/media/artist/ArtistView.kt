@@ -73,7 +73,7 @@ internal fun ArtistView(
 
     MediaListView(
         modifier = modifier,
-        mediaImplCollection = musicSet,
+        mediaImplList = musicSet.toMutableList(),
         collectionChanged = musicSetChanged,
         header = if (albumSet.isNotEmpty()) {
             {

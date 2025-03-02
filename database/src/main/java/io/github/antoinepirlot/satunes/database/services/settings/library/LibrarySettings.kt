@@ -30,6 +30,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import io.github.antoinepirlot.satunes.database.models.FoldersSelection
+import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager.dataStore
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -60,10 +61,12 @@ internal object LibrarySettings {
     // VARIABLES
 
     var foldersSelectionSelected: FoldersSelection = DEFAULT_FOLDERS_SELECTION_SELECTED
-        private set
-    var foldersPathsSelectedCollection: Collection<String> =
+        private set(value) {
+            field = value
+            SettingsManager.foldersSelectionSelected = field
+        }
+    val foldersPathsSelectedCollection: Collection<String> =
         mutableStateListOf(DEFAULT_SELECTED_PATH)
-        private set
 
     /**
      * This setting is true if the compilation's music has to be added to compilation's artist's music list
@@ -81,7 +84,7 @@ internal object LibrarySettings {
             val paths: Collection<String> =
                 preferences[SELECTED_PATHS_KEY] ?: setOf(DEFAULT_SELECTED_PATH)
             (this.foldersPathsSelectedCollection as MutableCollection<String>).clear()
-            (this.foldersPathsSelectedCollection as MutableCollection<String>).addAll(paths)
+            (this.foldersPathsSelectedCollection).addAll(paths)
 
             compilationMusic = preferences[COMPILATION_MUSIC_KEY] ?: DEFAULT_COMPILATION_MUSIC
 
@@ -164,7 +167,7 @@ internal object LibrarySettings {
     suspend fun resetFoldersSettings(context: Context) {
         context.dataStore.edit { preferences: MutablePreferences ->
             (this.foldersPathsSelectedCollection as MutableCollection<String>).clear()
-            (this.foldersPathsSelectedCollection as MutableCollection<String>)
+            (this.foldersPathsSelectedCollection)
                 .add(DEFAULT_SELECTED_PATH)
             preferences[SELECTED_PATHS_KEY] = this.foldersPathsSelectedCollection.toSet()
         }

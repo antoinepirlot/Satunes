@@ -93,7 +93,8 @@ object SettingsManager {
         get() = SearchSettings.musicsFilter
 
     // Library Settings
-    val foldersSelectionSelected: FoldersSelection = LibrarySettings.foldersSelectionSelected
+    var foldersSelectionSelected: FoldersSelection = LibrarySettings.foldersSelectionSelected
+        internal set
     val foldersPathsSelectedSet: Collection<String> = LibrarySettings.foldersPathsSelectedCollection
 
     /**

@@ -29,7 +29,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
-import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.ui.components.buttons.fab.ExtraButtonList
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 
@@ -44,7 +44,8 @@ internal fun AllMusicsListView(
     dataViewModel: DataViewModel = viewModel(),
 ) {
     //Find a way to do something more aesthetic but it works
-    val musicSet: Set<Music> = dataViewModel.getMusicSet()
+//    val musicSet: Set<Music> = dataViewModel.getMusicSet()
+    val musicSet: Set<MediaImpl> = dataViewModel.getMusicSet()
 
     LaunchedEffect(key1 = dataViewModel.isLoaded) {
         if (musicSet.isNotEmpty())

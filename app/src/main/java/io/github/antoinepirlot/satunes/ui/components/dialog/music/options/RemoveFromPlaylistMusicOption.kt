@@ -50,7 +50,7 @@ internal fun RemoveFromPlaylistMusicOption(
     dataViewModel: DataViewModel = viewModel(),
     music: Music,
     playlist: Playlist,
-    onFinished: () -> Unit,
+    onFinished: (() -> Unit)?,
 ) {
     val scope: CoroutineScope = LocalMainScope.current
     val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
@@ -73,7 +73,7 @@ internal fun RemoveFromPlaylistMusicOption(
                     music = music,
                     playlist = playlist
                 )
-                onFinished()
+                onFinished?.invoke()
             }
         )
     }

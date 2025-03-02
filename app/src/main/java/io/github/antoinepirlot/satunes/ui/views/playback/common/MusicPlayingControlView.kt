@@ -55,7 +55,6 @@ import io.github.antoinepirlot.jetpack_libs.components.models.ScreenSizes
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.jetpack_libs.components.texts.Subtitle
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
-import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Music
@@ -74,7 +73,6 @@ import io.github.antoinepirlot.satunes.ui.components.images.MusicPlayingAlbumArt
 @Composable
 internal fun MusicPlayingControlView(
     modifier: Modifier = Modifier,
-    satunesViewModel: SatunesViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
     onAlbumClick: (album: Album?) -> Unit,
     onArtistClick: (artist: Artist) -> Unit,
@@ -128,7 +126,6 @@ internal fun MusicPlayingControlView(
                         },
                         onLongClick = {
                             haptics.performHapticFeedback(HapticFeedbackType.LongPress)
-                            satunesViewModel.showMediaOptionsOf(mediaImpl = musicPlaying.artist)
                             showArtistOptions = true
                         }
                     ),
@@ -151,7 +148,6 @@ internal fun MusicPlayingControlView(
             ArtistOptionsDialog(
                 artist = musicPlaying.artist,
                 onDismissRequest = {
-                    satunesViewModel.hideMediaOptions()
                     showArtistOptions = false
                 }
             )

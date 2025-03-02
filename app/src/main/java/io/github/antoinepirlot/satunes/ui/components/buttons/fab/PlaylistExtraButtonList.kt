@@ -65,7 +65,7 @@ internal fun PlaylistExtraButtonList(
         )
     }
 
-    if (satunesUiState.showMediaSelectionDialog && satunesUiState.mediaToShowOptions == null) {
+    if (satunesUiState.showMediaSelectionDialog) {
         MediaSelectionDialog(
             onDismissRequest = { satunesViewModel.hideMediaSelectionDialog() },
             onConfirm = {

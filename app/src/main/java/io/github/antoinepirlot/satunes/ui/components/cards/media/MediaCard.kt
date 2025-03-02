@@ -33,6 +33,9 @@ import androidx.compose.material3.ListItemDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -94,7 +97,9 @@ internal fun MediaCard(
     val isInPlaybackView: Boolean =
         satunesUiState.currentDestination.category == DestinationCategory.PLAYBACK
 
-    val showMediaOptions: Boolean = satunesUiState.mediaToShowOptions == mediaImpl
+//    val showMediaOptions: Boolean = satunesUiState.mediaToShowOptions == mediaImpl
+    var showMediaOptions: Boolean by rememberSaveable { mutableStateOf(false) }
+
     val title: String =
         if (mediaImpl is Folder && mediaImpl.parentFolder == null) {
             getRootFolderName(title = mediaImpl.title)
@@ -124,7 +129,7 @@ internal fun MediaCard(
             onLongClick = if (enableExtraOptions) {
                 {
                     haptics.performHapticFeedback(HapticFeedbackType.LongPress)
-                    satunesViewModel.showMediaOptionsOf(mediaImpl = mediaImpl)
+                    showMediaOptions = true
                 }
             } else null
         )
@@ -193,7 +198,7 @@ internal fun MediaCard(
         MediaOptionsDialog(
             mediaImpl = mediaImpl,
             onDismissRequest = {
-                satunesViewModel.hideMediaOptions()
+                showMediaOptions = false
             }
         )
     }

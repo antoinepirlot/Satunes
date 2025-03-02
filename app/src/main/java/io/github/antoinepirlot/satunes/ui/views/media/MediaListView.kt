@@ -69,17 +69,21 @@ internal fun MediaListView(
     val lazyListState = rememberLazyListState()
     val listToShow: MutableList<MediaImpl> = remember { mediaImplCollection.toMutableStateList() }
     val sortOption: SortOptions = dataViewModel.sortOption
-    val isMediaOptionsOpened: Boolean = satunesUiState.mediaToShowOptions != null
 
-    LaunchedEffect(key1 = sortOption, key2 = isMediaOptionsOpened, key3 = collectionChanged) {
-        if (isMediaOptionsOpened) return@LaunchedEffect
-        val listDiff: Boolean = listToShow !== dataUiState.mediaImplListOnScreen
-        if (sort && sortOption != dataUiState.appliedSortOption || listDiff) {
+    LaunchedEffect(key1 = collectionChanged) {
+        // Prevent doing twice the same thing at launching and showing empty text temporarily
+        if (dataUiState.appliedSortOption == null) return@LaunchedEffect
+        listToShow.clear()
+        listToShow.addAll(elements = mediaImplCollection)
+    }
+
+    LaunchedEffect(key1 = sortOption, key2 = collectionChanged) {
+        if (sort && sortOption != dataUiState.appliedSortOption || collectionChanged) {
             dataViewModel.sort(
                 satunesUiState = satunesUiState,
                 list = listToShow,
             )
-            if (!listDiff)
+            if (!collectionChanged)
                 lazyListState.scrollToItem(0)
             else {
                 lazyListState.scrollToItem(

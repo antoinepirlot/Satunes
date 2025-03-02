@@ -53,7 +53,7 @@ internal fun AddToPlaylistMediaOption(
     dataViewModel: DataViewModel = viewModel(),
     mediaSelectionViewModel: MediaSelectionViewModel = viewModel(),
     mediaImpl: MediaImpl,
-    onFinished: () -> Unit
+    onFinished: (() -> Unit)?
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     val scope: CoroutineScope = LocalMainScope.current
@@ -88,7 +88,7 @@ internal fun AddToPlaylistMediaOption(
                     mediaImpl = mediaImpl
                 )
                 satunesViewModel.hideMediaSelectionDialog()
-                onFinished()
+                onFinished?.invoke()
             },
             mediaImplCollection = playlistSet,
             mediaDestination = mediaImpl,

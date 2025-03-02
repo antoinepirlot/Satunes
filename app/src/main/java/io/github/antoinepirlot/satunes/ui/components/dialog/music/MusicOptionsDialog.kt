@@ -76,13 +76,13 @@ internal fun MusicOptionsDialog(
             Column {
                 val musicPlaying: Music? = playbackViewModel.musicPlaying
                 LikeUnlikeMusicOption(music = music)
-                AddToPlaylistMediaOption(mediaImpl = music, onFinished = onDismissRequest)
+                AddToPlaylistMediaOption(mediaImpl = music, onFinished = null)
 
                 if (currentMediaImpl is Playlist) {
                     RemoveFromPlaylistMusicOption(
                         music = music,
                         playlist = currentMediaImpl,
-                        onFinished = onDismissRequest
+                        onFinished = null
                     )
                 }
 

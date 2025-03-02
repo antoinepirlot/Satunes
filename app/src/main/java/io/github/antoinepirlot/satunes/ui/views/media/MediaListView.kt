@@ -70,14 +70,20 @@ internal fun MediaListView(
     val listToShow: MutableList<MediaImpl> = remember { mediaImplCollection.toMutableStateList() }
     val sortOption: SortOptions = dataViewModel.sortOption
 
+    LaunchedEffect(key1 = collectionChanged) {
+        // Prevent doing twice the same thing at launching and showing empty text temporarily
+        if (dataUiState.appliedSortOption == null) return@LaunchedEffect
+        listToShow.clear()
+        listToShow.addAll(elements = mediaImplCollection)
+    }
+
     LaunchedEffect(key1 = sortOption, key2 = collectionChanged) {
-        val listDiff: Boolean = listToShow !== dataUiState.mediaImplListOnScreen
-        if (sort && sortOption != dataUiState.appliedSortOption || listDiff) {
+        if (sort && sortOption != dataUiState.appliedSortOption || collectionChanged) {
             dataViewModel.sort(
                 satunesUiState = satunesUiState,
                 list = listToShow,
             )
-            if (!listDiff)
+            if (!collectionChanged)
                 lazyListState.scrollToItem(0)
             else {
                 lazyListState.scrollToItem(

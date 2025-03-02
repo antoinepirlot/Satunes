@@ -93,7 +93,7 @@ internal fun AlbumView(
 
     MediaListView(
         modifier = modifier,
-        mediaImplList = musicSet.toMutableList(),
+        mediaImplCollection = musicSet,
         collectionChanged = setChanged,
         header = {
             Header(album = album)

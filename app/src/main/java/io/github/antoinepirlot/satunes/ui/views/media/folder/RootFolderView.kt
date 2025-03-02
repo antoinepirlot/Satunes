@@ -61,7 +61,7 @@ internal fun RootFolderView(
 
     MediaListView(
         modifier = modifier,
-        mediaImplList = rootFolderSet.toMutableList(),
+        mediaImplCollection = rootFolderSet,
         emptyViewText = stringResource(id = R.string.no_folder)
     )
 }

@@ -27,7 +27,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -55,7 +57,7 @@ internal fun MediaListView(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
     dataViewModel: DataViewModel = viewModel(),
-    mediaImplList: MutableList<MediaImpl>,
+    mediaImplCollection: Collection<MediaImpl>,
     collectionChanged: Boolean = false,
     header: (@Composable () -> Unit)? = null,
     emptyViewText: String,
@@ -65,29 +67,37 @@ internal fun MediaListView(
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     val dataUiState: DataUiState by dataViewModel.uiState.collectAsState()
     val lazyListState = rememberLazyListState()
+    val listToShow: MutableList<MediaImpl> = remember { mediaImplCollection.toMutableStateList() }
     val sortOption: SortOptions = dataViewModel.sortOption
     val isMediaOptionsOpened: Boolean = satunesUiState.mediaToShowOptions != null
 
     LaunchedEffect(key1 = sortOption, key2 = isMediaOptionsOpened, key3 = collectionChanged) {
         if (isMediaOptionsOpened) return@LaunchedEffect
-        val listDiff: Boolean = mediaImplList !== dataUiState.mediaImplListOnScreen
+        val listDiff: Boolean = listToShow !== dataUiState.mediaImplListOnScreen
         if (sort && sortOption != dataUiState.appliedSortOption || listDiff) {
             dataViewModel.sort(
                 satunesUiState = satunesUiState,
-                list = mediaImplList,
+                list = listToShow,
             )
-            dataViewModel.setMediaImplListOnScreen(mediaImplCollection = mediaImplList)
-            if (!listDiff) lazyListState.scrollToItem(0)
+            if (!listDiff)
+                lazyListState.scrollToItem(0)
+            else {
+                lazyListState.scrollToItem(
+                    index = lazyListState.firstVisibleItemIndex,
+                    scrollOffset = lazyListState.firstVisibleItemScrollOffset
+                ) //Prevent scroll to anywhere else when back gesture
+                dataViewModel.setMediaImplListOnScreen(mediaImplCollection = listToShow)
+            }
         }
     }
 
     if (satunesUiState.showSortDialog)
         SortListDialog()
 
-    if (mediaImplList.isNotEmpty()) { //Prevent showing the empty view if the list is not empty
+    if (listToShow.isNotEmpty()) {
         MediaCardList(
             modifier = modifier,
-            mediaImplList = mediaImplList,
+            mediaImplList = listToShow,
             lazyListState = lazyListState,
             header = header,
             showGroupIndication = showGroupIndication,
@@ -120,7 +130,7 @@ private fun MediaListViewPreview() {
         )
     )
     MediaListView(
-        mediaImplList = list,
+        mediaImplCollection = list,
         collectionChanged = false,
         emptyViewText = "No data"
     )

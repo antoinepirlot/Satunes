@@ -80,7 +80,7 @@ internal fun PlaylistView(
 
     MediaListView(
         modifier = modifier,
-        mediaImplList = musicSet.toMutableList(),
+        mediaImplCollection = musicSet,
         collectionChanged = setChanged,
         header = {
             val title: String = if (playlist.title == LIKES_PLAYLIST_TITLE) {

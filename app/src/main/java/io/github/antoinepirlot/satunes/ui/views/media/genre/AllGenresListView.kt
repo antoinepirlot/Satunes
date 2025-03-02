@@ -56,7 +56,7 @@ internal fun AllGenresListView(
 
     MediaListView(
         modifier = modifier,
-        mediaImplList = genreSet.toMutableList(),
+        mediaImplCollection = genreSet,
         emptyViewText = stringResource(id = R.string.no_genre)
     )
 }

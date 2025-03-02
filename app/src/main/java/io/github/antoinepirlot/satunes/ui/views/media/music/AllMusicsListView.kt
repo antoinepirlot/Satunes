@@ -22,8 +22,6 @@ package io.github.antoinepirlot.satunes.ui.views.media.music
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -47,8 +45,7 @@ internal fun AllMusicsListView(
 ) {
     //Find a way to do something more aesthetic but it works
 //    val musicSet: Set<Music> = dataViewModel.getMusicSet()
-    val musicSet: MutableList<MediaImpl> =
-        remember { dataViewModel.getMusicSet().toMutableStateList() }
+    val musicSet: Set<MediaImpl> = dataViewModel.getMusicSet()
 
     LaunchedEffect(key1 = dataViewModel.isLoaded) {
         if (musicSet.isNotEmpty())
@@ -61,7 +58,7 @@ internal fun AllMusicsListView(
 
     MediaListView(
         modifier = modifier,
-        mediaImplList = musicSet,
+        mediaImplCollection = musicSet,
         emptyViewText = stringResource(id = R.string.no_music)
     )
 }

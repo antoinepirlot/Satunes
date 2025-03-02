@@ -123,7 +123,7 @@ internal fun SearchView(
         Spacer(modifier = Modifier.size(16.dp))
         MediaChipList()
         MediaListView(
-            mediaImplList = searchUiState.mediaImplCollection.toMutableList(),
+            mediaImplCollection = searchUiState.mediaImplCollection,
             sort = false,
             emptyViewText = stringResource(id = R.string.no_result)
         )

@@ -56,7 +56,7 @@ internal fun AllAlbumsListView(
 
     MediaListView(
         modifier = modifier,
-        mediaImplList = albumSet.toMutableList(),
+        mediaImplCollection = albumSet,
         emptyViewText = stringResource(id = R.string.no_album)
     )
 }

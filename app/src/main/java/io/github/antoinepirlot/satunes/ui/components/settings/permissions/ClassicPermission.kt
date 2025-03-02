@@ -6,6 +6,8 @@ import android.content.Intent
 import android.net.Uri
 import android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -16,6 +18,7 @@ import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.accompanist.permissions.shouldShowRationale
 import io.github.antoinepirlot.satunes.MainActivity
+import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.models.Permissions
 
@@ -27,10 +30,11 @@ internal fun ClassicPermission(
     satunesViewModel: SatunesViewModel = viewModel(),
     permission: Permissions
 ) {
+    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     val permissionState: PermissionState =
         rememberPermissionState(permission = permission.value)
     if (permission == Permissions.READ_EXTERNAL_STORAGE_PERMISSION || permission == Permissions.READ_AUDIO_PERMISSION)
-        if (permissionState.status.isGranted && !satunesViewModel.isAudioAllowed)
+        if (permissionState.status.isGranted && !satunesUiState.isAudioAllowed)
             satunesViewModel.updateIsAudioAllowed()
     Permission(
         modifier = modifier,

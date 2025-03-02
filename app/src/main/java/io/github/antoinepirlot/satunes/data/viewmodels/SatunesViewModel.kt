@@ -95,10 +95,6 @@ internal class SatunesViewModel : ViewModel() {
     val isLoadingData: Boolean by _isLoadingData
     val isDataLoaded: Boolean by _isDataLoaded
 
-    //Use this in UiSate and ViewModel as it is a particular value. It could change but most of the time it won't change
-    var isAudioAllowed: Boolean by mutableStateOf(_uiState.value.isAudioAllowed)
-        private set
-
     @delegate:RequiresApi(Build.VERSION_CODES.M)
     var updateAvailableStatus: UpdateAvailableStatus by _updateAvailableStatus
         private set
@@ -189,10 +185,11 @@ internal class SatunesViewModel : ViewModel() {
     }
 
     internal fun updateIsAudioAllowed() {
-        this.isAudioAllowed = isAudioAllowed(context = MainActivity.instance.applicationContext)
-        if (this.isAudioAllowed != _uiState.value.isAudioAllowed) {
+        val isAudioAllowed: Boolean =
+            isAudioAllowed(context = MainActivity.instance.applicationContext)
+        if (isAudioAllowed != _uiState.value.isAudioAllowed) {
             _uiState.update { currentState: SatunesUiState ->
-                currentState.copy(isAudioAllowed = this.isAudioAllowed)
+                currentState.copy(isAudioAllowed = isAudioAllowed)
             }
         }
     }

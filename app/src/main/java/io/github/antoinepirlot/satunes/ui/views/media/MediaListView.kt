@@ -21,7 +21,6 @@
 package io.github.antoinepirlot.satunes.ui.views.media
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -32,6 +31,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.antoinepirlot.satunes.data.states.DataUiState
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
@@ -41,7 +41,6 @@ import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.models.radio_buttons.SortOptions
 import io.github.antoinepirlot.satunes.ui.components.EmptyView
 import io.github.antoinepirlot.satunes.ui.components.cards.media.MediaCardList
@@ -64,22 +63,22 @@ internal fun MediaListView(
     sort: Boolean = true,
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+    val dataUiState: DataUiState by dataViewModel.uiState.collectAsState()
     val lazyListState = rememberLazyListState()
     val sortOption: SortOptions = dataViewModel.sortOption
     val isMediaOptionsOpened: Boolean = satunesUiState.mediaToShowOptions != null
 
     LaunchedEffect(key1 = sortOption, key2 = isMediaOptionsOpened, key3 = collectionChanged) {
         if (isMediaOptionsOpened) return@LaunchedEffect
-
-        if (sort) {
-            sort(
+        val listDiff: Boolean = mediaImplList !== dataUiState.mediaImplListOnScreen
+        if (sort && sortOption != dataUiState.appliedSortOption || listDiff) {
+            dataViewModel.sort(
                 satunesUiState = satunesUiState,
-                lazyListState = lazyListState,
                 list = mediaImplList,
-                sortOption = sortOption
             )
+            dataViewModel.setMediaImplListOnScreen(mediaImplCollection = mediaImplList)
+            if (!listDiff) lazyListState.scrollToItem(0)
         }
-        dataViewModel.setMediaImplListOnScreen(mediaImplCollection = mediaImplList)
     }
 
     if (satunesUiState.showSortDialog)
@@ -100,23 +99,6 @@ internal fun MediaListView(
             text = emptyViewText
         )
     }
-}
-
-private suspend fun sort(
-    satunesUiState: SatunesUiState,
-    lazyListState: LazyListState,
-    list: MutableList<MediaImpl>,
-    sortOption: SortOptions
-) {
-    if (sortOption == SortOptions.PLAYLIST_ADDED_DATE) {
-        val playlist: Playlist = satunesUiState.currentMediaImpl as Playlist
-        list.sortBy { mediaImpl: MediaImpl ->
-            -(mediaImpl as Music).getOrder(playlist = playlist)
-        }
-    } else if (sortOption.comparator != null) {
-        list.sortWith(comparator = sortOption.comparator)
-    }
-    lazyListState.scrollToItem(0)
 }
 
 @SuppressLint("UnrememberedMutableState")

@@ -11,6 +11,9 @@ Améliorations, optimisations et dépannage :
 * Correction des paramètres de media (retour à l'ancien système qui était plus efficace)
 * Correction de la fonction d'exclusion de dossiers
 * Suppresion de la permission inutile "manage_external_storage"
+* Correction de la navigation :
+  * Si l'audio n'est pas autorisé, les paramètres sont accessibles.
+  * Si l'audio vient d'être autorisé dans l'app, la navigation est alors pleinement fonctionnelle
 
 ### 3.0.1
 

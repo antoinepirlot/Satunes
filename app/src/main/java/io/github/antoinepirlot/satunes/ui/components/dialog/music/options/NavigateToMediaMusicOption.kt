@@ -27,7 +27,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
-import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Folder
@@ -45,7 +44,6 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.options.DialogOption
 internal fun NavigateToMediaMusicOption(
     modifier: Modifier = Modifier,
     playbackViewModel: PlaybackViewModel = viewModel(),
-    satunesViewModel: SatunesViewModel = viewModel(),
     mediaImpl: MediaImpl,
 ) {
     val navController: NavHostController = LocalNavController.current
@@ -58,7 +56,6 @@ internal fun NavigateToMediaMusicOption(
                 media = mediaImpl,
                 navController = navController
             )
-            satunesViewModel.hideMediaOptions()
         },
         icon = when (mediaImpl) {
             is Album -> SatunesIcons.ALBUM

@@ -20,7 +20,7 @@
 
 package io.github.antoinepirlot.satunes.ui.views.media
 
-import androidx.compose.foundation.lazy.LazyListState
+import android.annotation.SuppressLint
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -28,9 +28,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.antoinepirlot.satunes.data.states.DataUiState
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
@@ -40,7 +43,6 @@ import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.models.radio_buttons.SortOptions
 import io.github.antoinepirlot.satunes.ui.components.EmptyView
 import io.github.antoinepirlot.satunes.ui.components.cards.media.MediaCardList
@@ -63,57 +65,43 @@ internal fun MediaListView(
     sort: Boolean = true,
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+    val dataUiState: DataUiState by dataViewModel.uiState.collectAsState()
     val lazyListState = rememberLazyListState()
+    val listToShow: MutableList<MediaImpl> = remember { mediaImplCollection.toMutableStateList() }
     val sortOption: SortOptions = dataViewModel.sortOption
 
-    //Do not put the list to show in ui state as it will reset list scroll when user goes back to the last page
-    //Plus this system insure the list can be scrolled correctly to the first item of the list (copying a new list make it not working as expected)
-    val mediaImplListToShow: MutableList<MediaImpl> = remember { mutableStateListOf() }
+    LaunchedEffect(key1 = collectionChanged) {
+        // Prevent doing twice the same thing at launching and showing empty text temporarily
+        if (dataUiState.appliedSortOption == null) return@LaunchedEffect
+        listToShow.clear()
+        listToShow.addAll(elements = mediaImplCollection)
+    }
 
-    val isMediaOptionsOpened: Boolean = satunesUiState.mediaToShowOptions != null
-
-    //TODO is a veritable issue change the behavior
-    LaunchedEffect(
-        listOf(
-            sortOption,
-            isMediaOptionsOpened,
-            collectionChanged,
-            mediaImplCollection
-        )
-    ) {
-        if (isMediaOptionsOpened) return@LaunchedEffect
-        else if (collectionChanged) mediaImplListToShow.clear()
-        else if (!dataViewModel.listSetUpdatedProcessed) {
-            mediaImplListToShow.clear()
-            dataViewModel.listSetUpdatedProcessed()
-        } else if (mediaImplCollection.isEmpty()) {
-            mediaImplListToShow.clear()
-        } else if (mediaImplListToShow.isNotEmpty()) {
-            lazyListState.scrollToItem(0)
-            mediaImplListToShow.clear()
-        }
-
-        if (sort) {
-            sort(
+    LaunchedEffect(key1 = sortOption, key2 = collectionChanged) {
+        if (sort && sortOption != dataUiState.appliedSortOption || collectionChanged) {
+            dataViewModel.sort(
                 satunesUiState = satunesUiState,
-                lazyListState = lazyListState,
-                source = mediaImplCollection,
-                destination = mediaImplListToShow,
-                sortOption = sortOption
+                list = listToShow,
             )
-        } else {
-            mediaImplListToShow.addAll(elements = mediaImplCollection)
+            if (!collectionChanged)
+                lazyListState.scrollToItem(0)
+            else {
+                lazyListState.scrollToItem(
+                    index = lazyListState.firstVisibleItemIndex,
+                    scrollOffset = lazyListState.firstVisibleItemScrollOffset
+                ) //Prevent scroll to anywhere else when back gesture
+                dataViewModel.setMediaImplListOnScreen(mediaImplCollection = listToShow)
+            }
         }
-        dataViewModel.setMediaImplListOnScreen(mediaImplCollection = mediaImplListToShow)
     }
 
     if (satunesUiState.showSortDialog)
         SortListDialog()
 
-    if (mediaImplCollection.isNotEmpty()) { //Prevent showing the empty view if the list is not empty
+    if (listToShow.isNotEmpty()) {
         MediaCardList(
             modifier = modifier,
-            mediaImplList = mediaImplListToShow,
+            mediaImplList = listToShow,
             lazyListState = lazyListState,
             header = header,
             showGroupIndication = showGroupIndication,
@@ -127,41 +115,11 @@ internal fun MediaListView(
     }
 }
 
-private suspend fun sort(
-    satunesUiState: SatunesUiState,
-    lazyListState: LazyListState,
-    source: Collection<MediaImpl>,
-    destination: MutableList<MediaImpl>,
-    sortOption: SortOptions
-) {
-    if (destination.isEmpty()) {
-        if (sortOption == SortOptions.PLAYLIST_ADDED_DATE) {
-            val playlist: Playlist = satunesUiState.currentMediaImpl as Playlist
-            destination.addAll(
-                source.sortedBy { mediaImpl: MediaImpl ->
-                    -(mediaImpl as Music).getOrder(playlist = playlist)
-                }
-            )
-        } else if (sortOption.comparator != null) {
-            destination.addAll(source.sortedWith(comparator = sortOption.comparator))
-        }
-    } else {
-        if (sortOption == SortOptions.PLAYLIST_ADDED_DATE) {
-            val playlist: Playlist = satunesUiState.currentMediaImpl as Playlist
-            destination.sortBy { mediaImpl: MediaImpl ->
-                -(mediaImpl as Music).getOrder(playlist = playlist)
-            }
-        } else if (sortOption.comparator != null) {
-            destination.sortWith(comparator = sortOption.comparator)
-        }
-        lazyListState.scrollToItem(0)
-    }
-}
-
+@SuppressLint("UnrememberedMutableState")
 @Composable
 @Preview
 private fun MediaListViewPreview() {
-    val map = listOf(
+    val list: SnapshotStateList<MediaImpl> = mutableStateListOf(
         Music(
             1,
             title = "title",
@@ -176,7 +134,7 @@ private fun MediaListViewPreview() {
         )
     )
     MediaListView(
-        mediaImplCollection = map,
+        mediaImplCollection = list,
         collectionChanged = false,
         emptyViewText = "No data"
     )

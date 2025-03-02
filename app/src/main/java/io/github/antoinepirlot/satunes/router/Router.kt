@@ -72,7 +72,7 @@ internal fun Router(
     val context: Context = LocalContext.current
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     val navController: NavHostController = LocalNavController.current
-    val isAudioAllowed: Boolean = satunesViewModel.isAudioAllowed
+    val isAudioAllowed: Boolean = satunesUiState.isAudioAllowed
     var defaultDestination: Destination? by rememberSaveable { mutableStateOf(null) }
     var isInitialisation: Boolean by rememberSaveable { mutableStateOf(true) }
     LaunchedEffect(key1 = Unit) {

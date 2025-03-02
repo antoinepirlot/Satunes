@@ -167,14 +167,10 @@ private fun onSettingButtonClick(
     }
     val currentDestination: Destination = uiState.currentDestination
     if (currentDestination.category == DestinationCategory.SETTING) {
-        if (currentDestination == Destination.PERMISSIONS_SETTINGS && !uiState.isAudioAllowed) {
-            return
-        } else {
-            navController.popBackStack()
-            if (navController.currentBackStackEntry == null) {
-                navController.navigate(Destination.FOLDERS.link)
-                navController.navigate(Destination.SETTINGS.link)
-            }
+        navController.popBackStack()
+        if (navController.currentBackStackEntry == null) {
+            navController.navigate(Destination.FOLDERS.link)
+            navController.navigate(Destination.SETTINGS.link)
         }
     } else {
         navController.navigate(Destination.SETTINGS.link)

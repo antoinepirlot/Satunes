@@ -3,6 +3,18 @@ Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
 ## 3.0 (Android 5.1.1 Lollipop and later
 
+### 3.0.2
+
+Improvements, optimizations and troubleshooting:
+
+* Improve list behavior
+* Fix modal popup (rollback to the old system that was more efficient)
+* Fix exclude folders feature
+* Remove useless permission "manage_external_storage"
+* Fix navigation:
+  * If audio is not allowed, settings are accessible
+  * If audio has just been allowed in-app, the navigation is then full working
+
 ### 3.0.1
 
 Improvements, optimizations and troubleshooting:

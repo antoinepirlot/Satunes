@@ -84,7 +84,7 @@ internal object LibrarySettings {
             val paths: Collection<String> =
                 preferences[SELECTED_PATHS_KEY] ?: setOf(DEFAULT_SELECTED_PATH)
             (this.foldersPathsSelectedCollection as MutableCollection<String>).clear()
-            (this.foldersPathsSelectedCollection as MutableCollection<String>).addAll(paths)
+            (this.foldersPathsSelectedCollection).addAll(paths)
 
             compilationMusic = preferences[COMPILATION_MUSIC_KEY] ?: DEFAULT_COMPILATION_MUSIC
 
@@ -167,7 +167,7 @@ internal object LibrarySettings {
     suspend fun resetFoldersSettings(context: Context) {
         context.dataStore.edit { preferences: MutablePreferences ->
             (this.foldersPathsSelectedCollection as MutableCollection<String>).clear()
-            (this.foldersPathsSelectedCollection as MutableCollection<String>)
+            (this.foldersPathsSelectedCollection)
                 .add(DEFAULT_SELECTED_PATH)
             preferences[SELECTED_PATHS_KEY] = this.foldersPathsSelectedCollection.toSet()
         }

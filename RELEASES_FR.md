@@ -3,6 +3,15 @@ You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
 ## 3.0 (Android 5.1.1 Lollipop et ultérieur)
 
+### 3.0.2
+
+Améliorations, optimisations et dépannage :
+
+* Amélioration du comportement des listes
+* Correction des paramètres de media (retour à l'ancien système qui était plus efficace)
+* Correction de la fonction d'exclusion de dossiers
+* Suppresion de la permission inutile "manage_external_storage"
+
 ### 3.0.1
 
 Améliorations, optimisations et dépannage:

@@ -53,6 +53,7 @@ import io.github.antoinepirlot.satunes.internet.updates.UpdateAvailableStatus
 import io.github.antoinepirlot.satunes.internet.updates.UpdateCheckManager
 import io.github.antoinepirlot.satunes.internet.updates.UpdateDownloadManager
 import io.github.antoinepirlot.satunes.models.Destination
+import io.github.antoinepirlot.satunes.models.DestinationCategory
 import io.github.antoinepirlot.satunes.ui.utils.showErrorSnackBar
 import io.github.antoinepirlot.satunes.ui.utils.showSnackBar
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
@@ -123,6 +124,9 @@ internal class SatunesViewModel : ViewModel() {
             throw e
         }
     }
+
+    fun isInPlaybackView(): Boolean =
+        _uiState.value.currentDestination.category == DestinationCategory.PLAYBACK
 
     fun seeWhatsNew(
         scope: CoroutineScope,

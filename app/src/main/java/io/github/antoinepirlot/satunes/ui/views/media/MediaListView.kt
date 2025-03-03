@@ -27,9 +27,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -63,18 +64,21 @@ internal fun MediaListView(
     emptyViewText: String,
     showGroupIndication: Boolean = true,
     sort: Boolean = true,
+    /**
+     * Overrides the base onClick on media behavior
+     */
+    onMediaClick: ((MediaImpl) -> Unit)? = null
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     val dataUiState: DataUiState by dataViewModel.uiState.collectAsState()
     val lazyListState = rememberLazyListState()
-    val listToShow: MutableList<MediaImpl> = remember { mediaImplCollection.toMutableStateList() }
+    var listToShow: MutableList<MediaImpl> by remember { mutableStateOf(mediaImplCollection.toMutableList()) }
     val sortOption: SortOptions = dataViewModel.sortOption
 
     LaunchedEffect(key1 = collectionChanged) {
         // Prevent doing twice the same thing at launching and showing empty text temporarily
         if (dataUiState.appliedSortOption == null) return@LaunchedEffect
-        listToShow.clear()
-        listToShow.addAll(elements = mediaImplCollection)
+        listToShow = mediaImplCollection.toMutableList()
     }
 
     LaunchedEffect(key1 = sortOption, key2 = collectionChanged) {
@@ -90,9 +94,9 @@ internal fun MediaListView(
                     index = lazyListState.firstVisibleItemIndex,
                     scrollOffset = lazyListState.firstVisibleItemScrollOffset
                 ) //Prevent scroll to anywhere else when back gesture
-                dataViewModel.setMediaImplListOnScreen(mediaImplCollection = listToShow)
             }
         }
+        dataViewModel.setMediaImplListOnScreen(mediaImplCollection = listToShow)
     }
 
     if (satunesUiState.showSortDialog)
@@ -105,6 +109,7 @@ internal fun MediaListView(
             lazyListState = lazyListState,
             header = header,
             showGroupIndication = showGroupIndication,
+            onMediaClick = onMediaClick
         )
     } else {
         EmptyView(

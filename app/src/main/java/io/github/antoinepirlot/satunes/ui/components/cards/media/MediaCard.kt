@@ -27,35 +27,24 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.hapticfeedback.HapticFeedback
-import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
 import io.github.antoinepirlot.jetpack_libs.components.models.ScreenSizes
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.jetpack_libs.components.texts.Subtitle
-import io.github.antoinepirlot.satunes.data.local.LocalNavController
-import io.github.antoinepirlot.satunes.data.states.DataUiState
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
-import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
@@ -68,10 +57,7 @@ import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.models.Destination
-import io.github.antoinepirlot.satunes.models.DestinationCategory
-import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.cards.ListItem
-import io.github.antoinepirlot.satunes.ui.components.dialog.media.MediaOptionsDialog
 import io.github.antoinepirlot.satunes.ui.components.images.MediaArtwork
 import io.github.antoinepirlot.satunes.ui.utils.getRootFolderName
 import io.github.antoinepirlot.satunes.database.R as RDb
@@ -85,20 +71,12 @@ import io.github.antoinepirlot.satunes.database.R as RDb
 internal fun MediaCard(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
-    dataViewModel: DataViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
     mediaImpl: MediaImpl,
-    enableExtraOptions: Boolean = true,
+    onClick: (() -> Unit)?,
+    onLongClick: (() -> Unit)?
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
-    val dataUiState: DataUiState by dataViewModel.uiState.collectAsState()
-    val navController: NavHostController = LocalNavController.current
-    val haptics: HapticFeedback = LocalHapticFeedback.current
-    val isInPlaybackView: Boolean =
-        satunesUiState.currentDestination.category == DestinationCategory.PLAYBACK
-
-//    val showMediaOptions: Boolean = satunesUiState.mediaToShowOptions == mediaImpl
-    var showMediaOptions: Boolean by rememberSaveable { mutableStateOf(false) }
 
     val title: String =
         if (mediaImpl is Folder && mediaImpl.parentFolder == null) {
@@ -109,29 +87,10 @@ internal fun MediaCard(
             mediaImpl.title
         }
     val screenWidthDp: Int = LocalConfiguration.current.screenWidthDp
-    val boxModifier: Modifier = if (!satunesUiState.showMediaSelectionDialog) {
+    val boxModifier: Modifier = if (onClick != null || onLongClick != null) {
         modifier.combinedClickable(
-            onClick = {
-                if (!showMediaOptions) {
-                    if (mediaImpl is Music && !isInPlaybackView)
-                        playbackViewModel.loadMusicFromMedias(
-                            medias = dataUiState.mediaImplListOnScreen,
-                            currentDestination = satunesUiState.currentDestination,
-                            musicToPlay = mediaImpl
-                        )
-                    openMedia(
-                        playbackViewModel = playbackViewModel,
-                        media = mediaImpl,
-                        navController = if (isInPlaybackView) null else navController,
-                    )
-                }
-            },
-            onLongClick = if (enableExtraOptions) {
-                {
-                    haptics.performHapticFeedback(HapticFeedbackType.LongPress)
-                    showMediaOptions = true
-                }
-            } else null
+            onClick = { onClick?.invoke() },
+            onLongClick = onLongClick
         )
     } else modifier
     Box(modifier = boxModifier) {
@@ -191,17 +150,6 @@ internal fun MediaCard(
             }
         )
     }
-    HorizontalDivider(modifier = modifier)
-
-    // Media option dialog
-    if (showMediaOptions) {
-        MediaOptionsDialog(
-            mediaImpl = mediaImpl,
-            onDismissRequest = {
-                showMediaOptions = false
-            }
-        )
-    }
 }
 
 @Composable
@@ -223,5 +171,7 @@ private fun CardPreview() {
     MediaCard(
         modifier = Modifier.fillMaxSize(),
         mediaImpl = music,
+        onClick = null,
+        onLongClick = null
     )
 }

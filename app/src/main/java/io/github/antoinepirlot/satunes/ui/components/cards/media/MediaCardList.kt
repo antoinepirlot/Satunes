@@ -24,19 +24,33 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedback
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.states.DataUiState
+import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.models.DestinationCategory
 import io.github.antoinepirlot.satunes.models.radio_buttons.SortOptions
+import io.github.antoinepirlot.satunes.router.utils.openMedia
+import io.github.antoinepirlot.satunes.ui.components.dialog.media.MediaOptionsDialog
 
 /**
  * @author Antoine Pirlot on 16/01/2024
@@ -45,6 +59,7 @@ import io.github.antoinepirlot.satunes.models.radio_buttons.SortOptions
 @Composable
 internal fun MediaCardList(
     modifier: Modifier = Modifier,
+    satunesViewModel: SatunesViewModel = viewModel(),
     lazyListState: LazyListState = rememberLazyListState(),
     dataViewModel: DataViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
@@ -53,9 +68,14 @@ internal fun MediaCardList(
     scrollToMusicPlaying: Boolean = false,
     showGroupIndication: Boolean = true,
 ) {
+    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     val dataUiState: DataUiState by dataViewModel.uiState.collectAsState()
     val showFirstLetter: Boolean = dataUiState.showFirstLetter
     val sortOption: SortOptions = dataViewModel.sortOption
+    val navController: NavHostController = LocalNavController.current
+    val haptics: HapticFeedback = LocalHapticFeedback.current
+    val isInPlaybackView: Boolean =
+        satunesUiState.currentDestination.category == DestinationCategory.PLAYBACK
 
     LazyColumn(
         modifier = modifier,
@@ -68,16 +88,16 @@ internal fun MediaCardList(
         items(
             items = mediaImplList,
             key = { it.javaClass.name + '-' + it.id }
-        ) { media: MediaImpl ->
-            if (media == mediaImplList.first()) header?.invoke()
+        ) { mediaImpl: MediaImpl ->
+            if (mediaImpl == mediaImplList.first()) header?.invoke()
 
             if (showFirstLetter && showGroupIndication) {
                 when (sortOption) {
                     SortOptions.GENRE -> {
-                        if (media is Music) {
+                        if (mediaImpl is Music) {
                             FirstGenre(
                                 map = groupMap!!,
-                                mediaImpl = media,
+                                mediaImpl = mediaImpl,
                                 mediaImplList = mediaImplList,
                             )
                         }
@@ -85,21 +105,52 @@ internal fun MediaCardList(
 
                     SortOptions.YEAR -> FirstYear(
                         map = groupMap!!,
-                        mediaImpl = media,
+                        mediaImpl = mediaImpl,
                         mediaImplList = mediaImplList
                     )
 
                     else -> {
                         FirstLetter(
                             map = groupMap!!,
-                            mediaImpl = media,
+                            mediaImpl = mediaImpl,
                             mediaImplList = mediaImplList,
                             sortOption = sortOption
                         )
                     }
                 }
             }
-            MediaCard(modifier = modifier, mediaImpl = media)
+            var showMediaOptions: Boolean by rememberSaveable { mutableStateOf(false) }
+            MediaCard(
+                modifier = modifier,
+                mediaImpl = mediaImpl,
+                onClick = {
+                    if (mediaImpl is Music && !isInPlaybackView)
+                        playbackViewModel.loadMusicFromMedias(
+                            medias = dataUiState.mediaImplListOnScreen,
+                            currentDestination = satunesUiState.currentDestination,
+                            musicToPlay = mediaImpl
+                        )
+                    openMedia(
+                        playbackViewModel = playbackViewModel,
+                        media = mediaImpl,
+                        navController = if (isInPlaybackView) null else navController
+                    )
+                },
+                onLongClick = {
+                    haptics.performHapticFeedback(HapticFeedbackType.LongPress)
+                    showMediaOptions = true
+                }
+            )
+            HorizontalDivider(modifier = modifier)
+            // Media option dialog
+            if (showMediaOptions) {
+                MediaOptionsDialog(
+                    mediaImpl = mediaImpl,
+                    onDismissRequest = {
+                        showMediaOptions = false
+                    }
+                )
+            }
         }
     }
     if (scrollToMusicPlaying) {

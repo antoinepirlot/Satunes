@@ -47,7 +47,6 @@ import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.models.DestinationCategory
 import io.github.antoinepirlot.satunes.models.radio_buttons.SortOptions
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.MediaOptionsDialog
@@ -67,6 +66,7 @@ internal fun MediaCardList(
     header: @Composable (() -> Unit)? = null,
     scrollToMusicPlaying: Boolean = false,
     showGroupIndication: Boolean = true,
+    onMediaClick: ((MediaImpl) -> Unit)? = null
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     val dataUiState: DataUiState by dataViewModel.uiState.collectAsState()
@@ -74,8 +74,7 @@ internal fun MediaCardList(
     val sortOption: SortOptions = dataViewModel.sortOption
     val navController: NavHostController = LocalNavController.current
     val haptics: HapticFeedback = LocalHapticFeedback.current
-    val isInPlaybackView: Boolean =
-        satunesUiState.currentDestination.category == DestinationCategory.PLAYBACK
+    val isInPlaybackView: Boolean = satunesViewModel.isInPlaybackView()
 
     LazyColumn(
         modifier = modifier,
@@ -124,17 +123,21 @@ internal fun MediaCardList(
                 modifier = modifier,
                 mediaImpl = mediaImpl,
                 onClick = {
-                    if (mediaImpl is Music && !isInPlaybackView)
-                        playbackViewModel.loadMusicFromMedias(
-                            medias = mediaImplList,
-                            currentDestination = satunesUiState.currentDestination,
-                            musicToPlay = mediaImpl
+                    if (onMediaClick != null) {
+                        onMediaClick.invoke(mediaImpl)
+                    } else {
+                        if (mediaImpl is Music && !isInPlaybackView)
+                            playbackViewModel.loadMusicFromMedias(
+                                medias = mediaImplList,
+                                currentDestination = satunesUiState.currentDestination,
+                                musicToPlay = mediaImpl
+                            )
+                        openMedia(
+                            playbackViewModel = playbackViewModel,
+                            media = mediaImpl,
+                            navController = if (isInPlaybackView) null else navController
                         )
-                    openMedia(
-                        playbackViewModel = playbackViewModel,
-                        media = mediaImpl,
-                        navController = if (isInPlaybackView) null else navController
-                    )
+                    }
                 },
                 onLongClick = {
                     haptics.performHapticFeedback(HapticFeedbackType.LongPress)

@@ -63,6 +63,10 @@ internal fun MediaListView(
     emptyViewText: String,
     showGroupIndication: Boolean = true,
     sort: Boolean = true,
+    /**
+     * Overrides the base onClick on media behavior
+     */
+    onMediaClick: ((MediaImpl) -> Unit)? = null
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     val dataUiState: DataUiState by dataViewModel.uiState.collectAsState()
@@ -105,6 +109,7 @@ internal fun MediaListView(
             lazyListState = lazyListState,
             header = header,
             showGroupIndication = showGroupIndication,
+            onMediaClick = onMediaClick
         )
     } else {
         EmptyView(

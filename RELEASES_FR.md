@@ -3,6 +3,12 @@ You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
 ## 3.0 (Android 5.1.1 Lollipop et ultérieur)
 
+### 3.0.3
+
+Améliorations, optimisations et dépannage :
+
+* Correction du crash lors de l'utilisation d'une carte SD
+
 ### 3.0.2
 
 Améliorations, optimisations et dépannage :

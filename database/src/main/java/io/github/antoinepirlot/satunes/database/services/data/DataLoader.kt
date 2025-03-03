@@ -321,8 +321,7 @@ object DataLoader {
         val displayName: String = cursor.getString(musicNameColumnId!!)
         val title: String = cursor.getString(musicTitleColumnId!!)
         val cdTrackNumber: Int = cursor.getInt(cdTrackNumberColumnId!!)
-        val dateAdded: Long = cursor.getInt(dateAddedPathColumnId!!)
-            .toLong() * 1000L // x1000 as the value is just an int and so, won't show the right date thanks to google's precision
+        val dateAdded: Long = cursor.getInt(dateAddedPathColumnId!!).toLong() * 1000L
 
         val music = Music(
             id = id,

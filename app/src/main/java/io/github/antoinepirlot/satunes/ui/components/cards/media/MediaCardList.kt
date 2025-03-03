@@ -126,7 +126,7 @@ internal fun MediaCardList(
                 onClick = {
                     if (mediaImpl is Music && !isInPlaybackView)
                         playbackViewModel.loadMusicFromMedias(
-                            medias = dataUiState.mediaImplListOnScreen,
+                            medias = mediaImplList,
                             currentDestination = satunesUiState.currentDestination,
                             musicToPlay = mediaImpl
                         )

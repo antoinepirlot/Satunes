@@ -90,9 +90,9 @@ internal fun MediaListView(
                     index = lazyListState.firstVisibleItemIndex,
                     scrollOffset = lazyListState.firstVisibleItemScrollOffset
                 ) //Prevent scroll to anywhere else when back gesture
-                dataViewModel.setMediaImplListOnScreen(mediaImplCollection = listToShow)
             }
         }
+        dataViewModel.setMediaImplListOnScreen(mediaImplCollection = listToShow)
     }
 
     if (satunesUiState.showSortDialog)

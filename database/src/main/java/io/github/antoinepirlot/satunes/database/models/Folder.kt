@@ -20,8 +20,6 @@
 
 package io.github.antoinepirlot.satunes.database.models
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import java.util.Date
 import java.util.SortedSet
@@ -42,7 +40,6 @@ class Folder(
         parentFolder!!.absolutePath + "/$title"
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     public override var addedDate: Date? = null
 
     companion object {

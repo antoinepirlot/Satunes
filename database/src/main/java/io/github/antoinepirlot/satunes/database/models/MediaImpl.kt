@@ -98,18 +98,6 @@ abstract class MediaImpl(
         }
     }
 
-//    @RequiresApi(Build.VERSION_CODES.O)
-//    protected fun getCreationDate(path: String): Long {
-//        try {
-//            val filePath = Paths.get(path)
-//            val attrs = Files.readAttributes(filePath, BasicFileAttributes::class.java)
-//            return attrs.creationTime().toMillis()
-//        } catch (_: AccessDeniedException) {
-//            //TODO find a fix for Android 15 and later for sd cards
-//            return 0
-//        }
-//    }
-
     protected fun listUpdated() {
         if (this.musicSetUpdated.value) this.musicSetUpdated.value = false
         this.musicSetUpdated.value = true

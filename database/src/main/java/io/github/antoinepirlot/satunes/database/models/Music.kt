@@ -85,15 +85,6 @@ class Music(
         folder.addMusic(music = this)
     }
 
-    private fun remove() {
-        this.genre.removeMusic(music = this)
-        this.album.removeMusic(music = this)
-        this.artist.removeMusic(music = this)
-        this.folder.removeMusic(music = this)
-        for (playlist: Playlist in this._playlistsOrderMap.keys) playlist.removeMusic(music = this)
-        DataManager.remove(music = this)
-    }
-
     fun switchLike() {
         this.liked.value = !this.liked.value
         val db = DatabaseManager.getInstance()

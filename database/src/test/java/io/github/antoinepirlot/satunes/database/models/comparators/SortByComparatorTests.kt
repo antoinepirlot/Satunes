@@ -29,7 +29,6 @@ import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
-import java.util.Date
 
 class SortByComparatorTests {
     private val _musics: Collection<Music>
@@ -48,13 +47,13 @@ class SortByComparatorTests {
                 (1L..9000L).random(),
                 (1..9000).random(),
                 null,
+                addedDateMs = ((1L * 13L)..(9L * 13L)).random(),
                 Folder(getRandomWord()),
                 artist,
                 Album(getRandomWord(), artist),
                 Genre(getRandomWord()),
-                uri = null
+                uri = null,
             )
-            music.addedDate = Date(((1L * 13L)..(9L * 13L)).random())
             collection.add(music)
         }
         _musics = collection.toSet()

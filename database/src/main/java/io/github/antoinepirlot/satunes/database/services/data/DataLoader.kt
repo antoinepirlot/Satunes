@@ -56,6 +56,7 @@ object DataLoader {
     private var musicDurationColumnId: Int? = null
     private var musicSizeColumnId: Int? = null
     private var absolutePathColumnId: Int? = null
+    private var dateAddedPathColumnId: Int? = null
 
     // Albums variables
     private var albumNameColumnId: Int? = null
@@ -82,6 +83,7 @@ object DataLoader {
         MediaStore.Audio.Media.DURATION,
         MediaStore.Audio.Media.SIZE,
         MediaStore.Audio.Media.DATA,
+        MediaStore.Audio.Media.DATE_ADDED,
 
         //ALBUMS
         MediaStore.Audio.Albums.ALBUM,
@@ -194,8 +196,8 @@ object DataLoader {
         musicDurationColumnId =
             cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION)
         musicSizeColumnId = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE)
-
         absolutePathColumnId = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA)
+        dateAddedPathColumnId = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATE_ADDED)
 
         //Cache album columns indices
         try {
@@ -319,6 +321,7 @@ object DataLoader {
         val displayName: String = cursor.getString(musicNameColumnId!!)
         val title: String = cursor.getString(musicTitleColumnId!!)
         val cdTrackNumber: Int = cursor.getInt(cdTrackNumberColumnId!!)
+        val dateAdded: Long = cursor.getInt(dateAddedPathColumnId!!).toLong() * 1000L
 
         val music = Music(
             id = id,
@@ -328,6 +331,7 @@ object DataLoader {
             duration = duration,
             size = size,
             cdTrackNumber = cdTrackNumber,
+            addedDateMs = dateAdded,
             album = album,
             artist = artist,
             folder = folder,

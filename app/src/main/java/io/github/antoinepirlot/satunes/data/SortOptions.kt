@@ -20,8 +20,6 @@
 
 package io.github.antoinepirlot.satunes.data
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.models.radio_buttons.SortOptions
 
@@ -41,11 +39,6 @@ private val artistsSortOptions: List<SortOptions> = listOf(
     SortOptions.TITLE,
 )
 
-private val foldersSortOptionsBeforeAndroidO: List<SortOptions> = listOf(
-    SortOptions.TITLE
-)
-
-@RequiresApi(Build.VERSION_CODES.O)
 private val foldersSortOptions: List<SortOptions> = listOf(
     SortOptions.TITLE,
     SortOptions.DATE_ADDED
@@ -55,15 +48,6 @@ private val genresSortOptions: List<SortOptions> = listOf(
     SortOptions.TITLE,
 )
 
-private val musicsSortOptionsBeforeAndroidO: List<SortOptions> = listOf(
-    SortOptions.TITLE,
-    SortOptions.ALBUM,
-    SortOptions.ARTIST,
-    SortOptions.GENRE,
-    SortOptions.YEAR
-)
-
-@RequiresApi(Build.VERSION_CODES.O)
 private val musicsSortOptions: List<SortOptions> = listOf(
     SortOptions.TITLE,
     SortOptions.ALBUM,
@@ -92,25 +76,16 @@ private val singlePlaylistSortOptions: List<SortOptions> = listOf(
  */
 internal fun getSortOptions(destination: Destination): List<SortOptions> {
     return when (destination) {
-        Destination.MUSICS, Destination.ALBUM, Destination.ARTIST, Destination.GENRE ->
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) musicsSortOptions
-            else musicsSortOptionsBeforeAndroidO
+        Destination.MUSICS, Destination.ALBUM, Destination.ARTIST, Destination.GENRE -> musicsSortOptions
 
         Destination.ALBUMS -> albumsSortOptions
         Destination.ARTISTS -> artistsSortOptions
-        Destination.FOLDERS, Destination.FOLDER ->
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) foldersSortOptions
-            else foldersSortOptionsBeforeAndroidO
+        Destination.FOLDERS, Destination.FOLDER -> foldersSortOptions
         Destination.GENRES -> genresSortOptions
         Destination.PLAYLISTS -> playlistsSortOptions
         Destination.PLAYLIST -> {
             val sortOptionsList: MutableCollection<SortOptions> = mutableSetOf()
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                sortOptionsList.addAll(elements = musicsSortOptions)
-                sortOptionsList.remove(element = SortOptions.DATE_ADDED)
-            } else {
-                sortOptionsList.addAll(elements = musicsSortOptionsBeforeAndroidO)
-            }
+            sortOptionsList.addAll(elements = musicsSortOptions)
             sortOptionsList.addAll(elements = singlePlaylistSortOptions)
             sortOptionsList.toList()
         }

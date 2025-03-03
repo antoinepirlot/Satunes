@@ -26,8 +26,6 @@ import android.graphics.BitmapFactory
 import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.net.Uri.encode
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.media3.common.MediaItem
@@ -35,10 +33,6 @@ import androidx.media3.common.MediaMetadata
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import java.nio.file.NoSuchFileException
 import java.util.Date
 
 /**
@@ -53,11 +47,12 @@ class Music(
     val duration: Long = 0,
     val size: Int = 0,
     cdTrackNumber: Int? = null,
+    addedDateMs: Long,
     var folder: Folder,
     val artist: Artist,
     val album: Album,
     val genre: Genre,
-    val uri: Uri? = Uri.parse(encode(absolutePath)) // Must be init before media item
+    val uri: Uri? = Uri.parse(encode(absolutePath)), // Must be init before media item
 ) : MediaImpl(id = id, title = title.ifBlank { displayName }) {
 
     /**
@@ -67,7 +62,6 @@ class Music(
 
     val cdTrackNumber: Int?
 
-    @RequiresApi(Build.VERSION_CODES.O)
     public override var addedDate: Date? = null
 
     var liked: MutableState<Boolean> = mutableStateOf(false)
@@ -85,17 +79,10 @@ class Music(
         if (SettingsManager.compilationMusic) {
             album.artist.addMusic(music = this)
         }
+        this.addedDate = Date(addedDateMs)
         artist.addMusic(music = this)
         genre.addMusic(music = this)
         folder.addMusic(music = this)
-        CoroutineScope(Dispatchers.IO).launch {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-                try {
-                    this@Music.addedDate = Date(this@Music.getCreationDate(path = absolutePath))
-                } catch (_: NoSuchFileException) {
-                    remove()
-                }
-        }
     }
 
     private fun remove() {

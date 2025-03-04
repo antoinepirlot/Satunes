@@ -22,7 +22,10 @@ package io.github.antoinepirlot.satunes.ui.components.images
 
 import android.content.Context
 import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
@@ -102,18 +105,24 @@ internal fun MediaArtwork(
 
     if (satunesUiState.artworkAnimation && mediaImpl == playbackViewModel.musicPlaying) {
         var lastScaleState: Float by rememberSaveable { mutableFloatStateOf(0F) }
-        val rotationAngle by animateFloatAsState(
-            targetValue = if (isPlaying) 360F else lastScaleState,
-            animationSpec = tween(
-                durationMillis = 10000,
-                delayMillis = 0,
-                easing = LinearEasing
+        var initialScale: Float by rememberSaveable { mutableFloatStateOf(lastScaleState) }
+        if (isPlaying) {
+            val infiniteTransition = rememberInfiniteTransition()
+
+            val rotation by infiniteTransition.animateFloat(
+                initialValue = initialScale,
+                targetValue = initialScale + 360F,
+                animationSpec = infiniteRepeatable(
+                    animation = tween(durationMillis = 10000, easing = LinearEasing),
+                    repeatMode = RepeatMode.Restart
+                )
             )
-        )
-        LaunchedEffect(isPlaying) {
-            if (!isPlaying) lastScaleState = rotationAngle
+            lastScaleState = rotation
+            mediaArtWorkModifier = mediaArtWorkModifier.rotate(rotation)
+        } else {
+            initialScale = lastScaleState
+            mediaArtWorkModifier = mediaArtWorkModifier.rotate(lastScaleState)
         }
-        mediaArtWorkModifier = mediaArtWorkModifier.rotate(rotationAngle)
     }
 
     mediaArtWorkModifier = if (onClick != null) {

@@ -60,4 +60,5 @@ internal data class SatunesUiState(
     val showSortDialog: Boolean = false,
     val showMediaSelectionDialog: Boolean = false,
     val artworkAnimation: Boolean = SettingsManager.artworkAnimation,
+    val artworkCircleShape: Boolean = SettingsManager.artworkCircleShape,
 )

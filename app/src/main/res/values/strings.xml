@@ -137,6 +137,7 @@
     <string name="list_sub_settings_title">Lists</string>
     <string name="update_playlists_success">Playlists have been updated</string>
     <string name="manage_external_storage_permission">Manage External Storage</string>
-    <string name="animation">Animation</string>
     <string name="artwork_animation_switch_button">Artwork animation when playing</string>
+    <string name="artwork_sub_settings">Artwork</string>
+    <string name="artwork_circle_shape_switch_button">Make artwork circle</string>
 </resources>

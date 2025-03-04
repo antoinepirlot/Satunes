@@ -77,8 +77,12 @@ object SettingsManager {
     val rewindMs: Long
         get() = PlaybackSettings.rewindMs
     val customActionsOrder: Collection<CustomActions> = DesignSettings.customActionsOrder
+
+    //Design
     val artworkAnimation: Boolean
         get() = DesignSettings.artworkAnimation
+    val artworkCircleShape: Boolean
+        get() = DesignSettings.artworkCircleShape
 
     // Search Settings
     val foldersFilter: Boolean
@@ -167,6 +171,10 @@ object SettingsManager {
 
     suspend fun switchArtworkAnimation(context: Context) {
         DesignSettings.switchArtworkAnimation(context = context)
+    }
+
+    suspend fun switchArtworkCircleShape(context: Context) {
+        DesignSettings.switchArtworkCircleShape(context = context)
     }
 
     suspend fun seeWhatsNew(context: Context) {

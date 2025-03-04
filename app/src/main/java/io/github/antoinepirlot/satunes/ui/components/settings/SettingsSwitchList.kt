@@ -223,9 +223,8 @@ private fun switchSetting(
             }
         }
 
-        SwitchSettings.ARTWORK_ANIMATION -> {
-            satunesViewModel.switchArtworkAnimation()
-        }
+        SwitchSettings.ARTWORK_ANIMATION -> satunesViewModel.switchArtworkAnimation()
+        SwitchSettings.ARTWORK_CIRCLE_SHAPE -> satunesViewModel.switchArtworkCircleShape()
 
         else -> {
             /* Not a switch */

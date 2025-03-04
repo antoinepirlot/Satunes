@@ -33,7 +33,6 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.glance.currentState
 import androidx.lifecycle.ViewModel
 import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.MainActivity.Companion.DEFAULT_URI
@@ -593,6 +592,19 @@ internal class SatunesViewModel : ViewModel() {
                 SettingsManager.switchArtworkAnimation(context = MainActivity.instance.applicationContext)
                 _uiState.update { currentState: SatunesUiState ->
                     currentState.copy(artworkAnimation = SettingsManager.artworkAnimation)
+                }
+            } catch (e: Throwable) {
+                _logger?.warning(e.message)
+            }
+        }
+    }
+
+    fun switchArtworkCircleShape() {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                SettingsManager.switchArtworkCircleShape(context = MainActivity.instance.applicationContext)
+                _uiState.update { currentState: SatunesUiState ->
+                    currentState.copy(artworkCircleShape = SettingsManager.artworkCircleShape)
                 }
             } catch (e: Throwable) {
                 _logger?.warning(e.message)

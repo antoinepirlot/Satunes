@@ -46,12 +46,13 @@ internal fun ArtworkAnimationSubSetting(
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
 
     val artworkAnimationSwitchSettings: Map<SwitchSettings, Boolean> = mapOf(
-        Pair(SwitchSettings.ARTWORK_ANIMATION, satunesUiState.artworkAnimation)
+        Pair(SwitchSettings.ARTWORK_ANIMATION, satunesUiState.artworkAnimation),
+        Pair(SwitchSettings.ARTWORK_CIRCLE_SHAPE, satunesUiState.artworkCircleShape)
     )
 
     SubSettings(
         modifier = modifier,
-        title = stringResource(R.string.animation)
+        title = stringResource(R.string.artwork_sub_settings)
     ) {
         SettingsSwitchList(checkedMap = artworkAnimationSwitchSettings)
     }

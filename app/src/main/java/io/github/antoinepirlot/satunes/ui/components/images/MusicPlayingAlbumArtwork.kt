@@ -35,7 +35,7 @@ import io.github.antoinepirlot.satunes.database.models.Album
 internal fun MusicPlayingAlbumArtwork(
     modifier: Modifier = Modifier,
     playbackViewModel: PlaybackViewModel = viewModel(),
-    onClick: ((album: Album?) -> Unit)? = null
+    onClick: ((album: Album?) -> Unit)? = null,
 ) {
     MediaArtwork(
         modifier = modifier,

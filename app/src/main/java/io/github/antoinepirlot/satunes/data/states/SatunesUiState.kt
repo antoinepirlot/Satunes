@@ -44,9 +44,7 @@ internal data class SatunesUiState(
     val currentMediaImpl: MediaImpl? = null,
     //Use this in UiSate and ViewModel as it is a particular value. It could change but most of the time it won't change
     val isAudioAllowed: Boolean = isAudioAllowed(context = MainActivity.instance.applicationContext),
-
     val foldersSelectionSelected: FoldersSelection = SettingsManager.foldersSelectionSelected,
-
     val playbackWhenClosedChecked: Boolean = SettingsManager.playbackWhenClosedChecked,
     val pauseIfNoisyChecked: Boolean = SettingsManager.pauseIfNoisyChecked,
     val pauseIfAnotherPlayback: Boolean = SettingsManager.pauseIfAnotherPlayback,

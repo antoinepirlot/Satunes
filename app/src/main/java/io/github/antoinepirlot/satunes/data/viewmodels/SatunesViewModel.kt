@@ -33,6 +33,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.glance.currentState
 import androidx.lifecycle.ViewModel
 import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.MainActivity.Companion.DEFAULT_URI
@@ -586,6 +587,19 @@ internal class SatunesViewModel : ViewModel() {
         }
     }
 
+    fun switchArtworkAnimation() {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                SettingsManager.switchArtworkAnimation(context = MainActivity.instance.applicationContext)
+                _uiState.update { currentState: SatunesUiState ->
+                    currentState.copy(artworkAnimation = SettingsManager.artworkAnimation)
+                }
+            } catch (e: Throwable) {
+                _logger?.warning(e.message)
+            }
+        }
+    }
+
     fun replaceExtraButtons(extraButtons: @Composable () -> Unit) {
         _uiState.update { currentState: SatunesUiState ->
             currentState.copy(extraButtons = extraButtons)
@@ -663,16 +677,6 @@ internal class SatunesViewModel : ViewModel() {
                         )
                     }
                 )
-            }
-        }
-    }
-
-    fun switchArtworkAnimation() {
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                SettingsManager.switchArtworkAnimation(context = MainActivity.instance.applicationContext)
-            } catch (e: Throwable) {
-                _logger?.warning(e.message)
             }
         }
     }

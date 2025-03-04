@@ -21,6 +21,11 @@
 package io.github.antoinepirlot.satunes.ui.components.images
 
 import android.content.Context
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.combinedClickable
@@ -29,6 +34,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,7 +43,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.hapticfeedback.HapticFeedback
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalConfiguration
@@ -48,11 +56,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.models.ScreenSizes
+import io.github.antoinepirlot.satunes.data.states.SatunesUiState
+import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.icons.R
 import io.github.antoinepirlot.satunes.ui.components.dialog.album.AlbumOptionsDialog
 import io.github.antoinepirlot.satunes.ui.utils.getRightIconAndDescription
@@ -69,11 +80,15 @@ import kotlinx.coroutines.launch
 @Composable
 internal fun MediaArtwork(
     modifier: Modifier = Modifier,
-    mediaImpl: MediaImpl,
     satunesViewModel: SatunesViewModel = viewModel(),
+    playbackViewModel: PlaybackViewModel = viewModel(),
+    mediaImpl: MediaImpl,
     onClick: ((album: Album?) -> Unit)? = null,
-    contentAlignment: Alignment = Alignment.Center
+    contentAlignment: Alignment = Alignment.Center,
 ) {
+    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+
+    var mediaArtWorkModifier: Modifier = modifier
     val haptics: HapticFeedback = LocalHapticFeedback.current
     val screenWidthDp = LocalConfiguration.current.screenWidthDp
     var showAlbumDialog: Boolean by rememberSaveable { mutableStateOf(false) }
@@ -83,8 +98,28 @@ internal fun MediaArtwork(
         else -> null
     }
 
-    val clickableModifier: Modifier = if (onClick != null) {
-        modifier
+    if(satunesUiState.artworkAnimation && mediaImpl == playbackViewModel.musicPlaying) {
+        val infiniteTransition = rememberInfiniteTransition(label = "infinite transition")
+        val scale by infiniteTransition.animateFloat(
+            initialValue = 0f,
+            targetValue = 360f,
+            animationSpec = infiniteRepeatable(
+                animation = tween(
+                    durationMillis = 2000,
+                    delayMillis = 0,
+                    easing = LinearEasing
+                )
+            ),
+            label = "scale"
+        )
+        mediaArtWorkModifier = mediaArtWorkModifier.graphicsLayer(
+            rotationZ = scale,
+            transformOrigin = TransformOrigin.Center
+        )
+    }
+
+    mediaArtWorkModifier = if (onClick != null) {
+        mediaArtWorkModifier
             .size(
                 if (screenWidthDp >= (ScreenSizes.VERY_VERY_SMALL - 1) && screenWidthDp < ScreenSizes.VERY_SMALL) 150.dp
                 else if (screenWidthDp < ScreenSizes.VERY_VERY_SMALL) 100.dp
@@ -101,7 +136,7 @@ internal fun MediaArtwork(
                 }
             )
     } else {
-        modifier
+        mediaArtWorkModifier
             .size(
                 if (screenWidthDp >= (ScreenSizes.VERY_VERY_SMALL - 1) && screenWidthDp < ScreenSizes.VERY_SMALL) 150.dp
                 else if (screenWidthDp < ScreenSizes.VERY_VERY_SMALL) 100.dp
@@ -110,7 +145,7 @@ internal fun MediaArtwork(
     }
 
     Box(
-        modifier = clickableModifier,
+        modifier = mediaArtWorkModifier,
         contentAlignment = contentAlignment
     ) {
         val context: Context = LocalContext.current

@@ -77,6 +77,8 @@ object SettingsManager {
     val rewindMs: Long
         get() = PlaybackSettings.rewindMs
     val customActionsOrder: Collection<CustomActions> = DesignSettings.customActionsOrder
+    val artworkAnimation: Boolean
+        get() = DesignSettings.artworkAnimation
 
     // Search Settings
     val foldersFilter: Boolean
@@ -161,6 +163,14 @@ object SettingsManager {
 
     suspend fun switchAudioOffload(context: Context) {
         PlaybackSettings.switchAudioOffload(context = context)
+    }
+
+    suspend fun enableArtworkAnimation(context: Context) {
+        DesignSettings.enableArtworkAnimation(context = context)
+    }
+
+    suspend fun disableArtworkAnimation(context: Context) {
+        DesignSettings.disableArtworkAnimation(context = context)
     }
 
     suspend fun seeWhatsNew(context: Context) {

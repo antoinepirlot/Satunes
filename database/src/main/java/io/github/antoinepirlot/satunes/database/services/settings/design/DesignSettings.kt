@@ -63,6 +63,7 @@ internal object DesignSettings {
         CustomActions.SHARE,
         CustomActions.TIMER
     )
+    private const val DEFAULT_ARTWORK_ANIMATION: Boolean = false
 
     // KEYS
     private val FOLDERS_NAVBAR_PREFERENCES_KEY: Preferences.Key<Boolean> =
@@ -83,6 +84,7 @@ internal object DesignSettings {
         booleanPreferencesKey("show_first_letter")
     private val CUSTOM_ACTIONS_ORDER_KEY: Preferences.Key<String> =
         stringPreferencesKey("custom_actions_order")
+    private val ARTWORK_ANIMATION_KEY: Preferences.Key<Boolean> = booleanPreferencesKey("artwork_animation")
 
     // VARIABLES
     var defaultNavBarSection: MutableState<NavBarSection> =
@@ -92,6 +94,8 @@ internal object DesignSettings {
     var showFirstLetter: Boolean = DEFAULT_SHOW_FIRST_LETTER
         private set
     val customActionsOrder: MutableList<CustomActions> = mutableStateListOf()
+    var artworkAnimation: Boolean = DEFAULT_ARTWORK_ANIMATION
+        private set
 
 
     internal suspend fun loadSettings(context: Context) {
@@ -107,8 +111,6 @@ internal object DesignSettings {
             NavBarSection.PLAYLISTS.isEnabled.value =
                 preferences[PLAYLISTS_NAVBAR_PREFERENCES_KEY] ?: DEFAULT_PLAYLIST_NAVBAR
             showFirstLetter = preferences[SHOW_FIRST_LETTER_KEY] ?: DEFAULT_SHOW_FIRST_LETTER
-
-
             defaultNavBarSection.value = getNavBarSection(preferences[DEFAULT_NAV_BAR_SECTION_KEY])
             defaultPlaylistId.longValue =
                 preferences[DEFAULT_PLAYLIST_ID_KEY] ?: DEFAULT_PLAYLIST_ID
@@ -117,6 +119,8 @@ internal object DesignSettings {
                 this.customActionsOrder.addAll(Json.decodeFromString(preferences[CUSTOM_ACTIONS_ORDER_KEY]!!))
             else
                 this.customActionsOrder.addAll(elements = DEFAULT_CUSTOM_ACTIONS_ORDER)
+
+            artworkAnimation = preferences[ARTWORK_ANIMATION_KEY] ?: DEFAULT_ARTWORK_ANIMATION
         }.first() //Without .first() settings are not loaded correctly
     }
 
@@ -235,6 +239,20 @@ internal object DesignSettings {
         }
     }
 
+    suspend fun enableArtworkAnimation(context: Context) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            this.artworkAnimation = true
+            preferences[ARTWORK_ANIMATION_KEY] = true
+        }
+    }
+
+    suspend fun disableArtworkAnimation(context: Context) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            this.artworkAnimation = false
+            preferences[ARTWORK_ANIMATION_KEY] = false
+        }
+    }
+
     suspend fun resetListsSettings(context: Context) {
         context.dataStore.edit { preferences: MutablePreferences ->
             this.showFirstLetter = DEFAULT_SHOW_FIRST_LETTER
@@ -250,9 +268,17 @@ internal object DesignSettings {
         }
     }
 
+    suspend fun resetArtworkAnimation(context: Context) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            this.artworkAnimation = DEFAULT_ARTWORK_ANIMATION
+            preferences[ARTWORK_ANIMATION_KEY] = DEFAULT_ARTWORK_ANIMATION
+        }
+    }
+
     suspend fun resetAll(context: Context) {
         this.resetNavigationBarSettings(context = context)
         this.resetListsSettings(context = context)
         this.resetCustomActions(context = context)
+        this.resetArtworkAnimation(context = context)
     }
 }

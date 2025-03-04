@@ -3,6 +3,12 @@ Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
 ## 3.0 (Android 5.1.1 Lollipop and later
 
+### 3.0.3
+
+Improvements, optimizations and troubleshooting:
+
+* Fix issue crashing the app using sd card
+
 ### 3.0.2
 
 Improvements, optimizations and troubleshooting:

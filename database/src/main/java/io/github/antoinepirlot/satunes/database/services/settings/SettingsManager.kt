@@ -165,12 +165,8 @@ object SettingsManager {
         PlaybackSettings.switchAudioOffload(context = context)
     }
 
-    suspend fun enableArtworkAnimation(context: Context) {
-        DesignSettings.enableArtworkAnimation(context = context)
-    }
-
-    suspend fun disableArtworkAnimation(context: Context) {
-        DesignSettings.disableArtworkAnimation(context = context)
+    suspend fun switchArtworkAnimation(context: Context) {
+        DesignSettings.switchArtworkAnimation(context = context)
     }
 
     suspend fun seeWhatsNew(context: Context) {

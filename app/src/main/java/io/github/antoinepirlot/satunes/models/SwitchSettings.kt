@@ -44,6 +44,7 @@ internal enum class SwitchSettings(val stringId: Int, val navBarSection: NavBarS
     ALBUMS_FILTER(stringId = albums),
     ARTISTS_NAVBAR(stringId = artists, navBarSection = NavBarSection.ARTISTS),
     ARTISTS_FILTER(stringId = artists),
+    ARTWORK_ANIMATION(stringId = R.string.artwork_animation_switch_button),
     AUDIO_OFFLOAD(stringId = audio_offload),
     PLAYLISTS_FILTER(stringId = playlists),
     FOLDERS_NAVBAR(stringId = folders, navBarSection = NavBarSection.FOLDERS),

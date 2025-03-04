@@ -239,17 +239,10 @@ internal object DesignSettings {
         }
     }
 
-    suspend fun enableArtworkAnimation(context: Context) {
+    suspend fun switchArtworkAnimation(context: Context) {
         context.dataStore.edit { preferences: MutablePreferences ->
-            this.artworkAnimation = true
-            preferences[ARTWORK_ANIMATION_KEY] = true
-        }
-    }
-
-    suspend fun disableArtworkAnimation(context: Context) {
-        context.dataStore.edit { preferences: MutablePreferences ->
-            this.artworkAnimation = false
-            preferences[ARTWORK_ANIMATION_KEY] = false
+            this.artworkAnimation = !this.artworkAnimation
+            preferences[ARTWORK_ANIMATION_KEY] = this.artworkAnimation
         }
     }
 

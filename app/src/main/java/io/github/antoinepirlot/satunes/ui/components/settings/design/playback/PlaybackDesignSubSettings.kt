@@ -23,6 +23,7 @@ package io.github.antoinepirlot.satunes.ui.components.settings.design.playback
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.foundation.layout.Column
 import io.github.antoinepirlot.satunes.ui.components.settings.design.playback.custom_actions.CustomActionsSubSettings
 
 /**
@@ -30,7 +31,10 @@ import io.github.antoinepirlot.satunes.ui.components.settings.design.playback.cu
  */
 @Composable
 fun PlaybackDesignSubSettings(modifier: Modifier = Modifier) {
-    CustomActionsSubSettings(modifier = modifier)
+    Column (modifier = modifier) {
+        CustomActionsSubSettings()
+        ArtworkAnimationSubSetting()
+    }
 }
 
 @Preview

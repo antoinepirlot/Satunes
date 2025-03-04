@@ -223,6 +223,10 @@ private fun switchSetting(
             }
         }
 
+        SwitchSettings.ARTWORK_ANIMATION -> {
+            satunesViewModel.switchArtworkAnimation()
+        }
+
         else -> {
             /* Not a switch */
         }

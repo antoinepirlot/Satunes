@@ -63,7 +63,6 @@ import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.icons.R
 import io.github.antoinepirlot.satunes.ui.components.dialog.album.AlbumOptionsDialog
 import io.github.antoinepirlot.satunes.ui.utils.getRightIconAndDescription
@@ -105,7 +104,7 @@ internal fun MediaArtwork(
             targetValue = 360f,
             animationSpec = infiniteRepeatable(
                 animation = tween(
-                    durationMillis = 2000,
+                    durationMillis = 10000,
                     delayMillis = 0,
                     easing = LinearEasing
                 )

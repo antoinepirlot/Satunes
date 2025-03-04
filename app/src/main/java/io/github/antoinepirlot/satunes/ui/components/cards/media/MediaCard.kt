@@ -167,6 +167,7 @@ private fun CardPreview() {
         artist = artist,
         album = Album(title = "Album Title", artist = artist),
         genre = Genre(title = "Genre Title"),
+        addedDateMs = 0,
     )
     MediaCard(
         modifier = Modifier.fillMaxSize(),

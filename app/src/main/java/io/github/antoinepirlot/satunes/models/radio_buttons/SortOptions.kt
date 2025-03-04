@@ -20,8 +20,6 @@
 
 package io.github.antoinepirlot.satunes.models.radio_buttons
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.comparators.SortByAddedDateComparator
@@ -52,7 +50,6 @@ enum class SortOptions(
         comparator = SortByArtistComparator
     ),
 
-    @RequiresApi(Build.VERSION_CODES.O)
     DATE_ADDED(
         icon = SatunesIcons.ADDED_DATE,
         stringId = RDb.string.added_date,

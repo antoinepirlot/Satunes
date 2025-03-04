@@ -30,6 +30,7 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -41,8 +42,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.hapticfeedback.HapticFeedback
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
@@ -86,6 +89,7 @@ internal fun MediaArtwork(
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
 
     var mediaArtWorkModifier: Modifier = modifier
+        .clip(shape = if (satunesUiState.artworkCircleShape) CircleShape else RectangleShape)
     val isPlaying: Boolean = playbackViewModel.isPlaying
     val haptics: HapticFeedback = LocalHapticFeedback.current
     val screenWidthDp = LocalConfiguration.current.screenWidthDp
@@ -95,8 +99,6 @@ internal fun MediaArtwork(
         is Album -> mediaImpl
         else -> null
     }
-
-
 
     if (satunesUiState.artworkAnimation && mediaImpl == playbackViewModel.musicPlaying) {
         var lastScaleState: Float by rememberSaveable { mutableFloatStateOf(0F) }

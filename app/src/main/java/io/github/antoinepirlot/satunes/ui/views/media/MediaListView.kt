@@ -136,6 +136,7 @@ private fun MediaListViewPreview() {
             artist = Artist(title = "Artist Title"),
             album = Album(title = "Album Title", artist = Artist(title = "Artist Title")),
             genre = Genre(title = "Genre Title"),
+            addedDateMs = 0,
         )
     )
     MediaListView(

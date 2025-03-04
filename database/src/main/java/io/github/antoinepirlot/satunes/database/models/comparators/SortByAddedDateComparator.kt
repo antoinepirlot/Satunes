@@ -20,8 +20,6 @@
 
 package io.github.antoinepirlot.satunes.database.models.comparators
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
@@ -29,7 +27,6 @@ import io.github.antoinepirlot.satunes.database.models.Music
 /**
  * @author Antoine Pirlot 30/01/2025
  */
-@RequiresApi(Build.VERSION_CODES.O)
 object SortByAddedDateComparator : Comparator<MediaImpl> {
     override fun compare(o1: MediaImpl, o2: MediaImpl): Int {
         val cmp: Int =

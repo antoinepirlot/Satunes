@@ -21,18 +21,12 @@
 package io.github.antoinepirlot.satunes.database.models
 
 import android.graphics.Bitmap
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import io.github.antoinepirlot.satunes.database.models.comparators.StringComparator
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
-import java.nio.file.AccessDeniedException
-import java.nio.file.Files
-import java.nio.file.Paths
-import java.nio.file.attribute.BasicFileAttributes
 import java.util.Date
 import java.util.SortedSet
 
@@ -55,7 +49,6 @@ abstract class MediaImpl(
     /**
      * Declared in concrete classes (Music and Folder)
      */
-    @RequiresApi(Build.VERSION_CODES.O)
     protected open var addedDate: Date? = null
 
     protected open val musicSortedSet: SortedSet<Music> = sortedSetOf()
@@ -102,18 +95,6 @@ abstract class MediaImpl(
         if (this.musicSortedSet.contains(element = music)) {
             this.musicSortedSet.remove(music)
             this.listUpdated()
-        }
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    protected fun getCreationDate(path: String): Long {
-        try {
-            val filePath = Paths.get(path)
-            val attrs = Files.readAttributes(filePath, BasicFileAttributes::class.java)
-            return attrs.creationTime().toMillis()
-        } catch (_: AccessDeniedException) {
-            //TODO find a fix for Android 15 and later for sd cards
-            return 0
         }
     }
 

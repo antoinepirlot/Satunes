@@ -1,0 +1,3 @@
+Améliorations, optimisations et dépannage :
+
+* Correction du crash lors de l'utilisation d'une carte SD

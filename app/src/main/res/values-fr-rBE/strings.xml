@@ -134,4 +134,7 @@
     <string name="list_sub_settings_title">Listes</string>
     <string name="update_playlists_success">Les playlists ont été mises à jour</string>
     <string name="manage_external_storage_permission">Accès à tous les fichiers</string>
+    <string name="artwork_animation_switch_button">Animation de l\'image de l\'album lors de la lecture</string>
+    <string name="artwork_sub_settings">Image d\'album</string>
+    <string name="artwork_circle_shape_switch_button">Arrondir l\'image de l\'album</string>
 </resources>

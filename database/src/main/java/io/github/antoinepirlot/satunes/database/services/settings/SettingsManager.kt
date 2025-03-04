@@ -78,6 +78,12 @@ object SettingsManager {
         get() = PlaybackSettings.rewindMs
     val customActionsOrder: Collection<CustomActions> = DesignSettings.customActionsOrder
 
+    //Design
+    val artworkAnimation: Boolean
+        get() = DesignSettings.artworkAnimation
+    val artworkCircleShape: Boolean
+        get() = DesignSettings.artworkCircleShape
+
     // Search Settings
     val foldersFilter: Boolean
         get() = SearchSettings.foldersFilter
@@ -161,6 +167,14 @@ object SettingsManager {
 
     suspend fun switchAudioOffload(context: Context) {
         PlaybackSettings.switchAudioOffload(context = context)
+    }
+
+    suspend fun switchArtworkAnimation(context: Context) {
+        DesignSettings.switchArtworkAnimation(context = context)
+    }
+
+    suspend fun switchArtworkCircleShape(context: Context) {
+        DesignSettings.switchArtworkCircleShape(context = context)
     }
 
     suspend fun seeWhatsNew(context: Context) {

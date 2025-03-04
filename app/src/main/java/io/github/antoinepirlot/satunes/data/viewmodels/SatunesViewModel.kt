@@ -586,6 +586,32 @@ internal class SatunesViewModel : ViewModel() {
         }
     }
 
+    fun switchArtworkAnimation() {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                SettingsManager.switchArtworkAnimation(context = MainActivity.instance.applicationContext)
+                _uiState.update { currentState: SatunesUiState ->
+                    currentState.copy(artworkAnimation = SettingsManager.artworkAnimation)
+                }
+            } catch (e: Throwable) {
+                _logger?.warning(e.message)
+            }
+        }
+    }
+
+    fun switchArtworkCircleShape() {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                SettingsManager.switchArtworkCircleShape(context = MainActivity.instance.applicationContext)
+                _uiState.update { currentState: SatunesUiState ->
+                    currentState.copy(artworkCircleShape = SettingsManager.artworkCircleShape)
+                }
+            } catch (e: Throwable) {
+                _logger?.warning(e.message)
+            }
+        }
+    }
+
     fun replaceExtraButtons(extraButtons: @Composable () -> Unit) {
         _uiState.update { currentState: SatunesUiState ->
             currentState.copy(extraButtons = extraButtons)

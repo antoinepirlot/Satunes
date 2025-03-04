@@ -44,6 +44,8 @@ internal enum class SwitchSettings(val stringId: Int, val navBarSection: NavBarS
     ALBUMS_FILTER(stringId = albums),
     ARTISTS_NAVBAR(stringId = artists, navBarSection = NavBarSection.ARTISTS),
     ARTISTS_FILTER(stringId = artists),
+    ARTWORK_ANIMATION(stringId = R.string.artwork_animation_switch_button),
+    ARTWORK_CIRCLE_SHAPE(stringId = R.string.artwork_circle_shape_switch_button),
     AUDIO_OFFLOAD(stringId = audio_offload),
     PLAYLISTS_FILTER(stringId = playlists),
     FOLDERS_NAVBAR(stringId = folders, navBarSection = NavBarSection.FOLDERS),
@@ -57,5 +59,5 @@ internal enum class SwitchSettings(val stringId: Int, val navBarSection: NavBarS
     PAUSE_IF_ANOTHER_PLAYBACK(stringId = pause_if_another_playback),
     COMPILATION_MUSIC(stringId = compilation_music_setting_text),
     ARTIST_REPLACEMENT(stringId = R.string.artist_replacement_setting_content),
-    SHOW_FIRST_LETTER(stringId = R.string.show_first_letter_setting_content);
+    SHOW_FIRST_LETTER(stringId = R.string.show_first_letter_setting_content),
 }

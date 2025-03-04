@@ -22,9 +22,7 @@ package io.github.antoinepirlot.satunes.ui.components.images
 
 import android.content.Context
 import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
@@ -36,16 +34,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.hapticfeedback.HapticFeedback
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalConfiguration
@@ -88,6 +86,7 @@ internal fun MediaArtwork(
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
 
     var mediaArtWorkModifier: Modifier = modifier
+    val isPlaying: Boolean = playbackViewModel.isPlaying
     val haptics: HapticFeedback = LocalHapticFeedback.current
     val screenWidthDp = LocalConfiguration.current.screenWidthDp
     var showAlbumDialog: Boolean by rememberSaveable { mutableStateOf(false) }
@@ -97,24 +96,22 @@ internal fun MediaArtwork(
         else -> null
     }
 
-    if(satunesUiState.artworkAnimation && mediaImpl == playbackViewModel.musicPlaying) {
-        val infiniteTransition = rememberInfiniteTransition(label = "infinite transition")
-        val scale by infiniteTransition.animateFloat(
-            initialValue = 0f,
-            targetValue = 360f,
-            animationSpec = infiniteRepeatable(
-                animation = tween(
-                    durationMillis = 10000,
-                    delayMillis = 0,
-                    easing = LinearEasing
-                )
-            ),
-            label = "scale"
+
+
+    if (satunesUiState.artworkAnimation && mediaImpl == playbackViewModel.musicPlaying) {
+        var lastScaleState: Float by rememberSaveable { mutableFloatStateOf(0F) }
+        val rotationAngle by animateFloatAsState(
+            targetValue = if (isPlaying) 360F else lastScaleState,
+            animationSpec = tween(
+                durationMillis = 10000,
+                delayMillis = 0,
+                easing = LinearEasing
+            )
         )
-        mediaArtWorkModifier = mediaArtWorkModifier.graphicsLayer(
-            rotationZ = scale,
-            transformOrigin = TransformOrigin.Center
-        )
+        LaunchedEffect(isPlaying) {
+            if (!isPlaying) lastScaleState = rotationAngle
+        }
+        mediaArtWorkModifier = mediaArtWorkModifier.rotate(rotationAngle)
     }
 
     mediaArtWorkModifier = if (onClick != null) {

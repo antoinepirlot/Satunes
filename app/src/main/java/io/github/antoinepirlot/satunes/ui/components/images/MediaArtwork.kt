@@ -63,6 +63,7 @@ import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.icons.R
 import io.github.antoinepirlot.satunes.ui.components.dialog.album.AlbumOptionsDialog
 import io.github.antoinepirlot.satunes.ui.utils.getRightIconAndDescription
@@ -97,7 +98,7 @@ internal fun MediaArtwork(
         else -> null
     }
 
-    if (satunesUiState.artworkAnimation && mediaImpl == playbackViewModel.musicPlaying) {
+    if(satunesUiState.artworkAnimation && mediaImpl == playbackViewModel.musicPlaying) {
         val infiniteTransition = rememberInfiniteTransition(label = "infinite transition")
         val scale by infiniteTransition.animateFloat(
             initialValue = 0f,

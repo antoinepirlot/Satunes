@@ -24,7 +24,6 @@ import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
@@ -43,9 +42,7 @@ import io.github.antoinepirlot.satunes.ui.components.buttons.settings.library.pl
 internal fun PlaylistsSettingsButtons(modifier: Modifier = Modifier) {
     val scrollState: ScrollState = rememberScrollState()
     Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .horizontalScroll(state = scrollState)
+        modifier = modifier.horizontalScroll(state = scrollState)
     ) {
         Spacer(modifier = Modifier.size(8.dp))
         ExportPlaylistsButton()

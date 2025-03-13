@@ -3,6 +3,14 @@ You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
 ## 3.0 (Android 5.1.1 Lollipop et ultérieur)
 
+### 3.0.4
+
+Améliorations, optimisations et dépannage :
+
+* Correction de la position de la liste lors du changement de tri
+* Les toasts sont centrés ainsi que les boutons dans les paramètres
+* Suppression des lignes de séparation ajoutées par erreur dans la pop-up de sélection des médias
+
 ### 3.0.3
 
 Améliorations, optimisations et dépannage :

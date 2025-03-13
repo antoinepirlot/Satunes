@@ -22,6 +22,7 @@ package io.github.antoinepirlot.satunes.ui.components.buttons.fab
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -65,12 +66,17 @@ internal fun SatunesFAB(
             if (isInMediaListViews && playbackViewModel.musicPlaying != null)
                 ShowCurrentMusicButton()
         }
-        SnackbarHost(
-            //Mandatory as for Google a snackbar is on top of FAB icons and does not overlay it.
-            // So the UI is ugly without that modifier
-            modifier = Modifier.padding(start = 30.dp),
-            hostState = snackBarHostState
-        )
+        Box(
+            modifier = Modifier.fillMaxWidth(),
+            contentAlignment = Alignment.Center
+        ) {
+            SnackbarHost(
+                //Mandatory as for Google a snackbar is on top of FAB icons and does not overlay it.
+                // So the UI is ugly without that modifier
+                modifier = Modifier.padding(start = 30.dp),
+                hostState = snackBarHostState
+            )
+        }
     }
 }
 

@@ -88,9 +88,9 @@ internal fun MediaListView(
                 list = listToShow,
             )
             if (!collectionChanged)
-                lazyListState.scrollToItem(0)
+                lazyListState.requestScrollToItem(0)
             else {
-                lazyListState.scrollToItem(
+                lazyListState.requestScrollToItem(
                     index = lazyListState.firstVisibleItemIndex,
                     scrollOffset = lazyListState.firstVisibleItemScrollOffset
                 ) //Prevent scroll to anywhere else when back gesture

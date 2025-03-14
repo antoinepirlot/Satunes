@@ -104,7 +104,7 @@ Otherwise, you can also follow the following steps:
 
 ##
 
-If you like the app and want to support me click [here](https://tipeee.com/antoinepirlot).
+If you like the app and want to support me click [here](https://liberapay.com/antoinepirlot/).
 
 # Releases
 

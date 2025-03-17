@@ -56,6 +56,6 @@ internal fun ImageWithLink(
 private fun ImageWithLinkPreview() {
     ImageWithLink(
         url = "",
-        painterId = R.drawable.tipeee_logo
+        painterId = R.drawable.fdroid_logo
     )
 }

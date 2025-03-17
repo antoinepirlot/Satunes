@@ -31,15 +31,15 @@ import io.github.antoinepirlot.satunes.ui.components.images.ImageWithLink
  */
 
 @Composable
-internal fun Tipeee(
+internal fun Liberapay(
     modifier: Modifier = Modifier
 ) {
-    val tipeeeUrl = "https://tipeee.com/antoinepirlot"
-    ImageWithLink(modifier = modifier, url = tipeeeUrl, painterId = R.drawable.tipeee_logo)
+    val liberapayUrl = "https://liberapay.com/antoinepirlot"
+    ImageWithLink(modifier = modifier, url = liberapayUrl, painterId = R.drawable.liberapay)
 }
 
 @Preview
 @Composable
-private fun TipeeePreview() {
-    Tipeee()
+private fun LiberapayPreview() {
+    Liberapay()
 }

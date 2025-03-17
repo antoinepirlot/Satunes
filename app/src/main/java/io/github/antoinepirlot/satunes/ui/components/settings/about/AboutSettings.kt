@@ -60,7 +60,7 @@ internal fun AboutSettings(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            Tipeee()
+            Liberapay()
             Fdroid()
             Codeberg()
         }

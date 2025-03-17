@@ -21,13 +21,18 @@
 package io.github.antoinepirlot.satunes.ui.components.images
 
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.data.local.LocalMainScope
+import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
+import io.github.antoinepirlot.satunes.ui.utils.showErrorSnackBar
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
+import kotlinx.coroutines.CoroutineScope
 
 /**
  * @author Antoine Pirlot on 11/04/2024
@@ -41,12 +46,21 @@ internal fun ImageWithLink(
     shape: Shape = CircleShape,
     imageBackgroundColor: Color? = null
 ) {
+    val scope: CoroutineScope = LocalMainScope.current
+    val snackbarHostState: SnackbarHostState = LocalSnackBarHostState.current
     io.github.antoinepirlot.jetpack_libs.components.images.ImageWithLink(
         modifier = modifier,
         url = url,
         painterId = painterId,
         shape = shape,
         imageBackgroundColor = imageBackgroundColor,
+        onFail = {
+            showErrorSnackBar(
+                scope = scope,
+                snackBarHostState = snackbarHostState,
+                action = null
+            )
+        },
         logger = SatunesLogger.getLogger()
     )
 }

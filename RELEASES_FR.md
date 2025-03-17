@@ -3,6 +3,12 @@ You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
 ## 3.0 (Android 5.1.1 Lollipop et ultérieur)
 
+### 3.0.5
+
+Améliorations, optimisations et dépannage :
+
+* Remplacement du bouton tipeee par Liberapay
+
 ### 3.0.4
 
 Améliorations, optimisations et dépannage :

@@ -3,6 +3,12 @@ Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
 ## 3.0 (Android 5.1.1 Lollipop and later
 
+### 3.0.5
+
+Improvements, optimizations and troubleshooting:
+
+* Change tipeee button by Liberapay
+
 ### 3.0.4
 
 Improvements, optimizations and troubleshooting:

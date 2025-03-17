@@ -1,0 +1,3 @@
+Améliorations, optimisations et dépannage :
+
+* Remplacement du bouton tipeee par Liberapay

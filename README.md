@@ -100,7 +100,7 @@ Sinon, tu peux également suivre les étapes suivantes:
 
 ## Soutien
 
-Si l'application te plait et que tu as envie de me soutenir, n'hésite pas à le faire [ici](https://fr.tipeee.com/antoinepirlot).
+Si l'application te plait et que tu as envie de me soutenir, n'hésite pas à le faire [ici](https://liberapay.com/antoinepirlot/).
 
 # Versions
 Si tu souhaites voir les différentes versions de l'application et ce qu'elles contiennent, [clique ici.](RELEASES_FR.md)

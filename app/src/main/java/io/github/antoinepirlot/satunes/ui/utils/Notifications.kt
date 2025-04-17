@@ -35,14 +35,14 @@ import kotlinx.coroutines.launch
 internal fun showErrorSnackBar(
     scope: CoroutineScope,
     snackBarHostState: SnackbarHostState,
-    action: () -> Unit,
+    action: (() -> Unit)? = null,
 ) {
     val context: Context = MainActivity.instance.applicationContext
     showSnackBar(
         scope = scope,
         snackBarHostState = snackBarHostState,
         message = context.getString(R.string.error_occurred),
-        actionLabel = context.getString(R.string.retry),
+        actionLabel = if(action != null) context.getString(R.string.retry) else null,
         action = action,
         duration = SnackbarDuration.Long
     )

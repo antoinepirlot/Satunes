@@ -1,5 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 
+<!--
+  ~ This file is part of Satunes.
+  ~ Satunes is free software: you can redistribute it and/or modify it under
+  ~ the terms of the GNU General Public License as published by the Free Software Foundation,
+  ~ either version 3 of the License, or (at your option) any later version.
+  ~  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+  ~ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+  ~ See the GNU General Public License for more details.
+  ~  You should have received a copy of the GNU General Public License along with Satunes.
+  ~  If not, see <https://www.gnu.org/licenses/>.
+  ~
+  ~ *** INFORMATION ABOUT THE AUTHOR *****
+  ~ The author of this file is Antoine Pirlot, the owner of this project.
+  ~ You find this original project on Codeberg.
+  ~
+  ~ My Codeberg link is: https://codeberg.org/antoinepirlot
+  ~ This current project's link is: https://codeberg.org/antoinepirlot/Satunes
+  -->
+
 <resources>
     <string name="play_all">Lire en mode aléatoire</string>
     <string name="navigation_bar_settings_title">Barre de navigation</string>
@@ -79,7 +98,7 @@
     <string name="update_playlist_success">%1$s a été mise à jour</string>
     <string name="bar_speed_label">Vitesse</string>
     <string name="update_modal_not_permanently">Le modal sera toujours montré à la prochaine ouverture.</string>
-    <string name="add_path_button">Ajouter un dossier à %1$s</string>
+    <string name="add_path_button">Ajouter un dossier</string>
     <string name="path_set_empty">Aucun chemin sélectionné</string>
     <string name="refresh_data_button">Recharger la bibliothèque</string>
     <string name="remove_musics_from_playlist_success">Les musiques ont été supprimées de %1$s</string>
@@ -138,4 +157,5 @@
     <string name="artwork_sub_settings_title">Image d\'album</string>
     <string name="artwork_circle_shape_switch_button">Arrondir l\'image de l\'album</string>
     <string name="logs_activation_button">Activation</string>
+    <string name="include_exclude_change_text">Désormais, les deux types d\'inclusion/exclusion sont pris en compte simultanément. Cela signifie que vous pouvez inclure certains dossiers et en exclure d\'autres en même temps (exclure est prédominant).</string>
 </resources>

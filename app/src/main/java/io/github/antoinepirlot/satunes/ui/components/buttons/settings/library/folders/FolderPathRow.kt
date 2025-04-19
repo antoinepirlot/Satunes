@@ -1,16 +1,15 @@
 /*
  * This file is part of Satunes.
- *
  * Satunes is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software Foundation,
  * either version 3 of the License, or (at your option) any later version.
- * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ *  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public License along with Satunes.
- * If not, see <https://www.gnu.org/licenses/>.
+ *  You should have received a copy of the GNU General Public License along with Satunes.
+ *  If not, see <https://www.gnu.org/licenses/>.
  *
- * *** INFORMATION ABOUT THE AUTHOR *****
+ * ** INFORMATION ABOUT THE AUTHOR *****
  * The author of this file is Antoine Pirlot, the owner of this project.
  * You find this original project on Codeberg.
  *
@@ -25,6 +24,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -34,6 +35,8 @@ import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.local.LocalMainScope
 import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
+import io.github.antoinepirlot.satunes.data.states.FolderSelectionUiState
+import io.github.antoinepirlot.satunes.data.viewmodels.FolderSelectionViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.buttons.IconButton
@@ -47,8 +50,10 @@ import kotlinx.coroutines.CoroutineScope
 internal fun FolderPathRow(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
-    path: String,
+    folderSelectionViewModel: FolderSelectionViewModel = viewModel(),
+    path: String
 ) {
+    val folderSelectionUiState: FolderSelectionUiState by folderSelectionViewModel.uiState.collectAsState()
     val scope: CoroutineScope = LocalMainScope.current
     val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
 
@@ -73,7 +78,8 @@ internal fun FolderPathRow(
                 satunesViewModel.removePath(
                     scope = scope,
                     snackBarHostState = snackBarHostState,
-                    path = path
+                    path = path,
+                    folderSelection = folderSelectionUiState.folderSelectionSelected
                 )
             }
         )
@@ -83,5 +89,5 @@ internal fun FolderPathRow(
 @Preview
 @Composable
 private fun FolderPathRowPreview() {
-    FoldersPathButtons()
+    FolderPathRow(path = "/test/path/%")
 }

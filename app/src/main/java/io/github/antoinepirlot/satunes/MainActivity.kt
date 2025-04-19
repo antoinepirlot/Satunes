@@ -1,16 +1,15 @@
 /*
  * This file is part of Satunes.
- *
  * Satunes is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software Foundation,
  * either version 3 of the License, or (at your option) any later version.
- * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ *  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public License along with Satunes.
- * If not, see <https://www.gnu.org/licenses/>.
+ *  You should have received a copy of the GNU General Public License along with Satunes.
+ *  If not, see <https://www.gnu.org/licenses/>.
  *
- * *** INFORMATION ABOUT THE AUTHOR *****
+ * ** INFORMATION ABOUT THE AUTHOR *****
  * The author of this file is Antoine Pirlot, the owner of this project.
  * You find this original project on Codeberg.
  *
@@ -29,6 +28,7 @@ import android.provider.DocumentsContract
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import io.github.antoinepirlot.satunes.data.viewmodels.utils.isAudioAllowed
+import io.github.antoinepirlot.satunes.database.models.FoldersSelection
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
@@ -54,7 +54,8 @@ internal class MainActivity : ComponentActivity() {
         private const val EXPORT_ALL_PLAYLISTS_CODE: Int = 2
         private const val EXPORT_PLAYLIST_CODE: Int = 3
         private const val EXPORT_LOGS_CODE: Int = 4
-        const val SELECT_FOLDER_TREE_CODE: Int = 5
+        const val INCLUDE_FOLDER_TREE_CODE: Int = 5
+        const val EXCLUDE_FOLDER_TREE_CODE: Int = 6
         const val MIME_JSON: String = "application/json"
         private const val MIME_TEXT: String = "application/text"
         val DEFAULT_URI: Uri =
@@ -161,10 +162,17 @@ internal class MainActivity : ComponentActivity() {
                     }
                 }
 
-                SELECT_FOLDER_TREE_CODE -> {
+                INCLUDE_FOLDER_TREE_CODE, EXCLUDE_FOLDER_TREE_CODE -> {
                     data?.data?.also {
+                        val folderSelection: FoldersSelection =
+                            if (requestCode == INCLUDE_FOLDER_TREE_CODE) FoldersSelection.INCLUDE
+                            else FoldersSelection.EXCLUDE
                         CoroutineScope(Dispatchers.IO).launch {
-                            SettingsManager.addPath(context = applicationContext, uri = it)
+                            SettingsManager.addPath(
+                                context = applicationContext,
+                                uri = it,
+                                folderSelection = folderSelection
+                            )
                         }
                     }
                 }

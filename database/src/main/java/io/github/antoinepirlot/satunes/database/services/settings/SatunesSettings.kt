@@ -43,12 +43,18 @@ internal object SatunesSettings {
     private const val DEFAULT_WHATS_NEW_SEEN: Boolean = false
     private const val DEFAULT_WHATS_NEW_VERSION_SEEN: String = ""
     private const val DEFAULT_LOGS_ACTIVATION: Boolean = true
+    private const val DEFAULT_INCLUDE_EXCLUDE_SEEN: Boolean = false
 
     // KEYS
 
-    private val WHATS_NEW_SEEN_KEY = booleanPreferencesKey("whats_new_seen")
-    private val WHATS_NEW_VERSION_SEEN_KEY = stringPreferencesKey("whats_new_version_seen")
-    private val LOGS_ACTIVATION_KEY = booleanPreferencesKey("logs_activation")
+    private val WHATS_NEW_SEEN_KEY: Preferences.Key<Boolean> =
+        booleanPreferencesKey("whats_new_seen")
+    private val WHATS_NEW_VERSION_SEEN_KEY: Preferences.Key<String> =
+        stringPreferencesKey("whats_new_version_seen")
+    private val LOGS_ACTIVATION_KEY: Preferences.Key<Boolean> =
+        booleanPreferencesKey("logs_activation")
+    private val INCLUDE_EXCLUDE_SEEN_KEY: Preferences.Key<Boolean> =
+        booleanPreferencesKey("see_include_exclude")
 
     // VARIABLES
 
@@ -57,6 +63,7 @@ internal object SatunesSettings {
     private var whatsNewVersionSeen: String = DEFAULT_WHATS_NEW_VERSION_SEEN
     var logsActivation: MutableState<Boolean> = mutableStateOf(DEFAULT_LOGS_ACTIVATION)
         private set
+    var includeExcludeSeen: Boolean = DEFAULT_INCLUDE_EXCLUDE_SEEN
 
     suspend fun loadSettings(context: Context) {
         context.dataStore.data.map { preferences: Preferences ->
@@ -64,6 +71,8 @@ internal object SatunesSettings {
             this.whatsNewVersionSeen =
                 preferences[WHATS_NEW_VERSION_SEEN_KEY] ?: DEFAULT_WHATS_NEW_VERSION_SEEN
             this.logsActivation.value = preferences[LOGS_ACTIVATION_KEY] ?: DEFAULT_LOGS_ACTIVATION
+            this.includeExcludeSeen =
+                preferences[INCLUDE_EXCLUDE_SEEN_KEY] ?: DEFAULT_INCLUDE_EXCLUDE_SEEN
             if (this.whatsNewSeen) {
                 val packageManager = context.packageManager
                 val packageInfo = packageManager.getPackageInfo(context.packageName, 0)
@@ -90,7 +99,7 @@ internal object SatunesSettings {
     suspend fun unSeeWhatsNew(context: Context) {
         context.dataStore.edit { preferences: MutablePreferences ->
             this.whatsNewSeen = false
-            preferences[WHATS_NEW_SEEN_KEY] = this.whatsNewSeen
+            preferences[WHATS_NEW_SEEN_KEY] = false
         }
     }
 
@@ -106,9 +115,25 @@ internal object SatunesSettings {
             this.logsActivation.value = DEFAULT_LOGS_ACTIVATION
             preferences[LOGS_ACTIVATION_KEY] = this.logsActivation.value
             this.whatsNewSeen = DEFAULT_WHATS_NEW_SEEN
-            preferences[WHATS_NEW_SEEN_KEY] = this.whatsNewSeen
+            preferences[WHATS_NEW_SEEN_KEY] = DEFAULT_WHATS_NEW_SEEN
             this.whatsNewVersionSeen = DEFAULT_WHATS_NEW_VERSION_SEEN
             preferences[WHATS_NEW_VERSION_SEEN_KEY] = this.whatsNewVersionSeen
+            this.includeExcludeSeen = DEFAULT_INCLUDE_EXCLUDE_SEEN
+            preferences[INCLUDE_EXCLUDE_SEEN_KEY] = DEFAULT_INCLUDE_EXCLUDE_SEEN
+        }
+    }
+
+    suspend fun seeIncludeExcludeInfo(context: Context) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            this.includeExcludeSeen = true
+            preferences[INCLUDE_EXCLUDE_SEEN_KEY] = true
+        }
+    }
+
+    suspend fun unSeeIncludeExcludeInfo(context: Context) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            this.includeExcludeSeen = false
+            preferences[INCLUDE_EXCLUDE_SEEN_KEY] = false
         }
     }
 }

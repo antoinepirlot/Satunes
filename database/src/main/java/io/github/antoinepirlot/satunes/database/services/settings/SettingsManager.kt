@@ -1,16 +1,15 @@
 /*
  * This file is part of Satunes.
- *
  * Satunes is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software Foundation,
  * either version 3 of the License, or (at your option) any later version.
- * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ *  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public License along with Satunes.
- * If not, see <https://www.gnu.org/licenses/>.
+ *  You should have received a copy of the GNU General Public License along with Satunes.
+ *  If not, see <https://www.gnu.org/licenses/>.
  *
- * *** INFORMATION ABOUT THE AUTHOR *****
+ * ** INFORMATION ABOUT THE AUTHOR *****
  * The author of this file is Antoine Pirlot, the owner of this project.
  * You find this original project on Codeberg.
  *
@@ -52,6 +51,8 @@ object SettingsManager {
     // Satunes Settings
     val whatsNewSeen: Boolean
         get() = SatunesSettings.whatsNewSeen
+    val includeExcludeSeen: Boolean
+        get() = SatunesSettings.includeExcludeSeen
     val logsActivation: MutableState<Boolean> = SatunesSettings.logsActivation
 
     // NavBarSettings
@@ -98,9 +99,13 @@ object SettingsManager {
         get() = SearchSettings.musicsFilter
 
     // Library Settings
+    @Deprecated("No more used as both include and exclude are used simultaneously")
     var foldersSelectionSelected: FoldersSelection = LibrarySettings.foldersSelectionSelected
         internal set
-    val foldersPathsSelectedSet: Collection<String> = LibrarySettings.foldersPathsSelectedCollection
+    val foldersPathsIncludingCollection: Collection<String> =
+        LibrarySettings.foldersPathsIncludingCollection
+    val foldersPathsExcludingCollection: Collection<String> =
+        LibrarySettings.foldersPathsExcludingCollection
 
     /**
      * This setting is true if the compilation's music has to be added to compilation's artist's music list
@@ -189,35 +194,34 @@ object SettingsManager {
         SearchSettings.switchFilter(context = context, filterSetting = filterSetting)
     }
 
-    suspend fun selectFoldersSelection(context: Context, foldersSelection: FoldersSelection) {
-        LibrarySettings.selectFoldersSelection(
-            context = context,
-            foldersSelection = foldersSelection
-        )
-    }
-
     /**
-     * Add a path to the selected paths set and memorize it in storage.
+     * Add a path to the including list or excluding list base on param [folderSelection] and memorize it in storage.
      *
      * @param context the app context
      * @param uri the uri containing the selected path
+     * @param folderSelection the option selected on screen.
      */
-    suspend fun addPath(context: Context, uri: Uri) {
-        this.addPath(context = context, path = uri.path!!)
+    suspend fun addPath(context: Context, uri: Uri, folderSelection: FoldersSelection) {
+        this.addPath(context = context, path = uri.path!!, folderSelection = folderSelection)
     }
 
     /**
-     * Add a path to the selected paths set and memorize it in storage.
+     * Add a path to the including list or excluding list base on param [folderSelection] and memorize it in storage.
      *
      * @param context the app context
      * @param path the selected path as string
+     * @param folderSelection the option selected on screen.
      */
-    suspend fun addPath(context: Context, path: String) {
-        LibrarySettings.addPath(context = context, path = path)
+    suspend fun addPath(context: Context, path: String, folderSelection: FoldersSelection) {
+        LibrarySettings.addPath(context = context, path = path, folderSelection = folderSelection)
     }
 
-    suspend fun removePath(context: Context, path: String) {
-        LibrarySettings.removePath(context = context, path = path)
+    suspend fun removePath(context: Context, path: String, folderSelection: FoldersSelection) {
+        LibrarySettings.removePath(
+            context = context,
+            path = path,
+            folderSelection = folderSelection
+        )
     }
 
     suspend fun selectDefaultNavBarSection(context: Context, navBarSection: NavBarSection) {
@@ -321,5 +325,13 @@ object SettingsManager {
 
     suspend fun resetArtworkSettings(context: Context) {
         DesignSettings.resetArtworkSettings(context = context)
+    }
+
+    suspend fun seeIncludeExcludeInfo(context: Context) {
+        SatunesSettings.seeIncludeExcludeInfo(context)
+    }
+
+    suspend fun unSeeIncludeExcludeInfo(context: Context) {
+        SatunesSettings.unSeeIncludeExcludeInfo(context)
     }
 }

@@ -137,4 +137,5 @@
     <string name="artwork_animation_switch_button">Animation de l\'image de l\'album lors de la lecture</string>
     <string name="artwork_sub_settings">Image d\'album</string>
     <string name="artwork_circle_shape_switch_button">Arrondir l\'image de l\'album</string>
+    <string name="logs_activation_button">Activation</string>
 </resources>

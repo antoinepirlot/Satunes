@@ -25,15 +25,26 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.jetpack_libs.components.texts.Title
 import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.data.local.LocalMainScope
+import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
+import io.github.antoinepirlot.satunes.data.states.SatunesUiState
+import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
+import io.github.antoinepirlot.satunes.models.SwitchSettings
+import io.github.antoinepirlot.satunes.ui.components.settings.SettingWithSwitch
+import kotlinx.coroutines.CoroutineScope
 
 /**
  * @author Antoine Pirlot on 15/07/2024
@@ -42,7 +53,11 @@ import io.github.antoinepirlot.satunes.R
 @Composable
 internal fun LogsSettingsView(
     modifier: Modifier = Modifier,
+    satunesViewModel: SatunesViewModel = viewModel()
 ) {
+    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+    val scope: CoroutineScope = LocalMainScope.current
+    val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
     val scrollState: ScrollState = rememberScrollState()
     Column(
         modifier = modifier.verticalScroll(state = scrollState),
@@ -53,6 +68,17 @@ internal fun LogsSettingsView(
         NormalText(
             text = stringResource(id = R.string.logs_settings_content),
             maxLines = Int.MAX_VALUE
+        )
+
+        SettingWithSwitch(
+            setting = SwitchSettings.LOGS,
+            checked = satunesUiState.logsActivation,
+            onCheckedChange = {
+                satunesViewModel.switchLogsActivation(
+                    scope = scope,
+                    snackBarHostState = snackBarHostState
+                )
+            }
         )
 
         Button(onClick = { MainActivity.instance.exportLogs() }) {

@@ -692,4 +692,26 @@ internal class SatunesViewModel : ViewModel() {
             }
         }
     }
+
+    fun switchLogsActivation(scope: CoroutineScope, snackBarHostState: SnackbarHostState) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                SettingsManager.switchLogsActivation(context = MainActivity.instance.applicationContext)
+                _uiState.update { currentState: SatunesUiState ->
+                    currentState.copy(logsActivation = SettingsManager.logsActivation)
+                }
+            } catch (e: Throwable) {
+                showErrorSnackBar(
+                    scope = scope,
+                    snackBarHostState = snackBarHostState,
+                    action = {
+                        switchLogsActivation(
+                            scope = scope,
+                            snackBarHostState = snackBarHostState
+                        )
+                    }
+                )
+            }
+        }
+    }
 }

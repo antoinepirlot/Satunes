@@ -52,6 +52,8 @@ object SettingsManager {
     // Satunes Settings
     val whatsNewSeen: Boolean
         get() = SatunesSettings.whatsNewSeen
+    val logsActivation: Boolean
+        get() = SatunesSettings.logsActivation
 
     // NavBarSettings
     val defaultNavBarSection: MutableState<NavBarSection> = DesignSettings.defaultNavBarSection
@@ -308,5 +310,9 @@ object SettingsManager {
 
     suspend fun resetCustomActions(context: Context) {
         DesignSettings.resetCustomActions(context = context)
+    }
+
+    suspend fun switchLogsActivation(context: Context) {
+        SatunesSettings.switchLogsActivation(context)
     }
 }

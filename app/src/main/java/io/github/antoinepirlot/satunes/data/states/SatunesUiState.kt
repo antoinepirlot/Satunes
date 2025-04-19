@@ -42,7 +42,9 @@ internal data class SatunesUiState(
      * It's null if the [currentDestination] is not a single media.
      */
     val currentMediaImpl: MediaImpl? = null,
-    //Use this in UiSate and ViewModel as it is a particular value. It could change but most of the time it won't change
+    /**
+     * Use this in UiSate and ViewModel as it is a particular value. It could change but most of the time it won't change
+     */
     val isAudioAllowed: Boolean = isAudioAllowed(context = MainActivity.instance.applicationContext),
     val foldersSelectionSelected: FoldersSelection = SettingsManager.foldersSelectionSelected,
     val playbackWhenClosedChecked: Boolean = SettingsManager.playbackWhenClosedChecked,
@@ -61,4 +63,5 @@ internal data class SatunesUiState(
     val showMediaSelectionDialog: Boolean = false,
     val artworkAnimation: Boolean = SettingsManager.artworkAnimation,
     val artworkCircleShape: Boolean = SettingsManager.artworkCircleShape,
+    val logsActivation: Boolean = SettingsManager.logsActivation
 )

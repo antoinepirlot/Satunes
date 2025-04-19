@@ -40,6 +40,7 @@ import io.github.antoinepirlot.satunes.data.availableSpeeds
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.utils.isAudioAllowed
 import io.github.antoinepirlot.satunes.database.models.BarSpeed
+import io.github.antoinepirlot.satunes.database.models.FoldersSelection
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.database.models.Playlist
@@ -521,7 +522,7 @@ class SatunesViewModel : ViewModel() {
         }
     }
 
-    fun addPath(include: Boolean) {
+    fun addPath(folderSelection: FoldersSelection) {
         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE).apply {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 putExtra(DocumentsContract.EXTRA_INITIAL_URI, DEFAULT_URI)
@@ -529,7 +530,7 @@ class SatunesViewModel : ViewModel() {
         }
         MainActivity.instance.startActivityForResult(
             intent,
-            if (include) MainActivity.INCLUDE_FOLDER_TREE_CODE else MainActivity.EXCLUDE_FOLDER_TREE_CODE
+            if (folderSelection == FoldersSelection.INCLUDE) MainActivity.INCLUDE_FOLDER_TREE_CODE else MainActivity.EXCLUDE_FOLDER_TREE_CODE
         )
     }
 
@@ -537,13 +538,13 @@ class SatunesViewModel : ViewModel() {
         scope: CoroutineScope,
         snackBarHostState: SnackbarHostState,
         path: String,
-        include: Boolean
+        folderSelection: FoldersSelection
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             SettingsManager.removePath(
                 context = MainActivity.instance.applicationContext,
                 path = path,
-                include
+                folderSelection = folderSelection
             )
             showSnackBar(
                 scope = scope,
@@ -558,7 +559,7 @@ class SatunesViewModel : ViewModel() {
                         SettingsManager.addPath(
                             context = MainActivity.instance.applicationContext,
                             path = path,
-                            include = include
+                            folderSelection = folderSelection
                         )
                     }
                 }

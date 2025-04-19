@@ -195,29 +195,33 @@ object SettingsManager {
     }
 
     /**
-     * Add a path to the including list or excluding list base on param [include] and memorize it in storage.
+     * Add a path to the including list or excluding list base on param [folderSelection] and memorize it in storage.
      *
      * @param context the app context
      * @param uri the uri containing the selected path
-     * @param include true if it must be in the include list, false for the exclude list
+     * @param folderSelection the option selected on screen.
      */
-    suspend fun addPath(context: Context, uri: Uri, include: Boolean) {
-        this.addPath(context = context, path = uri.path!!, include = include)
+    suspend fun addPath(context: Context, uri: Uri, folderSelection: FoldersSelection) {
+        this.addPath(context = context, path = uri.path!!, folderSelection = folderSelection)
     }
 
     /**
-     * Add a path to the including list or excluding list base on param [include] and memorize it in storage.
+     * Add a path to the including list or excluding list base on param [folderSelection] and memorize it in storage.
      *
      * @param context the app context
      * @param path the selected path as string
-     * @param include true if it must be in the include list, false for the exclude list
+     * @param folderSelection the option selected on screen.
      */
-    suspend fun addPath(context: Context, path: String, include: Boolean) {
-        LibrarySettings.addPath(context = context, path = path, include = include)
+    suspend fun addPath(context: Context, path: String, folderSelection: FoldersSelection) {
+        LibrarySettings.addPath(context = context, path = path, folderSelection = folderSelection)
     }
 
-    suspend fun removePath(context: Context, path: String, include: Boolean) {
-        LibrarySettings.removePath(context = context, path = path, include = include)
+    suspend fun removePath(context: Context, path: String, folderSelection: FoldersSelection) {
+        LibrarySettings.removePath(
+            context = context,
+            path = path,
+            folderSelection = folderSelection
+        )
     }
 
     suspend fun selectDefaultNavBarSection(context: Context, navBarSection: NavBarSection) {

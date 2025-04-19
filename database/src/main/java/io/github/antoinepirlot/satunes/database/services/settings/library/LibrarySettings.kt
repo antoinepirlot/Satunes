@@ -129,10 +129,18 @@ internal object LibrarySettings {
         if (tempList.isEmpty()) return
         if (this.foldersSelectionSelected == FoldersSelection.INCLUDE) {
             (this.foldersPathsIncludingCollection as MutableCollection<String>).clear()
-            for (path: String in tempList) this.addPath(context = context, path, include = true)
+            for (path: String in tempList) this.addPath(
+                context = context,
+                path,
+                folderSelection = this.foldersSelectionSelected
+            )
         } else if (this.foldersSelectionSelected == FoldersSelection.EXCLUDE) {
             (this.foldersPathsExcludingCollection as MutableCollection<String>).clear()
-            for (path: String in tempList) this.addPath(context = context, path, include = false)
+            for (path: String in tempList) this.addPath(
+                context = context,
+                path,
+                folderSelection = this.foldersSelectionSelected
+            )
         } else throw InternalError("Unexpected situation. The foldersSelectionSelected was not include or exclude.")
 
     }
@@ -155,22 +163,22 @@ internal object LibrarySettings {
      *
      * @param context the app context.
      * @param path the selected path as string.
-     * @param include means the file must be included, false means it must be excluded.
+     * @param folderSelection the option selected on screen.
      */
-    suspend fun addPath(context: Context, path: String, include: Boolean) {
+    suspend fun addPath(context: Context, path: String, folderSelection: FoldersSelection) {
         val formattedPath: String = getFormattedPath(path = path)
         context.dataStore.edit { preferences: MutablePreferences ->
-            if (include) {
+            if (folderSelection == FoldersSelection.INCLUDE) {
                 (this.foldersPathsIncludingCollection as MutableCollection<String>).add(
                     formattedPath
                 )
                 preferences[INCLUDING_PATHS_KEY] = this.foldersPathsIncludingCollection.toSet()
-            } else {
+            } else if (folderSelection == FoldersSelection.EXCLUDE) {
                 (this.foldersPathsExcludingCollection as MutableCollection<String>).add(
                     formattedPath
                 )
                 preferences[EXCLUDING_PATHS_KEY] = this.foldersPathsExcludingCollection.toSet()
-            }
+            } else throw IllegalArgumentException("folderSelection must be Include or Exclude.")
         }
     }
 
@@ -179,17 +187,17 @@ internal object LibrarySettings {
      *
      * @param context the [Context] fo the app
      * @param path as [String] that is formatted
-     * @param include true if it must be removed from the including list, false for the excluding list.
+     * @param folderSelection the option selected on screen.
      */
-    suspend fun removePath(context: Context, path: String, include: Boolean) {
+    suspend fun removePath(context: Context, path: String, folderSelection: FoldersSelection) {
         context.dataStore.edit { preferences: MutablePreferences ->
-            if (include) {
+            if (folderSelection == FoldersSelection.INCLUDE) {
                 (this.foldersPathsIncludingCollection as MutableCollection<String>).remove(path)
                 preferences[INCLUDING_PATHS_KEY] = this.foldersPathsIncludingCollection.toSet()
-            } else {
+            } else if (folderSelection == FoldersSelection.EXCLUDE) {
                 (this.foldersPathsExcludingCollection as MutableCollection<String>).remove(path)
                 preferences[EXCLUDING_PATHS_KEY] = this.foldersPathsExcludingCollection.toSet()
-            }
+            } else throw IllegalArgumentException("folderSelection must be Include or Exclude")
         }
     }
 

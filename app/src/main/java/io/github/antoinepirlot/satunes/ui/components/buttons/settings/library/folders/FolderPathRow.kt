@@ -79,7 +79,7 @@ internal fun FolderPathRow(
                     scope = scope,
                     snackBarHostState = snackBarHostState,
                     path = path,
-                    include = folderSelectionUiState.includeSection
+                    folderSelection = folderSelectionUiState.folderSelectionSelected
                 )
             }
         )

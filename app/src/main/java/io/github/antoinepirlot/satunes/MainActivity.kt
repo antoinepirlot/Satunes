@@ -28,6 +28,7 @@ import android.provider.DocumentsContract
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import io.github.antoinepirlot.satunes.data.viewmodels.utils.isAudioAllowed
+import io.github.antoinepirlot.satunes.database.models.FoldersSelection
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
@@ -163,11 +164,14 @@ internal class MainActivity : ComponentActivity() {
 
                 INCLUDE_FOLDER_TREE_CODE, EXCLUDE_FOLDER_TREE_CODE -> {
                     data?.data?.also {
+                        val folderSelection: FoldersSelection =
+                            if (requestCode == INCLUDE_FOLDER_TREE_CODE) FoldersSelection.INCLUDE
+                            else FoldersSelection.EXCLUDE
                         CoroutineScope(Dispatchers.IO).launch {
                             SettingsManager.addPath(
                                 context = applicationContext,
                                 uri = it,
-                                include = requestCode == INCLUDE_FOLDER_TREE_CODE
+                                folderSelection = folderSelection
                             )
                         }
                     }

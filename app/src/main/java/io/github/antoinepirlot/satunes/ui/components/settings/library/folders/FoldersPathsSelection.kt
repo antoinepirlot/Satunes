@@ -34,6 +34,7 @@ import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.states.FolderSelectionUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.FolderSelectionViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
+import io.github.antoinepirlot.satunes.database.models.FoldersSelection
 import io.github.antoinepirlot.satunes.ui.components.buttons.settings.library.folders.FolderPathRow
 import io.github.antoinepirlot.satunes.ui.components.buttons.settings.library.folders.FoldersPathButtons
 
@@ -52,7 +53,7 @@ internal fun FoldersPathsSelection(
         modifier = modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        if (folderSelectionUiState.includeSection)
+        if (folderSelectionUiState.folderSelectionSelected == FoldersSelection.INCLUDE)
             for (path: String in satunesViewModel.foldersPathsIncludingCollection)
                 FolderPathRow(path = path)
         else

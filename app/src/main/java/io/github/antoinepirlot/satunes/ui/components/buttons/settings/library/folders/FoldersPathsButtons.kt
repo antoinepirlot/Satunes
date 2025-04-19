@@ -69,7 +69,7 @@ internal fun FoldersPathButtons(
         ButtonWithIcon(
             modifier = Modifier.fillMaxWidth(),
             icon = SatunesIcons.ADD,
-            onClick = { satunesViewModel.addPath(include = folderSelectionUiState.includeSection) },
+            onClick = { satunesViewModel.addPath(folderSelection = folderSelectionUiState.folderSelectionSelected) },
             text = stringResource(
                 id = R.string.add_path_button,
                 stringResource(

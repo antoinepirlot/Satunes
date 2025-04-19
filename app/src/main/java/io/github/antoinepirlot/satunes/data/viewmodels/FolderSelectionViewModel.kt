@@ -21,6 +21,7 @@ package io.github.antoinepirlot.satunes.data.viewmodels
 
 import androidx.lifecycle.ViewModel
 import io.github.antoinepirlot.satunes.data.states.FolderSelectionUiState
+import io.github.antoinepirlot.satunes.database.models.FoldersSelection
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -40,7 +41,10 @@ class FolderSelectionViewModel : ViewModel() {
      */
     fun switchFolderSection() {
         _uiState.update { currentState: FolderSelectionUiState ->
-            currentState.copy(includeSection = !currentState.includeSection)
+            if (currentState.folderSelectionSelected == FoldersSelection.INCLUDE)
+                currentState.copy(folderSelectionSelected = FoldersSelection.EXCLUDE)
+            else
+                currentState.copy(folderSelectionSelected = FoldersSelection.INCLUDE)
         }
     }
 }

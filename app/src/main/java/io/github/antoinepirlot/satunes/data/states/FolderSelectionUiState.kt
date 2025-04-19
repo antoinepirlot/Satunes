@@ -19,9 +19,11 @@
 
 package io.github.antoinepirlot.satunes.data.states
 
+import io.github.antoinepirlot.satunes.database.models.FoldersSelection
+
 /**
  * @author Antoine Pirlot 19/04/2025
  */
 data class FolderSelectionUiState(
-    val includeSection: Boolean = true
+    val folderSelectionSelected: FoldersSelection = FoldersSelection.INCLUDE
 )

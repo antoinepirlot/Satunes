@@ -59,7 +59,7 @@ internal object LibrarySettings {
     private val INCLUDING_PATHS_KEY: Preferences.Key<Set<String>> =
         stringSetPreferencesKey("including_paths_set")
     private val EXCLUDING_PATHS_KEY: Preferences.Key<Set<String>> =
-        stringSetPreferencesKey("including_paths_set")
+        stringSetPreferencesKey("excluding_paths_set")
 
     private val COMPILATION_MUSIC_KEY: Preferences.Key<Boolean> =
         booleanPreferencesKey("compilation_music")
@@ -109,7 +109,7 @@ internal object LibrarySettings {
 
     private fun loadExcludingPaths(preferences: Preferences) {
         var paths: Collection<String> =
-            preferences[INCLUDING_PATHS_KEY] ?: setOf(DEFAULT_INCLUDE_PATH)
+            preferences[EXCLUDING_PATHS_KEY] ?: setOf()
         (this.foldersPathsExcludingCollection as MutableCollection<String>).clear()
         (this.foldersPathsExcludingCollection).addAll(paths)
     }
@@ -231,7 +231,10 @@ internal object LibrarySettings {
             (this.foldersPathsIncludingCollection as MutableCollection<String>).clear()
             (this.foldersPathsIncludingCollection)
                 .add(DEFAULT_INCLUDE_PATH)
-            preferences[SELECTED_PATHS_KEY] = this.foldersPathsIncludingCollection.toSet()
+            preferences[INCLUDING_PATHS_KEY] = this.foldersPathsIncludingCollection.toSet()
+
+            (this.foldersPathsExcludingCollection as MutableCollection<String>).clear()
+            preferences[EXCLUDING_PATHS_KEY] = this.foldersPathsExcludingCollection.toSet()
         }
     }
 
@@ -239,7 +242,7 @@ internal object LibrarySettings {
         context.dataStore.edit { preferences: MutablePreferences ->
             this.compilationMusic = DEFAULT_COMPILATION_MUSIC
             this.artistReplacement = DEFAULT_ARTISTS_REPLACEMENT
-            preferences[COMPILATION_MUSIC_KEY] = this.compilationMusic
+            preferences[COMPILATION_MUSIC_KEY] = DEFAULT_COMPILATION_MUSIC
             preferences[ARTISTS_REPLACEMENT_KEY] = this.artistReplacement
         }
     }

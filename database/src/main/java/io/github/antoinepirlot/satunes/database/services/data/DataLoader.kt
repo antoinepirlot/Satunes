@@ -120,7 +120,7 @@ object DataLoader {
         this.selection = ""
         this.selection_args = arrayOf()
 
-        val hasExcluding: Boolean = SettingsManager.foldersPathsExcludingCollection.isEmpty()
+        val hasExcluding: Boolean = SettingsManager.foldersPathsExcludingCollection.isNotEmpty()
         if (SettingsManager.foldersPathsIncludingCollection.isNotEmpty()) {
             this.addPaths(SettingsManager.foldersPathsIncludingCollection, or = true, like = true)
             if (hasExcluding) this.selection += "AND "

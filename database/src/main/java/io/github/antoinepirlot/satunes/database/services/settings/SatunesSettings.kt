@@ -21,9 +21,8 @@
 package io.github.antoinepirlot.satunes.database.services.settings
 
 import android.content.Context
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.datastore.preferences.core.MutablePreferences
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -56,7 +55,7 @@ internal object SatunesSettings {
     var whatsNewSeen: Boolean = DEFAULT_WHATS_NEW_SEEN
         private set
     private var whatsNewVersionSeen: String = DEFAULT_WHATS_NEW_VERSION_SEEN
-    var logsActivation: Boolean by mutableStateOf(DEFAULT_LOGS_ACTIVATION)
+    var logsActivation: MutableState<Boolean> = mutableStateOf(DEFAULT_LOGS_ACTIVATION)
         private set
 
     suspend fun loadSettings(context: Context) {
@@ -64,7 +63,7 @@ internal object SatunesSettings {
             this.whatsNewSeen = preferences[WHATS_NEW_SEEN_KEY] ?: DEFAULT_WHATS_NEW_SEEN
             this.whatsNewVersionSeen =
                 preferences[WHATS_NEW_VERSION_SEEN_KEY] ?: DEFAULT_WHATS_NEW_VERSION_SEEN
-            this.logsActivation = preferences[LOGS_ACTIVATION_KEY] ?: DEFAULT_LOGS_ACTIVATION
+            this.logsActivation.value = preferences[LOGS_ACTIVATION_KEY] ?: DEFAULT_LOGS_ACTIVATION
             if (this.whatsNewSeen) {
                 val packageManager = context.packageManager
                 val packageInfo = packageManager.getPackageInfo(context.packageName, 0)
@@ -97,15 +96,15 @@ internal object SatunesSettings {
 
     suspend fun switchLogsActivation(context: Context) {
         context.dataStore.edit { preferences: MutablePreferences ->
-            this.logsActivation = !this.logsActivation
-            preferences[LOGS_ACTIVATION_KEY] = this.logsActivation
+            this.logsActivation.value = !this.logsActivation.value
+            preferences[LOGS_ACTIVATION_KEY] = this.logsActivation.value
         }
     }
 
     suspend fun reset(context: Context) {
         context.dataStore.edit { preferences: MutablePreferences ->
-            this.logsActivation = DEFAULT_LOGS_ACTIVATION
-            preferences[LOGS_ACTIVATION_KEY] = this.logsActivation
+            this.logsActivation.value = DEFAULT_LOGS_ACTIVATION
+            preferences[LOGS_ACTIVATION_KEY] = this.logsActivation.value
             this.whatsNewSeen = DEFAULT_WHATS_NEW_SEEN
             preferences[WHATS_NEW_SEEN_KEY] = this.whatsNewSeen
             this.whatsNewVersionSeen = DEFAULT_WHATS_NEW_VERSION_SEEN

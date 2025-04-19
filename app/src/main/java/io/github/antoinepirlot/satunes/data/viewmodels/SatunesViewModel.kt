@@ -90,6 +90,9 @@ class SatunesViewModel : ViewModel() {
 
     @RequiresApi(Build.VERSION_CODES.M)
     private val _downloadStatus: MutableState<APKDownloadStatus> = UpdateCheckManager.downloadStatus
+    private val _artworkAnimation: MutableState<Boolean> = SettingsManager.artworkAnimation
+    private val _artworkCircleShape: MutableState<Boolean> = SettingsManager.artworkCircleShape
+    private val _logsActivation: MutableState<Boolean> = SettingsManager.logsActivation
 
     val uiState: StateFlow<SatunesUiState> = _uiState.asStateFlow()
 
@@ -113,9 +116,9 @@ class SatunesViewModel : ViewModel() {
     val defaultNavBarSection: NavBarSection by this._defaultNavBarSection
     val defaultPlaylistId: Long by this._defaultPlaylistId
 
-    val artworkAnimation: Boolean = SettingsManager.artworkAnimation
-    val artworkCircleShape: Boolean = SettingsManager.artworkCircleShape
-    val logsActivation: Boolean = SettingsManager.logsActivation
+    val artworkAnimation: Boolean by this._artworkAnimation
+    val artworkCircleShape: Boolean by this._artworkCircleShape
+    val logsActivation: Boolean by this._logsActivation
 
     fun loadSettings() {
         try {

@@ -52,8 +52,7 @@ object SettingsManager {
     // Satunes Settings
     val whatsNewSeen: Boolean
         get() = SatunesSettings.whatsNewSeen
-    val logsActivation: Boolean
-        get() = SatunesSettings.logsActivation
+    val logsActivation: MutableState<Boolean> = SatunesSettings.logsActivation
 
     // NavBarSettings
     val defaultNavBarSection: MutableState<NavBarSection> = DesignSettings.defaultNavBarSection
@@ -81,10 +80,8 @@ object SettingsManager {
     val customActionsOrder: Collection<CustomActions> = DesignSettings.customActionsOrder
 
     //Design
-    val artworkAnimation: Boolean
-        get() = DesignSettings.artworkAnimation
-    val artworkCircleShape: Boolean
-        get() = DesignSettings.artworkCircleShape
+    val artworkAnimation: MutableState<Boolean> = DesignSettings.artworkAnimation
+    val artworkCircleShape: MutableState<Boolean> = DesignSettings.artworkCircleShape
 
     // Search Settings
     val foldersFilter: Boolean
@@ -123,7 +120,7 @@ object SettingsManager {
             return
         }
         SatunesSettings.loadSettings(context = context)
-        SatunesLogger.enabled = this.logsActivation
+        SatunesLogger.enabled = this.logsActivation.value
         DesignSettings.loadSettings(context = context)
         PlaybackSettings.loadSettings(context = context)
         loadFilters(context = context)
@@ -317,9 +314,9 @@ object SettingsManager {
     suspend fun switchLogsActivation(context: Context) {
         SatunesSettings.switchLogsActivation(context)
         SatunesLogger.getLogger()?.info(
-            if (this.logsActivation) "Logs enabled." else "Logs Disabled."
+            if (this.logsActivation.value) "Logs enabled." else "Logs Disabled."
         )
-        SatunesLogger.enabled = this.logsActivation
+        SatunesLogger.enabled = this.logsActivation.value
     }
 
     suspend fun resetArtworkSettings(context: Context) {

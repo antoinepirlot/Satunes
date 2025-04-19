@@ -23,11 +23,9 @@ package io.github.antoinepirlot.satunes.database.services.settings.design
 import android.content.Context
 import androidx.compose.runtime.MutableLongState
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.datastore.preferences.core.MutablePreferences
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -101,9 +99,9 @@ internal object DesignSettings {
         private set
     val customActionsOrder: MutableList<CustomActions> = mutableStateListOf()
 
-    var artworkAnimation: Boolean by mutableStateOf(DEFAULT_ARTWORK_ANIMATION)
+    var artworkAnimation: MutableState<Boolean> = mutableStateOf(DEFAULT_ARTWORK_ANIMATION)
         private set
-    var artworkCircleShape: Boolean by mutableStateOf(DEFAULT_ARTWORK_CIRCLE_SHAPE)
+    var artworkCircleShape: MutableState<Boolean> = mutableStateOf(DEFAULT_ARTWORK_CIRCLE_SHAPE)
         private set
 
 
@@ -129,8 +127,8 @@ internal object DesignSettings {
             else
                 this.customActionsOrder.addAll(elements = DEFAULT_CUSTOM_ACTIONS_ORDER)
 
-            artworkAnimation = preferences[ARTWORK_ANIMATION_KEY] ?: DEFAULT_ARTWORK_ANIMATION
-            artworkCircleShape =
+            artworkAnimation.value = preferences[ARTWORK_ANIMATION_KEY] ?: DEFAULT_ARTWORK_ANIMATION
+            artworkCircleShape.value =
                 preferences[ARTWORK_CIRCLE_SHAPE_KEY] ?: DEFAULT_ARTWORK_CIRCLE_SHAPE
         }.first() //Without .first() settings are not loaded correctly
     }
@@ -252,22 +250,22 @@ internal object DesignSettings {
 
     suspend fun switchArtworkAnimation(context: Context) {
         context.dataStore.edit { preferences: MutablePreferences ->
-            this.artworkAnimation = !this.artworkAnimation
-            preferences[ARTWORK_ANIMATION_KEY] = this.artworkAnimation
+            this.artworkAnimation.value = !this.artworkAnimation.value
+            preferences[ARTWORK_ANIMATION_KEY] = this.artworkAnimation.value
         }
     }
 
     suspend fun switchArtworkCircleShape(context: Context) {
         context.dataStore.edit { preferences: MutablePreferences ->
-            this.artworkCircleShape = !this.artworkCircleShape
-            preferences[ARTWORK_CIRCLE_SHAPE_KEY] = this.artworkCircleShape
+            this.artworkCircleShape.value = !this.artworkCircleShape.value
+            preferences[ARTWORK_CIRCLE_SHAPE_KEY] = this.artworkCircleShape.value
         }
     }
 
     suspend fun resetListsSettings(context: Context) {
         context.dataStore.edit { preferences: MutablePreferences ->
             this.showFirstLetter = DEFAULT_SHOW_FIRST_LETTER
-            preferences[SHOW_FIRST_LETTER_KEY] = this.showFirstLetter
+            preferences[SHOW_FIRST_LETTER_KEY] = DEFAULT_SHOW_FIRST_LETTER
         }
     }
 
@@ -281,10 +279,10 @@ internal object DesignSettings {
 
     suspend fun resetArtworkSettings(context: Context) {
         context.dataStore.edit { preferences: MutablePreferences ->
-            this.artworkAnimation = DEFAULT_ARTWORK_ANIMATION
+            this.artworkAnimation.value = DEFAULT_ARTWORK_ANIMATION
             preferences[ARTWORK_ANIMATION_KEY] = DEFAULT_ARTWORK_ANIMATION
-            this.artworkCircleShape = DEFAULT_ARTWORK_CIRCLE_SHAPE
-            preferences[ARTWORK_CIRCLE_SHAPE_KEY] = this.artworkCircleShape
+            this.artworkCircleShape.value = DEFAULT_ARTWORK_CIRCLE_SHAPE
+            preferences[ARTWORK_CIRCLE_SHAPE_KEY] = this.artworkCircleShape.value
         }
     }
 

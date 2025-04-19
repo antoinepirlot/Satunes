@@ -33,7 +33,7 @@ import io.github.antoinepirlot.satunes.router.utils.getNavBarSectionDestination
 /**
  * @author Antoine Pirlot on 19/07/2024
  */
-internal data class SatunesUiState(
+data class SatunesUiState(
     val whatsNewSeen: Boolean = SettingsManager.whatsNewSeen,
     val extraButtons: (@Composable () -> Unit)? = null,
     val currentDestination: Destination = getNavBarSectionDestination(navBarSection = SettingsManager.defaultNavBarSection.value),

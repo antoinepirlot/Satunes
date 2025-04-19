@@ -795,10 +795,15 @@ class DataViewModel : ViewModel() {
         }
     }
 
-    fun resetAllSettings(scope: CoroutineScope, snackBarHostState: SnackbarHostState) {
+    fun resetAllSettings(
+        scope: CoroutineScope,
+        snackBarHostState: SnackbarHostState,
+        satunesViewModel: SatunesViewModel
+    ) {
         try {
             runBlocking {
                 SettingsManager.resetAll(context = MainActivity.instance.applicationContext)
+                satunesViewModel.reloadLogsSetting()
                 updateShowFirstLetter()
             }
         } catch (e: Exception) {
@@ -806,7 +811,11 @@ class DataViewModel : ViewModel() {
                 scope = scope,
                 snackBarHostState = snackBarHostState,
                 action = {
-                    resetAllSettings(scope = scope, snackBarHostState = snackBarHostState)
+                    resetAllSettings(
+                        scope = scope,
+                        snackBarHostState = snackBarHostState,
+                        satunesViewModel = satunesViewModel
+                    )
                 }
             )
         }

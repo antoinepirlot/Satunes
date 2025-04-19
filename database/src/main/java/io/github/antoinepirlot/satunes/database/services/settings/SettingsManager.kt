@@ -123,6 +123,7 @@ object SettingsManager {
             return
         }
         SatunesSettings.loadSettings(context = context)
+        SatunesLogger.enabled = this.logsActivation
         DesignSettings.loadSettings(context = context)
         PlaybackSettings.loadSettings(context = context)
         loadFilters(context = context)
@@ -314,5 +315,9 @@ object SettingsManager {
 
     suspend fun switchLogsActivation(context: Context) {
         SatunesSettings.switchLogsActivation(context)
+        SatunesLogger.getLogger()?.info(
+            if (this.logsActivation) "Logs enabled." else "Logs Disabled."
+        )
+        SatunesLogger.enabled = this.logsActivation
     }
 }

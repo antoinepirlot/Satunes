@@ -81,11 +81,11 @@ class SatunesLogger private constructor(
         IllegalStateException::class
     )
     fun exportLogs(context: Context, uri: Uri) {
-        info("exporting")
+        if (enabled) info("exporting")
         val file = File("$LOGS_PATH/log")
         if (!file.isFile) {
             val message = "$LOGS_PATH is not a file or doesn't exists"
-            severe(message)
+            if (enabled) severe(message)
             throw IllegalStateException(message)
         }
         var text: String = ""

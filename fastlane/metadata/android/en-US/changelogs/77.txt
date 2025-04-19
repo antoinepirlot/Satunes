@@ -1,0 +1,5 @@
+Improvements, optimizations and troubleshooting:
+
+* Fix list position on sort change
+* Center toast and buttons in settings
+* Remove separating lines added in media selection modal added by error

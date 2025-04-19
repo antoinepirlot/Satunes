@@ -1,0 +1,3 @@
+Improvements, optimizations and troubleshooting:
+
+* Change tipeee button by Liberapay

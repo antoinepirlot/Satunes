@@ -26,6 +26,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -43,7 +44,10 @@ internal fun LogsSettingsView(
     modifier: Modifier = Modifier,
 ) {
     val scrollState: ScrollState = rememberScrollState()
-    Column(modifier = modifier.verticalScroll(state = scrollState)) {
+    Column(
+        modifier = modifier.verticalScroll(state = scrollState),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         Title(text = stringResource(id = R.string.logs_settings))
 
         NormalText(
@@ -51,9 +55,7 @@ internal fun LogsSettingsView(
             maxLines = Int.MAX_VALUE
         )
 
-        Button(onClick = {
-            MainActivity.instance.exportLogs()
-        }) {
+        Button(onClick = { MainActivity.instance.exportLogs() }) {
             NormalText(text = stringResource(id = R.string.export_log_button_content))
         }
     }

@@ -795,15 +795,10 @@ class DataViewModel : ViewModel() {
         }
     }
 
-    fun resetAllSettings(
-        scope: CoroutineScope,
-        snackBarHostState: SnackbarHostState,
-        satunesViewModel: SatunesViewModel
-    ) {
+    fun resetAllSettings(scope: CoroutineScope, snackBarHostState: SnackbarHostState) {
         try {
             runBlocking {
                 SettingsManager.resetAll(context = MainActivity.instance.applicationContext)
-                satunesViewModel.reloadLogsSetting()
                 updateShowFirstLetter()
             }
         } catch (e: Exception) {
@@ -813,8 +808,7 @@ class DataViewModel : ViewModel() {
                 action = {
                     resetAllSettings(
                         scope = scope,
-                        snackBarHostState = snackBarHostState,
-                        satunesViewModel = satunesViewModel
+                        snackBarHostState = snackBarHostState
                     )
                 }
             )
@@ -890,6 +884,22 @@ class DataViewModel : ViewModel() {
                 snackBarHostState = snackBarHostState,
                 action = {
                     resetListsSettings(scope = scope, snackBarHostState = snackBarHostState)
+                }
+            )
+        }
+    }
+
+    fun resetArtworkSettings(scope: CoroutineScope, snackBarHostState: SnackbarHostState) {
+        try {
+            CoroutineScope(Dispatchers.IO).launch {
+                SettingsManager.resetArtworkSettings(context = MainActivity.instance.applicationContext)
+            }
+        } catch (e: Exception) {
+            showErrorSnackBar(
+                scope = scope,
+                snackBarHostState = snackBarHostState,
+                action = {
+                    resetArtworkSettings(scope = scope, snackBarHostState = snackBarHostState)
                 }
             )
         }

@@ -21,14 +21,11 @@
 package io.github.antoinepirlot.satunes.ui.components.settings.design.playback.artwork
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.models.SwitchSettings
 import io.github.antoinepirlot.satunes.ui.components.settings.SettingsSwitchList
@@ -43,16 +40,14 @@ internal fun ArtworkAnimationSubSetting(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel()
 ) {
-    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
-
     val artworkAnimationSwitchSettings: Map<SwitchSettings, Boolean> = mapOf(
-        Pair(SwitchSettings.ARTWORK_ANIMATION, satunesUiState.artworkAnimation),
-        Pair(SwitchSettings.ARTWORK_CIRCLE_SHAPE, satunesUiState.artworkCircleShape)
+        Pair(SwitchSettings.ARTWORK_ANIMATION, satunesViewModel.artworkAnimation),
+        Pair(SwitchSettings.ARTWORK_CIRCLE_SHAPE, satunesViewModel.artworkCircleShape)
     )
 
     SubSettings(
         modifier = modifier,
-        title = stringResource(R.string.artwork_sub_settings)
+        title = stringResource(R.string.artwork_sub_settings_title)
     ) {
         SettingsSwitchList(checkedMap = artworkAnimationSwitchSettings)
     }

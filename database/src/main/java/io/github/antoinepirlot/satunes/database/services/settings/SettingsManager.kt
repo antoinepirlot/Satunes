@@ -321,4 +321,8 @@ object SettingsManager {
         )
         SatunesLogger.enabled = this.logsActivation
     }
+
+    suspend fun resetArtworkSettings(context: Context) {
+        DesignSettings.resetArtworkSettings(context = context)
+    }
 }

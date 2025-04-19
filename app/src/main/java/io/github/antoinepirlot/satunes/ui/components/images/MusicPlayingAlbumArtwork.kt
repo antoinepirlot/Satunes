@@ -25,7 +25,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
@@ -44,12 +43,11 @@ internal fun MusicPlayingAlbumArtwork(
     playbackViewModel: PlaybackViewModel = viewModel(),
     onClick: ((album: Album?) -> Unit)? = null,
 ) {
-    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     MediaArtwork(
         modifier = modifier,
         mediaImpl = playbackViewModel.musicPlaying!!,
         onClick = onClick,
-        shape = if (satunesUiState.artworkAnimation) CircleShape else null
+        shape = if (satunesViewModel.artworkAnimation) CircleShape else null
     )
 }
 

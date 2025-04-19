@@ -36,7 +36,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -61,7 +60,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.models.ScreenSizes
-import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.Album
@@ -91,9 +89,8 @@ internal fun MediaArtwork(
     contentAlignment: Alignment = Alignment.Center,
     shape: Shape? = null
 ) {
-    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     var mediaArtWorkModifier: Modifier = modifier.clip(
-        shape = shape ?: if (satunesUiState.artworkCircleShape) CircleShape else RectangleShape
+        shape = shape ?: if (satunesViewModel.artworkCircleShape) CircleShape else RectangleShape
     )
     val isPlaying: Boolean = playbackViewModel.isPlaying
     val haptics: HapticFeedback = LocalHapticFeedback.current
@@ -105,7 +102,7 @@ internal fun MediaArtwork(
         else -> null
     }
 
-    if (satunesUiState.artworkAnimation && mediaImpl == playbackViewModel.musicPlaying) {
+    if (satunesViewModel.artworkAnimation && mediaImpl == playbackViewModel.musicPlaying) {
         var lastScaleState: Float by rememberSaveable { mutableFloatStateOf(0F) }
         var initialScale: Float by rememberSaveable { mutableFloatStateOf(lastScaleState) }
         if (isPlaying) {

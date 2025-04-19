@@ -23,9 +23,11 @@ package io.github.antoinepirlot.satunes.database.services.settings.design
 import android.content.Context
 import androidx.compose.runtime.MutableLongState
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.datastore.preferences.core.MutablePreferences
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -98,9 +100,10 @@ internal object DesignSettings {
     var showFirstLetter: Boolean = DEFAULT_SHOW_FIRST_LETTER
         private set
     val customActionsOrder: MutableList<CustomActions> = mutableStateListOf()
-    var artworkAnimation: Boolean = DEFAULT_ARTWORK_ANIMATION
+
+    var artworkAnimation: Boolean by mutableStateOf(DEFAULT_ARTWORK_ANIMATION)
         private set
-    var artworkCircleShape: Boolean = DEFAULT_ARTWORK_CIRCLE_SHAPE
+    var artworkCircleShape: Boolean by mutableStateOf(DEFAULT_ARTWORK_CIRCLE_SHAPE)
         private set
 
 

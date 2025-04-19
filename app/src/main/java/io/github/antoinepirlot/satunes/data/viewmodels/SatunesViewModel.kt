@@ -113,6 +113,10 @@ class SatunesViewModel : ViewModel() {
     val defaultNavBarSection: NavBarSection by this._defaultNavBarSection
     val defaultPlaylistId: Long by this._defaultPlaylistId
 
+    val artworkAnimation: Boolean = SettingsManager.artworkAnimation
+    val artworkCircleShape: Boolean = SettingsManager.artworkCircleShape
+    val logsActivation: Boolean = SettingsManager.logsActivation
+
     fun loadSettings() {
         try {
             runBlocking {
@@ -590,9 +594,6 @@ class SatunesViewModel : ViewModel() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 SettingsManager.switchArtworkAnimation(context = MainActivity.instance.applicationContext)
-                _uiState.update { currentState: SatunesUiState ->
-                    currentState.copy(artworkAnimation = SettingsManager.artworkAnimation)
-                }
             } catch (e: Throwable) {
                 _logger?.warning(e.message)
             }
@@ -603,9 +604,6 @@ class SatunesViewModel : ViewModel() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 SettingsManager.switchArtworkCircleShape(context = MainActivity.instance.applicationContext)
-                _uiState.update { currentState: SatunesUiState ->
-                    currentState.copy(artworkCircleShape = SettingsManager.artworkCircleShape)
-                }
             } catch (e: Throwable) {
                 _logger?.warning(e.message)
             }
@@ -697,7 +695,6 @@ class SatunesViewModel : ViewModel() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 SettingsManager.switchLogsActivation(context = MainActivity.instance.applicationContext)
-                this@SatunesViewModel.reloadLogsSetting()
             } catch (e: Throwable) {
                 showErrorSnackBar(
                     scope = scope,
@@ -710,12 +707,6 @@ class SatunesViewModel : ViewModel() {
                     }
                 )
             }
-        }
-    }
-
-    fun reloadLogsSetting() {
-        _uiState.update { currentState: SatunesUiState ->
-            currentState.copy(logsActivation = SettingsManager.logsActivation)
         }
     }
 }

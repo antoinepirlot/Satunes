@@ -61,7 +61,4 @@ data class SatunesUiState(
     val artistReplacement: Boolean = SettingsManager.artistReplacement,
     val showSortDialog: Boolean = false,
     val showMediaSelectionDialog: Boolean = false,
-    val artworkAnimation: Boolean = SettingsManager.artworkAnimation,
-    val artworkCircleShape: Boolean = SettingsManager.artworkCircleShape,
-    val logsActivation: Boolean = SettingsManager.logsActivation
 )

@@ -21,6 +21,9 @@
 package io.github.antoinepirlot.satunes.database.services.settings
 
 import android.content.Context
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.datastore.preferences.core.MutablePreferences
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -53,7 +56,7 @@ internal object SatunesSettings {
     var whatsNewSeen: Boolean = DEFAULT_WHATS_NEW_SEEN
         private set
     private var whatsNewVersionSeen: String = DEFAULT_WHATS_NEW_VERSION_SEEN
-    var logsActivation: Boolean = DEFAULT_LOGS_ACTIVATION
+    var logsActivation: Boolean by mutableStateOf(DEFAULT_LOGS_ACTIVATION)
         private set
 
     suspend fun loadSettings(context: Context) {

@@ -74,8 +74,7 @@ internal fun ResetSettingsView(
                 onClick = {
                     dataViewModel.resetAllSettings(
                         scope = scope,
-                        snackBarHostState = snackBarHostState,
-                        satunesViewModel = satunesViewModel
+                        snackBarHostState = snackBarHostState
                     )
                 }
             )

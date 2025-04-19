@@ -99,9 +99,6 @@ object SettingsManager {
         get() = SearchSettings.musicsFilter
 
     // Library Settings
-    @Deprecated("No more used as both include and exclude are used simultaneously")
-    var foldersSelectionSelected: FoldersSelection = LibrarySettings.foldersSelectionSelected
-        internal set
     val foldersPathsIncludingCollection: Collection<String> =
         LibrarySettings.foldersPathsIncludingCollection
     val foldersPathsExcludingCollection: Collection<String> =

@@ -29,7 +29,6 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import io.github.antoinepirlot.satunes.database.models.FoldersSelection
-import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager.dataStore
 import io.github.antoinepirlot.satunes.database.services.settings.library.LibrarySettings.SELECTED_PATHS_KEY
 import kotlinx.coroutines.flow.first
@@ -70,10 +69,8 @@ internal object LibrarySettings {
 
     @Deprecated("No more used as 'foldersPathsIncludingCollection' and 'foldersPathsExcludingCollection' do it.")
     var foldersSelectionSelected: FoldersSelection = DEFAULT_FOLDERS_SELECTION_SELECTED
-        private set(value) {
-            field = value
-            SettingsManager.foldersSelectionSelected = field
-        }
+        private set
+
     val foldersPathsIncludingCollection: Collection<String> =
         mutableStateListOf(DEFAULT_INCLUDE_PATH)
     val foldersPathsExcludingCollection: Collection<String> =

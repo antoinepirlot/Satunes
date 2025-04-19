@@ -30,7 +30,6 @@ import io.github.antoinepirlot.satunes.database.R
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Folder
-import io.github.antoinepirlot.satunes.database.models.FoldersSelection
 import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
@@ -176,7 +175,6 @@ object DataLoader {
 
         if (
             this@DataLoader.selection_args.isNotEmpty()
-            || SettingsManager.foldersSelectionSelected != FoldersSelection.INCLUDE
         ) {
             context.contentResolver.query(
                 URI,
@@ -384,19 +382,19 @@ object DataLoader {
         if (rootFolder == null) {
             // No root folders in the list
             rootFolder = Folder(title = splitPath[0])
-            DataManager.addFolder(folder = rootFolder!!)
+            DataManager.addFolder(folder = rootFolder!!) //Do not follow warning for !!
         }
 
         splitPath.removeAt(0)
-        rootFolder!!.createSubFolders(splitPath.toMutableList())
-        return rootFolder!!.getSubFolder(splitPath.toMutableList())!!
+        rootFolder!!.createSubFolders(splitPath.toMutableList()) //Do not follow warning for !!
+        return rootFolder!!.getSubFolder(splitPath.toMutableList())!! //Do not follow warning for !!
     }
 
     private fun loadArtist(context: Context, cursor: Cursor): Artist {
         // Get values of columns for a given artist.
         var name: String = try {
             cursor.getString(artistNameColumnId!!)
-        } catch (e: NullPointerException) {
+        } catch (_: NullPointerException) {
             UNKNOWN_ARTIST
         }
 
@@ -422,7 +420,7 @@ object DataLoader {
     private fun loadAlbumArtist(context: Context, cursor: Cursor): Artist {
         var name: String = try {
             cursor.getString(albumArtistColumnId!!)
-        } catch (e: NullPointerException) {
+        } catch (_: NullPointerException) {
             UNKNOWN_ARTIST
         }
 
@@ -450,7 +448,7 @@ object DataLoader {
     private fun loadAlbum(context: Context, cursor: Cursor): Album {
         var name: String = try {
             cursor.getString(albumNameColumnId!!)
-        } catch (e: NullPointerException) {
+        } catch (_: NullPointerException) {
             UNKNOWN_ALBUM
         }
 
@@ -489,7 +487,7 @@ object DataLoader {
             } else {
                 getGenreNameForAndroidQAndLess(context = context, cursor = cursor)
             }
-        } catch (e: NullPointerException) {
+        } catch (_: NullPointerException) {
             UNKNOWN_GENRE
         }
 

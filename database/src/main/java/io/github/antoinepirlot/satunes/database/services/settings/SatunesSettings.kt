@@ -98,4 +98,15 @@ internal object SatunesSettings {
             preferences[LOGS_ACTIVATION_KEY] = this.logsActivation
         }
     }
+
+    suspend fun reset(context: Context) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            this.logsActivation = DEFAULT_LOGS_ACTIVATION
+            preferences[LOGS_ACTIVATION_KEY] = this.logsActivation
+            this.whatsNewSeen = DEFAULT_WHATS_NEW_SEEN
+            preferences[WHATS_NEW_SEEN_KEY] = this.whatsNewSeen
+            this.whatsNewVersionSeen = DEFAULT_WHATS_NEW_VERSION_SEEN
+            preferences[WHATS_NEW_VERSION_SEEN_KEY] = this.whatsNewVersionSeen
+        }
+    }
 }

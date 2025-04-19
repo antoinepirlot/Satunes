@@ -288,6 +288,7 @@ object SettingsManager {
     }
 
     suspend fun resetAll(context: Context) {
+        SatunesSettings.reset(context = context)
         this.resetFoldersSettings(context = context)
         this.resetLoadingLogicSettings(context = context)
         this.resetBatterySettings(context = context)

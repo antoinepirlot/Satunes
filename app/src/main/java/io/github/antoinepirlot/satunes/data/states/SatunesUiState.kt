@@ -23,7 +23,6 @@ import androidx.compose.runtime.Composable
 import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.data.viewmodels.utils.isAudioAllowed
 import io.github.antoinepirlot.satunes.database.models.BarSpeed
-import io.github.antoinepirlot.satunes.database.models.FoldersSelection
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.models.Destination
@@ -46,8 +45,6 @@ data class SatunesUiState(
      * Use this in UiSate and ViewModel as it is a particular value. It could change but most of the time it won't change
      */
     val isAudioAllowed: Boolean = isAudioAllowed(context = MainActivity.instance.applicationContext),
-    @Deprecated("")
-    val foldersSelectionSelected: FoldersSelection = SettingsManager.foldersSelectionSelected,
     val playbackWhenClosedChecked: Boolean = SettingsManager.playbackWhenClosedChecked,
     val pauseIfNoisyChecked: Boolean = SettingsManager.pauseIfNoisyChecked,
     val pauseIfAnotherPlayback: Boolean = SettingsManager.pauseIfAnotherPlayback,

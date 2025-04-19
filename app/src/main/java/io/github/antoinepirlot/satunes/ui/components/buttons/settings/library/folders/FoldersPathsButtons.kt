@@ -37,7 +37,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.states.FolderSelectionUiState
-import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.FolderSelectionViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
@@ -55,7 +54,6 @@ internal fun FoldersPathButtons(
     playbackViewModel: PlaybackViewModel = viewModel(),
     folderSelectionViewModel: FolderSelectionViewModel = viewModel()
 ) {
-    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     val folderSelectionUiState: FolderSelectionUiState by folderSelectionViewModel.uiState.collectAsState()
 
     val spacerSize: Dp = 5.dp
@@ -73,7 +71,7 @@ internal fun FoldersPathButtons(
             text = stringResource(
                 id = R.string.add_path_button,
                 stringResource(
-                    id = satunesUiState.foldersSelectionSelected.stringId
+                    id = folderSelectionUiState.folderSelectionSelected.stringId
                 ).lowercase()
             )
         )

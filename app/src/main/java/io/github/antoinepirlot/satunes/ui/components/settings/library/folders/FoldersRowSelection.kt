@@ -51,7 +51,6 @@ internal fun FoldersRowSelection(
     satunesViewModel: SatunesViewModel = viewModel(),
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
-
     Box(
         modifier = modifier.fillMaxWidth(),
         contentAlignment = Alignment.Center

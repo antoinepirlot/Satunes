@@ -20,6 +20,7 @@
 
 package io.github.antoinepirlot.satunes.ui.components.settings.library.folders
 
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -39,6 +40,7 @@ internal fun FoldersSubSettings(
         modifier = modifier,
         title = stringResource(R.string.folders_settings)
     ) {
+        Text(text = stringResource(R.string.exclude_include_change_text))
         FoldersRowSelection()
         FoldersPathsSelection()
     }

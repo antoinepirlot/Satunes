@@ -1,16 +1,15 @@
 /*
  * This file is part of Satunes.
- *
  * Satunes is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software Foundation,
  * either version 3 of the License, or (at your option) any later version.
- * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ *  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public License along with Satunes.
- * If not, see <https://www.gnu.org/licenses/>.
+ *  You should have received a copy of the GNU General Public License along with Satunes.
+ *  If not, see <https://www.gnu.org/licenses/>.
  *
- * *** INFORMATION ABOUT THE AUTHOR *****
+ * ** INFORMATION ABOUT THE AUTHOR *****
  * The author of this file is Antoine Pirlot, the owner of this project.
  * You find this original project on Codeberg.
  *
@@ -100,10 +99,13 @@ object SettingsManager {
         get() = SearchSettings.musicsFilter
 
     // Library Settings
+    @Deprecated("No more used as both include and exclude are used simultaneously")
     var foldersSelectionSelected: FoldersSelection = LibrarySettings.foldersSelectionSelected
         internal set
-    val foldersPathsSelectedSet: Collection<String> =
+    val foldersPathsIncludingCollection: Collection<String> =
         LibrarySettings.foldersPathsIncludingCollection
+    val foldersPathsExcludingCollection: Collection<String> =
+        LibrarySettings.foldersPathsExcludingCollection
 
     /**
      * This setting is true if the compilation's music has to be added to compilation's artist's music list
@@ -190,13 +192,6 @@ object SettingsManager {
 
     suspend fun switchFilter(context: Context, filterSetting: NavBarSection) {
         SearchSettings.switchFilter(context = context, filterSetting = filterSetting)
-    }
-
-    suspend fun selectFoldersSelection(context: Context, foldersSelection: FoldersSelection) {
-        LibrarySettings.selectFoldersSelection(
-            context = context,
-            foldersSelection = foldersSelection
-        )
     }
 
     /**

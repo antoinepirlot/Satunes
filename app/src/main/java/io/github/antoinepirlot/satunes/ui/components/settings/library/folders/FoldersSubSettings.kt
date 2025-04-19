@@ -20,13 +20,26 @@
 
 package io.github.antoinepirlot.satunes.ui.components.settings.library.folders
 
-import androidx.compose.material3.Text
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.data.local.LocalMainScope
+import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
+import io.github.antoinepirlot.satunes.data.states.SatunesUiState
+import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
+import io.github.antoinepirlot.satunes.ui.components.dialog.InformationDialog
 import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
+import kotlinx.coroutines.CoroutineScope
+import io.github.antoinepirlot.satunes.database.R as RDb
 
 /**
  * @author Antoine Pirlot on 31/08/2024
@@ -34,13 +47,40 @@ import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
 
 @Composable
 internal fun FoldersSubSettings(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    satunesViewModel: SatunesViewModel = viewModel()
 ) {
+    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+
+    val scope: CoroutineScope = LocalMainScope.current
+    val snackbarHostState: SnackbarHostState = LocalSnackBarHostState.current
+
+    var showDialog: Boolean by rememberSaveable { mutableStateOf(true) }
+
     SubSettings(
         modifier = modifier,
         title = stringResource(R.string.folders_settings)
     ) {
-        Text(text = stringResource(R.string.exclude_include_change_text))
+        if (showDialog && !satunesUiState.includeExcludeSeen)
+            InformationDialog(
+                title = "${stringResource(RDb.string.include)} / ${stringResource(RDb.string.exclude)}",
+                text = stringResource(R.string.include_exclude_change_text),
+                onDismissRequest = {
+                    showDialog = false
+                    satunesViewModel.seeIncludeExcludeInfo(
+                        scope = scope,
+                        snackbarHostState = snackbarHostState
+                    )
+                },
+                onConfirm = {
+                    showDialog = false
+                    satunesViewModel.seeIncludeExcludeInfo(
+                        scope = scope,
+                        snackbarHostState = snackbarHostState,
+                        permanently = true
+                    )
+                }
+            )
         FoldersRowSelection()
         FoldersPathsSelection()
     }

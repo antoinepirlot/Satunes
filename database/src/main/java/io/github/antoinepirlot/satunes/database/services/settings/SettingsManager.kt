@@ -52,6 +52,8 @@ object SettingsManager {
     // Satunes Settings
     val whatsNewSeen: Boolean
         get() = SatunesSettings.whatsNewSeen
+    val includeExcludeSeen: Boolean
+        get() = SatunesSettings.includeExcludeSeen
     val logsActivation: MutableState<Boolean> = SatunesSettings.logsActivation
 
     // NavBarSettings
@@ -321,5 +323,13 @@ object SettingsManager {
 
     suspend fun resetArtworkSettings(context: Context) {
         DesignSettings.resetArtworkSettings(context = context)
+    }
+
+    suspend fun seeIncludeExcludeInfo(context: Context) {
+        SatunesSettings.seeIncludeExcludeInfo(context)
+    }
+
+    suspend fun unSeeIncludeExcludeInfo(context: Context) {
+        SatunesSettings.unSeeIncludeExcludeInfo(context)
     }
 }

@@ -137,5 +137,5 @@
     <string name="artwork_sub_settings_title">Artwork</string>
     <string name="artwork_circle_shape_switch_button">Make artwork circle</string>
     <string name="logs_activation_button">Activation</string>
-    <string name="exclude_include_change_text">Now, both include/exclude is taken in account simultaneous.\nIt means, you can include some folders and exclude others at the same time (exclude is predominent).</string>
+    <string name="include_exclude_change_text">Now, both include/exclude are taken in account simultaneous.\nIt means, you can include some folders and exclude others at the same time (exclude is predominent).</string>
 </resources>

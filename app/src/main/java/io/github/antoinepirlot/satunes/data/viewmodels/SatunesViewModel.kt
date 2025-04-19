@@ -135,28 +135,38 @@ class SatunesViewModel : ViewModel() {
     fun isInPlaybackView(): Boolean =
         _uiState.value.currentDestination.category == DestinationCategory.PLAYBACK
 
-    fun seeWhatsNew(
+    private fun seeNotification(
         scope: CoroutineScope,
-        snackBarHostState: SnackbarHostState,
+        snackbarHostState: SnackbarHostState,
+        permanentAction: suspend () -> Unit,
+        nonPermanentAction: suspend () -> Unit,
         permanently: Boolean = false
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             val context: Context = MainActivity.instance.applicationContext
             if (permanently) {
-                SettingsManager.seeWhatsNew(context = context)
+                permanentAction()
                 showSnackBar(
                     scope = scope,
-                    snackBarHostState = snackBarHostState,
+                    snackBarHostState = snackbarHostState,
                     message = context.getString(R.string.update_modal_permanently),
                     actionLabel = context.getString(R.string.cancel),
                     duration = SnackbarDuration.Long,
-                    action = { seeWhatsNew(scope = scope, snackBarHostState = snackBarHostState) }
+                    action = {
+                        seeNotification(
+                            scope = scope,
+                            snackbarHostState = snackbarHostState,
+                            permanently = permanently,
+                            permanentAction = permanentAction,
+                            nonPermanentAction = nonPermanentAction
+                        )
+                    }
                 )
             } else if (SettingsManager.whatsNewSeen) {
-                SettingsManager.unSeeWhatsNew(context = context)
+                nonPermanentAction
                 showSnackBar(
                     scope = scope,
-                    snackBarHostState = snackBarHostState,
+                    snackBarHostState = snackbarHostState,
                     message = context.getString(R.string.update_modal_not_permanently)
                 )
             }
@@ -165,6 +175,21 @@ class SatunesViewModel : ViewModel() {
             currentState.copy(whatsNewSeen = true)
         }
     }
+
+    fun seeWhatsNew(
+        scope: CoroutineScope,
+        snackBarHostState: SnackbarHostState,
+        permanently: Boolean = false
+    ) {
+        this.seeNotification(
+            scope = scope,
+            snackbarHostState = snackBarHostState,
+            permanently = permanently,
+            permanentAction = { SettingsManager.seeWhatsNew(context = MainActivity.instance.applicationContext) },
+            nonPermanentAction = { SettingsManager.unSeeWhatsNew(context = MainActivity.instance.applicationContext) }
+        )
+    }
+
 
     fun setCurrentDestination(destination: String) {
         _uiState.update { currentState: SatunesUiState ->
@@ -711,5 +736,19 @@ class SatunesViewModel : ViewModel() {
                 )
             }
         }
+    }
+
+    fun seeIncludeExcludeInfo(
+        scope: CoroutineScope,
+        snackbarHostState: SnackbarHostState,
+        permanently: Boolean = false
+    ) {
+        this.seeNotification(
+            scope = scope,
+            snackbarHostState = snackbarHostState,
+            permanently = permanently,
+            permanentAction = { SettingsManager.seeIncludeExcludeInfo(context = MainActivity.instance.applicationContext) },
+            nonPermanentAction = { SettingsManager.unSeeIncludeExcludeInfo(context = MainActivity.instance.applicationContext) }
+        )
     }
 }

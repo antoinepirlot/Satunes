@@ -138,5 +138,5 @@
     <string name="artwork_sub_settings_title">Image d\'album</string>
     <string name="artwork_circle_shape_switch_button">Arrondir l\'image de l\'album</string>
     <string name="logs_activation_button">Activation</string>
-    <string name="exclude_include_change_text">Désormais, les deux types d\'inclusion/exclusion sont pris en compte simultanément. Cela signifie que vous pouvez inclure certains dossiers et en exclure d\'autres en même temps (exclure est prédominant).</string>
+    <string name="include_exclude_change_text">Désormais, les deux types d\'inclusion/exclusion sont pris en compte simultanément. Cela signifie que vous pouvez inclure certains dossiers et en exclure d\'autres en même temps (exclure est prédominant).</string>
 </resources>

@@ -35,6 +35,7 @@ import io.github.antoinepirlot.satunes.router.utils.getNavBarSectionDestination
  */
 data class SatunesUiState(
     val whatsNewSeen: Boolean = SettingsManager.whatsNewSeen,
+    val includeExcludeSeen: Boolean = SettingsManager.includeExcludeSeen,
     val extraButtons: (@Composable () -> Unit)? = null,
     val currentDestination: Destination = getNavBarSectionDestination(navBarSection = SettingsManager.defaultNavBarSection.value),
     /**

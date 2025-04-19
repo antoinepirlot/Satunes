@@ -65,6 +65,7 @@ internal fun FoldersRowSelection(
                         index = i,
                         count = allFoldersSelections.size
                     ),
+                    icon = {}, //remove selected icon as it's not relevant for using both sections
                     onClick = { satunesViewModel.selectFoldersSelection(foldersSelection = foldersSelection) },
                     label = { NormalText(text = stringResource(id = foldersSelection.stringId)) }
                 )

@@ -72,7 +72,7 @@ import io.github.antoinepirlot.satunes.internet.R as RInternet
 /**
  * @author Antoine Pirlot on 19/07/2024
  */
-internal class SatunesViewModel : ViewModel() {
+class SatunesViewModel : ViewModel() {
     companion object {
         private val _uiState: MutableStateFlow<SatunesUiState> = MutableStateFlow(SatunesUiState())
     }
@@ -690,6 +690,32 @@ internal class SatunesViewModel : ViewModel() {
                     }
                 )
             }
+        }
+    }
+
+    fun switchLogsActivation(scope: CoroutineScope, snackBarHostState: SnackbarHostState) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                SettingsManager.switchLogsActivation(context = MainActivity.instance.applicationContext)
+                this@SatunesViewModel.reloadLogsSetting()
+            } catch (e: Throwable) {
+                showErrorSnackBar(
+                    scope = scope,
+                    snackBarHostState = snackBarHostState,
+                    action = {
+                        switchLogsActivation(
+                            scope = scope,
+                            snackBarHostState = snackBarHostState
+                        )
+                    }
+                )
+            }
+        }
+    }
+
+    fun reloadLogsSetting() {
+        _uiState.update { currentState: SatunesUiState ->
+            currentState.copy(logsActivation = SettingsManager.logsActivation)
         }
     }
 }

@@ -136,4 +136,5 @@
     <string name="artwork_animation_switch_button">Artwork animation when playing</string>
     <string name="artwork_sub_settings">Artwork</string>
     <string name="artwork_circle_shape_switch_button">Make artwork circle</string>
+    <string name="logs_activation_button">Activation</string>
 </resources>

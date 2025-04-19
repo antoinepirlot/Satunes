@@ -36,6 +36,7 @@ import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.local.LocalMainScope
 import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.ui.components.buttons.settings.reset.ResetButton
 import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
 import io.github.antoinepirlot.satunes.ui.components.settings.reset.battery.ResetBatterySettings
@@ -52,6 +53,7 @@ import kotlinx.coroutines.CoroutineScope
 @Composable
 internal fun AllResetSettings(
     modifier: Modifier = Modifier,
+    satunesViewModel: SatunesViewModel = viewModel(),
     dataViewModel: DataViewModel = viewModel(),
 ) {
     val scope: CoroutineScope = LocalMainScope.current
@@ -70,7 +72,8 @@ internal fun AllResetSettings(
                 onClick = {
                     dataViewModel.resetAllSettings(
                         scope = scope,
-                        snackBarHostState = snackBarHostState
+                        snackBarHostState = snackBarHostState,
+                        satunesViewModel = satunesViewModel
                     )
                 }
             )

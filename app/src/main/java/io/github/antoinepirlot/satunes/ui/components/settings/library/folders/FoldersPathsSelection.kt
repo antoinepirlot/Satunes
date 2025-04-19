@@ -33,7 +33,6 @@ import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.states.FolderSelectionUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.FolderSelectionViewModel
-import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.FoldersSelection
 import io.github.antoinepirlot.satunes.ui.components.buttons.settings.library.folders.FolderPathRow
 import io.github.antoinepirlot.satunes.ui.components.buttons.settings.library.folders.FoldersPathButtons
@@ -45,30 +44,34 @@ import io.github.antoinepirlot.satunes.ui.components.buttons.settings.library.fo
 @Composable
 internal fun FoldersPathsSelection(
     modifier: Modifier = Modifier,
-    satunesViewModel: SatunesViewModel = viewModel(),
     folderSelectionViewModel: FolderSelectionViewModel = viewModel()
 ) {
     val folderSelectionUiState: FolderSelectionUiState by folderSelectionViewModel.uiState.collectAsState()
+    val isIncludeSelected: Boolean =
+        folderSelectionUiState.folderSelectionSelected == FoldersSelection.INCLUDE
     Column(
         modifier = modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        if (folderSelectionUiState.folderSelectionSelected == FoldersSelection.INCLUDE)
-            for (path: String in satunesViewModel.foldersPathsIncludingCollection)
-                FolderPathRow(path = path)
-        else
-            for (path: String in satunesViewModel.foldersPathsExcludingCollection)
-                FolderPathRow(path = path)
-        FoldersPathButtons()
-    }
-    if (satunesViewModel.foldersPathsIncludingCollection.isEmpty()) {
-        Column(
-            modifier = modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            NormalText(text = stringResource(id = R.string.path_set_empty))
-            FoldersPathButtons()
+        if (isIncludeSelected) {
+            val folders: Collection<String> =
+                folderSelectionViewModel.foldersPathsIncludingCollection
+            if (folders.isNotEmpty())
+                for (path: String in folders)
+                    FolderPathRow(path = path)
+            else
+                NormalText(text = stringResource(id = R.string.path_set_empty))
+        } else {
+            val folders: Collection<String> =
+                folderSelectionViewModel.foldersPathsExcludingCollection
+            if (folders.isNotEmpty())
+                for (path: String in folders)
+                    FolderPathRow(path = path)
+            else
+                NormalText(text = stringResource(id = R.string.path_set_empty))
+
         }
+        FoldersPathButtons()
     }
 }
 

@@ -22,6 +22,7 @@ package io.github.antoinepirlot.satunes.data.viewmodels
 import androidx.lifecycle.ViewModel
 import io.github.antoinepirlot.satunes.data.states.FolderSelectionUiState
 import io.github.antoinepirlot.satunes.database.models.FoldersSelection
+import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -35,6 +36,11 @@ class FolderSelectionViewModel : ViewModel() {
         MutableStateFlow(FolderSelectionUiState())
 
     val uiState: StateFlow<FolderSelectionUiState> = _uiState.asStateFlow()
+
+    val foldersPathsIncludingCollection: Collection<String> =
+        SettingsManager.foldersPathsIncludingCollection
+    val foldersPathsExcludingCollection: Collection<String> =
+        SettingsManager.foldersPathsExcludingCollection
 
     /**
      * Switch the section selected in Folder sub settings.

@@ -110,11 +110,6 @@ class SatunesViewModel : ViewModel() {
     var downloadStatus: APKDownloadStatus by _downloadStatus
         private set
 
-    val foldersPathsIncludingCollection: Collection<String> =
-        SettingsManager.foldersPathsIncludingCollection
-    val foldersPathsExcludingCollection: Collection<String> =
-        SettingsManager.foldersPathsExcludingCollection
-
     val defaultNavBarSection: NavBarSection by this._defaultNavBarSection
     val defaultPlaylistId: Long by this._defaultPlaylistId
 

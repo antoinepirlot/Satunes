@@ -276,10 +276,12 @@ internal object DesignSettings {
         }
     }
 
-    suspend fun resetArtworkAnimation(context: Context) {
+    suspend fun resetArtworkSettings(context: Context) {
         context.dataStore.edit { preferences: MutablePreferences ->
             this.artworkAnimation = DEFAULT_ARTWORK_ANIMATION
             preferences[ARTWORK_ANIMATION_KEY] = DEFAULT_ARTWORK_ANIMATION
+            this.artworkCircleShape = DEFAULT_ARTWORK_CIRCLE_SHAPE
+            preferences[ARTWORK_CIRCLE_SHAPE_KEY] = this.artworkCircleShape
         }
     }
 
@@ -287,6 +289,6 @@ internal object DesignSettings {
         this.resetNavigationBarSettings(context = context)
         this.resetListsSettings(context = context)
         this.resetCustomActions(context = context)
-        this.resetArtworkAnimation(context = context)
+        this.resetArtworkSettings(context = context)
     }
 }

@@ -32,6 +32,7 @@ import androidx.datastore.preferences.core.stringSetPreferencesKey
 import io.github.antoinepirlot.satunes.database.models.FoldersSelection
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager.dataStore
+import io.github.antoinepirlot.satunes.database.services.settings.library.LibrarySettings.SELECTED_PATHS_KEY
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
@@ -43,7 +44,7 @@ internal object LibrarySettings {
     // DEFAULT VALUES
 
     private val DEFAULT_FOLDERS_SELECTION_SELECTED: FoldersSelection = FoldersSelection.INCLUDE
-    private const val DEFAULT_SELECTED_PATH: String = "/0/Music/%"
+    private const val DEFAULT_INCLUDE_PATH: String = "/0/Music/%"
     private const val DEFAULT_COMPILATION_MUSIC: Boolean = false
     private const val DEFAULT_ARTISTS_REPLACEMENT: Boolean = true
 
@@ -51,8 +52,16 @@ internal object LibrarySettings {
 
     private val FOLDERS_SELECTION_SELECTED_KEY: Preferences.Key<Int> =
         intPreferencesKey("folders_selection")
+
+    @Deprecated("Replaced by 'INCLUDING_PATHS_KEY' and 'EXCLUDING_PATHS_KEY'")
     private val SELECTED_PATHS_KEY: Preferences.Key<Set<String>> =
         stringSetPreferencesKey("selected_paths_set")
+
+    private val INCLUDING_PATHS_KEY: Preferences.Key<Set<String>> =
+        stringSetPreferencesKey("including_paths_set")
+    private val EXCLUDING_PATHS_KEY: Preferences.Key<Set<String>> =
+        stringSetPreferencesKey("including_paths_set")
+
     private val COMPILATION_MUSIC_KEY: Preferences.Key<Boolean> =
         booleanPreferencesKey("compilation_music")
     private val ARTISTS_REPLACEMENT_KEY: Preferences.Key<Boolean> =
@@ -60,13 +69,16 @@ internal object LibrarySettings {
 
     // VARIABLES
 
+    @Deprecated("No more used as 'foldersPathsIncludingCollection' and 'foldersPathsExcludingCollection' do it.")
     var foldersSelectionSelected: FoldersSelection = DEFAULT_FOLDERS_SELECTION_SELECTED
         private set(value) {
             field = value
             SettingsManager.foldersSelectionSelected = field
         }
-    val foldersPathsSelectedCollection: Collection<String> =
-        mutableStateListOf(DEFAULT_SELECTED_PATH)
+    val foldersPathsIncludingCollection: Collection<String> =
+        mutableStateListOf(DEFAULT_INCLUDE_PATH)
+    val foldersPathsExcludingCollection: Collection<String> =
+        mutableStateListOf() // By default there's no exclusion
 
     /**
      * This setting is true if the compilation's music has to be added to compilation's artist's music list
@@ -78,18 +90,52 @@ internal object LibrarySettings {
 
     suspend fun loadSettings(context: Context) {
         context.dataStore.data.map { preferences: Preferences ->
-            foldersSelectionSelected =
-                getFoldersSelection(preferences[FOLDERS_SELECTION_SELECTED_KEY])
-
-            val paths: Collection<String> =
-                preferences[SELECTED_PATHS_KEY] ?: setOf(DEFAULT_SELECTED_PATH)
-            (this.foldersPathsSelectedCollection as MutableCollection<String>).clear()
-            (this.foldersPathsSelectedCollection).addAll(paths)
+            if (preferences[this.SELECTED_PATHS_KEY] != null)
+                this.transferPaths(context = context, preferences = preferences)
+            this.loadIncludingPaths(preferences = preferences)
+            this.loadExcludingPaths(preferences = preferences)
 
             compilationMusic = preferences[COMPILATION_MUSIC_KEY] ?: DEFAULT_COMPILATION_MUSIC
 
             artistReplacement = preferences[ARTISTS_REPLACEMENT_KEY] ?: DEFAULT_ARTISTS_REPLACEMENT
         }.first() //Without .first() settings are not loaded correctly
+    }
+
+    private fun loadIncludingPaths(preferences: Preferences) {
+        var paths: Collection<String> =
+            preferences[INCLUDING_PATHS_KEY] ?: setOf(DEFAULT_INCLUDE_PATH)
+        (this.foldersPathsIncludingCollection as MutableCollection<String>).clear()
+        (this.foldersPathsIncludingCollection).addAll(paths)
+    }
+
+    private fun loadExcludingPaths(preferences: Preferences) {
+        var paths: Collection<String> =
+            preferences[INCLUDING_PATHS_KEY] ?: setOf(DEFAULT_INCLUDE_PATH)
+        (this.foldersPathsExcludingCollection as MutableCollection<String>).clear()
+        (this.foldersPathsExcludingCollection).addAll(paths)
+    }
+
+    /**
+     * Used only to transfer old data from [SELECTED_PATHS_KEY] to the new ones.
+     * It will be run only once in app's life if the user used the app before the modification.
+     */
+    private suspend fun transferPaths(context: Context, preferences: Preferences) {
+        foldersSelectionSelected =
+            getFoldersSelection(preferences[FOLDERS_SELECTION_SELECTED_KEY])
+        var tempList: Set<String> = setOf()
+        context.dataStore.edit { preferences: MutablePreferences ->
+            tempList = preferences[SELECTED_PATHS_KEY] ?: setOf()
+            preferences.remove(this.SELECTED_PATHS_KEY)
+        }
+        if (tempList.isEmpty()) return
+        if (this.foldersSelectionSelected == FoldersSelection.INCLUDE) {
+            (this.foldersPathsIncludingCollection as MutableCollection<String>).clear()
+            for (path: String in tempList) this.addPath(context = context, path, include = true)
+        } else if (this.foldersSelectionSelected == FoldersSelection.EXCLUDE) {
+            (this.foldersPathsExcludingCollection as MutableCollection<String>).clear()
+            for (path: String in tempList) this.addPath(context = context, path, include = false)
+        } else throw InternalError("Unexpected situation. The foldersSelectionSelected was not include or exclude.")
+
     }
 
     private fun getFoldersSelection(id: Int?): FoldersSelection {
@@ -113,16 +159,26 @@ internal object LibrarySettings {
     }
 
     /**
-     * Add a path to the selected paths set and memorize it in storage.
+     * Add a path to include or exclude and memorize it in storage.
      *
-     * @param context the app context
-     * @param path the selected path as string
+     * @param context the app context.
+     * @param path the selected path as string.
+     * @param include means the file must be included, false means it must be excluded.
      */
-    suspend fun addPath(context: Context, path: String) {
+    suspend fun addPath(context: Context, path: String, include: Boolean) {
         val formattedPath: String = getFormattedPath(path = path)
         context.dataStore.edit { preferences: MutablePreferences ->
-            (this.foldersPathsSelectedCollection as MutableCollection<String>).add(formattedPath)
-            preferences[SELECTED_PATHS_KEY] = this.foldersPathsSelectedCollection.toSet()
+            if (include) {
+                (this.foldersPathsIncludingCollection as MutableCollection<String>).add(
+                    formattedPath
+                )
+                preferences[INCLUDING_PATHS_KEY] = this.foldersPathsIncludingCollection.toSet()
+            } else {
+                (this.foldersPathsExcludingCollection as MutableCollection<String>).add(
+                    formattedPath
+                )
+                preferences[EXCLUDING_PATHS_KEY] = this.foldersPathsExcludingCollection.toSet()
+            }
         }
     }
 
@@ -131,11 +187,17 @@ internal object LibrarySettings {
      *
      * @param context the [Context] fo the app
      * @param path as [String] that is formatted
+     * @param include true if it must be removed from the including list, false for the excluding list.
      */
-    suspend fun removePath(context: Context, path: String) {
+    suspend fun removePath(context: Context, path: String, include: Boolean) {
         context.dataStore.edit { preferences: MutablePreferences ->
-            (this.foldersPathsSelectedCollection as MutableCollection<String>).remove(path)
-            preferences[SELECTED_PATHS_KEY] = this.foldersPathsSelectedCollection.toSet()
+            if (include) {
+                (this.foldersPathsIncludingCollection as MutableCollection<String>).remove(path)
+                preferences[INCLUDING_PATHS_KEY] = this.foldersPathsIncludingCollection.toSet()
+            } else {
+                (this.foldersPathsExcludingCollection as MutableCollection<String>).remove(path)
+                preferences[EXCLUDING_PATHS_KEY] = this.foldersPathsExcludingCollection.toSet()
+            }
         }
     }
 
@@ -166,10 +228,10 @@ internal object LibrarySettings {
 
     suspend fun resetFoldersSettings(context: Context) {
         context.dataStore.edit { preferences: MutablePreferences ->
-            (this.foldersPathsSelectedCollection as MutableCollection<String>).clear()
-            (this.foldersPathsSelectedCollection)
-                .add(DEFAULT_SELECTED_PATH)
-            preferences[SELECTED_PATHS_KEY] = this.foldersPathsSelectedCollection.toSet()
+            (this.foldersPathsIncludingCollection as MutableCollection<String>).clear()
+            (this.foldersPathsIncludingCollection)
+                .add(DEFAULT_INCLUDE_PATH)
+            preferences[SELECTED_PATHS_KEY] = this.foldersPathsIncludingCollection.toSet()
         }
     }
 

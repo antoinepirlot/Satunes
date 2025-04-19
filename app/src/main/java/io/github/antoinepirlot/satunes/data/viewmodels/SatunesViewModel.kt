@@ -541,11 +541,17 @@ class SatunesViewModel : ViewModel() {
         MainActivity.instance.startActivityForResult(intent, MainActivity.SELECT_FOLDER_TREE_CODE)
     }
 
-    fun removePath(scope: CoroutineScope, snackBarHostState: SnackbarHostState, path: String) {
+    fun removePath(
+        scope: CoroutineScope,
+        snackBarHostState: SnackbarHostState,
+        path: String,
+        include: Boolean
+    ) {
         CoroutineScope(Dispatchers.IO).launch {
             SettingsManager.removePath(
                 context = MainActivity.instance.applicationContext,
-                path = path
+                path = path,
+                include
             )
             showSnackBar(
                 scope = scope,
@@ -559,7 +565,8 @@ class SatunesViewModel : ViewModel() {
                     CoroutineScope(Dispatchers.IO).launch {
                         SettingsManager.addPath(
                             context = MainActivity.instance.applicationContext,
-                            path = path
+                            path = path,
+                            include = include
                         )
                     }
                 }
@@ -575,7 +582,7 @@ class SatunesViewModel : ViewModel() {
                     navBarSection = navBarSection
                 )
             }
-        } catch (e: Throwable) {
+        } catch (_: Throwable) {
             _logger?.severe("Error while selecting new default nav bar section: ${navBarSection.name}")
         }
     }
@@ -588,7 +595,7 @@ class SatunesViewModel : ViewModel() {
                     currentState.copy(compilationMusic = SettingsManager.compilationMusic)
                 }
             }
-        } catch (e: Throwable) {
+        } catch (_: Throwable) {
             _logger?.severe("Error while switching compilation music setting")
         }
     }
@@ -604,7 +611,7 @@ class SatunesViewModel : ViewModel() {
                     currentState.copy(artistReplacement = SettingsManager.artistReplacement)
                 }
             }
-        } catch (e: Throwable) {
+        } catch (_: Throwable) {
             showErrorSnackBar(
                 scope = scope,
                 snackBarHostState = snackBarHostState,
@@ -704,7 +711,7 @@ class SatunesViewModel : ViewModel() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 SettingsManager.resetCustomActions(context = MainActivity.instance.applicationContext)
-            } catch (e: Throwable) {
+            } catch (_: Throwable) {
                 showErrorSnackBar(
                     scope = scope,
                     snackBarHostState = snackBarHostState,
@@ -723,7 +730,7 @@ class SatunesViewModel : ViewModel() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 SettingsManager.switchLogsActivation(context = MainActivity.instance.applicationContext)
-            } catch (e: Throwable) {
+            } catch (_: Throwable) {
                 showErrorSnackBar(
                     scope = scope,
                     snackBarHostState = snackBarHostState,

@@ -102,7 +102,8 @@ object SettingsManager {
     // Library Settings
     var foldersSelectionSelected: FoldersSelection = LibrarySettings.foldersSelectionSelected
         internal set
-    val foldersPathsSelectedSet: Collection<String> = LibrarySettings.foldersPathsSelectedCollection
+    val foldersPathsSelectedSet: Collection<String> =
+        LibrarySettings.foldersPathsIncludingCollection
 
     /**
      * This setting is true if the compilation's music has to be added to compilation's artist's music list
@@ -199,27 +200,29 @@ object SettingsManager {
     }
 
     /**
-     * Add a path to the selected paths set and memorize it in storage.
+     * Add a path to the including list or excluding list base on param [include] and memorize it in storage.
      *
      * @param context the app context
      * @param uri the uri containing the selected path
+     * @param include true if it must be in the include list, false for the exclude list
      */
-    suspend fun addPath(context: Context, uri: Uri) {
-        this.addPath(context = context, path = uri.path!!)
+    suspend fun addPath(context: Context, uri: Uri, include: Boolean) {
+        this.addPath(context = context, path = uri.path!!, include = include)
     }
 
     /**
-     * Add a path to the selected paths set and memorize it in storage.
+     * Add a path to the including list or excluding list base on param [include] and memorize it in storage.
      *
      * @param context the app context
      * @param path the selected path as string
+     * @param include true if it must be in the include list, false for the exclude list
      */
-    suspend fun addPath(context: Context, path: String) {
-        LibrarySettings.addPath(context = context, path = path)
+    suspend fun addPath(context: Context, path: String, include: Boolean) {
+        LibrarySettings.addPath(context = context, path = path, include = include)
     }
 
-    suspend fun removePath(context: Context, path: String) {
-        LibrarySettings.removePath(context = context, path = path)
+    suspend fun removePath(context: Context, path: String, include: Boolean) {
+        LibrarySettings.removePath(context = context, path = path, include = include)
     }
 
     suspend fun selectDefaultNavBarSection(context: Context, navBarSection: NavBarSection) {

@@ -25,6 +25,7 @@ import io.github.antoinepirlot.satunes.database.R
 /**
  * @author Antoine Pirlot on 09/08/2024
  */
+@Deprecated("No more used as both include and exclude are used simultaneously")
 enum class FoldersSelection(
     internal val id: Int,
     val stringId: Int,

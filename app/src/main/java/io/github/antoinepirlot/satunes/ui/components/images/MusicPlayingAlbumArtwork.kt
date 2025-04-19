@@ -20,11 +20,17 @@
 
 package io.github.antoinepirlot.satunes.ui.components.images
 
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.Album
 
 /**
@@ -34,13 +40,16 @@ import io.github.antoinepirlot.satunes.database.models.Album
 @Composable
 internal fun MusicPlayingAlbumArtwork(
     modifier: Modifier = Modifier,
+    satunesViewModel: SatunesViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
     onClick: ((album: Album?) -> Unit)? = null,
 ) {
+    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     MediaArtwork(
         modifier = modifier,
         mediaImpl = playbackViewModel.musicPlaying!!,
-        onClick = onClick
+        onClick = onClick,
+        shape = if (satunesUiState.artworkAnimation) CircleShape else null
     )
 }
 

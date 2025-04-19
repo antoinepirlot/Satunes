@@ -49,6 +49,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.hapticfeedback.HapticFeedback
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
@@ -88,11 +89,12 @@ internal fun MediaArtwork(
     mediaImpl: MediaImpl,
     onClick: ((album: Album?) -> Unit)? = null,
     contentAlignment: Alignment = Alignment.Center,
+    shape: Shape? = null
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
-
-    var mediaArtWorkModifier: Modifier = modifier
-        .clip(shape = if (satunesUiState.artworkCircleShape) CircleShape else RectangleShape)
+    var mediaArtWorkModifier: Modifier = modifier.clip(
+        shape = shape ?: if (satunesUiState.artworkCircleShape) CircleShape else RectangleShape
+    )
     val isPlaying: Boolean = playbackViewModel.isPlaying
     val haptics: HapticFeedback = LocalHapticFeedback.current
     val screenWidthDp = LocalConfiguration.current.screenWidthDp

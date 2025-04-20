@@ -1,6 +1,26 @@
 # Versions (🇫🇷)
 You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
+## 3.1 (Android 5.1.1 Lollipop and later)
+
+## 3.1.0-beta-1
+
+Nouvelles fonctionnalités :
+
+* Nouveau Widget "Disque"
+* La fonction inclure/exclure prend désormais en compte les deux cas. Tu peux maintenant inclure
+  certains dossiers et en exclure d'autres en même temps.
+* Bouton pour désactiver les logs
+
+Améliorations, optimisations et dépannage :
+
+* Réglages pour arrondir les albums et animer les illustrations lors de la lecture
+* Correction d'un crash lors de la lecture de musique après autorisation de l'audio
+* Cacher les boutons pour jouer de la musique dans la vue des médias pour éviter de jouer de la
+  musique pendant le chargement des données
+* Lors de l'ajout à la file d'attente, les musiques sont ajoutées dans un ordre aléatoire si le mode
+  aléatoire par défaut est activé.
+
 ## 3.0 (Android 5.1.1 Lollipop et ultérieur)
 
 ### 3.0.5

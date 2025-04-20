@@ -19,33 +19,13 @@
 
 package io.github.antoinepirlot.satunes.widgets
 
-import android.content.Context
-import android.os.Environment
-import androidx.glance.GlanceId
 import androidx.glance.appwidget.GlanceAppWidget
-import androidx.glance.appwidget.provideContent
-import io.github.antoinepirlot.satunes.playback.services.WidgetPlaybackManager
-import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
-import io.github.antoinepirlot.satunes.widgets.PlaybackWidget.setRefreshWidget
-import io.github.antoinepirlot.satunes.widgets.ui.views.DiscPlaybackWidgetView
-import io.github.antoinepirlot.satunes.widgets.ui.views.WidgetView
+import androidx.glance.appwidget.GlanceAppWidgetReceiver
+import io.github.antoinepirlot.satunes.widgets.ui.DiscPlaybackWidget
 
 /**
  * @author Antoine Pirlot 20/04/2025
  */
-class DiscPlaybackWidget : GlanceAppWidget() {
-
-    override suspend fun provideGlance(context: Context, id: GlanceId) {
-        SatunesLogger.DOCUMENTS_PATH =
-            context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)!!.path
-        SatunesLogger.getLogger()?.info("DiscPlaybackWidget Starting")
-        setRefreshWidget(context = context)
-        WidgetPlaybackManager.refreshWidgets()
-
-        provideContent {
-            WidgetView {
-                DiscPlaybackWidgetView()
-            }
-        }
-    }
+class DiscPlaybackReceiver : GlanceAppWidgetReceiver() {
+    override val glanceAppWidget: GlanceAppWidget = DiscPlaybackWidget()
 }

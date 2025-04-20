@@ -17,21 +17,18 @@
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
-package io.github.antoinepirlot.satunes.widgets
+package io.github.antoinepirlot.satunes.widgets.ui
 
 import android.content.Context
 import android.os.Environment
 import androidx.glance.GlanceId
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.provideContent
-import androidx.glance.appwidget.updateAll
 import io.github.antoinepirlot.satunes.playback.services.WidgetPlaybackManager
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
+import io.github.antoinepirlot.satunes.widgets.PlaybackWidget.setRefreshWidget
 import io.github.antoinepirlot.satunes.widgets.ui.views.ClassicPlaybackWidgetView
 import io.github.antoinepirlot.satunes.widgets.ui.views.WidgetView
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 /**
  * @author Antoine Pirlot on 20/08/2024
@@ -41,21 +38,10 @@ class ClassicPlaybackWidget : GlanceAppWidget() {
 
     private var _logger: SatunesLogger? = null
 
-    companion object {
-        fun setRefreshWidget(context: Context) {
-            val refreshWidgets: () -> Unit = {
-                CoroutineScope(Dispatchers.Default).launch {
-                    ClassicPlaybackWidget().updateAll(context = context.applicationContext)
-                }
-            }
-            WidgetPlaybackManager.setRefreshWidgets(refreshWidgets = refreshWidgets)
-        }
-    }
-
     override suspend fun provideGlance(context: Context, id: GlanceId) {
-        SatunesLogger.DOCUMENTS_PATH =
+        SatunesLogger.Companion.DOCUMENTS_PATH =
             context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)!!.path
-        _logger = SatunesLogger.getLogger()
+        _logger = SatunesLogger.Companion.getLogger()
         _logger?.info("ClassicPlaybackWidget Starting")
         setRefreshWidget(context = context)
         WidgetPlaybackManager.refreshWidgets()

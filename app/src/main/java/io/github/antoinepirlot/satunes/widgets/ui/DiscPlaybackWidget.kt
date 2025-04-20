@@ -17,26 +17,35 @@
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
-package io.github.antoinepirlot.satunes.widgets
+package io.github.antoinepirlot.satunes.widgets.ui
 
 import android.content.Context
-import androidx.glance.appwidget.updateAll
+import android.os.Environment
+import androidx.glance.GlanceId
+import androidx.glance.appwidget.GlanceAppWidget
+import androidx.glance.appwidget.provideContent
 import io.github.antoinepirlot.satunes.playback.services.WidgetPlaybackManager
-import io.github.antoinepirlot.satunes.widgets.ui.ClassicPlaybackWidget
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
+import io.github.antoinepirlot.satunes.widgets.PlaybackWidget
+import io.github.antoinepirlot.satunes.widgets.ui.views.DiscPlaybackWidgetView
+import io.github.antoinepirlot.satunes.widgets.ui.views.WidgetView
 
 /**
  * @author Antoine Pirlot 20/04/2025
  */
-object PlaybackWidget {
-    fun setRefreshWidget(context: Context) {
-        val refreshWidgets: () -> Unit = {
-            CoroutineScope(Dispatchers.Default).launch {
-                ClassicPlaybackWidget().updateAll(context = context.applicationContext)
+class DiscPlaybackWidget : GlanceAppWidget() {
+
+    override suspend fun provideGlance(context: Context, id: GlanceId) {
+        SatunesLogger.Companion.DOCUMENTS_PATH =
+            context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)!!.path
+        SatunesLogger.Companion.getLogger()?.info("DiscPlaybackWidget Starting")
+        PlaybackWidget.setRefreshWidget(context = context)
+        WidgetPlaybackManager.refreshWidgets()
+
+        provideContent {
+            WidgetView {
+                DiscPlaybackWidgetView()
             }
         }
-        WidgetPlaybackManager.setRefreshWidgets(refreshWidgets = refreshWidgets)
     }
 }

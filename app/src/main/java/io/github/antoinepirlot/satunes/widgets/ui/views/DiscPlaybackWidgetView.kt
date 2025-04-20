@@ -33,11 +33,3 @@ fun DiscPlaybackWidgetView(
 ) {
     //TODO
 }
-
-@Composable
-@GlanceComposable
-private fun WidgetView(
-    modifier: GlanceModifier = GlanceModifier
-) {
-
-}

@@ -9,7 +9,7 @@
  *  You should have received a copy of the GNU General Public License along with Satunes.
  *  If not, see <https://www.gnu.org/licenses/>.
  *
- * ** INFORMATION ABOUT THE AUTHOR *****
+ * **** INFORMATION ABOUT THE AUTHOR *****
  * The author of this file is Antoine Pirlot, the owner of this project.
  * You find this original project on Codeberg.
  *
@@ -37,7 +37,7 @@ import io.github.antoinepirlot.satunes.utils.getNow
 import io.github.antoinepirlot.satunes.utils.initSatunes
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import io.github.antoinepirlot.satunes.utils.utils.showToastOnUiThread
-import io.github.antoinepirlot.satunes.widgets.ClassicPlaybackWidget
+import io.github.antoinepirlot.satunes.widgets.PlaybackWidget.setRefreshWidget
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -87,7 +87,7 @@ internal class MainActivity : ComponentActivity() {
         _logger?.info("Satunes started on API: ${Build.VERSION.SDK_INT}")
         instance = this
 
-        ClassicPlaybackWidget.setRefreshWidget(context = baseContext)
+        setRefreshWidget(context = baseContext)
         WidgetPlaybackManager.refreshWidgets()
 
         setContent {

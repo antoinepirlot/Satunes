@@ -17,30 +17,39 @@
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
-package io.github.antoinepirlot.satunes.widgets.ui.components
+package io.github.antoinepirlot.satunes.utils
 
-import androidx.compose.runtime.Composable
-import androidx.glance.GlanceComposable
-import androidx.glance.GlanceModifier
-import androidx.glance.GlanceTheme
-import androidx.glance.text.Text
-import androidx.glance.text.TextStyle
-import io.github.antoinepirlot.satunes.database.models.Music
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.Path
+import android.graphics.Rect
+import android.graphics.RectF
 
 /**
- * @author Antoine Pirlot on 20/08/2024
+ * @author Antoine Pirlot 20/04/2025
  */
 
-@Composable
-@GlanceComposable
-internal fun MusicInformations(
-    modifier: GlanceModifier = GlanceModifier,
-    music: Music
-) {
-    Text(
-        modifier = modifier,
-        text = music.title + " - " + music.artist.title,
-        style = TextStyle(color = GlanceTheme.colors.onSurface),
-        maxLines = 1
-    )
+/**
+ * Used to replace modifier.clip from Modifier, make the artwork circle
+ * @author ChatGPT
+ */
+fun Bitmap.toCircularBitmap(): Bitmap {
+    val size: Int = minOf(width, height)
+    val output: Bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
+    val canvas = Canvas(output)
+
+    val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    val rect = RectF(0f, 0f, size.toFloat(), size.toFloat())
+
+    val path = Path().apply {
+        addOval(rect, Path.Direction.CCW)
+    }
+
+    canvas.clipPath(path)
+    val srcRect =
+        Rect((width - size) / 2, (height - size) / 2, (width + size) / 2, (height + size) / 2)
+    canvas.drawBitmap(this, srcRect, rect, paint)
+
+    return output
 }

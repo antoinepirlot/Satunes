@@ -20,20 +20,70 @@
 
 package io.github.antoinepirlot.satunes.ui.views.settings.reset
 
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import io.github.antoinepirlot.satunes.ui.components.settings.reset.AllResetSettings
+import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.antoinepirlot.jetpack_libs.components.texts.Title
+import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.data.local.LocalMainScope
+import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
+import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
+import io.github.antoinepirlot.satunes.ui.components.buttons.settings.reset.ResetButton
+import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
+import io.github.antoinepirlot.satunes.ui.components.settings.reset.battery.ResetBatterySettings
+import io.github.antoinepirlot.satunes.ui.components.settings.reset.library.ResetLibrarySubSettings
+import io.github.antoinepirlot.satunes.ui.components.settings.reset.navigation_bar.ResetInterfaceSubSettings
+import io.github.antoinepirlot.satunes.ui.components.settings.reset.playback.ResetPlaybackSubSettings
+import io.github.antoinepirlot.satunes.ui.components.settings.reset.search.ResetSearchSubSettings
+import kotlinx.coroutines.CoroutineScope
 
 /**
  * @author Antoine Pirlot on 20/11/2024
  */
 @Composable
-internal fun ResetSettingsView(modifier: Modifier = Modifier) {
-    Column(modifier = modifier.fillMaxSize()) {
-        AllResetSettings()
+internal fun ResetSettingsView(
+    modifier: Modifier = Modifier,
+    satunesViewModel: SatunesViewModel = viewModel(),
+    dataViewModel: DataViewModel = viewModel(),
+) {
+    val scope: CoroutineScope = LocalMainScope.current
+    val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
+
+    val scrollState: ScrollState = rememberScrollState()
+
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .verticalScroll(state = scrollState),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Title(text = stringResource(R.string.reset_settings))
+        SubSettings {
+            ResetButton(
+                text = stringResource(R.string.reset_all_settings),
+                onClick = {
+                    dataViewModel.resetAllSettings(
+                        scope = scope,
+                        snackBarHostState = snackBarHostState
+                    )
+                }
+            )
+        }
+        ResetInterfaceSubSettings()
+        ResetPlaybackSubSettings()
+        ResetSearchSubSettings()
+        ResetLibrarySubSettings()
+        ResetBatterySettings()
     }
 }
 

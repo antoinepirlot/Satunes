@@ -9,7 +9,7 @@
  *  You should have received a copy of the GNU General Public License along with Satunes.
  *  If not, see <https://www.gnu.org/licenses/>.
  *
- * ** INFORMATION ABOUT THE AUTHOR *****
+ * **** INFORMATION ABOUT THE AUTHOR *****
  * The author of this file is Antoine Pirlot, the owner of this project.
  * You find this original project on Codeberg.
  *
@@ -17,16 +17,15 @@
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
-package io.github.antoinepirlot.satunes.database.models
+package io.github.antoinepirlot.satunes.widgets
 
-import io.github.antoinepirlot.satunes.database.R
+import androidx.glance.appwidget.GlanceAppWidget
+import androidx.glance.appwidget.GlanceAppWidgetReceiver
+import io.github.antoinepirlot.satunes.widgets.ui.DiscPlaybackWidget
 
 /**
- * @author Antoine Pirlot on 09/08/2024
+ * @author Antoine Pirlot 20/04/2025
  */
-enum class FoldersSelection(
-    val stringId: Int,
-) {
-    INCLUDE(stringId = R.string.include),
-    EXCLUDE(stringId = R.string.exclude)
+class DiscPlaybackReceiver : GlanceAppWidgetReceiver() {
+    override val glanceAppWidget: GlanceAppWidget = DiscPlaybackWidget()
 }

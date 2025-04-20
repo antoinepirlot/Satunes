@@ -17,48 +17,45 @@
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
-package io.github.antoinepirlot.satunes.widgets.ui.components.buttons
+package io.github.antoinepirlot.satunes.widgets.ui.views
 
-import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.glance.GlanceComposable
 import androidx.glance.GlanceModifier
-import androidx.glance.GlanceTheme
-import androidx.glance.LocalContext
-import androidx.glance.appwidget.components.CircleIconButton
-import androidx.glance.appwidget.components.SquareIconButton
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import androidx.glance.appwidget.CircularProgressIndicator
+import androidx.glance.layout.Alignment
+import androidx.glance.layout.Box
+import androidx.glance.layout.fillMaxSize
+import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
+import io.github.antoinepirlot.satunes.widgets.ui.components.buttons.LoadSatunesButton
 
 /**
- * @author Antoine Pirlot on 20/08/2024
+ * @author Antoine Pirlot 20/04/2025
  */
-
 @Composable
 @GlanceComposable
-internal fun PlayPauseButton(
+fun WidgetView(
     modifier: GlanceModifier = GlanceModifier,
+    widgetView: @Composable @GlanceComposable () -> Unit
 ) {
-    val context: Context = LocalContext.current
-    val isPlaying: Boolean by PlaybackManager.isPlaying
-    if (isPlaying) {
-        SquareIconButton(
-            modifier = modifier,
-            imageProvider = SatunesIcons.PAUSE.imageProvider!!,
-            contentDescription = "Pause",
-            onClick = { PlaybackManager.pause(context = context) },
-            backgroundColor = GlanceTheme.colors.primary,
-            contentColor = GlanceTheme.colors.onPrimary,
-        )
-    } else {
-        CircleIconButton(
-            modifier = modifier,
-            imageProvider = SatunesIcons.PLAY.imageProvider!!,
-            contentDescription = "Play",
-            onClick = { PlaybackManager.play(context = context) },
-            backgroundColor = GlanceTheme.colors.primary,
-            contentColor = GlanceTheme.colors.onPrimary,
-        )
+    val isDataLoading: Boolean by DataLoader.isLoading
+    val isPlaybackLoading: Boolean by PlaybackManager.isLoading
+    Box(
+        modifier = GlanceModifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        if (isDataLoading || isPlaybackLoading) {
+            CircularProgressIndicator(modifier = modifier)
+            return@Box
+        }
+
+        val isDataLoaded: Boolean by DataLoader.isLoaded
+        if (!isDataLoaded) {
+            LoadSatunesButton(modifier = modifier)
+        } else {
+            widgetView()
+        }
     }
 }

@@ -17,55 +17,48 @@
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
-package io.github.antoinepirlot.satunes.widgets.ui.components
+package io.github.antoinepirlot.satunes.widgets.ui.views
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import androidx.glance.GlanceComposable
 import androidx.glance.GlanceModifier
+import androidx.glance.action.actionStartActivity
+import androidx.glance.action.clickable
 import androidx.glance.layout.Alignment
-import androidx.glance.layout.Row
-import androidx.glance.layout.Spacer
+import androidx.glance.layout.Box
+import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.fillMaxWidth
-import androidx.glance.layout.size
+import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
-import io.github.antoinepirlot.satunes.widgets.ui.components.buttons.NextButton
-import io.github.antoinepirlot.satunes.widgets.ui.components.buttons.PlayPauseButton
-import io.github.antoinepirlot.satunes.widgets.ui.components.buttons.PreviousButton
+import io.github.antoinepirlot.satunes.widgets.ui.components.Artwork
+import io.github.antoinepirlot.satunes.widgets.ui.components.PlaybackControlBar
 
 /**
- * @author Antoine Pirlot on 20/08/2024
+ * @author Antoine Pirlot 20/04/2025
  */
-
 @Composable
 @GlanceComposable
-internal fun PlaybackControlBar(
-    modifier: GlanceModifier = GlanceModifier,
-    horizontalAlignment: Alignment.Horizontal = Alignment.CenterHorizontally,
-    verticalAlignment: Alignment.Vertical = Alignment.CenterVertically
+fun DiscPlaybackWidgetView(
+    modifier: GlanceModifier = GlanceModifier
 ) {
-    Row(
-        modifier = modifier.fillMaxWidth(),
-        horizontalAlignment = horizontalAlignment,
-        verticalAlignment = verticalAlignment
+    Box(
+        modifier = modifier.fillMaxSize(),
+        contentAlignment = Alignment.BottomCenter
     ) {
         val musicPlaying: Music? by PlaybackManager.musicPlaying
-        val spacerSize: Dp = 12.dp
+        if (musicPlaying != null)
+            Artwork(
+                modifier = GlanceModifier
+                    .fillMaxSize()
+                    .clickable(onClick = actionStartActivity<MainActivity>()),
+                music = musicPlaying!!
+            )
 
-        if (musicPlaying != null) {
-            PreviousButton(modifier = GlanceModifier.size(40.dp))
-            Spacer(modifier = GlanceModifier.size(spacerSize))
-        }
-
-        val playPauseSize: Dp = if (musicPlaying != null) 40.dp else 60.dp
-        PlayPauseButton(modifier = GlanceModifier.size(playPauseSize))
-
-        if (musicPlaying != null) {
-            Spacer(modifier = GlanceModifier.size(spacerSize))
-            NextButton(modifier = GlanceModifier.size(40.dp))
-        }
+        PlaybackControlBar(
+            modifier = if (musicPlaying == null) GlanceModifier.fillMaxSize()
+            else GlanceModifier.fillMaxWidth()
+        )
     }
 }

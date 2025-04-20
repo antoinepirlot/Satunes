@@ -18,46 +18,43 @@
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
-package io.github.antoinepirlot.satunes.ui.components.images
+package io.github.antoinepirlot.satunes.ui.components.settings.design.playback.artwork
 
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
-import io.github.antoinepirlot.satunes.data.states.SatunesUiState
-import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
+import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
-import io.github.antoinepirlot.satunes.database.models.Album
+import io.github.antoinepirlot.satunes.models.SwitchSettings
+import io.github.antoinepirlot.satunes.ui.components.settings.SettingsSwitchList
+import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
+
 
 /**
- * @author Antoine Pirlot on 11/08/2024
+ * @author Antoine Pirlot 04/03/2025
  */
-
 @Composable
-internal fun MusicPlayingAlbumArtwork(
+internal fun ArtworkAnimationSubSetting(
     modifier: Modifier = Modifier,
-    satunesViewModel: SatunesViewModel = viewModel(),
-    playbackViewModel: PlaybackViewModel = viewModel(),
-    onClick: ((album: Album?) -> Unit)? = null,
+    satunesViewModel: SatunesViewModel = viewModel()
 ) {
-    MediaArtwork(
-        modifier = modifier,
-        mediaImpl = playbackViewModel.musicPlaying!!,
-        onClick = onClick,
-        shape = if (satunesViewModel.artworkAnimation) CircleShape else null
+    val artworkAnimationSwitchSettings: Map<SwitchSettings, Boolean> = mapOf(
+        Pair(SwitchSettings.ARTWORK_ANIMATION, satunesViewModel.artworkAnimation),
+        Pair(SwitchSettings.ARTWORK_CIRCLE_SHAPE, satunesViewModel.artworkCircleShape)
     )
+
+    SubSettings(
+        modifier = modifier,
+        title = stringResource(R.string.artwork_sub_settings_title)
+    ) {
+        SettingsSwitchList(checkedMap = artworkAnimationSwitchSettings)
+    }
 }
 
 @Preview
 @Composable
-private fun MusicPlayingAlbumArtworkPreview() {
-    val playbackViewModel: PlaybackViewModel = viewModel()
-    MediaArtwork(
-        mediaImpl = playbackViewModel.musicPlaying!!,
-        onClick = { }
-    )
+private fun ArtworkAnimationSubSettingPreview(modifier: Modifier = Modifier) {
+    ArtworkAnimationSubSetting()
 }
-

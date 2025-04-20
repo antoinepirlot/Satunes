@@ -806,7 +806,10 @@ class DataViewModel : ViewModel() {
                 scope = scope,
                 snackBarHostState = snackBarHostState,
                 action = {
-                    resetAllSettings(scope = scope, snackBarHostState = snackBarHostState)
+                    resetAllSettings(
+                        scope = scope,
+                        snackBarHostState = snackBarHostState
+                    )
                 }
             )
         }
@@ -881,6 +884,22 @@ class DataViewModel : ViewModel() {
                 snackBarHostState = snackBarHostState,
                 action = {
                     resetListsSettings(scope = scope, snackBarHostState = snackBarHostState)
+                }
+            )
+        }
+    }
+
+    fun resetArtworkSettings(scope: CoroutineScope, snackBarHostState: SnackbarHostState) {
+        try {
+            CoroutineScope(Dispatchers.IO).launch {
+                SettingsManager.resetArtworkSettings(context = MainActivity.instance.applicationContext)
+            }
+        } catch (e: Exception) {
+            showErrorSnackBar(
+                scope = scope,
+                snackBarHostState = snackBarHostState,
+                action = {
+                    resetArtworkSettings(scope = scope, snackBarHostState = snackBarHostState)
                 }
             )
         }

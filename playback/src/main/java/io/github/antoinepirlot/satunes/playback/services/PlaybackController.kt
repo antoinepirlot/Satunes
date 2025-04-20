@@ -278,11 +278,11 @@ internal class PlaybackController private constructor(
             }
         }
         musicPlaying = playlist!!.getMusic(musicIndex = musicPlayingIndex)
-        if (mediaController.currentMediaItemIndex == musicPlayingIndex) {
+
+        if (mediaController.currentMediaItemIndex == musicPlayingIndex)
             mediaController.play()
-        } else {
-            seekTo(musicIndex = musicPlayingIndex)
-        }
+        else
+            mediaController.seekTo(musicPlayingIndex, 0)
     }
 
     fun playPause() {
@@ -350,15 +350,6 @@ internal class PlaybackController private constructor(
 
     fun seekTo(music: Music, positionMs: Long = 0) {
         val musicIndex: Int = playlist!!.getMusicIndex(music)
-        seekTo(musicIndex = musicIndex, positionMs)
-    }
-
-    fun seekTo(musicId: Long, positionMs: Long = 0) {
-        val music: Music = DataManager.getMusic(musicId)
-        seekTo(music = music, positionMs)
-    }
-
-    fun seekTo(musicIndex: Int, positionMs: Long = 0) {
         mediaController.seekTo(musicIndex, positionMs)
     }
 
@@ -427,7 +418,7 @@ internal class PlaybackController private constructor(
                 try {
                     this.playlist!!.addToQueue(music = mediaImpl)
                     this.mediaController.addMediaItem(mediaImpl.mediaItem)
-                } catch (e: AlreadyInPlaybackException) {
+                } catch (_: AlreadyInPlaybackException) {
                     return
                 }
                 hasNext = true
@@ -502,7 +493,7 @@ internal class PlaybackController private constructor(
                         mediaImpl.mediaItem
                     )
                     hasNext = true
-                } catch (e: AlreadyInPlaybackException) {
+                } catch (_: AlreadyInPlaybackException) {
                     this.moveMusic(music = mediaImpl, newIndex = this.musicPlayingIndex + 1)
                     hasNext = true
                 }

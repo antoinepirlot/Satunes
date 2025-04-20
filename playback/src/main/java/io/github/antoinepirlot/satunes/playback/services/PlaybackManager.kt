@@ -1,16 +1,15 @@
 /*
  * This file is part of Satunes.
- *
  * Satunes is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software Foundation,
  * either version 3 of the License, or (at your option) any later version.
- * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ *  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public License along with Satunes.
- * If not, see <https://www.gnu.org/licenses/>.
+ *  You should have received a copy of the GNU General Public License along with Satunes.
+ *  If not, see <https://www.gnu.org/licenses/>.
  *
- * *** INFORMATION ABOUT THE AUTHOR *****
+ * **** INFORMATION ABOUT THE AUTHOR *****
  * The author of this file is Antoine Pirlot, the owner of this project.
  * You find this original project on Codeberg.
  *
@@ -258,13 +257,8 @@ object PlaybackManager {
     fun seekTo(context: Context, musicId: Long, positionMs: Long = 0) {
         _logger?.info("Seek to with music id and position ms = $positionMs")
         checkPlaybackController(context = context)
-        this._playbackController!!.seekTo(musicId = musicId, positionMs = positionMs)
-    }
-
-    fun seekTo(context: Context, musicIndex: Int, positionMs: Long = 0) {
-        _logger?.info("Seek to with music index and position ms")
-        checkPlaybackController(context = context)
-        this._playbackController!!.seekTo(musicIndex = musicIndex, positionMs = positionMs)
+        val music: Music = DataManager.getMusic(musicId)
+        this.seekTo(context = context, music = music, positionMs = positionMs)
     }
 
     fun loadMusics(
@@ -287,22 +281,10 @@ object PlaybackManager {
         )
     }
 
-    fun addToQueue(context: Context, mediaImplList: Collection<MediaImpl>) {
-        _logger?.info("Add to queue with collection")
-        checkPlaybackController(context = context)
-        this._playbackController!!.addToQueue(mediaImplList = mediaImplList)
-    }
-
     fun addToQueue(context: Context, mediaImpl: MediaImpl) {
         _logger?.info("Add to queue with media impl")
         checkPlaybackController(context = context)
         this._playbackController!!.addToQueue(mediaImpl = mediaImpl)
-    }
-
-    fun removeFromQueue(context: Context, mediaImplList: Collection<MediaImpl>) {
-        _logger?.info("Remove from queue with collection")
-        checkPlaybackController(context = context)
-        this._playbackController!!.removeFromQueue(mediaImplList = mediaImplList)
     }
 
     fun removeFromQueue(context: Context, mediaImpl: MediaImpl) {

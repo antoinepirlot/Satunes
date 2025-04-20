@@ -433,10 +433,10 @@ internal class PlaybackController private constructor(
                 hasNext = true
             }
 
-            is Folder -> addToQueue(mediaImplList = mediaImpl.getAllMusic().reversed())
+            is Folder -> addToQueue(mediaImplList = mediaImpl.getAllMusic())
 
             else -> {
-                addToQueue(mediaImplList = mediaImpl.getMusicSet().reversed())
+                addToQueue(mediaImplList = mediaImpl.getMusicSet())
             }
         }
     }
@@ -460,10 +460,10 @@ internal class PlaybackController private constructor(
                 }
             }
 
-            is Folder -> removeFromQueue(mediaImplList = mediaImpl.getAllMusic().reversed())
+            is Folder -> removeFromQueue(mediaImplList = mediaImpl.getAllMusic())
 
             else -> {
-                removeFromQueue(mediaImplList = mediaImpl.getMusicSet().reversed())
+                removeFromQueue(mediaImplList = mediaImpl.getMusicSet())
             }
         }
     }
@@ -489,9 +489,8 @@ internal class PlaybackController private constructor(
     }
 
     fun addNext(mediaImpl: MediaImpl) {
-        if (musicPlaying == mediaImpl) {
-            return
-        }
+        if (musicPlaying == mediaImpl) return
+
         when (mediaImpl) {
             is Music -> {
                 try {
@@ -507,11 +506,11 @@ internal class PlaybackController private constructor(
                 }
             }
 
+            // reversed because each music will be added next to it's added after the current music
             is Folder -> addNext(mediaImplList = mediaImpl.getAllMusic().reversed())
 
-            else -> {
-                addNext(mediaImplList = mediaImpl.getMusicSet().reversed())
-            }
+            // reversed because each music will be added next to it's added after the current music
+            else -> addNext(mediaImplList = mediaImpl.getMusicSet().reversed())
         }
     }
 

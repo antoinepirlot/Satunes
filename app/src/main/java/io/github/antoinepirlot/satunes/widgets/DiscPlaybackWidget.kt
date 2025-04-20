@@ -29,42 +29,24 @@ import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.components.Scaffold
 import androidx.glance.appwidget.provideContent
-import androidx.glance.appwidget.updateAll
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Box
 import androidx.glance.layout.fillMaxSize
 import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.playback.services.WidgetPlaybackManager
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
-import io.github.antoinepirlot.satunes.widgets.ui.views.ClassicPlaybackWidgetView
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import io.github.antoinepirlot.satunes.widgets.PlaybackWidget.setRefreshWidget
+import io.github.antoinepirlot.satunes.widgets.ui.views.DiscPlaybackWidgetView
 
 /**
- * @author Antoine Pirlot on 20/08/2024
+ * @author Antoine Pirlot 20/04/2025
  */
-
-class ClassicPlaybackWidget : GlanceAppWidget() {
-
-    private var _logger: SatunesLogger? = null
-
-    companion object {
-        fun setRefreshWidget(context: Context) {
-            val refreshWidgets: () -> Unit = {
-                CoroutineScope(Dispatchers.Default).launch {
-                    ClassicPlaybackWidget().updateAll(context = context.applicationContext)
-                }
-            }
-            WidgetPlaybackManager.setRefreshWidgets(refreshWidgets = refreshWidgets)
-        }
-    }
+class DiscPlaybackWidget : GlanceAppWidget() {
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         SatunesLogger.DOCUMENTS_PATH =
             context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)!!.path
-        _logger = SatunesLogger.getLogger()
-        _logger?.info("ClassicPlaybackWidget Starting")
+        SatunesLogger.getLogger()?.info("DiscPlaybackWidget Starting")
         setRefreshWidget(context = context)
         WidgetPlaybackManager.refreshWidgets()
 
@@ -77,7 +59,7 @@ class ClassicPlaybackWidget : GlanceAppWidget() {
                         modifier = GlanceModifier.fillMaxSize(),
                         contentAlignment = Alignment.Center
                     ) {
-                        ClassicPlaybackWidgetView()
+                        DiscPlaybackWidgetView()
                     }
                 }
             }

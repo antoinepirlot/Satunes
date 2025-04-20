@@ -21,54 +21,52 @@ package io.github.antoinepirlot.satunes.widgets.ui.views
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.unit.dp
 import androidx.glance.GlanceComposable
 import androidx.glance.GlanceModifier
+import androidx.glance.GlanceTheme
+import androidx.glance.action.actionStartActivity
+import androidx.glance.action.clickable
+import androidx.glance.appwidget.CircularProgressIndicator
+import androidx.glance.appwidget.components.Scaffold
 import androidx.glance.layout.Alignment
-import androidx.glance.layout.Column
-import androidx.glance.layout.Row
-import androidx.glance.layout.Spacer
+import androidx.glance.layout.Box
 import androidx.glance.layout.fillMaxSize
-import androidx.glance.layout.fillMaxWidth
-import androidx.glance.layout.size
-import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.MainActivity
+import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
-import io.github.antoinepirlot.satunes.widgets.ui.components.Artwork
-import io.github.antoinepirlot.satunes.widgets.ui.components.MusicInformations
-import io.github.antoinepirlot.satunes.widgets.ui.components.PlaybackControlBar
+import io.github.antoinepirlot.satunes.widgets.ui.components.buttons.LoadSatunesButton
 
 /**
- * @author Antoine Pirlot on 21/08/2024
+ * @author Antoine Pirlot 20/04/2025
  */
-
-
 @Composable
 @GlanceComposable
-internal fun ClassicPlaybackWidgetView(
+fun WidgetView(
     modifier: GlanceModifier = GlanceModifier,
+    widgetView: @Composable @GlanceComposable () -> Unit
 ) {
-    Row(
-        modifier = modifier.fillMaxSize(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        val musicPlaying: Music? by PlaybackManager.musicPlaying
-
-        if (musicPlaying != null) {
-            Artwork(music = musicPlaying!!)
-            Spacer(modifier = GlanceModifier.size(5.dp))
-        }
-
-        Column(
-            modifier = GlanceModifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalAlignment = Alignment.CenterHorizontally,
+    val isDataLoading: Boolean by DataLoader.isLoading
+    val isPlaybackLoading: Boolean by PlaybackManager.isLoading
+    GlanceTheme {
+        Scaffold(
+            modifier = GlanceModifier.clickable(onClick = actionStartActivity<MainActivity>())
         ) {
-            if (musicPlaying != null) {
-                MusicInformations(music = musicPlaying!!)
-                Spacer(modifier = GlanceModifier.size(5.dp))
+            Box(
+                modifier = GlanceModifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                if (isDataLoading || isPlaybackLoading) {
+                    CircularProgressIndicator(modifier = modifier)
+                    return@Box
+                }
+
+                val isDataLoaded: Boolean by DataLoader.isLoaded
+                if (!isDataLoaded) {
+                    LoadSatunesButton(modifier = modifier)
+                } else {
+                    widgetView()
+                }
             }
-            PlaybackControlBar()
         }
     }
 }

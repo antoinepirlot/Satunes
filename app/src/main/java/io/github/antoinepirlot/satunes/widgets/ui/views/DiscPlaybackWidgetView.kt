@@ -21,12 +21,23 @@ package io.github.antoinepirlot.satunes.widgets.ui.views
 
 import androidx.compose.runtime.Composable
 import androidx.glance.GlanceComposable
+import androidx.glance.GlanceModifier
 
 /**
  * @author Antoine Pirlot 20/04/2025
  */
 @Composable
 @GlanceComposable
-fun DiscPlaybackWidgetView() {
+fun DiscPlaybackWidgetView(
+    modifier: GlanceModifier = GlanceModifier
+) {
     //TODO
+}
+
+@Composable
+@GlanceComposable
+private fun WidgetView(
+    modifier: GlanceModifier = GlanceModifier
+) {
+
 }

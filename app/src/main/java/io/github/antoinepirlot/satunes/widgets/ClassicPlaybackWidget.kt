@@ -22,21 +22,13 @@ package io.github.antoinepirlot.satunes.widgets
 import android.content.Context
 import android.os.Environment
 import androidx.glance.GlanceId
-import androidx.glance.GlanceModifier
-import androidx.glance.GlanceTheme
-import androidx.glance.action.actionStartActivity
-import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
-import androidx.glance.appwidget.components.Scaffold
 import androidx.glance.appwidget.provideContent
 import androidx.glance.appwidget.updateAll
-import androidx.glance.layout.Alignment
-import androidx.glance.layout.Box
-import androidx.glance.layout.fillMaxSize
-import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.playback.services.WidgetPlaybackManager
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import io.github.antoinepirlot.satunes.widgets.ui.views.ClassicPlaybackWidgetView
+import io.github.antoinepirlot.satunes.widgets.ui.views.WidgetView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -69,19 +61,9 @@ class ClassicPlaybackWidget : GlanceAppWidget() {
         WidgetPlaybackManager.refreshWidgets()
 
         provideContent {
-            GlanceTheme {
-                Scaffold(
-                    modifier = GlanceModifier.clickable(onClick = actionStartActivity<MainActivity>())
-                ) {
-                    Box(
-                        modifier = GlanceModifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        ClassicPlaybackWidgetView()
-                    }
-                }
+            WidgetView {
+                ClassicPlaybackWidgetView()
             }
-
         }
     }
 }

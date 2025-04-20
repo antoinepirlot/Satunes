@@ -1,0 +1,12 @@
+Nouvelles fonctionnalités :
+
+* Nouveau Widget "Disque"
+* La fonction inclure/exclure prend désormais en compte les deux cas. Tu peux maintenant inclure certains dossiers et en exclure d'autres en même temps.
+* Bouton pour désactiver les logs
+
+Améliorations, optimisations et dépannage :
+
+* Réglages pour arrondir les albums et animer les illustrations lors de la lecture
+* Correction d'un crash lors de la lecture de musique après autorisation de l'audio
+
+Plus d'info sur Codeberg.

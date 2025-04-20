@@ -32,7 +32,7 @@ import android.graphics.RectF
 
 /**
  * Used to replace modifier.clip from Modifier, make the artwork circle
- * @author AI
+ * @author ChatGPT
  */
 fun Bitmap.toCircularBitmap(): Bitmap {
     val size: Int = minOf(width, height)

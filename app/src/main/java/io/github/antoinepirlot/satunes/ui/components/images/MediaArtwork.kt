@@ -1,16 +1,15 @@
 /*
  * This file is part of Satunes.
- *
  * Satunes is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software Foundation,
  * either version 3 of the License, or (at your option) any later version.
- * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ *  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public License along with Satunes.
- * If not, see <https://www.gnu.org/licenses/>.
+ *  You should have received a copy of the GNU General Public License along with Satunes.
+ *  If not, see <https://www.gnu.org/licenses/>.
  *
- * *** INFORMATION ABOUT THE AUTHOR *****
+ * **** INFORMATION ABOUT THE AUTHOR *****
  * The author of this file is Antoine Pirlot, the owner of this project.
  * You find this original project on Codeberg.
  *
@@ -21,6 +20,7 @@
 package io.github.antoinepirlot.satunes.ui.components.images
 
 import android.content.Context
+import android.graphics.Bitmap
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -69,6 +69,7 @@ import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.icons.R
 import io.github.antoinepirlot.satunes.ui.components.dialog.album.AlbumOptionsDialog
 import io.github.antoinepirlot.satunes.ui.utils.getRightIconAndDescription
+import io.github.antoinepirlot.satunes.utils.toCircularBitmap
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -89,8 +90,9 @@ internal fun MediaArtwork(
     contentAlignment: Alignment = Alignment.Center,
     shape: Shape? = null
 ) {
+    val makeArtworkCircle: Boolean = satunesViewModel.artworkCircleShape || shape == CircleShape
     var mediaArtWorkModifier: Modifier = modifier.clip(
-        shape = shape ?: if (satunesViewModel.artworkCircleShape) CircleShape else RectangleShape
+        shape = shape ?: if (makeArtworkCircle) CircleShape else RectangleShape
     )
     val isPlaying: Boolean = playbackViewModel.isPlaying
     val haptics: HapticFeedback = LocalHapticFeedback.current
@@ -161,13 +163,14 @@ internal fun MediaArtwork(
         LaunchedEffect(key1 = mediaImpl) {
             job?.cancel()
             job = CoroutineScope(Dispatchers.IO).launch {
-                artwork = when (mediaImpl) {
+                var bitmap: Bitmap? = when (mediaImpl) {
                     is Music -> mediaImpl.getAlbumArtwork(context = context)
-                    is Album -> mediaImpl.getMusicSet().first()
-                        .getAlbumArtwork(context = context)
-
+                    is Album -> mediaImpl.getMusicSet().first().getAlbumArtwork(context = context)
                     else -> null
-                }?.asImageBitmap()
+                }
+                if (makeArtworkCircle)
+                    bitmap = bitmap?.toCircularBitmap()
+                artwork = bitmap?.asImageBitmap()
             }
         }
 

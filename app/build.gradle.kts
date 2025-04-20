@@ -7,7 +7,7 @@ val nameSpace: String = "io.github.antoinepirlot.satunes"
 
 android {
     namespace = nameSpace
-    compileSdk = 34
+    compileSdk = 35
 
     androidResources {
         generateLocaleConfig = true
@@ -17,9 +17,9 @@ android {
     defaultConfig {
         applicationId = nameSpace
         minSdk = 22
-        targetSdk = 34
-        versionCode = 57
-        versionName = "2.4.0-preview-1"
+        targetSdk = 35
+        versionCode = 78
+        versionName = "3.0.5"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -61,10 +61,12 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
-    packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
+
+    dependenciesInfo {
+        // Disables dependency metadata when building APKs.
+        includeInApk = false
+        // Disables dependency metadata when building Android App Bundles.
+        includeInBundle = false
     }
 }
 
@@ -97,7 +99,6 @@ dependencies {
     /**
      * Media
      */
-
     implementation(libs.androidx.media3.common)
     implementation(libs.androidx.media3.session)
 

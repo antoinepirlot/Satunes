@@ -1,7 +1,241 @@
 # Releases (🇬🇧)
 Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
+## 3.0 (Android 5.1.1 Lollipop and later
+
+### 3.0.5
+
+Improvements, optimizations and troubleshooting:
+
+* Change tipeee button by Liberapay
+
+### 3.0.4
+
+Improvements, optimizations and troubleshooting:
+
+* Fix list position on sort change
+* Center toast and buttons in settings
+* Remove separating lines added in media selection modal added by error
+
+### 3.0.3
+
+Improvements, optimizations and troubleshooting:
+
+* Fix issue crashing the app using sd card
+
+### 3.0.2
+
+Improvements, optimizations and troubleshooting:
+
+* Improve list behavior
+* Fix modal popup (rollback to the old system that was more efficient)
+* Fix exclude folders feature
+* Remove useless permission "manage_external_storage"
+* Fix navigation:
+  * If audio is not allowed, settings are accessible
+  * If audio has just been allowed in-app, the navigation is then full working
+
+### 3.0.1
+
+Improvements, optimizations and troubleshooting:
+
+* Fix crash when an sd card is loaded. Sorting by last added date temporarily unavailable for files
+  stored in sd cards.
+
+### 3.0.0
+
+New features:
+
+* Ability to sort media by artist, album and/or genre based on page
+* Display of the first letter in alphabetical order above the first media (with this letter) in the
+  list (can be disabled in library settings)
+* Added sorting by year and last added for music (in some views at the moment)
+* Adding media to playlists now removes them if they are present (entirely for those who are not
+  music)
+* It's possible to move custom actions positions
+* A playlist can be selected as the default one
+
+Improvements, optimizations and troubleshooting:
+
+* Support for Android 15 (Vanilla Ice Cream)
+* Update texts
+* When the user changes the view from one media type to another, the navigation bar reflects the
+  modifications
+* Music loading issues causing crashes under some conditions fixed (Concurrent Modification)
+* Satunes's libraries update that involve a slight design change of some elements (like the progress
+  bar)
+* Other indirect optimizations and corrections
+* Changed update source from GitHub to Codeberg
+* GitHub button replaced by Codeberg
+
+### 3.0.0-preview-1
+
+Improvements, optimisations and troubleshooting:
+
+* Fixed playlist selection being displayed when going to playback view
+* Faster startup
+* Fixed clicking on music in playback list
+* Media list doesn't return to first item if media options close
+* Fixed navigation issues
+* Centered artist icon next to artist name
+* Changed update source from GitHub to Codeberg
+* GitHub button replaced by Codeberg
+
+### 3.0.0-beta-2
+
+Improvements, optimizations and troubleshooting:
+
+* Fix some UI issues
+* Update texts
+* Remove some cancel actions when updating playlist as it is more complex now
+* Fix crashing when loading not existing music (yes it could happen with MediaStore lol)
+* Fix opening default playlist
+* Reset the older order of extra buttons list on playlist view
+* Fix search view
+* Other indirect optimizations and improvements
+
+### 3.0.0-beta-1
+
+New features:
+
+* It's possible to move custom actions positions
+* A playlist can be selected as the default one
+
+Improvements, optimizations and troubleshooting:
+
+* Update texts
+* Add artist icon next to artist title in certain views
+* Update position of elements in update view
+* Move settings dedicated to design in Design settings menu
+* Update code structure
+* Fix some ui issues from 3.0.0-alpha-2
+* Other indirect optimizations and improvements
+
+### 3.0.0-alpha-2
+
+New features:
+
+* Added sorting by year and last added for music (in some views at the moment)
+* Adding media to playlists now removes them if they are present (entirely for those who are not
+  music)
+
+Improvements, optimizations and troubleshooting:
+
+* Startup optimization
+* When the list is sorted, the list loaded in playback corresponds to the sort
+* When the user changes the view from one media type to another, the navigation bar reflects the
+  modifications
+* Other indirect optimizations and improvements
+
+### 3.0.0-alpha-1
+
+New features:
+
+* Ability to sort media by artist, album and/or genre based on page
+* Display of the first letter in alphabetical order above the first media (with this letter) in the
+  list (can be disabled in library settings)
+
+Improvements, optimizations and troubleshooting:
+
+* Support for Android 15 (Vanilla Ice Cream)
+* Music loading issues causing crashes under some conditions fixed (Concurrent Modification)
+* Satunes's libraries update that involve a slight design change of some elements (like the progress
+  bar)
+* Other indirect optimizations and corrections
+
+## 2.5 (Android 5.1.1 Lollipop and later)
+
+### 2.5.2
+
+Improvements, optimizations and troubleshooting:
+
+* Hide start timer if the timer is running
+
+### 2.5.1
+
+Improvements, optimizations and troubleshooting:
+
+* Add "Developed in Europe 🇪🇺" at the end of About settings section
+* Fix snack bar not showing '%' on folder's path removed
+* Fix Music control bar time when leaving and going back to the screen after a moment when playing
+* Fix if forward rewind new value is <= 0 then old value is kept
+* Show info dialog if setting need reload library
+
+### 2.5.0
+
+New features:
+
+* Add playlist's musics to another playlist
+* Jump back/ahead in music playback
+* Reset Settings
+
+Improvements, optimizations and troubleshooting:
+
+* Timer setting will show remaining time inside the number fields
+* Few minor optimization
+
 ## 2.4 (Android 5.1.1 Lollipop and later)
+
+### 2.4.6
+
+Improvements, optimizations and troubleshooting:
+
+* Fix Android Auto not playing the selected music and not respecting the default shuffle mode
+
+### 2.4.5
+
+Nothing new, issue happened while updating
+
+### 2.4.4
+
+Improvements, optimizations and troubleshooting:
+
+* Remove exclusion of FOSS libraries
+* Disable the inclusion dependency metadata in APK and Bundle as it's not FOSS compatible
+
+### 2.4.3
+
+Improvements, optimizations and troubleshooting:
+
+* The queue list button is now a switch like the setting button
+* Fix issue when nav bar section is disabled, it doesn't prevent user to go on its views
+* The widget is now resizable vertically but is limited (it fix wrong layout in certain launcher by
+  allowing user to resize it)
+
+### 2.4.2
+
+Improvements, optimizations and troubleshooting:
+
+* Add musics to playlists works again
+
+### 2.4.1
+
+Improvements, optimizations and troubleshooting:
+
+* When canceling media selection, the selected media are no longer saved
+* When selecting the default menu bar, the application no longer redirects to the new menu
+
+### 2.4.0
+
+New features:
+
+* Ability to like music in Android Auto
+* Timer that can pause music (maximum for 8 hours)
+
+Improvements, optimizations and troubleshooting:
+
+* Playing the current music from the same loaded playlist does not reload the playback
+* Music is sorted by track number in albums and then, otherwise, alphabetically
+* The name of the exported playlist file and logs contains a date and time
+* Improved widget refresh
+* The year of the album is displayed, if it exists
+* Update buttons are put in a column to improve their visibility on some screens
+* Like button in Android Auto has been swapped with shuffle button
+* Fixed track switching to previous under certain conditions
+
+Removed features:
+
+* Removed the playlist visualization in Android Auto to avoid distractions
 
 ### 2.4.0-preview-1
 

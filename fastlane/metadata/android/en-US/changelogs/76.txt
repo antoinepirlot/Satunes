@@ -1,0 +1,3 @@
+Improvements, optimizations and troubleshooting:
+
+* Fix issue crashing the app using sd card

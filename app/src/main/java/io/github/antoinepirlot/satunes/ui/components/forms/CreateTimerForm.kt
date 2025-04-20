@@ -1,26 +1,21 @@
 /*
  * This file is part of Satunes.
  *
- *  Satunes is free software: you can redistribute it and/or modify it under
- *  the terms of the GNU General Public License as published by the Free Software Foundation,
- *  either version 3 of the License, or (at your option) any later version.
+ * Satunes is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later version.
+ * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License along with Satunes.
+ * If not, see <https://www.gnu.org/licenses/>.
  *
- *  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- *  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *  See the GNU General Public License for more details.
+ * *** INFORMATION ABOUT THE AUTHOR *****
+ * The author of this file is Antoine Pirlot, the owner of this project.
+ * You find this original project on Codeberg.
  *
- *  You should have received a copy of the GNU General Public License along with Satunes.
- *  If not, see <https://www.gnu.org/licenses/>.
- *
- *  **** INFORMATIONS ABOUT THE AUTHOR *****
- *  The author of this file is Antoine Pirlot, the owner of this project.
- *  You find this original project on github.
- *
- *  My github link is: https://github.com/antoinepirlot
- *  This current project's link is: https://github.com/antoinepirlot/Satunes
- *
- *  You can contact me via my email: pirlot.antoine@outlook.com
- *  PS: I don't answer quickly.
+ * My Codeberg link is: https://codeberg.org/antoinepirlot
+ * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
 package io.github.antoinepirlot.satunes.ui.components.forms
@@ -31,11 +26,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material3.Button
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -53,8 +50,12 @@ import io.github.antoinepirlot.satunes.data.local.LocalMainScope
 import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.data.states.PlaybackUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
-import io.github.antoinepirlot.satunes.ui.components.settings.playback.timer.TimerRemainingTime
+import io.github.antoinepirlot.satunes.models.Timer
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 /**
  * @author Antoine Pirlot on 14/10/2024
@@ -72,6 +73,25 @@ internal fun CreateTimerForm(
     onFinished: (() -> Unit)? = null,
 ) {
     val playbackUiState: PlaybackUiState by playbackViewModel.uiState.collectAsState()
+    val timer: Timer? = playbackUiState.timer
+    val isTimerRunning = timer != null
+    val remainingTime: Long = playbackUiState.timerRemainingTime
+
+    val secondsIntField: MutableIntState = rememberSaveable { mutableIntStateOf(0) }
+    val minutesIntField: MutableIntState = rememberSaveable { mutableIntStateOf(0) }
+    val hoursIntField: MutableIntState = rememberSaveable { mutableIntStateOf(0) }
+
+    var job: Job? = null
+    LaunchedEffect(remainingTime, timer) {
+        secondsIntField.intValue = (timer?.getRemainingSeconds() ?: 0) % 60
+        minutesIntField.intValue = (timer?.getRemainingMinutes() ?: 0) % 60
+        hoursIntField.intValue = timer?.getRemainingHours() ?: 0
+        job?.cancel()
+        job = CoroutineScope(Dispatchers.IO).launch {
+            delay(1000) //prevent system refreshing each ms for better performance
+            playbackViewModel.refreshRemainingTime()
+        }
+    }
 
     Column(
         modifier = modifier
@@ -79,12 +99,9 @@ internal fun CreateTimerForm(
             .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        val scope: CoroutineScope = LocalMainScope.current
-        val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
 
-        val secondsIntField: MutableIntState = rememberSaveable { mutableIntStateOf(0) }
-        val minutesIntField: MutableIntState = rememberSaveable { mutableIntStateOf(0) }
-        val hoursIntField: MutableIntState = rememberSaveable { mutableIntStateOf(0) }
+    val scope: CoroutineScope = LocalMainScope.current
+        val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
 
         Box(
             modifier = Modifier.fillMaxWidth(),
@@ -93,34 +110,36 @@ internal fun CreateTimerForm(
             Row(
                 modifier = Modifier.fillMaxWidth(),
             ) {
-                OutlinedNumberField(
-                    modifier = Modifier.fillMaxWidth(fraction = 0.30f),
+                Field(
+                    modifier = Modifier.fillMaxWidth(fraction = 1f / 3f),
+                    enabled = !isTimerRunning,
+                    farLeft = true,
                     value = hoursIntField,
                     label = stringResource(R.string.hours_text_field_label),
                     maxValue = MAX_HOURS
                 )
-                Spacer(modifier = Modifier.size(16.dp))
-                OutlinedNumberField(
-                    modifier = Modifier.fillMaxWidth(fraction = 0.49f),
+                Field(
+                    modifier = Modifier.fillMaxWidth(fraction = 1f / 2f),
+                    enabled = !isTimerRunning,
                     value = minutesIntField,
                     label = stringResource(R.string.minutes_text_field_label),
                     maxValue = MAX_MINUTES
                 )
-                Spacer(modifier = Modifier.size(16.dp))
-                OutlinedNumberField(
+                Field(
                     modifier = Modifier.fillMaxWidth(),
+                    enabled = !isTimerRunning,
+                    farRight = true,
                     value = secondsIntField,
                     label = stringResource(R.string.seconds_text_field_label),
                     maxValue = MAX_SECONDS
                 )
             }
         }
-        TimerRemainingTime()
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center
         ) {
-            if (playbackUiState.timer != null) {
+            if (isTimerRunning) {
                 Button(
                     onClick = {
                         playbackViewModel.cancelTimer(
@@ -137,27 +156,58 @@ internal fun CreateTimerForm(
                 }
 
                 Spacer(modifier = Modifier.size(5.dp))
-            }
-            Button(
-                onClick = {
-                    computeTime(
-                        secondsIntField = secondsIntField,
-                        minutesIntField = minutesIntField,
-                        hoursIntField = hoursIntField
-                    )
-                    playbackViewModel.setTimer(
-                        scope = scope,
-                        snackBarHostState = snackBarHostState,
-                        hours = hoursIntField.intValue,
-                        minutes = minutesIntField.intValue,
-                        seconds = secondsIntField.intValue
-                    )
-                    onFinished?.invoke()
+            } else {
+                Button(
+                    onClick = {
+                        computeTime(
+                            secondsIntField = secondsIntField,
+                            minutesIntField = minutesIntField,
+                            hoursIntField = hoursIntField
+                        )
+                        playbackViewModel.setTimer(
+                            scope = scope,
+                            snackBarHostState = snackBarHostState,
+                            hours = hoursIntField.intValue,
+                            minutes = minutesIntField.intValue,
+                            seconds = secondsIntField.intValue
+                        )
+                        onFinished?.invoke()
+                    }
+                ) {
+
+                    NormalText(text = stringResource(R.string.start_timer_button_content))
                 }
-            ) {
-                NormalText(text = stringResource(R.string.start_timer_button_content))
             }
         }
+    }
+}
+
+@Composable
+private fun Field(
+    modifier: Modifier = Modifier,
+    farLeft: Boolean = false,
+    farRight: Boolean = false,
+    enabled: Boolean,
+    value: MutableIntState,
+    label: String,
+    maxValue: Int
+) {
+    val fieldModifier: Modifier =
+        if (farLeft)
+            Modifier.padding(end = 4.dp)
+        else if (farRight)
+            Modifier.padding(start = 4.dp)
+        else
+            Modifier.padding(horizontal = 4.dp)
+
+    Box(modifier = modifier) {
+        OutlinedNumberField(
+            modifier = fieldModifier,
+            enabled = enabled,
+            value = value,
+            label = label,
+            maxValue = maxValue
+        )
     }
 }
 

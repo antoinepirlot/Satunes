@@ -1,0 +1,42 @@
+<!--Downloaded from https://www.svgrepo.com/svg/349319/codeberg author is "edent"-->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="512dp"
+    android:height="512dp"
+    android:viewportWidth="512"
+    android:viewportHeight="512">
+    <path
+        android:fillColor="#ffffff"
+        android:pathData="M76.8,0L435.2,0A76.8,76.8 0,0 1,512 76.8L512,435.2A76.8,76.8 0,0 1,435.2 512L76.8,512A76.8,76.8 0,0 1,0 435.2L0,76.8A76.8,76.8 0,0 1,76.8 0z" />
+    <path
+        android:fillAlpha="0.5"
+        android:pathData="M259.8,161.4c-0.44,0 -1.1,0 -1.32,0.44l-0.44,1.1L332.04,440.21a192.04,192.04 0,0 0,86.77 -74.44L261.13,162.06a1.76,1.76 0,0 0,-1.32 -0.66z"
+        android:strokeWidth="1"
+        android:strokeAlpha="0.5"
+        android:strokeColor="#00000000">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:endX="383.13"
+                android:endY="407.83"
+                android:startX="259.8"
+                android:startY="161.4"
+                android:type="linear">
+                <item
+                    android:color="#00FFFFFF"
+                    android:offset="0" />
+                <item
+                    android:color="#FF71C2FF"
+                    android:offset="0.5" />
+                <item
+                    android:color="#FF39AAFF"
+                    android:offset="1" />
+            </gradient>
+        </aapt:attr>
+    </path>
+    <path
+        android:fillColor="#2185d0"
+        android:pathData="M255.3,71.8a192,192 0,0 0,-162 294l160.1,-207c0.5,-0.6 1.5,-1 2.6,-1s2,0.4 2.6,1l160,207a192,192 0,0 0,29.4 -102c0,-106 -86,-192 -192,-192a192,192 0,0 0,-0.7 0z"
+        android:strokeWidth="1"
+        android:strokeColor="#00000000" />
+</vector>

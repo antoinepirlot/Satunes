@@ -10,4 +10,4 @@ Improvements, optimizations and troubleshooting:
 * Make search setting view scrollable
 * Fix playing next music in certain conditions
 
-More details on GitHub.
+More details on Codeberg.

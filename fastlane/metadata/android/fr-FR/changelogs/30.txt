@@ -3,4 +3,4 @@ v1.0.3
 Cette version règles des problèmes de design et de comportement.
 Si l'utilisateurr ajoute une musique alors qu'il n'y en a aucune, l'application lance la création d'une nouvelle playlist.
 
-Plus de détails ici: https://github.com/antoinepirlot/Satunes/releases/tag/v1.0.3
+Plus d'info sur Codeberg.

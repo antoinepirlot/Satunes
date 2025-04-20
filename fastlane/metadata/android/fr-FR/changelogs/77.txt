@@ -1,0 +1,5 @@
+Améliorations, optimisations et dépannage :
+
+* Correction de la position de la liste lors du changement de tri
+* Les toasts sont centrés ainsi que les boutons dans les paramètres
+* Suppression des lignes de séparation ajoutées par erreur dans la pop-up de sélection des médias

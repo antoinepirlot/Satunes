@@ -1,26 +1,20 @@
 /*
  * This file is part of Satunes.
- *
- *  Satunes is free software: you can redistribute it and/or modify it under
- *  the terms of the GNU General Public License as published by the Free Software Foundation,
- *  either version 3 of the License, or (at your option) any later version.
- *
+ * Satunes is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later version.
  *  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- *  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *  See the GNU General Public License for more details.
- *
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *  You should have received a copy of the GNU General Public License along with Satunes.
  *  If not, see <https://www.gnu.org/licenses/>.
  *
- *  **** INFORMATIONS ABOUT THE AUTHOR *****
- *  The author of this file is Antoine Pirlot, the owner of this project.
- *  You find this original project on github.
+ * **** INFORMATION ABOUT THE AUTHOR *****
+ * The author of this file is Antoine Pirlot, the owner of this project.
+ * You find this original project on Codeberg.
  *
- *  My github link is: https://github.com/antoinepirlot
- *  This current project's link is: https://github.com/antoinepirlot/Satunes
- *
- *  You can contact me via my email: pirlot.antoine@outlook.com
- *  PS: I don't answer quickly.
+ * My Codeberg link is: https://codeberg.org/antoinepirlot
+ * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
 package io.github.antoinepirlot.satunes
@@ -33,9 +27,8 @@ import android.os.Environment
 import android.provider.DocumentsContract
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.media3.session.MediaController
-import com.google.common.util.concurrent.ListenableFuture
 import io.github.antoinepirlot.satunes.data.viewmodels.utils.isAudioAllowed
+import io.github.antoinepirlot.satunes.database.models.FoldersSelection
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
@@ -44,7 +37,7 @@ import io.github.antoinepirlot.satunes.utils.getNow
 import io.github.antoinepirlot.satunes.utils.initSatunes
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import io.github.antoinepirlot.satunes.utils.utils.showToastOnUiThread
-import io.github.antoinepirlot.satunes.widgets.ClassicPlaybackWidget
+import io.github.antoinepirlot.satunes.widgets.PlaybackWidget.setRefreshWidget
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -61,7 +54,8 @@ internal class MainActivity : ComponentActivity() {
         private const val EXPORT_ALL_PLAYLISTS_CODE: Int = 2
         private const val EXPORT_PLAYLIST_CODE: Int = 3
         private const val EXPORT_LOGS_CODE: Int = 4
-        const val SELECT_FOLDER_TREE_CODE: Int = 5
+        const val INCLUDE_FOLDER_TREE_CODE: Int = 5
+        const val EXCLUDE_FOLDER_TREE_CODE: Int = 6
         const val MIME_JSON: String = "application/json"
         private const val MIME_TEXT: String = "application/text"
         val DEFAULT_URI: Uri =
@@ -75,9 +69,7 @@ internal class MainActivity : ComponentActivity() {
         }
     }
 
-    private lateinit var _logger: SatunesLogger
-    private lateinit var _mediaControllerFuture: ListenableFuture<MediaController>
-    private lateinit var _mediaController: MediaController
+    private var _logger: SatunesLogger? = null
     private var _playlistToExport: Playlist? = null
 
     override fun onStart() {
@@ -92,13 +84,14 @@ internal class MainActivity : ComponentActivity() {
         SatunesLogger.DOCUMENTS_PATH =
             applicationContext.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)!!.path
         _logger = SatunesLogger.getLogger()
-        _logger.info("Satunes started on API: ${Build.VERSION.SDK_INT}")
+        _logger?.info("Satunes started on API: ${Build.VERSION.SDK_INT}")
         instance = this
 
-        ClassicPlaybackWidget.setRefreshWidget(context = baseContext)
+        setRefreshWidget(context = baseContext)
         WidgetPlaybackManager.refreshWidgets()
 
         setContent {
+            //App UI Entry Point
             Satunes()
         }
     }
@@ -142,7 +135,7 @@ internal class MainActivity : ComponentActivity() {
                         }
 
                         if (requestCode == EXPORT_LOGS_CODE) {
-                            _logger.exportLogs(context = this, uri = uri)
+                            _logger?.exportLogs(context = this, uri = uri)
                         } else {
                             CoroutineScope(Dispatchers.IO).launch {
                                 if (requestCode == EXPORT_ALL_PLAYLISTS_CODE) {
@@ -169,10 +162,17 @@ internal class MainActivity : ComponentActivity() {
                     }
                 }
 
-                SELECT_FOLDER_TREE_CODE -> {
+                INCLUDE_FOLDER_TREE_CODE, EXCLUDE_FOLDER_TREE_CODE -> {
                     data?.data?.also {
+                        val folderSelection: FoldersSelection =
+                            if (requestCode == INCLUDE_FOLDER_TREE_CODE) FoldersSelection.INCLUDE
+                            else FoldersSelection.EXCLUDE
                         CoroutineScope(Dispatchers.IO).launch {
-                            SettingsManager.addPath(context = applicationContext, uri = it)
+                            SettingsManager.addPath(
+                                context = applicationContext,
+                                uri = it,
+                                folderSelection = folderSelection
+                            )
                         }
                     }
                 }

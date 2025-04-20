@@ -1,31 +1,27 @@
 /*
  * This file is part of Satunes.
  *
- *  Satunes is free software: you can redistribute it and/or modify it under
- *  the terms of the GNU General Public License as published by the Free Software Foundation,
- *  either version 3 of the License, or (at your option) any later version.
+ * Satunes is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later version.
+ * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License along with Satunes.
+ * If not, see <https://www.gnu.org/licenses/>.
  *
- *  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- *  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *  See the GNU General Public License for more details.
+ * *** INFORMATION ABOUT THE AUTHOR *****
+ * The author of this file is Antoine Pirlot, the owner of this project.
+ * You find this original project on Codeberg.
  *
- *  You should have received a copy of the GNU General Public License along with Satunes.
- *  If not, see <https://www.gnu.org/licenses/>.
- *
- *  **** INFORMATIONS ABOUT THE AUTHOR *****
- *  The author of this file is Antoine Pirlot, the owner of this project.
- *  You find this original project on github.
- *
- *  My github link is: https://github.com/antoinepirlot
- *  This current project's link is: https://github.com/antoinepirlot/Satunes
- *
- *  You can contact me via my email: pirlot.antoine@outlook.com
- *  PS: I don't answer quickly.
+ * My Codeberg link is: https://codeberg.org/antoinepirlot
+ * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
 package io.github.antoinepirlot.satunes.router.utils
 
 import androidx.navigation.NavHostController
+import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Folder
@@ -35,7 +31,6 @@ import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.ui.utils.startMusic
-import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 
 /**
@@ -55,50 +50,11 @@ import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 internal fun openMedia(
     playbackViewModel: PlaybackViewModel,
     media: MediaImpl? = null,
-    navigate: Boolean = true,
     navController: NavHostController?,
 ) {
-    if (media == null || media is Music) {
+    if (media == null || media is Music)
         startMusic(playbackViewModel = playbackViewModel, mediaToPlay = media)
-    }
-    if (navigate) {
-        if (navController == null) {
-            val message = "navController can't be null if you navigate"
-            val logger = SatunesLogger.getLogger()
-            logger.severe(message)
-            throw IllegalArgumentException(message)
-        }
-        navController.navigate(getDestinationOf(media))
-    }
-}
-
-/**
- * Open mediaImpl from folders' views if the mediaImpl is:
- *      Music: It loads folder's musics data to playback and open the mediaImpl that is music.
- *
- *      Folder: navigate to the folder's view
- */
-internal fun openMediaFromFolder(
-    media: MediaImpl,
-    playbackViewModel: PlaybackViewModel,
-    navController: NavHostController
-) {
-    when (media) {
-        is Music -> {
-            playbackViewModel.loadMusicFromMedia(
-                media = media.folder,
-                musicToPlay = media
-            )
-            openMedia(
-                playbackViewModel = playbackViewModel,
-                media = media,
-                navController = navController
-            )
-        }
-
-        is Folder -> navController.navigate(getDestinationOf(media))
-    }
-
+    navController?.navigate(getDestinationOf(media))
 }
 
 /**
@@ -137,8 +93,7 @@ internal fun openCurrentMusic(
     val musicPlaying: Music? = playbackViewModel.musicPlaying
     if (musicPlaying == null) {
         val message = "No music is currently playing, this button can be accessible"
-        val logger = SatunesLogger.getLogger()
-        logger.severe(message)
+        SatunesLogger.getLogger()?.severe(message)
         throw IllegalStateException(message)
     }
 

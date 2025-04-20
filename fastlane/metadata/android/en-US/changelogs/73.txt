@@ -1,0 +1,11 @@
+New features:
+
+* Ability to sort media by artist, album and/or genre based on page
+* Display of the first letter in alphabetical order above the first media (with this letter) in the
+  list (can be disabled in library settings)
+* Added sorting by year and last added for music (in some views at the moment)
+* Adding media to playlists now removes them if they are present (entirely for those who are not
+  music)
+* It's possible to move custom actions positions
+
+More details on Codeberg.

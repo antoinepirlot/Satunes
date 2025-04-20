@@ -1,0 +1,3 @@
+Améliorations, optimisations et dépannage:
+
+* Le bouton démarrer le minuteur est masqué lorsque le minuteur fonctionne

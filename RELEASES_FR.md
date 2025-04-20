@@ -1,7 +1,252 @@
 # Versions (🇫🇷)
 You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
+## 3.0 (Android 5.1.1 Lollipop et ultérieur)
+
+### 3.0.5
+
+Améliorations, optimisations et dépannage :
+
+* Remplacement du bouton tipeee par Liberapay
+
+### 3.0.4
+
+Améliorations, optimisations et dépannage :
+
+* Correction de la position de la liste lors du changement de tri
+* Les toasts sont centrés ainsi que les boutons dans les paramètres
+* Suppression des lignes de séparation ajoutées par erreur dans la pop-up de sélection des médias
+
+### 3.0.3
+
+Améliorations, optimisations et dépannage :
+
+* Correction du crash lors de l'utilisation d'une carte SD
+
+### 3.0.2
+
+Améliorations, optimisations et dépannage :
+
+* Amélioration du comportement des listes
+* Correction des paramètres de media (retour à l'ancien système qui était plus efficace)
+* Correction de la fonction d'exclusion de dossiers
+* Suppresion de la permission inutile "manage_external_storage"
+* Correction de la navigation :
+  * Si l'audio n'est pas autorisé, les paramètres sont accessibles.
+  * Si l'audio vient d'être autorisé dans l'app, la navigation est alors pleinement fonctionnelle
+
+### 3.0.1
+
+Améliorations, optimisations et dépannage:
+
+* Correction d'un crash lors du chargement d'une carte SD. Le tri par date de dernier ajout est
+  temporairement indisponible pour les fichiers stockés sur des cartes SD.
+
+### 3.0.0
+
+Nouvelles fonctionnalités :
+
+* Possibilité de trier les médias par artistes, album et/ou genre en fonction de la page
+* Affichage de la première lettre par ordre alphabétique au dessus du premier média (ayant cette
+  lettre) dans la liste (désactivable dans les paramètres de librairies)
+* Ajout du tri par années et dernier ajout pour les musiques (dans certaines vues pour le moment)
+* L'ajout des médias dans les playlists permet maintenant de les supprimer s'ils y sont présents (
+  entièrement pour ceux qui ne sont pas des musiques)
+* Il est possible de déplacer des positions d'actions personnalisées
+* Une playlist peut être sélectionnée comme onglet par défaut
+
+Améliorations, optimisations et dépannage:
+
+* Support pour Android 15 (Vanilla Ice Cream)
+* Problèmes de chargement de la musique causant des crashs dans certaines conditions corrigé (
+  Concurrent Modification)
+* Mise à jour des textes
+* Mise à jour des libraries qui implique un léger changement de design de certains éléments (commme
+  la barre de progression)
+* Lorsque l'utilisateur change de vue d'un type de média à un autre, la barre de navigation reflète
+  le changement
+* Autres optimisations et corrections indirectes
+* Changement de la source de la mise à jour de GitHub vers Codeberg
+* Remplacement du bouton GitHub par Codeberg
+
+### 3.0.0-preview-1
+
+Améliorations, optimisations et dépannage :
+
+* Correction du problème de la selection de playlist qui s'affichait en allant dans la vue playback
+* Démarrage plus rapide
+* Correction du clique sur la musique dans la liste du playback
+* La liste des media ne retourne pas au premier élément si les options du media se ferment
+* Correction de problème liés à la navigation
+* Centrage de l'icône artiste à côté du nom d'artiste
+* Changement de la source de la mise à jour de GitHub vers Codeberg
+* Remplacement du bouton GitHub par Codeberg
+
+### 3.0.0-beta-2
+
+Améliorations, optimisations et dépannage :
+
+* Correction de quelques problèmes d'interface utilisateur
+* Mise à jour des textes
+* Suppression de certaines actions d'annulation lors de la modification des playlists car c'est plus
+  complexe maintenant
+* Correction d'un plantage lors du chargement d'une musique non existante (oui cela peut arriver
+  avec MediaStore lol)
+* Correction de l'ouverture de la playlist par défaut
+* Réinitialisation de l'ancien ordre de la liste des boutons extra dans la vue d'une playlist
+* Correction de la vue recherche
+* Autres optimisations et améliorations indirectes
+
+### 3.0.0-beta-1
+
+Nouvelles fonctionnalités :
+
+* Il est possible de déplacer des positions d'actions personnalisées
+* Une playlist peut être sélectionnée comme onglet par défaut.
+
+Améliorations, optimisations et dépannage :
+
+* Mise à jour des textes
+* Ajout d'une icône artiste à côté du titre de l'artiste dans certaines vues
+* Mise à jour de la position des éléments dans la vue de mise à jour
+* Déplacer les paramètres dédiés à au design dans les paramètre "Design"
+* Mise à jour de la structure du code
+* Correction de certains problèmes d'interface utilisateur depuis la version 3.0.0-alpha-2
+* Autres optimisations et améliorations indirectes
+
+### 3.0.0-alpha-2
+
+Nouvelles fonctionnalités:
+
+* Ajout du tri par années et dernier ajout pour les musiques (dans certaines vues pour le moment)
+* L'ajout des médias dans les playlists permet maintenant de les supprimer s'il y sont présents (
+  entièrement pour ceux qui ne sont pas des musiques)
+
+Améliorations, optimisations et dépannage:
+
+* Optimisation du démarrage
+* Lorsque la liste est triée, la liste chargée en playback correspond au tri
+* Lorsque l'utilisateur change de vue d'un type de média à un autre, la barre de navigation reflète
+  le changement
+* Autres optimisations et améliorations indirects
+
+### 3.0.0-alpha-1
+
+Nouvelles fonctionnalités:
+
+* Possibilité de trier les médias par artistes, album et/ou genre en fonction de la page
+* Affichage de la première lettre par ordre alphabétique au dessus du premier média (ayant cette
+  lettre) dans la liste (désactivable dans les paramètres de librairies)
+
+Améliorations, optimisations et dépannage:
+
+* Support pour Android 15 (Vanilla Ice Cream)
+* Problèmes de chargement de la musique causant des crash dans certaines conditions corrigé (
+  Concurrent Modification)
+* Mise à jour des libraries qui implique un léger changement de design de certains éléments (commme
+  la barre de progression)
+* Autres optimisations et corrections indirectes
+
+## 2.5 (Android 5.1.1 Lollipop et ultérieur)
+
+### 2.5.2
+
+Améliorations, optimisations et dépannage:
+
+* Le bouton démarrer le minuteur est masqué lorsque le minuteur fonctionne
+
+### 2.5.1
+
+Améliorations, optimisations et dépannage:
+
+* Ajout du text "Développé en Europe 🇪🇺" à la fin de la section à propos dans les paramètres
+* La snack bar ne montre plus le caractère '%' lors de la suppression d'un chemin de dossier
+* La barre de contrôle de la musique est toujours à jour même en quittant et en revenant dans la
+  page lors de la lecture
+* Si la nouvelle valeur pour avancer ou revenir en arrière est <= 0, alors la valeur n'est pas
+  changée
+* Une popup d'information est montrée si le paramètre nécessite un rechargement de la bibliothèque
+
+### 2.5.0
+
+Nouvelles fonctionnalités:
+
+* Ajout des musiques d'une playlist vers une autre
+* Avancer ou reculer dans une musique
+* Réinitialiser les paramètres
+
+Améliorations, optimisations et dépannage:
+
+* La vue du minuteur montre le temps restant dans les champs.
+* Quelques optimizations mineures
+
 ## 2.4 (Android 5.1.1 Lollipop et ultérieur)
+
+### 2.4.6
+
+Améliorations, optimisations et dépannage:
+
+* Correction du bogue d'Android Auto qui ne lit pas la musique séléctionnée et qui ne respecte pas
+  le mode aléatoire par défaut
+
+### 2.4.5
+
+Rien de nouveau. Une erreur est survenue lors de la mise à jour
+
+### 2.4.4
+
+Améliorations, optimisations et dépannage:
+
+* Suppression de l'exclusion des bibliothèques open source
+* Désactivation de l'inclusion des métadonnées de dépendances dans les APK et Bundle car ce n'est
+  pas une méthode compatible avec l'open source
+
+### 2.4.3
+
+Améliorations, optimisations et dépannage:
+
+* Le bouton pour afficher la liste de lecture est agit comme un switch (comme le bouton paramètre)
+* Correction du problème empêchant l'accès à une vue d'un média lorsque le bouton de la barre de
+  navigation correspondant est désactivé
+* Le widget peut être redimensionné verticalement mais est limité (cela empêche des problème
+  d'affichage avec certain launcher)
+
+### 2.4.2
+
+Améliorations, optimisations et dépannage:
+
+* L'ajout de musiques dans les playlists fonctionne à nouveau
+
+### 2.4.1
+
+Améliorations, optimisations et dépannage:
+
+* Lors de l'annulation de la sélection des médias, ceux sélectionné ne sont plus enregistrés
+* Lors de la sélection du menu bar défaut, l'application ne redirige plus vers le nouveau menu
+
+### 2.4.0
+
+Nouvelles fonctionnalités:
+
+* Possibilité de liker la musique dans Android Auto
+* Minuteur pouvant mettre la musique en pause (maximum pendant 8h)
+
+Améliorations, optimisations et dépannage:
+
+* La lecture de la musique en cours depuis la même playlist chargée ne recharge pas la lecture
+* Les musiques sont triées par numéro de piste dans les albums puis, sinon, par ordre alphabétique
+* Le nom de l'exportation du fichier de playlist et logs contiennent une date et une heure
+* Amélioration du refresh du widget
+* L'année de l'album est affichée, si elle existe
+* Les boutons de mises à jours sont mit en colonne pour améliorer leur visibilité sur certains
+  écrans
+* Le bouton like dans Android Auto a été échangé avec le bouton shuffle
+* Correction du changement de piste vers la précédente dans certaines conditions
+
+Fonctionnalités supprimées:
+
+* Suppression de la visualisation de la liste de lecture dans Android Auto pour éviter les
+  distractions
 
 ### v2.4.0-preview-1
 
@@ -18,16 +263,14 @@ Améliorations, optimisations et dépannage:
 Nouvelles fonctionnalités:
 
 * Possibilité de liker la music dans Android Auto
-* Minuteur pouvant mettre la musique ne pause (maximum pendant 8h)
+* Minuteur pouvant mettre la musique en pause (maximum pendant 8h)
 
 Améliorations, optimisations et dépannage:
 
-* La lecture de la musique en cours depuis la meme playlist chargée ne recharge pas la lecture
+* La lecture de la musique en cours depuis la même playlist chargée ne recharge pas la lecture
 * Les musiques sont triées par numéro de piste dans les albums puis, sinon, par ordre alphabétique
 * Le nom de l'exportation du fichier de playlist et logs contiennent une date et une heure
 * Amélioration du refresh du widget
-* Suppression de la visualisation de la liste de lecture dans Android Auto pour éviter les
-  distractions
 * L'année de l'album est affichée, si elle existe
 * Les boutons de mises à jours sont mit en colonne pour améliorer leur visibilité sur certains
   écrans

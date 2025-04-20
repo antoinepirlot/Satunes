@@ -7,4 +7,4 @@ Améliorations, optimisations et dépannage:
 * Correction du mauvais mode de répétition après le rechargement de la bibliothèque
 * Correction de la lecture de la musique suivante dans certaines conditions
 
-Plus de détails sur GitHub.
+Plus d'info sur Codeberg.

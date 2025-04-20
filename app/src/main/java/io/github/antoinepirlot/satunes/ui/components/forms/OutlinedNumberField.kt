@@ -1,26 +1,21 @@
 /*
  * This file is part of Satunes.
  *
- *  Satunes is free software: you can redistribute it and/or modify it under
- *  the terms of the GNU General Public License as published by the Free Software Foundation,
- *  either version 3 of the License, or (at your option) any later version.
+ * Satunes is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later version.
+ * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License along with Satunes.
+ * If not, see <https://www.gnu.org/licenses/>.
  *
- *  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- *  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *  See the GNU General Public License for more details.
+ * *** INFORMATION ABOUT THE AUTHOR *****
+ * The author of this file is Antoine Pirlot, the owner of this project.
+ * You find this original project on Codeberg.
  *
- *  You should have received a copy of the GNU General Public License along with Satunes.
- *  If not, see <https://www.gnu.org/licenses/>.
- *
- *  **** INFORMATIONS ABOUT THE AUTHOR *****
- *  The author of this file is Antoine Pirlot, the owner of this project.
- *  You find this original project on github.
- *
- *  My github link is: https://github.com/antoinepirlot
- *  This current project's link is: https://github.com/antoinepirlot/Satunes
- *
- *  You can contact me via my email: pirlot.antoine@outlook.com
- *  PS: I don't answer quickly.
+ * My Codeberg link is: https://codeberg.org/antoinepirlot
+ * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
 package io.github.antoinepirlot.satunes.ui.components.forms
@@ -45,21 +40,34 @@ import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 internal fun OutlinedNumberField(
     modifier: Modifier = Modifier,
     value: MutableIntState,
+    enabled: Boolean = true,
     label: String,
-    maxValue: Int,
+    maxValue: Int? = null,
+    onValueChanged: ((newValue: Int) -> Unit)? = null,
 ) {
     val keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
     OutlinedTextField(
         modifier = modifier,
+        enabled = enabled,
         value = if (value.intValue > 0) value.intValue.toString() else "",
         label = { NormalText(text = label) },
         onValueChange = {
             if (it.isBlank()) {
                 value.intValue = 0
             } else if (it.isDigitsOnly()) {
-                val itAsInt: Int = it.toInt()
-                if (itAsInt <= maxValue) {
-                    value.intValue = it.toInt()
+                try {
+                    val itAsInt: Int = it.toInt()
+                    if (maxValue != null) {
+                        if (itAsInt <= maxValue) {
+                            value.intValue = itAsInt
+                            onValueChanged?.invoke(itAsInt)
+                        }
+                    } else {
+                        value.intValue = itAsInt
+                        onValueChanged?.invoke(itAsInt)
+                    }
+                } catch (e: NumberFormatException) {
+                    /*It's not a int but a long or something else, so do nothing*/
                 }
             }
         },

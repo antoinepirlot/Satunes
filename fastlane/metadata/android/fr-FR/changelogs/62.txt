@@ -1,0 +1,4 @@
+Améliorations, optimisations et dépannage:
+
+* Suppression de l'exclusion des bibliothèques open source
+* Désactivation de l'inclusion des métadonnées de dépendances dans les APK et Bundle car ce n'est pas une méthode compatible avec l'open source

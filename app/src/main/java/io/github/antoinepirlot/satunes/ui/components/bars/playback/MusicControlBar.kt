@@ -1,26 +1,21 @@
 /*
  * This file is part of Satunes.
  *
- *  Satunes is free software: you can redistribute it and/or modify it under
- *  the terms of the GNU General Public License as published by the Free Software Foundation,
- *  either version 3 of the License, or (at your option) any later version.
+ * Satunes is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later version.
+ * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License along with Satunes.
+ * If not, see <https://www.gnu.org/licenses/>.
  *
- *  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- *  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *  See the GNU General Public License for more details.
+ * *** INFORMATION ABOUT THE AUTHOR *****
+ * The author of this file is Antoine Pirlot, the owner of this project.
+ * You find this original project on Codeberg.
  *
- *  You should have received a copy of the GNU General Public License along with Satunes.
- *  If not, see <https://www.gnu.org/licenses/>.
- *
- *  **** INFORMATIONS ABOUT THE AUTHOR *****
- *  The author of this file is Antoine Pirlot, the owner of this project.
- *  You find this original project on github.
- *
- *  My github link is: https://github.com/antoinepirlot
- *  This current project's link is: https://github.com/antoinepirlot/Satunes
- *
- *  You can contact me via my email: pirlot.antoine@outlook.com
- *  PS: I don't answer quickly.
+ * My Codeberg link is: https://codeberg.org/antoinepirlot
+ * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
 package io.github.antoinepirlot.satunes.ui.components.bars.playback
@@ -43,16 +38,19 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.antoinepirlot.jetpack_libs.components.models.ScreenSizes
+import io.github.antoinepirlot.satunes.ui.components.buttons.playback.ForwardXSecondsButton
 import io.github.antoinepirlot.satunes.ui.components.buttons.playback.NextMusicButton
 import io.github.antoinepirlot.satunes.ui.components.buttons.playback.PlayPauseMusicButton
 import io.github.antoinepirlot.satunes.ui.components.buttons.playback.PreviousMusicButton
 import io.github.antoinepirlot.satunes.ui.components.buttons.playback.RepeatMusicButton
+import io.github.antoinepirlot.satunes.ui.components.buttons.playback.RewindXSecondsButton
 import io.github.antoinepirlot.satunes.ui.components.buttons.playback.ShuffleMusicButton
 
 /**
  * @author Antoine Pirlot on 25/01/24
  */
 
+//TODO refactor how it is composed on different screen sizes
 @Composable
 internal fun MusicControlBar(
     modifier: Modifier = Modifier,
@@ -62,15 +60,17 @@ internal fun MusicControlBar(
     val screenWidthDp = LocalConfiguration.current.screenWidthDp
     val ratio: Float =
         if (screenWidthDp >= (ScreenSizes.VERY_VERY_SMALL - 1) && screenWidthDp < ScreenSizes.VERY_SMALL) {
-            0.8f
+            0.7f
         } else if (screenWidthDp < ScreenSizes.VERY_VERY_SMALL) {
-            0.6f
+            0.5f
         } else { // Normal
             1f
         }
-    val spaceSize = (20f * ratio).dp
-    val playPauseButtonSize = (80f * ratio).dp
-    val optionButtonSize = (35f * ratio).dp
+    val spaceSize = (10f * ratio).dp
+    val playPauseButtonSize = (70f * ratio).dp
+    val nextPreviousSize = (45f * ratio).dp
+    val rewindForwardSize = nextPreviousSize
+    val optionButtonSize = (30f * ratio).dp
 
     Column(modifier = modifier) {
         MusicPositionBar()
@@ -85,16 +85,22 @@ internal fun MusicControlBar(
             ShuffleMusicButton(modifier = Modifier.size(optionButtonSize))
             Spacer(modifier = Modifier.width(spaceSize))
 
-            PreviousMusicButton()
+            PreviousMusicButton(modifier = Modifier.size(size = nextPreviousSize))
+            Spacer(modifier = Modifier.width(spaceSize))
+
+            RewindXSecondsButton(modifier = Modifier.size(size = rewindForwardSize))
             Spacer(modifier = Modifier.width(spaceSize))
 
             PlayPauseMusicButton(modifier = Modifier.size(playPauseButtonSize))
             Spacer(modifier = Modifier.width(spaceSize))
 
-            NextMusicButton()
+            ForwardXSecondsButton(modifier = Modifier.size(size = rewindForwardSize))
             Spacer(modifier = Modifier.width(spaceSize))
 
-            RepeatMusicButton(modifier = Modifier.size(optionButtonSize))
+            NextMusicButton(Modifier.size(size = nextPreviousSize))
+            Spacer(modifier = Modifier.width(spaceSize))
+
+            RepeatMusicButton(modifier = Modifier.size(size = optionButtonSize))
         }
     }
 }

@@ -3,4 +3,4 @@ v1.0.3
 This version fixes some design issues and behavior.
 If the user add music to a playlist with empty playlist list then the app create new playlist.
 
-More details on: https://github.com/antoinepirlot/Satunes/releases/tag/v1.0.3
+More details on Codeberg.

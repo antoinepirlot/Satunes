@@ -9,4 +9,4 @@ Améliorations, optimisations et dépannage:
 * La surbrillance de la section de la barre de navigation est masquée dans les vues paramètres, playback et recherche
 * L'option "Lire ensuite" est masquée dans les options de la musique suivante
 
-Plus de détails sur GitHub
+Plus d'info sur Codeberg.

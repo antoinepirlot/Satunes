@@ -1,91 +1,161 @@
 /*
  * This file is part of Satunes.
  *
- *  Satunes is free software: you can redistribute it and/or modify it under
- *  the terms of the GNU General Public License as published by the Free Software Foundation,
- *  either version 3 of the License, or (at your option) any later version.
+ * Satunes is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later version.
+ * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License along with Satunes.
+ * If not, see <https://www.gnu.org/licenses/>.
  *
- *  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- *  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *  See the GNU General Public License for more details.
+ * *** INFORMATION ABOUT THE AUTHOR *****
+ * The author of this file is Antoine Pirlot, the owner of this project.
+ * You find this original project on Codeberg.
  *
- *  You should have received a copy of the GNU General Public License along with Satunes.
- *  If not, see <https://www.gnu.org/licenses/>.
- *
- *  **** INFORMATIONS ABOUT THE AUTHOR *****
- *  The author of this file is Antoine Pirlot, the owner of this project.
- *  You find this original project on github.
- *
- *  My github link is: https://github.com/antoinepirlot
- *  This current project's link is: https://github.com/antoinepirlot/Satunes
- *
- *  You can contact me via my email: pirlot.antoine@outlook.com
- *  PS: I don't answer quickly.
+ * My Codeberg link is: https://codeberg.org/antoinepirlot
+ * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
 package io.github.antoinepirlot.satunes.ui.components.cards.media
 
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedback
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import io.github.antoinepirlot.satunes.data.local.LocalNavController
+import io.github.antoinepirlot.satunes.data.states.DataUiState
+import io.github.antoinepirlot.satunes.data.states.SatunesUiState
+import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
-import io.github.antoinepirlot.satunes.database.models.Playlist
+import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.models.radio_buttons.SortOptions
+import io.github.antoinepirlot.satunes.router.utils.openMedia
+import io.github.antoinepirlot.satunes.ui.components.dialog.media.MediaOptionsDialog
 
 /**
- * @author Antoine Pirlot on 16/01/24
+ * @author Antoine Pirlot on 16/01/2024
  */
 
 @Composable
 internal fun MediaCardList(
     modifier: Modifier = Modifier,
+    satunesViewModel: SatunesViewModel = viewModel(),
+    lazyListState: LazyListState = rememberLazyListState(),
+    dataViewModel: DataViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
+    mediaImplList: List<MediaImpl>,
     header: @Composable (() -> Unit)? = null,
-    mediaImplCollection: Collection<MediaImpl>,
-    openMedia: (mediaImpl: MediaImpl) -> Unit,
-    openedPlaylist: Playlist? = null,
     scrollToMusicPlaying: Boolean = false,
+    showGroupIndication: Boolean = true,
+    onMediaClick: ((MediaImpl) -> Unit)? = null
 ) {
-    val lazyListState = rememberLazyListState()
-    val mediaListToLoad: List<MediaImpl> =
-        try {
-            mediaImplCollection as List<MediaImpl>
-        } catch (_: ClassCastException) {
-            mediaImplCollection.toList()
-        }
-
-    if (mediaImplCollection.isEmpty()) {
-        // It fixes issue while accessing last folder in chain
-        return
-    }
+    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+    val dataUiState: DataUiState by dataViewModel.uiState.collectAsState()
+    val showFirstLetter: Boolean = dataUiState.showFirstLetter
+    val sortOption: SortOptions = dataViewModel.sortOption
+    val navController: NavHostController = LocalNavController.current
+    val haptics: HapticFeedback = LocalHapticFeedback.current
+    val isInPlaybackView: Boolean = satunesViewModel.isInPlaybackView()
 
     LazyColumn(
         modifier = modifier,
         state = lazyListState
     ) {
+        //Used to store dynamically the first media impl linked to the first occurrence of a letter or media impl.
+        val groupMap: MutableMap<Any?, MediaImpl>? =
+            if (showGroupIndication) mutableMapOf() else null
+
         items(
-            items = mediaListToLoad,
+            items = mediaImplList,
             key = { it.javaClass.name + '-' + it.id }
-        ) { media: MediaImpl ->
-            if (media == mediaImplCollection.first()) {
-                if (header != null) {
-                    header()
+        ) { mediaImpl: MediaImpl ->
+            if (mediaImpl == mediaImplList.first()) header?.invoke()
+
+            if (showFirstLetter && showGroupIndication) {
+                when (sortOption) {
+                    SortOptions.GENRE -> {
+                        if (mediaImpl is Music) {
+                            FirstGenre(
+                                map = groupMap!!,
+                                mediaImpl = mediaImpl,
+                                mediaImplList = mediaImplList,
+                            )
+                        }
+                    }
+
+                    SortOptions.YEAR -> FirstYear(
+                        map = groupMap!!,
+                        mediaImpl = mediaImpl,
+                        mediaImplList = mediaImplList
+                    )
+
+                    else -> {
+                        FirstLetter(
+                            map = groupMap!!,
+                            mediaImpl = mediaImpl,
+                            mediaImplList = mediaImplList,
+                            sortOption = sortOption
+                        )
+                    }
                 }
             }
+            var showMediaOptions: Boolean by rememberSaveable { mutableStateOf(false) }
             MediaCard(
                 modifier = modifier,
-                media = media,
-                onClick = { openMedia(media) },
-                openedPlaylist = openedPlaylist,
+                mediaImpl = mediaImpl,
+                onClick = {
+                    if (onMediaClick != null) {
+                        onMediaClick.invoke(mediaImpl)
+                    } else {
+                        if (mediaImpl is Music && !isInPlaybackView)
+                            playbackViewModel.loadMusicFromMedias(
+                                medias = mediaImplList,
+                                currentDestination = satunesUiState.currentDestination,
+                                musicToPlay = mediaImpl
+                            )
+                        openMedia(
+                            playbackViewModel = playbackViewModel,
+                            media = mediaImpl,
+                            navController = if (isInPlaybackView) null else navController
+                        )
+                    }
+                },
+                onLongClick = {
+                    haptics.performHapticFeedback(HapticFeedbackType.LongPress)
+                    showMediaOptions = true
+                }
             )
+            HorizontalDivider(modifier = modifier)
+            // Media option dialog
+            if (showMediaOptions) {
+                MediaOptionsDialog(
+                    mediaImpl = mediaImpl,
+                    onDismissRequest = {
+                        showMediaOptions = false
+                    }
+                )
+            }
         }
     }
-
     if (scrollToMusicPlaying) {
         LaunchedEffect(key1 = Unit) {
             lazyListState.scrollToItem(
@@ -98,11 +168,5 @@ internal fun MediaCardList(
 @Composable
 @Preview
 private fun CardListPreview() {
-    MediaCardList(
-        header = {},
-        mediaImplCollection = listOf(),
-        openMedia = {},
-        openedPlaylist = null,
-        scrollToMusicPlaying = false
-    )
+    MediaCardList(mediaImplList = listOf(), header = {}, scrollToMusicPlaying = false)
 }

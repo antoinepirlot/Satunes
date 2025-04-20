@@ -49,14 +49,16 @@ internal fun Artwork(
 ) {
     val context: Context = LocalContext.current
     val artworkCircleShape: Boolean by remember { SettingsManager.artworkCircleShape }
+    val artworkAnimation: Boolean by remember { SettingsManager.artworkAnimation }
+
     var artwork: Bitmap? = music.getAlbumArtwork(context = context)
-    if (artwork == null) {
+    if (artwork == null)
         artwork = context.getDrawable(RIcon.mipmap.empty_album_artwork_foreground)!!.toBitmap()
-    }
+    if (artworkCircleShape || artworkAnimation) artwork = artwork.toCircularBitmap()
 
     Image(
         modifier = modifier,
-        provider = ImageProvider(bitmap = if (artworkCircleShape) artwork.toCircularBitmap() else artwork),
-        contentDescription = "Artwork"
+        provider = ImageProvider(bitmap = artwork),
+        contentDescription = "Artwork",
     )
 }

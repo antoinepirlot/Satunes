@@ -20,8 +20,20 @@
 package io.github.antoinepirlot.satunes.widgets.ui.views
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.glance.GlanceComposable
 import androidx.glance.GlanceModifier
+import androidx.glance.action.actionStartActivity
+import androidx.glance.action.clickable
+import androidx.glance.layout.Alignment
+import androidx.glance.layout.Box
+import androidx.glance.layout.fillMaxSize
+import androidx.glance.layout.fillMaxWidth
+import io.github.antoinepirlot.satunes.MainActivity
+import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
+import io.github.antoinepirlot.satunes.widgets.ui.components.Artwork
+import io.github.antoinepirlot.satunes.widgets.ui.components.PlaybackControlBar
 
 /**
  * @author Antoine Pirlot 20/04/2025
@@ -31,5 +43,22 @@ import androidx.glance.GlanceModifier
 fun DiscPlaybackWidgetView(
     modifier: GlanceModifier = GlanceModifier
 ) {
-    //TODO
+    Box(
+        modifier = modifier.fillMaxSize(),
+        contentAlignment = Alignment.BottomCenter
+    ) {
+        val musicPlaying: Music? by PlaybackManager.musicPlaying
+        if (musicPlaying != null)
+            Artwork(
+                modifier = GlanceModifier
+                    .fillMaxSize()
+                    .clickable(onClick = actionStartActivity<MainActivity>()),
+                music = musicPlaying!!
+            )
+
+        PlaybackControlBar(
+            modifier = if (musicPlaying == null) GlanceModifier.fillMaxSize()
+            else GlanceModifier.fillMaxWidth()
+        )
+    }
 }

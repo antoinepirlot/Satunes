@@ -17,7 +17,7 @@
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
-package io.github.antoinepirlot.satunes.widgets.ui.components.classic
+package io.github.antoinepirlot.satunes.widgets.ui.components
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -32,9 +32,9 @@ import androidx.glance.layout.fillMaxWidth
 import androidx.glance.layout.size
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
-import io.github.antoinepirlot.satunes.widgets.ui.components.classic.buttons.NextButton
-import io.github.antoinepirlot.satunes.widgets.ui.components.classic.buttons.PlayPauseButton
-import io.github.antoinepirlot.satunes.widgets.ui.components.classic.buttons.PreviousButton
+import io.github.antoinepirlot.satunes.widgets.ui.components.buttons.NextButton
+import io.github.antoinepirlot.satunes.widgets.ui.components.buttons.PlayPauseButton
+import io.github.antoinepirlot.satunes.widgets.ui.components.buttons.PreviousButton
 
 /**
  * @author Antoine Pirlot on 20/08/2024
@@ -44,11 +44,13 @@ import io.github.antoinepirlot.satunes.widgets.ui.components.classic.buttons.Pre
 @GlanceComposable
 internal fun PlaybackControlBar(
     modifier: GlanceModifier = GlanceModifier,
+    horizontalAlignment: Alignment.Horizontal = Alignment.CenterHorizontally,
+    verticalAlignment: Alignment.Vertical = Alignment.CenterVertically
 ) {
     Row(
         modifier = modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalAlignment = Alignment.CenterVertically
+        horizontalAlignment = horizontalAlignment,
+        verticalAlignment = verticalAlignment
     ) {
         val musicPlaying: Music? by PlaybackManager.musicPlaying
         val spacerSize: Dp = 12.dp

@@ -17,7 +17,7 @@
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
-package io.github.antoinepirlot.satunes.widgets.ui.components.classic.buttons
+package io.github.antoinepirlot.satunes.widgets.ui.components.buttons
 
 import android.content.Context
 import androidx.compose.runtime.Composable

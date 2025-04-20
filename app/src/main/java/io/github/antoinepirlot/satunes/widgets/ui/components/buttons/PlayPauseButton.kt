@@ -17,31 +17,48 @@
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
-package io.github.antoinepirlot.satunes.widgets.ui.components.classic.buttons
+package io.github.antoinepirlot.satunes.widgets.ui.components.buttons
 
 import android.content.Context
 import androidx.compose.runtime.Composable
-import androidx.glance.Button
+import androidx.compose.runtime.getValue
 import androidx.glance.GlanceComposable
 import androidx.glance.GlanceModifier
+import androidx.glance.GlanceTheme
 import androidx.glance.LocalContext
-import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.utils.initSatunes
+import androidx.glance.appwidget.components.CircleIconButton
+import androidx.glance.appwidget.components.SquareIconButton
+import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
 
 /**
- * @author Antoine Pirlot on 22/08/2024
+ * @author Antoine Pirlot on 20/08/2024
  */
 
 @Composable
 @GlanceComposable
-internal fun LoadSatunesButton(
+internal fun PlayPauseButton(
     modifier: GlanceModifier = GlanceModifier,
 ) {
     val context: Context = LocalContext.current
-
-    Button(
-        modifier = modifier,
-        text = LocalContext.current.getString(R.string.load_satunes_text),
-        onClick = { initSatunes(context = context, satunesViewModel = null) }
-    )
+    val isPlaying: Boolean by PlaybackManager.isPlaying
+    if (isPlaying) {
+        SquareIconButton(
+            modifier = modifier,
+            imageProvider = SatunesIcons.PAUSE.imageProvider!!,
+            contentDescription = "Pause",
+            onClick = { PlaybackManager.pause(context = context) },
+            backgroundColor = GlanceTheme.colors.primary,
+            contentColor = GlanceTheme.colors.onPrimary,
+        )
+    } else {
+        CircleIconButton(
+            modifier = modifier,
+            imageProvider = SatunesIcons.PLAY.imageProvider!!,
+            contentDescription = "Play",
+            onClick = { PlaybackManager.play(context = context) },
+            backgroundColor = GlanceTheme.colors.primary,
+            contentColor = GlanceTheme.colors.onPrimary,
+        )
+    }
 }

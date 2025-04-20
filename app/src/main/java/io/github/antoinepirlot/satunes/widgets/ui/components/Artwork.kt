@@ -17,48 +17,48 @@
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
-package io.github.antoinepirlot.satunes.widgets.ui.components.classic.buttons
+package io.github.antoinepirlot.satunes.widgets.ui.components
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Bitmap
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.core.graphics.drawable.toBitmap
 import androidx.glance.GlanceComposable
 import androidx.glance.GlanceModifier
-import androidx.glance.GlanceTheme
+import androidx.glance.Image
+import androidx.glance.ImageProvider
 import androidx.glance.LocalContext
-import androidx.glance.appwidget.components.CircleIconButton
-import androidx.glance.appwidget.components.SquareIconButton
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
+import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
+import io.github.antoinepirlot.satunes.utils.toCircularBitmap
+import io.github.antoinepirlot.satunes.icons.R as RIcon
 
 /**
  * @author Antoine Pirlot on 20/08/2024
  */
 
+@SuppressLint("UseCompatLoadingForDrawables")
 @Composable
 @GlanceComposable
-internal fun PlayPauseButton(
+internal fun Artwork(
     modifier: GlanceModifier = GlanceModifier,
+    music: Music,
 ) {
     val context: Context = LocalContext.current
-    val isPlaying: Boolean by PlaybackManager.isPlaying
-    if (isPlaying) {
-        SquareIconButton(
-            modifier = modifier,
-            imageProvider = SatunesIcons.PAUSE.imageProvider!!,
-            contentDescription = "Pause",
-            onClick = { PlaybackManager.pause(context = context) },
-            backgroundColor = GlanceTheme.colors.primary,
-            contentColor = GlanceTheme.colors.onPrimary,
-        )
-    } else {
-        CircleIconButton(
-            modifier = modifier,
-            imageProvider = SatunesIcons.PLAY.imageProvider!!,
-            contentDescription = "Play",
-            onClick = { PlaybackManager.play(context = context) },
-            backgroundColor = GlanceTheme.colors.primary,
-            contentColor = GlanceTheme.colors.onPrimary,
-        )
-    }
+    val artworkCircleShape: Boolean by remember { SettingsManager.artworkCircleShape }
+    val artworkAnimation: Boolean by remember { SettingsManager.artworkAnimation }
+
+    var artwork: Bitmap? = music.getAlbumArtwork(context = context)
+    if (artwork == null)
+        artwork = context.getDrawable(RIcon.mipmap.empty_album_artwork_foreground)!!.toBitmap()
+    if (artworkCircleShape || artworkAnimation) artwork = artwork.toCircularBitmap()
+
+    Image(
+        modifier = modifier,
+        provider = ImageProvider(bitmap = artwork),
+        contentDescription = "Artwork",
+    )
 }

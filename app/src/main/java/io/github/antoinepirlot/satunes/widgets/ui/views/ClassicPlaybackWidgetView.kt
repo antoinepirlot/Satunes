@@ -33,9 +33,9 @@ import androidx.glance.layout.fillMaxWidth
 import androidx.glance.layout.size
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
-import io.github.antoinepirlot.satunes.widgets.ui.components.classic.MusicInformations
-import io.github.antoinepirlot.satunes.widgets.ui.components.classic.PlaybackControlBar
-import io.github.antoinepirlot.satunes.widgets.ui.components.common.Artwork
+import io.github.antoinepirlot.satunes.widgets.ui.components.Artwork
+import io.github.antoinepirlot.satunes.widgets.ui.components.MusicInformations
+import io.github.antoinepirlot.satunes.widgets.ui.components.PlaybackControlBar
 
 /**
  * @author Antoine Pirlot on 21/08/2024

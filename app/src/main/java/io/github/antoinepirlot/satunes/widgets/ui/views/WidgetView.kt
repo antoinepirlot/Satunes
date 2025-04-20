@@ -23,18 +23,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.glance.GlanceComposable
 import androidx.glance.GlanceModifier
-import androidx.glance.GlanceTheme
-import androidx.glance.action.actionStartActivity
-import androidx.glance.action.clickable
 import androidx.glance.appwidget.CircularProgressIndicator
-import androidx.glance.appwidget.components.Scaffold
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Box
 import androidx.glance.layout.fillMaxSize
-import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
-import io.github.antoinepirlot.satunes.widgets.ui.components.classic.buttons.LoadSatunesButton
+import io.github.antoinepirlot.satunes.widgets.ui.components.buttons.LoadSatunesButton
 
 /**
  * @author Antoine Pirlot 20/04/2025
@@ -47,26 +42,20 @@ fun WidgetView(
 ) {
     val isDataLoading: Boolean by DataLoader.isLoading
     val isPlaybackLoading: Boolean by PlaybackManager.isLoading
-    GlanceTheme {
-        Scaffold(
-            modifier = GlanceModifier.clickable(onClick = actionStartActivity<MainActivity>())
-        ) {
-            Box(
-                modifier = GlanceModifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                if (isDataLoading || isPlaybackLoading) {
-                    CircularProgressIndicator(modifier = modifier)
-                    return@Box
-                }
+    Box(
+        modifier = GlanceModifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        if (isDataLoading || isPlaybackLoading) {
+            CircularProgressIndicator(modifier = modifier)
+            return@Box
+        }
 
-                val isDataLoaded: Boolean by DataLoader.isLoaded
-                if (!isDataLoaded) {
-                    LoadSatunesButton(modifier = modifier)
-                } else {
-                    widgetView()
-                }
-            }
+        val isDataLoaded: Boolean by DataLoader.isLoaded
+        if (!isDataLoaded) {
+            LoadSatunesButton(modifier = modifier)
+        } else {
+            widgetView()
         }
     }
 }

@@ -17,48 +17,34 @@
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
-package io.github.antoinepirlot.satunes.widgets.ui.components.common
+package io.github.antoinepirlot.satunes.widgets.ui.components.buttons
 
-import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Bitmap
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.core.graphics.drawable.toBitmap
 import androidx.glance.GlanceComposable
 import androidx.glance.GlanceModifier
-import androidx.glance.Image
-import androidx.glance.ImageProvider
+import androidx.glance.GlanceTheme
 import androidx.glance.LocalContext
-import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
-import io.github.antoinepirlot.satunes.utils.toCircularBitmap
-import io.github.antoinepirlot.satunes.icons.R as RIcon
+import androidx.glance.appwidget.components.CircleIconButton
+import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
 
 /**
  * @author Antoine Pirlot on 20/08/2024
  */
 
-@SuppressLint("UseCompatLoadingForDrawables")
 @Composable
 @GlanceComposable
-internal fun Artwork(
+internal fun PreviousButton(
     modifier: GlanceModifier = GlanceModifier,
-    music: Music,
 ) {
     val context: Context = LocalContext.current
-    val artworkCircleShape: Boolean by remember { SettingsManager.artworkCircleShape }
-    val artworkAnimation: Boolean by remember { SettingsManager.artworkAnimation }
-
-    var artwork: Bitmap? = music.getAlbumArtwork(context = context)
-    if (artwork == null)
-        artwork = context.getDrawable(RIcon.mipmap.empty_album_artwork_foreground)!!.toBitmap()
-    if (artworkCircleShape || artworkAnimation) artwork = artwork.toCircularBitmap()
-
-    Image(
+    CircleIconButton(
         modifier = modifier,
-        provider = ImageProvider(bitmap = artwork),
-        contentDescription = "Artwork",
+        imageProvider = SatunesIcons.SKIP_PREVIOUS.imageProvider!!,
+        contentDescription = "Skip previous",
+        onClick = { PlaybackManager.playPrevious(context = context) },
+        backgroundColor = GlanceTheme.colors.primary,
+        contentColor = GlanceTheme.colors.onPrimary,
     )
 }

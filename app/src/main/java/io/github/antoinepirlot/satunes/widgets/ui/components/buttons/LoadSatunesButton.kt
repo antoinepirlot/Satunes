@@ -17,34 +17,31 @@
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
-package io.github.antoinepirlot.satunes.widgets.ui.components.classic.buttons
+package io.github.antoinepirlot.satunes.widgets.ui.components.buttons
 
 import android.content.Context
 import androidx.compose.runtime.Composable
+import androidx.glance.Button
 import androidx.glance.GlanceComposable
 import androidx.glance.GlanceModifier
-import androidx.glance.GlanceTheme
 import androidx.glance.LocalContext
-import androidx.glance.appwidget.components.CircleIconButton
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
+import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.utils.initSatunes
 
 /**
- * @author Antoine Pirlot on 20/08/2024
+ * @author Antoine Pirlot on 22/08/2024
  */
 
 @Composable
 @GlanceComposable
-internal fun PreviousButton(
+internal fun LoadSatunesButton(
     modifier: GlanceModifier = GlanceModifier,
 ) {
     val context: Context = LocalContext.current
-    CircleIconButton(
+
+    Button(
         modifier = modifier,
-        imageProvider = SatunesIcons.SKIP_PREVIOUS.imageProvider!!,
-        contentDescription = "Skip previous",
-        onClick = { PlaybackManager.playPrevious(context = context) },
-        backgroundColor = GlanceTheme.colors.primary,
-        contentColor = GlanceTheme.colors.onPrimary,
+        text = LocalContext.current.getString(R.string.load_satunes_text),
+        onClick = { initSatunes(context = context, satunesViewModel = null) }
     )
 }

@@ -34,7 +34,7 @@ import androidx.glance.layout.fillMaxSize
 import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
-import io.github.antoinepirlot.satunes.widgets.ui.components.buttons.LoadSatunesButton
+import io.github.antoinepirlot.satunes.widgets.ui.components.classic.buttons.LoadSatunesButton
 
 /**
  * @author Antoine Pirlot 20/04/2025

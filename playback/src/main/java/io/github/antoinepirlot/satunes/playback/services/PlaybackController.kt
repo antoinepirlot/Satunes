@@ -49,7 +49,7 @@ internal class PlaybackController private constructor(
     loadAllMusics: Boolean = false
 ) {
 
-    internal lateinit var mediaController: MediaController
+    internal var mediaController: MediaController? = null
 
     internal var playlist: Playlist? = null
         private set(value) {
@@ -200,9 +200,9 @@ internal class PlaybackController private constructor(
                     if (_instance!!.isPlaying) {
                         _instance!!.pause()
                     }
-                    _instance!!.mediaController.removeListener(_instance!!.listener)
-                    _instance!!.mediaController.addListener(listener)
-                    _instance!!.mediaController.prepare()
+                    _instance!!.mediaController!!.removeListener(_instance!!.listener)
+                    _instance!!.mediaController!!.addListener(listener)
+                    _instance!!.mediaController!!.prepare()
                     if (wasPlaying) {
                         _instance!!.play()
                     }
@@ -216,7 +216,7 @@ internal class PlaybackController private constructor(
         }
 
         internal fun isInitialized(): Boolean =
-            this._instance != null && this._instance!!::mediaController.isInitialized
+            this._instance != null && this._instance!!.mediaController != null
     }
 
     init {
@@ -279,21 +279,21 @@ internal class PlaybackController private constructor(
         }
         musicPlaying = playlist!!.getMusic(musicIndex = musicPlayingIndex)
 
-        if (mediaController.currentMediaItemIndex == musicPlayingIndex)
-            mediaController.play()
+        if (mediaController!!.currentMediaItemIndex == musicPlayingIndex)
+            mediaController!!.play()
         else
-            mediaController.seekTo(musicPlayingIndex, 0)
+            mediaController!!.seekTo(musicPlayingIndex, 0)
     }
 
     fun playPause() {
         if (this.isPlaying) {
-            this.mediaController.pause()
+            this.mediaController!!.pause()
         } else {
             if (this.isEnded) {
                 this.start()
                 this.isEnded = false
             } else {
-                this.mediaController.play()
+                this.mediaController!!.play()
             }
         }
     }
@@ -311,25 +311,25 @@ internal class PlaybackController private constructor(
     }
 
     fun getCurrentPosition(): Long {
-        return this.mediaController.currentPosition
+        return this.mediaController!!.currentPosition
     }
 
     fun getMusicPlayingIndexPosition(): Int {
-        return this.mediaController.currentMediaItemIndex
+        return this.mediaController!!.currentMediaItemIndex
     }
 
     fun playNext() {
         if (playlist!!.musicCount() > 1) {
-            this.mediaController.seekToNext()
+            this.mediaController!!.seekToNext()
         }
     }
 
     fun playPrevious() {
-        mediaController.seekToPrevious()
+        mediaController!!.seekToPrevious()
     }
 
     fun seekTo(positionMs: Long) {
-        this.mediaController.seekTo(positionMs)
+        this.mediaController!!.seekTo(positionMs)
     }
 
     fun seekTo(positionPercentage: Float) {
@@ -350,7 +350,7 @@ internal class PlaybackController private constructor(
 
     fun seekTo(music: Music, positionMs: Long = 0) {
         val musicIndex: Int = playlist!!.getMusicIndex(music)
-        mediaController.seekTo(musicIndex, positionMs)
+        mediaController!!.seekTo(musicIndex, positionMs)
     }
 
     /**
@@ -384,19 +384,19 @@ internal class PlaybackController private constructor(
         this.isLoading = true
         this.playlist = playlist
 
-        this.mediaController.clearMediaItems()
-        this.mediaController.addMediaItems(this.playlist!!.mediaItemList)
-        this.mediaController.removeListener(listener)
-        this.mediaController.addListener(listener)
-        this.mediaController.repeatMode = when (SettingsManager.repeatMode) {
+        this.mediaController!!.clearMediaItems()
+        this.mediaController!!.addMediaItems(this.playlist!!.mediaItemList)
+        this.mediaController!!.removeListener(listener)
+        this.mediaController!!.addListener(listener)
+        this.mediaController!!.repeatMode = when (SettingsManager.repeatMode) {
             1 -> Player.REPEAT_MODE_ALL
             2 -> Player.REPEAT_MODE_ONE
             else -> Player.REPEAT_MODE_OFF // For 0 and other incorrect numbers
         }
-        this.mediaController.prepare()
+        this.mediaController!!.prepare()
 
         this.isShuffle = this.playlist!!.isShuffle
-        this.repeatMode = this.mediaController.repeatMode
+        this.repeatMode = this.mediaController!!.repeatMode
         PlaybackService.updateCustomCommands()
         this.isLoaded = true
         this.isLoading = false
@@ -417,7 +417,7 @@ internal class PlaybackController private constructor(
             is Music -> {
                 try {
                     this.playlist!!.addToQueue(music = mediaImpl)
-                    this.mediaController.addMediaItem(mediaImpl.mediaItem)
+                    this.mediaController!!.addMediaItem(mediaImpl.mediaItem)
                 } catch (_: AlreadyInPlaybackException) {
                     return
                 }
@@ -445,7 +445,7 @@ internal class PlaybackController private constructor(
             is Music -> {
                 val musicIndex: Int = this.playlist!!.removeFromQueue(music = mediaImpl)
                 if (musicIndex >= 0) {
-                    this.mediaController.removeMediaItem(musicIndex)
+                    this.mediaController!!.removeMediaItem(musicIndex)
                     updateHasNext()
                     updateHasPrevious()
                 }
@@ -460,13 +460,13 @@ internal class PlaybackController private constructor(
     }
 
     private fun updateHasNext() {
-        if (this.mediaController.currentMediaItemIndex == this.mediaController.mediaItemCount - 1) {
+        if (this.mediaController!!.currentMediaItemIndex == this.mediaController!!.mediaItemCount - 1) {
             hasNext = false
         }
     }
 
     private fun updateHasPrevious() {
-        if (this.mediaController.currentMediaItemIndex == 0) {
+        if (this.mediaController!!.currentMediaItemIndex == 0) {
             hasPrevious = false
         }
     }
@@ -488,7 +488,7 @@ internal class PlaybackController private constructor(
             is Music -> {
                 try {
                     this.playlist!!.addNext(index = this.musicPlayingIndex + 1, music = mediaImpl)
-                    this.mediaController.addMediaItem(
+                    this.mediaController!!.addMediaItem(
                         this.musicPlayingIndex + 1,
                         mediaImpl.mediaItem
                     )
@@ -519,15 +519,15 @@ internal class PlaybackController private constructor(
                 oldIndex = musicToMoveIndex,
                 newIndex = newIndex - 1
             )
-            this.mediaController.moveMediaItem(musicToMoveIndex, newIndex - 1)
-            this.musicPlayingIndex = this.mediaController.currentMediaItemIndex
+            this.mediaController!!.moveMediaItem(musicToMoveIndex, newIndex - 1)
+            this.musicPlayingIndex = this.mediaController!!.currentMediaItemIndex
         } else {
             this.playlist!!.moveMusic(
                 music = music,
                 oldIndex = musicToMoveIndex,
                 newIndex = newIndex
             )
-            this.mediaController.moveMediaItem(musicToMoveIndex, newIndex)
+            this.mediaController!!.moveMediaItem(musicToMoveIndex, newIndex)
         }
     }
 
@@ -566,15 +566,15 @@ internal class PlaybackController private constructor(
         }
 
         //A music is playing
-        this.mediaController.moveMediaItem(
-            this.mediaController.currentMediaItemIndex,
+        this.mediaController!!.moveMediaItem(
+            this.mediaController!!.currentMediaItemIndex,
             DEFAULT_MUSIC_PLAYING_INDEX
         )
 
         val fromIndex: Int = DEFAULT_MUSIC_PLAYING_INDEX + 1
         val toIndex: Int = this.playlist!!.lastIndex()
 
-        this.mediaController.replaceMediaItems(
+        this.mediaController!!.replaceMediaItems(
             fromIndex,
             toIndex + 1, // +1 as it is a toIndex excluded
             this.playlist!!.getMediaItems(fromIndex = fromIndex, toIndex = toIndex)
@@ -592,8 +592,8 @@ internal class PlaybackController private constructor(
         this.playlist!!.undoShuffle()
         if (this.musicPlaying == null) {
             // No music playing
-            this.mediaController.clearMediaItems()
-            this.mediaController.addMediaItems(this.playlist!!.mediaItemList)
+            this.mediaController!!.clearMediaItems()
+            this.mediaController!!.addMediaItems(this.playlist!!.mediaItemList)
 
             return
         }
@@ -607,14 +607,14 @@ internal class PlaybackController private constructor(
             DEFAULT_MUSIC_PLAYING_INDEX -> {
                 // Music playing is at the index 0, replace index 1 to last index
                 // The original place is the first
-                this.mediaController.moveMediaItem(
+                this.mediaController!!.moveMediaItem(
                     oldMusicPlayingIndex,
                     DEFAULT_MUSIC_PLAYING_INDEX
                 )
 
                 val fromIndex: Int = this.musicPlayingIndex + 1
 
-                this.mediaController.replaceMediaItems(
+                this.mediaController!!.replaceMediaItems(
                     fromIndex,
                     lastIndex + 1,
                     this.playlist!!.getMediaItems(fromIndex = fromIndex, toIndex = lastIndex)
@@ -623,12 +623,12 @@ internal class PlaybackController private constructor(
 
             lastIndex -> {
                 // The music is at the last index, replace from index 0 to last index -1
-                this.mediaController.moveMediaItem(
+                this.mediaController!!.moveMediaItem(
                     oldMusicPlayingIndex,
                     this.musicPlayingIndex + 1
                 )
 
-                this.mediaController.replaceMediaItems(
+                this.mediaController!!.replaceMediaItems(
                     DEFAULT_MUSIC_PLAYING_INDEX,
                     lastIndex,
                     this.playlist!!.getMediaItems(
@@ -640,12 +640,12 @@ internal class PlaybackController private constructor(
 
             else -> {
                 // Music playing is not at the easy position, replace before music playing and after
-                this.mediaController.moveMediaItem(
+                this.mediaController!!.moveMediaItem(
                     oldMusicPlayingIndex,
                     this.musicPlayingIndex
                 )
 
-                this.mediaController.replaceMediaItems(
+                this.mediaController!!.replaceMediaItems(
                     0,
                     this.musicPlayingIndex,
                     this.playlist!!.getMediaItems(
@@ -654,7 +654,7 @@ internal class PlaybackController private constructor(
                     )
                 )
 
-                this.mediaController.replaceMediaItems(
+                this.mediaController!!.replaceMediaItems(
                     this.musicPlayingIndex + 1,
                     lastIndex + 1,
                     this.playlist!!.getMediaItems(
@@ -681,13 +681,12 @@ internal class PlaybackController private constructor(
             }
         }
 
-        this.mediaController.repeatMode = this.repeatMode
+        this.mediaController!!.repeatMode = this.repeatMode
     }
 
     fun stop() {
-        if (this::mediaController.isInitialized) {
-            this.mediaController.stop()
-            this.mediaController.clearMediaItems()
+        this.mediaController?.stop()
+        this.mediaController?.clearMediaItems()
             this.musicPlayingIndex = DEFAULT_MUSIC_PLAYING_INDEX
             this.isPlaying = DEFAULT_IS_PLAYING_VALUE
             this.isShuffle = DEFAULT_IS_SHUFFLE
@@ -698,7 +697,6 @@ internal class PlaybackController private constructor(
             this.playlist = null
             this.repeatMode = DEFAULT_REPEAT_MODE
             this.musicPlaying = DEFAULT_MUSIC_PLAYING
-        }
     }
 
     fun release() {
@@ -706,9 +704,7 @@ internal class PlaybackController private constructor(
         PlaybackManager.isInitialized.value = false
         if (_instance != null) {
             this.stop()
-            if (this::mediaController.isInitialized) {
-                this.mediaController.release()
-            }
+            this.mediaController?.release()
             _instance = null
         }
         _logger?.info("PlaybackController released")
@@ -723,12 +719,12 @@ internal class PlaybackController private constructor(
     }
 
     override fun toString(): String {
-        val mediaControllerInit: Boolean = this::mediaController.isInitialized
+        val mediaControllerInit: Boolean = this.mediaController != null
         return """
             PlaybackController:
             musicPlayingIndex: $musicPlayingIndex
             mediaController initialized: $mediaControllerInit
-            musicPlayingIndex in MediaController: ${if (mediaControllerInit) mediaController.currentMediaItemIndex else "/"}
+            musicPlayingIndex in MediaController: ${if (mediaControllerInit) mediaController!!.currentMediaItemIndex else "/"}
             musicPlaying != null: ${musicPlaying != null}
             isPlaying: $isPlaying
             repeatMode: $repeatMode

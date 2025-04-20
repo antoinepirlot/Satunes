@@ -1,16 +1,15 @@
 /*
  * This file is part of Satunes.
- *
  * Satunes is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software Foundation,
  * either version 3 of the License, or (at your option) any later version.
- * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ *  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public License along with Satunes.
- * If not, see <https://www.gnu.org/licenses/>.
+ *  You should have received a copy of the GNU General Public License along with Satunes.
+ *  If not, see <https://www.gnu.org/licenses/>.
  *
- * *** INFORMATION ABOUT THE AUTHOR *****
+ * **** INFORMATION ABOUT THE AUTHOR *****
  * The author of this file is Antoine Pirlot, the owner of this project.
  * You find this original project on Codeberg.
  *
@@ -36,7 +35,7 @@ import kotlinx.coroutines.launch
  */
 internal object ProgressBarLifecycleCallbacks : DefaultLifecycleObserver {
     private val _logger: SatunesLogger? = SatunesLogger.getLogger()
-    private var _updatingJob: Job? = null;
+    private var _updatingJob: Job? = null
     var isUpdatingPosition: Boolean = false
     private var stopRefresh: Boolean = false
     private var resumed: Boolean = false // used to avoid refresh when widget is used (optimization)
@@ -95,10 +94,9 @@ internal object ProgressBarLifecycleCallbacks : DefaultLifecycleObserver {
     }
 
     fun updateCurrentPosition(log: Boolean = true) {
-        if (playbackViewModel.isEnded) {
-            // It means the music has reached the end of playlistDB and the music is finished
-            return
-        }
+        // It means the music has reached the end of playlistDB and the music is finished
+        if (playbackViewModel.isEnded) return
+
         playbackViewModel.updateCurrentPosition(log = log)
     }
 }

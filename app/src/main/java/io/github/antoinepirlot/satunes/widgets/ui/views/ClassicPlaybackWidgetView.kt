@@ -33,9 +33,9 @@ import androidx.glance.layout.fillMaxWidth
 import androidx.glance.layout.size
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
-import io.github.antoinepirlot.satunes.widgets.ui.components.classic.Artwork
 import io.github.antoinepirlot.satunes.widgets.ui.components.classic.MusicInformations
 import io.github.antoinepirlot.satunes.widgets.ui.components.classic.PlaybackControlBar
+import io.github.antoinepirlot.satunes.widgets.ui.components.common.Artwork
 
 /**
  * @author Antoine Pirlot on 21/08/2024
@@ -55,7 +55,7 @@ internal fun ClassicPlaybackWidgetView(
         val musicPlaying: Music? by PlaybackManager.musicPlaying
 
         if (musicPlaying != null) {
-            Artwork(music = musicPlaying!!)
+            Artwork(modifier = GlanceModifier.size(70.dp), music = musicPlaying!!)
             Spacer(modifier = GlanceModifier.size(5.dp))
         }
 

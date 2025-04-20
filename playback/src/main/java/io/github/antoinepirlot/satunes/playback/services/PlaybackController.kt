@@ -1,16 +1,15 @@
 /*
  * This file is part of Satunes.
- *
  * Satunes is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software Foundation,
  * either version 3 of the License, or (at your option) any later version.
- * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ *  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public License along with Satunes.
- * If not, see <https://www.gnu.org/licenses/>.
+ *  You should have received a copy of the GNU General Public License along with Satunes.
+ *  If not, see <https://www.gnu.org/licenses/>.
  *
- * *** INFORMATION ABOUT THE AUTHOR *****
+ * **** INFORMATION ABOUT THE AUTHOR *****
  * The author of this file is Antoine Pirlot, the owner of this project.
  * You find this original project on Codeberg.
  *
@@ -39,9 +38,6 @@ import io.github.antoinepirlot.satunes.playback.exceptions.AlreadyInPlaybackExce
 import io.github.antoinepirlot.satunes.playback.models.PlaybackListener
 import io.github.antoinepirlot.satunes.playback.models.Playlist
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 /**
  * @author Antoine Pirlot on 31/01/24
@@ -416,7 +412,11 @@ internal class PlaybackController private constructor(
     }
 
     fun addToQueue(mediaImplList: Collection<MediaImpl>) {
-        mediaImplList.forEach { mediaImpl: MediaImpl ->
+        val listToProcess: Collection<MediaImpl> =
+            if (SettingsManager.shuffleMode) mediaImplList.shuffled()
+            else mediaImplList
+
+        listToProcess.forEach { mediaImpl: MediaImpl ->
             addToQueue(mediaImpl = mediaImpl)
         }
     }
@@ -481,10 +481,12 @@ internal class PlaybackController private constructor(
     }
 
     private fun addNext(mediaImplList: Collection<MediaImpl>) {
-        CoroutineScope(Dispatchers.Main).launch {
-            mediaImplList.forEach { mediaImpl: MediaImpl ->
-                addNext(mediaImpl = mediaImpl)
-            }
+        val listToProcess: Collection<MediaImpl> =
+            if (SettingsManager.shuffleMode) mediaImplList.shuffled()
+            else mediaImplList
+
+        listToProcess.forEach { mediaImpl: MediaImpl ->
+            addNext(mediaImpl = mediaImpl)
         }
     }
 

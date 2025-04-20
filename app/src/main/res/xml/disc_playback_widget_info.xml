@@ -19,8 +19,9 @@
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
     android:description="@string/disc_widget_description"
     android:initialLayout="@layout/glance_default_loading_layout"
+    android:maxResizeHeight="300dp"
+    android:minWidth="80dp"
     android:resizeMode="horizontal|vertical"
     android:updatePeriodMillis="3600"
-    android:widgetCategory="home_screen" /><!--TODO    android:previewImage="@drawable/disc_widget_preview" />-->
-    <!--    android:minWidth="230dp"-->
-    <!--    android:maxResizeHeight="30dp"-->
+    android:previewImage="@drawable/disc_widget_preview"
+    android:widgetCategory="home_screen" />

@@ -22,6 +22,7 @@ package io.github.antoinepirlot.satunes.widgets.ui
 import android.content.Context
 import android.os.Environment
 import androidx.glance.GlanceId
+import androidx.glance.GlanceTheme
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.provideContent
 import io.github.antoinepirlot.satunes.playback.services.WidgetPlaybackManager
@@ -43,8 +44,10 @@ class DiscPlaybackWidget : GlanceAppWidget() {
         WidgetPlaybackManager.refreshWidgets()
 
         provideContent {
-            WidgetView {
-                DiscPlaybackWidgetView()
+            GlanceTheme {
+                WidgetView {
+                    DiscPlaybackWidgetView()
+                }
             }
         }
     }

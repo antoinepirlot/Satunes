@@ -17,30 +17,15 @@
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
-package io.github.antoinepirlot.satunes.widgets.ui.components
+package io.github.antoinepirlot.satunes.widgets
 
-import androidx.compose.runtime.Composable
-import androidx.glance.GlanceComposable
-import androidx.glance.GlanceModifier
-import androidx.glance.GlanceTheme
-import androidx.glance.text.Text
-import androidx.glance.text.TextStyle
-import io.github.antoinepirlot.satunes.database.models.Music
+import androidx.glance.appwidget.GlanceAppWidget
+import androidx.glance.appwidget.GlanceAppWidgetReceiver
+import io.github.antoinepirlot.satunes.widgets.ui.DiscPlaybackWidget
 
 /**
- * @author Antoine Pirlot on 20/08/2024
+ * @author Antoine Pirlot 20/04/2025
  */
-
-@Composable
-@GlanceComposable
-internal fun MusicInformations(
-    modifier: GlanceModifier = GlanceModifier,
-    music: Music
-) {
-    Text(
-        modifier = modifier,
-        text = music.title + " - " + music.artist.title,
-        style = TextStyle(color = GlanceTheme.colors.onSurface),
-        maxLines = 1
-    )
+class DiscPlaybackReceiver : GlanceAppWidgetReceiver() {
+    override val glanceAppWidget: GlanceAppWidget = DiscPlaybackWidget()
 }

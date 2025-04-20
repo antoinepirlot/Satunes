@@ -10,7 +10,7 @@
   ~  You should have received a copy of the GNU General Public License along with Satunes.
   ~  If not, see <https://www.gnu.org/licenses/>.
   ~
-  ~ *** INFORMATION ABOUT THE AUTHOR *****
+  ~ ***** INFORMATION ABOUT THE AUTHOR *****
   ~ The author of this file is Antoine Pirlot, the owner of this project.
   ~ You find this original project on Codeberg.
   ~
@@ -161,4 +161,5 @@
     <string name="artwork_circle_shape_switch_button">Make artwork circle</string>
     <string name="logs_activation_button">Activation</string>
     <string name="include_exclude_change_text">Now, both include/exclude are taken in account simultaneous. It means, you can include some folders and exclude others at the same time (exclude is predominent).</string>
+    <string name="disc_widget_description">Disc</string>
 </resources>

@@ -17,30 +17,26 @@
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
-package io.github.antoinepirlot.satunes.widgets.ui.components
+package io.github.antoinepirlot.satunes.widgets
 
-import androidx.compose.runtime.Composable
-import androidx.glance.GlanceComposable
-import androidx.glance.GlanceModifier
-import androidx.glance.GlanceTheme
-import androidx.glance.text.Text
-import androidx.glance.text.TextStyle
-import io.github.antoinepirlot.satunes.database.models.Music
+import android.content.Context
+import androidx.glance.appwidget.updateAll
+import io.github.antoinepirlot.satunes.playback.services.WidgetPlaybackManager
+import io.github.antoinepirlot.satunes.widgets.ui.ClassicPlaybackWidget
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 /**
- * @author Antoine Pirlot on 20/08/2024
+ * @author Antoine Pirlot 20/04/2025
  */
-
-@Composable
-@GlanceComposable
-internal fun MusicInformations(
-    modifier: GlanceModifier = GlanceModifier,
-    music: Music
-) {
-    Text(
-        modifier = modifier,
-        text = music.title + " - " + music.artist.title,
-        style = TextStyle(color = GlanceTheme.colors.onSurface),
-        maxLines = 1
-    )
+object PlaybackWidget {
+    fun setRefreshWidget(context: Context) {
+        val refreshWidgets: () -> Unit = {
+            CoroutineScope(Dispatchers.Default).launch {
+                ClassicPlaybackWidget().updateAll(context = context.applicationContext)
+            }
+        }
+        WidgetPlaybackManager.setRefreshWidgets(refreshWidgets = refreshWidgets)
+    }
 }

@@ -39,7 +39,6 @@ import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.icons.R
 import io.github.antoinepirlot.satunes.playback.models.PlaybackListener
 import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
-import io.github.antoinepirlot.satunes.utils.utils.toCircularBitmap
 
 /**
  * @author Antoine Pirlot on 23/03/2024
@@ -76,7 +75,7 @@ internal object SatunesPlaybackListener : PlaybackListener() {
             )
             .putBitmap(
                 MediaMetadataCompat.METADATA_KEY_ALBUM_ART,
-                artwork?.toCircularBitmap()
+                artwork
             )
             .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, musicPlaying.duration)
             .build()

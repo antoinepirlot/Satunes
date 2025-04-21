@@ -81,6 +81,7 @@ private fun Menu(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.M)
 @Preview
 @Composable
 private fun UpdateChannelSelectionPreview() {

@@ -1,15 +1,19 @@
 /*
  * This file is part of Satunes.
+ *
  * Satunes is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software Foundation,
  * either version 3 of the License, or (at your option) any later version.
- *  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ *
+ * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
  * See the GNU General Public License for more details.
  *  You should have received a copy of the GNU General Public License along with Satunes.
- *  If not, see <https://www.gnu.org/licenses/>.
  *
- * ** INFORMATION ABOUT THE AUTHOR *****
+ * If not, see <https://www.gnu.org/licenses/>.
+ *
+ * **** INFORMATION ABOUT THE AUTHOR *****
  * The author of this file is Antoine Pirlot, the owner of this project.
  * You find this original project on Codeberg.
  *
@@ -132,6 +136,15 @@ class SatunesViewModel : ViewModel() {
     fun isInPlaybackView(): Boolean =
         _uiState.value.currentDestination.category == DestinationCategory.PLAYBACK
 
+    /**
+     * Mark notification as read and show snack bar with a message depending of the action taken by the user.
+     *
+     * @param scope
+     * @param snackbarHostState
+     * @param permanentAction the [Unit] action to run when the action is permanent (won't be shown again)
+     * @param nonPermanentAction a [Unit] action to run when the action is not permanent (will be shown next time)
+     * @param permanently a [Boolean] indicating if the action is permanent or not.
+     */
     private fun seeNotification(
         scope: CoroutineScope,
         snackbarHostState: SnackbarHostState,
@@ -153,14 +166,14 @@ class SatunesViewModel : ViewModel() {
                         seeNotification(
                             scope = scope,
                             snackbarHostState = snackbarHostState,
-                            permanently = permanently,
+                            permanently = false,
                             permanentAction = permanentAction,
                             nonPermanentAction = nonPermanentAction
                         )
                     }
                 )
-            } else if (SettingsManager.whatsNewSeen) {
-                nonPermanentAction
+            } else {
+                nonPermanentAction()
                 showSnackBar(
                     scope = scope,
                     snackBarHostState = snackbarHostState,
@@ -742,8 +755,19 @@ class SatunesViewModel : ViewModel() {
             scope = scope,
             snackbarHostState = snackbarHostState,
             permanently = permanently,
-            permanentAction = { SettingsManager.seeIncludeExcludeInfo(context = MainActivity.instance.applicationContext) },
-            nonPermanentAction = { SettingsManager.unSeeIncludeExcludeInfo(context = MainActivity.instance.applicationContext) }
+            permanentAction = {
+                SettingsManager.seeIncludeExcludeInfo(context = MainActivity.instance.applicationContext)
+                _uiState.update { currentState: SatunesUiState ->
+                    currentState.copy(includeExcludeSeen = true)
+                }
+            },
+            nonPermanentAction = {
+                SettingsManager.unSeeIncludeExcludeInfo(context = MainActivity.instance.applicationContext)
+                _uiState.update { currentState: SatunesUiState ->
+                    currentState.copy(includeExcludeSeen = false)
+                }
+            }
         )
+
     }
 }

@@ -755,8 +755,19 @@ class SatunesViewModel : ViewModel() {
             scope = scope,
             snackbarHostState = snackbarHostState,
             permanently = permanently,
-            permanentAction = { SettingsManager.seeIncludeExcludeInfo(context = MainActivity.instance.applicationContext) },
-            nonPermanentAction = { SettingsManager.unSeeIncludeExcludeInfo(context = MainActivity.instance.applicationContext) }
+            permanentAction = {
+                SettingsManager.seeIncludeExcludeInfo(context = MainActivity.instance.applicationContext)
+                _uiState.update { currentState: SatunesUiState ->
+                    currentState.copy(includeExcludeSeen = true)
+                }
+            },
+            nonPermanentAction = {
+                SettingsManager.unSeeIncludeExcludeInfo(context = MainActivity.instance.applicationContext)
+                _uiState.update { currentState: SatunesUiState ->
+                    currentState.copy(includeExcludeSeen = false)
+                }
+            }
         )
+
     }
 }

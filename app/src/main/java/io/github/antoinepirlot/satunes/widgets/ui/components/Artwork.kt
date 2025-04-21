@@ -33,7 +33,7 @@ import androidx.glance.ImageProvider
 import androidx.glance.LocalContext
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
-import io.github.antoinepirlot.satunes.utils.toCircularBitmap
+import io.github.antoinepirlot.satunes.utils.utils.toCircularBitmap
 import io.github.antoinepirlot.satunes.icons.R as RIcon
 
 /**

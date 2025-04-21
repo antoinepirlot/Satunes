@@ -17,7 +17,7 @@
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
-package io.github.antoinepirlot.satunes.utils
+package io.github.antoinepirlot.satunes.utils.utils
 
 import android.graphics.Bitmap
 import android.graphics.Canvas

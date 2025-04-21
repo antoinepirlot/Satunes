@@ -68,7 +68,7 @@ import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.ui.components.dialog.album.AlbumOptionsDialog
 import io.github.antoinepirlot.satunes.ui.utils.getRightIconAndDescription
-import io.github.antoinepirlot.satunes.utils.toCircularBitmap
+import io.github.antoinepirlot.satunes.utils.utils.toCircularBitmap
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job

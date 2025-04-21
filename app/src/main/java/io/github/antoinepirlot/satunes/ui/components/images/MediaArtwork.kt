@@ -88,6 +88,7 @@ internal fun MediaArtwork(
     contentAlignment: Alignment = Alignment.Center,
     shape: Shape? = null
 ) {
+
     val makeArtworkCircle: Boolean = satunesViewModel.artworkCircleShape || shape == CircleShape
     var mediaArtWorkModifier: Modifier = modifier.clip(
         shape = shape ?: if (makeArtworkCircle) CircleShape else RectangleShape
@@ -166,11 +167,13 @@ internal fun MediaArtwork(
                     is Album -> mediaImpl.getMusicSet().first().getAlbumArtwork(context = context)
                     else -> null
                 }
-                if (!satunesViewModel.artworkCircleShape
+                if (bitmap != null
+                    && !satunesViewModel.artworkCircleShape
                     && satunesViewModel.artworkAnimation
-                    && (mediaImpl is Music || mediaImpl is Album)
-                ) //Make it circle if the option circle is off and animation is on (it will be reflected
-                    bitmap = bitmap?.toCircularBitmap()
+                    && playbackViewModel.musicPlaying == mediaImpl
+                )
+                //In other words, it will make artwork circle if the mediaImpl is the playing music (the animation with rectangular shape is ugly on artwork
+                    bitmap = bitmap.toCircularBitmap()
                 artwork = bitmap?.asImageBitmap()
             }
         }

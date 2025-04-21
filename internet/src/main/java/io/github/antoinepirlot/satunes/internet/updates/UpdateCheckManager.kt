@@ -1,16 +1,15 @@
 /*
  * This file is part of Satunes.
- *
  * Satunes is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software Foundation,
  * either version 3 of the License, or (at your option) any later version.
- * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ *  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public License along with Satunes.
- * If not, see <https://www.gnu.org/licenses/>.
+ *  You should have received a copy of the GNU General Public License along with Satunes.
+ *  If not, see <https://www.gnu.org/licenses/>.
  *
- * *** INFORMATION ABOUT THE AUTHOR *****
+ * **** INFORMATION ABOUT THE AUTHOR *****
  * The author of this file is Antoine Pirlot, the owner of this project.
  * You find this original project on Codeberg.
  *
@@ -31,9 +30,9 @@ import io.github.antoinepirlot.satunes.internet.updates.Versions.ALPHA
 import io.github.antoinepirlot.satunes.internet.updates.Versions.ALPHA_REGEX
 import io.github.antoinepirlot.satunes.internet.updates.Versions.BETA
 import io.github.antoinepirlot.satunes.internet.updates.Versions.BETA_REGEX
-import io.github.antoinepirlot.satunes.internet.updates.Versions.LATEST_RELEASE_URL
 import io.github.antoinepirlot.satunes.internet.updates.Versions.PREVIEW
 import io.github.antoinepirlot.satunes.internet.updates.Versions.PREVIEW_REGEX
+import io.github.antoinepirlot.satunes.internet.updates.Versions.RELEASES_URL
 import io.github.antoinepirlot.satunes.internet.updates.Versions.RELEASE_REGEX
 import io.github.antoinepirlot.satunes.internet.updates.Versions.TAG_RELEASE_URL
 import io.github.antoinepirlot.satunes.internet.updates.Versions.versionType
@@ -90,7 +89,7 @@ object UpdateCheckManager {
         //Check update
         try {
             //Get all versions
-            val res: Response = getUrlResponse(context = context, url = LATEST_RELEASE_URL)!!
+            val res: Response = getUrlResponse(context = context, url = RELEASES_URL)!!
             if (!res.isSuccessful) {
                 res.close()
                 UpdateAvailableStatus.CANNOT_CHECK.updateLink = null

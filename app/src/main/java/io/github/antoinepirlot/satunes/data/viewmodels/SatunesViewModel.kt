@@ -48,6 +48,7 @@ import io.github.antoinepirlot.satunes.database.models.FoldersSelection
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.database.models.Playlist
+import io.github.antoinepirlot.satunes.database.models.UpdateChannel
 import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
@@ -97,6 +98,8 @@ class SatunesViewModel : ViewModel() {
     private val _artworkCircleShape: MutableState<Boolean> = SettingsManager.artworkCircleShape
     private val _logsActivation: MutableState<Boolean> = SettingsManager.logsActivation
 
+    private val _updateChannel: MutableState<UpdateChannel> = SettingsManager.updateChannel
+
     val uiState: StateFlow<SatunesUiState> = _uiState.asStateFlow()
 
     val isLoadingData: Boolean by _isLoadingData
@@ -120,6 +123,8 @@ class SatunesViewModel : ViewModel() {
     val artworkAnimation: Boolean by this._artworkAnimation
     val artworkCircleShape: Boolean by this._artworkCircleShape
     val logsActivation: Boolean by this._logsActivation
+
+    val updateChannel: UpdateChannel by this._updateChannel
 
     fun loadSettings() {
         try {
@@ -414,9 +419,13 @@ class SatunesViewModel : ViewModel() {
         }
     }
 
+    /**
+     * Reset update status.
+     * @param force will make it always work if it's true. Otherwise it will be reset only if the status is not Available.
+     */
     @RequiresApi(Build.VERSION_CODES.M)
-    fun resetUpdatesStatus() {
-        if (updateAvailableStatus != UpdateAvailableStatus.AVAILABLE) {
+    fun resetUpdatesStatus(force: Boolean = false) {
+        if (force || updateAvailableStatus != UpdateAvailableStatus.AVAILABLE) {
             updateAvailableStatus = UpdateAvailableStatus.UNDEFINED
         }
     }
@@ -769,5 +778,20 @@ class SatunesViewModel : ViewModel() {
             }
         )
 
+    }
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    fun selectUpdateChannel(channel: UpdateChannel) {
+        try {
+            CoroutineScope(Dispatchers.IO).launch {
+                if (updateChannel != channel) resetUpdatesStatus(force = true)
+                SettingsManager.selectUpdateChannel(
+                    context = MainActivity.instance.applicationContext,
+                    channel = channel
+                )
+            }
+        } catch (_: Throwable) {
+            _logger?.severe("Error while selecting update channel '${channel.name}'")
+        }
     }
 }

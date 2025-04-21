@@ -1,13 +1,17 @@
 /*
  * This file is part of Satunes.
+ *
  * Satunes is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software Foundation,
  * either version 3 of the License, or (at your option) any later version.
- *  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ *
+ * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
  * See the GNU General Public License for more details.
  *  You should have received a copy of the GNU General Public License along with Satunes.
- *  If not, see <https://www.gnu.org/licenses/>.
+ *
+ * If not, see <https://www.gnu.org/licenses/>.
  *
  * **** INFORMATION ABOUT THE AUTHOR *****
  * The author of this file is Antoine Pirlot, the owner of this project.
@@ -25,17 +29,18 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import io.github.antoinepirlot.satunes.database.models.UpdateChannel
+import io.github.antoinepirlot.satunes.database.models.UpdateChannel.ALPHA
+import io.github.antoinepirlot.satunes.database.models.UpdateChannel.BETA
+import io.github.antoinepirlot.satunes.database.models.UpdateChannel.PREVIEW
+import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.internet.InternetManager
-import io.github.antoinepirlot.satunes.internet.updates.Versions.ALPHA
 import io.github.antoinepirlot.satunes.internet.updates.Versions.ALPHA_REGEX
-import io.github.antoinepirlot.satunes.internet.updates.Versions.BETA
 import io.github.antoinepirlot.satunes.internet.updates.Versions.BETA_REGEX
-import io.github.antoinepirlot.satunes.internet.updates.Versions.PREVIEW
 import io.github.antoinepirlot.satunes.internet.updates.Versions.PREVIEW_REGEX
 import io.github.antoinepirlot.satunes.internet.updates.Versions.RELEASES_URL
 import io.github.antoinepirlot.satunes.internet.updates.Versions.RELEASE_REGEX
 import io.github.antoinepirlot.satunes.internet.updates.Versions.TAG_RELEASE_URL
-import io.github.antoinepirlot.satunes.internet.updates.Versions.versionType
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -121,12 +126,12 @@ object UpdateCheckManager {
      * Generate the update URL and return it.
      *
      * @param page the html page of github releases
-     * @param currentVersion the version of the installed app (e.g. vx.y.z[-[versionType]])
+     * @param currentVersion the version of the installed app (e.g. vx.y.z[-versionType])
      *
      * @return the generated update url from page or null if the app is up to date.
      */
     private fun getUpdateUrl(page: String, currentVersion: String): String? {
-        val regex: Regex = when (versionType) {
+        val regex: Regex = when (SettingsManager.updateChannel.value) {
             ALPHA -> ALPHA_REGEX
             BETA -> BETA_REGEX
             PREVIEW -> PREVIEW_REGEX
@@ -137,7 +142,18 @@ object UpdateCheckManager {
                 page,
                 0
             )?.value?.split("/")?.last()?.split("\"")?.first()
-        return if (latestVersion != null && latestVersion != currentVersion) {
+        if (latestVersion == null) {
+            val message =
+                "No update url found. Latest version is $latestVersion & currentVersion is $currentVersion"
+            _logger?.warning(message)
+            return null
+        }
+
+        return if (this.isUpdateAvailable(
+                latestVersion = latestVersion,
+                currentVersion = currentVersion
+            )
+        ) {
             UpdateCheckManager.latestVersion.value = latestVersion
             "$TAG_RELEASE_URL/$latestVersion"
         } else {
@@ -148,18 +164,52 @@ object UpdateCheckManager {
         }
     }
 
+    /**
+     * Check if an update is available based on update channel.
+     * The scope of channel is based on [UpdateChannel] order
+     *      - Alpha gets all versions
+     *      - Beta gets Beta, Preview and Stable releases
+     *      - Preview gets Preview and Stable releases
+     *      - Stable only gets Stable releases
+     */
+    private fun isUpdateAvailable(latestVersion: String, currentVersion: String): Boolean {
+        val updateChannel: UpdateChannel = SettingsManager.updateChannel.value
+        val latestSplit: List<String> = latestVersion.split("-")
+        val currentSplit: List<String> = currentVersion.split("-")
+
+        val latestVersionToCheck: List<String> = latestSplit[0].split(".")
+        val currentVersionToCheck: List<String> = currentSplit[0].split(".")
+        var numberIncreased: Boolean = false
+        for (i: Int in 1..latestVersionToCheck.lastIndex) //1 to skip the 0 as it is 'v' char
+            if (latestVersionToCheck[i].toInt() > currentVersionToCheck[i].toInt()) {
+                numberIncreased = true
+                break
+            }
+
+        if (numberIncreased && latestSplit.size == 1) return true
+        else if (latestSplit.size == 1) return false
+        else if (updateChannel == UpdateChannel.STABLE) return false
+
+        val latestChannel: UpdateChannel =
+            if (latestSplit.size > 1) UpdateChannel.getUpdateChannel(name = latestSplit[1]) else UpdateChannel.STABLE
+        val currentChannel: UpdateChannel =
+            if (currentSplit.size > 1) UpdateChannel.getUpdateChannel(name = currentSplit[1]) else UpdateChannel.STABLE
+
+        if (updateChannel.order <= latestChannel.order) { //latest is in the channel scope
+            if (latestChannel.order < currentChannel.order) return true //Decreasing channel
+            if (latestChannel.order == currentChannel.order)
+                if (latestSplit[2].toInt() > currentSplit[2].toInt()) return true //Upgrading number in same channel
+        }
+
+        return false
+    }
+
     fun getCurrentVersion(context: Context): String {
         val versionName: String = try {
             context.packageManager.getPackageInfo(context.packageName, 0).versionName!!
         } catch (e: PackageManager.NameNotFoundException) {
             _logger?.severe(e.message)
             throw e
-        }
-
-        versionType = try {
-            versionName.split("-")[1]
-        } catch (_: IndexOutOfBoundsException) {
-            "" //blank for release
         }
         return versionName
     }

@@ -1,13 +1,17 @@
 /*
  * This file is part of Satunes.
+ *
  * Satunes is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software Foundation,
  * either version 3 of the License, or (at your option) any later version.
- *  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ *
+ * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
  * See the GNU General Public License for more details.
  *  You should have received a copy of the GNU General Public License along with Satunes.
- *  If not, see <https://www.gnu.org/licenses/>.
+ *
+ * If not, see <https://www.gnu.org/licenses/>.
  *
  * **** INFORMATION ABOUT THE AUTHOR *****
  * The author of this file is Antoine Pirlot, the owner of this project.
@@ -25,17 +29,17 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import io.github.antoinepirlot.satunes.database.models.UpdateChannel.ALPHA
+import io.github.antoinepirlot.satunes.database.models.UpdateChannel.BETA
+import io.github.antoinepirlot.satunes.database.models.UpdateChannel.PREVIEW
+import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.internet.InternetManager
-import io.github.antoinepirlot.satunes.internet.updates.Versions.ALPHA
 import io.github.antoinepirlot.satunes.internet.updates.Versions.ALPHA_REGEX
-import io.github.antoinepirlot.satunes.internet.updates.Versions.BETA
 import io.github.antoinepirlot.satunes.internet.updates.Versions.BETA_REGEX
-import io.github.antoinepirlot.satunes.internet.updates.Versions.PREVIEW
 import io.github.antoinepirlot.satunes.internet.updates.Versions.PREVIEW_REGEX
 import io.github.antoinepirlot.satunes.internet.updates.Versions.RELEASES_URL
 import io.github.antoinepirlot.satunes.internet.updates.Versions.RELEASE_REGEX
 import io.github.antoinepirlot.satunes.internet.updates.Versions.TAG_RELEASE_URL
-import io.github.antoinepirlot.satunes.internet.updates.Versions.versionType
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -121,12 +125,12 @@ object UpdateCheckManager {
      * Generate the update URL and return it.
      *
      * @param page the html page of github releases
-     * @param currentVersion the version of the installed app (e.g. vx.y.z[-[versionType]])
+     * @param currentVersion the version of the installed app (e.g. vx.y.z[-versionType])
      *
      * @return the generated update url from page or null if the app is up to date.
      */
     private fun getUpdateUrl(page: String, currentVersion: String): String? {
-        val regex: Regex = when (versionType) {
+        val regex: Regex = when (SettingsManager.updateChannel.value) {
             ALPHA -> ALPHA_REGEX
             BETA -> BETA_REGEX
             PREVIEW -> PREVIEW_REGEX
@@ -154,12 +158,6 @@ object UpdateCheckManager {
         } catch (e: PackageManager.NameNotFoundException) {
             _logger?.severe(e.message)
             throw e
-        }
-
-        versionType = try {
-            versionName.split("-")[1]
-        } catch (_: IndexOutOfBoundsException) {
-            "" //blank for release
         }
         return versionName
     }

@@ -25,6 +25,7 @@ import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.Rect
 import android.graphics.RectF
+import androidx.core.graphics.createBitmap
 
 /**
  * @author Antoine Pirlot 20/04/2025
@@ -36,7 +37,7 @@ import android.graphics.RectF
  */
 fun Bitmap.toCircularBitmap(): Bitmap {
     val size: Int = minOf(width, height)
-    val output: Bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
+    val output: Bitmap = createBitmap(size, size)
     val canvas = Canvas(output)
 
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)

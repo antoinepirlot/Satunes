@@ -44,8 +44,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.hapticfeedback.HapticFeedback
@@ -89,7 +91,9 @@ internal fun MediaArtwork(
     shape: Shape? = null
 ) {
     val makeArtworkCircle: Boolean = satunesViewModel.artworkCircleShape || shape == CircleShape
-    var mediaArtWorkModifier: Modifier = modifier
+    var mediaArtWorkModifier: Modifier = modifier.clip(
+        shape = shape ?: if (makeArtworkCircle) CircleShape else RectangleShape
+    )
     val isPlaying: Boolean = playbackViewModel.isPlaying
     val haptics: HapticFeedback = LocalHapticFeedback.current
     val screenWidthDp = LocalConfiguration.current.screenWidthDp

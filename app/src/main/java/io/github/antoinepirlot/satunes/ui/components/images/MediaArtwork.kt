@@ -57,7 +57,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.models.ScreenSizes
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
@@ -73,7 +72,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import io.github.antoinepirlot.satunes.icons.R as RIcon
 
 /**
  * @author Antoine Pirlot on 29/02/24
@@ -168,10 +166,11 @@ internal fun MediaArtwork(
                     is Album -> mediaImpl.getMusicSet().first().getAlbumArtwork(context = context)
                     else -> null
                 }
-                if (bitmap == null && (mediaImpl is Music || mediaImpl is Album))
-                    bitmap = context.getDrawable(RIcon.mipmap.empty_album_artwork_foreground)!!
-                        .toBitmap()
-                if (makeArtworkCircle) bitmap = bitmap?.toCircularBitmap()
+                if (!satunesViewModel.artworkCircleShape
+                    && satunesViewModel.artworkAnimation
+                    && (mediaImpl is Music || mediaImpl is Album)
+                ) //Make it circle if the option circle is off and animation is on (it will be reflected
+                    bitmap = bitmap?.toCircularBitmap()
                 artwork = bitmap?.asImageBitmap()
             }
         }

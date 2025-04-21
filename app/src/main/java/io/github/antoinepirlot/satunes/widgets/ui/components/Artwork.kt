@@ -23,18 +23,12 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.core.graphics.drawable.toBitmap
 import androidx.glance.GlanceComposable
 import androidx.glance.GlanceModifier
 import androidx.glance.Image
 import androidx.glance.ImageProvider
 import androidx.glance.LocalContext
 import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
-import io.github.antoinepirlot.satunes.utils.utils.toCircularBitmap
-import io.github.antoinepirlot.satunes.icons.R as RIcon
 
 /**
  * @author Antoine Pirlot on 20/08/2024
@@ -48,12 +42,7 @@ internal fun Artwork(
     music: Music,
 ) {
     val context: Context = LocalContext.current
-    val artworkCircleShape: Boolean by remember { SettingsManager.artworkCircleShape }
-
-    var artwork: Bitmap? = music.getAlbumArtwork(context = context)
-    if (artwork == null)
-        artwork = context.getDrawable(RIcon.mipmap.empty_album_artwork_foreground)!!.toBitmap()
-    if (artworkCircleShape) artwork = artwork.toCircularBitmap()
+    var artwork: Bitmap = music.getAlbumArtwork(context = context)
 
     Image(
         modifier = modifier,

@@ -1,16 +1,15 @@
 /*
  * This file is part of Satunes.
- *
  * Satunes is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software Foundation,
  * either version 3 of the License, or (at your option) any later version.
- * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ *  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public License along with Satunes.
- * If not, see <https://www.gnu.org/licenses/>.
+ *  You should have received a copy of the GNU General Public License along with Satunes.
+ *  If not, see <https://www.gnu.org/licenses/>.
  *
- * *** INFORMATION ABOUT THE AUTHOR *****
+ * **** INFORMATION ABOUT THE AUTHOR *****
  * The author of this file is Antoine Pirlot, the owner of this project.
  * You find this original project on Codeberg.
  *
@@ -26,14 +25,19 @@ import android.graphics.BitmapFactory
 import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.net.Uri.encode
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.core.graphics.drawable.toBitmap
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
+import io.github.antoinepirlot.satunes.utils.utils.toCircularBitmap
 import java.util.Date
+import io.github.antoinepirlot.satunes.icons.R as RIcon
+
 
 /**
  * @author Antoine Pirlot on 27/03/2024
@@ -113,8 +117,8 @@ class Music(
             .build()
     }
 
-    fun getAlbumArtwork(context: Context): Bitmap? {
-        return try {
+    fun getAlbumArtwork(context: Context): Bitmap {
+        var bitmap: Bitmap? = try {
             val mediaMetadataRetriever = MediaMetadataRetriever()
             mediaMetadataRetriever.setDataSource(context, uri)
             val artwork: ByteArray? = mediaMetadataRetriever.embeddedPicture
@@ -125,6 +129,12 @@ class Music(
             _logger?.warning(e.message)
             null
         }
+        if (bitmap == null)
+            bitmap = AppCompatResources.getDrawable(
+                context,
+                RIcon.mipmap.empty_album_artwork_foreground
+            )!!.toBitmap()
+        return if (SettingsManager.artworkCircleShape.value) bitmap.toCircularBitmap() else bitmap
     }
 
     /**

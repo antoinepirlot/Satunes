@@ -776,6 +776,7 @@ class SatunesViewModel : ViewModel() {
 
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     fun selectUpdateChannel(channel: UpdateChannel) {
         try {
             CoroutineScope(Dispatchers.IO).launch {

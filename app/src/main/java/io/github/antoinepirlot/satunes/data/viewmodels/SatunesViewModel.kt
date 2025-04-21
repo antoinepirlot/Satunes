@@ -419,9 +419,13 @@ class SatunesViewModel : ViewModel() {
         }
     }
 
+    /**
+     * Reset update status.
+     * @param force will make it always work if it's true. Otherwise it will be reset only if the status is not Available.
+     */
     @RequiresApi(Build.VERSION_CODES.M)
-    fun resetUpdatesStatus() {
-        if (updateAvailableStatus != UpdateAvailableStatus.AVAILABLE) {
+    fun resetUpdatesStatus(force: Boolean = false) {
+        if (force || updateAvailableStatus != UpdateAvailableStatus.AVAILABLE) {
             updateAvailableStatus = UpdateAvailableStatus.UNDEFINED
         }
     }
@@ -780,6 +784,7 @@ class SatunesViewModel : ViewModel() {
     fun selectUpdateChannel(channel: UpdateChannel) {
         try {
             CoroutineScope(Dispatchers.IO).launch {
+                if (updateChannel != channel) resetUpdatesStatus(force = true)
                 SettingsManager.selectUpdateChannel(
                     context = MainActivity.instance.applicationContext,
                     channel = channel

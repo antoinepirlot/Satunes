@@ -28,11 +28,17 @@ import io.github.antoinepirlot.satunes.database.R
 /**
  * @author Antoine Pirlot 21/04/2025
  */
-enum class UpdateChannel(val stringId: Int) {
-    ALPHA(R.string.alpha_channel_button_text),
-    BETA(R.string.beta_channel_button_text),
-    PREVIEW(R.string.preview_channel_button_text),
-    STABLE(R.string.stable_channel_button_text);
+enum class UpdateChannel(
+    val stringId: Int,
+    /**
+     * Comparable order, lower number indicate greater value
+     */
+    val order: Int
+) : Comparable<UpdateChannel> {
+    ALPHA(R.string.alpha_channel_button_text, order = 0),
+    BETA(R.string.beta_channel_button_text, order = 1),
+    PREVIEW(R.string.preview_channel_button_text, order = 2),
+    STABLE(R.string.stable_channel_button_text, order = 3);
 
     companion object {
         /**
@@ -45,7 +51,7 @@ enum class UpdateChannel(val stringId: Int) {
          */
         fun getUpdateChannel(name: String): UpdateChannel {
             for (channel: UpdateChannel in UpdateChannel.entries)
-                if (channel.name == name) return channel
+                if (channel.name == name.uppercase()) return channel
             throw IllegalArgumentException("Wrong name: $name.")
         }
     }

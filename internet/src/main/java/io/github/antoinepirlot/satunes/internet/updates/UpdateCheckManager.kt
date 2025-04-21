@@ -29,6 +29,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import io.github.antoinepirlot.satunes.database.models.UpdateChannel
 import io.github.antoinepirlot.satunes.database.models.UpdateChannel.ALPHA
 import io.github.antoinepirlot.satunes.database.models.UpdateChannel.BETA
 import io.github.antoinepirlot.satunes.database.models.UpdateChannel.PREVIEW
@@ -141,7 +142,18 @@ object UpdateCheckManager {
                 page,
                 0
             )?.value?.split("/")?.last()?.split("\"")?.first()
-        return if (latestVersion != null && latestVersion != currentVersion) {
+        if (latestVersion == null) {
+            val message =
+                "No update url found. Latest version is $latestVersion & currentVersion is $currentVersion"
+            _logger?.warning(message)
+            return null
+        }
+
+        return if (this.isUpdateAvailable(
+                latestVersion = latestVersion,
+                currentVersion = currentVersion
+            )
+        ) {
             UpdateCheckManager.latestVersion.value = latestVersion
             "$TAG_RELEASE_URL/$latestVersion"
         } else {
@@ -150,6 +162,46 @@ object UpdateCheckManager {
             _logger?.warning(message)
             null
         }
+    }
+
+    /**
+     * Check if an update is available based on update channel.
+     * The scope of channel is based on [UpdateChannel] order
+     *      - Alpha gets all versions
+     *      - Beta gets Beta, Preview and Stable releases
+     *      - Preview gets Preview and Stable releases
+     *      - Stable only gets Stable releases
+     */
+    private fun isUpdateAvailable(latestVersion: String, currentVersion: String): Boolean {
+        val updateChannel: UpdateChannel = SettingsManager.updateChannel.value
+        val latestSplit: List<String> = latestVersion.split("-")
+        val currentSplit: List<String> = currentVersion.split("-")
+
+        val latestVersionToCheck: List<String> = latestSplit[0].split(".")
+        val currentVersionToCheck: List<String> = currentSplit[0].split(".")
+        var numberIncreased: Boolean = false
+        for (i: Int in 1..latestVersionToCheck.lastIndex) //1 to skip the 0 as it is 'v' char
+            if (latestVersionToCheck[i].toInt() > currentVersionToCheck[i].toInt()) {
+                numberIncreased = true
+                break
+            }
+
+        if (numberIncreased && latestSplit.size == 1) return true
+        else if (latestSplit.size == 1) return false
+        else if (updateChannel == UpdateChannel.STABLE) return false
+
+        val latestChannel: UpdateChannel =
+            if (latestSplit.size > 1) UpdateChannel.getUpdateChannel(name = latestSplit[1]) else UpdateChannel.STABLE
+        val currentChannel: UpdateChannel =
+            if (currentSplit.size > 1) UpdateChannel.getUpdateChannel(name = currentSplit[1]) else UpdateChannel.STABLE
+
+        if (updateChannel.order <= latestChannel.order) { //latest is in the channel scope
+            if (latestChannel.order < currentChannel.order) return true //Decreasing channel
+            if (latestChannel.order == currentChannel.order)
+                if (latestSplit[2].toInt() > currentSplit[2].toInt()) return true //Upgrading number in same channel
+        }
+
+        return false
     }
 
     fun getCurrentVersion(context: Context): String {

@@ -31,14 +31,14 @@ import io.github.antoinepirlot.satunes.database.R
 enum class UpdateChannel(
     val stringId: Int,
     /**
-     * Comparable order, lower number indicate greater value
+     * Higher value indicates stability score (highest is most stable)
      */
-    val order: Int
+    val stability: Int
 ) : Comparable<UpdateChannel> {
-    ALPHA(R.string.alpha_channel_button_text, order = 0),
-    BETA(R.string.beta_channel_button_text, order = 1),
-    PREVIEW(R.string.preview_channel_button_text, order = 2),
-    STABLE(R.string.stable_channel_button_text, order = 3);
+    ALPHA(R.string.alpha_channel_button_text, stability = 0),
+    BETA(R.string.beta_channel_button_text, stability = 1),
+    PREVIEW(R.string.preview_channel_button_text, stability = 2),
+    STABLE(R.string.stable_channel_button_text, stability = 3);
 
     companion object {
         /**

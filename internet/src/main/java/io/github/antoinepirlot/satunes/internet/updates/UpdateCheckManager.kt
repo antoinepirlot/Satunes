@@ -174,34 +174,40 @@ object UpdateCheckManager {
      */
     private fun isUpdateAvailable(latestVersion: String, currentVersion: String): Boolean {
         val updateChannel: UpdateChannel = SettingsManager.updateChannel.value
-        val latestSplit: List<String> = latestVersion.split("-")
-        val currentSplit: List<String> = currentVersion.split("-")
+        val latestSplit: List<String> =
+            latestVersion.split("v")[1].split("-") //Removes the first letter 'v'
+        val currentSplit: List<String> =
+            currentVersion.split("v")[1].split("-") //Removes the first letter 'v'
+        val latestChannel: UpdateChannel =
+            if (latestSplit.size > 1) UpdateChannel.getUpdateChannel(name = latestSplit[1])
+            else UpdateChannel.STABLE
+        val currentChannel: UpdateChannel =
+            if (currentSplit.size > 1) UpdateChannel.getUpdateChannel(name = currentSplit[1])
+            else UpdateChannel.STABLE
 
+        var numberIncreased = false
         val latestVersionToCheck: List<String> = latestSplit[0].split(".")
         val currentVersionToCheck: List<String> = currentSplit[0].split(".")
-        var numberIncreased: Boolean = false
-        for (i: Int in 1..latestVersionToCheck.lastIndex) //1 to skip the 0 as it is 'v' char
-            if (latestVersionToCheck[i].toInt() > currentVersionToCheck[i].toInt()) {
+        for (i: Int in 0..latestVersionToCheck.lastIndex)  //1 to skip the 0 as it is 'v' char
+            if (latestVersionToCheck[i].toInt() < currentVersionToCheck[i].toInt()) break
+            else if (latestVersionToCheck[i].toInt() > currentVersionToCheck[i].toInt()) {
                 numberIncreased = true
                 break
             }
 
-        if (numberIncreased && latestSplit.size == 1) return true
-        else if (latestSplit.size == 1) return false
-        else if (updateChannel == UpdateChannel.STABLE) return false
+        //Here the 3 number have changed (vx.y.z...)
+        if (numberIncreased) return latestChannel.stability >= updateChannel.stability
+        else {
+            val latestNumber: Int = if (latestSplit.size > 1) latestSplit[2].toInt() else -1
+            val currentNumber: Int = if (currentSplit.size > 1) currentSplit[2].toInt() else -1
+            numberIncreased = latestNumber > currentNumber
 
-        val latestChannel: UpdateChannel =
-            if (latestSplit.size > 1) UpdateChannel.getUpdateChannel(name = latestSplit[1]) else UpdateChannel.STABLE
-        val currentChannel: UpdateChannel =
-            if (currentSplit.size > 1) UpdateChannel.getUpdateChannel(name = currentSplit[1]) else UpdateChannel.STABLE
-
-        if (updateChannel.order <= latestChannel.order) { //latest is in the channel scope
-            if (latestChannel.order < currentChannel.order) return true //Decreasing channel
-            if (latestChannel.order == currentChannel.order)
-                if (latestSplit[2].toInt() > currentSplit[2].toInt()) return true //Upgrading number in same channel
+            //Here the last number has increased: v...-...-x
+            if (!numberIncreased) return false
+            if (latestChannel.stability <= currentChannel.stability && latestChannel.stability >= updateChannel.stability)
+                return true
+            return currentChannel.stability <= updateChannel.stability && latestChannel.stability >= currentChannel.stability
         }
-
-        return false
     }
 
     fun getCurrentVersion(context: Context): String {

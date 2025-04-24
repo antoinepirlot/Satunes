@@ -1,13 +1,17 @@
 /*
  * This file is part of Satunes.
+ *
  * Satunes is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software Foundation,
  * either version 3 of the License, or (at your option) any later version.
- *  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ *
+ * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
  * See the GNU General Public License for more details.
  *  You should have received a copy of the GNU General Public License along with Satunes.
- *  If not, see <https://www.gnu.org/licenses/>.
+ *
+ * If not, see <https://www.gnu.org/licenses/>.
  *
  * **** INFORMATION ABOUT THE AUTHOR *****
  * The author of this file is Antoine Pirlot, the owner of this project.
@@ -37,8 +41,8 @@ android {
         applicationId = nameSpace
         minSdk = 22
         targetSdk = 35
-        versionCode = 79
-        versionName = "3.1.0-beta-1"
+        versionCode = 80
+        versionName = "3.1.0-preview-1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

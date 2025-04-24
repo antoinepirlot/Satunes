@@ -3,6 +3,25 @@ You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
 ## 3.1 (Android 5.1.1 Lollipop and later)
 
+## 3.1.0-preview-1
+
+Nouvelles fonctionnalités :
+
+* Ajout des abonnements aux canaux de mises à jour
+
+Améliorations, optimisations et dépannage :
+
+* Correction de la fenêtre d'information lors de l'ouverture des paramètres de la bibliothèque, elle
+  sera maintenant cachée de façon permanente lorsque le bouton "ok" sera cliqué
+* L'interrupteur d'inclusion/exclusion est de nouveau un simple bouton (plus d'action d'
+  interrupteur)
+* Correction du chemin trop long qui cache l'icône de la corbeille dans les paramètres de la
+  bibliothèque
+* L'image de l'album peut être arrondie dans Android Auto
+* Correction de la zone cliquable de l'illustration circulaire dans la vue de lecture (c'est
+  maintenant un cercle)
+* Tentative de correction du chargement du mauvais widget
+
 ## 3.1.0-beta-1
 
 Nouvelles fonctionnalités :

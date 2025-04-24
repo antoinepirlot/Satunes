@@ -1,13 +1,17 @@
 /*
  * This file is part of Satunes.
+ *
  * Satunes is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software Foundation,
  * either version 3 of the License, or (at your option) any later version.
- *  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ *
+ * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
  * See the GNU General Public License for more details.
  *  You should have received a copy of the GNU General Public License along with Satunes.
- *  If not, see <https://www.gnu.org/licenses/>.
+ *
+ * If not, see <https://www.gnu.org/licenses/>.
  *
  * **** INFORMATION ABOUT THE AUTHOR *****
  * The author of this file is Antoine Pirlot, the owner of this project.
@@ -19,13 +23,9 @@
 
 package io.github.antoinepirlot.satunes.widgets
 
-import androidx.glance.appwidget.GlanceAppWidget
-import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import io.github.antoinepirlot.satunes.widgets.ui.DiscPlaybackWidget
 
 /**
  * @author Antoine Pirlot 20/04/2025
  */
-class DiscPlaybackReceiver : GlanceAppWidgetReceiver() {
-    override val glanceAppWidget: GlanceAppWidget = DiscPlaybackWidget()
-}
+class DiscPlaybackReceiver : WidgetReceiver(DiscPlaybackWidget())

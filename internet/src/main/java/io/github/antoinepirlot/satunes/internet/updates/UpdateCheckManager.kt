@@ -175,9 +175,15 @@ object UpdateCheckManager {
     private fun isUpdateAvailable(latestVersion: String, currentVersion: String): Boolean {
         val updateChannel: UpdateChannel = SettingsManager.updateChannel.value
         val latestSplit: List<String> =
-            latestVersion.split("v")[1].split("-") //Removes the first letter 'v'
+            latestVersion.split(
+                "v",
+                limit = 2
+            )[1].split("-") //Removes the first letter 'v' and limit 2 to prevent splitting "preview"
         val currentSplit: List<String> =
-            currentVersion.split("v")[1].split("-") //Removes the first letter 'v'
+            currentVersion.split(
+                "v",
+                limit = 2
+            )[1].split("-") //Removes the first letter 'v' and limit 2 to prevent splitting "preview"
         val latestChannel: UpdateChannel =
             if (latestSplit.size > 1) UpdateChannel.getUpdateChannel(name = latestSplit[1])
             else UpdateChannel.STABLE

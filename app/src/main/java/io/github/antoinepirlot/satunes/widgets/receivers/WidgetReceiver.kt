@@ -21,7 +21,7 @@
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
-package io.github.antoinepirlot.satunes.widgets
+package io.github.antoinepirlot.satunes.widgets.receivers
 
 import android.appwidget.AppWidgetManager
 import android.content.Context
@@ -29,6 +29,7 @@ import androidx.glance.GlanceId
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
+import io.github.antoinepirlot.satunes.widgets.PlaybackWidget
 import kotlinx.coroutines.runBlocking
 
 /**

@@ -21,11 +21,12 @@
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
-package io.github.antoinepirlot.satunes.widgets
+package io.github.antoinepirlot.satunes.widgets.receivers
 
-import io.github.antoinepirlot.satunes.widgets.ui.DiscPlaybackWidget
+import io.github.antoinepirlot.satunes.widgets.ui.ClassicPlaybackWidget
 
 /**
- * @author Antoine Pirlot 20/04/2025
+ * @author Antoine Pirlot on 20/08/2024
  */
-class DiscPlaybackReceiver : WidgetReceiver(DiscPlaybackWidget())
+
+class ClassicPlaybackReceiver : WidgetReceiver(ClassicPlaybackWidget())

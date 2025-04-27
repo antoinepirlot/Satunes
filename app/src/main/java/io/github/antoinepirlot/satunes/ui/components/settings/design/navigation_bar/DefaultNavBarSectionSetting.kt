@@ -4,13 +4,16 @@
  * Satunes is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software Foundation,
  * either version 3 of the License, or (at your option) any later version.
+ *
  * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
  * See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public License along with Satunes.
+ *  You should have received a copy of the GNU General Public License along with Satunes.
+ *
  * If not, see <https://www.gnu.org/licenses/>.
  *
- * *** INFORMATION ABOUT THE AUTHOR *****
+ * **** INFORMATION ABOUT THE AUTHOR *****
  * The author of this file is Antoine Pirlot, the owner of this project.
  * You find this original project on Codeberg.
  *
@@ -20,19 +23,10 @@
 
 package io.github.antoinepirlot.satunes.ui.components.settings.design.navigation_bar
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -42,39 +36,23 @@ import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.allNavBarSections
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.ui.components.images.Icon
+import io.github.antoinepirlot.satunes.ui.components.forms.SatunesDropDownMenu
 
 /**
  * @author Antoine Pirlot on 29/08/2024
  */
-
 @Composable
 internal fun DefaultNavBarSectionSetting(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
 ) {
-    var expanded: Boolean by remember { mutableStateOf(false) }
     val selectedSection: NavBarSection = satunesViewModel.defaultNavBarSection
-
-    Row(
-        modifier = modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween,
-    ) {
-        NormalText(text = stringResource(id = R.string.default_section_setting_content))
-        Box {
-            TextButton(onClick = { expanded = true }) {
-                Row {
-                    Icon(
-                        icon = if (expanded) SatunesIcons.CLOSE_DROPDOWN_MENU
-                        else SatunesIcons.OPEN_DROPDOWN_MENU
-                    )
-                    NormalText(text = stringResource(id = selectedSection.stringId))
-                }
-            }
-            Menu(expanded = expanded, onDismissRequest = { expanded = false })
-        }
+    SatunesDropDownMenu(
+        modifier = modifier,
+        title = stringResource(id = R.string.default_section_setting_content),
+        selectedItemText = stringResource(id = selectedSection.stringId)
+    ) { expanded: Boolean, onDismissRequest: () -> Unit ->
+        Menu(expanded = expanded, onDismissRequest = onDismissRequest)
     }
 }
 

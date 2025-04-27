@@ -48,6 +48,7 @@ import kotlinx.serialization.json.Json
  * @author Antoine Pirlot 03/02/2025
  */
 internal object DesignSettings {
+
     // DEFAULT VALUES
     private const val DEFAULT_FOLDERS_NAVBAR: Boolean = true
     private const val DEFAULT_ARTISTS_NAVBAR: Boolean = true
@@ -63,6 +64,8 @@ internal object DesignSettings {
         CustomActions.SHARE,
         CustomActions.TIMER
     )
+    private const val DEFAULT_ARTWORK_ANIMATION: Boolean = false
+    private const val DEFAULT_ARTWORK_CIRCLE_SHAPE: Boolean = false
 
     // KEYS
     private val FOLDERS_NAVBAR_PREFERENCES_KEY: Preferences.Key<Boolean> =
@@ -83,6 +86,9 @@ internal object DesignSettings {
         booleanPreferencesKey("show_first_letter")
     private val CUSTOM_ACTIONS_ORDER_KEY: Preferences.Key<String> =
         stringPreferencesKey("custom_actions_order")
+    private val ARTWORK_ANIMATION_KEY: Preferences.Key<Boolean> = booleanPreferencesKey("artwork_animation")
+    private val ARTWORK_CIRCLE_SHAPE_KEY: Preferences.Key<Boolean> =
+        booleanPreferencesKey("artwork_circle_shape")
 
     // VARIABLES
     var defaultNavBarSection: MutableState<NavBarSection> =
@@ -92,6 +98,11 @@ internal object DesignSettings {
     var showFirstLetter: Boolean = DEFAULT_SHOW_FIRST_LETTER
         private set
     val customActionsOrder: MutableList<CustomActions> = mutableStateListOf()
+
+    var artworkAnimation: MutableState<Boolean> = mutableStateOf(DEFAULT_ARTWORK_ANIMATION)
+        private set
+    var artworkCircleShape: MutableState<Boolean> = mutableStateOf(DEFAULT_ARTWORK_CIRCLE_SHAPE)
+        private set
 
 
     internal suspend fun loadSettings(context: Context) {
@@ -107,8 +118,6 @@ internal object DesignSettings {
             NavBarSection.PLAYLISTS.isEnabled.value =
                 preferences[PLAYLISTS_NAVBAR_PREFERENCES_KEY] ?: DEFAULT_PLAYLIST_NAVBAR
             showFirstLetter = preferences[SHOW_FIRST_LETTER_KEY] ?: DEFAULT_SHOW_FIRST_LETTER
-
-
             defaultNavBarSection.value = getNavBarSection(preferences[DEFAULT_NAV_BAR_SECTION_KEY])
             defaultPlaylistId.longValue =
                 preferences[DEFAULT_PLAYLIST_ID_KEY] ?: DEFAULT_PLAYLIST_ID
@@ -117,6 +126,10 @@ internal object DesignSettings {
                 this.customActionsOrder.addAll(Json.decodeFromString(preferences[CUSTOM_ACTIONS_ORDER_KEY]!!))
             else
                 this.customActionsOrder.addAll(elements = DEFAULT_CUSTOM_ACTIONS_ORDER)
+
+            artworkAnimation.value = preferences[ARTWORK_ANIMATION_KEY] ?: DEFAULT_ARTWORK_ANIMATION
+            artworkCircleShape.value =
+                preferences[ARTWORK_CIRCLE_SHAPE_KEY] ?: DEFAULT_ARTWORK_CIRCLE_SHAPE
         }.first() //Without .first() settings are not loaded correctly
     }
 
@@ -235,10 +248,24 @@ internal object DesignSettings {
         }
     }
 
+    suspend fun switchArtworkAnimation(context: Context) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            this.artworkAnimation.value = !this.artworkAnimation.value
+            preferences[ARTWORK_ANIMATION_KEY] = this.artworkAnimation.value
+        }
+    }
+
+    suspend fun switchArtworkCircleShape(context: Context) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            this.artworkCircleShape.value = !this.artworkCircleShape.value
+            preferences[ARTWORK_CIRCLE_SHAPE_KEY] = this.artworkCircleShape.value
+        }
+    }
+
     suspend fun resetListsSettings(context: Context) {
         context.dataStore.edit { preferences: MutablePreferences ->
             this.showFirstLetter = DEFAULT_SHOW_FIRST_LETTER
-            preferences[SHOW_FIRST_LETTER_KEY] = this.showFirstLetter
+            preferences[SHOW_FIRST_LETTER_KEY] = DEFAULT_SHOW_FIRST_LETTER
         }
     }
 
@@ -250,9 +277,19 @@ internal object DesignSettings {
         }
     }
 
+    suspend fun resetArtworkSettings(context: Context) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            this.artworkAnimation.value = DEFAULT_ARTWORK_ANIMATION
+            preferences[ARTWORK_ANIMATION_KEY] = DEFAULT_ARTWORK_ANIMATION
+            this.artworkCircleShape.value = DEFAULT_ARTWORK_CIRCLE_SHAPE
+            preferences[ARTWORK_CIRCLE_SHAPE_KEY] = this.artworkCircleShape.value
+        }
+    }
+
     suspend fun resetAll(context: Context) {
         this.resetNavigationBarSettings(context = context)
         this.resetListsSettings(context = context)
         this.resetCustomActions(context = context)
+        this.resetArtworkSettings(context = context)
     }
 }

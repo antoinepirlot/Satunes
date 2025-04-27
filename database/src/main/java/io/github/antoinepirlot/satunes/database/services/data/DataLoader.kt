@@ -1,16 +1,15 @@
 /*
  * This file is part of Satunes.
- *
  * Satunes is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software Foundation,
  * either version 3 of the License, or (at your option) any later version.
- * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ *  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public License along with Satunes.
- * If not, see <https://www.gnu.org/licenses/>.
+ *  You should have received a copy of the GNU General Public License along with Satunes.
+ *  If not, see <https://www.gnu.org/licenses/>.
  *
- * *** INFORMATION ABOUT THE AUTHOR *****
+ * ** INFORMATION ABOUT THE AUTHOR *****
  * The author of this file is Antoine Pirlot, the owner of this project.
  * You find this original project on Codeberg.
  *
@@ -31,7 +30,6 @@ import io.github.antoinepirlot.satunes.database.R
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Folder
-import io.github.antoinepirlot.satunes.database.models.FoldersSelection
 import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
@@ -121,20 +119,36 @@ object DataLoader {
         this.selection = ""
         this.selection_args = arrayOf()
 
-        val foldersSelection: FoldersSelection = SettingsManager.foldersSelectionSelected
-        for (path: String in SettingsManager.foldersPathsSelectedSet) {
-            if (path != SettingsManager.foldersPathsSelectedSet.first()) {
-                this.selection += foldersSelection.andOrQueryAttribute + ' '
-            }
-            this.selection += "${MediaStore.Audio.Media.DATA} "
-            this.selection += "${foldersSelection.likeQueryAttribute} ? "
-
-            if (path.split("/")[1] == "0") {
-                this.selection_args += "/storage/emulated$path" // the first '/' is already in the path
-            } else {
-                this.selection_args += "/storage$path" // the first '/' is already in the path
-            }
+        val hasExcluding: Boolean = SettingsManager.foldersPathsExcludingCollection.isNotEmpty()
+        if (SettingsManager.foldersPathsIncludingCollection.isNotEmpty()) {
+            this.addPaths(SettingsManager.foldersPathsIncludingCollection, or = true, like = true)
+            if (hasExcluding) this.selection += "AND "
         }
+        if (hasExcluding)
+            this.addPaths(SettingsManager.foldersPathsExcludingCollection, or = false, like = false)
+    }
+
+
+    /**
+     * Add paths to selection
+     * @param list the list of [String] references paths
+     * @param or a [Boolean], true if the comparator keyword is OR (true) or AND (false).
+     * @param like a [Boolean], true if the like comparator is LIKE (true) or NOT LIKE (false)
+     */
+    private fun addPaths(list: Collection<String>, or: Boolean, like: Boolean) {
+        if (or) this.selection += '(' //Because the last or condition must not be associated by other AND
+        for (path: String in list) {
+            if (path != list.first()) this.selection += if (or) "OR " else "AND "
+
+            this.selection += "${MediaStore.Audio.Media.DATA} "
+            this.selection += if (like) "LIKE ? " else "NOT LIKE ? "
+
+            if (path.split("/")[1] == "0")
+                this.selection_args += "/storage/emulated$path" // the first '/' is already in the path
+            else
+                this.selection_args += "/storage$path" // the first '/' is already in the path
+        }
+        if (or) this.selection += ')' //Because the last or condition must not be associated by other AND
     }
 
     fun resetAllData() {
@@ -161,7 +175,6 @@ object DataLoader {
 
         if (
             this@DataLoader.selection_args.isNotEmpty()
-            || SettingsManager.foldersSelectionSelected != FoldersSelection.INCLUDE
         ) {
             context.contentResolver.query(
                 URI,
@@ -369,19 +382,19 @@ object DataLoader {
         if (rootFolder == null) {
             // No root folders in the list
             rootFolder = Folder(title = splitPath[0])
-            DataManager.addFolder(folder = rootFolder!!)
+            DataManager.addFolder(folder = rootFolder!!) //Do not follow warning for !!
         }
 
         splitPath.removeAt(0)
-        rootFolder!!.createSubFolders(splitPath.toMutableList())
-        return rootFolder!!.getSubFolder(splitPath.toMutableList())!!
+        rootFolder!!.createSubFolders(splitPath.toMutableList()) //Do not follow warning for !!
+        return rootFolder!!.getSubFolder(splitPath.toMutableList())!! //Do not follow warning for !!
     }
 
     private fun loadArtist(context: Context, cursor: Cursor): Artist {
         // Get values of columns for a given artist.
         var name: String = try {
             cursor.getString(artistNameColumnId!!)
-        } catch (e: NullPointerException) {
+        } catch (_: NullPointerException) {
             UNKNOWN_ARTIST
         }
 
@@ -407,7 +420,7 @@ object DataLoader {
     private fun loadAlbumArtist(context: Context, cursor: Cursor): Artist {
         var name: String = try {
             cursor.getString(albumArtistColumnId!!)
-        } catch (e: NullPointerException) {
+        } catch (_: NullPointerException) {
             UNKNOWN_ARTIST
         }
 
@@ -435,7 +448,7 @@ object DataLoader {
     private fun loadAlbum(context: Context, cursor: Cursor): Album {
         var name: String = try {
             cursor.getString(albumNameColumnId!!)
-        } catch (e: NullPointerException) {
+        } catch (_: NullPointerException) {
             UNKNOWN_ALBUM
         }
 
@@ -474,7 +487,7 @@ object DataLoader {
             } else {
                 getGenreNameForAndroidQAndLess(context = context, cursor = cursor)
             }
-        } catch (e: NullPointerException) {
+        } catch (_: NullPointerException) {
             UNKNOWN_GENRE
         }
 

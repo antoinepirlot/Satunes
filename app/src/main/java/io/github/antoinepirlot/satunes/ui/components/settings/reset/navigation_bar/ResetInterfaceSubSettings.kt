@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
+import io.github.antoinepirlot.satunes.ui.components.settings.reset.design.ResetArtworkSettings
 import io.github.antoinepirlot.satunes.ui.components.settings.reset.design.ResetCustomActionsSettings
 import io.github.antoinepirlot.satunes.ui.components.settings.reset.design.ResetListsSettings
 import io.github.antoinepirlot.satunes.ui.components.settings.reset.design.ResetNavigationBarSettings
@@ -53,6 +54,8 @@ internal fun ResetInterfaceSubSettings(
         ResetCustomActionsSettings()
         Spacer(modifier = Modifier.size(size = spacerSize))
         ResetListsSettings()
+        Spacer(modifier = Modifier.size(size = spacerSize))
+        ResetArtworkSettings()
     }
 }
 

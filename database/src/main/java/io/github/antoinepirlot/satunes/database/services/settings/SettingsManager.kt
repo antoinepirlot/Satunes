@@ -4,13 +4,16 @@
  * Satunes is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software Foundation,
  * either version 3 of the License, or (at your option) any later version.
+ *
  * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
  * See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public License along with Satunes.
+ *  You should have received a copy of the GNU General Public License along with Satunes.
+ *
  * If not, see <https://www.gnu.org/licenses/>.
  *
- * *** INFORMATION ABOUT THE AUTHOR *****
+ * **** INFORMATION ABOUT THE AUTHOR *****
  * The author of this file is Antoine Pirlot, the owner of this project.
  * You find this original project on Codeberg.
  *
@@ -31,6 +34,7 @@ import io.github.antoinepirlot.satunes.database.models.BarSpeed
 import io.github.antoinepirlot.satunes.database.models.FoldersSelection
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.database.models.Playlist
+import io.github.antoinepirlot.satunes.database.models.UpdateChannel
 import io.github.antoinepirlot.satunes.database.models.custom_action.CustomActions
 import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.database.services.settings.design.DesignSettings
@@ -52,6 +56,9 @@ object SettingsManager {
     // Satunes Settings
     val whatsNewSeen: Boolean
         get() = SatunesSettings.whatsNewSeen
+    val includeExcludeSeen: Boolean
+        get() = SatunesSettings.includeExcludeSeen
+    val logsActivation: MutableState<Boolean> = SatunesSettings.logsActivation
 
     // NavBarSettings
     val defaultNavBarSection: MutableState<NavBarSection> = DesignSettings.defaultNavBarSection
@@ -78,6 +85,10 @@ object SettingsManager {
         get() = PlaybackSettings.rewindMs
     val customActionsOrder: Collection<CustomActions> = DesignSettings.customActionsOrder
 
+    //Design
+    val artworkAnimation: MutableState<Boolean> = DesignSettings.artworkAnimation
+    val artworkCircleShape: MutableState<Boolean> = DesignSettings.artworkCircleShape
+
     // Search Settings
     val foldersFilter: Boolean
         get() = SearchSettings.foldersFilter
@@ -93,9 +104,14 @@ object SettingsManager {
         get() = SearchSettings.musicsFilter
 
     // Library Settings
-    var foldersSelectionSelected: FoldersSelection = LibrarySettings.foldersSelectionSelected
-        internal set
-    val foldersPathsSelectedSet: Collection<String> = LibrarySettings.foldersPathsSelectedCollection
+    val foldersPathsIncludingCollection: Collection<String> =
+        LibrarySettings.foldersPathsIncludingCollection
+    val foldersPathsExcludingCollection: Collection<String> =
+        LibrarySettings.foldersPathsExcludingCollection
+
+    //Update Settings
+    val updateChannel: MutableState<UpdateChannel>
+        get() = SatunesSettings.updateChannel
 
     /**
      * This setting is true if the compilation's music has to be added to compilation's artist's music list
@@ -115,6 +131,7 @@ object SettingsManager {
             return
         }
         SatunesSettings.loadSettings(context = context)
+        SatunesLogger.enabled = this.logsActivation.value
         DesignSettings.loadSettings(context = context)
         PlaybackSettings.loadSettings(context = context)
         loadFilters(context = context)
@@ -163,6 +180,14 @@ object SettingsManager {
         PlaybackSettings.switchAudioOffload(context = context)
     }
 
+    suspend fun switchArtworkAnimation(context: Context) {
+        DesignSettings.switchArtworkAnimation(context = context)
+    }
+
+    suspend fun switchArtworkCircleShape(context: Context) {
+        DesignSettings.switchArtworkCircleShape(context = context)
+    }
+
     suspend fun seeWhatsNew(context: Context) {
         SatunesSettings.seeWhatsNew(context = context)
     }
@@ -175,35 +200,34 @@ object SettingsManager {
         SearchSettings.switchFilter(context = context, filterSetting = filterSetting)
     }
 
-    suspend fun selectFoldersSelection(context: Context, foldersSelection: FoldersSelection) {
-        LibrarySettings.selectFoldersSelection(
-            context = context,
-            foldersSelection = foldersSelection
-        )
-    }
-
     /**
-     * Add a path to the selected paths set and memorize it in storage.
+     * Add a path to the including list or excluding list base on param [folderSelection] and memorize it in storage.
      *
      * @param context the app context
      * @param uri the uri containing the selected path
+     * @param folderSelection the option selected on screen.
      */
-    suspend fun addPath(context: Context, uri: Uri) {
-        this.addPath(context = context, path = uri.path!!)
+    suspend fun addPath(context: Context, uri: Uri, folderSelection: FoldersSelection) {
+        this.addPath(context = context, path = uri.path!!, folderSelection = folderSelection)
     }
 
     /**
-     * Add a path to the selected paths set and memorize it in storage.
+     * Add a path to the including list or excluding list base on param [folderSelection] and memorize it in storage.
      *
      * @param context the app context
      * @param path the selected path as string
+     * @param folderSelection the option selected on screen.
      */
-    suspend fun addPath(context: Context, path: String) {
-        LibrarySettings.addPath(context = context, path = path)
+    suspend fun addPath(context: Context, path: String, folderSelection: FoldersSelection) {
+        LibrarySettings.addPath(context = context, path = path, folderSelection = folderSelection)
     }
 
-    suspend fun removePath(context: Context, path: String) {
-        LibrarySettings.removePath(context = context, path = path)
+    suspend fun removePath(context: Context, path: String, folderSelection: FoldersSelection) {
+        LibrarySettings.removePath(
+            context = context,
+            path = path,
+            folderSelection = folderSelection
+        )
     }
 
     suspend fun selectDefaultNavBarSection(context: Context, navBarSection: NavBarSection) {
@@ -271,6 +295,7 @@ object SettingsManager {
     }
 
     suspend fun resetAll(context: Context) {
+        SatunesSettings.reset(context = context)
         this.resetFoldersSettings(context = context)
         this.resetLoadingLogicSettings(context = context)
         this.resetBatterySettings(context = context)
@@ -294,5 +319,29 @@ object SettingsManager {
 
     suspend fun resetCustomActions(context: Context) {
         DesignSettings.resetCustomActions(context = context)
+    }
+
+    suspend fun switchLogsActivation(context: Context) {
+        SatunesSettings.switchLogsActivation(context)
+        SatunesLogger.getLogger()?.info(
+            if (this.logsActivation.value) "Logs enabled." else "Logs Disabled."
+        )
+        SatunesLogger.enabled = this.logsActivation.value
+    }
+
+    suspend fun resetArtworkSettings(context: Context) {
+        DesignSettings.resetArtworkSettings(context = context)
+    }
+
+    suspend fun seeIncludeExcludeInfo(context: Context) {
+        SatunesSettings.seeIncludeExcludeInfo(context)
+    }
+
+    suspend fun unSeeIncludeExcludeInfo(context: Context) {
+        SatunesSettings.unSeeIncludeExcludeInfo(context)
+    }
+
+    suspend fun selectUpdateChannel(context: Context, channel: UpdateChannel) {
+        SatunesSettings.selectUpdateChannel(context = context, channel = channel)
     }
 }

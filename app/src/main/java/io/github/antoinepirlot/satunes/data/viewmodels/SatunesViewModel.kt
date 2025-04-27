@@ -4,13 +4,16 @@
  * Satunes is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software Foundation,
  * either version 3 of the License, or (at your option) any later version.
+ *
  * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
  * See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public License along with Satunes.
+ *  You should have received a copy of the GNU General Public License along with Satunes.
+ *
  * If not, see <https://www.gnu.org/licenses/>.
  *
- * *** INFORMATION ABOUT THE AUTHOR *****
+ * **** INFORMATION ABOUT THE AUTHOR *****
  * The author of this file is Antoine Pirlot, the owner of this project.
  * You find this original project on Codeberg.
  *
@@ -45,6 +48,7 @@ import io.github.antoinepirlot.satunes.database.models.FoldersSelection
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.database.models.Playlist
+import io.github.antoinepirlot.satunes.database.models.UpdateChannel
 import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
@@ -72,7 +76,7 @@ import io.github.antoinepirlot.satunes.internet.R as RInternet
 /**
  * @author Antoine Pirlot on 19/07/2024
  */
-internal class SatunesViewModel : ViewModel() {
+class SatunesViewModel : ViewModel() {
     companion object {
         private val _uiState: MutableStateFlow<SatunesUiState> = MutableStateFlow(SatunesUiState())
     }
@@ -90,6 +94,11 @@ internal class SatunesViewModel : ViewModel() {
 
     @RequiresApi(Build.VERSION_CODES.M)
     private val _downloadStatus: MutableState<APKDownloadStatus> = UpdateCheckManager.downloadStatus
+    private val _artworkAnimation: MutableState<Boolean> = SettingsManager.artworkAnimation
+    private val _artworkCircleShape: MutableState<Boolean> = SettingsManager.artworkCircleShape
+    private val _logsActivation: MutableState<Boolean> = SettingsManager.logsActivation
+
+    private val _updateChannel: MutableState<UpdateChannel> = SettingsManager.updateChannel
 
     val uiState: StateFlow<SatunesUiState> = _uiState.asStateFlow()
 
@@ -108,10 +117,14 @@ internal class SatunesViewModel : ViewModel() {
     var downloadStatus: APKDownloadStatus by _downloadStatus
         private set
 
-    val foldersPathsSelectedSet: Collection<String> = SettingsManager.foldersPathsSelectedSet
-
     val defaultNavBarSection: NavBarSection by this._defaultNavBarSection
     val defaultPlaylistId: Long by this._defaultPlaylistId
+
+    val artworkAnimation: Boolean by this._artworkAnimation
+    val artworkCircleShape: Boolean by this._artworkCircleShape
+    val logsActivation: Boolean by this._logsActivation
+
+    val updateChannel: UpdateChannel by this._updateChannel
 
     fun loadSettings() {
         try {
@@ -128,28 +141,47 @@ internal class SatunesViewModel : ViewModel() {
     fun isInPlaybackView(): Boolean =
         _uiState.value.currentDestination.category == DestinationCategory.PLAYBACK
 
-    fun seeWhatsNew(
+    /**
+     * Mark notification as read and show snack bar with a message depending of the action taken by the user.
+     *
+     * @param scope
+     * @param snackbarHostState
+     * @param permanentAction the [Unit] action to run when the action is permanent (won't be shown again)
+     * @param nonPermanentAction a [Unit] action to run when the action is not permanent (will be shown next time)
+     * @param permanently a [Boolean] indicating if the action is permanent or not.
+     */
+    private fun seeNotification(
         scope: CoroutineScope,
-        snackBarHostState: SnackbarHostState,
+        snackbarHostState: SnackbarHostState,
+        permanentAction: suspend () -> Unit,
+        nonPermanentAction: suspend () -> Unit,
         permanently: Boolean = false
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             val context: Context = MainActivity.instance.applicationContext
             if (permanently) {
-                SettingsManager.seeWhatsNew(context = context)
+                permanentAction()
                 showSnackBar(
                     scope = scope,
-                    snackBarHostState = snackBarHostState,
+                    snackBarHostState = snackbarHostState,
                     message = context.getString(R.string.update_modal_permanently),
                     actionLabel = context.getString(R.string.cancel),
                     duration = SnackbarDuration.Long,
-                    action = { seeWhatsNew(scope = scope, snackBarHostState = snackBarHostState) }
+                    action = {
+                        seeNotification(
+                            scope = scope,
+                            snackbarHostState = snackbarHostState,
+                            permanently = false,
+                            permanentAction = permanentAction,
+                            nonPermanentAction = nonPermanentAction
+                        )
+                    }
                 )
-            } else if (SettingsManager.whatsNewSeen) {
-                SettingsManager.unSeeWhatsNew(context = context)
+            } else {
+                nonPermanentAction()
                 showSnackBar(
                     scope = scope,
-                    snackBarHostState = snackBarHostState,
+                    snackBarHostState = snackbarHostState,
                     message = context.getString(R.string.update_modal_not_permanently)
                 )
             }
@@ -158,6 +190,21 @@ internal class SatunesViewModel : ViewModel() {
             currentState.copy(whatsNewSeen = true)
         }
     }
+
+    fun seeWhatsNew(
+        scope: CoroutineScope,
+        snackBarHostState: SnackbarHostState,
+        permanently: Boolean = false
+    ) {
+        this.seeNotification(
+            scope = scope,
+            snackbarHostState = snackBarHostState,
+            permanently = permanently,
+            permanentAction = { SettingsManager.seeWhatsNew(context = MainActivity.instance.applicationContext) },
+            nonPermanentAction = { SettingsManager.unSeeWhatsNew(context = MainActivity.instance.applicationContext) }
+        )
+    }
+
 
     fun setCurrentDestination(destination: String) {
         _uiState.update { currentState: SatunesUiState ->
@@ -372,9 +419,13 @@ internal class SatunesViewModel : ViewModel() {
         }
     }
 
+    /**
+     * Reset update status.
+     * @param force will make it always work if it's true. Otherwise it will be reset only if the status is not Available.
+     */
     @RequiresApi(Build.VERSION_CODES.M)
-    fun resetUpdatesStatus() {
-        if (updateAvailableStatus != UpdateAvailableStatus.AVAILABLE) {
+    fun resetUpdatesStatus(force: Boolean = false) {
+        if (force || updateAvailableStatus != UpdateAvailableStatus.AVAILABLE) {
             updateAvailableStatus = UpdateAvailableStatus.UNDEFINED
         }
     }
@@ -488,32 +539,29 @@ internal class SatunesViewModel : ViewModel() {
         }
     }
 
-    fun selectFoldersSelection(foldersSelection: FoldersSelection) {
-        CoroutineScope(Dispatchers.IO).launch {
-            SettingsManager.selectFoldersSelection(
-                context = MainActivity.instance.applicationContext,
-                foldersSelection = foldersSelection
-            )
-            _uiState.update { currentState: SatunesUiState ->
-                currentState.copy(foldersSelectionSelected = foldersSelection)
-            }
-        }
-    }
-
-    fun addPath() {
+    fun addPath(folderSelection: FoldersSelection) {
         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE).apply {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 putExtra(DocumentsContract.EXTRA_INITIAL_URI, DEFAULT_URI)
             }
         }
-        MainActivity.instance.startActivityForResult(intent, MainActivity.SELECT_FOLDER_TREE_CODE)
+        MainActivity.instance.startActivityForResult(
+            intent,
+            if (folderSelection == FoldersSelection.INCLUDE) MainActivity.INCLUDE_FOLDER_TREE_CODE else MainActivity.EXCLUDE_FOLDER_TREE_CODE
+        )
     }
 
-    fun removePath(scope: CoroutineScope, snackBarHostState: SnackbarHostState, path: String) {
+    fun removePath(
+        scope: CoroutineScope,
+        snackBarHostState: SnackbarHostState,
+        path: String,
+        folderSelection: FoldersSelection
+    ) {
         CoroutineScope(Dispatchers.IO).launch {
             SettingsManager.removePath(
                 context = MainActivity.instance.applicationContext,
-                path = path
+                path = path,
+                folderSelection = folderSelection
             )
             showSnackBar(
                 scope = scope,
@@ -527,7 +575,8 @@ internal class SatunesViewModel : ViewModel() {
                     CoroutineScope(Dispatchers.IO).launch {
                         SettingsManager.addPath(
                             context = MainActivity.instance.applicationContext,
-                            path = path
+                            path = path,
+                            folderSelection = folderSelection
                         )
                     }
                 }
@@ -543,7 +592,7 @@ internal class SatunesViewModel : ViewModel() {
                     navBarSection = navBarSection
                 )
             }
-        } catch (e: Throwable) {
+        } catch (_: Throwable) {
             _logger?.severe("Error while selecting new default nav bar section: ${navBarSection.name}")
         }
     }
@@ -556,7 +605,7 @@ internal class SatunesViewModel : ViewModel() {
                     currentState.copy(compilationMusic = SettingsManager.compilationMusic)
                 }
             }
-        } catch (e: Throwable) {
+        } catch (_: Throwable) {
             _logger?.severe("Error while switching compilation music setting")
         }
     }
@@ -572,7 +621,7 @@ internal class SatunesViewModel : ViewModel() {
                     currentState.copy(artistReplacement = SettingsManager.artistReplacement)
                 }
             }
-        } catch (e: Throwable) {
+        } catch (_: Throwable) {
             showErrorSnackBar(
                 scope = scope,
                 snackBarHostState = snackBarHostState,
@@ -583,6 +632,26 @@ internal class SatunesViewModel : ViewModel() {
                     )
                 }
             )
+        }
+    }
+
+    fun switchArtworkAnimation() {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                SettingsManager.switchArtworkAnimation(context = MainActivity.instance.applicationContext)
+            } catch (e: Throwable) {
+                _logger?.warning(e.message)
+            }
+        }
+    }
+
+    fun switchArtworkCircleShape() {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                SettingsManager.switchArtworkCircleShape(context = MainActivity.instance.applicationContext)
+            } catch (e: Throwable) {
+                _logger?.warning(e.message)
+            }
         }
     }
 
@@ -652,7 +721,7 @@ internal class SatunesViewModel : ViewModel() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 SettingsManager.resetCustomActions(context = MainActivity.instance.applicationContext)
-            } catch (e: Throwable) {
+            } catch (_: Throwable) {
                 showErrorSnackBar(
                     scope = scope,
                     snackBarHostState = snackBarHostState,
@@ -664,6 +733,65 @@ internal class SatunesViewModel : ViewModel() {
                     }
                 )
             }
+        }
+    }
+
+    fun switchLogsActivation(scope: CoroutineScope, snackBarHostState: SnackbarHostState) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                SettingsManager.switchLogsActivation(context = MainActivity.instance.applicationContext)
+            } catch (_: Throwable) {
+                showErrorSnackBar(
+                    scope = scope,
+                    snackBarHostState = snackBarHostState,
+                    action = {
+                        switchLogsActivation(
+                            scope = scope,
+                            snackBarHostState = snackBarHostState
+                        )
+                    }
+                )
+            }
+        }
+    }
+
+    fun seeIncludeExcludeInfo(
+        scope: CoroutineScope,
+        snackbarHostState: SnackbarHostState,
+        permanently: Boolean = false
+    ) {
+        this.seeNotification(
+            scope = scope,
+            snackbarHostState = snackbarHostState,
+            permanently = permanently,
+            permanentAction = {
+                SettingsManager.seeIncludeExcludeInfo(context = MainActivity.instance.applicationContext)
+                _uiState.update { currentState: SatunesUiState ->
+                    currentState.copy(includeExcludeSeen = true)
+                }
+            },
+            nonPermanentAction = {
+                SettingsManager.unSeeIncludeExcludeInfo(context = MainActivity.instance.applicationContext)
+                _uiState.update { currentState: SatunesUiState ->
+                    currentState.copy(includeExcludeSeen = false)
+                }
+            }
+        )
+
+    }
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    fun selectUpdateChannel(channel: UpdateChannel) {
+        try {
+            CoroutineScope(Dispatchers.IO).launch {
+                if (updateChannel != channel) resetUpdatesStatus(force = true)
+                SettingsManager.selectUpdateChannel(
+                    context = MainActivity.instance.applicationContext,
+                    channel = channel
+                )
+            }
+        } catch (_: Throwable) {
+            _logger?.severe("Error while selecting update channel '${channel.name}'")
         }
     }
 }

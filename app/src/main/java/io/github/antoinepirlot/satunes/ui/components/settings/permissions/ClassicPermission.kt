@@ -1,3 +1,22 @@
+/*
+ * This file is part of Satunes.
+ * Satunes is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later version.
+ *  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ *  You should have received a copy of the GNU General Public License along with Satunes.
+ *  If not, see <https://www.gnu.org/licenses/>.
+ *
+ * **** INFORMATION ABOUT THE AUTHOR *****
+ * The author of this file is Antoine Pirlot, the owner of this project.
+ * You find this original project on Codeberg.
+ *
+ * My Codeberg link is: https://codeberg.org/antoinepirlot
+ * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
+ */
+
 package io.github.antoinepirlot.satunes.ui.components.settings.permissions
 
 import android.annotation.SuppressLint
@@ -32,7 +51,12 @@ internal fun ClassicPermission(
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     val permissionState: PermissionState =
-        rememberPermissionState(permission = permission.value)
+        rememberPermissionState(
+            permission = permission.value,
+            onPermissionResult = { allowed: Boolean ->
+                if (allowed) permission.onGranted(satunesViewModel)
+            }
+        )
     if (permission == Permissions.READ_EXTERNAL_STORAGE_PERMISSION || permission == Permissions.READ_AUDIO_PERMISSION)
         if (permissionState.status.isGranted && !satunesUiState.isAudioAllowed)
             satunesViewModel.updateIsAudioAllowed()

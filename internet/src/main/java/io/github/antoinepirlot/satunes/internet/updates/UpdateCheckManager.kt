@@ -204,6 +204,7 @@ object UpdateCheckManager {
         //Here the 3 number have changed (vx.y.z...)
         if (numberIncreased) return latestChannel.stability >= updateChannel.stability
         else {
+            if (currentSplit.size == 1) return false
             val latestNumber: Int = if (latestSplit.size > 1) latestSplit[2].toInt() else -1
             val currentNumber: Int = if (currentSplit.size > 1) currentSplit[2].toInt() else -1
             numberIncreased = latestNumber > currentNumber

@@ -1,15 +1,19 @@
 /*
  * This file is part of Satunes.
+ *
  * Satunes is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software Foundation,
  * either version 3 of the License, or (at your option) any later version.
- *  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ *
+ * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
  * See the GNU General Public License for more details.
  *  You should have received a copy of the GNU General Public License along with Satunes.
- *  If not, see <https://www.gnu.org/licenses/>.
  *
- * ** INFORMATION ABOUT THE AUTHOR *****
+ * If not, see <https://www.gnu.org/licenses/>.
+ *
+ * **** INFORMATION ABOUT THE AUTHOR *****
  * The author of this file is Antoine Pirlot, the owner of this project.
  * You find this original project on Codeberg.
  *
@@ -44,6 +48,7 @@ import io.github.antoinepirlot.satunes.database.models.FoldersSelection
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.database.models.Playlist
+import io.github.antoinepirlot.satunes.database.models.UpdateChannel
 import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
@@ -93,6 +98,8 @@ class SatunesViewModel : ViewModel() {
     private val _artworkCircleShape: MutableState<Boolean> = SettingsManager.artworkCircleShape
     private val _logsActivation: MutableState<Boolean> = SettingsManager.logsActivation
 
+    private val _updateChannel: MutableState<UpdateChannel> = SettingsManager.updateChannel
+
     val uiState: StateFlow<SatunesUiState> = _uiState.asStateFlow()
 
     val isLoadingData: Boolean by _isLoadingData
@@ -117,6 +124,8 @@ class SatunesViewModel : ViewModel() {
     val artworkCircleShape: Boolean by this._artworkCircleShape
     val logsActivation: Boolean by this._logsActivation
 
+    val updateChannel: UpdateChannel by this._updateChannel
+
     fun loadSettings() {
         try {
             runBlocking {
@@ -132,6 +141,15 @@ class SatunesViewModel : ViewModel() {
     fun isInPlaybackView(): Boolean =
         _uiState.value.currentDestination.category == DestinationCategory.PLAYBACK
 
+    /**
+     * Mark notification as read and show snack bar with a message depending of the action taken by the user.
+     *
+     * @param scope
+     * @param snackbarHostState
+     * @param permanentAction the [Unit] action to run when the action is permanent (won't be shown again)
+     * @param nonPermanentAction a [Unit] action to run when the action is not permanent (will be shown next time)
+     * @param permanently a [Boolean] indicating if the action is permanent or not.
+     */
     private fun seeNotification(
         scope: CoroutineScope,
         snackbarHostState: SnackbarHostState,
@@ -153,14 +171,14 @@ class SatunesViewModel : ViewModel() {
                         seeNotification(
                             scope = scope,
                             snackbarHostState = snackbarHostState,
-                            permanently = permanently,
+                            permanently = false,
                             permanentAction = permanentAction,
                             nonPermanentAction = nonPermanentAction
                         )
                     }
                 )
-            } else if (SettingsManager.whatsNewSeen) {
-                nonPermanentAction
+            } else {
+                nonPermanentAction()
                 showSnackBar(
                     scope = scope,
                     snackBarHostState = snackbarHostState,
@@ -401,9 +419,13 @@ class SatunesViewModel : ViewModel() {
         }
     }
 
+    /**
+     * Reset update status.
+     * @param force will make it always work if it's true. Otherwise it will be reset only if the status is not Available.
+     */
     @RequiresApi(Build.VERSION_CODES.M)
-    fun resetUpdatesStatus() {
-        if (updateAvailableStatus != UpdateAvailableStatus.AVAILABLE) {
+    fun resetUpdatesStatus(force: Boolean = false) {
+        if (force || updateAvailableStatus != UpdateAvailableStatus.AVAILABLE) {
             updateAvailableStatus = UpdateAvailableStatus.UNDEFINED
         }
     }
@@ -742,8 +764,34 @@ class SatunesViewModel : ViewModel() {
             scope = scope,
             snackbarHostState = snackbarHostState,
             permanently = permanently,
-            permanentAction = { SettingsManager.seeIncludeExcludeInfo(context = MainActivity.instance.applicationContext) },
-            nonPermanentAction = { SettingsManager.unSeeIncludeExcludeInfo(context = MainActivity.instance.applicationContext) }
+            permanentAction = {
+                SettingsManager.seeIncludeExcludeInfo(context = MainActivity.instance.applicationContext)
+                _uiState.update { currentState: SatunesUiState ->
+                    currentState.copy(includeExcludeSeen = true)
+                }
+            },
+            nonPermanentAction = {
+                SettingsManager.unSeeIncludeExcludeInfo(context = MainActivity.instance.applicationContext)
+                _uiState.update { currentState: SatunesUiState ->
+                    currentState.copy(includeExcludeSeen = false)
+                }
+            }
         )
+
+    }
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    fun selectUpdateChannel(channel: UpdateChannel) {
+        try {
+            CoroutineScope(Dispatchers.IO).launch {
+                if (updateChannel != channel) resetUpdatesStatus(force = true)
+                SettingsManager.selectUpdateChannel(
+                    context = MainActivity.instance.applicationContext,
+                    channel = channel
+                )
+            }
+        } catch (_: Throwable) {
+            _logger?.severe("Error while selecting update channel '${channel.name}'")
+        }
     }
 }

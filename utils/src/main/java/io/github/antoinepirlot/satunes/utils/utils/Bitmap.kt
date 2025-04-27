@@ -17,16 +17,40 @@
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
-package io.github.antoinepirlot.satunes.widgets
+package io.github.antoinepirlot.satunes.utils.utils
 
-import androidx.glance.appwidget.GlanceAppWidget
-import androidx.glance.appwidget.GlanceAppWidgetReceiver
-import io.github.antoinepirlot.satunes.widgets.ui.ClassicPlaybackWidget
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.Path
+import android.graphics.Rect
+import android.graphics.RectF
+import androidx.core.graphics.createBitmap
 
 /**
- * @author Antoine Pirlot on 20/08/2024
+ * @author Antoine Pirlot 20/04/2025
  */
 
-class ClassicPlaybackReceiver : GlanceAppWidgetReceiver() {
-    override val glanceAppWidget: GlanceAppWidget = ClassicPlaybackWidget()
+/**
+ * Used to replace modifier.clip from Modifier, make the artwork circle
+ * @author ChatGPT
+ */
+fun Bitmap.toCircularBitmap(): Bitmap {
+    val size: Int = minOf(width, height)
+    val output: Bitmap = createBitmap(size, size)
+    val canvas = Canvas(output)
+
+    val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    val rect = RectF(0f, 0f, size.toFloat(), size.toFloat())
+
+    val path = Path().apply {
+        addOval(rect, Path.Direction.CCW)
+    }
+
+    canvas.clipPath(path)
+    val srcRect =
+        Rect((width - size) / 2, (height - size) / 2, (width + size) / 2, (height + size) / 2)
+    canvas.drawBitmap(this, srcRect, rect, paint)
+
+    return output
 }

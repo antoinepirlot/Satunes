@@ -44,8 +44,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.hapticfeedback.HapticFeedback
@@ -55,7 +57,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.models.ScreenSizes
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
@@ -66,12 +67,11 @@ import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.ui.components.dialog.album.AlbumOptionsDialog
 import io.github.antoinepirlot.satunes.ui.utils.getRightIconAndDescription
-import io.github.antoinepirlot.satunes.utils.toCircularBitmap
+import io.github.antoinepirlot.satunes.utils.utils.toCircularBitmap
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import io.github.antoinepirlot.satunes.icons.R as RIcon
 
 /**
  * @author Antoine Pirlot on 29/02/24
@@ -88,8 +88,11 @@ internal fun MediaArtwork(
     contentAlignment: Alignment = Alignment.Center,
     shape: Shape? = null
 ) {
+
     val makeArtworkCircle: Boolean = satunesViewModel.artworkCircleShape || shape == CircleShape
-    var mediaArtWorkModifier: Modifier = modifier
+    var mediaArtWorkModifier: Modifier = modifier.clip(
+        shape = shape ?: if (makeArtworkCircle) CircleShape else RectangleShape
+    )
     val isPlaying: Boolean = playbackViewModel.isPlaying
     val haptics: HapticFeedback = LocalHapticFeedback.current
     val screenWidthDp = LocalConfiguration.current.screenWidthDp
@@ -164,10 +167,13 @@ internal fun MediaArtwork(
                     is Album -> mediaImpl.getMusicSet().first().getAlbumArtwork(context = context)
                     else -> null
                 }
-                if (bitmap == null && (mediaImpl is Music || mediaImpl is Album))
-                    bitmap = context.getDrawable(RIcon.mipmap.empty_album_artwork_foreground)!!
-                        .toBitmap()
-                if (makeArtworkCircle) bitmap = bitmap?.toCircularBitmap()
+                if (bitmap != null
+                    && !satunesViewModel.artworkCircleShape
+                    && satunesViewModel.artworkAnimation
+                    && playbackViewModel.musicPlaying == mediaImpl
+                )
+                //In other words, it will make artwork circle if the mediaImpl is the playing music (the animation with rectangular shape is ugly on artwork
+                    bitmap = bitmap.toCircularBitmap()
                 artwork = bitmap?.asImageBitmap()
             }
         }

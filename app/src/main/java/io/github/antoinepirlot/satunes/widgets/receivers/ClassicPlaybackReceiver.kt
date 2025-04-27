@@ -21,10 +21,12 @@
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
-plugins {
-    id("com.android.application") version "8.9.2" apply false
-    id("com.android.library") version "8.9.2" apply false
-    id("org.jetbrains.kotlin.android") version "1.9.0" apply false
-    alias(libs.plugins.ksp) apply false
-}
+package io.github.antoinepirlot.satunes.widgets.receivers
+
+import io.github.antoinepirlot.satunes.widgets.ui.ClassicPlaybackWidget
+
+/**
+ * @author Antoine Pirlot on 20/08/2024
+ */
+
+class ClassicPlaybackReceiver : WidgetReceiver(ClassicPlaybackWidget())

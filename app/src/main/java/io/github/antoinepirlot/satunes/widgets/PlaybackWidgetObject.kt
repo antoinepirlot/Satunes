@@ -1,13 +1,17 @@
 /*
  * This file is part of Satunes.
+ *
  * Satunes is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software Foundation,
  * either version 3 of the License, or (at your option) any later version.
- *  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ *
+ * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
  * See the GNU General Public License for more details.
  *  You should have received a copy of the GNU General Public License along with Satunes.
- *  If not, see <https://www.gnu.org/licenses/>.
+ *
+ * If not, see <https://www.gnu.org/licenses/>.
  *
  * **** INFORMATION ABOUT THE AUTHOR *****
  * The author of this file is Antoine Pirlot, the owner of this project.
@@ -20,9 +24,9 @@
 package io.github.antoinepirlot.satunes.widgets
 
 import android.content.Context
-import androidx.glance.appwidget.updateAll
+import androidx.glance.GlanceId
+import androidx.glance.appwidget.GlanceAppWidget
 import io.github.antoinepirlot.satunes.playback.services.WidgetPlaybackManager
-import io.github.antoinepirlot.satunes.widgets.ui.ClassicPlaybackWidget
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -31,12 +35,24 @@ import kotlinx.coroutines.launch
  * @author Antoine Pirlot 20/04/2025
  */
 object PlaybackWidget {
+    private val _widgets: MutableMap<GlanceId, GlanceAppWidget> = mutableMapOf()
+
+    fun addWidget(glanceId: GlanceId, widget: GlanceAppWidget) {
+        if (this._widgets.contains(key = glanceId)) return
+        this._widgets[glanceId] = widget
+    }
+
     fun setRefreshWidget(context: Context) {
         val refreshWidgets: () -> Unit = {
             CoroutineScope(Dispatchers.Default).launch {
-                ClassicPlaybackWidget().updateAll(context = context.applicationContext)
+                for (entry: Map.Entry<GlanceId, GlanceAppWidget> in _widgets.entries)
+                    entry.value.update(context = context.applicationContext, id = entry.key)
             }
         }
         WidgetPlaybackManager.setRefreshWidgets(refreshWidgets = refreshWidgets)
+    }
+
+    fun removeWidget(glanceId: GlanceId) {
+        this._widgets.remove(key = glanceId)
     }
 }

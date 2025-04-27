@@ -3,10 +3,26 @@ Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
 ## 3.1 (Android 5.1.1 Lollipop and later)
 
+## 3.1.0-preview-1
+
+New features:
+
+* Update channels subscriptions
+
+Improvements, optimizations and troubleshooting:
+
+* Fix modal on opening library settings, it will now be permanently hidden on "ok" button click
+* Include/exclude switch is now a simple button again. (No more switch action)
+* Fix the too long path length that hides trash icon in library settings
+* Make artwork circle in Android Auto
+* Fix clickable zone of circle artwork in playback view (it's now a circle)
+* Tentative of wrong widget loading after a moment
+
 ## 3.1.0-beta-1
 
 New features:
 
+* Settings to round artworks and animate when playing
 * New Widget "Disc"
 * The include/exclude feature now takes in account both cases. You now can include some folders and
   exclude other ones at the same time.
@@ -14,7 +30,6 @@ New features:
 
 Improvements, optimizations and troubleshooting:
 
-* Settings to round artworks and animate when playing
 * Fix playing music crash after audio permission allowed
 * Hide buttons to play music on media's view to avoid playing music while data loading
 * On add to next or add to queue, musics are added randomly if the default shuffle mode is enabled

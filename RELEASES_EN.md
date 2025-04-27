@@ -3,7 +3,7 @@ Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
 ## 3.1 (Android 5.1.1 Lollipop and later)
 
-## 3.1.0
+### 3.1.0
 
 New features:
 
@@ -21,7 +21,7 @@ Improvements, optimizations and troubleshooting:
 * Hide buttons to play music on media's view to avoid playing music while data loading
 * On add to next or add to queue, musics are added randomly if the default shuffle mode is enabled
 
-## 3.1.0-preview-1
+### 3.1.0-preview-1
 
 New features:
 
@@ -36,7 +36,7 @@ Improvements, optimizations and troubleshooting:
 * Fix clickable zone of circle artwork in playback view (it's now a circle)
 * Tentative of wrong widget loading after a moment
 
-## 3.1.0-beta-1
+### 3.1.0-beta-1
 
 New features:
 

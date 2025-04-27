@@ -1,12 +1,11 @@
 Nouvelles fonctionnalités :
 
 * Nouveau Widget "Disque"
+* Réglages pour arrondir les albums et animer les illustrations lors de la lecture
 * La fonction inclure/exclure prend désormais en compte les deux cas. Tu peux maintenant inclure certains dossiers et en exclure d'autres en même temps.
 * Bouton pour désactiver les logs
+* Ajout des abonnements aux canaux de mises à jour
 
-Améliorations, optimisations et dépannage :
-
-* Réglages pour arrondir les albums et animer les illustrations lors de la lecture
-* Correction d'un crash lors de la lecture de musique après autorisation de l'audio
+Autres améliorations, optimisations et dépannage.
 
 Plus d'info sur Codeberg.

@@ -1,13 +1,14 @@
 New features:
 
 * New Widget "Disc"
+* Settings to round artworks and animate when playing
 * The include/exclude feature now takes in account both cases. You now can include some folders and exclude other ones at the same time.
 * Switch to turn off logs
+* Update channel subscriptions
 
 Improvements, optimizations and troubleshooting:
 
 * Settings to round artworks and animate when playing
 * Fix playing music crash after audio permission allowed
-* Hide buttons to play music on media's view to avoid playing music while data loading
 
 More details on Codeberg.

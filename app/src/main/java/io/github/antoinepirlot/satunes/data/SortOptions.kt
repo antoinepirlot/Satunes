@@ -63,7 +63,10 @@ private val playlistsSortOptions: List<SortOptions> = listOf(
 
 private val singlePlaylistSortOptions: List<SortOptions> = listOf(
     SortOptions.TITLE,
-    SortOptions.PLAYLIST_ADDED_DATE
+    SortOptions.ALBUM,
+    SortOptions.ARTIST,
+    SortOptions.GENRE,
+    SortOptions.YEAR,
 )
 
 /**
@@ -86,9 +89,9 @@ internal fun getSortOptions(destination: Destination): List<SortOptions> {
         Destination.PLAYLIST -> {
             val sortOptionsList: MutableCollection<SortOptions> = mutableSetOf()
             sortOptionsList.addAll(elements = musicsSortOptions)
-            sortOptionsList.addAll(elements = singlePlaylistSortOptions)
             sortOptionsList.toList()
         }
+
         else -> listOf()
     }
 }

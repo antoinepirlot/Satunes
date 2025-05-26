@@ -795,6 +795,7 @@ class DataViewModel : ViewModel() {
         }
     }
 
+    //TODO refresh uiState in satunes view model
     fun resetAllSettings(scope: CoroutineScope, snackBarHostState: SnackbarHostState) {
         try {
             runBlocking {

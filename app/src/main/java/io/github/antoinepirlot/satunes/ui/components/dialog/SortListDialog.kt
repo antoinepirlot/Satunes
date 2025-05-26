@@ -79,6 +79,7 @@ internal fun SortListDialog(
                     onClick = { sortListViewModel.selectSortOption(sortRadioButton = sortOption) },
                     icon = sortOption.icon,
                     text = stringResource(sortOption.stringId),
+                    maxLine = 2
                 )
             }
         }

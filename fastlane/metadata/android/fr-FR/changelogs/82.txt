@@ -1,6 +1,6 @@
-Améliorations, optimisations et dépannage :
+    Améliorations, optimisations et dépannage :
 
-* Correction de l'interface utilisateur des paramètres après la réinitialisation de certains paramètres
-* Clarification du nom de l'option de tri de l'ordre d'ajout à une playlist
-* Correction de l'ordre de la musique lue à partir d'un dossier en mode non aléatoire
-* Correction du rafraîchissement du widget disque dans certaines conditions
+    * Correction de l'interface utilisateur des paramètres après la réinitialisation de certains paramètres
+    * Clarification du nom de l'option de tri de l'ordre d'ajout à une playlist
+    * Correction de l'ordre de la musique lue à partir d'un dossier en mode non aléatoire
+    * Correction du rafraîchissement du widget disque dans certaines conditions

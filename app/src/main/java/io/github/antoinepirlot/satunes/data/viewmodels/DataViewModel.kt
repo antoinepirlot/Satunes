@@ -671,6 +671,7 @@ class DataViewModel : ViewModel() {
         try {
             runBlocking {
                 SettingsManager.resetFoldersSettings(context = MainActivity.instance.applicationContext)
+                SatunesViewModel.reloadSettings()
             }
         } catch (e: Exception) {
             showErrorSnackBar(
@@ -687,6 +688,7 @@ class DataViewModel : ViewModel() {
         try {
             runBlocking {
                 SettingsManager.resetLoadingLogicSettings(context = MainActivity.instance.applicationContext)
+                SatunesViewModel.reloadSettings()
                 updateShowFirstLetter()
             }
         } catch (e: Exception) {
@@ -704,6 +706,7 @@ class DataViewModel : ViewModel() {
         try {
             runBlocking {
                 SettingsManager.resetBatterySettings(context = MainActivity.instance.applicationContext)
+                SatunesViewModel.reloadSettings()
             }
         } catch (e: Exception) {
             showErrorSnackBar(
@@ -720,6 +723,7 @@ class DataViewModel : ViewModel() {
         try {
             runBlocking {
                 SettingsManager.resetPlaybackBehaviorSettings(context = MainActivity.instance.applicationContext)
+                SatunesViewModel.reloadSettings()
             }
         } catch (e: Exception) {
             showErrorSnackBar(
@@ -739,6 +743,7 @@ class DataViewModel : ViewModel() {
         try {
             runBlocking {
                 SettingsManager.resetPlaybackModesSettings(context = MainActivity.instance.applicationContext)
+                SatunesViewModel.reloadSettings()
             }
         } catch (e: Exception) {
             showErrorSnackBar(
@@ -761,6 +766,7 @@ class DataViewModel : ViewModel() {
         try {
             runBlocking {
                 SettingsManager.resetDefaultSearchFiltersSettings(context = MainActivity.instance.applicationContext)
+                SatunesViewModel.reloadSettings()
             }
         } catch (e: Exception) {
             showErrorSnackBar(
@@ -780,6 +786,7 @@ class DataViewModel : ViewModel() {
         try {
             runBlocking {
                 SettingsManager.resetNavigationBarSettings(context = MainActivity.instance.applicationContext)
+                SatunesViewModel.reloadSettings()
             }
         } catch (e: Exception) {
             showErrorSnackBar(
@@ -795,11 +802,14 @@ class DataViewModel : ViewModel() {
         }
     }
 
-    //TODO refresh uiState in satunes view model
-    fun resetAllSettings(scope: CoroutineScope, snackBarHostState: SnackbarHostState) {
+    fun resetAllSettings(
+        scope: CoroutineScope,
+        snackBarHostState: SnackbarHostState
+    ) {
         try {
             runBlocking {
                 SettingsManager.resetAll(context = MainActivity.instance.applicationContext)
+                SatunesViewModel.reloadSettings()
                 updateShowFirstLetter()
             }
         } catch (e: Exception) {
@@ -878,6 +888,7 @@ class DataViewModel : ViewModel() {
         try {
             CoroutineScope(Dispatchers.IO).launch {
                 SettingsManager.resetListsSettings(context = MainActivity.instance.applicationContext)
+                SatunesViewModel.reloadSettings()
             }
         } catch (e: Exception) {
             showErrorSnackBar(
@@ -894,6 +905,7 @@ class DataViewModel : ViewModel() {
         try {
             CoroutineScope(Dispatchers.IO).launch {
                 SettingsManager.resetArtworkSettings(context = MainActivity.instance.applicationContext)
+                SatunesViewModel.reloadSettings()
             }
         } catch (e: Exception) {
             showErrorSnackBar(

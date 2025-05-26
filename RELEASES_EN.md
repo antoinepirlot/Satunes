@@ -1,7 +1,17 @@
 # Releases (🇬🇧)
+
 Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
 ## 3.1 (Android 5.1.1 Lollipop and later)
+
+### 3.1.1
+
+Improvements, optimizations and troubleshooting:
+
+* Fix matching settings ui after reset some settings
+* Clarify the name of the added to playlist sorting option
+* Fix order of music played from folder on not shuffle mode
+* Fix disc widget refresh in certain conditions
 
 ### 3.1.0
 
@@ -83,8 +93,8 @@ Improvements, optimizations and troubleshooting:
 * Fix exclude folders feature
 * Remove useless permission "manage_external_storage"
 * Fix navigation:
-  * If audio is not allowed, settings are accessible
-  * If audio has just been allowed in-app, the navigation is then full working
+    * If audio is not allowed, settings are accessible
+    * If audio has just been allowed in-app, the navigation is then full working
 
 ### 3.0.1
 
@@ -293,10 +303,10 @@ Removed features:
 Improvements, optimizations and troubleshooting:
 
 * Fix v2.4.0-beta-1 issues
-  * Playing music crash in certain conditions
-  * Add music into playlists
-  * Show missing remove music from playlist
-  * Android Q and less crash at launching
+    * Playing music crash in certain conditions
+    * Add music into playlists
+    * Show missing remove music from playlist
+    * Android Q and less crash at launching
 
 ### 2.4.0-beta-1
 
@@ -449,8 +459,8 @@ Improvements, optimizations and troubleshooting:
 * Fix Android Auto issues
 * Fix app crash everytime the app launch itself with Android Auto
 * Path:
-  * Show "this device" instead of "/0"
-  * Move refresh button to a new line
+    * Show "this device" instead of "/0"
+    * Move refresh button to a new line
 * Optimize search process
 
 ### 2.1.0
@@ -491,21 +501,21 @@ Improvements, optimizations and troubleshooting:
 * Android Auto is more stable although Android Auto has some constraints in terms of data quantity
 * Importing and exporting playlists works correctly
 * The progress bar will display the predefined levels in this order:
-  * Very slow
-  * Slow
-  * A little slow
-  * Normal
-  * Fast
-  * Very fast
-  * In real time
+    * Very slow
+    * Slow
+    * A little slow
+    * Normal
+    * Fast
+    * Very fast
+    * In real time
 * Defined an order for media if their title is exactly the same when comparing,
   on the screen if this happens, you will see the media in this order:
-  * Music
-  * Album
-  * Artist
-  * Genre
-  * Playlist
-  * Folder
+    * Music
+    * Album
+    * Artist
+    * Genre
+    * Playlist
+    * Folder
 * Use of snack bars for different notifications
 * Added the album title on the music item to differentiate albums and songs
 * The buttons for the shuffle settings are no longer switches but act as the buttons
@@ -528,13 +538,13 @@ Improvements, Optimizations and Troubleshooting:
 * Add album title on music item to differentiate albums and musics
 * Fix closing app when playing while setting to keep it in playing mode disabled
 * Progress bar will show predefined levels in this order:
-  * Very Slow
-  * Slow
-  * A bit slow
-  * Normal
-  * Fast
-  * Very Fast
-  * Real Time
+    * Very Slow
+    * Slow
+    * A bit slow
+    * Normal
+    * Fast
+    * Very Fast
+    * Real Time
 * Do not close modal when unliking music from likes playlist view
 * Some other optimizations
 
@@ -544,12 +554,12 @@ Improvements, Optimizations and Troubleshooting:
 
 * Defined an order for media if their title is exactly the same while comparing, on the screen if it
   happens you will see media in this order:
-  * Music
-  * Album
-  * Artist
-  * Genre
-  * Playlist
-  * Folder
+    * Music
+    * Album
+    * Artist
+    * Genre
+    * Playlist
+    * Folder
 * Limit the item list with 300 element max in Android Auto due to its limitations
 * Loading should be faster in Android Auto as one loop has been removed for each list loading
 * The shuffle setting buttons are no more switches but act like repeat buttons
@@ -717,8 +727,9 @@ Improvements, Optimizations and Troubleshooting:
 
 * Navigating to genres or albums with a name containing the '/' character can now work normally
 * The design has been improved:
-  * The shuffle and repeat buttons in the playback view (only in the phone app) are completely round
-  * Support for screen sizes has been improved
+    * The shuffle and repeat buttons in the playback view (only in the phone app) are completely
+      round
+    * Support for screen sizes has been improved
 * Added a menu in settings explaining how to activate Android Auto
 
 ### 1.0.0-preview-2
@@ -730,8 +741,8 @@ New features:
 Improvements, Optimizations and Troubleshooting:
 
 * Problems related to playback in Android Auto have been fixed:
-  * No display at launch
-  * Progress bar during repeat one mode that goes beyond the time limit
+    * No display at launch
+    * Progress bar during repeat one mode that goes beyond the time limit
 * Added text explaining why exporting and exporting playlists is in beta
 * Attempted to fix crash when opening the app after a long time after pausing
 
@@ -745,9 +756,9 @@ New features:
 * Added a shuffle button to all Android Auto views
 * Removed the "Musics" tab because there were too many elements in Android Auto.
 * New settings:
-  * Choice of repeat mode
-  * Choice of shuffle mode
-  * Ability to prevent other applications from pausing/playing playback
+    * Choice of repeat mode
+    * Choice of shuffle mode
+    * Ability to prevent other applications from pausing/playing playback
 
 Improvements, Optimizations and Troubleshooting:
 
@@ -787,13 +798,14 @@ Improvements, Optimizations and Troubleshooting:
 * The way permissions are managed has been improved and the application no longer crashes on first
   start
 * The design has been improved:
-  * In order to avoid blocking on small screens, all elements are scrollable while waiting to find a
-    more suitable solution
-  * Album image is displayed on screen in album page
-  * The different views are scrollable in their entirety
-  * The genre view displays, in addition to music, albums as in an artist's page
-  * The artist name is displayed in the album view and allows redirection to it
-  * The text areas have been harmonized and long texts will be cut if necessary
+    * In order to avoid blocking on small screens, all elements are scrollable while waiting to find
+      a
+      more suitable solution
+    * Album image is displayed on screen in album page
+    * The different views are scrollable in their entirety
+    * The genre view displays, in addition to music, albums as in an artist's page
+    * The artist name is displayed in the album view and allows redirection to it
+    * The text areas have been harmonized and long texts will be cut if necessary
 * Some light optimizations have been made
 
 ## 0.9 (Android 9 Pie and later)
@@ -819,7 +831,8 @@ Improvements, Optimizations and Troubleshooting:
 
 ### 0.9.0-beta
 
-MP3 Player finally has its own name "Satunes". This version becomes compatible with Android 9 Pie and newer.
+MP3 Player finally has its own name "Satunes". This version becomes compatible with Android 9 Pie
+and newer.
 
 New features:
 
@@ -866,14 +879,16 @@ Improvements, Optimizations and Troubleshooting:
 * The update system has been redesigned. Now the user needs to click a button in the settings. This
   is no longer automatic in order to avoid unnecessary data consumption.
 * Update checking has been fixed and now takes into account 4 types of updates:
-  * Alpha: These are the most experimental and buggy versions. Features are not set in stone and may
-    disappear with a subsequent update.
-  * Beta: These are test versions to resolve problems with new features. This will be permanently
-    added to the application (except in cases of major forces).
-  * Preview: This is a release candidate which, if all goes well, will be deployed as a stable
-    version.
-  * Stable: This is a ready-to-use version. This is the recommended version for normal use. However, it may still present some bugs but these will be fixed
-     rare and will not prevent the functionality from functioning properly.
+    * Alpha: These are the most experimental and buggy versions. Features are not set in stone and
+      may
+      disappear with a subsequent update.
+    * Beta: These are test versions to resolve problems with new features. This will be permanently
+      added to the application (except in cases of major forces).
+    * Preview: This is a release candidate which, if all goes well, will be deployed as a stable
+      version.
+    * Stable: This is a ready-to-use version. This is the recommended version for normal use.
+      However, it may still present some bugs but these will be fixed
+      rare and will not prevent the functionality from functioning properly.
 * Adding music to several playlists is basically fixed.
 * Crashes occurring when recomposing the UI following changes such as "Screen rotation" or "
   Activation of dark mode" will no longer cause the application to crash.
@@ -896,7 +911,8 @@ New features:
 * Added new sections to the settings page.
 * Added title to show where the user is located.
 * Added a horizontal list displaying all artist's albums.
-* Possibility to click on album (in the artist page or from the currently playing music) to display the album page.
+* Possibility to click on album (in the artist page or from the currently playing music) to display
+  the album page.
 
 Improvements, Optimizations and Troubleshooting:
 
@@ -960,7 +976,7 @@ Fix issues:
 Features:
 
 * Android Auto support
-  * To activate Android Auto you can find instructions [here](README_EN)
+    * To activate Android Auto you can find instructions [here](README_EN)
 
 Fix issues:
 
@@ -987,8 +1003,8 @@ Features:
 
 * Show genres list and play music from them
 * Settings
-  * Allow users to stop the playback if the app is closed from multitasking
-  * Allow users to pause playback if the headset is disconnected (cable or bluetooth)
+    * Allow users to stop the playback if the app is closed from multitasking
+    * Allow users to pause playback if the headset is disconnected (cable or bluetooth)
 
 Fix issues:
 

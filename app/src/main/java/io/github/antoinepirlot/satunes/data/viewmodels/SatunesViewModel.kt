@@ -79,6 +79,22 @@ import io.github.antoinepirlot.satunes.internet.R as RInternet
 class SatunesViewModel : ViewModel() {
     companion object {
         private val _uiState: MutableStateFlow<SatunesUiState> = MutableStateFlow(SatunesUiState())
+
+        fun reloadSettings() {
+            _uiState.update { currentState: SatunesUiState ->
+                currentState.copy(
+                    playbackWhenClosedChecked = SettingsManager.playbackWhenClosedChecked,
+                    pauseIfNoisyChecked = SettingsManager.pauseIfNoisyChecked,
+                    pauseIfAnotherPlayback = SettingsManager.pauseIfAnotherPlayback,
+                    shuffleMode = SettingsManager.shuffleMode,
+                    repeatMode = SettingsManager.repeatMode,
+                    audioOffloadChecked = SettingsManager.audioOffloadChecked,
+                    barSpeed = SettingsManager.barSpeed,
+                    compilationMusic = SettingsManager.compilationMusic,
+                    artistReplacement = SettingsManager.artistReplacement,
+                )
+            }
+        }
     }
 
     private val _logger: SatunesLogger? = SatunesLogger.getLogger()

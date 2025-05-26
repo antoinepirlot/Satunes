@@ -57,7 +57,8 @@ internal fun RadioButton(
     colors: RadioButtonColors = RadioButtonDefaults.colors(),
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     icon: SatunesIcons? = null,
-    text: String? = null
+    text: String? = null,
+    maxLine: Int = 1
 ) {
 
     Row(
@@ -76,7 +77,7 @@ internal fun RadioButton(
         )
         if (icon != null) Icon(icon = icon)
         if (icon != null && text != null) Spacer(modifier = Modifier.size(size = spacerSize))
-        if (text != null) NormalText(text = text)
+        if (text != null) NormalText(text = text, maxLines = maxLine)
     }
 }
 

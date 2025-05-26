@@ -61,7 +61,15 @@ private val playlistsSortOptions: List<SortOptions> = listOf(
     SortOptions.TITLE
 )
 
-private val singlePlaylistSortOptions: List<SortOptions> = musicsSortOptions
+private val singlePlaylistSortOptions: List<SortOptions> = listOf(
+    SortOptions.TITLE,
+    SortOptions.ALBUM,
+    SortOptions.ARTIST,
+    SortOptions.GENRE,
+    SortOptions.YEAR,
+    SortOptions.DATE_ADDED,
+    SortOptions.PLAYLIST_ADDED_DATE
+)
 
 /**
  * Get the sortOptions list for the specified [Destination].

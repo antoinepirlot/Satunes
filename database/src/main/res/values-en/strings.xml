@@ -32,5 +32,6 @@
     <string name="various_artists">Various Artists</string>
     <string name="years">Years</string>
     <string name="added_date">Added Date</string>
+    <string name="playlist_added_date">Added in playlist order</string>
     <string name="custom_action_add_to_playlist">Add to playlist</string>
 </resources>

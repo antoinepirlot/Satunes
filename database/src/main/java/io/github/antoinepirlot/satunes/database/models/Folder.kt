@@ -51,7 +51,7 @@ class Folder(
     }
 
     override fun isEmpty(): Boolean {
-        return super.isEmpty() || try {
+        return super.isEmpty() && try {
             this.subFolderSortedSet.first { it.isNotEmpty() }
             false
         } catch (_: NoSuchElementException) {

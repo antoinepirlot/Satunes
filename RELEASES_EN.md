@@ -4,6 +4,13 @@ Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
 ## 3.1 (Android 5.1.1 Lollipop and later)
 
+### 3.1.2
+
+Improvements, optimizations and troubleshooting:
+
+* Fix play buttons not showing in folders views
+* Fix back gesture with swipe navigation (predictive back gesture is temporarily disable)
+
 ### 3.1.1
 
 Improvements, optimizations and troubleshooting:

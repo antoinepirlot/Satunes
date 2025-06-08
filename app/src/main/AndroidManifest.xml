@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ This file is part of Satunes.
   ~
   ~ Satunes is free software: you can redistribute it and/or modify it under
@@ -25,10 +24,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Since android 15, Google change the process and it makes app back gesture buggy in app
+        TODO enable OnBackInvokedCallback and check to fix the issue. (Temporarily disabled)
+    -->
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
-        android:enableOnBackInvokedCallback="true"
+        android:enableOnBackInvokedCallback="false"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/satunes_logo"
         android:label="@string/app_name"

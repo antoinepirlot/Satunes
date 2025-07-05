@@ -4,6 +4,12 @@ Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
 ## 3.1 (Android 5.1.1 Lollipop and later)
 
+### 3.1.3
+
+Improvements, optimizations and troubleshooting:
+
+* Fix crash when using sorts in a folder view
+
 ### 3.1.2
 
 Improvements, optimizations and troubleshooting:

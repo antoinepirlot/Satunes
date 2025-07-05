@@ -52,9 +52,7 @@ internal fun RootFolderView(
             rootFolderSet.forEach { folder: Folder ->
                 musicSet.addAll(folder.getAllMusic())
             }
-            satunesViewModel.replaceExtraButtons(extraButtons = {
-                ExtraButtonList()
-            })
+            satunesViewModel.replaceExtraButtons(extraButtons = { ExtraButtonList() })
         } else
             satunesViewModel.clearExtraButtons()
     }

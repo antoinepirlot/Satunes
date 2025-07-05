@@ -1,0 +1,3 @@
+Improvements, optimizations and troubleshooting:
+
+* Fix crash when using sorts in a folder view

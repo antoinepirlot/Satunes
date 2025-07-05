@@ -4,6 +4,20 @@ You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
 ## 3.1 (Android 5.1.1 Lollipop and later)
 
+### 3.1.3
+
+Améliorations, optimisations et dépannage :
+
+* Correction du crash lors du tri dans la vue d'un dossier
+
+### 3.1.2
+
+Améliorations, optimisations et dépannage :
+
+* Correction des boutons de lecture qui ne s'affichent pas dans les vues de dossiers
+* Correction du geste de retour avec la navigation par balayage (le geste de retour prédictif est
+  temporairement désactivé)
+
 ### 3.1.1
 
 Améliorations, optimisations et dépannage :

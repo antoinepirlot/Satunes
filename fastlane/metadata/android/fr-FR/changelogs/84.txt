@@ -1,0 +1,3 @@
+Améliorations, optimisations et dépannage :
+
+* Correction du crash lors du tri dans la vue d'un dossier

@@ -49,8 +49,7 @@ fun FileExtensionSelection(
     Row(modifier = modifier) {
         SatunesDropDownMenu(
             title = stringResource(R.string.file_extension_menu),
-            selectedItemText = dataViewModel.fileExtension?.value
-                ?: stringResource(R.string.file_extension_placeholder),
+            selectedItemText = dataViewModel.fileExtension.value
         ) { expanded: Boolean, onDismissRequest: () -> Unit ->
             Menu(
                 expanded = expanded,
@@ -72,7 +71,7 @@ private fun Menu(
         expanded = expanded,
         onDismissRequest = onDismissRequest
     ) {
-        for (fileExtension: FileExtensions in FileExtensions.entries)
+        for (fileExtension: FileExtensions in FileExtensions.getPlaylistsCompatibleFormats())
             DropdownMenuItem(
                 text = { NormalText(text = fileExtension.value) },
                 onClick = { dataViewModel.updateFileExtension(fileExtension = fileExtension) }

@@ -103,7 +103,7 @@ class DataViewModel : ViewModel() {
     /**
      * File extension used to know which file to import/export
      */
-    var fileExtension: FileExtensions? by mutableStateOf(null)
+    var fileExtension: FileExtensions by mutableStateOf(FileExtensions.JSON)
         private set
 
     /**
@@ -551,12 +551,14 @@ class DataViewModel : ViewModel() {
         this.fileExtension = fileExtension
     }
 
-    fun importPlaylists() = MainActivity.instance.openFileToImportPlaylists()
+    fun importPlaylists() =
+        MainActivity.instance.openFileToImportPlaylists(fileExtension = fileExtension)
 
     fun exportPlaylist(playlist: Playlist) {
         DatabaseManager.exportingPlaylist = true
         MainActivity.instance.createFileToExportPlaylist(
             defaultFileName = playlist.title,
+            fileExtension = fileExtension,
             playlist = playlist
         )
     }
@@ -582,7 +584,10 @@ class DataViewModel : ViewModel() {
             return
         }
         val fileName = "Satunes_${getNow()}"
-        MainActivity.instance.createFileToExportPlaylists(defaultFileName = fileName)
+        MainActivity.instance.createFileToExportPlaylists(
+            defaultFileName = fileName,
+            fileExtension = fileExtension
+        )
     }
 
     fun share(

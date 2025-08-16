@@ -143,5 +143,4 @@
     <string name="update_channel_dropdown_title">Canal</string>
     <string name="file_format_information_text">Sélectionne le format de fichier que tu veux</string>
     <string name="file_extension_menu">Extensions de fichier</string>
-    <string name="file_extension_placeholder">Sélectionne une extension</string>
 </resources>

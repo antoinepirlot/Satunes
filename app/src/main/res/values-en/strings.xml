@@ -165,5 +165,4 @@
     <string name="update_channel_dropdown_title">Channel</string>
     <string name="file_format_information_text">Select the file\'s format you want</string>
     <string name="file_extension_menu">File Extensions</string>
-    <string name="file_extension_placeholder">Select an extension</string>
 </resources>

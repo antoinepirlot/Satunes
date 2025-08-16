@@ -55,7 +55,7 @@ import io.github.antoinepirlot.satunes.ui.components.bars.bottom.BottomAppBar
 import io.github.antoinepirlot.satunes.ui.components.bars.top.TopAppBar
 import io.github.antoinepirlot.satunes.ui.components.buttons.fab.SatunesFAB
 import io.github.antoinepirlot.satunes.ui.components.dialog.WhatsNewDialog
-import io.github.antoinepirlot.satunes.ui.components.dialog.playlist.ExportAllPlaylistDialog
+import io.github.antoinepirlot.satunes.ui.components.dialog.playlist.ExportImportPlaylistsDialog
 import io.github.antoinepirlot.satunes.ui.theme.SatunesTheme
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import kotlinx.coroutines.CoroutineScope
@@ -121,9 +121,14 @@ internal fun Satunes(
                             }
                         )
                     } else if (dataUiState.showImportPlaylistDialog) {
-                        TODO()
+                        ExportImportPlaylistsDialog(
+                            export = false,
+                            onConfirm = { dataViewModel.importPlaylists() },
+                            onDismissRequest = { dataViewModel.closeImportPlaylistDialog() }
+                        )
                     } else if (dataUiState.showExportAllPlaylistDialog) {
-                        ExportAllPlaylistDialog(
+                        ExportImportPlaylistsDialog(
+                            export = true,
                             onConfirm = {
                                 dataViewModel.exportPlaylists(
                                     scope = scope,

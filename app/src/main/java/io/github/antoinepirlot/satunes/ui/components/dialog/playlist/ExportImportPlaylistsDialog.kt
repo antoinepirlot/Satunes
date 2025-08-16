@@ -41,23 +41,27 @@ import io.github.antoinepirlot.satunes.ui.components.images.Icon
  */
 
 @Composable
-fun ExportAllPlaylistDialog(
+fun ExportImportPlaylistsDialog(
     modifier: Modifier = Modifier,
     onConfirm: () -> Unit,
     onDismissRequest: () -> Unit,
+    export: Boolean //false means import
 ) {
+    val icon: SatunesIcons = if (export) SatunesIcons.EXPORT else SatunesIcons.IMPORT
+    val stringId: Int = if (export) R.string.export else R.string._import
+
     AlertDialog(
         modifier = modifier,
         onDismissRequest = onDismissRequest,
         icon = {
-            Icon(icon = SatunesIcons.EXPORT)
+            Icon(icon = icon)
         },
         title = {
-            NormalText(text = stringResource(R.string.export))
+            NormalText(text = stringResource(id = stringId))
         },
         confirmButton = {
             ButtonWithIcon(
-                icon = SatunesIcons.EXPORT, text = stringResource(R.string.export),
+                icon = icon, text = stringResource(id = stringId),
                 onClick = onConfirm,
             )
         },
@@ -68,7 +72,7 @@ fun ExportAllPlaylistDialog(
         },
         text = {
             Column {
-                NormalText(text = stringResource(R.string.export_playlist_text))
+                NormalText(text = stringResource(R.string.file_format_information_text))
                 FileExtensionSelection()
             }
         },

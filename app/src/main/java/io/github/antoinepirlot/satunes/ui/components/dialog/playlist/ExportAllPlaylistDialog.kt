@@ -23,17 +23,17 @@
 
 package io.github.antoinepirlot.satunes.ui.components.dialog.playlist
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.glance.layout.Column
-import androidx.glance.layout.Row
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.buttons.ButtonWithIcon
+import io.github.antoinepirlot.satunes.ui.components.forms.playlists.FileExtensionSelection
 import io.github.antoinepirlot.satunes.ui.components.images.Icon
 
 /**
@@ -69,9 +69,7 @@ fun ExportAllPlaylistDialog(
         text = {
             Column {
                 NormalText(text = stringResource(R.string.export_playlist_text))
-                Row {
-                    //TODO add the setting to select file extension
-                }
+                FileExtensionSelection()
             }
         },
     )

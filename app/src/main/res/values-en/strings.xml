@@ -164,4 +164,6 @@
     <string name="disc_widget_description">Disc</string>
     <string name="update_channel_dropdown_title">Channel</string>
     <string name="export_playlist_text">Select the file\'s format you want</string>
+    <string name="file_extension_menu">File Extensions</string>
+    <string name="file_extension_placeholder">Select an extension</string>
 </resources>

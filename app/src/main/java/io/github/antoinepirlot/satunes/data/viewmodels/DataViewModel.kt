@@ -51,6 +51,7 @@ import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
+import io.github.antoinepirlot.satunes.models.FileExtensions
 import io.github.antoinepirlot.satunes.models.radio_buttons.SortOptions
 import io.github.antoinepirlot.satunes.ui.utils.showErrorSnackBar
 import io.github.antoinepirlot.satunes.ui.utils.showSnackBar
@@ -96,6 +97,12 @@ class DataViewModel : ViewModel() {
         private set
 
     val isLoaded: Boolean by _isLoaded
+
+    /**
+     * File extension used to know which file to import/export
+     */
+    var fileExtension: FileExtensions? by mutableStateOf(null)
+        private set
 
     fun playlistSetUpdated() {
         this._playlistSetUpdated.value = false
@@ -530,6 +537,10 @@ class DataViewModel : ViewModel() {
         _uiState.update { currentState: DataUiState ->
             currentState.copy(showExportAllPlaylistDialog = false)
         }
+    }
+
+    fun updateFileExtension(fileExtension: FileExtensions) {
+        this.fileExtension = fileExtension
     }
 
     fun importPlaylists() = MainActivity.instance.openFileToImportPlaylists()

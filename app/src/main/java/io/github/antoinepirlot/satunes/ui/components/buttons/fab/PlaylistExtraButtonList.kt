@@ -57,10 +57,7 @@ internal fun PlaylistExtraButtonList(
     ) {
         ExtraButton(
             icon = SatunesIcons.EXPORT,
-            onClick = {
-                dataViewModel.setPlaylistToExport(playlist = playlist)
-                dataViewModel.openExportPlaylistDialog()
-            }
+            onClick = { dataViewModel.openExportPlaylistDialog(playlist = playlist) }
         )
         ExtraButton(
             icon = SatunesIcons.ADD,

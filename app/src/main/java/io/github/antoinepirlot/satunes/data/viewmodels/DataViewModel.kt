@@ -535,13 +535,15 @@ class DataViewModel : ViewModel() {
         }
     }
 
-    fun openExportPlaylistDialog() {
+    fun openExportPlaylistDialog(playlist: Playlist? = null) {
+        this._playlistToExport = playlist
         _uiState.update { currentState: DataUiState ->
             currentState.copy(showExportPlaylistDialog = true)
         }
     }
 
     fun closeExportPlaylistDialog() {
+        this._playlistToExport = null
         _uiState.update { currentState: DataUiState ->
             currentState.copy(showExportPlaylistDialog = false)
         }
@@ -971,9 +973,5 @@ class DataViewModel : ViewModel() {
                 }
             )
         }
-    }
-
-    fun setPlaylistToExport(playlist: Playlist) {
-        this._playlistToExport = playlist
     }
 }

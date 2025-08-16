@@ -400,9 +400,15 @@ class DatabaseManager private constructor(context: Context) {
     private fun getPlaylistsM3uFormat(): String {
         val playlistsWithMusics: List<PlaylistWithMusics> = this.getAllPlaylistWithMusics()
         var fileContent: String = "#EXTM3U\n"
-        for (playlist: PlaylistWithMusics in playlistsWithMusics)
-            fileContent += getPlaylistM3uFormat(playlist = playlist.playlistDB.playlist!!)
-        return fileContent
+        for (playlist: PlaylistWithMusics in playlistsWithMusics) {
+            val playlist: Playlist = playlist.playlistDB.playlist!!
+            fileContent += """#PLAYLIST:${playlist.title}
+                |${getPlaylistM3uFormat(playlist = playlist)}
+                |
+            """.trimMargin()
+
+        }
+        return fileContent.trimMargin()
     }
 
     private fun getPlaylistM3uFormat(playlist: Playlist): String {

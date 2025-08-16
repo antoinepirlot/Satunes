@@ -46,13 +46,16 @@ import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.data.local.LocalMainScope
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
+import io.github.antoinepirlot.satunes.data.states.DataUiState
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
+import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.router.Router
 import io.github.antoinepirlot.satunes.ui.components.bars.bottom.BottomAppBar
 import io.github.antoinepirlot.satunes.ui.components.bars.top.TopAppBar
 import io.github.antoinepirlot.satunes.ui.components.buttons.fab.SatunesFAB
 import io.github.antoinepirlot.satunes.ui.components.dialog.WhatsNewDialog
+import io.github.antoinepirlot.satunes.ui.components.dialog.playlist.ExportAllPlaylistDialog
 import io.github.antoinepirlot.satunes.ui.theme.SatunesTheme
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import kotlinx.coroutines.CoroutineScope
@@ -65,10 +68,13 @@ import kotlinx.coroutines.CoroutineScope
 @Composable
 internal fun Satunes(
     modifier: Modifier = Modifier,
-    satunesViewModel: SatunesViewModel = viewModel()
+    satunesViewModel: SatunesViewModel = viewModel(),
+    dataViewModel: DataViewModel = viewModel()
 ) {
     SatunesLogger.getLogger()?.info("Satunes Composable")
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+    val dataUiState: DataUiState by dataViewModel.uiState.collectAsState()
+
     SatunesTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
@@ -113,6 +119,18 @@ internal fun Satunes(
                                     snackBarHostState = snackBarHostState,
                                 )
                             }
+                        )
+                    } else if (dataUiState.showImportPlaylistDialog) {
+                        TODO()
+                    } else if (dataUiState.showExportAllPlaylistDialog) {
+                        ExportAllPlaylistDialog(
+                            onConfirm = {
+                                dataViewModel.exportPlaylists(
+                                    scope = scope,
+                                    snackBarHostState = snackBarHostState
+                                )
+                            },
+                            onDismissRequest = { dataViewModel.closeExportAllPlaylistDialog() }
                         )
                     }
                 }

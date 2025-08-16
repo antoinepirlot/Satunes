@@ -164,4 +164,5 @@
     <string name="include_exclude_change_text">Désormais, les deux types d\'inclusion/exclusion sont pris en compte simultanément. Cela signifie que vous pouvez inclure certains dossiers et en exclure d\'autres en même temps (exclure est prédominant).</string>
     <string name="disc_widget_description">Disque</string>
     <string name="update_channel_dropdown_title">Canal</string>
+    <string name="export_playlist_text">Sélectionne le format de fichier que tu veux</string>
 </resources>

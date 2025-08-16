@@ -82,6 +82,8 @@ class DataViewModel : ViewModel() {
     private val _isLoaded: MutableState<Boolean> = DataLoader.isLoaded
     private var _updatePlaylistsJob: Job? = null
 
+    val uiState: StateFlow<DataUiState> = _uiState.asStateFlow()
+
     var playlistSetUpdated: Boolean by _playlistSetUpdated
         private set
     var listSetUpdatedProcessed: Boolean = true
@@ -94,8 +96,6 @@ class DataViewModel : ViewModel() {
         private set
 
     val isLoaded: Boolean by _isLoaded
-
-    val uiState: StateFlow<DataUiState> = _uiState.asStateFlow()
 
     fun playlistSetUpdated() {
         this._playlistSetUpdated.value = false
@@ -505,6 +505,30 @@ class DataViewModel : ViewModel() {
                     )
                 }
             }
+        }
+    }
+
+    fun openImportPlaylistDialog() {
+        _uiState.update { currentState: DataUiState ->
+            currentState.copy(showImportPlaylistDialog = true)
+        }
+    }
+
+    fun closeImportPlaylistDialog() {
+        _uiState.update { currentState: DataUiState ->
+            currentState.copy(showImportPlaylistDialog = false)
+        }
+    }
+
+    fun openExportAllPlaylistDialog() {
+        _uiState.update { currentState: DataUiState ->
+            currentState.copy(showExportAllPlaylistDialog = true)
+        }
+    }
+
+    fun closeExportAllPlaylistDialog() {
+        _uiState.update { currentState: DataUiState ->
+            currentState.copy(showExportAllPlaylistDialog = false)
         }
     }
 

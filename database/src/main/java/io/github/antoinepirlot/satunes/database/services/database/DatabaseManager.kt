@@ -33,6 +33,7 @@ import io.github.antoinepirlot.satunes.database.exceptions.LikesPlaylistCreation
 import io.github.antoinepirlot.satunes.database.exceptions.MusicNotFoundException
 import io.github.antoinepirlot.satunes.database.exceptions.PlaylistAlreadyExistsException
 import io.github.antoinepirlot.satunes.database.exceptions.PlaylistNotFoundException
+import io.github.antoinepirlot.satunes.database.models.FileExtensions
 import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
@@ -354,24 +355,70 @@ class DatabaseManager private constructor(context: Context) {
         return this.playlistDao.getPlaylistsWithMusics()
     }
 
-    fun exportPlaylist(context: Context, uri: Uri, playlist: Playlist) {
-        val playlistWithMusics: PlaylistWithMusics =
+    fun exportPlaylist(
+        context: Context,
+        uri: Uri,
+        playlist: Playlist,
+        fileExtension: FileExtensions
+    ) {
+        val playlistWithMusics: List<PlaylistWithMusics> = listOf(
             this.playlistDao.getPlaylistWithMusics(playlistId = playlist.id)!!
-        val json: String = Json.encodeToString(playlistWithMusics)
-        exportJson(context = context, json = json, uri = uri)
-        exportingPlaylist = false
+        )
+        this.exportPlaylists(
+            context = context,
+            uri = uri,
+            playlistsWithMusics = playlistWithMusics,
+            fileExtension = fileExtension
+        )
     }
 
-    fun exportPlaylists(context: Context, uri: Uri) {
+    fun exportPlaylists(context: Context, uri: Uri, fileExtension: FileExtensions) {
         val playlistsWithMusics: List<PlaylistWithMusics> = this.getAllPlaylistWithMusics()
-        val json: String = Json.encodeToString(playlistsWithMusics)
-        exportJson(context = context, json = json, uri = uri)
+        this.exportPlaylists(
+            context = context,
+            uri = uri,
+            playlistsWithMusics = playlistsWithMusics,
+            fileExtension = fileExtension
+        )
+    }
+
+    private fun exportPlaylists(
+        context: Context,
+        uri: Uri,
+        playlistsWithMusics: Collection<PlaylistWithMusics>,
+        fileExtension: FileExtensions
+    ) {
+        val content: String = when (fileExtension) {
+            FileExtensions.JSON -> Json.encodeToString(playlistsWithMusics)
+            FileExtensions.M3U -> getPlaylistsM3uFormat()
+            else -> throw UnsupportedOperationException("${fileExtension.value} is not supported.")
+        }
+        export(context = context, content = content, uri = uri)
         exportingPlaylist = false
     }
 
-    private fun exportJson(context: Context, json: String, uri: Uri) {
+    private fun getPlaylistsM3uFormat(): String {
+        val playlistsWithMusics: List<PlaylistWithMusics> = this.getAllPlaylistWithMusics()
+        var fileContent: String = "#EXTM3U\n"
+        for (playlist: PlaylistWithMusics in playlistsWithMusics)
+            fileContent += getPlaylistM3uFormat(playlist = playlist.playlistDB.playlist!!)
+        return fileContent
+    }
+
+    private fun getPlaylistM3uFormat(playlist: Playlist): String {
+        var toReturn: String = ""
+        for (music: Music in playlist.getMusicSet())
+            toReturn += """#EXTINF:${music.duration / 1000},${music.title}
+                |file:///${music.absolutePath}
+                |
+            """.trimMargin()
+
+        return toReturn
+    }
+
+    private fun export(context: Context, content: String, uri: Uri) {
         try {
-            if (writeToUri(context = context, uri = uri, string = json)) {
+            if (writeToUri(context = context, uri = uri, string = content)) {
                 showToastOnUiThread(
                     context = context,
                     message = context.getString(R.string.exporting_success)

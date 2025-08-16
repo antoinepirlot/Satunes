@@ -21,7 +21,7 @@
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
-package io.github.antoinepirlot.satunes.models
+package io.github.antoinepirlot.satunes.database.models
 
 /**
  * @author Antoine Pirlot 16/08/2025

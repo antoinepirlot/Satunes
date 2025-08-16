@@ -42,6 +42,7 @@ import io.github.antoinepirlot.satunes.database.exceptions.LikesPlaylistCreation
 import io.github.antoinepirlot.satunes.database.exceptions.PlaylistAlreadyExistsException
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
+import io.github.antoinepirlot.satunes.database.models.FileExtensions
 import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
@@ -51,7 +52,6 @@ import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
-import io.github.antoinepirlot.satunes.models.FileExtensions
 import io.github.antoinepirlot.satunes.models.radio_buttons.SortOptions
 import io.github.antoinepirlot.satunes.ui.utils.showErrorSnackBar
 import io.github.antoinepirlot.satunes.ui.utils.showSnackBar
@@ -583,6 +583,7 @@ class DataViewModel : ViewModel() {
             DatabaseManager.exportingPlaylist = false
             return
         }
+
         val fileName = "Satunes_${getNow()}"
         MainActivity.instance.createFileToExportPlaylists(
             defaultFileName = fileName,

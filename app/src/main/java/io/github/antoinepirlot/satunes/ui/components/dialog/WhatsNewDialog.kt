@@ -120,5 +120,5 @@ internal fun WhatsNewDialog(
 @Preview
 @Composable
 private fun WhatsNewDialogPreview() {
-    WhatsNewDialog(onConfirm = {}, onDismiss = {})
+    WhatsNewDialog()
 }

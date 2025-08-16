@@ -26,15 +26,21 @@ package io.github.antoinepirlot.satunes.ui.components.dialog.playlist
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.data.local.LocalMainScope
+import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
+import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.buttons.ButtonWithIcon
 import io.github.antoinepirlot.satunes.ui.components.forms.playlists.FileExtensionSelection
 import io.github.antoinepirlot.satunes.ui.components.images.Icon
+import kotlinx.coroutines.CoroutineScope
 
 /**
  * @author Antoine Pirlot 16/08/2025
@@ -43,12 +49,18 @@ import io.github.antoinepirlot.satunes.ui.components.images.Icon
 @Composable
 fun ExportImportPlaylistsDialog(
     modifier: Modifier = Modifier,
-    onConfirm: () -> Unit,
-    onDismissRequest: () -> Unit,
-    export: Boolean //false means import
+    dataViewModel: DataViewModel = viewModel(),
+    export: Boolean, //false means import
 ) {
+    val scope: CoroutineScope = LocalMainScope.current
+    val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
     val icon: SatunesIcons = if (export) SatunesIcons.EXPORT else SatunesIcons.IMPORT
     val stringId: Int = if (export) R.string.export else R.string._import
+
+    val onDismissRequest: () -> Unit = {
+        if (export) dataViewModel.closeExportPlaylistDialog()
+        else dataViewModel.closeImportPlaylistDialog()
+    }
 
     AlertDialog(
         modifier = modifier,
@@ -62,7 +74,18 @@ fun ExportImportPlaylistsDialog(
         confirmButton = {
             ButtonWithIcon(
                 icon = icon, text = stringResource(id = stringId),
-                onClick = onConfirm,
+                onClick = {
+                    if (export) {
+                        dataViewModel.exportPlaylists(
+                            scope = scope,
+                            snackBarHostState = snackBarHostState
+                        )
+                        dataViewModel.closeExportPlaylistDialog()
+                    } else {
+                        dataViewModel.importPlaylists()
+                        dataViewModel.closeImportPlaylistDialog()
+                    }
+                },
             )
         },
         dismissButton = {

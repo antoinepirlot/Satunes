@@ -83,6 +83,8 @@ class DataViewModel : ViewModel() {
     private val _isLoaded: MutableState<Boolean> = DataLoader.isLoaded
     private var _updatePlaylistsJob: Job? = null
 
+    private var _playlistToExport: Playlist? = null
+
     val uiState: StateFlow<DataUiState> = _uiState.asStateFlow()
 
     var playlistSetUpdated: Boolean by _playlistSetUpdated
@@ -103,6 +105,12 @@ class DataViewModel : ViewModel() {
      */
     var fileExtension: FileExtensions? by mutableStateOf(null)
         private set
+
+    /**
+     * Indicates if the user export only one playlist
+     */
+    val isExportSinglePlaylist: Boolean
+        get() = this._playlistToExport != null
 
     fun playlistSetUpdated() {
         this._playlistSetUpdated.value = false
@@ -527,15 +535,15 @@ class DataViewModel : ViewModel() {
         }
     }
 
-    fun openExportAllPlaylistDialog() {
+    fun openExportPlaylistDialog() {
         _uiState.update { currentState: DataUiState ->
-            currentState.copy(showExportAllPlaylistDialog = true)
+            currentState.copy(showExportPlaylistDialog = true)
         }
     }
 
-    fun closeExportAllPlaylistDialog() {
+    fun closeExportPlaylistDialog() {
         _uiState.update { currentState: DataUiState ->
-            currentState.copy(showExportAllPlaylistDialog = false)
+            currentState.copy(showExportPlaylistDialog = false)
         }
     }
 
@@ -557,6 +565,12 @@ class DataViewModel : ViewModel() {
         scope: CoroutineScope,
         snackBarHostState: SnackbarHostState,
     ) {
+        if (this.isExportSinglePlaylist) {
+            exportPlaylist(playlist = this._playlistToExport!!)
+            this._playlistToExport = null
+            return
+        }
+
         DatabaseManager.exportingPlaylist = true
         if (DataManager.getPlaylistSet().isEmpty()) {
             showSnackBar(
@@ -951,5 +965,9 @@ class DataViewModel : ViewModel() {
                 }
             )
         }
+    }
+
+    fun setPlaylistToExport(playlist: Playlist) {
+        this._playlistToExport = playlist
     }
 }

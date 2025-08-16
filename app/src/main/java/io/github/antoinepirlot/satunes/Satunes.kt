@@ -101,43 +101,12 @@ internal fun Satunes(
                     floatingActionButtonPosition = FabPosition.End
                 ) { innerPadding: PaddingValues ->
                     Router(modifier = Modifier.padding(innerPadding))
-                    if (!satunesUiState.whatsNewSeen) {
-                        WhatsNewDialog(
-                            onConfirm = {
-                                // When app relaunch, it's not shown again
-                                satunesViewModel.seeWhatsNew(
-                                    scope = scope,
-                                    snackBarHostState = snackBarHostState,
-                                    permanently = true
-                                )
-
-                            },
-                            onDismiss = {
-                                // When app relaunch, it's shown again
-                                satunesViewModel.seeWhatsNew(
-                                    scope = scope,
-                                    snackBarHostState = snackBarHostState,
-                                )
-                            }
-                        )
-                    } else if (dataUiState.showImportPlaylistDialog) {
-                        ExportImportPlaylistsDialog(
-                            export = false,
-                            onConfirm = { dataViewModel.importPlaylists() },
-                            onDismissRequest = { dataViewModel.closeImportPlaylistDialog() }
-                        )
-                    } else if (dataUiState.showExportAllPlaylistDialog) {
-                        ExportImportPlaylistsDialog(
-                            export = true,
-                            onConfirm = {
-                                dataViewModel.exportPlaylists(
-                                    scope = scope,
-                                    snackBarHostState = snackBarHostState
-                                )
-                            },
-                            onDismissRequest = { dataViewModel.closeExportAllPlaylistDialog() }
-                        )
-                    }
+                    if (!satunesUiState.whatsNewSeen)
+                        WhatsNewDialog()
+                    else if (dataUiState.showImportPlaylistDialog)
+                        ExportImportPlaylistsDialog(export = false)
+                    else if (dataUiState.showExportPlaylistDialog)
+                        ExportImportPlaylistsDialog(export = true)
                 }
             }
         }

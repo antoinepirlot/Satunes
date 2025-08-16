@@ -28,6 +28,6 @@ data class DataUiState(
     val mediaImplListOnScreen: Collection<MediaImpl> = listOf(),
     val showFirstLetter: Boolean = SettingsManager.showFirstLetter,
     val appliedSortOption: SortOptions? = null,
-    val showExportAllPlaylistDialog: Boolean = false,
+    val showExportPlaylistDialog: Boolean = false,
     val showImportPlaylistDialog: Boolean = false,
 )

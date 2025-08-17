@@ -566,7 +566,7 @@ class DataViewModel : ViewModel() {
             defaultFileName = playlist.title,
             fileExtension = fileExtension,
             playlist = playlist,
-            rootPlaylistsFilesPath = this.rootPlaylistsFilesPath
+            rootPlaylistsFilesPath = if (_uiState.value.changeFileRootPath) this.rootPlaylistsFilesPath else DEFAULT_ROOT_FILE_PATH
         )
     }
 

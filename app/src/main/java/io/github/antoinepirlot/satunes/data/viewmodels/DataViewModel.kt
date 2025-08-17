@@ -595,7 +595,7 @@ class DataViewModel : ViewModel() {
         MainActivity.instance.createFileToExportPlaylists(
             defaultFileName = fileName,
             fileExtension = fileExtension,
-            rootPlaylistsFilesPath = this.rootPlaylistsFilesPath
+            rootPlaylistsFilesPath = if (_uiState.value.changeFileRootPath) this.rootPlaylistsFilesPath else DEFAULT_ROOT_FILE_PATH
         )
     }
 

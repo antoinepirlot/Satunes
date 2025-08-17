@@ -39,6 +39,7 @@ import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.database.models.FileExtensions
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.buttons.ButtonWithIcon
+import io.github.antoinepirlot.satunes.ui.components.forms.playlists.ExportMultipleFiles
 import io.github.antoinepirlot.satunes.ui.components.forms.playlists.FileExtensionSelection
 import io.github.antoinepirlot.satunes.ui.components.forms.playlists.MusicsRootPathSelection
 import io.github.antoinepirlot.satunes.ui.components.images.Icon
@@ -99,8 +100,10 @@ fun ExportImportPlaylistsDialog(
             Column {
                 NormalText(text = stringResource(R.string.file_format_information_text))
                 FileExtensionSelection()
-                if (export && dataViewModel.fileExtension == FileExtensions.M3U)
+                if (export && dataViewModel.fileExtension == FileExtensions.M3U) {
                     MusicsRootPathSelection()
+                    ExportMultipleFiles()
+                }
             }
         },
     )

@@ -990,4 +990,10 @@ class DataViewModel : ViewModel() {
     fun updateRootPlaylistsFilesPath(newValue: String) {
         this.rootPlaylistsFilesPath = newValue
     }
+
+    fun switchMultipleFiles() {
+        _uiState.update { currentState: DataUiState ->
+            currentState.copy(multipleFiles = !currentState.multipleFiles)
+        }
+    }
 }

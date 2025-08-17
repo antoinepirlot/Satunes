@@ -23,52 +23,37 @@
 
 package io.github.antoinepirlot.satunes.ui.components.forms.playlists
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
-import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.data.states.DataUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
-import io.github.antoinepirlot.satunes.database.data.DEFAULT_ROOT_FILE_PATH
 import io.github.antoinepirlot.satunes.models.SwitchSettings
 import io.github.antoinepirlot.satunes.ui.components.settings.SettingWithSwitch
 
 /**
  * @author Antoine Pirlot 17/08/2025
  */
-
 @Composable
-fun MusicsRootPathSelection(
+fun ExportMultipleFiles(
     modifier: Modifier = Modifier,
-    dataViewModel: DataViewModel = viewModel(),
+    dataViewModel: DataViewModel = viewModel()
 ) {
     val dataUiState: DataUiState by dataViewModel.uiState.collectAsState()
 
-    Column(modifier = modifier) {
-        SettingWithSwitch(
-            modifier = modifier,
-            setting = SwitchSettings.CHANGE_ROOT_PATH,
-            checked = dataUiState.changeFileRootPath,
-            onCheckedChange = { dataViewModel.switchChangeFileRootPath() },
-        )
-
-        if (dataUiState.changeFileRootPath) {
-            TextField(
-                value = dataViewModel.rootPlaylistsFilesPath,
-                onValueChange = { dataViewModel.updateRootPlaylistsFilesPath(newValue = it) },
-                placeholder = { NormalText(text = DEFAULT_ROOT_FILE_PATH) },
-            )
-        }
-    }
+    SettingWithSwitch(
+        modifier = modifier,
+        setting = SwitchSettings.EXPORT_MULTIPLE_FILES,
+        checked = dataUiState.multipleFiles,
+        onCheckedChange = { dataViewModel.switchMultipleFiles() }
+    )
 }
 
 @Preview
 @Composable
-private fun MusicRootPathSelectionPreview() {
-    MusicsRootPathSelection()
+private fun ExportMultipleFilesPreview() {
+    ExportMultipleFiles()
 }

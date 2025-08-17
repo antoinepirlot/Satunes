@@ -30,5 +30,6 @@ data class DataUiState(
     val appliedSortOption: SortOptions? = null,
     val showExportPlaylistDialog: Boolean = false,
     val showImportPlaylistDialog: Boolean = false,
-    val changeFileRootPath: Boolean = false
+    val changeFileRootPath: Boolean = false,
+    val multipleFiles: Boolean = false
 )

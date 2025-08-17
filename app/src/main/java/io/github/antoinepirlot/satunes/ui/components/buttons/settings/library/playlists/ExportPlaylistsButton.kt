@@ -43,18 +43,13 @@ fun ExportPlaylistsButton(
     modifier: Modifier = Modifier,
     dataViewModel: DataViewModel = viewModel(),
 ) {
-    val scope: CoroutineScope = LocalMainScope.current
-    val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
+    LocalMainScope.current
+    LocalSnackBarHostState.current
 
     ButtonWithIcon(
         modifier = modifier,
         icon = SatunesIcons.EXPORT,
-        onClick = {
-            dataViewModel.exportPlaylists(
-                scope = scope,
-                snackBarHostState = snackBarHostState
-            )
-        },
+        onClick = { dataViewModel.openExportPlaylistDialog() },
         text = stringResource(id = R.string.export)
     )
 }

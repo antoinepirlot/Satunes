@@ -23,6 +23,7 @@ package io.github.antoinepirlot.satunes.database.services.database
 import android.content.Context
 import android.database.sqlite.SQLiteConstraintException
 import android.net.Uri
+import androidx.core.net.toUri
 import io.github.antoinepirlot.satunes.database.R
 import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.daos.MusicDAO
@@ -360,7 +361,8 @@ class DatabaseManager private constructor(context: Context) {
         uri: Uri,
         playlist: Playlist,
         fileExtension: FileExtensions,
-        rootPlaylistsFilesPath: String
+        rootPlaylistsFilesPath: String,
+        multipleFiles: Boolean
     ) {
         val playlistWithMusics: List<PlaylistWithMusics> = listOf(
             this.playlistDao.getPlaylistWithMusics(playlistId = playlist.id)!!
@@ -370,14 +372,16 @@ class DatabaseManager private constructor(context: Context) {
             uri = uri,
             playlistsWithMusics = playlistWithMusics,
             fileExtension = fileExtension,
-            rootPlaylistsFilesPath = rootPlaylistsFilesPath
+            rootPlaylistsFilesPath = rootPlaylistsFilesPath,
+            multipleFiles = multipleFiles
         )
     }
 
     fun exportPlaylists(
         context: Context, uri: Uri,
         fileExtension: FileExtensions,
-        rootPlaylistsFilesPath: String
+        rootPlaylistsFilesPath: String,
+        multipleFiles: Boolean
     ) {
         val playlistsWithMusics: List<PlaylistWithMusics> = this.getAllPlaylistWithMusics()
         this.exportPlaylists(
@@ -385,30 +389,59 @@ class DatabaseManager private constructor(context: Context) {
             uri = uri,
             playlistsWithMusics = playlistsWithMusics,
             fileExtension = fileExtension,
-            rootPlaylistsFilesPath = rootPlaylistsFilesPath
+            rootPlaylistsFilesPath = rootPlaylistsFilesPath,
+            multipleFiles = multipleFiles
         )
     }
 
     private fun exportPlaylists(
         context: Context,
         uri: Uri,
-        playlistsWithMusics: Collection<PlaylistWithMusics>,
+        playlistsWithMusics: List<PlaylistWithMusics>,
         fileExtension: FileExtensions,
-        rootPlaylistsFilesPath: String
+        rootPlaylistsFilesPath: String,
+        multipleFiles: Boolean
     ) {
-        val content: String = when (fileExtension) {
-            FileExtensions.JSON -> Json.encodeToString(playlistsWithMusics)
-            FileExtensions.M3U -> getPlaylistsM3uFormat(rootPlaylistsFilesPath = rootPlaylistsFilesPath)
+        val uris: MutableList<Uri> = mutableListOf()
+        val strings: List<String> = when (fileExtension) {
+            FileExtensions.JSON -> {
+                uris += uri
+                listOf(Json.encodeToString(playlistsWithMusics))
+            }
+
+            FileExtensions.M3U -> {
+                val strings: List<String> = getPlaylistsM3uFormat(
+                    rootPlaylistsFilesPath = rootPlaylistsFilesPath,
+                    multipleFiles
+                )
+                if (multipleFiles) {
+                    for (i: Int in strings.indices) {
+                        var fileName: String = uri.path!!.split("/").last()
+                        val extension: String = fileName.split(".").last()
+                        fileName.removeSuffix(".$extension")
+                        uris += "$fileName-${playlistsWithMusics[i].playlistDB.playlist!!.title}.$extension".toUri()
+                    }
+                } else {
+                    uris += uri
+                }
+                strings
+            }
             else -> throw UnsupportedOperationException("${fileExtension.value} is not supported.")
         }
-        export(context = context, content = content, uri = uri)
+        //TODO check uris
+        export(context = context, strings = strings, uris = uris)
         exportingPlaylist = false
     }
 
-    private fun getPlaylistsM3uFormat(rootPlaylistsFilesPath: String): String {
+    private fun getPlaylistsM3uFormat(
+        rootPlaylistsFilesPath: String,
+        multipleFiles: Boolean
+    ): List<String> {
+        val toReturn: MutableList<String> = mutableListOf()
         val playlistsWithMusics: List<PlaylistWithMusics> = this.getAllPlaylistWithMusics()
         var fileContent: String = "#EXTM3U\n"
         for (playlist: PlaylistWithMusics in playlistsWithMusics) {
+            if (multipleFiles) fileContent = "#EXTM3U\n"
             val playlist: Playlist = playlist.playlistDB.playlist!!
             fileContent += """#PLAYLIST:${playlist.title}
                 |${
@@ -419,9 +452,10 @@ class DatabaseManager private constructor(context: Context) {
             }
                 |
             """.trimMargin()
-
+            if (multipleFiles) toReturn += fileContent
         }
-        return fileContent.trimMargin()
+        if (!multipleFiles) toReturn += fileContent
+        return toReturn
     }
 
     private fun getPlaylistM3uFormat(playlist: Playlist, rootPlaylistsFilesPath: String): String {
@@ -435,18 +469,20 @@ class DatabaseManager private constructor(context: Context) {
         return toReturn
     }
 
-    private fun export(context: Context, content: String, uri: Uri) {
+    private fun export(context: Context, strings: List<String>, uris: List<Uri>) {
         try {
-            if (writeToUri(context = context, uri = uri, string = content)) {
-                showToastOnUiThread(
-                    context = context,
-                    message = context.getString(R.string.exporting_success)
-                )
-            } else {
-                showToastOnUiThread(
-                    context = context,
-                    message = context.getString(R.string.exporting_failed)
-                )
+            for (i: Int in strings.indices) {
+                if (writeToUri(context = context, uri = uris[i], string = strings[i])) {
+                    showToastOnUiThread(
+                        context = context,
+                        message = context.getString(R.string.exporting_success)
+                    )
+                } else {
+                    showToastOnUiThread(
+                        context = context,
+                        message = context.getString(R.string.exporting_failed)
+                    )
+                }
             }
         } catch (e: Throwable) {
             _logger?.severe(e.message)

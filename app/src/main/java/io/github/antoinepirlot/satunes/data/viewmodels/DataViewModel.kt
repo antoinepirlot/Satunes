@@ -566,7 +566,8 @@ class DataViewModel : ViewModel() {
             defaultFileName = playlist.title,
             fileExtension = fileExtension,
             playlist = playlist,
-            rootPlaylistsFilesPath = if (_uiState.value.changeFileRootPath) this.rootPlaylistsFilesPath else DEFAULT_ROOT_FILE_PATH
+            rootPlaylistsFilesPath = if (_uiState.value.changeFileRootPath) this.rootPlaylistsFilesPath else DEFAULT_ROOT_FILE_PATH,
+            multipleFiles = _uiState.value.multipleFiles
         )
     }
 
@@ -595,7 +596,8 @@ class DataViewModel : ViewModel() {
         MainActivity.instance.createFileToExportPlaylists(
             defaultFileName = fileName,
             fileExtension = fileExtension,
-            rootPlaylistsFilesPath = if (_uiState.value.changeFileRootPath) this.rootPlaylistsFilesPath else DEFAULT_ROOT_FILE_PATH
+            rootPlaylistsFilesPath = if (_uiState.value.changeFileRootPath) this.rootPlaylistsFilesPath else DEFAULT_ROOT_FILE_PATH,
+            multipleFiles = _uiState.value.multipleFiles
         )
     }
 

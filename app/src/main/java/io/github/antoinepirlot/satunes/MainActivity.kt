@@ -71,6 +71,7 @@ internal class MainActivity : ComponentActivity() {
 
     private var _fileExtension: FileExtensions? = null
     private var _rootPlaylistsFilesPath: String = DEFAULT_ROOT_FILE_PATH
+    private var multipleFiles: Boolean = false
     private var _logger: SatunesLogger? = null
     private var _playlistToExport: Playlist? = null
 
@@ -102,13 +103,15 @@ internal class MainActivity : ComponentActivity() {
         defaultFileName: String,
         fileExtension: FileExtensions,
         playlist: Playlist,
-        rootPlaylistsFilesPath: String = DEFAULT_ROOT_FILE_PATH
+        rootPlaylistsFilesPath: String = DEFAULT_ROOT_FILE_PATH,
+        multipleFiles: Boolean
     ) {
         this._playlistToExport = playlist
         this.createExportIntent(
             defaultFileName = defaultFileName,
             fileExtension = fileExtension,
             rootPlaylistsFilesPath = rootPlaylistsFilesPath,
+            multipleFiles = multipleFiles,
             requestCode = EXPORT_PLAYLIST_CODE
         )
     }
@@ -116,12 +119,14 @@ internal class MainActivity : ComponentActivity() {
     fun createFileToExportPlaylists(
         defaultFileName: String,
         fileExtension: FileExtensions,
-        rootPlaylistsFilesPath: String = DEFAULT_ROOT_FILE_PATH
+        rootPlaylistsFilesPath: String = DEFAULT_ROOT_FILE_PATH,
+        multipleFiles: Boolean
     ) {
         this.createExportIntent(
             defaultFileName = defaultFileName,
             fileExtension = fileExtension,
             rootPlaylistsFilesPath = rootPlaylistsFilesPath,
+            multipleFiles = multipleFiles,
             requestCode = EXPORT_ALL_PLAYLISTS_CODE
         )
     }
@@ -150,8 +155,10 @@ internal class MainActivity : ComponentActivity() {
         defaultFileName: String,
         fileExtension: FileExtensions,
         rootPlaylistsFilesPath: String = DEFAULT_ROOT_FILE_PATH,
+        multipleFiles: Boolean = false,
         requestCode: Int
     ) {
+        this.multipleFiles = multipleFiles
         this._rootPlaylistsFilesPath = rootPlaylistsFilesPath
         this._fileExtension = fileExtension
         createFileIntent.putExtra(Intent.EXTRA_TITLE, defaultFileName)
@@ -182,7 +189,8 @@ internal class MainActivity : ComponentActivity() {
                                         context = this@MainActivity.applicationContext,
                                         fileExtension = this@MainActivity._fileExtension!!,
                                         uri = uri,
-                                        rootPlaylistsFilesPath = this@MainActivity._rootPlaylistsFilesPath
+                                        rootPlaylistsFilesPath = this@MainActivity._rootPlaylistsFilesPath,
+                                        multipleFiles = this@MainActivity.multipleFiles
                                     )
                                 } else {
                                     DatabaseManager.getInstance().exportPlaylist(
@@ -190,7 +198,8 @@ internal class MainActivity : ComponentActivity() {
                                         uri = uri,
                                         playlist = _playlistToExport!!,
                                         fileExtension = this@MainActivity._fileExtension!!,
-                                        rootPlaylistsFilesPath = this@MainActivity._rootPlaylistsFilesPath
+                                        rootPlaylistsFilesPath = this@MainActivity._rootPlaylistsFilesPath,
+                                        multipleFiles = this@MainActivity.multipleFiles
                                     )
                                     _playlistToExport = null
                                 }

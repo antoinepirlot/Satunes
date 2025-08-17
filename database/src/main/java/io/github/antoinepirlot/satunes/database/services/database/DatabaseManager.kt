@@ -359,7 +359,8 @@ class DatabaseManager private constructor(context: Context) {
         context: Context,
         uri: Uri,
         playlist: Playlist,
-        fileExtension: FileExtensions
+        fileExtension: FileExtensions,
+        rootPlaylistsFilesPath: String
     ) {
         val playlistWithMusics: List<PlaylistWithMusics> = listOf(
             this.playlistDao.getPlaylistWithMusics(playlistId = playlist.id)!!
@@ -368,17 +369,23 @@ class DatabaseManager private constructor(context: Context) {
             context = context,
             uri = uri,
             playlistsWithMusics = playlistWithMusics,
-            fileExtension = fileExtension
+            fileExtension = fileExtension,
+            rootPlaylistsFilesPath = rootPlaylistsFilesPath
         )
     }
 
-    fun exportPlaylists(context: Context, uri: Uri, fileExtension: FileExtensions) {
+    fun exportPlaylists(
+        context: Context, uri: Uri,
+        fileExtension: FileExtensions,
+        rootPlaylistsFilesPath: String
+    ) {
         val playlistsWithMusics: List<PlaylistWithMusics> = this.getAllPlaylistWithMusics()
         this.exportPlaylists(
             context = context,
             uri = uri,
             playlistsWithMusics = playlistsWithMusics,
-            fileExtension = fileExtension
+            fileExtension = fileExtension,
+            rootPlaylistsFilesPath = rootPlaylistsFilesPath
         )
     }
 
@@ -386,24 +393,30 @@ class DatabaseManager private constructor(context: Context) {
         context: Context,
         uri: Uri,
         playlistsWithMusics: Collection<PlaylistWithMusics>,
-        fileExtension: FileExtensions
+        fileExtension: FileExtensions,
+        rootPlaylistsFilesPath: String
     ) {
         val content: String = when (fileExtension) {
             FileExtensions.JSON -> Json.encodeToString(playlistsWithMusics)
-            FileExtensions.M3U -> getPlaylistsM3uFormat()
+            FileExtensions.M3U -> getPlaylistsM3uFormat(rootPlaylistsFilesPath = rootPlaylistsFilesPath)
             else -> throw UnsupportedOperationException("${fileExtension.value} is not supported.")
         }
         export(context = context, content = content, uri = uri)
         exportingPlaylist = false
     }
 
-    private fun getPlaylistsM3uFormat(): String {
+    private fun getPlaylistsM3uFormat(rootPlaylistsFilesPath: String): String {
         val playlistsWithMusics: List<PlaylistWithMusics> = this.getAllPlaylistWithMusics()
         var fileContent: String = "#EXTM3U\n"
         for (playlist: PlaylistWithMusics in playlistsWithMusics) {
             val playlist: Playlist = playlist.playlistDB.playlist!!
             fileContent += """#PLAYLIST:${playlist.title}
-                |${getPlaylistM3uFormat(playlist = playlist)}
+                |${
+                getPlaylistM3uFormat(
+                    playlist = playlist,
+                    rootPlaylistsFilesPath = rootPlaylistsFilesPath
+                )
+            }
                 |
             """.trimMargin()
 
@@ -411,11 +424,11 @@ class DatabaseManager private constructor(context: Context) {
         return fileContent.trimMargin()
     }
 
-    private fun getPlaylistM3uFormat(playlist: Playlist): String {
+    private fun getPlaylistM3uFormat(playlist: Playlist, rootPlaylistsFilesPath: String): String {
         var toReturn: String = ""
         for (music: Music in playlist.getMusicSet())
             toReturn += """#EXTINF:${music.duration / 1000},${music.title}
-                |file:///${music.absolutePath}
+                |file:///$rootPlaylistsFilesPath/${music.relativePath}
                 |
             """.trimMargin()
 

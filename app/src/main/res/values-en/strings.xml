@@ -165,4 +165,5 @@
     <string name="update_channel_dropdown_title">Channel</string>
     <string name="file_format_information_text">Select the file\'s format you want</string>
     <string name="file_extension_menu">File Extensions</string>
+    <string name="ask_select_music_root_path">Would you replace the root path of music files? (e.g.: /storage/emulated/0/path/to/music.mp3 the root path is \'/storage/emulated/0\')</string>
 </resources>

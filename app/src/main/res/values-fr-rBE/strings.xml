@@ -143,4 +143,5 @@
     <string name="update_channel_dropdown_title">Canal</string>
     <string name="file_format_information_text">Sélectionne le format de fichier que tu veux</string>
     <string name="file_extension_menu">Extensions de fichier</string>
+    <string name="ask_select_music_root_path">Veux tu remplacer le chemin racine des musiques? (Par exemple: /storage/emulated/0/chemin/vers/music.mp3 le chemin racine est \'/storage/emulated/0\')</string>
 </resources>

@@ -37,6 +37,7 @@ import io.github.antoinepirlot.satunes.data.defaultSortingOptions
 import io.github.antoinepirlot.satunes.data.states.DataUiState
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
+import io.github.antoinepirlot.satunes.database.data.DEFAULT_ROOT_FILE_PATH
 import io.github.antoinepirlot.satunes.database.exceptions.BlankStringException
 import io.github.antoinepirlot.satunes.database.exceptions.LikesPlaylistCreationException
 import io.github.antoinepirlot.satunes.database.exceptions.PlaylistAlreadyExistsException
@@ -104,6 +105,9 @@ class DataViewModel : ViewModel() {
      * File extension used to know which file to import/export
      */
     var fileExtension: FileExtensions by mutableStateOf(FileExtensions.JSON)
+        private set
+
+    var rootPlaylistsFilesPath: String by mutableStateOf(DEFAULT_ROOT_FILE_PATH)
         private set
 
     /**
@@ -561,13 +565,14 @@ class DataViewModel : ViewModel() {
         MainActivity.instance.createFileToExportPlaylist(
             defaultFileName = playlist.title,
             fileExtension = fileExtension,
-            playlist = playlist
+            playlist = playlist,
+            rootPlaylistsFilesPath = this.rootPlaylistsFilesPath
         )
     }
 
     fun exportPlaylists(
         scope: CoroutineScope,
-        snackBarHostState: SnackbarHostState,
+        snackBarHostState: SnackbarHostState
     ) {
         if (this.isExportSinglePlaylist) {
             exportPlaylist(playlist = this._playlistToExport!!)
@@ -589,7 +594,8 @@ class DataViewModel : ViewModel() {
         val fileName = "Satunes_${getNow()}"
         MainActivity.instance.createFileToExportPlaylists(
             defaultFileName = fileName,
-            fileExtension = fileExtension
+            fileExtension = fileExtension,
+            rootPlaylistsFilesPath = this.rootPlaylistsFilesPath
         )
     }
 
@@ -964,7 +970,7 @@ class DataViewModel : ViewModel() {
                 SettingsManager.resetArtworkSettings(context = MainActivity.instance.applicationContext)
                 SatunesViewModel.reloadSettings()
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             showErrorSnackBar(
                 scope = scope,
                 snackBarHostState = snackBarHostState,
@@ -973,5 +979,15 @@ class DataViewModel : ViewModel() {
                 }
             )
         }
+    }
+
+    fun switchChangeFileRootPath() {
+        _uiState.update { currentState: DataUiState ->
+            currentState.copy(changeFileRootPath = !currentState.changeFileRootPath)
+        }
+    }
+
+    fun updateRootPlaylistsFilesPath(newValue: String) {
+        this.rootPlaylistsFilesPath = newValue
     }
 }

@@ -35,6 +35,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.core.graphics.drawable.toBitmap
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
+import io.github.antoinepirlot.satunes.database.data.DEFAULT_ROOT_FILE_PATH
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
@@ -67,6 +68,8 @@ class Music(
      * Remember in which order music has been added to playlists
      */
     private val _playlistsOrderMap: MutableMap<Playlist, Long> = mutableMapOf()
+
+    val relativePath: String = this.absolutePath.replace("$DEFAULT_ROOT_FILE_PATH/", "")
 
     val cdTrackNumber: Int?
 

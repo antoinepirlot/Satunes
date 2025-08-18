@@ -2,7 +2,15 @@
 
 You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
-## 3.1 (Android 5.1.1 Lollipop and later)
+## 3.2 (Android 5.1.1 Lollipop et ultérieur)
+
+### 3.2.0-beta-1
+
+Nouvelles fonctionnalités :
+
+* Support du format M3U pour les playlistes (voir importation/exportation).
+
+## 3.1 (Android 5.1.1 Lollipop et ultérieur)
 
 ### 3.1.3
 

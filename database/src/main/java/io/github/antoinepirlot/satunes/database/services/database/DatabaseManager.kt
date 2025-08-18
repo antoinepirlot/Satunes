@@ -416,9 +416,9 @@ class DatabaseManager private constructor(context: Context) {
                 )
                 if (multipleFiles) {
                     for (i: Int in strings.indices) {
-                        var fileName: String = uri.path!!.split("/").last()
+                        var fileName: String = uri.path!!.split(":").last()
                         val extension: String = fileName.split(".").last()
-                        fileName.removeSuffix(".$extension")
+                        fileName = fileName.removeSuffix(".$extension")
                         uris += "$fileName-${playlistsWithMusics[i].playlistDB.playlist!!.title}.$extension".toUri()
                     }
                 } else {
@@ -428,7 +428,6 @@ class DatabaseManager private constructor(context: Context) {
             }
             else -> throw UnsupportedOperationException("${fileExtension.value} is not supported.")
         }
-        //TODO check uris
         export(context = context, strings = strings, uris = uris)
         exportingPlaylist = false
     }

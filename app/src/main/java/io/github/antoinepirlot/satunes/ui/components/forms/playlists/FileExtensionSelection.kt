@@ -72,7 +72,10 @@ private fun Menu(
         for (fileExtension: FileExtensions in FileExtensions.getPlaylistsCompatibleFormats())
             DropdownMenuItem(
                 text = { NormalText(text = fileExtension.value) },
-                onClick = { dataViewModel.updateFileExtension(fileExtension = fileExtension) }
+                onClick = {
+                    dataViewModel.updateFileExtension(fileExtension = fileExtension)
+                    onDismissRequest()
+                }
             )
     }
 }

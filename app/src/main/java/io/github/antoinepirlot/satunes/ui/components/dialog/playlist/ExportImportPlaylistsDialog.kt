@@ -24,11 +24,13 @@
 package io.github.antoinepirlot.satunes.ui.components.dialog.playlist
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -101,13 +103,20 @@ fun ExportImportPlaylistsDialog(
             }
         },
         text = {
-            Column {
-                NormalText(text = stringResource(R.string.file_format_information_text))
-                FileExtensionSelection()
-                if (export && dataViewModel.fileExtension == FileExtensions.M3U) {
-                    MusicsRootPathSelection()
-                    //TODO uncomment next line when a way to create multiple files has been found
+            Column(
+                modifier = modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                if (export) {
+                    NormalText(text = stringResource(R.string.file_format_information_text))
+                    FileExtensionSelection()
+                    if (dataViewModel.fileExtension == FileExtensions.M3U) {
+                        MusicsRootPathSelection()
+                        //TODO uncomment next line when a way to create multiple files has been found
 //                    ExportMultipleFiles()
+                    }
+                } else {
+                    NormalText(text = stringResource(R.string.import_information_text))
                 }
             }
         },

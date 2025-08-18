@@ -99,7 +99,6 @@ internal fun PlaylistOptionsDialog(
         text = {
             Column {
                 ExportPlaylistOption(playlist = playlist)
-                //TODO refactor in v3.0.0 and remove the current playlist from list
                 AddToPlaylistMediaOption(mediaImpl = playlist, onFinished = onDismissRequest)
                 RemovePlaylistOption(
                     playlistToRemove = playlist,

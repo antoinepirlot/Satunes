@@ -37,11 +37,13 @@ import io.github.antoinepirlot.satunes.data.defaultSortingOptions
 import io.github.antoinepirlot.satunes.data.states.DataUiState
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
+import io.github.antoinepirlot.satunes.database.data.DEFAULT_ROOT_FILE_PATH
 import io.github.antoinepirlot.satunes.database.exceptions.BlankStringException
 import io.github.antoinepirlot.satunes.database.exceptions.LikesPlaylistCreationException
 import io.github.antoinepirlot.satunes.database.exceptions.PlaylistAlreadyExistsException
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
+import io.github.antoinepirlot.satunes.database.models.FileExtensions
 import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
@@ -82,6 +84,10 @@ class DataViewModel : ViewModel() {
     private val _isLoaded: MutableState<Boolean> = DataLoader.isLoaded
     private var _updatePlaylistsJob: Job? = null
 
+    private var _playlistToExport: Playlist? = null
+
+    val uiState: StateFlow<DataUiState> = _uiState.asStateFlow()
+
     var playlistSetUpdated: Boolean by _playlistSetUpdated
         private set
     var listSetUpdatedProcessed: Boolean = true
@@ -95,7 +101,20 @@ class DataViewModel : ViewModel() {
 
     val isLoaded: Boolean by _isLoaded
 
-    val uiState: StateFlow<DataUiState> = _uiState.asStateFlow()
+    /**
+     * File extension used to know which file to import/export
+     */
+    var fileExtension: FileExtensions by mutableStateOf(FileExtensions.JSON)
+        private set
+
+    var rootPlaylistsFilesPath: String by mutableStateOf(DEFAULT_ROOT_FILE_PATH)
+        private set
+
+    /**
+     * Indicates if the user export only one playlist
+     */
+    val isExportSinglePlaylist: Boolean
+        get() = this._playlistToExport != null
 
     fun playlistSetUpdated() {
         this._playlistSetUpdated.value = false
@@ -508,20 +527,60 @@ class DataViewModel : ViewModel() {
         }
     }
 
-    fun importPlaylists() = MainActivity.instance.openFileToImportPlaylists()
+    fun openImportPlaylistDialog() {
+        _uiState.update { currentState: DataUiState ->
+            currentState.copy(showImportPlaylistDialog = true)
+        }
+    }
+
+    fun closeImportPlaylistDialog() {
+        _uiState.update { currentState: DataUiState ->
+            currentState.copy(showImportPlaylistDialog = false)
+        }
+    }
+
+    fun openExportPlaylistDialog(playlist: Playlist? = null) {
+        this._playlistToExport = playlist
+        _uiState.update { currentState: DataUiState ->
+            currentState.copy(showExportPlaylistDialog = true)
+        }
+    }
+
+    fun closeExportPlaylistDialog() {
+        this._playlistToExport = null
+        _uiState.update { currentState: DataUiState ->
+            currentState.copy(showExportPlaylistDialog = false)
+        }
+    }
+
+    fun updateFileExtension(fileExtension: FileExtensions) {
+        this.fileExtension = fileExtension
+    }
+
+    fun importPlaylists() =
+        MainActivity.instance.openFileToImportPlaylists(fileExtension = fileExtension)
 
     fun exportPlaylist(playlist: Playlist) {
         DatabaseManager.exportingPlaylist = true
         MainActivity.instance.createFileToExportPlaylist(
             defaultFileName = playlist.title,
-            playlist = playlist
+            fileExtension = fileExtension,
+            playlist = playlist,
+            rootPlaylistsFilesPath = if (_uiState.value.changeFileRootPath) this.rootPlaylistsFilesPath else DEFAULT_ROOT_FILE_PATH,
+            multipleFiles = _uiState.value.multipleFiles
         )
     }
 
     fun exportPlaylists(
         scope: CoroutineScope,
-        snackBarHostState: SnackbarHostState,
+        snackBarHostState: SnackbarHostState
     ) {
+        if (this.isExportSinglePlaylist) {
+            exportPlaylist(playlist = this._playlistToExport!!)
+            this._playlistToExport = null
+            return
+        }
+
         DatabaseManager.exportingPlaylist = true
         if (DataManager.getPlaylistSet().isEmpty()) {
             showSnackBar(
@@ -532,8 +591,14 @@ class DataViewModel : ViewModel() {
             DatabaseManager.exportingPlaylist = false
             return
         }
+
         val fileName = "Satunes_${getNow()}"
-        MainActivity.instance.createFileToExportPlaylists(defaultFileName = fileName)
+        MainActivity.instance.createFileToExportPlaylists(
+            defaultFileName = fileName,
+            fileExtension = fileExtension,
+            rootPlaylistsFilesPath = if (_uiState.value.changeFileRootPath) this.rootPlaylistsFilesPath else DEFAULT_ROOT_FILE_PATH,
+            multipleFiles = _uiState.value.multipleFiles
+        )
     }
 
     fun share(
@@ -907,7 +972,7 @@ class DataViewModel : ViewModel() {
                 SettingsManager.resetArtworkSettings(context = MainActivity.instance.applicationContext)
                 SatunesViewModel.reloadSettings()
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             showErrorSnackBar(
                 scope = scope,
                 snackBarHostState = snackBarHostState,
@@ -915,6 +980,22 @@ class DataViewModel : ViewModel() {
                     resetArtworkSettings(scope = scope, snackBarHostState = snackBarHostState)
                 }
             )
+        }
+    }
+
+    fun switchChangeFileRootPath() {
+        _uiState.update { currentState: DataUiState ->
+            currentState.copy(changeFileRootPath = !currentState.changeFileRootPath)
+        }
+    }
+
+    fun updateRootPlaylistsFilesPath(newValue: String) {
+        this.rootPlaylistsFilesPath = newValue
+    }
+
+    fun switchMultipleFiles() {
+        _uiState.update { currentState: DataUiState ->
+            currentState.copy(multipleFiles = !currentState.multipleFiles)
         }
     }
 }

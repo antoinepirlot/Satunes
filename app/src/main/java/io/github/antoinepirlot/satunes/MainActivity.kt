@@ -28,6 +28,8 @@ import android.provider.DocumentsContract
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import io.github.antoinepirlot.satunes.data.viewmodels.utils.isAudioAllowed
+import io.github.antoinepirlot.satunes.database.data.DEFAULT_ROOT_FILE_PATH
+import io.github.antoinepirlot.satunes.database.models.FileExtensions
 import io.github.antoinepirlot.satunes.database.models.FoldersSelection
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
@@ -56,10 +58,8 @@ internal class MainActivity : ComponentActivity() {
         private const val EXPORT_LOGS_CODE: Int = 4
         const val INCLUDE_FOLDER_TREE_CODE: Int = 5
         const val EXCLUDE_FOLDER_TREE_CODE: Int = 6
-        const val MIME_JSON: String = "application/json"
-        private const val MIME_TEXT: String = "application/text"
         val DEFAULT_URI: Uri =
-            Uri.parse(Environment.getExternalStorageDirectory().path + '/' + Environment.DIRECTORY_DOCUMENTS)
+            Uri.parse(DEFAULT_ROOT_FILE_PATH + '/' + Environment.DIRECTORY_DOCUMENTS)
 
         private val createFileIntent: Intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
             addCategory(Intent.CATEGORY_OPENABLE)
@@ -69,6 +69,9 @@ internal class MainActivity : ComponentActivity() {
         }
     }
 
+    private var _fileExtension: FileExtensions? = null
+    private var _rootPlaylistsFilesPath: String = DEFAULT_ROOT_FILE_PATH
+    private var multipleFiles: Boolean = false
     private var _logger: SatunesLogger? = null
     private var _playlistToExport: Playlist? = null
 
@@ -96,16 +99,43 @@ internal class MainActivity : ComponentActivity() {
         }
     }
 
-    fun createFileToExportPlaylists(defaultFileName: String) {
-        createFileIntent.putExtra(Intent.EXTRA_TITLE, defaultFileName)
-        createFileIntent.type = MIME_JSON
-        startActivityForResult(createFileIntent, EXPORT_ALL_PLAYLISTS_CODE)
+    fun createFileToExportPlaylist(
+        defaultFileName: String,
+        fileExtension: FileExtensions,
+        playlist: Playlist,
+        rootPlaylistsFilesPath: String = DEFAULT_ROOT_FILE_PATH,
+        multipleFiles: Boolean
+    ) {
+        this._playlistToExport = playlist
+        this.createExportIntent(
+            defaultFileName = defaultFileName,
+            fileExtension = fileExtension,
+            rootPlaylistsFilesPath = rootPlaylistsFilesPath,
+            multipleFiles = multipleFiles,
+            requestCode = EXPORT_PLAYLIST_CODE
+        )
     }
 
-    fun openFileToImportPlaylists() {
+    fun createFileToExportPlaylists(
+        defaultFileName: String,
+        fileExtension: FileExtensions,
+        rootPlaylistsFilesPath: String = DEFAULT_ROOT_FILE_PATH,
+        multipleFiles: Boolean
+    ) {
+        this.createExportIntent(
+            defaultFileName = defaultFileName,
+            fileExtension = fileExtension,
+            rootPlaylistsFilesPath = rootPlaylistsFilesPath,
+            multipleFiles = multipleFiles,
+            requestCode = EXPORT_ALL_PLAYLISTS_CODE
+        )
+    }
+
+    fun openFileToImportPlaylists(fileExtension: FileExtensions) {
+        this._fileExtension = fileExtension
         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
             addCategory(Intent.CATEGORY_OPENABLE)
-            type = MIME_JSON
+            type = this@MainActivity._fileExtension!!.mimeType
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 putExtra(DocumentsContract.EXTRA_INITIAL_URI, DEFAULT_URI)
             }
@@ -114,11 +144,27 @@ internal class MainActivity : ComponentActivity() {
     }
 
     fun exportLogs() {
-        createFileIntent.putExtra(Intent.EXTRA_TITLE, "Satunes_logs_${getNow()}.txt")
-        createFileIntent.type = MIME_TEXT
-        startActivityForResult(createFileIntent, EXPORT_LOGS_CODE)
+        this.createExportIntent(
+            defaultFileName = "Satunes_logs_${getNow()}.txt",
+            fileExtension = FileExtensions.TEXT,
+            requestCode = EXPORT_LOGS_CODE
+        )
     }
 
+    private fun createExportIntent(
+        defaultFileName: String,
+        fileExtension: FileExtensions,
+        rootPlaylistsFilesPath: String = DEFAULT_ROOT_FILE_PATH,
+        multipleFiles: Boolean = false,
+        requestCode: Int
+    ) {
+        this.multipleFiles = multipleFiles
+        this._rootPlaylistsFilesPath = rootPlaylistsFilesPath
+        this._fileExtension = fileExtension
+        createFileIntent.putExtra(Intent.EXTRA_TITLE, defaultFileName)
+        createFileIntent.type = this._fileExtension!!.mimeType
+        startActivityForResult(createFileIntent, requestCode)
+    }
 
     @Deprecated("This method has been deprecated in favor of using the Activity Result API\n      which brings increased type safety via an {@link ActivityResultContract} and the prebuilt\n      contracts for common intents available in\n      {@link androidx.activity.result.contract.ActivityResultContracts}, provides hooks for\n      testing, and allow receiving results in separate, testable classes independent from your\n      activity. Use\n      {@link #registerForActivityResult(ActivityResultContract, ActivityResultCallback)}\n      with the appropriate {@link ActivityResultContract} and handling the result in the\n      {@link ActivityResultCallback#onActivityResult(Object) callback}.")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -134,31 +180,42 @@ internal class MainActivity : ComponentActivity() {
                             )
                         }
 
-                        if (requestCode == EXPORT_LOGS_CODE) {
-                            _logger?.exportLogs(context = this, uri = uri)
-                        } else {
-                            CoroutineScope(Dispatchers.IO).launch {
+                        CoroutineScope(Dispatchers.IO).launch {
+                            if (requestCode == EXPORT_LOGS_CODE) {
+                                _logger?.exportLogs(context = this@MainActivity, uri = uri)
+                            } else {
                                 if (requestCode == EXPORT_ALL_PLAYLISTS_CODE) {
                                     DatabaseManager.getInstance().exportPlaylists(
                                         context = this@MainActivity.applicationContext,
-                                        uri = uri
+                                        fileExtension = this@MainActivity._fileExtension!!,
+                                        uri = uri,
+                                        rootPlaylistsFilesPath = this@MainActivity._rootPlaylistsFilesPath,
+                                        multipleFiles = this@MainActivity.multipleFiles
                                     )
                                 } else {
                                     DatabaseManager.getInstance().exportPlaylist(
                                         context = applicationContext,
                                         uri = uri,
-                                        playlist = _playlistToExport!!
+                                        playlist = _playlistToExport!!,
+                                        fileExtension = this@MainActivity._fileExtension!!,
+                                        rootPlaylistsFilesPath = this@MainActivity._rootPlaylistsFilesPath,
+                                        multipleFiles = this@MainActivity.multipleFiles
                                     )
                                     _playlistToExport = null
                                 }
                             }
+                            this@MainActivity._fileExtension = null
                         }
                     }
                 }
 
                 IMPORT_PLAYLIST_CODE -> {
                     data?.data?.also {
-                        DatabaseManager.getInstance().importPlaylists(context = this, uri = it)
+                        DatabaseManager.getInstance().importPlaylists(
+                            context = this,
+                            uri = it,
+                            fileExtension = this._fileExtension!!
+                        )
                     }
                 }
 
@@ -178,16 +235,6 @@ internal class MainActivity : ComponentActivity() {
                 }
             }
         }
-    }
-
-    fun createFileToExportPlaylist(
-        defaultFileName: String,
-        playlist: Playlist
-    ) {
-        _playlistToExport = playlist
-        createFileIntent.putExtra(Intent.EXTRA_TITLE, defaultFileName)
-        createFileIntent.type = MIME_JSON
-        startActivityForResult(createFileIntent, EXPORT_PLAYLIST_CODE)
     }
 
     override fun onDestroy() {

@@ -24,12 +24,14 @@
 package io.github.antoinepirlot.satunes.ui.components.dialog.playlist
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.height
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.R
@@ -91,7 +93,10 @@ fun ExportImportPlaylistsDialog(
             )
         },
         dismissButton = {
-            Button(onClick = onDismissRequest) {
+            Button(
+                modifier = Modifier.height(40.dp),
+                onClick = onDismissRequest
+            ) {
                 NormalText(text = stringResource(R.string.cancel))
             }
         },

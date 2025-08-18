@@ -39,7 +39,6 @@ import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.database.models.FileExtensions
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.buttons.ButtonWithIcon
-import io.github.antoinepirlot.satunes.ui.components.forms.playlists.ExportMultipleFiles
 import io.github.antoinepirlot.satunes.ui.components.forms.playlists.FileExtensionSelection
 import io.github.antoinepirlot.satunes.ui.components.forms.playlists.MusicsRootPathSelection
 import io.github.antoinepirlot.satunes.ui.components.images.Icon
@@ -102,7 +101,8 @@ fun ExportImportPlaylistsDialog(
                 FileExtensionSelection()
                 if (export && dataViewModel.fileExtension == FileExtensions.M3U) {
                     MusicsRootPathSelection()
-                    ExportMultipleFiles()
+                    //TODO uncomment next line when a way to create multiple files has been found
+//                    ExportMultipleFiles()
                 }
             }
         },

@@ -23,7 +23,6 @@ package io.github.antoinepirlot.satunes.database.services.database
 import android.content.Context
 import android.database.sqlite.SQLiteConstraintException
 import android.net.Uri
-import androidx.core.net.toUri
 import io.github.antoinepirlot.satunes.database.R
 import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.daos.MusicDAO
@@ -410,21 +409,26 @@ class DatabaseManager private constructor(context: Context) {
             }
 
             FileExtensions.M3U -> {
-                val strings: List<String> = getPlaylistsM3uFormat(
+                //TODO use it when you found a way to write multiple file at once
+//                val strings: List<String> = getPlaylistsM3uFormat(
+//                    rootPlaylistsFilesPath = rootPlaylistsFilesPath,
+//                    multipleFiles
+//                )
+//                if (multipleFiles) {
+//                    for (i: Int in strings.indices) {
+//                        var fileName: String = uri.path!!.split(":").last()
+//                        val extension: String = fileName.split(".").last()
+//                        fileName = fileName.removeSuffix(".$extension")
+//                        uris += "$fileName-${playlistsWithMusics[i].playlistDB.playlist!!.title}.$extension".toUri()
+//                    }
+//                } else {
+//                    uris += uri
+//                }
+                uris += uri
+                getPlaylistsM3uFormat(
                     rootPlaylistsFilesPath = rootPlaylistsFilesPath,
-                    multipleFiles
+                    multipleFiles = multipleFiles
                 )
-                if (multipleFiles) {
-                    for (i: Int in strings.indices) {
-                        var fileName: String = uri.path!!.split(":").last()
-                        val extension: String = fileName.split(".").last()
-                        fileName = fileName.removeSuffix(".$extension")
-                        uris += "$fileName-${playlistsWithMusics[i].playlistDB.playlist!!.title}.$extension".toUri()
-                    }
-                } else {
-                    uris += uri
-                }
-                strings
             }
             else -> throw UnsupportedOperationException("${fileExtension.value} is not supported.")
         }

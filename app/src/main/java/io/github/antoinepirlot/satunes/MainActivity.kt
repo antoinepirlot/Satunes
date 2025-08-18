@@ -211,7 +211,11 @@ internal class MainActivity : ComponentActivity() {
 
                 IMPORT_PLAYLIST_CODE -> {
                     data?.data?.also {
-                        DatabaseManager.getInstance().importPlaylists(context = this, uri = it)
+                        DatabaseManager.getInstance().importPlaylists(
+                            context = this,
+                            uri = it,
+                            fileExtension = this._fileExtension!!
+                        )
                     }
                 }
 

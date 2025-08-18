@@ -493,7 +493,7 @@ class DatabaseManager private constructor(context: Context) {
         }
     }
 
-    fun importPlaylists(context: Context, uri: Uri) {
+    fun importPlaylists(context: Context, uri: Uri, fileExtension: FileExtensions) {
         importingPlaylist = true
         val logger = SatunesLogger.getLogger()
         CoroutineScope(Dispatchers.IO).launch {
@@ -510,13 +510,13 @@ class DatabaseManager private constructor(context: Context) {
                     return@launch
                 }
 
-                val json: String = readTextFromUri(context = context, uri = uri, showToast = true)
+                val text: String = readTextFromUri(context = context, uri = uri, showToast = true)
                     ?: throw Exception()
-                val playlistsWithMusics: List<PlaylistWithMusics> = try {
-                    Json.decodeFromString(json)
-                } catch (_: IllegalArgumentException) {
-                    val playlistWithMusics: PlaylistWithMusics = Json.decodeFromString(json)
-                    listOf(playlistWithMusics)
+
+                val playlistsWithMusics: List<PlaylistWithMusics> = when (fileExtension) {
+                    FileExtensions.JSON -> getPlaylistsWithMusicsFromJson(json = text)
+                    FileExtensions.M3U -> getPlaylistsWithMusicsFromM3U(text = text)
+                    else -> throw UnsupportedOperationException("${fileExtension.value} not supported.")
                 }
 
                 importPlaylistsToDatabase(playlistWithMusicsList = playlistsWithMusics)
@@ -541,6 +541,31 @@ class DatabaseManager private constructor(context: Context) {
                 importingPlaylist = false
             }
         }
+    }
+
+    private fun getPlaylistsWithMusicsFromJson(json: String): List<PlaylistWithMusics> {
+        return try {
+            Json.decodeFromString(json)
+        } catch (_: IllegalArgumentException) {
+            val playlistWithMusics: PlaylistWithMusics = Json.decodeFromString(json)
+            listOf(playlistWithMusics)
+        }
+    }
+
+    private fun getPlaylistsWithMusicsFromM3U(text: String): List<PlaylistWithMusics> {
+        val playlistsWithMusics: MutableList<PlaylistWithMusics> = mutableListOf()
+        val playlistsText: List<String> = text.split("#PLAYLIST:")
+        for (i: Int in 1..playlistsText.lastIndex) {
+            val playlistText: String = playlistsText[i]
+            val split: List<String> = playlistText.split("#EXTINF")
+            val playlist = PlaylistWithMusics(PlaylistDB(title = split[0]), mutableListOf())
+            playlistsWithMusics += playlist
+            for (i: Int in 1..split.lastIndex) {
+                val filePath: String = split[i].split("file:///")[1]
+                playlist.musics += MusicDB(absolutePath = filePath)
+            }
+        }
+        return playlistsWithMusics
     }
 
     @Throws(NullPointerException::class)

@@ -23,7 +23,6 @@
 
 package io.github.antoinepirlot.satunes.ui.components.forms.playlists
 
-import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.runtime.Composable
@@ -46,16 +45,15 @@ fun FileExtensionSelection(
     modifier: Modifier = Modifier,
     dataViewModel: DataViewModel = viewModel()
 ) {
-    Row(modifier = modifier) {
-        SatunesDropDownMenu(
-            title = stringResource(R.string.file_extension_menu),
-            selectedItemText = dataViewModel.fileExtension.value
-        ) { expanded: Boolean, onDismissRequest: () -> Unit ->
-            Menu(
-                expanded = expanded,
-                onDismissRequest = onDismissRequest
-            )
-        }
+    SatunesDropDownMenu(
+        modifier = modifier,
+        title = stringResource(R.string.file_extension_menu),
+        selectedItemText = dataViewModel.fileExtension.value
+    ) { expanded: Boolean, onDismissRequest: () -> Unit ->
+        Menu(
+            expanded = expanded,
+            onDismissRequest = onDismissRequest
+        )
     }
 }
 

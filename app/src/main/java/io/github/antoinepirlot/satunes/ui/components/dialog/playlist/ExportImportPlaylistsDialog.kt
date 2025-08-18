@@ -107,16 +107,12 @@ fun ExportImportPlaylistsDialog(
                 modifier = modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                if (export) {
-                    NormalText(text = stringResource(R.string.file_format_information_text))
-                    FileExtensionSelection()
-                    if (dataViewModel.fileExtension == FileExtensions.M3U) {
-                        MusicsRootPathSelection()
-                        //TODO uncomment next line when a way to create multiple files has been found
+                NormalText(text = stringResource(R.string.file_format_information_text))
+                FileExtensionSelection()
+                if (export && dataViewModel.fileExtension == FileExtensions.M3U) {
+                    MusicsRootPathSelection()
+                    //TODO uncomment next line when a way to create multiple files has been found
 //                    ExportMultipleFiles()
-                    }
-                } else {
-                    NormalText(text = stringResource(R.string.import_information_text))
                 }
             }
         },

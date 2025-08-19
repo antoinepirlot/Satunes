@@ -79,6 +79,7 @@ internal class MainActivity : ComponentActivity() {
     private var multipleFiles: Boolean = false
     private var _logger: SatunesLogger? = null
     private var _playlistToExport: Playlist? = null
+    private var _intentToHandle: Intent? = null
     var handledMusic: Music? by mutableStateOf(null)
         private set
 
@@ -96,7 +97,7 @@ internal class MainActivity : ComponentActivity() {
         _logger = SatunesLogger.getLogger()
         _logger?.info("Satunes started on API: ${Build.VERSION.SDK_INT}")
         instance = this
-
+        this._intentToHandle = intent
         setRefreshWidget(context = baseContext)
         WidgetPlaybackManager.refreshWidgets()
 
@@ -246,16 +247,17 @@ internal class MainActivity : ComponentActivity() {
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        handleMusic(intent)
+        this._intentToHandle = intent
+        handleMusic()
     }
 
     /**
      * Handle the music the user clicked in the files explorer app.
      */
-    private fun handleMusic(intent: Intent?) {
-        if (intent == null) return
-        if (intent.action != Intent.ACTION_VIEW) return
-        val uri = intent.data ?: return
+    fun handleMusic() {
+        if (_intentToHandle == null) return
+        if (_intentToHandle!!.action != Intent.ACTION_VIEW) return
+        val uri = _intentToHandle!!.data ?: return
         if (uri.path!!.endsWith(".m3u")) return
         this.handledMusic =
             DataManager.getMusic(absolutePath = DEFAULT_ROOT_FILE_PATH + '/' + uri.path!!.split(":")[1])

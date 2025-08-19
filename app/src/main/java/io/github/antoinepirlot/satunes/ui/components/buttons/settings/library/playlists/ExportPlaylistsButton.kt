@@ -20,7 +20,6 @@
 
 package io.github.antoinepirlot.satunes.ui.components.buttons.settings.library.playlists
 
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -32,7 +31,6 @@ import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.buttons.ButtonWithIcon
-import kotlinx.coroutines.CoroutineScope
 
 /**
  * @author Antoine Pirlot on 12/09/2024
@@ -43,18 +41,13 @@ fun ExportPlaylistsButton(
     modifier: Modifier = Modifier,
     dataViewModel: DataViewModel = viewModel(),
 ) {
-    val scope: CoroutineScope = LocalMainScope.current
-    val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
+    LocalMainScope.current
+    LocalSnackBarHostState.current
 
     ButtonWithIcon(
         modifier = modifier,
         icon = SatunesIcons.EXPORT,
-        onClick = {
-            dataViewModel.exportPlaylists(
-                scope = scope,
-                snackBarHostState = snackBarHostState
-            )
-        },
+        onClick = { dataViewModel.openExportPlaylistDialog() },
         text = stringResource(id = R.string.export)
     )
 }

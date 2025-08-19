@@ -21,10 +21,12 @@
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
-plugins {
-    id("com.android.application") version "8.12.0" apply false
-    id("com.android.library") version "8.12.0" apply false
-    id("org.jetbrains.kotlin.android") version "1.9.0" apply false
-    alias(libs.plugins.ksp) apply false
-}
+package io.github.antoinepirlot.satunes.database.data
+
+import android.os.Environment
+
+/**
+ * @author Antoine Pirlot 17/08/2025
+ */
+
+val DEFAULT_ROOT_FILE_PATH: String = Environment.getExternalStorageDirectory().path

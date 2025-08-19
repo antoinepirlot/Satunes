@@ -63,15 +63,12 @@ internal fun PlaylistListView(
             ExtraButton(
                 icon = SatunesIcons.EXPORT,
                 onClick = {
-                    dataViewModel.exportPlaylists(
-                        scope = scope,
-                        snackBarHostState = snackBarHostState
-                    )
+                    dataViewModel.openExportPlaylistDialog()
                 }
             )
             ExtraButton(
                 icon = SatunesIcons.IMPORT,
-                onClick = { dataViewModel.importPlaylists() }
+                onClick = { dataViewModel.openImportPlaylistDialog() }
             )
             ExtraButton(icon = SatunesIcons.PLAYLIST_ADD, onClick = { openAlertDialog = true })
         }

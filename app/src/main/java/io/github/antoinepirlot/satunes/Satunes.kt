@@ -50,7 +50,9 @@ import io.github.antoinepirlot.satunes.data.states.DataUiState
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
+import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.router.Router
+import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.bars.bottom.BottomAppBar
 import io.github.antoinepirlot.satunes.ui.components.bars.top.TopAppBar
 import io.github.antoinepirlot.satunes.ui.components.buttons.fab.SatunesFAB
@@ -93,6 +95,8 @@ internal fun Satunes(
                     LocalNavController provides navController,
                 )
             ) {
+                val handledMusic: Music? = MainActivity.instance.handledMusic
+
                 Scaffold(
                     modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
                     topBar = { TopAppBar(scrollBehavior = scrollBehavior) },
@@ -107,6 +111,15 @@ internal fun Satunes(
                         ExportImportPlaylistsDialog(export = false)
                     else if (dataUiState.showExportPlaylistDialog)
                         ExportImportPlaylistsDialog(export = true)
+                }
+
+                if (handledMusic != null) {
+                    println("Playing: ${handledMusic.title}")
+                    openMedia(
+                        playbackViewModel = viewModel(),
+                        media = handledMusic,
+                        navController = navController,
+                    )
                 }
             }
         }

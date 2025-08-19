@@ -27,6 +27,9 @@ import android.os.Environment
 import android.provider.DocumentsContract
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import io.github.antoinepirlot.satunes.data.viewmodels.utils.isAudioAllowed
 import io.github.antoinepirlot.satunes.database.data.DEFAULT_ROOT_FILE_PATH
 import io.github.antoinepirlot.satunes.database.models.FileExtensions
@@ -36,7 +39,6 @@ import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
-import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
 import io.github.antoinepirlot.satunes.playback.services.WidgetPlaybackManager
 import io.github.antoinepirlot.satunes.utils.getNow
 import io.github.antoinepirlot.satunes.utils.initSatunes
@@ -77,6 +79,8 @@ internal class MainActivity : ComponentActivity() {
     private var multipleFiles: Boolean = false
     private var _logger: SatunesLogger? = null
     private var _playlistToExport: Playlist? = null
+    var handledMusic: Music? by mutableStateOf(null)
+        private set
 
     override fun onStart() {
         super.onStart()
@@ -253,13 +257,8 @@ internal class MainActivity : ComponentActivity() {
         if (intent.action != Intent.ACTION_VIEW) return
         val uri = intent.data ?: return
         if (uri.path!!.endsWith(".m3u")) return
-        val music: Music =
+        this.handledMusic =
             DataManager.getMusic(absolutePath = DEFAULT_ROOT_FILE_PATH + '/' + uri.path!!.split(":")[1])
-        PlaybackManager.loadMusics(
-            context = instance.applicationContext,
-            musics = listOf(music),
-            musicToPlay = music
-        )
     }
 
     override fun onDestroy() {

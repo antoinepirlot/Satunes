@@ -27,11 +27,16 @@ import android.os.Environment
 import android.provider.DocumentsContract
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import io.github.antoinepirlot.satunes.data.viewmodels.utils.isAudioAllowed
 import io.github.antoinepirlot.satunes.database.data.DEFAULT_ROOT_FILE_PATH
 import io.github.antoinepirlot.satunes.database.models.FileExtensions
 import io.github.antoinepirlot.satunes.database.models.FoldersSelection
+import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
+import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.playback.services.WidgetPlaybackManager
@@ -74,6 +79,9 @@ internal class MainActivity : ComponentActivity() {
     private var multipleFiles: Boolean = false
     private var _logger: SatunesLogger? = null
     private var _playlistToExport: Playlist? = null
+    private var _intentToHandle: Intent? = null
+    var handledMusic: Music? by mutableStateOf(null)
+        private set
 
     override fun onStart() {
         super.onStart()
@@ -89,7 +97,7 @@ internal class MainActivity : ComponentActivity() {
         _logger = SatunesLogger.getLogger()
         _logger?.info("Satunes started on API: ${Build.VERSION.SDK_INT}")
         instance = this
-
+        this._intentToHandle = intent
         setRefreshWidget(context = baseContext)
         WidgetPlaybackManager.refreshWidgets()
 
@@ -235,6 +243,24 @@ internal class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        this._intentToHandle = intent
+        handleMusic()
+    }
+
+    /**
+     * Handle the music the user clicked in the files explorer app.
+     */
+    fun handleMusic() {
+        if (_intentToHandle == null) return
+        if (_intentToHandle!!.action != Intent.ACTION_VIEW) return
+        val uri = _intentToHandle!!.data ?: return
+        if (uri.path!!.endsWith(".m3u")) return
+        this.handledMusic =
+            DataManager.getMusic(absolutePath = DEFAULT_ROOT_FILE_PATH + '/' + uri.path!!.split(":")[1])
     }
 
     override fun onDestroy() {

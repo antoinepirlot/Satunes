@@ -199,12 +199,10 @@ object UpdateCheckManager {
         }
 
         //Here the 3 number have changed (vx.y.z...)
-        if (numberIncreased)
-            return latestChannel.stability >= updateChannel.stability
-        else if (latestChannel.stability <= currentChannel.stability && latestChannel.stability >= updateChannel.stability)
-            return true
+        return if (latestChannel.stability >= updateChannel.stability)
+            numberIncreased || latestChannel.stability >= currentChannel.stability
         else
-            return currentChannel.stability <= updateChannel.stability && latestChannel.stability >= currentChannel.stability
+            currentChannel.stability <= updateChannel.stability && latestChannel.stability >= currentChannel.stability
     }
 
     fun getCurrentVersion(context: Context): String {

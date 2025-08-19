@@ -184,37 +184,27 @@ object UpdateCheckManager {
                 "v",
                 limit = 2
             )[1].split("-") //Removes the first letter 'v' and limit 2 to prevent splitting "preview"
-        val latestChannel: UpdateChannel =
-            if (latestSplit.size > 1) UpdateChannel.getUpdateChannel(name = latestSplit[1])
-            else UpdateChannel.STABLE
-        val currentChannel: UpdateChannel =
-            if (currentSplit.size > 1) UpdateChannel.getUpdateChannel(name = currentSplit[1])
-            else UpdateChannel.STABLE
+        val latestChannel: UpdateChannel = UpdateChannel.getUpdateChannel(name = latestSplit[1])
+        val currentChannel: UpdateChannel = UpdateChannel.getUpdateChannel(name = currentSplit[1])
 
         var numberIncreased = false
         val latestVersionToCheck: List<String> = latestSplit[0].split(".")
         val currentVersionToCheck: List<String> = currentSplit[0].split(".")
-        for (i: Int in 0..latestVersionToCheck.lastIndex)  //1 to skip the 0 as it is 'v' char
+        for (i: Int in 0..latestVersionToCheck.lastIndex) { //1 to skip the 0 as it is 'v' char
             if (latestVersionToCheck[i].toInt() < currentVersionToCheck[i].toInt()) break
             else if (latestVersionToCheck[i].toInt() > currentVersionToCheck[i].toInt()) {
                 numberIncreased = true
                 break
             }
+        }
 
         //Here the 3 number have changed (vx.y.z...)
-        if (numberIncreased) return latestChannel.stability >= updateChannel.stability
-        else {
-            if (currentSplit.size == 1) return false
-            val latestNumber: Int = if (latestSplit.size > 1) latestSplit[2].toInt() else -1
-            val currentNumber: Int = if (currentSplit.size > 1) currentSplit[2].toInt() else -1
-            numberIncreased = latestNumber > currentNumber
-
-            //Here the last number has increased: v...-...-x
-            if (!numberIncreased) return false
-            if (latestChannel.stability <= currentChannel.stability && latestChannel.stability >= updateChannel.stability)
-                return true
+        if (numberIncreased)
+            return latestChannel.stability >= updateChannel.stability
+        else if (latestChannel.stability <= currentChannel.stability && latestChannel.stability >= updateChannel.stability)
+            return true
+        else
             return currentChannel.stability <= updateChannel.stability && latestChannel.stability >= currentChannel.stability
-        }
     }
 
     fun getCurrentVersion(context: Context): String {

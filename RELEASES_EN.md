@@ -4,6 +4,12 @@ Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
 ## 3.2 (Android 5.1.1 Lollipop and later)
 
+### 3.2.0-preview-1
+
+New features:
+
+* Ability to open an audio file from the file explorer
+
 ### 3.2.0-beta-1
 
 New features:

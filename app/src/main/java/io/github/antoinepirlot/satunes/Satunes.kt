@@ -33,6 +33,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -49,8 +50,11 @@ import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.data.states.DataUiState
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
+import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.router.Router
+import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.bars.bottom.BottomAppBar
 import io.github.antoinepirlot.satunes.ui.components.bars.top.TopAppBar
 import io.github.antoinepirlot.satunes.ui.components.buttons.fab.SatunesFAB
@@ -69,7 +73,8 @@ import kotlinx.coroutines.CoroutineScope
 internal fun Satunes(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
-    dataViewModel: DataViewModel = viewModel()
+    dataViewModel: DataViewModel = viewModel(),
+    playbackViewModel: PlaybackViewModel = viewModel()
 ) {
     SatunesLogger.getLogger()?.info("Satunes Composable")
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
@@ -93,6 +98,8 @@ internal fun Satunes(
                     LocalNavController provides navController,
                 )
             ) {
+                val handledMusic: Music? = MainActivity.instance.handledMusic
+
                 Scaffold(
                     modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
                     topBar = { TopAppBar(scrollBehavior = scrollBehavior) },
@@ -107,6 +114,20 @@ internal fun Satunes(
                         ExportImportPlaylistsDialog(export = false)
                     else if (dataUiState.showExportPlaylistDialog)
                         ExportImportPlaylistsDialog(export = true)
+                }
+
+                LaunchedEffect(
+                    key1 = handledMusic,
+                    key2 = dataViewModel.isLoaded,
+                    key3 = playbackViewModel.isInitialized
+                ) {
+                    if (dataViewModel.isLoaded && playbackViewModel.isInitialized)
+                        if (handledMusic == null) MainActivity.instance.handleMusic()
+                        else openMedia(
+                            playbackViewModel = playbackViewModel,
+                            media = handledMusic,
+                            navController = navController,
+                        )
                 }
             }
         }

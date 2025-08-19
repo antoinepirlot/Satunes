@@ -252,6 +252,7 @@ internal class MainActivity : ComponentActivity() {
         if (intent == null) return
         if (intent.action != Intent.ACTION_VIEW) return
         val uri = intent.data ?: return
+        if (uri.path!!.endsWith(".m3u")) return
         val music: Music =
             DataManager.getMusic(absolutePath = DEFAULT_ROOT_FILE_PATH + '/' + uri.path!!.split(":")[1])
         PlaybackManager.loadMusics(

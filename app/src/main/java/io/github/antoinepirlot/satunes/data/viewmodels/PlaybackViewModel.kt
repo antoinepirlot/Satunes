@@ -345,10 +345,11 @@ class PlaybackViewModel : ViewModel() {
         )
     }
 
-    fun start(mediaToPlay: Music? = null) {
+    fun start(mediaToPlay: Music? = null, reset: Boolean = false) {
         PlaybackManager.start(
             context = MainActivity.instance.applicationContext,
-            musicToPlay = mediaToPlay
+            musicToPlay = mediaToPlay,
+            reset = reset
         )
     }
 

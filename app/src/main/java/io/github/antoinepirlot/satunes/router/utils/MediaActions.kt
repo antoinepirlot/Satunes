@@ -51,9 +51,10 @@ internal fun openMedia(
     playbackViewModel: PlaybackViewModel,
     media: MediaImpl? = null,
     navController: NavHostController?,
+    reset: Boolean = false
 ) {
     if (media == null || media is Music)
-        startMusic(playbackViewModel = playbackViewModel, mediaToPlay = media)
+        startMusic(playbackViewModel = playbackViewModel, mediaToPlay = media, reset = reset)
     navController?.navigate(getDestinationOf(media))
 }
 

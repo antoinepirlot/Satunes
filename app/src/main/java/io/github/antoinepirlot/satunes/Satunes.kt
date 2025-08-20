@@ -53,6 +53,7 @@ import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.models.listeners.OnDestinationChangedListener
 import io.github.antoinepirlot.satunes.router.Router
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.bars.bottom.BottomAppBar
@@ -91,6 +92,8 @@ internal fun Satunes(
             val scope: CoroutineScope = rememberCoroutineScope()
             val snackBarHostState: SnackbarHostState = remember { SnackbarHostState() }
 
+            navController.addOnDestinationChangedListener(listener = OnDestinationChangedListener)
+
             CompositionLocalProvider(
                 values = arrayOf(
                     LocalSnackBarHostState provides snackBarHostState,
@@ -123,11 +126,15 @@ internal fun Satunes(
                 ) {
                     if (dataViewModel.isLoaded && playbackViewModel.isInitialized)
                         if (handledMusic == null) MainActivity.instance.handleMusic()
-                        else openMedia(
-                            playbackViewModel = playbackViewModel,
-                            media = handledMusic,
-                            navController = navController,
-                        )
+                        else {
+                            openMedia(
+                                playbackViewModel = playbackViewModel,
+                                media = handledMusic,
+                                navController = navController,
+                                reset = true
+                            )
+                            MainActivity.instance.musicHandled()
+                        }
                 }
             }
         }

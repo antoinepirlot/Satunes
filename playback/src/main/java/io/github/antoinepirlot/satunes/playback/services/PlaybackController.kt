@@ -277,12 +277,17 @@ internal class PlaybackController private constructor(
                 musicPlayingIndex = playlist!!.getMusicIndex(music = musicToPlay)
             }
         }
-        musicPlaying = playlist!!.getMusic(musicIndex = musicPlayingIndex)
+        if (musicPlayingIndex == -1) {
+            this.loadMusics(musics = DataManager.getMusicSet(), musicToPlay = musicToPlay)
+            this.start(musicToPlay = musicToPlay)
+        } else {
+            musicPlaying = playlist!!.getMusic(musicIndex = musicPlayingIndex)
 
-        if (mediaController!!.currentMediaItemIndex == musicPlayingIndex)
-            mediaController!!.play()
-        else
-            mediaController!!.seekTo(musicPlayingIndex, 0)
+            if (mediaController!!.currentMediaItemIndex == musicPlayingIndex)
+                mediaController!!.play()
+            else
+                mediaController!!.seekTo(musicPlayingIndex, 0)
+        }
     }
 
     fun playPause() {

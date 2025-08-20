@@ -123,11 +123,14 @@ internal fun Satunes(
                 ) {
                     if (dataViewModel.isLoaded && playbackViewModel.isInitialized)
                         if (handledMusic == null) MainActivity.instance.handleMusic()
-                        else openMedia(
-                            playbackViewModel = playbackViewModel,
-                            media = handledMusic,
-                            navController = navController,
-                        )
+                        else {
+                            openMedia(
+                                playbackViewModel = playbackViewModel,
+                                media = handledMusic,
+                                navController = navController,
+                            )
+                            MainActivity.instance.musicHandled()
+                        }
                 }
             }
         }

@@ -261,10 +261,15 @@ internal class MainActivity : ComponentActivity() {
         if (uri.path!!.endsWith(".m3u")) return
         this.handledMusic =
             DataManager.getMusic(absolutePath = DEFAULT_ROOT_FILE_PATH + '/' + uri.path!!.split(":")[1])
+        _intentToHandle = null
     }
 
     override fun onDestroy() {
         super.onDestroy()
         WidgetPlaybackManager.refreshWidgets()
+    }
+
+    fun musicHandled() {
+        instance.handledMusic = null
     }
 }

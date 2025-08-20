@@ -131,6 +131,7 @@ internal fun Satunes(
                                 playbackViewModel = playbackViewModel,
                                 media = handledMusic,
                                 navController = navController,
+                                reset = true
                             )
                             MainActivity.instance.musicHandled()
                         }

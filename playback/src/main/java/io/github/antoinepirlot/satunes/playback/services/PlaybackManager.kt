@@ -133,6 +133,8 @@ object PlaybackManager {
         context: Context,
         listener: PlaybackListener? = this.listener,
         loadAllMusics: Boolean = true,
+        reset: Boolean = false,
+        musicToPlay: Music? = null,
         log: Boolean = true
     ) {
         if (log) _logger?.info("Check Playback Controller")
@@ -147,10 +149,14 @@ object PlaybackManager {
             PlaybackController.updateListener(listener = listener)
             if (loadAllMusics) {
                 if (
-                    this.playlist == null
+                    reset
+                    || this.playlist == null
                     || (this.playlist!!.musicCount() == 0 && DataManager.getMusicSet().isNotEmpty())
                 ) {
-                    this._playbackController!!.loadMusics(musics = DataManager.getMusicSet())
+                    this._playbackController!!.loadMusics(
+                        musics = DataManager.getMusicSet(),
+                        musicToPlay = musicToPlay
+                    )
                 }
             }
         }
@@ -169,9 +175,9 @@ object PlaybackManager {
         currentPositionProgression.floatValue = _playbackController!!.currentPositionProgression
     }
 
-    fun start(context: Context, musicToPlay: Music? = null) {
+    fun start(context: Context, musicToPlay: Music? = null, reset: Boolean = false) {
         _logger?.info("Start")
-        checkPlaybackController(context = context)
+        checkPlaybackController(context = context, reset = reset, musicToPlay = musicToPlay)
         this._playbackController!!.start(musicToPlay = musicToPlay)
     }
 

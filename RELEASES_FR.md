@@ -4,6 +4,17 @@ You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
 ## 3.2 (Android 5.1.1 Lollipop et ultérieur)
 
+### 3.2.0-preview-2
+
+Améliorations, optimisations et dépannage :
+
+* Suppression du bouton « Artiste » dans la boîte de dialogue « Album » si l'affichage actuel est
+  celui de l'artiste.
+* Correction d'un plantage lors de l'ouverture d'un fichier musical à partir de l'explorateur de
+  fichiers alors qu'une lecture est déjà en cours et que le fichier musical n'est pas dans la liste
+  de lecture.
+* Correction permettant l'ouverture du même fichier musical dans la session.
+
 ### 3.2.0-preview-1
 
 Nouvelles fonctionnalités :

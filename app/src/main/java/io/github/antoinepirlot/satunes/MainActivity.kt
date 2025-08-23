@@ -276,6 +276,14 @@ internal class MainActivity : ComponentActivity() {
             DataLoader.load(context = getContext(), uri = uri)
             this.handledMusic = DataManager.getMusic(absolutePath = uri.path!!)
             DataManager.remove(music = this.handledMusic!!)
+            if (this.handledMusic!!.album.musicCount() == 1)
+                DataManager.removeAlbum(album = this.handledMusic!!.album)
+            if (this.handledMusic!!.genre.musicCount() == 1)
+                DataManager.removeGenre(genre = this.handledMusic!!.genre)
+            if (this.handledMusic!!.artist.musicCount() == 1)
+                DataManager.removeArtist(artist = this.handledMusic!!.artist)
+            if (this.handledMusic!!.folder.musicCount() == 1)
+                DataManager.removeFolder(folder = this.handledMusic!!.folder)
         }
         _intentToHandle = null
     }

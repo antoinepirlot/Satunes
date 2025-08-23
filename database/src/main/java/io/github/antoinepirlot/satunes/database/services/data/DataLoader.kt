@@ -185,9 +185,7 @@ object DataLoader {
             )?.use {
                 _logger?.info("${it.count} musics to load.")
                 loadColumns(cursor = it)
-                while (it.moveToNext()) {
-                    loadData(cursor = it, context = context)
-                }
+                while (it.moveToNext()) loadData(cursor = it, context = context)
             }
         }
         DatabaseManager.initInstance(context = context).loadAllPlaylistsWithMusic()
@@ -195,6 +193,23 @@ object DataLoader {
         WidgetDatabaseManager.refreshWidgets()
         isLoaded.value = true
         isLoading.value = false
+    }
+
+    /**
+     * Load single music with its path (used when opening from file explorer).
+     */
+    fun load(context: Context, absolutePath: String) {
+        context.contentResolver.query(
+            URI,
+            projection,
+            "${MediaStore.Audio.Media.DATA} = ?",
+            arrayOf(absolutePath),
+            null
+        )?.use {
+            _logger?.info("${it.count} musics found (if everything is okay, it should be one")
+            loadColumns(cursor = it)
+            while (it.moveToNext()) loadData(cursor = it, context = context)
+        }
     }
 
     /**

@@ -19,6 +19,7 @@
 
 package io.github.antoinepirlot.satunes
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
@@ -36,6 +37,7 @@ import io.github.antoinepirlot.satunes.database.models.FileExtensions
 import io.github.antoinepirlot.satunes.database.models.FoldersSelection
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
+import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
@@ -71,6 +73,12 @@ internal class MainActivity : ComponentActivity() {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 putExtra(DocumentsContract.EXTRA_INITIAL_URI, DEFAULT_URI)
             }
+        }
+
+        fun getContext(): Context {
+            if (!::instance.isInitialized)
+                throw NullPointerException("No instances")
+            return instance.applicationContext
         }
     }
 
@@ -259,8 +267,15 @@ internal class MainActivity : ComponentActivity() {
         if (_intentToHandle!!.action != Intent.ACTION_VIEW) return
         val uri = _intentToHandle!!.data ?: return
         if (uri.path!!.endsWith(".m3u")) return
-        this.handledMusic =
-            DataManager.getMusic(absolutePath = DEFAULT_ROOT_FILE_PATH + '/' + uri.path!!.split(":")[1])
+        val musicPath: String = DEFAULT_ROOT_FILE_PATH + '/' + uri.path!!.split(":")[1]
+        try {
+            this.handledMusic = DataManager.getMusic(absolutePath = musicPath)
+        } catch (_: NullPointerException) {
+            //Music has not been loaded by Satunes
+            DataLoader.load(context = getContext(), absolutePath = musicPath)
+            this.handledMusic = DataManager.getMusic(absolutePath = musicPath)
+            DataManager.remove(music = this.handledMusic!!)
+        }
         _intentToHandle = null
     }
 

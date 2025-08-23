@@ -278,7 +278,14 @@ internal class PlaybackController private constructor(
             }
         }
         if (musicPlayingIndex == -1) {
-            this.loadMusics(musics = DataManager.getMusicSet(), musicToPlay = musicToPlay)
+            val musicSet: Set<Music> =
+                if (!DataManager.getMusicSet().contains(element = musicToPlay)) {
+                    val musicSet: MutableSet<Music> = mutableSetOf()
+                    musicSet.addAll(elements = DataManager.getMusicSet())
+                    musicSet.add(element = musicToPlay!!)
+                    musicSet
+                } else DataManager.getMusicSet()
+            this.loadMusics(musics = musicSet, musicToPlay = musicToPlay)
             this.start(musicToPlay = musicToPlay)
         } else {
             musicPlaying = playlist!!.getMusic(musicIndex = musicPlayingIndex)

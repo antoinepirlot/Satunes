@@ -4,6 +4,15 @@ You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
 ## 3.2 (Android 5.1.1 Lollipop et ultérieur)
 
+### 3.2.0-preview-3
+
+Améliorations, optimisations et dépannage :
+
+* Correction du bug ne pouvant ouvrir un dossier
+* Correction du problème lors de l'ouverture d'une musique ne faisant pas partie des musiques
+  chargées
+* Correction de la vérification d'une mise à jour
+
 ### 3.2.0-preview-2
 
 Améliorations, optimisations et dépannage :

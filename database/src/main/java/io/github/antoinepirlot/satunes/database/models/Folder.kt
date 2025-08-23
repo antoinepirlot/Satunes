@@ -172,4 +172,10 @@ class Folder(
         }
         return compared
     }
+
+    override fun musicCount(): Int {
+        var count = this.musicSortedSet.size
+        for (folder: Folder in this.subFolderSortedSet) count += folder.musicCount()
+        return count
+    }
 }

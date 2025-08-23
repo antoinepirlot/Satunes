@@ -19,6 +19,7 @@
 
 package io.github.antoinepirlot.satunes
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
@@ -36,6 +37,7 @@ import io.github.antoinepirlot.satunes.database.models.FileExtensions
 import io.github.antoinepirlot.satunes.database.models.FoldersSelection
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
+import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
@@ -48,6 +50,7 @@ import io.github.antoinepirlot.satunes.widgets.PlaybackWidget.setRefreshWidget
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+
 
 /**
  * @author Antoine Pirlot on 18/01/24
@@ -71,6 +74,12 @@ internal class MainActivity : ComponentActivity() {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 putExtra(DocumentsContract.EXTRA_INITIAL_URI, DEFAULT_URI)
             }
+        }
+
+        fun getContext(): Context {
+            if (!::instance.isInitialized)
+                throw NullPointerException("No instances")
+            return instance.applicationContext
         }
     }
 
@@ -259,8 +268,23 @@ internal class MainActivity : ComponentActivity() {
         if (_intentToHandle!!.action != Intent.ACTION_VIEW) return
         val uri = _intentToHandle!!.data ?: return
         if (uri.path!!.endsWith(".m3u")) return
-        this.handledMusic =
-            DataManager.getMusic(absolutePath = DEFAULT_ROOT_FILE_PATH + '/' + uri.path!!.split(":")[1])
+        try {
+            val musicPath: String = DEFAULT_ROOT_FILE_PATH + '/' + uri.path!!.split(":")[1]
+            this.handledMusic = DataManager.getMusic(absolutePath = musicPath)
+        } catch (_: NullPointerException) {
+            //Music has not been loaded by Satunes
+            DataLoader.load(context = getContext(), uri = uri)
+            this.handledMusic = DataManager.getMusic(absolutePath = uri.path!!)
+            DataManager.remove(music = this.handledMusic!!)
+            if (this.handledMusic!!.album.musicCount() == 1)
+                DataManager.removeAlbum(album = this.handledMusic!!.album)
+            if (this.handledMusic!!.genre.musicCount() == 1)
+                DataManager.removeGenre(genre = this.handledMusic!!.genre)
+            if (this.handledMusic!!.artist.musicCount() == 1)
+                DataManager.removeArtist(artist = this.handledMusic!!.artist)
+            if (this.handledMusic!!.folder.musicCount() == 1)
+                DataManager.removeFolder(folder = this.handledMusic!!.folder)
+        }
         _intentToHandle = null
     }
 

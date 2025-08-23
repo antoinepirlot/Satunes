@@ -4,6 +4,14 @@ Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
 ## 3.2 (Android 5.1.1 Lollipop and later)
 
+### 3.2.0-preview-3
+
+Improvements, optimisations and bug fixes:
+
+* Fixed bug preventing folders from opening
+* Fixed issue when opening music that was not part of the loaded music
+* Fixed update verification
+
 ### 3.2.0-preview-2
 
 Improvements, optimizations and troubleshooting:

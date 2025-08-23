@@ -282,8 +282,8 @@ internal class MainActivity : ComponentActivity() {
                 DataManager.removeGenre(genre = this.handledMusic!!.genre)
             if (this.handledMusic!!.artist.musicCount() == 1)
                 DataManager.removeArtist(artist = this.handledMusic!!.artist)
-            if (this.handledMusic!!.folder.musicCount() == 1)
-                DataManager.removeFolder(folder = this.handledMusic!!.folder)
+            //Here, the path starts with "document" it will never be in a folder of a loaded music.
+            DataManager.removeFolder(folder = this.handledMusic!!.folder.getRoot())
         }
         _intentToHandle = null
     }

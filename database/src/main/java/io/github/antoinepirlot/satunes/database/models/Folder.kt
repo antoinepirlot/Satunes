@@ -178,4 +178,9 @@ class Folder(
         for (folder: Folder in this.subFolderSortedSet) count += folder.musicCount()
         return count
     }
+
+    fun getRoot(): Folder {
+        if (this.parentFolder == null) return this
+        return this.parentFolder!!.getRoot()
+    }
 }

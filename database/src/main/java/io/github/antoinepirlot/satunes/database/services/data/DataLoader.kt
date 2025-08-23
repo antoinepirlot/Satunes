@@ -21,6 +21,7 @@ package io.github.antoinepirlot.satunes.database.services.data
 
 import android.content.Context
 import android.database.Cursor
+import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
@@ -198,17 +199,17 @@ object DataLoader {
     /**
      * Load single music with its path (used when opening from file explorer).
      */
-    fun load(context: Context, absolutePath: String) {
+    fun load(context: Context, uri: Uri) {
         context.contentResolver.query(
-            URI,
+            uri,
             projection,
-            "${MediaStore.Audio.Media.DATA} = ?",
-            arrayOf(absolutePath),
+            null,
+            null,
             null
         )?.use {
-            _logger?.info("${it.count} musics found (if everything is okay, it should be one")
+            _logger?.info("${it.count} music found (if everything is okay, it should be one")
             loadColumns(cursor = it)
-            while (it.moveToNext()) loadData(cursor = it, context = context)
+            while (it.moveToNext()) loadData(cursor = it, context = context, uri = uri)
         }
     }
 
@@ -263,37 +264,39 @@ object DataLoader {
 
     /**
      * Load data from cursor
+     *
+     * @param uri is the [Uri] used for temporary music
      */
-    private fun loadData(cursor: Cursor, context: Context) {
-        val absolutePath: String = cursor.getString(absolutePathColumnId!!)
-
+    private fun loadData(cursor: Cursor, context: Context, uri: Uri? = null) {
+        val absolutePath: String? = cursor.getString(absolutePathColumnId!!) ?: uri?.path!!
         // /!\ Do not check if File exist here as it will slower the loading, it is check in Music constructor
-
         //Load Artist
-        val artist: Artist = loadArtist(context = context, cursor = cursor)
+        val artist: Artist = loadArtist(context = context, cursor = cursor, uri = uri)
 
         //Load album
-        val album: Album = loadAlbum(cursor = cursor, context = context)
+        val album: Album = loadAlbum(cursor = cursor, context = context, uri = uri)
 
         //Link album to artist if the album doesn't already have the album
         artist.addAlbum(album = album)
 
 
         //Load Genre
-        val genre: Genre = loadGenre(context = context, cursor = cursor, album = album)
+        val genre: Genre = loadGenre(context = context, cursor = cursor, album = album, uri = uri)
 
         //Load Folder
-        val folder: Folder = loadFolder(absolutePath = absolutePath)
+        val folder: Folder = loadFolder(absolutePath = absolutePath!!)
 
         //Load music and folder inside load music function
         try {
             loadMusic(
+                context = context,
                 cursor = cursor,
                 album = album,
                 artist = artist,
                 folder = folder,
                 genre = genre,
                 absolutePath = absolutePath,
+                uri = uri
             )
         } catch (e: Throwable) {
             _logger?.warning(e.message)
@@ -322,32 +325,46 @@ object DataLoader {
      * @return the created music
      */
     private fun loadMusic(
+        context: Context,
         cursor: Cursor,
         album: Album,
         artist: Artist,
         folder: Folder,
         genre: Genre,
         absolutePath: String,
+        uri: Uri?
     ): Music {
         // Get values of columns for a given music.
+        var mmr: MediaMetadataRetriever? = null
+        if (uri != null) {
+            mmr = MediaMetadataRetriever()
+            mmr.setDataSource(context, uri)
+        }
+
         val id: Long = cursor.getLong(musicIdColumnId!!)
-        if (id < 1) {
-            val message = "Id < 1"
+        if (id < 0L) {
+            val message = "Id < 0"
             _logger?.severe(message)
             throw IllegalArgumentException(message)
         }
+
         val size = cursor.getInt(musicSizeColumnId!!)
-        if (size <= 0) {
+        if (size < 0) {
             val message = "Size <= 0"
             throw IllegalArgumentException(message)
         }
-        val duration: Long = cursor.getLong(musicDurationColumnId!!)
-        if (duration <= 0) {
+        var duration: Long = cursor.getLong(musicDurationColumnId!!)
+        if (duration < 0L) {
             val message = "Duration <= 0"
             throw IllegalArgumentException(message)
+        } else if (duration == 0L) {
+            duration =
+                mmr?.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)?.toLong() ?: 0L
         }
         val displayName: String = cursor.getString(musicNameColumnId!!)
         val title: String = cursor.getString(musicTitleColumnId!!)
+            ?: mmr?.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE)
+            ?: ""
         val cdTrackNumber: Int = cursor.getInt(cdTrackNumberColumnId!!)
         val dateAdded: Long = cursor.getInt(dateAddedPathColumnId!!).toLong() * 1000L
 
@@ -364,6 +381,7 @@ object DataLoader {
             artist = artist,
             folder = folder,
             genre = genre,
+            uri = uri
         )
         return music
     }
@@ -405,12 +423,16 @@ object DataLoader {
         return rootFolder!!.getSubFolder(splitPath.toMutableList())!! //Do not follow warning for !!
     }
 
-    private fun loadArtist(context: Context, cursor: Cursor): Artist {
+    private fun loadArtist(context: Context, cursor: Cursor, uri: Uri?): Artist {
         // Get values of columns for a given artist.
         var name: String = try {
             cursor.getString(artistNameColumnId!!)
         } catch (_: NullPointerException) {
-            UNKNOWN_ARTIST
+            if (uri != null) {
+                val mmr = MediaMetadataRetriever()
+                mmr.setDataSource(context, uri)
+                mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST) ?: UNKNOWN_ARTIST
+            } else UNKNOWN_ARTIST
         }
 
 
@@ -432,11 +454,16 @@ object DataLoader {
         return DataManager.addArtist(artist = Artist(title = name))
     }
 
-    private fun loadAlbumArtist(context: Context, cursor: Cursor): Artist {
+    private fun loadAlbumArtist(context: Context, cursor: Cursor, uri: Uri?): Artist {
         var name: String = try {
             cursor.getString(albumArtistColumnId!!)
         } catch (_: NullPointerException) {
-            UNKNOWN_ARTIST
+            if (uri != null) {
+                val mmr = MediaMetadataRetriever()
+                mmr.setDataSource(context, uri)
+                mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUMARTIST)
+                    ?: UNKNOWN_ARTIST
+            } else UNKNOWN_ARTIST
         }
 
         val isCompilation: Boolean =
@@ -451,7 +478,7 @@ object DataLoader {
                 context.getString(R.string.various_artists)
             } else if (SettingsManager.artistReplacement) {
                 //Load music's artist
-                return this.loadArtist(context = context, cursor = cursor)
+                return this.loadArtist(context = context, cursor = cursor, uri = uri)
             } else {
                 context.getString(R.string.unknown_artist)
             }
@@ -460,11 +487,15 @@ object DataLoader {
         return DataManager.addArtist(artist = Artist(title = name))
     }
 
-    private fun loadAlbum(context: Context, cursor: Cursor): Album {
+    private fun loadAlbum(context: Context, cursor: Cursor, uri: Uri?): Album {
         var name: String = try {
             cursor.getString(albumNameColumnId!!)
         } catch (_: NullPointerException) {
-            UNKNOWN_ALBUM
+            if (uri != null) {
+                val mmr = MediaMetadataRetriever()
+                mmr.setDataSource(context, uri)
+                mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM) ?: UNKNOWN_ALBUM
+            } else UNKNOWN_ALBUM
         }
 
         val isCompilation: Boolean =
@@ -480,7 +511,7 @@ object DataLoader {
 
         val year: Int = cursor.getInt(albumYearColumnId!!)
 
-        val artist: Artist = loadAlbumArtist(context = context, cursor = cursor)
+        val artist: Artist = loadAlbumArtist(context = context, cursor = cursor, uri = uri)
 
         val album: Album = DataManager.addAlbum(
             album = Album(
@@ -495,7 +526,7 @@ object DataLoader {
     }
 
 
-    private fun loadGenre(context: Context, cursor: Cursor, album: Album): Genre {
+    private fun loadGenre(context: Context, cursor: Cursor, album: Album, uri: Uri?): Genre {
         var name: String = try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 cursor.getString(genreNameColumnId!!)
@@ -503,7 +534,11 @@ object DataLoader {
                 getGenreNameForAndroidQAndLess(context = context, cursor = cursor)
             }
         } catch (_: NullPointerException) {
-            UNKNOWN_GENRE
+            if (uri != null) {
+                val mmr = MediaMetadataRetriever()
+                mmr.setDataSource(context, uri)
+                mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_GENRE) ?: UNKNOWN_GENRE
+            } else UNKNOWN_GENRE
         }
 
         if (name == UNKNOWN_GENRE) {

@@ -51,6 +51,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+
 /**
  * @author Antoine Pirlot on 18/01/24
  */
@@ -267,13 +268,13 @@ internal class MainActivity : ComponentActivity() {
         if (_intentToHandle!!.action != Intent.ACTION_VIEW) return
         val uri = _intentToHandle!!.data ?: return
         if (uri.path!!.endsWith(".m3u")) return
-        val musicPath: String = DEFAULT_ROOT_FILE_PATH + '/' + uri.path!!.split(":")[1]
         try {
+            val musicPath: String = DEFAULT_ROOT_FILE_PATH + '/' + uri.path!!.split(":")[1]
             this.handledMusic = DataManager.getMusic(absolutePath = musicPath)
         } catch (_: NullPointerException) {
             //Music has not been loaded by Satunes
-            DataLoader.load(context = getContext(), absolutePath = musicPath)
-            this.handledMusic = DataManager.getMusic(absolutePath = musicPath)
+            DataLoader.load(context = getContext(), uri = uri)
+            this.handledMusic = DataManager.getMusic(absolutePath = uri.path!!)
             DataManager.remove(music = this.handledMusic!!)
         }
         _intentToHandle = null

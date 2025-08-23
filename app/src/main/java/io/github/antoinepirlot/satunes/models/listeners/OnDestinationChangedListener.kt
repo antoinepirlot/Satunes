@@ -26,6 +26,7 @@ package io.github.antoinepirlot.satunes.models.listeners
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.savedstate.SavedState
+import io.github.antoinepirlot.satunes.models.Destination
 
 /**
  * @author Antoine Pirlot 20/08/2025
@@ -37,6 +38,7 @@ object OnDestinationChangedListener : NavController.OnDestinationChangedListener
         arguments: SavedState?
     ) {
         if (controller.previousBackStackEntry != null && destination == controller.previousBackStackEntry!!.destination)
-            controller.popBackStack()
+            if (Destination.getDestination(destination = destination.route!!) != Destination.FOLDER)
+                controller.popBackStack()
     }
 }

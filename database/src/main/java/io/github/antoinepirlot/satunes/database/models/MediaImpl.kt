@@ -122,5 +122,5 @@ abstract class MediaImpl(
         return compared
     }
 
-    fun musicCount(): Int = this.musicSortedSet.size
+    open fun musicCount(): Int = this.musicSortedSet.size
 }

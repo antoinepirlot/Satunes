@@ -50,7 +50,7 @@ Tu as le droit de réutiliser mon code pour créer une nouvelle application dér
 * Voir les artistes et leurs albums et musiques
 * Voir les genres et leurs albums et musiques
 * Lire la musique en fonction des dossiers, albums, genres et artistes
-* Système de playlists
+* Système de playlists (support M3U)
 * Exportation et importation des playlists
 * Personnalisation de l'expérience:
   * Arrrêter ou continuer la lecture si l'application est fermée

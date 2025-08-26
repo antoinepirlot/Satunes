@@ -2,6 +2,49 @@
 
 Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
+## 3.2 (Android 5.1.1 Lollipop and later)
+
+### 3.2.0
+
+New features:
+
+* Ability to open an audio file from the file explorer
+* Support for the M3U format for playlists (see import/export).
+
+Improvements, optimisations and bug fixes:
+
+* Fixed update verification
+* Remove artist button from Album's dialog if the current view is the artist.
+
+### 3.2.0-preview-3
+
+Improvements, optimisations and bug fixes:
+
+* Fixed bug preventing folders from opening
+* Fixed issue when opening music that was not part of the loaded music
+* Fixed update verification
+
+### 3.2.0-preview-2
+
+Improvements, optimizations and troubleshooting:
+
+* Remove artist button from Album's dialog if the current view is the artist.
+* Fix crash when opening music from file explorer app when a playback is already running and the
+  music not in the playback.
+* Fix allowing opening the same music in the session.
+
+### 3.2.0-preview-1
+
+New features:
+
+* Ability to open an audio file from the file explorer
+
+### 3.2.0-beta-1
+
+New features:
+
+* Support for the M3U format for playlists (see import/export).
+
 ## 3.1 (Android 5.1.1 Lollipop and later)
 
 ### 3.1.3

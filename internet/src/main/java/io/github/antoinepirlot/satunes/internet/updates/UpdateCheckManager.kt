@@ -173,48 +173,45 @@ object UpdateCheckManager {
      *      - Stable only gets Stable releases
      */
     private fun isUpdateAvailable(latestVersion: String, currentVersion: String): Boolean {
-        val updateChannel: UpdateChannel = SettingsManager.updateChannel.value
-        val latestSplit: List<String> =
-            latestVersion.split(
-                "v",
-                limit = 2
-            )[1].split("-") //Removes the first letter 'v' and limit 2 to prevent splitting "preview"
-        val currentSplit: List<String> =
-            currentVersion.split(
-                "v",
-                limit = 2
-            )[1].split("-") //Removes the first letter 'v' and limit 2 to prevent splitting "preview"
-        val latestChannel: UpdateChannel =
-            if (latestSplit.size > 1) UpdateChannel.getUpdateChannel(name = latestSplit[1])
-            else UpdateChannel.STABLE
+        val selectedChannel: UpdateChannel = SettingsManager.updateChannel.value
+        var split: List<String> = currentVersion.split("-")
+        val currentVersionNumber: String = split[0].split("v")[1]
         val currentChannel: UpdateChannel =
-            if (currentSplit.size > 1) UpdateChannel.getUpdateChannel(name = currentSplit[1])
-            else UpdateChannel.STABLE
+            if (split.size == 1) UpdateChannel.STABLE else UpdateChannel.getUpdateChannel(name = split[1])
+        val currentChannelVersion: Int = if (split.size == 1) 0 else split[2].toInt()
+
+        split = latestVersion.split("-")
+        val latestVersionNumber: String = split[0].split("v")[1]
+        val latestChannel: UpdateChannel =
+            if (split.size == 1) UpdateChannel.STABLE else UpdateChannel.getUpdateChannel(name = split[1])
+        val latestChannelVersion: Int = if (split.size == 1) 0 else split[2].toInt()
 
         var numberIncreased = false
-        val latestVersionToCheck: List<String> = latestSplit[0].split(".")
-        val currentVersionToCheck: List<String> = currentSplit[0].split(".")
-        for (i: Int in 0..latestVersionToCheck.lastIndex)  //1 to skip the 0 as it is 'v' char
-            if (latestVersionToCheck[i].toInt() < currentVersionToCheck[i].toInt()) break
-            else if (latestVersionToCheck[i].toInt() > currentVersionToCheck[i].toInt()) {
+        val currentVersionToCheck: List<String> = currentVersionNumber.split(".")
+        val latestVersionToCheck: List<String> = latestVersionNumber.split(".")
+        for (i: Int in 0..<3) { // "Version is like x.y.z (3 numbers)
+            val currentNumber: Int = currentVersionToCheck[i].toInt()
+            val latestNumber: Int = latestVersionToCheck[i].toInt()
+            if (currentNumber > latestNumber) return false
+            if (currentNumber < latestNumber) {
                 numberIncreased = true
                 break
             }
-
-        //Here the 3 number have changed (vx.y.z...)
-        if (numberIncreased) return latestChannel.stability >= updateChannel.stability
-        else {
-            if (currentSplit.size == 1) return false
-            val latestNumber: Int = if (latestSplit.size > 1) latestSplit[2].toInt() else -1
-            val currentNumber: Int = if (currentSplit.size > 1) currentSplit[2].toInt() else -1
-            numberIncreased = latestNumber > currentNumber
-
-            //Here the last number has increased: v...-...-x
-            if (!numberIncreased) return false
-            if (latestChannel.stability <= currentChannel.stability && latestChannel.stability >= updateChannel.stability)
-                return true
-            return currentChannel.stability <= updateChannel.stability && latestChannel.stability >= currentChannel.stability
         }
+
+        if (isMoreStableThan(latestChannel, selectedChannel)
+            && isMoreStableThan(latestChannel, currentChannel)
+        ) {
+            return numberIncreased || latestChannel != currentChannel || currentChannelVersion < latestChannelVersion
+        }
+        return false
+    }
+
+    /**
+     * Returns true if [channel1].stability >= [channel2].stability. False otherwise
+     */
+    private fun isMoreStableThan(channel1: UpdateChannel, channel2: UpdateChannel): Boolean {
+        return channel1.stability >= channel2.stability
     }
 
     fun getCurrentVersion(context: Context): String {

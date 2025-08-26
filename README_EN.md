@@ -50,7 +50,7 @@ You can reuse my code but you will have to redistribute it. This allows free sof
 * Play music on phone and on Android Auto
 * View artists and their albums and music
 * View genres and their albums and music
-* Playlists
+* Playlists (support M3U)
 * Play music based on folders, albums, genres, artists and playlists
 * Export and import playlists
 * Personalization of the experience:

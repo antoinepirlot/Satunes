@@ -33,8 +33,10 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.core.graphics.drawable.toBitmap
+import androidx.core.net.toUri
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
+import io.github.antoinepirlot.satunes.database.data.DEFAULT_ROOT_FILE_PATH
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
@@ -60,7 +62,7 @@ class Music(
     val artist: Artist,
     val album: Album,
     val genre: Genre,
-    val uri: Uri? = Uri.parse(encode(absolutePath)), // Must be init before media item
+    uri: Uri? = null,
 ) : MediaImpl(id = id, title = title.ifBlank { displayName }) {
 
     /**
@@ -68,12 +70,16 @@ class Music(
      */
     private val _playlistsOrderMap: MutableMap<Playlist, Long> = mutableMapOf()
 
+    val relativePath: String = this.absolutePath.replace("$DEFAULT_ROOT_FILE_PATH/", "")
+
     val cdTrackNumber: Int?
 
     public override var addedDate: Date? = null
 
     var liked: MutableState<Boolean> = mutableStateOf(false)
         private set
+
+    val uri: Uri? = uri ?: encode(absolutePath).toUri() // Must be init before media item
 
     val mediaItem: MediaItem = getMediaMetadata()
 

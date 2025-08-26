@@ -21,10 +21,24 @@
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
-plugins {
-    id("com.android.application") version "8.12.1" apply false
-    id("com.android.library") version "8.12.1" apply false
-    id("org.jetbrains.kotlin.android") version "1.9.0" apply false
-    alias(libs.plugins.ksp) apply false
+package io.github.antoinepirlot.satunes.models.listeners
+
+import androidx.navigation.NavController
+import androidx.navigation.NavDestination
+import androidx.savedstate.SavedState
+import io.github.antoinepirlot.satunes.models.Destination
+
+/**
+ * @author Antoine Pirlot 20/08/2025
+ */
+object OnDestinationChangedListener : NavController.OnDestinationChangedListener {
+    override fun onDestinationChanged(
+        controller: NavController,
+        destination: NavDestination,
+        arguments: SavedState?
+    ) {
+        if (controller.previousBackStackEntry != null && destination == controller.previousBackStackEntry!!.destination)
+            if (Destination.getDestination(destination = destination.route!!) != Destination.FOLDER)
+                controller.popBackStack()
+    }
 }

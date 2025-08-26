@@ -33,6 +33,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -40,19 +41,29 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import io.github.antoinepirlot.satunes.data.local.LocalMainScope
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
+import io.github.antoinepirlot.satunes.data.states.DataUiState
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
+import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
+import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.models.ProgressBarLifecycleCallbacks
+import io.github.antoinepirlot.satunes.models.listeners.OnDestinationChangedListener
 import io.github.antoinepirlot.satunes.router.Router
+import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.bars.bottom.BottomAppBar
 import io.github.antoinepirlot.satunes.ui.components.bars.top.TopAppBar
 import io.github.antoinepirlot.satunes.ui.components.buttons.fab.SatunesFAB
 import io.github.antoinepirlot.satunes.ui.components.dialog.WhatsNewDialog
+import io.github.antoinepirlot.satunes.ui.components.dialog.playlist.ExportImportPlaylistsDialog
 import io.github.antoinepirlot.satunes.ui.theme.SatunesTheme
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import kotlinx.coroutines.CoroutineScope
@@ -65,10 +76,14 @@ import kotlinx.coroutines.CoroutineScope
 @Composable
 internal fun Satunes(
     modifier: Modifier = Modifier,
-    satunesViewModel: SatunesViewModel = viewModel()
+    satunesViewModel: SatunesViewModel = viewModel(),
+    dataViewModel: DataViewModel = viewModel(),
+    playbackViewModel: PlaybackViewModel = viewModel()
 ) {
     SatunesLogger.getLogger()?.info("Satunes Composable")
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+    val dataUiState: DataUiState by dataViewModel.uiState.collectAsState()
+
     SatunesTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
@@ -80,6 +95,8 @@ internal fun Satunes(
             val scope: CoroutineScope = rememberCoroutineScope()
             val snackBarHostState: SnackbarHostState = remember { SnackbarHostState() }
 
+            navController.addOnDestinationChangedListener(listener = OnDestinationChangedListener)
+
             CompositionLocalProvider(
                 values = arrayOf(
                     LocalSnackBarHostState provides snackBarHostState,
@@ -87,6 +104,8 @@ internal fun Satunes(
                     LocalNavController provides navController,
                 )
             ) {
+                val handledMusic: Music? = MainActivity.instance.handledMusic
+
                 Scaffold(
                     modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
                     topBar = { TopAppBar(scrollBehavior = scrollBehavior) },
@@ -95,26 +114,36 @@ internal fun Satunes(
                     floatingActionButtonPosition = FabPosition.End
                 ) { innerPadding: PaddingValues ->
                     Router(modifier = Modifier.padding(innerPadding))
-                    if (!satunesUiState.whatsNewSeen) {
-                        WhatsNewDialog(
-                            onConfirm = {
-                                // When app relaunch, it's not shown again
-                                satunesViewModel.seeWhatsNew(
-                                    scope = scope,
-                                    snackBarHostState = snackBarHostState,
-                                    permanently = true
-                                )
+                    if (!satunesUiState.whatsNewSeen)
+                        WhatsNewDialog()
+                    else if (dataUiState.showImportPlaylistDialog)
+                        ExportImportPlaylistsDialog(export = false)
+                    else if (dataUiState.showExportPlaylistDialog)
+                        ExportImportPlaylistsDialog(export = true)
+                }
 
-                            },
-                            onDismiss = {
-                                // When app relaunch, it's shown again
-                                satunesViewModel.seeWhatsNew(
-                                    scope = scope,
-                                    snackBarHostState = snackBarHostState,
-                                )
-                            }
-                        )
-                    }
+                val lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current
+
+                LaunchedEffect(
+                    key1 = handledMusic,
+                    key2 = dataViewModel.isLoaded,
+                    key3 = playbackViewModel.isInitialized
+                ) {
+                    if (dataViewModel.isLoaded && playbackViewModel.isInitialized)
+                        if (handledMusic == null) MainActivity.instance.handleMusic()
+                        else {
+                            openMedia(
+                                playbackViewModel = playbackViewModel,
+                                media = handledMusic,
+                                navController = navController,
+                                reset = true
+                            )
+                            //Fix issue when opening the music from file explorer and the playback view is already opened causes bar not refreshing
+                            lifecycleOwner.lifecycle.removeObserver(ProgressBarLifecycleCallbacks)
+                            lifecycleOwner.lifecycle.addObserver(ProgressBarLifecycleCallbacks)
+                            ProgressBarLifecycleCallbacks.updateCurrentPosition()
+                            MainActivity.instance.musicHandled()
+                        }
                 }
             }
         }

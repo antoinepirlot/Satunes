@@ -66,6 +66,9 @@ internal class MainActivity : ComponentActivity() {
         private const val EXPORT_LOGS_CODE: Int = 4
         const val INCLUDE_FOLDER_TREE_CODE: Int = 5
         const val EXCLUDE_FOLDER_TREE_CODE: Int = 6
+
+        private var _handledIntentAsUri: Uri? = null
+
         val DEFAULT_URI: Uri =
             Uri.parse(DEFAULT_ROOT_FILE_PATH + '/' + Environment.DIRECTORY_DOCUMENTS)
 
@@ -264,7 +267,7 @@ internal class MainActivity : ComponentActivity() {
      * Handle the music the user clicked in the files explorer app.
      */
     fun handleMusic() {
-        if (_intentToHandle == null) return
+        if (_intentToHandle == null || _handledIntentAsUri == _intentToHandle?.data) return
         if (_intentToHandle!!.action != Intent.ACTION_VIEW) return
         val uri = _intentToHandle!!.data ?: return
         if (uri.path!!.endsWith(".m3u")) return
@@ -285,6 +288,7 @@ internal class MainActivity : ComponentActivity() {
             //Here, the path starts with "document" it will never be in a folder of a loaded music.
             DataManager.removeFolder(folder = this.handledMusic!!.folder.getRoot())
         }
+        _handledIntentAsUri = _intentToHandle?.data
         _intentToHandle = null
     }
 

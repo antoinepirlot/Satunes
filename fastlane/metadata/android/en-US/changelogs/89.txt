@@ -1,0 +1,9 @@
+New features:
+
+* Ability to open an audio file from the file explorer
+* Support for the M3U format for playlists (see import/export).
+
+Improvements, optimisations and bug fixes:
+
+* Fixed update verification
+* Remove artist button from Album's dialog if the current view is the artist.

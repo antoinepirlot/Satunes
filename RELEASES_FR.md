@@ -4,6 +4,19 @@ You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
 ## 3.2 (Android 5.1.1 Lollipop et ultérieur)
 
+### 3.2.0
+
+Nouvelles fonctionnalités :
+
+* Possibilité d'ouvrir un fichier audio à partir de l'explorateur de fichiers.
+* Support du format M3U pour les playlistes (voir importation/exportation).
+
+Améliorations, optimisations et corrections de bogues :
+
+* Correction de la vérification des mises à jour.
+* Suppression du bouton « Artiste » dans la boîte de dialogue « Album » si l'affichage actuel est
+  celui de l'artiste.
+
 ### 3.2.0-preview-3
 
 Améliorations, optimisations et dépannage :

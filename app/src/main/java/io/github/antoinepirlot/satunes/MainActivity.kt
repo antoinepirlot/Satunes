@@ -31,6 +31,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.core.net.toUri
 import io.github.antoinepirlot.satunes.data.viewmodels.utils.isAudioAllowed
 import io.github.antoinepirlot.satunes.database.data.DEFAULT_ROOT_FILE_PATH
 import io.github.antoinepirlot.satunes.database.models.FileExtensions
@@ -66,8 +67,10 @@ internal class MainActivity : ComponentActivity() {
         private const val EXPORT_LOGS_CODE: Int = 4
         const val INCLUDE_FOLDER_TREE_CODE: Int = 5
         const val EXCLUDE_FOLDER_TREE_CODE: Int = 6
+        var intentToHandle: Intent? = null
+
         val DEFAULT_URI: Uri =
-            Uri.parse(DEFAULT_ROOT_FILE_PATH + '/' + Environment.DIRECTORY_DOCUMENTS)
+            (DEFAULT_ROOT_FILE_PATH + '/' + Environment.DIRECTORY_DOCUMENTS).toUri()
 
         private val createFileIntent: Intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
             addCategory(Intent.CATEGORY_OPENABLE)
@@ -88,9 +91,9 @@ internal class MainActivity : ComponentActivity() {
     private var multipleFiles: Boolean = false
     private var _logger: SatunesLogger? = null
     private var _playlistToExport: Playlist? = null
-    private var _intentToHandle: Intent? = null
     var handledMusic: Music? by mutableStateOf(null)
         private set
+    private var _loadMusic: Boolean = true
 
     override fun onStart() {
         super.onStart()
@@ -106,7 +109,8 @@ internal class MainActivity : ComponentActivity() {
         _logger = SatunesLogger.getLogger()
         _logger?.info("Satunes started on API: ${Build.VERSION.SDK_INT}")
         instance = this
-        this._intentToHandle = intent
+        if (intentToHandle != intent) intentToHandle = intent
+        else _loadMusic = false
         setRefreshWidget(context = baseContext)
         WidgetPlaybackManager.refreshWidgets()
 
@@ -256,7 +260,8 @@ internal class MainActivity : ComponentActivity() {
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        this._intentToHandle = intent
+        intentToHandle = intent
+        _loadMusic = true
         handleMusic()
     }
 
@@ -264,9 +269,10 @@ internal class MainActivity : ComponentActivity() {
      * Handle the music the user clicked in the files explorer app.
      */
     fun handleMusic() {
-        if (_intentToHandle == null) return
-        if (_intentToHandle!!.action != Intent.ACTION_VIEW) return
-        val uri = _intentToHandle!!.data ?: return
+        if (!_loadMusic) return
+        if (intentToHandle == null) return
+        if (intentToHandle!!.action != Intent.ACTION_VIEW) return
+        val uri = intentToHandle!!.data ?: return
         if (uri.path!!.endsWith(".m3u")) return
         try {
             val musicPath: String = DEFAULT_ROOT_FILE_PATH + '/' + uri.path!!.split(":")[1]
@@ -285,7 +291,7 @@ internal class MainActivity : ComponentActivity() {
             //Here, the path starts with "document" it will never be in a folder of a loaded music.
             DataManager.removeFolder(folder = this.handledMusic!!.folder.getRoot())
         }
-        _intentToHandle = null
+        _loadMusic = false
     }
 
     override fun onDestroy() {
@@ -294,6 +300,6 @@ internal class MainActivity : ComponentActivity() {
     }
 
     fun musicHandled() {
-        instance.handledMusic = null
+        handledMusic = null
     }
 }

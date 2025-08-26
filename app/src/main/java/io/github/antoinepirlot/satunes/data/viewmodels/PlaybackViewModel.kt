@@ -110,7 +110,7 @@ class PlaybackViewModel : ViewModel() {
     private var _isShuffle: MutableState<Boolean> = PlaybackManager.isShuffle
     private var _isLoaded: MutableState<Boolean> = PlaybackManager.isLoaded
     private var _isEnded: MutableState<Boolean> = PlaybackManager.isEnded
-    private var _isInitialied: MutableState<Boolean> = PlaybackManager.isInitialized
+    private var _isInitialed: MutableState<Boolean> = PlaybackManager.isInitialized
 
     val uiState: StateFlow<PlaybackUiState> = _uiState.asStateFlow()
 
@@ -121,7 +121,7 @@ class PlaybackViewModel : ViewModel() {
     val isShuffle: Boolean by _isShuffle
     val isLoaded: Boolean by _isLoaded
     val isEnded: Boolean by _isEnded
-    val isInitialized: Boolean by _isInitialied
+    val isInitialized: Boolean by _isInitialed
     val forwardMs: Long = SettingsManager.forwardMs
     val rewindMs: Long = SettingsManager.rewindMs
     val customActionsOrder: Collection<CustomActions> = SettingsManager.customActionsOrder

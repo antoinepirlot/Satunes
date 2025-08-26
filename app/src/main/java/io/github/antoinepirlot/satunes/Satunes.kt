@@ -41,6 +41,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -53,6 +55,7 @@ import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.models.ProgressBarLifecycleCallbacks
 import io.github.antoinepirlot.satunes.models.listeners.OnDestinationChangedListener
 import io.github.antoinepirlot.satunes.router.Router
 import io.github.antoinepirlot.satunes.router.utils.openMedia
@@ -119,6 +122,8 @@ internal fun Satunes(
                         ExportImportPlaylistsDialog(export = true)
                 }
 
+                val lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current
+
                 LaunchedEffect(
                     key1 = handledMusic,
                     key2 = dataViewModel.isLoaded,
@@ -133,6 +138,10 @@ internal fun Satunes(
                                 navController = navController,
                                 reset = true
                             )
+                            //Fix issue when opening the music from file explorer and the playback view is already opened causes bar not refreshing
+                            lifecycleOwner.lifecycle.removeObserver(ProgressBarLifecycleCallbacks)
+                            lifecycleOwner.lifecycle.addObserver(ProgressBarLifecycleCallbacks)
+                            ProgressBarLifecycleCallbacks.updateCurrentPosition()
                             MainActivity.instance.musicHandled()
                         }
                 }

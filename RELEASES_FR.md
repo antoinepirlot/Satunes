@@ -4,6 +4,13 @@ You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
 ## 3.2 (Android 5.1.1 Lollipop et ultérieur)
 
+### 3.2.1
+
+Améliorations, optimisations et corrections de bugs :
+
+* Correction d'un problème lors de l'ouverture de musique à partir de l'explorateur de fichiers sur
+  les appareils Samsung.
+
 ### 3.2.0
 
 Nouvelles fonctionnalités :

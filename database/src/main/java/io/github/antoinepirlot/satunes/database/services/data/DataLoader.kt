@@ -199,7 +199,8 @@ object DataLoader {
     /**
      * Load single music with its path (used when opening from file explorer).
      */
-    fun load(context: Context, uri: Uri) {
+    fun load(context: Context, uri: Uri): Music? {
+        var music: Music? = null
         context.contentResolver.query(
             uri,
             projection,
@@ -209,8 +210,9 @@ object DataLoader {
         )?.use {
             _logger?.info("${it.count} music found (if everything is okay, it should be one")
             loadColumns(cursor = it)
-            while (it.moveToNext()) loadData(cursor = it, context = context, uri = uri)
+            while (it.moveToNext()) music = loadData(cursor = it, context = context, uri = uri)
         }
+        return music
     }
 
     /**
@@ -267,7 +269,7 @@ object DataLoader {
      *
      * @param uri is the [Uri] used for temporary music
      */
-    private fun loadData(cursor: Cursor, context: Context, uri: Uri? = null) {
+    private fun loadData(cursor: Cursor, context: Context, uri: Uri? = null): Music? {
         val absolutePath: String? = cursor.getString(absolutePathColumnId!!) ?: uri?.path!!
         // /!\ Do not check if File exist here as it will slower the loading, it is check in Music constructor
         //Load Artist
@@ -287,7 +289,7 @@ object DataLoader {
         val folder: Folder = loadFolder(absolutePath = absolutePath!!)
 
         //Load music and folder inside load music function
-        try {
+        return try {
             loadMusic(
                 context = context,
                 cursor = cursor,
@@ -314,6 +316,7 @@ object DataLoader {
             if (folder.isEmpty()) {
                 DataManager.removeFolder(folder = folder)
             }
+            null
         }
     }
 

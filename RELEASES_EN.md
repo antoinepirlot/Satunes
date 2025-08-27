@@ -4,6 +4,12 @@ Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
 ## 3.2 (Android 5.1.1 Lollipop and later)
 
+### 3.2.1
+
+Improvements, optimisations and bug fixes:
+
+* Fix issue while opening music from file explorer app on Samsung devices
+
 ### 3.2.0
 
 New features:

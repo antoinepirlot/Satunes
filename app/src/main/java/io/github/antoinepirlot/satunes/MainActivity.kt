@@ -275,12 +275,11 @@ internal class MainActivity : ComponentActivity() {
         val uri = intentToHandle!!.data ?: return
         if (uri.path!!.endsWith(".m3u")) return
         try {
-            val musicPath: String = DEFAULT_ROOT_FILE_PATH + '/' + uri.path!!.split(":")[1]
+            val musicPath: String = DEFAULT_ROOT_FILE_PATH + '/' + uri.path!!.split(":").last()
             this.handledMusic = DataManager.getMusic(absolutePath = musicPath)
         } catch (_: NullPointerException) {
             //Music has not been loaded by Satunes
-            DataLoader.load(context = getContext(), uri = uri)
-            this.handledMusic = DataManager.getMusic(absolutePath = uri.path!!)
+            this.handledMusic = DataLoader.load(context = getContext(), uri = uri)
             DataManager.remove(music = this.handledMusic!!)
             if (this.handledMusic!!.album.musicCount() == 1)
                 DataManager.removeAlbum(album = this.handledMusic!!.album)

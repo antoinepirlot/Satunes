@@ -1,0 +1,6 @@
+Improvements, optimizations and troubleshooting:
+
+* Fix matching settings ui after reset some settings
+* Clarify the name of the added to playlist sorting option
+* Fix order of music played from folder on not shuffle mode
+* Fix disc widget refresh in certain conditions

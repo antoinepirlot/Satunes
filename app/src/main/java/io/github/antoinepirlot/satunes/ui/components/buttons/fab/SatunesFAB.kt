@@ -65,9 +65,11 @@ internal fun SatunesFAB(
 
             val isInMediaListViews: Boolean =
                 satunesUiState.currentDestination.category == DestinationCategory.MEDIA
-            if (isInMediaListViews) satunesUiState.extraButtons?.invoke()
-            if (isInMediaListViews && playbackViewModel.musicPlaying != null)
-                ShowCurrentMusicButton()
+            if (isInMediaListViews) {
+                satunesUiState.extraButtons?.invoke()
+                if (playbackViewModel.musicPlaying != null)
+                    ShowCurrentMusicButton()
+            }
         }
         Box(
             modifier = Modifier.fillMaxWidth(),

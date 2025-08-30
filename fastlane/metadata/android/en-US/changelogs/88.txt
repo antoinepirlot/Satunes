@@ -1,0 +1,5 @@
+Improvements, optimisations and bug fixes:
+
+* Fixed bug preventing folders from opening
+* Fixed issue when opening music that was not part of the loaded music
+* Fixed update verification

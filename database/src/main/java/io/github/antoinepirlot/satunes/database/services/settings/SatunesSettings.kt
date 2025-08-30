@@ -4,13 +4,16 @@
  * Satunes is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software Foundation,
  * either version 3 of the License, or (at your option) any later version.
+ *
  * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
  * See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public License along with Satunes.
+ *  You should have received a copy of the GNU General Public License along with Satunes.
+ *
  * If not, see <https://www.gnu.org/licenses/>.
  *
- * *** INFORMATION ABOUT THE AUTHOR *****
+ * **** INFORMATION ABOUT THE AUTHOR *****
  * The author of this file is Antoine Pirlot, the owner of this project.
  * You find this original project on Codeberg.
  *
@@ -28,6 +31,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
+import io.github.antoinepirlot.satunes.database.models.UpdateChannel
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager.dataStore
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -44,6 +48,7 @@ internal object SatunesSettings {
     private const val DEFAULT_WHATS_NEW_VERSION_SEEN: String = ""
     private const val DEFAULT_LOGS_ACTIVATION: Boolean = true
     private const val DEFAULT_INCLUDE_EXCLUDE_SEEN: Boolean = false
+    private val DEFAULT_UPDATE_CHANNEL: UpdateChannel = UpdateChannel.STABLE
 
     // KEYS
 
@@ -55,6 +60,7 @@ internal object SatunesSettings {
         booleanPreferencesKey("logs_activation")
     private val INCLUDE_EXCLUDE_SEEN_KEY: Preferences.Key<Boolean> =
         booleanPreferencesKey("see_include_exclude")
+    private val UPDATE_CHANNEL_KEY: Preferences.Key<String> = stringPreferencesKey("update_channel")
 
     // VARIABLES
 
@@ -64,6 +70,7 @@ internal object SatunesSettings {
     var logsActivation: MutableState<Boolean> = mutableStateOf(DEFAULT_LOGS_ACTIVATION)
         private set
     var includeExcludeSeen: Boolean = DEFAULT_INCLUDE_EXCLUDE_SEEN
+    var updateChannel: MutableState<UpdateChannel> = mutableStateOf(DEFAULT_UPDATE_CHANNEL)
 
     suspend fun loadSettings(context: Context) {
         context.dataStore.data.map { preferences: Preferences ->
@@ -73,6 +80,11 @@ internal object SatunesSettings {
             this.logsActivation.value = preferences[LOGS_ACTIVATION_KEY] ?: DEFAULT_LOGS_ACTIVATION
             this.includeExcludeSeen =
                 preferences[INCLUDE_EXCLUDE_SEEN_KEY] ?: DEFAULT_INCLUDE_EXCLUDE_SEEN
+
+            val updateChannelName: String? = preferences[UPDATE_CHANNEL_KEY]
+            if (updateChannelName == null) this.updateChannel.value = DEFAULT_UPDATE_CHANNEL
+            else this.updateChannel.value = UpdateChannel.getUpdateChannel(name = updateChannelName)
+
             if (this.whatsNewSeen) {
                 val packageManager = context.packageManager
                 val packageInfo = packageManager.getPackageInfo(context.packageName, 0)
@@ -120,6 +132,8 @@ internal object SatunesSettings {
             preferences[WHATS_NEW_VERSION_SEEN_KEY] = this.whatsNewVersionSeen
             this.includeExcludeSeen = DEFAULT_INCLUDE_EXCLUDE_SEEN
             preferences[INCLUDE_EXCLUDE_SEEN_KEY] = DEFAULT_INCLUDE_EXCLUDE_SEEN
+            this.updateChannel.value = DEFAULT_UPDATE_CHANNEL
+            preferences[UPDATE_CHANNEL_KEY] = DEFAULT_UPDATE_CHANNEL.name
         }
     }
 
@@ -134,6 +148,13 @@ internal object SatunesSettings {
         context.dataStore.edit { preferences: MutablePreferences ->
             this.includeExcludeSeen = false
             preferences[INCLUDE_EXCLUDE_SEEN_KEY] = false
+        }
+    }
+
+    suspend fun selectUpdateChannel(context: Context, channel: UpdateChannel) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            this.updateChannel.value = channel
+            preferences[UPDATE_CHANNEL_KEY] = this.updateChannel.value.name
         }
     }
 }

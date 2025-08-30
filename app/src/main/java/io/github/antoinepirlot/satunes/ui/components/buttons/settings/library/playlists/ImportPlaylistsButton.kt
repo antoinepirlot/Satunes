@@ -42,9 +42,7 @@ internal fun ImportPlaylistsButton(
     ButtonWithIcon(
         modifier = modifier,
         icon = SatunesIcons.IMPORT,
-        onClick = {
-            dataViewModel.importPlaylists()
-        },
+        onClick = { dataViewModel.openImportPlaylistDialog() },
         text = stringResource(id = R.string._import)
     )
 }

@@ -1,0 +1,3 @@
+Nouvelles fonctionnalités :
+
+* Possibilité d'ouvrir un fichier audio depuis l'explorateur de fichier

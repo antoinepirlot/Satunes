@@ -1,0 +1,5 @@
+Améliorations, optimisations et dépannage :
+
+* Correction du bug ne pouvant ouvrir un dossier
+* Correction du problème lors de l'ouverture d'une musique ne faisant pas partie des musiques chargées
+* Correction de la vérification d'une mise à jour

@@ -1,5 +1,144 @@
 # Versions (🇫🇷)
+
 You can find this file in [english 🇬🇧](RELEASES_EN.md)
+
+## 3.2 (Android 5.1.1 Lollipop et ultérieur)
+
+### 3.2.1
+
+Améliorations, optimisations et corrections de bugs :
+
+* Correction d'un problème lors de l'ouverture de musique à partir de l'explorateur de fichiers sur
+  les appareils Samsung.
+
+### 3.2.0
+
+Nouvelles fonctionnalités :
+
+* Possibilité d'ouvrir un fichier audio à partir de l'explorateur de fichiers.
+* Support du format M3U pour les playlistes (voir importation/exportation).
+
+Améliorations, optimisations et corrections de bogues :
+
+* Correction de la vérification des mises à jour.
+* Suppression du bouton « Artiste » dans la boîte de dialogue « Album » si l'affichage actuel est
+  celui de l'artiste.
+
+### 3.2.0-preview-3
+
+Améliorations, optimisations et dépannage :
+
+* Correction du bug ne pouvant ouvrir un dossier
+* Correction du problème lors de l'ouverture d'une musique ne faisant pas partie des musiques
+  chargées
+* Correction de la vérification d'une mise à jour
+
+### 3.2.0-preview-2
+
+Améliorations, optimisations et dépannage :
+
+* Suppression du bouton « Artiste » dans la boîte de dialogue « Album » si l'affichage actuel est
+  celui de l'artiste.
+* Correction d'un plantage lors de l'ouverture d'un fichier musical à partir de l'explorateur de
+  fichiers alors qu'une lecture est déjà en cours et que le fichier musical n'est pas dans la liste
+  de lecture.
+* Correction permettant l'ouverture du même fichier musical dans la session.
+
+### 3.2.0-preview-1
+
+Nouvelles fonctionnalités :
+
+* Possibilité d'ouvrir un fichier audio depuis l'explorateur de fichier
+
+### 3.2.0-beta-1
+
+Nouvelles fonctionnalités :
+
+* Support du format M3U pour les playlistes (voir importation/exportation).
+
+## 3.1 (Android 5.1.1 Lollipop et ultérieur)
+
+### 3.1.3
+
+Améliorations, optimisations et dépannage :
+
+* Correction du crash lors du tri dans la vue d'un dossier
+
+### 3.1.2
+
+Améliorations, optimisations et dépannage :
+
+* Correction des boutons de lecture qui ne s'affichent pas dans les vues de dossiers
+* Correction du geste de retour avec la navigation par balayage (le geste de retour prédictif est
+  temporairement désactivé)
+
+### 3.1.1
+
+Améliorations, optimisations et dépannage :
+
+* Correction de l'interface utilisateur des paramètres après la réinitialisation de certains
+  paramètres
+* Clarification du nom de l'option de tri de l'ordre d'ajout à une playlist
+* Correction de l'ordre de la musique lue à partir d'un dossier en mode non aléatoire
+* Correction du rafraîchissement du widget disque dans certaines conditions
+
+### 3.1.0
+
+Nouvelles fonctionnalités :
+
+* Nouveau Widget "Disque"
+* Réglages pour arrondir les albums et animer les illustrations lors de la lecture
+* La fonction inclure/exclure prend désormais en compte les deux cas. Tu peux maintenant inclure
+  certains dossiers et en exclure d'autres en même temps.
+* Bouton pour désactiver les logs
+* Ajout des abonnements aux canaux de mises à jour
+
+Améliorations, optimisations et dépannage :
+
+* Correction du chemin trop long qui cache l'icône de la corbeille dans les paramètres de la
+  bibliothèque
+* Correction d'un crash lors de la lecture de musique après autorisation de l'audio
+* Cacher les boutons pour jouer de la musique dans la vue des médias pour éviter de jouer de la
+  musique pendant le chargement des données
+* Lors de l'ajout à la file d'attente, les musiques sont ajoutées dans un ordre aléatoire si le mode
+  aléatoire par défaut est activé.
+
+### 3.1.0-preview-1
+
+Nouvelles fonctionnalités :
+
+* Ajout des abonnements aux canaux de mises à jour
+
+Améliorations, optimisations et dépannage :
+
+* Correction de la fenêtre d'information lors de l'ouverture des paramètres de la bibliothèque, elle
+  sera maintenant cachée de façon permanente lorsque le bouton "ok" sera cliqué
+* L'interrupteur d'inclusion/exclusion est de nouveau un simple bouton (plus d'action d'
+  interrupteur)
+* Correction du chemin trop long qui cache l'icône de la corbeille dans les paramètres de la
+  bibliothèque
+* L'image de l'album peut être arrondie dans Android Auto
+* Correction de la zone cliquable de l'illustration circulaire dans la vue de lecture (c'est
+  maintenant un cercle)
+* Tentative de correction du chargement du mauvais widget
+
+### 3.1.0-beta-1
+
+Nouvelles fonctionnalités :
+
+* Nouveau Widget "Disque"
+* Réglages pour arrondir les albums et animer les illustrations lors de la lecture
+* La fonction inclure/exclure prend désormais en compte les deux cas. Tu peux maintenant inclure
+  certains dossiers et en exclure d'autres en même temps.
+* Bouton pour désactiver les logs
+
+Améliorations, optimisations et dépannage :
+
+* Correction d'un crash lors de la lecture de musique après autorisation de l'audio
+* Cacher les boutons pour jouer de la musique dans la vue des médias pour éviter de jouer de la
+  musique pendant le chargement des données
+* Lors de l'ajout à la file d'attente, les musiques sont ajoutées dans un ordre aléatoire si le mode
+  aléatoire par défaut est activé.
 
 ## 3.0 (Android 5.1.1 Lollipop et ultérieur)
 
@@ -32,8 +171,8 @@ Améliorations, optimisations et dépannage :
 * Correction de la fonction d'exclusion de dossiers
 * Suppresion de la permission inutile "manage_external_storage"
 * Correction de la navigation :
-  * Si l'audio n'est pas autorisé, les paramètres sont accessibles.
-  * Si l'audio vient d'être autorisé dans l'app, la navigation est alors pleinement fonctionnelle
+    * Si l'audio n'est pas autorisé, les paramètres sont accessibles.
+    * Si l'audio vient d'être autorisé dans l'app, la navigation est alors pleinement fonctionnelle
 
 ### 3.0.1
 
@@ -253,10 +392,10 @@ Fonctionnalités supprimées:
 Améliorations, optimisations et dépannage:
 
 * Correction des bogues de la v2.4.0-beta-1
-  * Crash de la lecture de la musique en cours de lecture
-  * Ajout d'une musique dans une playlist
-  * Montre à nouveau le bouton pour supprimer la musique de la playlist
-  * Crash lors du démarrage sur Android Q et antérieur
+    * Crash de la lecture de la musique en cours de lecture
+    * Ajout d'une musique dans une playlist
+    * Montre à nouveau le bouton pour supprimer la musique de la playlist
+    * Crash lors du démarrage sur Android Q et antérieur
 
 ### 2.4.0-beta-1
 
@@ -416,8 +555,8 @@ Améliorations, optimisations et dépannage:
 * Correction des problèmes d'Android Auto
 * Correction du plantage de l'application à chaque lancement de l'application avec Android Auto
 * Chemin:
-  * Afficher "cet appareil" au lieu de "/0"
-  * Déplacement du bouton d'actualisation vers une nouvelle ligne
+    * Afficher "cet appareil" au lieu de "/0"
+    * Déplacement du bouton d'actualisation vers une nouvelle ligne
 * Optimisation du processus de recherche
 
 ### 2.1.0
@@ -446,7 +585,8 @@ Améliorations, optimisations et dépannage:
 * Il n'est plus possible d'avoir 2 playlists différentes de même nom peu importe les
   majuscules/minuscules
 * Les espaces sont retirés lors de la création d'une playlist ou de la modification de son titre
-* Lors du lancement de la lecture via les recherches avec le mode aléatoire, la musique sélectionnée est la première de la liste de lecture
+* Lors du lancement de la lecture via les recherches avec le mode aléatoire, la musique sélectionnée
+  est la première de la liste de lecture
 * Lors d'une recherche, si les premiers ou derniers caractères sont des espaces, ils sont ignorés
 
 ### 2.0.0
@@ -459,21 +599,21 @@ Améliorations, optimisations et dépannage:
   donnée
 * L'importation et exportation des playlists fonctionne correctements
 * La barre de progression affichera les niveaux prédéfinis dans cet ordre:
-  * Très lent
-  * Lent
-  * Un peu lent
-  * Normal
-  * Rapide
-  * Très rapide
-  * En temps réel
+    * Très lent
+    * Lent
+    * Un peu lent
+    * Normal
+    * Rapide
+    * Très rapide
+    * En temps réel
 * Définition d'un ordre pour les médias si leur titre est exactement le même lors de la comparaison,
   à l'écran si cela se produit, tu verras les médias dans cet ordre:
-  * Musique
-  * Album
-  * Artiste
-  * Genre
-  * Playlist
-  * Dossier
+    * Musique
+    * Album
+    * Artiste
+    * Genre
+    * Playlist
+    * Dossier
 * Utilisation des snack bar pour les différentes notifications
 * Ajout du titre de l'album sur l'élément musical pour différencier les albums et les musiques
 * Les boutons des réglages aléatoire ne sont plus des commutateurs mais agissent comme les boutons
@@ -498,13 +638,13 @@ Améliorations, optimisations et dépannage:
 * Correction de la fermeture de l'application lors de la lecture lorsque le paramètre pour la
   maintenir en mode lecture désactivé
 * La barre de progression affichera les niveaux prédéfinis dans cet ordre:
-  * Très lent
-  * Lent
-  * Un peu lent
-  * Normal
-  * Rapide
-  * Très rapide
-  * En temps réel
+    * Très lent
+    * Lent
+    * Un peu lent
+    * Normal
+    * Rapide
+    * Très rapide
+    * En temps réel
 * La fenêtre modale ne se fermera plus lorsque tu décide de unliker la musique dans la vue de la
   playlist Favoris
 * Quelques autres optimisations
@@ -515,12 +655,12 @@ Améliorations, optimisations et dépannage:
 
 * Définition d'un ordre pour les médias si leur titre est exactement le même lors de la comparaison,
   à l'écran si cela se produit, tu verras les médias dans cet ordre:
-  * Musique
-  * Album
-  * Artiste
-  * Genre
-  * Playlist
-  * Dossier
+    * Musique
+    * Album
+    * Artiste
+    * Genre
+    * Playlist
+    * Dossier
 * Limitation de la liste d'éléments à 300 maximum dans Android Auto en raison de ses limitations
 * Le chargement devrait être plus rapide dans Android Auto car une boucle a été supprimée pour
   chaque chargement de liste
@@ -592,8 +732,8 @@ Nouvelles Fonctionnalités:
 * Recherche des différents média
 * Système de musique favorites
 * Visualisation de la liste de lecture et possibilité de:
-  * Lire la musique après le morceaux actuel
-  * Ajouter à la file d'attente
+    * Lire la musique après le morceaux actuel
+    * Ajouter à la file d'attente
 * Ajout d'un mode tablet pour l'affichage de la musique en cours de lecutre
 * Popup après installation d'une mise à jour
 
@@ -610,8 +750,8 @@ Nouvelles Fonctionnalités:
 * Recherche des différents média
 * Système de musique favorites
 * Visualisation de la liste de lecture et possibilité de:
-  * Lire la musique après le morceaux actuel
-  * Ajouter à la file d'attente
+    * Lire la musique après le morceaux actuel
+    * Ajouter à la file d'attente
 * Ajout d'un mode tablet pour l'affichage de la musique en cours de lecutre
 * Popup après installation d'une mise à jour
 
@@ -701,9 +841,10 @@ Améliorations, Optimisations et Résolutions de problèmes:
 * Le problème lié à la navigation dans les genres ou albums avec un nom contenant le caractère '/'
   peut maintenant fonctionner normalement
 * Le design a été amélioré:
-  * Les boutons shuffle et repeat dans la vue playback (uniquement dans l'application sur téléphone)
-    sont complètement rond
-  * La prise en charge des tailles d'écran à été améliorée
+    * Les boutons shuffle et repeat dans la vue playback (uniquement dans l'application sur
+      téléphone)
+      sont complètement rond
+    * La prise en charge des tailles d'écran à été améliorée
 * Ajout d'un menu dans les paramètres expliquant comment activer Android Auto
 
 ### 1.0.0-preview-2
@@ -715,9 +856,9 @@ Nouvelles Fonctionnalités:
 Améliorations, Optimisations et Résolutions de problèmes:
 
 * Les problèmes lié au playback dans Android Auto sont réglés:
-  * Pas d'affichage au lancement
-  * Barre de progression pendant le mode répéter un seul morceau qui va au delà de la limite de
-    temps
+    * Pas d'affichage au lancement
+    * Barre de progression pendant le mode répéter un seul morceau qui va au delà de la limite de
+      temps
 * Ajout d'un texte expliquant pourquoi l'exportation et exportation des playlists est en bêta
 * Tentative de correction du crash lors de l'ouverture de l'app après un long moment après une pause
 
@@ -731,9 +872,9 @@ Nouvelles Fonctionnalités:
 * Ajout d'un bouton shuffle dans toutes les vues Android Auto
 * Suppression de l'onglet "Musics" car trop d'éléments dans Android Auto.
 * Nouveaux paramètres:
-  * Choix du mode répétition
-  * Choix du mode shuffle
-  * Possibilité d'empêcher les autres application de mettre le playback en pause/play
+    * Choix du mode répétition
+    * Choix du mode shuffle
+    * Possibilité d'empêcher les autres application de mettre le playback en pause/play
 
 Améliorations, Optimisations et Résolutions de problèmes:
 
@@ -775,13 +916,14 @@ Améliorations, Optimisations et Résolutions de problèmes:
 * La façon dont les permissions sont gérée aa été amélioré et l'application ne plante plus lors du
   premier démarrage
 * Le design a été amélioré:
-  * Afin d'éviter les blocage dans les petits écran, toutes les éléments sont scrollable en attente
-    de trouver une solution plus adéquate
-  * L'image de l'album est affichée à l'écran dans la page de l'album
-  * Les différentes vues sont dans leur entierté déroulable
-  * La vue des genres affiches, en plus des musiques, les albums comme dans la page d'un artiste
-  * Le nom de l'artiste est affiché dans la vue de l'album et permet une redirection vers celui-ci
-  * Les zones de textes ont été harmonisées et les long textes seront coupés si nécéssaire
+    * Afin d'éviter les blocage dans les petits écran, toutes les éléments sont scrollable en
+      attente
+      de trouver une solution plus adéquate
+    * L'image de l'album est affichée à l'écran dans la page de l'album
+    * Les différentes vues sont dans leur entierté déroulable
+    * La vue des genres affiches, en plus des musiques, les albums comme dans la page d'un artiste
+    * Le nom de l'artiste est affiché dans la vue de l'album et permet une redirection vers celui-ci
+    * Les zones de textes ont été harmonisées et les long textes seront coupés si nécéssaire
 * Quelques optimisations légères ont été apportées
 
 ## 0.9 (Android 9 Pie et ultérieur)
@@ -808,7 +950,8 @@ Améliorations, Optimisations et Résolutions de problèmes:
 
 ### 0.9.0-beta
 
-MP3 Player porte enfin son propre nom "Satunes". Cette version devient compatible Android 9 Pie et plus récent.
+MP3 Player porte enfin son propre nom "Satunes". Cette version devient compatible Android 9 Pie et
+plus récent.
 
 Nouvelles Fonctionnalités:
 
@@ -823,7 +966,8 @@ Améliorations, Optimisations et Résolutions de problèmes:
 * Les paramètres ont été déplacés dans des sous sections pour une meilleure séparations.
 * Les mises à jours pourront se faire peu importe le nom de l'application
 * Les toasts ne seront plus affichés 2 fois lors de la mise à jour.
-* L'image des albums s'affiche dans les listes des albums et musiques afin de rendre les listes plus sympatique.
+* L'image des albums s'affiche dans les listes des albums et musiques afin de rendre les listes plus
+  sympatique.
 * Optimisation de l'utilisation de la batterie
 * Le lancement d'une musique depuis les playlists est maintenant réglé.
 * La librairie qui permet la navigation a été mise à jour et apporte de nouvelles animations.
@@ -856,16 +1000,17 @@ Améliorations, Optimisations et Résolutions de problèmes:
   les paramètres. Ce n'est plus automatique afin d'éviter des consomations de données inutiles.
 * La vérification des mises à jour a été corrigée et prend maintenant en compte 4 types de mises à
   jour:
-  * Alpha: Il s'agit des versions les plus expérimentales et les plus buguées. Les fonctionnalités
-    ne sont pas marquée dans le marbre et peuvent disparaître avec une mise à jour ultérieure.
-  * Beta: Il s'agit des versions de tests permettant de régler les problèmes des nouvelles
-    fonctionnalités. Celle-ci seront ajouté définitivement à l'application (sauf cas de force
-    majeur).
-  * Preview: Il s'agit d'une version candidate qui, si tout ce passe bien, sera déployée en version
-    stable.
-  * Stable: Il s'agit d'une version prête à l'emploi. C'est la version recomandée pour une
-    utilisation normale. Elle peut cependant encore présenter quelques bugs mais ceux-ci se feront
-    rare et n'empêcheront pas le bon fonctionnement des fonctionalités.
+    * Alpha: Il s'agit des versions les plus expérimentales et les plus buguées. Les fonctionnalités
+      ne sont pas marquée dans le marbre et peuvent disparaître avec une mise à jour ultérieure.
+    * Beta: Il s'agit des versions de tests permettant de régler les problèmes des nouvelles
+      fonctionnalités. Celle-ci seront ajouté définitivement à l'application (sauf cas de force
+      majeur).
+    * Preview: Il s'agit d'une version candidate qui, si tout ce passe bien, sera déployée en
+      version
+      stable.
+    * Stable: Il s'agit d'une version prête à l'emploi. C'est la version recomandée pour une
+      utilisation normale. Elle peut cependant encore présenter quelques bugs mais ceux-ci se feront
+      rare et n'empêcheront pas le bon fonctionnement des fonctionalités.
 * L'ajout de musiques à plusieurs playlists est en principe réglé.
 * Les crash survenant lors d'une recomposition de l'UI suite à des changements comme "Rotation de
   l'écran" ou encore "Activation du mode sombre" ne feront plus crasher l'application.
@@ -891,11 +1036,13 @@ Nouvelles Fonctionnalités:
 * Ajout de nouvelles sections dans la page paramètres.
 * Ajout de titre indiquant où l'utilisateur se trouve.
 * Ajout d'une liste horizontale affichant les albums d'un artiste.
-* Possibilité de cliquer sur l'album (dans la page d'un artiste ou depuis la musique en cours de lecture) pour afficher la page de l'album.
+* Possibilité de cliquer sur l'album (dans la page d'un artiste ou depuis la musique en cours de
+  lecture) pour afficher la page de l'album.
 
 Améliorations, Optimisations et Résolutions de problèmes:
 
-* Le paramètre qui permet de masquer l'onglet fichier est réparé, le paramètre est enregistré correctement.
+* Le paramètre qui permet de masquer l'onglet fichier est réparé, le paramètre est enregistré
+  correctement.
 * L'affichage de la page paramètre à été repensé et amélioré.
 
 ## 0.7 (Android 11 Red Velvet Cake et ultérieur)
@@ -957,7 +1104,7 @@ Résolutions de problèmes:
 Fonctionnalités:
 
 * Support pour Android Auto
-  * Pour activer Android Auto clique [ici](README.md) pour savoir comment faire.
+    * Pour activer Android Auto clique [ici](README.md) pour savoir comment faire.
 
 Résolutions de problèmes:
 
@@ -984,8 +1131,10 @@ Fonctionnalités:
 
 * Affichage de la lite des genres et possiblité de lire la musique depuis ceux-ci.
 * Paramètres
-    * Authorise l'utilisateur à choisir d'arrêter la lecture si l'application est fermée depuis le multi-âche.
-    * Authorise l'utilisateur à choisir d'arrêter la lecture si le casque/écouteurs sont déconnectés.
+    * Authorise l'utilisateur à choisir d'arrêter la lecture si l'application est fermée depuis le
+      multi-âche.
+    * Authorise l'utilisateur à choisir d'arrêter la lecture si le casque/écouteurs sont
+      déconnectés.
 
 Résolutions de problèmes:
 
@@ -1004,7 +1153,8 @@ Résolutions de problèmes:
 
 Résolutions de problèmes:
 
-* Le chargement des données sur les appareils Galaxy ne font plus crasher l'application si aucune image d'album n'est trouvée.
+* Le chargement des données sur les appareils Galaxy ne font plus crasher l'application si aucune
+  image d'album n'est trouvée.
 * La déconnexion des écouteurs/casques met la lecture en pause.
 * Le bouton play/pause est correctement synchronisé avec l'état de la musique.
 
@@ -1026,7 +1176,8 @@ Dans cette version, le problème suivant à été resolu:
 
 ### 0.2.0-beta
 
-Dans cette version, l'image de l'album est montré dans la vue lecture en cours et la bar de progression à été déplacée en bas de l'écran.
+Dans cette version, l'image de l'album est montré dans la vue lecture en cours et la bar de
+progression à été déplacée en bas de l'écran.
 
 ## 0.1 (Android 14 Upside Down Cake et ultérieur)
 

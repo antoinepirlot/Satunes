@@ -76,9 +76,7 @@ internal object ProgressBarLifecycleCallbacks : DefaultLifecycleObserver {
      * If this function is already running, just return by using isUpdatingPosition.
      */
     private fun refreshCurrentPosition() {
-        if (isUpdatingPosition || playbackViewModel.musicPlaying == null) {
-            return
-        }
+        if (isUpdatingPosition || playbackViewModel.musicPlaying == null) return
         isUpdatingPosition = true
         _logger?.info("Update current position")
         _updatingJob?.cancel()
@@ -94,7 +92,7 @@ internal object ProgressBarLifecycleCallbacks : DefaultLifecycleObserver {
     }
 
     fun updateCurrentPosition(log: Boolean = true) {
-        // It means the music has reached the end of playlistDB and the music is finished
+        // It means the music has reached the end of playlist and the music is finished
         if (playbackViewModel.isEnded) return
 
         playbackViewModel.updateCurrentPosition(log = log)

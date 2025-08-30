@@ -1,0 +1,4 @@
+Améliorations, optimisations et dépannage :
+
+* Correction des boutons de lecture qui ne s'affichent pas dans les vues de dossiers
+* Correction du geste de retour avec la navigation par balayage (le geste de retour prédictif est temporairement désactivé)

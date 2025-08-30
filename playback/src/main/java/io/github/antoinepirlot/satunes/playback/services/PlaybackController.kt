@@ -277,12 +277,24 @@ internal class PlaybackController private constructor(
                 musicPlayingIndex = playlist!!.getMusicIndex(music = musicToPlay)
             }
         }
-        musicPlaying = playlist!!.getMusic(musicIndex = musicPlayingIndex)
+        if (musicPlayingIndex == -1) {
+            val musicSet: Set<Music> =
+                if (!DataManager.getMusicSet().contains(element = musicToPlay)) {
+                    val musicSet: MutableSet<Music> = mutableSetOf()
+                    musicSet.addAll(elements = DataManager.getMusicSet())
+                    musicSet.add(element = musicToPlay!!)
+                    musicSet
+                } else DataManager.getMusicSet()
+            this.loadMusics(musics = musicSet, musicToPlay = musicToPlay)
+            this.start(musicToPlay = musicToPlay)
+        } else {
+            musicPlaying = playlist!!.getMusic(musicIndex = musicPlayingIndex)
 
-        if (mediaController!!.currentMediaItemIndex == musicPlayingIndex)
-            mediaController!!.play()
-        else
-            mediaController!!.seekTo(musicPlayingIndex, 0)
+            if (mediaController!!.currentMediaItemIndex == musicPlayingIndex)
+                mediaController!!.play()
+            else
+                mediaController!!.seekTo(musicPlayingIndex, 0)
+        }
     }
 
     fun playPause() {

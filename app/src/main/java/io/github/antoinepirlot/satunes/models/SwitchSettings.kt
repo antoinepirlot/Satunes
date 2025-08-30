@@ -61,4 +61,7 @@ internal enum class SwitchSettings(val stringId: Int, val navBarSection: NavBarS
     COMPILATION_MUSIC(stringId = compilation_music_setting_text),
     ARTIST_REPLACEMENT(stringId = R.string.artist_replacement_setting_content),
     SHOW_FIRST_LETTER(stringId = R.string.show_first_letter_setting_content),
+    CHANGE_ROOT_PATH(stringId = R.string.ask_select_music_root_path),
+    EXPORT_MULTIPLE_FILES(stringId = R.string.export_multiple_files_text),
+
 }

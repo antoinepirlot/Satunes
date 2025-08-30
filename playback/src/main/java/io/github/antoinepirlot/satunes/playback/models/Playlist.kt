@@ -209,4 +209,8 @@ internal class Playlist(musics: Collection<Music>) {
     override fun hashCode(): Int {
         return originalMusicMediaItemMap.hashCode()
     }
+
+    fun contains(music: Music?): Boolean {
+        return this.musicList.contains(element = music)
+    }
 }

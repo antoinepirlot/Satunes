@@ -1,0 +1,3 @@
+Nouvelles fonctionnalités :
+
+* Support du format M3U pour les playlistes (voir importation/exportation).

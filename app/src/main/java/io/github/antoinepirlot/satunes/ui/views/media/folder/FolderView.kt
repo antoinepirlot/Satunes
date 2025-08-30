@@ -49,9 +49,7 @@ internal fun FolderView(
 ) {
     LaunchedEffect(key1 = dataViewModel.isLoaded) {
         if (folder.isNotEmpty())
-            satunesViewModel.replaceExtraButtons(extraButtons = {
-                ExtraButtonList()
-            })
+            satunesViewModel.replaceExtraButtons(extraButtons = { ExtraButtonList() })
         else
             satunesViewModel.clearExtraButtons()
     }

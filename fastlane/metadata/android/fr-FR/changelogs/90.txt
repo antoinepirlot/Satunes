@@ -1,0 +1,3 @@
+Améliorations, optimisations et corrections de bugs :
+
+* Correction d'un problème lors de l'ouverture de musique à partir de l'explorateur de fichiers sur les appareils Samsung.

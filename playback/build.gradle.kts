@@ -5,10 +5,10 @@ plugins {
 
 android {
     namespace = "io.github.antoinepirlot.satunes.playback"
-    compileSdk = 35
+    compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
-        minSdk = 22
+        minSdk = libs.versions.android.minSdk.get().toInt()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -48,8 +48,6 @@ dependencies {
     /**
      * Media
      */
-    val media3Version = "1.4.0"
-
     implementation(libs.androidx.media3.common)
     implementation(libs.androidx.media3.exoplayer)
     implementation(libs.androidx.media3.exoplayer.dash)

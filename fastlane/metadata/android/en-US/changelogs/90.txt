@@ -1,0 +1,3 @@
+Improvements, optimisations and bug fixes:
+
+* Fix issue while opening music from file explorer app on Samsung devices

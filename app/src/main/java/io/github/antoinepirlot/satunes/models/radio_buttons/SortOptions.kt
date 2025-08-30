@@ -62,7 +62,7 @@ enum class SortOptions(
     ),
     PLAYLIST_ADDED_DATE(
         icon = SatunesIcons.ADDED_DATE,
-        stringId = RDb.string.added_date,
+        stringId = RDb.string.playlist_added_date,
         comparator = null
     ),
     TITLE(icon = SatunesIcons.TITLE, stringId = R.string.title, comparator = SortByTitleComparator),

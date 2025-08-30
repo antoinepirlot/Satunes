@@ -9,7 +9,7 @@
  *  You should have received a copy of the GNU General Public License along with Satunes.
  *  If not, see <https://www.gnu.org/licenses/>.
  *
- * ** INFORMATION ABOUT THE AUTHOR *****
+ * **** INFORMATION ABOUT THE AUTHOR *****
  * The author of this file is Antoine Pirlot, the owner of this project.
  * You find this original project on Codeberg.
  *
@@ -63,6 +63,7 @@ internal fun FolderPathRow(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         NormalText(
+            modifier.fillMaxWidth(fraction = 0.9f),
             text = if (path.startsWith("/0/")) {
                 path.replaceFirst(
                     "/0/",

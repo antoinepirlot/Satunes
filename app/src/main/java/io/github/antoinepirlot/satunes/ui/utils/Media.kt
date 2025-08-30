@@ -53,19 +53,20 @@ import io.github.antoinepirlot.satunes.icons.SatunesIcons.PLAYLIST
 
 internal fun startMusic(
     playbackViewModel: PlaybackViewModel,
-    mediaToPlay: MediaImpl? = null
+    mediaToPlay: MediaImpl? = null,
+    reset: Boolean = false
 ) {
     when (mediaToPlay) {
         is Music -> {
-            playbackViewModel.start(mediaToPlay)
+            playbackViewModel.start(mediaToPlay, reset = reset)
         }
 
         is Folder -> {
-            playbackViewModel.start()
+            playbackViewModel.start(reset = reset)
         }
 
         null -> {
-            playbackViewModel.start()
+            playbackViewModel.start(reset = reset)
         }
     }
 }

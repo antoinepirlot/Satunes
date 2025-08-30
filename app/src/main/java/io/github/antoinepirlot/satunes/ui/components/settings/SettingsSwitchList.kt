@@ -64,6 +64,7 @@ internal fun SettingsSwitchList(
     }
 }
 
+//TODO clarify these two functions
 @Composable
 internal fun SettingsSwitchList(
     modifier: Modifier = Modifier,
@@ -83,7 +84,7 @@ private fun SettingsSwitchListPreview() {
     SettingsSwitchList(checkedMap = mapOf())
 }
 
-//TODO remove this way as it adds complexity. Keep things simple
+//TODO remove this way as it adds complexity. Keep things simple, think to integrate the switch inside the enum SwitchSettings
 private fun switchSetting(
     satunesViewModel: SatunesViewModel,
     searchViewModel: SearchViewModel,

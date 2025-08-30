@@ -1,3 +1,26 @@
+/*
+ * This file is part of Satunes.
+ *
+ * Satunes is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later version.
+ *
+ * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *  You should have received a copy of the GNU General Public License along with Satunes.
+ *
+ * If not, see <https://www.gnu.org/licenses/>.
+ *
+ * **** INFORMATION ABOUT THE AUTHOR *****
+ * The author of this file is Antoine Pirlot, the owner of this project.
+ * You find this original project on Codeberg.
+ *
+ * My Codeberg link is: https://codeberg.org/antoinepirlot
+ * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
+ */
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -7,7 +30,7 @@ val nameSpace: String = "io.github.antoinepirlot.satunes"
 
 android {
     namespace = nameSpace
-    compileSdk = 35
+    compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     androidResources {
         generateLocaleConfig = true
@@ -16,10 +39,10 @@ android {
 
     defaultConfig {
         applicationId = nameSpace
-        minSdk = 22
-        targetSdk = 35
-        versionCode = 78
-        versionName = "3.0.5"
+        minSdk = libs.versions.android.minSdk.get().toInt()
+        targetSdk = libs.versions.android.targetSdk.get().toInt()
+        versionCode = 90
+        versionName = "3.2.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

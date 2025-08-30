@@ -49,7 +49,7 @@ fun ResetArtworkSettings(
         onClick = {
             dataViewModel.resetArtworkSettings(
                 scope = scope,
-                snackBarHostState = snackBarHostState
+                snackBarHostState = snackBarHostState,
             )
         }
     )

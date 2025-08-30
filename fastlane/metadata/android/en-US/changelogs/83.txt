@@ -1,0 +1,4 @@
+Improvements, optimizations and troubleshooting:
+
+* Fix play buttons not showing in folders views
+* Fix back gesture with swipe navigation (predictive back gesture is temporarily disable)

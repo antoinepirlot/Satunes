@@ -43,7 +43,7 @@ internal fun ExportPlaylistOption(
 ) {
     DialogOption(
         modifier = modifier,
-        onClick = { dataViewModel.exportPlaylist(playlist = playlist) },
+        onClick = { dataViewModel.openExportPlaylistDialog(playlist = playlist) },
         icon = SatunesIcons.EXPORT,
         text = stringResource(id = R.string.export)
     )

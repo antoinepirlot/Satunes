@@ -7,6 +7,7 @@
   <a href="https://f-droid.org/app/io.github.antoinepirlot.satunes"><img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" width="230"></a>
   </br>
   <a href="https://codeberg.org/antoinepirlot/Satunes/releases"><img src="https://get-it-on.codeberg.org/get-it-on-blue-on-white.png" width="200"></a>
+  </br>
   <a href="https://liberapay.com/antoinepirlot/"><img src="https://img.shields.io/liberapay/patrons/antoinepirlot.svg?logo=liberapay"></a>
 </p>
 

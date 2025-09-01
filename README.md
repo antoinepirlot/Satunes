@@ -8,7 +8,8 @@
   </br>
   <a href="https://codeberg.org/antoinepirlot/Satunes/releases"><img src="https://get-it-on.codeberg.org/get-it-on-blue-on-white.png" width="200"></a>
   </br>
-  <a href="https://liberapay.com/antoinepirlot/"><img src="https://img.shields.io/liberapay/patrons/antoinepirlot.svg?logo=liberapay"></a>
+  </br>
+  <a href="https://liberapay.com/antoinepirlot/"><img src="https://img.shields.io/liberapay/patrons/antoinepirlot.svg?logo=liberapay" width="200"></a>
 </p>
 
 You can find this file in [english 🇬🇧](README_EN.md).
@@ -103,7 +104,7 @@ Sinon, tu peux également suivre les étapes suivantes:
 
 Si l'application te plait et que tu as envie de me soutenir, n'hésite pas à le faire en cliquant sur le bouton ci-dessous.
 <p align="center">
-<a href="https://liberapay.com/antoinepirlot/"><img src="https://img.shields.io/liberapay/patrons/antoinepirlot.svg?logo=liberapay"></a>
+<a href="https://liberapay.com/antoinepirlot/"><img src="https://img.shields.io/liberapay/patrons/antoinepirlot.svg?logo=liberapay" width="200"></a>
 </p>
 
 

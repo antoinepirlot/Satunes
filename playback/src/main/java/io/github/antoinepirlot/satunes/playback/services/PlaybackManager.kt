@@ -102,10 +102,8 @@ object PlaybackManager {
         reset()
     }
 
-    private fun playbackControllerNotExists(): Boolean =
-        this._playbackController == null && !PlaybackController.isInitialized()
-
-    fun isConfigured(): Boolean = !this.playbackControllerNotExists()
+    fun playbackControllerExists(): Boolean =
+        this._playbackController != null || PlaybackController.isInitialized()
 
     private fun initPlaybackWithAllMusics(
         context: Context,
@@ -129,36 +127,32 @@ object PlaybackManager {
         }
     }
 
+    /**
+     * Checks if the PlaybackController is initialized.
+     * If that's not the case, it starts the process of creating new one.
+     *
+     * @param context the [Context] of the app
+     * @param listener the [PlaybackListener] to use.
+     * @param loadAllMusics is a [Boolean] value that is
+     *          true means it will load all musics if the playback controller doesn't exists.
+     *          false means it won't load all musics in the playback controller if it doesn't exist.
+     * @param log a [Boolean] value that indicates to log in this function.
+     */
     fun checkPlaybackController(
         context: Context,
         listener: PlaybackListener? = this.listener,
-        loadAllMusics: Boolean = true,
-        reset: Boolean = false,
-        musicToPlay: Music? = null,
+        loadAllMusics: Boolean = false,
         log: Boolean = true
     ) {
         if (log) _logger?.info("Check Playback Controller")
-        if (playbackControllerNotExists()) {
-            if (loadAllMusics) {
-                this.initPlaybackWithAllMusics(context = context, listener = listener)
-            } else {
-                this.initPlayback(context = context, listener = listener)
-            }
+        if (playbackControllerExists()) return
+        if (loadAllMusics) {
+            this.initPlaybackWithAllMusics(
+                context = context,
+                listener = listener
+            )
         } else {
-            if (this.isLoading.value) return
-            PlaybackController.updateListener(listener = listener)
-            if (loadAllMusics) {
-                if (
-                    reset
-                    || this.playlist == null
-                    || (this.playlist!!.musicCount() == 0 && DataManager.getMusicSet().isNotEmpty())
-                ) {
-                    this._playbackController!!.loadMusics(
-                        musics = DataManager.getMusicSet(),
-                        musicToPlay = musicToPlay
-                    )
-                }
-            }
+            this.initPlayback(context = context, listener = listener)
         }
     }
 
@@ -177,8 +171,15 @@ object PlaybackManager {
 
     fun start(context: Context, musicToPlay: Music? = null, reset: Boolean = false) {
         _logger?.info("Start")
-        checkPlaybackController(context = context, reset = reset, musicToPlay = musicToPlay)
-        this._playbackController!!.start(musicToPlay = musicToPlay)
+        checkPlaybackController(context = context, loadAllMusics = true)
+        if (reset) {
+            this._playbackController!!.loadMusics(
+                musics = DataManager.getMusicSet(),
+                musicToPlay = musicToPlay
+            )
+        } else {
+            this._playbackController!!.start(musicToPlay = musicToPlay)
+        }
     }
 
     fun playPause(context: Context) {
@@ -189,7 +190,7 @@ object PlaybackManager {
 
     fun play(context: Context) {
         _logger?.info("Play")
-        checkPlaybackController(context = context)
+        checkPlaybackController(context = context, loadAllMusics = true)
         if (musicPlaying.value == null) {
             this._playbackController!!.start()
         } else {

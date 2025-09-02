@@ -250,7 +250,7 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
         super.onTaskRemoved(rootIntent)
         if (
             !SettingsManager.playbackWhenClosedChecked ||
-            !PlaybackManager.isConfigured() ||
+            !PlaybackManager.playbackControllerExists() ||
             !PlaybackManager.isPlaying.value
         ) {
             stopSelf()
@@ -260,7 +260,7 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
     override fun onDestroy() {
         if (
             !SettingsManager.playbackWhenClosedChecked ||
-            !PlaybackManager.isConfigured() ||
+            !PlaybackManager.playbackControllerExists() ||
             !PlaybackManager.isPlaying.value
         ) {
             session.release()

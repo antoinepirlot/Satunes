@@ -58,7 +58,7 @@ internal fun startMusic(
 ) {
     when (mediaToPlay) {
         is Music -> {
-            playbackViewModel.start(mediaToPlay, reset = reset)
+            playbackViewModel.start(mediaToPlay = mediaToPlay, reset = reset)
         }
 
         is Folder -> {

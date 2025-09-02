@@ -87,6 +87,9 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
             listener = SatunesPlaybackListener,
         )
 
+        //Used because playback can be already been created.
+        PlaybackManager.updateListener(listener = SatunesPlaybackListener)
+
         if (!DataLoader.isLoaded.value) {
             val message = "Data has not been loaded"
             _logger?.severe(message)

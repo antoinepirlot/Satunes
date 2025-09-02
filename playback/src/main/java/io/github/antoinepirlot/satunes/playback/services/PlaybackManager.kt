@@ -102,6 +102,14 @@ object PlaybackManager {
         reset()
     }
 
+    /**
+     * Change the listener of playback controller
+     */
+    fun updateListener(listener: PlaybackListener?) {
+        this.listener = listener
+        PlaybackController.updateListener(listener = this.listener)
+    }
+
     fun playbackControllerExists(): Boolean =
         this._playbackController != null || PlaybackController.isInitialized()
 
@@ -177,9 +185,8 @@ object PlaybackManager {
                 musics = DataManager.getMusicSet(),
                 musicToPlay = musicToPlay
             )
-        } else {
-            this._playbackController!!.start(musicToPlay = musicToPlay)
         }
+        this._playbackController!!.start(musicToPlay = musicToPlay)
     }
 
     fun playPause(context: Context) {
@@ -280,7 +287,7 @@ object PlaybackManager {
             return
         }
         if (this.isLoading.value) return
-        checkPlaybackController(context = context, loadAllMusics = false)
+        checkPlaybackController(context = context)
         this._playbackController!!.loadMusics(
             musics = musics,
             shuffleMode = shuffleMode,

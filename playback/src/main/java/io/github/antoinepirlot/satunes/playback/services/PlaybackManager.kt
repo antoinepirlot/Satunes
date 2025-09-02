@@ -113,7 +113,7 @@ object PlaybackManager {
     fun playbackControllerExists(): Boolean =
         this._playbackController != null || PlaybackController.isInitialized()
 
-    private fun initPlaybackWithAllMusics(
+    fun initPlaybackWithAllMusics(
         context: Context,
         listener: PlaybackListener? = this.listener
     ) {

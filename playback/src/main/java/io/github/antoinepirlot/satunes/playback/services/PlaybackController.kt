@@ -233,10 +233,10 @@ internal class PlaybackController private constructor(
             mediaControllerFuture.addListener(
                 {
                     mediaController = mediaControllerFuture.get()
-                    PlaybackManager.isInitialized.value = true
                     if (loadAllMusics) {
                         this.loadMusics(musics = DataManager.getMusicSet())
                     }
+                    PlaybackManager.isInitialized.value = true
                 },
                 MoreExecutors.directExecutor()
             )

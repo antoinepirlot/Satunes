@@ -87,6 +87,9 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
             listener = SatunesPlaybackListener,
         )
 
+        //Used because playback can be already been created.
+        PlaybackManager.updateListener(listener = SatunesPlaybackListener)
+
         if (!DataLoader.isLoaded.value) {
             val message = "Data has not been loaded"
             _logger?.severe(message)
@@ -250,7 +253,7 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
         super.onTaskRemoved(rootIntent)
         if (
             !SettingsManager.playbackWhenClosedChecked ||
-            !PlaybackManager.isConfigured() ||
+            !PlaybackManager.playbackControllerExists() ||
             !PlaybackManager.isPlaying.value
         ) {
             stopSelf()
@@ -260,7 +263,7 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
     override fun onDestroy() {
         if (
             !SettingsManager.playbackWhenClosedChecked ||
-            !PlaybackManager.isConfigured() ||
+            !PlaybackManager.playbackControllerExists() ||
             !PlaybackManager.isPlaying.value
         ) {
             session.release()

@@ -21,26 +21,17 @@
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
-package io.github.antoinepirlot.satunes.internet.subsonic.callbacks
+package io.github.antoinepirlot.satunes.data.states
 
 import android.os.Build
 import androidx.annotation.RequiresApi
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicState
-import okhttp3.Call
-import okhttp3.Response
 
 /**
- * @author Antoine Pirlot 03/09/2025
+ * @author Antoine Pirlot 04/09/2025
  */
-
 @RequiresApi(Build.VERSION_CODES.M)
-internal class PingCallback(
-    subsonicApiRequester: SubsonicApiRequester
-) : SubsonicCallback(subsonicApiRequester = subsonicApiRequester) {
-    override fun onResponse(call: Call, response: Response) {
-        super.onResponse(call = call, response = response)
-        if (subsonicApiRequester.subsonicState == SubsonicState.ERROR) return
-        subsonicApiRequester.subsonicState = SubsonicState.IDLE
-    }
-}
+data class SubsonicUiState(
+    val subsonicState: SubsonicState = SubsonicApiRequester.DEFAULT_STATE //Only available for Android API 23+ (6.0 Marshmallow)
+)

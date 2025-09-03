@@ -20,6 +20,7 @@
 
 package io.github.antoinepirlot.satunes.ui.views.settings.library
 
+import android.os.Build
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -59,7 +60,8 @@ internal fun LibrarySettingsView(
         LoadingLogicSubSettings(modifier = Modifier.padding(horizontal = 16.dp))
         FoldersSubSettings(modifier = Modifier.padding(horizontal = 16.dp))
         PlaylistsSettings()
-        SubsonicSettings()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+            SubsonicSettings()
     }
 }
 

@@ -1,0 +1,129 @@
+/*
+ * This file is part of Satunes.
+ *
+ * Satunes is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later version.
+ *
+ * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *  You should have received a copy of the GNU General Public License along with Satunes.
+ *
+ * If not, see <https://www.gnu.org/licenses/>.
+ *
+ * **** INFORMATION ABOUT THE AUTHOR *****
+ * The author of this file is Antoine Pirlot, the owner of this project.
+ * You find this original project on Codeberg.
+ *
+ * My Codeberg link is: https://codeberg.org/antoinepirlot
+ * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
+ */
+
+package io.github.antoinepirlot.satunes.data.viewmodels
+
+import android.os.Build
+import androidx.annotation.RequiresApi
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.lifecycle.ViewModel
+import io.github.antoinepirlot.satunes.MainActivity
+import io.github.antoinepirlot.satunes.data.states.SubsonicUiState
+import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
+import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
+import io.github.antoinepirlot.satunes.ui.utils.showErrorSnackBar
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+
+/**
+ * @author Antoine Pirlot 03/09/2025
+ */
+@RequiresApi(Build.VERSION_CODES.M)
+class SubsonicViewModel : ViewModel() {
+    companion object {
+        private val _uiState: MutableStateFlow<SubsonicUiState> =
+            MutableStateFlow(SubsonicUiState())
+
+        private var _subsonicApiRequester: SubsonicApiRequester? = null
+
+    }
+
+    val uiState: StateFlow<SubsonicUiState> = _uiState.asStateFlow()
+
+    var url: String by mutableStateOf(SettingsManager.subsonicUrl)
+        private set
+
+    var username: String by mutableStateOf(SettingsManager.subsonicUsername)
+        private set
+
+    var password: String by mutableStateOf(SettingsManager.subsonicPassword)
+        private set
+
+    fun updateSubsonicUrl(url: String) {
+        this.url = url
+    }
+
+    fun updateSubsonicUsername(username: String) {
+        this.username = username
+    }
+
+    fun updateSubsonicPassword(password: String) {
+        this.password = password
+    }
+
+    fun reset() {
+        this.url = SettingsManager.subsonicUrl
+        this.username = SettingsManager.subsonicUsername
+        this.password = SettingsManager.subsonicPassword
+    }
+
+    fun applySubsonicUrl(scope: CoroutineScope, snackbarHostState: SnackbarHostState) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                SettingsManager.updateSubsonicUrl(
+                    context = MainActivity.instance.applicationContext,
+                    url = this@SubsonicViewModel.url
+                )
+                SettingsManager.updateSubsonicUsername(
+                    context = MainActivity.instance.applicationContext,
+                    username = this@SubsonicViewModel.username
+                )
+                SettingsManager.updateSubsonicPassword(
+                    context = MainActivity.instance.applicationContext,
+                    password = this@SubsonicViewModel.password
+                )
+                _subsonicApiRequester = SubsonicApiRequester(
+                    url = this@SubsonicViewModel.url,
+                    username = this@SubsonicViewModel.username,
+                    md5Password = SettingsManager.subsonicMd5Password,
+                    apiVersion = "1.16.1", //TODO can be retrieved with a single ping
+                    onSubsonicStateChanged = {
+                        _uiState.update { currentState: SubsonicUiState ->
+                            currentState.copy(subsonicState = it)
+                        }
+                    }
+                )
+                _subsonicApiRequester!!.ping(context = MainActivity.instance.applicationContext)
+            } catch (_: Throwable) {
+                showErrorSnackBar(
+                    scope = scope,
+                    snackBarHostState = snackbarHostState,
+                    action = {
+                        applySubsonicUrl(
+                            scope = scope,
+                            snackbarHostState = snackbarHostState
+                        )
+                    }
+                )
+            }
+        }
+    }
+}

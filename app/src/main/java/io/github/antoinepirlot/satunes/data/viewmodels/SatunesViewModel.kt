@@ -97,8 +97,6 @@ class SatunesViewModel : ViewModel() {
         }
     }
 
-    var subsonicUrl: String by mutableStateOf(SettingsManager.subsonicUrl)
-        private set
     private val _logger: SatunesLogger? = SatunesLogger.getLogger()
     private val _isLoadingData: MutableState<Boolean> = DataLoader.isLoading
     private val _isDataLoaded: MutableState<Boolean> = DataLoader.isLoaded
@@ -810,36 +808,6 @@ class SatunesViewModel : ViewModel() {
             }
         } catch (_: Throwable) {
             _logger?.severe("Error while selecting update channel '${channel.name}'")
-        }
-    }
-
-    fun updateSubsonicUrl(url: String) {
-        this.subsonicUrl = url
-    }
-
-    fun resetSubsonicUrl() {
-        this.subsonicUrl = SettingsManager.subsonicUrl
-    }
-
-    fun applySubsonicUrl(scope: CoroutineScope, snackbarHostState: SnackbarHostState) {
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                SettingsManager.updateSubsonicUrl(
-                    context = MainActivity.instance.applicationContext,
-                    url = this@SatunesViewModel.subsonicUrl
-                )
-            } catch (_: Throwable) {
-                showErrorSnackBar(
-                    scope = scope,
-                    snackBarHostState = snackbarHostState,
-                    action = {
-                        applySubsonicUrl(
-                            scope = scope,
-                            snackbarHostState = snackbarHostState
-                        )
-                    }
-                )
-            }
         }
     }
 }

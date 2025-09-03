@@ -78,7 +78,6 @@ class SubsonicApiRequester(
             url = this.url + "/ping?u=$username&c=$CLIENT_NAME&t=$md5Password&v=$apiVersion",
             resCallback = PingCallback(subsonicApiRequester = this)
         )
-        this.subsonicState = SubsonicState.IDLE
     }
 
     fun ping(context: Context) {

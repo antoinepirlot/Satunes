@@ -111,6 +111,15 @@ object SettingsManager {
     val subsonicUrl: String
         get() = LibrarySettings.subsonicUrl
 
+    val subsonicUsername: String
+        get() = LibrarySettings.subsonicUsername
+
+    val subsonicPassword: String
+        get() = LibrarySettings.subsonicPassword
+
+    val subsonicMd5Password: String
+        get() = LibrarySettings.subsonicMd5Password
+
     //Update Settings
     val updateChannel: MutableState<UpdateChannel>
         get() = SatunesSettings.updateChannel
@@ -346,5 +355,13 @@ object SettingsManager {
 
     suspend fun updateSubsonicUrl(context: Context, url: String) {
         LibrarySettings.updateSubsonicUrl(context = context, url = url)
+    }
+
+    suspend fun updateSubsonicUsername(context: Context, username: String) {
+        LibrarySettings.updateSubsonicUsername(context = context, username = username)
+    }
+
+    suspend fun updateSubsonicPassword(context: Context, password: String) {
+        LibrarySettings.updateSubsonicPassword(context = context, password = password)
     }
 }

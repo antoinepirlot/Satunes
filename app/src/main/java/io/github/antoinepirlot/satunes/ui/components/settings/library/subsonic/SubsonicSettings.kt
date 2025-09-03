@@ -23,6 +23,10 @@
 
 package io.github.antoinepirlot.satunes.ui.components.settings.library.subsonic
 
+import android.os.Build
+import android.view.View.AUTOFILL_HINT_PASSWORD
+import android.view.View.AUTOFILL_HINT_USERNAME
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
@@ -32,7 +36,11 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.autofill.ContentType
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentType
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -40,7 +48,7 @@ import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.local.LocalMainScope
 import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
-import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.SubsonicViewModel
 import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
 import kotlinx.coroutines.CoroutineScope
 
@@ -48,13 +56,12 @@ import kotlinx.coroutines.CoroutineScope
  * @author Antoine Pirlot 03/09/2025
  */
 
+@RequiresApi(Build.VERSION_CODES.M)
 @Composable
 fun SubsonicSettings(
     modifier: Modifier = Modifier,
-    satunesViewModel: SatunesViewModel = viewModel()
+    subsonicViewModel: SubsonicViewModel = viewModel()
 ) {
-    val scope: CoroutineScope = LocalMainScope.current
-    val snackbarHostState: SnackbarHostState = LocalSnackBarHostState.current
     SubSettings(
         modifier = modifier,
         title = stringResource(id = R.string.subsonic_subsonic_title),
@@ -62,30 +69,70 @@ fun SubsonicSettings(
     ) {
         NormalText(text = stringResource(R.string.subsonic_url_text))
         OutlinedTextField(
-            value = satunesViewModel.subsonicUrl,
-            onValueChange = { satunesViewModel.updateSubsonicUrl(url = it) },
+            value = subsonicViewModel.url,
+            onValueChange = { subsonicViewModel.updateSubsonicUrl(url = it) },
             label = { NormalText(text = "URL") },
             placeholder = { NormalText(text = "https://example.org") },
             singleLine = true
         )
-        Row {
-            Button(onClick = { satunesViewModel.resetSubsonicUrl() }) {
-                NormalText(text = stringResource(R.string.cancel))
-            }
-            Spacer(modifier = Modifier.size(size = 16.dp))
-            Button(onClick = {
-                satunesViewModel.applySubsonicUrl(
-                    scope = scope,
-                    snackbarHostState = snackbarHostState
-                )
-            }) {
+        OutlinedTextField(
+            modifier = Modifier.semantics {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    contentType = ContentType(AUTOFILL_HINT_USERNAME)
+                }
+            },
+            value = subsonicViewModel.username,
+            onValueChange = { subsonicViewModel.updateSubsonicUsername(username = it) },
+            label = { NormalText(text = "Username") },
+            placeholder = { NormalText(text = "username") },
+            singleLine = true
+        )
+        OutlinedTextField(
+            modifier = Modifier.semantics {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    contentType = ContentType(AUTOFILL_HINT_PASSWORD)
+                }
+            },
+            value = subsonicViewModel.password,
+            onValueChange = { subsonicViewModel.updateSubsonicPassword(password = it) },
+            label = { NormalText(text = "Password") },
+            placeholder = { NormalText(text = "@Password123") },
+            singleLine = true,
+            visualTransformation = PasswordVisualTransformation()
+        )
+        Buttons()
+    }
+}
 
-                NormalText(text = stringResource(R.string.save_button_text))
-            }
+/**
+ * Confirm and cancel button
+ */
+@RequiresApi(Build.VERSION_CODES.M)
+@Composable
+private fun Buttons(
+    modifier: Modifier = Modifier,
+    subsonicViewModel: SubsonicViewModel = viewModel()
+) {
+    val scope: CoroutineScope = LocalMainScope.current
+    val snackbarHostState: SnackbarHostState = LocalSnackBarHostState.current
+    Row(modifier = modifier) {
+        Button(onClick = { subsonicViewModel.reset() }) {
+            NormalText(text = stringResource(R.string.cancel))
+        }
+        Spacer(modifier = Modifier.size(size = 16.dp))
+        Button(onClick = {
+            subsonicViewModel.applySubsonicUrl(
+                scope = scope,
+                snackbarHostState = snackbarHostState
+            )
+        }) {
+
+            NormalText(text = stringResource(R.string.save_button_text))
         }
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.M)
 @Preview
 @Composable
 private fun SubsonicSettingsViewPreview() {

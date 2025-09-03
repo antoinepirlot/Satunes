@@ -27,7 +27,6 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
-import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import io.github.antoinepirlot.satunes.database.models.FoldersSelection
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager.dataStore
@@ -46,7 +45,6 @@ internal object LibrarySettings {
     private const val DEFAULT_INCLUDE_PATH: String = "/0/Music/%"
     private const val DEFAULT_COMPILATION_MUSIC: Boolean = false
     private const val DEFAULT_ARTISTS_REPLACEMENT: Boolean = true
-    private const val DEFAULT_SUBSONIC_URL: String = ""
 
     // KEYS
 
@@ -66,7 +64,6 @@ internal object LibrarySettings {
         booleanPreferencesKey("compilation_music")
     private val ARTISTS_REPLACEMENT_KEY: Preferences.Key<Boolean> =
         booleanPreferencesKey("artist_replacement")
-    private val SUBSONIC_URL_KEY: Preferences.Key<String> = stringPreferencesKey("subsonic_url")
 
     // VARIABLES
 
@@ -87,8 +84,17 @@ internal object LibrarySettings {
     var artistReplacement: Boolean = DEFAULT_ARTISTS_REPLACEMENT
         private set
 
-    var subsonicUrl: String = DEFAULT_SUBSONIC_URL
-        private set
+    val subsonicUrl: String
+        get() = SubsonicSettings.subsonicUrl
+
+    val subsonicUsername: String
+        get() = SubsonicSettings.subsonicUsername
+
+    val subsonicPassword: String
+        get() = SubsonicSettings.subsonicPassword
+
+    val subsonicMd5Password: String
+        get() = SubsonicSettings.subsonicMd5Password
 
     suspend fun loadSettings(context: Context) {
         context.dataStore.data.map { preferences: Preferences ->
@@ -101,8 +107,8 @@ internal object LibrarySettings {
 
             this.artistReplacement =
                 preferences[ARTISTS_REPLACEMENT_KEY] ?: DEFAULT_ARTISTS_REPLACEMENT
-            this.subsonicUrl = preferences[SUBSONIC_URL_KEY] ?: DEFAULT_SUBSONIC_URL
         }.first() //Without .first() settings are not loaded correctly
+        SubsonicSettings.loadSettings(context = context)
     }
 
     private fun loadIncludingPaths(preferences: Preferences) {
@@ -232,10 +238,15 @@ internal object LibrarySettings {
     }
 
     suspend fun updateSubsonicUrl(context: Context, url: String) {
-        context.dataStore.edit { preferences: MutablePreferences ->
-            preferences[SUBSONIC_URL_KEY] = url
-            this.subsonicUrl = url
-        }
+        SubsonicSettings.updateSubsonicUrl(context = context, url = url)
+    }
+
+    suspend fun updateSubsonicUsername(context: Context, username: String) {
+        SubsonicSettings.updateSubsonicUsername(context = context, username = username)
+    }
+
+    suspend fun updateSubsonicPassword(context: Context, password: String) {
+        SubsonicSettings.updateSubsonicMd5Password(context = context, password = password)
     }
 
     suspend fun resetFoldersSettings(context: Context) {
@@ -259,13 +270,9 @@ internal object LibrarySettings {
         }
     }
 
-    suspend fun resetSubsonic(context: Context) {
-        this.updateSubsonicUrl(context = context, url = DEFAULT_SUBSONIC_URL)
-    }
-
     suspend fun resetAll(context: Context) {
         this.resetFoldersSettings(context = context)
         this.resetLoadingLogicSettings(context = context)
-        this.resetSubsonic(context = context)
+        SubsonicSettings.resetAll(context = context)
     }
 }

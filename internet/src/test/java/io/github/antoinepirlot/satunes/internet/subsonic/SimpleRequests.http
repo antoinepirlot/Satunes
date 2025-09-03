@@ -1,0 +1,1 @@
+GET {{baseUrl}}/ping?u={{username}}&v={{version}}&c={{client}}&t={{token}}

@@ -1,0 +1,3 @@
+Améliorations, optimisations et corrections de bugs :
+
+* Rétablissement de Satunes sur Android 5.1.1 (il s'agissait d'une erreur, mes excuses)

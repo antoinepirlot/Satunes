@@ -34,7 +34,7 @@ import io.github.antoinepirlot.satunes.database.models.UpdateChannel.ALPHA
 import io.github.antoinepirlot.satunes.database.models.UpdateChannel.BETA
 import io.github.antoinepirlot.satunes.database.models.UpdateChannel.PREVIEW
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
-import io.github.antoinepirlot.satunes.internet.InternetManager
+import io.github.antoinepirlot.satunes.internet.InternetManager.Companion.getUrlResponse
 import io.github.antoinepirlot.satunes.internet.updates.Versions.ALPHA_REGEX
 import io.github.antoinepirlot.satunes.internet.updates.Versions.BETA_REGEX
 import io.github.antoinepirlot.satunes.internet.updates.Versions.PREVIEW_REGEX
@@ -42,8 +42,6 @@ import io.github.antoinepirlot.satunes.internet.updates.Versions.RELEASES_URL
 import io.github.antoinepirlot.satunes.internet.updates.Versions.RELEASE_REGEX
 import io.github.antoinepirlot.satunes.internet.updates.Versions.TAG_RELEASE_URL
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
-import okhttp3.OkHttpClient
-import okhttp3.Request
 import okhttp3.Response
 
 
@@ -61,30 +59,6 @@ object UpdateCheckManager {
     val downloadStatus: MutableState<APKDownloadStatus> =
         mutableStateOf(APKDownloadStatus.NOT_STARTED)
 
-    /**
-     * Create a httpclient and get the response matching url.
-     *
-     * @param context the context :p
-     * @param url the url to get the response
-     */
-    private fun getUrlResponse(context: Context, url: String): Response? {
-        return try {
-            val internetManager = InternetManager(context = context)
-            if (!internetManager.isConnected()) {
-                UpdateAvailableStatus.CANNOT_CHECK.updateLink = null
-                updateAvailableStatus.value = UpdateAvailableStatus.CANNOT_CHECK
-                return null
-            }
-            val httpClient = OkHttpClient()
-            val req: Request = Request.Builder()
-                .url(url)
-                .build()
-            httpClient.newCall(req).execute()
-        } catch (e: Throwable) {
-            _logger?.warning(e.message)
-            null
-        }
-    }
 
     /**
      * Checks if an update is available if there's an internet connection

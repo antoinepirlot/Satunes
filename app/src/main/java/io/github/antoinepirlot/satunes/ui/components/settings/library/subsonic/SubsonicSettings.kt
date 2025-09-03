@@ -79,6 +79,7 @@ fun SubsonicSettings(
                     snackbarHostState = snackbarHostState
                 )
             }) {
+
                 NormalText(text = stringResource(R.string.save_button_text))
             }
         }

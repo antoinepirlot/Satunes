@@ -1,0 +1,89 @@
+/*
+ * This file is part of Satunes.
+ *
+ * Satunes is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later version.
+ *
+ * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *  You should have received a copy of the GNU General Public License along with Satunes.
+ *
+ * If not, see <https://www.gnu.org/licenses/>.
+ *
+ * **** INFORMATION ABOUT THE AUTHOR *****
+ * The author of this file is Antoine Pirlot, the owner of this project.
+ * You find this original project on Codeberg.
+ *
+ * My Codeberg link is: https://codeberg.org/antoinepirlot
+ * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
+ */
+
+package io.github.antoinepirlot.satunes.internet.subsonic
+
+import android.content.Context
+import android.os.Build
+import androidx.annotation.RequiresApi
+import io.github.antoinepirlot.satunes.internet.InternetManager
+import io.github.antoinepirlot.satunes.internet.exceptions.NotConnectedException
+import io.github.antoinepirlot.satunes.internet.subsonic.callbacks.PingCallback
+import okhttp3.Callback
+import okhttp3.OkHttpClient
+import okhttp3.Request
+
+/**
+ * @author Antoine Pirlot 03/09/2025
+ */
+@RequiresApi(Build.VERSION_CODES.M)
+class SubsonicApiRequester(
+    url: String,
+    private val username: String,
+    private val md5Password: String,
+    private val apiVersion: String,
+    private val onSubsonicStateChanged: (SubsonicState) -> Unit
+) {
+    companion object {
+        val DEFAULT_STATE: SubsonicState = SubsonicState.DISCONNECTED
+        private const val CLIENT_NAME = "Satunes"
+    }
+
+    private val url: String = "$url/rest"
+    var subsonicState: SubsonicState = SubsonicState.DISCONNECTED
+        internal set(value) {
+            field = value
+            onSubsonicStateChanged.invoke(field)
+        }
+
+    private fun get(url: String, resCallback: Callback) {
+        val client = OkHttpClient()
+        val req: Request = Request.Builder()
+            .get()
+            .url(url)
+            .build()
+        client.newCall(req).enqueue(responseCallback = resCallback)
+    }
+
+    private fun checkInternetConnection(context: Context) {
+        if (!InternetManager(context = context).isConnected()) {
+            throw NotConnectedException("Internet connection KO")
+        }
+        ping()
+    }
+
+    private fun ping() {
+        this.subsonicState = SubsonicState.PINGING
+        this.get(
+            url = this.url + "/ping?u=$username&c=$CLIENT_NAME&t=$md5Password&v=$apiVersion",
+            resCallback = PingCallback(subsonicApiRequester = this)
+        )
+        this.subsonicState = SubsonicState.IDLE
+    }
+
+    fun ping(context: Context) {
+        this.subsonicState = SubsonicState.PINGING
+        this.checkInternetConnection(context = context)
+        this.ping()
+    }
+}

@@ -23,18 +23,22 @@
 
 package io.github.antoinepirlot.satunes.data.states
 
+import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable
 import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.data.viewmodels.utils.isAudioAllowed
 import io.github.antoinepirlot.satunes.database.models.BarSpeed
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
+import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
+import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicState
 import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.router.utils.getNavBarSectionDestination
 
 /**
  * @author Antoine Pirlot on 19/07/2024
  */
+@SuppressLint("NewApi")
 data class SatunesUiState(
     val whatsNewSeen: Boolean = SettingsManager.whatsNewSeen,
     val includeExcludeSeen: Boolean = SettingsManager.includeExcludeSeen,
@@ -63,4 +67,5 @@ data class SatunesUiState(
     val artistReplacement: Boolean = SettingsManager.artistReplacement,
     val showSortDialog: Boolean = false,
     val showMediaSelectionDialog: Boolean = false,
+    val subsonicState: SubsonicState = SubsonicApiRequester.DEFAULT_STATE //Only available for Android API 23+ (6.0 Marshmallow)
 )

@@ -28,6 +28,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,8 +37,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.data.local.LocalMainScope
+import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
+import kotlinx.coroutines.CoroutineScope
 
 /**
  * @author Antoine Pirlot 03/09/2025
@@ -48,6 +52,8 @@ fun SubsonicSettings(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel()
 ) {
+    val scope: CoroutineScope = LocalMainScope.current
+    val snackbarHostState: SnackbarHostState = LocalSnackBarHostState.current
     SubSettings(
         modifier = modifier,
         title = stringResource(id = R.string.subsonic_subsonic_title),
@@ -68,7 +74,12 @@ fun SubsonicSettings(
             Button(onClick = { satunesViewModel.resetSubsonicUrl() }) {
                 NormalText(text = stringResource(R.string.cancel))
             }
-            Button(onClick = { satunesViewModel.applySubsonicUrl() }) {
+            Button(onClick = {
+                satunesViewModel.applySubsonicUrl(
+                    scope = scope,
+                    snackbarHostState = snackbarHostState
+                )
+            }) {
                 NormalText(text = stringResource(R.string.save_button_text))
             }
         }

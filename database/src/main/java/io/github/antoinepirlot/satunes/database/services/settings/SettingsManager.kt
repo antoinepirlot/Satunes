@@ -104,10 +104,12 @@ object SettingsManager {
         get() = SearchSettings.musicsFilter
 
     // Library Settings
-    val foldersPathsIncludingCollection: Collection<String> =
-        LibrarySettings.foldersPathsIncludingCollection
-    val foldersPathsExcludingCollection: Collection<String> =
-        LibrarySettings.foldersPathsExcludingCollection
+    val foldersPathsIncludingCollection: Collection<String>
+        get() = LibrarySettings.foldersPathsIncludingCollection
+    val foldersPathsExcludingCollection: Collection<String>
+        get() = LibrarySettings.foldersPathsExcludingCollection
+    val subsonicUrl: String
+        get() = LibrarySettings.subsonicUrl
 
     //Update Settings
     val updateChannel: MutableState<UpdateChannel>
@@ -296,12 +298,9 @@ object SettingsManager {
 
     suspend fun resetAll(context: Context) {
         SatunesSettings.reset(context = context)
-        this.resetFoldersSettings(context = context)
-        this.resetLoadingLogicSettings(context = context)
-        this.resetBatterySettings(context = context)
-        this.resetPlaybackBehaviorSettings(context = context)
-        this.resetPlaybackModesSettings(context = context)
-        this.resetDefaultSearchFiltersSettings(context = context)
+        PlaybackSettings.resetAll(context = context)
+        SearchSettings.resetAll(context = context)
+        LibrarySettings.resetAll(context = context)
         DesignSettings.resetAll(context = context)
     }
 
@@ -343,5 +342,9 @@ object SettingsManager {
 
     suspend fun selectUpdateChannel(context: Context, channel: UpdateChannel) {
         SatunesSettings.selectUpdateChannel(context = context, channel = channel)
+    }
+
+    suspend fun updateSubsonicUrl(context: Context, url: String) {
+        LibrarySettings.updateSubsonicUrl(context = context, url = url)
     }
 }

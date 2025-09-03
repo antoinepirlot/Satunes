@@ -97,7 +97,7 @@ class SatunesViewModel : ViewModel() {
         }
     }
 
-    var subsonicUrl: String by mutableStateOf("") //TODO move the default value in settings
+    var subsonicUrl: String by mutableStateOf(SettingsManager.subsonicUrl)
         private set
     private val _logger: SatunesLogger? = SatunesLogger.getLogger()
     private val _isLoadingData: MutableState<Boolean> = DataLoader.isLoading
@@ -818,10 +818,28 @@ class SatunesViewModel : ViewModel() {
     }
 
     fun resetSubsonicUrl() {
-        this.subsonicUrl = this.subsonicUrl
+        this.subsonicUrl = SettingsManager.subsonicUrl
     }
 
-    fun applySubsonicUrl() {
-        this.subsonicUrl = this.subsonicUrl //TODO use the value in settings
+    fun applySubsonicUrl(scope: CoroutineScope, snackbarHostState: SnackbarHostState) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                SettingsManager.updateSubsonicUrl(
+                    context = MainActivity.instance.applicationContext,
+                    url = this@SatunesViewModel.subsonicUrl
+                )
+            } catch (_: Throwable) {
+                showErrorSnackBar(
+                    scope = scope,
+                    snackBarHostState = snackbarHostState,
+                    action = {
+                        applySubsonicUrl(
+                            scope = scope,
+                            snackbarHostState = snackbarHostState
+                        )
+                    }
+                )
+            }
+        }
     }
 }

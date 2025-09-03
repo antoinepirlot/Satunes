@@ -1,0 +1,3 @@
+Improvements, optimisations and bug fixes:
+
+* Bring back Satunes to Android 5.1.1 (it was a mistake, my apologies)

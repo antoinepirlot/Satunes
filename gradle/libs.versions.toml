@@ -2,7 +2,7 @@
 accompanistPermissions = "0.37.3"
 activityCompose = "1.10.1"
 android-compileSdk = "36"
-android-minSdk = "24"
+android-minSdk = "22"
 #noinspection OldTargetApi
 android-targetSdk = "35"
 composeBom = "2025.01.01" #Need kotlin upgrade

@@ -4,6 +4,12 @@ You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
 ## 3.2 (Android 5.1.1 Lollipop et ultérieur)
 
+### 3.2.2
+
+Améliorations, optimisations et corrections de bugs :
+
+* Rétablissement de Satunes sur Android 5.1.1 (il s'agissait d'une erreur, mes excuses)
+
 ### 3.2.1
 
 Améliorations, optimisations et corrections de bugs :

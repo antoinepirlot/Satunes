@@ -1,1 +1,6 @@
-GET {{baseUrl}}/ping?u={{username}}&v={{version}}&c={{client}}&t={{token}}
+GET {{baseUrl}}/ping?{{auth_params}}
+
+###
+
+#Used to get all musics as subsonic 1.16.1 doesn't provide to get all musics.
+GET {{baseUrl}}/getIndexes?{{auth_params}}

@@ -37,6 +37,7 @@ import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.ui.components.settings.library.folders.FoldersSubSettings
 import io.github.antoinepirlot.satunes.ui.components.settings.library.loading_logic.LoadingLogicSubSettings
 import io.github.antoinepirlot.satunes.ui.components.settings.library.playlists.PlaylistsSettings
+import io.github.antoinepirlot.satunes.ui.components.settings.library.subsonic.SubsonicSettings
 
 /**
  * @author Antoine Pirlot on 27/04/2024
@@ -58,6 +59,7 @@ internal fun LibrarySettingsView(
         LoadingLogicSubSettings(modifier = Modifier.padding(horizontal = 16.dp))
         FoldersSubSettings(modifier = Modifier.padding(horizontal = 16.dp))
         PlaylistsSettings()
+        SubsonicSettings()
     }
 }
 

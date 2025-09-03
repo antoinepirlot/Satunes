@@ -97,6 +97,8 @@ class SatunesViewModel : ViewModel() {
         }
     }
 
+    var subsonicUrl: String by mutableStateOf("") //TODO move the default value in settings
+        private set
     private val _logger: SatunesLogger? = SatunesLogger.getLogger()
     private val _isLoadingData: MutableState<Boolean> = DataLoader.isLoading
     private val _isDataLoaded: MutableState<Boolean> = DataLoader.isLoaded
@@ -809,5 +811,17 @@ class SatunesViewModel : ViewModel() {
         } catch (_: Throwable) {
             _logger?.severe("Error while selecting update channel '${channel.name}'")
         }
+    }
+
+    fun updateSubsonicUrl(url: String) {
+        this.subsonicUrl = url
+    }
+
+    fun resetSubsonicUrl() {
+        this.subsonicUrl = this.subsonicUrl
+    }
+
+    fun applySubsonicUrl() {
+        this.subsonicUrl = this.subsonicUrl //TODO use the value in settings
     }
 }

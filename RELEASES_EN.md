@@ -4,6 +4,12 @@ Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
 ## 3.2 (Android 5.1.1 Lollipop and later)
 
+### 3.2.2
+
+Improvements, optimisations and bug fixes:
+
+* Bring back Satunes to Android 5.1.1 (it was a mistake, my apologies)
+
 ### 3.2.1
 
 Improvements, optimisations and bug fixes:

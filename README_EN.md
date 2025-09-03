@@ -7,6 +7,9 @@
   <a href="https://f-droid.org/app/io.github.antoinepirlot.satunes"><img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" width="230"></a>
   </br>
   <a href="https://codeberg.org/antoinepirlot/Satunes/releases"><img src="https://get-it-on.codeberg.org/get-it-on-blue-on-white.png" width="200"></a>
+  </br>
+  </br>
+  <a href="https://liberapay.com/antoinepirlot/"><img src="https://img.shields.io/liberapay/patrons/antoinepirlot.svg?logo=liberapay" width="200"></a>
 </p>
 
 Vous pouvez retrouver ce fichier en [français 🇫🇷](README.md)
@@ -103,7 +106,10 @@ Otherwise, you can also follow the following steps:
 
 ##
 
-If you like the app and want to support me click [here](https://liberapay.com/antoinepirlot/).
+If you like the app and want to support me click on the button below.
+<p align="center">
+  <a href="https://liberapay.com/antoinepirlot/"><img src="https://img.shields.io/liberapay/patrons/antoinepirlot.svg?logo=liberapay" width="200"></a>
+</p>
 
 # Releases
 

@@ -168,6 +168,7 @@
     <string name="ask_select_music_root_path">Would you replace the root path of music files? (e.g.: /storage/emulated/0/path/to/music.mp3 the root path is \'/storage/emulated/0\')</string>
     <string name="export_multiple_files_text">One file per playlist?</string>
     <string name="subsonic_subsonic_title">Subsonic API (Server)</string>
-    <string name="subsonic_url_text">Select your Subsonic server url</string>
-    <string name="save_button_text">Save</string>
+    <string name="subsonic_url_text">Enter your Subsonic server information (prefer using HTTPS for security)</string>
+    <string name="connect_button_text">Connect</string>
+    <string name="connected_button_text">Connected</string>
 </resources>

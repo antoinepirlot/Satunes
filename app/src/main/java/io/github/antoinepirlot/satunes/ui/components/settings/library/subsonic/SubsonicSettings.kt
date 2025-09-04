@@ -34,6 +34,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.autofill.ContentType
@@ -48,7 +50,10 @@ import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.local.LocalMainScope
 import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
+import io.github.antoinepirlot.satunes.data.states.SubsonicUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.SubsonicViewModel
+import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicState
+import io.github.antoinepirlot.satunes.ui.components.LoadingCircle
 import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
 import kotlinx.coroutines.CoroutineScope
 
@@ -113,21 +118,36 @@ private fun Buttons(
     modifier: Modifier = Modifier,
     subsonicViewModel: SubsonicViewModel = viewModel()
 ) {
+    val subsonicUiState: SubsonicUiState by subsonicViewModel.uiState.collectAsState()
     val scope: CoroutineScope = LocalMainScope.current
     val snackbarHostState: SnackbarHostState = LocalSnackBarHostState.current
+    val isDisconnected: Boolean =
+        subsonicUiState.subsonicState == SubsonicState.DISCONNECTED || subsonicUiState.subsonicState == SubsonicState.ERROR
+
     Row(modifier = modifier) {
         Button(onClick = { subsonicViewModel.reset() }) {
             NormalText(text = stringResource(R.string.cancel))
         }
         Spacer(modifier = Modifier.size(size = 16.dp))
-        Button(onClick = {
-            subsonicViewModel.applySubsonicUrl(
-                scope = scope,
-                snackbarHostState = snackbarHostState
-            )
-        }) {
 
-            NormalText(text = stringResource(R.string.save_button_text))
+        Button(
+            onClick = {
+                subsonicViewModel.applySubsonicUrl(
+                    scope = scope,
+                    snackbarHostState = snackbarHostState
+                )
+            },
+            enabled = isDisconnected
+        ) {
+            if (subsonicUiState.subsonicState == SubsonicState.PINGING)
+                LoadingCircle(modifier = Modifier.size(size = 16.dp))
+            else
+                NormalText(
+                    text = stringResource(
+                        if (isDisconnected) R.string.connect_button_text
+                        else R.string.connected_button_text
+                    )
+                )
         }
     }
 }

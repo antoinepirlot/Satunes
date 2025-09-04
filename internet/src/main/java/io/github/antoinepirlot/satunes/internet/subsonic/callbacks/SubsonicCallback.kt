@@ -26,11 +26,18 @@ package io.github.antoinepirlot.satunes.internet.subsonic.callbacks
 import android.os.Build
 import androidx.annotation.RequiresApi
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
-import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicState
+import io.github.antoinepirlot.satunes.internet.subsonic.models.Error
+import io.github.antoinepirlot.satunes.internet.subsonic.models.SubsonicErrorCode
+import io.github.antoinepirlot.satunes.internet.subsonic.models.SubsonicState
+import io.github.antoinepirlot.satunes.internet.subsonic.models.XmlObject
+import io.github.antoinepirlot.satunes.internet.subsonic.utils.SubsonicXmlParser
+import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
 import java.io.IOException
+import java.io.InputStream
+
 
 /**
  * @author Antoine Pirlot 03/09/2025
@@ -41,15 +48,48 @@ abstract class SubsonicCallback(
     protected var subsonicApiRequester: SubsonicApiRequester
 ) : Callback {
 
+    private val _logger: SatunesLogger? = SatunesLogger.getLogger()
+
     override fun onFailure(call: Call, e: IOException) {
         e.printStackTrace()
-        SubsonicState.ERROR.code = null
+        SubsonicState.ERROR.error = null
         subsonicApiRequester.subsonicState = SubsonicState.ERROR
     }
 
     override fun onResponse(call: Call, response: Response) {
         if (response.code >= 400) {
-            SubsonicState.ERROR.code = response.code
+            SubsonicState.ERROR.error = SubsonicErrorCode.GENERIC_ERROR
+            subsonicApiRequester.subsonicState = SubsonicState.ERROR
+            return
+        }
+        try {
+            val input: InputStream = response.body!!.byteStream()
+            try {
+                val result: List<XmlObject> = SubsonicXmlParser().parse(inputStream = input)
+                if (result.isEmpty()) {
+                    SubsonicState.ERROR.error = SubsonicErrorCode.DATA_NOT_FOUND
+                    subsonicApiRequester.subsonicState = SubsonicState.ERROR
+                } else if (result.size == 1) {
+                    //Maybe error
+                    val xmlObject: XmlObject = result[0]
+                    if (xmlObject.isError()) {
+                        xmlObject as Error
+                        SubsonicState.ERROR.error =
+                            SubsonicErrorCode.getError(code = xmlObject.errorCode)
+                        subsonicApiRequester.subsonicState = SubsonicState.ERROR
+                    }
+                }
+            } catch (_: IOException) {
+                SubsonicState.ERROR.error = null
+                subsonicApiRequester.subsonicState = SubsonicState.ERROR
+            } catch (_: NullPointerException) {
+                //Do nothing it's when lines has all been read
+            } finally {
+                input.close()
+            }
+        } catch (_: NullPointerException) {
+            _logger?.warning("No body from request.")
+            SubsonicState.ERROR.error = SubsonicErrorCode.DATA_NOT_FOUND
             subsonicApiRequester.subsonicState = SubsonicState.ERROR
         }
     }

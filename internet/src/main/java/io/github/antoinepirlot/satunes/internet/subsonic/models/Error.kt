@@ -21,26 +21,13 @@
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
-package io.github.antoinepirlot.satunes.internet.subsonic
-
-import android.os.Build
-import androidx.annotation.RequiresApi
+package io.github.antoinepirlot.satunes.internet.subsonic.models
 
 /**
- * @author Antoine Pirlot 03/09/2025
+ * @author Antoine Pirlot 04/09/2025
  */
-
-@RequiresApi(Build.VERSION_CODES.M)
-enum class SubsonicState(code: Int? = null) {
-    DISCONNECTED,
-    PINGING,
-    IDLE,
-    ERROR;
-
-    var code: Int? = code
-        set(value) {
-            if (value != null && this != ERROR)
-                throw IllegalStateException("Can't change code of non error state.")
-            field = value
-        }
+data class Error(val errorCode: Int, val message: String) : XmlObject() {
+    override fun isError(): Boolean {
+        return true
+    }
 }

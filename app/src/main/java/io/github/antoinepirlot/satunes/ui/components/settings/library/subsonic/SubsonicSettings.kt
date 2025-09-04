@@ -52,7 +52,7 @@ import io.github.antoinepirlot.satunes.data.local.LocalMainScope
 import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.data.states.SubsonicUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.SubsonicViewModel
-import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicState
+import io.github.antoinepirlot.satunes.internet.subsonic.models.SubsonicState
 import io.github.antoinepirlot.satunes.ui.components.LoadingCircle
 import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
 import kotlinx.coroutines.CoroutineScope

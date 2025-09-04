@@ -26,7 +26,7 @@ package io.github.antoinepirlot.satunes.internet.subsonic.callbacks
 import android.os.Build
 import androidx.annotation.RequiresApi
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
-import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicState
+import io.github.antoinepirlot.satunes.internet.subsonic.models.SubsonicState
 import okhttp3.Call
 import okhttp3.Response
 

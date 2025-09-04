@@ -21,17 +21,26 @@
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
-package io.github.antoinepirlot.satunes.data.states
+package io.github.antoinepirlot.satunes.internet.subsonic.models
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
-import io.github.antoinepirlot.satunes.internet.subsonic.models.SubsonicState
 
 /**
- * @author Antoine Pirlot 04/09/2025
+ * @author Antoine Pirlot 03/09/2025
  */
+
 @RequiresApi(Build.VERSION_CODES.M)
-data class SubsonicUiState(
-    val subsonicState: SubsonicState = SubsonicApiRequester.DEFAULT_STATE //Only available for Android API 23+ (6.0 Marshmallow)
-)
+enum class SubsonicState(error: SubsonicErrorCode? = null) {
+    DISCONNECTED,
+    PINGING,
+    IDLE,
+    ERROR;
+
+    var error: SubsonicErrorCode? = error
+        set(value) {
+            if (value != null && this != ERROR)
+                throw IllegalStateException("Can't change code of non error state.")
+            field = value
+        }
+}

@@ -29,6 +29,7 @@ import androidx.annotation.RequiresApi
 import io.github.antoinepirlot.satunes.internet.InternetManager
 import io.github.antoinepirlot.satunes.internet.exceptions.NotConnectedException
 import io.github.antoinepirlot.satunes.internet.subsonic.callbacks.PingCallback
+import io.github.antoinepirlot.satunes.internet.subsonic.models.SubsonicState
 import okhttp3.Callback
 import okhttp3.OkHttpClient
 import okhttp3.Request

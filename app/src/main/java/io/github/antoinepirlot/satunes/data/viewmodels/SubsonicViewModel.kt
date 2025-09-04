@@ -67,22 +67,33 @@ class SubsonicViewModel : ViewModel() {
     var password: String by mutableStateOf(SettingsManager.subsonicPassword)
         private set
 
+    var hasBeenUpdated: Boolean by mutableStateOf(false)
+        private set
+
     fun updateSubsonicUrl(url: String) {
         this.url = url
+        this.hasBeenUpdated = true
     }
 
     fun updateSubsonicUsername(username: String) {
         this.username = username
+        this.hasBeenUpdated = true
     }
 
     fun updateSubsonicPassword(password: String) {
         this.password = password
+        this.hasBeenUpdated = true
     }
 
     fun reset() {
         this.url = SettingsManager.subsonicUrl
         this.username = SettingsManager.subsonicUsername
         this.password = SettingsManager.subsonicPassword
+        this.hasBeenUpdated = false
+    }
+
+    fun disconnect() {
+        _subsonicApiRequester?.disconnect()
     }
 
     fun applySubsonicUrl(scope: CoroutineScope, snackbarHostState: SnackbarHostState) {
@@ -100,6 +111,7 @@ class SubsonicViewModel : ViewModel() {
                     context = MainActivity.instance.applicationContext,
                     password = this@SubsonicViewModel.password
                 )
+                this@SubsonicViewModel.hasBeenUpdated = false
                 _subsonicApiRequester = SubsonicApiRequester(
                     url = this@SubsonicViewModel.url,
                     username = this@SubsonicViewModel.username,

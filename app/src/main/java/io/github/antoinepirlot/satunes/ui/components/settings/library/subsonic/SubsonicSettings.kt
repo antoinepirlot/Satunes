@@ -124,10 +124,13 @@ private fun Buttons(
     val isDisconnected: Boolean =
         subsonicUiState.subsonicState == SubsonicState.DISCONNECTED || subsonicUiState.subsonicState == SubsonicState.ERROR
 
+    val canConnect: Boolean = isDisconnected || subsonicViewModel.hasBeenUpdated
+
     Row(modifier = modifier) {
         Button(onClick = { subsonicViewModel.reset() }) {
             NormalText(text = stringResource(R.string.cancel))
         }
+
         Spacer(modifier = Modifier.size(size = 16.dp))
 
         Button(
@@ -137,14 +140,14 @@ private fun Buttons(
                     snackbarHostState = snackbarHostState
                 )
             },
-            enabled = isDisconnected
+            enabled = canConnect
         ) {
             if (subsonicUiState.subsonicState == SubsonicState.PINGING)
                 LoadingCircle(modifier = Modifier.size(size = 16.dp))
             else
                 NormalText(
                     text = stringResource(
-                        if (isDisconnected) R.string.connect_button_text
+                        if (canConnect) R.string.connect_button_text
                         else R.string.connected_button_text
                     )
                 )

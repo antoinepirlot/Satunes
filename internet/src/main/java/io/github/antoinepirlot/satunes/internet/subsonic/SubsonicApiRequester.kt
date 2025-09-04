@@ -85,4 +85,8 @@ class SubsonicApiRequester(
         this.checkInternetConnection(context = context)
         this.ping()
     }
+
+    fun disconnect() {
+        this.subsonicState = SubsonicState.DISCONNECTED
+    }
 }

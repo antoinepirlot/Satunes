@@ -117,9 +117,6 @@ object SettingsManager {
     val subsonicPassword: String
         get() = LibrarySettings.subsonicPassword
 
-    val subsonicMd5Password: String
-        get() = LibrarySettings.subsonicMd5Password
-
     //Update Settings
     val updateChannel: MutableState<UpdateChannel>
         get() = SatunesSettings.updateChannel

@@ -33,6 +33,7 @@ import androidx.lifecycle.ViewModel
 import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.data.states.SubsonicUiState
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
+import io.github.antoinepirlot.satunes.database.utils.md5
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
 import io.github.antoinepirlot.satunes.ui.utils.showErrorSnackBar
 import kotlinx.coroutines.CoroutineScope
@@ -115,7 +116,7 @@ class SubsonicViewModel : ViewModel() {
                 _subsonicApiRequester = SubsonicApiRequester(
                     url = this@SubsonicViewModel.url,
                     username = this@SubsonicViewModel.username,
-                    md5Password = SettingsManager.subsonicMd5Password,
+                    md5Password = this@SubsonicViewModel.password.md5(),
                     apiVersion = "1.16.1", //TODO can be retrieved with a single ping
                     onSubsonicStateChanged = {
                         _uiState.update { currentState: SubsonicUiState ->

@@ -93,9 +93,6 @@ internal object LibrarySettings {
     val subsonicPassword: String
         get() = SubsonicSettings.subsonicPassword
 
-    val subsonicMd5Password: String
-        get() = SubsonicSettings.subsonicMd5Password
-
     suspend fun loadSettings(context: Context) {
         context.dataStore.data.map { preferences: Preferences ->
             if (preferences[this.SELECTED_PATHS_KEY] != null)
@@ -246,7 +243,7 @@ internal object LibrarySettings {
     }
 
     suspend fun updateSubsonicPassword(context: Context, password: String) {
-        SubsonicSettings.updateSubsonicMd5Password(context = context, password = password)
+        SubsonicSettings.updateSubsonicPassword(context = context, password = password)
     }
 
     suspend fun resetFoldersSettings(context: Context) {

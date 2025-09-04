@@ -29,7 +29,6 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager.dataStore
-import io.github.antoinepirlot.satunes.database.utils.md5
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
@@ -45,7 +44,7 @@ internal object SubsonicSettings {
     private val SUBSONIC_URL_KEY: Preferences.Key<String> = stringPreferencesKey("subsonic_url")
     private val SUBSONIC_USERNAME_KEY: Preferences.Key<String> =
         stringPreferencesKey("subsonic_username")
-    private val SUBSONIC_MD5_PASSWORD_KEY: Preferences.Key<String> =
+    private val SUBSONIC_PASSWORD_KEY: Preferences.Key<String> =
         stringPreferencesKey("subsonic_password")
 
     var subsonicUrl: String = DEFAULT_SUBSONIC_URL
@@ -53,8 +52,6 @@ internal object SubsonicSettings {
     var subsonicUsername: String = DEFAULT_SUBSONIC_USERNAME
         private set
     var subsonicPassword: String = DEFAULT_SUBSONIC_MD5_PASSWORD
-        private set
-    var subsonicMd5Password: String = DEFAULT_SUBSONIC_MD5_PASSWORD
         private set
 
     suspend fun loadSettings(context: Context) {
@@ -80,17 +77,16 @@ internal object SubsonicSettings {
     /**
      * Get normal password and transform it to MD5
      */
-    suspend fun updateSubsonicMd5Password(context: Context, password: String) {
+    suspend fun updateSubsonicPassword(context: Context, password: String) {
         context.dataStore.edit { preferences: MutablePreferences ->
-            val md5Password: String = password.md5()
-            preferences[SUBSONIC_MD5_PASSWORD_KEY] = md5Password
-            this.subsonicMd5Password = md5Password
+            preferences[SUBSONIC_PASSWORD_KEY] = password
+            this.subsonicPassword = password
         }
     }
 
     suspend fun resetAll(context: Context) {
         this.updateSubsonicUrl(context = context, url = DEFAULT_SUBSONIC_URL)
         this.updateSubsonicUsername(context = context, username = DEFAULT_SUBSONIC_USERNAME)
-        this.updateSubsonicMd5Password(context = context, password = DEFAULT_SUBSONIC_MD5_PASSWORD)
+        this.updateSubsonicPassword(context = context, password = DEFAULT_SUBSONIC_MD5_PASSWORD)
     }
 }

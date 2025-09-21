@@ -27,6 +27,7 @@ import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import io.github.antoinepirlot.satunes.internet.InternetManager
+import io.github.antoinepirlot.satunes.internet.exceptions.AlreadyRequestingException
 import io.github.antoinepirlot.satunes.internet.exceptions.NotConnectedException
 import io.github.antoinepirlot.satunes.internet.subsonic.callbacks.PingCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.SubsonicState
@@ -55,13 +56,15 @@ class SubsonicApiRequester(
     }
 
     private val url: String = "$url/rest"
-    var subsonicState: SubsonicState = SubsonicState.DISCONNECTED
+    var subsonicState: SubsonicState = DEFAULT_STATE
         internal set(value) {
             field = value
             onSubsonicStateChanged.invoke(field)
         }
 
-    private fun get(url: String, resCallback: Callback) {
+    private fun get(url: String, resCallback: Callback, newState: SubsonicState) {
+        if (!this.canMakeRequest()) throw AlreadyRequestingException()
+        this.subsonicState = newState
         val client = OkHttpClient()
         val req: Request = Request.Builder()
             .get()
@@ -71,27 +74,31 @@ class SubsonicApiRequester(
     }
 
     private fun checkInternetConnection(context: Context) {
-        if (!InternetManager(context = context).isConnected()) {
+        if (!InternetManager(context = context).isConnected())
             throw NotConnectedException("Internet connection KO")
-        }
         ping()
     }
 
     private fun ping() {
-        this.subsonicState = SubsonicState.PINGING
+        var url: String = this.url + "/ping?u=$username&c=$CLIENT_NAME&t=$md5Password"
+        if (version != null) url += "&v=$version"
         this.get(
-            url = this.url + "/ping?u=$username&c=$CLIENT_NAME&t=$md5Password",
-            resCallback = PingCallback(subsonicApiRequester = this)
+            url = url,
+            resCallback = PingCallback(subsonicApiRequester = this),
+            newState = SubsonicState.PINGING
         )
     }
 
-    fun ping(context: Context) {
-        this.subsonicState = SubsonicState.PINGING
-        this.checkInternetConnection(context = context)
-        this.ping()
-    }
+    fun ping(context: Context) = this.checkInternetConnection(context = context)
 
     fun disconnect() {
         this.subsonicState = SubsonicState.DISCONNECTED
+    }
+
+    private fun canMakeRequest(): Boolean {
+        return when (this.subsonicState) {
+            SubsonicState.IDLE, SubsonicState.DISCONNECTED -> true
+            else -> false
+        }
     }
 }

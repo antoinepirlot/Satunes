@@ -21,32 +21,19 @@
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
-package io.github.antoinepirlot.satunes.internet.subsonic.models
-
-import android.os.Build
-import androidx.annotation.RequiresApi
-import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.XmlObject
+package io.github.antoinepirlot.satunes.internet.subsonic.models.responses
 
 /**
- * @author Antoine Pirlot 03/09/2025
+ * @author Antoine Pirlot 21/09/2025
  */
-
-@RequiresApi(Build.VERSION_CODES.M)
-enum class SubsonicState {
-    DISCONNECTED,
-    PINGING,
-    IDLE,
-    REQUESTING,
-    DATA_RECEIVED,
-    ERROR;
-
-    var error: SubsonicErrorCode? = null
-        set(value) {
-            if (value != null && this != ERROR)
-                throw IllegalStateException("Can't change code of non error state.")
-            field = value
-        }
-
-    //dataReceived is only used for DATA_RECEIVED
-    var dataReceived: List<XmlObject> = listOf()
+class Header(
+    val status: String? = null,
+    val version: String? = null,
+    val type: String? = null,
+    val serverVersion: String? = null,
+    val openSubsonic: Boolean? = null,
+) : XmlObject() {
+    override fun isHeader(): Boolean {
+        return true
+    }
 }

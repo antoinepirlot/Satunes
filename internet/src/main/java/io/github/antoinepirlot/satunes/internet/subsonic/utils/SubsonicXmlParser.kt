@@ -24,8 +24,9 @@
 package io.github.antoinepirlot.satunes.internet.subsonic.utils
 
 import android.util.Xml
-import io.github.antoinepirlot.satunes.internet.subsonic.models.Error
-import io.github.antoinepirlot.satunes.internet.subsonic.models.XmlObject
+import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.Error
+import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.Header
+import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.XmlObject
 import org.xmlpull.v1.XmlPullParser
 import org.xmlpull.v1.XmlPullParserException
 import java.io.IOException
@@ -52,7 +53,7 @@ class SubsonicXmlParser {
     private fun readBody(parser: XmlPullParser): List<XmlObject> {
         parser.require(XmlPullParser.START_TAG, null, "subsonic-response")
         val entries = mutableListOf<XmlObject>(
-            XmlObject(
+            Header(
                 status = parser.getAttributeValue(null, "status"),
                 version = parser.getAttributeValue(null, "version"),
                 type = parser.getAttributeValue(null, "type"),

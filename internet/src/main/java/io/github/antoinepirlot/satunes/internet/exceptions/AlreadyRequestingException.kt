@@ -21,16 +21,9 @@
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
-package io.github.antoinepirlot.satunes.internet.subsonic.models
+package io.github.antoinepirlot.satunes.internet.exceptions
 
 /**
- * @author Antoine Pirlot 04/09/2025
+ * @author Antoine Pirlot 21/09/2025
  */
-class Error(
-    val errorCode: Int,
-    val message: String
-) : XmlObject() {
-    override fun isError(): Boolean {
-        return true
-    }
-}
+class AlreadyRequestingException(message: String? = null) : Exception(message)

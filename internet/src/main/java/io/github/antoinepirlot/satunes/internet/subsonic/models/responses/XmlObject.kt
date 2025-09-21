@@ -21,19 +21,19 @@
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
-package io.github.antoinepirlot.satunes.internet.subsonic.models
+package io.github.antoinepirlot.satunes.internet.subsonic.models.responses
 
 /**
  * @author Antoine Pirlot 04/09/2025
  */
 open class XmlObject(
-    val status: String? = null,
-    val version: String? = null,
-    val type: String? = null,
-    val serverVersion: String? = null,
-    val openSubsonic: Boolean? = null,
+
 ) {
     open fun isError(): Boolean {
+        return false
+    }
+
+    open fun isHeader(): Boolean {
         return false
     }
 }

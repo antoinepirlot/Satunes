@@ -28,7 +28,8 @@ import androidx.annotation.RequiresApi
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
 import io.github.antoinepirlot.satunes.internet.subsonic.models.SubsonicErrorCode
 import io.github.antoinepirlot.satunes.internet.subsonic.models.SubsonicState
-import io.github.antoinepirlot.satunes.internet.subsonic.models.XmlObject
+import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.Header
+import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.XmlObject
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import okhttp3.Call
 import okhttp3.Response
@@ -41,27 +42,24 @@ import okhttp3.Response
 internal class PingCallback(
     subsonicApiRequester: SubsonicApiRequester
 ) : SubsonicCallback(subsonicApiRequester = subsonicApiRequester) {
+
     private val _logger: SatunesLogger? = SatunesLogger.getLogger()
 
     override fun onResponse(call: Call, response: Response) {
         super.onResponse(call = call, response = response)
-        if (subsonicApiRequester.subsonicState == SubsonicState.ERROR) return
         if (subsonicApiRequester.subsonicState != SubsonicState.DATA_RECEIVED) {
             setUnknownError()
             return
         }
-        val xmlObject: XmlObject? = subsonicApiRequester.subsonicState.dataReceived
-        if (xmlObject == null) {
-            setUnknownError()
-            return
-        }
+        val xmlObject: XmlObject = subsonicApiRequester.subsonicState.dataReceived[0]
+        xmlObject as Header
         SubsonicApiRequester.status = xmlObject.status
         SubsonicApiRequester.version = xmlObject.version
         SubsonicApiRequester.type = xmlObject.type
         SubsonicApiRequester.serverVersion = xmlObject.serverVersion
         SubsonicApiRequester.openSubsonic = xmlObject.openSubsonic
 
-        subsonicApiRequester.subsonicState = SubsonicState.DISCONNECTED
+//        subsonicApiRequester.subsonicState = SubsonicState.IDLE
     }
 
     private fun setUnknownError() {

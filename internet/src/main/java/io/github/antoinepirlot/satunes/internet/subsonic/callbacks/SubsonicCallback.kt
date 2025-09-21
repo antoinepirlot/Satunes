@@ -26,10 +26,10 @@ package io.github.antoinepirlot.satunes.internet.subsonic.callbacks
 import android.os.Build
 import androidx.annotation.RequiresApi
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
-import io.github.antoinepirlot.satunes.internet.subsonic.models.Error
 import io.github.antoinepirlot.satunes.internet.subsonic.models.SubsonicErrorCode
 import io.github.antoinepirlot.satunes.internet.subsonic.models.SubsonicState
-import io.github.antoinepirlot.satunes.internet.subsonic.models.XmlObject
+import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.Error
+import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.XmlObject
 import io.github.antoinepirlot.satunes.internet.subsonic.utils.SubsonicXmlParser
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import okhttp3.Call
@@ -69,19 +69,17 @@ abstract class SubsonicCallback(
                 if (result.isEmpty()) {
                     SubsonicState.ERROR.error = SubsonicErrorCode.DATA_NOT_FOUND
                     subsonicApiRequester.subsonicState = SubsonicState.ERROR
-                } else if (result.size == 1) {
-                    //Maybe error
-                    val xmlObject: XmlObject = result[0]
-                    if (xmlObject.isError()) {
-                        xmlObject as Error
-                        SubsonicState.ERROR.error =
-                            SubsonicErrorCode.getError(code = xmlObject.errorCode)
-                        subsonicApiRequester.subsonicState = SubsonicState.ERROR
-                    } else {
-                        subsonicApiRequester.subsonicState = SubsonicState.DATA_RECEIVED
-                        SubsonicState.DATA_RECEIVED.dataReceived = xmlObject
-                    }
                 }
+                //Maybe error
+                if (subsonicApiRequester.subsonicState != SubsonicState.PINGING)
+                    for (xmlObject: XmlObject in result) {
+                        if (xmlObject.isError()) {
+                            manageError(xmlObject = xmlObject)
+                            return
+                        }
+                    }
+                subsonicApiRequester.subsonicState = SubsonicState.DATA_RECEIVED
+                SubsonicState.DATA_RECEIVED.dataReceived = result
             } catch (_: IOException) {
                 SubsonicState.ERROR.error = null
                 subsonicApiRequester.subsonicState = SubsonicState.ERROR
@@ -95,5 +93,12 @@ abstract class SubsonicCallback(
             SubsonicState.ERROR.error = SubsonicErrorCode.DATA_NOT_FOUND
             subsonicApiRequester.subsonicState = SubsonicState.ERROR
         }
+    }
+
+    private fun manageError(xmlObject: XmlObject) {
+        xmlObject as Error
+        SubsonicState.ERROR.error =
+            SubsonicErrorCode.getError(code = xmlObject.errorCode)
+        subsonicApiRequester.subsonicState = SubsonicState.ERROR
     }
 }

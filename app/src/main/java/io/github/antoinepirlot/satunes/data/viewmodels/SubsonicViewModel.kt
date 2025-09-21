@@ -114,6 +114,7 @@ class SubsonicViewModel : ViewModel() {
                 )
                 this@SubsonicViewModel.hasBeenUpdated = false
                 _subsonicApiRequester = SubsonicApiRequester(
+                    context = MainActivity.instance.applicationContext,
                     url = this@SubsonicViewModel.url,
                     username = this@SubsonicViewModel.username,
                     md5Password = this@SubsonicViewModel.password.md5(),

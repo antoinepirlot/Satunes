@@ -40,6 +40,7 @@ import okhttp3.Request
  */
 @RequiresApi(Build.VERSION_CODES.M)
 class SubsonicApiRequester(
+    private val context: Context,
     url: String,
     private val username: String,
     private val md5Password: String,
@@ -62,6 +63,13 @@ class SubsonicApiRequester(
             onSubsonicStateChanged.invoke(field)
         }
 
+    /**
+     * Create and start a request
+     *
+     * @param url the request's url
+     * @param resCallback the callBack object matching the request.
+     * @param newState the new state the [subsonicState] must have.
+     */
     private fun get(url: String, resCallback: Callback, newState: SubsonicState) {
         if (!this.canMakeRequest()) throw AlreadyRequestingException()
         this.subsonicState = newState
@@ -73,13 +81,10 @@ class SubsonicApiRequester(
         client.newCall(req).enqueue(responseCallback = resCallback)
     }
 
-    private fun checkInternetConnection(context: Context) {
-        if (!InternetManager(context = context).isConnected())
-            throw NotConnectedException("Internet connection KO")
-        ping()
-    }
-
-    private fun ping() {
+    /**
+     * Ping API
+     */
+    fun ping() {
         var url: String = this.url + "/ping?u=$username&c=$CLIENT_NAME&t=$md5Password"
         if (version != null) url += "&v=$version"
         this.get(
@@ -89,13 +94,27 @@ class SubsonicApiRequester(
         )
     }
 
-    fun ping(context: Context) = this.checkInternetConnection(context = context)
-
-    fun disconnect() {
-        this.subsonicState = SubsonicState.DISCONNECTED
+    /**
+     * Change [subsonicState] to [SubsonicState.DISCONNECTED] if it can be changed.
+     *
+     * @return true if the process has been successfully done, otherwise false.
+     */
+    fun disconnect(): Boolean {
+        if (canMakeRequest()) {
+            this.subsonicState = SubsonicState.DISCONNECTED
+            return true
+        }
+        return false
     }
 
+    /**
+     * Checks if the internet connection is valid and if another process is not already requesting.
+     *
+     * @return true if a new request can be done, otherwise false.
+     */
     private fun canMakeRequest(): Boolean {
+        if (!InternetManager(context = context).isConnected())
+            throw NotConnectedException("Internet connection KO")
         return when (this.subsonicState) {
             SubsonicState.IDLE, SubsonicState.DISCONNECTED -> true
             else -> false

@@ -26,7 +26,10 @@ package io.github.antoinepirlot.satunes.internet.subsonic.models
 /**
  * @author Antoine Pirlot 04/09/2025
  */
-data class Error(val errorCode: Int, val message: String) : XmlObject() {
+class Error(
+    val errorCode: Int,
+    val message: String
+) : XmlObject() {
     override fun isError(): Boolean {
         return true
     }

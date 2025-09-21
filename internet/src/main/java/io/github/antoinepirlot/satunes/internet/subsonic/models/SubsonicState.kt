@@ -25,22 +25,30 @@ package io.github.antoinepirlot.satunes.internet.subsonic.models
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 
 /**
  * @author Antoine Pirlot 03/09/2025
  */
 
 @RequiresApi(Build.VERSION_CODES.M)
-enum class SubsonicState(error: SubsonicErrorCode? = null) {
+enum class SubsonicState {
     DISCONNECTED,
     PINGING,
     IDLE,
+    REQUESTING,
+    DATA_RECEIVED,
     ERROR;
 
-    var error: SubsonicErrorCode? = error
+    var error: SubsonicErrorCode? = null
         set(value) {
             if (value != null && this != ERROR)
                 throw IllegalStateException("Can't change code of non error state.")
             field = value
         }
+
+    //dataReceived is only used for DATA_RECEIVED
+    var dataReceived: XmlObject? by mutableStateOf(null)
 }

@@ -77,6 +77,9 @@ abstract class SubsonicCallback(
                         SubsonicState.ERROR.error =
                             SubsonicErrorCode.getError(code = xmlObject.errorCode)
                         subsonicApiRequester.subsonicState = SubsonicState.ERROR
+                    } else {
+                        subsonicApiRequester.subsonicState = SubsonicState.DATA_RECEIVED
+                        SubsonicState.DATA_RECEIVED.dataReceived = xmlObject
                     }
                 }
             } catch (_: IOException) {

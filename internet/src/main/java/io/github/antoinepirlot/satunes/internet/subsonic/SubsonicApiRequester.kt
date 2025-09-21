@@ -42,12 +42,16 @@ class SubsonicApiRequester(
     url: String,
     private val username: String,
     private val md5Password: String,
-    private val apiVersion: String,
     private val onSubsonicStateChanged: (SubsonicState) -> Unit
 ) {
     companion object {
         val DEFAULT_STATE: SubsonicState = SubsonicState.DISCONNECTED
         private const val CLIENT_NAME = "Satunes"
+        internal var version: String? = null
+        internal var status: String? = null
+        internal var type: String? = null
+        internal var serverVersion: String? = null
+        internal var openSubsonic: Boolean? = null
     }
 
     private val url: String = "$url/rest"
@@ -76,7 +80,7 @@ class SubsonicApiRequester(
     private fun ping() {
         this.subsonicState = SubsonicState.PINGING
         this.get(
-            url = this.url + "/ping?u=$username&c=$CLIENT_NAME&t=$md5Password&v=$apiVersion",
+            url = this.url + "/ping?u=$username&c=$CLIENT_NAME&t=$md5Password",
             resCallback = PingCallback(subsonicApiRequester = this)
         )
     }

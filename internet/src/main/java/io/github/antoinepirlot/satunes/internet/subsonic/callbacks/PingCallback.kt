@@ -26,7 +26,10 @@ package io.github.antoinepirlot.satunes.internet.subsonic.callbacks
 import android.os.Build
 import androidx.annotation.RequiresApi
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
+import io.github.antoinepirlot.satunes.internet.subsonic.models.SubsonicErrorCode
 import io.github.antoinepirlot.satunes.internet.subsonic.models.SubsonicState
+import io.github.antoinepirlot.satunes.internet.subsonic.models.XmlObject
+import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import okhttp3.Call
 import okhttp3.Response
 
@@ -38,9 +41,32 @@ import okhttp3.Response
 internal class PingCallback(
     subsonicApiRequester: SubsonicApiRequester
 ) : SubsonicCallback(subsonicApiRequester = subsonicApiRequester) {
+    private val _logger: SatunesLogger? = SatunesLogger.getLogger()
+
     override fun onResponse(call: Call, response: Response) {
         super.onResponse(call = call, response = response)
         if (subsonicApiRequester.subsonicState == SubsonicState.ERROR) return
-        subsonicApiRequester.subsonicState = SubsonicState.IDLE
+        if (subsonicApiRequester.subsonicState != SubsonicState.DATA_RECEIVED) {
+            setUnknownError()
+            return
+        }
+        val xmlObject: XmlObject? = subsonicApiRequester.subsonicState.dataReceived
+        if (xmlObject == null) {
+            setUnknownError()
+            return
+        }
+        SubsonicApiRequester.status = xmlObject.status
+        SubsonicApiRequester.version = xmlObject.version
+        SubsonicApiRequester.type = xmlObject.type
+        SubsonicApiRequester.serverVersion = xmlObject.serverVersion
+        SubsonicApiRequester.openSubsonic = xmlObject.openSubsonic
+
+        subsonicApiRequester.subsonicState = SubsonicState.DISCONNECTED
+    }
+
+    private fun setUnknownError() {
+        _logger?.warning("Unknown error while fetching ping data.")
+        subsonicApiRequester.subsonicState = SubsonicState.ERROR
+        SubsonicState.ERROR.error = SubsonicErrorCode.UNKNOWN
     }
 }

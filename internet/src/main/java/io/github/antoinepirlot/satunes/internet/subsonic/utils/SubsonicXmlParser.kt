@@ -50,8 +50,16 @@ class SubsonicXmlParser {
 
     @Throws(XmlPullParserException::class, IOException::class)
     private fun readBody(parser: XmlPullParser): List<XmlObject> {
-        val entries = mutableListOf<XmlObject>()
         parser.require(XmlPullParser.START_TAG, null, "subsonic-response")
+        val entries = mutableListOf<XmlObject>(
+            XmlObject(
+                status = parser.getAttributeValue(null, "status"),
+                version = parser.getAttributeValue(null, "version"),
+                type = parser.getAttributeValue(null, "type"),
+                serverVersion = parser.getAttributeValue(null, "serverVersion"),
+                openSubsonic = parser.getAttributeValue(null, "openSubsonic").toBoolean()
+            )
+        )
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.eventType != XmlPullParser.START_TAG) {
                 continue

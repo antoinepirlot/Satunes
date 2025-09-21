@@ -26,7 +26,13 @@ package io.github.antoinepirlot.satunes.internet.subsonic.models
 /**
  * @author Antoine Pirlot 04/09/2025
  */
-abstract class XmlObject() {
+open class XmlObject(
+    val status: String? = null,
+    val version: String? = null,
+    val type: String? = null,
+    val serverVersion: String? = null,
+    val openSubsonic: Boolean? = null,
+) {
     open fun isError(): Boolean {
         return false
     }

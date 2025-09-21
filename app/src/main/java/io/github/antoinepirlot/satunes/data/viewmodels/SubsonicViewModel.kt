@@ -117,7 +117,6 @@ class SubsonicViewModel : ViewModel() {
                     url = this@SubsonicViewModel.url,
                     username = this@SubsonicViewModel.username,
                     md5Password = this@SubsonicViewModel.password.md5(),
-                    apiVersion = "1.16.1", //TODO can be retrieved with a single ping
                     onSubsonicStateChanged = {
                         _uiState.update { currentState: SubsonicUiState ->
                             currentState.copy(subsonicState = it)

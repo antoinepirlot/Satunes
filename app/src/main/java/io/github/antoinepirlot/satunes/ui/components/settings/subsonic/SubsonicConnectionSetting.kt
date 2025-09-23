@@ -127,11 +127,13 @@ private fun Buttons(
     )
 
     Row(modifier = modifier) {
-        Button(onClick = { subsonicViewModel.reset() }) {
-            NormalText(text = stringResource(R.string.cancel))
-        }
+        if (subsonicViewModel.hasBeenUpdated) {
+            Button(onClick = { subsonicViewModel.reset() }) {
+                NormalText(text = stringResource(R.string.cancel))
+            }
 
-        Spacer(modifier = Modifier.size(size = 16.dp))
+            Spacer(modifier = Modifier.size(size = 16.dp))
+        }
 
         Button(
             onClick = {
@@ -145,11 +147,7 @@ private fun Buttons(
             if (subsonicUiState.subsonicState == SubsonicState.PINGING)
                 LoadingCircle(modifier = Modifier.size(size = 16.dp))
             else
-                NormalText(
-                    text = stringResource(
-                        R.string.test_connection_button_text
-                    )
-                )
+                NormalText(text = stringResource(R.string.test_connection_button_text))
         }
     }
 }

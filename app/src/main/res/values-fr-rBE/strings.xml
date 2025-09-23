@@ -149,4 +149,6 @@
     <string name="subsonic_url_text">Entre les informations de ton serveur Subsonic (l\'utilisation de HTTPS est recommandé pour la sécurité)</string>
     <string name="connect_button_text">Connecter</string>
     <string name="connected_button_text">Connecté</string>
+    <string name="subsonic_state_title">État</string>
+    <string name="subsonic_state_content">Le statut de la connection au serveur est: </string>
 </resources>

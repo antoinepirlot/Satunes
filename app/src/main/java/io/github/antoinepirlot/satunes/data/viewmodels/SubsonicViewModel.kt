@@ -23,6 +23,7 @@
 
 package io.github.antoinepirlot.satunes.data.viewmodels
 
+import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.material3.SnackbarHostState
@@ -94,27 +95,27 @@ class SubsonicViewModel : ViewModel() {
     }
 
     fun disconnect() {
-        _subsonicApiRequester?.disconnect()
+        _subsonicApiRequester?.disconnect(context = MainActivity.instance.applicationContext)
     }
 
     fun applySubsonicUrl(scope: CoroutineScope, snackbarHostState: SnackbarHostState) {
+        val context: Context = MainActivity.instance.applicationContext
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 SettingsManager.updateSubsonicUrl(
-                    context = MainActivity.instance.applicationContext,
+                    context = context,
                     url = this@SubsonicViewModel.url
                 )
                 SettingsManager.updateSubsonicUsername(
-                    context = MainActivity.instance.applicationContext,
+                    context = context,
                     username = this@SubsonicViewModel.username
                 )
                 SettingsManager.updateSubsonicPassword(
-                    context = MainActivity.instance.applicationContext,
+                    context = context,
                     password = this@SubsonicViewModel.password
                 )
                 this@SubsonicViewModel.hasBeenUpdated = false
                 _subsonicApiRequester = SubsonicApiRequester(
-                    context = MainActivity.instance.applicationContext,
                     url = this@SubsonicViewModel.url,
                     username = this@SubsonicViewModel.username,
                     md5Password = this@SubsonicViewModel.password.md5(),
@@ -124,7 +125,7 @@ class SubsonicViewModel : ViewModel() {
                         }
                     }
                 )
-                _subsonicApiRequester!!.ping()
+                _subsonicApiRequester!!.ping(context = context)
             } catch (_: Throwable) {
                 showErrorSnackBar(
                     scope = scope,

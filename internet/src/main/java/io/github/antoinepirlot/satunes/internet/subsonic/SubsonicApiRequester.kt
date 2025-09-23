@@ -40,7 +40,6 @@ import okhttp3.Request
  */
 @RequiresApi(Build.VERSION_CODES.M)
 class SubsonicApiRequester(
-    private val context: Context,
     url: String,
     private val username: String,
     private val md5Password: String,
@@ -70,8 +69,8 @@ class SubsonicApiRequester(
      * @param resCallback the callBack object matching the request.
      * @param newState the new state the [subsonicState] must have.
      */
-    private fun get(url: String, resCallback: Callback, newState: SubsonicState) {
-        if (!this.canMakeRequest()) throw AlreadyRequestingException()
+    private fun get(context: Context, url: String, resCallback: Callback, newState: SubsonicState) {
+        if (!this.canMakeRequest(context = context)) throw AlreadyRequestingException()
         this.subsonicState = newState
         val client = OkHttpClient()
         val req: Request = Request.Builder()
@@ -84,10 +83,11 @@ class SubsonicApiRequester(
     /**
      * Ping API
      */
-    fun ping() {
+    fun ping(context: Context) {
         var url: String = this.url + "/ping?u=$username&c=$CLIENT_NAME&t=$md5Password"
         if (version != null) url += "&v=$version"
         this.get(
+            context = context,
             url = url,
             resCallback = PingCallback(subsonicApiRequester = this),
             newState = SubsonicState.PINGING
@@ -99,8 +99,8 @@ class SubsonicApiRequester(
      *
      * @return true if the process has been successfully done, otherwise false.
      */
-    fun disconnect(): Boolean {
-        if (canMakeRequest()) {
+    fun disconnect(context: Context): Boolean {
+        if (canMakeRequest(context = context)) {
             this.subsonicState = SubsonicState.DISCONNECTED
             return true
         }
@@ -112,7 +112,7 @@ class SubsonicApiRequester(
      *
      * @return true if a new request can be done, otherwise false.
      */
-    private fun canMakeRequest(): Boolean {
+    private fun canMakeRequest(context: Context): Boolean {
         if (!InternetManager(context = context).isConnected())
             throw NotConnectedException("Internet connection KO")
         return when (this.subsonicState) {

@@ -176,4 +176,6 @@
     <string name="connect_button_text">Connect</string>
     <string name="connected_button_text">Connected</string>
     <string name="android_auto_title" translatable="false">Android Auto</string>
+    <string name="subsonic_state_title">State</string>
+    <string name="subsonic_state_content">The server connection state is: </string>
 </resources>

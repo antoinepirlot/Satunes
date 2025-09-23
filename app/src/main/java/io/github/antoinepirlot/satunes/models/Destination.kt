@@ -144,6 +144,7 @@ enum class Destination(
             Pair(first = SEARCH.link, second = SEARCH),
             Pair(first = SEARCH_SETTINGS.link, second = SEARCH_SETTINGS),
             Pair(first = SETTINGS.link, second = SETTINGS),
+            Pair(first = SUBSONIC_SETTINGS.link, second = SUBSONIC_SETTINGS)
         )
 
         init {

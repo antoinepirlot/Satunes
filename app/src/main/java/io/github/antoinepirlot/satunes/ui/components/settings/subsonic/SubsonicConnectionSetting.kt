@@ -62,7 +62,7 @@ import kotlinx.coroutines.CoroutineScope
 
 @RequiresApi(Build.VERSION_CODES.M)
 @Composable
-fun SubsonicSetting(
+fun SubsonicConnectionSetting(
     modifier: Modifier = Modifier,
     subsonicViewModel: SubsonicViewModel = viewModel()
 ) {
@@ -154,5 +154,5 @@ private fun Buttons(
 @Preview
 @Composable
 private fun SubsonicSettingsViewPreview() {
-    SubsonicSetting()
+    SubsonicConnectionSetting()
 }

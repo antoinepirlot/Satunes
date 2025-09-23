@@ -33,7 +33,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.jetpack_libs.components.texts.Title
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.ui.components.settings.subsonic.SubsonicSetting
+import io.github.antoinepirlot.satunes.ui.components.settings.subsonic.SubsonicConnectionSetting
 import io.github.antoinepirlot.satunes.ui.components.settings.subsonic.SubsonicStateSetting
 
 /**
@@ -46,7 +46,7 @@ fun SubsonicSettingView(modifier: Modifier = Modifier) {
     Column(modifier = modifier.fillMaxSize()) {
         Title(text = stringResource(R.string.subsonic_title), maxLines = 2)
         SubsonicStateSetting()
-        SubsonicSetting()
+        SubsonicConnectionSetting()
     }
 }
 

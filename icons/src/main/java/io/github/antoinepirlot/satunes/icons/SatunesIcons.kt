@@ -37,6 +37,7 @@ import androidx.compose.material.icons.rounded.BatterySaver
 import androidx.compose.material.icons.rounded.Category
 import androidx.compose.material.icons.rounded.CleaningServices
 import androidx.compose.material.icons.rounded.Close
+import androidx.compose.material.icons.rounded.Cloud
 import androidx.compose.material.icons.rounded.DateRange
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.DirectionsCar
@@ -168,6 +169,10 @@ enum class SatunesIcons(
     SETTING_PERMISSIONS(
         imageVector = Icons.Rounded.Security,
         description = "Permission Setting Icon"
+    ),
+    SETTING_SUBSONIC(
+        imageVector = Icons.Rounded.Cloud,
+        description = "Subsonic Icon"
     ),
     SETTING_UPDATE(imageVector = Icons.Rounded.Update, description = "Update Setting Icon"),
     SHARE(imageVector = Icons.Rounded.Share, description = "Share Icon"),

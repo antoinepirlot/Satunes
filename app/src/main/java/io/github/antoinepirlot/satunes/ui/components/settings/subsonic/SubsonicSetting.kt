@@ -21,12 +21,13 @@
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
-package io.github.antoinepirlot.satunes.ui.components.settings.library.subsonic
+package io.github.antoinepirlot.satunes.ui.components.settings.subsonic
 
 import android.os.Build
 import android.view.View.AUTOFILL_HINT_PASSWORD
 import android.view.View.AUTOFILL_HINT_USERNAME
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
@@ -36,7 +37,6 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.autofill.ContentType
 import androidx.compose.ui.res.stringResource
@@ -54,7 +54,6 @@ import io.github.antoinepirlot.satunes.data.states.SubsonicUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.SubsonicViewModel
 import io.github.antoinepirlot.satunes.internet.subsonic.models.SubsonicState
 import io.github.antoinepirlot.satunes.ui.components.LoadingCircle
-import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
 import kotlinx.coroutines.CoroutineScope
 
 /**
@@ -63,15 +62,11 @@ import kotlinx.coroutines.CoroutineScope
 
 @RequiresApi(Build.VERSION_CODES.M)
 @Composable
-fun SubsonicSettings(
+fun SubsonicSetting(
     modifier: Modifier = Modifier,
     subsonicViewModel: SubsonicViewModel = viewModel()
 ) {
-    SubSettings(
-        modifier = modifier,
-        title = stringResource(id = R.string.subsonic_subsonic_title),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
+    Column(modifier = modifier) {
         NormalText(text = stringResource(R.string.subsonic_url_text))
         OutlinedTextField(
             value = subsonicViewModel.url,
@@ -159,5 +154,5 @@ private fun Buttons(
 @Preview
 @Composable
 private fun SubsonicSettingsViewPreview() {
-    SubsonicSettings()
+    SubsonicSetting()
 }

@@ -45,7 +45,7 @@ enum class Destination(
         category = DestinationCategory.MEDIA,
         navBarSection = NavBarSection.ALBUMS
     ),
-    ANDROID_AUTO_SETTINGS(link = "/android_auto_setting", category = DestinationCategory.SETTING),
+
     ARTISTS(
         link = "/artists",
         category = DestinationCategory.MEDIA,
@@ -56,9 +56,6 @@ enum class Destination(
         category = DestinationCategory.MEDIA,
         navBarSection = NavBarSection.ARTISTS
     ),
-    BATTERY_SETTINGS(link = "/battery_settings", category = DestinationCategory.SETTING),
-    DESIGN_SETTINGS(link = "/design_settings", category = DestinationCategory.SETTING),
-    LIBRARY_SETTINGS(link = "/library_settings", category = DestinationCategory.SETTING),
     FOLDERS(
         link = "/folders",
         category = DestinationCategory.MEDIA,
@@ -79,16 +76,11 @@ enum class Destination(
         category = DestinationCategory.MEDIA,
         navBarSection = NavBarSection.GENRES
     ),
-    LOGS_SETTINGS(link = "/logs_settings", category = DestinationCategory.SETTING),
     MUSICS(
         link = "/musics",
         category = DestinationCategory.MEDIA,
         navBarSection = NavBarSection.MUSICS
     ),
-    PERMISSIONS_SETTINGS(link = "/permissions_settings", category = DestinationCategory.SETTING),
-    PLAYBACK(link = "/playback", category = DestinationCategory.PLAYBACK),
-    PLAYBACK_QUEUE(link = "/playback_queue", category = DestinationCategory.PLAYBACK),
-    PLAYBACK_SETTINGS(link = "/playback_settings", category = DestinationCategory.SETTING),
     PLAYLISTS(
         link = "/playlists",
         category = DestinationCategory.MEDIA,
@@ -99,13 +91,32 @@ enum class Destination(
         category = DestinationCategory.MEDIA,
         navBarSection = NavBarSection.PLAYLISTS
     ),
-    RESET_SETTINGS(link = "/reset_settings", category = DestinationCategory.SETTING),
     SEARCH(link = "/search", category = DestinationCategory.MEDIA),
-    SEARCH_SETTINGS("/search_settings", category = DestinationCategory.SETTING),
+
+    ////////////////////////////////////////
+    ///////////////PLAYBACK/////////////////
+    ////////////////////////////////////////
+    PLAYBACK(link = "/playback", category = DestinationCategory.PLAYBACK),
+    PLAYBACK_QUEUE(link = "/playback_queue", category = PLAYBACK.category),
+
+    ////////////////////////////////////////
+    ///////////////SETTINGS/////////////////
+    ////////////////////////////////////////
     SETTINGS(link = "/settings", category = DestinationCategory.SETTING),
+    ANDROID_AUTO_SETTINGS(link = "/android_auto_setting", category = SETTINGS.category),
+    BATTERY_SETTINGS(link = "/battery_settings", category = SETTINGS.category),
+    DESIGN_SETTINGS(link = "/design_settings", category = SETTINGS.category),
+    LIBRARY_SETTINGS(link = "/library_settings", category = SETTINGS.category),
+    LOGS_SETTINGS(link = "/logs_settings", category = SETTINGS.category),
+    PERMISSIONS_SETTINGS(link = "/permissions_settings", category = SETTINGS.category),
+    PLAYBACK_SETTINGS(link = "/playback_settings", category = SETTINGS.category),
+    RESET_SETTINGS(link = "/reset_settings", category = SETTINGS.category),
+    SEARCH_SETTINGS("/search_settings", category = SETTINGS.category),
+
+    SUBSONIC_SETTINGS(link = "/subsonic", category = SETTINGS.category),
 
     @RequiresApi(Build.VERSION_CODES.M)
-    UPDATES_SETTINGS(link = "/updates", category = DestinationCategory.SETTING);
+    UPDATES_SETTINGS(link = "/updates", category = SETTINGS.category);
 
     companion object {
         private val destinationsMap: MutableMap<String, Destination> = mutableMapOf(

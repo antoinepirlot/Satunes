@@ -61,6 +61,7 @@ internal fun SettingsView(
                     navController.navigate(Destination.ANDROID_AUTO_SETTINGS.link)
                 }
             )
+
             SettingButton(
                 text = stringResource(id = R.string.design_setting_title),
                 icon = SatunesIcons.SETTING_INTERFACE,
@@ -68,6 +69,7 @@ internal fun SettingsView(
                     navController.navigate(Destination.DESIGN_SETTINGS.link)
                 }
             )
+
             SettingButton(
                 text = stringResource(id = R.string.playback_settings),
                 icon = SatunesIcons.PLAYBACK,
@@ -75,6 +77,7 @@ internal fun SettingsView(
                     navController.navigate(Destination.PLAYBACK_SETTINGS.link)
                 }
             )
+
             SettingButton(
                 text = stringResource(id = R.string.search_setting_title),
                 icon = SatunesIcons.SEARCH,
@@ -82,6 +85,7 @@ internal fun SettingsView(
                     navController.navigate(Destination.SEARCH_SETTINGS.link)
                 }
             )
+
             SettingButton(
                 text = stringResource(id = R.string.battery_settings),
                 icon = SatunesIcons.BATTERY,
@@ -89,6 +93,7 @@ internal fun SettingsView(
                     navController.navigate(Destination.BATTERY_SETTINGS.link)
                 }
             )
+
             SettingButton(
                 text = stringResource(id = R.string.library_settings),
                 icon = SatunesIcons.SETTING_LIBRARY,
@@ -96,6 +101,14 @@ internal fun SettingsView(
                     navController.navigate(Destination.LIBRARY_SETTINGS.link)
                 }
             )
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+                SettingButton(
+                    text = stringResource(id = R.string.subsonic_title),
+                    icon = SatunesIcons.SETTING_SUBSONIC,
+                    onClick = { navController.navigate(Destination.SUBSONIC_SETTINGS.link) }
+                )
+
             SettingButton(
                 text = stringResource(id = R.string.permissions),
                 icon = SatunesIcons.SETTING_PERMISSIONS,
@@ -104,13 +117,12 @@ internal fun SettingsView(
                 }
             )
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
                 SettingButton(
                     text = stringResource(id = R.string.version),
                     icon = SatunesIcons.SETTING_UPDATE,
                     onClick = { navController.navigate(Destination.UPDATES_SETTINGS.link) }
                 )
-            }
 
             SettingButton(
                 text = stringResource(id = R.string.reset_settings),
@@ -123,6 +135,7 @@ internal fun SettingsView(
                 icon = SatunesIcons.SETTING_LOGS,
                 onClick = { navController.navigate(Destination.LOGS_SETTINGS.link) }
             )
+
 
             AboutSettings(modifier.padding(bottom = 16.dp)) // Bottom padding for a little space
         }

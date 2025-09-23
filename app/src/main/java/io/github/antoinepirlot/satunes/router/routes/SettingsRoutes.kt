@@ -41,6 +41,7 @@ import io.github.antoinepirlot.satunes.ui.views.settings.permissions.Permissions
 import io.github.antoinepirlot.satunes.ui.views.settings.playback.PlaybackSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.reset.ResetSettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.search.SearchSettingsView
+import io.github.antoinepirlot.satunes.ui.views.settings.subsonic.SubsonicSettingView
 import io.github.antoinepirlot.satunes.ui.views.settings.updates.UpdatesSettingView
 
 /**
@@ -93,6 +94,15 @@ internal fun NavGraphBuilder.settingsRoutes(
             onStart(it)
         }
         LibrarySettingsView() //No padding here as it cuts the row of playlists settings
+    }
+
+    composable(route = Destination.SUBSONIC_SETTINGS.link) {
+        LaunchedEffect(key1 = Unit) {
+            onStart(it)
+        }
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
+            throw IllegalStateException("Wrong version to access Subsonic Settings")
+        SubsonicSettingView()
     }
 
     composable(Destination.PERMISSIONS_SETTINGS.link) {

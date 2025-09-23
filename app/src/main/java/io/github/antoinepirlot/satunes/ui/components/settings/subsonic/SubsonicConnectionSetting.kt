@@ -68,6 +68,7 @@ fun SubsonicConnectionSetting(
     subsonicViewModel: SubsonicViewModel = viewModel()
 ) {
     SubSettings(
+        modifier = modifier,
         title = stringResource(R.string.subsonic_connection_title),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

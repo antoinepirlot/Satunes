@@ -146,9 +146,10 @@
     <string name="ask_select_music_root_path">Veux tu remplacer le chemin racine des musiques? (Par exemple: /storage/emulated/0/chemin/vers/music.mp3 le chemin racine est \'/storage/emulated/0\')</string>
     <string name="export_multiple_files_text">Un fichier par playlist?</string>
     <string name="subsonic_title">Subsonic API (Serveur)</string>
-    <string name="subsonic_url_text">Entre les informations de ton serveur Subsonic (l\'utilisation de HTTPS est recommandé pour la sécurité)</string>
+    <string name="subsonic_connection_text">Entre les informations de ton serveur Subsonic (l\'utilisation de HTTPS est recommandé pour la sécurité)</string>
     <string name="connect_button_text">Connecter</string>
     <string name="connected_button_text">Connecté</string>
     <string name="subsonic_state_title">État</string>
     <string name="subsonic_state_content">Le statut de la connection au serveur est: </string>
+    <string name="subsonic_connection_title">Identifiants de connexion</string>
 </resources>

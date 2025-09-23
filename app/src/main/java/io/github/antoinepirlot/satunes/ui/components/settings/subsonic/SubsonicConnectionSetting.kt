@@ -27,10 +27,8 @@ import android.os.Build
 import android.view.View.AUTOFILL_HINT_PASSWORD
 import android.view.View.AUTOFILL_HINT_USERNAME
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
@@ -56,6 +54,7 @@ import io.github.antoinepirlot.satunes.data.states.SubsonicUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.SubsonicViewModel
 import io.github.antoinepirlot.satunes.internet.subsonic.models.SubsonicState
 import io.github.antoinepirlot.satunes.ui.components.LoadingCircle
+import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
 import kotlinx.coroutines.CoroutineScope
 
 /**
@@ -68,11 +67,11 @@ fun SubsonicConnectionSetting(
     modifier: Modifier = Modifier,
     subsonicViewModel: SubsonicViewModel = viewModel()
 ) {
-    Column(
-        modifier = modifier.fillMaxWidth(),
+    SubSettings(
+        title = stringResource(R.string.subsonic_connection_title),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        NormalText(text = stringResource(R.string.subsonic_url_text))
+        NormalText(text = stringResource(R.string.subsonic_connection_text), maxLines = 2)
         OutlinedTextField(
             value = subsonicViewModel.url,
             onValueChange = { subsonicViewModel.updateSubsonicUrl(url = it) },

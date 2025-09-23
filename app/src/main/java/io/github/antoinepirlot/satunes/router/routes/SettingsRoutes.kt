@@ -25,6 +25,7 @@ import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
@@ -49,9 +50,11 @@ import io.github.antoinepirlot.satunes.ui.views.settings.updates.UpdatesSettingV
  */
 
 internal fun NavGraphBuilder.settingsRoutes(
-    satunesViewModel: SatunesViewModel, // Pass it as param to fix no recomposition when permission granted
+    satunesViewModel: SatunesViewModel, // Pass it as param to fix no recomposition when permission granted //TODO check if it can be removed
     onStart: AnimatedContentScope.(NavBackStackEntry) -> Unit
 ) {
+    val padding: Dp = 16.dp
+
     composable(Destination.SETTINGS.link) {
         LaunchedEffect(key1 = Unit) {
             onStart(it)
@@ -63,21 +66,21 @@ internal fun NavGraphBuilder.settingsRoutes(
         LaunchedEffect(key1 = Unit) {
             onStart(it)
         }
-        AndroidAutoSettingsView(modifier = Modifier.padding(horizontal = 16.dp))
+        AndroidAutoSettingsView(modifier = Modifier.padding(horizontal = padding))
     }
 
     composable(Destination.DESIGN_SETTINGS.link) {
         LaunchedEffect(key1 = Unit) {
             onStart(it)
         }
-        DesignSettingsView(modifier = Modifier.padding(horizontal = 16.dp))
+        DesignSettingsView(modifier = Modifier.padding(horizontal = padding))
     }
 
     composable(Destination.PLAYBACK_SETTINGS.link) {
         LaunchedEffect(key1 = Unit) {
             onStart(it)
         }
-        PlaybackSettingsView(modifier = Modifier.padding(horizontal = 16.dp))
+        PlaybackSettingsView(modifier = Modifier.padding(horizontal = padding))
     }
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -85,7 +88,7 @@ internal fun NavGraphBuilder.settingsRoutes(
             LaunchedEffect(key1 = Unit) {
                 onStart(it)
             }
-            UpdatesSettingView(modifier = Modifier.padding(horizontal = 16.dp))
+            UpdatesSettingView(modifier = Modifier.padding(horizontal = padding))
         }
     }
 
@@ -102,7 +105,7 @@ internal fun NavGraphBuilder.settingsRoutes(
         }
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
             throw IllegalStateException("Wrong version to access Subsonic Settings")
-        SubsonicSettingView()
+        SubsonicSettingView(modifier = Modifier.padding(horizontal = padding))
     }
 
     composable(Destination.PERMISSIONS_SETTINGS.link) {
@@ -110,34 +113,34 @@ internal fun NavGraphBuilder.settingsRoutes(
             onStart(it)
         }
         // Pass it as param to fix no recomposition when permission granted
-        PermissionsSettingsView(modifier = Modifier.padding(horizontal = 16.dp))
+        PermissionsSettingsView(modifier = Modifier.padding(horizontal = padding))
     }
 
     composable(Destination.BATTERY_SETTINGS.link) {
         LaunchedEffect(key1 = Unit) {
             onStart(it)
         }
-        BatterySettingsView(modifier = Modifier.padding(horizontal = 16.dp))
+        BatterySettingsView(modifier = Modifier.padding(horizontal = padding))
     }
 
     composable(Destination.SEARCH_SETTINGS.link) {
         LaunchedEffect(key1 = Unit) {
             onStart(it)
         }
-        SearchSettingsView(modifier = Modifier.padding(horizontal = 16.dp))
+        SearchSettingsView(modifier = Modifier.padding(horizontal = padding))
     }
 
     composable(Destination.LOGS_SETTINGS.link) {
         LaunchedEffect(key1 = Unit) {
             onStart(it)
         }
-        LogsSettingsView(modifier = Modifier.padding(horizontal = 16.dp))
+        LogsSettingsView(modifier = Modifier.padding(horizontal = padding))
     }
 
     composable(Destination.RESET_SETTINGS.link) {
         LaunchedEffect(key1 = Unit) {
             onStart(it)
         }
-        ResetSettingsView(modifier = Modifier.padding(horizontal = 16.dp))
+        ResetSettingsView(modifier = Modifier.padding(horizontal = padding))
     }
 }

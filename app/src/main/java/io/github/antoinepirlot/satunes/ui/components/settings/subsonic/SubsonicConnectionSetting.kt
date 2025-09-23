@@ -135,7 +135,7 @@ private fun Buttons(
 
         Button(
             onClick = {
-                subsonicViewModel.applySubsonicUrl(
+                subsonicViewModel.testConnection(
                     scope = scope,
                     snackbarHostState = snackbarHostState
                 )

@@ -39,7 +39,7 @@ internal object SubsonicSettings {
     private const val HASH_ALGORITHM: String = "MD5"
     private const val DEFAULT_SUBSONIC_URL: String = ""
     private const val DEFAULT_SUBSONIC_USERNAME: String = ""
-    private const val DEFAULT_SUBSONIC_MD5_PASSWORD: String = ""
+    private const val DEFAULT_SUBSONIC_PASSWORD: String = ""
 
     private val SUBSONIC_URL_KEY: Preferences.Key<String> = stringPreferencesKey("subsonic_url")
     private val SUBSONIC_USERNAME_KEY: Preferences.Key<String> =
@@ -51,12 +51,14 @@ internal object SubsonicSettings {
         private set
     var subsonicUsername: String = DEFAULT_SUBSONIC_USERNAME
         private set
-    var subsonicPassword: String = DEFAULT_SUBSONIC_MD5_PASSWORD
+    var subsonicPassword: String = DEFAULT_SUBSONIC_PASSWORD
         private set
 
     suspend fun loadSettings(context: Context) {
         context.dataStore.data.map { preferences: Preferences ->
             this.subsonicUrl = preferences[SUBSONIC_URL_KEY] ?: DEFAULT_SUBSONIC_URL
+            this.subsonicUsername = preferences[SUBSONIC_USERNAME_KEY] ?: DEFAULT_SUBSONIC_USERNAME
+            this.subsonicPassword = preferences[SUBSONIC_PASSWORD_KEY] ?: DEFAULT_SUBSONIC_PASSWORD
         }.first() //Without .first() settings are not loaded correctly
     }
 
@@ -87,6 +89,6 @@ internal object SubsonicSettings {
     suspend fun resetAll(context: Context) {
         this.updateSubsonicUrl(context = context, url = DEFAULT_SUBSONIC_URL)
         this.updateSubsonicUsername(context = context, username = DEFAULT_SUBSONIC_USERNAME)
-        this.updateSubsonicPassword(context = context, password = DEFAULT_SUBSONIC_MD5_PASSWORD)
+        this.updateSubsonicPassword(context = context, password = DEFAULT_SUBSONIC_PASSWORD)
     }
 }

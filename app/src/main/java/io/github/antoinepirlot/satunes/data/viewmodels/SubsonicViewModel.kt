@@ -98,7 +98,10 @@ class SubsonicViewModel : ViewModel() {
         _subsonicApiRequester?.disconnect(context = MainActivity.instance.applicationContext)
     }
 
-    fun applySubsonicUrl(scope: CoroutineScope, snackbarHostState: SnackbarHostState) {
+    /**
+     * Send ping to server to check if it is available and credentials corrects.
+     */
+    fun testConnection(scope: CoroutineScope, snackbarHostState: SnackbarHostState) {
         val context: Context = MainActivity.instance.applicationContext
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -131,7 +134,7 @@ class SubsonicViewModel : ViewModel() {
                     scope = scope,
                     snackBarHostState = snackbarHostState,
                     action = {
-                        applySubsonicUrl(
+                        testConnection(
                             scope = scope,
                             snackbarHostState = snackbarHostState
                         )

@@ -169,8 +169,7 @@
     <string name="export_multiple_files_text">One file per playlist?</string>
     <string name="subsonic_title">Subsonic API (Server)</string>
     <string name="subsonic_connection_text">Enter your Subsonic server information (prefer using HTTPS for security)</string>
-    <string name="connect_button_text">Connect</string>
-    <string name="connected_button_text">Connected</string>
+    <string name="test_connection_button_text">Try Connection</string>
     <string name="subsonic_state_title">State</string>
     <string name="subsonic_state_content">The server connection state is: </string>
     <string name="subsonic_connection_title">Connection Credentials</string>

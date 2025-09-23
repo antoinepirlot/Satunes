@@ -151,9 +151,7 @@ internal fun Router(
                 )
             }
         )
-        settingsRoutes(
-            onStart = { /* Nothing */ }
-        )
+        settingsRoutes()
     }
 }
 

@@ -27,11 +27,11 @@ package io.github.antoinepirlot.satunes.internet.subsonic.models.responses
  * @author Antoine Pirlot 21/09/2025
  */
 class Header(
-    val status: String? = null,
-    val version: String? = null,
-    val type: String? = null,
-    val serverVersion: String? = null,
-    val openSubsonic: Boolean? = null,
+    val status: String = "",
+    val version: String = "",
+    val type: String = "",
+    val serverVersion: String = "",
+    val openSubsonic: Boolean = false,
 ) : XmlObject() {
     override fun isHeader(): Boolean {
         return true

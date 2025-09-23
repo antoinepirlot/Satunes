@@ -49,4 +49,9 @@ enum class SubsonicState {
 
     //dataReceived is only used for DATA_RECEIVED
     var dataReceived: List<XmlObject> = listOf()
+        get() {
+            val value: List<XmlObject> = field
+            field = listOf()
+            return value
+        }
 }

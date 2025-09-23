@@ -128,7 +128,15 @@ class SubsonicViewModel : ViewModel() {
                         }
                     }
                 )
-                _subsonicApiRequester!!.ping(context = context)
+                _subsonicApiRequester!!.ping(
+                    context = context,
+                    onSucceed = {
+                        _subsonicApiRequester!!.getRandomSongs(
+                            context = context,
+                            size = 1
+                        )
+                    }
+                ) //TODO
             } catch (_: Throwable) {
                 showErrorSnackBar(
                     scope = scope,

@@ -27,37 +27,31 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
 import io.github.antoinepirlot.satunes.internet.subsonic.models.SubsonicState
-import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.Header
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.XmlObject
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import okhttp3.Call
 import okhttp3.Response
 
 /**
- * @author Antoine Pirlot 03/09/2025
+ * @author Antoine Pirlot 23/09/2025
  */
-
 @RequiresApi(Build.VERSION_CODES.M)
-internal class PingCallback(
+class GetRandomMusicCallback(
     subsonicApiRequester: SubsonicApiRequester,
     onSucceed: (() -> Unit)? = null
 ) : SubsonicCallback(subsonicApiRequester = subsonicApiRequester, onSucceed = onSucceed) {
-
     private val _logger: SatunesLogger? = SatunesLogger.getLogger()
 
     override fun onResponse(call: Call, response: Response) {
-        super.onResponse(call = call, response = response)
+        super.onResponse(call, response)
         if (subsonicApiRequester.subsonicState != SubsonicState.DATA_RECEIVED) {
             setUnknownError()
             return
         }
-        val xmlObject: XmlObject = subsonicApiRequester.subsonicState.dataReceived[0]
-        xmlObject as Header
-        SubsonicApiRequester.status = xmlObject.status
-        subsonicApiRequester.updateVersion(version = xmlObject.version)
-        SubsonicApiRequester.type = xmlObject.type
-        SubsonicApiRequester.serverVersion = xmlObject.serverVersion
-        SubsonicApiRequester.openSubsonic = xmlObject.openSubsonic
+        val xmlObjects: List<XmlObject> = SubsonicState.DATA_RECEIVED.dataReceived
+        for (xmlObject in xmlObjects) {
+            println()
+        }
 
         subsonicApiRequester.subsonicState = SubsonicState.IDLE
         onSucceed?.invoke()

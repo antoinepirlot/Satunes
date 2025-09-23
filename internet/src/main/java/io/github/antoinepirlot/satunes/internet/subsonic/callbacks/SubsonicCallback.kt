@@ -45,7 +45,8 @@ import java.io.InputStream
 
 @RequiresApi(Build.VERSION_CODES.M)
 abstract class SubsonicCallback(
-    protected var subsonicApiRequester: SubsonicApiRequester
+    protected val subsonicApiRequester: SubsonicApiRequester,
+    protected val onSucceed: (() -> Unit)? //Used in children classes
 ) : Callback {
 
     private val _logger: SatunesLogger? = SatunesLogger.getLogger()
@@ -100,5 +101,11 @@ abstract class SubsonicCallback(
         SubsonicState.ERROR.error =
             SubsonicErrorCode.getError(code = xmlObject.errorCode)
         subsonicApiRequester.subsonicState = SubsonicState.ERROR
+    }
+
+    protected fun setUnknownError() {
+        _logger?.warning("Unknown error while fetching ping data.")
+        subsonicApiRequester.subsonicState = SubsonicState.ERROR
+        SubsonicState.ERROR.error = SubsonicErrorCode.UNKNOWN
     }
 }

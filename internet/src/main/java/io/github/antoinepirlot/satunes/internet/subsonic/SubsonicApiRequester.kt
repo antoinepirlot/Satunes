@@ -29,6 +29,7 @@ import androidx.annotation.RequiresApi
 import io.github.antoinepirlot.satunes.internet.InternetManager
 import io.github.antoinepirlot.satunes.internet.exceptions.AlreadyRequestingException
 import io.github.antoinepirlot.satunes.internet.exceptions.NotConnectedException
+import io.github.antoinepirlot.satunes.internet.subsonic.callbacks.GetRandomMusicCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.callbacks.PingCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.SubsonicState
 import okhttp3.Callback
@@ -48,7 +49,7 @@ class SubsonicApiRequester(
     companion object {
         val DEFAULT_STATE: SubsonicState = SubsonicState.DISCONNECTED
         private const val CLIENT_NAME = "Satunes"
-        internal var version: String? = null
+        private var version: String? = null
         internal var status: String? = null
         internal var type: String? = null
         internal var serverVersion: String? = null
@@ -56,11 +57,20 @@ class SubsonicApiRequester(
     }
 
     private val url: String = "$url/rest"
+    private var inUrlCredentials: String = "u=$username&t=$md5Password&c=$CLIENT_NAME&v=$version"
+
     var subsonicState: SubsonicState = DEFAULT_STATE
         internal set(value) {
             field = value
             onSubsonicStateChanged.invoke(field)
         }
+
+    internal fun updateVersion(version: String) {
+        if (version == Companion.version) return
+        Companion.version = version
+        this.inUrlCredentials = "u=$username&t=$md5Password&c=$CLIENT_NAME&v=${Companion.version}"
+    }
+
 
     /**
      * Create and start a request
@@ -69,7 +79,12 @@ class SubsonicApiRequester(
      * @param resCallback the callBack object matching the request.
      * @param newState the new state the [subsonicState] must have.
      */
-    private fun get(context: Context, url: String, resCallback: Callback, newState: SubsonicState) {
+    private fun get(
+        context: Context,
+        url: String,
+        resCallback: Callback,
+        newState: SubsonicState = SubsonicState.REQUESTING
+    ) {
         if (!this.canMakeRequest(context = context)) throw AlreadyRequestingException()
         this.subsonicState = newState
         val client = OkHttpClient()
@@ -83,13 +98,12 @@ class SubsonicApiRequester(
     /**
      * Ping API
      */
-    fun ping(context: Context) {
-        var url: String = this.url + "/ping?u=$username&c=$CLIENT_NAME&t=$md5Password"
-        if (version != null) url += "&v=$version"
+    fun ping(context: Context, onSucceed: (() -> Unit)? = null) {
+        var url: String = this.url + "/ping?${this.inUrlCredentials}"
         this.get(
             context = context,
             url = url,
-            resCallback = PingCallback(subsonicApiRequester = this),
+            resCallback = PingCallback(subsonicApiRequester = this, onSucceed = onSucceed),
             newState = SubsonicState.PINGING
         )
     }
@@ -121,5 +135,20 @@ class SubsonicApiRequester(
         }
     }
 
-    //TODO request data
+    /**
+     * Get randomly [size] musics.
+     *
+     * @param size the number of music to get (default 10, max 500).
+     *
+     * @return musics //TODO
+     */
+    fun getRandomSongs(context: Context, size: Int = 10, onSucceed: (() -> Unit)? = null) {
+        if (size < 1 || size > 500)
+            throw IllegalArgumentException("Can't get $size musics")
+        this.get(
+            context = context,
+            url = this.url + "/getRandomSongs?${this.inUrlCredentials}&size=$size",
+            resCallback = GetRandomMusicCallback(subsonicApiRequester = this, onSucceed = onSucceed)
+        )
+    }
 }

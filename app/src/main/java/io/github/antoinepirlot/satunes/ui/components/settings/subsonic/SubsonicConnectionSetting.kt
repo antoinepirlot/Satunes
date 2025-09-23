@@ -121,10 +121,10 @@ private fun Buttons(
     val subsonicUiState: SubsonicUiState by subsonicViewModel.uiState.collectAsState()
     val scope: CoroutineScope = LocalMainScope.current
     val snackbarHostState: SnackbarHostState = LocalSnackBarHostState.current
-    val isDisconnected: Boolean =
-        subsonicUiState.subsonicState == SubsonicState.DISCONNECTED || subsonicUiState.subsonicState == SubsonicState.ERROR
 
-    isDisconnected || subsonicViewModel.hasBeenUpdated
+    val canTryConnection: Boolean = subsonicUiState.subsonicState in listOf(
+        SubsonicState.DISCONNECTED, SubsonicState.IDLE, SubsonicState.ERROR
+    )
 
     Row(modifier = modifier) {
         Button(onClick = { subsonicViewModel.reset() }) {
@@ -139,7 +139,8 @@ private fun Buttons(
                     scope = scope,
                     snackbarHostState = snackbarHostState
                 )
-            }
+            },
+            enabled = canTryConnection
         ) {
             if (subsonicUiState.subsonicState == SubsonicState.PINGING)
                 LoadingCircle(modifier = Modifier.size(size = 16.dp))

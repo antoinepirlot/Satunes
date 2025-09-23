@@ -152,7 +152,6 @@ internal fun Router(
             }
         )
         settingsRoutes(
-            satunesViewModel = satunesViewModel, // Pass it as param to fix no recomposition when permission granted
             onStart = { /* Nothing */ }
         )
     }

@@ -30,7 +30,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.ui.views.settings.SettingsView
 import io.github.antoinepirlot.satunes.ui.views.settings.android_auto.AndroidAutoSettingsView
@@ -50,7 +49,6 @@ import io.github.antoinepirlot.satunes.ui.views.settings.updates.UpdatesSettingV
  */
 
 internal fun NavGraphBuilder.settingsRoutes(
-    satunesViewModel: SatunesViewModel, // Pass it as param to fix no recomposition when permission granted //TODO check if it can be removed
     onStart: AnimatedContentScope.(NavBackStackEntry) -> Unit
 ) {
     val padding: Dp = 16.dp

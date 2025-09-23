@@ -59,7 +59,7 @@ internal class PingCallback(
         SubsonicApiRequester.serverVersion = xmlObject.serverVersion
         SubsonicApiRequester.openSubsonic = xmlObject.openSubsonic
 
-//        subsonicApiRequester.subsonicState = SubsonicState.IDLE
+        subsonicApiRequester.subsonicState = SubsonicState.IDLE
     }
 
     private fun setUnknownError() {

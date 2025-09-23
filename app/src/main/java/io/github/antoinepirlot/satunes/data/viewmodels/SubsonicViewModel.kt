@@ -124,7 +124,7 @@ class SubsonicViewModel : ViewModel() {
                         }
                     }
                 )
-                _subsonicApiRequester!!.ping(context = MainActivity.instance.applicationContext)
+                _subsonicApiRequester!!.ping()
             } catch (_: Throwable) {
                 showErrorSnackBar(
                     scope = scope,

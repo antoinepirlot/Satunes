@@ -36,4 +36,8 @@ open class XmlObject(
     open fun isHeader(): Boolean {
         return false
     }
+
+    open fun isMedia(): Boolean {
+        return false
+    }
 }

@@ -24,13 +24,13 @@
 
 package io.github.antoinepirlot.satunes.internet.subsonic.models.responses
 
-import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.database.models.Genre
 
 /**
- * @author Antoine Pirlot 25/09/2025
+ * @author Antoine Pirlot 26/09/2025
  */
-class XmlSong(music: Music): XmlMedia(media = music) {
-    override fun isSong(): Boolean {
-        return true
+class XmlGenre(genre: Genre): XmlMedia(media = genre) {
+    override fun isGenre(): Boolean {
+     return true
     }
 }

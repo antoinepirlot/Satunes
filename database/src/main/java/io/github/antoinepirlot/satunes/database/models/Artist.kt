@@ -29,8 +29,9 @@ import java.util.SortedSet
  */
 
 class Artist(
+    subsonicId: String? = null,
     title: String,
-) : MediaImpl(id = nextId, title = title) {
+) : MediaImpl(id = nextId, subsonicId = subsonicId, title = title) {
     private val albumSortedSet: SortedSet<Album> = sortedSetOf()
 
     val albumSortedSetUpdate: MutableState<Boolean> = mutableStateOf(false)

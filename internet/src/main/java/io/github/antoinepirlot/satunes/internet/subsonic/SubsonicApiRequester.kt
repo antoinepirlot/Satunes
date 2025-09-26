@@ -29,11 +29,17 @@ import androidx.annotation.RequiresApi
 import io.github.antoinepirlot.satunes.internet.InternetManager
 import io.github.antoinepirlot.satunes.internet.exceptions.AlreadyRequestingException
 import io.github.antoinepirlot.satunes.internet.exceptions.NotConnectedException
+import io.github.antoinepirlot.satunes.internet.subsonic.callbacks.GetArtistCallback
+import io.github.antoinepirlot.satunes.internet.subsonic.callbacks.GetIndexesCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.callbacks.GetMusicFoldersCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.callbacks.GetRandomMusicCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.callbacks.PingCallback
-import io.github.antoinepirlot.satunes.internet.subsonic.models.SubsonicFolder
+import io.github.antoinepirlot.satunes.internet.subsonic.models.media.SubsonicFolder
 import io.github.antoinepirlot.satunes.internet.subsonic.models.SubsonicState
+import io.github.antoinepirlot.satunes.internet.subsonic.models.media.SubsonicArtist
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import okhttp3.Callback
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -76,7 +82,7 @@ class SubsonicApiRequester(
      */
     internal fun getCommandUrl(command: String, vararg parameters: String): String {
         var toReturn = "$url/$command?$inUrlCredentials"
-        for(parameter: String in parameters)
+        for (parameter: String in parameters)
             toReturn += "&$parameter"
         return toReturn
     }
@@ -163,28 +169,84 @@ class SubsonicApiRequester(
             throw IllegalArgumentException("Can't get $size musics")
         this.get(
             context = context,
-            url = this.getCommandUrl(command = "getRandomSongs", parameters = arrayOf("size=$size")),
+            url = this.getCommandUrl(
+                command = "getRandomSongs",
+                parameters = arrayOf("size=$size")
+            ),
             resCallback = GetRandomMusicCallback(subsonicApiRequester = this, onSucceed = onSucceed)
         )
     }
 
+    /**
+     * Load all data from server.
+     * (Not recommended if the server is not the personal one as it could have a lot of data)
+     *
+     * @param context the [Context] of the app.
+     */
     fun loadAll(context: Context) {
-
-//        this.get(
-//            context = context,
-//            url = this.getCommandUrl(command = "getIndexes", parameters = arrayOf("musicFolderId="))
-//        )
+        this.getMusicFolders(
+            context = context,
+            onSucceed = { getIndexesByFolder(context = context) }
+        )
     }
 
-    fun getFolderIds(context: Context) {
+    /**
+     * Request "getIndexes" with "musicFolderId" param for each folder in [foldersToIndex].
+     * Then all folder will received their data.
+     */
+    private fun getIndexesByFolder(context: Context) {
+        for (folder: SubsonicFolder in this.foldersToIndex)
+            CoroutineScope(Dispatchers.IO).launch {
+                this@SubsonicApiRequester.get(
+                    context = context,
+                    url = this@SubsonicApiRequester.getCommandUrl(
+                        command = "getIndexes",
+                        parameters = arrayOf("musicFolderId=")
+                    ),
+                    resCallback = GetIndexesCallback(
+                        subsonicApiRequester = this@SubsonicApiRequester,
+                        folder = folder,
+                        onSucceed = {
+                            folder.loadMusics(
+                                context = context,
+                                subsonicApiRequester = this@SubsonicApiRequester
+                            )
+                        }//TODO
+                    ),
+                )
+            }
+    }
+
+    private fun getMusicFolders(context: Context, onSucceed: (() -> Unit)?) {
         this.get(
             context = context,
             url = this.getCommandUrl(command = "getMusicFolders", parameters = arrayOf()),
-            resCallback = GetMusicFoldersCallback(subsonicApiRequester = this)
+            resCallback = GetMusicFoldersCallback(
+                subsonicApiRequester = this,
+                onSucceed = onSucceed
+            )
         )
     }
 
     fun addFolderToIndex(subsonicFolder: SubsonicFolder) {
         this.foldersToIndex.add(subsonicFolder)
+    }
+
+    fun getArtists(context: Context, artists: Collection<SubsonicArtist>) {
+        for(artist: SubsonicArtist in artists)
+            CoroutineScope(Dispatchers.IO).launch {
+                this@SubsonicApiRequester.get(
+                    context = context,
+                    url = this@SubsonicApiRequester.getCommandUrl(command = "getArtist", parameters = arrayOf("id=${artist.subsonicId}")),
+                    resCallback = GetArtistCallback(
+                        subsonicApiRequester = this@SubsonicApiRequester,
+                        onSucceed = {  }
+                    )
+                )
+            }
+    }
+
+    fun getAlbums(context: Context, albums: Collection<SubsonicAlbum>) {
+
     }
 }

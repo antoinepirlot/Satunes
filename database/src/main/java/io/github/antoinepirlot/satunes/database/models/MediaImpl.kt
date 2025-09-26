@@ -38,7 +38,6 @@ import java.util.SortedSet
  */
 abstract class MediaImpl(
     id: Long,
-    subsonicId: String? = null,
     title: String
 ) : Media, Comparable<MediaImpl> {
     protected val _logger: SatunesLogger? = SatunesLogger.getLogger()

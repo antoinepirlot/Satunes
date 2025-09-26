@@ -131,10 +131,7 @@ class SubsonicViewModel : ViewModel() {
                 _subsonicApiRequester!!.ping(
                     context = context,
                     onSucceed = {
-                        _subsonicApiRequester!!.getFolderIds(
-                            context = context,
-//                            size = 1
-                        )
+                        _subsonicApiRequester!!.loadAll(context = context)
                     }
                 ) //TODO
             } catch (_: Throwable) {

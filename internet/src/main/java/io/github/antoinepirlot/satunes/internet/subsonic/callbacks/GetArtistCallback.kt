@@ -22,15 +22,22 @@
  *
  */
 
-package io.github.antoinepirlot.satunes.internet.subsonic.models
+package io.github.antoinepirlot.satunes.internet.subsonic.callbacks
 
-import io.github.antoinepirlot.satunes.database.models.Folder
+import android.os.Build
+import androidx.annotation.RequiresApi
+import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
 
 /**
  * @author Antoine Pirlot 26/09/2025
  */
-class SubsonicFolder(
-    val subsonicId: String,
-    title: String,
-    parentFolder: SubsonicFolder? = null
-): Folder(title = title, parentFolder = parentFolder)
+@RequiresApi(Build.VERSION_CODES.M)
+class GetArtistCallback(
+    subsonicApiRequester: SubsonicApiRequester,
+    onSucceed: (() -> Unit) ? = null
+): SubsonicCallback(
+    subsonicApiRequester = subsonicApiRequester,
+    onSucceed = onSucceed
+) {
+    //TODO YOU MUST START HERE NEXT TIME
+}

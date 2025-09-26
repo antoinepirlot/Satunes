@@ -22,16 +22,16 @@
  *
  */
 
-package io.github.antoinepirlot.satunes.internet.subsonic.models.responses
+package io.github.antoinepirlot.satunes.internet.subsonic.models.media
 
-import io.github.antoinepirlot.satunes.database.models.Folder
-import io.github.antoinepirlot.satunes.internet.subsonic.models.media.SubsonicFolder
+import io.github.antoinepirlot.satunes.database.models.Artist
 
 /**
  * @author Antoine Pirlot 26/09/2025
  */
-class XmlMusicFolder(folder: SubsonicFolder): XmlMedia(media = folder) {
-    override fun isFolder(): Boolean {
-        return true
-    }
+class SubsonicArtist(
+    val subsonicId: String? = null,
+    title: String
+): Artist(title = title) {
+    //TODO same as folder but for albums
 }

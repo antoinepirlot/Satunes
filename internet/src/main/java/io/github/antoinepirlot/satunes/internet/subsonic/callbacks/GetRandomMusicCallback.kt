@@ -47,7 +47,7 @@ class GetRandomMusicCallback(
         this.checkIfReceivedData()
         val xmlObjects: List<XmlObject> = SubsonicState.DATA_RECEIVED.dataReceived
         for (xmlObject in xmlObjects) {
-            println()
+            println() //TODO
         }
 
         subsonicApiRequester.subsonicState = SubsonicState.IDLE

@@ -42,7 +42,7 @@ import java.io.IOException
 import java.io.InputStream
 import java.time.OffsetDateTime
 import androidx.core.net.toUri
-import io.github.antoinepirlot.satunes.internet.subsonic.models.SubsonicFolder
+import io.github.antoinepirlot.satunes.internet.subsonic.models.media.SubsonicFolder
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.XmlArtist
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.XmlGenre
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.XmlMedia

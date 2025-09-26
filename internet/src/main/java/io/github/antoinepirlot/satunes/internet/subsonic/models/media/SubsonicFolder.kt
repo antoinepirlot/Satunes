@@ -22,16 +22,33 @@
  *
  */
 
-package io.github.antoinepirlot.satunes.internet.subsonic.models.responses
+package io.github.antoinepirlot.satunes.internet.subsonic.models.media
 
+import android.content.Context
+import android.os.Build
+import androidx.annotation.RequiresApi
+import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Folder
-import io.github.antoinepirlot.satunes.internet.subsonic.models.media.SubsonicFolder
+import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
 
 /**
  * @author Antoine Pirlot 26/09/2025
  */
-class XmlMusicFolder(folder: SubsonicFolder): XmlMedia(media = folder) {
-    override fun isFolder(): Boolean {
-        return true
+
+@RequiresApi(Build.VERSION_CODES.M)
+class SubsonicFolder(
+    val subsonicId: String,
+    title: String,
+    parentFolder: SubsonicFolder? = null
+): Folder(title = title, parentFolder = parentFolder) {
+    private var artists: MutableCollection<SubsonicArtist> = mutableSetOf()
+
+    internal fun addArtists(vararg artist: Artist) {
+        this.artists.addAll(elements = artists)
+    }
+
+    internal fun loadMusics(context: Context, subsonicApiRequester: SubsonicApiRequester) {
+        subsonicApiRequester.getArtists(context = context, artists = this.artists)
+        this.artists = mutableSetOf()
     }
 }

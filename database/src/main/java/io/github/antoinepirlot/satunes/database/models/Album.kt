@@ -27,7 +27,7 @@ import java.util.SortedSet
  * @author Antoine Pirlot on 27/03/2024
  */
 
-class Album(
+open class Album(
     title: String,
     var artist: Artist,
     var isCompilation: Boolean = false,

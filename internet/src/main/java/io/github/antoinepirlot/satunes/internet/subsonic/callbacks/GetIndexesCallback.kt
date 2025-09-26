@@ -26,11 +26,12 @@ package io.github.antoinepirlot.satunes.internet.subsonic.callbacks
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
 import io.github.antoinepirlot.satunes.internet.subsonic.models.media.SubsonicFolder
 import io.github.antoinepirlot.satunes.internet.subsonic.models.SubsonicState
+import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.XmlArtist
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.XmlMedia
-import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.XmlMusicFolder
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.XmlObject
 import okhttp3.Call
 import okhttp3.Response
@@ -39,23 +40,23 @@ import okhttp3.Response
  * @author Antoine Pirlot 26/09/2025
  */
 @RequiresApi(Build.VERSION_CODES.M)
-class GetMusicFoldersCallback(
+class GetIndexesCallback(
     subsonicApiRequester: SubsonicApiRequester,
-    onSucceed: (() -> Unit)? = null
-) : SubsonicCallback(
-    subsonicApiRequester = subsonicApiRequester, onSucceed = onSucceed
+    onSucceed: (() -> Unit)? = null,
+    val folder: SubsonicFolder
+): SubsonicCallback(
+    subsonicApiRequester = subsonicApiRequester,
+    onSucceed,
 ) {
     override fun onResponse(call: Call, response: Response) {
         super.onResponse(call, response)
         this.checkIfReceivedData()
         for(xmlObject: XmlObject in SubsonicState.DATA_RECEIVED.dataReceived) {
             if(!xmlObject.isHeader()) {
-                if (!xmlObject.isMedia()) throw IllegalStateException("No XmlMedia found.")
+                if(!xmlObject.isMedia()) throw IllegalStateException("No media found.")
                 xmlObject as XmlMedia
-                if (!xmlObject.isFolder())
-                    throw IllegalStateException("No XmlFolder found.")
-                xmlObject as XmlMusicFolder
-                subsonicApiRequester.addFolderToIndex(xmlObject.media as SubsonicFolder)
+                if(!xmlObject.isArtist()) throw IllegalStateException("XmlMedia should be artist.")
+                folder.addArtists(xmlObject.media as Artist)
             }
         }
     }

@@ -36,6 +36,7 @@ import io.github.antoinepirlot.satunes.internet.subsonic.callbacks.GetRandomMusi
 import io.github.antoinepirlot.satunes.internet.subsonic.callbacks.PingCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.media.SubsonicFolder
 import io.github.antoinepirlot.satunes.internet.subsonic.models.SubsonicState
+import io.github.antoinepirlot.satunes.internet.subsonic.models.media.SubsonicAlbum
 import io.github.antoinepirlot.satunes.internet.subsonic.models.media.SubsonicArtist
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

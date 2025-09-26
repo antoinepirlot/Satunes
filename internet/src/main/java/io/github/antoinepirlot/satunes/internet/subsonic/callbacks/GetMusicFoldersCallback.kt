@@ -9,16 +9,17 @@
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
  * See the GNU General Public License for more details.
- *  You should have received a copy of the GNU General Public License along with Satunes.
+ * You should have received a copy of the GNU General Public License along with Satunes.
  *
  * If not, see <https://www.gnu.org/licenses/>.
  *
- * **** INFORMATION ABOUT THE AUTHOR *****
+ * *** INFORMATION ABOUT THE AUTHOR *****
  * The author of this file is Antoine Pirlot, the owner of this project.
  * You find this original project on Codeberg.
  *
  * My Codeberg link is: https://codeberg.org/antoinepirlot
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
+ *
  */
 
 package io.github.antoinepirlot.satunes.internet.subsonic.callbacks
@@ -27,36 +28,25 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
 import io.github.antoinepirlot.satunes.internet.subsonic.models.SubsonicState
-import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.Header
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.XmlObject
-import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import okhttp3.Call
 import okhttp3.Response
 
 /**
- * @author Antoine Pirlot 03/09/2025
+ * @author Antoine Pirlot 26/09/2025
  */
-
 @RequiresApi(Build.VERSION_CODES.M)
-internal class PingCallback(
+class GetMusicFoldersCallback(
     subsonicApiRequester: SubsonicApiRequester,
     onSucceed: (() -> Unit)? = null
-) : SubsonicCallback(subsonicApiRequester = subsonicApiRequester, onSucceed = onSucceed) {
-
-    private val _logger: SatunesLogger? = SatunesLogger.getLogger()
-
+) : SubsonicCallback(
+    subsonicApiRequester = subsonicApiRequester, onSucceed = onSucceed
+) {
     override fun onResponse(call: Call, response: Response) {
-        super.onResponse(call = call, response = response)
+        super.onResponse(call, response)
         this.checkIfReceivedData()
-        val xmlObject: XmlObject = subsonicApiRequester.subsonicState.dataReceived[0]
-        xmlObject as Header
-        SubsonicApiRequester.status = xmlObject.status
-        subsonicApiRequester.updateVersion(version = xmlObject.version)
-        SubsonicApiRequester.type = xmlObject.type
-        SubsonicApiRequester.serverVersion = xmlObject.serverVersion
-        SubsonicApiRequester.openSubsonic = xmlObject.openSubsonic
+        for(xmlObject: XmlObject in SubsonicState.DATA_RECEIVED.dataReceived) {
 
-        subsonicApiRequester.subsonicState = SubsonicState.IDLE
-        onSucceed?.invoke()
+        }
     }
 }

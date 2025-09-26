@@ -44,10 +44,7 @@ class GetRandomMusicCallback(
 
     override fun onResponse(call: Call, response: Response) {
         super.onResponse(call, response)
-        if (subsonicApiRequester.subsonicState != SubsonicState.DATA_RECEIVED) {
-            setUnknownError()
-            return
-        }
+        this.checkIfReceivedData()
         val xmlObjects: List<XmlObject> = SubsonicState.DATA_RECEIVED.dataReceived
         for (xmlObject in xmlObjects) {
             println()

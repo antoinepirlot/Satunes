@@ -31,7 +31,7 @@ import java.util.SortedSet
  * @author Antoine Pirlot on 27/03/2024
  */
 
-class Folder(
+open class Folder(
     title: String,
     var parentFolder: Folder? = null,
 ) : MediaImpl(id = nextId, title = title) {

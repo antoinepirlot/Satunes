@@ -108,4 +108,11 @@ abstract class SubsonicCallback(
         subsonicApiRequester.subsonicState = SubsonicState.ERROR
         SubsonicState.ERROR.error = SubsonicErrorCode.UNKNOWN
     }
+
+    /**
+     * Checks if data has been received, if false then it set unknown error. otherwise do nothing
+     */
+    protected fun checkIfReceivedData() {
+        if (subsonicApiRequester.subsonicState != SubsonicState.DATA_RECEIVED) setUnknownError()
+    }
 }

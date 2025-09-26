@@ -42,10 +42,11 @@ import java.io.IOException
 import java.io.InputStream
 import java.time.OffsetDateTime
 import androidx.core.net.toUri
-import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.XmlAlbum
+import io.github.antoinepirlot.satunes.internet.subsonic.models.SubsonicFolder
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.XmlArtist
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.XmlGenre
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.XmlMedia
+import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.XmlMusicFolder
 
 /**
  * @author Antoine Pirlot 04/09/2025
@@ -61,28 +62,32 @@ class SubsonicXmlParser(private val subsonicApiRequester: SubsonicApiRequester) 
         private const val GENRE_TAG_NAME = "genres"
         private const val CONTRIBUTORS_TAG_NAME = "contributors"
         private const val CONTRIBUTORS_ARTIST_TAG_NAME = "artist"
+        private const val MUSIC_FOLDERS_TAG_NAME = "musicFolders"
+        private const val SINGLE_MUSIC_FOLDER_TAG_NAME = "musicFolder"
     }
+
+    private lateinit var parser: XmlPullParser
 
     @Throws(XmlPullParserException::class, IOException::class)
     fun parse(inputStream: InputStream): List<XmlObject> {
         inputStream.use { inputStream ->
-            val parser: XmlPullParser = Xml.newPullParser()
+            parser = Xml.newPullParser()
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false)
             parser.setInput(inputStream, null)
             parser.nextTag()
-            return readAll(parser)
+            return readAll()
         }
     }
 
-    private fun readAll(parser: XmlPullParser): List<XmlObject> {
+    private fun readAll(): List<XmlObject> {
         val entries: MutableList<XmlObject> = mutableListOf()
-        entries.add(readHeader(parser = parser))
-        entries.addAll(readBody(parser = parser))
+        entries.add(readHeader())
+        entries.addAll(readBody())
         return entries
     }
 
-    private fun readHeader(parser: XmlPullParser): Header {
-        parser.require(XmlPullParser.START_TAG, null, "subsonic-response")
+    private fun readHeader(): Header {
+        requireStartTag(name = "subsonic-response")
         return Header(
             status = parser.getAttributeValue(null, "status"),
             version = parser.getAttributeValue(null, "version"),
@@ -92,30 +97,32 @@ class SubsonicXmlParser(private val subsonicApiRequester: SubsonicApiRequester) 
         )
     }
 
-    private fun readBody(parser: XmlPullParser): List<XmlObject> {
+    private fun readBody(): List<XmlObject> {
         val entries: MutableList<XmlObject> = mutableListOf()
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.eventType == XmlPullParser.START_TAG) {
                 // Starts by looking for the entry tag.
                 when (parser.name) {
-                    "error" -> entries.add(readError(parser = parser))
-                    "randomSongs" -> entries.addAll(readRandomSongs(parser = parser))
-                    GENRE_TAG_NAME -> entries.add(element = readGenre(parser = parser))
-                    else -> skip(parser = parser)
+                    "error" -> entries.add(readError())
+                    "randomSongs" -> entries.addAll(readRandomSongs())
+                    GENRE_TAG_NAME -> entries.add(element = readGenre())
+                    MUSIC_FOLDERS_TAG_NAME -> entries.addAll(elements = readMusicFolders())
+                    SINGLE_MUSIC_FOLDER_TAG_NAME -> entries.add(element = readMusicFolder())
+                    else -> skip()
                 }
             }
         }
         return entries
     }
 
-    private fun readError(parser: XmlPullParser): Error {
-        parser.require(XmlPullParser.START_TAG, null, "error")
+    private fun readError(): Error {
+        requireStartTag(name = "error")
         val errorCode: Int = parser.getAttributeValue(null, "code").toInt()
         val message: String = parser.getAttributeValue(null, "message")
         return Error(errorCode = errorCode, message = message)
     }
 
-    private fun skip(parser: XmlPullParser) {
+    private fun skip() {
         if (parser.eventType != XmlPullParser.START_TAG) {
             throw IllegalStateException()
         }
@@ -128,23 +135,23 @@ class SubsonicXmlParser(private val subsonicApiRequester: SubsonicApiRequester) 
         }
     }
 
-    private fun readRandomSongs(parser: XmlPullParser): MutableList<XmlSong> {
-        parser.require(XmlPullParser.START_TAG, null, "randomSongs")
+    private fun readRandomSongs(): MutableList<XmlSong> {
+        requireStartTag(name = "randomSongs")
         parser.nextTag()
-        return readSongs(parser = parser)
+        return readSongs()
     }
 
-    private fun readSongs(parser: XmlPullParser): MutableList<XmlSong> {
+    private fun readSongs(): MutableList<XmlSong> {
         val entries: MutableList<XmlSong> = mutableListOf()
         while (parser.name == "song") {
             parser.require(XmlPullParser.START_TAG, null, "song")
-            entries.add(element = readSong(parser = parser))
+            entries.add(element = readSong())
         }
         return entries
     }
 
-    private fun readSong(parser: XmlPullParser): XmlSong {
-        parser.require(XmlPullParser.START_TAG, null, SONG_TAG_NAME)
+    private fun readSong(): XmlSong {
+        requireStartTag(name = SONG_TAG_NAME)
         val addedDateMs: Long = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             OffsetDateTime.parse(parser.getAttributeValue(null, "created"))
                 ?.toInstant()?.toEpochMilli()?: -1
@@ -158,12 +165,16 @@ class SubsonicXmlParser(private val subsonicApiRequester: SubsonicApiRequester) 
         val title: String = parser.getAttributeValue(null, "title")
         val duration: Long = parser.getAttributeValue(null, "duration").toLong()
         val size: Int = parser.getAttributeValue(null, "size").toInt()
+        val albumId: String = parser.getAttributeValue(null, "albumId")
+//        //Fetch album information
+//        subsonicApiRequester.getAlbum(albumId = albumId)
+
         var artist: Artist? = null
         var genre: Genre? = null
         parser.nextTag()
         while (parser.name != SONG_TAG_NAME) {
             //If it is song tag name, it means it's the end.
-            for(body in readBody(parser = parser)) {
+            for(body in readBody()) {
                 if(!body.isMedia()) throw IllegalStateException("Building Music with non media tag.")
                 body as XmlMedia
                 if(body.isSong()) throw IllegalStateException("Can't have music inside music.")
@@ -172,7 +183,7 @@ class SubsonicXmlParser(private val subsonicApiRequester: SubsonicApiRequester) 
                 else throw IllegalStateException("No valid media.")
             }
         }
-        parser.require(XmlPullParser.END_TAG, null, SONG_TAG_NAME)
+        requireEndTag(name = SONG_TAG_NAME)
 
         return XmlSong(music = Music(
                 id = -1,
@@ -193,13 +204,13 @@ class SubsonicXmlParser(private val subsonicApiRequester: SubsonicApiRequester) 
         )
     }
 
-    private fun readGenre(parser: XmlPullParser): XmlGenre {
-        parser.require(XmlPullParser.START_TAG, null, GENRE_TAG_NAME)
+    private fun readGenre(): XmlGenre {
+        requireStartTag(name = GENRE_TAG_NAME)
         return XmlGenre(Genre(parser.getAttributeValue(null, "name")))
     }
 
-    private fun readArtist(parser: XmlPullParser): XmlArtist {
-        parser.require(XmlPullParser.START_TAG, null, ARTIST_TAG_NAME)
+    private fun readArtist(): XmlArtist {
+        requireStartTag(name = ARTIST_TAG_NAME)
         return XmlArtist(
             Artist(
                 subsonicId = parser.getAttributeValue(null, "id"),
@@ -208,8 +219,33 @@ class SubsonicXmlParser(private val subsonicApiRequester: SubsonicApiRequester) 
         )
     }
 
-    private fun readContributors(parser: XmlPullParser): List<XmlObject> {
-        parser.require(XmlPullParser.START_TAG, null, CONTRIBUTORS_TAG_NAME)
-        return readBody(parser = parser)
+    private fun readContributors(): List<XmlObject> {
+        requireStartTag(name = CONTRIBUTORS_TAG_NAME)
+        return readBody()
+    }
+
+    private fun readMusicFolders(): List<XmlObject> {
+        requireStartTag(name = MUSIC_FOLDERS_TAG_NAME)
+        return readBody()
+    }
+
+    private fun readMusicFolder(): XmlMusicFolder {
+        requireStartTag(name = SINGLE_MUSIC_FOLDER_TAG_NAME)
+        val id: String = this.getAttribute(name = "id")
+        val title: String = this.getAttribute("name")
+        val folder = SubsonicFolder(subsonicId = id, title = title)
+        return XmlMusicFolder(folder = folder)
+    }
+
+    private fun requireStartTag(name: String) {
+        parser.require(XmlPullParser.START_TAG, null, name)
+    }
+
+    private fun requireEndTag(name: String) {
+        parser.require(XmlPullParser.START_TAG, null, name)
+    }
+
+    private fun getAttribute(name: String): String {
+        return parser.getAttributeValue(null, name)
     }
 }

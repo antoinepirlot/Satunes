@@ -26,9 +26,11 @@ package io.github.antoinepirlot.satunes.internet.subsonic
 import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
+import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.internet.InternetManager
 import io.github.antoinepirlot.satunes.internet.exceptions.AlreadyRequestingException
 import io.github.antoinepirlot.satunes.internet.exceptions.NotConnectedException
+import io.github.antoinepirlot.satunes.internet.subsonic.callbacks.GetMusicFoldersCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.callbacks.GetRandomMusicCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.callbacks.PingCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.SubsonicState
@@ -58,6 +60,7 @@ class SubsonicApiRequester(
 
     private val url: String = "$url/rest"
     private var inUrlCredentials: String = "u=$username&t=$md5Password&c=$CLIENT_NAME&v=$version"
+    private val foldersToIndex: MutableSet<Int> = mutableSetOf()
 
     var subsonicState: SubsonicState = DEFAULT_STATE
         internal set(value) {
@@ -160,8 +163,28 @@ class SubsonicApiRequester(
             throw IllegalArgumentException("Can't get $size musics")
         this.get(
             context = context,
-            url = this.url + "/getRandomSongs?${this.inUrlCredentials}&size=$size",
+            url = this.getCommandUrl(command = "getRandomSongs", parameters = arrayOf("size=$size")),
             resCallback = GetRandomMusicCallback(subsonicApiRequester = this, onSucceed = onSucceed)
         )
+    }
+
+    fun getAll(context: Context) {
+
+//        this.get(
+//            context = context,
+//            url = this.getCommandUrl(command = "getIndexes", parameters = arrayOf("musicFolderId="))
+//        )
+    }
+
+    private fun getFolderIds(context: Context) {
+        this.get(
+            context = context,
+            url = this.getCommandUrl(command = "getMusicFolders", parameters = arrayOf()),
+            resCallback = GetMusicFoldersCallback(subsonicApiRequester = this)
+        )
+    }
+
+    fun addFolderToIndex(folderId: Int) {
+        this.foldersToIndex.add(folderId)
     }
 }

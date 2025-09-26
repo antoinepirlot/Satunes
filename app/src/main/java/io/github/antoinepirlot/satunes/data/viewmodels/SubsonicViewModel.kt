@@ -131,9 +131,9 @@ class SubsonicViewModel : ViewModel() {
                 _subsonicApiRequester!!.ping(
                     context = context,
                     onSucceed = {
-                        _subsonicApiRequester!!.getRandomSongs(
+                        _subsonicApiRequester!!.getFolderIds(
                             context = context,
-                            size = 1
+//                            size = 1
                         )
                     }
                 ) //TODO

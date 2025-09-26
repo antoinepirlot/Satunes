@@ -18,6 +18,10 @@ abstract class XmlMedia(val media: MediaImpl): XmlObject() {
         return false
     }
 
+    open fun isFolder(): Boolean {
+        return false
+    }
+
     override fun isMedia(): Boolean {
         return true
     }

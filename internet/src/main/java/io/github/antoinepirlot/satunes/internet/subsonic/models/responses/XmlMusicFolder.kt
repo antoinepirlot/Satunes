@@ -30,4 +30,8 @@ import io.github.antoinepirlot.satunes.internet.subsonic.models.SubsonicFolder
 /**
  * @author Antoine Pirlot 26/09/2025
  */
-class XmlMusicFolder(folder: SubsonicFolder): XmlMedia(media = folder)
+class XmlMusicFolder(folder: SubsonicFolder): XmlMedia(media = folder) {
+    override fun isFolder(): Boolean {
+        return true
+    }
+}

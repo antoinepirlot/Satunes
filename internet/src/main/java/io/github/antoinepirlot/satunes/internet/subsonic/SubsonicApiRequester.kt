@@ -26,13 +26,13 @@ package io.github.antoinepirlot.satunes.internet.subsonic
 import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
-import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.internet.InternetManager
 import io.github.antoinepirlot.satunes.internet.exceptions.AlreadyRequestingException
 import io.github.antoinepirlot.satunes.internet.exceptions.NotConnectedException
 import io.github.antoinepirlot.satunes.internet.subsonic.callbacks.GetMusicFoldersCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.callbacks.GetRandomMusicCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.callbacks.PingCallback
+import io.github.antoinepirlot.satunes.internet.subsonic.models.SubsonicFolder
 import io.github.antoinepirlot.satunes.internet.subsonic.models.SubsonicState
 import okhttp3.Callback
 import okhttp3.OkHttpClient
@@ -60,7 +60,7 @@ class SubsonicApiRequester(
 
     private val url: String = "$url/rest"
     private var inUrlCredentials: String = "u=$username&t=$md5Password&c=$CLIENT_NAME&v=$version"
-    private val foldersToIndex: MutableSet<Int> = mutableSetOf()
+    private val foldersToIndex: MutableSet<SubsonicFolder> = mutableSetOf()
 
     var subsonicState: SubsonicState = DEFAULT_STATE
         internal set(value) {
@@ -168,7 +168,7 @@ class SubsonicApiRequester(
         )
     }
 
-    fun getAll(context: Context) {
+    fun loadAll(context: Context) {
 
 //        this.get(
 //            context = context,
@@ -176,7 +176,7 @@ class SubsonicApiRequester(
 //        )
     }
 
-    private fun getFolderIds(context: Context) {
+    fun getFolderIds(context: Context) {
         this.get(
             context = context,
             url = this.getCommandUrl(command = "getMusicFolders", parameters = arrayOf()),
@@ -184,7 +184,7 @@ class SubsonicApiRequester(
         )
     }
 
-    fun addFolderToIndex(folderId: Int) {
-        this.foldersToIndex.add(folderId)
+    fun addFolderToIndex(subsonicFolder: SubsonicFolder) {
+        this.foldersToIndex.add(subsonicFolder)
     }
 }

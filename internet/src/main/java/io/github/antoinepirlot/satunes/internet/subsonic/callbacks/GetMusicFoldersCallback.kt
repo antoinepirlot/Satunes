@@ -27,7 +27,10 @@ package io.github.antoinepirlot.satunes.internet.subsonic.callbacks
 import android.os.Build
 import androidx.annotation.RequiresApi
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
+import io.github.antoinepirlot.satunes.internet.subsonic.models.SubsonicFolder
 import io.github.antoinepirlot.satunes.internet.subsonic.models.SubsonicState
+import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.XmlMedia
+import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.XmlMusicFolder
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.XmlObject
 import okhttp3.Call
 import okhttp3.Response
@@ -46,7 +49,12 @@ class GetMusicFoldersCallback(
         super.onResponse(call, response)
         this.checkIfReceivedData()
         for(xmlObject: XmlObject in SubsonicState.DATA_RECEIVED.dataReceived) {
-
+            if(!xmlObject.isMedia()) throw IllegalStateException("No XmlMedia found.")
+            xmlObject as XmlMedia
+            if(!xmlObject.isFolder())
+                throw IllegalStateException("No XmlFolder found.")
+            xmlObject as XmlMusicFolder
+            subsonicApiRequester.addFolderToIndex(xmlObject.media as SubsonicFolder)
         }
     }
 }

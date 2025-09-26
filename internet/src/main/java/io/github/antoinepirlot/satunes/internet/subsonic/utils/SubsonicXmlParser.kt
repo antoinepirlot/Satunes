@@ -23,21 +23,33 @@
 
 package io.github.antoinepirlot.satunes.internet.subsonic.utils
 
+import android.os.Build
 import android.util.Xml
+import androidx.annotation.RequiresApi
+import io.github.antoinepirlot.satunes.database.models.Album
+import io.github.antoinepirlot.satunes.database.models.Artist
+import io.github.antoinepirlot.satunes.database.models.Folder
+import io.github.antoinepirlot.satunes.database.models.Genre
+import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.Error
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.Header
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.XmlObject
+import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.XmlSong
 import org.xmlpull.v1.XmlPullParser
 import org.xmlpull.v1.XmlPullParserException
 import java.io.IOException
 import java.io.InputStream
+import java.time.OffsetDateTime
+import androidx.core.net.toUri
 
 /**
  * @author Antoine Pirlot 04/09/2025
  *
  * Inspired from https://developer.android.com/develop/connectivity/network-ops/xml
  */
-class SubsonicXmlParser {
+@RequiresApi(Build.VERSION_CODES.M)
+class SubsonicXmlParser(private val subsonicApiRequester: SubsonicApiRequester) {
     @Throws(XmlPullParserException::class, IOException::class)
     fun parse(inputStream: InputStream): List<XmlObject> {
         inputStream.use { inputStream ->
@@ -49,7 +61,6 @@ class SubsonicXmlParser {
         }
     }
 
-    @Throws(XmlPullParserException::class, IOException::class)
     private fun readBody(parser: XmlPullParser): List<XmlObject> {
         parser.require(XmlPullParser.START_TAG, null, "subsonic-response")
         val entries = mutableListOf<XmlObject>(
@@ -66,16 +77,15 @@ class SubsonicXmlParser {
                 continue
             }
             // Starts by looking for the entry tag.
-            if (parser.name == "error") {
-                entries.add(readError(parser))
-            } else {
-                skip(parser)
+            when(parser.name) {
+                "error" -> entries.add(readError(parser = parser))
+                "randomSongs" -> entries.addAll(readRandomSongs(parser = parser))
+                else -> skip(parser = parser)
             }
         }
         return entries
     }
 
-    @Throws(XmlPullParserException::class, IOException::class)
     private fun readError(parser: XmlPullParser): Error {
         parser.require(XmlPullParser.START_TAG, null, "error")
         val errorCode: Int = parser.getAttributeValue(null, "code").toInt()
@@ -83,17 +93,75 @@ class SubsonicXmlParser {
         return Error(errorCode = errorCode, message = message)
     }
 
-    @Throws(XmlPullParserException::class, IOException::class)
     private fun skip(parser: XmlPullParser) {
         if (parser.eventType != XmlPullParser.START_TAG) {
             throw IllegalStateException()
         }
         var depth = 1
         while (depth != 0) {
-            when (parser.next()) {
+            when (parser.nextTag()) {
                 XmlPullParser.END_TAG -> depth--
                 XmlPullParser.START_TAG -> depth++
             }
         }
+    }
+
+    private fun readRandomSongs(parser: XmlPullParser): List<XmlSong> {
+        parser.require(XmlPullParser.START_TAG, null, "randomSongs")
+        parser.nextTag()
+        return readSongs(parser = parser)
+    }
+
+    private fun readSongs(parser: XmlPullParser): List<XmlSong> {
+        val xmlSongs: MutableList<XmlSong> = mutableListOf()
+        while (parser.name == "song") {
+            parser.require(XmlPullParser.START_TAG, null, "song")
+            xmlSongs.add(readSong(parser = parser))
+        }
+        return xmlSongs
+    }
+
+    private fun readSong(parser: XmlPullParser): XmlSong {
+        parser.require(XmlPullParser.START_TAG, null, "song")
+        val addedDateMs: Long = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            OffsetDateTime.parse(parser.getAttributeValue(null, "created"))
+                ?.toInstant()?.toEpochMilli()?: -1
+        } else -1
+
+        val subsonicId: String = parser.getAttributeValue(null, "id")
+        val musicUrl: String = subsonicApiRequester.getCommandUrl(
+            command = "getSong",
+            parameters = arrayOf("id=$subsonicId")
+        )
+
+        val music = Music(
+            id = -1,
+            subsonicId = subsonicId,
+            title = parser.getAttributeValue(null, "title"),
+            displayName = "If you see this, it's a bug.",
+            absolutePath = "",
+            duration = parser.getAttributeValue(null, "duration").toLong(),
+            size = parser.getAttributeValue(null, "size").toInt(),
+            cdTrackNumber = -1, //TODO
+            addedDateMs = addedDateMs,
+            folder = Folder("Oh no"), //TODO
+            artist = Artist("Artist Title"),// TODO
+            album = Album("Title", Artist("Artist Title")),//TODO
+            genre = Genre("Genre Title"), //TODO
+            uri = musicUrl.toUri()
+        )
+
+        parser.nextTag()
+
+        if(parser.name == "artist") {
+            parser.nextTag()
+            //TODO
+        }
+
+        if(parser.name == "album") {
+            parser.nextTag()
+            //TODO
+        }
+        return XmlSong(music = music)
     }
 }

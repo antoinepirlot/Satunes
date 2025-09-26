@@ -66,7 +66,7 @@ abstract class SubsonicCallback(
         try {
             val input: InputStream = response.body!!.byteStream()
             try {
-                val result: List<XmlObject> = SubsonicXmlParser().parse(inputStream = input)
+                val result: List<XmlObject> = SubsonicXmlParser(subsonicApiRequester = subsonicApiRequester).parse(inputStream = input)
                 if (result.isEmpty()) {
                     SubsonicState.ERROR.error = SubsonicErrorCode.DATA_NOT_FOUND
                     subsonicApiRequester.subsonicState = SubsonicState.ERROR

@@ -65,6 +65,19 @@ class SubsonicApiRequester(
             onSubsonicStateChanged.invoke(field)
         }
 
+    /**
+     * Returns the url as https://example.org/rest/[command]?[inUrlCredentials]&[parameters]
+     *
+     * @param command the command as [String]. For example getSong
+     * @param parameters the parameters of command. For example: id=59feo8
+     */
+    internal fun getCommandUrl(command: String, vararg parameters: String): String {
+        var toReturn = "$url/$command?$inUrlCredentials"
+        for(parameter: String in parameters)
+            toReturn += "&$parameter"
+        return toReturn
+    }
+
     internal fun updateVersion(version: String) {
         if (version == Companion.version) return
         Companion.version = version

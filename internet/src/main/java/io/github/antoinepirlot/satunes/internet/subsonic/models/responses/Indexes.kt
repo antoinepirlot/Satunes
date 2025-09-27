@@ -34,5 +34,7 @@ import kotlinx.serialization.json.JsonNames
 @Serializable
 @OptIn(ExperimentalSerializationApi::class)
 internal data class Indexes constructor(
-    @JsonNames("index") val list: Collection<Index>
+    @JsonNames("index") val list: Collection<Index>,
+    val lastModified: Long,
+    val ignoredArticles: String
 )

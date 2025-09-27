@@ -24,7 +24,9 @@
 
 package io.github.antoinepirlot.satunes.internet.subsonic.models.media
 
+import androidx.compose.runtime.isTraceInProgress
 import io.github.antoinepirlot.satunes.database.models.Artist
+import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -45,4 +47,6 @@ internal data class SubsonicArtist(
     val sortName: String? = null,
     val roles: Collection<String> = listOf(),
     @JsonNames("album") val subsonicAlbums: Collection<SubsonicAlbum> = listOf()
-)
+) {
+    fun toArtist(): Artist = DataManager.getArtist(subsonicId = id)?: Artist(subsonicId = id, title = name)
+}

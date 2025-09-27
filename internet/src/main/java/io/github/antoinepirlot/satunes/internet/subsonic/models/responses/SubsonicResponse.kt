@@ -24,6 +24,7 @@
 
 package io.github.antoinepirlot.satunes.internet.subsonic.models.responses
 
+import io.github.antoinepirlot.satunes.internet.subsonic.models.media.SubsonicAlbum
 import io.github.antoinepirlot.satunes.internet.subsonic.models.media.SubsonicArtist
 import io.github.antoinepirlot.satunes.internet.subsonic.models.media.SubsonicFolder
 import io.github.antoinepirlot.satunes.internet.subsonic.models.media.SubsonicFolders
@@ -47,7 +48,8 @@ internal data class SubsonicResponse(
     val error: Error? = null,
     @JsonNames("indexes") private val indexes: Indexes? = null,
     @JsonNames("musicFolders") private val subsonicFolders: SubsonicFolders? = null,
-    @JsonNames("artist") val artist: SubsonicArtist? = null
+    @JsonNames("artist") val artist: SubsonicArtist? = null,
+    @JsonNames("album") val album: SubsonicAlbum? = null,
 ) {
 
     companion object {
@@ -56,9 +58,9 @@ internal data class SubsonicResponse(
     }
     fun isError(): Boolean = this.status == FAILED_STATUS
     fun hasArtist(): Boolean = this.artist != null
+    fun hasAlbum(): Boolean = this.album != null
     fun hasFolders(): Boolean = this.subsonicFolders != null
     fun hasIndexes(): Boolean = this.indexes != null
-    fun hasMedia(): Boolean = hasArtist() || hasFolders() || hasIndexes()
 
     /**
      * Returns the list of [Index] received.

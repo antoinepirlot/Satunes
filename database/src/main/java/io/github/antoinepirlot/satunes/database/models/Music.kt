@@ -51,6 +51,7 @@ import io.github.antoinepirlot.satunes.icons.R as RIcon
 
 class Music(
     id: Long,
+    subsonicId: String? = null,
     title: String,
     displayName: String,
     val absolutePath: String,
@@ -63,7 +64,7 @@ class Music(
     val album: Album,
     val genre: Genre,
     uri: Uri? = null,
-) : MediaImpl(id = id, title = title.ifBlank { displayName }) {
+) : MediaImpl(id = id, subsonicId = subsonicId, title = title.ifBlank { displayName }) {
 
     /**
      * Remember in which order music has been added to playlists

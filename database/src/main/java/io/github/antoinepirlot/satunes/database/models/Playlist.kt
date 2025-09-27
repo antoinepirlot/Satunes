@@ -31,8 +31,9 @@ import kotlinx.coroutines.launch
  */
 class Playlist(
     id: Long, // Managed by Database
+    subsonicId: String? = null,
     title: String
-) : MediaImpl(id = id, title = title) {
+) : MediaImpl(id = id, subsonicId = subsonicId, title = title) {
 
     override fun addMusic(music: Music, triggerUpdate: Boolean) {
         super.addMusic(music, triggerUpdate)

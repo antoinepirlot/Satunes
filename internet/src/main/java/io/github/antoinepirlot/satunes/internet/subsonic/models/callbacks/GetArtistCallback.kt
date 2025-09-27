@@ -22,15 +22,13 @@
  *
  */
 
-package io.github.antoinepirlot.satunes.internet.subsonic.callbacks
+package io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks
 
 import android.os.Build
 import androidx.annotation.RequiresApi
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
-import io.github.antoinepirlot.satunes.internet.subsonic.models.SubsonicState
 import io.github.antoinepirlot.satunes.internet.subsonic.models.media.SubsonicAlbum
-import io.github.antoinepirlot.satunes.internet.subsonic.models.media.SubsonicArtist
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.SubsonicResponse
 import okhttp3.Call
 import okhttp3.Response
@@ -42,19 +40,17 @@ import okhttp3.Response
 internal class GetArtistCallback(
     subsonicApiRequester: SubsonicApiRequester,
     onSucceed: (() -> Unit)? = null,
-    val artist: SubsonicArtist
 ) : SubsonicCallback(
     subsonicApiRequester = subsonicApiRequester,
     onSucceed = onSucceed
 ) {
     override fun onResponse(call: Call, response: Response) {
         super.onResponse(call, response)
-        this.checkIfReceivedData()
-        val response: SubsonicResponse = SubsonicState.DATA_RECEIVED.dataReceived!!
-        if (response.hasMedia()) throw IllegalStateException("No XmlMedia.")
-        // TODO
-//        if (!response.hasAlbum()) throw IllegalStateException("No XmlAlbum.")
-//        DataManager.addAlbum(album = response.toSubsonicAlbum(artist = artist))
+        if(!this.hasReceivedData()) return
+        val response: SubsonicResponse = this.getSubsonicResponse()
+        if (!response.hasArtist()) throw IllegalStateException("No Artist received.")
+        for(album: SubsonicAlbum in response.artist?.subsonicAlbums!!)
+            DataManager.addAlbum(album = album.toAlbum())
         this.dataProcessed()
     }
 }

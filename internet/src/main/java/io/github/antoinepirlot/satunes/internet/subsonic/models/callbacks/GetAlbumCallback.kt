@@ -22,33 +22,35 @@
  *
  */
 
-package io.github.antoinepirlot.satunes.internet.subsonic.models.media
+package io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks
 
-import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
-import io.github.antoinepirlot.satunes.database.models.Artist
-import io.github.antoinepirlot.satunes.database.models.Folder
+import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
+import io.github.antoinepirlot.satunes.internet.subsonic.models.media.SubsonicSong
+import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.SubsonicResponse
+import okhttp3.Call
+import okhttp3.Response
 
 /**
- * @author Antoine Pirlot 26/09/2025
+ * @author Antoine Pirlot 27/09/2025
  */
-
 @RequiresApi(Build.VERSION_CODES.M)
-internal class SubsonicFolderOld(
-    val subsonicId: String,
-    title: String,
-    parentFolder: SubsonicFolderOld? = null
-): Folder(title = title, parentFolder = parentFolder) {
-    private var artists: MutableCollection<SubsonicArtist> = mutableSetOf()
-
-    internal fun addArtists(vararg artist: Artist) {
-        this.artists.addAll(elements = artists)
-    }
-
-    internal fun loadMusics(context: Context, subsonicApiRequester: SubsonicApiRequester) {
-        subsonicApiRequester.getArtists(context = context, artists = this.artists)
-        this.artists = mutableSetOf()
+internal class GetAlbumCallback(
+    subsonicApiRequester: SubsonicApiRequester,
+    onSucceed: (() -> Unit)? = null
+): SubsonicCallback(
+    subsonicApiRequester = subsonicApiRequester,
+    onSucceed = onSucceed
+) {
+    override fun onResponse(call: Call, response: Response) {
+        super.onResponse(call, response)
+        if(!this.hasReceivedData()) return
+        val response: SubsonicResponse = this.getSubsonicResponse()
+        if(!response.hasAlbum()) throw IllegalStateException("No media found.")
+        for(song: SubsonicSong in response.album!!.songs)
+            DataManager.addMusic(music = song.toMusic(subsonicApiRequester = subsonicApiRequester))
+        this.dataProcessed()
     }
 }

@@ -43,7 +43,7 @@ internal fun AllGenresListView(
     satunesViewModel: SatunesViewModel = viewModel(),
     dataViewModel: DataViewModel = viewModel(),
 ) {
-    val genreSet: Set<Genre> = dataViewModel.getGenreSet()
+    val genreSet: Collection<Genre> = dataViewModel.getGenreSet()
 
     LaunchedEffect(key1 = dataViewModel.isLoaded) {
         if (genreSet.isNotEmpty())

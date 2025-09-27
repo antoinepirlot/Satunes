@@ -28,11 +28,12 @@ import java.util.SortedSet
  */
 
 open class Album(
+    subsonicId: String? = null,
     title: String,
     var artist: Artist,
     var isCompilation: Boolean = false,
     year: Int? = null
-) : MediaImpl(id = nextId, title = title) {
+) : MediaImpl(id = nextId, subsonicId = subsonicId, title = title) {
 
     companion object {
         var nextId: Long = 1

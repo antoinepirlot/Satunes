@@ -191,7 +191,7 @@ private fun PlaylistSelectionDialogPreview() {
         icon = SatunesIcons.PLAYLIST_ADD,
         onDismissRequest = {},
         onConfirm = {},
-        mediaDestination = Genre(""),
+        mediaDestination = Genre(title = ""),
         mediaImplCollection = listOf()
     )
 }

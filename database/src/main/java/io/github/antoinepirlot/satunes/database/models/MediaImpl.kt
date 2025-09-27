@@ -38,6 +38,7 @@ import java.util.SortedSet
  */
 abstract class MediaImpl(
     id: Long,
+    val subsonicId: String?,
     title: String
 ) : Media, Comparable<MediaImpl> {
     protected val _logger: SatunesLogger? = SatunesLogger.getLogger()
@@ -68,6 +69,8 @@ abstract class MediaImpl(
     fun getMusicSet(): Set<Music> {
         return this.musicSortedSet
     }
+
+    fun isSubsonic(): Boolean = this.subsonicId != null
 
     fun clearMusicSet(triggerUpdate: Boolean = true) {
         this.musicSortedSet.clear()

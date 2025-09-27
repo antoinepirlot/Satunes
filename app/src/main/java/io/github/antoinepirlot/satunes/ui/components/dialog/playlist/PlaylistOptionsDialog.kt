@@ -143,7 +143,7 @@ internal fun PlaylistOptionsDialog(
 @Composable
 private fun PlaylistOptionsDialogPreview() {
     PlaylistOptionsDialog(
-        playlist = Playlist(id = 1, "PlaylistDB Title"),
+        playlist = Playlist(id = 1, title = "PlaylistDB Title"),
         onDismissRequest = {},
     )
 }

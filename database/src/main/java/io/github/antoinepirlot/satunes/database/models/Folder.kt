@@ -32,9 +32,10 @@ import java.util.SortedSet
  */
 
 open class Folder(
+    subsonicId: String? = null,
     title: String,
     var parentFolder: Folder? = null,
-) : MediaImpl(id = nextId, title = title) {
+) : MediaImpl(id = nextId, subsonicId = subsonicId, title = title) {
     private val subFolderSortedSet: SortedSet<Folder> = sortedSetOf()
 
     val absolutePath: String = if (parentFolder == null) {

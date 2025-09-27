@@ -24,17 +24,21 @@
 
 package io.github.antoinepirlot.satunes.internet.subsonic.models.media
 
+import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
+import io.github.antoinepirlot.satunes.database.services.data.DataManager
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonNames
 
 /**
  * @author Antoine Pirlot 26/09/2025
  */
+@OptIn(ExperimentalSerializationApi::class)
 @Serializable
 internal data class SubsonicAlbum(
     val id: String,
     val name: String,
-    val artist: String,
     val artistId: String,
     val covertArt: String,
     val songCount: Int,
@@ -43,7 +47,7 @@ internal data class SubsonicAlbum(
     val created: String,
     val played: String,
     val userRating: Int,
-//    val genres: Collection<XmlGenre>,
+    val genres: Collection<SubsonicGenre>,
     val musicBrainzId: String,
     val isCompilation: Boolean,
     val sortName: String,
@@ -52,8 +56,16 @@ internal data class SubsonicAlbum(
 //    val releaseTypes: Collection<Any>,
 //    val recordLabels: Collection<Any>,
 //    val moods: Collection<Any>,
-    val artists: Collection<SubsonicArtist>,
+    val artists: Collection<SubsonicArtist> = listOf(),
     val displayArtist: String,
     val explicitStatus: String,
-    val version: String
-)
+    val version: String,
+    @JsonNames("song") val songs: Collection<SubsonicSong>
+) {
+    fun toAlbum(): Album = DataManager.getAlbum(subsonicId = id)?: Album(
+            title = name,
+            subsonicId = id,
+            artist = DataManager.getSubsonicArtist(id = artistId)!!,
+            isCompilation = isCompilation
+        )
+}

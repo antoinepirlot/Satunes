@@ -25,14 +25,16 @@
 package io.github.antoinepirlot.satunes.internet.subsonic.models.responses
 
 import io.github.antoinepirlot.satunes.internet.subsonic.models.media.SubsonicArtist
-import kotlinx.serialization.SerialName
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonNames
 
 /**
  * @author Antoine Pirlot 27/09/2025
  */
+@OptIn(ExperimentalSerializationApi::class)
 @Serializable
 internal data class Index(
     val name: String,
-    val artist: Collection<SubsonicArtist>
+    @JsonNames("artist") val artists: Collection<SubsonicArtist>
 )

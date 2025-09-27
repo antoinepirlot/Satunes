@@ -24,23 +24,16 @@
 
 package io.github.antoinepirlot.satunes.internet.subsonic.models.media
 
-import io.github.antoinepirlot.satunes.database.models.Album
-import io.github.antoinepirlot.satunes.database.models.Artist
+import io.github.antoinepirlot.satunes.database.models.Genre
+import io.github.antoinepirlot.satunes.database.services.data.DataManager
+import kotlinx.serialization.Serializable
 
 /**
- * @author Antoine Pirlot 26/09/2025
+ * @author Antoine Pirlot 27/09/2025
  */
-class SubsonicAlbumOld(
-    val subsonicId: String,
-    title: String,
-    artist: Artist,
-    isCompilation: Boolean = false,
-    year: Int? = null
-) : Album(
-    title = title,
-    artist = artist,
-    isCompilation = isCompilation,
-    year = year
+@Serializable
+internal data class SubsonicGenre(
+    val name: String
 ) {
-    //TODO
+    fun toGenre(): Genre = DataManager.getGenre(title = name)?: Genre(title = name)
 }

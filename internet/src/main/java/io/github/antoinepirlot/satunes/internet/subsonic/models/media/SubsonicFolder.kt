@@ -24,6 +24,8 @@
 
 package io.github.antoinepirlot.satunes.internet.subsonic.models.media
 
+import io.github.antoinepirlot.satunes.database.models.Folder
+import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import kotlinx.serialization.Serializable
 
 /**
@@ -32,6 +34,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 internal data class SubsonicFolder(
-    val id: Long,
+    val id: String,
     val name: String
-)
+) {
+    fun toFolder(): Folder = DataManager.getFolder(subsonicId = id)?: Folder(subsonicId = id, title = name)
+}

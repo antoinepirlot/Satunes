@@ -9,45 +9,52 @@
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
  * See the GNU General Public License for more details.
- *  You should have received a copy of the GNU General Public License along with Satunes.
+ * You should have received a copy of the GNU General Public License along with Satunes.
  *
  * If not, see <https://www.gnu.org/licenses/>.
  *
- * **** INFORMATION ABOUT THE AUTHOR *****
+ * *** INFORMATION ABOUT THE AUTHOR *****
  * The author of this file is Antoine Pirlot, the owner of this project.
  * You find this original project on Codeberg.
  *
  * My Codeberg link is: https://codeberg.org/antoinepirlot
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
+ *
  */
 
-package io.github.antoinepirlot.satunes.internet.subsonic.callbacks
+package io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import io.github.antoinepirlot.satunes.database.models.Artist
+import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
-import io.github.antoinepirlot.satunes.internet.subsonic.models.SubsonicState
+import io.github.antoinepirlot.satunes.internet.subsonic.models.media.SubsonicArtist
+import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.Index
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.SubsonicResponse
-import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import okhttp3.Call
 import okhttp3.Response
 
 /**
- * @author Antoine Pirlot 23/09/2025
+ * @author Antoine Pirlot 26/09/2025
  */
 @RequiresApi(Build.VERSION_CODES.M)
-internal class GetRandomMusicCallback(
+internal class GetIndexesCallback(
     subsonicApiRequester: SubsonicApiRequester,
-    onSucceed: (() -> Unit)? = null
-) : SubsonicCallback(subsonicApiRequester = subsonicApiRequester, onSucceed = onSucceed) {
-    private val _logger: SatunesLogger? = SatunesLogger.getLogger()
-
+    onSucceed: (() -> Unit)? = null,
+): SubsonicCallback(
+    subsonicApiRequester = subsonicApiRequester,
+    onSucceed,
+) {
     override fun onResponse(call: Call, response: Response) {
         super.onResponse(call, response)
-        this.checkIfReceivedData()
-        val response: SubsonicResponse = SubsonicState.DATA_RECEIVED.dataReceived!!
-        //TODO
+        if(!this.hasReceivedData()) return
+
+        val response: SubsonicResponse = this.getSubsonicResponse()
+        if(!response.hasIndexes()) throw IllegalStateException("Indexes not found.")
+        for(index: Index in response.getAllIndexes()) //Each index represents a letter (A, B, C, etc. alphabetical order)
+            for(artist: SubsonicArtist in index.artists)
+                DataManager.addArtist(artist = artist.toArtist())
         this.dataProcessed()
-        onSucceed?.invoke()
     }
 }

@@ -21,7 +21,7 @@
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
-package io.github.antoinepirlot.satunes.internet.subsonic.callbacks
+package io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks
 
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -31,20 +31,16 @@ import io.github.antoinepirlot.satunes.internet.subsonic.models.SubsonicState
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.Error
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.SubsonicResponse
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.SubsonicResponseBody
-import io.github.antoinepirlot.satunes.internet.subsonic.utils.toText
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerializationException
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
-import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStream
-import java.io.InputStreamReader
 
 
 /**
@@ -124,10 +120,13 @@ internal abstract class SubsonicCallback(
     }
 
     /**
-     * Checks if data has been received, if false then it set unknown error. otherwise do nothing
+     * Checks if data has been received, if false then it set unknown error and returns false. otherwise return true
      */
-    protected fun checkIfReceivedData() {
-        if (subsonicApiRequester.subsonicState != SubsonicState.DATA_RECEIVED) setUnknownError()
+    protected fun hasReceivedData(): Boolean {
+        return if (subsonicApiRequester.subsonicState != SubsonicState.DATA_RECEIVED || SubsonicState.DATA_RECEIVED.dataReceived == null) {
+            setUnknownError()
+            false
+        } else true
     }
 
     /**
@@ -135,5 +134,9 @@ internal abstract class SubsonicCallback(
      */
     protected fun dataProcessed() {
         subsonicApiRequester.subsonicState = SubsonicState.IDLE
+    }
+
+    protected fun getSubsonicResponse(): SubsonicResponse {
+        return SubsonicState.DATA_RECEIVED.dataReceived!!
     }
 }

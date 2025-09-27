@@ -9,58 +9,44 @@
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
  * See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public License along with Satunes.
+ *  You should have received a copy of the GNU General Public License along with Satunes.
  *
  * If not, see <https://www.gnu.org/licenses/>.
  *
- * *** INFORMATION ABOUT THE AUTHOR *****
+ * **** INFORMATION ABOUT THE AUTHOR *****
  * The author of this file is Antoine Pirlot, the owner of this project.
  * You find this original project on Codeberg.
  *
  * My Codeberg link is: https://codeberg.org/antoinepirlot
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
- *
  */
 
-package io.github.antoinepirlot.satunes.internet.subsonic.callbacks
+package io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import io.github.antoinepirlot.satunes.database.models.Folder
-import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
-import io.github.antoinepirlot.satunes.internet.subsonic.models.SubsonicState
-import io.github.antoinepirlot.satunes.internet.subsonic.models.media.SubsonicFolder
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.SubsonicResponse
+import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import okhttp3.Call
 import okhttp3.Response
 
 /**
- * @author Antoine Pirlot 26/09/2025
+ * @author Antoine Pirlot 23/09/2025
  */
 @RequiresApi(Build.VERSION_CODES.M)
-internal class GetMusicFoldersCallback(
+internal class GetRandomMusicCallback(
     subsonicApiRequester: SubsonicApiRequester,
     onSucceed: (() -> Unit)? = null
-) : SubsonicCallback(
-    subsonicApiRequester = subsonicApiRequester, onSucceed = onSucceed
-) {
-    companion object {
-        private const val SUBSONIC_FOLDER_TITLE = "Cloud" //TODO make it dynamic by the app's language
-    }
+) : SubsonicCallback(subsonicApiRequester = subsonicApiRequester, onSucceed = onSucceed) {
+    private val _logger: SatunesLogger? = SatunesLogger.getLogger()
 
     override fun onResponse(call: Call, response: Response) {
         super.onResponse(call, response)
-        this.checkIfReceivedData()
-        val response: SubsonicResponse = SubsonicState.DATA_RECEIVED.dataReceived!!
-        var subsonicRootFolder: Folder? = DataManager.getSubsonicRootFolder()
-        if(subsonicRootFolder == null) {
-            subsonicRootFolder = Folder(title = SUBSONIC_FOLDER_TITLE)
-            DataManager.addFolder(subsonicRootFolder)
-        }
-
-        for (subsonicFolder: SubsonicFolder in response.getAllMusicFolders())
-            DataManager.addFolder(folder = Folder(title = subsonicFolder.name, parentFolder = subsonicRootFolder))
+        if(!this.hasReceivedData()) return
+        val response: SubsonicResponse = this.getSubsonicResponse()
+        //TODO
         this.dataProcessed()
+        onSucceed?.invoke()
     }
 }

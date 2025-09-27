@@ -88,6 +88,6 @@ internal fun GenreView(
 @Preview
 @Composable
 private fun GenreViewPreview() {
-    GenreView(genre = Genre("Genre"))
+    GenreView(genre = Genre(title = "Genre"))
 }
 

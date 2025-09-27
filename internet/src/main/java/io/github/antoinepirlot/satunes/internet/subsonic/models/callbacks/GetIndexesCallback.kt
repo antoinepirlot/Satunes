@@ -56,5 +56,6 @@ internal class GetIndexesCallback(
             for(artist: SubsonicArtist in index.artists)
                 DataManager.addArtist(artist = artist.toArtist())
         this.dataProcessed()
+        this.onSucceed?.invoke()
     }
 }

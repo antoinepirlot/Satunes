@@ -52,5 +52,6 @@ internal class GetArtistCallback(
         for(album: SubsonicAlbum in response.artist?.subsonicAlbums!!)
             DataManager.addAlbum(album = album.toAlbum())
         this.dataProcessed()
+        this.onSucceed?.invoke()
     }
 }

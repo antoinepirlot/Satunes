@@ -9,16 +9,17 @@
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
  * See the GNU General Public License for more details.
- *  You should have received a copy of the GNU General Public License along with Satunes.
+ * You should have received a copy of the GNU General Public License along with Satunes.
  *
  * If not, see <https://www.gnu.org/licenses/>.
  *
- * **** INFORMATION ABOUT THE AUTHOR *****
+ * *** INFORMATION ABOUT THE AUTHOR *****
  * The author of this file is Antoine Pirlot, the owner of this project.
  * You find this original project on Codeberg.
  *
  * My Codeberg link is: https://codeberg.org/antoinepirlot
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
+ *
  */
 
 package io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks
@@ -57,6 +58,6 @@ internal class PingCallback(
         SubsonicApiRequester.openSubsonic = response.openSubsonic
 
         this.dataProcessed()
-        onSucceed?.invoke()
+        this.onSucceed?.invoke()
     }
 }

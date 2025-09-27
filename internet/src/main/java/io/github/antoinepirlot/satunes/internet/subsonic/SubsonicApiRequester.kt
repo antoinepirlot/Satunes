@@ -191,10 +191,7 @@ class SubsonicApiRequester(
      * @param context the [Context] of the app.
      */
     fun loadAll(context: Context) {
-        this.loadMusicFolders(
-            context = context,
-            onSucceed = { loadIndexesByFolder(context = context) }
-        )
+        this.loadMusicFolders(context = context)
     }
 
     /**
@@ -264,13 +261,13 @@ class SubsonicApiRequester(
         )
     }
 
-    private fun loadMusicFolders(context: Context, onSucceed: (() -> Unit)?) {
+    private fun loadMusicFolders(context: Context) {
         this.get(
             context = context,
             url = this.getCommandUrl(command = "getMusicFolders", parameters = arrayOf()),
             resCallback = GetMusicFoldersCallback(
                 subsonicApiRequester = this,
-                onSucceed = onSucceed
+                onSucceed = { this.loadIndexesByFolder(context = context) }
             )
         )
     }

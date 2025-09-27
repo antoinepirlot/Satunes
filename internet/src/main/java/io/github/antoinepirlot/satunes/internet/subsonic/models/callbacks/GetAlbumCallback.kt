@@ -52,5 +52,6 @@ internal class GetAlbumCallback(
         for(song: SubsonicSong in response.album!!.songs)
             DataManager.addMusic(music = song.toMusic(subsonicApiRequester = subsonicApiRequester))
         this.dataProcessed()
+        this.onSucceed?.invoke()
     }
 }

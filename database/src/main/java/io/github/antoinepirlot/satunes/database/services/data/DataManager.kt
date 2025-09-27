@@ -193,9 +193,10 @@ object DataManager {
         return this.subsonicFolder != null
     }
 
-    fun addSubsonicFolder(subsonicFolder: Folder) {
+    private fun addSubsonicFolder(subsonicFolder: Folder) {
         if(!subsonicFolder.isSubsonic()) throw IllegalArgumentException("subsonic folder is not a subsonic one.")
-        if(this.subsonicFolder != null) throw IllegalStateException("A subsonic folder already exists.")
+        if(this.subsonicFolder != null && subsonicFolder.parentFolder == null)
+            throw IllegalStateException("A subsonic folder already exists.")
         this.subsonicFolder = subsonicFolder
         this.subsonicFoldersSortedMap[subsonicFolder.subsonicId] = subsonicFolder
     }
@@ -204,7 +205,7 @@ object DataManager {
         if (!folderSortedSet.contains(folder)) {
             this.folderMapById[folder.id] = folder
             this.folderSortedSet.add(element = folder)
-            if(folder.isSubsonic()) this.subsonicFoldersSortedMap[folder.subsonicId] = folder
+            if(folder.isSubsonic()) this.addSubsonicFolder(subsonicFolder = folder)
             if (folder.parentFolder == null) {
                 this.rootFolderSortedSet.add(element = folder)
             }

@@ -54,12 +54,13 @@ internal class GetMusicFoldersCallback(
         val response: SubsonicResponse = this.getSubsonicResponse()
         var subsonicRootFolder: Folder? = DataManager.getSubsonicRootFolder()
         if(subsonicRootFolder == null) {
-            subsonicRootFolder = Folder(title = SUBSONIC_FOLDER_TITLE)
+            subsonicRootFolder = Folder(subsonicId = SUBSONIC_FOLDER_TITLE, title = SUBSONIC_FOLDER_TITLE) //Use subsonicId for this one to consider it as subsonic one
             DataManager.addFolder(subsonicRootFolder)
         }
 
         for (subsonicFolder: SubsonicFolder in response.getAllMusicFolders())
             DataManager.addFolder(folder = Folder(title = subsonicFolder.name, parentFolder = subsonicRootFolder))
         this.dataProcessed()
+        this.onSucceed?.invoke()
     }
 }

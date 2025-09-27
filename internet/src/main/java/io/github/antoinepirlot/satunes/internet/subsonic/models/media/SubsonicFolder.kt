@@ -34,8 +34,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 internal data class SubsonicFolder(
-    val id: String,
+    val id: Long,
     val name: String
 ) {
-    fun toFolder(): Folder = DataManager.getFolder(subsonicId = id)?: Folder(subsonicId = id, title = name)
+    fun toFolder(): Folder = DataManager.getFolder(subsonicId = id.toString())?: Folder(subsonicId = id.toString(), title = name)
 }

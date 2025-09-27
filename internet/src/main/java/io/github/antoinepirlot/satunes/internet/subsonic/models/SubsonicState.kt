@@ -25,6 +25,7 @@ package io.github.antoinepirlot.satunes.internet.subsonic.models
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.SubsonicCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.SubsonicResponse
 
 /**
@@ -43,15 +44,38 @@ enum class SubsonicState {
     var error: SubsonicErrorCode? = null
         set(value) {
             if (value != null && this != ERROR)
-                throw IllegalStateException("Can't change code of non error state.")
+                throw UnsupportedOperationException("Can't change code of non error state.")
             field = value
         }
 
     //dataReceived is only used for DATA_RECEIVED
-    internal var dataReceived: SubsonicResponse? = null
+    private val dataReceivedMap: MutableMap<SubsonicCallback, SubsonicResponse?> = mutableMapOf()
         get() {
-            val value: SubsonicResponse? = field
-            field = null
-            return value
+            this.checkIsDataReceived()
+            return field
         }
+
+    internal fun prepareDataReceived(subsonicCallback: SubsonicCallback) {
+        this.checkIsDataReceived()
+        this.dataReceivedMap[subsonicCallback] = null
+    }
+
+    internal fun addDataReceived(subsonicCallback: SubsonicCallback, subsonicResponse: SubsonicResponse) {
+        this.checkIsDataReceived()
+        this.dataReceivedMap[subsonicCallback] = subsonicResponse
+    }
+
+    internal fun getDataReceived(subsonicCallback: SubsonicCallback): SubsonicResponse? {
+        this.checkIsDataReceived()
+        return this.dataReceivedMap.remove(key = subsonicCallback)
+    }
+
+    internal fun hasDataToProcess(): Boolean {
+        this.checkIsDataReceived()
+        return this.dataReceivedMap.isNotEmpty()
+    }
+
+    private fun checkIsDataReceived() {
+        if(this != DATA_RECEIVED) throw UnsupportedOperationException("Not Allowed.")
+    }
 }

@@ -31,7 +31,6 @@ import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.internet.InternetManager
-import io.github.antoinepirlot.satunes.internet.exceptions.AlreadyRequestingException
 import io.github.antoinepirlot.satunes.internet.exceptions.NotConnectedException
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetAlbumCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetIndexesCallback
@@ -39,6 +38,7 @@ import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetMus
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetRandomMusicCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.PingCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.SubsonicState
+import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.SubsonicCallback
 import okhttp3.Callback
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -105,11 +105,11 @@ class SubsonicApiRequester(
     private fun get(
         context: Context,
         url: String,
-        resCallback: Callback,
+        resCallback: SubsonicCallback,
         newState: SubsonicState = SubsonicState.REQUESTING
     ) {
-        if (!this.canMakeRequest(context = context)) throw AlreadyRequestingException()
         this.subsonicState = newState
+        if(newState != SubsonicState.PINGING) SubsonicState.DATA_RECEIVED.prepareDataReceived(subsonicCallback = resCallback)
         val client = OkHttpClient()
         val req: Request = Request.Builder()
             .get()
@@ -136,11 +136,13 @@ class SubsonicApiRequester(
      * @return true if the process has been successfully done, otherwise false.
      */
     fun disconnect(context: Context): Boolean {
-        if (canMakeRequest(context = context)) {
-            this.subsonicState = SubsonicState.DISCONNECTED
-            return true
+        return when(this.subsonicState) {
+            SubsonicState.REQUESTING, SubsonicState.PINGING, SubsonicState.DATA_RECEIVED -> false
+            else -> {
+                this.subsonicState = SubsonicState.DISCONNECTED
+                true
+            }
         }
-        return false
     }
 
     /**
@@ -152,7 +154,7 @@ class SubsonicApiRequester(
         if (!InternetManager(context = context).isConnected())
             throw NotConnectedException("Internet connection KO")
         return when (this.subsonicState) {
-            SubsonicState.IDLE, SubsonicState.DISCONNECTED -> true
+            SubsonicState.DISCONNECTED -> true
             else -> false
         }
     }

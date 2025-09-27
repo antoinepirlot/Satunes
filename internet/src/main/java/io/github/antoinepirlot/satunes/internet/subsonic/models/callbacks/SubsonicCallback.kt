@@ -81,7 +81,7 @@ internal abstract class SubsonicCallback(
                     manageError(error = response.error!!)
                 } else {
                     subsonicApiRequester.subsonicState = SubsonicState.DATA_RECEIVED
-                    SubsonicState.DATA_RECEIVED.dataReceived = response
+                    SubsonicState.DATA_RECEIVED.addDataReceived(subsonicCallback = this, response)
                 }
             } catch (e: SerializationException) {
                 _logger?.severe(e.message)
@@ -134,10 +134,11 @@ internal abstract class SubsonicCallback(
      * Change state to idle for [SubsonicState]
      */
     protected fun dataProcessed() {
-        subsonicApiRequester.subsonicState = SubsonicState.IDLE
+        if(!SubsonicState.DATA_RECEIVED.hasDataToProcess())
+            subsonicApiRequester.subsonicState = SubsonicState.IDLE
     }
 
     protected fun getSubsonicResponse(): SubsonicResponse {
-        return SubsonicState.DATA_RECEIVED.dataReceived!!
+        return SubsonicState.DATA_RECEIVED.getDataReceived(subsonicCallback = this)!!
     }
 }

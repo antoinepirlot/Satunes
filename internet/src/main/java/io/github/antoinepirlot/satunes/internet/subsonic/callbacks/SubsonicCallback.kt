@@ -31,7 +31,6 @@ import io.github.antoinepirlot.satunes.internet.subsonic.models.SubsonicState
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.Error
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.SubsonicResponse
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.SubsonicResponseBody
-import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.XmlObject
 import io.github.antoinepirlot.satunes.internet.subsonic.utils.toText
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import kotlinx.serialization.ExperimentalSerializationApi

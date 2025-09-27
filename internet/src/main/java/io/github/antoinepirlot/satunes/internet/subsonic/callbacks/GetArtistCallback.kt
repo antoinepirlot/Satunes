@@ -32,8 +32,6 @@ import io.github.antoinepirlot.satunes.internet.subsonic.models.SubsonicState
 import io.github.antoinepirlot.satunes.internet.subsonic.models.media.SubsonicAlbum
 import io.github.antoinepirlot.satunes.internet.subsonic.models.media.SubsonicArtist
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.SubsonicResponse
-import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.XmlMedia
-import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.XmlObject
 import okhttp3.Call
 import okhttp3.Response
 

@@ -25,7 +25,6 @@
 package io.github.antoinepirlot.satunes.internet.subsonic.models.media
 
 import io.github.antoinepirlot.satunes.database.models.Artist
-import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.XmlGenre
 import kotlinx.serialization.Serializable
 
 /**

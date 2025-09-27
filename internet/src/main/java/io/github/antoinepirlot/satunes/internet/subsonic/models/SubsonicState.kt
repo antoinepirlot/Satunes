@@ -26,7 +26,6 @@ package io.github.antoinepirlot.satunes.internet.subsonic.models
 import android.os.Build
 import androidx.annotation.RequiresApi
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.SubsonicResponse
-import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.XmlObject
 
 /**
  * @author Antoine Pirlot 03/09/2025

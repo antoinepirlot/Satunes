@@ -35,8 +35,6 @@ import kotlinx.serialization.Transient
  * @author Antoine Pirlot on 27/03/2024
  */
 
-// TODO choose which one to use
-
 @Serializable
 internal data class PlaylistWithMusics(
     @Embedded val playlistDB: PlaylistDB,

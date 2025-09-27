@@ -9,28 +9,35 @@
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
  * See the GNU General Public License for more details.
- *  You should have received a copy of the GNU General Public License along with Satunes.
+ * You should have received a copy of the GNU General Public License along with Satunes.
  *
  * If not, see <https://www.gnu.org/licenses/>.
  *
- * **** INFORMATION ABOUT THE AUTHOR *****
+ * *** INFORMATION ABOUT THE AUTHOR *****
  * The author of this file is Antoine Pirlot, the owner of this project.
  * You find this original project on Codeberg.
  *
  * My Codeberg link is: https://codeberg.org/antoinepirlot
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
+ *
  */
 
 package io.github.antoinepirlot.satunes.internet.subsonic.models.responses
 
-import kotlinx.serialization.SerialName
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonNames
 
 /**
- * @author Antoine Pirlot 04/09/2025
+ * @author Antoine Pirlot 27/09/2025
  */
+
+/**
+ * SubsonicResponseBody is the main json body containing subsonic-response and it is only
+ * used to get subsonic-response
+ */
+@OptIn(ExperimentalSerializationApi::class)
 @Serializable
-internal data class Error(
-    val code: Int,
-    val message: String
+internal data class SubsonicResponseBody(
+    @JsonNames("subsonic-response") val subsonicResponse: SubsonicResponse
 )

@@ -24,14 +24,15 @@
 
 package io.github.antoinepirlot.satunes.internet.subsonic.models.responses
 
-import io.github.antoinepirlot.satunes.database.models.Folder
-import io.github.antoinepirlot.satunes.internet.subsonic.models.media.SubsonicFolder
+import io.github.antoinepirlot.satunes.internet.subsonic.models.media.SubsonicArtist
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 /**
- * @author Antoine Pirlot 26/09/2025
+ * @author Antoine Pirlot 27/09/2025
  */
-class XmlMusicFolder(folder: SubsonicFolder): XmlMedia(media = folder) {
-    override fun isFolder(): Boolean {
-        return true
-    }
-}
+@Serializable
+internal data class Index(
+    val name: String,
+    val artist: Collection<SubsonicArtist>
+)

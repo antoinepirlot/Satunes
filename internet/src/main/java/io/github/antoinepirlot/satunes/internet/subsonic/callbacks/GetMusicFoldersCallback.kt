@@ -27,11 +27,6 @@ package io.github.antoinepirlot.satunes.internet.subsonic.callbacks
 import android.os.Build
 import androidx.annotation.RequiresApi
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
-import io.github.antoinepirlot.satunes.internet.subsonic.models.media.SubsonicFolder
-import io.github.antoinepirlot.satunes.internet.subsonic.models.SubsonicState
-import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.XmlMedia
-import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.XmlMusicFolder
-import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.XmlObject
 import okhttp3.Call
 import okhttp3.Response
 
@@ -39,7 +34,7 @@ import okhttp3.Response
  * @author Antoine Pirlot 26/09/2025
  */
 @RequiresApi(Build.VERSION_CODES.M)
-class GetMusicFoldersCallback(
+internal class GetMusicFoldersCallback(
     subsonicApiRequester: SubsonicApiRequester,
     onSucceed: (() -> Unit)? = null
 ) : SubsonicCallback(
@@ -47,17 +42,7 @@ class GetMusicFoldersCallback(
 ) {
     override fun onResponse(call: Call, response: Response) {
         super.onResponse(call, response)
-        this.checkIfReceivedData()
-        for(xmlObject: XmlObject in SubsonicState.DATA_RECEIVED.dataReceived) {
-            if(!xmlObject.isHeader()) {
-                if (!xmlObject.isMedia()) throw IllegalStateException("No XmlMedia found.")
-                xmlObject as XmlMedia
-                if (!xmlObject.isFolder())
-                    throw IllegalStateException("No XmlFolder found.")
-                xmlObject as XmlMusicFolder
-                subsonicApiRequester.addFolderToIndex(xmlObject.media as SubsonicFolder)
-            }
-        }
+        //TODO
         this.dataProcessed()
     }
 }

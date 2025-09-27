@@ -34,9 +34,9 @@ import io.github.antoinepirlot.satunes.internet.subsonic.callbacks.GetIndexesCal
 import io.github.antoinepirlot.satunes.internet.subsonic.callbacks.GetMusicFoldersCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.callbacks.GetRandomMusicCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.callbacks.PingCallback
-import io.github.antoinepirlot.satunes.internet.subsonic.models.media.SubsonicFolder
+import io.github.antoinepirlot.satunes.internet.subsonic.models.media.SubsonicFolderOld
 import io.github.antoinepirlot.satunes.internet.subsonic.models.SubsonicState
-import io.github.antoinepirlot.satunes.internet.subsonic.models.media.SubsonicAlbum
+import io.github.antoinepirlot.satunes.internet.subsonic.models.media.SubsonicAlbumOld
 import io.github.antoinepirlot.satunes.internet.subsonic.models.media.SubsonicArtist
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -58,6 +58,7 @@ class SubsonicApiRequester(
     companion object {
         val DEFAULT_STATE: SubsonicState = SubsonicState.DISCONNECTED
         private const val CLIENT_NAME = "Satunes"
+        private const val JSON_FORMAT = "json"
         private var version: String? = null
         internal var status: String? = null
         internal var type: String? = null
@@ -66,8 +67,8 @@ class SubsonicApiRequester(
     }
 
     private val url: String = "$url/rest"
-    private var inUrlCredentials: String = "u=$username&t=$md5Password&c=$CLIENT_NAME&v=$version"
-    private val foldersToIndex: MutableSet<SubsonicFolder> = mutableSetOf()
+    private var inUrlMandatoryParams: String = "u=$username&t=$md5Password&c=$CLIENT_NAME&v=$version&f=$JSON_FORMAT"
+    private val foldersToIndex: MutableSet<SubsonicFolderOld> = mutableSetOf()
 
     var subsonicState: SubsonicState = DEFAULT_STATE
         internal set(value) {
@@ -76,13 +77,13 @@ class SubsonicApiRequester(
         }
 
     /**
-     * Returns the url as https://example.org/rest/[command]?[inUrlCredentials]&[parameters]
+     * Returns the url as https://example.org/rest/[command]?[inUrlMandatoryParams]&[parameters]
      *
      * @param command the command as [String]. For example getSong
      * @param parameters the parameters of command. For example: id=59feo8
      */
     internal fun getCommandUrl(command: String, vararg parameters: String): String {
-        var toReturn = "$url/$command?$inUrlCredentials"
+        var toReturn = "$url/$command?$inUrlMandatoryParams"
         for (parameter: String in parameters)
             toReturn += "&$parameter"
         return toReturn
@@ -91,7 +92,7 @@ class SubsonicApiRequester(
     internal fun updateVersion(version: String) {
         if (version == Companion.version) return
         Companion.version = version
-        this.inUrlCredentials = "u=$username&t=$md5Password&c=$CLIENT_NAME&v=${Companion.version}"
+        this.inUrlMandatoryParams = "u=$username&t=$md5Password&c=$CLIENT_NAME&v=${Companion.version}"
     }
 
 
@@ -122,7 +123,7 @@ class SubsonicApiRequester(
      * Ping API
      */
     fun ping(context: Context, onSucceed: (() -> Unit)? = null) {
-        var url: String = this.url + "/ping?${this.inUrlCredentials}"
+        var url: String = this.url + "/ping?${this.inUrlMandatoryParams}"
         this.get(
             context = context,
             url = url,
@@ -196,7 +197,7 @@ class SubsonicApiRequester(
      * Then all folder will received their data.
      */
     private fun getIndexesByFolder(context: Context) {
-        for (folder: SubsonicFolder in this.foldersToIndex)
+        for (folder: SubsonicFolderOld in this.foldersToIndex)
             CoroutineScope(Dispatchers.IO).launch {
                 this@SubsonicApiRequester.get(
                     context = context,
@@ -229,16 +230,16 @@ class SubsonicApiRequester(
         )
     }
 
-    fun addFolderToIndex(subsonicFolder: SubsonicFolder) {
-        this.foldersToIndex.add(subsonicFolder)
+    internal fun addFolderToIndex(subsonicFolderOld: SubsonicFolderOld) {
+        this.foldersToIndex.add(subsonicFolderOld)
     }
 
-    fun getArtists(context: Context, artists: Collection<SubsonicArtist>) {
+    internal fun getArtists(context: Context, artists: Collection<SubsonicArtist>) {
         for(artist: SubsonicArtist in artists)
             CoroutineScope(Dispatchers.IO).launch {
                 this@SubsonicApiRequester.get(
                     context = context,
-                    url = this@SubsonicApiRequester.getCommandUrl(command = "getArtist", parameters = arrayOf("id=${artist.subsonicId}")),
+                    url = this@SubsonicApiRequester.getCommandUrl(command = "getArtist", parameters = arrayOf("id=${artist.id}")),
                     resCallback = GetArtistCallback(
                         subsonicApiRequester = this@SubsonicApiRequester,
                         artist = artist
@@ -247,7 +248,7 @@ class SubsonicApiRequester(
             }
     }
 
-    fun getAlbums(context: Context, albums: Collection<SubsonicAlbum>) {
+    fun getAlbums(context: Context, albums: Collection<SubsonicAlbumOld>) {
 
     }
 }

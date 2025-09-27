@@ -24,23 +24,37 @@
 
 package io.github.antoinepirlot.satunes.internet.subsonic.models.media
 
-import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
+import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.XmlGenre
+import kotlinx.serialization.Serializable
 
 /**
  * @author Antoine Pirlot 26/09/2025
  */
-class SubsonicAlbum(
-    val subsonicId: String,
-    title: String,
-    artist: Artist,
-    isCompilation: Boolean = false,
-    year: Int? = null
-) : Album(
-    title = title,
-    artist = artist,
-    isCompilation = isCompilation,
-    year = year
-) {
-    //TODO
-}
+@Serializable
+internal data class SubsonicAlbum(
+    val id: String,
+    val name: String,
+    val artist: String,
+    val artistId: String,
+    val covertArt: String,
+    val songCount: Int,
+    val duration: Long,
+    val playCount: Long,
+    val created: String,
+    val played: String,
+    val userRating: Int,
+//    val genres: Collection<XmlGenre>,
+    val musicBrainzId: String,
+    val isCompilation: Boolean,
+    val sortName: String,
+//    val discTitles: Collection<Any>,
+//    val originalReleasesDate: Any,
+//    val releaseTypes: Collection<Any>,
+//    val recordLabels: Collection<Any>,
+//    val moods: Collection<Any>,
+    val artists: Collection<SubsonicArtist>,
+    val displayArtist: String,
+    val explicitStatus: String,
+    val version: String
+)

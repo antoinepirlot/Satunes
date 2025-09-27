@@ -24,22 +24,15 @@
 
 package io.github.antoinepirlot.satunes.internet.subsonic.models.responses
 
-import io.github.antoinepirlot.satunes.database.models.Album
-import io.github.antoinepirlot.satunes.internet.subsonic.models.media.SubsonicAlbum
-import io.github.antoinepirlot.satunes.internet.subsonic.models.media.SubsonicArtist
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonNames
 
 /**
- * @author Antoine Pirlot 26/09/2025
+ * @author Antoine Pirlot 27/09/2025
  */
-class XmlAlbum(
-    val subsonicId: String,
-    val title: String
-): XmlMedia(media = null) {
-    fun toSubsonicAlbum(artist: SubsonicArtist): SubsonicAlbum {
-        return SubsonicAlbum(subsonicId = this.subsonicId, title = this.title, artist = artist)
-    }
-
-    override fun isAlbum(): Boolean {
-        return true
-    }
-}
+@Serializable
+@OptIn(ExperimentalSerializationApi::class)
+internal data class Indexes constructor(
+    @JsonNames("index") val list: Collection<Index>
+)

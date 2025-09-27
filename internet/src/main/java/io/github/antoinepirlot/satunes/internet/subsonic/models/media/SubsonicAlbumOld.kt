@@ -22,16 +22,25 @@
  *
  */
 
-package io.github.antoinepirlot.satunes.internet.subsonic.models.responses
+package io.github.antoinepirlot.satunes.internet.subsonic.models.media
 
+import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
-import io.github.antoinepirlot.satunes.internet.subsonic.models.media.SubsonicArtist
 
 /**
  * @author Antoine Pirlot 26/09/2025
  */
-class XmlArtist(artist: SubsonicArtist): XmlMedia(media = artist) {
-    override fun isArtist(): Boolean {
-        return true
-    }
+class SubsonicAlbumOld(
+    val subsonicId: String,
+    title: String,
+    artist: Artist,
+    isCompilation: Boolean = false,
+    year: Int? = null
+) : Album(
+    title = title,
+    artist = artist,
+    isCompilation = isCompilation,
+    year = year
+) {
+    //TODO
 }

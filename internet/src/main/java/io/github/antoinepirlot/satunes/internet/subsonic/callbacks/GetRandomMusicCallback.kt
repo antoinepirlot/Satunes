@@ -27,6 +27,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
 import io.github.antoinepirlot.satunes.internet.subsonic.models.SubsonicState
+import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.SubsonicResponse
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.XmlObject
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import okhttp3.Call
@@ -36,7 +37,7 @@ import okhttp3.Response
  * @author Antoine Pirlot 23/09/2025
  */
 @RequiresApi(Build.VERSION_CODES.M)
-class GetRandomMusicCallback(
+internal class GetRandomMusicCallback(
     subsonicApiRequester: SubsonicApiRequester,
     onSucceed: (() -> Unit)? = null
 ) : SubsonicCallback(subsonicApiRequester = subsonicApiRequester, onSucceed = onSucceed) {
@@ -45,11 +46,8 @@ class GetRandomMusicCallback(
     override fun onResponse(call: Call, response: Response) {
         super.onResponse(call, response)
         this.checkIfReceivedData()
-        val xmlObjects: List<XmlObject> = SubsonicState.DATA_RECEIVED.dataReceived
-        for (xmlObject in xmlObjects) {
-            println() //TODO
-        }
-
+        val response: SubsonicResponse = SubsonicState.DATA_RECEIVED.dataReceived!!
+        //TODO
         this.dataProcessed()
         onSucceed?.invoke()
     }

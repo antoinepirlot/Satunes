@@ -29,14 +29,23 @@ import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
 import io.github.antoinepirlot.satunes.internet.subsonic.models.SubsonicErrorCode
 import io.github.antoinepirlot.satunes.internet.subsonic.models.SubsonicState
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.Error
+import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.SubsonicResponse
+import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.SubsonicResponseBody
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.XmlObject
-import io.github.antoinepirlot.satunes.internet.subsonic.utils.SubsonicXmlParser
+import io.github.antoinepirlot.satunes.internet.subsonic.utils.toText
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.SerializationException
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.decodeFromStream
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
+import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStream
+import java.io.InputStreamReader
 
 
 /**
@@ -44,7 +53,7 @@ import java.io.InputStream
  */
 
 @RequiresApi(Build.VERSION_CODES.M)
-abstract class SubsonicCallback(
+internal abstract class SubsonicCallback(
     protected val subsonicApiRequester: SubsonicApiRequester,
     protected val onSucceed: (() -> Unit)? //Used in children classes
 ) : Callback {
@@ -57,31 +66,35 @@ abstract class SubsonicCallback(
         subsonicApiRequester.subsonicState = SubsonicState.ERROR
     }
 
+    @OptIn(ExperimentalSerializationApi::class)
     override fun onResponse(call: Call, response: Response) {
         if (response.code >= 400) {
             SubsonicState.ERROR.error = SubsonicErrorCode.GENERIC_ERROR
             subsonicApiRequester.subsonicState = SubsonicState.ERROR
             return
         }
+        var hasError: Boolean = false
         try {
             val input: InputStream = response.body!!.byteStream()
             try {
-                val result: List<XmlObject> = SubsonicXmlParser(subsonicApiRequester = subsonicApiRequester).parse(inputStream = input)
-                if (result.isEmpty()) {
-                    SubsonicState.ERROR.error = SubsonicErrorCode.DATA_NOT_FOUND
-                    subsonicApiRequester.subsonicState = SubsonicState.ERROR
-                }
+                val response: SubsonicResponse =
+                    Json.decodeFromStream<SubsonicResponseBody>(input).subsonicResponse
+
                 //Maybe error
-                if (subsonicApiRequester.subsonicState != SubsonicState.PINGING)
-                    for (xmlObject: XmlObject in result) {
-                        if (xmlObject.isError()) {
-                            manageError(xmlObject = xmlObject)
-                            return
-                        }
-                    }
-                subsonicApiRequester.subsonicState = SubsonicState.DATA_RECEIVED
-                SubsonicState.DATA_RECEIVED.dataReceived = result
-            } catch (_: IOException) {
+                if (response.isError()) {
+                    manageError(error = response.error!!)
+                } else {
+                    subsonicApiRequester.subsonicState = SubsonicState.DATA_RECEIVED
+                    SubsonicState.DATA_RECEIVED.dataReceived = response
+                }
+            } catch (e: SerializationException) {
+                _logger?.severe(e.message)
+                hasError = true
+            } catch (e: IllegalArgumentException) {
+                _logger?.severe(e.message)
+                hasError = true
+            } catch (e: IOException) {
+                _logger?.severe(e.message)
                 SubsonicState.ERROR.error = null
                 subsonicApiRequester.subsonicState = SubsonicState.ERROR
             } catch (_: NullPointerException) {
@@ -91,15 +104,17 @@ abstract class SubsonicCallback(
             }
         } catch (_: NullPointerException) {
             _logger?.warning("No body from request.")
-            SubsonicState.ERROR.error = SubsonicErrorCode.DATA_NOT_FOUND
-            subsonicApiRequester.subsonicState = SubsonicState.ERROR
+            hasError = true
+        } finally {
+            if (hasError) {
+                SubsonicState.ERROR.error = SubsonicErrorCode.DATA_NOT_FOUND
+                subsonicApiRequester.subsonicState = SubsonicState.ERROR
+            }
         }
     }
 
-    private fun manageError(xmlObject: XmlObject) {
-        xmlObject as Error
-        SubsonicState.ERROR.error =
-            SubsonicErrorCode.getError(code = xmlObject.errorCode)
+    private fun manageError(error: Error) {
+        SubsonicState.ERROR.error = SubsonicErrorCode.getError(code = error.code)
         subsonicApiRequester.subsonicState = SubsonicState.ERROR
     }
 

@@ -26,9 +26,8 @@ package io.github.antoinepirlot.satunes.internet.subsonic.callbacks
 import android.os.Build
 import androidx.annotation.RequiresApi
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
-import io.github.antoinepirlot.satunes.internet.subsonic.models.SubsonicState
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.Header
-import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.XmlObject
+import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.SubsonicResponse
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import okhttp3.Call
 import okhttp3.Response
@@ -48,13 +47,12 @@ internal class PingCallback(
     override fun onResponse(call: Call, response: Response) {
         super.onResponse(call = call, response = response)
         this.checkIfReceivedData()
-        val xmlObject: XmlObject = subsonicApiRequester.subsonicState.dataReceived[0]
-        xmlObject as Header
-        SubsonicApiRequester.status = xmlObject.status
-        subsonicApiRequester.updateVersion(version = xmlObject.version)
-        SubsonicApiRequester.type = xmlObject.type
-        SubsonicApiRequester.serverVersion = xmlObject.serverVersion
-        SubsonicApiRequester.openSubsonic = xmlObject.openSubsonic
+        val response: SubsonicResponse = subsonicApiRequester.subsonicState.dataReceived!!
+        SubsonicApiRequester.status = response.status
+        subsonicApiRequester.updateVersion(version = response.version)
+        SubsonicApiRequester.type = response.type
+        SubsonicApiRequester.serverVersion = response.serverVersion
+        SubsonicApiRequester.openSubsonic = response.openSubsonic
 
         this.dataProcessed()
         onSucceed?.invoke()

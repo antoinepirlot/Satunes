@@ -7,4 +7,13 @@ GET {{baseUrl}}/getIndexes?{{auth_params}}
 
 ###
 
+GET {{baseUrl}}/getMusicFolders?{{auth_params}}
+
+
+###
+
 GET {{baseUrl}}/getRandomSongs?{{auth_params}}
+
+###
+
+GET {{baseUrl}}/getArtist?{{auth_params}}

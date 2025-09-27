@@ -25,13 +25,24 @@
 package io.github.antoinepirlot.satunes.internet.subsonic.models.media
 
 import io.github.antoinepirlot.satunes.database.models.Artist
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonNames
 
 /**
  * @author Antoine Pirlot 26/09/2025
  */
-class SubsonicArtist(
-    val subsonicId: String? = null,
-    title: String
-): Artist(title = title) {
-
-}
+@OptIn(ExperimentalSerializationApi::class)
+@Serializable
+@SerialName("artist")
+internal data class SubsonicArtist(
+    val id: String,
+    val name: String,
+    val covertArt: String,
+    val artistImageUrl: String,
+    val musicBrainzId: String? = null,
+    val sortName: String? = null,
+    val roles: Collection<String> = listOf(),
+    @JsonNames("album") val subsonicAlbums: Collection<SubsonicAlbum> = listOf()
+)

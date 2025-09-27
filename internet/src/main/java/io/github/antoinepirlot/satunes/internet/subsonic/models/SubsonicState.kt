@@ -25,6 +25,7 @@ package io.github.antoinepirlot.satunes.internet.subsonic.models
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.SubsonicResponse
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.XmlObject
 
 /**
@@ -48,10 +49,10 @@ enum class SubsonicState {
         }
 
     //dataReceived is only used for DATA_RECEIVED
-    var dataReceived: List<XmlObject> = listOf()
+    internal var dataReceived: SubsonicResponse? = null
         get() {
-            val value: List<XmlObject> = field
-            field = listOf()
+            val value: SubsonicResponse? = field
+            field = null
             return value
         }
 }

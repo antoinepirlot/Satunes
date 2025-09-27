@@ -41,7 +41,7 @@ import kotlinx.serialization.json.JsonNames
 internal data class SubsonicArtist(
     val id: String,
     val name: String,
-    val covertArt: String,
+    val coverArt: String,
     val artistImageUrl: String,
     val musicBrainzId: String? = null,
     val sortName: String? = null,

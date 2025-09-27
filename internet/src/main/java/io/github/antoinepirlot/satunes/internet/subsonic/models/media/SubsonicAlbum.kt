@@ -28,6 +28,7 @@ import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonNames
 
@@ -36,31 +37,13 @@ import kotlinx.serialization.json.JsonNames
  */
 @OptIn(ExperimentalSerializationApi::class)
 @Serializable
+@SerialName("album")
 internal data class SubsonicAlbum(
     val id: String,
     val name: String,
     val artistId: String,
-    val covertArt: String,
-    val songCount: Int,
-    val duration: Long,
-    val playCount: Long,
-    val created: String,
-    val played: String,
-    val userRating: Int,
-    val genres: Collection<SubsonicGenre>,
-    val musicBrainzId: String,
     val isCompilation: Boolean,
-    val sortName: String,
-//    val discTitles: Collection<Any>,
-//    val originalReleasesDate: Any,
-//    val releaseTypes: Collection<Any>,
-//    val recordLabels: Collection<Any>,
-//    val moods: Collection<Any>,
-    val artists: Collection<SubsonicArtist> = listOf(),
-    val displayArtist: String,
-    val explicitStatus: String,
-    val version: String,
-    @JsonNames("song") val songs: Collection<SubsonicSong>
+    @JsonNames("song") val songs: Collection<SubsonicSong> = listOf()
 ) {
     fun toAlbum(): Album = DataManager.getAlbum(subsonicId = id)?: Album(
             title = name,

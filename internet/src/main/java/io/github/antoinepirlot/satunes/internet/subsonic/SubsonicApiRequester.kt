@@ -38,6 +38,7 @@ import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetMus
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetRandomMusicCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.PingCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.SubsonicState
+import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetArtistCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.SubsonicCallback
 import okhttp3.Callback
 import okhttp3.OkHttpClient
@@ -146,20 +147,6 @@ class SubsonicApiRequester(
     }
 
     /**
-     * Checks if the internet connection is valid and if another process is not already requesting.
-     *
-     * @return true if a new request can be done, otherwise false.
-     */
-    private fun canMakeRequest(context: Context): Boolean {
-        if (!InternetManager(context = context).isConnected())
-            throw NotConnectedException("Internet connection KO")
-        return when (this.subsonicState) {
-            SubsonicState.DISCONNECTED -> true
-            else -> false
-        }
-    }
-
-    /**
      * Get randomly [size] musics.
      *
      * @param size the number of music to get (default 10, max 500).
@@ -234,7 +221,7 @@ class SubsonicApiRequester(
         this.get(
             context = context,
             url = this.getCommandUrl(command = "getArtist", parameters = arrayOf("id=$artistId")),
-            resCallback = GetAlbumCallback(
+            resCallback = GetArtistCallback(
                 subsonicApiRequester = this,
                 onSucceed = { this.loadSongs(context = context) }
             )
@@ -244,6 +231,7 @@ class SubsonicApiRequester(
     /**
      * Load songs of received albums.
      */
+    @Synchronized
     private fun loadSongs(context: Context) {
         if(!DataManager.hasSubsonicAlbums()) return
         for(album: Album in DataManager.getSubsonicAlbumsSet()) {

@@ -31,6 +31,7 @@ import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 /**
@@ -39,6 +40,7 @@ import kotlinx.serialization.Serializable
 
 @RequiresApi(Build.VERSION_CODES.M)
 @Serializable
+@SerialName("song")
 internal data class SubsonicSong(
     val id: String,
     val title: String,
@@ -49,7 +51,7 @@ internal data class SubsonicSong(
     val size: Int,
     val track: Int,
     val duration: Long,
-    val mediaType: String
+    val mediaType: String,
 ) {
     fun toMusic(subsonicApiRequester: SubsonicApiRequester): Music {
         if(mediaType != SubsonicApiRequester.SONG_MEDIA_TYPE)

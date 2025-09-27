@@ -41,11 +41,6 @@ import kotlinx.serialization.json.JsonNames
 internal data class SubsonicArtist(
     val id: String,
     val name: String,
-    val coverArt: String,
-    val artistImageUrl: String,
-    val musicBrainzId: String? = null,
-    val sortName: String? = null,
-    val roles: Collection<String> = listOf(),
     @JsonNames("album") val subsonicAlbums: Collection<SubsonicAlbum> = listOf()
 ) {
     fun toArtist(): Artist = DataManager.getArtist(subsonicId = id)?: Artist(subsonicId = id, title = name)

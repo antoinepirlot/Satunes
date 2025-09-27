@@ -184,4 +184,12 @@ open class Folder(
         if (this.parentFolder == null) return this
         return this.parentFolder!!.getRoot()
     }
+
+    /**
+     * Add manually a [Folder] in [subFolderSortedSet].
+     * (Used in internet module with Subsonic)
+     */
+    fun addSubfolder(folder: Folder) {
+        this.subFolderSortedSet.add(element = folder)
+    }
 }

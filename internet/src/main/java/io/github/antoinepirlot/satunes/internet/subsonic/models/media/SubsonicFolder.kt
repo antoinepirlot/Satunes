@@ -37,5 +37,16 @@ internal data class SubsonicFolder(
     val id: Long,
     val name: String
 ) {
-    fun toFolder(): Folder = DataManager.getFolder(subsonicId = id.toString())?: Folder(subsonicId = id.toString(), title = name)
+    fun toFolder(parentFolder: Folder? = null): Folder {
+        var folder: Folder? = DataManager.getFolder(subsonicId = id.toString())
+        if (folder == null) {
+            folder = Folder(
+                subsonicId = id.toString(),
+                title = name,
+                parentFolder = parentFolder
+            )
+            parentFolder?.addSubfolder(folder = folder)
+        }
+        return folder
+    }
 }

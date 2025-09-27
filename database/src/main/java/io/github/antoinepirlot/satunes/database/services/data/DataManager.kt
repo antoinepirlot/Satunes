@@ -101,6 +101,10 @@ object DataManager {
         return this.rootFolderSortedSet
     }
 
+    fun getRootSubsonicFolders(): Set<Folder> {
+        return this.subsonicFolder?.getSubFolderSet()?: setOf()
+    }
+
     fun getFolderSet(): Set<Folder> {
         return this.folderSortedSet
     }
@@ -195,9 +199,7 @@ object DataManager {
 
     private fun addSubsonicFolder(subsonicFolder: Folder) {
         if(!subsonicFolder.isSubsonic()) throw IllegalArgumentException("subsonic folder is not a subsonic one.")
-        if(this.subsonicFolder != null && subsonicFolder.parentFolder == null)
-            throw IllegalStateException("A subsonic folder already exists.")
-        this.subsonicFolder = subsonicFolder
+        if(this.subsonicFolder == null) this.subsonicFolder = subsonicFolder
         this.subsonicFoldersSortedMap[subsonicFolder.subsonicId] = subsonicFolder
     }
 

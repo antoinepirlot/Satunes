@@ -59,7 +59,7 @@ internal class GetMusicFoldersCallback(
         }
 
         for (subsonicFolder: SubsonicFolder in response.getAllMusicFolders())
-            DataManager.addFolder(folder = Folder(title = subsonicFolder.name, parentFolder = subsonicRootFolder))
+            DataManager.addFolder(folder = subsonicFolder.toFolder(parentFolder = subsonicRootFolder))
         this.dataProcessed()
         this.onSucceed?.invoke()
     }

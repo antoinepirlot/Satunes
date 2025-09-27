@@ -200,8 +200,7 @@ class SubsonicApiRequester(
      */
     private fun loadIndexesByFolder(context: Context) {
         if(!DataManager.hasSubsonicFolders()) return
-        val subsonicRootFolder: Folder = DataManager.getSubsonicRootFolder()!!
-        for (folder: Folder in subsonicRootFolder.getSubFolderSet()) {
+        for (folder: Folder in DataManager.getRootSubsonicFolders()) {
             this.get(
                 context = context,
                 url = this@SubsonicApiRequester.getCommandUrl(

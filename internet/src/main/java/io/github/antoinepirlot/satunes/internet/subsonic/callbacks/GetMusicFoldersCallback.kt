@@ -26,7 +26,12 @@ package io.github.antoinepirlot.satunes.internet.subsonic.callbacks
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import io.github.antoinepirlot.satunes.database.models.Folder
+import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
+import io.github.antoinepirlot.satunes.internet.subsonic.models.SubsonicState
+import io.github.antoinepirlot.satunes.internet.subsonic.models.media.SubsonicFolder
+import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.SubsonicResponse
 import okhttp3.Call
 import okhttp3.Response
 
@@ -40,9 +45,22 @@ internal class GetMusicFoldersCallback(
 ) : SubsonicCallback(
     subsonicApiRequester = subsonicApiRequester, onSucceed = onSucceed
 ) {
+    companion object {
+        private const val SUBSONIC_FOLDER_TITLE = "Cloud" //TODO make it dynamic by the app's language
+    }
+
     override fun onResponse(call: Call, response: Response) {
         super.onResponse(call, response)
-        //TODO
+        this.checkIfReceivedData()
+        val response: SubsonicResponse = SubsonicState.DATA_RECEIVED.dataReceived!!
+        var subsonicRootFolder: Folder? = DataManager.getSubsonicRootFolder()
+        if(subsonicRootFolder == null) {
+            subsonicRootFolder = Folder(title = SUBSONIC_FOLDER_TITLE)
+            DataManager.addFolder(subsonicRootFolder)
+        }
+
+        for (subsonicFolder: SubsonicFolder in response.getAllMusicFolders())
+            DataManager.addFolder(folder = Folder(title = subsonicFolder.name, parentFolder = subsonicRootFolder))
         this.dataProcessed()
     }
 }

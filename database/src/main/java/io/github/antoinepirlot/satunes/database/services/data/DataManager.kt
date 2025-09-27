@@ -39,6 +39,7 @@ import java.util.SortedSet
 
 object DataManager {
     // All public map and sortedmap has bool state to recompose as Map are not supported for recomposition
+    private var subsonicFolder: Folder? = null
     private val musicSortedSet: SortedSet<Music> = sortedSetOf()
     private val musicMapById: MutableMap<Long, Music> = mutableMapOf()
     private val musicMapByAbsolutePath: MutableMap<String, Music> = mutableMapOf()
@@ -146,6 +147,22 @@ object DataManager {
 
     fun getFolder(id: Long): Folder? {
         return folderMapById[id]!!
+    }
+
+    /**
+     * Returns the subsonic folder if it has been created, null otherwise.
+     */
+    fun getSubsonicRootFolder(): Folder? {
+        return this.subsonicFolder
+    }
+
+    fun hasSubsonicFolder(): Boolean {
+        return this.subsonicFolder != null
+    }
+
+    fun addSubsonicFolder(subsonicFolder: Folder) {
+        if(this.subsonicFolder != null) throw IllegalStateException("A subsonic folder already exists.")
+        this.subsonicFolder = subsonicFolder
     }
 
     fun addFolder(folder: Folder) {

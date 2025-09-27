@@ -60,12 +60,23 @@ internal data class SubsonicResponse(
     fun hasIndexes(): Boolean = this.indexes != null
     fun hasMedia(): Boolean = hasArtist() || hasFolders() || hasIndexes()
 
-
+    /**
+     * Returns the list of [Index] received.
+     *
+     * @throws IllegalStateException if it has not been received
+     */
     fun getAllIndexes(): Collection<Index> {
+        if(!this.hasIndexes()) throw IllegalStateException("No indexes received.")
         return this.indexes?.list?: listOf()
     }
 
+    /**
+     * Returns the list of [SubsonicFolder] received.
+     *
+     * @throws IllegalStateException if it has not been received
+     */
     fun getAllMusicFolders(): Collection<SubsonicFolder> {
+        if(!this.hasFolders()) throw IllegalStateException("No music folder received.")
         return this.subsonicFolders?.list?: listOf()
     }
 }

@@ -42,7 +42,10 @@ import java.io.IOException
 import java.io.InputStream
 import java.time.OffsetDateTime
 import androidx.core.net.toUri
+import io.github.antoinepirlot.satunes.internet.subsonic.models.media.SubsonicAlbum
+import io.github.antoinepirlot.satunes.internet.subsonic.models.media.SubsonicArtist
 import io.github.antoinepirlot.satunes.internet.subsonic.models.media.SubsonicFolder
+import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.XmlAlbum
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.XmlArtist
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.XmlGenre
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.XmlMedia
@@ -64,6 +67,7 @@ class SubsonicXmlParser(private val subsonicApiRequester: SubsonicApiRequester) 
         private const val CONTRIBUTORS_ARTIST_TAG_NAME = "artist"
         private const val MUSIC_FOLDERS_TAG_NAME = "musicFolders"
         private const val SINGLE_MUSIC_FOLDER_TAG_NAME = "musicFolder"
+        private const val SINGLE_ALBUM_TAG_NAME = "album"
     }
 
     private lateinit var parser: XmlPullParser
@@ -108,6 +112,7 @@ class SubsonicXmlParser(private val subsonicApiRequester: SubsonicApiRequester) 
                     GENRE_TAG_NAME -> entries.add(element = readGenre())
                     MUSIC_FOLDERS_TAG_NAME -> entries.addAll(elements = readMusicFolders())
                     SINGLE_MUSIC_FOLDER_TAG_NAME -> entries.add(element = readMusicFolder())
+                    SINGLE_ALBUM_TAG_NAME -> entries.add(element = readAlbum())
                     else -> skip()
                 }
             }
@@ -212,7 +217,7 @@ class SubsonicXmlParser(private val subsonicApiRequester: SubsonicApiRequester) 
     private fun readArtist(): XmlArtist {
         requireStartTag(name = ARTIST_TAG_NAME)
         return XmlArtist(
-            Artist(
+            SubsonicArtist(
                 subsonicId = parser.getAttributeValue(null, "id"),
                 title = parser.getAttributeValue(null, "name")
             )
@@ -235,6 +240,14 @@ class SubsonicXmlParser(private val subsonicApiRequester: SubsonicApiRequester) 
         val title: String = this.getAttribute("name")
         val folder = SubsonicFolder(subsonicId = id, title = title)
         return XmlMusicFolder(folder = folder)
+    }
+
+    private fun readAlbum(): XmlAlbum {
+        requireStartTag(name = SINGLE_ALBUM_TAG_NAME)
+        val id: String = this.getAttribute(name = "id")
+        val title: String = this.getAttribute(name = "name")
+
+        return XmlAlbum(subsonicId = id, title = title)
     }
 
     private fun requireStartTag(name: String) {

@@ -59,5 +59,6 @@ class GetIndexesCallback(
                 folder.addArtists(xmlObject.media as Artist)
             }
         }
+        this.dataProcessed()
     }
 }

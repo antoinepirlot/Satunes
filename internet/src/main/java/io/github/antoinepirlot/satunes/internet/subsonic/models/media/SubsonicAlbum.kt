@@ -31,6 +31,7 @@ import io.github.antoinepirlot.satunes.database.models.Artist
  * @author Antoine Pirlot 26/09/2025
  */
 class SubsonicAlbum(
+    val subsonicId: String,
     title: String,
     artist: Artist,
     isCompilation: Boolean = false,

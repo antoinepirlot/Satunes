@@ -33,5 +33,5 @@ class SubsonicArtist(
     val subsonicId: String? = null,
     title: String
 ): Artist(title = title) {
-    //TODO same as folder but for albums
+
 }

@@ -58,5 +58,6 @@ class GetMusicFoldersCallback(
                 subsonicApiRequester.addFolderToIndex(xmlObject.media as SubsonicFolder)
             }
         }
+        this.dataProcessed()
     }
 }

@@ -115,4 +115,11 @@ abstract class SubsonicCallback(
     protected fun checkIfReceivedData() {
         if (subsonicApiRequester.subsonicState != SubsonicState.DATA_RECEIVED) setUnknownError()
     }
+
+    /**
+     * Change state to idle for [SubsonicState]
+     */
+    protected fun dataProcessed() {
+        subsonicApiRequester.subsonicState = SubsonicState.IDLE
+    }
 }

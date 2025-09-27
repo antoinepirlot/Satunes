@@ -5,7 +5,7 @@ import io.github.antoinepirlot.satunes.database.models.MediaImpl
 /**
  * @author Antoine Pirlot 25/09/2025
  */
-abstract class XmlMedia(val media: MediaImpl): XmlObject() {
+abstract class XmlMedia(val media: MediaImpl?): XmlObject() {
     open fun isArtist(): Boolean {
         return false
     }
@@ -19,6 +19,10 @@ abstract class XmlMedia(val media: MediaImpl): XmlObject() {
     }
 
     open fun isFolder(): Boolean {
+        return false
+    }
+
+    open fun isAlbum(): Boolean {
         return false
     }
 

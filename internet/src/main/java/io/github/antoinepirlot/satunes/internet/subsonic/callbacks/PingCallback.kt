@@ -56,7 +56,7 @@ internal class PingCallback(
         SubsonicApiRequester.serverVersion = xmlObject.serverVersion
         SubsonicApiRequester.openSubsonic = xmlObject.openSubsonic
 
-        subsonicApiRequester.subsonicState = SubsonicState.IDLE
+        this.dataProcessed()
         onSucceed?.invoke()
     }
 }

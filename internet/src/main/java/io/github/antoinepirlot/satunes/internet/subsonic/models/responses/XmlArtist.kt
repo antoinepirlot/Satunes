@@ -25,11 +25,12 @@
 package io.github.antoinepirlot.satunes.internet.subsonic.models.responses
 
 import io.github.antoinepirlot.satunes.database.models.Artist
+import io.github.antoinepirlot.satunes.internet.subsonic.models.media.SubsonicArtist
 
 /**
  * @author Antoine Pirlot 26/09/2025
  */
-class XmlArtist(artist: Artist): XmlMedia(media = artist) {
+class XmlArtist(artist: SubsonicArtist): XmlMedia(media = artist) {
     override fun isArtist(): Boolean {
         return true
     }

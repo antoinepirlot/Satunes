@@ -241,7 +241,7 @@ class SubsonicApiRequester(
                     url = this@SubsonicApiRequester.getCommandUrl(command = "getArtist", parameters = arrayOf("id=${artist.subsonicId}")),
                     resCallback = GetArtistCallback(
                         subsonicApiRequester = this@SubsonicApiRequester,
-                        onSucceed = {  }
+                        artist = artist
                     )
                 )
             }

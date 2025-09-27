@@ -50,7 +50,7 @@ class GetRandomMusicCallback(
             println() //TODO
         }
 
-        subsonicApiRequester.subsonicState = SubsonicState.IDLE
+        this.dataProcessed()
         onSucceed?.invoke()
     }
 }

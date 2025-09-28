@@ -164,7 +164,9 @@ internal fun MediaArtwork(
             job = CoroutineScope(Dispatchers.IO).launch {
                 var bitmap: Bitmap? = when (mediaImpl) {
                     is Music -> mediaImpl.getAlbumArtwork(context = context)
-                    is Album -> mediaImpl.getMusicSet().first().getAlbumArtwork(context = context)
+                    is Album ->
+                        if (mediaImpl.isEmpty()) null
+                        else mediaImpl.getMusicSet().first().getAlbumArtwork(context = context)
                     else -> null
                 }
                 if (bitmap != null

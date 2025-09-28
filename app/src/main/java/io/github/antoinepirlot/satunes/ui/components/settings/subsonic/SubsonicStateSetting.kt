@@ -37,6 +37,7 @@ import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.states.SubsonicUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.SubsonicViewModel
+import io.github.antoinepirlot.satunes.internet.SubsonicCall
 import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
 
 /**
@@ -53,6 +54,7 @@ fun SubsonicStateSetting(
     Column(modifier = modifier) {
         SubSettings(title = stringResource(R.string.subsonic_state_title)) {
             NormalText(text = stringResource(R.string.subsonic_state_content) + subsonicUiState.subsonicState)
+            NormalText(text = "Requests: ${SubsonicCall.nbRequests}") //TODO remove
         }
     }
 }

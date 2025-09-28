@@ -30,6 +30,7 @@ import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
+import io.github.antoinepirlot.satunes.internet.SubsonicCall
 import io.github.antoinepirlot.satunes.internet.subsonic.models.SubsonicState
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetAlbumCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetArtistCallback
@@ -38,6 +39,7 @@ import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetMus
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetRandomMusicCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.PingCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.SubsonicCallback
+import okhttp3.Call
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
@@ -112,7 +114,12 @@ class SubsonicApiRequester(
             .get()
             .url(url)
             .build()
-        client.newCall(req).enqueue(responseCallback = resCallback)
+        val call: Call = client.newCall(req)
+        SubsonicCall.Builder()
+            .setCall(call = call)
+            .setCallBack(callBack = resCallback)
+            .build()
+            .enqueue()
     }
 
     /**
@@ -223,8 +230,8 @@ class SubsonicApiRequester(
     /**
      * Load songs of received albums.
      */
-    @Synchronized
     private fun loadSongs() {
+        return //TODO
         if(!DataManager.hasSubsonicAlbums()) return
         for(album: Album in DataManager.getSubsonicAlbumsSet()) {
             this.loadAlbum(albumId = album.subsonicId!!)

@@ -155,6 +155,7 @@ object DataManager {
         return this.albumSortedMap.keys
     }
 
+    @Synchronized
     fun getSubsonicAlbumsSet(): Collection<Album> {
         return this.subsonicAlbumsSortedSet.values
     }

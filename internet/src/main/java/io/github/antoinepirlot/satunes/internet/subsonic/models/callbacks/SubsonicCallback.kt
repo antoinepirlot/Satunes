@@ -26,6 +26,7 @@ package io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import io.github.antoinepirlot.satunes.internet.SubsonicCall
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
 import io.github.antoinepirlot.satunes.internet.subsonic.models.SubsonicErrorCode
 import io.github.antoinepirlot.satunes.internet.subsonic.models.SubsonicState
@@ -51,7 +52,7 @@ import java.io.InputStream
 @RequiresApi(Build.VERSION_CODES.M)
 internal abstract class SubsonicCallback(
     protected val subsonicApiRequester: SubsonicApiRequester,
-    protected val onSucceed: (() -> Unit)? //Used in children classes
+    protected val onSucceed: (() -> Unit)?, //Used in children classes
 ) : Callback {
 
     private val _logger: SatunesLogger? = SatunesLogger.getLogger()
@@ -107,6 +108,7 @@ internal abstract class SubsonicCallback(
                 SubsonicState.ERROR.error = SubsonicErrorCode.DATA_NOT_FOUND
                 subsonicApiRequester.subsonicState = SubsonicState.ERROR
             }
+            SubsonicCall.executionFinished(subsonicCallback = this)
         }
     }
 

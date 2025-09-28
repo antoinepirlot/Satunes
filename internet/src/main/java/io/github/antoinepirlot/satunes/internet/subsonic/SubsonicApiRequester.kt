@@ -30,17 +30,14 @@ import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
-import io.github.antoinepirlot.satunes.internet.InternetManager
-import io.github.antoinepirlot.satunes.internet.exceptions.NotConnectedException
+import io.github.antoinepirlot.satunes.internet.subsonic.models.SubsonicState
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetAlbumCallback
+import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetArtistCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetIndexesCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetMusicFoldersCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetRandomMusicCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.PingCallback
-import io.github.antoinepirlot.satunes.internet.subsonic.models.SubsonicState
-import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetArtistCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.SubsonicCallback
-import okhttp3.Callback
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
@@ -104,7 +101,6 @@ class SubsonicApiRequester(
      * @param newState the new state the [subsonicState] must have.
      */
     private fun get(
-        context: Context,
         url: String,
         resCallback: SubsonicCallback,
         newState: SubsonicState = SubsonicState.REQUESTING
@@ -122,9 +118,8 @@ class SubsonicApiRequester(
     /**
      * Ping API
      */
-    fun ping(context: Context, onSucceed: (() -> Unit)? = null) {
+    fun ping(onSucceed: (() -> Unit)? = null) {
         this.get(
-            context = context,
             url = this.getCommandUrl(command = "ping", parameters = arrayOf()),
             resCallback = PingCallback(subsonicApiRequester = this, onSucceed = onSucceed),
             newState = SubsonicState.PINGING
@@ -157,7 +152,6 @@ class SubsonicApiRequester(
         if (size < 1 || size > 500)
             throw IllegalArgumentException("Can't get $size musics")
         this.get(
-            context = context,
             url = this.getCommandUrl(
                 command = "getRandomSongs",
                 parameters = arrayOf("size=$size")
@@ -179,26 +173,25 @@ class SubsonicApiRequester(
      *
      * @param context the [Context] of the app.
      */
-    fun loadAll(context: Context) {
-        this.loadMusicFolders(context = context)
+    fun loadAll() {
+        this.loadMusicFolders()
     }
 
     /**
      * Request "getIndexes" with "musicFolderId" param for each folder in [foldersToIndex].
      * Then all folder will received their data.
      */
-    private fun loadIndexesByFolder(context: Context) {
+    private fun loadIndexesByFolder() {
         if(!DataManager.hasSubsonicFolders()) return
         for (folder: Folder in DataManager.getRootSubsonicFolders()) {
             this.get(
-                context = context,
                 url = this@SubsonicApiRequester.getCommandUrl(
                     command = "getIndexes",
                     parameters = arrayOf("musicFolderId=${folder.subsonicId}")
                 ),
                 resCallback = GetIndexesCallback(
                     subsonicApiRequester = this@SubsonicApiRequester,
-                    onSucceed = { this.loadAlbums(context = context) }
+                    onSucceed = { this.loadAlbums() }
                 ),
             )
         }
@@ -207,23 +200,22 @@ class SubsonicApiRequester(
     /**
      * Load albums  query based on each subsonic artist.
      */
-    private fun loadAlbums(context: Context) {
+    private fun loadAlbums() {
         if(!DataManager.hasSubsonicArtists()) return
         for(artist: Artist in DataManager.getSubsonicArtistSet()) {
-            this.loadArtist(context = context, artistId = artist.subsonicId!!)
+            this.loadArtist(artistId = artist.subsonicId!!)
         }
     }
 
     /**
      * Load artist's information containing albums by using "getArtist" query.
      */
-    fun loadArtist(context: Context, artistId: String) {
+    fun loadArtist(artistId: String) {
         this.get(
-            context = context,
             url = this.getCommandUrl(command = "getArtist", parameters = arrayOf("id=$artistId")),
             resCallback = GetArtistCallback(
                 subsonicApiRequester = this,
-                onSucceed = { this.loadSongs(context = context) }
+                onSucceed = { this.loadSongs() }
             )
         )
     }
@@ -232,31 +224,29 @@ class SubsonicApiRequester(
      * Load songs of received albums.
      */
     @Synchronized
-    private fun loadSongs(context: Context) {
+    private fun loadSongs() {
         if(!DataManager.hasSubsonicAlbums()) return
         for(album: Album in DataManager.getSubsonicAlbumsSet()) {
-            this.loadAlbum(context = context, albumId = album.subsonicId!!)
+            this.loadAlbum(albumId = album.subsonicId!!)
         }
     }
 
     /**
      * Load album by its id and get songs of it.
      */
-    fun loadAlbum(context: Context, albumId: String) {
+    fun loadAlbum(albumId: String) {
         this.get(
-            context = context,
             url = this.getCommandUrl(command = "getAlbum", parameters = arrayOf("id=$albumId")),
             resCallback = GetAlbumCallback(subsonicApiRequester = this)
         )
     }
 
-    private fun loadMusicFolders(context: Context) {
+    private fun loadMusicFolders() {
         this.get(
-            context = context,
             url = this.getCommandUrl(command = "getMusicFolders", parameters = arrayOf()),
             resCallback = GetMusicFoldersCallback(
                 subsonicApiRequester = this,
-                onSucceed = { this.loadIndexesByFolder(context = context) }
+                onSucceed = { this.loadIndexesByFolder() }
             )
         )
     }

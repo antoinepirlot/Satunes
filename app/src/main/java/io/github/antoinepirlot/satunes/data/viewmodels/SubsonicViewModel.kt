@@ -129,9 +129,8 @@ class SubsonicViewModel : ViewModel() {
                     }
                 )
                 _subsonicApiRequester!!.ping(
-                    context = context,
                     onSucceed = {
-                        _subsonicApiRequester!!.loadAll(context = context)
+                        _subsonicApiRequester!!.loadAll()
                     }
                 ) //TODO
             } catch (_: Throwable) {

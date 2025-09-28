@@ -131,7 +131,7 @@ class SubsonicApiRequester(
      *
      * @return true if the process has been successfully done, otherwise false.
      */
-    fun disconnect(context: Context): Boolean {
+    fun disconnect(): Boolean {
         return when(this.subsonicState) {
             SubsonicState.REQUESTING, SubsonicState.PINGING, SubsonicState.DATA_RECEIVED -> false
             else -> {

@@ -95,7 +95,7 @@ class SubsonicViewModel : ViewModel() {
     }
 
     fun disconnect() {
-        _subsonicApiRequester?.disconnect(context = MainActivity.instance.applicationContext)
+        _subsonicApiRequester?.disconnect()
     }
 
     /**
@@ -128,11 +128,7 @@ class SubsonicViewModel : ViewModel() {
                         }
                     }
                 )
-                _subsonicApiRequester!!.ping(
-                    onSucceed = {
-                        _subsonicApiRequester!!.loadAll()
-                    }
-                ) //TODO
+                _subsonicApiRequester!!.ping(onSucceed = { _subsonicApiRequester!!.loadAll() }) //TODO
             } catch (_: Throwable) {
                 showErrorSnackBar(
                     scope = scope,

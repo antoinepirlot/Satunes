@@ -48,9 +48,13 @@ internal fun AllMusicsListView(
     dataViewModel: DataViewModel = viewModel(),
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
-    if (satunesUiState.mode == SatunesModes.ONLINE)
-        throw IllegalStateException("Can't show all musics page in online mode.")
+
     val musicSet: Set<MediaImpl> = dataViewModel.getMusicSet()
+
+    LaunchedEffect(key1 = Unit) {
+        if (satunesUiState.mode == SatunesModes.ONLINE)
+            throw IllegalStateException("Can't show all musics page in online mode.")
+    }
 
     LaunchedEffect(key1 = dataViewModel.isLoaded) {
         if (musicSet.isNotEmpty())

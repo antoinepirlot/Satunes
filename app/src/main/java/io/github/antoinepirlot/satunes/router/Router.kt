@@ -38,18 +38,19 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
+import io.github.antoinepirlot.satunes.data.allNavBarSections
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
+import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.router.routes.mediaRoutes
 import io.github.antoinepirlot.satunes.router.routes.playbackRoutes
 import io.github.antoinepirlot.satunes.router.routes.searchRoutes
 import io.github.antoinepirlot.satunes.router.routes.settingsRoutes
-import io.github.antoinepirlot.satunes.router.utils.getNavBarSectionDestination
 import io.github.antoinepirlot.satunes.ui.components.bars.backToRoot
 import io.github.antoinepirlot.satunes.utils.checkDefaultPlaylistSetting
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
@@ -73,9 +74,11 @@ internal fun Router(
     val isAudioAllowed: Boolean = satunesUiState.isAudioAllowed
     var defaultDestination: Destination? by rememberSaveable { mutableStateOf(null) }
     var isInitialisation: Boolean by rememberSaveable { mutableStateOf(true) }
+    val isMusicsNavBarEnabled: Boolean by rememberSaveable { NavBarSection.MUSICS.isEnabled }
+
     LaunchedEffect(key1 = Unit) {
         defaultDestination =
-            getNavBarSectionDestination(navBarSection = satunesViewModel.defaultNavBarSection)
+            Destination.getDestination(navBarSection = satunesViewModel.defaultNavBarSection)
     }
 
     if (defaultDestination == null) return
@@ -110,6 +113,15 @@ internal fun Router(
     LaunchedEffect(key1 = currentRoute) {
         satunesViewModel.setCurrentDestination(destination = currentRoute)
         satunesViewModel.clearCurrentMediaImpl()
+    }
+
+    LaunchedEffect(key1 = satunesUiState.mode) {
+        if (!isMusicsNavBarEnabled && currentRoute == Destination.MUSICS.link) {
+            navController.popBackStack()
+            navController.navigate(
+                route = Destination.getDestination(navBarSection = getFirstCompatibleNavBar()!!).link
+            )
+        }
     }
 
     NavHost(
@@ -176,4 +188,12 @@ private fun checkIfAllowed(
         return false
     }
     return true
+}
+
+private fun getFirstCompatibleNavBar(): NavBarSection? {
+    for (navBarSection in allNavBarSections) {
+        if (navBarSection.isEnabled.value)
+            return navBarSection
+    }
+    return null
 }

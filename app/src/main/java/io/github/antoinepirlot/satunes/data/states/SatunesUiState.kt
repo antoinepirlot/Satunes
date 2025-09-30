@@ -32,7 +32,6 @@ import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.models.SatunesModes
-import io.github.antoinepirlot.satunes.router.utils.getNavBarSectionDestination
 
 /**
  * @author Antoine Pirlot on 19/07/2024
@@ -42,7 +41,7 @@ data class SatunesUiState(
     val whatsNewSeen: Boolean = SettingsManager.whatsNewSeen,
     val includeExcludeSeen: Boolean = SettingsManager.includeExcludeSeen,
     val extraButtons: (@Composable () -> Unit)? = null,
-    val currentDestination: Destination = getNavBarSectionDestination(navBarSection = SettingsManager.defaultNavBarSection.value),
+    val currentDestination: Destination = Destination.getDestination(navBarSection = SettingsManager.defaultNavBarSection.value),
     /**
      * The current [MediaImpl] associated to the [currentDestination] if it is a single media destination
      * It's null if the [currentDestination] is not a single media.

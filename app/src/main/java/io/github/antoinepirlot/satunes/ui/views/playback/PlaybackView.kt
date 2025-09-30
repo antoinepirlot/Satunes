@@ -32,7 +32,7 @@ import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
-import io.github.antoinepirlot.satunes.router.utils.getNavBarSectionDestination
+import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.ui.components.bars.backToRoot
 import io.github.antoinepirlot.satunes.ui.views.playback.mobile.PlaybackMobileView
 import io.github.antoinepirlot.satunes.ui.views.playback.tablet.PlaybackTabletView
@@ -53,7 +53,7 @@ internal fun PlaybackView(
 
     if (playbackViewModel.musicPlaying == null) {
         backToRoot(
-            rootRoute = getNavBarSectionDestination(navBarSection = satunesViewModel.defaultNavBarSection),
+            rootRoute = Destination.getDestination(navBarSection = satunesViewModel.defaultNavBarSection),
             navController = navController
         )
         return

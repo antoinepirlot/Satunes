@@ -29,6 +29,6 @@ import io.github.antoinepirlot.satunes.icons.SatunesIcons
  * @author Antoine Pirlot 30/09/2025
  */
 enum class SatunesModes(val icon: SatunesIcons) {
-    OFFLINE(icon = SatunesIcons.CLOUD_ON_ICON),
-    ONLINE(icon = SatunesIcons.CLOUD_OFF_ICON)
+    OFFLINE(icon = SatunesIcons.CLOUD_OFF_ICON),
+    ONLINE(icon = SatunesIcons.CLOUD_ON_ICON)
 }

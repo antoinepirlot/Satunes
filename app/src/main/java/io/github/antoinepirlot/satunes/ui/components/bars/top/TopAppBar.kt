@@ -22,6 +22,7 @@ package io.github.antoinepirlot.satunes.ui.components.bars.top
 
 import android.annotation.SuppressLint
 import android.os.Build
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -50,6 +51,7 @@ import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.models.DestinationCategory
+import io.github.antoinepirlot.satunes.models.SatunesModes
 import io.github.antoinepirlot.satunes.ui.components.buttons.IconButton
 
 /**
@@ -77,27 +79,34 @@ internal fun TopAppBar(
             titleContentColor = MaterialTheme.colorScheme.primary,
         ),
         navigationIcon = {
-            val screenWidth: Int = LocalConfiguration.current.screenWidthDp
-            if (
-                currentDestination.category == DestinationCategory.PLAYBACK &&
-                screenWidth < ScreenSizes.LARGE
-            ) {
+            Row {
+                val screenWidth: Int = LocalConfiguration.current.screenWidthDp
+                if (
+                    currentDestination.category == DestinationCategory.PLAYBACK &&
+                    screenWidth < ScreenSizes.LARGE
+                ) {
+                    IconButton(
+                        icon = SatunesIcons.PLAYBACK,
+                        onClick = {
+                            onPlaybackQueueButtonClick(
+                                uiState = satunesUiState,
+                                navController = navController
+                            )
+                        }
+                    )
+                } else if (
+                    currentDestination.category == DestinationCategory.MEDIA &&
+                    getSortOptions(destination = satunesUiState.currentDestination).size > 1
+                ) {
+                    IconButton(
+                        icon = SatunesIcons.SORT,
+                        onClick = { satunesViewModel.showSortDialog() }
+                    )
+                }
+                val mode: SatunesModes = satunesUiState.mode
                 IconButton(
-                    icon = SatunesIcons.PLAYBACK,
-                    onClick = {
-                        onPlaybackQueueButtonClick(
-                            uiState = satunesUiState,
-                            navController = navController
-                        )
-                    }
-                )
-            } else if (
-                currentDestination.category == DestinationCategory.MEDIA &&
-                getSortOptions(destination = satunesUiState.currentDestination).size > 1
-            ) {
-                IconButton(
-                    icon = SatunesIcons.SORT,
-                    onClick = { satunesViewModel.showSortDialog() }
+                    icon = mode.icon,
+                    onClick = { satunesViewModel.switchCloudMode() }
                 )
             }
         },

@@ -73,7 +73,7 @@ enum class SettingsViews(
     ),
     SUBSONIC(
         stringId = R.string.subsonic_title,
-        icon = SatunesIcons.SETTING_SUBSONIC,
+        icon = SatunesIcons.CLOUD_ON_ICON,
         destination = Destination.SUBSONIC_SETTINGS,
         minSdk = Build.VERSION_CODES.M
     ),

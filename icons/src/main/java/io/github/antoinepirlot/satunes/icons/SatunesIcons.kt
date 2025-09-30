@@ -38,6 +38,7 @@ import androidx.compose.material.icons.rounded.Category
 import androidx.compose.material.icons.rounded.CleaningServices
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Cloud
+import androidx.compose.material.icons.rounded.CloudOff
 import androidx.compose.material.icons.rounded.DateRange
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.DirectionsCar
@@ -106,6 +107,14 @@ enum class SatunesIcons(
         imageVector = Icons.Rounded.ArrowDropDown,
         description = "Close dropdown menu icon"
     ),
+    CLOUD_OFF_ICON(
+        imageVector = Icons.Rounded.CloudOff,
+        description = "Cloud Off Icon"
+    ),
+    CLOUD_ON_ICON(
+        imageVector = Icons.Rounded.Cloud,
+        description = "Cloud On Icon"
+    ),
     DONE(imageVector = Icons.Rounded.Done, description = "Done Icon"),
     EXPORT(imageVector = Icons.Rounded.Upload, description = "Export Icon"),
     FORWARD(imageVector = Icons.Rounded.FastForward, description = "Forward Icon"),
@@ -169,10 +178,6 @@ enum class SatunesIcons(
     SETTING_PERMISSIONS(
         imageVector = Icons.Rounded.Security,
         description = "Permission Setting Icon"
-    ),
-    SETTING_SUBSONIC(
-        imageVector = Icons.Rounded.Cloud,
-        description = "Subsonic Icon"
     ),
     SETTING_UPDATE(imageVector = Icons.Rounded.Update, description = "Update Setting Icon"),
     SHARE(imageVector = Icons.Rounded.Share, description = "Share Icon"),

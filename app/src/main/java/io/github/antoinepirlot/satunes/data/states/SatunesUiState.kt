@@ -31,6 +31,7 @@ import io.github.antoinepirlot.satunes.database.models.BarSpeed
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.models.Destination
+import io.github.antoinepirlot.satunes.models.SatunesModes
 import io.github.antoinepirlot.satunes.router.utils.getNavBarSectionDestination
 
 /**
@@ -65,4 +66,5 @@ data class SatunesUiState(
     val artistReplacement: Boolean = SettingsManager.artistReplacement,
     val showSortDialog: Boolean = false,
     val showMediaSelectionDialog: Boolean = false,
+    val mode: SatunesModes = SatunesModes.OFFLINE
 )

@@ -797,11 +797,15 @@ class SatunesViewModel : ViewModel() {
 
     fun switchCloudMode() {
         _uiState.update { currentState: SatunesUiState ->
-            currentState.copy(
-                mode =
-                    if (currentState.mode == SatunesModes.ONLINE) SatunesModes.OFFLINE
-                    else SatunesModes.ONLINE
-            )
+            val newMode: SatunesModes
+            if (currentState.mode == SatunesModes.ONLINE) {
+                newMode = SatunesModes.OFFLINE
+                NavBarSection.MUSICS.isEnabled.value = true
+            } else {
+                newMode = SatunesModes.ONLINE
+                NavBarSection.MUSICS.isEnabled.value = false
+            }
+            currentState.copy(mode = newMode)
         }
     }
 }

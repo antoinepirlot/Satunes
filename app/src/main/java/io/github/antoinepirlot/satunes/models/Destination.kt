@@ -149,5 +149,16 @@ enum class Destination(
         fun getDestination(destination: String): Destination {
             return this.destinationsMap[destination]!!
         }
+
+        fun getDestination(navBarSection: NavBarSection): Destination {
+            return when (navBarSection) {
+                NavBarSection.MUSICS -> MUSICS
+                NavBarSection.ALBUMS -> ALBUMS
+                NavBarSection.GENRES -> GENRES
+                NavBarSection.ARTISTS -> ARTISTS
+                NavBarSection.FOLDERS -> FOLDERS
+                NavBarSection.PLAYLISTS -> PLAYLISTS
+            }
+        }
     }
 }

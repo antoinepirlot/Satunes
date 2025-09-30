@@ -21,8 +21,6 @@
 package io.github.antoinepirlot.satunes.router
 
 import android.content.Context
-import androidx.activity.OnBackPressedDispatcher
-import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -39,6 +37,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import io.github.antoinepirlot.android.utils.logger.Logger
+import io.github.antoinepirlot.satunes.data.allNavBarSections
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.states.NavigationUiState
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
@@ -46,14 +45,13 @@ import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
+import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.database.models.media.Playlist
 import io.github.antoinepirlot.satunes.models.Destination
-import io.github.antoinepirlot.satunes.models.listeners.OnBackPressedListener
 import io.github.antoinepirlot.satunes.router.routes.mediaRoutes
 import io.github.antoinepirlot.satunes.router.routes.playbackRoutes
 import io.github.antoinepirlot.satunes.router.routes.searchRoutes
 import io.github.antoinepirlot.satunes.router.routes.settingsRoutes
-import io.github.antoinepirlot.satunes.router.utils.getNavBarSectionDestination
 import io.github.antoinepirlot.satunes.utils.checkDefaultPlaylistSetting
 
 /**
@@ -78,9 +76,10 @@ internal fun Router(
     var defaultDestination: Destination? by rememberSaveable { mutableStateOf(null) }
 
     if (defaultDestination == null) {
-        LaunchedEffect(key1 = Unit) {
+        val isMusicsNavBarEnabled: Boolean by rememberSaveable { NavBarSection.MUSICS.isEnabled } LaunchedEffect (key1 =
+            Unit) {
             defaultDestination =
-                getNavBarSectionDestination(navBarSection = satunesViewModel.defaultNavBarSection)
+                Destination.getDestination(navBarSection = satunesViewModel.defaultNavBarSection)
             navigationViewModel.reset()
         }
         return
@@ -110,6 +109,15 @@ internal fun Router(
     }
 
     // Start handle destination change
+
+    LaunchedEffect(key1 = satunesUiState.mode) {
+        if (!isMusicsNavBarEnabled && currentRoute == Destination.MUSICS.link) {
+            navController.popBackStack()
+            navController.navigate(
+                route = Destination.getDestination(navBarSection = getFirstCompatibleNavBar()!!).link
+            )
+        }
+    }
 
     NavHost(
         modifier = modifier,
@@ -189,4 +197,12 @@ private fun checkIfAllowed(
         return false
     }
     return true
+}
+
+private fun getFirstCompatibleNavBar(): NavBarSection? {
+    for (navBarSection in allNavBarSections) {
+        if (navBarSection.isEnabled.value)
+            return navBarSection
+    }
+    return null
 }

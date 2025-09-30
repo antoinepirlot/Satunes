@@ -29,6 +29,7 @@ import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.data.viewmodels.utils.isAudioAllowed
 import io.github.antoinepirlot.satunes.database.models.BarSpeed
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
+import io.github.antoinepirlot.satunes.models.SatunesModes
 
 /**
  * @author Antoine Pirlot on 19/07/2024
@@ -57,4 +58,5 @@ data class SatunesUiState(
     val showSortDialog: Boolean = false,
     val showMediaSelectionDialog: Boolean = false,
     val isMusicTitleDisplayName: Boolean = SettingsManager.isMusicTitleDisplayName
+    val mode: SatunesModes = SatunesModes.OFFLINE
 )

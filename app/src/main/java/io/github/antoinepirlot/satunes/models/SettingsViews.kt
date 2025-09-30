@@ -72,7 +72,7 @@ enum class SettingsViews(
     ),
     SUBSONIC(
         stringId = R.string.subsonic_title,
-        icon = JetpackLibsIcons.SETTING_CLOUD,
+        icon = JetpackLibsIcons.CLOUD_ON_ICON,
         destination = Destination.SUBSONIC_SETTINGS,
     ),
     PERMISSIONS(

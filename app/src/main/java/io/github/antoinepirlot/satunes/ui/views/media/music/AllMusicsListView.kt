@@ -22,14 +22,18 @@ package io.github.antoinepirlot.satunes.ui.views.media.music
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
+import io.github.antoinepirlot.satunes.models.SatunesModes
 import io.github.antoinepirlot.satunes.ui.components.buttons.fab.ExtraButtonList
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 
@@ -43,8 +47,9 @@ internal fun AllMusicsListView(
     satunesViewModel: SatunesViewModel = viewModel(),
     dataViewModel: DataViewModel = viewModel(),
 ) {
-    //Find a way to do something more aesthetic but it works
-//    val musicSet: Set<Music> = dataViewModel.getMusicSet()
+    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+    if (satunesUiState.mode == SatunesModes.ONLINE)
+        throw IllegalStateException("Can't show all musics page in online mode.")
     val musicSet: Set<MediaImpl> = dataViewModel.getMusicSet()
 
     LaunchedEffect(key1 = dataViewModel.isLoaded) {

@@ -22,7 +22,7 @@ package io.github.antoinepirlot.satunes.playback.models
 
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.media3.common.MediaItem
-import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.playback.exceptions.AlreadyInPlaybackException
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 

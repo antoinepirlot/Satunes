@@ -18,60 +18,62 @@
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
-package io.github.antoinepirlot.satunes.database.models
+package io.github.antoinepirlot.satunes.database.models.media
 
-import io.github.antoinepirlot.satunes.database.models.comparators.MusicInAlbumComparator
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import java.util.SortedSet
 
 /**
  * @author Antoine Pirlot on 27/03/2024
  */
 
-open class Album(
+open class Artist(
     subsonicId: String? = null,
     title: String,
-    var artist: Artist,
-    var isCompilation: Boolean = false,
-    year: Int? = null
 ) : MediaImpl(id = nextId, subsonicId = subsonicId, title = title) {
+    private val albumSortedSet: SortedSet<Album> = sortedSetOf()
+
+    val albumSortedSetUpdate: MutableState<Boolean> = mutableStateOf(false)
 
     companion object {
         var nextId: Long = 1
     }
 
-    override val musicSortedSet: SortedSet<Music> = sortedSetOf(MusicInAlbumComparator)
-    val year: Int? = if (year != null && year < 1) null else year
     init {
         nextId++
+    }
+
+    fun addAlbum(album: Album): Boolean {
+        if (!contains(album = album)) {
+            albumSortedSet.add(element = album)
+            return true
+        }
+        return false
+    }
+
+    fun getAlbumSet(): Set<Album> {
+        return this.albumSortedSet
+    }
+
+    fun contains(album: Album): Boolean {
+        return this.albumSortedSet.contains(album)
+    }
+
+    override fun toString(): String {
+        return this.title
     }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as Album
+        other as Artist
 
-        if (title != other.title) return false
-        if (artist != other.artist) return false
-
-        return true
+        return title == other.title
     }
 
     override fun hashCode(): Int {
-        var result = title.hashCode()
-        result = 31 * result + (artist.hashCode())
-        return result
-    }
-
-    override fun compareTo(other: MediaImpl): Int {
-        var compared: Int = super.compareTo(other)
-        if (compared == 0 && other is Album) {
-            compared = this.artist.compareTo(other.artist)
-        }
-        return compared
-    }
-
-    override fun toString(): String {
-        return "$title - $artist"
+        return title.hashCode()
     }
 }

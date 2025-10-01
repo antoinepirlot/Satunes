@@ -23,7 +23,7 @@ package io.github.antoinepirlot.satunes.ui.components.bars
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.sp
 import io.github.antoinepirlot.jetpack_libs.components.texts.Title
-import io.github.antoinepirlot.satunes.database.models.Folder
+import io.github.antoinepirlot.satunes.database.models.media.Folder
 import io.github.antoinepirlot.satunes.ui.utils.getRootFolderName
 
 @Composable

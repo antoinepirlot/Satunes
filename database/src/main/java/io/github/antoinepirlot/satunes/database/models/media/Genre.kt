@@ -18,7 +18,7 @@
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
-package io.github.antoinepirlot.satunes.database.models
+package io.github.antoinepirlot.satunes.database.models.media
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -28,11 +28,11 @@ import java.util.SortedSet
  * @author Antoine Pirlot on 27/03/2024
  */
 
-open class Artist(
+class Genre(
     subsonicId: String? = null,
     title: String,
 ) : MediaImpl(id = nextId, subsonicId = subsonicId, title = title) {
-    private val albumSortedSet: SortedSet<Album> = sortedSetOf()
+    private val _albumSortedSet: SortedSet<Album> = sortedSetOf()
 
     val albumSortedSetUpdate: MutableState<Boolean> = mutableStateOf(false)
 
@@ -44,31 +44,22 @@ open class Artist(
         nextId++
     }
 
-    fun addAlbum(album: Album): Boolean {
-        if (!contains(album = album)) {
-            albumSortedSet.add(element = album)
-            return true
-        }
-        return false
-    }
-
     fun getAlbumSet(): Set<Album> {
-        return this.albumSortedSet
+        return this._albumSortedSet
     }
 
-    fun contains(album: Album): Boolean {
-        return this.albumSortedSet.contains(album)
-    }
-
-    override fun toString(): String {
-        return this.title
+    fun addAlbum(album: Album) {
+        if (!this._albumSortedSet.contains(element = album)) {
+            this._albumSortedSet.add(element = album)
+            this.albumSortedSetUpdate.value = true
+        }
     }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as Artist
+        other as Genre
 
         return title == other.title
     }

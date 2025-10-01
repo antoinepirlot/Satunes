@@ -21,8 +21,8 @@
 package io.github.antoinepirlot.satunes.data
 
 import androidx.compose.runtime.Composable
-import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.custom_action.CustomActions
+import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.ui.components.buttons.playback.custom_actions.AddToPlaylistCustomAction
 import io.github.antoinepirlot.satunes.ui.components.buttons.playback.custom_actions.FavoriteCustomAction
 import io.github.antoinepirlot.satunes.ui.components.buttons.playback.custom_actions.ShareCustomAction

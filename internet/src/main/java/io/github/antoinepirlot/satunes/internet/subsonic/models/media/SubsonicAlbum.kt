@@ -24,8 +24,7 @@
 
 package io.github.antoinepirlot.satunes.internet.subsonic.models.media
 
-import io.github.antoinepirlot.satunes.database.models.Album
-import io.github.antoinepirlot.satunes.database.models.Artist
+import io.github.antoinepirlot.satunes.database.models.media.Album
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName

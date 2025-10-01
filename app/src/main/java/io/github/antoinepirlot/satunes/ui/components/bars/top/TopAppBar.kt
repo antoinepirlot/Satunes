@@ -47,8 +47,8 @@ import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.getSortOptions
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
-import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.SubsonicViewModel
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.models.DestinationCategory
@@ -65,7 +65,7 @@ internal fun TopAppBar(
     modifier: Modifier = Modifier,
     scrollBehavior: TopAppBarScrollBehavior,
     satunesViewModel: SatunesViewModel = viewModel(),
-    dataViewModel: DataViewModel = viewModel(),
+    subsonicViewModel: SubsonicViewModel = viewModel(),
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     val navController: NavHostController = LocalNavController.current
@@ -105,11 +105,15 @@ internal fun TopAppBar(
                         onClick = { satunesViewModel.showSortDialog() }
                     )
                 }
-                val mode: SatunesModes = satunesUiState.mode
-                IconButton(
-                    icon = mode.icon,
-                    onClick = { satunesViewModel.switchCloudMode(dataViewModel = dataViewModel) }
-                )
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    val mode: SatunesModes = satunesUiState.mode
+                    IconButton(
+                        icon = mode.icon,
+                        onClick = {
+                            satunesViewModel.switchCloudMode(subsonicViewModel = subsonicViewModel)
+                        }
+                    )
+                }
             }
         },
         title = {

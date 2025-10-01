@@ -52,6 +52,7 @@ import io.github.antoinepirlot.satunes.data.local.LocalMainScope
 import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.data.states.SubsonicUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.SubsonicViewModel
+import io.github.antoinepirlot.satunes.database.models.User
 import io.github.antoinepirlot.satunes.internet.subsonic.models.SubsonicState
 import io.github.antoinepirlot.satunes.ui.components.LoadingCircle
 import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
@@ -72,9 +73,11 @@ fun SubsonicConnectionSetting(
         title = stringResource(R.string.subsonic_connection_title),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        val user: User = subsonicViewModel.user
+
         NormalText(text = stringResource(R.string.subsonic_connection_text), maxLines = 2)
         OutlinedTextField(
-            value = subsonicViewModel.url,
+            value = user.url,
             onValueChange = { subsonicViewModel.updateSubsonicUrl(url = it) },
             label = { NormalText(text = "URL") },
             placeholder = { NormalText(text = "https://example.org") },
@@ -86,7 +89,7 @@ fun SubsonicConnectionSetting(
                     contentType = ContentType(AUTOFILL_HINT_USERNAME)
                 }
             },
-            value = subsonicViewModel.username,
+            value = user.username,
             onValueChange = { subsonicViewModel.updateSubsonicUsername(username = it) },
             label = { NormalText(text = "Username") },
             placeholder = { NormalText(text = "username") },
@@ -98,7 +101,7 @@ fun SubsonicConnectionSetting(
                     contentType = ContentType(AUTOFILL_HINT_PASSWORD)
                 }
             },
-            value = subsonicViewModel.password,
+            value = user.password,
             onValueChange = { subsonicViewModel.updateSubsonicPassword(password = it) },
             label = { NormalText(text = "Password") },
             placeholder = { NormalText(text = "@Password123") },

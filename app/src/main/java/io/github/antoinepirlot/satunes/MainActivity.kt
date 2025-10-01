@@ -41,8 +41,8 @@ import io.github.antoinepirlot.satunes.database.models.FileExtensions
 import io.github.antoinepirlot.satunes.database.models.FoldersSelection
 import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.database.models.media.Playlist
-import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
+import io.github.antoinepirlot.satunes.database.services.data.LocalDataLoader
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.playback.services.WidgetPlaybackManager
@@ -279,7 +279,7 @@ internal class MainActivity : ComponentActivity() {
             this.handledMusic = DataManager.getMusic(absolutePath = musicPath)
         } catch (_: NullPointerException) {
             //Music has not been loaded by Satunes
-            this.handledMusic = DataLoader.load(context = getContext(), uri = uri)
+            this.handledMusic = LocalDataLoader.load(context = getContext(), uri = uri)
             DataManager.remove(music = this.handledMusic!!)
             if (this.handledMusic!!.album.musicCount() == 1)
                 DataManager.removeAlbum(album = this.handledMusic!!.album)

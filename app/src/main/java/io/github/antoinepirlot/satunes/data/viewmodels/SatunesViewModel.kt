@@ -45,7 +45,7 @@ import io.github.antoinepirlot.satunes.database.models.FoldersSelection
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.database.models.UpdateChannel
 import io.github.antoinepirlot.satunes.database.models.media.Playlist
-import io.github.antoinepirlot.satunes.database.services.data.DataLoader
+import io.github.antoinepirlot.satunes.database.services.data.LocalDataLoader
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.internet.updates.APKDownloadStatus
@@ -92,8 +92,8 @@ class SatunesViewModel : ViewModel() {
     }
 
     private val _logger: Logger? = Logger.getLogger()
-    private val _isLoadingData: MutableState<Boolean> = DataLoader.isLoading
-    private val _isDataLoaded: MutableState<Boolean> = DataLoader.isLoaded
+    private val _isLoadingData: MutableState<Boolean> = LocalDataLoader.isLoading
+    private val _isDataLoaded: MutableState<Boolean> = LocalDataLoader.isLoaded
     private val _defaultNavBarSection: MutableState<NavBarSection> =
         SettingsManager.defaultNavBarSection
     private val _defaultPlaylistId: MutableLongState = SettingsManager.defaultPlaylistId
@@ -209,7 +209,7 @@ class SatunesViewModel : ViewModel() {
 
     fun loadAllData() {
         CoroutineScope(Dispatchers.IO).launch {
-            DataLoader.loadAllData(context = MainActivity.instance.applicationContext)
+            LocalDataLoader.loadAllData(context = MainActivity.instance.applicationContext)
         }
     }
 
@@ -222,7 +222,7 @@ class SatunesViewModel : ViewModel() {
                 // run from MAIN thread as media controller seems to not be reachable from IO thread
                 playbackViewModel.stop()
             }
-            DataLoader.resetAllData()
+            LocalDataLoader.resetAllData()
             this@SatunesViewModel.loadAllData()
         }
     }

@@ -37,8 +37,8 @@ import io.github.antoinepirlot.satunes.car.pages.pages
 import io.github.antoinepirlot.satunes.car.utils.buildMediaItem
 import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.media.Music
-import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
+import io.github.antoinepirlot.satunes.database.services.data.LocalDataLoader
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
 import kotlinx.coroutines.Dispatchers
@@ -80,14 +80,14 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
 
     private fun loadAllPlaybackData() {
         runBlocking(Dispatchers.IO) {
-            DataLoader.loadAllData(context = baseContext)
+            LocalDataLoader.loadAllData(context = baseContext)
         }
         PlaybackManager.initPlaybackWithAllMusics(
             context = applicationContext,
             listener = SatunesPlaybackListener
         )
 
-        if (!DataLoader.isLoaded.value) {
+        if (!LocalDataLoader.isLoaded.value) {
             val message = "Data has not been loaded"
             _logger?.severe(message)
             throw IllegalStateException(message)

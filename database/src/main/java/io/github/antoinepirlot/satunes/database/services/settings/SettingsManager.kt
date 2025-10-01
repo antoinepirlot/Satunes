@@ -34,7 +34,7 @@ import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.database.models.UpdateChannel
 import io.github.antoinepirlot.satunes.database.models.custom_action.CustomActions
 import io.github.antoinepirlot.satunes.database.models.media.Playlist
-import io.github.antoinepirlot.satunes.database.services.data.DataLoader
+import io.github.antoinepirlot.satunes.database.services.data.LocalDataLoader
 import io.github.antoinepirlot.satunes.database.services.settings.design.DesignSettings
 import io.github.antoinepirlot.satunes.database.services.settings.library.LibrarySettings
 import io.github.antoinepirlot.satunes.database.services.settings.playback.PlaybackSettings
@@ -144,7 +144,7 @@ object SettingsManager {
         PlaybackSettings.loadSettings(context = context)
         loadFilters(context = context)
         LibrarySettings.loadSettings(context = context)
-        DataLoader.loadFoldersPaths()
+        LocalDataLoader.loadFoldersPaths()
         _isLoaded = true
     }
 

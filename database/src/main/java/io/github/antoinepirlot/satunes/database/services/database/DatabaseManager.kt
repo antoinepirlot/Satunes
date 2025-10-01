@@ -47,12 +47,11 @@ import io.github.antoinepirlot.satunes.database.models.media.Folder
 import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.database.models.media.Playlist
-import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
+import io.github.antoinepirlot.satunes.database.services.data.LocalDataLoader
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 /**
@@ -658,7 +657,7 @@ class DatabaseManager private constructor(context: Context) {
     }
 
     suspend fun getOrder(playlist: Playlist, music: Music): Long {
-        if (!DataLoader.isLoading.value) _logger?.info("Get Order") // It will reduce startup speed if executed
+        if (!LocalDataLoader.isLoading.value) _logger?.info("Get Order") // It will reduce startup speed if executed
         val musicsPlaylistsRelList: List<MusicsPlaylistsRel> =
             musicsPlaylistsRelDAO.getAllFromPlaylist(playlistId = playlist.id)
         val musicsPlaylistsRel: MusicsPlaylistsRel =

@@ -31,8 +31,8 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import io.github.antoinepirlot.android.utils.logger.Logger
 import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.media.Music
-import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
+import io.github.antoinepirlot.satunes.database.services.data.LocalDataLoader
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.playback.models.PlaybackListener
 import io.github.antoinepirlot.satunes.playback.models.Playlist
@@ -119,10 +119,10 @@ object PlaybackManager {
         listener: PlaybackListener? = this.listener
     ) {
         _logger?.info("Init playback with all musics")
-        if (!DataLoader.isLoaded.value && !DataLoader.isLoading.value) {
-            DataLoader.resetAllData()
+        if (!LocalDataLoader.isLoaded.value && !LocalDataLoader.isLoading.value) {
+            LocalDataLoader.resetAllData()
             runBlocking(Dispatchers.IO) {
-                DataLoader.loadAllData(context = context)
+                LocalDataLoader.loadAllData(context = context)
             }
             this.initPlayback(context = context, listener = listener, loadAllMusics = true)
         } else {

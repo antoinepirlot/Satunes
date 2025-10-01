@@ -43,8 +43,8 @@ import io.github.antoinepirlot.satunes.database.models.database.relations.Playli
 import io.github.antoinepirlot.satunes.database.models.database.tables.MusicDB
 import io.github.antoinepirlot.satunes.database.models.database.tables.MusicsPlaylistsRel
 import io.github.antoinepirlot.satunes.database.models.database.tables.PlaylistDB
-import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
+import io.github.antoinepirlot.satunes.database.services.data.LocalDataLoader
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import io.github.antoinepirlot.satunes.utils.utils.readTextFromUri
 import io.github.antoinepirlot.satunes.utils.utils.showToastOnUiThread
@@ -657,7 +657,7 @@ class DatabaseManager private constructor(context: Context) {
     }
 
     suspend fun getOrder(playlist: Playlist, music: Music): Long {
-        if (!DataLoader.isLoading.value) _logger?.info("Get Order") // It will reduce startup speed if executed
+        if (!LocalDataLoader.isLoading.value) _logger?.info("Get Order") // It will reduce startup speed if executed
         val musicsPlaylistsRelList: List<MusicsPlaylistsRel> =
             musicsPlaylistsRelDAO.getAllFromPlaylist(playlistId = playlist.id)
         val musicsPlaylistsRel: MusicsPlaylistsRel =

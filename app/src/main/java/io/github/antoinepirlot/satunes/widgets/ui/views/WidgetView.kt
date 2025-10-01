@@ -27,7 +27,7 @@ import androidx.glance.appwidget.CircularProgressIndicator
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Box
 import androidx.glance.layout.fillMaxSize
-import io.github.antoinepirlot.satunes.database.services.data.DataLoader
+import io.github.antoinepirlot.satunes.database.services.data.LocalDataLoader
 import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
 import io.github.antoinepirlot.satunes.widgets.ui.components.buttons.LoadSatunesButton
 
@@ -40,7 +40,7 @@ fun WidgetView(
     modifier: GlanceModifier = GlanceModifier,
     widgetView: @Composable @GlanceComposable () -> Unit
 ) {
-    val isDataLoading: Boolean by DataLoader.isLoading
+    val isDataLoading: Boolean by LocalDataLoader.isLoading
     val isPlaybackLoading: Boolean by PlaybackManager.isLoading
     Box(
         modifier = GlanceModifier.fillMaxSize(),
@@ -51,7 +51,7 @@ fun WidgetView(
             return@Box
         }
 
-        val isDataLoaded: Boolean by DataLoader.isLoaded
+        val isDataLoaded: Boolean by LocalDataLoader.isLoaded
         if (!isDataLoaded) {
             LoadSatunesButton(modifier = modifier)
         } else {

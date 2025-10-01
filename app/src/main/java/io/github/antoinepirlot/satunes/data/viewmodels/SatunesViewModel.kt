@@ -796,16 +796,24 @@ class SatunesViewModel : ViewModel() {
     }
 
     fun switchCloudMode() {
+        if (_uiState.value.mode == SatunesModes.ONLINE) {
+            turnOffCloud()
+        } else {
+            turnOnCloud()
+        }
+    }
+
+    private fun turnOffCloud() {
+        NavBarSection.MUSICS.isEnabled.value = true
         _uiState.update { currentState: SatunesUiState ->
-            val newMode: SatunesModes
-            if (currentState.mode == SatunesModes.ONLINE) {
-                newMode = SatunesModes.OFFLINE
-                NavBarSection.MUSICS.isEnabled.value = true
-            } else {
-                newMode = SatunesModes.ONLINE
-                NavBarSection.MUSICS.isEnabled.value = false
-            }
-            currentState.copy(mode = newMode)
+            currentState.copy(mode = SatunesModes.OFFLINE)
+        }
+    }
+
+    private fun turnOnCloud() {
+        NavBarSection.MUSICS.isEnabled.value = false
+        _uiState.update { currentState: SatunesUiState ->
+            currentState.copy(mode = SatunesModes.ONLINE)
         }
     }
 }

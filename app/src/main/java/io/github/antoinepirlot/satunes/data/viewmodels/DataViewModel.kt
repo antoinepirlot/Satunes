@@ -1018,12 +1018,4 @@ class DataViewModel : ViewModel() {
             currentState.copy(multipleFiles = !currentState.multipleFiles)
         }
     }
-
-//    fun loadOnlineMusic() {
-//        SubsonicApiRequester.loadOnlineMusic()
-//    }
-//
-//    fun removeOnlineMusic() {
-//        TODO("Not yet implemented")
-//    }
 }

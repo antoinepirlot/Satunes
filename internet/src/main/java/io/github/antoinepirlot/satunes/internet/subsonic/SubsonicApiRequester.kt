@@ -24,11 +24,13 @@
 package io.github.antoinepirlot.satunes.internet.subsonic
 
 import android.content.Context
+import io.github.antoinepirlot.satunes.database.models.User
 import io.github.antoinepirlot.satunes.database.models.media.Album
 import io.github.antoinepirlot.satunes.database.models.media.Artist
 import io.github.antoinepirlot.satunes.database.models.media.Folder
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.internet.SubsonicCall
+import io.github.antoinepirlot.satunes.internet.subsonic.models.ApiType
 import io.github.antoinepirlot.satunes.internet.subsonic.models.SubsonicState
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetAlbumCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetArtistCallback
@@ -45,9 +47,7 @@ import okhttp3.Request
  * @author Antoine Pirlot 03/09/2025
  */
 class SubsonicApiRequester(
-    url: String,
-    private val username: String,
-    private val md5Password: String,
+    private val user: User,
     private val onSubsonicStateChanged: (SubsonicState) -> Unit
 ) {
     companion object {
@@ -62,8 +62,6 @@ class SubsonicApiRequester(
         internal var openSubsonic: Boolean? = null
     }
 
-    val url: String = "$url/rest"
-
     var subsonicState: SubsonicState = DEFAULT_STATE
         internal set(value) {
             field = value
@@ -71,7 +69,7 @@ class SubsonicApiRequester(
         }
 
     val inUrlMandatoryParams: String
-        get() = "u=$username&t=$md5Password&c=$CLIENT_NAME&v=$version&f=$JSON_FORMAT"
+        get() = "u=${user.username}&t=${user.getMd5Password()}&c=$CLIENT_NAME&v=$version&f=$JSON_FORMAT"
 
     /**
      * Returns the url as https://example.org/rest/[command]?[inUrlMandatoryParams]&[parameters]
@@ -79,11 +77,37 @@ class SubsonicApiRequester(
      * @param command the command as [String]. For example getSong
      * @param parameters the parameters of command. For example: id=59feo8
      */
-    internal fun getCommandUrl(command: String, vararg parameters: String): String {
-        var toReturn = "$url/$command?$inUrlMandatoryParams"
+    internal fun getCommandUrl(
+        apiType: ApiType = ApiType.SUBSONIC,
+        command: String,
+        vararg parameters: String
+    ): String {
+        return when (apiType) {
+            ApiType.SUBSONIC -> this.getSubsonicCommandUrl(
+                command = command,
+                parameters = parameters
+            )
+
+            else -> ""
+        }
+    }
+
+    private fun getSubsonicCommandUrl(command: String, vararg parameters: String): String {
+        var toReturn = "${user.url}/rest/$command?$inUrlMandatoryParams"
         for (parameter: String in parameters)
             toReturn += "&$parameter"
         return toReturn
+    }
+
+    private fun getFunkwhaleCommandUrl(command: String, vararg parameters: String): String {
+        return "${user.url}/api/v1/$command"
+    }
+
+    private fun getBody(vararg parameters: String) {
+        var body: String = "{"
+        for (i: Int in parameters.indices)
+            if (i == 0) body += parameters[i]
+            else body += ",${parameters[i]}"
     }
 
     internal fun updateVersion(version: String) {
@@ -182,10 +206,9 @@ class SubsonicApiRequester(
     }
 
     /**
-     * Request "getIndexes" with "musicFolderId" param for each folder in [foldersToIndex].
-     * Then all folder will received their data.
+     * Load all artists.
      */
-    private fun loadIndexesByFolder() {
+    private fun loadArtists() {
         if(!DataManager.hasSubsonicFolders()) return
         for (folder: Folder in DataManager.getRootSubsonicFolders()) {
             this.get(
@@ -193,10 +216,7 @@ class SubsonicApiRequester(
                     command = "getIndexes",
                     parameters = arrayOf("musicFolderId=${folder.subsonicId}")
                 ),
-                resCallback = GetIndexesCallback(
-                    subsonicApiRequester = this@SubsonicApiRequester,
-                    onSucceed = { this.loadAlbums() }
-                ),
+                resCallback = GetIndexesCallback(subsonicApiRequester = this@SubsonicApiRequester)
             )
         }
     }
@@ -250,7 +270,7 @@ class SubsonicApiRequester(
             url = this.getCommandUrl(command = "getMusicFolders", parameters = arrayOf()),
             resCallback = GetMusicFoldersCallback(
                 subsonicApiRequester = this,
-                onSucceed = { this.loadIndexesByFolder() }
+                onSucceed = { this.loadArtists() }
             )
         )
     }

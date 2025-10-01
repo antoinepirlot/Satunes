@@ -31,9 +31,10 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.data.states.SubsonicUiState
+import io.github.antoinepirlot.satunes.database.models.User
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
-import io.github.antoinepirlot.satunes.database.utils.md5
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
+import io.github.antoinepirlot.satunes.internet.subsonic.models.SubsonicState
 import io.github.antoinepirlot.satunes.ui.utils.showErrorSnackBar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -51,48 +52,39 @@ class SubsonicViewModel : ViewModel() {
         private val _uiState: MutableStateFlow<SubsonicUiState> =
             MutableStateFlow(SubsonicUiState())
 
-        private var _subsonicApiRequester: SubsonicApiRequester? = null
-
     }
 
     val uiState: StateFlow<SubsonicUiState> = _uiState.asStateFlow()
 
-    var url: String by mutableStateOf(SettingsManager.subsonicUrl)
-        private set
-
-    var username: String by mutableStateOf(SettingsManager.subsonicUsername)
-        private set
-
-    var password: String by mutableStateOf(SettingsManager.subsonicPassword)
-        private set
-
     var hasBeenUpdated: Boolean by mutableStateOf(false)
         private set
 
+    var user: User = User(
+        url = SettingsManager.subsonicUrl,
+        username = SettingsManager.subsonicUsername,
+        password = SettingsManager.subsonicPassword
+    )
+
     fun updateSubsonicUrl(url: String) {
-        this.url = url
+        this.user.url = url
         this.hasBeenUpdated = true
     }
 
     fun updateSubsonicUsername(username: String) {
-        this.username = username
+        this.user.username = username
         this.hasBeenUpdated = true
     }
 
     fun updateSubsonicPassword(password: String) {
-        this.password = password
+        this.user.password = password
         this.hasBeenUpdated = true
     }
 
     fun reset() {
-        this.url = SettingsManager.subsonicUrl
-        this.username = SettingsManager.subsonicUsername
-        this.password = SettingsManager.subsonicPassword
+        this.user.url = SettingsManager.subsonicUrl
+        this.user.username = SettingsManager.subsonicUsername
+        this.user.password = SettingsManager.subsonicPassword
         this.hasBeenUpdated = false
-    }
-
-    fun disconnect() {
-        _subsonicApiRequester?.disconnect()
     }
 
     /**
@@ -104,28 +96,24 @@ class SubsonicViewModel : ViewModel() {
             try {
                 SettingsManager.updateSubsonicUrl(
                     context = context,
-                    url = this@SubsonicViewModel.url
+                    url = this@SubsonicViewModel.user.url
                 )
                 SettingsManager.updateSubsonicUsername(
                     context = context,
-                    username = this@SubsonicViewModel.username
+                    username = this@SubsonicViewModel.user.username
                 )
                 SettingsManager.updateSubsonicPassword(
                     context = context,
-                    password = this@SubsonicViewModel.password
+                    password = this@SubsonicViewModel.user.password
                 )
                 this@SubsonicViewModel.hasBeenUpdated = false
-                _subsonicApiRequester = SubsonicApiRequester(
-                    url = this@SubsonicViewModel.url,
-                    username = this@SubsonicViewModel.username,
-                    md5Password = this@SubsonicViewModel.password.md5(),
-                    onSubsonicStateChanged = {
-                        _uiState.update { currentState: SubsonicUiState ->
-                            currentState.copy(subsonicState = it)
-                        }
-                    }
+                val subsonicApiRequester = SubsonicApiRequester(
+                    user = user,
+                    onSubsonicStateChanged = { this@SubsonicViewModel.updateState(newState = it) }
                 )
-                _subsonicApiRequester!!.ping(onSucceed = { _subsonicApiRequester!!.loadAll() }) //TODO
+                subsonicApiRequester!!.ping(onSucceed = {
+                    subsonicApiRequester!!.loadAll()
+                }) //TODO
             } catch (_: Throwable) {
                 showErrorSnackBar(
                     scope = scope,
@@ -139,5 +127,23 @@ class SubsonicViewModel : ViewModel() {
                 )
             }
         }
+    }
+
+    private fun updateState(newState: SubsonicState) {
+        _uiState.update { currentState: SubsonicUiState ->
+            currentState.copy(subsonicState = newState)
+        }
+    }
+
+    fun loadArtists() {
+        val apiRequester = SubsonicApiRequester(
+            user = user,
+            onSubsonicStateChanged = { this.updateState(newState = it) }
+        )
+        apiRequester.loadArtists()
+    }
+
+    fun removeOnlineMusic() {
+        TODO("Not yet implemented")
     }
 }

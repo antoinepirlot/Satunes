@@ -157,7 +157,7 @@ dependencies {
     implementation(project(":database"))
 
     /**
-     * Update
+     * Internet
      */
     implementation(project(":internet"))
 

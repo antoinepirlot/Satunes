@@ -48,6 +48,7 @@ import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.getSortOptions
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.states.NavigationUiState
+import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.models.Destination
@@ -65,6 +66,7 @@ internal fun TopAppBar(
     scrollBehavior: TopAppBarScrollBehavior,
     satunesViewModel: SatunesViewModel = viewModel(),
     navigationViewModel: NavigationViewModel = viewModel(),
+    dataViewModel: DataViewModel = viewModel(),
 ) {
     val navigationUiState: NavigationUiState by navigationViewModel.uiState.collectAsState()
     val navController: NavHostController = LocalNavController.current
@@ -108,7 +110,7 @@ internal fun TopAppBar(
                 val mode: SatunesModes = satunesUiState.mode
                 IconButton(
                     icon = mode.icon,
-                    onClick = { satunesViewModel.switchCloudMode() }
+                    onClick = { satunesViewModel.switchCloudMode(dataViewModel = dataViewModel) }
                 )
             }
         },

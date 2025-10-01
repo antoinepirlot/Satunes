@@ -795,25 +795,26 @@ class SatunesViewModel : ViewModel() {
         }
     }
 
-    fun switchCloudMode() {
-        if (_uiState.value.mode == SatunesModes.ONLINE) {
-            turnOffCloud()
-        } else {
-            turnOnCloud()
-        }
+    fun switchCloudMode(dataViewModel: DataViewModel) {
+        if (_uiState.value.mode == SatunesModes.ONLINE)
+            turnOffCloud(dataViewModel = dataViewModel)
+        else
+            turnOnCloud(dataViewModel = dataViewModel)
     }
 
-    private fun turnOffCloud() {
+    private fun turnOffCloud(dataViewModel: DataViewModel) {
         NavBarSection.MUSICS.isEnabled.value = true
         _uiState.update { currentState: SatunesUiState ->
             currentState.copy(mode = SatunesModes.OFFLINE)
         }
+//        dataViewModel.loadOnlineMusic()
     }
 
-    private fun turnOnCloud() {
+    private fun turnOnCloud(dataViewModel: DataViewModel) {
         NavBarSection.MUSICS.isEnabled.value = false
         _uiState.update { currentState: SatunesUiState ->
             currentState.copy(mode = SatunesModes.ONLINE)
         }
+//        dataViewModel.removeOnlineMusic()
     }
 }

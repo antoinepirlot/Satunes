@@ -20,15 +20,11 @@
 
 package io.github.antoinepirlot.satunes.ui.views.media.album
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -36,7 +32,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -45,7 +40,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import io.github.antoinepirlot.jetpack_libs.components.models.ScreenSizes
-import io.github.antoinepirlot.jetpack_libs.components.texts.Subtitle
 import io.github.antoinepirlot.jetpack_libs.components.texts.Title
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
@@ -55,10 +49,8 @@ import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.router.utils.openMedia
+import io.github.antoinepirlot.satunes.ui.components.bars.media.ArtistBar
 import io.github.antoinepirlot.satunes.ui.components.buttons.fab.ExtraButtonList
-import io.github.antoinepirlot.satunes.ui.components.images.Icon
 import io.github.antoinepirlot.satunes.ui.components.images.MediaArtwork
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 
@@ -108,7 +100,7 @@ private fun Header(
     playbackViewModel: PlaybackViewModel = viewModel(),
     album: Album
 ) {
-    val navController: NavHostController = LocalNavController.current
+    LocalNavController.current
 
     Column(modifier = modifier.padding(vertical = 16.dp)) {
         val screenWidthDp = LocalConfiguration.current.screenWidthDp
@@ -127,29 +119,14 @@ private fun Header(
             bottomPadding = 0.dp,
             text = album.title
         )
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center
+        Box(
+            modifier = Modifier.fillMaxWidth(),
+            contentAlignment = Alignment.Center
         ) {
-            Row(
-                modifier = Modifier
-                    .clip(shape = CircleShape)
-                    .clickable {
-                        openMedia(
-                            playbackViewModel = playbackViewModel,
-                            media = album.artist,
-                            navController = navController
-                        )
-                    },
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Spacer(modifier = Modifier.size(size = 10.dp)) //Used for press animation larger zone
-                Icon(icon = SatunesIcons.ARTIST)
-                Spacer(modifier = Modifier.size(size = 5.dp))
-                Subtitle(text = if (album.year != null) "${album.artist.title} - ${album.year}" else album.artist.title)
-                Spacer(modifier = Modifier.size(size = 10.dp)) //Used for press animation larger zone
-            }
+            ArtistBar(
+                artist = album.artist,
+                title = if (album.year != null) "${album.artist.title} - ${album.year}" else album.artist.title
+            )
         }
     }
 }

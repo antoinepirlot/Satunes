@@ -80,7 +80,7 @@ internal fun AlbumGridCard(
             MediaArtwork(
                 modifier.size(artworkSize),
                 mediaImpl = album,
-                onClick = onClick
+                isClickable = true
             )
             NormalText(
                 modifier = Modifier.fillMaxWidth(),

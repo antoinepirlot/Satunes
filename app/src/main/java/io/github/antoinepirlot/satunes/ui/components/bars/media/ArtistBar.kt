@@ -44,11 +44,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import io.github.antoinepirlot.jetpack_libs.components.texts.Subtitle
+import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
-import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.dialog.artist.ArtistOptionsDialog
 import io.github.antoinepirlot.satunes.ui.components.images.Icon
 
@@ -58,13 +60,13 @@ import io.github.antoinepirlot.satunes.ui.components.images.Icon
 @Composable
 fun ArtistBar(
     modifier: Modifier = Modifier,
-    playbackViewModel: PlaybackViewModel = viewModel(),
-    onArtistClick: (artist: Artist) -> Unit,
+    playbackViewModel: PlaybackViewModel = viewModel()
 ) {
     val haptics: HapticFeedback = LocalHapticFeedback.current
     val padding: Dp = 16.dp
     var showArtistOptions: Boolean by rememberSaveable { mutableStateOf(false) }
     val musicPlaying: Music = playbackViewModel.musicPlaying!!
+    val navController: NavHostController = LocalNavController.current
 
     Row(
         modifier = modifier
@@ -73,7 +75,11 @@ fun ArtistBar(
             .combinedClickable(
                 onClick = {
                     haptics.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-                    onArtistClick(musicPlaying.artist)
+                    openMedia(
+                        playbackViewModel = playbackViewModel,
+                        media = musicPlaying.artist,
+                        navController = navController
+                    )
                 },
                 onLongClick = {
                     haptics.performHapticFeedback(HapticFeedbackType.LongPress)
@@ -105,5 +111,5 @@ fun ArtistBar(
 @Preview
 @Composable
 private fun ArtistBarPreview() {
-    ArtistBar(onArtistClick = {})
+    ArtistBar()
 }

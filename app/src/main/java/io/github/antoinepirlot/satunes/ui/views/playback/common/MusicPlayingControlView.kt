@@ -41,8 +41,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.models.ScreenSizes
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
-import io.github.antoinepirlot.satunes.database.models.Album
-import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.ui.components.bars.media.ArtistBar
 import io.github.antoinepirlot.satunes.ui.components.bars.playback.MusicControlBar
@@ -57,9 +55,7 @@ import io.github.antoinepirlot.satunes.ui.components.images.MusicPlayingAlbumArt
 @Composable
 internal fun MusicPlayingControlView(
     modifier: Modifier = Modifier,
-    playbackViewModel: PlaybackViewModel = viewModel(),
-    onAlbumClick: (album: Album?) -> Unit,
-    onArtistClick: (artist: Artist) -> Unit,
+    playbackViewModel: PlaybackViewModel = viewModel()
 ) {
     val musicPlaying: Music = playbackViewModel.musicPlaying!!
     val padding: Dp = 16.dp
@@ -82,7 +78,7 @@ internal fun MusicPlayingControlView(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                MusicPlayingAlbumArtwork(onClick = onAlbumClick)
+                MusicPlayingAlbumArtwork()
             }
         }
         Column(
@@ -97,7 +93,7 @@ internal fun MusicPlayingControlView(
                 text = musicPlaying.title,
                 fontSize = 20.sp
             )
-            ArtistBar(onArtistClick = onArtistClick)
+            ArtistBar()
             PlaybackCustomActionsBar()
             MusicControlBar(modifier = Modifier.padding(horizontal = padding))
         }
@@ -108,5 +104,5 @@ internal fun MusicPlayingControlView(
 @Composable
 @Preview
 private fun MusicPlayingControlViewPreview() {
-    MusicPlayingControlView(onAlbumClick = {}, onArtistClick = {})
+    MusicPlayingControlView()
 }

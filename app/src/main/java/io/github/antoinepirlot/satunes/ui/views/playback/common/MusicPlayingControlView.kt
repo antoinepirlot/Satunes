@@ -93,7 +93,7 @@ internal fun MusicPlayingControlView(
                 text = musicPlaying.title,
                 fontSize = 20.sp
             )
-            ArtistBar()
+            ArtistBar(artist = musicPlaying.artist)
             PlaybackCustomActionsBar()
             MusicControlBar(modifier = Modifier.padding(horizontal = padding))
         }

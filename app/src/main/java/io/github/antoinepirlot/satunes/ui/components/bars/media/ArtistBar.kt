@@ -48,7 +48,7 @@ import androidx.navigation.NavHostController
 import io.github.antoinepirlot.jetpack_libs.components.texts.Subtitle
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
-import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.dialog.artist.ArtistOptionsDialog
@@ -60,12 +60,12 @@ import io.github.antoinepirlot.satunes.ui.components.images.Icon
 @Composable
 fun ArtistBar(
     modifier: Modifier = Modifier,
-    playbackViewModel: PlaybackViewModel = viewModel()
+    playbackViewModel: PlaybackViewModel = viewModel(),
+    artist: Artist
 ) {
     val haptics: HapticFeedback = LocalHapticFeedback.current
     val padding: Dp = 16.dp
     var showArtistOptions: Boolean by rememberSaveable { mutableStateOf(false) }
-    val musicPlaying: Music = playbackViewModel.musicPlaying!!
     val navController: NavHostController = LocalNavController.current
 
     Row(
@@ -77,7 +77,7 @@ fun ArtistBar(
                     haptics.performHapticFeedback(HapticFeedbackType.TextHandleMove)
                     openMedia(
                         playbackViewModel = playbackViewModel,
-                        media = musicPlaying.artist,
+                        media = artist,
                         navController = navController
                     )
                 },
@@ -91,7 +91,7 @@ fun ArtistBar(
         Spacer(modifier = Modifier.size(size = 10.dp)) //Used for press animation larger zone
         Icon(icon = SatunesIcons.ARTIST)
         Spacer(modifier = Modifier.size(size = 5.dp))
-        Subtitle(text = musicPlaying.artist.title)
+        Subtitle(text = artist.title)
         Spacer(modifier = Modifier.size(size = 10.dp)) //Used for press animation larger zone
     }
 
@@ -100,7 +100,7 @@ fun ArtistBar(
      */
     if (showArtistOptions) {
         ArtistOptionsDialog(
-            artist = musicPlaying.artist,
+            artist = artist,
             onDismissRequest = {
                 showArtistOptions = false
             }
@@ -111,5 +111,5 @@ fun ArtistBar(
 @Preview
 @Composable
 private fun ArtistBarPreview() {
-    ArtistBar()
+    ArtistBar(artist = Artist(title = "Artist Name"))
 }

@@ -23,6 +23,7 @@
 
 package io.github.antoinepirlot.satunes.ui.components.bars.media
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -57,6 +58,7 @@ import io.github.antoinepirlot.satunes.ui.components.images.Icon
 /**
  * @author Antoine Pirlot 07/10/2025
  */
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ArtistBar(
     modifier: Modifier = Modifier,

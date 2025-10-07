@@ -61,7 +61,8 @@ import io.github.antoinepirlot.satunes.ui.components.images.Icon
 fun ArtistBar(
     modifier: Modifier = Modifier,
     playbackViewModel: PlaybackViewModel = viewModel(),
-    artist: Artist
+    artist: Artist,
+    title: String = artist.title
 ) {
     val haptics: HapticFeedback = LocalHapticFeedback.current
     val padding: Dp = 16.dp
@@ -91,7 +92,7 @@ fun ArtistBar(
         Spacer(modifier = Modifier.size(size = 10.dp)) //Used for press animation larger zone
         Icon(icon = SatunesIcons.ARTIST)
         Spacer(modifier = Modifier.size(size = 5.dp))
-        Subtitle(text = artist.title)
+        Subtitle(text = title)
         Spacer(modifier = Modifier.size(size = 10.dp)) //Used for press animation larger zone
     }
 

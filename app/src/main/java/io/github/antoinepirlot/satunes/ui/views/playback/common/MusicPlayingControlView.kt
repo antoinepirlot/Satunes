@@ -22,7 +22,6 @@ package io.github.antoinepirlot.satunes.ui.views.playback.common
 
 import android.annotation.SuppressLint
 import android.content.res.Configuration
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -51,7 +50,6 @@ import io.github.antoinepirlot.satunes.ui.components.images.MusicPlayingAlbumArt
  * @author Antoine Pirlot on 25/01/2024
  */
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun MusicPlayingControlView(
     modifier: Modifier = Modifier,

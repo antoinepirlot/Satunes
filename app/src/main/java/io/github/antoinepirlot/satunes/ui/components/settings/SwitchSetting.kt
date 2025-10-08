@@ -48,7 +48,7 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.InformationDialog
  */
 
 @Composable
-internal fun SettingWithSwitch(
+internal fun SwitchSetting(
     modifier: Modifier = Modifier,
     setting: SwitchSettings,
     icon: SatunesIcons? = null,
@@ -111,7 +111,7 @@ internal fun SettingWithSwitch(
 @Composable
 @Preview
 private fun SettingWithSwitchPreview() {
-    SettingWithSwitch(
+    SwitchSetting(
         setting = SwitchSettings.PAUSE_IF_ANOTHER_PLAYBACK,
         checked = true,
         icon = SatunesIcons.INFO,

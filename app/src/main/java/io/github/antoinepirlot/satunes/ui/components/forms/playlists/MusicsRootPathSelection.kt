@@ -36,7 +36,7 @@ import io.github.antoinepirlot.satunes.data.states.DataUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.database.data.DEFAULT_ROOT_FILE_PATH
 import io.github.antoinepirlot.satunes.models.SwitchSettings
-import io.github.antoinepirlot.satunes.ui.components.settings.SettingWithSwitch
+import io.github.antoinepirlot.satunes.ui.components.settings.SwitchSetting
 
 /**
  * @author Antoine Pirlot 17/08/2025
@@ -50,7 +50,7 @@ fun MusicsRootPathSelection(
     val dataUiState: DataUiState by dataViewModel.uiState.collectAsState()
 
     Column(modifier = modifier) {
-        SettingWithSwitch(
+        SwitchSetting(
             modifier = modifier,
             setting = SwitchSettings.CHANGE_ROOT_PATH,
             checked = dataUiState.changeFileRootPath,

@@ -32,7 +32,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.data.states.DataUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.models.SwitchSettings
-import io.github.antoinepirlot.satunes.ui.components.settings.SettingWithSwitch
+import io.github.antoinepirlot.satunes.ui.components.settings.SwitchSetting
 
 /**
  * @author Antoine Pirlot 17/08/2025
@@ -44,7 +44,7 @@ fun ExportMultipleFiles(
 ) {
     val dataUiState: DataUiState by dataViewModel.uiState.collectAsState()
 
-    SettingWithSwitch(
+    SwitchSetting(
         modifier = modifier,
         setting = SwitchSettings.EXPORT_MULTIPLE_FILES,
         checked = dataUiState.multipleFiles,

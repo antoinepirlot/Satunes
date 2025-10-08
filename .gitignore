@@ -14,3 +14,4 @@ releaseTest
 schemas
 structure/*.bkp
 *.log
+/internet/src/test/java/io/github/antoinepirlot/satunes/internet/subsonic/http-client.private.env.json

@@ -1,0 +1,4 @@
+Improvements, optimisations and bug fixes:
+
+* Fix the action on artist banner in album's view.
+* Fix the export of a single playlist from playlist's option does no more export all playlist.

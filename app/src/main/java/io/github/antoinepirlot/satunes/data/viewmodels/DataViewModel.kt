@@ -75,6 +75,7 @@ import io.github.antoinepirlot.satunes.database.R as RDb
 class DataViewModel : ViewModel() {
     companion object {
         private val _uiState: MutableStateFlow<DataUiState> = MutableStateFlow(DataUiState())
+        private var _playlistToExport: Playlist? = null
     }
 
     private val _logger: SatunesLogger? = SatunesLogger.getLogger()
@@ -83,8 +84,6 @@ class DataViewModel : ViewModel() {
         DatabaseManager.initInstance(context = MainActivity.instance.applicationContext)
     private val _isLoaded: MutableState<Boolean> = DataLoader.isLoaded
     private var _updatePlaylistsJob: Job? = null
-
-    private var _playlistToExport: Playlist? = null
 
     val uiState: StateFlow<DataUiState> = _uiState.asStateFlow()
 
@@ -114,7 +113,7 @@ class DataViewModel : ViewModel() {
      * Indicates if the user export only one playlist
      */
     val isExportSinglePlaylist: Boolean
-        get() = this._playlistToExport != null
+        get() = _playlistToExport != null
 
     fun playlistSetUpdated() {
         this._playlistSetUpdated.value = false
@@ -293,7 +292,7 @@ class DataViewModel : ViewModel() {
                         )
                     }
                 )
-            } catch (e: Throwable) {
+            } catch (_: Throwable) {
                 showErrorSnackBar(
                     scope = scope,
                     snackBarHostState = snackBarHostState,
@@ -540,14 +539,14 @@ class DataViewModel : ViewModel() {
     }
 
     fun openExportPlaylistDialog(playlist: Playlist? = null) {
-        this._playlistToExport = playlist
+        _playlistToExport = playlist
         _uiState.update { currentState: DataUiState ->
             currentState.copy(showExportPlaylistDialog = true)
         }
     }
 
     fun closeExportPlaylistDialog() {
-        this._playlistToExport = null
+        _playlistToExport = null
         _uiState.update { currentState: DataUiState ->
             currentState.copy(showExportPlaylistDialog = false)
         }
@@ -573,11 +572,11 @@ class DataViewModel : ViewModel() {
 
     fun exportPlaylists(
         scope: CoroutineScope,
-        snackBarHostState: SnackbarHostState
+        snackBarHostState: SnackbarHostState,
     ) {
         if (this.isExportSinglePlaylist) {
-            exportPlaylist(playlist = this._playlistToExport!!)
-            this._playlistToExport = null
+            exportPlaylist(playlist = _playlistToExport!!)
+            _playlistToExport = null
             return
         }
 
@@ -688,7 +687,7 @@ class DataViewModel : ViewModel() {
                     MainActivity.instance.startActivity(shareIntent)
                 }
             }
-        } catch (e: NotImplementedError) {
+        } catch (_: NotImplementedError) {
             return
         } catch (e: Throwable) {
             _logger?.severe(e.message)
@@ -717,7 +716,7 @@ class DataViewModel : ViewModel() {
                     snackBarHostState = snackBarHostState,
                     message = context.getString(R.string.cleaned_snackbar_text)
                 )
-            } catch (e: Throwable) {
+            } catch (_: Throwable) {
                 showErrorSnackBar(
                     scope = scope,
                     snackBarHostState = snackBarHostState,
@@ -738,7 +737,7 @@ class DataViewModel : ViewModel() {
                 SettingsManager.resetFoldersSettings(context = MainActivity.instance.applicationContext)
                 SatunesViewModel.reloadSettings()
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             showErrorSnackBar(
                 scope = scope,
                 snackBarHostState = snackBarHostState,
@@ -756,7 +755,7 @@ class DataViewModel : ViewModel() {
                 SatunesViewModel.reloadSettings()
                 updateShowFirstLetter()
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             showErrorSnackBar(
                 scope = scope,
                 snackBarHostState = snackBarHostState,
@@ -773,7 +772,7 @@ class DataViewModel : ViewModel() {
                 SettingsManager.resetBatterySettings(context = MainActivity.instance.applicationContext)
                 SatunesViewModel.reloadSettings()
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             showErrorSnackBar(
                 scope = scope,
                 snackBarHostState = snackBarHostState,
@@ -790,7 +789,7 @@ class DataViewModel : ViewModel() {
                 SettingsManager.resetPlaybackBehaviorSettings(context = MainActivity.instance.applicationContext)
                 SatunesViewModel.reloadSettings()
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             showErrorSnackBar(
                 scope = scope,
                 snackBarHostState = snackBarHostState,
@@ -810,7 +809,7 @@ class DataViewModel : ViewModel() {
                 SettingsManager.resetPlaybackModesSettings(context = MainActivity.instance.applicationContext)
                 SatunesViewModel.reloadSettings()
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             showErrorSnackBar(
                 scope = scope,
                 snackBarHostState = snackBarHostState,
@@ -833,7 +832,7 @@ class DataViewModel : ViewModel() {
                 SettingsManager.resetDefaultSearchFiltersSettings(context = MainActivity.instance.applicationContext)
                 SatunesViewModel.reloadSettings()
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             showErrorSnackBar(
                 scope = scope,
                 snackBarHostState = snackBarHostState,
@@ -853,7 +852,7 @@ class DataViewModel : ViewModel() {
                 SettingsManager.resetNavigationBarSettings(context = MainActivity.instance.applicationContext)
                 SatunesViewModel.reloadSettings()
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             showErrorSnackBar(
                 scope = scope,
                 snackBarHostState = snackBarHostState,
@@ -877,7 +876,7 @@ class DataViewModel : ViewModel() {
                 SatunesViewModel.reloadSettings()
                 updateShowFirstLetter()
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             showErrorSnackBar(
                 scope = scope,
                 snackBarHostState = snackBarHostState,
@@ -903,7 +902,7 @@ class DataViewModel : ViewModel() {
             try {
                 SettingsManager.switchShowFirstLetter(context = MainActivity.instance.applicationContext)
                 updateShowFirstLetter()
-            } catch (e: Throwable) {
+            } catch (_: Throwable) {
                 showErrorSnackBar(
                     scope = scope,
                     snackBarHostState = snackBarHostState,
@@ -955,7 +954,7 @@ class DataViewModel : ViewModel() {
                 SettingsManager.resetListsSettings(context = MainActivity.instance.applicationContext)
                 SatunesViewModel.reloadSettings()
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             showErrorSnackBar(
                 scope = scope,
                 snackBarHostState = snackBarHostState,

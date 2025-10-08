@@ -4,6 +4,14 @@ You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
 ## 3.2 (Android 5.1.1 Lollipop et ultérieur)
 
+### 3.2.3
+
+Améliorations, optimisations et corrections de bugs :
+
+* Correction de l'action de la bannière de l'artiste dans la vue de l'album.
+* Correction de l'export d'une seule playlist à partir de ses options. Maintenant l'option export
+  uniquement cette playlist.
+
 ### 3.2.2
 
 Améliorations, optimisations et corrections de bugs :

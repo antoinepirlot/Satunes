@@ -30,8 +30,6 @@ import io.github.antoinepirlot.jetpack_libs.components.models.ScreenSizes
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
-import io.github.antoinepirlot.satunes.database.models.Album
-import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.router.utils.getNavBarSectionDestination
 import io.github.antoinepirlot.satunes.ui.components.bars.backToRoot
 import io.github.antoinepirlot.satunes.ui.views.playback.mobile.PlaybackMobileView
@@ -45,9 +43,7 @@ import io.github.antoinepirlot.satunes.ui.views.playback.tablet.PlaybackTabletVi
 internal fun PlaybackView(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
-    playbackViewModel: PlaybackViewModel = viewModel(),
-    onAlbumClick: (album: Album?) -> Unit,
-    onArtistClick: (artist: Artist) -> Unit,
+    playbackViewModel: PlaybackViewModel = viewModel()
 ) {
     val navController: NavHostController = LocalNavController.current
 
@@ -65,23 +61,15 @@ internal fun PlaybackView(
     val screenWidthDp: Int = LocalConfiguration.current.screenWidthDp
     if (screenWidthDp < ScreenSizes.LARGE) {
         // Mobile
-        PlaybackMobileView(
-            modifier = modifier,
-            onAlbumClick = onAlbumClick,
-            onArtistClick = onArtistClick
-        )
+        PlaybackMobileView(modifier = modifier)
     } else {
         // Tablet
-        PlaybackTabletView(
-            modifier = modifier,
-            onAlbumClick = onAlbumClick,
-            onArtistClick = onArtistClick
-        )
+        PlaybackTabletView(modifier = modifier)
     }
 }
 
 @Preview
 @Composable
 private fun PlaybackViewPreview() {
-    PlaybackView(onAlbumClick = {}, onArtistClick = {})
+    PlaybackView()
 }

@@ -58,13 +58,16 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import io.github.antoinepirlot.jetpack_libs.components.models.ScreenSizes
+import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.dialog.album.AlbumOptionsDialog
 import io.github.antoinepirlot.satunes.ui.utils.getRightIconAndDescription
 import io.github.antoinepirlot.satunes.utils.utils.toCircularBitmap
@@ -84,7 +87,7 @@ internal fun MediaArtwork(
     satunesViewModel: SatunesViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
     mediaImpl: MediaImpl,
-    onClick: ((album: Album?) -> Unit)? = null,
+    isClickable: Boolean = false,
     contentAlignment: Alignment = Alignment.Center,
     shape: Shape? = null
 ) {
@@ -97,6 +100,8 @@ internal fun MediaArtwork(
     val haptics: HapticFeedback = LocalHapticFeedback.current
     val screenWidthDp = LocalConfiguration.current.screenWidthDp
     var showAlbumDialog: Boolean by rememberSaveable { mutableStateOf(false) }
+    val navController: NavHostController = LocalNavController.current
+
     val album: Album? = when (mediaImpl) {
         is Music -> mediaImpl.album
         is Album -> mediaImpl
@@ -125,7 +130,7 @@ internal fun MediaArtwork(
         }
     }
 
-    mediaArtWorkModifier = if (onClick != null) {
+    mediaArtWorkModifier = if (isClickable) {
         mediaArtWorkModifier
             .size(
                 if (screenWidthDp >= (ScreenSizes.VERY_VERY_SMALL - 1) && screenWidthDp < ScreenSizes.VERY_SMALL) 150.dp
@@ -135,7 +140,13 @@ internal fun MediaArtwork(
             .combinedClickable(
                 onClick = {
                     haptics.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-                    onClick(album)
+                    if (album != null) {
+                        openMedia(
+                            playbackViewModel = playbackViewModel,
+                            media = album,
+                            navController = navController,
+                        )
+                    }
                 },
                 onLongClick = {
                     haptics.performHapticFeedback(HapticFeedbackType.LongPress)

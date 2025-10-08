@@ -23,8 +23,6 @@ package io.github.antoinepirlot.satunes.ui.views.playback.mobile
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import io.github.antoinepirlot.satunes.database.models.Album
-import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.ui.views.playback.common.MusicPlayingControlView
 
 /**
@@ -32,20 +30,12 @@ import io.github.antoinepirlot.satunes.ui.views.playback.common.MusicPlayingCont
  */
 
 @Composable
-internal fun PlaybackMobileView(
-    modifier: Modifier = Modifier,
-    onAlbumClick: (album: Album?) -> Unit,
-    onArtistClick: (artist: Artist) -> Unit,
-) {
-    MusicPlayingControlView(
-        modifier = modifier,
-        onAlbumClick = onAlbumClick,
-        onArtistClick = onArtistClick
-    )
+internal fun PlaybackMobileView(modifier: Modifier = Modifier) {
+    MusicPlayingControlView(modifier = modifier)
 }
 
 @Preview
 @Composable
 private fun PlaybackMobileViewPreview() {
-    PlaybackMobileView(onAlbumClick = {}, onArtistClick = {})
+    PlaybackMobileView()
 }

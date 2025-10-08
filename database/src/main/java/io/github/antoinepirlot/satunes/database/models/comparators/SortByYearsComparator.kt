@@ -27,7 +27,7 @@ import io.github.antoinepirlot.satunes.database.models.Music
 /**
  * @author Antoine Pirlot 30/01/2025
  */
-object SortByYearsComparator : Comparator<MediaImpl> {
+object SortByYearsComparator : MediaComparator<MediaImpl>() {
 
     /**
      * Sort o1 and o2 by dates.
@@ -49,15 +49,16 @@ object SortByYearsComparator : Comparator<MediaImpl> {
             is Album -> o2.year
             else -> throw UnsupportedOperationException("Only Musics and Albums can be sorted by year")
         }
-        return if (year1 == year2) {
+        val cmp: Int = if (year1 == year2) {
             if (year1 == null) 0
             else o1.compareTo(o2)
-        }
-        else if (year1 == null)
+        } else if (year1 == null)
             1
         else if (year2 == null)
             -1
         else if (year1 > year2) -1
         else 1
+
+        return this.getFinalCmp(cmp = cmp)
     }
 }

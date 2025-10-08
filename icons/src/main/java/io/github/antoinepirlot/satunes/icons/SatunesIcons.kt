@@ -70,8 +70,8 @@ import androidx.compose.material.icons.rounded.Share
 import androidx.compose.material.icons.rounded.Shuffle
 import androidx.compose.material.icons.rounded.SkipNext
 import androidx.compose.material.icons.rounded.SkipPrevious
+import androidx.compose.material.icons.rounded.SortByAlpha
 import androidx.compose.material.icons.rounded.Timer
-import androidx.compose.material.icons.rounded.Title
 import androidx.compose.material.icons.rounded.Update
 import androidx.compose.material.icons.rounded.Upload
 import androidx.compose.material.icons.rounded.Warning
@@ -184,7 +184,7 @@ enum class SatunesIcons(
     ),
     SORT(imageVector = Icons.AutoMirrored.Rounded.Sort, description = "Sort Icon"),
     TIMER(imageVector = Icons.Rounded.Timer, description = "Timer Icon"),
-    TITLE(imageVector = Icons.Rounded.Title, description = "Title Icon"),
+    TITLE(imageVector = Icons.Rounded.SortByAlpha, description = "Title Icon"),
     UNLIKED(imageVector = Icons.Rounded.FavoriteBorder, description = "Unliked Icon"),
     WARNING(imageVector = Icons.Rounded.Warning, description = "Warning Icon"),
     YEARS(imageVector = Icons.Rounded.DateRange, description = "Years Icon"),

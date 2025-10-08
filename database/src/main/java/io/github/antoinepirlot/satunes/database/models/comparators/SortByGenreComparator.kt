@@ -33,9 +33,9 @@ import io.github.antoinepirlot.satunes.database.models.Music
  *
  *  @author Antoine Pirlot on 22/12/2024
  */
-object SortByGenreComparator : Comparator<MediaImpl> {
+object SortByGenreComparator : MediaComparator<MediaImpl>() {
     override fun compare(mediaImpl1: MediaImpl, mediaImpl2: MediaImpl): Int {
-        return when (mediaImpl1) {
+        val cmp: Int = when (mediaImpl1) {
             is Music -> {
                 when (mediaImpl2) {
                     is Music -> {
@@ -54,5 +54,7 @@ object SortByGenreComparator : Comparator<MediaImpl> {
                     else -> throw NotSupportedException("Can't sort ${mediaImpl1.javaClass.name} and ${mediaImpl2.javaClass.name} and ${mediaImpl2.javaClass.name} by genre.")
                 }
         }
+
+        return this.getFinalCmp(cmp = cmp)
     }
 }

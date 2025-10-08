@@ -38,7 +38,6 @@ import io.github.antoinepirlot.satunes.database.models.NavBarSection
  *   @author Antoine Pirlot 06/03/2024
  */
 
-// TODO rename for Switch SwitchSettings enum class
 internal enum class SwitchSettings(val stringId: Int, val navBarSection: NavBarSection? = null) {
     ALBUMS_NAVBAR(stringId = albums, navBarSection = NavBarSection.ALBUMS),
     ALBUMS_FILTER(stringId = albums),
@@ -63,5 +62,5 @@ internal enum class SwitchSettings(val stringId: Int, val navBarSection: NavBarS
     SHOW_FIRST_LETTER(stringId = R.string.show_first_letter_setting_content),
     CHANGE_ROOT_PATH(stringId = R.string.ask_select_music_root_path),
     EXPORT_MULTIPLE_FILES(stringId = R.string.export_multiple_files_text),
-
+    REVER_ORDER(stringId = R.string.reverse_order)
 }

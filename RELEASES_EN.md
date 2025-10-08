@@ -4,6 +4,13 @@ Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
 ## 3.2 (Android 5.1.1 Lollipop and later)
 
+### 3.2.3
+
+Improvements, optimisations and bug fixes:
+
+* Fix the action on artist banner in album's view.
+* Fix the export of a single playlist from playlist's option does no more export all playlist.
+
 ### 3.2.2
 
 Improvements, optimisations and bug fixes:

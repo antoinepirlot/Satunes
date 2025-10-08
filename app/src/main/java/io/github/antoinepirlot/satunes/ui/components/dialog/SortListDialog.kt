@@ -36,8 +36,10 @@ import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SortListViewModel
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import io.github.antoinepirlot.satunes.models.SwitchSettings
 import io.github.antoinepirlot.satunes.models.radio_buttons.SortOptions
 import io.github.antoinepirlot.satunes.ui.components.buttons.RadioButton
+import io.github.antoinepirlot.satunes.ui.components.settings.SwitchSetting
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 
 /**
@@ -52,7 +54,7 @@ internal fun SortListDialog(
     sortListViewModel: SortListViewModel = viewModel(),
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
-    val selectedSortOption: SortOptions = sortListViewModel.selectedSortOption
+
     Dialog(
         modifier = modifier,
         icon = SatunesIcons.SORT,
@@ -60,7 +62,8 @@ internal fun SortListDialog(
         onDismissRequest = { satunesViewModel.hideSortDialog() },
         onConfirmRequest = {
             satunesViewModel.hideSortDialog()
-            dataViewModel.setSorting(sortOption = selectedSortOption)
+            dataViewModel.setReverseOrder(reverseOrder = sortListViewModel.reverseOrder)
+            dataViewModel.setSorting(sortOption = sortListViewModel.selectedSortOption)
         },
         confirmText = stringResource(R.string.ok),
         dismissText = stringResource(R.string.cancel),
@@ -73,9 +76,15 @@ internal fun SortListDialog(
                 SatunesLogger.getLogger()?.severe(message)
                 throw UnsupportedOperationException(message)
             }
+            SwitchSetting(
+                setting = SwitchSettings.REVER_ORDER,
+                checked = sortListViewModel.reverseOrder,
+                onCheckedChange = { sortListViewModel.switchReverseOrder() }
+            )
+
             for (sortOption: SortOptions in sortOptions) {
                 RadioButton(
-                    selected = selectedSortOption == sortOption,
+                    selected = sortListViewModel.selectedSortOption == sortOption,
                     onClick = { sortListViewModel.selectSortOption(sortRadioButton = sortOption) },
                     icon = sortOption.icon,
                     text = stringResource(sortOption.stringId),

@@ -26,7 +26,7 @@ import io.github.antoinepirlot.satunes.database.models.Music
 /**
  * @author Antoine Pirlot on 18/10/2024
  */
-object MusicInAlbumComparator : Comparator<Music> {
+object MusicInAlbumComparator : MediaComparator<Music>() {
     /**
      * Compare 2 music's in the same album.
      * Assume it is used only in Album's music set
@@ -43,13 +43,15 @@ object MusicInAlbumComparator : Comparator<Music> {
      * @return [Int]: -1 or 0 or 1 as specified.
      */
     override fun compare(o1: Music, o2: Music): Int {
+        var cmp: Int = 0
         if (o1.album != o2.album) throw NotInAlbumException()
-        if (o1.cdTrackNumber != null && o2.cdTrackNumber == null) return -1
-        if (o1.cdTrackNumber == null && o2.cdTrackNumber != null) return 1
-        if (o1.cdTrackNumber == null || o2.cdTrackNumber == null) return o1.compareTo(o2) //both are null
-        if (o1.cdTrackNumber > o2.cdTrackNumber) return 1
-        if (o1.cdTrackNumber < o2.cdTrackNumber) return -1
-        return 0
+        if (o1.cdTrackNumber != null && o2.cdTrackNumber == null) cmp = -1
+        else if (o1.cdTrackNumber == null && o2.cdTrackNumber != null) cmp = 1
+        else if (o1.cdTrackNumber == null || o2.cdTrackNumber == null) cmp =
+            o1.compareTo(o2) //both are null
+        else if (o1.cdTrackNumber > o2.cdTrackNumber) cmp = 1
+        else if (o1.cdTrackNumber < o2.cdTrackNumber) cmp = -1
+        return this.getFinalCmp(cmp = cmp)
     }
 
 }

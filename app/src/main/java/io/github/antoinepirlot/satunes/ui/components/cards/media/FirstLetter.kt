@@ -20,8 +20,13 @@
 
 package io.github.antoinepirlot.satunes.ui.components.cards.media
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Card
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -43,6 +48,7 @@ import java.text.Normalizer
 @Suppress("NAME_SHADOWING")
 @Composable
 fun FirstLetter(
+    modifier: Modifier = Modifier,
     map: MutableMap<Any?, MediaImpl>,
     mediaImpl: MediaImpl,
     mediaImplList: Collection<MediaImpl>,
@@ -64,12 +70,23 @@ fun FirstLetter(
         }
     }
     if (mediaImpl == map[charToCompare]) {
-        Title(
-            modifier = Modifier.padding(vertical = 15.dp),
-            bottomPadding = 0.dp,
-            fontSize = 30.sp,
-            textAlign = TextAlign.Center,
-            text = charToCompare.toString()
-        )
+        Box(
+            modifier = modifier.fillMaxWidth(),
+            contentAlignment = Alignment.Center
+        ) {
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth(fraction = 0.15f)
+                    .fillMaxHeight(fraction = 0.1f)
+            ) {
+                Title(
+                    modifier = Modifier.padding(vertical = 15.dp),
+                    bottomPadding = 0.dp,
+                    fontSize = 30.sp,
+                    textAlign = TextAlign.Center,
+                    text = charToCompare.toString()
+                )
+            }
+        }
     }
 }

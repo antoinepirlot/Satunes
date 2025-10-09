@@ -94,7 +94,6 @@ internal fun PlaylistListView(
             mediaImplCollection = playlistSet!!,
             collectionChanged = setChanged,
             emptyViewText = stringResource(id = R.string.no_playlists),
-            showGroupIndication = false,
             sort = false,
         )
 

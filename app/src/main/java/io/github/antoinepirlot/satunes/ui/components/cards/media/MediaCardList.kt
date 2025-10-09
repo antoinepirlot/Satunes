@@ -65,7 +65,6 @@ internal fun MediaCardList(
     mediaImplList: List<MediaImpl>,
     header: @Composable (() -> Unit)? = null,
     scrollToMusicPlaying: Boolean = false,
-    showGroupIndication: Boolean = true,
     onMediaClick: ((MediaImpl) -> Unit)? = null
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
@@ -81,8 +80,7 @@ internal fun MediaCardList(
         state = lazyListState
     ) {
         //Used to store dynamically the first media impl linked to the first occurrence of a letter or media impl.
-        val groupMap: MutableMap<Any?, MediaImpl>? =
-            if (showGroupIndication) mutableMapOf() else null
+        val groupMap: MutableMap<Any?, MediaImpl> = mutableMapOf()
 
         items(
             items = mediaImplList,
@@ -90,7 +88,7 @@ internal fun MediaCardList(
         ) { mediaImpl: MediaImpl ->
             if (mediaImpl == mediaImplList.first()) header?.invoke()
 
-            if (showFirstLetter && showGroupIndication) {
+            if (showFirstLetter) {
                 when (sortOption) {
                     SortOptions.GENRE -> {
                         if (mediaImpl is Music) {
@@ -157,7 +155,7 @@ internal fun MediaCardList(
             )
 
             //TODO add option to show hide divider?
-            
+
             // Media option dialog
             if (showMediaOptions) {
                 MediaOptionsDialog(

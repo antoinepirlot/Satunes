@@ -62,7 +62,6 @@ internal fun MediaListView(
     collectionChanged: Boolean = false,
     header: (@Composable () -> Unit)? = null,
     emptyViewText: String,
-    showGroupIndication: Boolean = true,
     sort: Boolean = true,
     /**
      * Overrides the base onClick on media behavior
@@ -112,7 +111,6 @@ internal fun MediaListView(
             mediaImplList = listToShow,
             lazyListState = lazyListState,
             header = header,
-            showGroupIndication = showGroupIndication,
             onMediaClick = onMediaClick
         )
     } else {

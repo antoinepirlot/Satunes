@@ -37,8 +37,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.data.switchSettingsNeedReloadLibrary
-import io.github.antoinepirlot.satunes.data.switchSettingsNeedRestarts
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.models.SwitchSettings
 import io.github.antoinepirlot.satunes.ui.components.dialog.InformationDialog
@@ -55,8 +53,6 @@ internal fun SwitchSetting(
     checked: Boolean,
     onCheckedChange: () -> Unit
 ) {
-    val isRestartNeeded: Boolean = switchSettingsNeedRestarts.contains(setting)
-    val isReloadLibraryNeeded: Boolean = switchSettingsNeedReloadLibrary.contains(setting)
     var showInfo: Boolean by rememberSaveable { mutableStateOf(false) }
 
     Row(
@@ -73,7 +69,7 @@ internal fun SwitchSetting(
         if (icon != null) {
             Icon(imageVector = icon.imageVector, contentDescription = icon.description)
         } else {
-            if (isRestartNeeded || isReloadLibraryNeeded) {
+            if (setting.needRestart || setting.needReloadLibrary) {
                 @Suppress("NAME_SHADOWING")
                 val icon = SatunesIcons.INFO
                 Icon(imageVector = icon.imageVector, contentDescription = icon.description)
@@ -82,7 +78,7 @@ internal fun SwitchSetting(
         Switch(
             checked = checked,
             onCheckedChange = {
-                if (isRestartNeeded || isReloadLibraryNeeded) {
+                if (setting.needRestart || setting.needReloadLibrary) {
                     showInfo = true
                 } else {
                     onCheckedChange()
@@ -94,8 +90,8 @@ internal fun SwitchSetting(
     if (showInfo) {
         InformationDialog(
             title = stringResource(
-                id = if (isRestartNeeded) R.string.restart_required
-                else if (isReloadLibraryNeeded) R.string.reload_library_required
+                id = if (setting.needRestart) R.string.restart_required
+                else if (setting.needReloadLibrary) R.string.reload_library_required
                 else throw UnsupportedOperationException("Can't show if no restart nor reload is needed.")
             ),
             onDismissRequest = { showInfo = false },

@@ -137,6 +137,7 @@ class DataViewModel : ViewModel() {
     }
 
     fun getRootRootFolder(): Folder = DataManager.getRootRootFolder()
+    fun getBackFolder(): Folder = DataManager.getBackFolder()
     fun getFolderSet(): Set<Folder> = DataManager.getFolderSet()
     fun getArtistSet(): Set<Artist> = DataManager.getArtistSet()
     fun getAlbumSet(): Set<Album> = DataManager.getAlbumSet()

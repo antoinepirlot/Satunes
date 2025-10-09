@@ -40,6 +40,7 @@ import java.util.SortedSet
 
 object DataManager {
     private const val ROOT_FOLDER_TITLE: String = "root"
+    private const val BACK_FOLDER_TITLE: String = "../"
 
     // All public map and sortedmap has bool state to recompose as Map are not supported for recomposition
     private val musicSortedSet: SortedSet<Music> = sortedSetOf()
@@ -47,6 +48,7 @@ object DataManager {
     private val musicMapByAbsolutePath: MutableMap<String, Music> = mutableMapOf()
 
     private var rootFolder: Folder = Folder(title = ROOT_FOLDER_TITLE)
+    private var backFolder: Folder = Folder(title = BACK_FOLDER_TITLE)
     private val folderMapById: MutableMap<Long, Folder> = mutableMapOf()
     private val folderSortedSet: SortedSet<Folder> = sortedSetOf()
 
@@ -96,9 +98,9 @@ object DataManager {
     /**
      * Returns the very first folder in chain the folder with the [ROOT_FOLDER_TITLE].
      */
-    fun getRootRootFolder(): Folder {
-        return this.rootFolder
-    }
+    fun getRootRootFolder(): Folder = this.rootFolder
+
+    fun getBackFolder(): Folder = this.backFolder
 
     fun getFolderSet(): Set<Folder> {
         return this.folderSortedSet

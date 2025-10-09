@@ -397,7 +397,7 @@ object DataLoader {
     private fun loadFolder(context: Context, absolutePath: String): Folder {
         val splitPath: Collection<String> =
             this.getPathList(context = context, absolutePath = absolutePath)
-        val rootFolder: Folder = DataManager.getRootFolder()
+        val rootFolder: Folder = DataManager.getRootRootFolder()
         rootFolder.createSubFolders(splitPath)
         return rootFolder.getSubFolder(splitPath.toMutableList())!!
     }

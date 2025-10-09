@@ -36,7 +36,7 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToQ
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.PlayNextMediaOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.RemoveFromQueueOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.ShareMediaOption
-import io.github.antoinepirlot.satunes.ui.utils.getRootFolderName
+import io.github.antoinepirlot.satunes.ui.utils.getFirstFolderNameInChain
 
 /**
  * @author Antoine Pirlot on 07/07/2024
@@ -58,8 +58,8 @@ internal fun FolderOptionsDialog(
             Icon(imageVector = icon.imageVector, contentDescription = icon.description)
         },
         title = {
-            val title: String = if (folder.parentFolder == null) {
-                getRootFolderName(title = folder.title)
+            val title: String = if (folder.isRoot()) {
+                getFirstFolderNameInChain(title = folder.title)
             } else {
                 folder.title
             }

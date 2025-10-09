@@ -30,6 +30,7 @@ import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
+import io.github.antoinepirlot.satunes.database.services.data.DataManager.ROOT_FOLDER_TITLE
 import java.util.SortedMap
 import java.util.SortedSet
 
@@ -92,7 +93,10 @@ object DataManager {
         return getMusic(id = music.id)
     }
 
-    fun getRootFolder(): Folder {
+    /**
+     * Returns the very first folder in chain the folder with the [ROOT_FOLDER_TITLE].
+     */
+    fun getRootRootFolder(): Folder {
         return this.rootFolder
     }
 

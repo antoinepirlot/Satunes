@@ -59,7 +59,7 @@ import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.ui.components.cards.ListItem
 import io.github.antoinepirlot.satunes.ui.components.images.MediaArtwork
-import io.github.antoinepirlot.satunes.ui.utils.getRootFolderName
+import io.github.antoinepirlot.satunes.ui.utils.getFirstFolderNameInChain
 import io.github.antoinepirlot.satunes.database.R as RDb
 
 /**
@@ -80,7 +80,7 @@ internal fun MediaCard(
 
     val title: String =
         if (mediaImpl is Folder && mediaImpl.isRoot()) {
-            getRootFolderName(title = mediaImpl.title)
+            getFirstFolderNameInChain(title = mediaImpl.title)
         } else if (mediaImpl is Playlist && mediaImpl.title == LIKES_PLAYLIST_TITLE) {
             stringResource(id = RDb.string.likes_playlist_title)
         } else {

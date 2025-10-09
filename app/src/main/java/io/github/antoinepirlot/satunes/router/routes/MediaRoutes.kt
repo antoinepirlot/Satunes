@@ -63,7 +63,7 @@ internal fun NavGraphBuilder.mediaRoutes(
         if (satunesViewModel.isLoadingData || !satunesViewModel.isDataLoaded) {
             LoadingView()
         } else {
-            FolderView(folder = dataViewModel.getRootFolder())
+            FolderView(folder = dataViewModel.getRootRootFolder())
         }
     }
 

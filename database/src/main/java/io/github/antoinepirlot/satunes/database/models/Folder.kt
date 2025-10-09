@@ -185,5 +185,5 @@ class Folder(
         return this.parentFolder!!.getRoot()
     }
 
-    fun isRoot(): Boolean = this === DataManager.getRootFolder()
+    fun isRoot(): Boolean = this.parentFolder === DataManager.getRootRootFolder()
 }

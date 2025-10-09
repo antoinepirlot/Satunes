@@ -79,7 +79,7 @@ internal fun MediaCard(
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
 
     val title: String =
-        if (mediaImpl is Folder && mediaImpl.parentFolder == null) {
+        if (mediaImpl is Folder && mediaImpl.isRoot()) {
             getRootFolderName(title = mediaImpl.title)
         } else if (mediaImpl is Playlist && mediaImpl.title == LIKES_PLAYLIST_TITLE) {
             stringResource(id = RDb.string.likes_playlist_title)

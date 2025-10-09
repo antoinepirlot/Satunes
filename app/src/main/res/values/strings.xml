@@ -26,7 +26,6 @@
     <string name="app_name" translatable="false">Satunes</string>
     <string name="play_all">Shuffle All Musics</string>
     <string name="navigation_bar_settings_title">Navigation Bar</string>
-    <string name="this_device">This Device</string>
     <string name="external_storage">External Storage</string>
     <string name="playback_settings">Playback</string>
     <string name="playback_when_paused">Playback if the Satunes is closed</string>

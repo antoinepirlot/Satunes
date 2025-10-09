@@ -99,13 +99,11 @@ fun getRightIconAndDescription(media: MediaImpl): SatunesIcons {
 }
 
 /**
- * Return the root folder name: 0 -> This device, else -> External Storage: name
+ * Returns External Storage: [title]
+ *
+ * @param title the folder's title
  */
 @Composable
 fun getRootFolderName(title: String): String {
-    return when (title) {
-        "0" -> stringResource(id = R.string.this_device)
-
-        else -> "${stringResource(id = R.string.external_storage)}: $title"
-    }
+    return "${stringResource(id = R.string.external_storage)}: $title"
 }

@@ -43,7 +43,7 @@ fun getMediaTitle(mediaImpl: MediaImpl): String {
 
         is Folder -> {
             if (mediaImpl.title == "0") {
-                MainActivity.instance.getString(io.github.antoinepirlot.satunes.R.string.this_device)
+                MainActivity.instance.getString(R.string.this_device)
             } else {
                 mediaImpl.title
             }

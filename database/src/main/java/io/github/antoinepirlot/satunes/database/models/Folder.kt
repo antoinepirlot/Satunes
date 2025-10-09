@@ -93,7 +93,7 @@ class Folder(
      *                                 It's a path not all the subfolder of this folder
      *
      */
-    fun createSubFolders(subFolderNameChainList: MutableList<String>) {
+    fun createSubFolders(subFolderNameChainList: Collection<String>) {
         var parentFolder = this
         subFolderNameChainList.forEach { folderName: String ->
             var subFolder: Folder? = null
@@ -181,7 +181,9 @@ class Folder(
     }
 
     fun getRoot(): Folder {
-        if (this.parentFolder == null) return this
+        if (this.isRoot()) return this
         return this.parentFolder!!.getRoot()
     }
+
+    fun isRoot(): Boolean = this === DataManager.getRootFolder()
 }

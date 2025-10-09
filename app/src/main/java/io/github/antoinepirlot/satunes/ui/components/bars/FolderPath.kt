@@ -28,7 +28,7 @@ import io.github.antoinepirlot.satunes.ui.utils.getRootFolderName
 
 @Composable
 internal fun FolderPath(folder: Folder) {
-    if (folder.parentFolder == null) {
+    if (folder.isRoot()) {
         Title(
             text = '/' + getRootFolderName(title = folder.title),
             fontSize = 20.sp,
@@ -37,7 +37,7 @@ internal fun FolderPath(folder: Folder) {
     } else {
         val allPath: MutableList<String> = folder.absolutePath.split("/").toMutableList()
         // Wrong issue. Remove first is available before API 35, you can ignore error from Android Studio.
-        allPath.removeFirst()
+        allPath.removeAt(index = 0)
         allPath[0] = getRootFolderName(title = allPath[0])
         var path = ""
         for (s: String in allPath) {

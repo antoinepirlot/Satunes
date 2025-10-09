@@ -286,7 +286,7 @@ object DataLoader {
         val genre: Genre = loadGenre(context = context, cursor = cursor, album = album, uri = uri)
 
         //Load Folder
-        val folder: Folder = loadFolder(absolutePath = absolutePath!!)
+        val folder: Folder = loadFolder(context = context, absolutePath = absolutePath!!)
 
         //Load music and folder inside load music function
         return try {
@@ -394,25 +394,36 @@ object DataLoader {
      *
      * @param absolutePath the absolute path to create folder and sub-folders if not already created
      */
-    private fun loadFolder(absolutePath: String): Folder {
-        val splitPath: Collection<String> = this.getPathList(absolutePath = absolutePath)
+    private fun loadFolder(context: Context, absolutePath: String): Folder {
+        val splitPath: Collection<String> =
+            this.getPathList(context = context, absolutePath = absolutePath)
         val rootFolder: Folder = DataManager.getRootFolder()
-        rootFolder.createSubFolders(splitPath) //Do not follow warning for !!
-        return rootFolder.getSubFolder(splitPath.toMutableList())!! //Do not follow warning for !!
+        rootFolder.createSubFolders(splitPath)
+        return rootFolder.getSubFolder(splitPath.toMutableList())!!
     }
 
     /**
      * Returns the path list by removing storage and emulated.
      */
-    private fun getPathList(absolutePath: String): Collection<String> {
-        val splitPath: MutableCollection<String> = mutableListOf()
+    private fun getPathList(context: Context, absolutePath: String): Collection<String> {
+        val splitPathToReturn: MutableCollection<String> = mutableListOf()
         val splitList: List<String> = absolutePath.split("/")
         var canAddPath: Boolean = false
-        splitList.forEach { folderName: String ->
-            if (canAddPath) splitPath.add(folderName)
-            else if (folderName == "emulated") canAddPath = true
+        var storageNameCanBeProcessed: Boolean = false
+        splitList.forEach { element: String ->
+            val folderName: String =
+                if (storageNameCanBeProcessed) {
+                    storageNameCanBeProcessed = false
+                    if (element == "0") context.getString(R.string.this_device)
+                    else element
+                } else element
+            if (canAddPath) splitPathToReturn.add(folderName)
+            else if (folderName == "emulated") {
+                canAddPath = true
+                storageNameCanBeProcessed = true
+            }
         }
-        return splitList
+        return splitPathToReturn
     }
 
     private fun loadArtist(context: Context, cursor: Cursor, uri: Uri?): Artist {

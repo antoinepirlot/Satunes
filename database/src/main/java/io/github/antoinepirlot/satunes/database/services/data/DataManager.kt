@@ -40,7 +40,7 @@ import java.util.SortedSet
 
 object DataManager {
     private const val ROOT_FOLDER_TITLE: String = "root"
-    private const val BACK_FOLDER_TITLE: String = "../"
+    private const val BACK_FOLDER_TITLE: String = ".."
 
     // All public map and sortedmap has bool state to recompose as Map are not supported for recomposition
     private val musicSortedSet: SortedSet<Music> = sortedSetOf()

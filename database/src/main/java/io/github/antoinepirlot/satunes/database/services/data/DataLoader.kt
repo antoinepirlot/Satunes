@@ -406,24 +406,9 @@ object DataLoader {
             }
         }
 
-        var rootFolder: Folder? = null
-
-        DataManager.getRootFolderSet().forEach { folder: Folder ->
-            if (folder.title == splitPath[0]) {
-                rootFolder = folder
-                return@forEach
-            }
-        }
-
-        if (rootFolder == null) {
-            // No root folders in the list
-            rootFolder = Folder(title = splitPath[0])
-            DataManager.addFolder(folder = rootFolder!!) //Do not follow warning for !!
-        }
-
-        splitPath.removeAt(0)
-        rootFolder!!.createSubFolders(splitPath.toMutableList()) //Do not follow warning for !!
-        return rootFolder!!.getSubFolder(splitPath.toMutableList())!! //Do not follow warning for !!
+        val rootFolder: Folder = DataManager.getRootFolder()
+        rootFolder.createSubFolders(splitPath.toMutableList()) //Do not follow warning for !!
+        return rootFolder.getSubFolder(splitPath.toMutableList())!! //Do not follow warning for !!
     }
 
     private fun loadArtist(context: Context, cursor: Cursor, uri: Uri?): Artist {

@@ -35,6 +35,11 @@ class Folder(
     title: String,
     var parentFolder: Folder? = null,
 ) : MediaImpl(id = nextId, title = title) {
+
+    companion object {
+        var nextId: Long = 1
+    }
+
     private val subFolderSortedSet: SortedSet<Folder> = sortedSetOf()
 
     val absolutePath: String = if (parentFolder == null) {
@@ -44,10 +49,6 @@ class Folder(
     }
 
     public override var addedDate: Date? = null
-
-    companion object {
-        var nextId: Long = 1
-    }
 
     init {
         nextId++

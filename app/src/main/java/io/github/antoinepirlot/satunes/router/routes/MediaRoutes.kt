@@ -64,7 +64,7 @@ internal fun NavGraphBuilder.mediaRoutes(
         if (satunesViewModel.isLoadingData || !satunesViewModel.isDataLoaded) {
             LoadingView()
         } else {
-            RootFolderView(satunesViewModel = satunesViewModel) //(for all all media list) send view model needed to avoid not showing extra buttons on first launch
+            RootFolderView()
         }
     }
 

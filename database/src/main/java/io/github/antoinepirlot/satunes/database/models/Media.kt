@@ -26,4 +26,6 @@ package io.github.antoinepirlot.satunes.database.models
 internal interface Media {
     val id: Long
     var title: String
+
+    fun isMusic(): Boolean
 }

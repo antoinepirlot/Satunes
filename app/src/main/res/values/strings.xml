@@ -172,4 +172,5 @@
     <string name="ask_select_music_root_path">Would you replace the root path of music files? (e.g.: /storage/emulated/0/path/to/music.mp3 the root path is \'/storage/emulated/0\')</string>
     <string name="export_multiple_files_text">One file per playlist?</string>
     <string name="reverse_order">Reverse order</string>
+    <string name="is_music_title_display_name_text">Use the file\'s title for the music\'s title?</string>
 </resources>

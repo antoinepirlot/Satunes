@@ -79,6 +79,17 @@ internal fun LoadingLogicSubSettings(
                 )
             }
         )
+
+        SwitchSetting(
+            setting = SwitchSettings.IS_MUSIC_TITLE_DISPLAY_NAME,
+            checked = satunesUiState.isMusicTitleDisplayName,
+            onCheckedChange = {
+                satunesViewModel.switchIsMusicTitleDisplayName(
+                    scope = scope,
+                    snackBarHostState = snackBarHostState
+                )
+            }
+        )
     }
 }
 

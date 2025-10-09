@@ -50,6 +50,7 @@ internal enum class SwitchSettings(val stringId: Int, val navBarSection: NavBarS
     FOLDERS_FILTER(stringId = folders),
     GENRES_NAVBAR(stringId = genres, navBarSection = NavBarSection.GENRES),
     GENRES_FILTER(stringId = genres),
+    IS_MUSIC_TITLE_DISPLAY_NAME(stringId = R.string.is_music_title_display_name_text),
     MUSICS_FILTER(stringId = musics),
     LOGS(stringId = R.string.logs_activation_button),
     PAUSE_IF_NOISY(stringId = pause_if_noisy),

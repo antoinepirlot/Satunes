@@ -43,7 +43,7 @@ fun getMediaTitle(mediaImpl: MediaImpl): String {
 
         is Folder -> {
             if (mediaImpl.title == "0") {
-                MainActivity.instance.getString(io.github.antoinepirlot.satunes.R.string.this_device)
+                MainActivity.instance.getString(R.string.this_device)
             } else {
                 mediaImpl.title
             }
@@ -51,4 +51,15 @@ fun getMediaTitle(mediaImpl: MediaImpl): String {
 
         else -> mediaImpl.title
     }
+}
+
+/**
+ * Returns the first folder containing at least 1 music or 2 folders.
+ */
+fun getTheFirstVisibleFolder(folder: Folder): Folder {
+    val subFolders: Collection<Folder> = folder.getSubFolderSet()
+    if (subFolders.size == 1 && folder.getMusicSet().isEmpty()) return getTheFirstVisibleFolder(
+        subFolders.first()
+    )
+    return folder
 }

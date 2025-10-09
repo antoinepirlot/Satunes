@@ -30,6 +30,7 @@ import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
+import io.github.antoinepirlot.satunes.database.services.data.DataManager.ROOT_FOLDER_TITLE
 import java.util.SortedMap
 import java.util.SortedSet
 
@@ -38,12 +39,14 @@ import java.util.SortedSet
  */
 
 object DataManager {
+    private const val ROOT_FOLDER_TITLE: String = "root"
+
     // All public map and sortedmap has bool state to recompose as Map are not supported for recomposition
     private val musicSortedSet: SortedSet<Music> = sortedSetOf()
     private val musicMapById: MutableMap<Long, Music> = mutableMapOf()
     private val musicMapByAbsolutePath: MutableMap<String, Music> = mutableMapOf()
 
-    private val rootFolderSortedSet: SortedSet<Folder> = sortedSetOf()
+    private var rootFolder: Folder = Folder(title = ROOT_FOLDER_TITLE)
     private val folderMapById: MutableMap<Long, Folder> = mutableMapOf()
     private val folderSortedSet: SortedSet<Folder> = sortedSetOf()
 
@@ -90,8 +93,11 @@ object DataManager {
         return getMusic(id = music.id)
     }
 
-    fun getRootFolderSet(): Set<Folder> {
-        return this.rootFolderSortedSet
+    /**
+     * Returns the very first folder in chain the folder with the [ROOT_FOLDER_TITLE].
+     */
+    fun getRootRootFolder(): Folder {
+        return this.rootFolder
     }
 
     fun getFolderSet(): Set<Folder> {
@@ -152,9 +158,6 @@ object DataManager {
         if (!folderSortedSet.contains(folder)) {
             this.folderMapById[folder.id] = folder
             this.folderSortedSet.add(element = folder)
-            if (folder.parentFolder == null) {
-                this.rootFolderSortedSet.add(element = folder)
-            }
         }
     }
 
@@ -165,7 +168,6 @@ object DataManager {
         folder.getSubFolderSet().forEach {
             this.removeFolder(folder = it)
         }
-        rootFolderSortedSet.remove(folder)
     }
 
     fun getGenre(id: Long): Genre? {
@@ -223,7 +225,7 @@ object DataManager {
         musicSortedSet.clear()
         musicMapById.clear()
         musicMapByAbsolutePath.clear()
-        rootFolderSortedSet.clear()
+        this.rootFolder = Folder(title = ROOT_FOLDER_TITLE)
         folderMapById.clear()
         folderSortedSet.clear()
         artistMapById.clear()

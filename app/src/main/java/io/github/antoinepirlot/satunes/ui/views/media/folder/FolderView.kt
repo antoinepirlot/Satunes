@@ -55,7 +55,8 @@ internal fun FolderView(
     }
 
     Column(modifier = modifier) {
-        FolderPath(folder)
+        if (folder !== dataViewModel.getRootRootFolder())
+            FolderPath(folder)
         MediaListView(
             mediaImplCollection = folder.getSubFolderListWithMusics(),
             emptyViewText = stringResource(id = R.string.no_music)

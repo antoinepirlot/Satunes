@@ -55,7 +55,7 @@ abstract class MediaImpl(
      */
     override var title: String by mutableStateOf(
         value =
-            if (!this.isMusic() || !SettingsManager.isMusicTitleDisplayName) title
+            if (this !is Music || !SettingsManager.isMusicTitleDisplayName) title
             else title.split(".").first()
     )
 
@@ -136,8 +136,4 @@ abstract class MediaImpl(
     }
 
     open fun musicCount(): Int = this.musicSortedSet.size
-
-    open fun isMusic(): Boolean {
-        return false
-    }
 }

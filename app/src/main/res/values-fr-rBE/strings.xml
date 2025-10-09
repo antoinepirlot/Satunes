@@ -3,7 +3,6 @@
 <resources>
     <string name="play_all">Lire en mode aléatoire</string>
     <string name="navigation_bar_settings_title">Barre de navigation</string>
-    <string name="this_device">Cet Appareil</string>
     <string name="external_storage">Stockage Externe</string>
     <string name="playback_settings">Lecture</string>
     <string name="playback_when_paused">Lecture si Satunes est fermée</string>

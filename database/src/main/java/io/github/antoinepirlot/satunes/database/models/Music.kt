@@ -202,8 +202,4 @@ class Music(
         if (compared == 0 && this != other) return 1
         return compared
     }
-
-    override fun isMusic(): Boolean {
-        return true
-    }
 }

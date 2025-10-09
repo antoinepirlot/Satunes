@@ -286,7 +286,7 @@ object DataLoader {
         val genre: Genre = loadGenre(context = context, cursor = cursor, album = album, uri = uri)
 
         //Load Folder
-        val folder: Folder = loadFolder(absolutePath = absolutePath!!)
+        val folder: Folder = loadFolder(context = context, absolutePath = absolutePath!!)
 
         //Load music and folder inside load music function
         return try {
@@ -394,36 +394,36 @@ object DataLoader {
      *
      * @param absolutePath the absolute path to create folder and sub-folders if not already created
      */
-    private fun loadFolder(absolutePath: String): Folder {
-        val splitPath: MutableList<String> = mutableListOf()
+    private fun loadFolder(context: Context, absolutePath: String): Folder {
+        val splitPath: Collection<String> =
+            this.getPathList(context = context, absolutePath = absolutePath)
+        val rootFolder: Folder = DataManager.getRootRootFolder()
+        rootFolder.createSubFolders(splitPath)
+        return rootFolder.getSubFolder(splitPath.toMutableList())!!
+    }
+
+    /**
+     * Returns the path list by removing storage and emulated.
+     */
+    private fun getPathList(context: Context, absolutePath: String): Collection<String> {
+        val splitPathToReturn: MutableCollection<String> = mutableListOf()
         val splitList: List<String> = absolutePath.split("/")
-        for (index: Int in 0..<splitList.lastIndex) {
-            //Don't create a folder for the file (no folder called music.mp3)
-            //The last name is a file
-            val folderName: String = splitList[index]
-            if (folderName !in listOf("", "storage", "emulated")) {
-                splitPath.add(folderName)
+        var canAddPath: Boolean = false
+        var storageNameCanBeProcessed: Boolean = false
+        splitList.forEach { element: String ->
+            val folderName: String =
+                if (storageNameCanBeProcessed) {
+                    storageNameCanBeProcessed = false
+                    if (element == "0") context.getString(R.string.this_device)
+                    else element
+                } else element
+            if (canAddPath) splitPathToReturn.add(folderName)
+            else if (folderName == "emulated") {
+                canAddPath = true
+                storageNameCanBeProcessed = true
             }
         }
-
-        var rootFolder: Folder? = null
-
-        DataManager.getRootFolderSet().forEach { folder: Folder ->
-            if (folder.title == splitPath[0]) {
-                rootFolder = folder
-                return@forEach
-            }
-        }
-
-        if (rootFolder == null) {
-            // No root folders in the list
-            rootFolder = Folder(title = splitPath[0])
-            DataManager.addFolder(folder = rootFolder!!) //Do not follow warning for !!
-        }
-
-        splitPath.removeAt(0)
-        rootFolder!!.createSubFolders(splitPath.toMutableList()) //Do not follow warning for !!
-        return rootFolder!!.getSubFolder(splitPath.toMutableList())!! //Do not follow warning for !!
+        return splitPathToReturn
     }
 
     private fun loadArtist(context: Context, cursor: Cursor, uri: Uri?): Artist {

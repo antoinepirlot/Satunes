@@ -40,6 +40,7 @@ import io.github.antoinepirlot.satunes.icons.SatunesIcons.FOLDER
 import io.github.antoinepirlot.satunes.icons.SatunesIcons.GENRES
 import io.github.antoinepirlot.satunes.icons.SatunesIcons.MUSIC
 import io.github.antoinepirlot.satunes.icons.SatunesIcons.PLAYLIST
+import io.github.antoinepirlot.satunes.database.R as RDb
 
 /**
  * @author Antoine Pirlot on 27/01/2024
@@ -99,13 +100,14 @@ fun getRightIconAndDescription(media: MediaImpl): SatunesIcons {
 }
 
 /**
- * Return the root folder name: 0 -> This device, else -> External Storage: name
+ * Returns External Storage: [title] or just title if it is not an external storage
+ *
+ * @param title the folder's title
  */
 @Composable
-fun getRootFolderName(title: String): String {
+fun getFirstFolderNameInChain(title: String): String {
     return when (title) {
-        "0" -> stringResource(id = R.string.this_device)
-
+        stringResource(id = RDb.string.this_device) -> title
         else -> "${stringResource(id = R.string.external_storage)}: $title"
     }
 }
